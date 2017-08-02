@@ -34,8 +34,8 @@ identical to the existing abstract page, with the addition of cited references.
 
 .. _figure-ng-components-browse-phase1:
 
-.. figure:: diagrams/ng-components-browse-phase1.png
-   :target: diagrams/ng-components-browse-phase1.png
+.. figure:: _static/diagrams/ng-components-browse-phase1.png
+   :target: _static/diagrams/ng-components-browse-phase1.png
 
    Main components of the browse application in phase 1.
 
@@ -63,8 +63,8 @@ exposed to the rest of the application. API methods must only accept and return
 
 .. _figure-ng-classes-browse-phase1-service:
 
-.. figure:: diagrams/ng-classes-browse-phase1-service.png
-   :target: diagrams/ng-classes-browse-phase1-service.png
+.. figure:: _static/diagrams/ng-classes-browse-phase1-service.png
+   :target: _static/diagrams/ng-classes-browse-phase1-service.png
 
    Example architecture of the document service layer component. This is merely
    a rough indication of how the component could be implemented.
