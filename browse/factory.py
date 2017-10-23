@@ -1,7 +1,7 @@
 """Application factory for browse service components."""
 
 from flask import Flask
-from browse.models import db
+from browse.services.database.models import db
 
 import logging
 

@@ -205,18 +205,6 @@ to be loaded.
 """
 
 # MySQL configuration
-BROWSE_MYSQL_ENDPOINT = os.environ.get('BROWSE_MYSQL_ENDPOINT', 'localhost')
-"""
-URI for the MySQL database service.
-"""
+SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'mysql://user:pass@localhost/dbname')
 
-BROWSE_MYSQL_DB_NAME = os.environ.get('BROWSE_MYSQL_DB_NAME', 'dbname')
-"""
-Name of the MySQL database.
-"""
-
-BROWSE_MYSQL_DB_USER = os.environ.get('BROWSE_MYSQL_DB_USER', 'user')
-BROWSE_MYSQL_DB_PASS = os.environ.get('BROWSE_MYSQL_DB_PASS', 'pass')
-
-SQLALCHEMY_DATABASE_URI = 'mysql://'+BROWSE_MYSQL_DB_USER+':'+BROWSE_MYSQL_DB_PASS+'@'+BROWSE_MYSQL_ENDPOINT+'/'+BROWSE_MYSQL_DB_NAME
 SQLALCHEMY_TRACK_MODIFICATIONS = OFF
