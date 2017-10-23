@@ -2,6 +2,7 @@ from flask import current_app, request
 from browse import status
 from browse.services.database import get_institution
 
+
 def get_institution_from_request():
 
    try:

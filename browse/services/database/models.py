@@ -1,11 +1,13 @@
 # coding: utf-8
-from sqlalchemy import BINARY, BigInteger, Column, Date, DateTime, Enum, ForeignKey, ForeignKeyConstraint, Index, Integer, Numeric, SmallInteger, String, Table, Text, text
+from sqlalchemy import BINARY, BigInteger, Column, Date, DateTime, Enum, ForeignKey, ForeignKeyConstraint, Index, \
+    Integer, Numeric, SmallInteger, String, Table, Text, text
 from sqlalchemy.orm import relationship
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class MemberInstitution(db.Model):
     __tablename__ = 'Subscription_UniversalInstitution'
