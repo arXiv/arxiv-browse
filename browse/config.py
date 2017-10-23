@@ -13,7 +13,7 @@ VERSION = '0.1'
 """The application version """
 
 ON = 'yes'
-OFF: int = 'no'
+OFF = 'no'
 
 DEBUG = os.environ.get('DEBUG') == ON
 """enable/disable debug mode"""
