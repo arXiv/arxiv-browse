@@ -1,13 +1,16 @@
-# coding: utf-8
-from sqlalchemy import BINARY, BigInteger, Column, Date, DateTime, Enum, ForeignKey, ForeignKeyConstraint, Index, Integer, Numeric, SmallInteger, String, Table, Text, text
+"""arXiv browse database models."""
+from sqlalchemy import BigInteger, Column, DateTime, Enum, \
+    ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
 
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class MemberInstitution(db.Model):
+    """Primary model for arXiv member insitution data."""
+
     __tablename__ = 'Subscription_UniversalInstitution'
 
     resolver_URL = Column(String(255))
@@ -20,6 +23,8 @@ class MemberInstitution(db.Model):
 
 
 class MemberInstitutionContact(db.Model):
+    """Model for arXiv member institution contact information."""
+
     __tablename__ = 'Subscription_UniversalInstitutionContact'
 
     email = Column(String(255))
@@ -35,6 +40,8 @@ class MemberInstitutionContact(db.Model):
 
 
 class MemberInstitutionIP(db.Model):
+    """Model for arXiv member insitution IP address ranges and exclusions."""
+
     __tablename__ = 'Subscription_UniversalInstitutionIP'
     __table_args__ = (
         Index('ip', 'start', 'end'),
@@ -51,6 +58,8 @@ class MemberInstitutionIP(db.Model):
 
 
 class SciencewisePing(db.Model):
+    """Model for ScienceWISE (trackback) pings."""
+
     __tablename__ = 'arXiv_sciencewise_pings'
 
     paper_id_v = Column(String(32), primary_key=True)
@@ -58,6 +67,8 @@ class SciencewisePing(db.Model):
 
 
 class TrackbackPing(db.Model):
+    """Primary model for arXiv trackback data."""
+
     __tablename__ = 'arXiv_trackback_pings'
 
     trackback_id = Column(Integer, primary_key=True)
@@ -76,12 +87,16 @@ class TrackbackPing(db.Model):
     approved_by_user = Column(Integer, nullable=False,
                               server_default=text("'0'"))
     approved_time = Column(Integer, nullable=False, server_default=text("'0'"))
-    status = Column(Enum('pending', 'pending2', 'accepted', 'rejected', 'spam'),
-                    nullable=False, index=True, server_default=text("'pending'"))
+    status = Column(Enum('pending', 'pending2', 'accepted',
+                         'rejected', 'spam'),
+                    nullable=False, index=True,
+                    server_default=text("'pending'"))
     site_id = Column(Integer)
 
 
 class TrackbackSite(db.Model):
+    """Model for sites that submit trackbacks to arXiv."""
+
     __tablename__ = 'arXiv_trackback_sites'
 
     pattern = Column(String(255), nullable=False,
