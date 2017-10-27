@@ -1,7 +1,7 @@
 """Browse controllers."""
 from flask import request
 from flask_api import status
-from browse.services.database.util import get_institution
+from browse.services.database import get_institution
 
 
 def get_institution_from_request():
