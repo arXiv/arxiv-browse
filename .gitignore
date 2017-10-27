@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+
 build/
 develop-eggs/
 dist/
@@ -54,6 +55,7 @@ coverage.xml
 *.log
 .static_storage/
 .media/
+
 local_settings.py
 
 # Flask stuff:
@@ -81,6 +83,7 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
+
 # Environments
 .env
 .venv
@@ -89,6 +92,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
 
 # Spyder project settings
 .spyderproject
