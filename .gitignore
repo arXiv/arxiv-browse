@@ -106,3 +106,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# IDE/editor files
+.idea
+*~
