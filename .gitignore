@@ -109,4 +109,8 @@ venv.bak/
 
 # IDE/editor files
 .idea
+arxiv-browse.iml
 *~
+
+# DB connection, etc
+private_vars.sh

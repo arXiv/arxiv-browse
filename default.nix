@@ -15,6 +15,7 @@ stdenv.mkDerivation {
     # requirements.tx require the following packages to be installed locally
     # in order to compile any binary extensions they may require.
     #
+    gcc6
     mysql57
     openssl
     zlib
@@ -27,5 +28,9 @@ stdenv.mkDerivation {
     export PATH=$PWD/venv/bin:$PATH
     export PYTHONPATH=$PWD
     pip install -r requirements.txt
+    export LD_LIBRARY_PATH=${mysql57}/lib:${gcc6.cc.lib}/lib:$LD_LIBRARY_PATH
+    export FLASK_APP=app.py
+    export FLASK_DEBUG=1
+    source private_vars.sh
   '';
 }
