@@ -2,10 +2,10 @@
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-
 from flask_sqlalchemy import SQLAlchemy
+from typing import Any
 
-db = SQLAlchemy()
+db: Any = SQLAlchemy()
 
 
 class MemberInstitution(db.Model):

@@ -13,3 +13,5 @@ six==1.11.0
 sqlacodegen==1.1.6
 SQLAlchemy==1.1.13
 Werkzeug==0.12.2
+mypy==0.540
+typed-ast==1.1.0
