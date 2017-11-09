@@ -1,13 +1,10 @@
 """
 Flask configuration.
+
 Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.
 """
 import os
-try:
-    from browse import secrets
-except ImportError:
-    pass
 
 VERSION = '0.1'
 """The application version """
@@ -127,7 +124,8 @@ If set to a value in bytes, Flask will reject incoming requests with a content
 length greater than this by returning a 413 status code.
 """
 
-SEND_FILE_MAX_AGE_DEFAULT = int(os.environ.get('SEND_FILE_MAX_AGE_DEFAULT', 43200))
+SEND_FILE_MAX_AGE_DEFAULT = int(
+    os.environ.get('SEND_FILE_MAX_AGE_DEFAULT', 43200))
 """
 Default cache control max age to use with send_static_file() (the default
 static file handler) and send_file(), as datetime.timedelta or as seconds.
@@ -169,9 +167,9 @@ transport for instance.
 
 JSON_SORT_KEYS = os.environ.get('JSON_AS_ASCII') != OFF
 """
-By default Flask will serialize JSON objects in a way that the keys are ordered.
-This is done in order to ensure that independent of the hash seed of the
-dictionary the return value will be consistent to not trash external HTTP
+By default Flask will serialize JSON objects in a way that the keys are
+ordered. This is done in order to ensure that independent of the hash seed of
+the dictionary the return value will be consistent to not trash external HTTP
 caches. You can override the default behavior by changing this variable.
 This is not recommended but might give you a performance improvement on the
 cost of cacheability.
@@ -203,3 +201,9 @@ message to the logger explaining the attempts to locate the template. This can
 be useful to figure out why templates cannot be found or wrong templates appear
 to be loaded.
 """
+
+# MySQL configuration
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    'SQLALCHEMY_DATABASE_URI', 'mysql://user:pass@localhost/dbname')
+
+SQLALCHEMY_TRACK_MODIFICATIONS = OFF
