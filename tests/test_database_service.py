@@ -85,15 +85,16 @@ class TestGetInstitution(TestCase):
 
         label = self.database_service.get_institution('128.84.10.5')
         self.assertEqual(
-            label, 'Other University', 'Institution label returned for IP \
-            excluded by one institution but included by another')
+            label, 'Other University',
+            'Institution label returned for IP excluded '
+            'by one institution but included by another')
 
         with self.assertRaises(ValueError) as context:
             self.database_service.get_institution('notanip')
 
-        self.assertTrue(
-            'does not appear to be an IPv4 or IPv6 address'
-            in str(context.exception))
+        self.assertIn(
+            'does not appear to be an IPv4 or IPv6 address',
+            str(context.exception))
 
     def tearDown(self):
         """Close the database session and drop all tables."""
