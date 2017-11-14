@@ -46,7 +46,6 @@ class ArXivDocMetadata(object):
                   'report_num', 'acm_class', 'msc_class', 'journal_ref', 'doi',
                   'license', 'copyright']:
             setattr(self, f, None)
-        self.categories = []
 
         self._parse_abs_file()
 
