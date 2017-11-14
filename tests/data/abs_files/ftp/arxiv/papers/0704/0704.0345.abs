@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0345
+From: Bing Wang <sMDiS@X5bP.215>
+Date: Tue, 3 Apr 2007 08:30:22 GMT   (76kb)
+
+Title: A High Robustness and Low Cost Model for Cascading Failures
+Authors: Bing Wang, Beom Jun Kim
+Categories: physics.soc-ph
+Comments: 5 pages, 5 figures, accepted by EPL
+Journal-ref: EPL, 78(2007)48001
+DOI: 10.1209/0295-5075/78/48001
+\\
+  We study numerically the cascading failure problem by using artificially
+created scale-free networks and the real network structure of the power grid.
+The capacity for a vertex is assigned as a monotonically increasing function of
+the load (or the betweenness centrality). Through the use of a simple
+functional form with two free parameters, revealed is that it is indeed
+possible to make networks more robust while spending less cost. We suggest that
+our method to prevent cascade by protecting less vertices is particularly
+important for the design of more robust real-world networks to cascading
+failures.
+\\

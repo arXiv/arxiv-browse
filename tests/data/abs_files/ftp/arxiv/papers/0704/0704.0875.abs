@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0875
+From: Boris Tarasov <xqI0nsB@q2U.BV8.8J>
+Date: Fri, 6 Apr 2007 11:08:20 GMT   (6kb)
+Date (revised v2): Sat, 7 Apr 2007 10:15:04 GMT   (6kb)
+
+Title: The concrete theory of numbers: initial numbers and wonderful properties
+  of numbers repunit
+Authors: Boris V. Tarasov
+Categories: math.GM
+Comments: 8 pages ; v3: minor grammatical changes, etc
+MSC-class: 11A67; 11B99
+\\
+  In this work initial numbers and repunit numbers have been studied. All
+numbers have been considered in a decimal notation. The problem of simplicity
+of initial numbers has been studied. Interesting properties of numbers repunit
+are proved:
+  $gcd(R_a, R_b) = R_{gcd(a,b)}$;
+  $R_{ab}/(R_aR_b)$ is an integer only if $gcd(a,b) = 1$, where $a\geq1$,
+$b\geq1$ are integers. Dividers of numbers repunit, are researched by a degree
+of prime number.
+\\

@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0528
+From: Soung Liew <LhmI8@EI.3NHK.nXK.Ix>
+Date: Wed, 4 Apr 2007 09:17:38 GMT   (347kb)
+
+Title: Many-to-One Throughput Capacity of IEEE 802.11 Multi-hop Wireless
+  Networks
+Authors: Chi Pan Chan, Soung Chang Liew, An Chan
+Categories: cs.NI cs.IT math.IT
+\\
+  This paper investigates the many-to-one throughput capacity (and by symmetry,
+one-to-many throughput capacity) of IEEE 802.11 multi-hop networks. It has
+generally been assumed in prior studies that the many-to-one throughput
+capacity is upper-bounded by the link capacity L. Throughput capacity L is not
+achievable under 802.11. This paper introduces the notion of "canonical
+networks", which is a class of regularly-structured networks whose capacities
+can be analyzed more easily than unstructured networks. We show that the
+throughput capacity of canonical networks under 802.11 has an analytical upper
+bound of 3L/4 when the source nodes are two or more hops away from the sink;
+and simulated throughputs of 0.690L (0.740L) when the source nodes are many
+hops away. We conjecture that 3L/4 is also the upper bound for general
+networks. When all links have equal length, 2L/3 can be shown to be the upper
+bound for general networks. Our simulations show that 802.11 networks with
+random topologies operated with AODV routing can only achieve throughputs far
+below the upper bounds. Fortunately, by properly selecting routes near the
+gateway (or by properly positioning the relay nodes leading to the gateway) to
+fashion after the structure of canonical networks, the throughput can be
+improved significantly by more than 150%. Indeed, in a dense network, it is
+worthwhile to deactivate some of the relay nodes near the sink judiciously.
+\\

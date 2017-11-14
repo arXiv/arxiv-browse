@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0163
+From: Peter Brommer <r6hTC.9BZcyt0@4RRV.Fhn-SzBsJbole.jV>
+Date: Mon, 2 Apr 2007 13:36:21 GMT   (39kb,D)
+
+Title: Effective potentials for quasicrystals from ab-initio data
+Authors: Peter Brommer and Franz G\"ahler (Institut f\"ur Theoretische und
+  Angewandte Physik, Universit\"at Stuttgart)
+Categories: cond-mat.mtrl-sci
+Comments: 7 pages, 1 figure, Proceedings of International Conference on
+  Quasicrystals 9
+Journal-ref: Philosophical Magazine 86 (2006), 753
+DOI: 10.1080/14786430500333349
+\\
+  Classical effective potentials are indispensable for any large-scale
+atomistic simulations, and the relevance of simulation results crucially
+depends on the quality of the potentials used. For complex alloys like
+quasicrystals, however, realistic effective potentials are practically
+inexistent. We report here on our efforts to develop effective potentials
+especially for quasicrystalline alloy systems. We use the so-called force
+matching method, in which the potential parameters are adapted so as to
+optimally reproduce the forces and energies in a set of suitably chosen
+reference configurations. These reference data are calculated with ab-initio
+methods. As a first application, EAM potentials for decagonal Al-Ni-Co,
+icosahedral Ca-Cd, and both icosahedral and decagonal Mg-Zn quasicrystals have
+been constructed. The influence of the potential range and degree of
+specialisation on the accuracy and other properties is discussed and compared.
+\\

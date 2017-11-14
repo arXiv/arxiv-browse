@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0913
+From: Pieter Visscher <u8gRILRP@g8.eP3>
+Date: Fri, 6 Apr 2007 18:36:28 GMT   (55kb)
+
+Title: Domain wall switching: optimizing the energy landscape
+Authors: Zhihong Lu, P. B. Visscher, and W. H. Butler
+Categories: cond-mat.stat-mech cond-mat.mtrl-sci
+Comments: Acccepted for proceedings of Jan. 2007 MMM Meeting, paper BE-04
+DOI: 10.1109/TMAG.2007.893630
+\\
+  It has recently been suggested that exchange spring media offer a way to
+increase media density without causing thermal instability
+(superparamagnetism), by using a hard and a soft layer coupled by exchange.
+Victora has suggested a figure of merit xi = 2 E_b/mu_0 m_s H_sw, the ratio of
+the energy barrier to that of a Stoner-Wohlfarth system with the same switching
+field, which is 1 for a Stoner-Wohlfarth (coherently switching) particle and 2
+for an optimal two-layer composite medium. A number of theoretical approaches
+have been used for this problem (e.g., various numbers of coupled
+Stoner-Wohlfarth layers and continuum micromagnetics). In this paper we show
+that many of these approaches can be regarded as special cases or
+approximations to a variational formulation of the problem, in which the energy
+is minimized for fixed magnetization. The results can be easily visualized in
+terms of a plot of the energy as a function of magnetic moment m_z, in which
+both the switching field [the maximum slope of E(m_z)] and the stability
+(determined by the energy barrier E_b) are geometrically visible. In this
+formulation we can prove a rigorous limit on the figure of merit xi, which can
+be no higher than 4. We also show that a quadratic anistropy suggested by Suess
+et al comes very close to this limit.
+\\

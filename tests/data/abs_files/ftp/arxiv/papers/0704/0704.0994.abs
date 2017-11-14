@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0994
+From: Sergei Ovchinnikov <PSMrCu@eXk8.Nxl>
+Date: Sat, 7 Apr 2007 17:45:12 GMT   (140kb)
+Date (revised v2): Sun, 22 Jul 2007 09:37:30 GMT   (97kb)
+Date (revised v3): Tue, 14 Aug 2007 05:12:45 GMT   (97kb)
+
+Title: Mediatic graphs
+Authors: J.-Cl. Falmagne, S. Ovchinnikov
+Categories: math.CO
+Comments: Four axioms replaced by two; two references added; Fig.6 corrected
+\\
+  Any medium can be represented as an isometric subgraph of the hypercube, with
+each token of the medium represented by a particular equivalence class of arcs
+of the subgraph. Such a representation, although useful, is not especially
+revealing of the structure of a particular medium. We propose an axiomatic
+definition of the concept of a `mediatic graph'. We prove that the graph of any
+medium is a mediatic graph. We also show that, for any non-necessarily finite
+set S, there exists a bijection from the collection M of all the media on a
+given set S (of states) onto the collection G of all the mediatic graphs on S.
+\\

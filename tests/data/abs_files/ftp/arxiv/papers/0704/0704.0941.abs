@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0941
+From: Raul Jimenez <133KN@cIRQO8c.lOXty.xRu>
+Date: Fri, 6 Apr 2007 20:43:29 GMT   (148kb)
+Date (revised v2): Mon, 6 Aug 2007 14:25:42 GMT   (281kb)
+
+Title: Recovering galaxy star formation and metallicity histories from spectra
+  using VESPA
+Authors: Rita Tojeiro (IfA, Edinburgh), Alan F. Heavens (IfA, Edinburgh), Raul
+  Jimenez (UPenn), Ben Panter (IfA, Edinburgh)
+Categories: astro-ph
+Comments: In press MNRAS, minor revisions to match accepted version by the
+  journal
+DOI: 10.1111/j.1365-2966.2007.12323.x
+\\
+  We introduce VErsatile SPectral Analysis (VESPA): a new method which aims to
+recover robust star formation and metallicity histories from galactic spectra.
+VESPA uses the full spectral range to construct a galaxy history from synthetic
+models. We investigate the use of an adaptative parametrization grid to recover
+reliable star formation histories on a galaxy-by-galaxy basis. Our goal is
+robustness as opposed to high resolution histories, and the method is designed
+to return high time resolution only where the data demand it. In this paper we
+detail the method and we present our findings when we apply VESPA to synthetic
+and real Sloan Digital Sky Survey (SDSS) spectroscopic data. We show that the
+number of parameters that can be recovered from a spectrum depends strongly on
+the signal-to-noise, wavelength coverage and presence or absence of a young
+population. For a typical SDSS sample of galaxies, we can normally recover
+between 2 to 5 stellar populations. We find very good agreement between VESPA
+and our previous analysis of the SDSS sample with MOPED.
+\\

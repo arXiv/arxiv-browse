@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0229
+From: Ketan Mulmuley D <buGLkEPQ@UG.ZSk36ew5.Nly>
+Date: Mon, 2 Apr 2007 16:41:38 GMT   (89kb)
+Date (revised v2): Fri, 18 May 2007 19:55:46 GMT   (90kb)
+Date (revised v3): Mon, 28 Apr 2008 19:49:27 GMT   (83kb)
+Date (revised v4): Thu, 22 Jan 2009 15:25:24 GMT   (89kb)
+
+Title: Geometric Complexity Theory VI: the flip via saturated and positive
+  integer programming in representation theory and algebraic geometry
+Authors: Ketan D. Mulmuley
+Categories: cs.CC
+Comments: 139 pages. Corrects error in the conjectural saturation hypothesis
+  (SH) in the earlier version, which was pointed out in a recent paper of
+  Briand et al (arXIv:0810.3163v1 [math.CO])
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  This article belongs to a series on geometric complexity theory (GCT), an
+approach to the P vs. NP and related problems through algebraic geometry and
+representation theory. The basic principle behind this approach is called the
+flip. In essence, it reduces the negative hypothesis in complexity theory (the
+lower bound problems), such as the P vs. NP problem in characteristic zero, to
+the positive hypothesis in complexity theory (the upper bound problems):
+specifically, to showing that the problems of deciding nonvanishing of the
+fundamental structural constants in representation theory and algebraic
+geometry, such as the well known plethysm constants--or rather certain relaxed
+forms of these decision probelms--belong to the complexity class P. In this
+article, we suggest a plan for implementing the flip, i.e., for showing that
+these relaxed decision problems belong to P. This is based on the reduction of
+the preceding complexity-theoretic positive hypotheses to mathematical
+positivity hypotheses: specifically, to showing that there exist positive
+formulae--i.e. formulae with nonnegative coefficients--for the structural
+constants under consideration and certain functions associated with them. These
+turn out be intimately related to the similar positivity properties of the
+Kazhdan-Lusztig polynomials and the multiplicative structural constants of the
+canonical (global crystal) bases in the theory of Drinfeld-Jimbo quantum
+groups. The known proofs of these positivity properties depend on the Riemann
+hypothesis over finite fields and the related results. Thus the reduction here,
+in conjunction with the flip, in essence, says that the validity of the P vs.
+NP conjecture in characteristic zero is intimately linked to the Riemann
+hypothesis over finite fields and related problems.
+\\

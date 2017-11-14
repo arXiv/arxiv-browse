@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0771
+From: Mikko Mottonen <38ADJ.h41PBVA7@LnC.9R>
+Date: Thu, 5 Apr 2007 18:06:45 GMT   (248kb)
+
+Title: Suppression of 1/f noise in one-qubit systems
+Authors: Pekko Kuopanportti, Mikko Mottonen, Ville Bergholm, Olli-Pentti Saira,
+  Jun Zhang, and K. Birgitta Whaley
+Categories: quant-ph
+Comments: 8 pages, 7 figures
+Journal-ref: Phys. Rev. A 77, 032334 (2008)
+DOI: 10.1103/PhysRevA.77.032334
+\\
+  We investigate the generation of quantum operations for one-qubit systems
+under classical noise with 1/f^\alpha power spectrum, where 2>\alpha > 0. We
+present an efficient way to approximate the noise with a discrete multi-state
+Markovian fluctuator. With this method, the average temporal evolution of the
+qubit density matrix under 1/f^\alpha noise can be feasibly determined from
+recently derived deterministic master equations. We obtain qubit operations
+such as quantum memory and the NOT}gate to high fidelity by a gradient based
+optimization algorithm. For the NOT gate, the computed fidelities are
+qualitatively similar to those obtained earlier for random telegraph noise. In
+the case of quantum memory however, we observe a nonmonotonic dependency of the
+fidelity on the operation time, yielding a natural access rate of the memory.
+\\

@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0335
+From: Fabien Panloup <QnffZwT@5sB.hChoiUU.Xn>
+Date: Tue, 3 Apr 2007 07:30:48 GMT   (35kb)
+Date (revised v2): Tue, 24 Feb 2009 07:42:07 GMT   (174kb)
+Date (revised v3): Mon, 7 Sep 2009 12:56:07 GMT   (174kb)
+
+Title: Approximation of the distribution of a stationary Markov process with
+  application to option pricing
+Authors: Gilles Pag\`es (PMA, LSProba), Fabien Panloup (PMA)
+Categories: math.PR q-fin.CP q-fin.PR
+Proxy: ccsd hal-00139496
+MSC-class: 60G10, 65C30, 60J75, 60B10, 62P05
+Journal-ref: Bernoulli 15, 1 (2009) 146-177
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We build a sequence of empirical measures on the space D(R_+,R^d) of
+R^d-valued c\`adl\`ag functions on R_+ in order to approximate the law of a
+stationary R^d-valued Markov and Feller process (X_t). We obtain some general
+results of convergence of this sequence. Then, we apply them to Brownian
+diffusions and solutions to L\'evy driven SDE's under some Lyapunov-type
+stability assumptions. As a numerical application of this work, we show that
+this procedure gives an efficient way of option pricing in stochastic
+volatility models.
+\\

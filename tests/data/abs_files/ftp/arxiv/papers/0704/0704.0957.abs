@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0957
+From: Soumik Pal <BE8zDede2@ppnbC.pXP>
+Date: Fri, 6 Apr 2007 22:20:54 GMT   (24kb)
+Date (revised v2): Tue, 22 Jan 2008 07:19:06 GMT   (27kb)
+
+Title: One-dimensional Brownian particle systems with rank dependent drifts
+Authors: Soumik Pal and Jim Pitman
+Categories: math.PR
+Comments: 25 pages; to appear in the Annals of Applied Probability
+MSC-class: 60G07; 60G55
+\\
+  We study interacting systems of linear Brownian motions whose drift vector at
+every time point is determined by the relative ranks of the coordinate
+processes at that time. Our main objective has been to study the long range
+behavior of the spacings between the Brownian motions arranged in increasing
+order. For finitely many Brownian motions interacting in this manner, we
+characterize drifts for which the family of laws of the vector of spacings is
+tight, and show its convergence to a unique stationary joint distribution given
+by independent exponential distributions with varying means. We also study one
+particular countably infinite system, where only the minimum Brownian particle
+gets a constant upward drift, and prove that independent and identically
+distributed exponential spacings remain stationary under the dynamics of such a
+process. Some related conjectures in this direction have also been discussed.
+\\

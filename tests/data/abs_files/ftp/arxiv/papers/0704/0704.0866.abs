@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0866
+From: Ahmed Zeriahi <cizG1po@4Xi9Or.IoJ-2LYC.DV>
+Date: Fri, 6 Apr 2007 10:06:50 GMT   (13kb)
+Date (revised v2): Fri, 22 Feb 2008 08:17:56 GMT   (14kb)
+
+Title: A priori estimates for weak solutions of complex Monge-Amp\`ere
+  equations
+Authors: S.Benelkourchi, V.Guedj and A.Zeriahi
+Categories: math.CV math.DG
+Comments: Corrected typos, added details to one proof
+MSC-class: 32W20, 32Q25, 32U05
+Journal-ref: Ann. Scuola Norm. Sup. Pisa, Cl. Sci. (5) Vol. VII (2008), 1-16
+\\
+  Let $X$ be a compact K\"ahler manifold and $\om$ a smooth closed form of
+bidegree $(1,1)$ which is nonnegative and big. We study the classes ${\mathcal
+E}_{\chi}(X,\om)$ of $\om$-plurisubharmonic functions of finite weighted
+Monge-Amp\`ere energy. When the weight $\chi$ has fast growth at infinity, the
+corresponding functions are close to be bounded.
+  We show that if a positive Radon measure is suitably dominated by the
+Monge-Amp\`ere capacity, then it belongs to the range of the Monge-Amp\`ere
+operator on some class ${\mathcal E}_{\chi}(X,\om)$. This is done by
+establishing a priori estimates on the capacity of sublevel sets of the
+solutions.
+  Our result extends U.Cegrell's and S.Kolodziej's results and puts them into a
+unifying frame. It also gives a simple proof of S.T.Yau's celebrated a priori
+${\mathcal C}^0$-estimate.
+\\

@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0758
+From: Matthaeus Halder <egxE4S5PN.Adl72Q@57YIhwN.En0dn.JT>
+Date: Thu, 5 Apr 2007 16:26:47 GMT   (159kb)
+
+Title: Entangling Independent Photons by Time Measurement
+Authors: Matthaeus Halder, Alexios Beveratos, Nicolas Gisin, Valerio Scarani,
+  Christoph Simon and Hugo Zbinden
+Categories: quant-ph
+Comments: 13 pages, 3 figures
+Journal-ref: Nature Physics 3, 692 - 695 (2007)
+DOI: 10.1038/nphys700
+\\
+  A quantum system composed of two or more subsystems can be in an entangled
+state, i.e. a state in which the properties of the global system are well
+defined but the properties of each subsystem are not. Entanglement is at the
+heart of quantum physics, both for its conceptual foundations and for
+applications in information processing and quantum communication. Remarkably,
+entanglement can be "swapped": if one prepares two independent entangled pairs
+A1-A2 and B1-B2, a joint measurement on A1 and B1 (called a "Bell-State
+Measurement", BSM) has the effect of projecting A2 and B2 onto an entangled
+state, although these two particles have never interacted or shared any common
+past[1,2]. Experiments using twin photons produced by spontaneous parametric
+down-conversion (SPDC) have already demonstrated entanglement swapping[3-6],
+but here we present its first realization using continuous wave (CW) sources,
+as originally proposed[2]. The challenge was to achieve sufficiently sharp
+synchronization of the photons in the BSM. Using narrow-band filters, the
+coherence time of the photons that undergo the BSM is significantly increased,
+exceeding the temporal resolution of the detectors. Hence pulsed sources can be
+replaced by CW sources, which do not require any synchronization[6,7], allowing
+for the first time the use of completely autonomous sources. Our experiment
+exploits recent progress in the time precision of photon detectors, in the
+efficiency of photon pair production by SPDC with waveguides in nonlinear
+crystals[8], and in the stability of narrow-band filters. This approach is
+independent of the form of entanglement; we employed time-bin entangled
+photons[9] at telecom wavelengths. Our setup is robust against thermal or
+mechanical fluctuations in optical fibres thanks to cm-long coherence lengths.
+\\

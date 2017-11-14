@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0716
+From: Christoph Richard <p1dobuq@363C.E9j-BFgpIdp1v.0j>
+Date: Thu, 5 Apr 2007 12:45:03 GMT   (43kb)
+Date (revised v2): Fri, 28 Sep 2007 15:13:43 GMT   (48kb)
+Date (revised v3): Fri, 29 Feb 2008 16:05:39 GMT   (48kb)
+Date (revised v4): Fri, 14 Nov 2008 09:07:25 GMT   (49kb)
+
+Title: Limit distributions and scaling functions
+Authors: Christoph Richard
+Categories: math-ph math.MP
+Comments: 54 pages, 2 figures; v2 updated and slightly expanded; v3 changes in
+  some proofs; v4 slightly expanded
+MSC-class: 05A15; 05A16
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We discuss the asymptotic behaviour of models of lattice polygons, mainly on
+the square lattice. In particular, we focus on limiting area laws in the
+uniform perimeter ensemble where, for fixed perimeter, each polygon of a given
+area occurs with the same probability. We relate limit distributions to the
+scaling behaviour of the associated perimeter and area generating functions,
+thereby providing a geometric interpretation of scaling functions. To a major
+extent, this article is a pedagogic review of known results.
+\\

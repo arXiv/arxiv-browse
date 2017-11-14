@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0906.2112
+From: Robin de Jong <TXcENeQ@ZGvk.19RNElKvTQ.Hk>
+Date: Thu, 11 Jun 2009 14:09:14 GMT   (20kb)
+Date (revised v2): Mon, 9 Aug 2010 13:12:58 GMT   (21kb)
+Date (revised v3): Wed, 28 Mar 2012 08:04:12 GMT   (21kb)
+
+Title: Symmetric roots and admissible pairing
+Authors: Robin de Jong
+Categories: math.AG math.NT
+Comments: 21 pages
+MSC-class: 14G40, 11G20
+Journal-ref: Transactions of the AMS 363 (2011), 4263--4283
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Using the discriminant modular form and the Noether formula it is possible to
+write the admissible self-intersection of the relative dualising sheaf of a
+semistable hyperelliptic curve over a number field or function field as a sum,
+over all places, of a certain adelic invariant. We provide a simple geometric
+interpretation for this invariant, based on the arithmetic of symmetric roots.
+We propose the conjecture that the invariant introduced in this paper coincides
+with an invariant introduced in a recent paper by S.-W. Zhang.
+\\

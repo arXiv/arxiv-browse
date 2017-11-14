@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0402
+From: Yi Li <oh-MW@6U1Mq.bVw>
+Date: Tue, 3 Apr 2007 14:21:26 GMT   (16kb)
+
+Title: Locating the peaks of least-energy solutions to a quasilinear elliptic
+  Neumann problem
+Authors: Yi Li and Chunshan Zhao
+Categories: math.AP
+Comments: Keywords: Quasilinear Neumann problem, m-Laplacian operator,
+  least-energy solution, exponential decay, mean curvature.
+MSC-class: 35J70; 35J20; 35J25
+DOI: 10.1093/imamat/hxl032
+\\
+  In this paper we study the shape of least-energy solutions to a singularly
+perturbed quasilinear problem with homogeneous Neumann boundary condition. We
+use an intrinsic variation method to show that at limit, the global maximum
+point of least-energy solutions goes to a point on the boundary faster than the
+linear rate and this point on the boundary approaches to a point where the mean
+curvature of the boundary achieves its maximum. We also give a complete proof
+of exponential decay of least-energy solutions.
+\\

@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:funct-an/9301001
+From: Alexander Turbiner <8gODpQvk@KLSvzbe.vEGP.qD>
+Date: Sat, 16 Jan 1993 11:49:26 GMT   (0kb,I)
+Date (revised v2): Tue, 8 Sep 1998 18:01:31 GMT   (38kb)
+
+Title: Lie-algebras and linear operators with invariant subspaces
+Authors: Alexander Turbiner
+Categories: funct-an math.OA
+Comments: 47pp, AMS-LaTeX
+Report-no: I.H.E.S./P/92/95
+MSC-class: 81C05 (Primary) 81C40, 17B15 (Secondary)
+Journal-ref: in {\em Lie algebras, cohomologies and new findings in quantum
+  mechanics} (N. Kamran and P. J. Olver, eds.), AMS {\it Contemporary
+  Mathematics}, vol. 160, pp. 263--310, 1994
+\\
+  A general classification of linear differential and finite-difference
+operators possessing a finite-dimensional invariant subspace with a polynomial
+basis (the generalized Bochner problem) is given. The main result is that any
+operator with the above property must have a representation as a polynomial
+element of the universal enveloping algebra of some algebra of differential
+(difference) operators in finite-dimensional representation plus an operator
+annihilating the finite-dimensional invariant subspace. In low dimensions a
+classification is given by algebras $sl_2({\bold R})$ (for differential
+operators in ${\bold R}$) and $sl_2({\bold R})_q$ (for finite-difference
+operators in ${\bold R}$), $osp(2,2)$ (operators in one real and one Grassmann
+variable, or equivalently, $2 \times 2$ matrix operators in ${\bold R}$),
+$sl_3({\bold R})$, $sl_2({\bold R}) \oplus sl_2({\bold R})$ and $gl_2 ({\bold
+R}) \ltimes {\bold R}^{r+1}\ , r$ a natural number (operators in ${\bold
+R^2}$). A classification of linear operators possessing infinitely many
+finite-dimensional invariant subspaces with a basis in polynomials is
+presented. A connection to the recently-discovered quasi-exactly-solvable
+spectral problems is discussed.
+\\

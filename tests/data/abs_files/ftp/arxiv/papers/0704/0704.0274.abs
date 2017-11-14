@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0274
+From: Georg von Hippel <AGh1yjmJ@NSuRewP.CU>
+Date: Mon, 2 Apr 2007 21:44:28 GMT   (22kb)
+
+Title: New version announcement for TaylUR, an arbitrary-order diagonal
+  automatic differentiation package for Fortran 95
+Authors: Georg M. von Hippel
+Categories: physics.comp-ph
+Comments: 3 pages, uses elsart.cls
+Journal-ref: Comput.Phys.Commun. 176 (2007) 710-711
+DOI: 10.1016/j.cpc.2007.03.008
+\\
+  We present a new version of TaylUR, a Fortran 95 module to automatically
+compute the numerical values of a complex-valued function's derivatives with
+respect to several variables up to an arbitrary order in each variable, but
+excluding mixed derivatives. The new version fixes a potentially serious bug in
+the code for exponential-related functions that could corrupt the imaginary
+parts of derivatives, as well as being compatible with a wider range of
+compilers.
+\\

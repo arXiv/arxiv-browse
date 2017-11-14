@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0595
+From: Fernando Dobarro <Kx01FMs@Y0X.6aa6a.sW>
+Date: Wed, 4 Apr 2007 15:40:27 GMT   (169kb)
+
+Title: About curvature, conformal metrics and warped products
+Authors: Fernando Dobarro, Bulent Unal
+Categories: math.DG gr-qc hep-th math-ph math.AP math.MP
+Comments: 32 pages, 3 figures
+MSC-class: 53C21,53C25,53C50
+Journal-ref: J.Phys.A40:13907-13930,2007
+DOI: 10.1088/1751-8113/40/46/006
+\\
+  We consider the curvature of a family of warped products of two
+pseduo-Riemannian manifolds $(B,g_B)$ and $(F,g_F)$ furnished with metrics of
+the form $c^{2}g_B \oplus w^2 g_F$ and, in particular, of the type $w^{2
+\mu}g_B \oplus w^2 g_F$, where $c, w \colon B \to (0,\infty)$ are smooth
+functions and $\mu$ is a real parameter. We obtain suitable expressions for the
+Ricci tensor and scalar curvature of such products that allow us to establish
+results about the existence of Einstein or constant scalar curvature structures
+in these categories. If $(B,g_B)$ is Riemannian, the latter question involves
+nonlinear elliptic partial differential equations with concave-convex
+nonlinearities and singular partial differential equations of the
+Lichnerowicz-York type among others.
+\\

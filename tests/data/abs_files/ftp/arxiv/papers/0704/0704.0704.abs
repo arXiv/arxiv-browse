@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0704
+From: Max-K. von Renesse <v7SnR2Ig@k8rC.d2-TYJoJ2.vf>
+Date: Thu, 5 Apr 2007 10:33:56 GMT   (50kb)
+
+Title: Entropic Measure and Wasserstein Diffusion
+Authors: Max-K von Renesse, Karl-Theodor Sturm
+Categories: math.PR math.AP
+MSC-class: 60H15, 60H07, 58J65
+\\
+  We construct a new random probability measure on the sphere and on the unit
+interval which in both cases has a Gibbs structure with the relative entropy
+functional as Hamiltonian. It satisfies a quasi-invariance formula with respect
+to the action of smooth diffeomorphism of the sphere and the interval
+respectively. The associated integration by parts formula is used to construct
+two classes of diffusion processes on probability measures (on the sphere or
+the unit interval) by Dirichlet form methods. The first one is closely related
+to Malliavin's Brownian motion on the homeomorphism group. The second one is a
+probability valued stochastic perturbation of the heat flow, whose intrinsic
+metric is the quadratic Wasserstein distance. It may be regarded as the
+canonical diffusion process on the Wasserstein space.
+\\

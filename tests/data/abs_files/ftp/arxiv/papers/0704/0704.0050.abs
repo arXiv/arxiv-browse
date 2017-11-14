@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0050
+From: Igor Grabec <k0ed.fTOzsA@mf.S2a-Wk.yv>
+Date: Sun, 1 Apr 2007 18:53:13 GMT   (428kb)
+
+Title: Intelligent location of simultaneously active acoustic emission sources:
+  Part II
+Authors: T. Kosel and I. Grabec
+Categories: cs.NE cs.AI
+Comments: 5 pages, 7 eps figures, uses IEEEtran.cls
+\\
+  Part I describes an intelligent acoustic emission locator, while Part II
+discusses blind source separation, time delay estimation and location of two
+continuous acoustic emission sources.
+  Acoustic emission (AE) analysis is used for characterization and location of
+developing defects in materials. AE sources often generate a mixture of various
+statistically independent signals. A difficult problem of AE analysis is
+separation and characterization of signal components when the signals from
+various sources and the mode of mixing are unknown. Recently, blind source
+separation (BSS) by independent component analysis (ICA) has been used to solve
+these problems. The purpose of this paper is to demonstrate the applicability
+of ICA to locate two independent simultaneously active acoustic emission
+sources on an aluminum band specimen. The method is promising for
+non-destructive testing of aircraft frame structures by acoustic emission
+analysis.
+\\

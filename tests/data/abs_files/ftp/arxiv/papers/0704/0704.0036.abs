@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0036
+From: Eduardo D. Sontag <a6dyIn@4KAb.H71MIR3.aKL>
+Date: Sat, 31 Mar 2007 15:55:50 GMT   (24kb)
+Date (revised v2): Fri, 20 Jul 2007 01:25:10 GMT   (96kb)
+
+Title: A remark on the number of steady states in a multiple futile cycle
+Authors: Liming Wang and Eduardo D. Sontag
+Categories: q-bio.QM q-bio.MN
+Comments: Resubmit with new results on the upper bound of the number of steady
+  states. 20 pages, 2 figures, See
+  http://www.math.rutgers.edu/~sontag/PUBDIR/index.html for online preprints
+  and reprints of related work
+\\
+  The multisite phosphorylation-dephosphorylation cycle is a motif repeatedly
+used in cell signaling. This motif itself can generate a variety of dynamic
+behaviors like bistability and ultrasensitivity without direct positive
+feedbacks. In this paper, we study the number of positive steady states of a
+general multisite phosphorylation-dephosphorylation cycle, and how the number
+of positive steady states varies by changing the biological parameters. We show
+analytically that (1) for some parameter ranges, there are at least n+1 (if n
+is even) or n (if n is odd) steady states; (2) there never are more than 2n-1
+steady states (in particular, this implies that for n=2, including single
+levels of MAPK cascades, there are at most three steady states); (3) for
+parameters near the standard Michaelis-Menten quasi-steady state conditions,
+there are at most n+1 steady states; and (4) for parameters far from the
+standard Michaelis-Menten quasi-steady state conditions, there is at most one
+steady state.
+\\

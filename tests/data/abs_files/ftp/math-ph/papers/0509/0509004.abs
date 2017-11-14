@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509004
+From: Adam Gamsa <inW8.bkE8P@XlrnCak.d1mPDP.Yh.Zn>
+Date: Fri, 2 Sep 2005 11:16:11 GMT   (273kb)
+Date (revised v2): Thu, 5 Jan 2006 20:17:09 GMT   (273kb)
+
+Title: The scaling limit of two cluster boundaries in critical lattice models
+Authors: Adam Gamsa and John Cardy
+Categories: math-ph cond-mat.stat-mech math.MP
+Comments: 27 pages, 7 figures
+Journal-ref: J. Stat. Mech. (2005) P12009
+DOI: 10.1088/1742-5468/2005/12/P12009
+\\
+  The probability that a point is to one side of a curve in Schramm-Loewner
+evolution (SLE) can be obtained alternatively using boundary conformal field
+theory (BCFT). We extend the BCFT approach to treat two curves, forming, for
+example, the left and right boundaries of a cluster. This proves to correspond
+to a generalisation to SLE(kappa,rho), with rho=2. We derive the probabilities
+that a given point lies between two curves or to one side of both. We find
+analytic solutions for the cases kappa=0,2,4,8/3,8. The result for kappa=6
+leads to predictions for the current distribution at the plateau transition in
+the semiclassical approximation to the quantum Hall effect.
+\\

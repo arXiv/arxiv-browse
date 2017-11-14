@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0804
+From: Francis Alexander <EL3@g3Gs.l02>
+Date: Thu, 5 Apr 2007 20:45:34 GMT   (30kb)
+
+Title: Equation-free implementation of statistical moment closures
+Authors: Francis J. Alexander, Gregory Johnson, Gregory L. Eyink, and Ioannis
+  G. Kevrekidis
+Categories: cond-mat.stat-mech cond-mat.other
+Comments: 7 pages, 2 figures
+DOI: 10.1103/PhysRevE.77.026701
+\\
+  We present a general numerical scheme for the practical implementation of
+statistical moment closures suitable for modeling complex, large-scale,
+nonlinear systems. Building on recently developed equation-free methods, this
+approach numerically integrates the closure dynamics, the equations of which
+may not even be available in closed form. Although closure dynamics introduce
+statistical assumptions of unknown validity, they can have significant
+computational advantages as they typically have fewer degrees of freedom and
+may be much less stiff than the original detailed model. The closure method can
+in principle be applied to a wide class of nonlinear problems, including
+strongly-coupled systems (either deterministic or stochastic) for which there
+may be no scale separation. We demonstrate the equation-free approach for
+implementing entropy-based Eyink-Levermore closures on a nonlinear stochastic
+partial differential equation.
+\\

@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0735
+From: Pozzi Francesca <m.9IFFa@GjTvz.VG>
+Date: Thu, 5 Apr 2007 14:50:39 GMT   (566kb)
+Date (revised v2): Wed, 11 Apr 2007 10:48:03 GMT   (566kb)
+
+Title: The HELLAS2XMM survey. X. The bolometric output of luminous obscured
+  quasars: The Spitzer perspective
+Authors: F. Pozzi, C. Vignali, A. Comastri, L. Pozzetti, M. Mignoli, C.
+  Gruppioni, G. Zamorani, C. Lari, F. Civano, M. Brusa, F. Fiore, R. Maiolino
+  and F. La Franca
+Categories: astro-ph
+Comments: 12 pages, 6 figures, A&A accepted. Typo corrected in the title
+DOI: 10.1051/0004-6361:20077092
+\\
+  Aims: We aim at estimating the spectral energy distributions (SEDs) and the
+physical parameters related to the black holes harbored in eight high
+X-ray-to-optical (F_X/F_R>10) obscured quasars at z>0.9 selected in the 2--10
+keV band from the HELLAS2XMM survey.
+  Methods: We use IRAC and MIPS 24 micron observations, along with optical and
+Ks-band photometry, to obtain the SEDs of the sources. The observed SEDs are
+modeled using a combination of an elliptical template and torus emission (using
+the phenomenological templates of Silva et al. 2004) for six sources associated
+with passive galaxies; for two point-like sources, the empirical SEDs of red
+quasars are adopted. The bolometric luminosities and the M_BH-L_K relation are
+used to provide an estimate of the masses and Eddington ratios of the black
+holes residing in these AGN.
+  Results: All of our sources are detected in the IRAC and MIPS (at 24 micron)
+bands. The SED modeling described above is in good agreement with the observed
+near- and mid-infrared data. The derived bolometric luminosities are in the
+range ~10^45-10^47 erg s^-1, and the median 2--10 keV bolometric correction is
+~25, consistent with the widely adopted value derived by Elvis et al. (1994).
+For the objects with elliptical-like profiles in the K_s band, we derive high
+stellar masses (0.8-6.2)X10^11 Mo, black hole masses in the range
+(0.2-2.5)X10^9 Mo, and Eddington ratios L/L_Edd<0.1, suggesting a low-accretion
+phase.
+\\

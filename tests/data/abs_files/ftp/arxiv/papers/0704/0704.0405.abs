@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0405
+From: R. J. Williams <lrHYQUZS@sK9m.QWij.g3K>
+Date: Tue, 3 Apr 2007 14:30:08 GMT   (150kb,S)
+
+Title: An invariance principle for semimartingale reflecting Brownian motions
+  in domains with piecewise smooth boundaries
+Authors: W. Kang, R. J. Williams
+Categories: math.PR
+Comments: Published at http://dx.doi.org/10.1214/105051606000000899 in the
+  Annals of Applied Probability (http://www.imstat.org/aap/) by the Institute
+  of Mathematical Statistics (http://www.imstat.org)
+Proxy: vtex
+Report-no: IMS-AAP-AAP414
+MSC-class: 60F17, 60J60, 60K25, 90B15, 93E03 (Primary)
+Journal-ref: Annals of Applied Probability 2007, Vol. 17, No. 2, 741-779
+DOI: 10.1214/105051606000000899
+\\
+  Semimartingale reflecting Brownian motions (SRBMs) living in the closures of
+domains with piecewise smooth boundaries are of interest in applied probability
+because of their role as heavy traffic approximations for some stochastic
+networks. In this paper, assuming certain conditions on the domains and
+directions of reflection, a perturbation result, or invariance principle, for
+SRBMs is proved. This provides sufficient conditions for a process that
+satisfies the definition of an SRBM, except for small random perturbations in
+the defining conditions, to be close in distribution to an SRBM. A crucial
+ingredient in the proof of this result is an oscillation inequality for
+solutions of a perturbed Skorokhod problem. We use the invariance principle to
+show weak existence of SRBMs under mild conditions. We also use the invariance
+principle, in conjunction with known uniqueness results for SRBMs, to give some
+sufficient conditions for validating approximations involving (i) SRBMs in
+convex polyhedrons with a constant reflection vector field on each face of the
+polyhedron, and (ii) SRBMs in bounded domains with piecewise smooth boundaries
+and possibly nonconstant reflection vector fields on the boundary surfaces.
+\\

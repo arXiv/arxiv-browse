@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0795
+From: Christopher Aubin <WsYTa9@6s9T.EB1jP0Nf.ecX>
+Date: Thu, 5 Apr 2007 20:10:36 GMT   (152kb)
+Date (revised v2): Tue, 26 Jun 2007 20:50:31 GMT   (152kb)
+
+Title: Heavy-Light Semileptonic Decays in Staggered Chiral Perturbation Theory
+Authors: C. Aubin and C. Bernard
+Categories: hep-lat
+Comments: 53 pages, 8 figures, v2: Minor correction to the section on finite
+  volume effects, and typos fixed. Version to be published in Phys. Rev. D
+Report-no: CU-TP-1177
+Journal-ref: Phys.Rev.D76:014002,2007
+DOI: 10.1103/PhysRevD.76.014002
+\\
+  We calculate the form factors for the semileptonic decays of heavy-light
+pseudoscalar mesons in partially quenched staggered chiral perturbation theory
+(\schpt), working to leading order in $1/m_Q$, where $m_Q$ is the heavy quark
+mass. We take the light meson in the final state to be a pseudoscalar
+corresponding to the exact chiral symmetry of staggered quarks. The treatment
+assumes the validity of the standard prescription for representing the
+staggered ``fourth root trick'' within \schpt by insertions of factors of 1/4
+for each sea quark loop. Our calculation is based on an existing partially
+quenched continuum chiral perturbation theory calculation with degenerate sea
+quarks by Becirevic, Prelovsek and Zupan, which we generalize to the staggered
+(and non-degenerate) case. As a by-product, we obtain the continuum partially
+quenched results with non-degenerate sea quarks. We analyze the effects of
+non-leading chiral terms, and find a relation among the coefficients governing
+the analytic valence mass dependence at this order. Our results are useful in
+analyzing lattice computations of form factors $B\to\pi$ and $D\to K$ when the
+light quarks are simulated with the staggered action.
+\\

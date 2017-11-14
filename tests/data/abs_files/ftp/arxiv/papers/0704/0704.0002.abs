@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0002
+From: Louis Theran <xJTBmJ@Ab.wwIQX.eAi>
+Date: Sat, 31 Mar 2007 02:26:18 GMT   (377kb,D)
+Date (revised v2): Sat, 13 Dec 2008 17:26:00 GMT   (136kb,D)
+
+Title: Sparsity-certifying Graph Decompositions
+Authors: Ileana Streinu and Louis Theran
+Categories: math.CO cs.CG
+Comments: To appear in Graphs and Combinatorics
+MSC-class: 05C85; 05C70; 68R10; 05B35
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We describe a new algorithm, the $(k,\ell)$-pebble game with colors, and use
+it obtain a characterization of the family of $(k,\ell)$-sparse graphs and
+algorithmic solutions to a family of problems concerning tree decompositions of
+graphs. Special instances of sparse graphs appear in rigidity theory and have
+received increased attention in recent years. In particular, our colored
+pebbles generalize and strengthen the previous results of Lee and Streinu and
+give a new proof of the Tutte-Nash-Williams characterization of arboricity. We
+also present a new decomposition that certifies sparsity based on the
+$(k,\ell)$-pebble game with colors. Our work also exposes connections between
+pebble game algorithms and previous sparse graph algorithms by Gabow, Gabow and
+Westermann and Hendrickson.
+\\

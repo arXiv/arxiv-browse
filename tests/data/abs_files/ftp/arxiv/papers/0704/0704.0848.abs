@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0848
+From: Hyeong-Chai Jeong <sHQ@Q18Tis.Bp.f6>
+Date: Fri, 6 Apr 2007 07:07:20 GMT   (61kb)
+
+Title: Growing Perfect Decagonal Quasicrystals by Local Rules
+Authors: Hyeong-Chai Jeong
+Categories: cond-mat.dis-nn cond-mat.stat-mech math-ph math.MP
+Comments: 4pages, 2figures
+Journal-ref: Phys. Rev. Lett. 98, 135501 (2007)
+\\
+  A local growth algorithm for a decagonal quasicrystal is presented. We show
+that a perfect Penrose tiling (PPT) layer can be grown on a decapod tiling
+layer by a three dimensional (3D) local rule growth. Once a PPT layer begins to
+form on the upper layer, successive 2D PPT layers can be added on top resulting
+in a perfect decagonal quasicrystalline structure in bulk with a point defect
+only on the bottom surface layer. Our growth rule shows that an ideal
+quasicrystal structure can be constructed by a local growth algorithm in 3D,
+contrary to the necessity of non-local information for a 2D PPT growth.
+\\

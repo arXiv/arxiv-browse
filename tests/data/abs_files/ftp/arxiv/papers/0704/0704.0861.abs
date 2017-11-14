@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0861
+From: Mohamed Kaaniche <A1vKojz.6X4IQOoH@E6A3.SI>
+Date: Fri, 6 Apr 2007 08:50:34 GMT   (677kb)
+
+Title: Empirical analysis and statistical modeling of attack processes based on
+  honeypots
+Authors: Mohamed Kaaniche (LAAS), Y. Deswarte (LAAS), Eric Alata (LAAS), Marc
+  Dacier (SC), Vincent Nicomette (LAAS)
+Categories: cs.PF cs.CR
+Proxy: ccsd hal-00140367
+Journal-ref: IEEE/IFIP International Conference on Dependable Systems and
+  Networks (DSN-2006) (25/06/2006) 119-124
+\\
+  Honeypots are more and more used to collect data on malicious activities on
+the Internet and to better understand the strategies and techniques used by
+attackers to compromise target systems. Analysis and modeling methodologies are
+needed to support the characterization of attack processes based on the data
+collected from the honeypots. This paper presents some empirical analyses based
+on the data collected from the Leurr{\'e}.com honeypot platforms deployed on
+the Internet and presents some preliminary modeling studies aimed at fulfilling
+such objectives.
+\\

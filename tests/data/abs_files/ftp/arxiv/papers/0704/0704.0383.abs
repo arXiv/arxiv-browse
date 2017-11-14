@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0383
+From: Rajendra Prasad <npRCDTz1@PP6tX.TSt>
+Date: Tue, 3 Apr 2007 13:08:37 GMT   (111kb)
+
+Title: The Exact Boundary Condition to Solve the Schrodinger Equation of Many
+  Electron System
+Authors: Rajendra Prasad
+Categories: cond-mat.str-el
+\\
+  In an attempt to bypass the sign problem in quantum Monte Carlo simulation of
+electronic systems within the framework of fixed node approach, we derive the
+exclusion principle "Two electrons can't be at the same external isopotential
+surface simultaneously" using the first postulate of quantum mechanics. We
+propose the exact Coulomb-Exchange nodal surface i.e. the exact boundary
+condition to solve the non-relativistic Schrodinger equation for the
+non-degenerate ground state of atoms and molecules. This boundary condition was
+applied to compute the ground state energies of N, Ne, Li2, Be2, B2, C2, N2,
+O2, F2, and H2O systems using diffusion Monte Carlo method. The ground state
+energies thus obtained agree well with the exact estimate of non-relativistic
+energies.
+\\

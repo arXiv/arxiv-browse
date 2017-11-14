@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0782
+From: Oliver Rinne <RBux8@vZwVO.afob1iZ.j74>
+Date: Thu, 5 Apr 2007 19:20:06 GMT   (809kb,D)
+Date (revised v2): Wed, 25 Jul 2007 17:54:31 GMT   (768kb,D)
+
+Title: Testing outer boundary treatments for the Einstein equations
+Authors: Oliver Rinne, Lee Lindblom and Mark A. Scheel
+Categories: gr-qc
+Comments: Modified to agree with version accepted for publication in Class.
+  Quantum Grav
+Journal-ref: Class.Quant.Grav.24:4053-4078,2007
+DOI: 10.1088/0264-9381/24/16/006
+\\
+  Various methods of treating outer boundaries in numerical relativity are
+compared using a simple test problem: a Schwarzschild black hole with an
+outgoing gravitational wave perturbation. Numerical solutions computed using
+different boundary treatments are compared to a `reference' numerical solution
+obtained by placing the outer boundary at a very large radius. For each
+boundary treatment, the full solutions including constraint violations and
+extracted gravitational waves are compared to those of the reference solution,
+thereby assessing the reflections caused by the artificial boundary. These
+tests use a first-order generalized harmonic formulation of the Einstein
+equations. Constraint-preserving boundary conditions for this system are
+reviewed, and an improved boundary condition on the gauge degrees of freedom is
+presented. Alternate boundary conditions evaluated here include freezing the
+incoming characteristic fields, Sommerfeld boundary conditions, and the
+constraint-preserving boundary conditions of Kreiss and Winicour. Rather
+different approaches to boundary treatments, such as sponge layers and spatial
+compactification, are also tested. Overall the best treatment found here
+combines boundary conditions that preserve the constraints, freeze the
+Newman-Penrose scalar Psi_0, and control gauge reflections.
+\\

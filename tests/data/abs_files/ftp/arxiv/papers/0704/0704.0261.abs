@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0261
+From: Scott Randall <813EF6Sw@p9k.mfPmPYF.Our>
+Date: Mon, 2 Apr 2007 20:48:02 GMT   (926kb)
+
+Title: Constraints on the Self-Interaction Cross-Section of Dark Matter from
+  Numerical Simulations of the Merging Galaxy Cluster 1E 0657-5
+Authors: Scott W. Randall, Maxim Markevitch, Douglas Clowe, Anthony H.
+  Gonzalez, and Marusa Bradac
+Categories: astro-ph
+DOI: 10.1086/587859
+\\
+  (Abridged) We compare recent results from X-ray, strong lensing, weak
+lensing, and optical observations with numerical simulations of the merging
+galaxy cluster 1E0657-56. X-ray observations reveal a bullet-like subcluster
+with a prominent bow shock, while lensing results show that the positions of
+the total mass peaks are consistent with the centroids of the collisionless
+galaxies (and inconsistent with the X-ray brightness peaks). Previous studies,
+based on older observational datasets, have placed upper limits on the
+self-interaction cross-section of dark matter per unit mass, sigma/m, using
+simplified analytic techniques. In this work, we take advantage of new,
+higher-quality observational datasets by running N-body simulations of
+1E0657-56 that include the effects of self-interacting dark matter, and
+comparing the results with observations. Furthermore, the recent data allow for
+a new independent method of constraining sigma/m, based on the non-observation
+of an offset between the bullet subcluster mass peak and galaxy centroid. This
+new method places an upper limit (68% confidence) of sigma/m < 1.25 cm^2/g. If
+we make the assumption that the subcluster and the main cluster had equal
+mass-to-light ratios prior to the merger, we derive our most stringent
+constraint of sigma/m < 0.7 cm^2/g, which comes from the consistency of the
+subcluster's observed mass-to-light ratio with the main cluster's, and with the
+universal cluster value, ruling out the possibility of a large fraction of dark
+matter particles being scattered away due to collisions. Our limit is a slight
+improvement over the previous result from analytic estimates, and rules out
+most of the 0.5 - 5cm^2/g range invoked to explain inconsistencies between the
+standard collisionless cold dark matter model and observations.
+\\

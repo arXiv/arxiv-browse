@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0892
+From: Xingang Wang Dr <2tYmZH@8ys.cup.Q6>
+Date: Fri, 6 Apr 2007 14:19:59 GMT   (192kb)
+
+Title: Nonstationary pattern in unsynchronizable complex networks
+Authors: Xingang Wang, Meng Zhan, Ghuguang Guan, and Choy Heng Lai
+Categories: nlin.CD
+Comments: 11 pages, 9 figures, preprints. Comments and suggestions are welcome
+\\
+  Pattern formation and evolution in unsynchronizable complex networks are
+investigated. Due to the asymmetric topology, the synchronous patterns formed
+in complex networks are irregular and nonstationary. For coupling strength
+immediately out of the synchronizable region, the typical phenomenon is the
+on-off intermittency of the system dynamics. The patterns appeared in this
+process are signatured by the coexistence of a giant cluster, which comprises
+most of the nodes, and a few number of small clusters. The pattern evolution is
+characterized by the giant cluster irregularly absorbs or emits the small
+clusters. As the coupling strength leaves away from the synchronization
+bifurcation point, the giant cluster is gradually dissolved into a number of
+small clusters, and the system dynamics is characterized by the integration and
+separation of the small clusters. Dynamical mechanisms and statistical
+properties of the nonstationary pattern evolution are analyzed and conducted,
+and some scalings are newly revealed. Remarkably, it is found that the few
+active nodes, which escape from the giant cluster with a high frequency, are
+independent of the coupling strength while are sensitive to the bifurcation
+types. We hope our findings about nonstationary pattern could give additional
+understandings to the dynamics of complex systems and have implications to some
+real problems where systems maintain their normal functions only in the
+unsynchronizable state.
+\\

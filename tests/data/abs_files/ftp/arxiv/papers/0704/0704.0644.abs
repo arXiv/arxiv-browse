@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0644
+From: Iain Moffatt <7NGizIhY@d3op.9piJFYEwE.Fc>
+Date: Wed, 4 Apr 2007 20:10:53 GMT   (30kb)
+Date (revised v2): Mon, 30 Jun 2008 16:04:39 GMT   (0kb,I)
+
+Title: On the HOMFLY and Tutte polynomials
+Authors: Iain Moffatt
+Categories: math.CO
+Comments: This paper has been withdrawn due to an error in Lemma 8
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  A celebrated result of F. Jaeger states that the Tutte polynomial of a planar
+graph is determined by the HOMFLY polynomial of an associated link. Here we are
+interested in the converse of this result. We consider the question `to what
+extent does the Tutte polynomial determine the HOMFLY polynomial of any knot?'
+We show that the HOMFLY polynomial of a knot is determined by Tutte polynomials
+of plane graphs associated to the knot.
+\\

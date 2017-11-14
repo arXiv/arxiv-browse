@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0152
+From: Alberto Dellafiore <ySQoq@w9.Sht3.Yl>
+Date: Mon, 2 Apr 2007 10:11:53 GMT   (439kb)
+Date (revised v2): Tue, 18 Dec 2007 15:03:58 GMT   (553kb)
+
+Title: Kinetic equation for finite systems of fermions with pairing
+Authors: V.I. Abrosimov, D.M. Brink, A.Dellafiore, F. Matera
+Categories: nucl-th
+Comments: deeply revised, to be published in Nucl. Phys. A
+Journal-ref: Nucl.Phys.A800:1-20,2008
+DOI: 10.1016/j.nuclphysa.2007.11.009
+\\
+  The solutions of the Wigner-transformed time-dependent
+Hartree--Fock--Bogoliubov equations are studied in the constant-$\Delta$
+approximation. This approximation is known to violate particle-number
+conservation. As a consequence, the density fluctuation and the longitudinal
+response function given by this approximation contain spurious contributions. A
+simple prescription for restoring both local and global particle-number
+conservation is proposed. Explicit expressions for the eigenfrequencies of the
+correlated systems and for the density response function are derived and it is
+shown that the semiclassical analogous of the quantum single--particle spectrum
+has an excitation gap of $2\Delta$, in agreement with the quantum result. The
+collective response is studied for a simplified form of the residual
+interaction.
+\\

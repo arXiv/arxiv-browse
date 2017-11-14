@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0570
+From: Susanne Viefers <n.W.GyR9X7D@hVh.xmG.ro>
+Date: Wed, 4 Apr 2007 13:27:05 GMT   (91kb,D)
+
+Title: Composite fermion wave functions as conformal field theory correlators
+Authors: Hans Hansson, Chia-Chen Chang, Jainendra Jain, and Susanne Viefers
+Categories: cond-mat.mes-hall cond-mat.str-el
+Comments: 26 pages, 3 figures
+\\
+  It is known that a subset of fractional quantum Hall wave functions has been
+expressed as conformal field theory (CFT) correlators, notably the Laughlin
+wave function at filling factor $\nu=1/m$ ($m$ odd) and its quasiholes, and the
+Pfaffian wave function at $\nu=1/2$ and its quasiholes. We develop a general
+scheme for constructing composite-fermion (CF) wave functions from conformal
+field theory. Quasiparticles at $\nu=1/m$ are created by inserting anyonic
+vertex operators, $P_{\frac{1}{m}}(z)$, that replace a subset of the electron
+operators in the correlator. The one-quasiparticle wave function is identical
+to the corresponding CF wave function, and the two-quasiparticle wave function
+has correct fractional charge and statistics and is numerically almost
+identical to the corresponding CF wave function. We further show how to exactly
+represent the CF wavefunctions in the Jain series $\nu = s/(2sp+1)$ as the CFT
+correlators of a new type of fermionic vertex operators, $V_{p,n}(z)$,
+constructed from $n$ free compactified bosons; these operators provide the CFT
+representation of composite fermions carrying $2p$ flux quanta in the $n^{\rm
+th}$ CF Landau level. We also construct the corresponding quasiparticle- and
+quasihole operators and argue that they have the expected fractional charge and
+statistics. For filling fractions 2/5 and 3/7 we show that the chiral CFTs that
+describe the bulk wave functions are identical to those given by Wen's general
+classification of quantum Hall states in terms of $K$-matrices and $l$- and
+$t$-vectors, and we propose that to be generally true. Our results suggest a
+general procedure for constructing quasiparticle wave functions for other
+fractional Hall states, as well as for constructing ground states at filling
+fractions not contained in the principal Jain series.
+\\

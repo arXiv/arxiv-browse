@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0086
+From: Vladislav Vysotsky <djuS.2eK3DyUL@r7QMf.bWe>
+Date: Sun, 1 Apr 2007 13:10:43 GMT   (94kb)
+Date (revised v2): Tue, 17 Jun 2008 06:56:43 GMT   (134kb,S)
+
+Title: Clustering in a stochastic model of one-dimensional gas
+Authors: Vladislav V. Vysotsky
+Categories: math.PR
+Comments: Published in at http://dx.doi.org/10.1214/07-AAP481 the Annals of
+  Applied Probability (http://www.imstat.org/aap/) by the Institute of
+  Mathematical Statistics (http://www.imstat.org)
+Report-no: IMS-AAP-AAP481
+MSC-class: 60K35, 82C22 (Primary) 60F17, 70F99 (Secondary)
+Journal-ref: Annals of Applied Probability 2008, Vol. 18, No. 3, 1026-1058
+DOI: 10.1214/07-AAP481
+\\
+  We give a quantitative analysis of clustering in a stochastic model of
+one-dimensional gas. At time zero, the gas consists of $n$ identical particles
+that are randomly distributed on the real line and have zero initial speeds.
+Particles begin to move under the forces of mutual attraction. When particles
+collide, they stick together forming a new particle, called cluster, whose mass
+and speed are defined by the laws of conservation. We are interested in the
+asymptotic behavior of $K_n(t)$ as $n\to \infty$, where $K_n(t)$ denotes the
+number of clusters at time $t$ in the system with $n$ initial particles. Our
+main result is a functional limit theorem for $K_n(t)$. Its proof is based on
+the discovered localization property of the aggregation process, which states
+that the behavior of each particle is essentially defined by the motion of
+neighbor particles.
+\\

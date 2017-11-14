@@ -1,0 +1,44 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0199
+From: Christian Krattenthaler <jE0WmnzWd.BGnAwI2P3Q04Y@ubgvfl.8c.sW>
+Date: Mon, 2 Apr 2007 14:10:05 GMT   (59kb)
+Date (revised v2): Fri, 9 Jan 2009 11:03:54 GMT   (61kb)
+Date (revised v3): Tue, 17 Nov 2009 10:18:51 GMT   (61kb)
+
+Title: Decomposition numbers for finite Coxeter groups and generalised
+  non-crossing partitions
+Authors: Christian Krattenthaler (Universit\"at Wien) and Thomas M\"uller
+  (Queen Mary & Westfield College, University of London)
+Categories: math.CO math.GR
+Comments: AmS-LaTeX; 65 pages. Final version to appear in Trans. Amer. Math.
+  Soc
+MSC-class: 05E15 (Primary), 05A05, 05A10, 05A15, 05A18, 06A07, 20F55, 33C05
+  (Secondary)
+Journal-ref: Trans. Amer. Math. Soc. 362 (2010), 2723-2787
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Given a finite irreducible Coxeter group $W$, a positive integer $d$, and
+types $T_1,T_2,...,T_d$ (in the sense of the classification of finite Coxeter
+groups), we compute the number of decompositions $c=\si_1\si_2 cdots\si_d$ of a
+Coxeter element $c$ of $W$, such that $\si_i$ is a Coxeter element in a
+subgroup of type $T_i$ in $W$, $i=1,2,...,d$, and such that the factorisation
+is "minimal" in the sense that the sum of the ranks of the $T_i$'s,
+$i=1,2,...,d$, equals the rank of $W$. For the exceptional types, these
+decomposition numbers have been computed by the first author. The type $A_n$
+decomposition numbers have been computed by Goulden and Jackson, albeit using a
+somewhat different language. We explain how to extract the type $B_n$
+decomposition numbers from results of B\'ona, Bousquet, Labelle and Leroux on
+map enumeration. Our formula for the type $D_n$ decomposition numbers is new.
+These results are then used to determine, for a fixed positive integer $l$ and
+fixed integers $r_1\le r_2\le ...\le r_l$, the number of multi-chains $\pi_1\le
+\pi_2\le ...\le \pi_l$ in Armstrong's generalised non-crossing partitions
+poset, where the poset rank of $\pi_i$ equals $r_i$, and where the "block
+structure" of $\pi_1$ is prescribed. We demonstrate that this result implies
+all known enumerative results on ordinary and generalised non-crossing
+partitions via appropriate summations. Surprisingly, this result on multi-chain
+enumeration is new even for the original non-crossing partitions of Kreweras.
+Moreover, the result allows one to solve the problem of rank-selected chain
+enumeration in the type $D_n$ generalised non-crossing partitions poset, which,
+in turn, leads to a proof of Armstrong's $F=M$ Conjecture in type $D_n$.
+\\

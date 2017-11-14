@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0565
+From: Apostolos Damialis <sRB0hnd1@D5HNAKNWBc.UA-iLEieb.8g>
+Date: Wed, 4 Apr 2007 13:03:11 GMT   (14kb)
+Date (revised v2): Thu, 10 Jul 2008 16:25:11 GMT   (14kb)
+Date (revised v3): Fri, 10 Jul 2009 08:40:54 GMT   (14kb)
+Date (revised v4): Thu, 1 Oct 2009 19:10:04 GMT   (15kb)
+
+Title: The Lifshitz-Slyozov-Wagner equation for reaction-controlled kinetics
+Authors: Apostolos Damialis
+Categories: math.AP
+Comments: 15 pages, LaTeX; minor revision, change of title
+MSC-class: 82C24, 35B27
+Journal-ref: Proc. R. Soc. Edinb. A 140 (2010) 273-289
+DOI: 10.1017/S0308210508000656
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We rigorously derive a weak form of the Lifshitz-Slyozov-Wagner equation as
+the homogenization limit of a Stefan-type problem describing
+reaction-controlled coarsening of a large number of small spherical particles.
+Moreover, we deduce that the effective mean-field description holds true in the
+particular limit of vanishing surface-area density of particles.
+\\

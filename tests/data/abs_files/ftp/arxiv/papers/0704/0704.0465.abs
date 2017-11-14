@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0465
+From: Veit Schw\"ammle <7ac8T4i6@L7LBi.zil>
+Date: Tue, 3 Apr 2007 21:24:49 GMT   (12kb)
+
+Title: A General Nonlinear Fokker-Planck Equation and its Associated Entropy
+Authors: Veit Schwammle, Evaldo M. F. Curado, Fernando D. Nobre
+Categories: cond-mat.stat-mech cond-mat.other
+Comments: 17 pages, submitted to Eur. Phys. J. B
+DOI: 10.1140/epjb/e2007-00217-1
+\\
+  A recently introduced nonlinear Fokker-Planck equation, derived directly from
+a master equation, comes out as a very general tool to describe
+phenomenologically systems presenting complex behavior, like anomalous
+diffusion, in the presence of external forces. Such an equation is
+characterized by a nonlinear diffusion term that may present, in general, two
+distinct powers of the probability distribution. Herein, we calculate the
+stationary-state distributions of this equation in some special cases, and
+introduce associated classes of generalized entropies in order to satisfy the
+H-theorem. Within this approach, the parameters associated with the transition
+rates of the original master-equation are related to such generalized
+entropies, and are shown to obey some restrictions. Some particular cases are
+discussed.
+\\

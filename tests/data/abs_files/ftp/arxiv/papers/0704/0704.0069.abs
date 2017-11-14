@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0069
+From: John Robertson <tXisPLlho@lm6w.IWER2KM.9yE>
+Date: Sun, 1 Apr 2007 06:48:47 GMT   (71kb,D)
+
+Title: Dynamical Objects for Cohomologically Expanding Maps
+Authors: John W. Robertson
+Categories: math.DS
+Comments: 38 pages
+MSC-class: 37C05; 32H50; 18F20; 55N30
+\\
+  The goal of this paper is to construct invariant dynamical objects for a (not
+necessarily invertible) smooth self map of a compact manifold. We prove a
+result that takes advantage of differences in rates of expansion in the terms
+of a sheaf cohomological long exact sequence to create unique lifts of finite
+dimensional invariant subspaces of one term of the sequence to invariant
+subspaces of the preceding term. This allows us to take invariant cohomological
+classes and under the right circumstances construct unique currents of a given
+type, including unique measures of a given type, that represent those classes
+and are invariant under pullback. A dynamically interesting self map may have a
+plethora of invariant measures, so the uniquess of the constructed currents is
+important. It means that if local growth is not too big compared to the growth
+rate of the cohomological class then the expanding cohomological class gives
+sufficient "marching orders" to the system to prohibit the formation of any
+other such invariant current of the same type (say from some local dynamical
+subsystem). Because we use subsheaves of the sheaf of currents we give
+conditions under which a subsheaf will have the same cohomology as the sheaf
+containing it. Using a smoothing argument this allows us to show that the sheaf
+cohomology of the currents under consideration can be canonically identified
+with the deRham cohomology groups. Our main theorem can be applied in both the
+smooth and holomorphic setting.
+\\

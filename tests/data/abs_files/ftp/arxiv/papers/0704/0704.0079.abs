@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0079
+From: Stephen C. Power <N.re8BV@U5Q3xVqeO.kO.9L>
+Date: Mon, 2 Apr 2007 15:04:48 GMT   (29kb)
+
+Title: Operator algebras associated with unitary commutation relations
+Authors: Stephen C. Power (Lancaster University), Baruch Solel (Technion)
+Categories: math.OA
+Comments: 38 pages
+MSC-class: 47L55, 47L30, 47L75, 46L05
+\\
+  We define nonselfadjoint operator algebras with generators $L_{e_1},...,
+L_{e_n}, L_{f_1},...,L_{f_m}$ subject to the unitary commutation relations of
+the form \[ L_{e_i}L_{f_j} = \sum_{k,l} u_{i,j,k,l} L_{f_l}L_{e_k}\] where $u=
+(u_{i,j,k,l})$ is an $nm \times nm$ unitary matrix. These algebras, which
+generalise the analytic Toeplitz algebras of rank 2 graphs with a single
+vertex, are classified up to isometric isomorphism in terms of the matrix $u$.
+\\

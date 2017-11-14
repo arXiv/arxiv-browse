@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0759
+From: Peter Constantin <zP6SL@Bw7W.VNX3iWIc.7WR>
+Date: Thu, 5 Apr 2007 16:28:31 GMT   (39kb)
+
+Title: Energy conservation and Onsager's conjecture for the Euler equations
+Authors: A. Cheskidov, P. Constantin, S. Friedlander, R. Shvydkoy
+Categories: math.AP
+MSC-class: 76B03, 76F02
+\\
+  Onsager conjectured that weak solutions of the Euler equations for
+incompressible fluids in 3D conserve energy only if they have a certain minimal
+smoothness, (of order of 1/3 fractional derivatives) and that they dissipate
+energy if they are rougher. In this paper we prove that energy is conserved for
+velocities in the function space $B^{1/3}_{3,c(\NN)}$. We show that this space
+is sharp in a natural sense. We phrase the energy spectrum in terms of the
+Littlewood-Paley decomposition and show that the energy flux is controlled by
+local interactions. This locality is shown to hold also for the helicity flux;
+moreover, every weak solution of the Euler equations that belongs to
+$B^{2/3}_{3,c(\NN)}$ conserves helicity. In contrast, in two dimensions, the
+strong locality of the enstrophy holds only in the ultraviolet range.
+\\

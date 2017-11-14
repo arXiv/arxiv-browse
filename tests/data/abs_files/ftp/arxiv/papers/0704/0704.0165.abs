@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0165
+From: Shlomo Gelaki <oNiVO4@j0iV.7CfOcnbl.7W.Tt>
+Date: Mon, 2 Apr 2007 10:59:52 GMT   (14kb)
+
+Title: Frobenius-Schur indicators for semisimple Lie algebras
+Authors: Mohammad Abu-Hamed and Shlomo Gelaki
+Categories: math.QA math.RT
+Comments: 12 pages, to appear in Journal of Algebra
+\\
+  Let g be a finite dimensional complex semisimple Lie algebra, and let V be a
+finite dimensional represenation of g. We give a closed formula for the mth
+Frobenius-Schur indicator, m>1, of V in representation-theoretic terms. We
+deduce that the indicators take integer values, and that for a large enough m,
+the mth indicator of V equals the dimension of the zero weight space of V. For
+the classical Lie algebras sl(n), so(2n), so(2n+1) and sp(2n), this is the case
+for m greater or equal to 2n-1, 4n-5, 4n-3 and 2n+1, respectively.
+\\

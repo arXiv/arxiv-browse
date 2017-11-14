@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0047
+From: Igor Grabec <Hvy1.LLoKYP@Ed.HwY-0M.ie>
+Date: Sun, 1 Apr 2007 13:06:50 GMT   (110kb)
+
+Title: Intelligent location of simultaneously active acoustic emission sources:
+  Part I
+Authors: T. Kosel and I. Grabec
+Categories: cs.NE cs.AI
+Comments: 5 pages, 5 eps figures, uses IEEEtran.cls
+\\
+  The intelligent acoustic emission locator is described in Part I, while Part
+II discusses blind source separation, time delay estimation and location of two
+simultaneously active continuous acoustic emission sources.
+  The location of acoustic emission on complicated aircraft frame structures is
+a difficult problem of non-destructive testing. This article describes an
+intelligent acoustic emission source locator. The intelligent locator comprises
+a sensor antenna and a general regression neural network, which solves the
+location problem based on learning from examples. Locator performance was
+tested on different test specimens. Tests have shown that the accuracy of
+location depends on sound velocity and attenuation in the specimen, the
+dimensions of the tested area, and the properties of stored data. The location
+accuracy achieved by the intelligent locator is comparable to that obtained by
+the conventional triangulation method, while the applicability of the
+intelligent locator is more general since analysis of sonic ray paths is
+avoided. This is a promising method for non-destructive testing of aircraft
+frame structures by the acoustic emission method.
+\\

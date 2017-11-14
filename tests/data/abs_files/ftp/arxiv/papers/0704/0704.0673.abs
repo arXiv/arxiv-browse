@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0673
+From: Mark McDonnell <bxXIPXdL@qVwrHeg.T8NDP6tW.Fjc.VD>
+Date: Thu, 5 Apr 2007 04:05:47 GMT   (82kb)
+
+Title: Optimal stimulus and noise distributions for information transmission
+  via suprathreshold stochastic resonance
+Authors: Mark D. McDonnell, Nigel G. Stocks and Derek Abbott
+Categories: cond-mat.stat-mech q-bio.NC
+Comments: Accepted for publication by Physical Review E, 28 pages of text and
+  references, 5 figures, 2 tables
+Journal-ref: Phys. Rev. E 75, 061105 (2007)
+DOI: 10.1103/PhysRevE.75.061105
+\\
+  Suprathreshold stochastic resonance (SSR) is a form of noise enhanced signal
+transmission that occurs in a parallel array of independently noisy identical
+threshold nonlinearities, including model neurons. Unlike most forms of
+stochastic resonance, the output response to suprathreshold random input
+signals of arbitrary magnitude is improved by the presence of even small
+amounts of noise. In this paper the information transmission performance of SSR
+in the limit of a large array size is considered. Using a relationship between
+Shannon's mutual information and Fisher information, a sufficient condition for
+optimality, i.e. channel capacity, is derived. It is shown that capacity is
+achieved when the signal distribution is Jeffrey's prior, as formed from the
+noise distribution, or when the noise distribution depends on the signal
+distribution via a cosine relationship. These results provide theoretical
+verification and justification for previous work in both computational
+neuroscience and electronics.
+\\

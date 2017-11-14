@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0324
+From: Karel Pravda-Starov <putw7@M47m.a5o0C4Ns.Lsn>
+Date: Tue, 3 Apr 2007 06:54:27 GMT   (79kb)
+
+Title: On the pseudospectrum of elliptic quadratic differential operators
+Authors: Karel Pravda-Starov
+Categories: math.AP
+Comments: 39 pages
+Proxy: ccsd hal-00139490
+MSC-class: 35S05, 35P05
+\\
+  We study the pseudospectrum of a class of non-selfadjoint differential
+operators. Our work consists in a detailed study of the microlocal properties,
+which rule the spectral stability or instability phenomena appearing under
+small perturbations for elliptic quadratic differential operators. The class of
+elliptic quadratic differential operators stands for the class of operators
+defined in the Weyl quantization by complex-valued elliptic quadratic symbols.
+We establish in this paper a simple necessary and sufficient condition on the
+Weyl symbol of these operators, which ensures the stability of their spectra.
+When this condition is violated, we prove that it occurs some strong spectral
+instabilities for the high energies of these operators, in some regions which
+can be far away from their spectra. We give a precise geometrical description
+of them, which explains the results obtained for these operators in some
+numerical simulations giving the computation of false eigenvalues far from
+their spectra by algorithms for eigenvalues computing.
+\\

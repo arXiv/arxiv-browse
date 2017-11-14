@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0787
+From: Sebastien Zimmermann <5uFo5A12A.uH2moiXWLD@NZ-BrCa.N3>
+Date: Thu, 5 Apr 2007 19:47:06 GMT   (35kb)
+
+Title: Convergence of a finite volume scheme for the incompressible fluids
+Authors: Sebastien Zimmermann
+Categories: math.NA
+Comments: preprint; 19 pages; no figures
+MSC-class: 76M12; 76B99
+\\
+  We consider a finite volume scheme for the two-dimensional incompressible
+Navier-Stokes equations. We use a triangular mesh. The unknowns for the
+velocity and pressure are respectively piecewise constant and affine. We use a
+projection method to deal with the incompressibility constraint. In a former
+paper, the stability of the scheme has been proven. We infer from it its
+convergence.
+\\

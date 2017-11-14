@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0551
+From: Marco Tomassini <LUwht.IHmMRVWc9@xlkR.YC>
+Date: Wed, 4 Apr 2007 11:39:58 GMT   (173kb)
+
+Title: The Genetic Programming Collaboration Network and its Communities
+Authors: L. Luthi, M. Tomassini, M. Giacobini, B. W. Langdon
+Categories: physics.soc-ph
+Comments: 16 pages, 6 figures, to appear in genetic and evolutionary conference
+  gecco 07
+\\
+  Useful information about scientific collaboration structures and patterns can
+be inferred from computer databases of published papers. The genetic
+programming bibliography is the most complete reference of papers on GP\@. In
+addition to locating publications, it contains coauthor and coeditor
+relationships from which a more complete picture of the field emerges. We treat
+these relationships as undirected small world graphs whose study reveals the
+community structure of the GP collaborative social network. Automatic analysis
+discovers new communities and highlights new facets of them. The investigation
+reveals many similarities between GP and coauthorship networks in other
+scientific fields but also some subtle differences such as a smaller central
+network component and a high clustering.
+\\

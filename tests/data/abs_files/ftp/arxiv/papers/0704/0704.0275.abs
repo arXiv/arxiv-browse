@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0275
+From: George M. Bergman <pRjp5lp5@fQRq.04KyNoYb.oMJ>
+Date: Mon, 2 Apr 2007 21:53:20 GMT   (36kb)
+Date (revised v2): Fri, 28 Mar 2008 16:40:54 GMT   (40kb)
+
+Title: Mapping radii of metric spaces
+Authors: George M. Bergman (U.C.Berkeley)
+Categories: math.MG
+Comments: 24 pages. To appear, Pacific J. Math. Any updates, errata, related
+  references etc. learned of after publication will be noted at
+  http://math.berkeley.edu/~gbergman/papers . Changes from first version:
+  correction to display (30) and statement of Cor. 26; new display (41) and
+  Lemma 33; minor clarifications of wording etc.
+MSC-class: 54E40; 46B20; 46E15; 52A40
+\\
+  It is known that every closed curve of length \leq 4 in R^n (n>0) can be
+surrounded by a sphere of radius 1, and that this is the best bound. Letting S
+denote the circle of circumference 4, with the arc-length metric, we here
+express this fact by saying that the "mapping radius" of S in R^n is 1.
+  Tools are developed for estimating the mapping radius of a metric space X in
+a metric space Y. In particular, it is shown that for X a bounded metric space,
+the supremum of the mapping radii of X in all convex subsets of normed metric
+spaces is equal to the infimum of the sup norms of all convex linear
+combinations of the functions d(x,-): X --> R (x\in X).
+  Several explicit mapping radii are calculated, and open questions noted.
+\\

@@ -4,16 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm.exc import NoResultFound
-from typing import Any, Optional
-from werkzeug.local import LocalProxy
+from flask_sqlalchemy import SQLAlchemy, Model
+from typing import Any, NewType
+#SQLAlchemyType = NewType('SQLAlchemyType', Any)
 
-db: Any = SQLAlchemy()
+dbx: SQLAlchemy = SQLAlchemy()
 
 
-class MemberInstitution(db.Model):
+class MemberInstitution(dbx.Model):
     """Primary model for arXiv member insitution data."""
 
     __tablename__ = 'Subscription_UniversalInstitution'
@@ -27,7 +25,7 @@ class MemberInstitution(db.Model):
     note = Column(String(255))
 
 
-class MemberInstitutionContact(db.Model):
+class MemberInstitutionContact(dbx.Model):
     """Model for arXiv member institution contact information."""
 
     __tablename__ = 'Subscription_UniversalInstitutionContact'
@@ -44,7 +42,7 @@ class MemberInstitutionContact(db.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class MemberInstitutionIP(db.Model):
+class MemberInstitutionIP(dbx.Model):
     """Model for arXiv member insitution IP address ranges and exclusions."""
 
     __tablename__ = 'Subscription_UniversalInstitutionIP'
@@ -62,7 +60,7 @@ class MemberInstitutionIP(db.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class SciencewisePing(db.Model):
+class SciencewisePing(dbx.Model):
     """Model for ScienceWISE (trackback) pings."""
 
     __tablename__ = 'arXiv_sciencewise_pings'
@@ -71,7 +69,7 @@ class SciencewisePing(db.Model):
     updated = Column(DateTime)
 
 
-class TrackbackPing(db.Model):
+class TrackbackPing(dbx.Model):
     """Primary model for arXiv trackback data."""
 
     __tablename__ = 'arXiv_trackback_pings'
@@ -99,7 +97,7 @@ class TrackbackPing(db.Model):
     site_id = Column(Integer)
 
 
-class TrackbackSite(db.Model):
+class TrackbackSite(dbx.Model):
     """Model for sites that submit trackbacks to arXiv."""
 
     __tablename__ = 'arXiv_trackback_sites'

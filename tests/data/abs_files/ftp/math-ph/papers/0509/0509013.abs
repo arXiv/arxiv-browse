@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509013
+From: Bartolomeu Figueiredo db <7I1m1@ujWF.ew>
+Date: Thu, 8 Sep 2005 21:02:25 GMT   (20kb)
+
+Title: Ince's limits for confluent and double-confluent Heun equations
+Authors: B. D. Bonorino Figueiredo
+Categories: math-ph math.MP
+Comments: Submitted to Journal of Mathmatical Physics
+DOI: 10.1063/1.2104267
+\\
+  We find pairs of solutions to a differential equation which is obtained as a
+special limit of a generalized spheroidal wave equation (this is also known as
+confluent Heun equation). One solution in each pair is given by a series of
+hypergeometric functions and converges for any finite value of the independent
+variable $z$, while the other is given by a series of modified Bessel functions
+and converges for $|z|>|z_{0}|$, where $z_{0}$ denotes a regular singularity.
+For short, the preceding limit is called Ince's limit after Ince who have used
+the same procedure to get the Mathieu equations from the Whittaker-Hill ones.
+We find as well that, when $z_{0}$ tends to zero, the Ince limit of the
+generalized spheroidal wave equation turns out to be the Ince limit of a
+double-confluent Heun equation, for which solutions are provided. Finally, we
+show that the Schr\"odinger equation for inverse fourth and sixth-power
+potentials reduces to peculiar cases of the double-confluent Heun equation and
+its Ince's limit, respectively.
+\\

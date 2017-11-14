@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0150
+From: Bo Gu <ol.rw20@upGzO.YWc>
+Date: Mon, 2 Apr 2007 09:16:44 GMT   (484kb)
+
+Title: Magnetism and Thermodynamics of Spin-1/2 Heisenberg Diamond Chains in a
+  Magnetic Field
+Authors: Bo Gu and Gang Su
+Categories: cond-mat.str-el
+Comments: 18 pages, 20 figures, to be published in Phys. Rev. B
+Journal-ref: Phys. Rev. B 75, 174437 (2007)
+DOI: 10.1103/PhysRevB.75.174437
+\\
+  The magnetic and thermodynamic properties of spin-1/2 Heisenberg diamond
+chains are investigated in three different cases: (a) J1, J2, J3>0
+(frustrated); (b) J1, J3<0, J2>0 (frustrated); and (c) J1, J2>0, J3<0
+(non-frustrated). The density matrix renormalization group (DMRG) technique is
+invoked to study the properties of the system in the ground state, while the
+transfer matrix renormalization group (TMRG) technique is applied to explore
+the thermodynamic properties. The local magnetic moments, spin correlation
+functions, and static structure factors are discussed in the ground state for
+the three cases. It is shown that the static structure factor S(q) shows peaks
+at wavevectors $q=a\pi /3$ (a=0,1,2,3,4,5) for different couplings in a zero
+magnetic field, which, however in the magnetic fields where the magnetization
+plateau with m=1/6 pertains, exhibits the peaks only at q=0, $2\pi /3$ and
+$4\pi /3$, which are found to be couplings-independent. The DMRG results of the
+zero-field static structure factor can be nicely fitted by a linear
+superposition of six modes, where two fitting equations are proposed. It is
+observed that the six modes are closely related to the low-lying excitations of
+the system. At finite temperatures, the double-peak structures of the
+susceptibility and specific heat against temperature are obtained, where the
+peak positions and heights are found to depend on the competition of the
+couplings. It is also uncovered that the XXZ anisotropy of F and AF couplings
+leads the system of case (c) to display quite different behaviors. In addition,
+the experimental data of the susceptibility, specific heat and magnetization
+for the compound Cu$_{3}$(CO$_{3}$)$_{2}$(OH)$_{2}$ are fairly compared with
+our TMRG results.
+\\

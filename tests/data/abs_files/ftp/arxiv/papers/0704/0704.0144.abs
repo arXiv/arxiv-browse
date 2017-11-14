@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0144
+From: Dmitry I. Podolsky <L87Pin.UkPAHQ5Q@Slk0T720.WF>
+Date: Mon, 2 Apr 2007 08:51:48 GMT   (11kb)
+Date (revised v2): Tue, 24 Apr 2007 10:15:31 GMT   (11kb)
+Date (revised v3): Tue, 18 Sep 2007 10:16:45 GMT   (9kb)
+
+Title: Eternal inflation and localization on the landscape
+Authors: D. Podolsky, K. Enqvist
+Categories: hep-th astro-ph gr-qc
+Comments: 4 pages; more references added; discussion enlarged
+Report-no: HIP-2007-15/TH
+Journal-ref: JCAP 0902:007,2009
+DOI: 10.1088/1475-7516/2009/02/007
+\\
+  We model the essential features of eternal inflation on the landscape of a
+dense discretuum of vacua by the potential $V(\phi)=V_{0}+\delta V(\phi)$,
+where $|\delta V(\phi)|\ll V_{0}$ is random. We find that the diffusion of the
+distribution function $\rho(\phi,t)$ of the inflaton expectation value in
+different Hubble patches may be suppressed due to the effect analogous to the
+Anderson localization in disordered quantum systems. At $t \to \infty$ only the
+localized part of the distribution function $\rho (\phi, t)$ survives which
+leads to dynamical selection principle on the landscape. The probability to
+measure any but a small value of the cosmological constant in a given Hubble
+patch on the landscape is exponentially suppressed at $t\to \infty$.
+\\

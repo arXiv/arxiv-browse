@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0339
+From: Massimo Tessarotto <MpJ@rt3V.h8QI.T1mtBmw.jc>
+Date: Tue, 3 Apr 2007 07:51:08 GMT   (29kb)
+
+Title: Lattice Boltzmann inverse kinetic approach for the incompressible
+  Navier-Stokes equations
+Authors: Enrico Fonda, Massimo Tessarotto and Marco Ellero
+Categories: physics.flu-dyn physics.comp-ph
+\\
+  In spite of the large number of papers appeared in the past which are devoted
+to the lattice Boltzmann (LB) methods, basic aspects of the theory still remain
+unchallenged. An unsolved theoretical issue is related to the construction of a
+discrete kinetic theory which yields \textit{exactly} the fluid equations,
+i.e., is non-asymptotic (here denoted as \textit{LB inverse kinetic theory}).
+The purpose of this paper is theoretical and aims at developing an inverse
+kinetic approach of this type. In principle infinite solutions exist to this
+problem but the freedom can be exploited in order to meet important
+requirements. In particular, the discrete kinetic theory can be defined so that
+it yields exactly the fluid equation also for arbitrary non-equilibrium (but
+suitably smooth) kinetic distribution functions and arbitrarily close to the
+boundary of the fluid domain. Unlike previous entropic LB methods the theorem
+can be obtained without functional constraints on the class of the initial
+distribution functions. Possible realizations of the theory and asymptotic
+approximations are provided which permit to determine the fluid equations
+\textit{with prescribed accuracy.} As a result, asymptotic accuracy estimates
+of customary LB approaches and comparisons with the Chorin artificial
+compressibility method are discussed.
+\\

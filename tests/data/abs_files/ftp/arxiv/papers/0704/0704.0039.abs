@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0039
+From: Jose Antonio Oller <EF7CI@pZ.7T>
+Date: Sat, 31 Mar 2007 17:06:06 GMT   (177kb)
+Date (revised v2): Wed, 25 Apr 2007 11:14:41 GMT   (177kb)
+
+Title: Scalar radius of the pion and zeros in the form factor
+Authors: Jose A. Oller and Luis Roca
+Categories: hep-ph hep-lat nucl-th
+Comments: 18 pages, 3 figures. Some rewriting in the presentation of the
+  results and comments to previous works
+Journal-ref: Phys.Lett.B651:139-146,2007
+DOI: 10.1016/j.physletb.2007.06.023
+\\
+  The quadratic pion scalar radius, \la r^2\ra^\pi_s, plays an important role
+for present precise determinations of \pi\pi scattering. Recently, Yndur\'ain,
+using an Omn\`es representation of the null isospin(I) non-strange pion scalar
+form factor, obtains \la r^2\ra^\pi_s=0.75\pm 0.07 fm^2. This value is larger
+than the one calculated by solving the corresponding Muskhelishvili-Omn\`es
+equations, \la r^2\ra^\pi_s=0.61\pm 0.04 fm^2. A large discrepancy between both
+values, given the precision, then results. We reanalyze Yndur\'ain's method and
+show that by imposing continuity of the resulting pion scalar form factor under
+tiny changes in the input \pi\pi phase shifts, a zero in the form factor for
+some S-wave I=0 T-matrices is then required. Once this is accounted for, the
+resulting value is \la r^2\ra_s^\pi=0.65\pm 0.05 fm^2. The main source of error
+in our determination is present experimental uncertainties in low energy S-wave
+I=0 \pi\pi phase shifts. Another important contribution to our error is the not
+yet settled asymptotic behaviour of the phase of the scalar form factor from
+QCD.
+\\

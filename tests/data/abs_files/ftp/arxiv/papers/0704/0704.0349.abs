@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0349
+From: Ivan Izmestiev <cViHAIHXC@QlfG.RS-VwWGvT.4i>
+Date: Tue, 3 Apr 2007 09:03:12 GMT   (11kb)
+Date (revised v2): Thu, 5 Apr 2007 15:27:07 GMT   (11kb)
+Date (revised v3): Fri, 25 Jul 2008 11:52:27 GMT   (16kb)
+
+Title: The Colin de Verdi\`ere number and graphs of polytopes
+Authors: Ivan Izmestiev
+Categories: math.CO math.MG
+Comments: 18 pages, 2 figures; reorganized; an estimate of the spectral gap
+  added; the appendix on mixed volumes rewritten
+MSC-class: 05C50 (primary) 52A39, 52C25 (secondary)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The Colin de Verdi\`ere number $\mu(G)$ of a graph $G$ is the maximum corank
+of a Colin de Verdi\`ere matrix for $G$ (that is, of a Schr\"odinger operator
+on $G$ with a single negative eigenvalue). In 2001, Lov\'asz gave a
+construction that associated to every convex 3-polytope a Colin de Verdi\`ere
+matrix of corank 3 for its 1-skeleton.
+  We generalize the Lov\'asz construction to higher dimensions by interpreting
+it as minus the Hessian matrix of the volume of the polar dual. As a corollary,
+$\mu(G) \ge d$ if $G$ is the 1-skeleton of a convex $d$-polytope.
+  Determination of the signature of the Hessian of the volume is based on the
+second Minkowski inequality for mixed volumes and on Bol's condition for
+equality.
+\\

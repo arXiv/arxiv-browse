@@ -1,0 +1,17 @@
+------------------------------------------------------------------------------
+\\
+arXiv:alg-geom/9311008
+From: Stefan A. Bauer <CmcAD@TjyQ.FIP.v7h>
+Date: Tue, 23 Nov 1993 19:06:40 GMT   (24kb)
+
+Title: Spin polynomial invariants for Dolgachev surfaces
+Authors: S. Bauer and V. Pidstrigatch
+Categories: alg-geom math.AG
+Comments: 24 pages, amstex
+\\
+  We consider the spin polynomial invariants for bundles with c_2=2 and c_1 =
+K_S + 2nk a rational mutiple of the canonical divisor on a Dolgacev surface. It
+is shown that the chamber structure can be controlled so that the polynomials
+give diffeomorphism invariants of Dolgachev surfaces of the form q_S(n) =
+a(n)Q^2 + b(n)Qk^2 + c(n)k^4. The two leading coefficients are computed.
+\\

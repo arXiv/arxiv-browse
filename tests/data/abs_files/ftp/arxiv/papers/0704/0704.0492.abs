@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0492
+From: Shenghui Su <1AVLALCb@rZQ.Ipq>
+Date: Wed, 4 Apr 2007 04:31:00 GMT   (176kb)
+Date (revised v2): Thu, 4 Feb 2010 14:06:43 GMT   (296kb)
+
+Title: Refuting the Pseudo Attack on the REESSE1+ Cryptosystem
+Authors: Shenghui Su, and Shuwang Lu
+Categories: cs.CR
+Comments: 14 pages, and 2 table
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We illustrate through example 1 and 2 that the condition at theorem 1 in [8]
+dissatisfies necessity, and the converse proposition of fact 1.1 in [8] does
+not hold, namely the condition Z/M - L/Ak < 1/(2 Ak^2) is not sufficient for
+f(i) + f(j) = f(k). Illuminate through an analysis and ex.3 that there is a
+logic error during deduction of fact 1.2, which causes each of fact 1.2, 1.3, 4
+to be invalid. Demonstrate through ex.4 and 5 that each or the combination of
+qu+1 > qu * D at fact 4 and table 1 at fact 2.2 is not sufficient for f(i) +
+f(j) = f(k), property 1, 2, 3, 4, 5 each are invalid, and alg.1 based on fact 4
+and alg.2 based on table 1 are disordered and wrong logically. Further,
+manifest through a repeated experiment and ex.5 that the data at table 2 is
+falsified, and the example in [8] is woven elaborately. We explain why Cx = Ax
+* W^f(x) (% M) is changed to Cx = (Ax * W^f(x))^d (% M) in REESSE1+ v2.1. To
+the signature fraud, we point out that [8] misunderstands the existence of T^-1
+and Q^-1 % (M-1), and forging of Q can be easily avoided through moving H.
+Therefore, the conclusion of [8] that REESSE1+ is not secure at all (which
+connotes that [8] can extract a related private key from any public key in
+REESSE1+) is fully incorrect, and as long as the parameter Omega is fitly
+selected, REESSE1+ with Cx = Ax * W^f(x) (% M) is secure.
+\\

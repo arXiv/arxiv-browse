@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0181
+From: Joel Goh <yPevw8e@EcKv5FWPreExEi.qJf>
+Date: Mon, 2 Apr 2007 12:40:02 GMT   (348kb)
+
+Title: Genetic Optimization of Photonic Bandgap Structures
+Authors: Joel Goh, Ilya Fushman, Dirk Englund, and Jelena Vuckovic
+Categories: physics.optics physics.comp-ph
+Comments: 9 pages, 20 figures
+DOI: 10.1364/OE.15.008218
+\\
+  We investigate the use of a Genetic Algorithm (GA) to design a set of
+photonic crystals (PCs) in one and two dimensions. Our flexible design
+methodology allows us to optimize PC structures which are optimized for
+specific objectives. In this paper, we report the results of several such
+GA-based PC optimizations. We show that the GA performs well even in very
+complex design spaces, and therefore has great potential for use as a robust
+design tool in present and future applications.
+\\

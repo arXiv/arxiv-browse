@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0045
+From: A. M. Kamchatnov <eYYCr@FzYu.KYSm8Nu.yL>
+Date: Sat, 31 Mar 2007 18:09:02 GMT   (281kb)
+
+Title: Evolution of solitary waves and undular bores in shallow-water flows
+  over a gradual slope with bottom friction
+Authors: G.A. El, R.H.J. Grimshaw, A.M. Kamchatnov
+Categories: nlin.PS nlin.SI
+Comments: accepted for publication in J. Fluid Mech.
+Journal-ref: J. Fluid Mech. 585, 213-244 (2007)
+DOI: 10.1017/S0022112007006817
+\\
+  This paper considers the propagation of shallow-water solitary and nonlinear
+periodic waves over a gradual slope with bottom friction in the framework of a
+variable-coefficient Korteweg-de Vries equation. We use the Whitham averaging
+method, using a recent development of this theory for perturbed integrable
+equations. This general approach enables us not only to improve known results
+on the adiabatic evolution of isolated solitary waves and periodic wave trains
+in the presence of variable topography and bottom friction, modeled by the
+Chezy law, but also importantly, to study the effects of these factors on the
+propagation of undular bores, which are essentially unsteady in the system
+under consideration. In particular, it is shown that the combined action of
+variable topography and bottom friction generally imposes certain global
+restrictions on the undular bore propagation so that the evolution of the
+leading solitary wave can be substantially different from that of an isolated
+solitary wave with the same initial amplitude. This non-local effect is due to
+nonlinear wave interactions within the undular bore and can lead to an
+additional solitary wave amplitude growth, which cannot be predicted in the
+framework of the traditional adiabatic approach to the propagation of solitary
+waves in slowly varying media.
+\\

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0942
+From: Suzanne Lynch Hruska <zQlynT2@BBO.5AC.HM9>
+Date: Fri, 6 Apr 2007 20:45:17 GMT   (178kb,D)
+Date (revised v2): Fri, 19 Oct 2007 18:17:07 GMT   (570kb)
+
+Title: Axiom A polynomial skew products of C^2 and their postcritical sets
+Authors: Laura DeMarco and Suzanne Lynch Hruska
+Categories: math.DS
+Comments: 33 pages, 3 figures
+MSC-class: 32H50; 37F15; 37D20
+Journal-ref: Ergodic Theory and Dynamical Systems, Volume 28, Issue 06, Dec.
+  2008, pages 1749--1779.
+\\
+  A polynomial skew product of C^2 is a map of the form f(z,w) = (p(z),
+q(z,w)), where p and q are polynomials, such that f is regular of degree d >=
+2. For polynomial maps of C, hyperbolicity is equivalent to the condition that
+the closure of the postcritical set is disjoint from the Julia set; further,
+critical points either iterate to an attracting cycle or infinity. For
+polynomial skew products, Jonsson (Math. Ann., 1999) established that f is
+Axiom A if and only if the closure of the postcritical set is disjoint from the
+right analog of the Julia set. Here we present the analogous conclusion:
+critical orbits either escape to infinity or accumulate on an attracting set.
+In addition, we construct new examples of Axiom A maps demonstrating various
+postcritical behaviors.
+\\

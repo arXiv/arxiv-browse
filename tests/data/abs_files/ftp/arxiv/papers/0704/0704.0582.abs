@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0582
+From: Christof Kuelske <v1qye2h@mzVh.P2p.xr>
+Date: Wed, 4 Apr 2007 14:34:28 GMT   (10kb)
+
+Title: Continuous interfaces with disorder: Even strong pinning is too weak in
+  2 dimensions
+Authors: C. Kuelske, E. Orlandi
+Categories: math.PR math-ph math.MP
+Comments: 8 pages
+MSC-class: 60K57; 82B24; 82B44
+\\
+  We consider statistical mechanics models of continuous height effective
+interfaces in the presence of a delta-pinning at height zero. There is a
+detailed mathematical understanding of the depinning transition in 2 dimensions
+without disorder. Then the variance of the interface height w.r.t. the Gibbs
+measure stays bounded uniformly in the volume for any positive pinning force
+and diverges like the logarithm of the pinning force when it tends to zero.
+  How does the presence of a quenched disorder term in the Hamiltonian modify
+this transition? We show that an arbitarily weak random field term is enough to
+beat an arbitrarily strong delta-pinning in 2 dimensions and will cause
+delocalization. The proof is based on a rigorous lower bound for the overlap
+between local magnetizations and random fields in finite volume. In 2
+dimensions it implies growth faster than the volume which is a contradiction to
+localization. We also derive a simple complementary inequality which shows that
+in higher dimensions the fraction of pinned sites converges to one when the
+pinning force tends to infinity.
+\\

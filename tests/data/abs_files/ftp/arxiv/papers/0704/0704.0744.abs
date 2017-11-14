@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0744
+From: Gergely Palla <aCOn3i@0TLmb.wQDo.1B>
+Date: Thu, 5 Apr 2007 15:35:27 GMT   (327kb)
+
+Title: Quantifying social group evolution
+Authors: Gergely Palla, Albert-Laszlo Barabasi and Tamas Vicsek
+Categories: stat.ME physics.soc-ph stat.AP
+Comments: 11 pages, 4 figures
+Journal-ref: Nature 446, 664 (2007)
+DOI: 10.1038/nature05670
+\\
+  The rich set of interactions between individuals in the society results in
+complex community structure, capturing highly connected circles of friends,
+families, or professional cliques in a social network. Thanks to frequent
+changes in the activity and communication patterns of individuals, the
+associated social and communication network is subject to constant evolution.
+Our knowledge of the mechanisms governing the underlying community dynamics is
+limited, but is essential for a deeper understanding of the development and
+self-optimisation of the society as a whole. We have developed a new algorithm
+based on clique percolation, that allows, for the first time, to investigate
+the time dependence of overlapping communities on a large scale and as such, to
+uncover basic relationships characterising community evolution. Our focus is on
+networks capturing the collaboration between scientists and the calls between
+mobile phone users. We find that large groups persist longer if they are
+capable of dynamically altering their membership, suggesting that an ability to
+change the composition results in better adaptability. The behaviour of small
+groups displays the opposite tendency, the condition for stability being that
+their composition remains unchanged. We also show that the knowledge of the
+time commitment of the members to a given community can be used for estimating
+the community's lifetime. These findings offer a new view on the fundamental
+differences between the dynamics of small groups and large institutions.
+\\

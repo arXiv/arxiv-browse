@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0906
+From: Federico Bassetti <HxxZpKVl.HS2QfBUA@DTiPm.AK>
+Date: Fri, 6 Apr 2007 17:06:39 GMT   (35kb)
+Date (revised v2): Tue, 8 May 2007 16:07:29 GMT   (35kb)
+
+Title: Metropolis algorithm and equienergy sampling for two mean field spin
+  systems
+Authors: Bassetti Federico, Leisen Fabrizio
+Categories: math.PR math.ST stat.CO stat.TH
+\\
+  In this paper we study the Metropolis algorithm in connection with two
+mean--field spin systems, the so called mean--field Ising model and the
+Blume--Emery--Griffiths model. In both this examples the naive choice of
+proposal chain gives rise, for some parameters, to a slowly mixing Metropolis
+chain, that is a chain whose spectral gap decreases exponentially fast (in the
+dimension $N$ of the problem). Here we show how a slight variant in the
+proposal chain can avoid this problem, keeping the mean computational cost
+similar to the cost of the usual Metropolis. More precisely we prove that, with
+a suitable variant in the proposal, the Metropolis chain has a spectral gap
+which decreases polynomially in 1/N. Using some symmetry structure of the
+energy, the method rests on allowing appropriate jumps within the energy level
+of the starting state.
+\\

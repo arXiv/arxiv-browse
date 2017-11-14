@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0926
+From: Quang-Cuong Pham <KydGL.JwTr@oBV.au>
+Date: Fri, 6 Apr 2007 19:58:52 GMT   (63kb)
+Date (revised v2): Fri, 25 Jan 2008 15:10:37 GMT   (73kb)
+
+Title: A Contraction Theory Approach to Stochastic Incremental Stability
+Authors: Q.-C. Pham, N. Tabareau, J.-J. Slotine
+Categories: math.OC
+Comments: 23 pages, 2 figures
+\\
+  We investigate the incremental stability properties of It\^o stochastic
+dynamical systems. Specifically, we derive a stochastic version of nonlinear
+contraction theory that provides a bound on the mean square distance between
+any two trajectories of a stochastically contracting system. This bound can be
+expressed as a function of the noise intensity and the contraction rate of the
+noise-free system. We illustrate these results in the contexts of stochastic
+nonlinear observers design and stochastic synchronization.
+\\

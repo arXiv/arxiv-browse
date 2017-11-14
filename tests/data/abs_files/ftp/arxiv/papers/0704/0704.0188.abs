@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0188
+From: Tanya Elliott <h.FAy1R32a@flGkeKS.Wt.V6.LT>
+Date: Mon, 2 Apr 2007 13:31:16 GMT   (40kb)
+Date (revised v2): Fri, 11 May 2007 07:47:55 GMT   (40kb)
+
+Title: Biased random walks on combs
+Authors: Tanya M Elliott and John F Wheater
+Categories: cond-mat.other
+Comments: minor changes in technical definitions
+Report-no: Oxford University Preprint OUTP-07-04P
+Journal-ref: J. Phys. A: Math. Theor. 40 (2007) 8265-8288.
+DOI: 10.1088/1751-8113/40/29/005
+\\
+  We develop rigorous, analytic techniques to study the behaviour of biased
+random walks on combs. This enables us to calculate exactly the spectral
+dimension of random comb ensembles for any bias scenario in the teeth or spine.
+Two specific examples of random comb ensembles are discussed; the random comb
+with nonzero probability of an infinitely long tooth at each vertex on the
+spine and the random comb with a power law distribution of tooth lengths. We
+also analyze transport properties along the spine for these probability
+measures.
+\\

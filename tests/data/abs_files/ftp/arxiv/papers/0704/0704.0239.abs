@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0239
+From: J. Dzubiella <awu4mcHX@ZW.4i9.3g>
+Date: Mon, 2 Apr 2007 17:16:09 GMT   (52kb)
+
+Title: Interface dynamics of microscopic cavities in water
+Authors: Joachim Dzubiella
+Categories: cond-mat.soft
+Comments: to appear in J. Chem. Phys
+DOI: 10.1063/1.2734962
+\\
+  An analytical description of the interface motion of a collapsing
+nanometer-sized spherical cavity in water is presented by a modification of the
+Rayleigh-Plesset equation in conjunction with explicit solvent molecular
+dynamics simulations. Quantitative agreement is found between the two
+approaches for the time-dependent cavity radius $R(t)$ at different solvent
+conditions while in the continuum picture the solvent viscosity has to be
+corrected for curvature effects. The typical magnitude of the interface or
+collapse velocity is found to be given by the ratio of surface tension and
+fluid viscosity, $v\simeq\gamma/\eta$, while the curvature correction
+accelerates collapse dynamics on length scales below the equilibrium crossover
+scales ($\sim$1nm). The study offers a starting point for an efficient implicit
+modeling of water dynamics in aqueous nanoassembly and protein systems in
+nonequilibrium.
+\\

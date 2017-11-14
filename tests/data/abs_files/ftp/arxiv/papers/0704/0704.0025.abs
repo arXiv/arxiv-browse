@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0025
+From: Andrei Mishchenko S <LCdLx.ZsuVTCXY@OQkz.zA.66>
+Date: Mon, 2 Apr 2007 12:02:36 GMT   (334kb)
+
+Title: Spectroscopic Properties of Polarons in Strongly Correlated Systems by
+  Exact Diagrammatic Monte Carlo Method
+Authors: A. S. Mishchenko (1 and 2) and N. Nagaosa (1 and 3) ((1) CREST, Japan
+  Science and Technology Agency, (2) Russian Research Centre ``Kurchatov
+  Institute'', (3) The University of Tokyo)
+Categories: cond-mat.str-el cond-mat.stat-mech
+Comments: 41 pages, 13 figures, in "Polarons in Advanced Materials" ed. A. S.
+  Alexandrov (Canopus/Springer Publishing, Bristol (2007)), pp. 503-544.
+\\
+  We present recent advances in understanding of the ground and excited states
+of the electron-phonon coupled systems obtained by novel methods of
+Diagrammatic Monte Carlo and Stochastic Optimization, which enable the
+approximation-free calculation of Matsubara Green function in imaginary times
+and perform unbiased analytic continuation to real frequencies. We present
+exact numeric results on the ground state properties, Lehmann spectral function
+and optical conductivity of different strongly correlated systems: Frohlich
+polaron, Rashba-Pekar exciton-polaron, pseudo Jahn-Teller polaron, exciton, and
+interacting with phonons hole in the t-J model.
+\\

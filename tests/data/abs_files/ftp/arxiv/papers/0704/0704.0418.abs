@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0418
+From: Yu-Cheng Lin <kHs@laMf.9fp-xi.rG>
+Date: Tue, 3 Apr 2007 15:21:08 GMT   (127kb)
+Date (revised v2): Tue, 28 Aug 2007 12:05:53 GMT   (127kb)
+
+Title: Entanglement entropy at infinite randomness fixed points in higher
+  dimensions
+Authors: Yu-Cheng Lin, Ferenc Igloi and Heiko Rieger
+Categories: cond-mat.dis-nn quant-ph
+Comments: References updated; Accepted for publication in Phys. Rev. Lett
+Journal-ref: Phys. Rev. Lett. 99, 147202 (2007)
+DOI: 10.1103/PhysRevLett.99.147202
+\\
+  The entanglement entropy of the two-dimensional random transverse Ising model
+is studied with a numerical implementation of the strong disorder
+renormalization group. The asymptotic behavior of the entropy per surface area
+diverges at, and only at, the quantum phase transition that is governed by an
+infinite randomness fixed point. Here we identify a double-logarithmic
+multiplicative correction to the area law for the entanglement entropy. This
+contrasts with the pure area law valid at the infinite randomness fixed point
+in the diluted transverse Ising model in higher dimensions.
+\\

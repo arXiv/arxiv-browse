@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0624
+From: Timothy Bole <CCtA8M@2HPF.PMU>
+Date: Wed, 4 Apr 2007 19:55:24 GMT   (226kb)
+
+Title: Temporal Evolution of Step-Edge Fluctuations Under Electromigration
+  Conditions
+Authors: P. J. Rous, T. W. Bole
+Categories: cond-mat.mtrl-sci
+Comments: 7 pages, 5 figures
+DOI: 10.1103/PhysRevB.76.125435
+\\
+  The temporal evolution of step-edge fluctuations under electromigration
+conditions is analysed using a continuum Langevin model. If the
+electromigration driving force acts in the step up/down direction, and
+step-edge diffusion is the dominant mass-transport mechanism, we find that
+significant deviations from the usual $t^{1/4}$ scaling of the terrace-width
+correlation function occurs for a critical time $\tau$ which is dependent upon
+the three energy scales in the problem: $k_{B}T$, the step stiffness, $\gamma$,
+and the bias associated with adatom hopping under the influence of an
+electromigration force, $\pm \Delta U$. For ($t < \tau$), the correlation
+function evolves as a superposition of $t^{1/4}$ and $t^{3/4}$ power laws. For
+$t \ge \tau$ a closed form expression can be derived. This behavior is
+confirmed by a Monte-Carlo simulation using a discrete model of the step
+dynamics. It is proposed that the magnitude of the electromigration force
+acting upon an atom at a step-edge can by estimated by a careful analysis of
+the statistical properties of step-edge fluctuations on the appropriate
+time-scale.
+\\

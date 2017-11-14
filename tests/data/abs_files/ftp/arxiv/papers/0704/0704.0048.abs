@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0048
+From: Alexander Stroeer <flHn12Ho@gkIe.sI.VSgL.yc.5o>
+Date: Sat, 31 Mar 2007 19:17:47 GMT   (50kb)
+Date (revised v2): Tue, 3 Apr 2007 22:26:37 GMT   (50kb)
+
+Title: Inference on white dwarf binary systems using the first round Mock LISA
+  Data Challenges data sets
+Authors: Alexander Stroeer, John Veitch, Christian Roever, Ed Bloomer, James
+  Clark, Nelson Christensen, Martin Hendry, Chris Messenger, Renate Meyer,
+  Matthew Pitkin, Jennifer Toher, Richard Umstaetter, Alberto Vecchio and
+  Graham Woan
+Categories: gr-qc astro-ph
+Comments: GWDAW-11 proceeding, submitted to CQG, 10 pages, 3 figures, 1 table;
+  revised values in table
+Journal-ref: Class.Quant.Grav.24:S541-S550,2007
+DOI: 10.1088/0264-9381/24/19/S17
+\\
+  We report on the analysis of selected single source data sets from the first
+round of the Mock LISA Data Challenges (MLDC) for white dwarf binaries. We
+implemented an end-to-end pipeline consisting of a grid-based coherent
+pre-processing unit for signal detection, and an automatic Markov Chain Monte
+Carlo post-processing unit for signal evaluation. We demonstrate that signal
+detection with our coherent approach is secure and accurate, and is increased
+in accuracy and supplemented with additional information on the signal
+parameters by our Markov Chain Monte Carlo approach. We also demonstrate that
+the Markov Chain Monte Carlo routine is additionally able to determine
+accurately the noise level in the frequency window of interest.
+\\

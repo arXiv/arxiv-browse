@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0012
+From: Dohoon Choi <epGkNj@qOzJb7M.tD.Pn>
+Date: Sat, 31 Mar 2007 05:48:51 GMT   (9kb)
+
+Title: Distribution of integral Fourier Coefficients of a Modular Form of Half
+  Integral Weight Modulo Primes
+Authors: Dohoon Choi
+Categories: math.NT
+MSC-class: 11F11,11F33
+\\
+  Recently, Bruinier and Ono classified cusp forms $f(z) := \sum_{n=0}^{\infty}
+a_f(n)q ^n \in S_{\lambda+1/2}(\Gamma_0(N),\chi)\cap \mathbb{Z}[[q]]$ that does
+not satisfy a certain distribution property for modulo odd primes $p$. In this
+paper, using Rankin-Cohen Bracket, we extend this result to modular forms of
+half integral weight for primes $p \geq 5$. As applications of our main theorem
+we derive distribution properties, for modulo primes $p\geq5$, of traces of
+singular moduli and Hurwitz class number. We also study an analogue of Newman's
+conjecture for overpartitions.
+\\

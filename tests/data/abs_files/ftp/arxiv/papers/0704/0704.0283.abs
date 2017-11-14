@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0283
+From: Richard Green <Ddi@2MNVXq.sIOxrI57.yIS>
+Date: Mon, 2 Apr 2007 22:55:30 GMT   (39kb)
+
+Title: On the Markov trace for Temperley--Lieb algebras of type $E_n$
+Authors: R.M. Green
+Categories: math.QA
+Comments: Approximately 37 pages, AMSTeX. 9 figures.
+MSC-class: 20C08, 20F55, 57M15
+\\
+  We show that there is a unique Markov trace on the tower of Temperley--Lieb
+type quotients of Hecke algebras of Coxeter type $E_n$ (for all $n \geq 6$). We
+explain in detail how this trace may be computed easily using tom Dieck's
+calculus of diagrams. As applications, we show how to use the trace to show
+that the diagram representation is faithful, and to compute leading
+coefficients of certain Kazhdan--Lusztig polynomials.
+\\

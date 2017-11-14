@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:acc-phys/9502001
+From: Robert Ryne <Hr6F@AoBK.AWbLD.uoy3.Eiv>
+Date: Sun, 12 Feb 1995 03:25:31 GMT   (63kb)
+
+Title: Finding matched rms envelopes in rf linacs: A Hamiltonian approach
+Authors: Robert D. Ryne (Los Alamos National Laboratory)
+Categories: acc-phys physics.acc-ph
+Comments: 10 pages, uuencoded gzipped PostScript (88K)
+Report-no: LA-UR-95-391
+\\
+  We present a new method for obtaining matched solutions of the rms envelope
+equations. In this approach, the envelope equations are first expressed in
+Hamiltonian form. The Hamiltonian defines a nonlinear mapping, $\cal M$, and
+for periodic transport systems the fixed points of the one-period map are the
+matched envelopes. Expanding the Hamiltonian around a fiducial trajectory one
+obtains a linear map, $M$, that describes trajectories (rms envelopes) near the
+fiducial trajectory. Using $\cal M$ and $M$ we construct a contraction mapping
+that can be used to obtain the matched envelopes. The algorithm is
+quadratically convergent. Using the zero-current matched parameters as starting
+values, the contraction mapping typically converges in a few to several
+iterations. Since our approach uses numerical integration to obtain all the
+mappings, it includes the effects of nonidealized, $z$-dependent transverse and
+longitudinal focusing fields. We present numerical examples including finding a
+matched beam in a quadrupole channel with rf bunchers.
+\\

@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509036
+From: Yuri Kozitsky <ZGH2U@4zqJ9.ksfn.EhTIrY.JR>
+Date: Fri, 16 Sep 2005 15:08:01 GMT   (49kb)
+
+Title: Euclidean Gibbs Measures of Quantum Anharmonic Crystals
+Authors: Yuri Kozitsky and Tatiana Pasurek
+Categories: math-ph math.MP math.PR
+Report-no: BiBoS 05-05-180
+MSC-class: 82B10
+\\
+  A lattice system of interacting temperature loops, which is used in the
+Euclidean approach to describe equilibrium thermodynamic properties of an
+infinite system of interacting quantum particles performing anharmonic
+oscillations (quantum anharmonic crystal), is considered. For this system, it
+is proven that: (a) the set of tempered Gibbs measures is non-void and weakly
+compact; (b) every Gibbs measure obeys an exponential integrability estimate,
+the same for all such measures; (c) every Gibbs measure has a Lebowitz-Presutti
+type support; (d) the set of all Gibbs measures is a singleton at high
+temperatures. In the case of attractive interaction and one-dimensional
+oscillations we prove that at low temperatures the system undergoes a phase
+transition. The uniqueness of Gibbs measures due to strong quantum effects
+(strong diffusivity) and at a nonzero external field are also proven in this
+case. Thereby, a complete description of the properties of the set of all Gibbs
+measures has been done, which essentially extends and refines the results
+obtained so far for models of this type.
+\\

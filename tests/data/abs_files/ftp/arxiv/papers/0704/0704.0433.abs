@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0433
+From: Antonio De Nicola <y5uXRP1b@LK.cnh7x.Ny>
+Date: Tue, 3 Apr 2007 16:43:49 GMT   (88kb)
+Date (revised v2): Thu, 17 Apr 2008 17:39:06 GMT   (87kb)
+Date (revised v3): Mon, 13 Oct 2008 16:36:28 GMT   (70kb)
+
+Title: A variational formulation of electrodynamics with external sources
+Authors: Antonio De Nicola, Wlodzimierz M. Tulczyjew
+Categories: math-ph math.DG math.MP
+Comments: 23 pages, to appear in Int. J. Geom. Methods Mod. Phys. (IJGMMP)
+MSC-class: 49S05, 70S05
+Journal-ref: Int. J. Geom. Methods Mod. Phys. 6 (2009), 173-200
+DOI: 10.1142/S0219887809003461
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We present a variational formulation of electrodynamics using de Rham even
+and odd differential forms. Our formulation relies on a variational principle
+more complete than the Hamilton principle and thus leads to field equations
+with external sources and permits the derivation of the constitutive relations.
+We interpret a domain in space-time as an odd de Rham 4-current. This permits a
+treatment of different types of boundary problems in an unified way. In
+particular we obtain a smooth transition to the infinitesimal version by using
+a current with a one point support.
+\\

@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0943
+From: Peter Shawhan <AdgA53br@nc8.VNb>
+Date: Fri, 6 Apr 2007 20:45:17 GMT   (237kb)
+Date (revised v2): Tue, 28 Aug 2007 03:34:35 GMT   (282kb)
+Date (revised v3): Tue, 9 Oct 2007 18:37:08 GMT   (282kb)
+
+Title: Search for gravitational-wave bursts in LIGO data from the fourth
+  science run
+Authors: LIGO Scientific Collaboration
+Categories: gr-qc
+Comments: Corrected amplitude sensitivities (7% change on average); 30 pages,
+  submitted to Classical and Quantum Gravity
+Report-no: LIGO-P060016-C-Z
+Journal-ref: Class.Quant.Grav.24:5343-5370,2007; Erratum-ibid.25:039801,2008
+DOI: 10.1088/0264-9381/24/22/002 10.1088/0264-9381/25/3/039801
+\\
+  The fourth science run of the LIGO and GEO 600 gravitational-wave detectors,
+carried out in early 2005, collected data with significantly lower noise than
+previous science runs. We report on a search for short-duration
+gravitational-wave bursts with arbitrary waveform in the 64-1600 Hz frequency
+range appearing in all three LIGO interferometers. Signal consistency tests,
+data quality cuts, and auxiliary-channel vetoes are applied to reduce the rate
+of spurious triggers. No gravitational-wave signals are detected in 15.5 days
+of live observation time; we set a frequentist upper limit of 0.15 per day (at
+90% confidence level) on the rate of bursts with large enough amplitudes to be
+detected reliably. The amplitude sensitivity of the search, characterized using
+Monte Carlo simulations, is several times better than that of previous
+searches. We also provide rough estimates of the distances at which
+representative supernova and binary black hole merger signals could be detected
+with 50% efficiency by this analysis.
+\\

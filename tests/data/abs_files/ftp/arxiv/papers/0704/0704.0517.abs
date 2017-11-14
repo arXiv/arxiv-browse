@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0517
+From: Jessica Tressou <g7a6DHJ@bsdmd.m3>
+Date: Wed, 4 Apr 2007 08:27:27 GMT   (42kb)
+
+Title: Using decomposed household food acquisitions as inputs of a Kinetic
+  Dietary Exposure Model
+Authors: Olivier Allais (CORELA), Jessica Tressou (METARISK, Hkust-Ismt)
+Categories: math.ST stat.TH
+Proxy: ccsd hal-00139914
+\\
+  Foods naturally contain a number of contaminants that may have different and
+long term toxic effects. This paper introduces a novel approach for the
+assessment of such chronic food risk that integrates the pharmacokinetic
+properties of a given contaminant. The estimation of such a Kinetic Dietary
+Exposure Model (KDEM) should be based on long term consumption data which, for
+the moment, can only be provided by Household Budget Surveys such as the
+SECODIP panel in France. A semi parametric model is proposed to decompose a
+series of household quantities into individual quantities which are then used
+as inputs of the KDEM. As an illustration, the risk assessment related to the
+presence of methyl mercury in seafood is revisited using this novel approach.
+\\

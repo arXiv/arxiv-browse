@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0678
+From: Hugo Cable <VWbdrR@JDJ.KzP>
+Date: Thu, 5 Apr 2007 04:53:26 GMT   (161kb)
+
+Title: Generation of Large Number-Path Entanglement Using Linear Optics and
+  Feed-Forward
+Authors: Hugo Cable and Jonathan P. Dowling
+Categories: quant-ph
+Journal-ref: Phys. Rev. Lett. 99, 163604 (2007)
+DOI: 10.1103/PhysRevLett.99.163604
+\\
+  We show how an idealised measurement procedure can condense photons from two
+modes into one, and how, by feeding forward the results of the measurement, it
+is possible to generate efficiently superpositions of components for which only
+one mode is populated, commonly called ``N00N states''. For the basic
+procedure, sources of number states leak onto a beam splitter, and the output
+ports are monitored by photodetectors. We find that detecting a fixed fraction
+of the input at one output port suffices to direct the remainder to the same
+port with high probability, however large the initial state. When instead
+photons are detected at both ports, Schr\"{o}dinger cat states are produced. We
+describe a circuit for making the components of such a state orthogonal, and
+another for subsequent conversion to a N00N state. Our approach scales
+exponentially better than existing proposals. Important applications include
+quantum imaging and metrology.
+\\

@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0317
+From: William Wylie <1yx91@FsKO.WCPj.nIe>
+Date: Tue, 3 Apr 2007 05:43:44 GMT   (5kb)
+
+Title: Complete Shrinking Ricci Solitons have Finite Fundamental Group
+Authors: William Wylie
+Categories: math.DG
+Comments: 4 pages, To appear in Proceedings of AMS
+MSC-class: 53C20
+\\
+  We show that if a complete Riemannian manifold supports a vector field such
+that the Ricci tensor plus the Lie derivative of the metric with respect to the
+vector field has a positive lower bound, then the fundamental group is finite.
+In particular, it follows that complete shrinking Ricci solitons and complete
+smooth metric measure spaces with a positive lower bound on the Bakry-Emery
+tensor have finite fundamental group. The method of proof is to generalize
+arguments of Garcia-Rio and Fernandez-Lopez in the compact case.
+\\

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0089
+From: Igor Grabec <Zara.dqHKib@c5.647-Dp.jA>
+Date: Sun, 1 Apr 2007 14:29:57 GMT   (289kb)
+
+Title: A general approach to statistical modeling of physical laws:
+  nonparametric regression
+Authors: I. Grabec
+Categories: physics.data-an physics.gen-ph
+Comments: 17 pages, 8 eps figures, uses revtex4.cls
+\\
+  Statistical modeling of experimental physical laws is based on the
+probability density function of measured variables. It is expressed by
+experimental data via a kernel estimator. The kernel is determined objectively
+by the scattering of data during calibration of experimental setup. A physical
+law, which relates measured variables, is optimally extracted from experimental
+data by the conditional average estimator. It is derived directly from the
+kernel estimator and corresponds to a general nonparametric regression. The
+proposed method is demonstrated by the modeling of a return map of noisy
+chaotic data. In this example, the nonparametric regression is used to predict
+a future value of chaotic time series from the present one. The mean predictor
+error is used in the definition of predictor quality, while the redundancy is
+expressed by the mean square distance between data points. Both statistics are
+used in a new definition of predictor cost function. From the minimum of the
+predictor cost function, a proper number of data in the model is estimated.
+\\

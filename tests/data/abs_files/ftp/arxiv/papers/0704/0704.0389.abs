@@ -1,0 +1,47 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0389
+From: Tanja Hinderer <8JPZM@5kuNbkJ.oJK>
+Date: Tue, 3 Apr 2007 13:48:12 GMT   (30kb)
+Date (revised v2): Tue, 17 Apr 2007 11:56:29 GMT   (32kb)
+Date (revised v3): Mon, 7 May 2007 16:13:42 GMT   (32kb)
+Date (revised v4): Mon, 14 Jun 2010 18:49:58 GMT   (33kb)
+Date (revised v5): Fri, 3 Sep 2010 17:30:31 GMT   (33kb)
+Date (revised v6): Wed, 1 Dec 2010 16:55:44 GMT   (33kb)
+Date (revised v7): Tue, 7 Dec 2010 00:01:20 GMT   (34kb)
+Date (revised v8): Fri, 22 Jul 2011 17:35:59 GMT   (34kb)
+
+Title: Evolution of the Carter constant for inspirals into a black hole: effect
+  of the black hole quadrupole
+Authors: Eanna E. Flanagan and Tanja Hinderer
+Categories: gr-qc
+Comments: Typos found in sec. III, this version has the corrected expressions.
+  An erratum is in press. 22 pages, added a paragraph to sec. V B;
+  Erratum-ibid.D82:069904,2010; Erratum-ibid.D82:129903,2010
+Journal-ref: Phys.Rev.D75:124007,2007; Erratum-ibid.D82:069904,2010;
+  Erratum-ibid.D82:129903,2010
+DOI: 10.1103/PhysRevD.75.124007 10.1103/PhysRevD.82.029901
+  10.1103/PhysRevD.82.129903
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We analyze the effect of gravitational radiation reaction on generic orbits
+around a body with an axisymmetric mass quadrupole moment Q to linear order in
+Q, to the leading post-Newtonian order, and to linear order in the mass ratio.
+This system admits three constants of the motion in absence of radiation
+reaction: energy, angular momentum, and a third constant analogous to the
+Carter constant. We compute instantaneous and time-averaged rates of change of
+these three constants. For a point particle orbiting a black hole, Ryan has
+computed the leading order evolution of the orbit's Carter constant, which is
+linear in the spin. Our result, when combined with an interaction quadratic in
+the spin (the coupling of the black hole's spin to its own radiation reaction
+field), gives the next to leading order evolution. The effect of the
+quadrupole, like that of the linear spin term, is to circularize eccentric
+orbits and to drive the orbital plane towards antialignment with the symmetry
+axis. In addition we consider a system of two point masses where one body has a
+single mass multipole or current multipole. To linear order in the mass ratio,
+to linear order in the multipole, and to the leading post-Newtonian order, we
+show that there does not exist an analog of the Carter constant for such a
+system (except for the cases of spin and mass quadrupole). With mild additional
+assumptions, this result falsifies the conjecture that all vacuum, axisymmetric
+spacetimes posess a third constant of geodesic motion.
+\\

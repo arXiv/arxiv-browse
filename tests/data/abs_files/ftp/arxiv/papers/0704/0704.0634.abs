@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0634
+From: Mark Bathe <lBig.ecBcj@HwyWls.px2.2R>
+Date: Wed, 4 Apr 2007 19:02:54 GMT   (790kb)
+
+Title: A Finite Element framework for computation of protein normal modes and
+  mechanical response
+Authors: Mark Bathe
+Categories: q-bio.BM q-bio.QM
+\\
+  A coarse-grained computational procedure based on the Finite Element Method
+is proposed to calculate the normal modes and mechanical response of proteins
+and their supramolecular assemblies. Motivated by the elastic network model,
+proteins are modeled as homogeneous isotropic elastic solids with volume
+defined by their solvent-excluded surface. The discretized Finite Element
+representation is obtained using a surface simplification algorithm that
+facilitates the generation of models of arbitrary prescribed spatial
+resolution. The procedure is applied to compute the normal modes of a mutant of
+T4 phage lysozyme and of filamentous actin, as well as the critical Euler
+buckling load of the latter when subject to axial compression. Results compare
+favorably with all-atom normal mode analysis, the Rotation Translation Blocks
+procedure, and experiment. The proposed methodology establishes a computational
+framework for the calculation of protein mechanical response that facilitates
+the incorporation of specific atomic-level interactions into the model,
+including aqueous-electrolyte-mediated electrostatic effects. The procedure is
+equally applicable to proteins with known atomic coordinates as it is to
+electron density maps of proteins, protein complexes, and supramolecular
+assemblies of unknown atomic structure.
+\\

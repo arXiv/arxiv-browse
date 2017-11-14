@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0904
+From: Robin Corbet <JRo7Rk@wnDqgRsw.bPBl.sLgC.gim>
+Date: Fri, 6 Apr 2007 16:49:01 GMT   (8kb)
+
+Title: The Use of Weighting in Periodicity Searches in All-Sky Monitor Data:
+  Applications to the GLAST LAT
+Authors: Robin Corbet, Richard Dubois
+Categories: astro-ph
+Comments: 2 pages. To appear in the Proceedings of the First International
+  GLAST Symposium, Febuary 5-8, 2007, Stanford University, AIP, Eds. S. Ritz,
+  P. F. Michelson, and C. Meegan
+Journal-ref: AIP Conf.Proc.921:548-549,2007
+DOI: 10.1063/1.2757445
+\\
+  The light curves produced by all-sky monitors, such as the Rossi X-ray Timing
+Explorer All-Sky Monitor and the Swift Burst Alert Telescope (BAT), generally
+have non-uniform error bars. In searching for periodic modulation in this type
+of data using power spectra it can be important to use appropriate weighting of
+data points to achieve the best sensitivity. It was recently demonstrated that
+for Swift BAT data a simple weighting scheme can actually sometimes reduce the
+sensitivity of the power spectrum depending on source brightness. Instead, a
+modified weighting scheme, based on the Cochran semi-weighted mean, gives
+improved results independent of source brightness. We investigate the benefits
+of weighting power spectra in period searches using simulated GLAST LAT
+observations of gamma-ray binaries.
+\\

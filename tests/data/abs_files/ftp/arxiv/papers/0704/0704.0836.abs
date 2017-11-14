@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0836
+From: Kurt Luoto <URkAQqB@iry9.FLX4ROtMVD.k8E>
+Date: Fri, 6 Apr 2007 02:43:59 GMT   (27kb)
+Date (revised v2): Fri, 16 Nov 2007 18:35:09 GMT   (25kb)
+
+Title: A matroid-friendly basis for the quasisymmetric functions
+Authors: Kurt W. Luoto
+Categories: math.CO
+Comments: 25 pages; exposition tightened, typos corrected; to appear in the
+  Journal of Combinatorial Theory, Series A
+MSC-class: 05B35, 52B40
+Journal-ref: Journal of Combinatorial Theory, Series A 115 (2008) 777-798
+DOI: 10.1016/j.jcta.2007.10.003
+\\
+  A new Z-basis for the space of quasisymmetric functions (QSym, for short) is
+presented. It is shown to have nonnegative structure constants, and several
+interesting properties relative to the space of quasisymmetric functions
+associated to matroids by the Hopf algebra morphism (F) of Billera, Jia, and
+Reiner. In particular, for loopless matroids, this basis reflects the grading
+by matroid rank, as well as by the size of the ground set. It is shown that the
+morphism F is injective on the set of rank two matroids, and that
+decomposability of the quasisymmetric function of a rank two matroid mirrors
+the decomposability of its base polytope. An affirmative answer is given to the
+Hilbert basis question raised by Billera, Jia, and Reiner.
+\\

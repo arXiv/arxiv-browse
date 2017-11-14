@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0860
+From: Mohamed Kaaniche <JwPj6gw.SQ4F8ZN1@WaAq.Tl>
+Date: Fri, 6 Apr 2007 08:24:47 GMT   (433kb)
+
+Title: Availability assessment of SunOS/Solaris Unix Systems based on Syslogd
+  and wtmpx logfiles : a case study
+Authors: Cristina Simache (LAAS), Mohamed Kaaniche (LAAS)
+Categories: cs.PF
+Proxy: ccsd hal-00140364
+Journal-ref: Proc. 2005 IEEE Pacific Rim International Symposium on Dependable
+  Computing (PRDC'2005), Changsha, Hunan (Chine), 12-14 D{\'e}cembre 2005
+  (18/12/2005) 49-56
+\\
+  This paper presents a measurement-based availability assessment study using
+field data collected during a 4-year period from 373 SunOS/Solaris Unix
+workstations and servers interconnected through a local area network. We focus
+on the estimation of machine uptimes, downtimes and availability based on the
+identification of failures that caused total service loss. Data corresponds to
+syslogd event logs that contain a large amount of information about the normal
+activity of the studied systems as well as their behavior in the presence of
+failures. It is widely recognized that the information contained in such event
+logs might be incomplete or imperfect. The solution investigated in this paper
+to address this problem is based on the use of auxiliary sources of data
+obtained from wtmpx files maintained by the SunOS/Solaris Unix operating
+system. The results obtained suggest that the combined use of wtmpx and syslogd
+log files provides more complete information on the state of the target systems
+that is useful to provide availability estimations that better reflect reality.
+\\

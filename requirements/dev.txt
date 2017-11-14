@@ -12,9 +12,11 @@ Jinja2==2.9.6
 lazy-object-proxy==1.3.1
 MarkupSafe==1.0
 mccabe==0.6.1
-mypy==0.540
+mypy==0.550
 mysqlclient==1.3.10
 nose2==0.6.5
+pep8==1.7.1
+psutil==5.4.1
 pylint==1.7.4
 six==1.11.0
 sqlacodegen==1.1.6

@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0967
+From: Jia Liu <Z0TByd8O@4r.Cwl>
+Date: Sat, 7 Apr 2007 03:18:46 GMT   (98kb)
+
+Title: Cross-Layer Optimization of MIMO-Based Mesh Networks with Gaussian
+  Vector Broadcast Channels
+Authors: Jia Liu and Y. Thomas Hou
+Categories: cs.IT cs.AR math.IT
+\\
+  MIMO technology is one of the most significant advances in the past decade to
+increase channel capacity and has a great potential to improve network capacity
+for mesh networks. In a MIMO-based mesh network, the links outgoing from each
+node sharing the common communication spectrum can be modeled as a Gaussian
+vector broadcast channel. Recently, researchers showed that ``dirty paper
+coding'' (DPC) is the optimal transmission strategy for Gaussian vector
+broadcast channels. So far, there has been little study on how this fundamental
+result will impact the cross-layer design for MIMO-based mesh networks. To fill
+this gap, we consider the problem of jointly optimizing DPC power allocation in
+the link layer at each node and multihop/multipath routing in a MIMO-based mesh
+networks. It turns out that this optimization problem is a very challenging
+non-convex problem. To address this difficulty, we transform the original
+problem to an equivalent problem by exploiting the channel duality. For the
+transformed problem, we develop an efficient solution procedure that integrates
+Lagrangian dual decomposition method, conjugate gradient projection method
+based on matrix differential calculus, cutting-plane method, and subgradient
+method. In our numerical example, it is shown that we can achieve a network
+performance gain of 34.4% by using DPC.
+\\

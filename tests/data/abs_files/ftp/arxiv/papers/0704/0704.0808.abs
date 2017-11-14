@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0808
+From: Michael T. Lacey <9n2ST@ZPAp.TpOGdm.ewq>
+Date: Thu, 5 Apr 2007 21:33:13 GMT   (58kb)
+Date (revised v2): Tue, 18 Sep 2007 16:09:38 GMT   (68kb)
+Date (revised v3): Fri, 11 Jan 2008 00:26:28 GMT   (70kb)
+
+Title: On a Conjecture of EM Stein on the Hilbert Transform on Vector Fields
+Authors: Michael Lacey and Xiaochun Li
+Categories: math.CA
+Comments: 92 pages, 20+ figures. Final version of the paper. To appear in
+  Memoirs AMS
+MSC-class: 42B
+\\
+  Let $ v$ be a smooth vector field on the plane, that is a map from the plane
+to the unit circle. We study sufficient conditions for the boundedness of the
+Hilbert transform
+  \operatorname H_{v, \epsilon}f(x) := \text{p.v.}\int_{-\epsilon}^ \epsilon
+f(x-yv(x)) \frac{dy}y where $ \epsilon $ is a suitably chosen parameter,
+determined by the smoothness properties of the vector field. It is a
+conjecture, due to E.\thinspace M.\thinspace Stein, that if $ v$ is Lipschitz,
+there is a positive $ \epsilon $ for which the transform above is bounded on $
+L ^{2}$. Our principal result gives a sufficient condition in terms of the
+boundedness of a maximal function associated to $ v$. This sufficient condition
+is that this new maximal function be bounded on some $ L ^{p}$, for some $
+1<p<2$. We show that the maximal function is bounded from $ L ^{2}$ to weak $ L
+^{2}$ for all Lipschitz maximal function. The relationship between our results
+and other known sufficient conditions is explored.
+\\

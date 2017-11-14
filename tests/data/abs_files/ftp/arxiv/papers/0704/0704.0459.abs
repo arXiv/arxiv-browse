@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0459
+From: Yahya  Ould Hamidoune <Qh4xKJr7I@eKI5.Qz1P57v.0s>
+Date: Tue, 3 Apr 2007 20:40:18 GMT   (7kb)
+
+Title: On iterated image size for point-symmetric relations
+Authors: Yahya Ould Hamidoune
+Categories: math.CO
+MSC-class: 20D60
+\\
+  Let $\Gamma =(V,E)$ be a point-symmetric reflexive relation and let $v\in V$
+such that
+  $|\Gamma (v)|$ is finite (and hence $|\Gamma (x)|$ is finite for all $x$, by
+the transitive action of the group of automorphisms). Let $j\in \N$ be an
+integer such that $\Gamma ^j(v)\cap \Gamma ^{-}(v)=\{v\}$. Our main result
+states that
+  $$ |\Gamma ^{j} (v)|\ge | \Gamma ^{j-1} (v)| + |\Gamma (v)|-1.$$
+  As an application we have $ |\Gamma ^{j} (v)| \ge 1+(|\Gamma (v)|-1)j.$ The
+last result confirms a recent conjecture of Seymour in the case of
+vertex-symmetric graphs. Also it gives a short proof for the validity of the
+Caccetta-H\"aggkvist conjecture for vertex-symmetric graphs and generalizes an
+additive result of Shepherdson.
+\\

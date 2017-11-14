@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0567
+From: Martin Keller-Ressel <pfjZ6lB@qIf.yjcGaX.5E.ig>
+Date: Wed, 4 Apr 2007 13:32:17 GMT   (66kb,D)
+Date (revised v2): Mon, 26 Nov 2007 08:34:35 GMT   (26kb)
+
+Title: Yield Curve Shapes and the Asymptotic Short Rate Distribution in Affine
+  One-Factor Models
+Authors: Martin Keller-Ressel, Thomas Steiner
+Categories: q-fin.PR math.PR
+MSC-class: 60J25; 91B28
+\\
+  We consider a model for interest rates, where the short rate is given by a
+time-homogenous, one-dimensional affine process in the sense of Duffie,
+Filipovic and Schachermayer. We show that in such a model yield curves can only
+be normal, inverse or humped (i.e. endowed with a single local maximum). Each
+case can be characterized by simple conditions on the present short rate. We
+give conditions under which the short rate process will converge to a limit
+distribution and describe the limit distribution in terms of its cumulant
+generating function. We apply our results to the Vasicek model, the CIR model,
+a CIR model with added jumps and a model of Ornstein-Uhlenbeck type.
+\\

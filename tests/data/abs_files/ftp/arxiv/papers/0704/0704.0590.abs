@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0590
+From: Rachit Agarwal <pSzBKm.RrFcizU@04Be.YlQ>
+Date: Wed, 4 Apr 2007 15:06:14 GMT   (289kb,D)
+Date (revised v2): Thu, 5 Apr 2007 11:47:23 GMT   (182kb,D)
+
+Title: A Low Complexity Algorithm and Architecture for Systematic Encoding of
+  Hermitian Codes
+Authors: Rachit Agarwal, Ralf Koetter and Emanuel Popovici
+Categories: cs.IT math.IT
+Comments: 5 Pages, Accepted in IEEE International Symposium on Information
+  Theory ISIT 2007
+\\
+  We present an algorithm for systematic encoding of Hermitian codes. For a
+Hermitian code defined over GF(q^2), the proposed algorithm achieves a run time
+complexity of O(q^2) and is suitable for VLSI implementation. The encoder
+architecture uses as main blocks q varying-rate Reed-Solomon encoders and
+achieves a space complexity of O(q^2) in terms of finite field multipliers and
+memory elements.
+\\

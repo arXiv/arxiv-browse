@@ -1,0 +1,45 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0806
+From: Daniel E. Vanden Berk <6Oo0r@K7SYf.iKJ.2aR>
+Date: Thu, 5 Apr 2007 21:00:10 GMT   (359kb)
+
+Title: The Sloan Digital Sky Survey Quasar Catalog IV. Fifth Data Release
+Authors: Donald P. Schneider, Patrick B. Hall, Gordon T. Richards, Michael A.
+  Strauss, Daniel E. Vanden Berk, Scott F. Anderson, W.N. Brandt, Xiaohui Fan,
+  Sebastian Jester, Jim Gray, James E. Gunn, Mark U. SubbaRao, Anirudda R.
+  Thakar, Chris Stoughton, Alexander S. Szalay, Brian Yanny, Donald G. York,
+  Neta A. Bahcall, J. Barentine, Michael R. Blanton, Howard Brewington, J.
+  Brinkmann, Robert J. Brunner, Francisco J. Castander, Istvan Csabai, Joshua
+  A. Frieman, Masataka Fukugita, Michael Harvanek, David W. Hogg, Zeljko
+  Ivezic, Stephen M. Kent, S. J. Kleinman, G. R. Knapp, Richard G. Kron, Jurek
+  Krzesinski, Daniel C. Long, Robert H. Lupton, Atsuko Nitta, Jeffrey R. Pier,
+  David H. Saxe, Yue Shen, Stephanie A. Snedden, David H. Weinberg, and Jian Wu
+Categories: astro-ph
+Comments: 37 pages, Accepted for publication in AJ
+Journal-ref: Astron.J.134:102-117,2007
+DOI: 10.1086/518474
+\\
+  We present the fourth edition of the Sloan Digital Sky Survey (SDSS) Quasar
+Catalog. The catalog contains 77,429 objects; this is an increase of over
+30,000 entries since the previous edition. The catalog consists of the objects
+in the SDSS Fifth Data Release that have luminosities larger than M_i = -22.0
+(in a cosmology with H_0 = 70 km/s/Mpc, Omega_M = 0.3, and Omega_Lambda = 0.7)
+have at least one emission line with FWHM larger than 1000 km/s, or have
+interesting/complex absorption features, are fainter than i=15.0, and have
+highly reliable redshifts. The area covered by the catalog is 5740 sq. deg. The
+quasar redshifts range from 0.08 to 5.41, with a median value of 1.48; the
+catalog includes 891 quasars at redshifts greater than four, of which 36 are at
+redshifts greater than five. Approximately half of the catalog quasars have i <
+19; nearly all have i < 21. For each object the catalog presents positions
+accurate to better than 0.2 arcsec. rms per coordinate, five-band (ugriz)
+CCD-based photometry with typical accuracy of 0.03 mag, and information on the
+morphology and selection method. The catalog also contains basic radio,
+near-infrared, and X-ray emission properties of the quasars, when available,
+from other large-area surveys. The calibrated digital spectra cover the
+wavelength region 3800--9200A at a spectral resolution of ~2000. The spectra
+can be retrieved from the public database using the information provided in the
+catalog. The average SDSS colors of quasars as a function of redshift, derived
+from the catalog entries, are presented in tabular form. Approximately 96% of
+the objects in the catalog were discovered by the SDSS.
+\\

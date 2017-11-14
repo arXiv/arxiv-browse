@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0059
+From: Thomas Beatty <4KzH9LB@3lJ.c8gqIcy.foi>
+Date: Sat, 31 Mar 2007 22:16:50 GMT   (149kb)
+Date (revised v2): Mon, 9 Apr 2007 15:50:24 GMT   (150kb)
+
+Title: The Mass and Radius of the Unseen M-Dwarf Companion in the Single-Lined
+  Eclipsing Binary HAT-TR-205-013
+Authors: T. G. Beatty, J. M. Fernandez, D. W. Latham, G. A. Bakos, G. Kovacs,
+  R. W. Noyes, R. P. Stefanik, G. Torres, M. E. Everett, C. W. Hergenrother
+Categories: astro-ph
+Comments: 18 pages, 9 tables and 6 figures; accepted by ApJ. Added a reference
+  and corrected a typo
+Journal-ref: Astrophys.J.663:573-582,2007
+DOI: 10.1086/518413
+\\
+  We derive masses and radii for both components in the single-lined eclipsing
+binary HAT-TR-205-013, which consists of a F7V primary and a late M-dwarf
+secondary. The system's period is short, $P=2.230736 \pm 0.000010$ days, with
+an orbit indistinguishable from circular, $e=0.012 \pm 0.021$. We demonstrate
+generally that the surface gravity of the secondary star in a single-lined
+binary undergoing total eclipses can be derived from characteristics of the
+light curve and spectroscopic orbit. This constrains the secondary to a unique
+line in the mass-radius diagram with $M/R^2$ = constant. For HAT-TR-205-013, we
+assume the orbit has been tidally circularized, and that the primary's rotation
+has been synchronized and aligned with the orbital axis. Our observed line
+broadening, $V_{\rm rot} \sin i_{\rm rot} = 28.9 \pm 1.0$ \kms, gives a primary
+radius of $R_{\rm A} = 1.28 \pm 0.04$ \rsun. Our light curve analysis leads to
+the radius of the secondary, $R_{\rm B} = 0.167 \pm 0.006$ \rsun, and the
+semimajor axis of the orbit, $a = 7.54 \pm 0.30 \rsun = 0.0351 \pm 0.0014$ AU.
+Our single-lined spectroscopic orbit and the semimajor axis then yield the
+individual masses, $M_{\rm B} = 0.124 \pm 0.010$ \msun and $M_{\rm A} = 1.04
+\pm 0.13$ \msun. Our result for HAT-TR-205-013 B lies above the theoretical
+mass-radius models from the Lyon group, consistent with results from
+double-lined eclipsing binaries. The method we describe offers the opportunity
+to study the very low end of the stellar mass-radius relation.
+\\

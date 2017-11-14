@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0834
+From: Anatoly Rodionov <bCuvDmhzPpj@9GACI.VEv>
+Date: Fri, 6 Apr 2007 02:30:42 GMT   (249kb)
+
+Title: P-adic arithmetic coding
+Authors: Anatoly Rodionov, Sergey Volkov
+Categories: cs.DS
+Comments: 29 pages
+ACM-class: H.1.1
+\\
+  A new incremental algorithm for data compression is presented. For a sequence
+of input symbols algorithm incrementally constructs a p-adic integer number as
+an output. Decoding process starts with less significant part of a p-adic
+integer and incrementally reconstructs a sequence of input symbols. Algorithm
+is based on certain features of p-adic numbers and p-adic norm. p-adic coding
+algorithm may be considered as of generalization a popular compression
+technique - arithmetic coding algorithms. It is shown that for p = 2 the
+algorithm works as integer variant of arithmetic coding; for a special class of
+models it gives exactly the same codes as Huffman's algorithm, for another
+special model and a specific alphabet it gives Golomb-Rice codes.
+\\

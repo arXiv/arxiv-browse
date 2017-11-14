@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0797
+From: Roland Haas <FdP0jx@EDbfWoa.malWYrMT.Fq>
+Date: Thu, 5 Apr 2007 20:22:54 GMT   (158kb)
+Date (revised v2): Fri, 6 Jul 2007 15:52:46 GMT   (158kb)
+
+Title: Scalar self-force on eccentric geodesics in Schwarzschild spacetime: a
+  time-domain computation
+Authors: Roland Haas
+Categories: gr-qc
+Comments: 18 pages, 18 figures, RevTeX4 some typos fixed, published version
+Journal-ref: Phys.Rev.D75:124011,2007
+DOI: 10.1103/PhysRevD.75.124011
+\\
+  We calculate the self-force acting on a particle with scalar charge moving on
+a generic geodesic around a Schwarzschild black hole. This calculation requires
+an accurate computation of the retarded scalar field produced by the moving
+charge; this is done numerically with the help of a fourth-order convergent
+finite-difference scheme formulated in the time domain. The calculation also
+requires a regularization procedure, because the retarded field is singular on
+the particle's world line; this is handled mode-by-mode via the mode-sum
+regularization scheme first introduced by Barack and Ori. This paper presents
+the numerical method, various numerical tests, and a sample of results for
+mildly eccentric orbits as well as ``zoom-whirl'' orbits.
+\\

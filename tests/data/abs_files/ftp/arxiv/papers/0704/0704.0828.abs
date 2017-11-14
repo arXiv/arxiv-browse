@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0828
+From: Cynthia J. Olson Reichhardt <Ukrj@L5ql.HkS>
+Date: Fri, 6 Apr 2007 02:03:01 GMT   (508kb)
+Date (revised v2): Thu, 26 Jul 2007 20:21:35 GMT   (511kb)
+
+Title: Vortex Molecular Crystal and Vortex Plastic Crystal States in Honeycomb
+  and Kagome Pinning Arrays
+Authors: C. Reichhardt and C. J. Olson Reichhardt
+Categories: cond-mat.supr-con cond-mat.soft
+Comments: 19 pages, 22 postscript figures. Version to appear in Phys. Rev. B
+Journal-ref: Phys. Rev. B 76, 064523 (2007)
+DOI: 10.1103/PhysRevB.76.064523
+\\
+  Using numerical simulations, we investigate vortex configurations and pinning
+in superconductors with honeycomb and kagome pinning arrays. We find that a
+variety of novel vortex crystal states can be stabilized at integer and
+fractional matching field densities. The honeycomb and kagome pinning arrays
+produce considerably more pronounced commensuration peaks in the critical
+depinning force than triangular pinning arrays, and also cause additional peaks
+at noninteger matching fields where a portion of the vortices are located in
+the large interstitial regions of the pinning lattices. For the honeycomb
+pinning array, we find matching effects of equal strength at most fillings
+B/B_\phi=n/2 for n>2, where n is an integer, in agreement with recent
+experiments. For kagome pinning arrays, pronounced matching effects generally
+occur at B/B_\phi=n/3 for n>3, while for triangular pinning arrays pronounced
+matching effects are observed only at integer fillings B/B_\phi=n. At the
+noninteger matching field peaks in the honeycomb and kagome pinning arrays, the
+interstitial vortices are arranged in dimer, trimer, and higher order n-mer
+states that have an overall orientational order. We call these n-mer states
+"vortex molecular crystals" and "vortex plastic crystals" since they are
+similar to the states recently observed in colloidal molecular crystal systems.
+We argue that the vortex molecular crystals have properties in common with
+certain spin systems such as Ising and n-state Potts models. We show that
+kagome and honeycomb pinning arrays can be useful for increasing the critical
+current above that of purely triangular pinning arrays.
+\\

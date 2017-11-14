@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0268
+From: Mark Whitney <CpVHk83@QJKX.3hd1qbVq.yWd>
+Date: Mon, 2 Apr 2007 21:31:28 GMT   (207kb)
+
+Title: Automated Generation of Layout and Control for Quantum Circuits
+Authors: Mark Whitney, Nemanja Isailovic, Yatish Patel, John Kubiatowicz
+Categories: quant-ph
+Comments: 16 pages, 11 figures, To appear in ACM Computing Frontiers 2007, this
+  version contains expanded related work
+\\
+  We present a computer-aided design flow for quantum circuits, complete with
+automatic layout and control logic extraction. To motivate automated layout for
+quantum circuits, we investigate grid-based layouts and show a performance
+variance of four times as we vary grid structure and initial qubit placement.
+We then propose two polynomial-time design heuristics: a greedy algorithm
+suitable for small, congestion-free quantum circuits and a dataflow-based
+analysis approach to placement and routing with implicit initial placement of
+qubits. Finally, we show that our dataflow-based heuristic generates better
+layouts than the state-of-the-art automated grid-based layout and scheduling
+mechanism in terms of latency and potential pipelinability, but at the cost of
+some area.
+\\

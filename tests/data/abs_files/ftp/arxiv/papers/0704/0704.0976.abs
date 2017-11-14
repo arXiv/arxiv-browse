@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0976
+From: J.-P. Eckmann <oMqB-47Fkid.yteh6Ip@JolTQRi.rsnsv.sC>
+Date: Sat, 7 Apr 2007 08:40:38 GMT   (278kb)
+
+Title: A Topological Glass
+Authors: Jean-Pierre Eckmann
+Categories: cond-mat.stat-mech cond-mat.dis-nn nlin.CD
+DOI: 10.1007/s10955-007-9387-9
+\\
+  We propose and study a model with glassy behavior. The state space of the
+model is given by all triangulations of a sphere with $n$ nodes, half of which
+are red and half are blue. Red nodes want to have 5 neighbors while blue ones
+want 7. Energies of nodes with different numbers of neighbors are supposed to
+be positive. The dynamics is that of flipping the diagonal of two adjacent
+triangles, with a temperature dependent probability. We show that this system
+has an approach to a steady state which is exponentially slow, and show that
+the stationary state is unordered. We also study the local energy landscape and
+show that it has the hierarchical structure known from spin glasses. Finally,
+we show that the evolution can be described as that of a rarefied gas with
+spontaneous generation of particles and annihilating collisions.
+\\

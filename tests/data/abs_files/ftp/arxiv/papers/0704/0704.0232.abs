@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0232
+From: Christoph Bergbauer <g0nI9OM@xvRU.W7-QhhMbO.Kr>
+Date: Mon, 2 Apr 2007 16:47:55 GMT   (87kb)
+Date (revised v2): Wed, 4 Nov 2009 12:36:09 GMT   (87kb)
+
+Title: New algebraic aspects of perturbative and non-perturbative Quantum Field
+  Theory
+Authors: Christoph Bergbauer, Dirk Kreimer
+Categories: hep-th
+Comments: 15 pages, Contribution to the Proceedings of the ICMP 2006, 2 typos
+  corrected, final version
+Journal-ref: in "New Trends in Mathematical Physics; Selected contributions of
+  the XVth International Congress on Mathematical Physics", V. Sidoravicius
+  (Ed.), Springer (2009)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  In this expository article we review recent advances in our understanding of
+the combinatorial and algebraic structure of perturbation theory in terms of
+Feynman graphs, and Dyson-Schwinger equations. Starting from Lie and Hopf
+algebras of Feynman graphs, perturbative renormalization is rephrased
+algebraically. The Hochschild cohomology of these Hopf algebras leads the way
+to Slavnov-Taylor identities and Dyson-Schwinger equations. We discuss recent
+progress in solving simple Dyson-Schwinger equations in the high energy sector
+using the algebraic machinery. Finally there is a short account on a relation
+to algebraic geometry and number theory: understanding Feynman integrals as
+periods of mixed (Tate) motives.
+\\

@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0290
+From: Jarrod R. Hurley <9yXE1rY@2YoF.jwy.3R>
+Date: Mon, 2 Apr 2007 23:53:16 GMT   (132kb)
+
+Title: The core binary fractions of star clusters from realistic simulations
+Authors: Jarrod R. Hurley, Sverre J. Aarseth, Michael M. Shara
+Categories: astro-ph
+Comments: 34 pages, 12 figures, accepted for publication in the Astrophysical
+  Journal
+Journal-ref: Astrophys.J.665:707-718,2007
+DOI: 10.1086/517879
+\\
+  We investigate the evolution of binary fractions in star clusters using
+N-body models of up to 100000 stars. Primordial binary frequencies in these
+models range from 5% to 50%. Simulations are performed with the NBODY4 code and
+include a full mass spectrum of stars, stellar evolution, binary evolution and
+the tidal field of the Galaxy. We find that the overall binary fraction of a
+cluster almost always remains close to the primordial value, except at late
+times when a cluster is near dissolution. A critical exception occurs in the
+central regions where we observe a marked increase in binary fraction with time
+-- a simulation starting with 100000 stars and 5% binaries reached a core
+binary frequency as high as 40% at the end of the core-collapse phase
+(occurring at 16 Gyr with ~20000 stars remaining). Binaries are destroyed in
+the core by a variety of processes as a cluster evolves, but the combination of
+mass-segregation and creation of new binaries in exchange interactions produces
+the observed increase in relative number. We also find that binaries are cycled
+into and out of cluster cores in a manner that is analogous to convection in
+stars. For models of 100000 stars we show that the evolution of the core-radius
+up to the end of the initial phase of core-collapse is not affected by the
+exact value of the primordial binary frequency (for frequencies of 10% or
+less). We discuss the ramifications of our results for the likely primordial
+binary content of globular clusters.
+\\

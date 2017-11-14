@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0382
+From: Gilles Z\'emor <n6glZ@Jm9D.W-lsadH3FhH.Re>
+Date: Tue, 3 Apr 2007 13:06:16 GMT   (5kb)
+
+Title: On Some Subgroup Chains Related to Kneser's Theorem
+Authors: Yahya Ould Hamidoune, Oriol Serra, Gilles Zemor
+Categories: math.NT
+MSC-class: 11P70
+Journal-ref: J. de Theorie des Nombres de Bordeaux, 20 (2008) 125--130
+\\
+  A recent result of Balandraud shows that for every subset S of an abelian
+group G, there exists a non trivial subgroup H such that |TS| <= |T|+|S|-2
+holds only if the stabilizer of TS contains H. Notice that Kneser's Theorem
+says only that the stabilizer of TS must be a non-zero subgroup.
+  This strong form of Kneser's theorem follows from some nice properties of a
+certain poset investigated by Balandraud. We consider an analogous poset for
+nonabelian groups and, by using classical tools from Additive Number Theory,
+extend some of the above results. In particular we obtain short proofs of
+Balandraud's results in the abelian case.
+\\

@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0542
+From: K Raghavan Dr. <kwd@otFr.Svg.r6>
+Date: Wed, 4 Apr 2007 10:41:20 GMT   (173kb)
+Date (revised v2): Mon, 23 Apr 2007 08:52:20 GMT   (730kb)
+
+Title: Hilbert functions of points on Schubert varieties in Orthogonal
+  Grassmannians
+Authors: K. N. Raghavan and Shyamashree Upadhyay
+Categories: math.CO math.AC math.AG
+Comments: latex; 73 pages; uses packages ifthen, graphicx, epsf, color; 9
+  figures (some in color); figures in color may not print well on a non-color
+  printer; includes table of contents and index of definitions and notation.
+  For version 2: reference to 0703.0637 and comments upon it added; typos
+  corrected
+MSC-class: 05E15 (Primary); 13F50, 13P10, 14L35 (Secondary)
+\\
+  A solution is given to the following problem: how to compute the
+multiplicity, or more generally the Hilbert function, at a point on a Schubert
+variety in an orthogonal Grassmannian. Standard monomial theory is applied to
+translate the problem from geometry to combinatorics. The solution of the
+resulting combinatorial problem forms the bulk of the paper. This approach has
+been followed earlier to solve the same problem for the Grassmannian and the
+symplectic Grassmannian.
+  As an application, we present an interpretation of the multiplicity as the
+number of non-intersecting lattice paths of a certain kind.
+  Taking the Schubert variety to be of a special kind and the point to be the
+"identity coset," our problem specializes to a problem about Pfaffian ideals
+treatments of which by different methods exist in the literature. Also
+available in the literature is a geometric solution when the point is a
+"generic singularity."
+\\

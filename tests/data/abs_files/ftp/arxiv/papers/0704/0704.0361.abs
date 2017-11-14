@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0361
+From: Ioannis Chatzigeorgiou <y3RNq@sQe.M0.2m>
+Date: Tue, 3 Apr 2007 10:24:38 GMT   (68kb)
+
+Title: Pseudo-random Puncturing: A Technique to Lower the Error Floor of Turbo
+  Codes
+Authors: Ioannis Chatzigeorgiou, Miguel R. D. Rodrigues, Ian J. Wassell and
+  Rolando Carrasco
+Categories: cs.IT math.IT
+Comments: 5 pages, 1 figure, Proceedings of the 2007 IEEE International
+  Symposium on Information Theory, Nice, France, June 24-29, 2007
+\\
+  It has been observed that particular rate-1/2 partially systematic parallel
+concatenated convolutional codes (PCCCs) can achieve a lower error floor than
+that of their rate-1/3 parent codes. Nevertheless, good puncturing patterns can
+only be identified by means of an exhaustive search, whilst convergence towards
+low bit error probabilities can be problematic when the systematic output of a
+rate-1/2 partially systematic PCCC is heavily punctured. In this paper, we
+present and study a family of rate-1/2 partially systematic PCCCs, which we
+call pseudo-randomly punctured codes. We evaluate their bit error rate
+performance and we show that they always yield a lower error floor than that of
+their rate-1/3 parent codes. Furthermore, we compare analytic results to
+simulations and we demonstrate that their performance converges towards the
+error floor region, owning to the moderate puncturing of their systematic
+output. Consequently, we propose pseudo-random puncturing as a means of
+improving the bandwidth efficiency of a PCCC and simultaneously lowering its
+error floor.
+\\

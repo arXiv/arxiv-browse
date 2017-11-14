@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0523
+From: Hyunseok Jeong <marfe@G3jeVQt.Qq.Q4f.62>
+Date: Wed, 4 Apr 2007 08:44:23 GMT   (652kb)
+Date (revised v2): Mon, 23 Jul 2007 13:56:50 GMT   (794kb)
+
+Title: Quantum superpositions and entanglement of thermal states at high
+  temperatures and their applications to quantum information processing
+Authors: Hyunseok Jeong and Timothy C. Ralph
+Categories: quant-ph
+Comments: 12 pages, 11 figures, minor corrections, to be published in Phys.
+  Rev. A
+Journal-ref: Phys. Rev. A 76, 042103 (2007)
+DOI: 10.1103/PhysRevA.76.042103
+\\
+  We study characteristics of superpositions and entanglement of thermal states
+at high temperatures and discuss their applications to quantum information
+processing. We introduce thermal-state qubits and thermal-Bell states, which
+are a generalization of pure-state qubits and Bell states to thermal mixtures.
+A scheme is then presented to discriminate between the four thermal-Bell states
+without photon number resolving detection but with Kerr nonlinear interactions
+and two single-photon detectors. This enables one to perform quantum
+teleportation and gate operations for quantum computation with thermal-state
+qubits.
+\\

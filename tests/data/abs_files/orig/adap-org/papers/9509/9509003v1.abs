@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:adap-org/9509003
+From: Yu Shi <XJABg@YCSg2.zjsX.t1.RC>
+Date: Thu, 5 Oct 1995 17:35:17 GMT   (0kb,I)
+
+Title: Self-organization, ergodicity breaking, phase transition and
+  synchronization in two-dimensional traffic-flow model
+Authors: Yu Shi (Dept. of Phys., fudan University, China)
+Categories: adap-org nlin.AO
+Comments: This version (adap-org/9509003v1) was not stored by arXiv. A
+  subsequent replacement was made before versioning was introduced.
+\\
+  Analytical investigation is made on the two-dimensional traffic-flow model
+with alternative movement and exclude-volume effect between right and up arrows
+[Phys. Rev. {\bf A} 46 R6124 (1992)]. Several exact results are obtained,
+including the upper critical density above which there are only jamming
+configurations, and the lower critical density below which there are only
+moving configurations. The observed jamming transition takes place at another
+critical density $p_{c}(N)$, which is in the intermidiate region between the
+lower and upper critical densities. It is derived that
+$p_{c}(N)\,=\,CN^{\alpha}$, where $C$ and $\alpha$ are determined to be
+respectively $0.76$ and $-0.14$ from previous numerical simulation. This
+transition is suggested to be a second-order phase transition, the order
+parameter is found. The nature of self-organization, ergodicity breaking and
+synchronization are discussed, Comparison with the sandpile model is made.
+\\

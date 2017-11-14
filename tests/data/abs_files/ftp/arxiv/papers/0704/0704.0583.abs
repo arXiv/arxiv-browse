@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0583
+From: Wilhelm Winter <y79GgVK@4yCi.DaI-brQSsmTe.dj>
+Date: Wed, 4 Apr 2007 14:16:56 GMT   (12kb)
+
+Title: On the KK-theory of strongly self-absorbing C*-algebras
+Authors: Marius Dadarlat, Wilhelm Winter
+Categories: math.OA math.KT
+Comments: 12 pages
+MSC-class: 46L05; 47L40
+\\
+  Let $\Dh$ and $A$ be unital and separable $C^{*}$-algebras; let $\Dh$ be
+strongly self-absorbing. It is known that any two unital $^*$-homomorphisms
+from $\Dh$ to $A \otimes \Dh$ are approximately unitarily equivalent. We show
+that, if $\Dh$ is also $K_{1}$-injective, they are even asymptotically
+unitarily equivalent. This in particular implies that any unital endomorphism
+of $\Dh$ is asymptotically inner. Moreover, the space of automorphisms of $\Dh$
+is compactly-contractible (in the point-norm topology) in the sense that for
+any compact Hausdorff space $X$, the set of homotopy classes $[X,\Aut(\Dh)]$
+reduces to a point. The respective statement holds for the space of unital
+endomorphisms of $\Dh$. As an application, we give a description of the
+Kasparov group $KK(\Dh, A\ot \Dh)$ in terms of $^*$-homomorphisms and
+asymptotic unitary equivalence. Along the way, we show that the Kasparov group
+$KK(\Dh, A\ot \Dh)$ is isomorphic to $K_0(A\ot \Dh)$.
+\\

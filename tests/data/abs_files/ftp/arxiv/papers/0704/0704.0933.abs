@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0933
+From: Fa Wang <4n0Xy4@Ax0gwOGV.91x>
+Date: Fri, 6 Apr 2007 20:06:15 GMT   (239kb)
+Date (revised v2): Wed, 5 Sep 2007 20:29:58 GMT   (241kb)
+
+Title: Quantum and Classical Spins on the Spatially Distorted Kagome Lattice:
+  Applications to Volborthite
+Authors: Fa Wang, Ashvin Vishwanath, Yong Baek Kim
+Categories: cond-mat.str-el
+Comments: revised, section V about exact diagonalization is extensively
+  rewritten, 17 pages, 11 figures, RevTex 4, accepted by Phys. Rev. B
+Journal-ref: Phys. Rev. B 76, 094421 (2007)
+DOI: 10.1103/PhysRevB.76.094421
+\\
+  In Volborthite, spin-1/2 moments form a distorted Kagom\'e lattice, of corner
+sharing isosceles triangles with exchange constants $J$ on two bonds and $J'$
+on the third bond. We study the properties of such spin systems, and show that
+despite the distortion, the lattice retains a great deal of frustration.
+Although sub-extensive, the classical ground state degeneracy remains very
+large, growing exponentially with the system perimeter. We consider degeneracy
+lifting by thermal and quantum fluctuations. To linear (spin wave) order, the
+degeneracy is found to stay intact. Two complementary approaches are therefore
+introduced, appropriate to low and high temperatures, which point to the same
+ordered pattern. In the low temperature limit, an effective chirality
+Hamiltonian is derived from non-linear spin waves which predicts a transition
+on increasing $J'/J$, from $\sqrt 3\times \sqrt 3$ type order to a new
+ferrimagnetic {\em striped chirality} order with a doubled unit cell. This is
+confirmed by a large-N approximation on the O($n$) model on this lattice. While
+the saddle point solution produces a line degeneracy, $O(1/n)$ corrections
+select the non-trivial wavevector of the striped chirality state. The quantum
+limit of spin 1/2 on this lattice is studied via exact small system
+diagonalization and compare well with experimental results at intermediate
+temperatures. We suggest that the very low temperature spin frozen state seen
+in NMR experiments may be related to the disconnected nature of classical
+ground states on this lattice, which leads to a prediction for NMR line shapes.
+\\

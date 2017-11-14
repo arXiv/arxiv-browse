@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0033
+From: Maxim A. Yurkin <elZrMMp@Lk7VsPN.FPI.bq>
+Date: Sat, 31 Mar 2007 15:34:25 GMT   (564kb)
+
+Title: Convergence of the discrete dipole approximation. I. Theoretical
+  analysis
+Authors: Maxim A. Yurkin, Valeri P. Maltsev, Alfons G. Hoekstra
+Categories: physics.optics physics.comp-ph
+Comments: 23 pages, 5 figures
+Journal-ref: J.Opt.Soc.Am.A 23(10): 2578-2591 (2006)
+DOI: 10.1364/JOSAA.23.002578
+\\
+  We performed a rigorous theoretical convergence analysis of the discrete
+dipole approximation (DDA). We prove that errors in any measured quantity are
+bounded by a sum of a linear and quadratic term in the size of a dipole d, when
+the latter is in the range of DDA applicability. Moreover, the linear term is
+significantly smaller for cubically than for non-cubically shaped scatterers.
+Therefore, for small d errors for cubically shaped particles are much smaller
+than for non-cubically shaped. The relative importance of the linear term
+decreases with increasing size, hence convergence of DDA for large enough
+scatterers is quadratic in the common range of d. Extensive numerical
+simulations were carried out for a wide range of d. Finally we discuss a number
+of new developments in DDA and their consequences for convergence.
+\\

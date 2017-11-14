@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0215
+From: Tomasz Rolski <3Yx6hS@BTNj.pH8.u8tS.hy>
+Date: Mon, 2 Apr 2007 15:27:17 GMT   (18kb)
+
+Title: The exact asymptotic of the collision time tail distribution for
+  independent Brownian particles with different drifts
+Authors: Zbigniew Pucha{\l}a and Tomasz Rolski
+Categories: math.PR
+Comments: 20 pages
+MSC-class: 60J65
+Journal-ref: Probab. Theor. Relat. Field., Vol. 142, No. 3-4, pp. 595-617,
+  (2008)
+DOI: 10.1007/s00440-007-0116-8
+\\
+  In this note we consider the time of the collision $\tau$ for $n$ independent
+Brownian motions $X^1_t,...,X_t^n$ with drifts $a_1,...,a_n$, each starting
+from $x=(x_1,...,x_n)$, where $x_1<...<x_n$. We show the exact asymptotics of
+$P_x(\tau>t) = C h(x)t^{-\alpha}e^{-\gamma t}(1 + o(1))$ as $t\to\infty$ and
+identify $C,h(x),\alpha,\gamma$ in terms of the drifts.
+\\

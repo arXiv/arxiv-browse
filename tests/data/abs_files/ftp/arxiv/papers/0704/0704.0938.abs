@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0938
+From: Hui Wang <72Stn@19Q5MbR.C9Hhde.A7o>
+Date: Fri, 6 Apr 2007 20:32:31 GMT   (163kb)
+Date (revised v2): Wed, 18 Apr 2007 14:39:10 GMT   (151kb)
+Date (revised v3): Wed, 13 Jun 2007 20:23:08 GMT   (151kb)
+Date (revised v4): Wed, 4 Jul 2007 18:28:59 GMT   (146kb)
+
+Title: Approaching equilibrium and the distribution of clusters
+Authors: Hui Wang, Kipton Barros, Harvey Gould and W. Klein
+Categories: cond-mat.stat-mech cond-mat.other
+Comments: 22 pages, 16 figures
+Journal-ref: Phys. Rev. E 76, 041116, 2007
+DOI: 10.1103/PhysRevE.76.041116
+\\
+  We investigate the approach to stable and metastable equilibrium in Ising
+models using a cluster representation. The distribution of nucleation times is
+determined using the Metropolis algorithm and the corresponding $\phi^{4}$
+model using Langevin dynamics. We find that the nucleation rate is suppressed
+at early times even after global variables such as the magnetization and energy
+have apparently reached their time independent values. The mean number of
+clusters whose size is comparable to the size of the nucleating droplet becomes
+time independent at about the same time that the nucleation rate reaches its
+constant value. We also find subtle structural differences between the
+nucleating droplets formed before and after apparent metastable equilibrium has
+been established.
+\\

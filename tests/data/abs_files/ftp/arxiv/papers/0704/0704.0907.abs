@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0907
+From: Fabien Portier <GJZpDe.s6uL6Ty@GIE.OU>
+Date: Fri, 6 Apr 2007 17:08:06 GMT   (210kb)
+Date (revised v2): Sat, 7 Apr 2007 19:38:18 GMT   (113kb)
+Date (revised v3): Tue, 10 Apr 2007 13:25:32 GMT   (113kb)
+Date (revised v4): Tue, 22 Apr 2008 08:03:45 GMT   (284kb)
+
+Title: Experimental Test of the High-Frequency Quantum Shot Noise Theory in a
+  Quantum Point Contact
+Authors: Eva Zakka-Bajjani (SPEC), Julien Segala (SPEC), Fabien Portier (SPEC),
+  Patrice Roche (SPEC), Christian Glattli (SPEC), Antonella Cavanna (LPN), Yong
+  Jin (LPN)
+Categories: cond-mat.mes-hall
+Comments: Version Published in Phys. Rev. Lett. (Phys. Rev. Lett. 99, 236803
+  (2007))
+Journal-ref: Physical Review Letters 99 (2007) 236803
+DOI: 10.1103/PhysRevLett.99.236803
+\\
+  We report on direct measurements of the electronic shot noise of a quantum
+point contact at frequencies nu in the range 4-8 GHz. The very small energy
+scale used ensures energy independent transmissions of the few transmitted
+electronic modes and their accurate knowledge. Both the thermal energy and the
+quantum point contact drain-source voltage Vds are comparable to the photon
+energy hnu leading to observation of the shot noise suppression when
+$V_{ds}<h\nu/e$. Our measurements provide the first complete test of the finite
+frequency shot noise scattering theory without adjustable parameters.
+\\

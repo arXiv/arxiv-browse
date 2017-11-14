@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0301
+From: Akitoshi Kawamura <dHmpDSkX@2y.DcXxleZ.QRj>
+Date: Tue, 3 Apr 2007 19:50:14 GMT   (25kb)
+
+Title: Differential Recursion and Differentially Algebraic Functions
+Authors: Akitoshi Kawamura
+Categories: cs.CC
+Comments: 14 pages, 3 figures
+ACM-class: F.1.1
+Journal-ref: Revised and published in ACM Trans. Comput. Logic 10, Article 22,
+  2009, under the title "Differential Recursion".
+DOI: 10.1145/1507244.1507252
+\\
+  Moore introduced a class of real-valued "recursive" functions by analogy with
+Kleene's formulation of the standard recursive functions. While his concise
+definition inspired a new line of research on analog computation, it contains
+some technical inaccuracies. Focusing on his "primitive recursive" functions,
+we pin down what is problematic and discuss possible attempts to remove the
+ambiguity regarding the behavior of the differential recursion operator on
+partial functions. It turns out that in any case the purported relation to
+differentially algebraic functions, and hence to Shannon's model of analog
+computation, fails.
+\\

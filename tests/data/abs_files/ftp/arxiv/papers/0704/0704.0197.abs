@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0197
+From: Steffen Schober <AOnqj3I.xURXn4C@gF8-kKm.Jf>
+Date: Mon, 2 Apr 2007 14:55:28 GMT   (20kb)
+
+Title: Analysis of random Boolean networks using the average sensitivity
+Authors: Steffen Schober and Martin Bossert
+Categories: nlin.CG
+Comments: 11 pages, 1 figure
+\\
+  In this work we consider random Boolean networks that provide a general model
+for genetic regulatory networks. We extend the analysis of James Lynch who was
+able to proof Kauffman's conjecture that in the ordered phase of random
+networks, the number of ineffective and freezing gates is large, where as in
+the disordered phase their number is small. Lynch proved the conjecture only
+for networks with connectivity two and non-uniform probabilities for the
+Boolean functions. We show how to apply the proof to networks with arbitrary
+connectivity $K$ and to random networks with biased Boolean functions. It turns
+out that in these cases Lynch's parameter $\lambda$ is equivalent to the
+expectation of average sensitivity of the Boolean functions used to construct
+the network. Hence we can apply a known theorem for the expectation of the
+average sensitivity. In order to prove the results for networks with biased
+functions, we deduct the expectation of the average sensitivity when only
+functions with specific connectivity and specific bias are chosen at random.
+\\

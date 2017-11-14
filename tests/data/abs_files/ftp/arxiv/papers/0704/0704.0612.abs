@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0612
+From: Javier L. Albacete <6gAEyiX7@WqD.A7MZ-CbWz8.j2E>
+Date: Wed, 4 Apr 2007 16:54:26 GMT   (73kb)
+Date (revised v2): Fri, 22 Jun 2007 18:56:47 GMT   (73kb)
+
+Title: Solving The High Energy Evolution Equation Including Running Coupling
+  Corrections
+Authors: Javier L. Albacete and Yuri V. Kovchegov
+Categories: hep-ph nucl-th
+Comments: 30 pages and 12 figures. Typos corrected and references updated
+Journal-ref: Phys.Rev.D75:125021,2007
+DOI: 10.1103/PhysRevD.75.125021
+\\
+  We study the solution of the nonlinear BK evolution equation with the
+recently calculated running coupling corrections [hep-ph/0609105,
+hep-ph/0609090]. Performing a numerical solution we confirm the earlier result
+of [hep-ph/0408216] that the high energy evolution with the running coupling
+leads to a universal scaling behavior for the dipole scattering amplitude. The
+running coupling corrections calculated recently significantly change the shape
+of the scaling function as compared to the fixed coupling case leading to a
+considerable increase in the anomalous dimension and to a slow-down of the
+evolution with rapidity. The difference between the two recent calculations is
+due to an extra contribution to the evolution kernel, referred to as the
+subtraction term, which arises when running coupling corrections are included.
+These subtraction terms were neglected in both recent calculations. We evaluate
+numerically the subtraction terms for both calculations, and demonstrate that
+when the subtraction terms are added back to the evolution kernels obtained in
+the two works the resulting dipole amplitudes agree with each other! We then
+use the complete running coupling kernel including the subtraction term to find
+the numerical solution of the resulting full non-linear evolution equation with
+the running coupling corrections. Again the scaling regime is recovered at very
+large rapidity.
+\\

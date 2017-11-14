@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0277
+From: Roy Meshulam <gv8wRJih@9klE.jXdFMSoB.lM.MS>
+Date: Mon, 2 Apr 2007 22:08:05 GMT   (8kb)
+
+Title: Leray numbers of projections and a topological Helly type theorem
+Authors: Gil Kalai and Roy Meshulam
+Categories: math.CO
+Comments: 9 pages
+MSC-class: 55U10; 52A35
+\\
+  Let X be a simplicial complex on the vertex set V. The rational Leray number
+L(X) of X is the minimal d such that the rational reduced homology of any
+induced subcomplex of X vanishes in dimensions d and above. Let \pi be a
+simplicial map from X to a simplex Y, such that the cardinality of the preimage
+of any point in |Y| is at most r. It is shown that L(\pi(X)) \leq r L(X)+r-1.
+One consequence is a topological extension of a Helly type result of Amenta.
+\\

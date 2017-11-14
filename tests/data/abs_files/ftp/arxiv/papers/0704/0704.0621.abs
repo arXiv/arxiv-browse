@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0621
+From: Alexei Poltoratski <b4LP0pF@tTxB.JkPJ.mau>
+Date: Wed, 4 Apr 2007 17:26:10 GMT   (20kb)
+
+Title: Uniqueness theorems for Cauchy integrals
+Authors: Mark Melnikov, Alexei Poltoratski and Alexander Volberg
+Categories: math.CV math.AC
+Comments: 19 pages
+MSC-class: 30E20
+\\
+  If $\mu$ is a finite complex measure in the complex plane $\C$ we denote by
+$C^\mu$ its Cauchy integral defined in the sense of principal value. The
+measure $\mu$ is called reflectionless if it is continuous (has no atoms) and
+$C^\mu=0$ at $\mu$-almost every point. We show that if $\mu$ is reflectionless
+and its Cauchy maximal function $C^\mu_*$ is summable with respect to $|\mu|$
+then $\mu$ is trivial. An example of a reflectionless measure whose maximal
+function belongs to the "weak" $L^1$ is also constructed, proving that the
+above result is sharp in its scale. We also give a partial geometric
+description of the set of reflectionless measures on the line and discuss
+connections of our results with the notion of sets of finite perimeter in the
+sense of De Giorgi.
+\\

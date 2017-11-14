@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0482
+From: Zhang-qi Yin <ZiGsJNnYy6@Fq5u3.WMf>
+Date: Wed, 4 Apr 2007 02:09:26 GMT   (38kb)
+Date (revised v2): Mon, 2 Jul 2007 03:34:56 GMT   (42kb)
+Date (revised v3): Fri, 2 Nov 2007 04:09:26 GMT   (43kb)
+
+Title: Implementation of holonomic quantum computation through engineering and
+  manipulating environment
+Authors: Zhang-qi Yin, Fu-li Li, Peng Peng
+Categories: quant-ph
+Comments: 4 pages, 2 figures; v2, We have maken considerable changes. New model
+  to engineer effective reservoir without broadband squeezing light is
+  proposed, which makes the scheme more practical. Main results are not
+  changed; v3, accepted for PRA. Change style to PRA
+Journal-ref: Phys. Rev. A 76, 062311 (2007)
+DOI: 10.1103/PhysRevA.76.062311
+\\
+  We consider an atom-field coupled system, in which two pairs of four-level
+atoms are respectively driven by laser fields and trapped in two distant
+cavities that are connected by an optical fiber. First, we show that an
+effective squeezing reservoir can be engineered under appropriate conditions.
+Then, we show that a two-qubit geometric CPHASE gate between the atoms in the
+two cavities can be implemented through adiabatically manipulating the
+engineered reservoir along a closed loop. This scheme that combines engineering
+environment with decoherence-free space and geometric phase quantum computation
+together has the remarkable feature: a CPHASE gate with arbitrary phase shift
+is implemented by simply changing the strength and relative phase of the
+driving fields.
+\\

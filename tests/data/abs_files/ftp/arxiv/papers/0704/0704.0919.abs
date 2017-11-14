@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0919
+From: Ganpathy Murthy <1n9ynD@99CqHeC.uZ.jZ2.yUb>
+Date: Fri, 6 Apr 2007 19:26:30 GMT   (437kb)
+
+Title: Interactions, superconducting $T_c$, and fluctuation magnetization for
+  two coupled dots in the crossover between the Gaussian Orthogonal and Unitary
+  ensembles
+Authors: Oleksandr Zelyak, Ganpathy Murthy, Igor Rozhkov
+Categories: cond-mat.mes-hall
+Comments: 53 pages, 9 figures with many subfigures
+DOI: 10.1103/PhysRevB.76.125314
+\\
+  We study a system of two quantum dots connected by a hopping bridge. Both the
+dots and connecting region are assumed to be in universal crossover regimes
+between Gaussian Orthogonal and Unitary ensembles. Using a diagrammatic
+approach appropriate for energy separations much larger than the level spacing
+we obtain the ensemble-averaged one- and two-particle Green's functions. It
+turns out that the diffuson and cooperon parts of the two-particle Green's
+function can be described by separate scaling functions. We then use this
+information to investigate a model interacting system in which one dot has an
+attractive s-wave reduced Bardeen-Cooper-Schrieffer interaction, while the
+other is noninteracting but subject to an orbital magnetic field. We find that
+the critical temperature is {\it nonmonotonic} in the flux through the second
+dot in a certain regime of interdot coupling. Likewise, the fluctuation
+magnetization above the critical temperature is also nonmonotonic in this
+regime, can be either diamagnetic or paramagnetic, and can be deduced from the
+cooperon scaling function.
+\\

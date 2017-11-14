@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0853
+From: Hao Yin <qeW1WQcH@gK3bV.Gj8>
+Date: Fri, 6 Apr 2007 07:53:53 GMT   (8kb)
+Date (revised v2): Tue, 5 Jun 2007 01:44:15 GMT   (12kb)
+
+Title: Normalized Ricci flow on nonparabolic surfaces
+Authors: Hao Yin
+Categories: math.DG
+Comments: Some false statements corrected. Details of estimate and a discussion
+  on Uniformization added. 14 pages
+MSC-class: 53C44
+\\
+  This paper studies normalized Ricci flow on a nonparabolic surface, whose
+scalar curvature is asymptotically -1 in an integral sense. By a method
+initiated by R. Hamilton, the flow is shown to converge to a metric of constant
+scalar curvature -1. A relative estimate of Green's function is proved as a
+tool.
+\\

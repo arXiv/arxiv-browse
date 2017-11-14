@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0065
+From: Alexander Molev <boLw3@Li7kn.JAet.tiJ.ql>
+Date: Mon, 2 Apr 2007 01:14:48 GMT   (17kb)
+Date (revised v2): Mon, 16 Apr 2007 11:41:24 GMT   (18kb)
+Date (revised v3): Mon, 16 Jul 2007 10:40:52 GMT   (18kb)
+
+Title: Littlewood-Richardson polynomials
+Authors: A. I. Molev
+Categories: math.AG math.CO
+Comments: 21 pages, reference to independent work of V. Kreiman was added
+Journal-ref: J. Algebra 321 (2009), 3450-3468.
+\\
+  We introduce a family of rings of symmetric functions depending on an
+infinite sequence of parameters. A distinguished basis of such a ring is
+comprised by analogues of the Schur functions. The corresponding structure
+coefficients are polynomials in the parameters which we call the
+Littlewood-Richardson polynomials. We give a combinatorial rule for their
+calculation by modifying an earlier result of B. Sagan and the author. The new
+rule provides a formula for these polynomials which is manifestly positive in
+the sense of W. Graham. We apply this formula for the calculation of the
+product of equivariant Schubert classes on Grassmannians which implies a
+stability property of the structure coefficients. The first manifestly positive
+formula for such an expansion was given by A. Knutson and T. Tao by using
+combinatorics of puzzles while the stability property was not apparent from
+that formula. We also use the Littlewood-Richardson polynomials to describe the
+multiplication rule in the algebra of the Casimir elements for the general
+linear Lie algebra in the basis of the quantum immanants constructed by A.
+Okounkov and G. Olshanski.
+\\

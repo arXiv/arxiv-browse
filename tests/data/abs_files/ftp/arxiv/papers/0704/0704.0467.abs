@@ -1,0 +1,37 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0467
+From: Gabor Pszota <jeiVVeO@J8izs2t.ox1P4C.eDE>
+Date: Tue, 3 Apr 2007 22:23:44 GMT   (300kb)
+Date (revised v2): Fri, 6 Apr 2007 04:59:18 GMT   (299kb)
+Date (revised v3): Thu, 7 Jun 2007 19:43:24 GMT   (300kb)
+
+Title: Modeling Accretion Disk X-ray Continuum of Black Hole Candidates
+Authors: Gabor Pszota and Wei Cui
+Categories: astro-ph
+Comments: - final journal version: typos, wordings refined, commas, added
+  missing reference - 15 pages, 4 figures, accepted to ApJ Changes: fig4b was
+  not the right graph, wrong chi squared/dof numbers at one place. (doesn't
+  make significant difference)
+Journal-ref: Astrophys.J.663:1201-1206,2007
+DOI: 10.1086/518823
+\\
+  We critically examine issues associated with determining the fundamental
+properties of the black hole and the surrounding accretion disk in an X-ray
+binary based on modeling the disk X-ray continuum of the source. We base our
+work mainly on two XMM-Newton observations of GX 339-4, because they provided
+high-quality data at low energies (below 1 keV) which are critical for reliably
+modeling the spectrum of the accretion disk. A key issue examined is the
+determination of the so-called "color correction factor", which is often
+empirically introduced to account for the deviation of the local disk spectrum
+from a blackbody (due to electron scattering). This factor cannot be
+pre-determined theoretically because it may vary with, e.g., mass accretion
+rate, among a number of important factors. We follow up on an earlier
+suggestion to estimate the color correction observationally by modeling the
+disk spectrum with saturated Compton scattering. We show that the spectra can
+be fitted well and the approach yields reasonable values for the color
+correction factor. For comparison, we have also attempted to fit the spectra
+with other models. We show that even the high-soft-state continuum (which is
+dominated by the disk emission) cannot be satisfactorily fitted by
+state-of-the-art disk models. We discuss the implication of the results.
+\\

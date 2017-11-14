@@ -1,0 +1,37 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0238
+From: Geoffrey C. Bower <e0vU4C@4pWwU.EEycySe3.CDT>
+Date: Mon, 2 Apr 2007 17:14:48 GMT   (89kb)
+
+Title: Radio Astrometric Detection and Characterization of Extra-Solar Planets:
+  A White Paper Submitted to the NSF ExoPlanet Task Force
+Authors: Geoffrey C. Bower (Berkeley), Alberto Bolatto (Berkeley), Eric Ford
+  (CfA, Florida), Paul Kalas (Berkeley), Jim Ulvestad (NRAO)
+Categories: astro-ph
+\\
+  The extraordinary astrometric accuracy of radio interferometry creates an
+important and unique opportunity for the discovery and characterization of
+exo-planets. Currently, the Very Long Baseline Array can routinely achieve
+better than 100 microarcsecond accuracy, and can approach 10 microarcsecond
+with careful calibration. We describe here RIPL, the Radio Interferometric
+PLanet search, a new program with the VLBA and the Green Bank 100 m telescope
+that will survey 29 low-mass, active stars over 3 years with sub-Jovian planet
+mass sensitivity at 1 AU. An upgrade of the VLBA bandwidth will increase
+astrometric accuracy by an order of magnitude. Ultimately, the colossal
+collecting area of the Square Kilometer Array could push astrometric accuracy
+to 1 microarcsecond, making detection and characterizaiton of Earth mass
+planets possible.
+  RIPL and other future radio astrometric planet searches occupy a unique
+volume in planet discovery and characterization parameter space. The parameter
+space of astrometric searches gives greater sensitivity to planets at large
+radii than radial velocity searches. For the VLBA and the expanded VLBA, the
+targets of radio astrometric surveys are by necessity nearby, low-mass, active
+stars, which cannot be studied efficiently through the radial velocity method,
+coronagraphy, or optical interferometry. For the SKA, detection sensitivity
+will extend to solar-type stars. Planets discovered through radio astrometric
+methods will be suitable for characterization through extreme adaptive optics.
+  The complementarity of radio astrometric techniques with other methods
+demonstrates that radio astrometry can play an important role in the roadmap
+for exoplanet discovery and characterization.
+\\

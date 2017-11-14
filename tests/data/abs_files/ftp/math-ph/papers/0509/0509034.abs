@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509034
+From: Plamen Djakov <zBwtLi@qf6.ltb-O1F60.cM>
+Date: Fri, 16 Sep 2005 12:45:32 GMT   (26kb)
+
+Title: Asymptotics of instability zones of the Hill operator with a two term
+  potential
+Authors: Plamen Djakov and Boris Mityagin
+Categories: math-ph math.FA math.MP
+Comments: 39 pages
+Report-no: Ohio State Mathematical Research Institute Preprint 04-10, July 19,
+  2004
+MSC-class: 47E05; 34L40; 34L20
+\\
+  Let $\gamma_n $ denote the length of the $n$-th zone of instability of the
+Hill operator $Ly= -y^{\prime \prime} - [4t\alpha \cos2x + 2 \alpha^2 \cos 4x ]
+y,$ where $\alpha \neq 0, $ and either both $\alpha, t $ are real, or both are
+pure imaginary numbers. For even $n$ we prove: if $t, n $ are fixed, then, for
+$ \alpha \to 0, $
+  $$ \gamma_n = | \frac{8\alpha^n}{2^n [(n-1)!]^2} \prod_{k=1}^{n/2}  (t^2 -
+(2k-1)^2)  |  (1 + O(\alpha)), $$
+ and if $ \alpha, t $ are fixed, then, for $ n \to \infty, $
+  $$ \gamma_n = \frac{8 |\alpha/2|^n}{[2 \cdot 4 ... (n-2)]^2}  | \cos
+(\frac{\pi}{2} t) |  [ 1 + O  (\frac{\log n}{n})  ]. $$
+  Similar formulae (see Theorems \ref{thm2} and \ref{thm4}) hold for odd $n.$
+The asymptotics for $\alpha \to 0 $ imply interesting identities for squares of
+integers.
+\\

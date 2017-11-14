@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0639
+From: Matteo G. A. Paris <RfFkMp.K23hl@7T4iyr.v20ns.G4>
+Date: Wed, 4 Apr 2007 19:06:14 GMT   (165kb)
+Date (revised v2): Thu, 19 Apr 2007 20:31:34 GMT   (166kb)
+Date (revised v3): Tue, 17 Jul 2007 16:53:17 GMT   (166kb)
+Date (revised v4): Tue, 2 Oct 2007 20:36:13 GMT   (308kb)
+
+Title: A measure of the non-Gaussian character of a quantum state
+Authors: Marco G. Genoni, Matteo G. A. Paris, Konrad Banaszek
+Categories: quant-ph
+Comments: revised and enlarged version, 7 pages, 4 figures
+Journal-ref: Phys. Rev. A 76, 042327 (2007)
+DOI: 10.1103/PhysRevA.76.042327
+\\
+  We address the issue of quantifying the non-Gaussian character of a bosonic
+quantum state and introduce a non-Gaussianity measure based on the
+Hilbert-Schmidt distance between the state under examination and a reference
+Gaussian state. We analyze in details the properties of the proposed measure
+and exploit it to evaluate the non-Gaussianity of some relevant single- and
+multi-mode quantum states. The evolution of non-Gaussianity is also analyzed
+for quantum states undergoing the processes of Gaussification by loss and
+de-Gaussification by photon-subtraction. The suggested measure is easily
+computable for any state of a bosonic system and allows to define a
+corresponding measure for the non-Gaussian character of a quantum operation.
+\\

@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0899
+From: Van Dixon <qYC@Eu7.unG.1lt>
+Date: Fri, 6 Apr 2007 15:37:01 GMT   (412kb)
+
+Title: CalFUSE v3: A Data-Reduction Pipeline for the Far Ultraviolet
+  Spectroscopic Explorer
+Authors: W. V. Dixon (1), D. J. Sahnow (1), P. E. Barrett (2 and 3), T. Civeit
+  (1 and 4), J. Dupuis (1 and 5), A. W. Fullerton (1 and 6), B. Godard (1 and
+  7), J. C. Hsu (2 and 8), M. E. Kaiser (1), J. W. Kruk (1), S. Lacour (1 and
+  9), D. J. Lindler (10), D. Massa (11), R. D. Robinson (1 and 8), M. L.
+  Romelfanger (1), P. Sonnentrucker (1) ((1) Johns Hopkins University, (2)
+  Space Telescope Science Institute, (3) U.S. Naval Observatory, (4) Centre
+  National d'Etudes Spatiales, (5) Canadian Space Agency, (6) University of
+  Victoria, (7) Institut d'Astrophysique de Paris, (8) Retired, (9) Sydney
+  University, (10) Sigma Space Corporation, (11) SGT, Inc.)
+Categories: astro-ph
+Comments: To appear in PASP; 29 pages, 13 figures, uses aastex, emulateapj
+DOI: 10.1086/518617
+\\
+  Since its launch in 1999, the Far Ultraviolet Spectroscopic Explorer (FUSE)
+has made over 4600 observations of some 2500 individual targets. The data are
+reduced by the Principal Investigator team at the Johns Hopkins University and
+archived at the Multimission Archive at Space Telescope (MAST). The
+data-reduction software package, called CalFUSE, has evolved considerably over
+the lifetime of the mission. The entire FUSE data set has recently been
+reprocessed with CalFUSE v3.2, the latest version of this software. This paper
+describes CalFUSE v3.2, the instrument calibrations upon which it is based, and
+the format of the resulting calibrated data files.
+\\

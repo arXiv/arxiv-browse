@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0800
+From: Tad Hogg <eSE.iBC4@jP.s79>
+Date: Thu, 5 Apr 2007 20:30:46 GMT   (199kb)
+
+Title: Quantum Auctions
+Authors: Tad Hogg, Pavithra Harsha and Kay-Yut Chen
+Categories: quant-ph
+Comments: 38 pages, 3 figures
+Journal-ref: Intl. J. of Quantum Information 5:751-780 (2007)
+\\
+  We present a quantum auction protocol using superpositions to represent bids
+and distributed search to identify the winner(s). Measuring the final quantum
+state gives the auction outcome while simultaneously destroying the
+superposition. Thus non-winning bids are never revealed. Participants can use
+entanglement to arrange for correlations among their bids, with the assurance
+that this entanglement is not observable by others. The protocol is useful for
+information hiding applications, such as partnership bidding with allocative
+externality or concerns about revealing bidding preferences. The protocol
+applies to a variety of auction types, e.g., first or second price, and to
+auctions involving either a single item or arbitrary bundles of items (i.e.,
+combinatorial auctions). We analyze the game-theoretical behavior of the
+quantum protocol for the simple case of a sealed-bid quantum, and show how a
+suitably designed adiabatic search reduces the possibilities for bidders to
+game the auction. This design illustrates how incentive rather that
+computational constraints affect quantum algorithm choices.
+\\

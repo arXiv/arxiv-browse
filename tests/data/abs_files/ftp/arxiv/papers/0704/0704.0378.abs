@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0378
+From: Maurice Duits <GN3IjuV.dHixx@Rzz.xjm782Qq.H6>
+Date: Tue, 3 Apr 2007 12:49:42 GMT   (51kb)
+
+Title: An equilibrium problem for the limiting eigenvalue distribution of
+  banded Toeplitz matrices
+Authors: Maurice Duits and Arno B.J. Kuijlaars
+Categories: math.CV math.CA
+Comments: 28 pages; 7 figures
+MSC-class: 15A18; 30E20; 31A99; 47B06
+\\
+  We study the limiting eigenvalue distribution of $n\times n$ banded Toeplitz
+matrices as $n\to \infty$. From classical results of Schmidt-Spitzer and
+Hirschman it is known that the eigenvalues accumulate on a special curve in the
+complex plane and the normalized eigenvalue counting measure converges weakly
+to a measure on this curve as $n\to\infty$. In this paper, we characterize the
+limiting measure in terms of an equilibrium problem. The limiting measure is
+one component of the unique vector of measures that minimes an energy
+functional defined on admissible vectors of measures. In addition, we show that
+each of the other components is the limiting measure of the normalized counting
+measure on certain generalized eigenvalues.
+\\

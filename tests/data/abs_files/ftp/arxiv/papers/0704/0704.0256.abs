@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0256
+From: Paul Harvey <5m0@TFkKt.95.WsYgus.Sd8>
+Date: Mon, 2 Apr 2007 20:39:38 GMT   (283kb)
+
+Title: Multi-spectral Observations of Lunar Occultations: I. Resolving The Dust
+  Shell Around AFGL 5440
+Authors: Paul M. Harvey and Andrew Oldag
+Categories: astro-ph
+Journal-ref: Astrophys.J.663:543-552,2007
+DOI: 10.1086/518588
+\\
+  We present observations and modeling of a lunar occultation of the
+dust-enshrouded carbon star AFGL 5440. The observations were made over a
+continuous range of wavelengths from 1 - 4um with a high-speed
+spectrophotometer designed expressly for this purpose. We find that the
+occultation fringes cannot be fit by any single-size model. We use the DUSTY
+radiative transfer code to model a circumstellar shell and fit both the
+observed occultation light curves and the spectral energy distribution
+described in the literature. We find a strong constraint on the inner radius of
+the dust shell, Tmax = 950 K +/- 50K, and optical depth at 5um of 0.5 +/- 0.1.
+The observations are best fit by models with a density gradient of r^-2 or the
+gradient derived by Ivezic & Elitzur for a radiatively driven hydrodynamic
+outflow. Our models cannot fit the observed IRAS 60um flux without assuming a
+substantial abundance of graphite or by assuming a substantially higher
+mass-loss rate in the past.
+\\

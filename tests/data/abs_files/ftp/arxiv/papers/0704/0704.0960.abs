@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0960
+From: Gui Lu Long <5apvti@DXyX.RUZ2TziA.CHq.Si>
+Date: Sat, 7 Apr 2007 00:32:46 GMT   (20kb)
+Date (revised v2): Fri, 15 Jun 2007 14:15:35 GMT   (72kb)
+
+Title: Generating Squeezed States of Nanomechanical Resonator
+Authors: Wen Yi Huo and Gui Lu Long
+Categories: quant-ph
+Comments: 4 pages 1 figure. One figure added, squeezing efficiency added. Noise
+  considered
+\\
+  We propose a scheme for generating squeezed states in solid state circuits
+consisting of a nanomechanical resonator (NMR), a superconducting Cooper-pair
+box (CPB) and a superconducting transmission line resonator (STLR). The
+nonlinear interaction between the NMR and the STLR can be implemented by
+setting the external biased flux of the CPB at certain values. The interaction
+Hamiltonian between the NMR and the STLR is derived by performing Fr$\rm\ddot
+o$hlich transformation on the total Hamiltonian of the combined system. Just by
+adiabatically keeping the CPB at the ground state, we get the standard
+parametric down-conversion Hamiltonian. The CPB plays the role of ``nonlinear
+media", and the squeezed states of the NMR can be easily generated in a manner
+similar to the three-wave mixing in quantum optics. This is the three-wave
+mixing in a solid-state circuit.
+\\

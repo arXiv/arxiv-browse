@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509009
+From: Benjamin Schlein <7EMhnat@stQ9.szuCg5CG.BUG>
+Date: Mon, 5 Sep 2005 16:48:52 GMT   (53kb)
+
+Title: Rayleigh Scattering at Atoms with Dynamical Nuclei
+Authors: J. Froehlich, M. Griesemer, B. Schlein
+Categories: math-ph math.MP
+Comments: 45 pages, 1 figure
+MSC-class: 81V10, 81U99
+\\
+  Scattering of photons at an atom with a dynamical nucleus is studied on the
+subspace of states of the system with a total energy below the threshold for
+ionization of the atom (Rayleigh scattering). The kinematics of the electron
+and the nucleus is chosen to be non-relativistic, and their spins are
+neglected. In a simplified model of a hydrogen atom or a one-electron ion
+interacting with the quantized radiation field in which the helicity of photons
+is neglected and the interactions between photons and the electron and nucleus
+are turned off at very high photon energies and at photon energies below an
+arbitrarily small, but fixed energy (infrared cutoff), asymptotic completeness
+of Rayleigh scattering is established rigorously. On the way towards proving
+this result, it is shown that, after coupling the electron and the nucleus to
+the photons, the atom still has a stable ground state, provided its center of
+mass velocity is smaller than the velocity of light; but its excited states are
+turned into resonances. The proof of asymptotic completeness then follows from
+extensions of a positive commutator method and of propagation estimates for the
+atom and the photons developed in previous papers.
+  The methods developed in this paper can be extended to more realistic models.
+It is, however, not known, at present, how to remove the infrared cutoff.
+\\

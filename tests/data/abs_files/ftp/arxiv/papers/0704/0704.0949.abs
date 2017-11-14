@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0949
+From: Delfim F. M. Torres <kSOVty@1jf.PW.fS>
+Date: Fri, 6 Apr 2007 21:31:14 GMT   (9kb)
+
+Title: Conservation laws for invariant functionals containing compositions
+Authors: Gastao S. F. Frederico, Delfim F. M. Torres
+Categories: math.OC
+Comments: Accepted for an oral presentation at the 7th IFAC Symposium on
+  Nonlinear Control Systems (NOLCOS 2007), to be held in Pretoria, South
+  Africa, 22-24 August, 2007
+MSC-class: 49K05; 49J05
+Journal-ref: Applicable Analysis, Volume 86, Issue 9, 2007, pp. 1117-1126.
+DOI: 10.1080/00036810701584583
+\\
+  The study of problems of the calculus of variations with compositions is a
+quite recent subject with origin in dynamical systems governed by chaotic maps.
+Available results are reduced to a generalized Euler-Lagrange equation that
+contains a new term involving inverse images of the minimizing trajectories. In
+this work we prove a generalization of the necessary optimality condition of
+DuBois-Reymond for variational problems with compositions. With the help of the
+new obtained condition, a Noether-type theorem is proved. An application of our
+main result is given to a problem appearing in the chaotic setting when one
+consider maps that are ergodic.
+\\

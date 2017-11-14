@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0806.0920
+From: Alexander Wolff <OQZiM6oAz.VAwx9@ZYh-UjR7UkrML.h2>
+Date: Thu, 5 Jun 2008 09:31:57 GMT   (380kb,D)
+Date (revised v2): Fri, 20 Jun 2008 09:13:11 GMT   (516kb,D)
+Date (revised v3): Thu, 16 Sep 2010 13:34:08 GMT   (408kb,D)
+
+Title: Drawing (Complete) Binary Tanglegrams: Hardness, Approximation,
+  Fixed-Parameter Tractability
+Authors: Kevin Buchin, Maike Buchin, Jaroslaw Byrka, Martin N\"ollenburg,
+  Yoshio Okamoto, Rodrigo I. Silveira, Alexander Wolff
+Categories: cs.CG cs.CC
+Comments: Journal version
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  A \emph{binary tanglegram} is a drawing of a pair of rooted binary trees
+whose leaf sets are in one-to-one correspondence; matching leaves are connected
+by inter-tree edges. For applications, for example, in phylogenetics, it is
+essential that both trees are drawn without edge crossings and that the
+inter-tree edges have as few crossings as possible. It is known that finding a
+tanglegram with the minimum number of crossings is NP-hard and that the problem
+is fixed-parameter tractable with respect to that number.
+  We prove that under the Unique Games Conjecture there is no constant-factor
+approximation for binary trees. We show that the problem is NP-hard even if
+both trees are complete binary trees. For this case we give an $O(n^3)$-time
+2-approximation and a new, simple fixed-parameter algorithm. We show that the
+maximization version of the dual problem for binary trees can be reduced to a
+version of MaxCut for which the algorithm of Goemans and Williamson yields a
+0.878-approximation.
+\\

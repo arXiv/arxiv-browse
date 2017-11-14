@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0799
+From: Ruxandra Bondarescu <Y2jCgWrz@7poW2.jtbVxFG.NMC>
+Date: Thu, 5 Apr 2007 20:55:58 GMT   (207kb)
+Date (revised v2): Tue, 7 Aug 2007 01:32:22 GMT   (549kb)
+Date (revised v3): Fri, 21 Sep 2007 05:13:07 GMT   (549kb)
+
+Title: Spin Evolution of Accreting Neutron Stars: Nonlinear Development of the
+  R-mode Instability
+Authors: Ruxandra Bondarescu, Saul A. Teukolsky and Ira Wasserman (Cornell
+  University)
+Categories: astro-ph gr-qc
+Comments: 18 pages, 9 figures. Error Corrected. Includes referee input.
+  Corrected References
+Journal-ref: Phys.Rev.D76:064019,2007
+DOI: 10.1103/PhysRevD.76.064019
+\\
+  The nonlinear saturation of the r-mode instability and its effects on the
+spin evolution of Low Mass X-ray Binaries (LMXBs) are modeled using the triplet
+of modes at the lowest parametric instability threshold. We solve numerically
+the coupled equations for the three mode amplitudes in conjunction with the
+spin and temperature evolution equations. We observe that very quickly the mode
+amplitudes settle into quasi-stationary states. Once these states are reached,
+the mode amplitudes can be found algebraically and the system of equations is
+reduced from eight to two equations: spin and temperature evolution.
+Eventually, the system may reach thermal equilibrium and either (1) undergo a
+cyclic evolution with a frequency change of at most 10%, (2) evolve toward a
+full equilibrium state in which the accretion torque balances the gravitational
+radiation emission, or (3) enter a thermogravitational runaway on a very long
+timescale of about $10^6$ years. Alternatively, a faster thermal runaway
+(timescale of about 100 years) may occur. The sources of damping considered are
+shear viscosity, hyperon bulk viscosity and boundary layer viscosity. We vary
+proprieties of the star such as the hyperon superfluid transition temperature
+T_c, the fraction of the star that is above the threshold for direct URCA
+reactions, and slippage factor, and map the different scenarios we obtain to
+ranges of these parameters. For all our bound evolutions the r-mode amplitude
+remains small $\sim 10^{-5}$. The spin frequency is limited by boundary layer
+viscosity to $\nu_{max} \sim 800 Hz [S_{ns}/(M_{1.4} R_6)]^{4/11} T_8^{-2/11}$.
+We find that for $\nu > 700$ Hz the r-mode instability would be active for
+about 1 in 1000 LMXBs and that only the gravitational waves from LMXBs in the
+local group of galaxies could be detected by advanced LIGO interferometers.
+\\

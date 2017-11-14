@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0876
+From: Josef Teichmann <yRyN8.NfAE6U7DS@rjN.zmee3D.k8.wg>
+Date: Fri, 6 Apr 2007 11:15:47 GMT   (6kb)
+
+Title: Non-monotone convergence in the quadratic Wasserstein distance
+Authors: Walter Schachermayer, Uwe Schmock, Josef Teichmann
+Categories: math.PR
+MSC-class: 60B10
+\\
+  We give an easy counter-example to Problem 7.20 from C. Villani's book on
+mass transport: in general, the quadratic Wasserstein distance between $n$-fold
+normalized convolutions of two given measures fails to decrease monotonically.
+\\

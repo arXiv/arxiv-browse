@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0914
+From: Allan Greenleaf <bdbgw@TgxA.N97VgwOVg.JgN>
+Date: Fri, 6 Apr 2007 18:44:19 GMT   (26kb)
+
+Title: Electromagnetic wormholes via handlebody constructions
+Authors: Allan Greenleaf, Yaroslav Kurylev, Matti Lassas and Gunther Uhlmann
+Categories: math.AP math-ph math.MP physics.optics
+Comments: 25 pages, 6 figures (some color)
+DOI: 10.1007/s00220-008-0492-7
+\\
+  Cloaking devices are prescriptions of electrostatic, optical or
+electromagnetic parameter fields (conductivity $\sigma(x)$, index of refraction
+$n(x)$, or electric permittivity $\epsilon(x)$ and magnetic permeability
+$\mu(x)$) which are piecewise smooth on $\mathbb R^3$ and singular on a
+hypersurface $\Sigma$, and such that objects in the region enclosed by $\Sigma$
+are not detectable to external observation by waves. Here, we give related
+constructions of invisible tunnels, which allow electromagnetic waves to pass
+between possibly distant points, but with only the ends of the tunnels visible
+to electromagnetic imaging. Effectively, these change the topology of space
+with respect to solutions of Maxwell's equations, corresponding to attaching a
+handlebody to $\mathbb R^3$. The resulting devices thus function as
+electromagnetic wormholes.
+\\

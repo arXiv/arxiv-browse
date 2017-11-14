@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0149
+From: Eric Gourgoulhon <LySb.AHL5yTvrJHb@axhcx.cL>
+Date: Mon, 2 Apr 2007 09:16:14 GMT   (63kb)
+Date (revised v2): Wed, 7 Nov 2007 09:42:19 GMT   (63kb)
+
+Title: Construction of initial data for 3+1 numerical relativity
+Authors: Eric Gourgoulhon (LUTH, CNRS / Observatoire de Paris / Univ. Paris 7)
+Categories: gr-qc
+Comments: Minor modifications, updated references, 28 pages, 5 figures,
+  contribution to the Proceedings of the VII Mexican School on Gravitation and
+  Mathematical Physics, held in Playa del Carmen, Mexico (Nov. 26 - Dec. 2,
+  2006), Journal of Physics: Conference Series, in press
+Journal-ref: J.Phys.Conf.Ser.91:012001,2007
+DOI: 10.1088/1742-6596/91/1/012001
+\\
+  This lecture is devoted to the problem of computing initial data for the
+Cauchy problem of 3+1 general relativity. The main task is to solve the
+constraint equations. The conformal technique, introduced by Lichnerowicz and
+enhanced by York, is presented. Two standard methods, the conformal
+transverse-traceless one and the conformal thin sandwich, are discussed and
+illustrated by some simple examples. Finally a short review regarding initial
+data for binary systems (black holes and neutron stars) is given.
+\\

@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0679
+From: Katsunori Iwasaki <ipfSHSa@9Ty8.xslXgS-q.4T.0D>
+Date: Thu, 5 Apr 2007 05:57:44 GMT   (63kb)
+
+Title: Finite branch solutions to Painleve VI around a fixed singular point
+Authors: Katsunori Iwasaki
+Categories: math.AG math.CA
+Comments: 45 pages, 22 figures, 5 tables
+MSC-class: 34M55; 37F10
+\\
+  Every finite branch solutions to the sixth Painleve equation around a fixed
+singular point is an algebraic branch solution. In particular a global solution
+is an algebraic solution if and only if it is finitely many-valued globally.
+The proof of this result relies on algebraic geometry of Painleve VI,
+Riemann-Hilbert correspondence, geometry and dynamics on cubic surfaces,
+resolutions of Kleinian singularities, and power geometry of algebraic
+differential equations. In the course of the proof we are also able to classify
+all finite branch solutions up to Backlund transformations.
+\\

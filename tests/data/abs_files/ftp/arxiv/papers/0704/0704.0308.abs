@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0308
+From: Ke Deng <lsYXUX@8kC.KDs.DR>
+Date: Tue, 3 Apr 2007 03:15:35 GMT   (102kb)
+
+Title: Effect of node deleting on network structure
+Authors: Ke Deng, Heping Zhao, Dejun Li
+Categories: physics.soc-ph
+Comments: 12 pages, 9 figures, to be published in physica a
+Journal-ref: Physica A 379 (2007) 714-726
+DOI: 10.1016/j.physa.2007.02.039
+\\
+  The ever-increasing knowledge of the structure of various real-world networks
+has uncovered their complex multi-mechanism-governed evolution processes.
+Therefore, a better understanding of the structure and evolution of these
+networked complex systems requires us to describe such processes in a more
+detailed and realistic manner. In this paper, we introduce a new type of
+network growth rule which comprises addition and deletion of nodes, and propose
+an evolving network model to investigate the effect of node deleting on network
+structure. It is found that, with the introduction of node deleting, network
+structure is significantly transformed. In particular, degree distribution of
+the network undergoes a transition from scale-free to exponential forms as the
+intensity of node deleting increases. At the same time, nontrivial
+disassortative degree correlation develops spontaneously as a natural result of
+network evolution in the model. We also demonstrate that node deleting
+introduced in the model does not destroy the connectedness of a growing network
+so long as the increasing rate of edges is not excessively small. In addition,
+it is found that node deleting will weaken but not eliminate the small-world
+effect of a growing network, and generally it will decrease the clustering
+coefficient in a network.
+\\

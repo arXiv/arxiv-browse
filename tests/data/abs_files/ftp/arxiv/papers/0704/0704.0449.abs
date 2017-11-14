@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0449
+From: Volker Braun <IACAgP@DIyh.Uk>
+Date: Tue, 3 Apr 2007 20:34:38 GMT   (60kb)
+
+Title: Worldsheet Instantons and Torsion Curves, Part B: Mirror Symmetry
+Authors: Volker Braun, Maximilian Kreuzer, Burt A. Ovrut, Emanuel Scheidegger
+Categories: hep-th
+Comments: 59 pages, LaTeX
+Report-no: UPR 1178-T, DISTA-2007, TUW-07-08
+Journal-ref: JHEP0710:023,2007
+DOI: 10.1088/1126-6708/2007/10/023
+\\
+  We apply mirror symmetry to the problem of counting holomorphic rational
+curves in a Calabi-Yau threefold X with Z_3 x Z_3 Wilson lines. As we found in
+Part A [hep-th/0703182], the integral homology group H_2(X,Z)=Z^3 + Z_3 + Z_3
+contains torsion curves. Using the B-model on the mirror of X as well as its
+covering spaces, we compute the instanton numbers. We observe that X is
+self-mirror even at the quantum level. Using the self-mirror property, we
+derive the complete prepotential on X, going beyond the results of Part A. In
+particular, this yields the first example where the instanton number depends on
+the torsion part of its homology class. Another consequence is that the
+threefold X provides a non-toric example for the conjectured exchange of
+torsion subgroups in mirror manifolds.
+\\

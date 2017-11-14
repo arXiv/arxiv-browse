@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0558
+From: Andreas H\"oring <S9U1dFyX@x2TCrYK.BbZ-xQGen3Ol.IO>
+Date: Wed, 4 Apr 2007 12:30:22 GMT   (7kb)
+
+Title: M-regularity of the Fano surface
+Authors: Andreas Hoering
+Categories: math.AG
+Comments: 5 pages
+MSC-class: 14K12
+\\
+  Let (A,\Theta) be a principally polarised abelian variety, and let Y be a
+subvariety. Pareschi and Popa conjectured that Y has minimal cohomology class
+if and only if the structure sheaf of Y satisfies a property that they call
+M-regularity.
+  Let now X be a smooth cubic threefold. By a classical result due to Clemens
+and Griffiths, its intermediate Jacobian J(X) is a principally polarised
+abelian variety; furthermore the Fano surface of lines on X can be embedded in
+J(X) and has minimal cohomology class. In this short note we show that its
+structure sheaf is M-regular.
+\\

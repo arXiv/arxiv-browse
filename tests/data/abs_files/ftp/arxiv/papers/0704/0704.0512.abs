@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0512
+From: Everaldo Arashiro <kp4Q7NMs@kao.7T>
+Date: Wed, 4 Apr 2007 08:12:16 GMT   (78kb)
+
+Title: Stable oscillations of a predator-prey probabilistic cellular automaton:
+  a mean-field approach
+Authors: T\^{a}nia Tom\'{e} and Kelly C de Carvalho
+Categories: cond-mat.stat-mech
+Comments: 10 figures
+DOI: 10.1088/1751-8113/40/43/005
+\\
+  We analyze a probabilistic cellular automaton describing the dynamics of
+coexistence of a predator-prey system. The individuals of each species are
+localized over the sites of a lattice and the local stochastic updating rules
+are inspired on the processes of the Lotka-Volterra model. Two levels of
+mean-field approximations are set up. The simple approximation is equivalent to
+an extended patch model, a simple metapopulation model with patches colonized
+by prey, patches colonized by predators and empty patches. This approximation
+is capable of describing the limited available space for species occupancy. The
+pair approximation is moreover able to describe two types of coexistence of
+prey and predators: one where population densities are constant in time and
+another displaying self-sustained time-oscillations of the population
+densities. The oscillations are associated with limit cycles and arise through
+a Hopf bifurcation. They are stable against changes in the initial conditions
+and, in this sense, they differ from the Lotka-Volterra cycles which depend on
+initial conditions. In this respect, the present model is biologically more
+realistic than the Lotka-Volterra model.
+\\

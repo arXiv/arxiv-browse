@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0309
+From: Guohun Zhu <GfN3H7L@q5TE.qkb.pR>
+Date: Tue, 3 Apr 2007 03:50:43 GMT   (9kb)
+Date (revised v2): Wed, 13 Jun 2007 15:42:14 GMT   (10kb)
+Date (revised v3): Fri, 13 Jul 2007 01:38:24 GMT   (10kb)
+
+Title: The Complexity of HCP in Digraps with Degree Bound Two
+Authors: Guohun Zhu
+Categories: cs.CC cs.DM
+Comments: 10 pages, 4 figures, had been submitted to a Journal
+\\
+  The Hamiltonian cycle problem (HCP) in digraphs D with degree bound two is
+solved by two mappings in this paper. The first bijection is between an
+incidence matrix C_{nm} of simple digraph and an incidence matrix F of balanced
+bipartite undirected graph G; The second mapping is from a perfect matching of
+G to a cycle of D. It proves that the complexity of HCP in D is polynomial, and
+finding a second non-isomorphism Hamiltonian cycle from a given Hamiltonian
+digraph with degree bound two is also polynomial. Lastly it deduces P=NP base
+on the results.
+\\

@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0329
+From: Hans J. Haubold <d6IKKuKy@Pes.5kg.Zrv>
+Date: Tue, 3 Apr 2007 07:11:58 GMT   (7kb)
+Date (revised v2): Tue, 7 Aug 2007 16:23:23 GMT   (7kb)
+
+Title: Solutions of fractional reaction-diffusion equations in terms of the
+  H-function
+Authors: H.J. Haubold, A.M. Mathai, R.K. Saxena
+Categories: math.PR math.CA math.ST stat.TH
+Comments: 9 pages, LaTeX, typos corrected
+Journal-ref: Bull. Astr. Soc. India 35(2007)681-689
+\\
+  This paper deals with the investigation of the solution of an unified
+fractional reaction-diffusion equation associated with the Caputo derivative as
+the time-derivative and Riesz-Feller fractional derivative as the
+space-derivative. The solution is derived by the application of the Laplace and
+Fourier transforms in closed form in terms of the H-function. The results
+derived are of general nature and include the results investigated earlier by
+many authors, notably by Mainardi et al. (2001, 2005) for the fundamental
+solution of the space-time fractional diffusion equation, and Saxena et al.
+(2006a, b) for fractional reaction- diffusion equations. The advantage of using
+Riesz-Feller derivative lies in the fact that the solution of the fractional
+reaction-diffusion equation containing this derivative includes the fundamental
+solution for space-time fractional diffusion, which itself is a generalization
+of neutral fractional diffusion, space-fractional diffusion, and
+time-fractional diffusion. These specialized types of diffusion can be
+interpreted as spatial probability density functions evolving in time and are
+expressible in terms of the H-functions in compact form.
+\\

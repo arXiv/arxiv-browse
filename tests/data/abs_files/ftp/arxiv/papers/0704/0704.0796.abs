@@ -1,0 +1,44 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0796
+From: Stephen Adler <XtfTI@iDQ.aD9>
+Date: Thu, 5 Apr 2007 20:12:11 GMT   (35kb)
+Date (revised v2): Fri, 27 Apr 2007 18:25:55 GMT   (35kb)
+Date (revised v3): Thu, 7 Jun 2007 19:34:04 GMT   (34kb)
+Date (revised v4): Mon, 16 Jul 2007 21:52:31 GMT   (34kb)
+
+Title: A density tensor hierarchy for open system dynamics: retrieving the
+  noise
+Authors: Stephen L. Adler
+Categories: quant-ph astro-ph cond-mat.stat-mech hep-ph math-ph math.MP
+Comments: TeX, 58 pages v2: minor editing and typos corrected; v3: some
+  significant revisions and shortening; v4: has final corrections in published
+  version
+Journal-ref: J.Phys.A40:8959-8990,2007
+DOI: 10.1088/1751-8113/40/30/020
+\\
+  We introduce a density tensor hierarchy for open system dynamics, that
+recovers information about fluctuations lost in passing to the reduced density
+matrix. For the case of fluctuations arising from a classical probability
+distribution, the hierarchy is formed from expectations of products of pure
+state density matrix elements, and can be compactly summarized by a simple
+generating function. For the case of quantum fluctuations arising when a
+quantum system interacts with a quantum environment in an overall pure state,
+the corresponding hierarchy is defined as the environmental trace of products
+of system matrix elements of the full density matrix. Only the lowest member of
+the quantum noise hierarchy is directly experimentally measurable. The unit
+trace and idempotence properties of the pure state density matrix imply descent
+relations for the tensor hierarchies, that relate the order $n$ tensor, under
+contraction of appropriate pairs of tensor indices, to the order $n-1$ tensor.
+As examples to illustrate the classical probability distribution formalism, we
+consider a quantum system evolving by It\^o stochastic and by jump process
+Schr\"odinger equations. As examples to illustrate the corresponding trace
+formalism in the quantum fluctuation case, we consider collisional Brownian
+motion of an infinite mass Brownian particle, and the weak coupling Born-Markov
+master equation. In different specializations, the latter gives the hierarchies
+generalizing the quantum optical master equation and the Caldeira--Leggett
+master equation. As a further application of the density tensor, we contrast
+stochastic Schr\"odinger equations that reduce and that do not reduce the state
+vector, and discuss why a quantum system coupled to a quantum environment
+behaves like the latter.
+\\

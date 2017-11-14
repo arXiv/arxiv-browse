@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0258
+From: Wschebor Nicolas <ejZCB@IHAw.zYq.T9>
+Date: Mon, 2 Apr 2007 20:42:06 GMT   (32kb)
+Date (revised v2): Tue, 23 Oct 2007 21:56:10 GMT   (33kb)
+
+Title: Correlation functions in the Non Perturbative Renormalization Group and
+  field expansion
+Authors: Diego Guerra, Ramon Mendez-Galain and Nicolas Wschebor
+Categories: hep-th cond-mat.stat-mech
+Comments: 20 pages, 6 figures. Minor changes. Version to be published in EPJ B
+Journal-ref: Eur.Phys.J.B59:357-365,2007
+DOI: 10.1140/epjb/e2007-00296-x
+\\
+  The usual procedure of including a finite number of vertices in Non
+Perturbative Renormalization Group equations in order to obtain $n$-point
+correlation functions at finite momenta is analyzed. This is done by exploiting
+a general method recently introduced which includes simultaneously all vertices
+although approximating their momentum dependence. The study is performed using
+the self-energy of the tridimensional scalar model at criticality. At least in
+this example, low order truncations miss quantities as the critical exponent
+$\eta$ by as much as 60%. However, if one goes to high order truncations the
+procedure seems to converge rapidly.
+\\

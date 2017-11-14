@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0905
+From: Dragan Lukic <76NSS@cI8Fn.x6B2yJvb.XW3>
+Date: Fri, 6 Apr 2007 17:53:35 GMT   (413kb)
+
+Title: Dielectronic Recombination of Fe XV forming Fe XIV: Laboratory
+  Measurements and Theoretical Calculations
+Authors: D. V. Luki\'c, M. Schnell, D. W. Savin, C. Brandau, E. W. Schmidt, S.
+  B\"ohm, A. M\"uller, S. Schippers, M. Lestinsky, F. Sprenger, A. Wolf, Z.
+  Altun, N. R. Badnell
+Categories: astro-ph
+Journal-ref: Astrophys.J.664:1244-1252,2007
+DOI: 10.1086/519073
+\\
+  We have measured resonance strengths and energies for dielectronic
+recombination (DR) of Mg-like Fe XV forming Al-like Fe XIV via N=3 -> N' = 3
+core excitations in the electron-ion collision energy range 0-45 eV. All
+measurements were carried out using the heavy-ion Test Storage Ring at the Max
+Planck Institute for Nuclear Physics in Heidelberg, Germany. We have also
+carried out new multiconfiguration Breit-Pauli (MCBP) calculations using the
+AUTOSTRUCTURE code. For electron-ion collision energies < 25 eV we find poor
+agreement between our experimental and theoretical resonance energies and
+strengths. From 25 to 42 eV we find good agreement between the two for
+resonance energies. But in this energy range the theoretical resonance
+strengths are ~ 31% larger than the experimental results. This is larger than
+our estimated total experimental uncertainty in this energy range of +/- 26%
+(at a 90% confidence level). Above 42 eV the difference in the shape between
+the calculated and measured 3s3p(^1P_1)nl DR series limit we attribute partly
+to the nl dependence of the detection probabilities of high Rydberg states in
+the experiment. We have used our measurements, supplemented by our
+AUTOSTRUCTURE calculations, to produce a Maxwellian-averaged 3 -> 3 DR rate
+coefficient for Fe XV forming Fe XIV. The resulting rate coefficient is
+estimated to be accurate to better than +/- 29% (at a 90% confidence level) for
+k_BT_e > 1 eV. At temperatures of k_BT_e ~ 2.5-15 eV, where Fe XV is predicted
+to form in photoionized plasmas, significant discrepancies are found between
+our experimentally-derived rate coefficient and previously published
+theoretical results. Our new MCBP plasma rate coefficient is 19-28% smaller
+than our experimental results over this temperature range.
+\\

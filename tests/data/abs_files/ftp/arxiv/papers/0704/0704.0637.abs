@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0637
+From: Marcelo Lopez-Fuentes <DW6LLU@qjAO.Pic.8E>
+Date: Wed, 4 Apr 2007 18:46:28 GMT   (387kb)
+Date (revised v2): Mon, 24 Sep 2007 16:53:07 GMT   (589kb)
+
+Title: Are constant loop widths an artifact of the background and the spatial
+  resolution?
+Authors: M.C. Lopez Fuentes, P. Demoulin, J.A. Klimchuk
+Categories: astro-ph
+Comments: Accepted for publication in ApJ
+DOI: 10.1086/523928
+\\
+  We study the effect of the coronal background in the determination of the
+diameter of EUV loops, and we analyze the suitability of the procedure followed
+in a previous paper (L\'opez Fuentes, Klimchuk & D\'emoulin 2006) for
+characterizing their expansion properties. For the analysis we create different
+synthetic loops and we place them on real backgrounds from data obtained with
+the Transition Region and Coronal Explorer (\textit{TRACE}). We apply to these
+loops the same procedure followed in our previous works, and we compare the
+results with real loop observations. We demonstrate that the procedure allows
+us to distinguish constant width loops from loops that expand appreciably with
+height, as predicted by simple force-free field models. This holds even for
+loops near the resolution limit. The procedure can easily determine when loops
+are below resolution limit and therefore not reliably measured. We find that
+small-scale variations in the measured loop width are likely due to
+imperfections in the background subtraction. The greatest errors occur in
+especially narrow loops and in places where the background is especially bright
+relative to the loop. We stress, however, that these effects do not impact the
+ability to measure large-scale variations. The result that observed loops do
+not expand systematically with height is robust.
+\\

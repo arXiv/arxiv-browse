@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0302
+From: Li Wang <fyekk67@X3E.20a.8D6>
+Date: Tue, 3 Apr 2007 16:12:08 GMT   (363kb)
+Date (revised v2): Fri, 6 Apr 2007 14:46:37 GMT   (363kb)
+
+Title: Spline Single-Index Prediction Model
+Authors: Li Wang and Lijian Yang
+Categories: math.ST stat.TH
+Comments: 39 pages,5 figures
+MSC-class: Primary: 62G08; Secondary: 62M10
+\\
+  For the past two decades, single-index model, a special case of projection
+pursuit regression, has proven to be an efficient way of coping with the high
+dimensional problem in nonparametric regression. In this paper, based on weakly
+dependent sample, we investigate the single-index prediction (SIP) model which
+is robust against deviation from the single-index model. The single-index is
+identified by the best approximation to the multivariate prediction function of
+the response variable, regardless of whether the prediction function is a
+genuine single-index function. A polynomial spline estimator is proposed for
+the single-index prediction coefficients, and is shown to be root-n consistent
+and asymptotically normal. An iterative optimization routine is used which is
+sufficiently fast for the user to analyze large data of high dimension within
+seconds. Simulation experiments have provided strong evidence that corroborates
+with the asymptotic theory. Application of the proposed procedure to the rive
+flow data of Iceland has yielded superior out-of-sample rolling forecasts.
+\\

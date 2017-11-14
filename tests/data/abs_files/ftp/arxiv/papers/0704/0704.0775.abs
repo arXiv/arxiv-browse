@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0775
+From: Efton Park <4.DtEK@QKH.Rho>
+Date: Thu, 5 Apr 2007 18:23:47 GMT   (15kb)
+
+Title: K_0-theory of n-potents in rings and algebras
+Authors: Efton Park and Jody Trout
+Categories: math.KT math.RA
+Comments: 22 pages
+MSC-class: 18F30 (Primary) 19A99, 19K99 (Secondary)
+\\
+  Let $n \geq 2$ be an integer. An \emph{$n$-potent} is an element $e$ of a
+ring $R$ such that $e^n = e$. In this paper, we study $n$-potents in matrices
+over $R$ and use them to construct an abelian group $K_0^n(R)$. If $A$ is a
+complex algebra, there is a group isomorphism $K_0^n(A) \cong
+\bigl(K_0(A)\bigr)^{n-1}$ for all $n \geq 2$. However, for algebras over
+cyclotomic fields, this is not true in general. We consider $K_0^n$ as a
+covariant functor, and show that it is also functorial for a generalization of
+homomorphism called an \emph{$n$-homomorphism}.
+\\

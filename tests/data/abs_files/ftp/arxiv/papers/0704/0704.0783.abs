@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0783
+From: Sebastien Zimmermann <YDArPn1s7.JshWjFQ3Wu@ej-TSck.uM>
+Date: Thu, 5 Apr 2007 19:32:04 GMT   (35kb)
+Date (revised v2): Tue, 20 Nov 2007 17:39:28 GMT   (22kb)
+
+Title: Stability of a finite volume scheme for the incompressible fluids
+Authors: Sebastien Zimmermann
+Categories: math.NA
+Comments: preprint; 14 pages; no figures
+MSC-class: 76M12, 76B99
+\\
+  We introduce a finite volume scheme for the two-dimensional incompressible
+Navier-Stokes equations. We use a triangular mesh. The unknowns for the
+velocity and pressure are respectively piecewise constant and affine. We use a
+projection method to deal with the incompressibility constraint. We show that
+the differential operators in the Navier-Stokes equations and their discrete
+counterparts share similar properties. In particular we state an inf-sup
+(Babuska-Brezzi) condition. Using these properties we infer the stability of
+the scheme.
+\\

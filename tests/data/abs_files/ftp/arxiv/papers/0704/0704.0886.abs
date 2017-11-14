@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0886
+From: Peter Jung <O4@Zpa.eEo-l8ck0.ka>
+Date: Fri, 6 Apr 2007 13:32:51 GMT   (167kb)
+Date (revised v2): Wed, 20 Jun 2007 16:04:41 GMT   (166kb)
+
+Title: Lower bounds for the conductivities of correlated quantum systems
+Authors: Peter Jung and Achim Rosch
+Categories: cond-mat.str-el
+Comments: Title changed; 9 pages, 2 figures
+Journal-ref: Phys. Rev. B 75, 245104 (2007)
+DOI: 10.1103/PhysRevB.75.245104
+\\
+  We show how one can obtain a lower bound for the electrical, spin or heat
+conductivity of correlated quantum systems described by Hamiltonians of the
+form H = H0 + g H1. Here H0 is an interacting Hamiltonian characterized by
+conservation laws which lead to an infinite conductivity for g=0. The small
+perturbation g H1, however, renders the conductivity finite at finite
+temperatures. For example, H0 could be a continuum field theory, where momentum
+is conserved, or an integrable one-dimensional model while H1 might describe
+the effects of weak disorder. In the limit g to 0, we derive lower bounds for
+the relevant conductivities and show how they can be improved systematically
+using the memory matrix formalism. Furthermore, we discuss various applications
+and investigate under what conditions our lower bound may become exact.
+\\

@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0162
+From: Igor Grabec <wPAP.u4LSV5@MS.Gr9-Xq.Pw>
+Date: Mon, 2 Apr 2007 10:54:21 GMT   (109kb)
+
+Title: Estimation of experimental data redundancy and related statistics
+Authors: I. Grabec
+Categories: physics.data-an physics.comp-ph
+Comments: 7 pages, 5 eps figures, uses svjour.cls
+\\
+  Redundancy of experimental data is the basic statistic from which the
+complexity of a natural phenomenon and the proper number of experiments needed
+for its exploration can be estimated. The redundancy is expressed by the
+entropy of information pertaining to the probability density function of
+experimental variables. Since the calculation of entropy is inconvenient due to
+integration over a range of variables, an approximate expression for redundancy
+is derived that includes only a sum over the set of experimental data about
+these variables. The approximation makes feasible an efficient estimation of
+the redundancy of data along with the related experimental information and
+information cost function. From the experimental information the complexity of
+the phenomenon can be simply estimated, while the proper number of experiments
+needed for its exploration can be determined from the minimum of the cost
+function. The performance of the approximate estimation of these statistics is
+demonstrated on two-dimensional normally distributed random data.
+\\

@@ -1,0 +1,45 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0044
+From: Alexander Schekochihin <C.rXSbXUF892KR@eqt8S2K9.8g.1l>
+Date: Sat, 31 Mar 2007 17:47:54 GMT   (390kb)
+Date (revised v2): Sat, 24 May 2008 19:38:45 GMT   (645kb)
+Date (revised v3): Sat, 24 Jan 2009 19:05:36 GMT   (693kb)
+Date (revised v4): Sat, 9 May 2009 19:26:10 GMT   (693kb)
+
+Title: Astrophysical gyrokinetics: kinetic and fluid turbulent cascades in
+  magnetized weakly collisional plasmas
+Authors: A. A. Schekochihin (Oxford), S. C. Cowley (Culham), W. Dorland
+  (Maryland), G. W. Hammett (Princeton), G. G. Howes (Iowa), E. Quataert
+  (Berkeley), T. Tatsuno (Maryland)
+Categories: astro-ph nlin.CD physics.plasm-ph physics.space-ph
+Comments: aastex using emulateapj, 65 pages, 10 figures; replaced to match
+  published version
+Journal-ref: ApJS 182, 310 (2009)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We present a theoretical framework for plasma turbulence in astrophysical
+plasmas (solar wind, interstellar medium, galaxy clusters, accretion disks).
+The key assumptions are that the turbulence is anisotropic with respect to the
+mean magnetic field and frequencies are low compared to the ion cyclotron
+frequency. The energy injected at the outer scale scale has to be converted
+into heat, which ultimately cannot be done without collisions. A KINETIC
+CASCADE develops that brings the energy to collisional scales both in space and
+velocity. Its nature depends on the physics of plasma fluctuations. In each of
+the physically distinct scale ranges, the kinetic problem is systematically
+reduced to a more tractable set of equations. In the "inertial range" above the
+ion gyroscale, the kinetic cascade splits into a cascade of Alfvenic
+fluctuations, which are governed by the RMHD equations at both the collisional
+and collisionless scales, and a passive cascade of compressive fluctuations,
+which obey a linear kinetic equation along the moving field lines associated
+with the Alfvenic component. In the "dissipation range" between the ion and
+electron gyroscales, there are again two cascades: the kinetic-Alfven-wave
+(KAW) cascade governed by two fluid-like Electron RMHD equations and a passive
+phase-space cascade of ion entropy fluctuations. The latter cascade brings the
+energy of the inertial-range fluctuations that was damped by collisionless
+wave-particle interaction at the ion gyroscale to collisional scales in the
+phase space and leads to ion heating. The KAW energy is similarly damped at the
+electron gyroscale and converted into electron heat. Kolmogorov-style scaling
+relations are derived for these cascades. Astrophysical and space-physical
+applications are discussed in detail.
+\\

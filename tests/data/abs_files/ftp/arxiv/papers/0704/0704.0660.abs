@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0660
+From: Ryan Barnett <tEmBUDfy@exmwTgm.n6i>
+Date: Thu, 5 Apr 2007 06:15:52 GMT   (948kb)
+
+Title: Multiscale model of electronic behavior and localization in stretched
+  dry DNA
+Authors: Ryan Barnett, Paul Maragakis, Ari Turner, Maria Fyta, Efthimios
+  Kaxiras
+Categories: cond-mat.mtrl-sci cond-mat.str-el
+Comments: 13 Pages, 9 Figures. Review-style article to be published in special
+  issue of Journal of Materials Science
+Journal-ref: J. Mater. Sci. 42, 8894 (2007).
+DOI: 10.1007/s10853-007-1901-6
+\\
+  When the DNA double helix is subjected to external forces it can stretch
+elastically to elongations reaching 100% of its natural length. These
+distortions, imposed at the mesoscopic or macroscopic scales, have a dramatic
+effect on electronic properties at the atomic scale and on electrical transport
+along DNA. Accordingly, a multiscale approach is necessary to capture the
+electronic behavior of the stretched DNA helix. To construct such a model, we
+begin with accurate density-functional-theory calculations for electronic
+states in DNA bases and base pairs in various relative configurations
+encountered in the equilibrium and stretched forms. These results are
+complemented by semi-empirical quantum mechanical calculations for the states
+of a small size [18 base pair poly(CG)-poly(CG)] dry, neutral DNA sequence,
+using previously published models for stretched DNA. The calculated electronic
+states are then used to parametrize an effective tight-binding model that can
+describe electron hopping in the presence of environmental effects, such as the
+presence of stray water molecules on the backbone or structural features of the
+substrate. These effects introduce disorder in the model hamiltonian which
+leads to electron localization. The localization length is smaller by several
+orders of magnitude in stretched DNA relative to that in the unstretched
+structure.
+\\

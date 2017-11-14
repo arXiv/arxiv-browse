@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0295
+From: Saugata Basu <dfdRRF5.NvTE@uKbS.dncmTQ.QMJ>
+Date: Tue, 3 Apr 2007 05:51:58 GMT   (20kb)
+Date (revised v2): Thu, 30 Aug 2007 18:40:15 GMT   (22kb)
+Date (revised v3): Sat, 22 Mar 2008 03:43:25 GMT   (25kb)
+
+Title: On the number of topological types occurring in a parametrized family of
+  arrangements
+Authors: Saugata Basu
+Categories: math.CO math.GT
+Comments: 20 pages, 2 figures. Revised version with updated bibliography and
+  corrected references
+MSC-class: 52C45
+Journal-ref: Discrete Comput. Geom. 40:481-503 (2008)
+\\
+  Let ${\mathcal S}(\R)$ be an o-minimal structure over $\R$, $T \subset
+\R^{k_1+k_2+\ell}$ a closed definable set, and $$ \displaylines{\pi_1:
+\R^{k_1+k_2+\ell}\to \R^{k_1 + k_2}, \pi_2: \R^{k_1+k_2+\ell}\to \R^{\ell}, \
+\pi_3: \R^{k_1 + k_2} \to \R^{k_2}} $$ the projection maps.
+  For any collection ${\mathcal A} = \{A_1,...,A_n\}$ of subsets of
+$\R^{k_1+k_2}$, and $\z \in \R^{k_2}$, let $\A_\z$ denote the collection of
+subsets of $\R^{k_1}$, $\{A_{1,\z},..., A_{n,\z}\}$, where $A_{i,\z} = A_i \cap
+\pi_3^{-1}(\z), 1 \leq i \leq n$. We prove that there exists a constant $C =
+C(T) > 0,$ such that for any family ${\mathcal A} = \{A_1,...,A_n\}$ of
+definable sets, where each $A_i = \pi_1(T \cap \pi_2^{-1}(\y_i))$, for some
+$\y_i \in \R^{\ell}$, the number of distinct stable homotopy types of $\A_\z,
+\z \in \R^{k_2}$, is bounded by $ \displaystyle{C \cdot n^{(k_1+1)k_2},} $
+while the number of distinct homotopy types is bounded by $ \displaystyle{C
+\cdot n^{(k_1+3)k_2}.} $ This generalizes to the general o-minimal setting,
+bounds of the same type proved in \cite{BV} for semi-algebraic and
+semi-Pfaffian families. One main technical tool used in the proof of the above
+results, is a topological comparison theorem which might be of independent
+interest in the study of arrangements.
+\\

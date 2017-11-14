@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0183
+From: Tekin Dereli <ZEBf31F@1k.Dx3.b9>
+Date: Mon, 2 Apr 2007 13:12:48 GMT   (178kb)
+
+Title: Temperature Dependence of the Tensile Properties of Single Walled Carbon
+  Nanotubes: O(N) Tight Binding MD Simulation
+Authors: G. Dereli and B. Sungu (Yildiz Tech. Univ., Istanbul)
+Categories: cond-mat.mtrl-sci
+DOI: 10.1103/PhysRevB.75.184104
+\\
+  This paper examines the effect of temperature on the structural stability and
+mechanical properties of 20 layered (10,10) single walled carbon nanotubes
+(SWCNTs) under tensile loading using an O(N) tight binding molecular dynamics
+(TBMD) simulation method. We observed that (10,10) tube can sustain its
+structural stability for the strain values of 0.23 in elongation and 0.06 in
+compression at 300K. Bond breaking strain value decreases with increasing
+temperature under streching but not under compression. The elastic limit,
+Young's modulus, tensile strength and Poisson ratio are calculated as 0.10,
+0.395 TPa, 83.23 GPa, 0.285, respectively, at 300K. In the temperature range
+from 300K to 900K; Young's modulus and the tensile strengths are decreasing
+with increasing temperature while the Poisson ratio is increasing. At higher
+temperatures, Young's modulus starts to increase while the Poisson ratio and
+tensile strength decrease. In the temperature range from 1200K to 1800K, the
+SWCNT is already deformed and softened. Applying strain on these deformed and
+softened SWCNTs do not follow the same pattern as in the temperature range of
+300K to 900K.
+\\

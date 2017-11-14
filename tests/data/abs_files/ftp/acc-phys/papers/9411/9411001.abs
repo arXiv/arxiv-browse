@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:acc-phys/9411001
+From: Salman Habib <NdENv@u0-4VU8.fWz4.XrM>
+Date: Tue, 1 Nov 1994 18:57:48 GMT   (199kb)
+
+Title: Symplectic Computation of Lyapunov Exponents
+Authors: Salman Habib and Robert D. Ryne
+Categories: acc-phys physics.acc-ph
+Comments: 12 pages, uuencoded PostScript (figures included)
+Report-no: LA-UR-94-3641
+\\
+  A recently developed method for the calculation of Lyapunov exponents of
+dynamical systems is described. The method is applicable whenever the
+linearized dynamics is Hamiltonian. By utilizing the exponential representation
+of symplectic matrices, this approach avoids the renormalization and
+reorthogonalization procedures necessary in usual techniques. It is also easily
+extendible to damped systems. The method is illustrated by considering two
+examples of physical interest: a model system that describes the beam halo in
+charged particle beams and the driven van der Pol oscillator.
+\\

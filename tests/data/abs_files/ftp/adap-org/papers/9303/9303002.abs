@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:adap-org/9303002
+From: Kunihiko Kaneko <0zPCcL@ifbx7.v.u-wGgRw.yR.G4>
+Date: Mon, 8 Mar 1993 00:00:00 GMT   (0kb,I)
+Date (revised v2): Mon, 29 Mar 1993 02:17:00 GMT   (9kb)
+
+Title: Evolution to the Edge of Chaos in Imitation Game
+Authors: Kunihiko Kaneko and Junji Suzuki
+Categories: adap-org nlin.AO q-bio.PE
+Comments: CYCLER Paper 93mar006. 8 pages, LaTex. (3.28 revised for minor LaTeX
+  changes)
+\\
+  Motivated by the evolution of complex bird songs, an abstract imitation game
+is proposed to study the increase of dynamical complexity: Artificial "birds"
+display a "song" time series to each other, and those that imitate the other's
+song better win the game. With the introduction of population dynamics
+according to the score of the game and the mutation of parameters for the song
+dynamics, the dynamics is found to evolve towards the borderline between chaos
+and a periodic window, after punctuated equilibria. The importance of edge of
+chaos with topological chaos for complexity is stressed.
+\\

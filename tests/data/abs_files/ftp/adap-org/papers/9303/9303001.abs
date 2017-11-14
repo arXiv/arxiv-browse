@@ -1,0 +1,17 @@
+------------------------------------------------------------------------------
+\\
+arXiv:adap-org/9303001
+From: Ruediger Schack <TXsGxnB@tRikhhA.g0S.E4w>
+Date: Fri, 5 Mar 1993 23:26:51 GMT   (4kb)
+
+Title: The length of a typical Huffman codeword
+Authors: R. Schack (University of New Mexico)
+Categories: adap-org nlin.AO
+Comments: 4 pages, LATEX
+\\
+  If p is the probability of a letter of a memoryless source, the length l of
+the corresponding binary Huffman codeword can be very different from the value
+-log p. We show that, nevertheless, for a typical letter, l is approximately
+equal to -log p. More precisely, the probability that l differs from -log p by
+more than m decreases exponentially with m.
+\\

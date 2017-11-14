@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0623
+From: Edoardo Milotti <WOSeJcq@lO.A1QV.0t>
+Date: Wed, 4 Apr 2007 17:30:42 GMT   (804kb)
+
+Title: Algorithm for anisotropic diffusion in hydrogen-bonded networks
+Authors: Edoardo Milotti
+Categories: cond-mat.soft
+Comments: 11 figures
+\\
+  In this paper I describe a specialized algorithm for anisotropic diffusion
+determined by a field of transition rates. The algorithm can be used to
+describe some interesting forms of diffusion that occur in the study of proton
+motion in a network of hydrogen bonds. The algorithm produces data that require
+a nonstandard method of spectral analysis which is also developed here.
+Finally, I apply the algorithm to a simple specific example.
+\\

@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0708
+From: Marc Dambrine <PMGo.GM3dHYA0@WRu.bJ>
+Date: Thu, 5 Apr 2007 11:46:19 GMT   (30kb)
+
+Title: On second order shape optimization methods for electrical impedance
+  tomography
+Authors: Lekbir Afraites (LMAC), Marc Dambrine (LMAC), Djalil Kateb (LMAC)
+Categories: math.OC
+Proxy: ccsd hal-00140211
+\\
+  This paper is devoted to the analysis of a second order method for recovering
+the \emph{a priori} unknown shape of an inclusion $\omega$ inside a body
+$\Omega$ from boundary measurement. This inverse problem - known as electrical
+impedance tomography - has many important practical applications and hence has
+focussed much attention during the last years. However, to our best knowledge,
+no work has yet considered a second order approach for this problem. This paper
+aims to fill that void: we investigate the existence of second order derivative
+of the state $u$ with respect to perturbations of the shape of the interface
+$\partial\omega$, then we choose a cost function in order to recover the
+geometry of $\partial \omega$ and derive the expression of the derivatives
+needed to implement the corresponding Newton method. We then investigate the
+stability of the process and explain why this inverse problem is severely
+ill-posed by proving the compactness of the Hessian at the global minimizer.
+\\

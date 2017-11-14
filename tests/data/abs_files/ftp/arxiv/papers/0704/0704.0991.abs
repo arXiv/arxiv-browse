@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0991
+From: Masahiko Egami <mptbx@l69FZ.l0N>
+Date: Mon, 9 Apr 2007 19:25:39 GMT   (231kb)
+
+Title: A Direct Method for Solving Optimal Switching Problems of
+  One-Dimensional Diffusions
+Authors: Masahiko Egami
+Categories: math.OC
+\\
+  In this paper, we propose a direct solution method for optimal switching
+problems of one-dimensional diffusions. This method is free from conjectures
+about the form of the value function and switching strategies, or does not
+require the proof of optimality through quasi-variational inequalities. The
+direct method uses a general theory of optimal stopping problems for
+one-dimensional diffusions and characterizes the value function as sets of the
+smallest linear majorants in their respective transformed spaces.
+\\

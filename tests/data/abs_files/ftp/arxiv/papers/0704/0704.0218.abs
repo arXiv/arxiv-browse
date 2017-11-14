@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0218
+From: Yuri Pritykin <abys.jh815Rtw@r6Yy8.TFm>
+Date: Mon, 2 Apr 2007 15:45:37 GMT   (11kb)
+
+Title: On Almost Periodicity Criteria for Morphic Sequences in Some Particular
+  Cases
+Authors: Yuri Pritykin
+Categories: cs.DM cs.LO
+Comments: 9 pages. To be presented on 11th International Conference on
+  Developments in Language Theory (DLT'2007), Turku, Finland, July 2007.
+ACM-class: G.2.1; F.2.2; F.4.3
+\\
+  In some particular cases we give criteria for morphic sequences to be almost
+periodic (=uniformly recurrent). Namely, we deal with fixed points of
+non-erasing morphisms and with automatic sequences. In both cases a
+polynomial-time algorithm solving the problem is found. A result more or less
+supporting the conjecture of decidability of the general problem is given.
+\\

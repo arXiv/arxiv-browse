@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0818
+From: Michael Shay <vFSx@JGZmQHi.2cqQ.Fhn>
+Date: Fri, 6 Apr 2007 00:11:21 GMT   (903kb)
+
+Title: Two-scale structure of the electron dissipation region during
+  collisionless magnetic reconnection
+Authors: M. A. Shay, J. F. Drake, and M. Swisdak
+Categories: physics.plasm-ph physics.space-ph
+Comments: Submitted to Physical Review Letters, 4 pages, 4 figures
+DOI: 10.1103/PhysRevLett.99.155002
+\\
+  Particle in cell (PIC) simulations of collisionless magnetic reconnection are
+presented that demonstrate that the electron dissipation region develops a
+distinct two-scale structure along the outflow direction. The length of the
+electron current layer is found to decrease with decreasing electron mass,
+approaching the ion inertial length for a proton-electron plasma. A surprise,
+however, is that the electrons form a high-velocity outflow jet that remains
+decoupled from the magnetic field and extends large distances downstream from
+the x-line. The rate of reconnection remains fast in very large systems,
+independent of boundary conditions and the mass of electrons.
+\\

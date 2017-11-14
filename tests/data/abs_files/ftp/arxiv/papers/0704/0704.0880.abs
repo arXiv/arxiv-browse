@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0880
+From: Qiuping A. Wang <MRZlJ@FrtdfH.FNvJ-CM6HYH.qv>
+Date: Fri, 6 Apr 2007 11:53:21 GMT   (159kb)
+
+Title: Stochastic action principle and maximum entropy
+Authors: Q. A. Wang (ISMANS), F. Tsobnang (ISMANS), S. Bangoup (ISMANS), F.
+  Dzangue (ISMANS), A. Jeatsa (ISMANS), A. Le M{\'e}haut{\'e} (ISMANS)
+Categories: cond-mat.stat-mech
+Comments: This work is a further development of the idea proposed in the paper
+  cond-mat/0407515, 15 pages
+Proxy: ccsd hal-00140483
+\\
+  A stochastic action principle for stochastic dynamics is revisited. We
+present first numerical diffusion experiments showing that the diffusion path
+probability depend exponentially on average Lagrangian action. This result is
+then used to derive an uncertainty measure defined in a way mimicking the heat
+or entropy in the first law of thermodynamics. It is shown that the path
+uncertainty (or path entropy) can be measured by the Shannon information and
+that the maximum entropy principle and the least action principle of classical
+mechanics can be unified into a concise form. It is argued that this action
+principle, hence the maximum entropy principle, is simply a consequence of the
+mechanical equilibrium condition extended to the case of stochastic dynamics.
+\\

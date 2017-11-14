@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0609
+From: Thomas B. Bahder <5ZFRkf.EPRJSf@08.Ug3Q.MwS>
+Date: Wed, 4 Apr 2007 16:31:03 GMT   (65kb)
+
+Title: The effectiveness of quantum operations for eavesdropping on sealed
+  messages
+Authors: Paul A Lopata, Thomas B Bahder
+Categories: quant-ph
+Comments: 10 pages, 2 figures. Third Feynman Festival, 25 -- 29 August 2006,
+  University of Maryland, College Park, Maryland, U.S.A
+DOI: 10.1088/1742-6596/70/1/012011
+\\
+  A quantum protocol is described which enables a user to send sealed messages
+and that allows for the detection of active eavesdroppers. We examine a class
+of eavesdropping strategies, those that make use of quantum operations, and we
+determine the information gain versus disturbance caused by these strategies.
+We demonstrate this tradeoff with an example and we compare this protocol to
+quantum key distribution, quantum direct communication, and quantum seal
+protocols.
+\\

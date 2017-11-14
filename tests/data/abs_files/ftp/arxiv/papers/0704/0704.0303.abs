@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0303
+From: Stefan Westerhoff <13EmlDyZq8@cHGxq.PM1NVKZu.F3L>
+Date: Tue, 3 Apr 2007 01:55:20 GMT   (1257kb)
+Date (revised v2): Mon, 2 Jul 2007 17:33:28 GMT   (783kb)
+
+Title: Measurement of the Aerosol Phase Function at the Pierre Auger
+  Observatory
+Authors: S.Y. BenZvi, B.M. Connolly, J.A.J. Matthews, M. Prouza, E.F. Visbal,
+  S. Westerhoff
+Categories: astro-ph physics.ao-ph
+Comments: 19 pages, 10 figures (4 in color), replaced with version accepted for
+  publication in Astroparticle Physics
+Journal-ref: Astropart.Phys.28:312-320,2007
+DOI: 10.1016/j.astropartphys.2007.06.005
+\\
+  Air fluorescence detectors measure the energy of ultra-high energy cosmic
+rays by collecting fluorescence light emitted from nitrogen molecules along the
+extensive air shower cascade. To ensure a reliable energy determination, the
+light signal needs to be corrected for atmospheric effects, which not only
+attenuate the signal, but also produce a non-negligible background component
+due to scattered Cherenkov light and multiple-scattered light. The correction
+requires regular measurements of the aerosol attenuation length and the aerosol
+phase function, defined as the probability of light scattered in a given
+direction. At the Pierre Auger Observatory in Malargue, Argentina, the phase
+function is measured on an hourly basis using two Aerosol Phase Function (APF)
+light sources. These sources direct a UV light beam across the field of view of
+the fluorescence detectors; the phase function can be extracted from the image
+of the shots in the fluorescence detector cameras. This paper describes the
+design, current status, standard operation procedure, and performance of the
+APF system at the Pierre Auger Observatory.
+\\
