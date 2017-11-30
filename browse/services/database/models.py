@@ -6,7 +6,6 @@ from sqlalchemy import BigInteger, Column, DateTime, Enum, \
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy, Model
 from typing import Any, NewType
-#SQLAlchemyType = NewType('SQLAlchemyType', Any)
 
 dbx: SQLAlchemy = SQLAlchemy()
 

@@ -41,6 +41,3 @@ def get_institution(ip: str) -> Optional[str]:
         return None
     except SQLAlchemyError as e:
         raise IOError('Database error: %s' % e) from e
-
-
-__all__ = ["get_institution", "db"]
