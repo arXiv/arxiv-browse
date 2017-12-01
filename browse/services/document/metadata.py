@@ -14,28 +14,30 @@ class ArXivAbsParsingError(ArXivAbsError):
 
     pass
 
+# (recipe for later consideration)
 # Base class. Uses a descriptor to set a value
-class Descriptor:
-    def __init__(self, name=None, **opts):
-        self.name = name
-        for key, value in opts.items():
-            setattr(self, key, value)
+# class Descriptor:
+#     def __init__(self, name=None, **opts):
+#         self.name = name
+#         for key, value in opts.items():
+#             setattr(self, key, value)
+#
+#     def __set__(self, instance, value):
+#         instance.__dict__[self.name] = value
+#
+# # Decorator for applying type checking
+# def Typed(expected_type, cls=None):
+#     if cls is None:
+#         return lambda cls: Typed(expected_type, cls)
+#
+#     super_set = cls.__set__
+#     def __set__(self, instance, value):
+#         if not isinstance(value, expected_type):
+#             raise TypeError('expected ' + str(expected_type))
+#         super_set(self, instance, value)
+#     cls.__set__ = __set__
+#     return cls
 
-    def __set__(self, instance, value):
-        instance.__dict__[self.name] = value
-
-# Decorator for applying type checking
-def Typed(expected_type, cls=None):
-    if cls is None:
-        return lambda cls: Typed(expected_type, cls)
-
-    super_set = cls.__set__
-    def __set__(self, instance, value):
-        if not isinstance(value, expected_type):
-            raise TypeError('expected ' + str(expected_type))
-        super_set(self, instance, value)
-    cls.__set__ = __set__
-    return cls
 
 class ArXivDocMetadata(object):
     """Class for representing arXiv document metadata."""
@@ -157,6 +159,97 @@ class ArXivDocMetadata(object):
         return (
             '{}(filename="{}")'.format(self.__class__.__name__, self.filename)
         )
+
+    def __str__(self):
+        """Return the string epresentation of the instance in json."""
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=True)
+
+# class ArXivItem():
+#     """Central class for arXiv items (papers)."""
+
+    # def __init__():
+
+
+class ArXivIdentifier():
+    """Class for arXiv identifiers."""
+
+    # 1991 to 2007-03
+    RE_ARXIV_OLD_ID = re.compile(
+        r'^(?P<archive>[a-z]{1,}(\-[a-z]{2,})?)(\.([a-zA-Z\-]{2,}))?\/'
+        r'(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))(?P<num>\d\d\d)'
+        r'(v(?P<version>\d+))?([#\/].*)?$')
+
+    # 2007-04 to present
+    RE_ARXIV_NEW_ID = re.compile(
+        r'^(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))\.(?P<num>\d{4,5})'
+        r'(v(?P<version>\d+))?([#\/].*)?$'
+    )
+
+    def __init__(self, arxiv_id: str):
+        """Attempt to validate the provided arXiv id.
+
+        Parse constituent parts.
+        """
+        self.version = 0
+        parse_actions = ((self.RE_ARXIV_OLD_ID, self._parse_old_id),
+                         (self.RE_ARXIV_NEW_ID, self._parse_new_id))
+
+        id_match = None
+        for regex, parse_action in parse_actions:
+            id_match = re.match(regex, arxiv_id)
+            if id_match:
+                parse_action(id_match)
+                break
+
+        if not id_match:
+            # TODO: improve
+            raise Exception('Invalid arXiv identifier')
+
+        if id_match.group('version'):
+            self.version = int(id_match.group('version'))
+            self.idv = '{}v{}'.format(
+                self.id, self.version)
+        else:
+            self.idv = self.id
+        self.yymm = id_match.group('yymm')
+        self.month = int(id_match.group('mm'))
+        self.num = int(id_match.group('num'))
+
+    def _parse_old_id(self, match):
+        """Populate instance attributes parsed from old arXiv identifier."""
+        self.is_old_id = True
+        self.archive = match.group('archive')
+        self.year = int(match.group('yy')) + 1900
+        self.year += 100 if int(match.group('yy')) < 91 else 0
+
+        if match.group('version'):
+            self.version = int(match.group('version'))
+        self.filename = '{}{:03d}'.format(
+            match.group('yymm'),
+            int(match.group('num')))
+        self.id = '{}/{}'.format(self.archive, self.filename)
+        self.is_submission = True if self.archive == 'submit' else False
+
+    def _parse_new_id(self, match):
+        """Populate instance attributes from a new arXiv identifier.
+
+        e.g. 1711.01234
+        """
+        self.is_old_id = False
+        self.archive = 'arxiv'
+        # works only until 2099
+        self.year = int(match.group('yy')) + 2000
+        if self.year >= 2015:
+            self.id = '{:04d}.{:05d}'.format(
+                int(match.group('yymm')),
+                int(match.group('num')))
+        else:
+            self.id = '{:04d}.{:04d}'.format(
+                int(match.group('yymm')),
+                int(match.group('num')))
+        self.filename = self.id
+        self.is_submission = False
 
     def __str__(self):
         """Return the string epresentation of the instance in json."""
