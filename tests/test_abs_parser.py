@@ -7,7 +7,7 @@ ABS_FILES = 'tests/data/abs_files'
 
 
 class TestAbsParser(TestCase):
-    """:func:`.get_institution` gets an institution label for an IP address."""
+    """Test  parsing metadata from .abs files."""
 
     def test_bulk_parsing(self):
         """Parse all nonempty .abs files in test set."""
