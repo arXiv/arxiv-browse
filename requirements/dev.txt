@@ -15,3 +15,4 @@ SQLAlchemy==1.1.15
 Werkzeug==0.12.2
 mypy==0.540
 typed-ast==1.1.0
+arxiv-base==0.4.1

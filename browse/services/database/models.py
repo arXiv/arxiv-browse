@@ -1,9 +1,15 @@
 """arXiv browse database models."""
+from browse.domain.institution import Institution
+import ipaddress
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
-from typing import Any
+from sqlalchemy.sql import func
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm.exc import NoResultFound
+from typing import Any, Optional
+from werkzeug.local import LocalProxy
 
 db: Any = SQLAlchemy()
 
@@ -104,3 +110,37 @@ class TrackbackSite(db.Model):
     site_id = Column(Integer, primary_key=True)
     action = Column(Enum('neutral', 'accept', 'reject', 'spam'),
                     nullable=False, server_default=text("'neutral'"))
+
+
+def init_app(app: Optional[LocalProxy]) -> None:
+    """Set configuration defaults and attach session to the application."""
+    db.init_app(app)
+
+
+def get_institution(ip: str) -> Optional[Institution]:
+    """Get institution label from IP address."""
+    decimal_ip = int(ipaddress.ip_address(ip))
+    print("here it is ", decimal_ip, " ", ip)
+    try:
+        stmt = (
+            db.session.query(
+                MemberInstitution.label,
+                func.sum(MemberInstitutionIP.exclude).label("exclusions")
+            ).
+            join(MemberInstitutionIP).
+            filter(
+                MemberInstitutionIP.start <= decimal_ip,
+                MemberInstitutionIP.end >= decimal_ip
+            ).
+            group_by(MemberInstitution.label).
+            subquery()
+        )
+
+        return (
+            db.session.query(stmt.c.label).
+            filter(stmt.c.exclusions == 0).one().label
+        )
+    except NoResultFound:
+        return None
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
