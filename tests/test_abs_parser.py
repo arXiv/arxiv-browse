@@ -1,7 +1,11 @@
 """Tests for arXiv abstract (.abs) parser."""
 import os
 from unittest import TestCase
-from browse.services.document import metadata
+from datetime import datetime
+from dateutil.tz import tzutc
+from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
+                                   VersionEntry
+from browse.services.document.metadata import AbsMetaSession
 
 ABS_FILES = 'tests/data/abs_files'
 
@@ -18,10 +22,12 @@ class TestAbsParser(TestCase):
                 # skip any empty files
                 if os.stat(fname_path).st_size == 0:
                     continue
+                if not fname_path.endswith('.abs'):
+                    continue
                 num_files_tested += 1
-                m = metadata.ArXivDocMetadata(filename=fname_path)
-                self.assertIsInstance(m, metadata.ArXivDocMetadata)
-                self.assertTrue(m.initialized, 'instance initialized')
+                m = AbsMetaSession.parse_abs_file(filename=fname_path)
+                self.assertIsInstance(m, DocMetadata)
+                # self.assertTrue(m.initialized, 'instance initialized')
 
         # our test set should be sufficiently large
         self.assertGreater(num_files_tested, 1000, 'comprehensive dataset')
@@ -29,51 +35,83 @@ class TestAbsParser(TestCase):
     def test_individual_files(self):
         """Test individual .abs files."""
         f1 = ABS_FILES + '/orig/arxiv/papers/0906/0906.5132v3.abs'
-        m = metadata.ArXivDocMetadata(filename=f1)
+        m = AbsMetaSession.parse_abs_file(filename=f1)
 
-        self.assertIsInstance(m, metadata.ArXivDocMetadata)
-        self.assertTrue(m.initialized, 'instance initialized')
+        self.assertIsInstance(m, DocMetadata)
         self.assertEqual(m.paper_id, '0906.5132', 'paper_id')
-        self.assertDictEqual(
+        self.assertEqual(
             m.submitter,
-            {
-                'name': 'Vladimir P. Mineev',
-                'email': '***REMOVED***'
-            }
+            Submitter(
+                name='Vladimir P. Mineev',
+                email='***REMOVED***'
+            )
         )
-        self.assertDictEqual(
-            m.history,
-            {
-                'v1': {
-                    'date': 'Sun, 28 Jun 2009 11:24:35 GMT',
-                    'dateline': 'Date: Sun, 28 Jun 2009 11:24:35 GMT   (17kb)',
-                    'size_kilobytes': 17,
-                    'source_type': ''
-                },
-                'v2': {
-                    'date': 'Tue, 21 Jul 2009 09:45:44 GMT',
-                    'dateline': 'Date (revised v2): Tue, 21 Jul '
-                                '2009 09:45:44 GMT   (17kb)',
-                    'size_kilobytes': 17,
-                    'source_type': ''
-                },
-                'v3': {
-                    'date': 'Wed, 29 Jul 2009 11:13:43 GMT',
-                    'dateline': 'Date (revised v3): Wed, 29 Jul '
-                                '2009 11:13:43 GMT   (17kb)',
-                    'size_kilobytes': 17,
-                    'source_type': ''
-                }
-            }
+        self.assertListEqual(
+            m.version_history,
+            [
+                VersionEntry(
+                    version=1,
+                    raw='Date: Sun, 28 Jun 2009 11:24:35 GMT   (17kb)',
+                    submitted_date=datetime(2009, 6, 28, 11, 24, 35,
+                                            tzinfo=tzutc()),
+                    size_kilobytes=17,
+                    source_type=SourceType(code='')
+                ),
+                VersionEntry(
+                    version=2,
+                    raw='Date (revised v2): Tue, 21 Jul '
+                        '2009 09:45:44 GMT   (17kb)',
+                    submitted_date=datetime(2009, 7, 21, 9, 45, 44,
+                                            tzinfo=tzutc()),
+                    size_kilobytes=17,
+                    source_type=SourceType(code='')
+                ),
+                VersionEntry(
+                    version=3,
+                    raw='Date (revised v3): Wed, 29 Jul '
+                        '2009 11:13:43 GMT   (17kb)',
+                    submitted_date=datetime(2009, 7, 29, 11, 13, 43,
+                                            tzinfo=tzutc()),
+                    size_kilobytes=17,
+                    source_type=SourceType(code='')
+                )
+            ]
         )
+#         self.assertDictEqual(
+#             m.history,
+#             {
+#                 'v1': {
+#                     'date': 'Sun, 28 Jun 2009 11:24:35 GMT',
+#                     'dateline': 'Date: Sun, 28 Jun 2009 11:24:35 GMT   (17kb)',
+#                     'size_kilobytes': 17,
+#                     'source_type': ''
+#                 },
+#                 'v2': {
+#                     'date': 'Tue, 21 Jul 2009 09:45:44 GMT',
+#                     'dateline': 'Date (revised v2): Tue, 21 Jul '
+#                                 '2009 09:45:44 GMT   (17kb)',
+#                     'size_kilobytes': 17,
+#                     'source_type': ''
+#                 },
+#                 'v3': {
+#                     'date': 'Wed, 29 Jul 2009 11:13:43 GMT',
+#                     'dateline': 'Date (revised v3): Wed, 29 Jul '
+#                                 '2009 11:13:43 GMT   (17kb)',
+#                     'size_kilobytes': 17,
+#                     'source_type': ''
+#                 }
+#             }
+#         )
         self.assertEqual(m.version, 3)
         self.assertEqual(m.title, 'Recent developments in unconventional '
                                   'superconductivity theory')
         self.assertEqual(m.authors, 'V.P.Mineev')
         self.assertEqual(m.categories, 'cond-mat.supr-con cond-mat.mtrl-sci')
         self.assertEqual(m.comments, '15 pages')
-        self.assertEqual(m.license,
-                         'http://arxiv.org/licenses/nonexclusive-distrib/1.0/')
+        self.assertEqual(
+            m.license,
+            'http://arxiv.org/licenses/nonexclusive-distrib/1.0/'
+        )
         self.assertMultiLineEqual(
             m.abstract,
             '''  The review of recent developments in the unconventional superconductivity
