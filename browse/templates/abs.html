@@ -83,20 +83,46 @@
       <table summary="Additional metadata">
         {% if abs_meta.comments %}
         <tr>
-          <td class="tablecell label">Comments:
-          </td>
+          <td class="tablecell label">Comments:</td>
           <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
         </tr>
         {% endif %}
         <tr>
-          <td class="tablecell label">Subjects:
-          </td>
+          <td class="tablecell label">Subjects:</td>
           <td class="tablecell subjects"><span class="primary-subject">TODO: full primary category name ({{ abs_meta.primary_category }})</span>{% if abs_meta.secondary_categories %}{% for category in abs_meta.secondary_categories %}; TODO: full secondary category name ({{ category }}){% endfor %}{% endif %}</td>
         </tr>
+        {% if abs_meta.msc_class %}
         <tr>
-          <td class="tablecell label">
-            Cite&nbsp;as:
-          </td>
+          <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
+          <td class="tablecell msc_classes">{{ abs_meta.msc_class }}</td>
+        </tr>
+        {% endif %}
+        {% if abs_meta.acm_class %}
+        <tr>
+          <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
+          <td class="tablecell acm-classes">{{ abs_meta.acm_class }}</td>
+        </tr>
+        {% endif %}
+        {% if abs_meta.journal_ref %}
+        <tr>
+          <td class="tablecell label">Journal&nbsp;reference:</td>
+          <td class="tablecell jref">{{ abs_meta.journal_ref }}</td>
+        </tr>
+        {% endif %}
+        {% if abs_meta.doi %}
+        <tr>
+          <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
+          <td class="tablecell msc_classes">TODO: link {{ abs_meta.doi }}</td>
+        </tr>
+        {% endif %}
+        {% if abs_meta.report_num %}
+        <tr>
+          <td class="tablecell label">Report&nbsp;number:</td>
+          <td class="tablecell jref">{{ abs_meta.report_num }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td class="tablecell label">Cite as:</td>
           <td class="tablecell arxivid"><a href="{{ url_for('browse.abstract', document_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category }}]</td>
         </tr>
         <tr>
