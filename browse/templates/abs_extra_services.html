@@ -1,0 +1,53 @@
+{% block extra_services %}
+   <div class="extra-services">
+
+    <div class="full-text">
+      <span class="descriptor">Full-text links:</span>
+      <h2>Download:</h2>
+      <ul>
+        <li><a href="/pdf/1708.00003" accesskey="f">TODO: PDF</a></li>
+        <li><a href="/format/1708.00003">TODO: Other formats</a></li>
+      </ul>
+      <div class="abs-license">(<a href="https://arxiv.org/licenses/nonexclusive-distrib/1.0/" title="Rights to this article">license</a>)</div>
+    </div>
+    <!--end full-text-->
+
+    <div class="browse">
+      <h3>Current browse context:</h3>
+      <div class="current">{{ abs_meta.primary_category }}</div>
+      <div class="prevnext"><span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category }}&amp;function=prev" accesskey="p" title="previous in {{ abs_meta.primary_category }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category }}&amp;function=next" accesskey="n" title="next in astro-ph.CO (accesskey n)">next&nbsp;&gt;</a></span>
+        <br /></div>
+      <div class="list"><a href="/list/{{ abs_meta.primary_category }}/new">new</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category }}/recent">recent</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category }}/YYMM">TODO: YYMM</a></div>
+      <h3>Change to browse by:</h3>
+      <div class="switch">
+        <a href="/abs/{{ abs_meta.arxiv_id }}?context=todo_archive">TODO: archive_id</a><br/>
+        <span class="subclass"><a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_category }}">cond-mat.mtrl-sci</a></span>
+      </div>
+
+    </div>
+    <div class="extra-ref-cite">
+      {# TODO: references section #}
+      <h3>References &amp; Citations</h3>
+      <ul>
+        <li><a href="https://inspirehep.net/search?p=find+eprint+1708.00003">INSPIRE HEP</a><br />(<a href="/refs/1708.00003">refers to</a> | <a href="/cits/1708.00003">cited by </a>)</li>
+        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:1708.00003">NASA ADS</a></li>
+      </ul>
+    </div>
+    <div class="bookmarks">
+      <div class="what-is-this">
+        {# TODO: bookmarks section (..get rid of Digg) #}
+        <h3>Bookmark</h3> (<a href="/help/social_bookmarking">what is this?</a>)
+      </div>
+      <a href="/ct?url=http%3A%2F%2Fwww.citeulike.org%2Fposturl%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae%26authors%3D&amp;v=efe9693d" title="Bookmark on CiteULike"><img src="//static.arxiv.org/icons/social/citeulike.png" alt="CiteULike logo" /></a>
+      <a href="/ct?url=http%3A%2F%2Fwww.bibsonomy.org%2FBibtexHandler%3FrequTask%3Dupload%26url%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26description%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=b8be226d"
+        title="Bookmark on BibSonomy"><img src="//static.arxiv.org/icons/social/bibsonomy.png" alt="BibSonomy logo" /></a>
+      <a href="/ct?url=https%3A%2F%2Fwww.mendeley.com%2Fimport%2F%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003&amp;v=2a683b27" title="Bookmark on Mendeley"><img src="//static.arxiv.org/icons/social/mendeley.png" alt="Mendeley logo" /></a>
+      <a href="/ct?url=https%3A%2F%2Fdel.icio.us%2Fpost%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26description%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=4e77f129" title="Bookmark on del.icio.us"><img src="//static.arxiv.org/icons/social/delicious.png" alt="del.icio.us logo" /></a>
+      <a href="/ct?url=https%3A%2F%2Fdigg.com%2Fsubmit%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=eecee25d" title="Bookmark on Digg"><img src="//static.arxiv.org/icons/social/digg.png" alt="Digg logo" /></a>
+      <a href="/ct?url=https%3A%2F%2Freddit.com%2Fsubmit%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=9c3d0d02" title="Bookmark on Reddit"><img src="//static.arxiv.org/icons/social/reddit.png" alt="Reddit logo" /></a>
+      <a href="/ct?url=http%3A%2F%2Fsciencewise.info%2Fbookmarks%2Fadd%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003&amp;v=bc135dba" title="Bookmark on ScienceWISE"><img src="//static.arxiv.org/icons/social/sciencewise.png" alt="ScienceWISE logo" /></a>
+
+    </div>
+  </div>
+  <!--end extra-services-->
+{% endblock extra_services %}

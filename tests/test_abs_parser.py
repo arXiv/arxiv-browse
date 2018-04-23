@@ -30,7 +30,7 @@ class TestAbsParser(TestCase):
                 # self.assertTrue(m.initialized, 'instance initialized')
 
         # our test set should be sufficiently large
-        self.assertGreater(num_files_tested, 1000, 'comprehensive dataset')
+        self.assertGreater(num_files_tested, 1_000, 'comprehensive dataset')
 
     def test_individual_files(self):
         """Test individual .abs files."""
@@ -38,7 +38,7 @@ class TestAbsParser(TestCase):
         m = AbsMetaSession.parse_abs_file(filename=f1)
 
         self.assertIsInstance(m, DocMetadata)
-        self.assertEqual(m.paper_id, '0906.5132', 'paper_id')
+        self.assertEqual(m.arxiv_id, '0906.5132', 'arxiv_id')
         self.assertEqual(
             m.submitter,
             Submitter(
@@ -77,31 +77,6 @@ class TestAbsParser(TestCase):
                 )
             ]
         )
-#         self.assertDictEqual(
-#             m.history,
-#             {
-#                 'v1': {
-#                     'date': 'Sun, 28 Jun 2009 11:24:35 GMT',
-#                     'dateline': 'Date: Sun, 28 Jun 2009 11:24:35 GMT   (17kb)',
-#                     'size_kilobytes': 17,
-#                     'source_type': ''
-#                 },
-#                 'v2': {
-#                     'date': 'Tue, 21 Jul 2009 09:45:44 GMT',
-#                     'dateline': 'Date (revised v2): Tue, 21 Jul '
-#                                 '2009 09:45:44 GMT   (17kb)',
-#                     'size_kilobytes': 17,
-#                     'source_type': ''
-#                 },
-#                 'v3': {
-#                     'date': 'Wed, 29 Jul 2009 11:13:43 GMT',
-#                     'dateline': 'Date (revised v3): Wed, 29 Jul '
-#                                 '2009 11:13:43 GMT   (17kb)',
-#                     'size_kilobytes': 17,
-#                     'source_type': ''
-#                 }
-#             }
-#         )
         self.assertEqual(m.version, 3)
         self.assertEqual(m.title, 'Recent developments in unconventional '
                                   'superconductivity theory')

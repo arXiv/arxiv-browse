@@ -68,12 +68,10 @@ class DocMetadata():
 
     """arXiv paper identifier"""
     """TODO: stricter typing?"""
-    paper_id: str = field(default_factory=str)
+    arxiv_id: str = field(default_factory=str)
+    arxiv_id_v: str = field(default_factory=str)
 
-    """Title of the article."""
     title: str = field(default_factory=str)
-
-    """Summary of the article."""
     abstract: str = field(default_factory=str)
 
     """Article authors."""
@@ -82,8 +80,12 @@ class DocMetadata():
     """Submitter of the article."""
     submitter: Submitter = field(default_factory=Submitter)
 
-    """Article classification."""
+    """Article classification (raw string)."""
     categories: str = field(default_factory=str)
+    """Primary category."""
+    primary_category: str = field(default_factory=str)
+    """Secondary categor(y|ies)."""
+    secondary_categories: List[str] = None
 
     """Journal reference."""
     journal_ref: Optional[str] = None

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}[1708.00003] Precise Time Delays from Chromatically Microlensed Type Ia Supernovae{% endblock %}
 
@@ -6,7 +6,8 @@
     {{ super() }}
     <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
 
-    {# meta tags #}
+    {# TODO: meta tags #}
+    <!--
     <meta name="citation_title" content="Precise Time Delays from Chromatically Microlensed Type Ia Supernovae" />
     <meta name="citation_author" content="Goldstein, Daniel A." />
     <meta name="citation_author" content="Nugent, Peter E." />
@@ -16,15 +17,16 @@
     <meta name="citation_online_date" content="2017/07/31" />
     <meta name="citation_pdf_url" content="http://arxiv.org/pdf/1708.00003" />
     <meta name="citation_arxiv_id" content="1708.00003" />
+   -->
 
 {% endblock head %}
 {% block body_id %}{% endblock %}
 
 {% block header_class %}{# TODO: class="cs" #}{% endblock %}
 {% block header %}
-  <h1><a href="/">arXiv.org</a> &gt; <a href="/list/astro-ph/recent">astro-ph</a> &gt; arXiv:1708.00003</h1>
+  <h1><a href="/">arXiv.org</a> &gt; <a href="/list/archive_id/recent">TODO: archive ID</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
   <div id="search">
-    <form id="search-arxiv" method="post" action="/search">
+    <form id="search-arxiv" method="GET" action="/search">
 
       <div class="wrapper-search-arxiv">
         <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
@@ -60,112 +62,77 @@
 -->
 
 <div id="abs">
-  <div class="extra-services">
-
-    <div class="full-text">
-      <span class="descriptor">Full-text links:</span>
-      <h2>Download:</h2>
-      <ul>
-        <li><a href="/pdf/1708.00003" accesskey="f">PDF</a></li>
-        <li><a href="/format/1708.00003">Other formats</a></li>
-      </ul>
-      <div class="abs-license">(<a href="http://arxiv.org/licenses/nonexclusive-distrib/1.0/" title="Rights to this article">license</a>)</div>
-    </div>
-    <!--end full-text-->
-
-    <div class="browse">
-      <h3>Current browse context:</h3>
-      <div class="current">astro-ph.CO</div>
-      <div class="prevnext"><span class="arrow"><a href="http://arxiv.org/prevnext?site=arxiv.org&amp;id=1708.00003&amp;context=astro-ph.CO&amp;function=prev" accesskey="p" title="previous in astro-ph.CO (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="http://arxiv.org/prevnext?site=arxiv.org&amp;id=1708.00003&amp;context=astro-ph.CO&amp;function=next" accesskey="n" title="next in astro-ph.CO (accesskey n)">next&nbsp;&gt;</a></span>
-        <br /></div>
-      <div class="list"><a href="/list/astro-ph.CO/new">new</a>&nbsp;| <a href="/list/astro-ph.CO/recent">recent</a>&nbsp;| <a href="/list/astro-ph.CO/1708">1708</a></div>
-      <h3>Change to browse by:</h3>
-      <div class="switch">
-        <a href="/abs/1708.00003?context=astro-ph">astro-ph</a>
-      </div>
-
-    </div>
-    <div class="extra-ref-cite">
-      <h3>References &amp; Citations</h3>
-      <ul>
-        <li><a href="https://inspirehep.net/search?p=find+eprint+1708.00003">INSPIRE HEP</a><br />(<a href="/refs/1708.00003">refers to</a> | <a href="/cits/1708.00003">cited by </a>)</li>
-        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:1708.00003">NASA ADS</a></li>
-      </ul>
-
-    </div>
-    <div class="bookmarks">
-      <div class="what-is-this">
-        <h3>Bookmark</h3> (<a href="/help/social_bookmarking">what is this?</a>)
-      </div>
-      <a href="/ct?url=http%3A%2F%2Fwww.citeulike.org%2Fposturl%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae%26authors%3D&amp;v=efe9693d" title="Bookmark on CiteULike"><img src="//static.arxiv.org/icons/social/citeulike.png" alt="CiteULike logo" /></a>
-      <a href="/ct?url=http%3A%2F%2Fwww.bibsonomy.org%2FBibtexHandler%3FrequTask%3Dupload%26url%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26description%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=b8be226d"
-        title="Bookmark on BibSonomy"><img src="//static.arxiv.org/icons/social/bibsonomy.png" alt="BibSonomy logo" /></a>
-      <a href="/ct?url=https%3A%2F%2Fwww.mendeley.com%2Fimport%2F%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003&amp;v=2a683b27" title="Bookmark on Mendeley"><img src="//static.arxiv.org/icons/social/mendeley.png" alt="Mendeley logo" /></a>
-      <a href="/ct?url=https%3A%2F%2Fdel.icio.us%2Fpost%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26description%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=4e77f129" title="Bookmark on del.icio.us"><img src="//static.arxiv.org/icons/social/delicious.png" alt="del.icio.us logo" /></a>
-      <a href="/ct?url=https%3A%2F%2Fdigg.com%2Fsubmit%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=eecee25d" title="Bookmark on Digg"><img src="//static.arxiv.org/icons/social/digg.png" alt="Digg logo" /></a>
-      <a href="/ct?url=https%3A%2F%2Freddit.com%2Fsubmit%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003%26title%3DPrecise%2520Time%2520Delays%2520from%2520Chromatically%2520Microlensed%2520Type%2520Ia%2520Supernovae&amp;v=9c3d0d02" title="Bookmark on Reddit"><img src="//static.arxiv.org/icons/social/reddit.png" alt="Reddit logo" /></a>
-      <a href="/ct?url=http%3A%2F%2Fsciencewise.info%2Fbookmarks%2Fadd%3Furl%3Dhttp%3A%2F%2Farxiv.org%2Fabs%2F1708.00003&amp;v=bc135dba" title="Bookmark on ScienceWISE"><img src="//static.arxiv.org/icons/social/sciencewise.png" alt="ScienceWISE logo" /></a>
-
-    </div>
-  </div>
-  <!--end extra-services-->
-
+  {% include "abs_extra_services.html" %}
   <div class="leftcolumn">
     <div class="subheader">
-      <h1>Astrophysics > Cosmology and Nongalactic Astrophysics</h1>
+      <h1>TODO: primary archive name > TODO: primary category name</h1>
     </div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>
-Precise Time Delays from Chromatically Microlensed Type Ia Supernovae</h1>
+    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title }}</h1>
+    {# TODO: authors section #}
     <div class="authors"><span class="descriptor">Authors:</span>
-      <a href="/find/astro-ph/1/au:+Goldstein_D/0/1/0/all/0/1">Daniel A. Goldstein</a>,
+      <!-- <a href="/find/astro-ph/1/au:+Goldstein_D/0/1/0/all/0/1">Daniel A. Goldstein</a>,
       <a href="/find/astro-ph/1/au:+Nugent_P/0/1/0/all/0/1">Peter E. Nugent</a>,
       <a href="/find/astro-ph/1/au:+Kasen_D/0/1/0/all/0/1">Daniel N. Kasen</a>,
-      <a href="/find/astro-ph/1/au:+Collett_T/0/1/0/all/0/1">Thomas E. Collett</a></div>
-    <div class="dateline">(Submitted on 31 Jul 2017)</div>
-    <blockquote class="abstract mathjax">
-      <span class="descriptor">Abstract:</span> We perform detailed population, microlensing, radiation transport, and light-curve simulations to quantify (a) the effect of microlensing on the strongly lensed Type Ia supernova (LSN Ia) yield of the
-      Large Synoptic Survey Telescope (LSST) and (b) the effect of microlensing on the precision and accuracy of time delays that can be extracted from LSST LSNe Ia. Microlensing has a negligible effect on the LSST LSN Ia yield, but it can be increased
-      by a factor of ~2 to 930 systems (comparable to the expected yield of lensed quasars) using a novel photometric identification technique based on spectral template fitting. Crucially, the microlensing of LSNe Ia is achromatic until 3 rest-frame
-      weeks after the explosion, making features in the early-time color curves precise time delay indicators. By fitting simulated flux and color observations of microlensed LSNe Ia with their underlying, unlensed spectral templates, we forecast
-      the distribution of absolute time delay error due to microlensing for LSST, which is unbiased at the sub-percent level and peaked at 1% for color curve observations in the achromatic phase, while for light curve observations it is comparable
-      to mass modeling uncertainties (4%). About 70% of LSST LSN Ia images should be discovered during the achromatic phase, indicating that microlensing time delay uncertainties can be minimized if prompt multicolor follow-up observations are obtained.
-      Accounting for microlensing, the 1-2 day time delay on the recently discovered LSN Ia iPTF16geu can be measured to 40% precision, limiting its cosmological utility. The relatively low precision of this time delay is due to (a) its remarkably
-      short duration and (b) the fact that follow-up observations began long after peak brightness, during a period of significant chromatic uncertainty.
-    </blockquote>
+      <a href="/find/astro-ph/1/au:+Collett_T/0/1/0/all/0/1">Thomas E. Collett</a></div> -->
+      {{ abs_meta.authors }}
+    <div class="dateline">{{ generate_dateline() }}</div>
+
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
+        {% if abs_meta.comments %}
         <tr>
           <td class="tablecell label">Comments:
           </td>
-          <td class="tablecell comments">15 pages, submitted to ApJ, comments welcome</td>
+          <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
         </tr>
+        {% endif %}
         <tr>
           <td class="tablecell label">Subjects:
           </td>
-          <td class="tablecell subjects"><span class="primary-subject">Cosmology and Nongalactic Astrophysics (astro-ph.CO)</span></td>
+          <td class="tablecell subjects"><span class="primary-subject">TODO: full primary category name ({{ abs_meta.primary_category }})</span>{% if abs_meta.secondary_categories %}{% for category in abs_meta.secondary_categories %}; TODO: full secondary category name ({{ category }}){% endfor %}{% endif %}</td>
         </tr>
         <tr>
           <td class="tablecell label">
             Cite&nbsp;as:
           </td>
-          <td class="tablecell arxivid"><a href="/abs/1708.00003">arXiv:1708.00003</a> [astro-ph.CO]</td>
+          <td class="tablecell arxivid"><a href="{{ url_for('browse.abstract', document_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category }}]</td>
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid"><a href="/abs/1708.00003v1">arXiv:1708.00003v1</a> [astro-ph.CO]</span> for this version)</td>
+          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('browse.abstract', document_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category }}]</span> for this version)</td>
         </tr>
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: Daniel Goldstein [<a href="https://arxiv.org/show-email/b83fd63d/1708.00003">view email</a>]
-      <br />
-      <b>[v1]</b> Mon, 31 Jul 2017 18:00:00 GMT (12032kb,D)<br />
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="https://arxiv.org/show-email/some_hash/paper_id">TODO view email</a>]
+      <br/>
+      {%- for version_entry in abs_meta.version_history -%}
+      {{ generate_version_entry(version_entry, abs_meta.version) }}
+      {%- endfor -%}
     </div>
-    <div class="endorsers"><a href="http://arxiv.org/auth/show-endorsers/1708.00003">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="/help/mathjax/">What is MathJax?</a>)</div>
-    <script
-      type="text/javascript" language="javascript">mathjaxToggle();</script>
+    <div class="endorsers"><a href="https://arxiv.org/auth/show-endorsers/{{ abs_meta.arxiv_id }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="/help/mathjax/">What is MathJax?</a>)</div>
+    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
   </div>
   <!--end leftcolumn-->
 </div>
 {% endblock content %}
+
+{%- macro generate_version_entry(version_entry, this_version) %}
+  {%- if version_entry.version == this_version -%}<b>[v{{ version_entry.version }}]</b> {% else %}<a href="{{ url_for('browse.abstract', document_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a> {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
+{%- endmacro -%}
+
+{%- macro generate_dateline() -%}
+  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }} (
+  {%- if abs_meta.version == 1 %}this version{% else %}<a href="{{ url_for('browse.abstract', document_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>{%- endif %})
+  {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
+  , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
+  {%- endif -%}
+  {%- if abs_meta.version != abs_meta.version_history[-1].version -%}
+  , <em>latest version {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }}</em> (<a href="{{ url_for('browse.abstract', document_id='{}v{}'.format(abs_meta.arxiv_id, abs_meta.version_history[-1].version)) }}">v{{ abs_meta.version_history[-1].version }}</a>)
+  {%- elif abs_meta.version > 1 and abs_meta.version == abs_meta.version_history[-1].version -%}
+  , last revised {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
+  {%- endif -%}
+  )
+{%- endmacro -%}

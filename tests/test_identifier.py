@@ -1,17 +1,17 @@
-"""Tests for arXiv identifier class ArXivIdentifier."""
+"""Tests for arXiv identifier class Identifier."""
 import os
 from unittest import TestCase
-from browse.services.document.metadata import ArXivIdentifier
+from browse.domain.identifier import Identifier
 
 
 class TestIdentifier(TestCase):
     """Tests for the ArXivIdentifier class."""
 
     def test_identifier_fields(self):
-        """Test individual fields in ArXivIdentifier object."""
+        """Test individual fields in Identifier object."""
 
-        tid1 = ArXivIdentifier('0803.1924')
-        self.assertIsInstance(tid1, ArXivIdentifier, 'valid instance')
+        tid1 = Identifier(paper_id='0803.1924')
+        self.assertIsInstance(tid1, Identifier, 'valid instance')
         self.assertIsNotNone(tid1.id, 'id is not None')
         self.assertIs(tid1.is_old_id, False, 'id is new type')
         self.assertEqual(tid1.archive, 'arxiv', 'archive is arxiv for new ID')
@@ -25,8 +25,8 @@ class TestIdentifier(TestCase):
         self.assertEqual(tid1.squashed, '0803.1924', 'squashed id matches')
         self.assertEqual(tid1.squashedv, '0803.1924', 'squashed idv matches')
 
-        tid2 = ArXivIdentifier(arxiv_id='hep-th/0701051v4')
-        self.assertIsInstance(tid2, ArXivIdentifier, 'valid instance')
+        tid2 = Identifier(paper_id='hep-th/0701051v4')
+        self.assertIsInstance(tid2, Identifier, 'valid instance')
         self.assertIsNotNone(tid2.id, 'id is not None')
         self.assertIs(tid2.is_old_id, True, 'id is old type')
         self.assertEqual(tid2.archive, 'hep-th',
@@ -63,8 +63,8 @@ class TestIdentifier(TestCase):
         for bad_id in bad_ids:
             with self.assertRaises(
                     Exception,
-                    msg='{} is an invalid identifier'.format(bad_id)) as context:
-                ArXivIdentifier(arxiv_id=bad_id)
+                    msg=f'{bad_id} is an invalid identifier') as context:
+                Identifier(paper_id=bad_id)
 
             self.assertIn('invalid arXiv identifier', str(context.exception))
 
@@ -86,12 +86,7 @@ class TestIdentifier(TestCase):
             '/1014.12345v1':  '1014.12345',
         }
         for provided_id, good_id in good_ids.items():
-            gid = ArXivIdentifier(arxiv_id=provided_id)
-            self.assertIsInstance(gid, ArXivIdentifier, 'valid instance')
+            gid = Identifier(paper_id=provided_id)
+            self.assertIsInstance(gid, Identifier, 'valid instance')
             self.assertEqual(gid.id, good_id)
             self.assertEqual(gid.ids, provided_id)
-
-    # def test_submission_identifiers(self):
-    #     """Test submission identifiers."""
-    #     subid = ArXivIdentifier(arxiv_id='submit/003000')
-    #     self.assertIsInstance(subid, ArXivIdentifier, 'valid instance')
