@@ -4,6 +4,7 @@ import re
 from pytz import timezone
 from dateutil import parser
 from functools import wraps
+from typing import Dict, List
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
@@ -30,8 +31,15 @@ NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
 # (normalized) required parsed fields
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
 
+
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
+
+    pass
+
+
+class AbsNotFoundException(FileNotFoundError):
+    """Error class for arXiv .abs file not found exceptions."""
 
     pass
 
@@ -97,8 +105,8 @@ class AbsMetaSession(object):
         try:
             f = open(filename, 'rt')
             raw = f.read()
-        except OSError as e:
-            raise AbsParsingException(f'Failed to read .abs file: {e}')
+        except FileNotFoundError as e:
+            raise AbsNotFoundException
         except UnicodeDecodeError as e:
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
@@ -139,9 +147,32 @@ class AbsMetaSession(object):
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
+
+        AbsMetaSession._parse_version_entries(
+            fields=fields,
+            version_entry_list=parsed_version_entries
+        )
+        # named (key-value) fields
+        AbsMetaSession._parse_metadata_fields(fields=fields,
+                                              key_value_block=misc_fields)
+
+        if not all(rf in fields for rf in REQUIRED_FIELDS):
+            raise AbsParsingException('missing required field(s)')
+
+        # some transformations
+        categories = fields['categories'].split()
+        fields['primary_category'] = categories[0]
+        fields['secondary_categories'] = categories[1:] if len(categories) > 1\
+            else None
+
+        return DocMetadata(**fields)
+
+    @staticmethod
+    def _parse_version_entries(fields: Dict, version_entry_list: List) -> None:
+        """Parse the version entries from the arXiv .abs file."""
         version_count = 0
         version_entries = list()
-        for parsed_version_entry in parsed_version_entries:
+        for parsed_version_entry in version_entry_list:
             version_count += 1
             date_match = RE_DATE_COMPONENTS.match(parsed_version_entry)
             if not date_match:
@@ -169,9 +200,11 @@ class AbsMetaSession(object):
         fields['arxiv_id_v'] = f"{fields['arxiv_id']}v" \
                                f"{version_entries[-1].version}"
 
-        # named (key-value) fields
-        misc_fields = misc_fields.lstrip()
-        field_lines = re.split(r'\n', misc_fields)
+    @staticmethod
+    def _parse_metadata_fields(fields: Dict, key_value_block: str) -> None:
+        """Parse the key-value block from the arXiv .abs file."""
+        key_value_block = key_value_block.lstrip()
+        field_lines = re.split(r'\n', key_value_block)
         field_name = 'unknown'
         for field_line in field_lines:
             field_match = RE_FIELD_COMPONENTS.match(field_line)
@@ -183,17 +216,7 @@ class AbsMetaSession(object):
             elif field_name != 'unknown':
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
-
-        if not all(rf in fields for rf in REQUIRED_FIELDS):
-            raise AbsParsingException('missing required field(s)')
-
-        # some transformations
-        categories = fields['categories'].split()
-        fields['primary_category'] = categories[0]
-        if len(categories) > 1:
-            fields['secondary_categories'] = categories[1:]
-
-        return DocMetadata(**fields)
+        return fields
 
 
 @wraps(AbsMetaSession.get_abs)
