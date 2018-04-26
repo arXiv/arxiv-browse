@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+
+{% block content %}
+
+{% if arxiv_id and (not_found or version_not_found) %}
+<h1>Article {{ arxiv_id }} doesn't exist</h1>
+<p>There is no record of an article with identifier '{{ arxiv_id }}'.
+  You might instead {% if version_not_found %}look at the latest version of this paper: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>', or {% endif %}try to <a href="/search">search for papers</a>.</p>
+<p>Identifiers for arXiv papers have the form YYMM.NNNNN, e.g. 1507.00123, YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older papers, e.g. hep-th/9901001. To access an article simply enter the identifier in the search box. The web address for access
+  to the abstract is constructed by prepending
+  <code>https://arxiv.org/abs/</code>.</p>
+{% elif arxiv_id %}
+<h1>Paper identifier '{{ arxiv_id}}' not recognized</h1>
+<p>You might instead try to <a href="/search">search for papers</a> using
+title or author information.</p>
+<p>For additional help on arXiv identifiers, see
+<a href="/help/arxiv_identifier">understanding the arXiv identifier</a>.</p>
+
+{% else %}
+<h1>No paper identifier specified</h1>
+<p>If you know the paper identifier then
+please enter it in the search box in the top right of this page. You can use this
+search box from most arXiv pages. Papers submitted after 1 April 2007 have identifiers of the form
+<code>YYMM.NNNN</code> (e.g. <code>0704.12345</code>, there is no archive/ prefix), or
+<code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no archive/ prefix), whereas papers submitted
+before then have identifier of the form <code>archive/YYMMNNN</code> (e.g. <code>archive/0701001</code>).</p>
+<p>You might instead try to <a href="/search">search for papers</a> using
+title or author information.</p>
+<p>For additional help on arXiv identifiers, see
+<a href="/help/arxiv_identifier">understanding the arXiv identifier</a>.</p>
+{% endif %}
+
+{% endblock content %}
