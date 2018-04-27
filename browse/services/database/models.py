@@ -117,10 +117,9 @@ def init_app(app: Optional[LocalProxy]) -> None:
     db.init_app(app)
 
 
-def get_institution(ip: str) -> Optional[Institution]:
+def get_institution(ip: str) -> Optional[str]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
-    print("here it is ", decimal_ip, " ", ip)
     try:
         stmt = (
             db.session.query(

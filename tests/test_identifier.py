@@ -1,5 +1,4 @@
 """Tests for arXiv identifier class Identifier."""
-import os
 from unittest import TestCase
 from browse.domain.identifier import Identifier
 
@@ -9,8 +8,7 @@ class TestIdentifier(TestCase):
 
     def test_identifier_fields(self):
         """Test individual fields in Identifier object."""
-
-        tid1 = Identifier(paper_id='0803.1924')
+        tid1 = Identifier(arxiv_id='0803.1924')
         self.assertIsInstance(tid1, Identifier, 'valid instance')
         self.assertIsNotNone(tid1.id, 'id is not None')
         self.assertIs(tid1.is_old_id, False, 'id is new type')
@@ -25,7 +23,7 @@ class TestIdentifier(TestCase):
         self.assertEqual(tid1.squashed, '0803.1924', 'squashed id matches')
         self.assertEqual(tid1.squashedv, '0803.1924', 'squashed idv matches')
 
-        tid2 = Identifier(paper_id='hep-th/0701051v4')
+        tid2 = Identifier(arxiv_id='hep-th/0701051v4')
         self.assertIsInstance(tid2, Identifier, 'valid instance')
         self.assertIsNotNone(tid2.id, 'id is not None')
         self.assertIs(tid2.is_old_id, True, 'id is old type')
@@ -64,7 +62,7 @@ class TestIdentifier(TestCase):
             with self.assertRaises(
                     Exception,
                     msg=f'{bad_id} is an invalid identifier') as context:
-                Identifier(paper_id=bad_id)
+                Identifier(arxiv_id=bad_id)
 
             self.assertIn('invalid arXiv identifier', str(context.exception))
 
@@ -86,7 +84,7 @@ class TestIdentifier(TestCase):
             '/1014.12345v1':  '1014.12345',
         }
         for provided_id, good_id in good_ids.items():
-            gid = Identifier(paper_id=provided_id)
+            gid = Identifier(arxiv_id=provided_id)
             self.assertIsInstance(gid, Identifier, 'valid instance')
             self.assertEqual(gid.id, good_id)
             self.assertEqual(gid.ids, provided_id)

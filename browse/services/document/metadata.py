@@ -44,6 +44,12 @@ class AbsNotFoundException(FileNotFoundError):
     pass
 
 
+class AbsVersionNotFoundException(FileNotFoundError):
+    """Error class for arXiv .abs file version not found exceptions."""
+
+    pass
+
+
 class AbsParsingException(OSError):
     """Error class for arXiv .abs file parsing exceptions."""
 
@@ -86,15 +92,20 @@ class AbsMetaSession(object):
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException as e:
-            return
+            print(f'Got an IdentifierException: {e}')
+            raise
 
         latest_version = self._get_version(identifier=paper_id)
         if not paper_id.has_version \
            or paper_id.version == latest_version.version:
             return latest_version
 
-        this_version = self._get_version(identifier=paper_id,
-                                         version=paper_id.version)
+        try:
+            this_version = self._get_version(identifier=paper_id,
+                                             version=paper_id.version)
+        except AbsNotFoundException as e:
+            raise AbsVersionNotFoundException(e)
+
         this_version.version_history = latest_version.version_history
         return this_version
 
@@ -235,7 +246,6 @@ def get_session(app: object = None) -> AbsMetaSession:
     return AbsMetaSession(latest_versions_path, orignal_versions_path)
 
 
-# TODO: consider making this private.
 def current_session() -> AbsMetaSession:
     """Get/create :class:`.AbsMetaSession` for this context."""
     g = get_application_global()

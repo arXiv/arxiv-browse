@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 from datetime import datetime
+from browse.domain.identifier import Identifier
 
 
 @dataclass
@@ -70,6 +71,7 @@ class DocMetadata():
     """TODO: stricter typing?"""
     arxiv_id: str = field(default_factory=str)
     arxiv_id_v: str = field(default_factory=str)
+    arxiv_identifier: Identifier = field(default_factory=Identifier)
 
     title: str = field(default_factory=str)
     abstract: str = field(default_factory=str)
@@ -85,7 +87,7 @@ class DocMetadata():
     """Primary category."""
     primary_category: str = field(default_factory=str)
     """Secondary categor(y|ies)."""
-    secondary_categories: List[str] = None
+    secondary_categories: List[str] = field(default_factory=list)
 
     """Journal reference."""
     journal_ref: Optional[str] = None

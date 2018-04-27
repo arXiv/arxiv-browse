@@ -1,6 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
+from typing import Match
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
@@ -40,12 +41,15 @@ class Identifier(object):
 
         Parse constituent parts.
         """
-        # id as specified
+        # id specified
         self.ids = arxiv_id
-        # probably can be done more efficiently, but OK for now
+        # TODO: recheck for mypy
         for subtup in SUBSTITUTIONS:
-            arxiv_id = re.sub(subtup[0], subtup[1],
-                              arxiv_id, count=subtup[2], flags=subtup[3])
+            arxiv_id = re.sub(subtup[0],  # type: ignore
+                              subtup[1],
+                              arxiv_id,
+                              count=subtup[2],
+                              flags=subtup[3])
 
         self.version = 0
         parse_actions = ((RE_ARXIV_OLD_ID, self._parse_old_id),
@@ -71,8 +75,7 @@ class Identifier(object):
 
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
-            self.idv = '{}v{}'.format(
-                self.id, self.version)
+            self.idv = f'{self.id}v{self.version}'
             self.has_version = True
         else:
             self.has_version = False
@@ -82,7 +85,7 @@ class Identifier(object):
         self.yymm = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
 
-    def _parse_old_id(self, matchobj):
+    def _parse_old_id(self, matchobj: Match[str]) -> None:
         """Populate instance attributes parsed from old arXiv identifier.
 
         The old identifiers were minted from 1991 until March 2003.
@@ -97,12 +100,13 @@ class Identifier(object):
         self.filename = '{}{:03d}'.format(
             matchobj.group('yymm'),
             int(matchobj.group('num')))
-        self.id = '{}/{}'.format(self.archive, self.filename)
+        self.id = f'{self.archive}/{self.filename}'
 
-    def _parse_new_id(self, matchobj):
+    def _parse_new_id(self, matchobj: Match[str]) -> None:
         """Populate instance attributes from a new arXiv identifier.
 
-        e.g. 1711.01234
+        e.g. 1401.1234
+             1711.01234
         """
         self.is_old_id = False
         self.archive = 'arxiv'
@@ -118,7 +122,7 @@ class Identifier(object):
                 int(matchobj.group('num')))
         self.filename = self.id
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return the string representation of the instance in json."""
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=True)
