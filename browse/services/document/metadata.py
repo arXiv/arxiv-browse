@@ -141,6 +141,7 @@ class AbsMetaSession(object):
                 'Could not extract arXiv ID from prehistory component.')
 
         fields['arxiv_id'] = id_match.group('arxiv_id')
+        fields['arxiv_identifier'] = Identifier(arxiv_id=fields['arxiv_id'])
 
         prehistory = re.sub(r'^.*\n', '', prehistory)
         parsed_version_entries = re.split(r'\n', prehistory)
@@ -166,9 +167,11 @@ class AbsMetaSession(object):
         # named (key-value) fields
         AbsMetaSession._parse_metadata_fields(fields=fields,
                                               key_value_block=misc_fields)
+        if 'categories' not in fields and fields['arxiv_identifier'].is_old_id:
+            fields['categories'] = fields['arxiv_identifier'].archive
 
         if not all(rf in fields for rf in REQUIRED_FIELDS):
-            raise AbsParsingException('missing required field(s)')
+            raise AbsParsingException(f'missing required field(s)')
 
         # some transformations
         categories = fields['categories'].split()
@@ -236,7 +239,6 @@ def get_abs(arxiv_id: str) -> DocMetadata:
     return current_session().get_abs(arxiv_id)
 
 
-# TODO: consider making this private.
 def get_session(app: object = None) -> AbsMetaSession:
     """Get a new session with the abstract metadata service."""
     config = get_application_config(app)

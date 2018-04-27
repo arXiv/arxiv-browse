@@ -194,7 +194,7 @@ automatically. By default the value is None which means that Flask checks
 original file only in debug mode.
 """
 
-EXPLAIN_TEMPLATE_LOADING = os.environ.get('EXPLAIN_TEMPLATE_LOADING') == ON
+EXPLAIN_TEMPLATE_LOADING = os.environ.get('EXPLAIN_TEMPLATE_LOADING') == OFF
 """
 If this is enabled then every attempt to load a template will write an info
 message to the logger explaining the attempts to locate the template. This can
@@ -202,8 +202,15 @@ be useful to figure out why templates cannot be found or wrong templates appear
 to be loaded.
 """
 
-# MySQL configuration
+# SQLAlchemy configuration
+# For mysql: 'mysql://user:pass@localhost/dbname'
 SQLALCHEMY_DATABASE_URI = os.environ.get(
-    'SQLALCHEMY_DATABASE_URI', 'mysql://user:pass@localhost/dbname')
-
+    'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = OFF
+
+# Paths to .abs files
+DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
+    'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
+
+DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
+    'DOCUMENT_ORIGNAL_VERSIONS_PATH', 'tests/data/abs_files/orig')

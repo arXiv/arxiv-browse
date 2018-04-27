@@ -16,6 +16,6 @@ six==1.11.0
 sqlacodegen==1.1.6
 SQLAlchemy==1.1.15
 Werkzeug==0.12.2
-mypy==0.540
+mypy==0.560
 typed-ast==1.1.0
 arxiv-base==0.6.1

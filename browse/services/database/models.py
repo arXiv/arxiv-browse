@@ -1,5 +1,4 @@
 """arXiv browse database models."""
-from browse.domain.institution import Institution
 import ipaddress
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
@@ -134,11 +133,9 @@ def get_institution(ip: str) -> Optional[str]:
             group_by(MemberInstitution.label).
             subquery()
         )
-
-        return (
-            db.session.query(stmt.c.label).
+        institution_name = db.session.query(stmt.c.label).\
             filter(stmt.c.exclusions == 0).one().label
-        )
+        return institution_name  # type: ignore
     except NoResultFound:
         return None
     except SQLAlchemyError as e:
