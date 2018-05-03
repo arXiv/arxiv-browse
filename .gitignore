@@ -110,6 +110,7 @@ venv.bak/
 # IDE/editor files
 .idea
 arxiv-browse.iml
+.vscode
 *~
 
 # DB connection, etc
