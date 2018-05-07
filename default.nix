@@ -28,6 +28,7 @@ stdenv.mkDerivation {
     # in order to compile any binary extensions they may require.
     #
     gcc6
+    glibcLocales # for click+python3
     mysql57
     ncurses # needed by uWSGI
     openssl
