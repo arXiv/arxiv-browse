@@ -3,16 +3,25 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 from datetime import datetime
 from browse.domain.identifier import Identifier
+from browse.domain.license import License
 
+# @dataclass
+# class License():
+#     """Represents an arXiv article license."""
 
-@dataclass
-class License():
-    """Represents an arXiv article license."""
+#     """Name of the license."""
+#     name: Optional[str] = None
+#     """URI of the license."""
+#     uri: str = field(default='http://arxiv.org/licenses/assumed-1991-2003/')
+#     """URL of our page about the license. """
+#     page: Optional[str] = None
 
-    """Name of the license."""
-    name: Optional[str] = None
-    """URI of the license."""
-    uri: Optional[str] = None
+#     """TODO: need licenses
+#     TODO: needs to be moved to common libraries
+#     TODO: need validation?
+#     TODO: the License dataclass would be the best place to put knowledge
+#     about any un-obivious behavior of the licenses. Ex. Licenses before YYYY
+#     are the assumed-1991-2003 license """
 
 
 @dataclass
@@ -106,8 +115,7 @@ class DocMetadata():
     msc_class: Optional[str] = None
 
     """License associated with the article."""
-    # license: License = field(default_factory=License)
-    license: Optional[str] = None
+    license: Optional[License] = None
 
     """Proxy."""
     proxy: Optional[str] = None
@@ -120,3 +128,9 @@ class DocMetadata():
 
     """Version of this paper."""
     version: int = 1
+
+    def __post_init__(self) -> None:
+        if(hasattr(self, 'license')):
+            self.license = License(self.license)
+        else:
+            self.license = License(None)

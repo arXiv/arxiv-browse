@@ -4,7 +4,7 @@ from unittest import TestCase
 from datetime import datetime
 from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-                                   VersionEntry
+    VersionEntry
 from browse.services.document.metadata import AbsMetaSession
 
 ABS_FILES = 'tests/data/abs_files'
@@ -83,8 +83,9 @@ class TestAbsParser(TestCase):
         self.assertEqual(m.authors, 'V.P.Mineev')
         self.assertEqual(m.categories, 'cond-mat.supr-con cond-mat.mtrl-sci')
         self.assertEqual(m.comments, '15 pages')
+        self.assertNotEqual(m.license, None)
         self.assertEqual(
-            m.license,
+            m.license.effectiveLicenseUri,
             'http://arxiv.org/licenses/nonexclusive-distrib/1.0/'
         )
         self.assertMultiLineEqual(
