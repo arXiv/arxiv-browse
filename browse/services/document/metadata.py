@@ -8,7 +8,7 @@ from typing import Dict, List
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
-from browse.context import get_application_config, get_application_global
+from arxiv.base.globals import get_application_config, get_application_global
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
