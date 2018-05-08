@@ -27,6 +27,9 @@ class TestAbsParser(TestCase):
                 num_files_tested += 1
                 m = AbsMetaSession.parse_abs_file(filename=fname_path)
                 self.assertIsInstance(m, DocMetadata)
+                self.assertNotEqual(m.license, None)
+                self.assertNotEqual(m.license.effectiveLicenseUri, None,
+                                    'sould have an effectiveLicenseUri')
                 # self.assertTrue(m.initialized, 'instance initialized')
 
         # our test set should be sufficiently large
