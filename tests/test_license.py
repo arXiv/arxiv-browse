@@ -8,14 +8,14 @@ class TestLicense(TestCase):
 
         r_uri = 'http://bogus/license/uri'
         lic = License(r_uri)
-        assert lic is not None
-        assert lic.recorded_uri == r_uri
-        assert lic.effectiveLicenseUri == r_uri
+        self.assertNotEqual(lic, None)
+        self.assertEqual(lic.recorded_uri, r_uri)
+        self.assertEqual(lic.effectiveLicenseUri, r_uri)
 
         lic = License(None)
-        assert lic is not None
-        assert lic.recorded_uri is None
-        assert lic.effectiveLicenseUri == ASSUMED_LICENSE_URI
+        self.assertNotEqual(lic, None)
+        self.assertEqual(lic.recorded_uri, None)
+        self.assertEqual(lic.effectiveLicenseUri, ASSUMED_LICENSE_URI)
 
         with self.assertRaises(TypeError):
             lic = License(23)

@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 ASSUMED_LICENSE_URI = 'http://arxiv.org/licenses/assumed-1991-2003/'
 
 
-def licenseForRecoredLicense(recorded_uri: Optional[str]) -> str:
-    """Get the license for a license recorded in an abs file
+def licenseForRecordedLicense(recorded_uri: Optional[str]) -> str:
+    """Gets the license for the value recorded in the abs file.
 
     This represents an important encoding of policy in code:
 
@@ -17,7 +17,7 @@ def licenseForRecoredLicense(recorded_uri: Optional[str]) -> str:
     license.
 
     After the submission system in Perl and catalyst was put into
-    production, the author selected from several licenses. If the
+    production 2009, the author selected from several licenses. If the
     author selected the arXiv assumed license, the abs file would have
     no license field. If the author selected a license other than the
     assumed license, it would be recorded in the .abs file in the
@@ -31,7 +31,7 @@ def licenseForRecoredLicense(recorded_uri: Optional[str]) -> str:
 
     A lack of a license in arXiv's records did not mean the author
     failed to select a license. The classic submission system was
-    explicitly written to not premit submitters to submit without
+    explicitly written to not permit submitters to submit without
     selecting a license.
 
     """
@@ -40,7 +40,7 @@ def licenseForRecoredLicense(recorded_uri: Optional[str]) -> str:
         return ASSUMED_LICENSE_URI
     else:
         if not isinstance(recorded_uri, str):
-            raise TypeError("Licnese recorded_uri must be str or None")
+            raise TypeError("License recorded_uri must be str or None")
         else:
             return recorded_uri
 
@@ -60,7 +60,7 @@ class License(object):
     effectiveLicenseUri: str = field(init=False)
 
     def __post_init__(self) -> None:
-        self.effectiveLicenseUri = licenseForRecoredLicense(
+        self.effectiveLicenseUri = licenseForRecordedLicense(
             self.recorded_uri)
 
 #     # TODO: need licenses?
