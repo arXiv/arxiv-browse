@@ -5,24 +5,6 @@ from datetime import datetime
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
 
-# @dataclass
-# class License():
-#     """Represents an arXiv article license."""
-
-#     """Name of the license."""
-#     name: Optional[str] = None
-#     """URI of the license."""
-#     uri: str = field(default='http://arxiv.org/licenses/assumed-1991-2003/')
-#     """URL of our page about the license. """
-#     page: Optional[str] = None
-
-#     """TODO: need licenses
-#     TODO: needs to be moved to common libraries
-#     TODO: need validation?
-#     TODO: the License dataclass would be the best place to put knowledge
-#     about any un-obivious behavior of the licenses. Ex. Licenses before YYYY
-#     are the assumed-1991-2003 license """
-
 
 @dataclass
 class SourceType():

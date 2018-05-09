@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 ASSUMED_LICENSE_URI = 'http://arxiv.org/licenses/assumed-1991-2003/'
 
 
-def licenseForRecordedLicense(recorded_uri: Optional[str]) -> str:
+def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
     """Gets the license for the value recorded in the abs file.
 
     This represents an important encoding of policy in code:
@@ -57,10 +57,10 @@ class License(object):
     When the submitter uploaded this paper to arXiv, they agreed to
     arXiv using the paper under the terms of this license. This takes
     into account assumed license."""
-    effectiveLicenseUri: str = field(init=False)
+    effective_license_uri: str = field(init=False)
 
     def __post_init__(self) -> None:
-        self.effectiveLicenseUri = licenseForRecordedLicense(
+        self.effective_license_uri = license_for_recorded_license(
             self.recorded_uri)
 
 #     # TODO: need licenses?

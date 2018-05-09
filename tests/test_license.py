@@ -10,12 +10,12 @@ class TestLicense(TestCase):
         lic = License(r_uri)
         self.assertNotEqual(lic, None)
         self.assertEqual(lic.recorded_uri, r_uri)
-        self.assertEqual(lic.effectiveLicenseUri, r_uri)
+        self.assertEqual(lic.effective_license_uri, r_uri)
 
         lic = License(None)
         self.assertNotEqual(lic, None)
         self.assertEqual(lic.recorded_uri, None)
-        self.assertEqual(lic.effectiveLicenseUri, ASSUMED_LICENSE_URI)
+        self.assertEqual(lic.effective_license_uri, ASSUMED_LICENSE_URI)
 
         with self.assertRaises(TypeError):
             lic = License(23)

@@ -21,7 +21,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(m.license.recorded_uri, None,
                          '0704.0001 should have no license in abs')
-        self.assertEqual(m.license.effectiveLicenseUri, ASSUMED_LICENSE_URI,
+        self.assertEqual(m.license.effective_license_uri, ASSUMED_LICENSE_URI,
                          '0704.0001 should get assumed license')
         assert b'http://arxiv.org/licenses/assumed-1991-2003/' in rv.data, \
             'abs/0704.0001 should be displayed with assumed-1991-2003 license'
@@ -32,7 +32,8 @@ class BrowseTest(unittest.TestCase):
 
         self.assertNotEqual(m.license,  None)
         self.assertNotEqual(m.license.recorded_uri, None)
-        self.assertEqual(m.license.recorded_uri, m.license.effectiveLicenseUri)
+        self.assertEqual(m.license.recorded_uri,
+                         m.license.effective_license_uri)
         self.assertNotEqual(
             m.license.recorded_uri, 'http://arxiv.org/licenses/assumed-1991-2003/')
 
@@ -40,7 +41,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
         self.assertRegex(
-            rv.data.decode('utf-8'), m.license.effectiveLicenseUri,
+            rv.data.decode('utf-8'), m.license.effective_license_uri,
             'should be displayed with its license')
 
 
