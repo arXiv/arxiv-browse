@@ -50,7 +50,7 @@ class License(object):
     """Represents an arXiv article license."""
 
     """URI of a license if one is in the article record."""
-    recorded_uri: Optional[str] = field()
+    recorded_uri: Optional[str] = None
 
     """License that is in effect.
 
