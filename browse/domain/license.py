@@ -40,7 +40,8 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
         return ASSUMED_LICENSE_URI
     else:
         if not isinstance(recorded_uri, str):
-            raise TypeError("License recorded_uri must be str or None")
+            raise TypeError(
+                "License recorded_uri must be str or None, but it was " + str(type(recorded_uri)))
         else:
             return recorded_uri
 
@@ -49,15 +50,15 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
 class License(object):
     """Represents an arXiv article license."""
 
+    recorded_uri: Optional[str] = field(default=None)
     """URI of a license if one is in the article record."""
-    recorded_uri: Optional[str] = None
 
+    effective_license_uri: str = field(init=False)
     """License that is in effect.
 
     When the submitter uploaded this paper to arXiv, they agreed to
     arXiv using the paper under the terms of this license. This takes
     into account assumed license."""
-    effective_license_uri: str = field(init=False)
 
     def __post_init__(self) -> None:
         self.effective_license_uri = license_for_recorded_license(

@@ -113,7 +113,7 @@ class AbsMetaSession(object):
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
         fields = {}  # type: Dict[str, Any]
-        with open(filename, 'rt') as absf:
+        with open(filename) as absf:
             try:
                 raw = absf.read()
             except FileNotFoundError as e:

@@ -10,8 +10,8 @@ from browse.domain.license import License
 class SourceType():
     """Represents arXiv article source file type."""
 
-    """Internal code for the source type."""
     code: str = field(default_factory=str)
+    """Internal code for the source type."""
 
     """TODO: need source mappings"""
 
@@ -20,11 +20,11 @@ class SourceType():
 class Submitter():
     """Represents the person who submitted an arXiv article."""
 
-    """Full name."""
     name: str = field(default_factory=str)
+    """Full name."""
 
-    """Email address."""
     email: str = field(default_factory=str)
+    """Email address."""
 
 
 @dataclass
@@ -33,86 +33,97 @@ class VersionEntry():
 
     version: int
 
-    """Raw history entry, e.g. as parsed from .abs file."""
     raw: str
+    """Raw history entry, e.g. as parsed from .abs file."""
 
-    """Date for the entry."""
     submitted_date: datetime
+    """Date for the entry."""
 
-    """Size of the article source, in kilobytes."""
     size_kilobytes: int = 0
+    """Size of the article source, in kilobytes."""
 
-    """Source file type."""
     source_type: SourceType = field(default_factory=SourceType)
+    """Source file type."""
 
 
 @dataclass
 class AuthorList():
     """Represents author names."""
 
-    """Raw author field string."""
     raw: str = field(default_factory=str)
+    """Raw author field string."""
 
 
 @dataclass
 class DocMetadata():
     """Class for representing the core arXiv document metadata."""
 
-    """arXiv paper identifier"""
     """TODO: stricter typing?"""
+
     arxiv_id: str = field(default_factory=str)
+    """arXiv paper identifier"""
+
     arxiv_id_v: str = field(default_factory=str)
+    """Identifier and version ex. 1402.12345v2"""
+
     arxiv_identifier: Identifier = field(default_factory=Identifier)
 
     title: str = field(default_factory=str)
     abstract: str = field(default_factory=str)
 
-    """Article authors."""
     authors: AuthorList = field(default_factory=AuthorList)
+    """Article authors."""
 
-    """Submitter of the article."""
     submitter: Submitter = field(default_factory=Submitter)
+    """Submitter of the article."""
 
-    """Article classification (raw string)."""
     categories: str = field(default_factory=str)
-    """Primary category."""
+    """Article classification (raw string)."""
+
     primary_category: str = field(default_factory=str)
-    """Secondary categor(y|ies)."""
+    """Primary category."""
+
     secondary_categories: List[str] = field(default_factory=list)
+    """Secondary categor(y|ies)."""
 
-    """Journal reference."""
     journal_ref: Optional[str] = None
-
     """Report number."""
+
     report_num: Optional[str] = None
+    """Report number."""
 
-    """Digital Object Identifier (DOI)."""
     doi: Optional[str] = None
+    """Digital Object Identifier (DOI)."""
 
-    """Association for Computing Machinery (ACM) classification(s)."""
     acm_class: Optional[str] = None
+    """Association for Computing Machinery (ACM) classification(s)."""
 
+    msc_class: Optional[str] = None
     """American Mathematical Society Mathematics Subject (MSC)
        classification(s)."""
-    msc_class: Optional[str] = None
 
+    license: License = field(default=None)
     """License associated with the article."""
-    license: Optional[License] = None
 
-    """Proxy."""
     proxy: Optional[str] = None
+    """Proxy submitter"""
 
-    """Submitter- and/or administrator-provided comments about the article."""
     comments: Optional[str] = None
+    """Submitter- and/or administrator-provided comments about the article."""
 
-    """Version history, consisting of at least one version history entry."""
     version_history: List[VersionEntry] = field(default_factory=list)
+    """Version history, consisting of at least one version history entry."""
 
-    """Version of this paper."""
     version: int = 1
+    """Version of this paper."""
 
     def __post_init__(self) -> None:
-        if(hasattr(self, 'license')):
+
+        if(not hasattr(self, 'license') or self.license is None):
+            self.license = License()
+        elif(isinstance(self.license, str)):
             self.license = License(self.license)
-        else:
-            self.license = License(None)
+        elif(not isinstance(self.license, License)):
+            raise TypeError(
+                "metadata should have str,Licnese or None as self.license "
+                + "but it was " + str(type(self.license)))

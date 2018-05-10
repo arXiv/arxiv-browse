@@ -8,7 +8,7 @@
         <li><a href="/pdf/1708.00003" accesskey="f">TODO: PDF</a></li>
         <li><a href="/format/1708.00003">TODO: Other formats</a></li>
       </ul>
-      <div class="abs-license">(<a href="{{abs_meta.license.effective_license_uri}}" title="Rights to this article">license</a>)</div>
+      <div class="abs-license">(<a href="{% if abs_meta.license %}{{abs_meta.license.effective_license_uri}}{% endif %}" title="Rights to this article">license</a>)</div>
     </div>
     <!--end full-text-->
 
