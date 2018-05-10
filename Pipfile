@@ -21,6 +21,8 @@ mypy = "*"
 sqlacodegen = "*"
 Flask-Testing = "*"
 "Jinja2" = "*"
+pycodestyle = "*"
+pydocstyle = "*"
 
 [requires]
 python_version = "3.6"
