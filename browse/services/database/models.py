@@ -7,10 +7,10 @@ from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy, Model
 from typing import Any, NewType
 
-dbx: SQLAlchemy = SQLAlchemy()
+db: SQLAlchemy = SQLAlchemy()
 
 
-class MemberInstitution(dbx.Model):
+class MemberInstitution(db.Model):
     """Primary model for arXiv member insitution data."""
 
     __tablename__ = 'Subscription_UniversalInstitution'
@@ -24,7 +24,7 @@ class MemberInstitution(dbx.Model):
     note = Column(String(255))
 
 
-class MemberInstitutionContact(dbx.Model):
+class MemberInstitutionContact(db.Model):
     """Model for arXiv member institution contact information."""
 
     __tablename__ = 'Subscription_UniversalInstitutionContact'
@@ -41,7 +41,7 @@ class MemberInstitutionContact(dbx.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class MemberInstitutionIP(dbx.Model):
+class MemberInstitutionIP(db.Model):
     """Model for arXiv member insitution IP address ranges and exclusions."""
 
     __tablename__ = 'Subscription_UniversalInstitutionIP'
@@ -59,7 +59,7 @@ class MemberInstitutionIP(dbx.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class SciencewisePing(dbx.Model):
+class SciencewisePing(db.Model):
     """Model for ScienceWISE (trackback) pings."""
 
     __tablename__ = 'arXiv_sciencewise_pings'
@@ -68,7 +68,7 @@ class SciencewisePing(dbx.Model):
     updated = Column(DateTime)
 
 
-class TrackbackPing(dbx.Model):
+class TrackbackPing(db.Model):
     """Primary model for arXiv trackback data."""
 
     __tablename__ = 'arXiv_trackback_pings'
@@ -96,7 +96,7 @@ class TrackbackPing(dbx.Model):
     site_id = Column(Integer)
 
 
-class TrackbackSite(dbx.Model):
+class TrackbackSite(db.Model):
     """Model for sites that submit trackbacks to arXiv."""
 
     __tablename__ = 'arXiv_trackback_sites'

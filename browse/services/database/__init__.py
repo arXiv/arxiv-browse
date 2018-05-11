@@ -1,7 +1,7 @@
 """Import db instance and define utility functions."""
 
 import ipaddress
-from browse.services.database.models import dbx
+from browse.services.database.models import db
 from browse.services.database.models import MemberInstitution, \
     MemberInstitutionIP
 from sqlalchemy.sql import func
