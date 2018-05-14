@@ -3,6 +3,7 @@ from unittest import mock, TestCase
 from browse.services import database
 
 
+
 DATABASE_URL = 'sqlite:///:memory:'
 
 
@@ -11,6 +12,9 @@ class TestGetInstitution(TestCase):
 
     def setUp(self) -> None:
         """Initialize a database session with in-memory SQLite."""
+
+        from browse.services import database
+        self.database_service = database
         mock_app = mock.MagicMock()
         mock_app.config = {'SQLALCHEMY_DATABASE_URI': DATABASE_URL,
                            'SQLALCHEMY_TRACK_MODIFICATIONS': False}
@@ -65,32 +69,31 @@ class TestGetInstitution(TestCase):
 
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
-
-        label = database.get_institution('128.84.0.0')
+        label = self.database_service.models.get_institution('128.84.0.0')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
-        label = database.get_institution('128.84.255.255')
+        label = self.database_service.models.get_institution('128.84.255.255')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
 
-        label = database.get_institution('128.84.12.34')
+        label = self.database_service.models.get_institution('128.84.12.34')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP within range')
-        label = database.get_institution('128.85.12.34')
+        label = self.database_service.models.get_institution('128.85.12.34')
         self.assertIsNone(
             label, 'No institution label returned for non-matching IP')
-        label = database.get_institution('128.84.10.1')
+        label = self.database_service.models.get_institution('128.84.10.1')
         self.assertIsNone(
             label, 'No institution label returned for excluded IP')
 
-        label = database.get_institution('128.84.10.5')
+        label = self.database_service.models.get_institution('128.84.10.5')
         self.assertEqual(
             label, 'Other University',
             'Institution label returned for IP excluded '
             'by one institution but included by another')
 
         with self.assertRaises(ValueError) as context:
-            database.get_institution('notanip')
+            self.database_service.models.get_institution('notanip')
 
         self.assertIn(
             'does not appear to be an IPv4 or IPv6 address',

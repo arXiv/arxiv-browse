@@ -4,8 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy, Model
-from typing import Any, NewType
+from sqlalchemy.sql import func
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm.exc import NoResultFound
+from typing import Any, Optional
+from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
 

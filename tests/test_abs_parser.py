@@ -46,7 +46,7 @@ class TestAbsParser(TestCase):
             m.submitter,
             Submitter(
                 name='Vladimir P. Mineev',
-                email='***REMOVED***'
+                email='WTUwTuyJ.Owwldw@sOD.n4'
             )
         )
         self.assertListEqual(
