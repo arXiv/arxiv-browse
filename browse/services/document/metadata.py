@@ -113,14 +113,15 @@ class AbsMetaSession(object):
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
         fields = {}  # type: Dict[str, Any]
-        with open(filename) as absf:
-            try:
+
+        try:
+            with open(filename) as absf:
                 raw = absf.read()
-            except FileNotFoundError as e:
-                raise AbsNotFoundException
-            except UnicodeDecodeError as e:
-                raise AbsParsingException(
-                    f'Failed to decode .abs file "{filename}": {e}')
+        except FileNotFoundError as e:
+            raise AbsNotFoundException
+        except UnicodeDecodeError as e:
+            raise AbsParsingException(
+                f'Failed to decode .abs file "{filename}": {e}')
 
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components

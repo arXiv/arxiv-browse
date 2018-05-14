@@ -40,6 +40,21 @@ class TestIdentifier(TestCase):
         self.assertEqual(tid2.squashedv, 'hep-th0701051v4',
                          'squashed idv matches')
 
+        tid3 = Identifier(arxiv_id='1201.0001')
+        self.assertIsInstance(tid3, Identifier, 'valid instance')
+        self.assertIsNotNone(tid3.id, 'id is not None')
+        self.assertIs(tid3.is_old_id, False, 'id is new type')
+        self.assertEqual(tid3.yymm, '1201', 'yymm matches')
+        self.assertEqual(tid3.year, 2012, 'year matches')
+        self.assertEqual(tid3.month, 1, 'month matches')
+        self.assertEqual(tid3.num, 1, 'numerical id matches')
+        self.assertEqual(tid3.id, '1201.0001', 'id matches')
+        self.assertEqual(tid3.ids, '1201.0001', 'id specified matches')
+        self.assertEqual(tid3.filename, '1201.0001', 'filename matches')
+        self.assertEqual(tid3.squashed, '1201.0001', 'squashed id matches')
+        self.assertEqual(tid3.squashedv, '1201.0001',
+                         'squashed idv matches')
+
     def test_bad_identifiers(self):
         """Test known bad identifiers."""
         bad_ids = ('BAD_ID', 'hep-th/990100', 'hep-th/99010011', '0703.123',
