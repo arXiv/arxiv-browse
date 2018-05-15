@@ -9,6 +9,7 @@ from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
+from browse.services.document.config import DELETED_PAPERS
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -56,6 +57,12 @@ class AbsParsingException(OSError):
     pass
 
 
+class AbsDeletedException(Exception):
+    """Error class for arXiv papers that have been deleted."""
+
+    pass
+
+
 class AbsMetaSession(object):
     """Class for representing arXiv document metadata."""
 
@@ -92,8 +99,10 @@ class AbsMetaSession(object):
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException as e:
-            print(f'Got an IdentifierException: {e}')
             raise
+
+        if paper_id.id in DELETED_PAPERS:
+            raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 
         latest_version = self._get_version(identifier=paper_id)
         if not paper_id.has_version \
@@ -104,7 +113,10 @@ class AbsMetaSession(object):
             this_version = self._get_version(identifier=paper_id,
                                              version=paper_id.version)
         except AbsNotFoundException as e:
-            raise AbsVersionNotFoundException(e)
+            if paper_id.is_old_id:
+                raise
+            else:
+                raise AbsVersionNotFoundException(e)
 
         this_version.version_history = latest_version.version_history
         return this_version

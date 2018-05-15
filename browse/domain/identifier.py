@@ -2,6 +2,7 @@
 import json
 import re
 from typing import Match
+from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
@@ -33,6 +34,12 @@ class IdentifierException(Exception):
     pass
 
 
+class IdentifierIsArchiveException(Exception):
+    """Error class for case where supplied arXiv identifier is an archive."""
+
+    pass
+
+
 class Identifier(object):
     """Class for arXiv identifiers of published papers."""
 
@@ -41,8 +48,14 @@ class Identifier(object):
 
         Parse constituent parts.
         """
-        # id specified
+
         self.ids = arxiv_id
+        """ID specified."""
+
+        if self.ids in taxonomy.ARCHIVES:
+            raise IdentifierIsArchiveException(
+                taxonomy.ARCHIVES[self.ids]['name'])
+
         # TODO: recheck for mypy
         for subtup in SUBSTITUTIONS:
             arxiv_id = re.sub(subtup[0],  # type: ignore

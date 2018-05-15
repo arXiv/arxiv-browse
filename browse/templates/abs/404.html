@@ -5,13 +5,51 @@
 
 {% block content %}
 
-{% if arxiv_id and (not_found or version_not_found) %}
-<h1>Article {{ arxiv_id }} doesn't exist</h1>
-<p>There is no record of an article with identifier '{{ arxiv_id }}'.
-  You might instead {% if version_not_found %}look at the latest version of this paper: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>', or {% endif %}try to <a href="/search">search for papers</a>.</p>
-<p>Identifiers for arXiv papers have the form YYMM.NNNNN, e.g. 1507.00123, YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older papers, e.g. hep-th/9901001. To access an article simply enter the identifier in the search box. The web address for access
-  to the abstract is constructed by prepending
-  <code>https://arxiv.org/abs/</code>.</p>
+{% if reason %}
+  {% if (reason=='not_found' or reason=='version_not_found') and arxiv_id %}
+  <h1>Article {{ arxiv_id }} doesn't exist</h1>
+  <p>There is no record of an article with identifier '{{ arxiv_id }}'.
+  You might instead {% if reason=='version_not_found' %}look at the latest version of
+  this paper: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>',
+  or {% endif %}try to <a href="/search">search for papers</a>.</p>
+  {{ identifier_help() }}
+
+  {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
+  <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive doesn't exist</h1>
+  <p>To view the abstract of a particular article in the {{ archive_name }} archive,</p>
+  <form action="/abs/{{ archive_id }}" method="get">
+    <p>enter paper number: {{ archive_id }} /
+    <input name="papernum" type="text" size="7"></p>
+  </form>
+  <p>Note that truncated paper numbers default to the current year and month,</p>
+  <ul>
+    <li>e.g. during <b>04/2007</b>, <b>4</b> will be translated to <b>0704005</b></li>
+  </ul>
+  <p>And the current year will be used by default where applicable,</p>
+  <ul>
+    <li>e.g. during <b>2018</b>, <b>9005</b> will be translated to <b>1809005</b></li>
+  </ul>
+  <p>A truncated paper number too high for the current month instead has
+  previous month prepended, and specifying a month greater than the current 
+  month instead has previous year prepended.</p>
+
+  {% elif reason=='deleted' and arxiv_id_latest %}
+  <h1>Article {{ arxiv_id_latest }} doesn't exist</h1>
+  <p><b>The article <i>alg-geom/9311009</i> is recorded as having been
+  deleted from arXiv. The reason recorded is <i>"{{ reason }}"</i>.</b></p>
+  {{ identifier_help() }}
+
+  {% elif reason=='is_archive' and arxiv_id and archive_name %}
+  <h1>Incomplete paper identifer '{{ arxiv_id }}'</h1>
+  <p>If you are looking for a paper in the {{ archive_name }} ({{ arxiv_id }}) archive then
+  please enter the complete paper id in the search box in the top right of this page. You can use this
+  search box from most arXiv pages. Papers submitted after 1 April 2007 have identifiers of the form
+  <code>YYMM.NNNN</code> (e.g. <code>0704.1234</code>, there is no {{ arxiv_id }}/ prefix), or
+  <code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no {{ arxiv_id }}/ prefix),
+  whereas papers submitted
+  before then have identifier of the form <code>{{ arxiv_id }}/YYMMNNN</code> (e.g. <code>{{ arxiv_id }}/0701001</code>).</p>
+  {% endif %}
+
 {% elif arxiv_id %}
 <h1>Paper identifier '{{ arxiv_id}}' not recognized</h1>
 <p>You might instead try to <a href="/search">search for papers</a> using
@@ -34,3 +72,11 @@ title or author information.</p>
 {% endif %}
 
 {% endblock content %}
+
+{% macro identifier_help() -%}
+<p>Identifiers for arXiv papers have the form YYMM.NNNNN, e.g. 1507.00123,
+YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older papers,
+e.g. hep-th/9901001. To access an article simply enter the identifier in the
+search box. The web address for access to the abstract is constructed by
+prepending <code>https://arxiv.org/abs/</code>.</p>
+{%- endmacro %}
