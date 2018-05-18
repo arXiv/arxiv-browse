@@ -16,26 +16,16 @@
 
   {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
   <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive doesn't exist</h1>
-  <p>To view the abstract of a particular article in the {{ archive_name }} archive,</p>
-  <form action="/abs/{{ archive_id }}" method="get">
-    <p>enter paper number: {{ archive_id }} /
-    <input name="papernum" type="text" size="7"></p>
+
+  {# TODO: will need to support params to this route if we want to support this #}
+  <form action="{{ url_for('browse.abstract', arxiv_id=archive_id) }}" method="get">
+    <p>To view the abstract of a particular article in the {{ archive_name }}
+    archive, enter a paper number: {{ archive_id }} / <input name="papernum" type="text" size="7"></p>
   </form>
-  <p>Note that truncated paper numbers default to the current year and month,</p>
-  <ul>
-    <li>e.g. during <b>04/2007</b>, <b>4</b> will be translated to <b>0704005</b></li>
-  </ul>
-  <p>And the current year will be used by default where applicable,</p>
-  <ul>
-    <li>e.g. during <b>2018</b>, <b>9005</b> will be translated to <b>1809005</b></li>
-  </ul>
-  <p>A truncated paper number too high for the current month instead has
-  previous month prepended, and specifying a month greater than the current 
-  month instead has previous year prepended.</p>
 
   {% elif reason=='deleted' and arxiv_id_latest %}
   <h1>Article {{ arxiv_id_latest }} doesn't exist</h1>
-  <p><b>The article <i>alg-geom/9311009</i> is recorded as having been
+  <p><b>The article <i>{{ arxiv_id_latest }}</i> is recorded as having been
   deleted from arXiv. The reason recorded is <i>"{{ reason }}"</i>.</b></p>
   {{ identifier_help() }}
 
