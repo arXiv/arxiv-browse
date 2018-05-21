@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}[1708.00003] Precise Time Delays from Chromatically Microlensed Type Ia Supernovae{% endblock %}
+{% block title %}[{{ abs_meta.arxiv_identifier.ids }}] {{ abs_meta.title }}{% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -94,7 +94,7 @@
         {% if abs_meta.msc_class %}
         <tr>
           <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
-          <td class="tablecell msc_classes">{{ abs_meta.msc_class }}</td>
+          <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
         </tr>
         {% endif %}
         {% if abs_meta.acm_class %}
