@@ -4,6 +4,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
+from arxiv import taxonomy
 
 
 @dataclass
@@ -55,6 +56,41 @@ class AuthorList():
 
 
 @dataclass
+class Category():
+    """Represents an arXiv category."""
+
+    id: str = field(default_factory=str)
+    """The category identifier (e.g. cs.DL)."""
+    name: str = field(init=False)
+    """The name of the category (e.g. Digital Libraries)."""
+
+    def __post_init__(self):
+        """Get the full category name."""
+        if self.id in taxonomy.CATEGORIES:
+            self.name = taxonomy.CATEGORIES[self.id]['name']
+
+
+@dataclass
+class Archive(Category):
+    """Represents an arXiv archive."""
+
+    def __post_init__(self):
+        """Get the full archive name."""
+        if self.id in taxonomy.ARCHIVES:
+            self.name = taxonomy.ARCHIVES[self.id]['name']
+
+
+@dataclass
+class Group(Category):
+    """Represents an arXiv group."""
+
+    def __post_init__(self):
+        """Get the full group name."""
+        if self.id in taxonomy.ARCHIVES:
+            self.name = taxonomy.ARCHIVES[self.id]['name']
+
+
+@dataclass
 class DocMetadata():
     """Class for representing the core arXiv document metadata."""
 
@@ -78,10 +114,12 @@ class DocMetadata():
     categories: str = field(default_factory=str)
     """Article classification (raw string)."""
 
-    primary_category: str = field(default_factory=str)
+    primary_category: Category = field(default_factory=Category)
     """Primary category."""
+    primary_archive: Archive = field(init=False)
+    primary_group: Group = field(init=False)
 
-    secondary_categories: List[str] = field(default_factory=list)
+    secondary_categories: List[Category] = field(default_factory=list)
     """Secondary categor(y|ies)."""
 
     journal_ref: Optional[str] = None
@@ -125,3 +163,7 @@ class DocMetadata():
             raise TypeError(
                 "metadata should have str,Licnese or None as self.license "
                 + "but it was " + str(type(self.license)))
+        self.primary_archive = Archive(
+            id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
+        self.primary_group = Group(
+            id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])

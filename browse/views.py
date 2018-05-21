@@ -29,7 +29,7 @@ def apply_response_headers(response: Response) -> Response:
 
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs():
-    """Return 404."""
+    """Return 404."""   
     raise NotFound
 
 

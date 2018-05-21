@@ -14,14 +14,15 @@
 
     <div class="browse">
       <h3>Current browse context:</h3>
-      <div class="current">{{ abs_meta.primary_category }}</div>
-      <div class="prevnext"><span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category }}&amp;function=prev" accesskey="p" title="previous in {{ abs_meta.primary_category }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category }}&amp;function=next" accesskey="n" title="next in astro-ph.CO (accesskey n)">next&nbsp;&gt;</a></span>
+      <div class="current">{{ abs_meta.primary_category.id }}</div>
+      <div class="prevnext"><span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category.id }}&amp;function=prev" accesskey="p" title="previous in {{ abs_meta.primary_category.id }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category.id }}&amp;function=next" accesskey="n" title="next in astro-ph.CO (accesskey n)">next&nbsp;&gt;</a></span>
         <br /></div>
-      <div class="list"><a href="/list/{{ abs_meta.primary_category }}/new">new</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category }}/recent">recent</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category }}/YYMM">TODO: YYMM</a></div>
+      <div class="list"><a href="/list/{{ abs_meta.primary_category.id }}/new">new</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category.id }}/recent">recent</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category.id }}/YYMM">{{ abs_meta.arxiv_identifier.yymm }}</a></div>
       <h3>Change to browse by:</h3>
+      {# TODO: needs additional logic #}
       <div class="switch">
-        <a href="/abs/{{ abs_meta.arxiv_id }}?context=todo_archive">TODO: archive_id</a><br/>
-        <span class="subclass"><a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_category }}">cond-mat.mtrl-sci</a></span>
+        <a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_archive.id }}">{{ abs_meta.primary_archive.id }}</a><br/>
+        <span class="subclass"><a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_category.id }}">{{ abs_meta.primary_category.id }}</a></span>
       </div>
 
     </div>

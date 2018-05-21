@@ -6,7 +6,7 @@ from dateutil import parser
 from functools import wraps
 from typing import Dict, List
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-    VersionEntry
+    VersionEntry, Category
 from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
@@ -188,9 +188,10 @@ class AbsMetaSession(object):
 
         # some transformations
         categories = fields['categories'].split()
-        fields['primary_category'] = categories[0]
-        fields['secondary_categories'] = categories[1:] if len(categories) > 1\
-            else None
+        fields['primary_category'] = Category(id=categories[0])
+        fields['secondary_categories'] = [
+            Category(id=x) for x in categories[1:] if len(categories) > 1
+        ]
 
         return DocMetadata(**fields)
 
