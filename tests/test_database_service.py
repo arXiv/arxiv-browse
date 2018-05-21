@@ -3,7 +3,6 @@ from unittest import mock, TestCase
 from browse.services import database
 
 
-
 DATABASE_URL = 'sqlite:///:memory:'
 
 
@@ -12,7 +11,6 @@ class TestGetInstitution(TestCase):
 
     def setUp(self) -> None:
         """Initialize a database session with in-memory SQLite."""
-
         from browse.services import database
         self.database_service = database
         mock_app = mock.MagicMock()

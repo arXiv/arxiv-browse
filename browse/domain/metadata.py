@@ -1,7 +1,7 @@
 """Representations of arXiv document metadata."""
-from dataclasses import dataclass, field
 from typing import List, Optional
 from datetime import datetime
+from dataclasses import dataclass, field
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
 
@@ -57,8 +57,6 @@ class AuthorList():
 @dataclass
 class DocMetadata():
     """Class for representing the core arXiv document metadata."""
-
-    """TODO: stricter typing?"""
 
     arxiv_id: str = field(default_factory=str)
     """arXiv paper identifier"""
@@ -118,12 +116,12 @@ class DocMetadata():
     """Version of this paper."""
 
     def __post_init__(self) -> None:
-
-        if(not hasattr(self, 'license') or self.license is None):
+        """Post-initialization for license."""
+        if not hasattr(self, 'license') or self.license is None:
             self.license = License()
-        elif(isinstance(self.license, str)):
+        elif isinstance(self.license, str):
             self.license = License(self.license)
-        elif(not isinstance(self.license, License)):
+        elif not isinstance(self.license, License):
             raise TypeError(
                 "metadata should have str,Licnese or None as self.license "
                 + "but it was " + str(type(self.license)))

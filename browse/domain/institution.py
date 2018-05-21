@@ -1,10 +1,11 @@
 """Representations of arXiv member insitution."""
-from dataclasses import dataclass, field
+from typing import Optional
+from dataclasses import dataclass
 
 
 @dataclass
 class Institution:
     """Represents an arXiv member insitution."""
 
+    name: Optional[str] = None
     """Name of the insitution."""
-    name: str = field(default_factory=str)

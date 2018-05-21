@@ -5,8 +5,8 @@ The primary entrypoint to this module is :func:`.get_abs_page`, which handles
 GET requests to the abs endpoint.
 """
 
-from arxiv import status, taxonomy
 from typing import Tuple, Dict, Any
+from arxiv import status, taxonomy
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
@@ -55,9 +55,8 @@ def get_abs_page(arxiv_id: str) -> Response:
                     'archive_id': arxiv_identifier.archive,
                     'archive_name': archive_name},\
                 status.HTTP_404_NOT_FOUND, {}
-        else:
-            return {'reason': 'not_found', 'arxiv_id': arxiv_id}, \
-                status.HTTP_404_NOT_FOUND, {}
+        return {'reason': 'not_found', 'arxiv_id': arxiv_id}, \
+            status.HTTP_404_NOT_FOUND, {}
     except AbsVersionNotFoundException as e:
         return {'reason': 'version_not_found',
                 'arxiv_id': arxiv_identifier.idv,

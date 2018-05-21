@@ -12,6 +12,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='')
 
 @blueprint.before_request
 def before_request() -> None:
+    """Get instituional affiliation from session."""
     if 'institution' not in session:
         institution = get_institution_from_request()
         session['institution'] = institution
@@ -28,6 +29,7 @@ def apply_response_headers(response: Response) -> Response:
 
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs():
+    """Return 404."""
     raise NotFound
 
 
@@ -38,8 +40,8 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
     response, code, headers = abs.get_abs_page(arxiv_id)
 
     if code == status.HTTP_200_OK:
-        return render_template('abs/abs.html', **response), code
+        return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_404_NOT_FOUND:
-        return render_template('abs/404.html', **response), code
+        return render_template('abs/404.html', **response), code, headers
 
     raise InternalServerError('Unexpected error')

@@ -26,6 +26,21 @@ class TestExceptionHandling(TestCase):
                              f'should get 404 for {path}')
             self.assertIn('text/html', response.content_type)
 
+        response = self.client.get('/abs/1307.0001v999')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
+                         f'should get 404 for known paper ID with '
+                         'nonexistent version')
+        response = self.client.get('/abs/alg-geom/07059999')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
+                         f'should get 404 for valid old paper ID '
+                         'with nonexistent paper number affix')
+        response = self.client.get('/abs/astro-ph/0110242')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
+                         f'should get 404 for known deleted paper')
+        response = self.client.get('/abs/foo-bar/11223344')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
+                         f'should get 404 for bad paper ID')
+
     @mock.patch('browse.controllers.abs.get_abs_page')
     def test_500(self, mock_abs):
         """A 500 response should be returned."""

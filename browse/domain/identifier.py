@@ -24,7 +24,7 @@ SUBSTITUTIONS = (
     (r'//+', '/', 0, 0),
     (r'--+', '-', 0, 0),
     (r'^([^/]+)', lambda x: str.lower(x.group(0)), 1, 0),
-    (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', '\g<1>-\g<2>\g<3>', 1, 0)
+    (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', r'\g<1>-\g<2>\g<3>', 1, 0)
 )
 
 
@@ -50,13 +50,17 @@ class Identifier(object):
         """
 
         self.ids = arxiv_id
-        """ID specified."""
+        """The ID as specified."""
+        self.id = None
+        self.archive = None
+        self.filename = None
+        self.year = None
+        self.is_old_id = None
 
         if self.ids in taxonomy.ARCHIVES:
             raise IdentifierIsArchiveException(
                 taxonomy.ARCHIVES[self.ids]['name'])
 
-        # TODO: recheck for mypy
         for subtup in SUBSTITUTIONS:
             arxiv_id = re.sub(subtup[0],  # type: ignore
                               subtup[1],

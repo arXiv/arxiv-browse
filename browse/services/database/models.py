@@ -1,5 +1,6 @@
 """arXiv browse database models."""
 import ipaddress
+from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
@@ -7,7 +8,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from typing import Any, Optional
 from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
