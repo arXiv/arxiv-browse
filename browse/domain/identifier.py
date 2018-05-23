@@ -34,7 +34,7 @@ class IdentifierException(Exception):
     pass
 
 
-class IdentifierIsArchiveException(Exception):
+class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
 
     pass
@@ -143,3 +143,22 @@ class Identifier(object):
         """Return the string representation of the instance in json."""
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=True)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        """Return the next Identifier."""
+        if self.is_old_id:
+            pass
+        else:
+            new_num = self.num + 1
+            try:
+                if self.year >= 2015:
+                    return Identifier(
+                        arxiv_id='{:04d}.{:05d}'.format(int(self.yymm), new_num))
+                else:
+                    return Identifier(
+                        arxiv_id='{:04d}.{:04d}'.format(int(self.yymm), new_num))
+            except IdentifierException as e:
+                raise StopIteration()
