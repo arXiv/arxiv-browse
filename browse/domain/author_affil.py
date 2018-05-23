@@ -102,9 +102,9 @@ def parse_author_affil_split(author_line: str):
     print('before filter')
     pprint.pprint(parts)
 
-    parts = dropwhile(lambda x: x == ',', parts)  # get rid of commas at front
-    parts = takewhile(lambda x: x != ',', parts)  # get rid of commas at back
 
+    parts = reversed(list(dropwhile(lambda x: x == ',', reversed(parts))))  # get rid of commas at back
+    parts = dropwhile(lambda x: x == ',', parts)  # get rid of commas at front
 
     # Extract all names (all parts not starting with comma or paren)
     names = list(filter(lambda x: re.match('^[^](,]', x), parts))
