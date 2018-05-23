@@ -2,7 +2,7 @@
 from typing import Union
 
 from browse.controllers import abs, get_institution_from_request
-from flask import Blueprint, render_template, Response, session
+from flask import Blueprint, render_template, request, Response, session
 from arxiv import status
 from arxiv.base import exceptions
 from werkzeug.exceptions import InternalServerError, NotFound, HTTPException
@@ -29,15 +29,15 @@ def apply_response_headers(response: Response) -> Response:
 
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs():
-    """Return 404."""   
+    """Return 404."""
     raise NotFound
 
 
 @blueprint.route('/abs/', methods=['GET'], defaults={'arxiv_id': ''})
-@blueprint.route('/abs/<path:arxiv_id>', methods=['GET'])
+@blueprint.route('/abs/<path:arxiv_id>', methods=['GET', 'POST'])
 def abstract(arxiv_id: str) -> Union[str, Response]:
     """Abstract (abs) page view."""
-    response, code, headers = abs.get_abs_page(arxiv_id)
+    response, code, headers = abs.get_abs_page(arxiv_id, request.args)
 
     if code == status.HTTP_200_OK:
         return render_template('abs/abs.html', **response), code, headers

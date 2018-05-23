@@ -167,3 +167,14 @@ class DocMetadata():
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
         self.primary_group = Group(
             id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
+
+    def get_browse_context_list(self) -> List[str]:
+        """Get the list of archive/category IDs to generate browse context."""
+        # TODO: this really should be based on the "minimal" list of categories
+        options = {}
+        options[self.primary_category.id] = True
+        options[taxonomy.CATEGORIES[self.primary_category.id]['in_archive']] = True
+        for category in self.secondary_categories:
+            options[category.id] = True
+            options[taxonomy.CATEGORIES[category.id]['in_archive']] = True
+        return sorted(options.keys())

@@ -13,17 +13,19 @@ from browse.services.document.metadata import AbsException,\
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from werkzeug.exceptions import InternalServerError
+from werkzeug.datastructures import MultiDict
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 
-def get_abs_page(arxiv_id: str) -> Response:
+def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
     """
     Get abs page data from the document metadata service.
 
     Parameters
     ----------
     arxiv_id : str
+    request_params : dict
 
     Returns
     -------
@@ -46,6 +48,11 @@ def get_abs_page(arxiv_id: str) -> Response:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
+        if 'context' in request_params\
+           and (request_params['context'] in taxonomy.CATEGORIES
+                or request_params['context'] in taxonomy.ARCHIVES
+                or request_params['context'] == 'arxiv'):
+            response_data['browse_context'] = request_params['context']
     except AbsNotFoundException as e:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
            in taxonomy.ARCHIVES:

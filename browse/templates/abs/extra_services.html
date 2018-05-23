@@ -1,3 +1,42 @@
+{%- macro generate_browse_context() -%}
+<div class="browse">
+  {% set current_context = browse_context if browse_context else abs_meta.primary_category.id %}
+  <h3>Current browse context:</h3>
+  <div class="current">{{ current_context }}</div>
+  {% if current_context == 'arxiv' %}
+    {# TODO #}
+    < TODO arXiv context | TODO arXiv context >
+  {% elif not abs_meta.arxiv_identifier.is_old_id %}
+    {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
+  <div class="prevnext">
+    <span class="arrow"><a href="{{ prevnext_url }}&function=prev" accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="{{ prevnext_url }}&function=next" accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a></span>
+    <br/>
+  </div>
+  {% else %}
+  < TODO new ID | TODO new ID ><br/>
+  {% endif %}
+
+  {% if current_context != 'arxiv' %}
+  <div class="list">
+    <a href="https://arxiv.org/list/{{ current_context }}/new">new</a>&nbsp;| <a href="https://arxiv.org/list/{{ current_context }}/recent">recent</a>&nbsp;| <a href="https://arxiv.org/list/{{ current_context }}/{{ abs_meta.arxiv_identifier.yymm }}">{{ abs_meta.arxiv_identifier.yymm }}</a>
+  </div>
+  {% endif %}
+
+  <h3>Change to browse by:</h3>
+  <div class="switch">
+    {% for category in abs_meta.get_browse_context_list() if not (browse_context and browse_context==category) %}
+      {% set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) %}
+      {% if '.' in category %}
+      <span class="subclass"><a href="{{ switch_url}}">{{ category }}</a></span>
+      {% else %}
+      <a href="{{ switch_url}}">{{ category }}</a>
+      {% endif %}
+    <br/>
+    {% endfor %}
+</div>
+
+{%- endmacro -%}
+
 {% block extra_services %}
    <div class="extra-services">
 
@@ -12,18 +51,7 @@
     </div>
     <!--end full-text-->
 
-    <div class="browse">
-      <h3>Current browse context:</h3>
-      <div class="current">{{ abs_meta.primary_category.id }}</div>
-      <div class="prevnext"><span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category.id }}&amp;function=prev" accesskey="p" title="previous in {{ abs_meta.primary_category.id }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="https://arxiv.org/prevnext?site=arxiv.org&amp;id={{ abs_meta.arxiv_id }}&amp;context={{ abs_meta.primary_category.id }}&amp;function=next" accesskey="n" title="next in astro-ph.CO (accesskey n)">next&nbsp;&gt;</a></span>
-        <br /></div>
-      <div class="list"><a href="/list/{{ abs_meta.primary_category.id }}/new">new</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category.id }}/recent">recent</a>&nbsp;| <a href="/list/{{ abs_meta.primary_category.id }}/YYMM">{{ abs_meta.arxiv_identifier.yymm }}</a></div>
-      <h3>Change to browse by:</h3>
-      {# TODO: needs additional logic #}
-      <div class="switch">
-        <a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_archive.id }}">{{ abs_meta.primary_archive.id }}</a><br/>
-        <span class="subclass"><a href="/abs/{{ abs_meta.arxiv_id }}?context={{ abs_meta.primary_category.id }}">{{ abs_meta.primary_category.id }}</a></span>
-      </div>
+    {{ generate_browse_context() }}
 
     </div>
     <div class="extra-ref-cite">
