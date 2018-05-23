@@ -1,11 +1,12 @@
 """Functions to make HTML head metadata tags for DocMetadata"""
 import re
 from datetime import datetime, tzinfo
-from typing import Union, Dict
+from typing import Union, Dict, Optional, List
 
 from browse.domain.escape_html import escape_special_characters
 from browse.domain.metadata import DocMetadata
 from browse.domain.routes import pdf
+from browse.domain.author_affil import parse_author_affil
 
 
 def meta_tag_metadata(metadata: DocMetadata):
@@ -23,9 +24,9 @@ def meta_tag_metadata(metadata: DocMetadata):
     if metadata.title:
         meta_tags.append(mtag('citation_title', metadata.title))
 
-    hundo = parse_author_affil_utf(metadata.authors)[:100]
+    hundo = parse_author_affil(metadata.authors)[:100]
     meta_tags.extend(filter(lambda a: a is not None,
-                            map(format_affil_utf_author, hundo)))
+                            map(format_affil_author, hundo)))
 
     foundy = False
     if metadata.journal_ref:
@@ -52,21 +53,14 @@ def meta_tag_metadata(metadata: DocMetadata):
     return meta_tags
 
 
-def format_affil_utf_author(au: list[str]) -> Union[Dict, None]:
+def format_affil_author(au: List[str]) -> Optional[Dict]:
     if not au or len(au) < 1 or not au[0]:
         return None
     name = au[0]
     name = name + ' ' + au[2] if (len(au) > 2 and au[2]) else name
     name = name + ', ' + au[1] if (len(au) > 1 and au[1]) else name
+    # TODO: name is in TeX, do something like tex2utf()
     return mtag('citation_author', name) if name else None
-
-
-def parse_author_affil_utf(authors: str):
-    # TODO implement this from arxiv-lib
-    if authors:
-        return [['Alhonson', 'B', 'D'], ['Blerg', 'P']]
-    else:
-        return []
 
 
 def mtag(name: str, content: Union[int, str, datetime]):

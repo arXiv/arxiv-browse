@@ -1,7 +1,6 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
-from pytz import timezone
 from dateutil import parser
 from functools import wraps
 from typing import Dict, List
