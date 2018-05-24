@@ -1,5 +1,6 @@
 """Tests for author and affiliation parsing."""
-from unittest import mock, TestCase
+from unittest import TestCase
+
 from browse.domain.author_affil import parse_author_affil, split_authors
 
 
@@ -14,6 +15,27 @@ class TestAuthorAffiliationParsing(TestCase):
 
         self.assertListEqual(split_authors('Simeon Warner, Herbert Van de Sompel'),
                              ['Simeon Warner', ',', 'Herbert Van de Sompel'])
+
+        self.assertListEqual(split_authors(
+            'a.b.first, c.d.second (1), e.f.third, g.h.forth (2,3) ((1) affil1, (2) affil2, (3) affil3)'),
+            ['a.b.first',
+             ',',
+             'c.d.second',
+             '(1)',
+             ',',
+             'e.f.third',
+             ',',
+             'g.h.forth',
+             '(2,3)',
+             '((1)',
+             'affil1',
+             ',',
+             '(2)',
+             'affil2',
+             ',',
+             '(3)',
+             'affil3)']
+        )
 
     def test_parse_author_affil_basic(self):
         self.assertListEqual(parse_author_affil(
@@ -71,11 +93,12 @@ class TestAuthorAffiliationParsing(TestCase):
         self.assertListEqual(
             parse_author_affil('BELLE Collaboration: A Person, Nother Person'),
             [
-                ['BELLE Collaboration', '',       ''],
-                ['Person',              'A',      ''],
-                ['Person',              'Nother', '']
+                ['BELLE Collaboration', '', ''],
+                ['Person', 'A', ''],
+                ['Person', 'Nother', '']
             ])
 
+    def test_parse_author_affil_with_affiliations(self):
         self.assertListEqual(
             parse_author_affil('sum won (lab a)'),
             [['won', 'sum', '', 'lab a']])
@@ -109,7 +132,7 @@ class TestAuthorAffiliationParsing(TestCase):
                 'a.b.first, c.d.second (1), e.f.third, g.h.forth (2,3) ((1) affil1, (2) affil2, (3) affil3)'
             ),
             [
-                ['first',  'a. b.', '', 'affil1'],
+                ['first', 'a. b.', '', 'affil1'],
                 ['second', 'c. d.', '', 'affil1'],
                 ['third', 'e. f.', '', 'affil2', 'affil3'],
                 ['forth', 'g. h.', '', 'affil2', 'affil3']
