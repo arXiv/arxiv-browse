@@ -82,23 +82,31 @@ class AbsMetaSession(object):
         self.original_versions_path = os.path.realpath(original_versions_path)
 
     def _get_version(self, identifier: Identifier,
-                     version: int=None) -> DocMetadata:
-        path = os.path.join(
+                     version: int = None) -> DocMetadata:
+        parent_path = self._get_parent_path(identifier=identifier,
+                                            version=version)
+        path = os.path.join(parent_path,
+                            (f'{identifier.filename}.abs' if not version
+                             else f'{identifier.filename}v{version}.abs'))
+        return self.parse_abs_file(filename=path)
+
+    def _get_parent_path(self, identifier: Identifier,
+                         version: int = None) -> str:
+        """Get the parent path for the identifier."""
+        parent_path = os.path.join(
             (self.latest_versions_path if not version
              else self.original_versions_path),
             ('arxiv' if not identifier.is_old_id else identifier.archive),
             'papers',
             identifier.yymm,
-            (f'{identifier.filename}.abs' if not version
-             else f'{identifier.filename}v{version}.abs')
         )
-        return self.parse_abs_file(filename=path)
+        return parent_path
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier."""
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
-        except IdentifierException as e:
+        except IdentifierException:
             raise
 
         if paper_id.id in DELETED_PAPERS:
@@ -129,7 +137,7 @@ class AbsMetaSession(object):
         try:
             with open(filename) as absf:
                 raw = absf.read()
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             raise AbsNotFoundException
         except UnicodeDecodeError as e:
             raise AbsParsingException(
@@ -245,6 +253,70 @@ class AbsMetaSession(object):
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields
+
+    def get_next_id(self, identifier: Identifier) -> Identifier:
+        """Get the next Identifier in sequence if it also exists."""
+        next_id = identifier.next_id()
+        if not next_id:
+            return None
+
+        path = self._get_parent_path(identifier=next_id)
+        file_path = os.path.join(path, f'{next_id.filename}.abs')
+        if os.path.isfile(file_path):
+            return next_id
+
+        next_yymm_id = next_id.next_yymm_id()
+        if not next_yymm_id:
+            return None
+
+        path = self._get_parent_path(identifier=next_yymm_id)
+        file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
+        if os.path.isfile(file_path):
+            return next_yymm_id
+
+        return None
+
+    def get_previous_id(self, identifier: Identifier):
+        """Get the previous Identifier in sequence if it also exists."""
+        previous_id = identifier.previous_id()
+        if not previous_id:
+            return None
+
+        if identifier.year == previous_id.year \
+           and identifier.month == previous_id.month:
+            return previous_id
+
+        path = self._get_parent_path(previous_id)
+        if not os.path.exists(path):
+            return None
+
+        for _, _, file_list in os.walk(path):
+            abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
+            max_id = max(abs_files)
+            try:
+                if previous_id.is_old_id:
+                    short_id = Identifier(
+                        arxiv_id=f'{previous_id.archive}/{max_id}')
+                else:
+                    short_id = Identifier(arxiv_id=max_id)
+                return short_id
+
+            except IdentifierException:
+                return None
+
+        return None
+
+
+@wraps(AbsMetaSession.get_next_id)
+def get_next_id(identifier: Identifier) -> Identifier:
+    """Retrieve next arxiv document metadata by id."""
+    return current_session().get_next_id(identifier)
+
+
+@wraps(AbsMetaSession.get_previous_id)
+def get_previous_id(identifier: Identifier) -> Identifier:
+    """Retrieve previous arxiv document metadata by id."""
+    return current_session().get_previous_id(identifier)
 
 
 @wraps(AbsMetaSession.get_abs)

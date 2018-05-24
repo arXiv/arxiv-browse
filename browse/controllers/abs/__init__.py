@@ -52,6 +52,11 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
            and (request_params['context'] in taxonomy.CATEGORIES
                 or request_params['context'] in taxonomy.ARCHIVES
                 or request_params['context'] == 'arxiv'):
+            if request_params['context'] == 'arxiv':
+                response_data['browse_context_next_id'] = \
+                    metadata.get_next_id(arxiv_identifier)
+                response_data['browse_context_previous_id'] = \
+                    metadata.get_previous_id(arxiv_identifier)
             response_data['browse_context'] = request_params['context']
     except AbsNotFoundException as e:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
@@ -84,5 +89,5 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
-
+    metadata.get_next_id(identifier=arxiv_identifier)
     return response_data, status.HTTP_200_OK, {}

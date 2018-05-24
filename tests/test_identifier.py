@@ -96,7 +96,6 @@ class TestIdentifier(TestCase):
             'hep-th/9901001/ExTrA': 'hep-th/9901001',
             'HEP-TH/9901001/extra': 'hep-th/9901001',
             'HEP-TH/9901001/ExTrA': 'hep-th/9901001',
-            '/1014.12345v1':  '1014.12345',
         }
         for provided_id, good_id in good_ids.items():
             gid = Identifier(arxiv_id=provided_id)

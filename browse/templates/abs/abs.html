@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}[{{ abs_meta.arxiv_identifier.ids }}] {{ abs_meta.title }}{% endblock %}
+{% block title %}[{{ abs_meta.arxiv_id }}] {{ abs_meta.title }}{% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -22,7 +22,7 @@
 {% endblock head %}
 {% block body_id %}{% endblock %}
 
-{% block header_class %}{# TODO: class="cs" #}{% endblock %}
+{% block header_class %}{% endblock %}
 {% block header %}
   <h1><a href="/">arXiv.org</a> &gt; <a href="/list/{{ abs_meta.primary_archive.id }}/recent">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
   <div id="search">

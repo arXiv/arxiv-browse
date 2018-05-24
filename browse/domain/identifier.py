@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match
+from typing import Match, Optional
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -44,17 +44,17 @@ class Identifier(object):
     """Class for arXiv identifiers of published papers."""
 
     def __init__(self, arxiv_id: str) -> None:
-        """Attempt to validate the provided arXiv id.
+        """Attempt to validate the provided arXiv ID.
 
         Parse constituent parts.
         """
-
         self.ids = arxiv_id
         """The ID as specified."""
         self.id = None
         self.archive = None
         self.filename = None
         self.year = None
+        self.month = None
         self.is_old_id = None
 
         if self.ids in taxonomy.ARCHIVES:
@@ -85,7 +85,10 @@ class Identifier(object):
             )
 
         self.num = int(id_match.group('num'))
-        if self.num == 0:
+        if self.num == 0 \
+           or (self.num > 99999 and self.year >= 2015) \
+           or (self.num > 9999 and self.year < 2015) \
+           or (self.num > 999 and self.is_old_id):
             raise IdentifierException(
                 'invalid arXiv identifier {}'.format(self.ids)
             )
@@ -144,21 +147,93 @@ class Identifier(object):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=True)
 
-    def __iter__(self):
-        return self
+    def __repr__(self):
+        """Return the instance representation."""
+        return f"Identifier(arxiv_id='{self.ids}')"
 
-    def __next__(self):
-        """Return the next Identifier."""
+    def next_id(self):
+        """Get the next Identifier in the sequence."""
+        next_id = None
+        new_year = self.year
+        new_month = self.month
+        new_num = self.num + 1
+        if (self.is_old_id and new_num > 999) \
+           or (not self.is_old_id and self.year < 2015 and new_num > 9999) \
+           or (not self.is_old_id and self.year >= 2015 and new_num > 99999):
+            new_num = 1
+            new_month = new_month + 1
+            if new_month > 12:
+                new_month = 1
+                new_year = new_year + 1
+
         if self.is_old_id:
-            pass
+            next_id = '{}/{:02d}{:02d}{:03d}'.format(
+                self.archive, new_year % 100, new_month, new_num)
         else:
-            new_num = self.num + 1
-            try:
-                if self.year >= 2015:
-                    return Identifier(
-                        arxiv_id='{:04d}.{:05d}'.format(int(self.yymm), new_num))
-                else:
-                    return Identifier(
-                        arxiv_id='{:04d}.{:04d}'.format(int(self.yymm), new_num))
-            except IdentifierException as e:
-                raise StopIteration()
+            if new_year >= 2015:
+                next_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                next_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=next_id)
+        except IdentifierException:
+            return None
+
+    def next_yymm_id(self):
+        """Get the first identifier for the next month."""
+        next_yymm_id = None
+        new_year = self.year
+        new_month = self.month + 1
+        new_num = 1
+        if new_month > 12:
+            new_month = 1
+            new_year = new_year + 1
+        if self.is_old_id:
+            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
+                self.archive, new_year % 100, new_month, new_num)
+        elif new_year >= 2015:
+            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
+                new_year % 100, new_month, new_num)
+        else:
+            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
+                new_year % 100, new_month, new_num)
+
+        try:
+            return Identifier(arxiv_id=next_yymm_id)
+        except IdentifierException:
+            return None
+
+    def previous_id(self):
+        """Get the previous Identifier in the sequence."""
+        previous_id = None
+        new_year = self.year
+        new_month = self.month
+        new_num = self.num - 1
+        if new_num == 0:
+            new_month = new_month - 1
+            if new_month == 0:
+                new_month = 12
+                new_year = new_year - 1
+
+        if self.is_old_id:
+            if new_num == 0:
+                new_num = 999
+            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
+                self.archive, new_year % 100, new_month, new_num)
+        else:
+            if new_year >= 2015:
+                if new_num == 0:
+                    new_num = 99999
+                previous_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                if new_num == 0:
+                    new_num = 9999
+                previous_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=previous_id)
+        except IdentifierException:
+            return None

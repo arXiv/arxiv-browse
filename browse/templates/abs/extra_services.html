@@ -3,18 +3,18 @@
   {% set current_context = browse_context if browse_context else abs_meta.primary_category.id %}
   <h3>Current browse context:</h3>
   <div class="current">{{ current_context }}</div>
-  {% if current_context == 'arxiv' %}
-    {# TODO #}
-    < TODO arXiv context | TODO arXiv context >
-  {% elif not abs_meta.arxiv_identifier.is_old_id %}
-    {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
   <div class="prevnext">
-    <span class="arrow"><a href="{{ prevnext_url }}&function=prev" accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="{{ prevnext_url }}&function=next" accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a></span>
+    <span class="arrow">
+    {% if current_context == 'arxiv' %}
+      {% if browse_context_previous_id %}{{ browse_context_previous_id.id }}{% else %}<span class="nolink">previous</span>{% endif %} | {% if browse_context_next_id %}<span class="arrow"><a href="{{ url_for('browse.abstract', arxiv_id=browse_context_next_id.id, context='arxiv') }}" accesskey="n" title=\"next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a></span>{% else %}<span class="nolink">next</span>{% endif %}
+    {% elif not abs_meta.arxiv_identifier.is_old_id %}
+      {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
+      <a href="{{ prevnext_url }}&function=prev" accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a></span>&nbsp;|&nbsp;<span class="arrow"><a href="{{ prevnext_url }}&function=next" accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
+     {% endif %}
+    </span>
     <br/>
   </div>
-  {% else %}
-  < TODO new ID | TODO new ID ><br/>
-  {% endif %}
+
 
   {% if current_context != 'arxiv' %}
   <div class="list">
