@@ -58,6 +58,11 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                 response_data['browse_context_previous_id'] = \
                     metadata.get_previous_id(arxiv_identifier)
             response_data['browse_context'] = request_params['context']
+        elif arxiv_identifier.is_old_id:
+            response_data['browse_context_next_id'] = \
+                metadata.get_next_id(arxiv_identifier)
+            response_data['browse_context_previous_id'] = \
+                metadata.get_previous_id(arxiv_identifier)
     except AbsNotFoundException as e:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
            in taxonomy.ARCHIVES:

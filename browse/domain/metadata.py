@@ -171,7 +171,7 @@ class DocMetadata():
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
         if self.arxiv_identifier.is_old_id:
-            return (self.arxiv_identifier.archive)
+            return [self.arxiv_identifier.archive]
         options = {}
         options[self.primary_category.id] = True
         options[taxonomy.CATEGORIES[self.primary_category.id]['in_archive']] \

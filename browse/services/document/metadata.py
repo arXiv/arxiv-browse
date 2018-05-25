@@ -15,10 +15,10 @@ ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
-    r'From:\s*(?P<name>[^<]+)?\s*(<(?P<email>.*)>)?')
+    r'From:\s*(?P<name>[^<]+)\s*(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
-    '(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
 RE_FIELD_COMPONENTS = re.compile(
     r'^(?P<field>[-a-z\)\(]+\s*):\s*(?P<value>.*)', re.IGNORECASE)
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
@@ -171,9 +171,7 @@ class AbsMetaSession(object):
         from_match = RE_FROM_FIELD.match(parsed_version_entries.pop(0))
         if not from_match:
             raise AbsParsingException('Could not extract submitter data.')
-        name = from_match.group('name')
-        if name:
-            name = name.rstrip()
+        name = from_match.group('name').rstrip()
         email = from_match.group('email') or None
         fields['submitter'] = Submitter(name=name, email=email)
 
