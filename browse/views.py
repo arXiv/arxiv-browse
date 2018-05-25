@@ -2,7 +2,8 @@
 from typing import Union
 
 from browse.controllers import abs, get_institution_from_request
-from flask import Blueprint, render_template, request, Response, session
+from flask import Blueprint, render_template, request, Response, session, \
+                  redirect
 from arxiv import status
 from arxiv.base import exceptions
 from werkzeug.exceptions import InternalServerError, NotFound, HTTPException
@@ -41,6 +42,8 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
 
     if code == status.HTTP_200_OK:
         return render_template('abs/abs.html', **response), code, headers
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
     elif code == status.HTTP_404_NOT_FOUND:
         return render_template('abs/404.html', **response), code, headers
 

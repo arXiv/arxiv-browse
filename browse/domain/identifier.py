@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match, Optional
+from typing import Match
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -81,7 +81,7 @@ class Identifier(object):
 
         if not id_match:
             raise IdentifierException(
-                'invalid arXiv identifier {}'.format(self.ids)
+                f'invalid arXiv identifier {self.ids}'
             )
 
         self.num = int(id_match.group('num'))
@@ -92,7 +92,6 @@ class Identifier(object):
             raise IdentifierException(
                 'invalid arXiv identifier {}'.format(self.ids)
             )
-
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
@@ -104,11 +103,26 @@ class Identifier(object):
         self.squashedv = self.idv.replace('/', '')
         self.yymm = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
+        if self.month > 12 or self.month < 1:
+            raise IdentifierException(
+                f'invalid arXiv identifier {self.ids}'
+            )
+        if self.is_old_id:
+            if self.year < 1991 or self.year > 2007 \
+               or (self.year == 2007 and self.month > 3):
+                raise IdentifierException(
+                    f'invalid arXiv identifier {self.ids}'
+                )
+        else:
+            if self.year < 2007 or (self.year == 2007 and self.month < 4):
+                raise IdentifierException(
+                    f'invalid arXiv identifier {self.ids}'
+                )
 
     def _parse_old_id(self, matchobj: Match[str]) -> None:
         """Populate instance attributes parsed from old arXiv identifier.
 
-        The old identifiers were minted from 1991 until March 2003.
+        The old identifiers were minted from 1991 until March 2007.
         """
         self.is_old_id = True
         self.archive = matchobj.group('archive')
@@ -125,7 +139,11 @@ class Identifier(object):
     def _parse_new_id(self, matchobj: Match[str]) -> None:
         """Populate instance attributes from a new arXiv identifier.
 
-        e.g. 1401.1234
+        New identifiers started 2007-04 with 4-digit suffix;
+        starting 2015 they have a 5-digit suffix.
+        e.g. 0704.1234
+             1412.0001
+             1501.00001
              1711.01234
         """
         self.is_old_id = False
@@ -141,15 +159,6 @@ class Identifier(object):
                 int(matchobj.group('yymm')),
                 int(matchobj.group('num')))
         self.filename = self.id
-
-    def __str__(self) -> str:
-        """Return the string representation of the instance in json."""
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True, indent=True)
-
-    def __repr__(self):
-        """Return the instance representation."""
-        return f"Identifier(arxiv_id='{self.ids}')"
 
     def next_id(self):
         """Get the next Identifier in the sequence."""
@@ -237,3 +246,16 @@ class Identifier(object):
             return Identifier(arxiv_id=previous_id)
         except IdentifierException:
             return None
+
+    def __str__(self) -> str:
+        """Return the string representation of the instance in json."""
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=True)
+
+    def __repr__(self):
+        """Return the instance representation."""
+        return f"Identifier(arxiv_id='{self.ids}')"
+
+    def __eq__(self, other):
+        """Return instance equality."""
+        return self.__dict__ == other.__dict__

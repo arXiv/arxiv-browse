@@ -12,6 +12,7 @@ from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
+from flask import url_for
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
@@ -43,9 +44,18 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
 
     """
     response_data = {}  # type: Dict[str, Any]
-
+    # TODO: refactor
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+        if arxiv_identifier and arxiv_identifier.ids != arxiv_identifier.id \
+           and arxiv_identifier.ids != arxiv_identifier.idv:
+            redirect_url = arxiv_identifier.idv \
+                          if arxiv_identifier.has_version \
+                          else arxiv_identifier.id
+            return {},\
+                status.HTTP_301_MOVED_PERMANENTLY,\
+                {'Location': url_for('browse.abstract', arxiv_id=redirect_url)}
+
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
         if 'context' in request_params\
@@ -63,7 +73,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                 metadata.get_next_id(arxiv_identifier)
             response_data['browse_context_previous_id'] = \
                 metadata.get_previous_id(arxiv_identifier)
-    except AbsNotFoundException as e:
+    except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
            in taxonomy.ARCHIVES:
             archive_name = taxonomy.ARCHIVES[arxiv_identifier.archive]['name']
@@ -74,7 +84,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                 status.HTTP_404_NOT_FOUND, {}
         return {'reason': 'not_found', 'arxiv_id': arxiv_id}, \
             status.HTTP_404_NOT_FOUND, {}
-    except AbsVersionNotFoundException as e:
+    except AbsVersionNotFoundException:
         return {'reason': 'version_not_found',
                 'arxiv_id': arxiv_identifier.idv,
                 'arxiv_id_latest': arxiv_identifier.id},\
@@ -88,7 +98,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                 'arxiv_id': arxiv_id,
                 'archive_name': e},\
             status.HTTP_404_NOT_FOUND, {}
-    except IdentifierException as e:
+    except IdentifierException:
         return {'arxiv_id': arxiv_id}, status.HTTP_404_NOT_FOUND, {}
     except (AbsException, Exception) as e:
         raise InternalServerError(
@@ -96,3 +106,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
             'help@arxiv.org.') from e
     metadata.get_next_id(identifier=arxiv_identifier)
     return response_data, status.HTTP_200_OK, {}
+
+# def identifier_check(identifier: Identifier) -> None:
+#     """Check supplied identifier."""
+#     pass
