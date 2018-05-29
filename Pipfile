@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-arxiv-base = "==0.7.1"
+arxiv-base = "==0.7.2"
 dataclasses = "*"
 inflect = "*"
 python-dateutil = "*"
