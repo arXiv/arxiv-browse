@@ -13,7 +13,7 @@ from werkzeug.local import LocalProxy
 db: SQLAlchemy = SQLAlchemy()
 
 
-class MemberInstitution(db.Model):
+class MemberInstitution(db.Model): # pylint: disable=too-few-public-methods
     """Primary model for arXiv member insitution data."""
 
     __tablename__ = 'Subscription_UniversalInstitution'
@@ -27,7 +27,7 @@ class MemberInstitution(db.Model):
     note = Column(String(255))
 
 
-class MemberInstitutionContact(db.Model):
+class MemberInstitutionContact(db.Model): # pylint: disable=too-few-public-methods
     """Model for arXiv member institution contact information."""
 
     __tablename__ = 'Subscription_UniversalInstitutionContact'
@@ -44,7 +44,7 @@ class MemberInstitutionContact(db.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class MemberInstitutionIP(db.Model):
+class MemberInstitutionIP(db.Model):  # pylint: disable=too-few-public-methods
     """Model for arXiv member insitution IP address ranges and exclusions."""
 
     __tablename__ = 'Subscription_UniversalInstitutionIP'
@@ -62,7 +62,7 @@ class MemberInstitutionIP(db.Model):
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class SciencewisePing(db.Model):
+class SciencewisePing(db.Model):  # pylint: disable=too-few-public-methods
     """Model for ScienceWISE (trackback) pings."""
 
     __tablename__ = 'arXiv_sciencewise_pings'
@@ -71,7 +71,7 @@ class SciencewisePing(db.Model):
     updated = Column(DateTime)
 
 
-class TrackbackPing(db.Model):
+class TrackbackPing(db.Model):  # pylint: disable=too-few-public-methods
     """Primary model for arXiv trackback data."""
 
     __tablename__ = 'arXiv_trackback_pings'
@@ -99,7 +99,7 @@ class TrackbackPing(db.Model):
     site_id = Column(Integer)
 
 
-class TrackbackSite(db.Model):
+class TrackbackSite(db.Model):  # pylint: disable=too-few-public-methods
     """Model for sites that submit trackbacks to arXiv."""
 
     __tablename__ = 'arXiv_trackback_sites'
