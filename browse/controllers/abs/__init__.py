@@ -5,7 +5,7 @@ The primary entrypoint to this module is :func:`.get_abs_page`, which handles
 GET requests to the abs endpoint.
 """
 
-from typing import Tuple, Dict, Any, Optional, Str
+from typing import Tuple, Dict, Any, Optional
 from arxiv import status, taxonomy
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
@@ -26,6 +26,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
     Parameters
     ----------
     arxiv_id : str
+        The arXiv identifier as provided in the request.
     request_params : dict
 
     Returns
@@ -53,7 +54,9 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                    {'Location': redirect_url}
 
         response_data['abs_meta'] = metadata.get_abs(arxiv_id)
-        _check_context(request_params, response_data, arxiv_identifier)
+        _check_context(arxiv_identifier,
+                       request_params,
+                       response_data)
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
@@ -90,7 +93,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
     return response_data, status.HTTP_200_OK, {}
 
 
-def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional(Str):
+def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
     """
     Provide redirect URL if supplied ID does not match parsed ID.
 
@@ -101,7 +104,8 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional(Str):
     Returns
     -------
     redirect_url: str
-        The redirect URL with the canonical arXiv identifier.
+        A `browse.abstract` redirect URL that uses the canonical
+        arXiv identifier.
 
     """
     if arxiv_identifier and arxiv_identifier.ids != arxiv_identifier.id and \
@@ -114,17 +118,19 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional(Str):
     return None
 
 
-def _check_context(request_params: MultiDict,
-                   response_data: Dict,
-                   arxiv_identifier: Identifier) -> None:
+def _check_context(arxiv_identifier: Identifier,
+                   request_params: MultiDict,
+                   response_data) -> None:
     """
     Check context in request parameters and update response accordingly.
 
     Parameters
     ----------
-    request_params: MultiDict
-    response_data: dict
     arxiv_identifier: :class:`Identifier`
+
+    request_params: MultiDict
+
+    response_data: dict
 
     Returns
     -------

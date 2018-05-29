@@ -5,8 +5,7 @@ from browse.controllers import abs, get_institution_from_request
 from flask import Blueprint, render_template, request, Response, session, \
                   redirect
 from arxiv import status
-from arxiv.base import exceptions
-from werkzeug.exceptions import InternalServerError, NotFound, HTTPException
+from werkzeug.exceptions import InternalServerError, NotFound
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 
@@ -21,8 +20,8 @@ def before_request() -> None:
 
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
+    """Prevent UI redress attacks."""
     """Hook for applying response headers to all responses."""
-    """Prevent UI redress attacks"""
     response.headers["Content-Security-Policy"] = "frame-ancestors 'none'"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     return response
