@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match
+from typing import Match, Optional
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -119,25 +119,37 @@ class Identifier(object):
                     f'invalid arXiv identifier {self.ids}'
                 )
 
-    def _parse_old_id(self, matchobj: Match[str]) -> None:
-        """Populate instance attributes parsed from old arXiv identifier.
+    def _parse_old_id(self, match_obj: Match[str]) -> None:
+        """
+        Populate instance attributes parsed from old arXiv identifier.
 
         The old identifiers were minted from 1991 until March 2007.
+
+        Parameters
+        ----------
+        match_obj : Match[str]
+            A regex match on RE_ARXIV_OLD_ID
+
+        Returns
+        -------
+        None
+
         """
         self.is_old_id = True
-        self.archive = matchobj.group('archive')
-        self.year = int(matchobj.group('yy')) + 1900
-        self.year += 100 if int(matchobj.group('yy')) < 91 else 0
+        self.archive = match_obj.group('archive')
+        self.year = int(match_obj.group('yy')) + 1900
+        self.year += 100 if int(match_obj.group('yy')) < 91 else 0
 
-        if matchobj.group('version'):
-            self.version = int(matchobj.group('version'))
+        if match_obj.group('version'):
+            self.version = int(match_obj.group('version'))
         self.filename = '{}{:03d}'.format(
-            matchobj.group('yymm'),
-            int(matchobj.group('num')))
+            match_obj.group('yymm'),
+            int(match_obj.group('num')))
         self.id = f'{self.archive}/{self.filename}'
 
-    def _parse_new_id(self, matchobj: Match[str]) -> None:
-        """Populate instance attributes from a new arXiv identifier.
+    def _parse_new_id(self, match_obj: Match[str]) -> None:
+        """
+        Populate instance attributes from a new arXiv identifier.
 
         New identifiers started 2007-04 with 4-digit suffix;
         starting 2015 they have a 5-digit suffix.
@@ -145,23 +157,41 @@ class Identifier(object):
              1412.0001
              1501.00001
              1711.01234
+
+        Parameters
+        ----------
+        match_obj : Match[str]
+            A regex match on RE_ARXIV_NEW_ID
+
+        Returns
+        -------
+        None
+
         """
         self.is_old_id = False
         self.archive = 'arxiv'
         # NB: this works only until 2099
-        self.year = int(matchobj.group('yy')) + 2000
+        self.year = int(match_obj.group('yy')) + 2000
         if self.year >= 2015:
             self.id = '{:04d}.{:05d}'.format(
-                int(matchobj.group('yymm')),
-                int(matchobj.group('num')))
+                int(match_obj.group('yymm')),
+                int(match_obj.group('num')))
         else:
             self.id = '{:04d}.{:04d}'.format(
-                int(matchobj.group('yymm')),
-                int(matchobj.group('num')))
+                int(match_obj.group('yymm')),
+                int(match_obj.group('num')))
         self.filename = self.id
 
-    def next_id(self):
-        """Get the next Identifier in the sequence."""
+    def next_id(self) -> Optional['Identifier']:
+        """
+        Get next consecutive Identifier relative to the instance Identifier.
+
+        Returns
+        -------
+        :class:`Identifier`
+            The next Indentifier in sequence
+
+        """
         next_id = None
         new_year = self.year
         new_month = self.month
@@ -214,8 +244,16 @@ class Identifier(object):
         except IdentifierException:
             return None
 
-    def previous_id(self):
-        """Get the previous Identifier in the sequence."""
+    def previous_id(self) -> Optional['Identifier']:
+        """
+        Get previous consecutive Identifier relative to instance Identifier.
+
+        Returns
+        -------
+        :class:`Identifier`
+            The previous Indentifier in sequence
+
+        """
         previous_id = None
         new_year = self.year
         new_month = self.month
@@ -252,7 +290,7 @@ class Identifier(object):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return the instance representation."""
         return f"Identifier(arxiv_id='{self.ids}')"
 

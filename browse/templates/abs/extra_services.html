@@ -31,7 +31,7 @@
   {% if not abs_meta.arxiv_identifier.is_old_id %}
   <h3>Change to browse by:</h3>
   <div class="switch">
-    {% for category in abs_meta.get_browse_context_list() if not (browse_context and browse_context==category) %}
+    {% for category in abs_meta.get_browse_context_list() if not (current_context==category) %}
       {% set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) %}
       {% if '.' in category %}
       <span class="subclass"><a href="{{ switch_url}}">{{ category }}</a></span>
@@ -54,7 +54,14 @@
         <li><a href="/pdf/1708.00003" accesskey="f">TODO: PDF</a></li>
         <li><a href="/format/1708.00003">TODO: Other formats</a></li>
       </ul>
-      <div class="abs-license">(<a href="{% if abs_meta.license %}{{abs_meta.license.effective_license_uri}}{% endif %}" title="Rights to this article">license</a>)</div>
+
+      <div class="abs-license">
+        {% if abs_meta.license.icon_uri_path %}
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
+        {% else %}
+        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">license</a>)
+        {% endif %}
+      </div>
     </div>
     <!--end full-text-->
 

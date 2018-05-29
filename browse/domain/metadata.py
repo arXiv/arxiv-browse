@@ -138,11 +138,11 @@ class DocMetadata():
     """American Mathematical Society Mathematics Subject (MSC)
        classification(s)."""
 
-    license: License = field(default=None)
+    license: License = field(default_factory=License)
     """License associated with the article."""
 
     proxy: Optional[str] = None
-    """Proxy submitter"""
+    """Proxy submitter."""
 
     comments: Optional[str] = None
     """Submitter- and/or administrator-provided comments about the article."""
@@ -154,15 +154,7 @@ class DocMetadata():
     """Version of this paper."""
 
     def __post_init__(self) -> None:
-        """Post-initialization for license."""
-        if not hasattr(self, 'license') or self.license is None:
-            self.license = License()
-        elif isinstance(self.license, str):
-            self.license = License(self.license)
-        elif not isinstance(self.license, License):
-            raise TypeError(
-                "metadata should have str,Licnese or None as self.license "
-                + "but it was " + str(type(self.license)))
+        """Post-initialization for DocMetadata."""
         self.primary_archive = Archive(
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
         self.primary_group = Group(

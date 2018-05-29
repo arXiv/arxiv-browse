@@ -28,7 +28,7 @@ class TestAbsParser(TestCase):
                 m = AbsMetaSession.parse_abs_file(filename=fname_path)
                 self.assertIsInstance(m, DocMetadata)
                 self.assertNotEqual(m.license, None)
-                self.assertNotEqual(m.license.effective_license_uri, None,
+                self.assertNotEqual(m.license.effective_uri, None,
                                     'sould have an effectiveLicenseUri')
                 # self.assertTrue(m.initialized, 'instance initialized')
 
@@ -88,7 +88,7 @@ class TestAbsParser(TestCase):
         self.assertEqual(m.comments, '15 pages')
         self.assertNotEqual(m.license, None)
         self.assertEqual(
-            m.license.effective_license_uri,
+            m.license.effective_uri,
             'http://arxiv.org/licenses/nonexclusive-distrib/1.0/'
         )
         self.assertMultiLineEqual(

@@ -1,13 +1,19 @@
-"""Parse fields from a single arXiv abstract (.abs) file."""
+"""
+arxiv browse metadata service.
+
+Provides routines to parse filesystem-based arXiv abstract (.abs) files.
+"""
 import os
 import re
 from pytz import timezone
 from dateutil import parser
 from functools import wraps
-from typing import Dict, List
+from typing import Dict, List, Optional
+
+from browse.domain.identifier import Identifier, IdentifierException
+from browse.domain.license import License
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry, Category
-from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
 
@@ -28,7 +34,7 @@ RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
 # major component of .abs file.
 NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
                 'Report-no', 'ACM-class', 'MSC-class', 'Journal-ref',
-                'DOI', 'License']
+                'DOI', 'License', '']
 # (normalized) required parsed fields
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
 
@@ -64,11 +70,11 @@ class AbsDeletedException(Exception):
 
 
 class AbsMetaSession(object):
-    """Class for representing arXiv document metadata."""
+    """Abstract metadata session class."""
 
     def __init__(self, latest_versions_path: str,
                  original_versions_path: str) -> None:
-
+        """Set the filesystem paths the to be used with AbsMetaSession."""
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
                                '"{latest_versions_path}" does not exist'
@@ -81,29 +87,20 @@ class AbsMetaSession(object):
         self.latest_versions_path = os.path.realpath(latest_versions_path)
         self.original_versions_path = os.path.realpath(original_versions_path)
 
-    def _get_version(self, identifier: Identifier,
-                     version: int = None) -> DocMetadata:
-        parent_path = self._get_parent_path(identifier=identifier,
-                                            version=version)
-        path = os.path.join(parent_path,
-                            (f'{identifier.filename}.abs' if not version
-                             else f'{identifier.filename}v{version}.abs'))
-        return self.parse_abs_file(filename=path)
-
-    def _get_parent_path(self, identifier: Identifier,
-                         version: int = None) -> str:
-        """Get the parent path for the identifier."""
-        parent_path = os.path.join(
-            (self.latest_versions_path if not version
-             else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id else identifier.archive),
-            'papers',
-            identifier.yymm,
-        )
-        return parent_path
-
     def get_abs(self, arxiv_id: str) -> DocMetadata:
-        """Get the .abs metadata for the specified arXiv paper identifier."""
+        """
+        Get the .abs metadata for the specified arXiv paper identifier.
+
+        Parameters
+        ----------
+        arxiv_id : str
+            The arXiv identifier string.
+
+        Returns
+        -------
+        :class:`DocMetadata`
+
+        """
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException:
@@ -128,6 +125,96 @@ class AbsMetaSession(object):
 
         this_version.version_history = latest_version.version_history
         return this_version
+
+    def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
+        """
+        Get the next identifier in sequence if it exists in the repository.
+
+        Under certain conditions this is called to generate the "next" link
+        in the "browse context" portion of the abs page rendering.
+        These conditions are dependent on the identifier and context; it
+        emulates legacy functionality. It is recommended to deprecate
+        this function once the /prevnext route is fixed (or replaced) to
+        handle old identifiers correctly.
+
+        Parameters
+        ----------
+        identifier : :class:`Identifier`
+
+        Returns
+        -------
+        :class:`Identifier`
+            The next identifier in sequence that exists in the repository.
+
+        """
+        next_id = identifier.next_id()
+        if not next_id:
+            return None
+
+        path = self._get_parent_path(identifier=next_id)
+        file_path = os.path.join(path, f'{next_id.filename}.abs')
+        if os.path.isfile(file_path):
+            return next_id
+
+        next_yymm_id = next_id.next_yymm_id()
+        if not next_yymm_id:
+            return None
+
+        path = self._get_parent_path(identifier=next_yymm_id)
+        file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
+        if os.path.isfile(file_path):
+            return next_yymm_id
+
+        return None
+
+    def get_previous_id(self, identifier: Identifier):
+        """
+        Get the previous identifier in sequence if it exists in the repository.
+
+        Under certain conditions this is called to generate the "previous" link
+        in the "browse context" portion of the abs page rendering.
+        These conditions are dependent on the identifier and context; it
+        emulates legacy functionality. It is recommended to deprecate
+        this function once the /prevnext route is fixed (or replaced) to
+        handle old identifiers correctly.
+
+        Parameters
+        ----------
+        identifier : :class:`Identifier`
+
+        Returns
+        -------
+        :class:`Identifier`
+            The previous identifier in sequence that exists in the repository.
+
+        """
+        previous_id = identifier.previous_id()
+        if not previous_id:
+            return None
+
+        if identifier.year == previous_id.year \
+           and identifier.month == previous_id.month:
+            return previous_id
+
+        path = self._get_parent_path(previous_id)
+        if not os.path.exists(path):
+            return None
+
+        for _, _, file_list in os.walk(path):
+            abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
+            max_id = max(abs_files)
+            try:
+                if previous_id.is_old_id:
+                    short_id = Identifier(
+                        arxiv_id=f'{previous_id.archive}/{max_id}')
+                else:
+                    short_id = Identifier(arxiv_id=max_id)
+                return short_id
+
+            except IdentifierException:
+                return None
+
+        return None
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
@@ -198,8 +285,32 @@ class AbsMetaSession(object):
         fields['secondary_categories'] = [
             Category(id=x) for x in categories[1:] if len(categories) > 1
         ]
+        if 'license' in fields:
+            fields['license'] = License(recorded_uri=fields['license'])
 
         return DocMetadata(**fields)
+
+    def _get_version(self, identifier: Identifier,
+                     version: int = None) -> DocMetadata:
+        """Get a specific version of a paper's abstract metadata."""
+        parent_path = self._get_parent_path(identifier=identifier,
+                                            version=version)
+        path = os.path.join(parent_path,
+                            (f'{identifier.filename}.abs' if not version
+                             else f'{identifier.filename}v{version}.abs'))
+        return self.parse_abs_file(filename=path)
+
+    def _get_parent_path(self, identifier: Identifier,
+                         version: int = None) -> str:
+        """Get the parent directory of the provided identifier."""
+        parent_path = os.path.join(
+            (self.latest_versions_path if not version
+             else self.original_versions_path),
+            ('arxiv' if not identifier.is_old_id else identifier.archive),
+            'papers',
+            identifier.yymm,
+        )
+        return parent_path
 
     @staticmethod
     def _parse_version_entries(fields: Dict, version_entry_list: List) -> None:
@@ -236,7 +347,7 @@ class AbsMetaSession(object):
 
     @staticmethod
     def _parse_metadata_fields(fields: Dict, key_value_block: str) -> None:
-        """Parse the key-value block from the arXiv .abs file."""
+        """Parse the key-value block from the arXiv .abs string."""
         key_value_block = key_value_block.lstrip()
         field_lines = re.split(r'\n', key_value_block)
         field_name = 'unknown'
@@ -251,58 +362,6 @@ class AbsMetaSession(object):
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields
-
-    def get_next_id(self, identifier: Identifier) -> Identifier:
-        """Get the next Identifier in sequence if it also exists."""
-        next_id = identifier.next_id()
-        if not next_id:
-            return None
-
-        path = self._get_parent_path(identifier=next_id)
-        file_path = os.path.join(path, f'{next_id.filename}.abs')
-        if os.path.isfile(file_path):
-            return next_id
-
-        next_yymm_id = next_id.next_yymm_id()
-        if not next_yymm_id:
-            return None
-
-        path = self._get_parent_path(identifier=next_yymm_id)
-        file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
-        if os.path.isfile(file_path):
-            return next_yymm_id
-
-        return None
-
-    def get_previous_id(self, identifier: Identifier):
-        """Get the previous Identifier in sequence if it also exists."""
-        previous_id = identifier.previous_id()
-        if not previous_id:
-            return None
-
-        if identifier.year == previous_id.year \
-           and identifier.month == previous_id.month:
-            return previous_id
-
-        path = self._get_parent_path(previous_id)
-        if not os.path.exists(path):
-            return None
-
-        for _, _, file_list in os.walk(path):
-            abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
-            max_id = max(abs_files)
-            try:
-                if previous_id.is_old_id:
-                    short_id = Identifier(
-                        arxiv_id=f'{previous_id.archive}/{max_id}')
-                else:
-                    short_id = Identifier(arxiv_id=max_id)
-                return short_id
-
-            except IdentifierException:
-                return None
-
-        return None
 
 
 @wraps(AbsMetaSession.get_next_id)
