@@ -99,7 +99,7 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
 
     Parameters
     ----------
-    arxiv_identier: :class:`Identifier`
+    arxiv_identier : :class:`Identifier`
 
     Returns
     -------
@@ -126,7 +126,7 @@ def _check_context(arxiv_identifier: Identifier,
 
     Parameters
     ----------
-    arxiv_identifier: :class:`Identifier`
+    arxiv_identifier : :class:`Identifier`
 
     request_params: MultiDict
 
