@@ -170,5 +170,6 @@ class DocMetadata():
             = True
         for category in self.secondary_categories:
             options[category.id] = True
-            options[taxonomy.CATEGORIES[category.id]['in_archive']] = True
+            in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
+            options[in_archive] = True
         return sorted(options.keys())

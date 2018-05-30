@@ -26,7 +26,7 @@
   {% elif reason=='deleted' and arxiv_id_latest %}
   <h1>Article {{ arxiv_id_latest }} doesn't exist</h1>
   <p><b>The article <i>{{ arxiv_id_latest }}</i> is recorded as having been
-  deleted from arXiv. The reason recorded is <i>"{{ reason }}"</i>.</b></p>
+  deleted from arXiv. The reason recorded is <i>"{{ message }}"</i>.</b></p>
   {{ identifier_help() }}
 
   {% elif reason=='is_archive' and arxiv_id and archive_name %}

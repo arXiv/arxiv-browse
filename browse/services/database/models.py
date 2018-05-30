@@ -1,19 +1,16 @@
 """arXiv browse database models."""
-import ipaddress
+
 from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
 
 
-class MemberInstitution(db.Model): # pylint: disable=too-few-public-methods
+class MemberInstitution(db.Model):
     """Primary model for arXiv member insitution data."""
 
     __tablename__ = 'Subscription_UniversalInstitution'
@@ -27,7 +24,7 @@ class MemberInstitution(db.Model): # pylint: disable=too-few-public-methods
     note = Column(String(255))
 
 
-class MemberInstitutionContact(db.Model): # pylint: disable=too-few-public-methods
+class MemberInstitutionContact(db.Model):
     """Model for arXiv member institution contact information."""
 
     __tablename__ = 'Subscription_UniversalInstitutionContact'
@@ -44,7 +41,7 @@ class MemberInstitutionContact(db.Model): # pylint: disable=too-few-public-metho
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class MemberInstitutionIP(db.Model):  # pylint: disable=too-few-public-methods
+class MemberInstitutionIP(db.Model):
     """Model for arXiv member insitution IP address ranges and exclusions."""
 
     __tablename__ = 'Subscription_UniversalInstitutionIP'
@@ -62,7 +59,7 @@ class MemberInstitutionIP(db.Model):  # pylint: disable=too-few-public-methods
     Subscription_UniversalInstitution = relationship('MemberInstitution')
 
 
-class SciencewisePing(db.Model):  # pylint: disable=too-few-public-methods
+class SciencewisePing(db.Model):
     """Model for ScienceWISE (trackback) pings."""
 
     __tablename__ = 'arXiv_sciencewise_pings'
@@ -71,7 +68,7 @@ class SciencewisePing(db.Model):  # pylint: disable=too-few-public-methods
     updated = Column(DateTime)
 
 
-class TrackbackPing(db.Model):  # pylint: disable=too-few-public-methods
+class TrackbackPing(db.Model):
     """Primary model for arXiv trackback data."""
 
     __tablename__ = 'arXiv_trackback_pings'
@@ -99,7 +96,7 @@ class TrackbackPing(db.Model):  # pylint: disable=too-few-public-methods
     site_id = Column(Integer)
 
 
-class TrackbackSite(db.Model):  # pylint: disable=too-few-public-methods
+class TrackbackSite(db.Model):
     """Model for sites that submit trackbacks to arXiv."""
 
     __tablename__ = 'arXiv_trackback_sites'
@@ -114,29 +111,3 @@ class TrackbackSite(db.Model):  # pylint: disable=too-few-public-methods
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)
-
-
-def get_institution(ip: str) -> Optional[str]:
-    """Get institution label from IP address."""
-    decimal_ip = int(ipaddress.ip_address(ip))
-    try:
-        stmt = (
-            db.session.query(
-                MemberInstitution.label,
-                func.sum(MemberInstitutionIP.exclude).label("exclusions")
-            ).
-            join(MemberInstitutionIP).
-            filter(
-                MemberInstitutionIP.start <= decimal_ip,
-                MemberInstitutionIP.end >= decimal_ip
-            ).
-            group_by(MemberInstitution.label).
-            subquery()
-        )
-        institution_name = db.session.query(stmt.c.label).\
-            filter(stmt.c.exclusions == 0).one().label
-        return institution_name  # type: ignore
-    except NoResultFound:
-        return None
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e

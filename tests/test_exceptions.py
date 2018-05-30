@@ -41,7 +41,7 @@ class TestExceptionHandling(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
                          f'should get 404 for bad paper ID')
 
-    @mock.patch('browse.controllers.abs.get_abs_page')
+    @mock.patch('browse.controllers.abs_page.get_abs_page')
     def test_500(self, mock_abs):
         """A 500 response should be returned."""
         # Raise a general exception from the get_abs_page controller.

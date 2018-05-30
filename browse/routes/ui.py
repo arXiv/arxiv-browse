@@ -1,7 +1,7 @@
 """Provides the user intefaces for browse."""
 from typing import Union
 
-from browse.controllers import abs, get_institution_from_request
+from browse.controllers import abs_page, get_institution_from_request
 from flask import Blueprint, render_template, request, Response, session, \
                   redirect
 from arxiv import status
@@ -37,7 +37,7 @@ def bare_abs():
 @blueprint.route('/abs/<path:arxiv_id>', methods=['GET', 'POST'])
 def abstract(arxiv_id: str) -> Union[str, Response]:
     """Abstract (abs) page view."""
-    response, code, headers = abs.get_abs_page(arxiv_id, request.args)
+    response, code, headers = abs_page.get_abs_page(arxiv_id, request.args)
 
     if code == status.HTTP_200_OK:
         return render_template('abs/abs.html', **response), code, headers

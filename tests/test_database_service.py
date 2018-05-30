@@ -67,31 +67,31 @@ class TestGetInstitution(TestCase):
 
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
-        label = self.database_service.models.get_institution('128.84.0.0')
+        label = self.database_service.get_institution('128.84.0.0')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
-        label = self.database_service.models.get_institution('128.84.255.255')
+        label = self.database_service.get_institution('128.84.255.255')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
 
-        label = self.database_service.models.get_institution('128.84.12.34')
+        label = self.database_service.get_institution('128.84.12.34')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP within range')
-        label = self.database_service.models.get_institution('128.85.12.34')
+        label = self.database_service.get_institution('128.85.12.34')
         self.assertIsNone(
             label, 'No institution label returned for non-matching IP')
-        label = self.database_service.models.get_institution('128.84.10.1')
+        label = self.database_service.get_institution('128.84.10.1')
         self.assertIsNone(
             label, 'No institution label returned for excluded IP')
 
-        label = self.database_service.models.get_institution('128.84.10.5')
+        label = self.database_service.get_institution('128.84.10.5')
         self.assertEqual(
             label, 'Other University',
             'Institution label returned for IP excluded '
             'by one institution but included by another')
 
         with self.assertRaises(ValueError) as context:
-            self.database_service.models.get_institution('notanip')
+            self.database_service.get_institution('notanip')
 
         self.assertIn(
             'does not appear to be an IPv4 or IPv6 address',

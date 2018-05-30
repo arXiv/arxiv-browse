@@ -40,7 +40,7 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
         if not isinstance(recorded_uri, str):
             raise TypeError(
                 "License recorded_uri must be str or None, but it was "
-                f"{str(type(recorded_uri))}")
+                f"{type(recorded_uri).__name__}")
         else:
             return recorded_uri
 
