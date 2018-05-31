@@ -1,5 +1,6 @@
 """Representations of arXiv document metadata."""
 import collections
+import pprint
 
 from dataclasses import dataclass, field
 from typing import List, Optional
@@ -159,11 +160,11 @@ class DocMetadata:
         if not version:
             version = self.highest_version()
 
-        versions = (v for v in self.version_history if v.version == version)
+        versions = list(v for v in self.version_history if v.version == version)
         if len(versions) > 1:
             raise ValueError('%s version_history had more than one version %i' % (self.arxiv_id, version))
         if len(versions) == 0:
             return None
         else:
-            return versions[0].version.submitted_date
+            return versions[0].submitted_date
 

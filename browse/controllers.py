@@ -3,6 +3,8 @@ import re
 from flask import request
 from arxiv import status
 from typing import Tuple, Dict, Any, Optional
+
+from browse.domain.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsNotFoundException,\
     AbsVersionNotFoundException
@@ -20,6 +22,7 @@ def get_abs_page(arxiv_id: str) -> Response:
     try:
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
+        response_data['meta_tags'] = meta_tag_metadata(abs_meta)
     except AbsNotFoundException as e:
         return {'not_found': True, 'arxiv_id': arxiv_id}, \
             status.HTTP_404_NOT_FOUND, {}

@@ -1,7 +1,10 @@
 """Parse Authors lines to extract author and affiliation data"""
+import pprint
 import re
 from itertools import dropwhile
 from typing import List, Tuple, Dict
+
+from browse.domain.tex2utf import tex2utf
 
 PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di'
 
@@ -61,9 +64,10 @@ def parse_author_affil(authors: str) -> List[List[str]]:
     ]
     """
 
-    return parse_author_affil_back_propagate(**parse_author_affil_split(authors))
+    return _parse_author_affil_back_propagate(**_parse_author_affil_split(authors))
 
-def parse_author_affil_split(author_line: str):
+
+def _parse_author_affil_split(author_line: str):
     """
     Take author line, tidy spacing and punctuation, and then split up into
     individual author an affiliation data. Has special cases to avoid splitting
@@ -73,23 +77,23 @@ def parse_author_affil_split(author_line: str):
 
     Does not handle multiple collaboration names.
     """
-    names = split_authors(author_line)
+    names = _split_authors(author_line)
     if not names or len(names) == 0:
         return {'author_list': [], 'back_prop': 0}
 
     #names = map(lambda n: n.lstrip().rstrip(), names)
 
-    names = remove_double_commas(names)
+    names = _remove_double_commas(names)
     names = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))  # get rid of commas at back
     names = list(dropwhile(lambda x: x == ',', names))  # get rid of commas at front
 
     # Extract all names (all parts not starting with comma or paren)
-    names = list(map(tidy_name, filter(lambda x: re.match('^[^](,]', x), names)))
+    names = list(map(_tidy_name, filter(lambda x: re.match('^[^](,]', x), names)))
     names = list(filter(lambda n: not re.match(r'^\s*et\.\s+al\.?\s*', n, flags=re.IGNORECASE), names))
 
-    (names, author_list, back_propagate_affiliations_to) = collaboration_at_start(names)
+    (names, author_list, back_propagate_affiliations_to) = _collaboration_at_start(names)
 
-    (enumaffils) = enum_collaboration_at_end(author_line)
+    (enumaffils) = _enum_collaboration_at_end(author_line)
 
     # Now go through names in turn and try to get affiliations
     # to go with them
@@ -122,13 +126,21 @@ def parse_author_affil_split(author_line: str):
             author_entry = [name, '', '']
 
         # search back in author_line for affiliation
-        author_entry = add_affiliation( author_line, enumaffils, author_entry, name)
+        author_entry = _add_affiliation(author_line, enumaffils, author_entry, name)
         author_list.append(author_entry)
 
     return {'author_list': author_list, 'back_prop': back_propagate_affiliations_to}
 
 
-def remove_double_commas(items: List[str]) -> List[str]:
+def parse_author_affil_utf(authors: str):
+    """Passes author_line to parse_author_affil() and does TeX to UTF
+    conversion on all elements of the resulting array. Output
+    structure is the same but should be in UTF and not TeX.
+    """
+    return list(map(lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
+
+
+def _remove_double_commas(items: List[str]) -> List[str]:
     parts = []
     last = ''
     for p in items:
@@ -140,14 +152,14 @@ def remove_double_commas(items: List[str]) -> List[str]:
     return parts
 
 
-def tidy_name(name: str) -> str:
+def _tidy_name(name: str) -> str:
     name = re.sub('\s\s+', ' ', name)  # also gets rid of CR
     # add space after dot (except in TeX)
     name = re.sub(r'(?<!\\)\.(\S)', '. \g<1>', name)
     return name
 
 
-def collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]], int]:
+def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]], int]:
     """Special handling of collaboration at start"""
     author_list = []
 
@@ -170,7 +182,7 @@ def collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]], 
     return names, author_list, back_propagate_affiliations_to
 
 
-def enum_collaboration_at_end(author_line:str)->Dict:
+def _enum_collaboration_at_end(author_line:str)->Dict:
     """ Gets separate set of enumerated affiliations from end of author_line"""
 
     # Now see if we have a separate set of enumerated affiliations
@@ -192,7 +204,7 @@ def enum_collaboration_at_end(author_line:str)->Dict:
     return enumaffils
 
 
-def add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str):
+def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str):
     """Add author affiliation to author_entry if one is found in author_line
     This should deal with these cases
     Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)  """
@@ -217,7 +229,7 @@ def add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str],
     return author_entry
 
 
-def parse_author_affil_back_propagate(author_list: List[List[str]], back_prop: int) -> List[List[str]]:
+def _parse_author_affil_back_propagate(author_list: List[List[str]], back_prop: int) -> List[List[str]]:
     """Take the author list structure generated by parse_author_affil_split(..)
     and propagate affiliation information backwards to preceeding author
     entries where none was give. Stop before entry $back_prop to avoid
@@ -244,7 +256,7 @@ def parse_author_affil_back_propagate(author_list: List[List[str]], back_prop: i
     return author_list
 
 
-def split_authors(authors):
+def _split_authors(authors):
     """ Take and author line as a string and return a reference to a list of the
     different name and affiliation blocks. While this does normalize spacing
     and 'and', it is a key feature that the set of strings returned can be
@@ -318,22 +330,3 @@ def split_authors(authors):
     return parts
 
 
-def parse_author_affil_utf():
-    #TODO implement this
-    """Passes $author_line to parse_author_affil() and does TeX to UTF
-    conversion on all elements of the resulting array. Output
-    structure is the same but should be in UTF and not TeX.
-    """
-    pass
-#   my ($author_line)=@_;
-#   my $author_list_ptr=parse_author_affil($author_line);
-
-#   # Go through all fields and do in place TeX to UTF conversion
-#   #
-#   foreach my $author_entry_ptr (@$author_list_ptr) {
-#     for (my $j=0;$j<=$#{$author_entry_ptr};$j++) {
-#       $author_entry_ptr->[$j]=tex2UTF($author_entry_ptr->[$j]);
-#     }
-#   }
-#   return($author_list_ptr);
-# }

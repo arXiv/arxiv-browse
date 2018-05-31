@@ -9,4 +9,4 @@ def main_site(param: str) -> str:
 def pdf(item: DocMetadata) -> str:
     """ Retunrs URL to PDF for the item """
     if isinstance(item, DocMetadata):
-        return main_site('/pdf/' + item.id)
+        return main_site('/pdf/' + item.arxiv_id)

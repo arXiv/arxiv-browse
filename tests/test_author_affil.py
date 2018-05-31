@@ -1,62 +1,62 @@
 """Tests for author and affiliation parsing."""
 from unittest import TestCase
 
-from browse.domain.author_affil import parse_author_affil, split_authors
+from browse.domain.author_affil import parse_author_affil, _split_authors
 
 
 class TestAuthorAffiliationParsing(TestCase):
 
     def test_split_authors(self):
-        self.assertListEqual(split_authors('Simeon Warner'),
+        self.assertListEqual(_split_authors('Simeon Warner'),
                              ['Simeon Warner'])
 
-        self.assertListEqual(split_authors('BELLE Collaboration: A Person, Nother Person'),
+        self.assertListEqual(_split_authors('BELLE Collaboration: A Person, Nother Person'),
                              ['BELLE Collaboration', ':', 'A Person', ',', 'Nother Person'])
 
-        self.assertListEqual(split_authors('Simeon Warner, Herbert Van de Sompel'),
+        self.assertListEqual(_split_authors('Simeon Warner, Herbert Van de Sompel'),
                              ['Simeon Warner', ',', 'Herbert Van de Sompel'])
 
         self.assertListEqual(
-            split_authors('An Author'),
+            _split_authors('An Author'),
             ['An Author'],
             'single author'
         )
 
         self.assertListEqual(
-            split_authors(''),
+            _split_authors(''),
             [],
             'empty author'
         )
 
         self.assertListEqual(
-            split_authors('An Author (affil)'),
+            _split_authors('An Author (affil)'),
             ['An Author', '(affil)'],
             'single author with affil'
         )
         self.assertListEqual(
-            split_authors('An Author     (affil)'),
+            _split_authors('An Author     (affil)'),
             ['An Author', '(affil)'],
             'single author with affil'
         )
         self.assertListEqual(
-            split_authors('An Author and Another P. H. J. Author (affil)'),
+            _split_authors('An Author and Another P. H. J. Author (affil)'),
             ['An Author', ',', 'Another P. H. J. Author', '(affil)'],
             'double author with affil'
         )
         self.assertListEqual(
-            split_authors(
+            _split_authors(
                 'John Von Neumann, Herbert Van de Sompel, Fred Bloggs, Jr, et al'),
             ['John Von Neumann', ',', 'Herbert Van de Sompel',
              ',', 'Fred Bloggs, Jr', ',', 'et al'],
             'multiple with prefixes and suffixes'
         )
         self.assertListEqual(
-            split_authors('sum won ( whatever affil  data   unmunged  )'),
+            _split_authors('sum won ( whatever affil  data   unmunged  )'),
             ['sum won', '( whatever affil data unmunged )'],
             'one author, two labs'
         )
         self.assertListEqual(
-            split_authors('sum won(1,2)((1)lab a,(2)lab b)'),
+            _split_authors('sum won(1,2)((1)lab a,(2)lab b)'),
             ['sum won', '(1,2)', '((1)lab a,(2)lab b)'],
             'one author, two labs'
         )

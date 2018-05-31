@@ -1,12 +1,14 @@
 """Functions to make HTML head metadata tags for DocMetadata"""
 import re
-from datetime import datetime, tzinfo
+from datetime import datetime
 from typing import Union, Dict, Optional, List
 
+import pytz as pytz
+
+from browse.domain.author_affil import parse_author_affil_utf
 from browse.domain.escape_html import escape_special_characters
 from browse.domain.metadata import DocMetadata
 from browse.domain.routes import pdf
-from browse.domain.author_affil import parse_author_affil
 
 
 def meta_tag_metadata(metadata: DocMetadata):
@@ -24,32 +26,33 @@ def meta_tag_metadata(metadata: DocMetadata):
     if metadata.title:
         meta_tags.append(mtag('citation_title', metadata.title))
 
-    hundo = parse_author_affil(metadata.authors)[:100]
-    meta_tags.extend(filter(lambda a: a is not None,
-                            map(format_affil_author, hundo)))
+    if metadata.authors:
+        hundo = parse_author_affil_utf(metadata.authors)[:100]
+        meta_tags.extend(filter(lambda a: a is not None, map(format_affil_author, hundo)))
 
-    foundy = False
+    found_y = False
     if metadata.journal_ref:
-        match = re.search(' (journal of artificial intelligence research) ', metadata.journal_ref, re.I)
+        match = re.search('(journal of artificial intelligence research)', metadata.journal_ref, re.IGNORECASE)
         if match:
             meta_tags.append(mtag('citation_journal_title', match.group(1)))
             # check for year of publication
-            ymatch = re.search(r"([^\d]+(\d{4})\s*$|\((\d{4})\))", metadata.journal_ref)
-            if ymatch:
-                foundy = True
-                if ymatch.group(2):
-                    meta_tags.append(mtag('citation_publication_date', ymatch.group(2)))
+            y_match = re.search(r"([^\d]+(\d{4})\s*$|\((\d{4})\))", metadata.journal_ref)
+            if y_match:
+                found_y = True
+                if y_match.group(2):
+                    meta_tags.append(mtag('citation_publication_date', y_match.group(2)))
                 else:
-                    meta_tags.append(mtag('citation_publication_date', ymatch.group(3)))
+                    meta_tags.append(mtag('citation_publication_date', y_match.group(3)))
 
     if metadata.doi:
         meta_tags.append(mtag('citation_doi', metadata.doi))
 
-    if not foundy:  # changed from citation_date to citation_publication_date in 2018-5
+    # changed from citation_date to citation_publication_date in 2018-5: citation_date is not in spec
+    if not found_y:
         meta_tags.append(mtag('citation_publication_date', metadata.get_datetime_of_version(1)))
-    meta_tags.append(mtag('citation_online_date', metadata.get_datetime_of_version()))
+    meta_tags.append(mtag('citation_online_date', metadata.get_datetime_of_version(metadata.version)))
     meta_tags.append(mtag('citation_pdf_url', pdf(metadata)))
-    meta_tags.append(mtag('citation_arxiv_id', metadata.version))
+    meta_tags.append(mtag('citation_arxiv_id', metadata.arxiv_id_v))
     return meta_tags
 
 
@@ -65,7 +68,7 @@ def format_affil_author(au: List[str]) -> Optional[Dict]:
 
 def mtag(name: str, content: Union[int, str, datetime]):
     if isinstance(content, datetime):
-        cstr = content.astimezone(tzinfo.utc).strftime('%Y/%m/%d')
+        cstr = content.astimezone(pytz.UTC).strftime('%Y/%m/%d')
     elif isinstance(content, int):
         cstr = str(content)
     else:
