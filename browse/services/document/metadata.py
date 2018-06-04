@@ -126,6 +126,74 @@ class AbsMetaSession(object):
         this_version.version_history = latest_version.version_history
         return this_version
 
+    def _next_id(self, identifier: Identifier) -> Optional['Identifier']:
+        """
+        Get next consecutive Identifier relative to the provided Identifier.
+
+        Parameters
+        ----------
+        identifier : :class:`Identifier`
+
+        Returns
+        -------
+        :class:`Identifier`
+            The next Indentifier in sequence
+
+        """
+        next_id = None
+        new_year = identifier.year
+        new_month = identifier.month
+        new_num = identifier.num + 1
+        if (identifier.is_old_id and new_num > 999) \
+           or (not identifier.is_old_id
+               and identifier.year < 2015 and new_num > 9999) \
+           or (not identifier.is_old_id
+               and identifier.year >= 2015 and new_num > 99999):
+            new_num = 1
+            new_month = new_month + 1
+            if new_month > 12:
+                new_month = 1
+                new_year = new_year + 1
+
+        if identifier.is_old_id:
+            next_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        else:
+            if new_year >= 2015:
+                next_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                next_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=next_id)
+        except IdentifierException:
+            return None
+
+    def _next_yymm_id(self, identifier: Identifier):
+        """Get the first identifier for the next month."""
+        next_yymm_id = None
+        new_year = identifier.year
+        new_month = identifier.month + 1
+        new_num = 1
+        if new_month > 12:
+            new_month = 1
+            new_year = new_year + 1
+        if identifier.is_old_id:
+            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        elif new_year >= 2015:
+            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
+                new_year % 100, new_month, new_num)
+        else:
+            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
+                new_year % 100, new_month, new_num)
+
+        try:
+            return Identifier(arxiv_id=next_yymm_id)
+        except IdentifierException:
+            return None
+
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
         """
         Get the next identifier in sequence if it exists in the repository.
@@ -147,7 +215,7 @@ class AbsMetaSession(object):
             The next identifier in sequence that exists in the repository.
 
         """
-        next_id = identifier.next_id()
+        next_id = self._next_id(identifier)
         if not next_id:
             return None
 
@@ -156,7 +224,7 @@ class AbsMetaSession(object):
         if os.path.isfile(file_path):
             return next_id
 
-        next_yymm_id = next_id.next_yymm_id()
+        next_yymm_id = self._next_yymm_id(identifier)
         if not next_yymm_id:
             return None
 
@@ -166,6 +234,51 @@ class AbsMetaSession(object):
             return next_yymm_id
 
         return None
+
+    def _previous_id(self, identifier: Identifier) -> Optional['Identifier']:
+        """
+        Get previous consecutive Identifier relative to provided Identifier.
+
+        Parameters
+        ----------
+        identifier : :class:`Identifier`
+
+        Returns
+        -------
+        :class:`Identifier`
+            The previous Indentifier in sequence
+
+        """
+        previous_id = None
+        new_year = identifier.year
+        new_month = identifier.month
+        new_num = identifier.num - 1
+        if new_num == 0:
+            new_month = new_month - 1
+            if new_month == 0:
+                new_month = 12
+                new_year = new_year - 1
+
+        if identifier.is_old_id:
+            if new_num == 0:
+                new_num = 999
+            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        else:
+            if new_year >= 2015:
+                if new_num == 0:
+                    new_num = 99999
+                previous_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                if new_num == 0:
+                    new_num = 9999
+                previous_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=previous_id)
+        except IdentifierException:
+            return None
 
     def get_previous_id(self, identifier: Identifier):
         """
@@ -188,7 +301,7 @@ class AbsMetaSession(object):
             The previous identifier in sequence that exists in the repository.
 
         """
-        previous_id = identifier.previous_id()
+        previous_id = self._previous_id(identifier)
         if not previous_id:
             return None
 

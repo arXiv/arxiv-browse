@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match, Optional
+from typing import Match
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -181,109 +181,6 @@ class Identifier(object):
                 int(match_obj.group('yymm')),
                 int(match_obj.group('num')))
         self.filename = self.id
-
-    def next_id(self) -> Optional['Identifier']:
-        """
-        Get next consecutive Identifier relative to the instance Identifier.
-
-        Returns
-        -------
-        :class:`Identifier`
-            The next Indentifier in sequence
-
-        """
-        next_id = None
-        new_year = self.year
-        new_month = self.month
-        new_num = self.num + 1
-        if (self.is_old_id and new_num > 999) \
-           or (not self.is_old_id and self.year < 2015 and new_num > 9999) \
-           or (not self.is_old_id and self.year >= 2015 and new_num > 99999):
-            new_num = 1
-            new_month = new_month + 1
-            if new_month > 12:
-                new_month = 1
-                new_year = new_year + 1
-
-        if self.is_old_id:
-            next_id = '{}/{:02d}{:02d}{:03d}'.format(
-                self.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
-                next_id = '{:02d}{:02d}.{:05d}'.format(
-                    new_year % 100, new_month, new_num)
-            else:
-                next_id = '{:02d}{:02d}.{:04d}'.format(
-                    new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=next_id)
-        except IdentifierException:
-            return None
-
-    def next_yymm_id(self):
-        """Get the first identifier for the next month."""
-        next_yymm_id = None
-        new_year = self.year
-        new_month = self.month + 1
-        new_num = 1
-        if new_month > 12:
-            new_month = 1
-            new_year = new_year + 1
-        if self.is_old_id:
-            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
-                self.archive, new_year % 100, new_month, new_num)
-        elif new_year >= 2015:
-            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
-                new_year % 100, new_month, new_num)
-        else:
-            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
-                new_year % 100, new_month, new_num)
-
-        try:
-            return Identifier(arxiv_id=next_yymm_id)
-        except IdentifierException:
-            return None
-
-    def previous_id(self) -> Optional['Identifier']:
-        """
-        Get previous consecutive Identifier relative to instance Identifier.
-
-        Returns
-        -------
-        :class:`Identifier`
-            The previous Indentifier in sequence
-
-        """
-        previous_id = None
-        new_year = self.year
-        new_month = self.month
-        new_num = self.num - 1
-        if new_num == 0:
-            new_month = new_month - 1
-            if new_month == 0:
-                new_month = 12
-                new_year = new_year - 1
-
-        if self.is_old_id:
-            if new_num == 0:
-                new_num = 999
-            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
-                self.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
-                if new_num == 0:
-                    new_num = 99999
-                previous_id = '{:02d}{:02d}.{:05d}'.format(
-                    new_year % 100, new_month, new_num)
-            else:
-                if new_num == 0:
-                    new_num = 9999
-                previous_id = '{:02d}{:02d}.{:04d}'.format(
-                    new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=previous_id)
-        except IdentifierException:
-            return None
 
     def __str__(self) -> str:
         """Return the string representation of the instance in json."""
