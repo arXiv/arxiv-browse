@@ -1,6 +1,8 @@
 """Application factory for browse service components."""
 
 from flask import Flask
+
+from arxiv.base import Base
 from browse.services.database import models
 from browse.routes import ui
 
@@ -12,8 +14,7 @@ def create_web_app() -> Flask:
 
     models.init_app(app)
 
-    # from browse.url_converter import ArXivConverter
-    # app.url_map.converters['arxiv'] = ArXivConverter
+    Base(app)
     app.register_blueprint(ui.blueprint)
 
     return app

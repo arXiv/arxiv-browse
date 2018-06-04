@@ -6,15 +6,18 @@ GET requests to the abs endpoint.
 """
 
 from typing import Tuple, Dict, Any, Optional
+from flask import url_for
+from werkzeug.exceptions import InternalServerError, NotFound
+from werkzeug.datastructures import MultiDict
+
 from arxiv import status, taxonomy
+from browse.exceptions import AbsNotFound
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
-from flask import url_for
-from werkzeug.exceptions import InternalServerError
-from werkzeug.datastructures import MultiDict
+
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -62,29 +65,25 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
            in taxonomy.ARCHIVES:
             archive_name = taxonomy.ARCHIVES[arxiv_identifier.archive]['name']
-            return {'reason': 'old_id_not_found',
-                    'arxiv_id': arxiv_id,
-                    'archive_id': arxiv_identifier.archive,
-                    'archive_name': archive_name},\
-                status.HTTP_404_NOT_FOUND, {}
-        return {'reason': 'not_found', 'arxiv_id': arxiv_id}, \
-            status.HTTP_404_NOT_FOUND, {}
+            raise AbsNotFound(data={'reason': 'old_id_not_found',
+                                    'arxiv_id': arxiv_id,
+                                    'archive_id': arxiv_identifier.archive,
+                                    'archive_name': archive_name})
+        raise AbsNotFound(data={'reason': 'not_found', 'arxiv_id': arxiv_id})
     except AbsVersionNotFoundException:
-        return {'reason': 'version_not_found',
-                'arxiv_id': arxiv_identifier.idv,
-                'arxiv_id_latest': arxiv_identifier.id},\
-            status.HTTP_404_NOT_FOUND, {}
+        raise AbsNotFound(data={'reason': 'version_not_found',
+                                'arxiv_id': arxiv_identifier.idv,
+                                'arxiv_id_latest': arxiv_identifier.id})
     except AbsDeletedException as e:
-        return {'reason': 'deleted', 'arxiv_id_latest': arxiv_identifier.id,
-                'message': e},\
-            status.HTTP_404_NOT_FOUND, {}
+        raise AbsNotFound(data={'reason': 'deleted',
+                                'arxiv_id_latest': arxiv_identifier.id,
+                                'message': e})
     except IdentifierIsArchiveException as e:
-        return {'reason': 'is_archive',
-                'arxiv_id': arxiv_id,
-                'archive_name': e},\
-            status.HTTP_404_NOT_FOUND, {}
+        raise AbsNotFound(data={'reason': 'is_archive',
+                                'arxiv_id': arxiv_id,
+                                'archive_name': e})
     except IdentifierException:
-        return {'arxiv_id': arxiv_id}, status.HTTP_404_NOT_FOUND, {}
+        raise AbsNotFound(data={'arxiv_id': arxiv_id})
     except (AbsException, Exception) as e:
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '

@@ -1,12 +1,10 @@
 """Tests exception handling in :mod:`arxiv.base.exceptions`."""
 
 from unittest import TestCase, mock
-from flask import Flask
 
 from arxiv import status
 from browse.factory import create_web_app
 from browse.services.document.metadata import AbsException
-from werkzeug.exceptions import InternalServerError
 
 
 class TestExceptionHandling(TestCase):
