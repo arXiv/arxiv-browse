@@ -43,7 +43,5 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
         return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
-    elif code == status.HTTP_404_NOT_FOUND:
-        return render_template('abs/404.html', **response), code, headers
 
     raise InternalServerError('Unexpected error')
