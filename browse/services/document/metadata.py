@@ -10,7 +10,7 @@ from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 import pytz
 
-ARXIV_BUSINESS_TZ = pytz('US/Eastern')
+ARXIV_BUSINESS_TZ = pytz.timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(

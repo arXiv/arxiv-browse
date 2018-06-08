@@ -11,11 +11,11 @@ PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di'
 """
 Takes data from an Author: line in the current arXiv abstract
 file and returns a structured set of data:
- 
+
  author_list_ptr = [
   [ author1_keyname, author1_firstnames, author1_suffix, affil1, affil2 ] ,
   [ author2_keyname, author2_firstnames, author1_suffix, affil1 ] ,
-  [ author3_keyname, author3_firstnames, author1_suffix ] 
+  [ author3_keyname, author3_firstnames, author1_suffix ]
          ]
 
 Abstracted from Dienst software for OAI1 and other uses. This
@@ -23,11 +23,11 @@ routine might at some stage be incorporated into Metadata.pm
 but should just go away when a better metadata structure is
 adopted that deals with names and affiliations properly.
 
-Must remember that there is at least one person one the archive 
+Must remember that there is at least one person one the archive
 who has only one name, this should clearly be considered the key name.
 
-Code originally written by Christina Scovel, Simeon Warner Dec99/Jan00 
- 2000-10-16 - separated. 
+Code originally written by Christina Scovel, Simeon Warner Dec99/Jan00
+ 2000-10-16 - separated.
  2000-12-07 - added support for suffix
  2003-02-14 - get surname prefixes from arXiv::Filters::Index [Simeon]
  2007-10-01 - created test script, some tidying [Simeon]
@@ -67,7 +67,7 @@ def parse_author_affil(authors: str) -> List[List[str]]:
     return _parse_author_affil_back_propagate(**_parse_author_affil_split(authors))
 
 
-def _parse_author_affil_split(author_line: str):
+def _parse_author_affil_split(author_line: str)->Dict:
     """
     Take author line, tidy spacing and punctuation, and then split up into
     individual author an affiliation data. Has special cases to avoid splitting
@@ -78,20 +78,25 @@ def _parse_author_affil_split(author_line: str):
     Does not handle multiple collaboration names.
     """
     names = _split_authors(author_line)
-    if not names or len(names) == 0:
+    if not names or not names:
         return {'author_list': [], 'back_prop': 0}
 
     #names = map(lambda n: n.lstrip().rstrip(), names)
 
     names = _remove_double_commas(names)
-    names = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))  # get rid of commas at back
-    names = list(dropwhile(lambda x: x == ',', names))  # get rid of commas at front
+    # get rid of commas at back
+    names = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))
+    # get rid of commas at front
+    names = list(dropwhile(lambda x: x == ',', names))
 
     # Extract all names (all parts not starting with comma or paren)
-    names = list(map(_tidy_name, filter(lambda x: re.match('^[^](,]', x), names)))
-    names = list(filter(lambda n: not re.match(r'^\s*et\.\s+al\.?\s*', n, flags=re.IGNORECASE), names))
+    names = list(map(_tidy_name, filter(
+        lambda x: re.match('^[^](,]', x), names)))
+    names = list(filter(lambda n: not re.match(
+        r'^\s*et\.?\s+al\.?\s*', n, flags=re.IGNORECASE), names))
 
-    (names, author_list, back_propagate_affiliations_to) = _collaboration_at_start(names)
+    (names, author_list,
+     back_propagate_affiliations_to) = _collaboration_at_start(names)
 
     (enumaffils) = _enum_collaboration_at_end(author_line)
 
@@ -101,19 +106,27 @@ def _parse_author_affil_split(author_line: str):
         # Split name into keyname and firstnames/initials.
         # Deal with different patterns in turn: prefixes, suffixes, plain
         # and single name.
-        patterns = [('double-prefix', r'^(.*)\s+(' + PREFIX_MATCH + r')\s(' + PREFIX_MATCH + r')\s(\S+)$'),
-                    ('name-prefix-name', r'^(.*)\s+(' + PREFIX_MATCH + ')\s(\S+)$'),
-                    ('name-name-prefix', r'^(.*)\s+(\S+)\s(I|II|III|IV|V|Sr|Jr|Sr\.|Jr\.)$'),
-                    ('name-name', r'^(.*)\s+(\S+)$'), ]
+        patterns = [('double-prefix',
+                     r'^(.*)\s+(' + PREFIX_MATCH + r')\s(' +
+                     PREFIX_MATCH + r')\s(\S+)$'),
+                    ('name-prefix-name',
+                     r'^(.*)\s+(' + PREFIX_MATCH + ')\s(\S+)$'),
+                    ('name-name-prefix',
+                     r'^(.*)\s+(\S+)\s(I|II|III|IV|V|Sr|Jr|Sr\.|Jr\.)$'),
+                    ('name-name',
+                     r'^(.*)\s+(\S+)$'), ]
 
         pattern_matches = ((mtype, re.match(m, name, flags=re.IGNORECASE))
                            for (mtype, m) in patterns)
 
         (mtype, match) = next(((mtype, m)
-                               for (mtype, m) in pattern_matches if m is not None), ('default', None))
-
+                               for (mtype, m) in pattern_matches
+                               if m is not None), ('default', None))
+#        if match is None:
+#            author_entry = [name, '', '']
         if mtype == 'double-prefix':
-            s = '{} {} {}'.format(match.group(2), match.group(3), match.group(4))
+            s = '{} {} {}'.format(match.group(
+                2), match.group(3), match.group(4))
             author_entry = [s, match.group(1), '']
         elif mtype == 'name-prefix-name':
             s = '{} {}'.format(match.group(2), match.group(3))
@@ -126,13 +139,15 @@ def _parse_author_affil_split(author_line: str):
             author_entry = [name, '', '']
 
         # search back in author_line for affiliation
-        author_entry = _add_affiliation(author_line, enumaffils, author_entry, name)
+        author_entry = _add_affiliation(
+            author_line, enumaffils, author_entry, name)
         author_list.append(author_entry)
 
-    return {'author_list': author_list, 'back_prop': back_propagate_affiliations_to}
+    return {'author_list': author_list,
+            'back_prop': back_propagate_affiliations_to}
 
 
-def parse_author_affil_utf(authors: str):
+def parse_author_affil_utf(authors: str)->List:
     """Passes author_line to parse_author_affil() and does TeX to UTF
     conversion on all elements of the resulting array. Output
     structure is the same but should be in UTF and not TeX.
@@ -165,8 +180,8 @@ def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]],
 
     back_propagate_affiliations_to = 0
     while len(names) > 0:
-        m = re.match(r'^([a-z0-9]+\s+(collaboration|group|team))',
-                     names[0], flags=re.IGNORECASE)
+        m = re.search(r'([a-z0-9\s]+\s+(collaboration|group|team))',
+                      names[0], flags=re.IGNORECASE)
         if not m:
             break
 
@@ -182,7 +197,7 @@ def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]],
     return names, author_list, back_propagate_affiliations_to
 
 
-def _enum_collaboration_at_end(author_line:str)->Dict:
+def _enum_collaboration_at_end(author_line: str)->Dict:
     """ Gets separate set of enumerated affiliations from end of author_line"""
 
     # Now see if we have a separate set of enumerated affiliations
@@ -204,13 +219,13 @@ def _enum_collaboration_at_end(author_line:str)->Dict:
     return enumaffils
 
 
-def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str):
+def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str)->List:
     """Add author affiliation to author_entry if one is found in author_line
     This should deal with these cases
     Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)  """
 
     en = re.escape(name)
-    namerex = r'{}\s*\(([^\(\)]+)'.format( en.replace(' ', 's*'))
+    namerex = r'{}\s*\(([^\(\)]+)'.format(en.replace(' ', 's*'))
     m = re.search(namerex, author_line, flags=re.IGNORECASE)
     if not m:
         return author_entry
@@ -229,7 +244,8 @@ def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str]
     return author_entry
 
 
-def _parse_author_affil_back_propagate(author_list: List[List[str]], back_prop: int) -> List[List[str]]:
+def _parse_author_affil_back_propagate(author_list: List[List[str]],
+                                       back_prop: int) -> List[List[str]]:
     """Take the author list structure generated by parse_author_affil_split(..)
     and propagate affiliation information backwards to preceeding author
     entries where none was give. Stop before entry $back_prop to avoid
@@ -244,19 +260,19 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]], back_prop: 
     implies
       a.b.first (1), c.d.second (1), e.f.third (2,3), g.h.forth (2,3)
     """
-    last_affil=False
-    for x in range(len(author_list)-1, max(back_prop-1,-1), -1):
+    last_affil: List[str] = []
+    for x in range(len(author_list)-1, max(back_prop-1, -1), -1):
         author_entry = author_list[x]
-        if len(author_entry) > 3: #author has affiliation,store
+        if len(author_entry) > 3:  # author has affiliation,store
             last_affil = author_entry
         elif last_affil:
-            #author doesn't have affil but later one did => copy
-            author_entry.extend( last_affil[3:])
+            # author doesn't have affil but later one did => copy
+            author_entry.extend(last_affil[3:])
 
     return author_list
 
 
-def _split_authors(authors):
+def _split_authors(authors: str)->List:
     """ Take and author line as a string and return a reference to a list of the
     different name and affiliation blocks. While this does normalize spacing
     and 'and', it is a key feature that the set of strings returned can be
@@ -314,7 +330,7 @@ def _split_authors(authors):
                     listx.append(name)
 
     # Recombine suffixes that were separated with a comma
-    parts = []
+    parts: List[str] = []
     for p in listx:
         if re.match(r'^(Jr\.?|Sr\.?\[IV]{2,})$', p) \
                 and len(parts) >= 2 \
@@ -322,11 +338,9 @@ def _split_authors(authors):
                 and not re.match('\)$', parts[-2]):
             separator = parts.pop()
             last = parts.pop()
-            recomb = "{}{} {}".format( last, separator, p)
+            recomb = "{}{} {}".format(last, separator, p)
             parts.append(recomb)
         else:
             parts.append(p)
 
     return parts
-
-

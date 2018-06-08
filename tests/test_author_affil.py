@@ -10,6 +10,9 @@ class TestAuthorAffiliationParsing(TestCase):
         self.assertListEqual(_split_authors('Simeon Warner'),
                              ['Simeon Warner'])
 
+        self.assertListEqual(_split_authors('The DELPHI Collaboration, J. Abdallah, et al'),
+                             ['The DELPHI Collaboration', ',', 'J. Abdallah', ',', 'et al'])
+
         self.assertListEqual(_split_authors('BELLE Collaboration: A Person, Nother Person'),
                              ['BELLE Collaboration', ':', 'A Person', ',', 'Nother Person'])
 
@@ -122,6 +125,10 @@ class TestAuthorAffiliationParsing(TestCase):
                 ['Person', 'Nother', '']
             ])
 
+        self.assertListEqual(parse_author_affil('The DELPHI Collaboration, J. Abdallah, et al'),
+                             [['The DELPHI Collaboration', '', ''], ['Abdallah', 'J.', '']])
+
+
     def test_parse_author_affil_with_affiliations(self):
         self.assertListEqual(
             parse_author_affil('sum won (lab a)'),
@@ -181,39 +188,39 @@ class TestAuthorAffiliationParsing(TestCase):
             [
                 ["QUaD collaboration", "", ""],
                 ["Gupta", "S.", "", "Cardiff University"],
-                ["Ade",   "P.", "", "Cardiff University"],
-                ["Bock",   "J.", "", "JPL",                "Caltech"],
+                ["Ade", "P.", "", "Cardiff University"],
+                ["Bock", "J.", "", "JPL", "Caltech"],
                 ["Bowden", "M.", "", "Cardiff University", "Stanford University"],
-                ["Brown",  "M. L.", "", "University of Cambridge"],
-                ["Cahill", "G.",    "", "National University of Ireland Maynooth"],
+                ["Brown", "M. L.", "", "University of Cambridge"],
+                ["Cahill", "G.", "", "National University of Ireland Maynooth"],
                 [
                     "Castro", "P. G.", "",
                     "University of Edinburgh",
                     "Universidade Tecnica de Lisboa"
                 ],
-                ["Church",      "S.",    "", "Stanford University"],
-                ["Culverhouse", "T.",    "", "University of Chicago"],
-                ["Friedman",    "R. B.", "", "University of Chicago"],
-                ["Ganga",       "K.",    "", "Laboratoire APC/CNRS"],
-                ["Gear",        "W. K.", "", "Cardiff University"],
-                ["Hinderks", "J.",    "", "University of Cambridge", "NASA Goddard"],
-                ["Kovac",    "J.",    "", "Caltech"],
-                ["Lange",    "A. E.", "", "Stanford University"],
-                ["Leitch",   "E.",    "", "JPL",                     "Caltech"],
+                ["Church", "S.", "", "Stanford University"],
+                ["Culverhouse", "T.", "", "University of Chicago"],
+                ["Friedman", "R. B.", "", "University of Chicago"],
+                ["Ganga", "K.", "", "Laboratoire APC/CNRS"],
+                ["Gear", "W. K.", "", "Cardiff University"],
+                ["Hinderks", "J.", "", "University of Cambridge", "NASA Goddard"],
+                ["Kovac", "J.", "", "Caltech"],
+                ["Lange", "A. E.", "", "Stanford University"],
+                ["Leitch", "E.", "", "JPL", "Caltech"],
                 ["Melhuish", "S. J.", "", "University of Manchester"],
-                ["Memari",   "Y.",    "", "University of Edinburgh"],
-                ["Murphy",   "J. A.", "", "National University of Ireland Maynooth"],
+                ["Memari", "Y.", "", "University of Edinburgh"],
+                ["Murphy", "J. A.", "", "National University of Ireland Maynooth"],
                 ["Orlando", "A.", "", "Cardiff University", "Caltech"],
                 ["O'Sullivan", "C.", "", "National University of Ireland Maynooth"],
                 ["Piccirillo", "L.", "", "University of Manchester"],
-                ["Pryke",      "C.", "", "University of Chicago"],
-                ["Rajguru",  "N.",       "", "Cardiff University",  "UCL"],
-                ["Rusholme", "B.",       "", "Stanford University", "IPAC"],
-                ["Schwarz",  "R.",       "", "University of Chicago"],
-                ["Taylor",   "A. N.",    "", "University of Edinburgh"],
-                ["Thompson", "K. L.",    "", "Stanford University"],
-                ["Turner",   "A. H.",    "", "Cardiff University"],
-                ["Wu",       "E. Y. S.", "", "Stanford University"],
+                ["Pryke", "C.", "", "University of Chicago"],
+                ["Rajguru", "N.", "", "Cardiff University", "UCL"],
+                ["Rusholme", "B.", "", "Stanford University", "IPAC"],
+                ["Schwarz", "R.", "", "University of Chicago"],
+                ["Taylor", "A. N.", "", "University of Edinburgh"],
+                ["Thompson", "K. L.", "", "Stanford University"],
+                ["Turner", "A. H.", "", "Cardiff University"],
+                ["Wu", "E. Y. S.", "", "Stanford University"],
                 ["Zemcov", "M.", "", "Cardiff University", "JPL", "Caltech"]
             ],
             'parse_author_affil (mind-blowing) 1/1'

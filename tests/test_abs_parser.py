@@ -29,7 +29,7 @@ class TestAbsParser(TestCase):
                 self.assertIsInstance(m, DocMetadata)
                 self.assertNotEqual(m.license, None)
                 self.assertNotEqual(m.license.effective_license_uri, None,
-                                    'sould have an effectiveLicenseUri')
+                                    'should have an effectiveLicenseUri')
                 # self.assertTrue(m.initialized, 'instance initialized')
 
         # our test set should be sufficiently large

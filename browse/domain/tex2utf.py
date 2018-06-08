@@ -110,24 +110,27 @@ textsym_pattern = _p_to_match(textsym)
 
 
 def textlet_sub(match: Match) -> str:
+    """Get char that matches"""
     return chr(textlet[match.group(2)])
 
 
 def textsym_sub(match: Match) -> str:
+    """Get char that matches"""
     return chr(textsym[match.group(2)])
 
 
 def texch2UTF(acc: str) -> str:
-    """# Convert single character TeX accents to UTF-8. Strip non-\w characters
-# from any sequence not recognized (hence could return an empty string if
-# there are no \w characters in the input string).
-#
-# chr(num) will automatically create a UTF8 string for big num
+    """Convert single character TeX accents to UTF-8. Strip
+non-whitepsace characters
+from any sequence not recognized (hence could return an empty string if
+there are no \w characters in the input string).
+
+chr(num) will automatically create a UTF8 string for big num
 """
     if acc in accents:
         return chr(accents[acc])
     else:
-        return re.sub(r'[^\w]+', '', flags=re.IGNORECASE)
+        return re.sub(r'[^\w]+', '', acc, flags=re.IGNORECASE)
 
 
 #   my ($acc)=@_;
@@ -139,17 +142,9 @@ def texch2UTF(acc: str) -> str:
 # }
 #
 
-def tex2utf(tex: str, no_encode=False) -> str:
+def tex2utf(tex: str) -> str:
     """Converts some accents and greek TeX to utf8."""
     # This is Legacy stuff and might not be needed if we move toward all utf8
-    #
-    # Encode any latin1 8-bit chars to UTF8 first (these are not part of
-    # the tex sequences that follow). This will set the UTF8 flag on the
-    # string $utf;
-    # if no_encode:
-    #     utf = tex
-    # else:
-    #     utf = tex.decode('iso-8859-1').encode('utf8')
 
     # Do dotless i,j -> plain i,j where they are part of an accented i or j
     utf = re.sub(r"/(\\['`\^\"\~\=\.uvH])\{\\([ij])\}", r"\g<1>\{\g<2>\}", tex)
