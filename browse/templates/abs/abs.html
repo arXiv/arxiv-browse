@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}[1708.00003] Precise Time Delays from Chromatically Microlensed Type Ia Supernovae{% endblock %}
+{% block title %}[{{ abs_meta.arxiv_id }}] {{ abs_meta.title }}{% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -22,9 +22,9 @@
 {% endblock head %}
 {% block body_id %}{% endblock %}
 
-{% block header_class %}{# TODO: class="cs" #}{% endblock %}
+{% block header_class %}{% endblock %}
 {% block header %}
-  <h1><a href="/">arXiv.org</a> &gt; <a href="/list/archive_id/recent">TODO: archive ID</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
+  <h1><a href="/">arXiv.org</a> &gt; <a href="/list/{{ abs_meta.primary_archive.id }}/recent">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
   <div id="search">
     <form id="search-arxiv" method="GET" action="/search">
 
@@ -65,7 +65,7 @@
   {% include "abs/extra_services.html" %}
   <div class="leftcolumn">
     <div class="subheader">
-      <h1>TODO: primary archive name > TODO: primary category name</h1>
+      <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title }}</h1>
     {# TODO: authors section #}
@@ -89,12 +89,12 @@
         {% endif %}
         <tr>
           <td class="tablecell label">Subjects:</td>
-          <td class="tablecell subjects"><span class="primary-subject">TODO: full primary category name ({{ abs_meta.primary_category }})</span>{% if abs_meta.secondary_categories %}{% for category in abs_meta.secondary_categories %}; TODO: full secondary category name ({{ category }}){% endfor %}{% endif %}</td>
+          <td class="tablecell subjects"><span class="primary-subject">{{ abs_meta.primary_category.name }} ({{ abs_meta.primary_category.id }})</span>{% if abs_meta.secondary_categories %}{% for category in abs_meta.secondary_categories %}; {{ category.name}} ({{ category.id }}){% endfor %}{% endif %}</td>
         </tr>
         {% if abs_meta.msc_class %}
         <tr>
           <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
-          <td class="tablecell msc_classes">{{ abs_meta.msc_class }}</td>
+          <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
         </tr>
         {% endif %}
         {% if abs_meta.acm_class %}
@@ -123,11 +123,11 @@
         {% endif %}
         <tr>
           <td class="tablecell label">Cite as:</td>
-          <td class="tablecell arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category }}]</td>
+          <td class="tablecell arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category.id }}]</td>
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category }}]</span> for this version)</td>
+          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category.id }}]</span> for this version)</td>
         </tr>
       </table>
     </div>

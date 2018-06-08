@@ -4,23 +4,25 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+arxiv-base = "==0.7.2"
 dataclasses = "*"
 inflect = "*"
 python-dateutil = "*"
-arxiv-base = "*"
-Flask = "*"
+flask = "==0.12.2"
 Flask-API = "*"
 Flask-SQLAlchemy = "*"
+"jinja2" = "==2.10"
 MarkupSafe = "*"
 SQLAlchemy = "*"
-Werkzeug = "*"
+werkzeug = "==0.13"
+pytz = "*"
+pylama = "*"
+"nose2" = "*"
 
 [dev-packages]
-mypy = "*"
-"nose2" = "*"
+mypy = "==0.560"
+"nose2" = "==0.7.3"
 sqlacodegen = "*"
-Flask-Testing = "*"
-"Jinja2" = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 

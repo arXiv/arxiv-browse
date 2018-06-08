@@ -2,12 +2,11 @@
 from typing import Optional
 from dataclasses import dataclass, field
 
-"""Assumed license from 1991-2003, but also used after 2003. """
-ASSUMED_LICENSE_URI = 'http://arxiv.org/licenses/assumed-1991-2003/'
+from arxiv.license import ASSUMED_LICENSE_URI, LICENSES
 
 
 def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
-    """Gets the license for the value recorded in the abs file.
+    """Get the license for the value recorded in the abs file.
 
     This represents an important encoding of policy in code:
 
@@ -35,13 +34,13 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
     selecting a license.
 
     """
-
     if recorded_uri is None:
         return ASSUMED_LICENSE_URI
     else:
         if not isinstance(recorded_uri, str):
             raise TypeError(
-                "License recorded_uri must be str or None, but it was " + str(type(recorded_uri)))
+                "License recorded_uri must be str or None, but it was "
+                f"{type(recorded_uri).__name__}")
         else:
             return recorded_uri
 
@@ -53,25 +52,29 @@ class License(object):
     recorded_uri: Optional[str] = field(default=None)
     """URI of a license if one is in the article record."""
 
-    effective_license_uri: str = field(init=False)
-    """License that is in effect.
+    effective_uri: str = field(init=False)
+    """
+    License that is in effect.
 
     When the submitter uploaded this paper to arXiv, they agreed to
     arXiv using the paper under the terms of this license. This takes
-    into account assumed license."""
+    into account assumed license.
+    """
+
+    icon_uri_path: str = field(init=False)
+    """Path to license icon."""
+
+    label: str = field(init=False)
+    """The license label."""
 
     def __post_init__(self) -> None:
-        self.effective_license_uri = license_for_recorded_license(
+        """Set the effective license URI."""
+        self.effective_uri = license_for_recorded_license(
             self.recorded_uri)
-
-#     # TODO: need licenses?
-#     # TODO: needs to be moved to common libraries
-#     # TODO: need validation?
-#     # TODO: the License class would be the best place to put knowledge
-#     # about any un-obivious behavior of the licenses. Ex. Licenses before YYYY
-#     # are the assumed-1991-2003 license
-
-#     # TODO Maybe make a class like Licenses to encode what licenses can
-#     # be used in arXiv. when licenses were the default, what license
-#     # was the default during some time period so a abs without a specified
-#     # license can be assigned the default for that time period.
+        self.icon_uri_path = None
+        self.label = None
+        if self.effective_uri in LICENSES:
+            if 'icon_uri' in LICENSES[self.effective_uri]:
+                self.icon_uri_path = LICENSES[self.effective_uri]['icon_uri']
+            if 'label' in LICENSES[self.effective_uri]:
+                self.label = LICENSES[self.effective_uri]['label']

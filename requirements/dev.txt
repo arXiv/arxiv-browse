@@ -1,3 +1,4 @@
+arxiv-base==0.7.1
 astroid==1.5.3
 click==6.7
 dataclasses==0.4

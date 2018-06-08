@@ -2,6 +2,7 @@
 import json
 import re
 from typing import Match
+from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
@@ -23,7 +24,7 @@ SUBSTITUTIONS = (
     (r'//+', '/', 0, 0),
     (r'--+', '-', 0, 0),
     (r'^([^/]+)', lambda x: str.lower(x.group(0)), 1, 0),
-    (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', '\g<1>-\g<2>\g<3>', 1, 0)
+    (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', r'\g<1>-\g<2>\g<3>', 1, 0)
 )
 
 
@@ -33,17 +34,33 @@ class IdentifierException(Exception):
     pass
 
 
+class IdentifierIsArchiveException(IdentifierException):
+    """Error class for case where supplied arXiv identifier is an archive."""
+
+    pass
+
+
 class Identifier(object):
     """Class for arXiv identifiers of published papers."""
 
     def __init__(self, arxiv_id: str) -> None:
-        """Attempt to validate the provided arXiv id.
+        """Attempt to validate the provided arXiv ID.
 
         Parse constituent parts.
         """
-        # id specified
         self.ids = arxiv_id
-        # TODO: recheck for mypy
+        """The ID as specified."""
+        self.id = None
+        self.archive = None
+        self.filename = None
+        self.year = None
+        self.month = None
+        self.is_old_id = None
+
+        if self.ids in taxonomy.ARCHIVES:
+            raise IdentifierIsArchiveException(
+                taxonomy.ARCHIVES[self.ids]['name'])
+
         for subtup in SUBSTITUTIONS:
             arxiv_id = re.sub(subtup[0],  # type: ignore
                               subtup[1],
@@ -64,15 +81,17 @@ class Identifier(object):
 
         if not id_match:
             raise IdentifierException(
-                'invalid arXiv identifier {}'.format(self.ids)
+                f'invalid arXiv identifier {self.ids}'
             )
 
         self.num = int(id_match.group('num'))
-        if self.num == 0:
+        if self.num == 0 \
+           or (self.num > 99999 and self.year >= 2015) \
+           or (self.num > 9999 and self.year < 2015) \
+           or (self.num > 999 and self.is_old_id):
             raise IdentifierException(
                 'invalid arXiv identifier {}'.format(self.ids)
             )
-
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
@@ -84,45 +103,94 @@ class Identifier(object):
         self.squashedv = self.idv.replace('/', '')
         self.yymm = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
+        if self.month > 12 or self.month < 1:
+            raise IdentifierException(
+                f'invalid arXiv identifier {self.ids}'
+            )
+        if self.is_old_id:
+            if self.year < 1991 or self.year > 2007 \
+               or (self.year == 2007 and self.month > 3):
+                raise IdentifierException(
+                    f'invalid arXiv identifier {self.ids}'
+                )
+        else:
+            if self.year < 2007 or (self.year == 2007 and self.month < 4):
+                raise IdentifierException(
+                    f'invalid arXiv identifier {self.ids}'
+                )
 
-    def _parse_old_id(self, matchobj: Match[str]) -> None:
-        """Populate instance attributes parsed from old arXiv identifier.
+    def _parse_old_id(self, match_obj: Match[str]) -> None:
+        """
+        Populate instance attributes parsed from old arXiv identifier.
 
-        The old identifiers were minted from 1991 until March 2003.
+        The old identifiers were minted from 1991 until March 2007.
+
+        Parameters
+        ----------
+        match_obj : Match[str]
+            A regex match on RE_ARXIV_OLD_ID
+
+        Returns
+        -------
+        None
+
         """
         self.is_old_id = True
-        self.archive = matchobj.group('archive')
-        self.year = int(matchobj.group('yy')) + 1900
-        self.year += 100 if int(matchobj.group('yy')) < 91 else 0
+        self.archive = match_obj.group('archive')
+        self.year = int(match_obj.group('yy')) + 1900
+        self.year += 100 if int(match_obj.group('yy')) < 91 else 0
 
-        if matchobj.group('version'):
-            self.version = int(matchobj.group('version'))
+        if match_obj.group('version'):
+            self.version = int(match_obj.group('version'))
         self.filename = '{}{:03d}'.format(
-            matchobj.group('yymm'),
-            int(matchobj.group('num')))
+            match_obj.group('yymm'),
+            int(match_obj.group('num')))
         self.id = f'{self.archive}/{self.filename}'
 
-    def _parse_new_id(self, matchobj: Match[str]) -> None:
-        """Populate instance attributes from a new arXiv identifier.
+    def _parse_new_id(self, match_obj: Match[str]) -> None:
+        """
+        Populate instance attributes from a new arXiv identifier.
 
-        e.g. 1401.1234
+        New identifiers started 2007-04 with 4-digit suffix;
+        starting 2015 they have a 5-digit suffix.
+        e.g. 0704.1234
+             1412.0001
+             1501.00001
              1711.01234
+
+        Parameters
+        ----------
+        match_obj : Match[str]
+            A regex match on RE_ARXIV_NEW_ID
+
+        Returns
+        -------
+        None
+
         """
         self.is_old_id = False
         self.archive = 'arxiv'
         # NB: this works only until 2099
-        self.year = int(matchobj.group('yy')) + 2000
+        self.year = int(match_obj.group('yy')) + 2000
         if self.year >= 2015:
             self.id = '{:04d}.{:05d}'.format(
-                int(matchobj.group('yymm')),
-                int(matchobj.group('num')))
+                int(match_obj.group('yymm')),
+                int(match_obj.group('num')))
         else:
             self.id = '{:04d}.{:04d}'.format(
-                int(matchobj.group('yymm')),
-                int(matchobj.group('num')))
+                int(match_obj.group('yymm')),
+                int(match_obj.group('num')))
         self.filename = self.id
 
     def __str__(self) -> str:
         """Return the string representation of the instance in json."""
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=True)
+
+    def __repr__(self) -> str:
+        """Return the instance representation."""
+        return f"Identifier(arxiv_id='{self.ids}')"
+
+    def __eq__(self, other):
+        """Return instance equality."""
+        return self.__dict__ == other.__dict__

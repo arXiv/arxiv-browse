@@ -1,13 +1,10 @@
 """arXiv browse database models."""
-import ipaddress
+
+from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, \
     ForeignKey, Index, Integer, String, text
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm.exc import NoResultFound
-from typing import Any, Optional
 from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
@@ -114,29 +111,3 @@ class TrackbackSite(db.Model):
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)
-
-
-def get_institution(ip: str) -> Optional[str]:
-    """Get institution label from IP address."""
-    decimal_ip = int(ipaddress.ip_address(ip))
-    try:
-        stmt = (
-            db.session.query(
-                MemberInstitution.label,
-                func.sum(MemberInstitutionIP.exclude).label("exclusions")
-            ).
-            join(MemberInstitutionIP).
-            filter(
-                MemberInstitutionIP.start <= decimal_ip,
-                MemberInstitutionIP.end >= decimal_ip
-            ).
-            group_by(MemberInstitution.label).
-            subquery()
-        )
-        institution_name = db.session.query(stmt.c.label).\
-            filter(stmt.c.exclusions == 0).one().label
-        return institution_name  # type: ignore
-    except NoResultFound:
-        return None
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
