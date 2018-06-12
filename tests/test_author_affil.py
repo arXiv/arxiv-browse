@@ -128,6 +128,8 @@ class TestAuthorAffiliationParsing(TestCase):
         self.assertListEqual(parse_author_affil('The DELPHI Collaboration, J. Abdallah, et al'),
                              [['The DELPHI Collaboration', '', ''], ['Abdallah', 'J.', '']])
 
+        self.assertListEqual(parse_author_affil('Ali Vaziri Astaneh, Federico Fuentes'),
+                             [['Vaziri Astaneh', 'Ali', ''],['Fuentes', 'Federico', '']])
 
     def test_parse_author_affil_with_affiliations(self):
         self.assertListEqual(
@@ -228,7 +230,8 @@ class TestAuthorAffiliationParsing(TestCase):
 
         # Problem case with 1110.4366
         self.assertListEqual(
-            parse_author_affil('Matthew Everitt, Robert M. Heath and Viv Kendon'),
+            parse_author_affil(
+                'Matthew Everitt, Robert M. Heath and Viv Kendon'),
             [['Everitt', 'Matthew', ''],
              ['Heath', 'Robert M.', ''],
              ['Kendon', 'Viv', '']],

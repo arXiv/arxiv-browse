@@ -1,4 +1,4 @@
-"""Convert between TeX escapes and UTF8"""
+"""Convert between TeX escapes and UTF8."""
 import re
 import pprint
 from typing import Pattern, Dict, Match
@@ -92,7 +92,7 @@ textlet = {
 
 
 def _p_to_match(tex_to_chr: Dict[str, int]) -> Pattern:
-    """textsym and textlet both use the same sort of regex pattern. """
+    #textsym and textlet both use the same sort of regex pattern.
     keys = r'\\(' + '|'.join(tex_to_chr.keys()) + ')'
     pstr = r'({)?' + keys + r'(\b|(?=_))(?(1)}|(\\(?= )| |{}|)?)'
     return re.compile(pstr)
@@ -109,24 +109,22 @@ textsym = {
 textsym_pattern = _p_to_match(textsym)
 
 
-def textlet_sub(match: Match) -> str:
-    """Get char that matches"""
+def _textlet_sub(match: Match) -> str:
     return chr(textlet[match.group(2)])
 
 
-def textsym_sub(match: Match) -> str:
-    """Get char that matches"""
+def _textsym_sub(match: Match) -> str:
     return chr(textsym[match.group(2)])
 
 
 def texch2UTF(acc: str) -> str:
-    """Convert single character TeX accents to UTF-8. Strip
-non-whitepsace characters
-from any sequence not recognized (hence could return an empty string if
-there are no \w characters in the input string).
+    """Convert single character TeX accents to UTF-8.
 
-chr(num) will automatically create a UTF8 string for big num
-"""
+    Strip non-whitepsace characters from any sequence not recognized (hence could return an empty string if
+    there are no word characters in the input string).
+
+    chr(num) will automatically create a UTF8 string for big num
+    """
     if acc in accents:
         return chr(accents[acc])
     else:
@@ -151,8 +149,8 @@ def tex2utf(tex: str) -> str:
     # $utf =~ s/(\\['`\^"\~\=\.uvH])\{\\([ij])\}/$1\{$2\}/g; #'
 
     # Now work on the Tex sequences, first those with letters only match
-    utf = textlet_pattern.sub(textlet_sub, utf)
-    utf = textsym_pattern.sub(textsym_sub, utf)
+    utf = textlet_pattern.sub(_textlet_sub, utf)
+    utf = textsym_pattern.sub(_textsym_sub, utf)
 
     utf = re.sub(r'\{\\j\}|\\j\s', 'j', utf)  # not in Unicode?
 

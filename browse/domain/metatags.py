@@ -1,4 +1,4 @@
-"""Functions to make HTML head metadata tags for DocMetadata"""
+"""Functions to make HTML head metadata tags for DocMetadata."""
 import re
 from datetime import datetime
 from typing import Union, Dict, Optional, List
@@ -21,11 +21,10 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
 
     Unlike Classic, this method does not HTML escape anything.
     """
-
     meta_tags = []
 
     if metadata.title:
-        meta_tags.append(mtag('citation_title', metadata.title))
+        meta_tags.append(_mtag('citation_title', metadata.title))
 
     if metadata.authors:
         hundo = parse_author_affil_utf(metadata.authors)[:100]
@@ -37,7 +36,7 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
         match = re.search('(journal of artificial intelligence research)',
                           metadata.journal_ref, re.IGNORECASE)
         if match:
-            meta_tags.append(mtag('citation_journal_title', match.group(1)))
+            meta_tags.append(_mtag('citation_journal_title', match.group(1)))
             # check for year of publication
             y_match = re.search(
                 r"([^\d]+(\d{4})\s*$|\((\d{4})\))", metadata.journal_ref)
@@ -45,37 +44,37 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
                 found_y = True
                 if y_match.group(2):
                     meta_tags.append(
-                        mtag('citation_publication_date', y_match.group(2)))
+                        _mtag('citation_publication_date', y_match.group(2)))
                 else:
                     meta_tags.append(
-                        mtag('citation_publication_date', y_match.group(3)))
+                        _mtag('citation_publication_date', y_match.group(3)))
 
     if metadata.doi:
-        meta_tags.append(mtag('citation_doi', metadata.doi))
+        meta_tags.append(_mtag('citation_doi', metadata.doi))
 
     dtv1 = metadata.get_datetime_of_version(1)
     if not found_y and dtv1:
-        meta_tags.append(mtag('citation_date', dtv1))
+        meta_tags.append(_mtag('citation_date', dtv1))
     cod = metadata.get_datetime_of_version(metadata.version)
     if cod:
-        meta_tags.append(mtag('citation_online_date', cod))
-    meta_tags.append(mtag('citation_pdf_url', pdf(metadata)))
-    meta_tags.append(mtag('citation_arxiv_id', str(metadata.arxiv_id)))
+        meta_tags.append(_mtag('citation_online_date', cod))
+    meta_tags.append(_mtag('citation_pdf_url', pdf(metadata)))
+    meta_tags.append(_mtag('citation_arxiv_id', str(metadata.arxiv_id)))
     return meta_tags
 
 
 def format_affil_author(au: List[str]) -> Dict:
-    """Formats author for citation tag"""
+    """Formats author for citation tag."""
     if not au or len(au) < 1 or not au[0]:
         return {}
     name = au[0]
     name = name + ' ' + au[2] if (len(au) > 2 and au[2]) else name
     name = name + ', ' + au[1] if (len(au) > 1 and au[1]) else name
     # TODO: name is in TeX, do something like tex2utf()
-    return mtag('citation_author', name) if name else {}
+    return _mtag('citation_author', name) if name else {}
 
 
-def mtag(name: str, content: Union[int, str, datetime])->Dict:
+def _mtag(name: str, content: Union[int, str, datetime])->Dict:
     if isinstance(content, datetime):
         cstr = content.astimezone(pytz.UTC).strftime('%Y/%m/%d')
     elif isinstance(content, int):

@@ -1,12 +1,11 @@
-"""Parse Authors lines to extract author and affiliation data"""
-import pprint
+"""Parse Authors lines to extract author and affiliation data."""
 import re
 from itertools import dropwhile
 from typing import List, Tuple, Dict
 
 from browse.domain.tex2utf import tex2utf
 
-PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di'
+PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di|vaziri'
 
 """
 Takes data from an Author: line in the current arXiv abstract
@@ -19,8 +18,7 @@ file and returns a structured set of data:
          ]
 
 Abstracted from Dienst software for OAI1 and other uses. This
-routine might at some stage be incorporated into Metadata.pm
-but should just go away when a better metadata structure is
+routine should just go away when a better metadata structure is
 adopted that deals with names and affiliations properly.
 
 Must remember that there is at least one person one the archive
@@ -36,13 +34,11 @@ Code originally written by Christina Scovel, Simeon Warner Dec99/Jan00
 
 
 def parse_author_affil(authors: str) -> List[List[str]]:
-    """
-    Takes an unparsed author line as input string and returns an
-    list of author and affiliation data.
+    """Parse author line and returns an list of author and affiliation data.
 
     The list for each author will have at least three elements for
     keyname, firstname(s) and suffix. The keyname will always have content
-    but the other stings might be empty stings if there is no firstname
+    but the other strings might be empty strings if there is no firstname
     or suffix. Any additional elements after the first three are affiliations,
     there may be zero or more.
 
@@ -58,17 +54,18 @@ def parse_author_affil(authors: str) -> List[List[str]]:
     :return:
     Returns a structured set of data:
     author_list_ptr = [
-        [ author1_keyname, author1_firstnames, author1_suffix, affil1, affil2 ] ,
+        [ author1_keyname, author1_firstnames, author1_suffix, affil1, affil2 ],
         [ author2_keyname, author2_firstnames, author1_suffix, affil1 ] ,
         [ author3_keyname, author3_firstnames, author1_suffix ]
     ]
     """
-
-    return _parse_author_affil_back_propagate(**_parse_author_affil_split(authors))
+    return _parse_author_affil_back_propagate(
+        **_parse_author_affil_split(authors))
 
 
 def _parse_author_affil_split(author_line: str)->Dict:
-    """
+    """Split author line into author and affiliation data.
+
     Take author line, tidy spacing and punctuation, and then split up into
     individual author an affiliation data. Has special cases to avoid splitting
     an initial collaboration name and records in $back_propagate_affiliation_to
@@ -78,7 +75,7 @@ def _parse_author_affil_split(author_line: str)->Dict:
     Does not handle multiple collaboration names.
     """
     names = _split_authors(author_line)
-    if not names or not names:
+    if not author_line or not names:
         return {'author_list': [], 'back_prop': 0}
 
     #names = map(lambda n: n.lstrip().rstrip(), names)
@@ -148,11 +145,12 @@ def _parse_author_affil_split(author_line: str)->Dict:
 
 
 def parse_author_affil_utf(authors: str)->List:
-    """Passes author_line to parse_author_affil() and does TeX to UTF
-    conversion on all elements of the resulting array. Output
-    structure is the same but should be in UTF and not TeX.
+    """Calls parse_author_affil() and does TeX to UTF conversion.
+
+    Output structure is the same but should be in UTF and not TeX.
     """
-    return list(map(lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
+    return list(map(
+        lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
 
 
 def _remove_double_commas(items: List[str]) -> List[str]:
@@ -160,7 +158,7 @@ def _remove_double_commas(items: List[str]) -> List[str]:
     last = ''
     for p in items:
         if p == ',' and last == ',':
-            next
+            continue
         else:
             parts.append(p)
             last = p
@@ -175,7 +173,7 @@ def _tidy_name(name: str) -> str:
 
 
 def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]], int]:
-    """Special handling of collaboration at start"""
+    """Special handling of collaboration at start."""
     author_list = []
 
     back_propagate_affiliations_to = 0
@@ -198,8 +196,7 @@ def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]],
 
 
 def _enum_collaboration_at_end(author_line: str)->Dict:
-    """ Gets separate set of enumerated affiliations from end of author_line"""
-
+    """Gets separate set of enumerated affiliations from end of author_line."""
     # Now see if we have a separate set of enumerated affiliations
     # This is indicated by finding '(\s*('
     line_m = re.search(r'\(\s*\((.*)$', author_line)
@@ -220,10 +217,11 @@ def _enum_collaboration_at_end(author_line: str)->Dict:
 
 
 def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str)->List:
-    """Add author affiliation to author_entry if one is found in author_line
-    This should deal with these cases
-    Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)  """
+    """Add author affiliation to author_entry if one is found in author_line.
 
+    This should deal with these cases
+    Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)
+    """
     en = re.escape(name)
     namerex = r'{}\s*\(([^\(\)]+)'.format(en.replace(' ', 's*'))
     m = re.search(namerex, author_line, flags=re.IGNORECASE)
@@ -246,7 +244,9 @@ def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str]
 
 def _parse_author_affil_back_propagate(author_list: List[List[str]],
                                        back_prop: int) -> List[List[str]]:
-    """Take the author list structure generated by parse_author_affil_split(..)
+    """Back propagate author affiliation.
+
+    Take the author list structure generated by parse_author_affil_split(..)
     and propagate affiliation information backwards to preceeding author
     entries where none was give. Stop before entry $back_prop to avoid
     adding affiliation information to collaboration names.
@@ -273,13 +273,15 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]],
 
 
 def _split_authors(authors: str)->List:
-    """ Take and author line as a string and return a reference to a list of the
+    """Split author string into authors entity lists.
+
+    Take and author line as a string and return a reference to a list of the
     different name and affiliation blocks. While this does normalize spacing
     and 'and', it is a key feature that the set of strings returned can be
     concatenated to reproduce the original authors line. This code thus
     provides a very graceful degredation for badly formatted authors lines,
-    the text at least shows up."""
-
+    the text at least shows up.
+    """
     # split authors field into blocks with boundaries of ( and )
     aus = re.split('(\(|\))', authors)
     aus = list(filter(lambda x: x != '', aus))
