@@ -97,22 +97,22 @@ def _parse_author_affil_split(author_line: str)->Dict:
 
     (enumaffils) = _enum_collaboration_at_end(author_line)
 
+    # Split name into keyname and firstnames/initials.
+    # Deal with different patterns in turn: prefixes, suffixes, plain
+    # and single name.
+    patterns = [('double-prefix',
+                 r'^(.*)\s+(' + PREFIX_MATCH + r')\s(' +
+                 PREFIX_MATCH + r')\s(\S+)$'),
+                ('name-prefix-name',
+                 r'^(.*)\s+(' + PREFIX_MATCH + ')\s(\S+)$'),
+                ('name-name-prefix',
+                 r'^(.*)\s+(\S+)\s(I|II|III|IV|V|Sr|Jr|Sr\.|Jr\.)$'),
+                ('name-name',
+                 r'^(.*)\s+(\S+)$'), ]
+
     # Now go through names in turn and try to get affiliations
     # to go with them
     for name in names:
-        # Split name into keyname and firstnames/initials.
-        # Deal with different patterns in turn: prefixes, suffixes, plain
-        # and single name.
-        patterns = [('double-prefix',
-                     r'^(.*)\s+(' + PREFIX_MATCH + r')\s(' +
-                     PREFIX_MATCH + r')\s(\S+)$'),
-                    ('name-prefix-name',
-                     r'^(.*)\s+(' + PREFIX_MATCH + ')\s(\S+)$'),
-                    ('name-name-prefix',
-                     r'^(.*)\s+(\S+)\s(I|II|III|IV|V|Sr|Jr|Sr\.|Jr\.)$'),
-                    ('name-name',
-                     r'^(.*)\s+(\S+)$'), ]
-
         pattern_matches = ((mtype, re.match(m, name, flags=re.IGNORECASE))
                            for (mtype, m) in patterns)
 
