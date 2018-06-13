@@ -21,6 +21,7 @@ stdenv.mkDerivation {
     python36Packages.virtualenv
     python36Packages.pip
     python36Packages.pip-tools
+    # pipenv
     # the following packages are related to the dependencies of your python
     # project.
     # In this particular example the python modules listed in the
@@ -40,11 +41,12 @@ stdenv.mkDerivation {
   shellHook = ''
     # set SOURCE_DATE_EPOCH so that we can use python wheels
     SOURCE_DATE_EPOCH=$(date +%s)
+    export LANG=en_US.UTF-8
     virtualenv venv
     export PATH=$PWD/venv/bin:$PATH
     export PYTHONPATH=$PWD
     pip install pipenv
-    pipenv install --dev
+    pipenv --three install --dev
     export LD_LIBRARY_PATH=${mysql57}/lib:${gcc6.cc.lib}/lib:$LD_LIBRARY_PATH
     export FLASK_APP=app.py
     export FLASK_DEBUG=1
@@ -53,6 +55,7 @@ stdenv.mkDerivation {
   '';
 }
 
+#    
 #
 # Now you can run the following command to start the server:
 #

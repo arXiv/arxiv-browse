@@ -25,6 +25,7 @@ sqlacodegen = "*"
 Flask-Testing = "*"
 pycodestyle = "*"
 pydocstyle = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.6"
