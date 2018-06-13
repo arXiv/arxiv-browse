@@ -38,7 +38,6 @@ def execute_sql_files() ->  None:
 
     def exec_sql(file: str) -> None:
         query = open(file, 'r').read()
-        print("hello")
         cursor.executescript(query)
         conn.commit()
 
