@@ -1,10 +1,10 @@
 """Functions to make HTML head metadata tags for DocMetadata."""
 import re
 from datetime import datetime
-from typing import Union, Dict, Optional, List
+from typing import Union, Dict, List
 import pytz
 
-from browse.domain.author_affil import parse_author_affil_utf
+from browse.services.document.author_affil import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
 from browse.domain.routes import pdf
 

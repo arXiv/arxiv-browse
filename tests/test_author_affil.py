@@ -1,7 +1,7 @@
 """Tests for author and affiliation parsing."""
 from unittest import TestCase
 
-from browse.domain.author_affil import parse_author_affil, _split_authors
+from browse.services.document.author_affil import parse_author_affil, _split_authors
 
 
 class TestAuthorAffiliationParsing(TestCase):
