@@ -1,12 +1,12 @@
 """Import db instance and define utility functions."""
 
 import ipaddress
-from typing import Optional
+from typing import List, Optional
 from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
-from browse.services.database.models import db, MemberInstitution, \
-    MemberInstitutionIP
+from browse.services.database.models import db, ArXivDocument, \
+    MemberInstitution, MemberInstitutionIP, TrackbackPing
 
 
 def get_institution(ip: str) -> Optional[str]:
@@ -33,3 +33,30 @@ def get_institution(ip: str) -> Optional[str]:
         return None
     except SQLAlchemyError as e:
         raise IOError('Database error: %s' % e) from e
+
+
+def get_all_trackback_pings() -> List[TrackbackPing]:
+    """Get all trackback pings in database."""
+    try:
+        stmt = (db.session.query(TrackbackPing))
+    except NoResultFound:
+        return []
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
+
+
+def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
+    """Get trackback pings for a particular document (paper_id)."""
+    try:
+        stmt = (db.session.query(TrackbackPing))
+    except NoResultFound:
+        return []
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
+
+
+def count_trackback_pings(paper_id: str)-> int:
+    """Count trackback pings for a particular document (paper_id)."""
+
+    return get_trackback_pings(paper_id).count()
+

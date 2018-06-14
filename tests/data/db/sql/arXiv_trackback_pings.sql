@@ -7,3 +7,7 @@ INSERT INTO `arXiv_trackback_pings` VALUES (796775,504934,'Omega baryon - Wikipe
 INSERT INTO `arXiv_trackback_pings` VALUES (797970,504934,'Tevatron - Wikipedia, the free encyclopedia','\"Observation of the','http://en.wikipedia.org/wiki/Tevatron','Wikipedia','arxiv1.library.cornell.edu','128.84.158.114',1228752458,0,0,0,'accepted',NULL);
 INSERT INTO `arXiv_trackback_pings` VALUES (802269,504934,'More On The Omega B Baryon Significance','The CDF result came almost one year after a similar measurement was published by the competitor experiment, D0. D0 had ','http://www.scientificblogging.com/quantum_diaries_survivor/more_omega_b_baryon_significance','A Quantum Diaries Survivor','arxiv1.library.cornell.edu','128.84.158.114',1258486297,0,0,1258558336,'accepted',NULL);
 
+
+
+INSERT INTO `arXiv_trackback_pings` VALUES (99999999,99999998,'Nothing here','Really nothing here ','http://www.example.org','On Nothing','arxiv1.library.cornell.edu','128.84.158.114',1258488297,0,0,1248558336,'accepted',NULL);
+

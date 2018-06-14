@@ -1,7 +1,7 @@
 """Tests for database service."""
 from unittest import mock, TestCase
 from browse.services import database
-
+from tests import *
 
 DATABASE_URL = 'sqlite:///:memory:'
 
@@ -96,6 +96,19 @@ class TestGetInstitution(TestCase):
         self.assertIn(
             'does not appear to be an IPv4 or IPv6 address',
             str(context.exception))
+
+    def test_get_all_trackback_pings(self) -> None:
+        """Test if all trackback pings are returned"""
+        count = grep_f_count(
+            './tests/data/browse.db', '''INSERT INTO `arXiv_trackback_pings`'''
+        )
+        if count is not None:
+            self.assertEqual(count, 9, 'All trackback pings are returned')
+        else:
+            self.assertIsNotNone(count, 'count of trackback pings is defined')
+
+
+
 
     def tearDown(self) -> None:
         """Close the database session and drop all tables."""
