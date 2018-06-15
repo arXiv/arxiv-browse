@@ -1,6 +1,7 @@
 """Tests for database service."""
 from unittest import mock, TestCase
 from browse.services import database
+import os
 from tests import *
 
 DATABASE_URL = 'sqlite:///:memory:'
@@ -99,13 +100,26 @@ class TestGetInstitution(TestCase):
 
     def test_get_all_trackback_pings(self) -> None:
         """Test if all trackback pings are returned"""
-        count = grep_f_count(
-            './tests/data/browse.db', '''INSERT INTO `arXiv_trackback_pings`'''
+        doc_sql_file = os.path.join(
+            os.path.dirname(__file__),
+            'data/db/sql/arXiv_trackback_pings.sql'
         )
-        if count is not None:
-            self.assertEqual(count, 9, 'All trackback pings are returned')
+        count_from_file = grep_f_count(
+            doc_sql_file,
+            '''INSERT INTO `arXiv_trackback_pings`'''
+        )
+        count_from_db: int = self.database_service.count_all_trackback_pings()
+
+        if count_from_file is not None:
+            self.assertEqual(
+                count_from_db, count_from_file,
+                'All trackback pings are returned'
+            )
         else:
-            self.assertIsNotNone(count, 'count of trackback pings is defined')
+            self.assertIsNotNone(
+                count_from_file,
+                'count of trackback pings is defined'
+            )
 
 
 

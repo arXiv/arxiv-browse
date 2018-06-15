@@ -30,7 +30,9 @@ def populate_test_database(drop_and_create: bool) -> None:
     models.db.session.commit()
     execute_sql_files()
 
-def execute_sql_files() ->  None:
+
+def execute_sql_files() -> None:
+    """Populate test db by executing hardcoded .sql files"""
     db_file    = './tests/data/browse.db'
     sql_files  = glob.glob('./tests/data/db/sql/*.sql')
     conn       = sqlite3.connect(db_file)

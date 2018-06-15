@@ -9,6 +9,10 @@ from browse.services.database.models import db, ArXivDocument, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing
 
 
+def __all_trackbacks_query():
+    return db.session.query(TrackbackPing)
+
+
 def get_institution(ip: str) -> Optional[str]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
@@ -48,7 +52,7 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     try:
-        stmt = (db.session.query(TrackbackPing))
+        stmt = __all_trackbacks_query
     except NoResultFound:
         return []
     except SQLAlchemyError as e:
@@ -60,3 +64,8 @@ def count_trackback_pings(paper_id: str)-> int:
 
     return get_trackback_pings(paper_id).count()
 
+
+def count_all_trackback_pings()-> int:
+    """Count trackback pings for a particular document (paper_id)."""
+
+    return __all_trackbacks_query().count()
