@@ -2,7 +2,6 @@
 from unittest import mock, TestCase
 from browse.services import database
 import glob
-import os
 from tests import *
 
 DATABASE_URL = 'sqlite:///:memory:'
@@ -66,8 +65,9 @@ class TestGetInstitution(TestCase):
             exclude=0
         )
         database.db.session.add(inst_other_ip)
-        conn = database.db.engine.connect()
-        execute_sql_files(glob.glob('./tests/data/db/sql/*.sql'), conn)
+        sql_dir = test_path_of('data/db/sql')
+        sql_files: List[str] = glob.glob(f'{sql_dir}/*.sql')
+        execute_sql_files(sql_files, database.db.engine)
 
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
@@ -103,10 +103,8 @@ class TestGetInstitution(TestCase):
 
     def test_get_all_trackback_pings(self) -> None:
         """Test if all trackback pings are returned"""
-        doc_sql_file = os.path.join(
-            os.path.dirname(__file__),
-            'data/db/sql/arXiv_trackback_pings.sql'
-        )
+        doc_sql_file = test_path_of('data/db/sql/arXiv_trackback_pings.sql')
+
         count_from_file = grep_f_count(
             doc_sql_file,
             '''INSERT INTO `arXiv_trackback_pings`'''

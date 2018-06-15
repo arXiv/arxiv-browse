@@ -4,12 +4,13 @@ import ipaddress
 from typing import List, Optional
 from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 from browse.services.database.models import db, ArXivDocument, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing
 
 
-def __all_trackbacks_query():
+def __all_trackbacks_query() -> Query:
     return db.session.query(TrackbackPing)
 
 
@@ -68,4 +69,4 @@ def count_trackback_pings(paper_id: str)-> int:
 def count_all_trackback_pings()-> int:
     """Count trackback pings for a particular document (paper_id)."""
 
-    return __all_trackbacks_query().count()
+    return __all_trackbacks_query().count() # type: ignore 

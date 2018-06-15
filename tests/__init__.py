@@ -1,6 +1,9 @@
 from typing import List, Optional
 
-from sqlite3 import Connection
+import os
+from sqlalchemy import text
+from sqlalchemy.engine.base import Engine
+
 
 def grep_f_count(filename: str, query: str) -> Optional[int]:
     """Like counting lines from grep -F "query" filename"""
@@ -13,13 +16,16 @@ def grep_f_count(filename: str, query: str) -> Optional[int]:
         return None
 
 
-def execute_sql_files(sql_files: List[str], conn: Connection) -> None:
+def execute_sql_files(sql_files: List[str], engine: Engine) -> None:
     """Populate test db by executing the sql_files"""
-
-    def exec_sql(file: str) -> None:
-        query = open(file, 'r').read()
-        conn.executescript(query)
-        conn.commit()
+    def exec_sql(filename: str) -> None:
+        with open(filename) as sql_file:
+            file_lines: List[str] = [line.strip() for line in sql_file]
+        list(map(lambda ln: engine.execute(text(ln)), file_lines))
 
     list(map(exec_sql, sql_files))
-    conn.close()
+
+
+def test_path_of(rel_path: str) -> str:
+    """Returns absolute path of rel_path, assuming rel_path is under tests/"""
+    return os.path.join(os.path.dirname(__file__), rel_path)

@@ -4,8 +4,9 @@ import click
 from browse.factory import create_web_app
 from browse.services.database import models
 import glob
-import sqlite3
 from tests import execute_sql_files
+from typing import List
+
 
 app = create_web_app()
 app.app_context().push()
@@ -29,8 +30,8 @@ def populate_test_database(drop_and_create: bool) -> None:
     models.db.session.add(models.MemberInstitutionIP(
         id=1, sid=1, start=2130706433, end=2130706433, exclude=0))
     models.db.session.commit()
-    conn = sqlite3.connect('./tests/data/browse.db')
-    execute_sql_files(glob.glob('./tests/data/db/sql/*.sql'), conn)
+    sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
+    execute_sql_files(sql_files, models.db.engine)
 
 
 if __name__ == '__main__':

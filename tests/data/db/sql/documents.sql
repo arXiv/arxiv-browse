@@ -116,5 +116,4 @@ INSERT INTO `arXiv_metadata` VALUES (14,7,'0906.5132','2009-10-08 13:10:42','200
 --
 -- WHERE:  document_id=557241
 
-INSERT INTO `arXiv_documents` VALUES (8,'0906.9150','A submission without metadata','David Fielding','?rdK@bv-rr4tearwh1qw
-',12,1255007442,'supr-con',NULL);
+INSERT INTO `arXiv_documents` VALUES (8,'0906.9150','A submission without metadata','David Fielding','?rdK@bv-rr4tearwh1qw',12,1255007442,'supr-con',NULL);
