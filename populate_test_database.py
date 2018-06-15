@@ -1,11 +1,12 @@
 """Helper script to initialize the browse database and add a few rows."""
 
 import click
-import glob
-import ipaddress
 from browse.factory import create_web_app
 from browse.services.database import models
+import glob
 import sqlite3
+from tests import execute_sql_files
+
 app = create_web_app()
 app.app_context().push()
 
@@ -28,24 +29,8 @@ def populate_test_database(drop_and_create: bool) -> None:
     models.db.session.add(models.MemberInstitutionIP(
         id=1, sid=1, start=2130706433, end=2130706433, exclude=0))
     models.db.session.commit()
-    execute_sql_files()
-
-
-def execute_sql_files() -> None:
-    """Populate test db by executing hardcoded .sql files"""
-    db_file    = './tests/data/browse.db'
-    sql_files  = glob.glob('./tests/data/db/sql/*.sql')
-    conn       = sqlite3.connect(db_file)
-    cursor     = conn.cursor()
-
-    def exec_sql(file: str) -> None:
-        query = open(file, 'r').read()
-        cursor.executescript(query)
-        conn.commit()
-
-    list(map(exec_sql, sql_files))
-    cursor.close()
-    conn.close()
+    conn = sqlite3.connect('./tests/data/browse.db')
+    execute_sql_files(glob.glob('./tests/data/db/sql/*.sql'), conn)
 
 
 if __name__ == '__main__':

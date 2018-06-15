@@ -1,6 +1,7 @@
 """Tests for database service."""
 from unittest import mock, TestCase
 from browse.services import database
+import glob
 import os
 from tests import *
 
@@ -65,6 +66,8 @@ class TestGetInstitution(TestCase):
             exclude=0
         )
         database.db.session.add(inst_other_ip)
+        conn = database.db.engine.connect()
+        execute_sql_files(glob.glob('./tests/data/db/sql/*.sql'), conn)
 
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
@@ -120,9 +123,6 @@ class TestGetInstitution(TestCase):
                 count_from_file,
                 'count of trackback pings is defined'
             )
-
-
-
 
     def tearDown(self) -> None:
         """Close the database session and drop all tables."""
