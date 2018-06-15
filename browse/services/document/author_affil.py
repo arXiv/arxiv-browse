@@ -74,7 +74,7 @@ def _parse_author_affil_split(author_line: str)->Dict:
 
     Does not handle multiple collaboration names.
     """
-    names = _split_authors(author_line)
+    names = split_authors(author_line)
     if not author_line or not names:
         return {'author_list': [], 'back_prop': 0}
 
@@ -272,7 +272,7 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]],
     return author_list
 
 
-def _split_authors(authors: str)->List:
+def split_authors(authors: str)->List:
     """Split author string into authors entity lists.
 
     Take and author line as a string and return a reference to a list of the
