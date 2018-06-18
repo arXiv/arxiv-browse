@@ -2,6 +2,7 @@
 from unittest import mock, TestCase
 from browse.services import database
 import glob
+from operator import length_hint
 from tests import *
 
 DATABASE_URL = 'sqlite:///:memory:'
@@ -101,8 +102,8 @@ class TestGetInstitution(TestCase):
             'does not appear to be an IPv4 or IPv6 address',
             str(context.exception))
 
-    def test_get_all_trackback_pings(self) -> None:
-        """Test if all trackback pings are returned"""
+    def test_all_trackback_pings(self) -> None:
+        """Test if all trackback pings are counted"""
         doc_sql_file = test_path_of('data/db/sql/arXiv_trackback_pings.sql')
 
         count_from_file = grep_f_count(
@@ -110,11 +111,13 @@ class TestGetInstitution(TestCase):
             '''INSERT INTO `arXiv_trackback_pings`'''
         )
         count_from_db: int = self.database_service.count_all_trackback_pings()
+        count_from_db_list: int = self.database_service\
+            .get_all_trackback_pings().__len__()
 
         if count_from_file is not None:
             self.assertEqual(
                 count_from_db, count_from_file,
-                'All trackback pings are returned'
+                'Count of all trackback pings are correct'
             )
         else:
             self.assertIsNotNone(
@@ -122,7 +125,29 @@ class TestGetInstitution(TestCase):
                 'count of trackback pings is defined'
             )
 
-    def tearDown(self) -> None:
+        self.assertEqual(
+            count_from_db_list, count_from_file,
+            'All trackback pings are returned'
+        )
+
+    def test_trackback_pings(self) -> None:
+        """Test if trackback pings for specific paper are counted"""
+        test_paper_id = '0808.4142'
+        count_from_db: int = self.database_service.\
+            count_trackback_pings(test_paper_id)
+        count_from_db_list: int = self.database_service. \
+            get_trackback_pings(test_paper_id).__len__()
+        self.assertEqual(
+            count_from_db, 8,
+            f'Correct count of pings returned for paper {test_paper_id}'
+        )
+        self.assertEqual(
+            count_from_db_list, 8,
+            f'Correct count of pings returned for paper {test_paper_id}'
+        )
+
+
+def tearDown(self) -> None:
         """Close the database session and drop all tables."""
         database.db.session.remove()
         database.db.drop_all()

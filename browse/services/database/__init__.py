@@ -14,6 +14,12 @@ def __all_trackbacks_query() -> Query:
     return db.session.query(TrackbackPing)
 
 
+def __paper_trackbacks_query(paper_id) -> Query:
+    return __all_trackbacks_query() \
+        .filter(TrackbackPing.document_id == ArXivDocument.document_id) \
+        .filter(ArXivDocument.paper_id == paper_id)
+
+
 def get_institution(ip: str) -> Optional[str]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
@@ -43,7 +49,7 @@ def get_institution(ip: str) -> Optional[str]:
 def get_all_trackback_pings() -> List[TrackbackPing]:
     """Get all trackback pings in database."""
     try:
-        stmt = (db.session.query(TrackbackPing))
+        return list(__all_trackbacks_query().all())
     except NoResultFound:
         return []
     except SQLAlchemyError as e:
@@ -53,20 +59,20 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     try:
-        stmt = __all_trackbacks_query
+        return list(__paper_trackbacks_query(paper_id).all())
     except NoResultFound:
         return []
     except SQLAlchemyError as e:
         raise IOError('Database error: %s' % e) from e
 
 
-def count_trackback_pings(paper_id: str)-> int:
+def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
 
-    return get_trackback_pings(paper_id).count()
+    return __paper_trackbacks_query(paper_id).count()
 
 
-def count_all_trackback_pings()-> int:
+def count_all_trackback_pings() -> int:
     """Count trackback pings for a particular document (paper_id)."""
 
-    return __all_trackbacks_query().count() # type: ignore 
+    return __all_trackbacks_query().count() # type: ignore
