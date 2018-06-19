@@ -30,24 +30,20 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
     string input by the submitter.
 
     Takes the authors string from a document metadata or .abs, split,
-    and return a structure of [ (query_str, text_anchor)...]
+    and return a structure of [ str|(name_text, author_search_query_str)...]
 
-    Where query_str will be something like "Webb J E" which can be used to query the
+    If the item in the list is just a string, it should just be placed in the HTML output
+    since it is something like whitespace, a comma or 'for the' or a colon.
+
+    If a list item is a tuple, author_search_query_str will be something like "Webb J E" which can be used to query the
     search service.
 
-    text_prefix will be text that is not intended to be in the anchor but before it,
-    mostly 'for the ' or None.
+    name_text will be the text to put in side the <a> tag. Such as "James E. Webb,"
 
-    text_anchor will be the text to put in side the <a> tag. Such as "James E. Webb,"
-
-    If query_str is None, then text_anchor should just be appended to the output without an <a>
+    DON'T URL_encode, do that in template
+    DON'T do entities, do that in template
+    DON'T escape utf8 for HTML, just return utf8
     """
-    # DON'T URL_encode, do that in template
-    # DON'T do entities, do that in template
-    # DON'T escape utf8, just return utf8
-
-    # DON'T do this truncate stuff, do that in template, maybe even in JS only
-    # return author list in spans and then add JS to collapse if needed.
     out: List(Union(str, Tuple(str, str))) = []
 
     splits: List[str] = split_authors(authors)

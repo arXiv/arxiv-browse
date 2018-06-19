@@ -5,7 +5,7 @@ from browse.domain import DocMetadata
 
 # TODO This belongs in some configuration file
 
-MAIN_SITE = 'http://arxiv.org'
+MAIN_SITE = 'http://dev.arxiv.org'
 
 
 def main_site(param: str) -> str:
@@ -19,7 +19,6 @@ def pdf(item: DocMetadata) -> str:
 
 def search_author(author_query: str) -> str:
     """Returns URL for author in arxiv search.
-    ex.
-    https://arxiv.org/search?searchtype=author&query=Berger%2C+E+L
+    ex. https://arxiv.org/search?searchtype=author&query=Berger%2C+E+L
     """
     return main_site("/search?searchtype=author&query=" + urllib.parse.quote_plus(author_query))
