@@ -8,7 +8,6 @@
     {{ generate_scholar_tags() }}
 {%- endblock head -%}
 
-
 {% block body_id %}{% endblock %}
 
 {% block header_class %}{% endblock %}
@@ -49,11 +48,9 @@
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title }}</h1>
     {# TODO: authors section #}
     <div class="authors"><span class="descriptor">Authors:</span>
-      <!-- <a href="/find/astro-ph/1/au:+Goldstein_D/0/1/0/all/0/1">Daniel A. Goldstein</a>,
-      <a href="/find/astro-ph/1/au:+Nugent_P/0/1/0/all/0/1">Peter E. Nugent</a>,
-      <a href="/find/astro-ph/1/au:+Kasen_D/0/1/0/all/0/1">Daniel N. Kasen</a>,
-      <a href="/find/astro-ph/1/au:+Collett_T/0/1/0/all/0/1">Thomas E. Collett</a></div> -->
-      {{ abs_meta.authors }}
+      {%- include "/abs/author_links.html" %}
+    </div>
+
     <div class="dateline">{{ generate_dateline() }}</div>
 
     <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract }}</blockquote>

@@ -1,0 +1,11 @@
+{%- macro generate_link( part ) %}
+        <a href="{{author_search_url_fn( part[1] )}}">{{part[0]}}</a>
+{%- endmacro -%}
+
+{%- for part in author_links -%}
+   {%- if part is string -%}
+        {{- part -}}
+    {%- else -%}
+        {{ generate_link( part ) }}
+    {%- endif -%}
+{% endfor %}

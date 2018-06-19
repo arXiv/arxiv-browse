@@ -78,8 +78,6 @@ def _parse_author_affil_split(author_line: str)->Dict:
     if not author_line or not names:
         return {'author_list': [], 'back_prop': 0}
 
-    #names = map(lambda n: n.lstrip().rstrip(), names)
-
     names = _remove_double_commas(names)
     # get rid of commas at back
     names = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))
