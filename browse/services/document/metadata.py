@@ -39,6 +39,20 @@ NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
 
 
+# List of tuples containing the valid source file name extensions and their
+# corresponding dissemintation formats.
+# There are minor performance implications in the ordering when doing
+# filesystem lookups, so the ordering here should be preserved.
+VALID_SOURCE_EXTENSIONS = [
+                            ('.tar.gz', None),
+                            ('.pdf', ['pdfonly']),
+                            ('.ps.gz', ['pdf', 'ps']),
+                            ('.gz', None),
+                            ('.dvi.gz', None),
+                            ('.html.gz', ['html'])
+                          ]
+
+
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
 
@@ -280,7 +294,7 @@ class AbsMetaSession(object):
         except IdentifierException:
             return None
 
-    def get_previous_id(self, identifier: Identifier):
+    def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
         """
         Get the previous identifier in sequence if it exists in the repository.
 
@@ -328,6 +342,118 @@ class AbsMetaSession(object):
                 return None
 
         return None
+
+    def _get_formats_from_source(self, identifier: Identifier) -> \
+            Optional[List]:
+        """Get list of dissemination formats based on source file."""
+        parent_path = self._get_parent_path(identifier)
+        # Check the usual file extensions
+        for extension in VALID_SOURCE_EXTENSIONS:
+            # We only care to check for those that have corresponding
+            # dissemination formats
+            if not isinstance(extension[1], (list,)):
+                continue
+            possible_path = os.path.join(
+                parent_path,
+                f'{identifier.filename}{extension[0]}')
+            print(f'Checking {possible_path} exists')
+            if os.path.isfile(possible_path):
+                print(f'{possible_path} exists')
+                return extension[1]
+        return None
+
+    def get_dissemination_formats(self, docmeta: DocMetadata) -> List[str]:
+        """
+        Get a list of formats that can be disseminated for this DocMetadata.
+
+        Several checks are performed to determine available dissemination
+        formats:
+            1. a check for source files with specific, valid file name
+               extensions (i.e. for a subset of the allowed source file name
+               extensions, the dissemintation formats are predictable)
+            2. if formats cannot be inferred from source file, inspect the
+               source type in the document metadata.
+
+        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
+        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
+
+        Parameters
+        ----------
+        docmeta : :class:`DocMetadata`
+
+        Returns
+        -------
+        List[str]
+            A list of format strings.
+
+        """
+        formats = []
+        has_other = False
+        # first, get possible list of formats based on available source file
+        formats_from_source = self._get_formats_from_source(
+            docmeta.arxiv_identifier)
+        if formats_from_source:
+            formats.extend(formats_from_source)
+        else:
+            try:
+                v = docmeta.version
+                code = docmeta.version_history[v-1].source_type.code
+            except Exception as e:
+                print(f'Caught exception {e}')
+            print(f'source type code is {code}')
+            has_encrypted_source = re.search('S', code, re.IGNORECASE)
+            # TODO: get 'xxx-ps-defaults' preference
+            ps_defaults = ''
+            if re.search('I', code, re.IGNORECASE):
+                if not has_encrypted_source:
+                    formats.append('src')
+            elif re.search('P', code, re.IGNORECASE):
+                formats.extend(['pdf', 'ps', 'other'])
+            elif re.search('D', code, re.IGNORECASE):
+                # PDFtex has source so honor src preference
+                if re.search('src', ps_defaults) and not has_encrypted_source:
+                    formats.append('src')
+                formats.extend(['pdf', 'other'])
+            elif re.search('F', code, re.IGNORECASE):
+                formats.extend(['pdf', 'other'])
+            elif re.search('H', code, re.IGNORECASE):
+                formats.extend(['html', 'other'])
+            elif re.search(r'[XO]', code, re.IGNORECASE):
+                formats.extend(['pdf', 'other'])
+            # TODO PS cache check
+            # elsif  -z "$cache.ps.gz" && !source_newer_than_cache_files($version,'ps')) {
+            # elif os.path.getsize == 0
+            #       formats.extend(['nops', 'other'])
+            else:
+                if re.search('pdf', ps_defaults):
+                    formats.append('pdf')
+                elif re.search('400', ps_defaults):
+                    formats.append('ps(400)')
+                elif re.search('600', ps_defaults):
+                    formats.append('ps(600)')
+                elif re.search('fname=cm', ps_defaults):
+                    formats.append('ps(cm)')
+                elif re.search('fname=CM', ps_defaults):
+                    formats.append('ps(CM)')
+                elif re.search('dvi', ps_defaults):
+                    formats.append('dvi')
+                elif re.search('src', ps_defaults):
+                    if not has_encrypted_source:
+                        formats.append('src')
+                    formats.extend(['pdf', 'ps'])
+                else:
+                    formats.extend(['pdf', 'ps'])
+
+                has_other = True
+
+        # TODO - ScienceWISE annotated PDF
+        # if has_annotated_pdf:
+        #     formats.append('sciencewise_pdf')
+
+        if has_other:
+            formats.append('other')
+
+        return formats
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
@@ -415,7 +541,7 @@ class AbsMetaSession(object):
 
     def _get_parent_path(self, identifier: Identifier,
                          version: int = None) -> str:
-        """Get the parent directory of the provided identifier."""
+        """Get the absolute parent path of the provided identifier."""
         parent_path = os.path.join(
             (self.latest_versions_path if not version
              else self.original_versions_path),
@@ -475,6 +601,12 @@ class AbsMetaSession(object):
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields
+
+
+@wraps(AbsMetaSession.get_dissemination_formats)
+def get_dissemination_formats(docmeta: DocMetadata) -> List:
+    """Get list of dissemination formats."""
+    return current_session().get_dissemination_formats(docmeta)
 
 
 @wraps(AbsMetaSession.get_next_id)

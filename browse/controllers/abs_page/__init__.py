@@ -56,7 +56,11 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
                    status.HTTP_301_MOVED_PERMANENTLY,\
                    {'Location': redirect_url}
 
-        response_data['abs_meta'] = metadata.get_abs(arxiv_id)
+        abs_meta = metadata.get_abs(arxiv_id)
+        formats = metadata.get_dissemination_formats(abs_meta)
+        response_data['abs_meta'] = abs_meta
+        print(f'here are the formats: {formats}')
+        response_data['formats'] = formats
         _check_context(arxiv_identifier,
                        request_params,
                        response_data)

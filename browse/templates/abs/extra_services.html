@@ -1,3 +1,33 @@
+{%- macro generate_download_links(format_list=[]) -%}
+<ul>
+  {% if format_list|length == 0 %}
+  <li>Unavailable</li>
+  {% else %}
+    {# We have to skip the 'src' format unless we're viewing the current version of the article #}
+    {% for format in format_list if not (format == 'src' and abs_meta.version != abs_meta.version_history[-1].version)  %}
+  <li>
+    {%- if format == 'src' -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">Source</a>
+    {%- elif format.startswith('ps') -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+    {%- elif format.startswith('pdf') -%}
+    <a href="/pdf/{{ abs_meta.arxiv_id }}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    {%- elif format == 'dvi' or format == 'html' -%}
+    <a href="/{{ format }}/{{ abs_meta.arxiv_id }}"{% if format == 'html' %} accesskey="f"{% endif %}>{{ format.upper() }}</a>
+    {%- elif format == 'other' -%}
+    <a href="/format/{{ abs_meta.arxiv_id }}">Other formats</a>
+    {%- elif format == 'nops' -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">(PostScript unavailable)</a>
+    {%- elif format == 'sciencewise_pdf' -%}
+    {# consider for deprecation #}
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a>
+    {%- endif -%}
+  </li>
+    {% endfor %}
+  {% endif %}
+</ul>
+{%- endmacro -%}
+
 {%- macro generate_browse_context() -%}
   {% set current_context = browse_context if browse_context else abs_meta.primary_category.id %}
   <h3>Current browse context:</h3>
@@ -44,16 +74,14 @@
   {% endif %}
 {%- endmacro -%}
 
+
 {% block extra_services %}
    <div class="extra-services">
 
     <div class="full-text">
       <span class="descriptor">Full-text links:</span>
       <h2>Download:</h2>
-      <ul>
-        <li><a href="/pdf/1708.00003" accesskey="f">TODO: PDF</a></li>
-        <li><a href="/format/1708.00003">TODO: Other formats</a></li>
-      </ul>
+      {{ generate_download_links(format_list=formats) }}
 
       <div class="abs-license">
         {% if abs_meta.license.icon_uri_path %}

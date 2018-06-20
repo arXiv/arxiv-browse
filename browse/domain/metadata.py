@@ -9,12 +9,35 @@ from arxiv import taxonomy
 
 @dataclass
 class SourceType():
-    """Represents arXiv article source file type."""
+    """
+    Represents arXiv article source file type.
+
+    Source file types are represented by single-character codes:
+    I - ignore
+        All files auto ignore. No paper available.
+    S - source encrypted
+        Source is encrypted and should not be made available.
+    P - PS only
+        Multi-file PS submission. It is not necessary to indicate P with single
+        file PS since in this case the source file has .ps.gz extension.
+    D - PDFlatex
+        A TeX submission that must be processed with PDFlatex
+    H - HTML submissions
+        Multi-file HTML submission.
+    A - includes ancillary files
+        Submission includes ancillary files in the /anc directory
+    B - DC pilot data
+        Submission has associated data in the DC pilot system
+    X - DOCX
+        Submission in Microsoft DOCX (Office Open XML) format
+    O - ODF
+        Submission in Open Document Format
+    F - PDF only
+        PDF-only submission with .tar.gz package (likely because of anc files)
+    """
 
     code: str = field(default_factory=str)
     """Internal code for the source type."""
-
-    """TODO: need source mappings"""
 
 
 @dataclass
