@@ -6,7 +6,7 @@ import pytz
 
 from browse.services.document.author_affil import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
-from browse.domain.routes import pdf
+from browse.services.util.routes import pdf
 
 
 def meta_tag_metadata(metadata: DocMetadata)->List:

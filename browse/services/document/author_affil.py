@@ -3,7 +3,7 @@ import re
 from itertools import dropwhile
 from typing import List, Tuple, Dict
 
-from browse.domain.tex2utf import tex2utf
+from browse.services.util.tex2utf import tex2utf
 
 PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di|vaziri'
 
@@ -119,9 +119,9 @@ def _parse_author_affil_split(author_line: str)->Dict:
         (mtype, match) = next(((mtype, m)
                                for (mtype, m) in pattern_matches
                                if m is not None), ('default', None))
-#        if match is None:
-#            author_entry = [name, '', '']
-        if mtype == 'double-prefix':
+        if match is None:
+            author_entry = [name, '', '']
+        elif mtype == 'double-prefix':
             s = '{} {} {}'.format(match.group(
                 2), match.group(3), match.group(4))
             author_entry = [s, match.group(1), '']

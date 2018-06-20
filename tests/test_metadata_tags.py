@@ -9,7 +9,7 @@ from unittest import TestCase
 # from datetime import datetime
 # from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata
-from browse.domain.metatags import meta_tag_metadata
+from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document.metadata import AbsMetaSession
 
 CLASSIC_RESULTS_FILE = 'tests/data/classic_scholar_metadata_tags.json'

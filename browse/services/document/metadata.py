@@ -3,7 +3,7 @@ import os
 import re
 from dateutil import parser
 from functools import wraps
-from typing import Dict, List
+from typing import Dict, List, Any
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
@@ -196,7 +196,7 @@ class AbsMetaSession(object):
                 sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
             except (ValueError, TypeError):
-                raise 'AbsParsingError'(
+                raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
             source_type = SourceType(code=date_match.group('source_type'))

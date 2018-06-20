@@ -2,24 +2,24 @@
 import re
 from typing import List, Tuple, Union
 
-from browse.domain.tex2utf import tex2utf
+from browse.services.util.tex2utf import tex2utf
 from browse.services.document.author_affil import split_authors
 
 
-def is_affiliation(item: str):
+def is_affiliation(item: str)-> bool:
     return item.startswith('(')
 
 
-def is_short(item):
+def is_short(item:str)-> bool:
     return len(item) < 4
 
 
-def is_etal(item):
-    return re.match(r'et\.? al\.?$', item)
+def is_etal(item:str)-> bool:
+    return re.match(r'et\.? al\.?$', item) is not None
 
 
-def is_divider(item):
-    return re.match(r'^(,|:)', item)
+def is_divider(item:str)-> bool:
+    return re.match(r'^(,|:)', item) is not None
 
 
 def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
@@ -41,7 +41,7 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
 
     If query_str is None, then text_anchor should just be appended to the output without an <a>
     """
-    out: List(Union(str, Tuple(str, str))) = []
+    out: List[Union[str, Tuple[str, str]]] = []
 
     splits = split_authors(authors)
     for item in splits:
@@ -86,7 +86,7 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
 
                     surname = name_bits.pop()
                     name_bit_count = 0
-                    surname_prefixes = []
+                    surname_prefixes:List[str]= []
                     initials = []
                     found_prefix = False
 
@@ -96,7 +96,7 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
                         if found_prefix or \
                                 (name_bit_count > 1
                                  and re.match(f'^({PREFIX_PATTERN})$', name_bit, re.IGNORECASE)):
-                            surname_prefixes.push(name_bit)
+                            surname_prefixes.append(name_bit)
                             found_prefix = True
                         else:
                             initials.append(name_bit[0:1])

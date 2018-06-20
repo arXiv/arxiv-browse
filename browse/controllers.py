@@ -4,7 +4,7 @@ from flask import request
 from arxiv import status
 from typing import Tuple, Dict, Any, Optional
 
-from browse.domain.metatags import meta_tag_metadata
+from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsNotFoundException,\
     AbsVersionNotFoundException
