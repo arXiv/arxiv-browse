@@ -50,6 +50,10 @@ class BrowseTest(unittest.TestCase):
             rv.data.decode('utf-8'), m.license.effective_uri,
             'should be displayed with its license')
 
+    def test_missing_paper(self):
+        rv = self.app.get('/abs/1805.0001')
+        self.assertEqual(rv.status_code, 301)
+
 
 if __name__ == '__main__':
     unittest.main()
