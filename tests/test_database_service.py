@@ -2,7 +2,6 @@
 from unittest import mock, TestCase
 from browse.services import database
 import glob
-from operator import length_hint
 from tests import *
 
 DATABASE_URL = 'sqlite:///:memory:'
@@ -142,7 +141,7 @@ class TestGetInstitution(TestCase):
             f'Correct count of pings returned for paper {test_paper_id}'
         )
         self.assertEqual(
-            count_from_db_list, 8,
+            count_from_db_list, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
 

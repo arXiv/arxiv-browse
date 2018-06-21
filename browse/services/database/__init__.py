@@ -6,7 +6,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
-from browse.services.database.models import db, ArXivDocument, \
+from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing
 
 
@@ -16,8 +16,9 @@ def __all_trackbacks_query() -> Query:
 
 def __paper_trackbacks_query(paper_id) -> Query:
     return __all_trackbacks_query() \
-        .filter(TrackbackPing.document_id == ArXivDocument.document_id) \
-        .filter(ArXivDocument.paper_id == paper_id)
+        .filter(TrackbackPing.document_id == Document.document_id) \
+        .filter(Document.paper_id == paper_id) \
+        .filter(TrackbackPing.status == 'accepted')
 
 
 def get_institution(ip: str) -> Optional[str]:
@@ -69,10 +70,11 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
 
-    return __paper_trackbacks_query(paper_id).count()
+    return __paper_trackbacks_query(paper_id)\
+        .group_by(TrackbackPing.url).count()
 
 
 def count_all_trackback_pings() -> int:
-    """Count trackback pings for a particular document (paper_id)."""
+    """Count trackback pings for all documents, without DISTINCT(URL)."""
 
     return __all_trackbacks_query().count() # type: ignore

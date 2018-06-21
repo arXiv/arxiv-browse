@@ -9,7 +9,7 @@ from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
 
-class ArXivDocument(db.Model):
+class Document(db.Model):
     """Model for documents stored as part of the arXiv repository."""
 
     __tablename__ = 'arXiv_documents'
@@ -23,9 +23,9 @@ class ArXivDocument(db.Model):
     dated = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
-    submitter = relationship('TapirUser')
+    submitter = relationship('User')
 
-class ArXivLicense(db.Model):
+class License(db.Model):
     __tablename__ = 'arXiv_licenses'
 
     name = Column(String(255), primary_key=True)
@@ -35,7 +35,7 @@ class ArXivLicense(db.Model):
     sequence = Column(Integer)
 
 
-class ArXivMetadatum(db.Model):
+class Metadata(db.Model):
     __tablename__ = 'arXiv_metadata'
     __table_args__ = (
         Index('pidv', 'paper_id', 'version', unique=True),
@@ -69,9 +69,9 @@ class ArXivMetadatum(db.Model):
     is_current = Column(Integer, server_default=text("'1'"))
     is_withdrawn = Column(Integer, nullable=False, server_default=text("'0'"))
 
-    document = relationship('ArXivDocument')
-    arXiv_license = relationship('ArXivLicense')
-    submitter = relationship('TapirUser')
+    document = relationship('Document')
+    arXiv_license = relationship('License')
+    submitter = relationship('User')
 
 
 class MemberInstitution(db.Model):
@@ -132,7 +132,7 @@ class SciencewisePing(db.Model):
     updated = Column(DateTime)
 
 
-class TapirUser(db.Model):
+class User(db.Model):
     """Legacy table that is a foreign key dependency of TapirSession."""
 
     __tablename__ = 'tapir_users'
@@ -167,7 +167,7 @@ class TapirUser(db.Model):
 
 
 
-class TapirPolicyClass(db.Model):
+class UserPolicyClass(db.Model):
     """Legacy table that is a foreign key depency of TapirUse."""
 
     __tablename__ = 'tapir_policy_classes'
