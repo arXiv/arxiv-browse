@@ -1,16 +1,21 @@
 import unittest
 
-from browse.factory import create_web_app
 from tests.test_abs_parser import ABS_FILES
+from browse.factory import create_web_app
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
+
+import os
+import tempfile
+
+from app import app
 
 
 class BrowseTest(unittest.TestCase):
 
     def setUp(self):
-        app = create_web_app()
         app.testing = True
+        app.config['APPLICATION_ROOT'] = ''
         self.app = app.test_client()
 
     def test_abs_without_license_field(self):
@@ -30,12 +35,13 @@ class BrowseTest(unittest.TestCase):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
         m = AbsMetaSession.parse_abs_file(filename=f1)
 
-        self.assertNotEqual(m.license,  None)
+        self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
         self.assertEqual(m.license.recorded_uri,
                          m.license.effective_uri)
         self.assertNotEqual(
-            m.license.recorded_uri, 'http://arxiv.org/licenses/assumed-1991-2003/')
+            m.license.recorded_uri,
+            'http://arxiv.org/licenses/assumed-1991-2003/')
 
         rv = self.app.get('/abs/0704.0600')
         self.assertEqual(rv.status_code, 200)

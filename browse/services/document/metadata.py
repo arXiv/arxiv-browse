@@ -1,8 +1,4 @@
-"""
-arxiv browse metadata service.
-
-Provides routines to parse filesystem-based arXiv abstract (.abs) files.
-"""
+"""Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
 from pytz import timezone
@@ -10,10 +6,10 @@ from dateutil import parser
 from functools import wraps
 from typing import Dict, List, Optional
 
-from browse.domain.identifier import Identifier, IdentifierException
-from browse.domain.license import License
+from browse.domain import License
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry, Category
+from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
 
@@ -21,10 +17,10 @@ ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
-    r'From:\s*(?P<name>[^<]+)\s*(<(?P<email>.*)>)?')
+    r'From:\s*(?P<name>[^<]+)?\s*(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
-    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+    '(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
 RE_FIELD_COMPONENTS = re.compile(
     r'^(?P<field>[-a-z\)\(]+\s*):\s*(?P<value>.*)', re.IGNORECASE)
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
@@ -34,7 +30,7 @@ RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
 # major component of .abs file.
 NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
                 'Report-no', 'ACM-class', 'MSC-class', 'Journal-ref',
-                'DOI', 'License', '']
+                'DOI', 'License']
 # (normalized) required parsed fields
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
 
@@ -70,11 +66,11 @@ class AbsDeletedException(Exception):
 
 
 class AbsMetaSession(object):
-    """Abstract metadata session class."""
+    """Class for representing arXiv document metadata."""
 
     def __init__(self, latest_versions_path: str,
                  original_versions_path: str) -> None:
-        """Set the filesystem paths the to be used with AbsMetaSession."""
+
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
                                '"{latest_versions_path}" does not exist'
@@ -100,7 +96,7 @@ class AbsMetaSession(object):
         -------
         :class:`DocMetadata`
 
-        """
+        """   
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException:
@@ -440,7 +436,7 @@ class AbsMetaSession(object):
                 sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
             except (ValueError, TypeError):
-                raise 'AbsParsingError'(
+                raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
             source_type = SourceType(code=date_match.group('source_type'))
