@@ -106,7 +106,7 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
 
     Parameters
     ----------
-    arxiv_identier : :class:`Identifier`
+    arxiv_identifier : :class:`Identifier`
 
     Returns
     -------

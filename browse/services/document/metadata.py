@@ -12,6 +12,8 @@ from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
 from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
+from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
+    formats_from_source_file, formats_from_source_type
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -20,7 +22,7 @@ RE_FROM_FIELD = re.compile(
     r'From:\s*(?P<name>[^<]+)?\s*(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
-    '(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
 RE_FIELD_COMPONENTS = re.compile(
     r'^(?P<field>[-a-z\)\(]+\s*):\s*(?P<value>.*)', re.IGNORECASE)
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
@@ -33,20 +35,6 @@ NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
                 'DOI', 'License']
 # (normalized) required parsed fields
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
-
-
-# List of tuples containing the valid source file name extensions and their
-# corresponding dissemintation formats.
-# There are minor performance implications in the ordering when doing
-# filesystem lookups, so the ordering here should be preserved.
-VALID_SOURCE_EXTENSIONS = [
-                            ('.tar.gz', None),
-                            ('.pdf', ['pdfonly']),
-                            ('.ps.gz', ['pdf', 'ps']),
-                            ('.gz', None),
-                            ('.dvi.gz', None),
-                            ('.html.gz', ['html'])
-                          ]
 
 
 class AbsException(Exception):
@@ -110,7 +98,7 @@ class AbsMetaSession(object):
         -------
         :class:`DocMetadata`
 
-        """   
+        """
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException:
@@ -339,26 +327,24 @@ class AbsMetaSession(object):
 
         return None
 
-    def _get_formats_from_source(self, identifier: Identifier) -> \
-            Optional[List]:
-        """Get list of dissemination formats based on source file."""
+    def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
+        """Get the absolute path of this DocMetadata's source file."""
+        identifier = docmeta.arxiv_identifier
         parent_path = self._get_parent_path(identifier)
-        # Check the usual file extensions
         for extension in VALID_SOURCE_EXTENSIONS:
-            # We only care to check for those that have corresponding
-            # dissemination formats
-            if not isinstance(extension[1], (list,)):
-                continue
             possible_path = os.path.join(
                 parent_path,
                 f'{identifier.filename}{extension[0]}')
             print(f'Checking {possible_path} exists')
             if os.path.isfile(possible_path):
                 print(f'{possible_path} exists')
-                return extension[1]
+                return possible_path
         return None
 
-    def get_dissemination_formats(self, docmeta: DocMetadata) -> List[str]:
+    def get_dissemination_formats(self,
+                                  docmeta: DocMetadata,
+                                  format_pref: str = None,
+                                  add_sciencewise: bool = False) -> List[str]:
         """
         Get a list of formats that can be disseminated for this DocMetadata.
 
@@ -376,6 +362,10 @@ class AbsMetaSession(object):
         Parameters
         ----------
         docmeta : :class:`DocMetadata`
+        format_pref : str
+            The format preference string.
+        add_sciencewise : bool
+            Specify whether to include 'sciencewise_pdf' format in list.
 
         Returns
         -------
@@ -384,70 +374,28 @@ class AbsMetaSession(object):
 
         """
         formats = []
-        has_other = False
+
         # first, get possible list of formats based on available source file
-        formats_from_source = self._get_formats_from_source(
-            docmeta.arxiv_identifier)
-        if formats_from_source:
-            formats.extend(formats_from_source)
+        source_file = self._get_source_path(docmeta)
+        source_file_formats = formats_from_source_file(source_file)
+        if source_file_formats:
+            formats.extend(source_file_formats)
         else:
-            try:
-                v = docmeta.version
-                code = docmeta.version_history[v-1].source_type.code
-            except Exception as e:
-                print(f'Caught exception {e}')
-            print(f'source type code is {code}')
-            has_encrypted_source = re.search('S', code, re.IGNORECASE)
-            # TODO: get 'xxx-ps-defaults' preference
-            ps_defaults = ''
-            if re.search('I', code, re.IGNORECASE):
-                if not has_encrypted_source:
-                    formats.append('src')
-            elif re.search('P', code, re.IGNORECASE):
-                formats.extend(['pdf', 'ps', 'other'])
-            elif re.search('D', code, re.IGNORECASE):
-                # PDFtex has source so honor src preference
-                if re.search('src', ps_defaults) and not has_encrypted_source:
-                    formats.append('src')
-                formats.extend(['pdf', 'other'])
-            elif re.search('F', code, re.IGNORECASE):
-                formats.extend(['pdf', 'other'])
-            elif re.search('H', code, re.IGNORECASE):
-                formats.extend(['html', 'other'])
-            elif re.search(r'[XO]', code, re.IGNORECASE):
-                formats.extend(['pdf', 'other'])
-            # TODO PS cache check
-            # elsif  -z "$cache.ps.gz" && !source_newer_than_cache_files($version,'ps')) {
-            # elif os.path.getsize == 0
-            #       formats.extend(['nops', 'other'])
+            # check source type from metadata, with consideration to
+            # user format preference
+            version = docmeta.version
+            code = docmeta.version_history[version-1].source_type.code
+            source_type_formats = formats_from_source_type(code, format_pref)
+            print(f'source type formats: {source_type_formats}')
+            if source_type_formats:
+                formats.extend(source_type_formats)
+
+        # ScienceWISE annotated PDF
+        if add_sciencewise:
+            if formats and formats[-1] == 'other':
+                formats.insert(-1, 'sciencewise_pdf')
             else:
-                if re.search('pdf', ps_defaults):
-                    formats.append('pdf')
-                elif re.search('400', ps_defaults):
-                    formats.append('ps(400)')
-                elif re.search('600', ps_defaults):
-                    formats.append('ps(600)')
-                elif re.search('fname=cm', ps_defaults):
-                    formats.append('ps(cm)')
-                elif re.search('fname=CM', ps_defaults):
-                    formats.append('ps(CM)')
-                elif re.search('dvi', ps_defaults):
-                    formats.append('dvi')
-                elif re.search('src', ps_defaults):
-                    if not has_encrypted_source:
-                        formats.append('src')
-                    formats.extend(['pdf', 'ps'])
-                else:
-                    formats.extend(['pdf', 'ps'])
-
-                has_other = True
-
-        # TODO - ScienceWISE annotated PDF
-        # if has_annotated_pdf:
-        #     formats.append('sciencewise_pdf')
-
-        if has_other:
-            formats.append('other')
+                formats.append('sciencewise_pdf')
 
         return formats
 
