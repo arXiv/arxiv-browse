@@ -37,7 +37,11 @@ def bare_abs():
 @blueprint.route('/abs/<path:arxiv_id>', methods=['GET', 'POST'])
 def abstract(arxiv_id: str) -> Union[str, Response]:
     """Abstract (abs) page view."""
-    response, code, headers = abs_page.get_abs_page(arxiv_id, request.args)
+    download_format_pref = request.cookies.get('xxx-ps-defaults')
+    print(f'download format pref: {download_format_pref}')
+    response, code, headers = abs_page.get_abs_page(arxiv_id,
+                                                    request.args,
+                                                    download_format_pref)
 
     if code == status.HTTP_200_OK:
         return render_template('abs/abs.html', **response), code, headers

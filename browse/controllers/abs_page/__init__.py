@@ -22,7 +22,9 @@ from browse.domain.identifier import Identifier, IdentifierException,\
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 
-def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
+def get_abs_page(arxiv_id: str,
+                 download_link_pref: str,
+                 request_params: MultiDict) -> Response:
     """
     Get abs page data from the document metadata service.
 
