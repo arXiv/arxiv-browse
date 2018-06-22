@@ -12,6 +12,7 @@ from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
 from browse.exceptions import AbsNotFound
+from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
@@ -23,8 +24,8 @@ Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 
 def get_abs_page(arxiv_id: str,
-                 download_link_pref: str,
-                 request_params: MultiDict) -> Response:
+                 request_params: MultiDict,
+                 download_format_pref: str = None) -> Response:
     """
     Get abs page data from the document metadata service.
 
@@ -59,10 +60,10 @@ def get_abs_page(arxiv_id: str,
                    {'Location': redirect_url}
 
         abs_meta = metadata.get_abs(arxiv_id)
-        formats = metadata.get_dissemination_formats(abs_meta)
         response_data['abs_meta'] = abs_meta
-        print(f'here are the formats: {formats}')
-        response_data['formats'] = formats
+        response_data['meta_tags'] = meta_tag_metadata(abs_meta)
+        response_data['formats'] = metadata.get_dissemination_formats(abs_meta)
+
         _check_context(arxiv_identifier,
                        request_params,
                        response_data)
@@ -91,6 +92,7 @@ def get_abs_page(arxiv_id: str,
     except IdentifierException:
         raise AbsNotFound(data={'arxiv_id': arxiv_id})
     except (AbsException, Exception) as e:
+        print(f'Problem: {e}')
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e

@@ -1,6 +1,8 @@
 """Representations of arXiv document metadata."""
+import collections
 from typing import List, Optional
 from datetime import datetime
+
 from dataclasses import dataclass, field
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
@@ -176,12 +178,23 @@ class DocMetadata():
     version: int = 1
     """Version of this paper."""
 
+    private: bool = field(default=False)
+    """TODO: NOT IMPLEMENTED """
+    """Description from arxiv classic: Flag set by init_from_file to
+    indicate that the abstract file exists authentication for
+    pre-publication access to papers should check for an undef return
+    from init_from_file and then check private to see if an
+    authentication redirect is required.
+
+    """
+
     def __post_init__(self) -> None:
         """Post-initialization for DocMetadata."""
         self.primary_archive = Archive(
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
         self.primary_group = Group(
             id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
+
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
@@ -196,3 +209,40 @@ class DocMetadata():
             in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
             options[in_archive] = True
         return sorted(options.keys())
+
+     
+    def highest_version(self)-> int:
+        """Return highest version number from metadata.
+
+        This is determined by counting the entries in the
+        {history}. Return 1 if the metadata is private. Returns undef
+        if this object is not initialized.
+        """
+        if self.private:
+            return 1
+        if not isinstance(self.version_history, collections.Iterable):
+            raise ValueError(
+                'version_history was not an Iterable for %s' % self.arxiv_id_v)
+        return max(map(lambda ve: ve.version, self.version_history))
+
+    def get_datetime_of_version(
+            self, version: Optional[int])->Optional[datetime]:
+        """Returns python datetime of version.
+
+        version: Version to get datetime of. Must be in range
+            1..highest_version. Uses highest_version if not specified.
+
+        """
+        if not version:
+            version = self.highest_version()
+
+        versions = list(
+            v for v in self.version_history if v.version == version)
+        if len(versions) > 1:
+            raise ValueError(
+                '%s version_history had more than one version %i' % (
+                    self.arxiv_id, version))
+        if not versions:
+            return None
+        else:
+            return versions[0].submitted_date

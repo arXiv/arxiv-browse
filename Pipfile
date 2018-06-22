@@ -16,13 +16,13 @@ MarkupSafe = "*"
 SQLAlchemy = "*"
 werkzeug = "==0.13"
 pytz = "*"
-pylama = "*"
-"nose2" = "*"
 
 [dev-packages]
+pylama = "*"
 mypy = "==0.560"
 "nose2" = "==0.7.3"
 sqlacodegen = "*"
+Flask-Testing = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 
