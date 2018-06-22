@@ -1,0 +1,17 @@
+language: python
+sudo: required
+cache: pip
+env:
+  MIN_PYLINT_SCORE: 8
+os:
+  - linux
+python:
+  - "3.6"
+script:
+  - pip install pipenv
+  - pipenv install --dev
+  - pipenv run nose2 --with-coverage
+  - tests/lint.sh
+  - tests/docstyle.sh
+after_success:
+  - coveralls
