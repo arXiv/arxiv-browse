@@ -16,6 +16,7 @@ MarkupSafe = "*"
 SQLAlchemy = "*"
 werkzeug = "==0.13"
 pytz = "*"
+pylint = "*"
 
 [dev-packages]
 pylama = "*"
