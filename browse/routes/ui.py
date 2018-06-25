@@ -49,3 +49,11 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
         return redirect(headers['Location'], code=code)
 
     raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id':''})
+@blueprint.route('/trackback/<path:arxiv_id>', methods=['GET', 'POST'])
+def trackback(arxiv_id: str)-> Union[str, Response]:
+    "Route to define new trackbacks for papers"
+    # TODO implement
+    raise NotFound

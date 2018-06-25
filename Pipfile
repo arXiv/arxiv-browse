@@ -16,6 +16,9 @@ MarkupSafe = "*"
 SQLAlchemy = "*"
 werkzeug = "==0.13"
 pytz = "*"
+pylint = "*"
+coverage = "*"
+coveralls = "*"
 
 [dev-packages]
 pylama = "*"
@@ -25,6 +28,7 @@ sqlacodegen = "*"
 Flask-Testing = "*"
 pycodestyle = "*"
 pydocstyle = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.6"

@@ -1,0 +1,12 @@
+<!--
+TODO: check if dc:title is tex 2 utf8 in original system, need to wait til merge of PR for ARXIVNG-601
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+    <rdf:Description
+        rdf:about="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id)}}"
+        dc:identifier="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id)}}"
+        dc:title="{{abs_meta.title}}"
+        trackback:ping="{{ url_for('browse.trackback' , arxiv_id=abs_meta.arxiv_id) }}" />
+    </rdf:RDF>
+-->

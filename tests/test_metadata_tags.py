@@ -57,14 +57,22 @@ class TestAgainstClassicResults(TestCase):
                 gs_tags = meta_tag_metadata(m)
                 self.assertIsInstance(gs_tags, list)
                 if m.arxiv_id_v not in classic_results:
-                    print("could not find google scholar tags in classic results for '" + m.arxiv_id_v + "'")
+                    # Could not find google scholar tags in classic results for this
+                    # arxiv_id. Not a problem. Probably this abs was added to the
+                    # test data after the classic results were generated.
+                    # You only should add the google scholar tags to the classic
+                    # metadata if you'd like a regression test for it.
+                    continue
 
-                classic = set(map(html.unescape, to_set(classic_results[m.arxiv_id_v])))
+                classic = set(map(html.unescape, to_set(
+                    classic_results[m.arxiv_id_v])))
                 ng = set(map(html.unescape, to_set(gs_tags)))
 
                 if ng != classic:
-                    classic_without_doi = set(filter(lambda v: not v.startswith('citation_doi'), classic))
-                    ng_without_doi = set(filter(lambda v: not v.startswith('citation_doi'), ng))
+                    classic_without_doi = set(
+                        filter(lambda v: not v.startswith('citation_doi'), classic))
+                    ng_without_doi = set(
+                        filter(lambda v: not v.startswith('citation_doi'), ng))
                     self.assertSetEqual(ng_without_doi, classic_without_doi,
                                         '''
                                         
@@ -79,4 +87,4 @@ ng/actual: {}
 
 test authors: {}
 test title: {}'''.format(m.arxiv_id_v, num_files_tested, pprint.pformat(classic), pprint.pformat(ng), m.authors,
-                         m.title))
+                                            m.title))
