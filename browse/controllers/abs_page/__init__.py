@@ -12,13 +12,14 @@ from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
 from browse.exceptions import AbsNotFound
+from browse.services.search.search_authors import queries_for_authors
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
-
+from browse.services.util.routes import search_author
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -60,6 +61,8 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
+        response_data['author_links'] = queries_for_authors(abs_meta.authors)
+        response_data['author_search_url_fn'] = search_author
 
         _check_context(arxiv_identifier,
                        request_params,

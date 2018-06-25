@@ -4,7 +4,7 @@ import re
 from typing import List, Tuple, Union
 
 from browse.services.util.tex2utf import tex2utf
-from browse.services.document.author_affil import split_authors
+from browse.services.document.author_affil import split_authors, PREFIX_MATCH
 
 
 def is_affiliation(item: str)-> bool:
@@ -98,7 +98,7 @@ def _link_for_name_or_collab(item: str) -> List[Union[str, Tuple[str, str]]]:
                 name_bit_count += 1
 
                 if (found_prefix or (name_bit_count > 1
-                                     and re.match(f'^({PREFIX_MATCH})$', name_bit, re.IGNORECASE))):
+                                     and re.match('^('+PREFIX_MATCH+')$', name_bit, re.IGNORECASE))):
                     surname_prefixes.append(name_bit)
                     found_prefix = True
                 else:
