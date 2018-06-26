@@ -1,13 +1,11 @@
 """Provides the user intefaces for browse."""
 from typing import Union
 
-from arxiv import status
-from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app, url_for
-from werkzeug.exceptions import InternalServerError, NotFound
-
 from browse.controllers import abs_page, get_institution_from_request
-from browse.domain.clickthrough import is_hash_valid
+from flask import Blueprint, render_template, request, Response, session, \
+                  redirect
+from arxiv import status
+from werkzeug.exceptions import InternalServerError, NotFound
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 
@@ -49,18 +47,9 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
     raise InternalServerError('Unexpected error')
 
 
-@blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id': ''})
+@blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id':''})
 @blueprint.route('/trackback/<path:arxiv_id>', methods=['GET', 'POST'])
-def trackback(arxiv_id: str) -> Union[str, Response]:
+def trackback(arxiv_id: str)-> Union[str, Response]:
     "Route to define new trackbacks for papers"
     # TODO implement
     raise NotFound
-
-
-@blueprint.route('/ct')
-def clickthrough():
-    if 'host' in request.args and 'v' in request.args \
-            and is_hash_valid(current_app.config['SECRET_KEY'], request.args.get('host'), request.args.get('v')):
-        return redirect(request.args.get('host'))
-    else:
-        raise NotFound()

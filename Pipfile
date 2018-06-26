@@ -19,8 +19,6 @@ pytz = "*"
 pylint = "*"
 coverage = "*"
 coveralls = "*"
-"mmh3" = "*"
-hypothesis = "*"
 
 [dev-packages]
 pylama = "*"
