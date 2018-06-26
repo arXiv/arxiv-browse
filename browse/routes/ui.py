@@ -3,7 +3,7 @@ from typing import Union
 
 from arxiv import status
 from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app
+    redirect, current_app, url_for
 from werkzeug.exceptions import InternalServerError, NotFound
 
 from browse.controllers import abs_page, get_institution_from_request
@@ -63,7 +63,7 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route('/ct')
 def clickthrough():
     if 'host' in request.args and 'v' in request.args \
-            and is_hash_valid(current_app.config['SECRETE_KEY'], request.args.get('host'), request.args.get('v')):
+            and is_hash_valid(current_app.config['SECRET_KEY'], request.args.get('host'), request.args.get('v')):
         return redirect(request.args.get('host'))
     else:
         raise NotFound()

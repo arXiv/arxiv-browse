@@ -12,4 +12,4 @@ class TestClickthrough(unittest.TestCase):
     @given(text(), text())
     def test_clickthrough(self, s, v):
         h = create_hash(s, v)
-        self.assertTrue(is_hash_valid(s, v, h), 'Hash should check out for secret "{s}" and value "{v}"')
+        self.assertTrue(is_hash_valid(s, v, h))
