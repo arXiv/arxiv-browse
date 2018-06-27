@@ -9,23 +9,31 @@ from werkzeug.local import LocalProxy
 
 db: SQLAlchemy = SQLAlchemy()
 
+
 class Document(db.Model):
     """Model for documents stored as part of the arXiv repository."""
 
     __tablename__ = 'arXiv_documents'
 
     document_id = Column(Integer, primary_key=True)
-    paper_id = Column(String(20), nullable=False, unique=True, server_default=text("''"))
-    title = Column(String(255), nullable=False, index=True, server_default=text("''"))
+    paper_id = Column(String(20), nullable=False,
+                      unique=True, server_default=text("''"))
+    title = Column(String(255), nullable=False,
+                   index=True, server_default=text("''"))
     authors = Column(Text)
-    submitter_email = Column(String(64), nullable=False, index=True, server_default=text("''"))
+    submitter_email = Column(String(64), nullable=False,
+                             index=True, server_default=text("''"))
     submitter_id = Column(ForeignKey('tapir_users.user_id'), index=True)
-    dated = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    dated = Column(Integer, nullable=False, index=True,
+                   server_default=text("'0'"))
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
     submitter = relationship('User')
 
+
 class License(db.Model):
+    """Model for arXiv licenses."""
+
     __tablename__ = 'arXiv_licenses'
 
     name = Column(String(255), primary_key=True)
@@ -36,13 +44,22 @@ class License(db.Model):
 
 
 class Metadata(db.Model):
+    """Model for arXiv document metadata."""
+
     __tablename__ = 'arXiv_metadata'
     __table_args__ = (
         Index('pidv', 'paper_id', 'version', unique=True),
     )
 
     metadata_id = Column(Integer, primary_key=True)
-    document_id = Column(ForeignKey('arXiv_documents.document_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, index=True, server_default=text("'0'"))
+    document_id = Column(
+                            ForeignKey('arXiv_documents.document_id',
+                                       ondelete='CASCADE',
+                                       onupdate='CASCADE'),
+                            nullable=False,
+                            index=True,
+                            server_default=text("'0'")
+                        )
     paper_id = Column(String(64), nullable=False)
     created = Column(DateTime)
     updated = Column(DateTime)
@@ -141,30 +158,46 @@ class User(db.Model):
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)
     suffix_name = Column(String(50))
-    share_first_name = Column(Integer, nullable=False, server_default=text("'1'"))
-    share_last_name = Column(Integer, nullable=False, server_default=text("'1'"))
-    email = Column(String(255), nullable=False, unique=True, server_default=text("''"))
+    share_first_name = Column(Integer, nullable=False,
+                              server_default=text("'1'"))
+    share_last_name = Column(Integer, nullable=False,
+                             server_default=text("'1'"))
+    email = Column(String(255), nullable=False,
+                   unique=True, server_default=text("''"))
     share_email = Column(Integer, nullable=False, server_default=text("'8'"))
-    email_bouncing = Column(Integer, nullable=False, server_default=text("'0'"))
+    email_bouncing = Column(Integer, nullable=False,
+                            server_default=text("'0'"))
     policy_class = Column(
         ForeignKey('tapir_policy_classes.class_id'),
         nullable=False, index=True, server_default=text("'0'")
     )
-    joined_date = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    joined_date = Column(Integer, nullable=False,
+                         index=True, server_default=text("'0'"))
     joined_ip_num = Column(String(16), index=True)
-    joined_remote_host = Column(String(255), nullable=False, server_default=text("''"))
-    flag_internal = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    flag_edit_users = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    flag_edit_system = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_email_verified = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_approved = Column(Integer, nullable=False, index=True, server_default=text("'1'"))
-    flag_deleted = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    flag_banned = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    flag_wants_email = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_html_email = Column(Integer, nullable=False, server_default=text("'0'"))
-    tracking_cookie = Column(String(255), nullable=False, index=True, server_default=text("''"))
-    flag_allow_tex_produced = Column(Integer, nullable=False, server_default=text("'0'"))
-
+    joined_remote_host = Column(
+        String(255), nullable=False, server_default=text("''"))
+    flag_internal = Column(Integer, nullable=False,
+                           index=True, server_default=text("'0'"))
+    flag_edit_users = Column(Integer, nullable=False,
+                             index=True, server_default=text("'0'"))
+    flag_edit_system = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    flag_email_verified = Column(
+        Integer, nullable=False, server_default=text("'0'"))
+    flag_approved = Column(Integer, nullable=False,
+                           index=True, server_default=text("'1'"))
+    flag_deleted = Column(Integer, nullable=False,
+                          index=True, server_default=text("'0'"))
+    flag_banned = Column(Integer, nullable=False,
+                         index=True, server_default=text("'0'"))
+    flag_wants_email = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    flag_html_email = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
+    tracking_cookie = Column(String(255), nullable=False,
+                             index=True, server_default=text("''"))
+    flag_allow_tex_produced = Column(
+        Integer, nullable=False, server_default=text("'0'"))
 
 
 class UserPolicyClass(db.Model):
@@ -175,9 +208,12 @@ class UserPolicyClass(db.Model):
     class_id = Column(SmallInteger, primary_key=True)
     name = Column(String(64), nullable=False, server_default=text("''"))
     description = Column(Text, nullable=False)
-    password_storage = Column(Integer, nullable=False, server_default=text("'0'"))
-    recovery_policy = Column(Integer, nullable=False, server_default=text("'0'"))
-    permanent_login = Column(Integer, nullable=False, server_default=text("'0'"))
+    password_storage = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    recovery_policy = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
+    permanent_login = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
 
 
 class TrackbackPing(db.Model):

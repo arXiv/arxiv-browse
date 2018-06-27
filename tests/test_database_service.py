@@ -1,13 +1,14 @@
 """Tests for database service."""
-from unittest import mock, TestCase
-from browse.services import database
 import glob
-from tests import *
+from typing import List
+from unittest import mock, TestCase
+from tests import grep_f_count, execute_sql_files, test_path_of
+
 
 DATABASE_URL = 'sqlite:///:memory:'
 
 
-class TestGetInstitution(TestCase):
+class TestBrowseDatabaseService(TestCase):
     """:func:`.get_institution` gets an institution label for an IP address."""
 
     @classmethod
@@ -78,29 +79,29 @@ class TestGetInstitution(TestCase):
 
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.0.0')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.255.255')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
 
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.12.34')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP within range')
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.85.12.34')
         self.assertIsNone(
             label, 'No institution label returned for non-matching IP')
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.10.1')
         self.assertIsNone(
             label, 'No institution label returned for excluded IP')
 
-        label = TestGetInstitution.database_service.get_institution(
+        label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.10.5')
         self.assertEqual(
             label, 'Other University',
@@ -108,22 +109,24 @@ class TestGetInstitution(TestCase):
             'by one institution but included by another')
 
         with self.assertRaises(ValueError) as context:
-            TestGetInstitution.database_service.get_institution('notanip')
+            TestBrowseDatabaseService.database_service\
+                .get_institution('notanip')
 
         self.assertIn(
             'does not appear to be an IPv4 or IPv6 address',
             str(context.exception))
 
     def test_all_trackback_pings(self) -> None:
-        """Test if all trackback pings are counted"""
+        """Test if all trackback pings are counted."""
         doc_sql_file = test_path_of('data/db/sql/arXiv_trackback_pings.sql')
 
         count_from_file = grep_f_count(
             doc_sql_file,
             '''INSERT INTO `arXiv_trackback_pings`'''
         )
-        count_from_db: int = TestGetInstitution.database_service.count_all_trackback_pings()
-        count_from_db_list: int = TestGetInstitution.database_service\
+        count_from_db: int = TestBrowseDatabaseService.database_service\
+            .count_all_trackback_pings()
+        count_from_db_list: int = TestBrowseDatabaseService.database_service\
             .get_all_trackback_pings().__len__()
 
         if count_from_file is not None:
@@ -143,12 +146,12 @@ class TestGetInstitution(TestCase):
         )
 
     def test_trackback_pings(self) -> None:
-        """Test if trackback pings for specific paper are counted"""
+        """Test if trackback pings for specific paper are counted."""
         test_paper_id = '0808.4142'
-        count_from_db: int = TestGetInstitution.database_service.\
-            count_trackback_pings(test_paper_id)
-        count_from_db_list: int = TestGetInstitution.database_service. \
-            get_trackback_pings(test_paper_id).__len__()
+        count_from_db: int = TestBrowseDatabaseService.database_service\
+            .count_trackback_pings(test_paper_id)
+        count_from_db_list: int = TestBrowseDatabaseService.database_service\
+            .get_trackback_pings(test_paper_id).__len__()
         self.assertEqual(
             count_from_db, 8,
             f'Correct count of pings returned for paper {test_paper_id}'
@@ -157,6 +160,21 @@ class TestGetInstitution(TestCase):
             count_from_db_list, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
+
+    def test_sciencewise_ping(self) -> None:
+        """Test whether paper with version suffix has a ScienceWISE ping."""
+        test_paper_id_v = '1605.09669v2'
+        self.assertTrue(
+            TestBrowseDatabaseService.database_service.
+            has_sciencewise_ping(test_paper_id_v))
+        test_paper_id_v = '1605.09669'
+        self.assertFalse(
+            TestBrowseDatabaseService.database_service.
+            has_sciencewise_ping(test_paper_id_v))
+        test_paper_id_v = None
+        self.assertFalse(
+            TestBrowseDatabaseService.database_service.
+            has_sciencewise_ping(test_paper_id_v))
 
     @classmethod
     def tearDownClass(cls) -> None:

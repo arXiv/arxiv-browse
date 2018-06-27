@@ -6,8 +6,9 @@ from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
+
 from browse.services.database.models import db, Document, \
-    MemberInstitution, MemberInstitutionIP, TrackbackPing
+    MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing
 
 
 def __all_trackbacks_query() -> Query:
@@ -69,12 +70,21 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
-
     return __paper_trackbacks_query(paper_id)\
         .group_by(TrackbackPing.url).count()
 
 
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
+    return __all_trackbacks_query().count()  # type: ignore
 
-    return __all_trackbacks_query().count() # type: ignore
+
+def has_sciencewise_ping(paper_id_v: str) -> bool:
+    """Determine whether versioned document has a ScienceWISE ping."""
+    try:
+        return db.session.query(SciencewisePing) \
+            .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
+    except NoResultFound:
+        return False
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
