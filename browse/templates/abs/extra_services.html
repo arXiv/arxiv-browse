@@ -19,8 +19,9 @@
     {%- elif format == 'nops' -%}
     <a href="/ps/{{ abs_meta.arxiv_id }}">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
-    {# consider for deprecation #}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a>
+    {# TODO: consider this format for deprecation #}
+    {# TODO: create clickthrough link from sciencewise link #}
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a> <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info"><img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" /></a>
     {%- endif -%}
   </li>
     {% endfor %}

@@ -27,7 +27,8 @@ def formats_from_source_file(source_file_path: str) -> List[str]:
 
 
 def formats_from_source_type(source_type: str,
-                             format_pref: str = None) -> List[str]:
+                             format_pref: str = None,
+                             cache_flag: bool = False) -> List[str]:
     """
     Get the dissemination formats based on source type and format preference.
 
@@ -87,8 +88,8 @@ def formats_from_source_type(source_type: str,
     # TODO PS cache check
     # elsif  -z "$cache.ps.gz"
     # && !source_newer_than_cache_files($version,'ps')) {
-    # elif os.path.getsize == 0
-    #       formats.extend(['nops', 'other'])
+    elif cache_flag:
+        formats.extend(['nops', 'other'])
     else:
         if re.search('pdf', format_pref):
             formats.append('pdf')

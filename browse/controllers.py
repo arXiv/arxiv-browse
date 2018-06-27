@@ -28,19 +28,18 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
-    except AbsNotFoundException as e:
+    except AbsNotFoundException:
         return {'not_found': True, 'arxiv_id': arxiv_id}, \
-               status.HTTP_404_NOT_FOUND, {}
-    except AbsVersionNotFoundException as e:
+                 status.HTTP_404_NOT_FOUND, {}
+    except AbsVersionNotFoundException:
         arxiv_id_latest = re.sub(r'(v[\d]+)$', '', arxiv_id)
         return {'version_not_found': True,
                 'arxiv_id': arxiv_id,
                 'arxiv_id_latest': arxiv_id_latest}, \
-               status.HTTP_404_NOT_FOUND, {}
-    except IdentifierException as e:
-        print(f'Got IdentifierException {e}')
+            status.HTTP_404_NOT_FOUND, {}
+    except IdentifierException:
         return {'arxiv_id': arxiv_id}, status.HTTP_404_NOT_FOUND, {}
-    except IOError as e:
+    except IOError:
         # TODO: handle differently?
         raise InternalServerError(
             "There was a problem. If this problem "

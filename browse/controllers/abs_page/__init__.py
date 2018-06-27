@@ -20,6 +20,9 @@ from browse.services.document.metadata import AbsException,\
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
+from browse.domain.metadata import DocMetadata
+from browse.services.database import count_trackback_pings,\
+                                     has_sciencewise_ping
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -35,6 +38,8 @@ def get_abs_page(arxiv_id: str,
     arxiv_id : str
         The arXiv identifier as provided in the request.
     request_params : dict
+    download_format_pref: str
+        Download format preference.
 
     Returns
     -------
@@ -63,9 +68,17 @@ def get_abs_page(arxiv_id: str,
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
-        response_data['formats'] = metadata.get_dissemination_formats(abs_meta)
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
+
+        # Dissemination formats for download links
+        add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
+        response_data['formats'] = metadata.get_dissemination_formats(
+                                    abs_meta,
+                                    download_format_pref,
+                                    add_sciencewise_ping)
+
+        # Browse context
         _check_context(arxiv_identifier,
                        request_params,
                        response_data)
@@ -129,7 +142,7 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
 
 def _check_context(arxiv_identifier: Identifier,
                    request_params: MultiDict,
-                   response_data) -> None:
+                   response_data: Dict[str, Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
 
@@ -161,3 +174,20 @@ def _check_context(arxiv_identifier: Identifier,
             metadata.get_next_id(arxiv_identifier)
         response_data['browse_context_previous_id'] = \
             metadata.get_previous_id(arxiv_identifier)
+
+
+def _check_sciencewise_ping(paper_id_v: str) -> bool:
+    """Check whether paper has a ScienceWISE ping."""
+    try:
+        return has_sciencewise_ping(paper_id_v)
+    except IOError:
+        # log this
+        return False
+
+# def _check_trackback_pings(paper_id: str) -> int:
+#     """Check general tracback pings"""
+#     try:
+#         return count_trackback_pings(paper_id)
+#     except IOError:
+#
+#         return 0

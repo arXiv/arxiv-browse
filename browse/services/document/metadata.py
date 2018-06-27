@@ -14,6 +14,7 @@ from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file, formats_from_source_type
+from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -68,11 +69,11 @@ class AbsDeletedException(Exception):
 
 
 class AbsMetaSession(object):
-    """Class for representing arXiv document metadata."""
+    """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
                  original_versions_path: str) -> None:
-
+        """Initialize the document metadata session."""
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
                                '"{latest_versions_path}" does not exist'
@@ -335,9 +336,7 @@ class AbsMetaSession(object):
             possible_path = os.path.join(
                 parent_path,
                 f'{identifier.filename}{extension[0]}')
-            print(f'Checking {possible_path} exists')
             if os.path.isfile(possible_path):
-                print(f'{possible_path} exists')
                 return possible_path
         return None
 
@@ -376,21 +375,32 @@ class AbsMetaSession(object):
         formats = []
 
         # first, get possible list of formats based on available source file
-        source_file = self._get_source_path(docmeta)
-        source_file_formats = formats_from_source_file(source_file)
+        source_file_path = self._get_source_path(docmeta)
+        source_file_formats = formats_from_source_file(source_file_path)
         if source_file_formats:
             formats.extend(source_file_formats)
         else:
-            # check source type from metadata, with consideration to
-            # user format preference
+            # check source type from metadata, with consideration of
+            # user format preference and cache
             version = docmeta.version
-            code = docmeta.version_history[version-1].source_type.code
-            source_type_formats = formats_from_source_type(code, format_pref)
-            print(f'source type formats: {source_type_formats}')
+            format_code = docmeta.version_history[version-1].source_type.code
+            cached_ps_file_path = cache.get_cache_file_path(
+                                    docmeta,
+                                    'ps')
+            cache_flag = False
+            if cached_ps_file_path \
+                    and os.path.getsize(cached_ps_file_path) == 0 \
+                    and source_file_path \
+                    and os.path.getmtime(source_file_path) \
+                    < os.path.getmtime(cached_ps_file_path):
+                cache_flag = True
+            source_type_formats = formats_from_source_type(format_code,
+                                                           format_pref,
+                                                           cache_flag)
             if source_type_formats:
                 formats.extend(source_type_formats)
 
-        # ScienceWISE annotated PDF
+        # Separate check for ScienceWISE annotated PDF
         if add_sciencewise:
             if formats and formats[-1] == 'other':
                 formats.insert(-1, 'sciencewise_pdf')
@@ -548,9 +558,13 @@ class AbsMetaSession(object):
 
 
 @wraps(AbsMetaSession.get_dissemination_formats)
-def get_dissemination_formats(docmeta: DocMetadata) -> List:
+def get_dissemination_formats(docmeta: DocMetadata,
+                              format_pref: str = None,
+                              add_sciencewise: bool = False) -> List:
     """Get list of dissemination formats."""
-    return current_session().get_dissemination_formats(docmeta)
+    return current_session().get_dissemination_formats(docmeta,
+                                                       format_pref,
+                                                       add_sciencewise)
 
 
 @wraps(AbsMetaSession.get_next_id)
