@@ -13,7 +13,7 @@ from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
-    formats_from_source_file, formats_from_source_type
+    formats_from_source_file_name, formats_from_source_type
 from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
@@ -376,7 +376,7 @@ class AbsMetaSession(object):
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
-        source_file_formats = formats_from_source_file(source_file_path)
+        source_file_formats = formats_from_source_file_name(source_file_path)
         if source_file_formats:
             formats.extend(source_file_formats)
         else:

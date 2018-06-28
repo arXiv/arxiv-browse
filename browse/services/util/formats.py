@@ -16,12 +16,12 @@ VALID_SOURCE_EXTENSIONS = [
                           ]
 
 
-def formats_from_source_file(source_file_path: str) -> List[str]:
+def formats_from_source_file_name(source_file_path: str) -> List[str]:
     """Get list of formats based on source file name."""
     if not source_file_path:
         return []
     for extension in VALID_SOURCE_EXTENSIONS:
-        if source_file_path.endswith(extension[0]):
+        if source_file_path.endswith(extension[0]) and isinstance(extension[1], list):
             return extension[1]
     return []
 
@@ -85,10 +85,9 @@ def formats_from_source_type(source_type: str,
         formats.extend(['html', 'other'])
     elif has_docx_or_odf:
         formats.extend(['pdf', 'other'])
-    # TODO PS cache check
-    # elsif  -z "$cache.ps.gz"
-    # && !source_newer_than_cache_files($version,'ps')) {
     elif cache_flag:
+        # this is the case where the source is not newer than the cache file
+        # and the cache file is empty
         formats.extend(['nops', 'other'])
     else:
         if re.search('pdf', format_pref):

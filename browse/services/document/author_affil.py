@@ -63,8 +63,9 @@ def parse_author_affil(authors: str) -> List[List[str]]:
         **_parse_author_affil_split(authors))
 
 
-def _parse_author_affil_split(author_line: str)->Dict:
-    """Split author line into author and affiliation data.
+def _parse_author_affil_split(author_line: str) -> Dict:
+    """
+    Split author line into author and affiliation data.
 
     Take author line, tidy spacing and punctuation, and then split up into
     individual author an affiliation data. Has special cases to avoid splitting
@@ -74,8 +75,11 @@ def _parse_author_affil_split(author_line: str)->Dict:
 
     Does not handle multiple collaboration names.
     """
+    if not author_line:
+        return {'author_list': [], 'back_prop': 0}
+
     names = split_authors(author_line)
-    if not author_line or not names:
+    if not names:
         return {'author_list': [], 'back_prop': 0}
 
     names = _remove_double_commas(names)
@@ -142,12 +146,14 @@ def _parse_author_affil_split(author_line: str)->Dict:
             'back_prop': back_propagate_affiliations_to}
 
 
-def parse_author_affil_utf(authors: str)->List:
+def parse_author_affil_utf(authors: str) -> List:
     """
     Call parse_author_affil() and do TeX to UTF conversion.
 
     Output structure is the same but should be in UTF and not TeX.
     """
+    if not authors:
+        return []
     return list(map(
         lambda author:
             list(map(tex2utf, author)), parse_author_affil(authors)))
@@ -221,7 +227,8 @@ def _add_affiliation(author_line: str,
                      enumaffils: Dict,
                      author_entry: List[str],
                      name: str) -> List:
-    """Add author affiliation to author_entry if one is found in author_line.
+    """
+    Add author affiliation to author_entry if one is found in author_line.
 
     This should deal with these cases
     Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)
@@ -276,17 +283,20 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]],
     return author_list
 
 
-def split_authors(authors: str)->List:
-    """Split author string into authors entity lists.
+def split_authors(authors: str) -> List:
+    """
+    Split author string into authors entity lists.
 
-    Take and author line as a string and return a reference to a list of the
+    Take an author line as a string and return a reference to a list of the
     different name and affiliation blocks. While this does normalize spacing
     and 'and', it is a key feature that the set of strings returned can be
     concatenated to reproduce the original authors line. This code thus
-    provides a very graceful degredation for badly formatted authors lines,
+    provides a very graceful degredation for badly formatted authors lines, as
     the text at least shows up.
     """
     # split authors field into blocks with boundaries of ( and )
+    if not authors:
+        return []
     aus = re.split(r'(\(|\))', authors)
     aus = list(filter(lambda x: x != '', aus))
 

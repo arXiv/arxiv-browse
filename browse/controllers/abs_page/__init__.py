@@ -20,7 +20,6 @@ from browse.services.document.metadata import AbsException,\
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
-from browse.domain.metadata import DocMetadata
 from browse.services.database import count_trackback_pings,\
                                      has_sciencewise_ping
 
@@ -62,8 +61,8 @@ def get_abs_page(arxiv_id: str,
         redirect_url = _check_supplied_identifier(arxiv_identifier)
         if redirect_url:
             return {},\
-                   status.HTTP_301_MOVED_PERMANENTLY,\
-                   {'Location': redirect_url}
+                status.HTTP_301_MOVED_PERMANENTLY,\
+                {'Location': redirect_url}
 
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
