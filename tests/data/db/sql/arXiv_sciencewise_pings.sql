@@ -1,4 +1,4 @@
-# This represents a subset of the actual data.
+-- This represents a subset of the actual data.
 INSERT INTO `arXiv_sciencewise_pings` VALUES ('0711.3396v1','2015-07-09 08:48:32');
 INSERT INTO `arXiv_sciencewise_pings` VALUES ('0711.4286v1','2015-07-09 08:44:15');
 INSERT INTO `arXiv_sciencewise_pings` VALUES ('0712.4050v1','2015-08-28 14:15:30');
