@@ -15,6 +15,8 @@ from browse.services.document.config import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file_name, formats_from_source_type
 from browse.services.document import cache
+from browse.services.util.email import generate_show_email_hash
+
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -72,7 +74,7 @@ class AbsMetaSession(object):
     """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
-                 original_versions_path: str) -> None:
+                 original_versions_path: str, show_email_secret: str) -> None:
         """Initialize the document metadata session."""
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
@@ -85,6 +87,7 @@ class AbsMetaSession(object):
 
         self.latest_versions_path = os.path.realpath(latest_versions_path)
         self.original_versions_path = os.path.realpath(original_versions_path)
+        self.show_email_secret = show_email_secret
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """
@@ -409,6 +412,10 @@ class AbsMetaSession(object):
 
         return formats
 
+    def get_show_email_hash(self, identifier: Identifier) -> str:
+        """Get the hash value used in generating the /show-email link."""
+        return generate_show_email_hash(identifier.id, self.show_email_secret)
+
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
@@ -557,6 +564,12 @@ class AbsMetaSession(object):
         return fields
 
 
+@wraps(AbsMetaSession.get_show_email_hash)
+def get_show_email_hash(identifier: Identifier) -> str:
+    """Get the hash value used in generating the /show-email link."""
+    return current_session().get_show_email_hash(identifier)
+
+
 @wraps(AbsMetaSession.get_dissemination_formats)
 def get_dissemination_formats(docmeta: DocMetadata,
                               format_pref: str = None,
@@ -590,8 +603,10 @@ def get_session(app: object = None) -> AbsMetaSession:
     config = get_application_config(app)
     orignal_versions_path = config.get('DOCUMENT_ORIGNAL_VERSIONS_PATH', None)
     latest_versions_path = config.get('DOCUMENT_LATEST_VERSIONS_PATH', None)
+    show_email_secret = config.get('SHOW_EMAIL_SECRET', '')
 
-    return AbsMetaSession(latest_versions_path, orignal_versions_path)
+    return AbsMetaSession(latest_versions_path, orignal_versions_path,
+                          show_email_secret)
 
 
 def current_session() -> AbsMetaSession:

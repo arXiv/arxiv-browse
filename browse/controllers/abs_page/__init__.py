@@ -66,6 +66,8 @@ def get_abs_page(arxiv_id: str,
 
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
+        response_data['show_email_hash'] = \
+            metadata.get_show_email_hash(arxiv_identifier)
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
