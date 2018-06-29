@@ -13,7 +13,8 @@ from browse.domain.identifier import Identifier, IdentifierException
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.services.document.config import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
-    formats_from_source_file_name, formats_from_source_type
+     formats_from_source_file_name, formats_from_source_type, \
+     has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
@@ -409,6 +410,16 @@ class AbsMetaSession(object):
 
         return formats
 
+    def get_ancillary_files(self, docmeta: DocMetadata) \
+            -> Optional[List[Dict]]:
+        """Get list of ancillary file names and sizes."""
+        version = docmeta.version
+        format_code = docmeta.version_history[version-1].source_type.code
+        if has_ancillary_files(format_code):
+            source_file_path = self._get_source_path(docmeta)
+            return list_ancillary_files(source_file_path)
+        return None
+
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
@@ -555,6 +566,12 @@ class AbsMetaSession(object):
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields
+
+
+@wraps(AbsMetaSession.get_ancillary_files)
+def get_ancillary_files(docmeta: DocMetadata) -> Optional[List[Dict]]:
+    """Get list of ancillary file names and sizes."""
+    return current_session().get_ancillary_files(docmeta)
 
 
 @wraps(AbsMetaSession.get_dissemination_formats)

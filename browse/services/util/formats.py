@@ -118,6 +118,13 @@ def formats_from_source_type(source_type: str,
     return formats
 
 
+def has_ancillary_files(source_type: str) -> bool:
+    """Check source type for indication of ancillary files."""
+    if not source_type:
+        return False
+    return re.search('A', source_type, re.IGNORECASE)
+
+
 def list_ancillary_files(tarball_path: str) -> Optional[List[Dict]]:
     """Return a list of ancillary files in a tarball (.tar.gz file)."""
     if not tarball_path or not tarball_path.endswith('.tar.gz') \
@@ -133,6 +140,7 @@ def list_ancillary_files(tarball_path: str) -> Optional[List[Dict]]:
             size_bytes = member.size
             anc_files.append({'name': name, 'size_bytes': size_bytes})
     except (ReadError, CompressionError):
+        # TODO: log this?
         # print(f'There was a problem reading the tarball: {e}')
         return None
     if len(anc_files) > 1:

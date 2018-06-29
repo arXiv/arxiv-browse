@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0905.2326
+From: Zvi Bern <0905.2326@example.org>
+Date: Thu, 14 May 2009 17:04:44 GMT   (2546kb,A)
+Date (revised v2): Sun, 8 Jan 2012 13:27:40 GMT   (2609kb,A)
+
+Title: The Ultraviolet Behavior of N=8 Supergravity at Four Loops
+Authors: Z. Bern, J. J. Carrasco, L. J. Dixon, H. Johansson, R. Roiban
+Categories: hep-th
+Comments: 5 pages, 4 figures. v2 contains minor corrections, including flipping
+  sign of eq. (1). Complete results, including mathematica readable form,
+  presented in the directory aux/ included in the source of this manuscript. As
+  certain computer operating systems (e.g. Windows) preclude the naming of
+  directories "aux" we also host this data at:
+  http://www.physics.ucla.edu/~jjmc/auxiliaryData.tgz
+Report-no: SLAC-PUB-13608, UCLA/09/TEP/09/47
+Journal-ref: Phys.Rev.Lett.103:081301,2009
+DOI: 10.1103/PhysRevLett.103.081301
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We describe the construction of the complete four-loop four-particle
+amplitude of N=8 supergravity. The amplitude is ultraviolet finite, not only in
+four dimensions, but in five dimensions as well. The observed extra
+cancellations provide additional non-trivial evidence that N=8 supergravity in
+four dimensions may be ultraviolet finite to all orders of perturbation theory.
+\\

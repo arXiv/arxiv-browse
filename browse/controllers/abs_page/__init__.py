@@ -11,6 +11,7 @@ from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
+from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors
 from browse.services.util.metatags import meta_tag_metadata
@@ -76,6 +77,8 @@ def get_abs_page(arxiv_id: str,
                                     abs_meta,
                                     download_format_pref,
                                     add_sciencewise_ping)
+        # Ancillary files
+        _check_ancillary_files(abs_meta, response_data)
 
         # Browse context
         _check_context(arxiv_identifier,
@@ -182,6 +185,14 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
     except IOError:
         # log this
         return False
+
+
+def _check_ancillary_files(docmeta: DocMetadata,
+                           response_data: Dict[str, Any]) -> None:
+    """Check whether paper has ancillary files."""
+    anc_file_list = metadata.get_ancillary_files(docmeta)
+    if anc_file_list:
+        response_data['ancillary_files'] = anc_file_list
 
 # def _check_trackback_pings(paper_id: str) -> int:
 #     """Check general tracback pings"""
