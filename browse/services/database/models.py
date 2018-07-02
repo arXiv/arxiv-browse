@@ -2,8 +2,8 @@
 
 from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BigInteger, Column, DateTime, Enum, \
-    ForeignKey, Index, Integer, SmallInteger, String, text, Text
+from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, Index, \
+    Integer, SmallInteger, String, text, Text
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
 
@@ -53,13 +53,13 @@ class Metadata(db.Model):
 
     metadata_id = Column(Integer, primary_key=True)
     document_id = Column(
-                            ForeignKey('arXiv_documents.document_id',
-                                       ondelete='CASCADE',
-                                       onupdate='CASCADE'),
-                            nullable=False,
-                            index=True,
-                            server_default=text("'0'")
-                        )
+        ForeignKey('arXiv_documents.document_id',
+                   ondelete='CASCADE',
+                   onupdate='CASCADE'),
+        nullable=False,
+        index=True,
+        server_default=text("'0'")
+    )
     paper_id = Column(String(64), nullable=False)
     created = Column(DateTime)
     updated = Column(DateTime)
@@ -150,7 +150,7 @@ class SciencewisePing(db.Model):
 
 
 class User(db.Model):
-    """Legacy table that is a foreign key dependency of TapirSession."""
+    """Model for legacy user data."""
 
     __tablename__ = 'tapir_users'
 
@@ -158,19 +158,19 @@ class User(db.Model):
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)
     suffix_name = Column(String(50))
-    share_first_name = Column(Integer, nullable=False,
-                              server_default=text("'1'"))
+    share_first_name = Column(
+        Integer, nullable=False, server_default=text("'1'"))
     share_last_name = Column(Integer, nullable=False,
                              server_default=text("'1'"))
     email = Column(String(255), nullable=False,
                    unique=True, server_default=text("''"))
-    share_email = Column(Integer, nullable=False, server_default=text("'8'"))
+    share_email = Column(Integer, nullable=False,
+                         server_default=text("'8'"))
     email_bouncing = Column(Integer, nullable=False,
                             server_default=text("'0'"))
-    policy_class = Column(
-        ForeignKey('tapir_policy_classes.class_id'),
-        nullable=False, index=True, server_default=text("'0'")
-    )
+    policy_class = Column(ForeignKey('tapir_policy_classes.class_id'),
+                          nullable=False, index=True,
+                          server_default=text("'0'"))
     joined_date = Column(Integer, nullable=False,
                          index=True, server_default=text("'0'"))
     joined_ip_num = Column(String(16), index=True)
@@ -180,8 +180,8 @@ class User(db.Model):
                            index=True, server_default=text("'0'"))
     flag_edit_users = Column(Integer, nullable=False,
                              index=True, server_default=text("'0'"))
-    flag_edit_system = Column(Integer, nullable=False,
-                              server_default=text("'0'"))
+    flag_edit_system = Column(
+        Integer, nullable=False, server_default=text("'0'"))
     flag_email_verified = Column(
         Integer, nullable=False, server_default=text("'0'"))
     flag_approved = Column(Integer, nullable=False,
@@ -190,8 +190,8 @@ class User(db.Model):
                           index=True, server_default=text("'0'"))
     flag_banned = Column(Integer, nullable=False,
                          index=True, server_default=text("'0'"))
-    flag_wants_email = Column(Integer, nullable=False,
-                              server_default=text("'0'"))
+    flag_wants_email = Column(
+        Integer, nullable=False, server_default=text("'0'"))
     flag_html_email = Column(Integer, nullable=False,
                              server_default=text("'0'"))
     tracking_cookie = Column(String(255), nullable=False,
@@ -199,17 +199,19 @@ class User(db.Model):
     flag_allow_tex_produced = Column(
         Integer, nullable=False, server_default=text("'0'"))
 
+    tapir_policy_class = relationship('UserPolicyClass')
+
 
 class UserPolicyClass(db.Model):
-    """Legacy table that is a foreign key depency of TapirUse."""
+    """Model for the legacy user policy class."""
 
     __tablename__ = 'tapir_policy_classes'
 
     class_id = Column(SmallInteger, primary_key=True)
     name = Column(String(64), nullable=False, server_default=text("''"))
     description = Column(Text, nullable=False)
-    password_storage = Column(Integer, nullable=False,
-                              server_default=text("'0'"))
+    password_storage = Column(
+        Integer, nullable=False, server_default=text("'0'"))
     recovery_policy = Column(Integer, nullable=False,
                              server_default=text("'0'"))
     permanent_login = Column(Integer, nullable=False,
@@ -254,6 +256,41 @@ class TrackbackSite(db.Model):
     site_id = Column(Integer, primary_key=True)
     action = Column(Enum('neutral', 'accept', 'reject', 'spam'),
                     nullable=False, server_default=text("'neutral'"))
+
+
+class DBLP(db.Model):
+    """Primary model for the DBLP Computer Science Bibliography data."""
+
+    __tablename__ = 'arXiv_dblp'
+
+    document_id = Column(ForeignKey('arXiv_documents.document_id'),
+                         primary_key=True, server_default=text("'0'"))
+    url = Column(String(80))
+
+
+class DBLPAuthor(db.Model):
+    """Model for DBLP author name."""
+
+    __tablename__ = 'arXiv_dblp_authors'
+
+    author_id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String(40), unique=True)
+
+
+class DBLPDocumentAuthor(db.Model):
+    """Model for the DBLP document to author mapping with ordering."""
+
+    __tablename__ = 'arXiv_dblp_document_authors'
+
+    document_id = Column(ForeignKey('arXiv_documents.document_id'),
+                         primary_key=True, nullable=False, index=True)
+    author_id = Column(ForeignKey('arXiv_dblp_authors.author_id'),
+                       primary_key=True, nullable=False, index=True,
+                       server_default=text("'0'"))
+    position = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    author = relationship('DBLPAuthor')
+    document = relationship('Document')
 
 
 def init_app(app: Optional[LocalProxy]) -> None:
