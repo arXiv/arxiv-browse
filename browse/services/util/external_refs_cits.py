@@ -13,7 +13,7 @@ def include_inspire_link(docmeta: DocMetadata) -> bool:
     identifier = docmeta.arxiv_identifier
     primary_category = docmeta.primary_category.id
     orig_publish_date = date(identifier.year, identifier.month, 1)
-    if primary_category in INSPIRE_REF_CIT_CATEGORIES \
-            and orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category]:
+    if primary_category in INSPIRE_REF_CIT_CATEGORIES and \
+            orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category]:
         return True
     return False
