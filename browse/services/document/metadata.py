@@ -6,12 +6,12 @@ from dateutil import parser
 from functools import wraps
 from typing import Dict, List, Optional
 
+from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry, Category
 from browse.domain.identifier import Identifier, IdentifierException
-from arxiv.base.globals import get_application_config, get_application_global
-from browse.services.document.config import DELETED_PAPERS
+from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file_name, formats_from_source_type
 from browse.services.document import cache
@@ -383,10 +383,10 @@ class AbsMetaSession(object):
             # check source type from metadata, with consideration of
             # user format preference and cache
             version = docmeta.version
-            format_code = docmeta.version_history[version-1].source_type.code
+            format_code = docmeta.version_history[version - 1].source_type.code
             cached_ps_file_path = cache.get_cache_file_path(
-                                    docmeta,
-                                    'ps')
+                docmeta,
+                'ps')
             cache_flag = False
             if cached_ps_file_path \
                     and os.path.getsize(cached_ps_file_path) == 0 \

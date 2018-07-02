@@ -22,6 +22,7 @@ from browse.domain.identifier import Identifier, IdentifierException,\
 from browse.services.util.routes import search_author
 from browse.services.database import count_trackback_pings,\
                                      has_sciencewise_ping
+from browse.services.util.external_refs_cits import include_inspire_link
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -69,6 +70,7 @@ def get_abs_page(arxiv_id: str,
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
+        response_data['include_inspire_link'] = include_inspire_link(abs_meta)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -182,6 +184,7 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
     except IOError:
         # log this
         return False
+
 
 # def _check_trackback_pings(paper_id: str) -> int:
 #     """Check general tracback pings"""

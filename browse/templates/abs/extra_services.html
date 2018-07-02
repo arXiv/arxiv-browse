@@ -99,13 +99,15 @@
     </div>
 
     <div class="extra-ref-cite">
-      {# TODO: references section #}
       <h3>References &amp; Citations</h3>
       <ul>
-        <li><a href="https://inspirehep.net/search?p=find+eprint+1708.00003">INSPIRE HEP</a><br />(<a href="/refs/1708.00003">refers to</a> | <a href="/cits/1708.00003">cited by </a>)</li>
-        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:1708.00003">NASA ADS</a></li>
+        {% if include_inspire_link %}
+        <li><a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}"">INSPIRE HEP</a><br/>(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)</li>
+        {% endif %}
+        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:{{ abs_meta.arxiv_id }}">NASA ADS</a></li>
       </ul>
     </div>
+
     <div class="bookmarks">
       <div class="what-is-this">
         {# TODO: bookmarks section (..get rid of Digg) #}
