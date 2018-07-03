@@ -176,6 +176,20 @@ class TestBrowseDatabaseService(TestCase):
             TestBrowseDatabaseService.database_service.
             has_sciencewise_ping(test_paper_id_v))
 
+    def test_get_dblp_url(self) -> None:
+        """Test whether paper has a DBLP Bibliography URL."""
+        test_paper_id = '0704.0361'
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.get_dblp_url(
+                test_paper_id),
+            'db/journals/corr/corr0704.html#abs-0704-0361',
+            f'get expected DBLP URL'
+        )
+        test_paper_id = '1807.00001'
+        self.assertIsNone(
+            TestBrowseDatabaseService.database_service.get_dblp_url(
+                test_paper_id))
+
     @classmethod
     def tearDownClass(cls) -> None:
         """Close the database session and drop all tables."""
