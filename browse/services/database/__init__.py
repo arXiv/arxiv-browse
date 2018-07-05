@@ -91,7 +91,7 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
         raise IOError('Database error: %s' % e) from e
 
 
-def get_dblp_url(paper_id: str) -> Optional[str]:
+def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     try:
         url = db.session.query(DBLP.url).join(Document).filter(

@@ -7,6 +7,7 @@ GET requests to the abs endpoint.
 
 from typing import Tuple, Dict, Any, Optional
 from flask import url_for
+from urllib.parse import urljoin
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
@@ -21,8 +22,11 @@ from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
 from browse.services.database import count_trackback_pings,\
-                                     has_sciencewise_ping
-from browse.services.util.external_refs_cits import include_inspire_link
+    has_sciencewise_ping, get_dblp_listing_path, get_dblp_authors
+from browse.services.util.external_refs_cits import include_inspire_link,\
+    get_dblp_bibtex_path
+from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
+    DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -71,6 +75,7 @@ def get_abs_page(arxiv_id: str,
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
         response_data['include_inspire_link'] = include_inspire_link(abs_meta)
+        _check_dblp(arxiv_identifier.id, response_data)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -185,6 +190,28 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
         # log this
         return False
 
+
+def _check_dblp(paper_id: str, response_data: Dict[str, Any]) -> None:
+    """Check whether paper has DBLP Bibliography entry."""
+    # TODO: add fallback check for case where DB service is not available
+    try:
+        listing_path = get_dblp_listing_path(paper_id)
+        if not listing_path:
+            return
+        bibtex_path = get_dblp_bibtex_path(listing_path)
+        author_list = get_dblp_authors(paper_id)
+        response_data['dblp'] = {
+            'base_url': DBLP_BASE_URL,
+            'author_search_url':
+                urljoin(DBLP_BASE_URL, DBLP_AUTHOR_SEARCH_PATH),
+            'bibtex_base_url': urljoin(DBLP_BASE_URL, DBLP_BIBTEX_PATH),
+            'bibtex_path': bibtex_path,
+            'listing_url': urljoin(DBLP_BASE_URL, listing_path),
+            'author_list': author_list
+        }
+    except IOError:
+        # log this
+        return
 
 # def _check_trackback_pings(paper_id: str) -> int:
 #     """Check general tracback pings"""

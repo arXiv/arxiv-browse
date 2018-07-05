@@ -29,3 +29,15 @@ were added. INSPIRE also includes individual papers outside the below
 categories a case-by-case basis, but as of 2014-03 there is no attempt
 in the arXiv system to handle these (see also ARXIVDEV-2089).
 """
+
+DBLP_BASE_URL = 'https://dblp.uni-trier.de'
+DBLP_BIBTEX_PATH = '/rec/bibtex'
+DBLP_AUTHOR_SEARCH_PATH = '/search/author'
+DBLP_ARCHIVES = ['cs', 'cmp-lg']
+DBLP_START_DATE = date(2005, 1, 1)
+"""
+Config params for the DBLP Bibliography service for Computer Science papers.
+
+In cases where the browse DB service is unavailable, we can generate DBLP links
+programmatically if papers were published in the archives specified in
+DBLP_ARCHIVES after the date specified in DBLP_START_DATE."""

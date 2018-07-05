@@ -76,6 +76,24 @@
 {%- endmacro -%}
 
 
+{%- macro generate_dblp_section(author_cutoff=5) -%}
+  <div class="dblp">
+    <h3><a href="{{ dblp.base_url }}">DBLP</a> - CS Bibliography</h3>
+    <div class="list">
+      <a href="{{ dblp.listing_url }}" title="listing on DBLP">listing</a>{% if dblp.bibtex_path %} | <a href="{{ dblp.bibtex_base_url }}/{{ dblp.bibtex_path }}" title="DBLP bibtex record">bibtex</a>{% endif %}
+    </div>
+    <div class="list">
+    {% for author in dblp.author_list[:author_cutoff] %}
+      <a href="{{ dblp.author_search_url }}?author={{ author }}">{{ author }}</a><br/>
+    {% endfor %}
+    {% if dblp.author_list|length > author_cutoff %}
+      <div class="list">&hellip;</div>
+    {% endif %}
+    <br/>
+    </div>
+  </div>
+{%- endmacro -%}
+
 {% block extra_services %}
    <div class="extra-services">
 
@@ -102,11 +120,16 @@
       <h3>References &amp; Citations</h3>
       <ul>
         {% if include_inspire_link %}
-        <li><a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}"">INSPIRE HEP</a><br/>(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)</li>
+        <li><a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)</li>
         {% endif %}
         <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:{{ abs_meta.arxiv_id }}">NASA ADS</a></li>
       </ul>
     </div>
+
+    {# DBLP is a bibliographical database primarily for Computer Science papers #}
+    {% if dblp %}
+      {{ generate_dblp_section() }}
+    {% endif %}
 
     <div class="bookmarks">
       <div class="what-is-this">
