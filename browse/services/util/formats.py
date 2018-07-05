@@ -7,13 +7,13 @@ from typing import List
 # There are minor performance implications in the ordering when doing
 # filesystem lookups, so the ordering here should be preserved.
 VALID_SOURCE_EXTENSIONS = [
-                            ('.tar.gz', None),
-                            ('.pdf', ['pdfonly']),
-                            ('.ps.gz', ['pdf', 'ps']),
-                            ('.gz', None),
-                            ('.dvi.gz', None),
-                            ('.html.gz', ['html'])
-                          ]
+    ('.tar.gz', None),
+    ('.pdf', ['pdfonly']),
+    ('.ps.gz', ['pdf', 'ps']),
+    ('.gz', None),
+    ('.dvi.gz', None),
+    ('.html.gz', ['html'])
+]
 
 
 def formats_from_source_file_name(source_file_path: str) -> List[str]:
@@ -21,7 +21,8 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     if not source_file_path:
         return []
     for extension in VALID_SOURCE_EXTENSIONS:
-        if source_file_path.endswith(extension[0]) and isinstance(extension[1], list):
+        if source_file_path.endswith(extension[0]) \
+                and isinstance(extension[1], list):
             return extension[1]
     return []
 
@@ -55,7 +56,6 @@ def formats_from_source_type(source_type: str,
     F - PDF only
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
-
     formats = []
     if not source_type:
         source_type = ''
