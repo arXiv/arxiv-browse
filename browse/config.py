@@ -207,7 +207,7 @@ to be loaded.
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_ECHO = False
+SQLALCHEMY_ECHO = True
 SQLALCHEMY_RECORD_QUERIES = False
 
 # Paths to .abs and source files
