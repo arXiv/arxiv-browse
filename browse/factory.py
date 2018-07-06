@@ -1,10 +1,11 @@
 """Application factory for browse service components."""
-
-from flask import Flask
+from functools import partial
 
 from arxiv.base import Base
-from browse.services.database import models
+from flask import Flask, url_for
+
 from browse.routes import ui
+from browse.services.database import models
 
 
 def create_web_app() -> Flask:
