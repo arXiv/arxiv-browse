@@ -12,13 +12,13 @@ from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
+from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
      AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
-from browse.domain.metadata import DocMetadata
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
@@ -84,6 +84,8 @@ def get_abs_page(arxiv_id: str,
                                     abs_meta,
                                     download_format_pref,
                                     add_sciencewise_ping)
+        # Ancillary files
+        _check_ancillary_files(abs_meta, response_data)
 
         # Browse context
         _check_context(arxiv_identifier,
@@ -196,7 +198,6 @@ def _check_dblp(docmeta: DocMetadata,
                 response_data: Dict[str, Any],
                 db_override: bool = False) -> None:
     """Check whether paper has DBLP Bibliography entry."""
-
     if not include_dblp_section(docmeta):
         return
     identifier = docmeta.arxiv_identifier
@@ -224,6 +225,15 @@ def _check_dblp(docmeta: DocMetadata,
         'listing_url': urljoin(DBLP_BASE_URL, listing_path),
         'author_list': author_list
     }
+
+
+def _check_ancillary_files(docmeta: DocMetadata,
+                           response_data: Dict[str, Any]) -> None:
+    """Check whether paper has ancillary files."""
+    anc_file_list = metadata.get_ancillary_files(docmeta)
+    if anc_file_list:
+        response_data['ancillary_files'] = anc_file_list
+
 # def _check_trackback_pings(paper_id: str) -> int:
 #     """Check general tracback pings"""
 #     try:

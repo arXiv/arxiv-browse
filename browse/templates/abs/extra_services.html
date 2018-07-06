@@ -1,3 +1,17 @@
+{%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=5) -%}
+<ul>
+  {%- for anc_file in anc_file_list -%}
+    {% if loop.index == cutoff and anc_file_list|length > cutoff %}
+  </ul><div id="long-anc-list"><ul>
+    {% endif %}
+  <li><a href="/src/{{ abs_meta.arxiv_id_v }}/anc/{{ anc_file['name'] }}">{{ anc_file['name'] }}</a></li>
+  {%- endfor -%}
+  {% if anc_file_list|length > cutoff %}
+    {% set num_files_not_shown = anc_file_list|length - cutoff %}
+  </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
+  {% endif %}
+{%- endmacro -%}
+
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
   {% if format_list|length == 0 %}
@@ -97,8 +111,38 @@
 {%- endmacro -%}
 
 {% block extra_services %}
-   <div class="extra-services">
-
+  <div class="extra-services">
+{# TODO: check whether anything but the ancillary files section uses this #}
+{% if ancillary_files %}
+    <script type="text/javascript">
+    <!--
+     function toggleList(whichLayer,toggleThis)
+     {
+        var elem, vis;
+        if( document.getElementById ) // standard
+          elem = document.getElementById( whichLayer );
+        else if( document.all ) // old msie versions
+          elem = document.all[whichLayer];
+        else if( document.layers ) // nn4
+          elem = document.layers[whichLayer];
+        vis = elem.style;
+        // if the style.display value is blank we try to figure it out here
+        if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+          vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'inline':'none';
+        vis.display = (vis.display==''||vis.display=='inline')?'none':'inline';
+        // toggle link inner text
+        status = vis.display;
+        if(vis.display=='inline'){
+          document.getElementById('toggle').innerHTML = "(collapse list)";
+          document.getElementById('toggle').title = "Collapse list";
+        } else {
+          document.getElementById('toggle').innerHTML = "("+toggleThis+")";
+          document.getElementById('toggle').title = "Show complete list";
+        }
+     }
+     //-->
+    </script>
+{% endif %}
     <div class="full-text">
       <span class="descriptor">Full-text links:</span>
       <h2>Download:</h2>
@@ -114,6 +158,13 @@
     </div>
     <!--end full-text-->
 
+{% if ancillary_files %}
+  <div class="ancillary">
+    <span class="descriptor">Ancillary-file links:</span>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
+    {{ generate_ancillary_file_list(ancillary_files)}}
+  </div><!--end ancillary-->
+{% endif %}
     <div class="browse">
     {{ generate_browse_context() }}
     </div>
