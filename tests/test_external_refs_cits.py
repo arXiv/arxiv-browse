@@ -1,5 +1,6 @@
 """Tests for external reference and citation configuration and utilities."""
 from unittest import TestCase, mock
+from datetime import date
 
 from arxiv.taxonomy import CATEGORIES, ARCHIVES
 from browse.domain.metadata import Category, Archive
@@ -65,7 +66,7 @@ class TestExternalReferencesCitations(TestCase):
     @mock.patch('browse.domain.metadata.DocMetadata')
     def test_include_dblp_section(self, mock_docmeta):
         """Tests for the include_dblp_section fallback (from DB) function."""
-        mock_docmeta.arxiv_identifier = Identifier('1807.00001')
+        mock_docmeta.arxiv_identifier = Identifier('1806.00001')
         mock_docmeta.primary_archive = Archive('cs')
         self.assertTrue(include_dblp_section(mock_docmeta))
 
@@ -77,6 +78,6 @@ class TestExternalReferencesCitations(TestCase):
         mock_docmeta.primary_archive = Archive('cs')
         self.assertFalse(include_dblp_section(mock_docmeta))
 
-        mock_docmeta.arxiv_identifier = Identifier('1807.00002')
+        mock_docmeta.arxiv_identifier = Identifier('1806.00002')
         mock_docmeta.primary_archive = Archive('math')
         self.assertFalse(include_dblp_section(mock_docmeta))

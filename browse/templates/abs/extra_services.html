@@ -82,6 +82,7 @@
     <div class="list">
       <a href="{{ dblp.listing_url }}" title="listing on DBLP">listing</a>{% if dblp.bibtex_path %} | <a href="{{ dblp.bibtex_base_url }}/{{ dblp.bibtex_path }}" title="DBLP bibtex record">bibtex</a>{% endif %}
     </div>
+    {% if dblp.author_list %}
     <div class="list">
     {% for author in dblp.author_list[:author_cutoff] %}
       <a href="{{ dblp.author_search_url }}?author={{ author }}">{{ author }}</a><br/>
@@ -91,6 +92,7 @@
     {% endif %}
     <br/>
     </div>
+    {% endif %}
   </div>
 {%- endmacro -%}
 

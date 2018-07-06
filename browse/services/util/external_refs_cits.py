@@ -27,9 +27,11 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
         return False
     identifier = docmeta.arxiv_identifier
     orig_publish_date = date(identifier.year, identifier.month, 1)
+    today = date.today()
+    this_month = date(today.year, today.month, 1)
     primary_archive = docmeta.primary_archive.id
-    print(f'primary archive: {primary_archive}')
     if primary_archive in DBLP_ARCHIVES and \
+            orig_publish_date < this_month and \
             orig_publish_date >= DBLP_START_DATE:
         return True
     return False
@@ -52,3 +54,14 @@ def get_dblp_bibtex_path(url: str) -> Optional[str]:
     except ValueError:
         return None
     return None
+
+
+def get_computed_dblp_listing_path(docmeta: DocMetadata) -> Optional[str]:
+    """Get the DBLP listing path based on the metadata."""
+    identifier = docmeta.arxiv_identifier
+    if identifier.is_old_id:
+        dblp_id = f'abs-cs-{identifier.num}'
+    else:
+        dashed_id = identifier.id.replace('.', '-', 1)
+        dblp_id = f'abs-{dashed_id}'
+    return f'db/journals/corr/corr{identifier.yymm}.html#{dblp_id}'

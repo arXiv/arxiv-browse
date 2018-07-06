@@ -16,7 +16,7 @@ def __all_trackbacks_query() -> Query:
     return db.session.query(TrackbackPing)
 
 
-def __paper_trackbacks_query(paper_id) -> Query:
+def __paper_trackbacks_query(paper_id: str) -> Query:
     return __all_trackbacks_query() \
         .filter(TrackbackPing.document_id == Document.document_id) \
         .filter(Document.paper_id == paper_id) \
@@ -77,7 +77,10 @@ def count_trackback_pings(paper_id: str) -> int:
 
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
-    return __all_trackbacks_query().count()  # type: ignore
+    try:
+        return __all_trackbacks_query().count()  # type: ignore
+    except NoResultFound:
+        return 0
 
 
 def has_sciencewise_ping(paper_id_v: str) -> bool:

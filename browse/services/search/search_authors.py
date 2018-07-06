@@ -44,7 +44,7 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
     DON'T do entities, do that in template
     DON'T escape utf8 for HTML, just return utf8
     """
-    out: List(Union(str, Tuple(str, str))) = []
+    out: List[Union[str, Tuple[str, str]]] = []
 
     splits: List[str] = split_authors(authors)
     for i in splits:
