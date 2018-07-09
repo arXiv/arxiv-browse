@@ -17,7 +17,6 @@ app.app_context().push()
               help='Drop and recreate tables from models.')
 def populate_test_database(drop_and_create: bool) -> None:
     """Initialize the browse tables."""
-
     if drop_and_create:
         models.db.drop_all()
         models.db.create_all()

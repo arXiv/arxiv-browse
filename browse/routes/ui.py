@@ -54,6 +54,6 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('/trackback/<path:arxiv_id>', methods=['GET', 'POST'])
 def trackback(arxiv_id: str)-> Union[str, Response]:
-    "Route to define new trackbacks for papers"
+    """Route to define new trackbacks for papers."""
     # TODO implement
     raise NotFound

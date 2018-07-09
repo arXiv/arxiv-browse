@@ -55,7 +55,6 @@ def formats_from_source_type(source_type: str,
     F - PDF only
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
-
     formats = []
     if not source_type:
         source_type = ''
