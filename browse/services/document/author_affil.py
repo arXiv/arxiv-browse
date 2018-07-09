@@ -54,17 +54,18 @@ def parse_author_affil(authors: str) -> List[List[str]]:
     :return:
     Returns a structured set of data:
     author_list_ptr = [
-        [ author1_keyname, author1_firstnames, author1_suffix, affil1, affil2 ],
-        [ author2_keyname, author2_firstnames, author1_suffix, affil1 ] ,
-        [ author3_keyname, author3_firstnames, author1_suffix ]
+       [ author1_keyname, author1_firstnames, author1_suffix, affil1, affil2 ],
+       [ author2_keyname, author2_firstnames, author1_suffix, affil1 ] ,
+       [ author3_keyname, author3_firstnames, author1_suffix ]
     ]
     """
     return _parse_author_affil_back_propagate(
         **_parse_author_affil_split(authors))
 
 
-def _parse_author_affil_split(author_line: str)->Dict:
-    """Split author line into author and affiliation data.
+def _parse_author_affil_split(author_line: str) -> Dict:
+    """
+    Split author line into author and affiliation data.
 
     Take author line, tidy spacing and punctuation, and then split up into
     individual author an affiliation data. Has special cases to avoid splitting
@@ -74,8 +75,11 @@ def _parse_author_affil_split(author_line: str)->Dict:
 
     Does not handle multiple collaboration names.
     """
+    if not author_line:
+        return {'author_list': [], 'back_prop': 0}
+
     names = split_authors(author_line)
-    if not author_line or not names:
+    if not names:
         return {'author_list': [], 'back_prop': 0}
 
     names = _remove_double_commas(names)
@@ -102,7 +106,7 @@ def _parse_author_affil_split(author_line: str)->Dict:
                  r'^(.*)\s+(' + PREFIX_MATCH + r')\s(' +
                  PREFIX_MATCH + r')\s(\S+)$'),
                 ('name-prefix-name',
-                 r'^(.*)\s+(' + PREFIX_MATCH + ')\s(\S+)$'),
+                 r'^(.*)\s+(' + PREFIX_MATCH + r')\s(\S+)$'),
                 ('name-name-prefix',
                  r'^(.*)\s+(\S+)\s(I|II|III|IV|V|Sr|Jr|Sr\.|Jr\.)$'),
                 ('name-name',
@@ -142,13 +146,17 @@ def _parse_author_affil_split(author_line: str)->Dict:
             'back_prop': back_propagate_affiliations_to}
 
 
-def parse_author_affil_utf(authors: str)->List:
-    """Calls parse_author_affil() and does TeX to UTF conversion.
+def parse_author_affil_utf(authors: str) -> List:
+    """
+    Call parse_author_affil() and do TeX to UTF conversion.
 
     Output structure is the same but should be in UTF and not TeX.
     """
+    if not authors:
+        return []
     return list(map(
-        lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
+        lambda author:
+            list(map(tex2utf, author)), parse_author_affil(authors)))
 
 
 def _remove_double_commas(items: List[str]) -> List[str]:
@@ -164,14 +172,15 @@ def _remove_double_commas(items: List[str]) -> List[str]:
 
 
 def _tidy_name(name: str) -> str:
-    name = re.sub('\s\s+', ' ', name)  # also gets rid of CR
+    name = re.sub(r'\s\s+', ' ', name)  # also gets rid of CR
     # add space after dot (except in TeX)
-    name = re.sub(r'(?<!\\)\.(\S)', '. \g<1>', name)
+    name = re.sub(r'(?<!\\)\.(\S)', r'. \g<1>', name)
     return name
 
 
-def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]], int]:
-    """Special handling of collaboration at start."""
+def _collaboration_at_start(names: List[str]) \
+        -> Tuple[List[str], List[List[str]], int]:
+    """Perform special handling of collaboration at start."""
     author_list = []
 
     back_propagate_affiliations_to = 0
@@ -194,7 +203,7 @@ def _collaboration_at_start(names: List[str])->Tuple[List[str], List[List[str]],
 
 
 def _enum_collaboration_at_end(author_line: str)->Dict:
-    """Gets separate set of enumerated affiliations from end of author_line."""
+    """Get separate set of enumerated affiliations from end of author_line."""
     # Now see if we have a separate set of enumerated affiliations
     # This is indicated by finding '(\s*('
     line_m = re.search(r'\(\s*\((.*)$', author_line)
@@ -214,8 +223,12 @@ def _enum_collaboration_at_end(author_line: str)->Dict:
     return enumaffils
 
 
-def _add_affiliation(author_line: str, enumaffils: Dict, author_entry: List[str], name: str)->List:
-    """Add author affiliation to author_entry if one is found in author_line.
+def _add_affiliation(author_line: str,
+                     enumaffils: Dict,
+                     author_entry: List[str],
+                     name: str) -> List:
+    """
+    Add author affiliation to author_entry if one is found in author_line.
 
     This should deal with these cases
     Smith B(labX) Smith B(1) Smith B(1, 2) Smith B(1 & 2) Smith B(1 and 2)
@@ -270,18 +283,21 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]],
     return author_list
 
 
-def split_authors(authors: str)->List:
-    """Split author string into authors entity lists.
+def split_authors(authors: str) -> List:
+    """
+    Split author string into authors entity lists.
 
-    Take and author line as a string and return a reference to a list of the
+    Take an author line as a string and return a reference to a list of the
     different name and affiliation blocks. While this does normalize spacing
     and 'and', it is a key feature that the set of strings returned can be
     concatenated to reproduce the original authors line. This code thus
-    provides a very graceful degredation for badly formatted authors lines,
+    provides a very graceful degredation for badly formatted authors lines, as
     the text at least shows up.
     """
     # split authors field into blocks with boundaries of ( and )
-    aus = re.split('(\(|\))', authors)
+    if not authors:
+        return []
+    aus = re.split(r'(\(|\))', authors)
     aus = list(filter(lambda x: x != '', aus))
 
     blocks = []
@@ -316,12 +332,12 @@ def split_authors(authors: str)->List:
     listx = []
 
     for block in blocks:
-        block = re.sub('\s+', ' ', block)
-        if re.match('^\(', block):  # it is a comment
+        block = re.sub(r'\s+', ' ', block)
+        if re.match(r'^\(', block):  # it is a comment
             listx.append(block)
         else:  # it is a name
-            block = re.sub(',?\s+(and|\&)\s', ',', block)
-            names = re.split('(,|:)\s*', block)
+            block = re.sub(r',?\s+(and|\&)\s', ',', block)
+            names = re.split(r'(,|:)\s*', block)
             for name in names:
                 if not name:
                     next
@@ -335,7 +351,7 @@ def split_authors(authors: str)->List:
         if re.match(r'^(Jr\.?|Sr\.?\[IV]{2,})$', p) \
                 and len(parts) >= 2 \
                 and parts[-1] == ',' \
-                and not re.match('\)$', parts[-2]):
+                and not re.match(r'\)$', parts[-2]):
             separator = parts.pop()
             last = parts.pop()
             recomb = "{}{} {}".format(last, separator, p)

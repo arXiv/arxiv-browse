@@ -6,15 +6,17 @@ from sqlalchemy.sql import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
+
 from browse.services.database.models import db, Document, \
-    MemberInstitution, MemberInstitutionIP, TrackbackPing
+    MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
+    DBLP, DBLPAuthor, DBLPDocumentAuthor
 
 
 def __all_trackbacks_query() -> Query:
     return db.session.query(TrackbackPing)
 
 
-def __paper_trackbacks_query(paper_id) -> Query:
+def __paper_trackbacks_query(paper_id: str) -> Query:
     return __all_trackbacks_query() \
         .filter(TrackbackPing.document_id == Document.document_id) \
         .filter(Document.paper_id == paper_id) \
@@ -69,12 +71,51 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
-
     return __paper_trackbacks_query(paper_id)\
         .group_by(TrackbackPing.url).count()
 
 
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
+    try:
+        return __all_trackbacks_query().count()  # type: ignore
+    except NoResultFound:
+        return 0
 
-    return __all_trackbacks_query().count() # type: ignore
+
+def has_sciencewise_ping(paper_id_v: str) -> bool:
+    """Determine whether versioned document has a ScienceWISE ping."""
+    try:
+        return db.session.query(SciencewisePing) \
+            .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
+    except NoResultFound:
+        return False
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
+
+
+def get_dblp_listing_path(paper_id: str) -> Optional[str]:
+    """Get the DBLP Bibliography URL for a given document (paper_id)."""
+    try:
+        url = db.session.query(DBLP.url).join(Document).filter(
+            Document.paper_id == paper_id).one().url
+        return url
+    except NoResultFound:
+        return None
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e
+
+
+def get_dblp_authors(paper_id: str) -> List[str]:
+    """Get sorted list of DBLP authors for a given document (paper_id)."""
+    try:
+        authors_t = db.session.query(DBLPAuthor.name).\
+                join(DBLPDocumentAuthor).\
+                join(Document).filter(Document.paper_id == paper_id).\
+                order_by(DBLPDocumentAuthor.position).all()
+        authors = [a for (a,) in authors_t]
+        return authors
+    except NoResultFound:
+        return []
+    except SQLAlchemyError as e:
+        raise IOError('Database error: %s' % e) from e

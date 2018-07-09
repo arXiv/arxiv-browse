@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1605.09669
+From: Hasan Dalman Dr <1605.09669@example.org>
+Date: Sun, 29 May 2016 17:36:46 GMT   (710kb)
+
+Title: Interactive Fuzzy Goal Programming Based on Taylor Series to Solve
+  Multiobjective Nonlinear Programming Problems with Interval Type 2 Fuzzy
+  Numbers
+Authors: Hasan Dalman
+Categories: math.OC
+MSC-class: 68T37, 68T20, 68T27
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  This paper presents an interactive fuzzy goal programming (FGP) approach for
+solving multiobjective nonlinear programming problems (MONLPP) with interval
+type 2 fuzzy numbers (IT2 FNs). The cost and time of the objective functions,
+the resources, and the requirements of each kind of resources are taken to be
+trapezoidal IT2 FNs. Here, the considered problem is first transformed into an
+equivalent crisp MONLPP, and then the transformed MONLPP is converted into an
+equivalent Multiobjective Linear Programming Problem (MONLPP). By using a
+procedure based on Taylor series, this problem is reduced into a single
+objective linear programming problem (LPP) which can be easily solved by Maple
+18.02 optimization toolbox. Finally, the proposed solution procedure is
+illustrated by two numerical examples.
+\\

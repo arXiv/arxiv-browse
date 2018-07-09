@@ -10,7 +10,8 @@ from browse.services.util.routes import pdf
 
 
 def meta_tag_metadata(metadata: DocMetadata)->List:
-    """Return data for HTML <meta> tags as used by Google Scholar.
+    """
+    Return data for HTML <meta> tags as used by Google Scholar.
 
     http://scholar.google.com/intl/en/scholar/inclusion.html.
 
@@ -74,15 +75,13 @@ def format_affil_author(au: List[str]) -> Dict:
     return _mtag('citation_author', name) if name else {}
 
 
-def _mtag(name: str, content: Union[int, str, datetime])->Dict:
+def _mtag(name: str, content: Union[int, str, datetime]) -> Dict:
+    cstr = ''
     if isinstance(content, datetime):
         cstr = content.astimezone(pytz.UTC).strftime('%Y/%m/%d')
-    elif isinstance(content, int):
-        cstr = str(content)
     else:
-        cstr = content
+        cstr = f'{content}'
 
     # Remove any line breaks/multiple spaces
     cstr = re.sub(r'\s\s+', ' ', cstr)
-    return {'name': name,
-            'content': cstr}
+    return {'name': name, 'content': cstr}

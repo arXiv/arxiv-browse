@@ -1,3 +1,48 @@
+{%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=5) -%}
+<ul>
+  {%- for anc_file in anc_file_list -%}
+    {% if loop.index == cutoff and anc_file_list|length > cutoff %}
+  </ul><div id="long-anc-list"><ul>
+    {% endif %}
+  <li><a href="/src/{{ abs_meta.arxiv_id_v }}/anc/{{ anc_file['name'] }}">{{ anc_file['name'] }}</a></li>
+  {%- endfor -%}
+  {% if anc_file_list|length > cutoff %}
+    {% set num_files_not_shown = anc_file_list|length - cutoff %}
+  </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
+  {% endif %}
+{%- endmacro -%}
+
+{%- macro generate_download_links(format_list=[]) -%}
+<ul>
+  {% if format_list|length == 0 %}
+  <li>Unavailable</li>
+  {% else %}
+    {# We have to skip the 'src' format unless we're viewing the current version of the article #}
+    {% for format in format_list if not (format == 'src' and abs_meta.version != abs_meta.version_history[-1].version)  %}
+  <li>
+    {%- if format == 'src' -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">Source</a>
+    {%- elif format.startswith('ps') -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+    {%- elif format.startswith('pdf') -%}
+    <a href="/pdf/{{ abs_meta.arxiv_id }}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    {%- elif format == 'dvi' or format == 'html' -%}
+    <a href="/{{ format }}/{{ abs_meta.arxiv_id }}"{% if format == 'html' %} accesskey="f"{% endif %}>{{ format.upper() }}</a>
+    {%- elif format == 'other' -%}
+    <a href="/format/{{ abs_meta.arxiv_id }}">Other formats</a>
+    {%- elif format == 'nops' -%}
+    <a href="/ps/{{ abs_meta.arxiv_id }}">(PostScript unavailable)</a>
+    {%- elif format == 'sciencewise_pdf' -%}
+    {# TODO: consider this format for deprecation #}
+    {# TODO: create clickthrough link from sciencewise link #}
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a> <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info"><img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" /></a>
+    {%- endif -%}
+  </li>
+    {% endfor %}
+  {% endif %}
+</ul>
+{%- endmacro -%}
+
 {%- macro generate_browse_context() -%}
   {% set current_context = browse_context if browse_context else abs_meta.primary_category.id %}
   <h3>Current browse context:</h3>
@@ -44,16 +89,64 @@
   {% endif %}
 {%- endmacro -%}
 
-{% block extra_services %}
-   <div class="extra-services">
 
+{%- macro generate_dblp_section(author_cutoff=5) -%}
+  <div class="dblp">
+    <h3><a href="{{ dblp.base_url }}">DBLP</a> - CS Bibliography</h3>
+    <div class="list">
+      <a href="{{ dblp.listing_url }}" title="listing on DBLP">listing</a>{% if dblp.bibtex_path %} | <a href="{{ dblp.bibtex_base_url }}/{{ dblp.bibtex_path }}" title="DBLP bibtex record">bibtex</a>{% endif %}
+    </div>
+    {% if dblp.author_list %}
+    <div class="list">
+    {% for author in dblp.author_list[:author_cutoff] %}
+      <a href="{{ dblp.author_search_url }}?author={{ author }}">{{ author }}</a><br/>
+    {% endfor %}
+    {% if dblp.author_list|length > author_cutoff %}
+      <div class="list">&hellip;</div>
+    {% endif %}
+    <br/>
+    </div>
+    {% endif %}
+  </div>
+{%- endmacro -%}
+
+{% block extra_services %}
+  <div class="extra-services">
+{# TODO: check whether anything but the ancillary files section uses this #}
+{% if ancillary_files %}
+    <script type="text/javascript">
+    <!--
+     function toggleList(whichLayer,toggleThis)
+     {
+        var elem, vis;
+        if( document.getElementById ) // standard
+          elem = document.getElementById( whichLayer );
+        else if( document.all ) // old msie versions
+          elem = document.all[whichLayer];
+        else if( document.layers ) // nn4
+          elem = document.layers[whichLayer];
+        vis = elem.style;
+        // if the style.display value is blank we try to figure it out here
+        if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+          vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'inline':'none';
+        vis.display = (vis.display==''||vis.display=='inline')?'none':'inline';
+        // toggle link inner text
+        status = vis.display;
+        if(vis.display=='inline'){
+          document.getElementById('toggle').innerHTML = "(collapse list)";
+          document.getElementById('toggle').title = "Collapse list";
+        } else {
+          document.getElementById('toggle').innerHTML = "("+toggleThis+")";
+          document.getElementById('toggle').title = "Show complete list";
+        }
+     }
+     //-->
+    </script>
+{% endif %}
     <div class="full-text">
       <span class="descriptor">Full-text links:</span>
       <h2>Download:</h2>
-      <ul>
-        <li><a href="/pdf/1708.00003" accesskey="f">TODO: PDF</a></li>
-        <li><a href="/format/1708.00003">TODO: Other formats</a></li>
-      </ul>
+      {{ generate_download_links(format_list=formats) }}
 
       <div class="abs-license">
         {% if abs_meta.license.icon_uri_path %}
@@ -65,19 +158,34 @@
     </div>
     <!--end full-text-->
 
+{% if ancillary_files %}
+  <div class="ancillary">
+    <span class="descriptor">Ancillary-file links:</span>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
+    {{ generate_ancillary_file_list(ancillary_files)}}
+  </div><!--end ancillary-->
+{% endif %}
     <div class="browse">
     {{ generate_browse_context() }}
     </div>
 
     <div class="extra-ref-cite">
-      {# TODO: references section #}
       <h3>References &amp; Citations</h3>
       <ul>
-        <li><a href="https://inspirehep.net/search?p=find+eprint+1708.00003">INSPIRE HEP</a><br />(<a href="/refs/1708.00003">refers to</a> | <a href="/cits/1708.00003">cited by </a>)</li>
-        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:1708.00003">NASA ADS</a></li>
+        {% if include_inspire_link %}
+        <li><a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)</li>
+        {% endif %}
+        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:{{ abs_meta.arxiv_id }}">NASA ADS</a></li>
       </ul>
     </div>
+
+    {# DBLP is a bibliographical database primarily for Computer Science papers #}
+    {% if dblp %}
+      {{ generate_dblp_section() }}
+    {% endif %}
+
     {% include "abs/bookmarking.html" %}
+
   </div>
   <!--end extra-services-->
 {% endblock extra_services %}

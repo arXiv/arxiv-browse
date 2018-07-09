@@ -206,11 +206,18 @@ to be loaded.
 # For mysql: 'mysql://user:pass@localhost/dbname'
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
-SQLALCHEMY_TRACK_MODIFICATIONS = OFF
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ECHO = False
+SQLALCHEMY_RECORD_QUERIES = False
 
-# Paths to .abs files
+# Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
 
 DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_ORIGNAL_VERSIONS_PATH', 'tests/data/abs_files/orig')
+
+# Path to cache directory
+DOCUMENT_CACHE_PATH = os.environ.get(
+    'DOCUMENT_CACHE_PATH', 'tests/data/cache'
+)
