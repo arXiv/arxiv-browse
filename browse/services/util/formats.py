@@ -125,11 +125,11 @@ def has_ancillary_files(source_type: str) -> bool:
     return re.search('A', source_type, re.IGNORECASE)
 
 
-def list_ancillary_files(tarball_path: str) -> Optional[List[Dict]]:
+def list_ancillary_files(tarball_path: str) -> List[Dict]:
     """Return a list of ancillary files in a tarball (.tar.gz file)."""
     if not tarball_path or not tarball_path.endswith('.tar.gz') \
        or not os.path.isfile(tarball_path):
-        return None
+        return []
 
     anc_files = []
     try:
@@ -141,8 +141,7 @@ def list_ancillary_files(tarball_path: str) -> Optional[List[Dict]]:
             anc_files.append({'name': name, 'size_bytes': size_bytes})
     except (ReadError, CompressionError):
         # TODO: log this?
-        # print(f'There was a problem reading the tarball: {e}')
-        return None
+        return []
     if len(anc_files) > 1:
         anc_files = sorted(anc_files, key=itemgetter('name'))
     return anc_files

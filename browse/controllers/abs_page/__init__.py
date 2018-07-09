@@ -76,7 +76,7 @@ def get_abs_page(arxiv_id: str,
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
         response_data['include_inspire_link'] = include_inspire_link(abs_meta)
-        _check_dblp(abs_meta, response_data)
+        response_data['dblp'] = _check_dblp(abs_meta)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -85,7 +85,8 @@ def get_abs_page(arxiv_id: str,
                                     download_format_pref,
                                     add_sciencewise_ping)
         # Ancillary files
-        _check_ancillary_files(abs_meta, response_data)
+        response_data['ancillary_files'] = \
+            metadata.get_ancillary_files(abs_meta)
 
         # Browse context
         _check_context(arxiv_identifier,
@@ -195,11 +196,10 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
 
 
 def _check_dblp(docmeta: DocMetadata,
-                response_data: Dict[str, Any],
-                db_override: bool = False) -> None:
+                db_override: bool = False) -> Optional[Dict]:
     """Check whether paper has DBLP Bibliography entry."""
     if not include_dblp_section(docmeta):
-        return
+        return None
     identifier = docmeta.arxiv_identifier
     listing_path = None
     author_list = []
@@ -210,13 +210,13 @@ def _check_dblp(docmeta: DocMetadata,
         try:
             listing_path = get_dblp_listing_path(identifier.id)
             if not listing_path:
-                return
+                return None
             author_list = get_dblp_authors(identifier.id)
         except IOError:
             # log this
-            return
+            return None
     bibtex_path = get_dblp_bibtex_path(listing_path)
-    response_data['dblp'] = {
+    return {
         'base_url': DBLP_BASE_URL,
         'author_search_url':
             urljoin(DBLP_BASE_URL, DBLP_AUTHOR_SEARCH_PATH),
@@ -226,13 +226,6 @@ def _check_dblp(docmeta: DocMetadata,
         'author_list': author_list
     }
 
-
-def _check_ancillary_files(docmeta: DocMetadata,
-                           response_data: Dict[str, Any]) -> None:
-    """Check whether paper has ancillary files."""
-    anc_file_list = metadata.get_ancillary_files(docmeta)
-    if anc_file_list:
-        response_data['ancillary_files'] = anc_file_list
 
 # def _check_trackback_pings(paper_id: str) -> int:
 #     """Check general tracback pings"""
