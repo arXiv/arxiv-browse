@@ -117,3 +117,9 @@ INSERT INTO `arXiv_metadata` VALUES (14,7,'0906.5132','2009-10-08 13:10:42','200
 -- WHERE:  document_id=557241
 
 INSERT INTO `arXiv_documents` VALUES (8,'0906.9150','A submission without metadata','David Fielding','?rdK@bv-rr4tearwh1qw',12,1255007442,'supr-con',NULL);
+
+--
+-- Dumping data for table `arXiv_documents`
+--
+-- WHERE:  document_id=422353
+INSERT INTO `arXiv_documents` VALUES (422353,'0704.0361','Pseudo-random Puncturing: A Technique to Lower the Error Floor of Turbo\n  Codes','Ioannis Chatzigeorgiou, Miguel R. D. Rodrigues, Ian J. Wassell and\n  Rolando Carrasco','0704.0361@example.org',73043,1175595878,'IT',NULL);
