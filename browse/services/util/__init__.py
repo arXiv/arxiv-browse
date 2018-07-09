@@ -1,1 +1,1 @@
-"""Service utility functions."""
+"""Service utility modules."""

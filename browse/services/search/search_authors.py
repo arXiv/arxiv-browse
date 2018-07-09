@@ -50,7 +50,7 @@ def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
     DON'T do entities, do that in template
     DON'T escape utf8 for HTML, just return utf8
     """
-    out: List(Union(str, Tuple(str, str))) = []
+    out: List[Union[str, Tuple[str, str]]] = []
 
     splits: List[str] = split_authors(authors)
     for i in splits:
@@ -83,7 +83,7 @@ def _link_for_name_or_collab(item: str) -> List[Union[str, Tuple[str, str]]]:
     colab_m = re.match(r'^(.+)\s+(collaboration|group|team)',
                        item, re.IGNORECASE)
     if colab_m:
-        out.append(item, f'{colab_m.group(1)} {colab_m.group(2)}')
+        out.append(f'{colab_m.group(1)} {colab_m.group(2)}')
     else:
         name_bits = item.split()
         if len(name_bits) == 0:

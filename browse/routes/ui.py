@@ -38,7 +38,6 @@ def bare_abs():
 def abstract(arxiv_id: str) -> Union[str, Response]:
     """Abstract (abs) page view."""
     download_format_pref = request.cookies.get('xxx-ps-defaults')
-    print(f'download format pref: {download_format_pref}')
     response, code, headers = abs_page.get_abs_page(arxiv_id,
                                                     request.args,
                                                     download_format_pref)

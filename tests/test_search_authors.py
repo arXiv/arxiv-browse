@@ -26,7 +26,8 @@ class TestAuthorLinkCreation(TestCase):
 
         out = queries_for_authors("Fred Blogs (a), Jim Smith (b) (c)")
         self.assertListEqual(out, [('Fred Blogs', 'Blogs, F'),
-                                   '(a)', ', ', ('Jim Smith', 'Smith, J'), '(b)', '(c)'])
+                                   '(a)', ', ', ('Jim Smith', 'Smith, J'),
+                                   '(b)', '(c)'])
 
         out = queries_for_authors("Francesca von Braun-Bates")
         self.assertListEqual(

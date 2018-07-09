@@ -19,6 +19,8 @@ pytz = "*"
 pylint = "*"
 coverage = "*"
 coveralls = "*"
+sqlacodegen = "*"
+mysqlclient = "*"
 
 [dev-packages]
 pylama = "*"

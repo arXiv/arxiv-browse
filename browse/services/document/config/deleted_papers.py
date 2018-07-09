@@ -1,4 +1,4 @@
-"""arxiv browse metadata service configuration."""
+"""Configuration for deleted papers and their reasons for deletion."""
 
 skipped_msg = 'this identifier erroneously skipped during software upgrade'
 DELETED_PAPERS = {
