@@ -411,14 +411,14 @@ class AbsMetaSession(object):
         return formats
 
     def get_ancillary_files(self, docmeta: DocMetadata) \
-            -> Optional[List[Dict]]:
+            -> List[Dict]:
         """Get list of ancillary file names and sizes."""
         version = docmeta.version
         format_code = docmeta.version_history[version-1].source_type.code
         if has_ancillary_files(format_code):
             source_file_path = self._get_source_path(docmeta)
             return list_ancillary_files(source_file_path)
-        return None
+        return []
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
