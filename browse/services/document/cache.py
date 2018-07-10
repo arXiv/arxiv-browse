@@ -30,8 +30,8 @@ class DocumentCacheSession(object):
     def __init__(self, document_cache_path: str) -> None:
         """Initialize the document cache session."""
         if not os.path.isdir(document_cache_path):
-            raise DocumentCacheException(f'Path to document cache '
-                                         '{document_cache_path} does '
+            raise DocumentCacheException('Path to document cache '
+                                         f'{document_cache_path} does '
                                          'not exist')
         self.document_cache_path = os.path.realpath(document_cache_path)
 
@@ -39,8 +39,8 @@ class DocumentCacheSession(object):
                             cache_format: str) -> Optional[str]:
         """Get the absolute path of the cache file/directory if it exists."""
         if cache_format not in CACHE_FORMATS:
-            raise DocumentCacheFormatException(f'Invalid cache file format: '
-                                               '{cache_format}')
+            raise DocumentCacheFormatException('Invalid cache file format: '
+                                               f'{cache_format}')
         identifier = docmeta.arxiv_identifier
         parent_path = os.path.join(
             self.document_cache_path,
