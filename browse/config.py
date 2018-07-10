@@ -214,3 +214,8 @@ DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
 
 DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_ORIGNAL_VERSIONS_PATH', 'tests/data/abs_files/orig')
+
+# Path to cache directory
+DOCUMENT_CACHE_PATH = os.environ.get(
+    'DOCUMENT_CACHE_PATH', 'tests/data/cache'
+)
