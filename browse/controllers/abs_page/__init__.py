@@ -7,10 +7,12 @@ GET requests to the abs endpoint.
 
 from typing import Tuple, Dict, Any, Optional
 from flask import url_for
-from werkzeug.exceptions import InternalServerError, NotFound
+from urllib.parse import urljoin
+from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
+from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors
 from browse.services.util.metatags import meta_tag_metadata
@@ -20,11 +22,19 @@ from browse.services.document.metadata import AbsException,\
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
+from browse.services.database import count_trackback_pings,\
+    has_sciencewise_ping, get_dblp_listing_path, get_dblp_authors
+from browse.services.util.external_refs_cits import include_inspire_link,\
+    include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
+from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
+    DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 
-def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
+def get_abs_page(arxiv_id: str,
+                 request_params: MultiDict,
+                 download_format_pref: str = None) -> Response:
     """
     Get abs page data from the document metadata service.
 
@@ -33,6 +43,8 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
     arxiv_id : str
         The arXiv identifier as provided in the request.
     request_params : dict
+    download_format_pref: str
+        Download format preference.
 
     Returns
     -------
@@ -55,15 +67,28 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
         redirect_url = _check_supplied_identifier(arxiv_identifier)
         if redirect_url:
             return {},\
-                   status.HTTP_301_MOVED_PERMANENTLY,\
-                   {'Location': redirect_url}
+                status.HTTP_301_MOVED_PERMANENTLY,\
+                {'Location': redirect_url}
 
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = queries_for_authors(abs_meta.authors)
         response_data['author_search_url_fn'] = search_author
+        response_data['include_inspire_link'] = include_inspire_link(abs_meta)
+        response_data['dblp'] = _check_dblp(abs_meta)
 
+        # Dissemination formats for download links
+        add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
+        response_data['formats'] = metadata.get_dissemination_formats(
+                                    abs_meta,
+                                    download_format_pref,
+                                    add_sciencewise_ping)
+        # Ancillary files
+        response_data['ancillary_files'] = \
+            metadata.get_ancillary_files(abs_meta)
+
+        # Browse context
         _check_context(arxiv_identifier,
                        request_params,
                        response_data)
@@ -92,6 +117,7 @@ def get_abs_page(arxiv_id: str, request_params: MultiDict) -> Response:
     except IdentifierException:
         raise AbsNotFound(data={'arxiv_id': arxiv_id})
     except (AbsException, Exception) as e:
+        print(f'Problem: {e}')
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
@@ -105,7 +131,7 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
 
     Parameters
     ----------
-    arxiv_identier : :class:`Identifier`
+    arxiv_identifier : :class:`Identifier`
 
     Returns
     -------
@@ -126,7 +152,7 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
 
 def _check_context(arxiv_identifier: Identifier,
                    request_params: MultiDict,
-                   response_data) -> None:
+                   response_data: Dict[str, Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
 
@@ -158,3 +184,53 @@ def _check_context(arxiv_identifier: Identifier,
             metadata.get_next_id(arxiv_identifier)
         response_data['browse_context_previous_id'] = \
             metadata.get_previous_id(arxiv_identifier)
+
+
+def _check_sciencewise_ping(paper_id_v: str) -> bool:
+    """Check whether paper has a ScienceWISE ping."""
+    try:
+        return has_sciencewise_ping(paper_id_v)
+    except IOError:
+        # log this
+        return False
+
+
+def _check_dblp(docmeta: DocMetadata,
+                db_override: bool = False) -> Optional[Dict]:
+    """Check whether paper has DBLP Bibliography entry."""
+    if not include_dblp_section(docmeta):
+        return None
+    identifier = docmeta.arxiv_identifier
+    listing_path = None
+    author_list = []
+    # fallback check in case DB service is not available
+    if db_override:
+        listing_path = get_computed_dblp_listing_path(docmeta)
+    else:
+        try:
+            listing_path = get_dblp_listing_path(identifier.id)
+            if not listing_path:
+                return None
+            author_list = get_dblp_authors(identifier.id)
+        except IOError:
+            # log this
+            return None
+    bibtex_path = get_dblp_bibtex_path(listing_path)
+    return {
+        'base_url': DBLP_BASE_URL,
+        'author_search_url':
+            urljoin(DBLP_BASE_URL, DBLP_AUTHOR_SEARCH_PATH),
+        'bibtex_base_url': urljoin(DBLP_BASE_URL, DBLP_BIBTEX_PATH),
+        'bibtex_path': bibtex_path,
+        'listing_url': urljoin(DBLP_BASE_URL, listing_path),
+        'author_list': author_list
+    }
+
+
+# def _check_trackback_pings(paper_id: str) -> int:
+#     """Check general tracback pings"""
+#     try:
+#         return count_trackback_pings(paper_id)
+#     except IOError:
+#
+#         return 0

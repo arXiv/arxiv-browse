@@ -16,8 +16,6 @@ class SourceType():
     code: str = field(default_factory=str)
     """Internal code for the source type."""
 
-    """TODO: need source mappings"""
-
 
 @dataclass
 class Submitter():
@@ -172,7 +170,6 @@ class DocMetadata():
         self.primary_group = Group(
             id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
 
-
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
         if self.arxiv_identifier.is_old_id:
@@ -187,7 +184,6 @@ class DocMetadata():
             options[in_archive] = True
         return sorted(options.keys())
 
-     
     def highest_version(self)-> int:
         """Return highest version number from metadata.
 

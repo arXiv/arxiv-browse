@@ -6,12 +6,16 @@ from dateutil import parser
 from functools import wraps
 from typing import Dict, List, Optional
 
+from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry, Category
 from browse.domain.identifier import Identifier, IdentifierException
-from arxiv.base.globals import get_application_config, get_application_global
-from browse.services.document.config import DELETED_PAPERS
+from browse.services.document.config.deleted_papers import DELETED_PAPERS
+from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
+     formats_from_source_file_name, formats_from_source_type, \
+     has_ancillary_files, list_ancillary_files
+from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -20,7 +24,7 @@ RE_FROM_FIELD = re.compile(
     r'From:\s*(?P<name>[^<]+)?\s*(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
-    '(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
 RE_FIELD_COMPONENTS = re.compile(
     r'^(?P<field>[-a-z\)\(]+\s*):\s*(?P<value>.*)', re.IGNORECASE)
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
@@ -66,11 +70,11 @@ class AbsDeletedException(Exception):
 
 
 class AbsMetaSession(object):
-    """Class for representing arXiv document metadata."""
+    """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
                  original_versions_path: str) -> None:
-
+        """Initialize the document metadata session."""
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
                                '"{latest_versions_path}" does not exist'
@@ -96,7 +100,7 @@ class AbsMetaSession(object):
         -------
         :class:`DocMetadata`
 
-        """   
+        """
         try:
             paper_id = Identifier(arxiv_id=arxiv_id)
         except IdentifierException:
@@ -276,7 +280,7 @@ class AbsMetaSession(object):
         except IdentifierException:
             return None
 
-    def get_previous_id(self, identifier: Identifier):
+    def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
         """
         Get the previous identifier in sequence if it exists in the repository.
 
@@ -324,6 +328,97 @@ class AbsMetaSession(object):
                 return None
 
         return None
+
+    def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
+        """Get the absolute path of this DocMetadata's source file."""
+        identifier = docmeta.arxiv_identifier
+        parent_path = self._get_parent_path(identifier)
+        for extension in VALID_SOURCE_EXTENSIONS:
+            possible_path = os.path.join(
+                parent_path,
+                f'{identifier.filename}{extension[0]}')
+            if os.path.isfile(possible_path):
+                return possible_path
+        return None
+
+    def get_dissemination_formats(self,
+                                  docmeta: DocMetadata,
+                                  format_pref: str = None,
+                                  add_sciencewise: bool = False) -> List[str]:
+        """
+        Get a list of formats that can be disseminated for this DocMetadata.
+
+        Several checks are performed to determine available dissemination
+        formats:
+            1. a check for source files with specific, valid file name
+               extensions (i.e. for a subset of the allowed source file name
+               extensions, the dissemintation formats are predictable)
+            2. if formats cannot be inferred from source file, inspect the
+               source type in the document metadata.
+
+        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
+        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
+
+        Parameters
+        ----------
+        docmeta : :class:`DocMetadata`
+        format_pref : str
+            The format preference string.
+        add_sciencewise : bool
+            Specify whether to include 'sciencewise_pdf' format in list.
+
+        Returns
+        -------
+        List[str]
+            A list of format strings.
+
+        """
+        formats = []
+
+        # first, get possible list of formats based on available source file
+        source_file_path = self._get_source_path(docmeta)
+        source_file_formats = formats_from_source_file_name(source_file_path)
+        if source_file_formats:
+            formats.extend(source_file_formats)
+        else:
+            # check source type from metadata, with consideration of
+            # user format preference and cache
+            version = docmeta.version
+            format_code = docmeta.version_history[version - 1].source_type.code
+            cached_ps_file_path = cache.get_cache_file_path(
+                docmeta,
+                'ps')
+            cache_flag = False
+            if cached_ps_file_path \
+                    and os.path.getsize(cached_ps_file_path) == 0 \
+                    and source_file_path \
+                    and os.path.getmtime(source_file_path) \
+                    < os.path.getmtime(cached_ps_file_path):
+                cache_flag = True
+            source_type_formats = formats_from_source_type(format_code,
+                                                           format_pref,
+                                                           cache_flag)
+            if source_type_formats:
+                formats.extend(source_type_formats)
+
+        # Separate check for ScienceWISE annotated PDF
+        if add_sciencewise:
+            if formats and formats[-1] == 'other':
+                formats.insert(-1, 'sciencewise_pdf')
+            else:
+                formats.append('sciencewise_pdf')
+
+        return formats
+
+    def get_ancillary_files(self, docmeta: DocMetadata) \
+            -> List[Dict]:
+        """Get list of ancillary file names and sizes."""
+        version = docmeta.version
+        format_code = docmeta.version_history[version-1].source_type.code
+        if has_ancillary_files(format_code):
+            source_file_path = self._get_source_path(docmeta)
+            return list_ancillary_files(source_file_path)
+        return []
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
@@ -411,7 +506,7 @@ class AbsMetaSession(object):
 
     def _get_parent_path(self, identifier: Identifier,
                          version: int = None) -> str:
-        """Get the parent directory of the provided identifier."""
+        """Get the absolute parent path of the provided identifier."""
         parent_path = os.path.join(
             (self.latest_versions_path if not version
              else self.original_versions_path),
@@ -471,6 +566,22 @@ class AbsMetaSession(object):
                 # we have a line with leading spaces
                 fields[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields
+
+
+@wraps(AbsMetaSession.get_ancillary_files)
+def get_ancillary_files(docmeta: DocMetadata) -> List[Dict]:
+    """Get list of ancillary file names and sizes."""
+    return current_session().get_ancillary_files(docmeta)
+
+
+@wraps(AbsMetaSession.get_dissemination_formats)
+def get_dissemination_formats(docmeta: DocMetadata,
+                              format_pref: str = None,
+                              add_sciencewise: bool = False) -> List:
+    """Get list of dissemination formats."""
+    return current_session().get_dissemination_formats(docmeta,
+                                                       format_pref,
+                                                       add_sciencewise)
 
 
 @wraps(AbsMetaSession.get_next_id)
