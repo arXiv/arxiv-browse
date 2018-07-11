@@ -1,1 +1,1 @@
-"""arxiv browse routes."""
+"""Browse routes."""

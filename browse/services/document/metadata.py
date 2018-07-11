@@ -17,6 +17,7 @@ from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
      has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
 
+
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
