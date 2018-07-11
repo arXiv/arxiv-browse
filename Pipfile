@@ -21,6 +21,8 @@ coverage = "*"
 coveralls = "*"
 sqlacodegen = "*"
 mysqlclient = "*"
+"mmh3" = "*"
+hypothesis = "*"
 
 [dev-packages]
 pylama = "*"
