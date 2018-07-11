@@ -6,6 +6,7 @@ from flask import Flask, url_for
 
 from browse.routes import ui
 from browse.services.database import models
+from browse.services.util.email import generate_show_email_hash
 
 
 def create_web_app() -> Flask:
@@ -17,5 +18,9 @@ def create_web_app() -> Flask:
 
     Base(app)
     app.register_blueprint(ui.blueprint)
+
+    app.jinja_env.filters['show_email_hash'] = \
+        partial(generate_show_email_hash,
+                secret=app.config.get('SHOW_EMAIL_SECRET'))
 
     return app

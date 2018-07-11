@@ -16,7 +16,6 @@ from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
      formats_from_source_file_name, formats_from_source_type, \
      has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
-from browse.services.util.email import generate_show_email_hash
 
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
@@ -413,11 +412,6 @@ class AbsMetaSession(object):
 
         return formats
 
-
-    def get_show_email_hash(self, identifier: Identifier) -> str:
-        """Get the hash value used in generating the /show-email link."""
-        return generate_show_email_hash(identifier.id, self.show_email_secret)
-
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""
@@ -427,7 +421,6 @@ class AbsMetaSession(object):
             source_file_path = self._get_source_path(docmeta)
             return list_ancillary_files(source_file_path)
         return []
-
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
@@ -577,17 +570,10 @@ class AbsMetaSession(object):
         return fields
 
 
-
-@wraps(AbsMetaSession.get_show_email_hash)
-def get_show_email_hash(identifier: Identifier) -> str:
-    """Get the hash value used in generating the /show-email link."""
-    return current_session().get_show_email_hash(identifier)
-
 @wraps(AbsMetaSession.get_ancillary_files)
 def get_ancillary_files(docmeta: DocMetadata) -> List[Dict]:
     """Get list of ancillary file names and sizes."""
     return current_session().get_ancillary_files(docmeta)
-
 
 
 @wraps(AbsMetaSession.get_dissemination_formats)

@@ -108,7 +108,7 @@
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="https://arxiv.org/show-email/{{ show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="https://arxiv.org/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
