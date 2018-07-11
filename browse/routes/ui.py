@@ -3,11 +3,11 @@ from typing import Union
 
 from arxiv import status
 from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app, url_for
+    redirect, current_app
 from werkzeug.exceptions import InternalServerError, NotFound
 
 from browse.controllers import abs_page, get_institution_from_request
-from browse.domain.clickthrough import is_hash_valid
+from browse.util.clickthrough import is_hash_valid
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 

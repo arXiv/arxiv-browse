@@ -4,7 +4,7 @@ from functools import partial
 from arxiv.base import Base
 from flask import Flask, url_for
 
-from browse.domain.clickthrough import create_ct_url
+from browse.util.clickthrough import create_ct_url
 from browse.routes import ui
 from browse.services.database import models
 

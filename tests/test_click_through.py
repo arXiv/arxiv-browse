@@ -4,7 +4,7 @@ import unittest
 from hypothesis import given
 from hypothesis.strategies import text
 
-from browse.domain.clickthrough import create_hash, is_hash_valid
+from browse.util.clickthrough import create_hash, is_hash_valid
 
 
 class TestClickthrough(unittest.TestCase):
