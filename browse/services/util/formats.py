@@ -4,7 +4,7 @@ import re
 import tarfile
 from operator import itemgetter
 from tarfile import ReadError, CompressionError
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 # List of tuples containing the valid source file name extensions and their
 # corresponding dissemintation formats.

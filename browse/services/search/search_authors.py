@@ -8,37 +8,44 @@ from browse.services.document.author_affil import split_authors, PREFIX_MATCH
 
 
 def is_affiliation(item: str)-> bool:
+    """Return true if a string contains an affiliation."""
     return item.startswith('(')
 
 
 def is_short(item: str)-> bool:
+    """Return true if the length of string is less than 4 characters long."""
     return len(item) < 4
 
 
 def is_etal(item: str)-> bool:
+    """Return true if the string contains et al."""
     return re.match(r'et\.? al\.?$', item) is not None
 
 
 def is_divider(item: str)-> bool:
+    """Return true if the string contains a divider character."""
     return re.match(r'^(,|:)', item) is not None
 
 
 def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
-    """Make search service query strings for authors
+    """
+    Make search service query strings for authors.
 
-    The main challenge here is that the HTML output of this should match as closely as possible the
-    string input by the submitter.
+    The main challenge here is that the HTML output of this should match as
+    closely as possible the string input by the submitter.
 
     Takes the authors string from a document metadata or .abs, split,
     and return a structure of [ str|(name_text, author_search_query_str)...]
 
-    If the item in the list is just a string, it should just be placed in the HTML output
-    since it is something like whitespace, a comma or 'for the' or a colon.
+    If the item in the list is just a string, it should just be placed in the
+    HTML output since it is something like whitespace, a comma or 'for the' or
+    a colon.
 
-    If a list item is a tuple, author_search_query_str will be something like "Webb J E" which can be used to query the
-    search service.
+    If a list item is a tuple, author_search_query_str will be something like
+    "Webb J E" which can be used to query the search service.
 
-    name_text will be the text to put in side the <a> tag. Such as "James E. Webb,"
+    name_text will be the text to put in side the <a> tag. Such as
+    "James E. Webb,"
 
     DON'T URL_encode, do that in template
     DON'T do entities, do that in template
@@ -98,7 +105,8 @@ def _link_for_name_or_collab(item: str) -> List[Union[str, Tuple[str, str]]]:
                 name_bit_count += 1
 
                 if (found_prefix or (name_bit_count > 1
-                                     and re.match('^('+PREFIX_MATCH+')$', name_bit, re.IGNORECASE))):
+                                     and re.match('^('+PREFIX_MATCH+')$',
+                                                  name_bit, re.IGNORECASE))):
                     surname_prefixes.append(name_bit)
                     found_prefix = True
                 else:

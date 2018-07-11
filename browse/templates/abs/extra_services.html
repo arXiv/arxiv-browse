@@ -184,6 +184,14 @@
       {{ generate_dblp_section() }}
     {% endif %}
 
+    {% if trackback_ping_count and trackback_ping_count > 0 %}
+    <div class="extra-general">
+        <div class="what-is-this">
+            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog links</a></h3> (<a href="/help/trackback/">what is this?</a>)
+        </div>
+    </div>
+    {% endif %}
+
     {% include "abs/bookmarking.html" %}
   </div>
   <!--end extra-services-->

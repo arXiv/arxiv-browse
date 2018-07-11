@@ -221,3 +221,6 @@ DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
 DOCUMENT_CACHE_PATH = os.environ.get(
     'DOCUMENT_CACHE_PATH', 'tests/data/cache'
 )
+
+# Used in linking to /show-email
+SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')

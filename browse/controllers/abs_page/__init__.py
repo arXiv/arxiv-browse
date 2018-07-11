@@ -77,6 +77,7 @@ def get_abs_page(arxiv_id: str,
         response_data['author_search_url_fn'] = search_author
         response_data['include_inspire_link'] = include_inspire_link(abs_meta)
         response_data['dblp'] = _check_dblp(abs_meta)
+        response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
