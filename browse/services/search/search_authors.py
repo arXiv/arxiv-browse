@@ -1,4 +1,4 @@
-"""Produces search service query strings for authors"""
+"""Produces search service query strings for authors."""
 import itertools
 import re
 from typing import List, Tuple, Union
