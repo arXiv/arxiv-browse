@@ -74,7 +74,7 @@ class AbsMetaSession(object):
     """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
-                 original_versions_path: str, show_email_secret: str) -> None:
+                 original_versions_path: str) -> None:
         """Initialize the document metadata session."""
         if not os.path.isdir(latest_versions_path):
             raise AbsException(f'Path to latest .abs versions '
@@ -87,7 +87,6 @@ class AbsMetaSession(object):
 
         self.latest_versions_path = os.path.realpath(latest_versions_path)
         self.original_versions_path = os.path.realpath(original_versions_path)
-        self.show_email_secret = show_email_secret
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """
@@ -609,10 +608,8 @@ def get_session(app: object = None) -> AbsMetaSession:
     config = get_application_config(app)
     orignal_versions_path = config.get('DOCUMENT_ORIGNAL_VERSIONS_PATH', None)
     latest_versions_path = config.get('DOCUMENT_LATEST_VERSIONS_PATH', None)
-    show_email_secret = config.get('SHOW_EMAIL_SECRET', '')
 
-    return AbsMetaSession(latest_versions_path, orignal_versions_path,
-                          show_email_secret)
+    return AbsMetaSession(latest_versions_path, orignal_versions_path)
 
 
 def current_session() -> AbsMetaSession:
