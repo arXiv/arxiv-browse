@@ -26,6 +26,31 @@ def is_divider(item: str)-> bool:
     return re.match(r'^(,|:)', item) is not None
 
 
+def split_long_author_list(authors: List[Union[str, Tuple[str, str]]], size:int) -> Tuple[List[Union[str, Tuple[str, str]]], List[Union[str, Tuple[str, str]]]]:
+    """Returns two lists where the first is of size and the second is the remaining authors.
+
+    The author list has strings which are not part of the author names, but commas between them to preserve
+    the formatting that the submitter used.
+
+    This function is used to split the list base on name count, not just list element count.
+    """
+    front = []
+    back = []
+    count = 0
+    back_count = 0
+    for item in authors:
+        if count > size:
+            back.append(item)
+            if type(item) is tuple:
+                back_count = back_count + 1
+        else:
+            front.append(item)
+            if type(item) is tuple:
+                count = count + 1
+    return front, back, back_count
+
+
+
 def queries_for_authors(authors: str) -> List[Union[str, Tuple[str, str]]]:
     """
     Make search service query strings for authors.

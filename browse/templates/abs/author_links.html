@@ -1,4 +1,4 @@
-{% set truncate_authors_at = 50 %}
+{% set truncate_authors_at = 5 %}
 
 {%- macro generate_link( part ) %}
         <a href="{{author_search_url_fn( part[1] )}}">{{part[0]}}</a>
@@ -14,9 +14,13 @@
     {% endfor %}
 {%- endmacro -%}
 
-{{ author_list( author_links[:truncate_authors_at] ) }}
+{{ author_list( author_links[0] ) }}
 
-{% if author_links|length > truncate_authors_at %}
+
+{% if author_links[1] %}
+{% if author_links[2] == 1 %}
+    {{author_list(author_links[1])}}
+{% else %}
 
 <script type="text/javascript">
 <!--
@@ -52,11 +56,12 @@ function toggleAuthorList(whichLayer,toggleThis)
 </script>
 
   <div id="long-author-list" style="display: none;">
-        {{ author_list( author_links[truncate_authors_at:]) }}
+        {{ author_list( author_links[1]) }}
   </div>
-  <a href="javascript:toggleAuthorList('long-author-list','et al. ({{ (author_links|length) - truncate_authors_at }} additional authors not shown)');"
+  <a href="javascript:toggleAuthorList('long-author-list','et al. ({{ author_links[2] }} additional authors not shown)');"
      title="Show Entire Author List" id="toggle">
-    et al. ({{ (author_links|length) - truncate_authors_at }} additional authors not shown)</a>
+    et al. ({{ author_links[2] }} additional authors not shown)</a>
   <noscript>&nbsp;You must enable JavaScript to view entire author list.</noscript>
 
+{% endif %}
 {% endif %}

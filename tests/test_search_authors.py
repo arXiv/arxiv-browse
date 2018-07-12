@@ -2,7 +2,9 @@
 
 from unittest import TestCase
 
-from browse.services.search.search_authors import queries_for_authors
+from browse.domain import metadata
+from browse.services.document.metadata import AbsMetaSession
+from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 
 
 class TestAuthorLinkCreation(TestCase):
@@ -40,3 +42,15 @@ class TestAuthorLinkCreation(TestCase):
         out = queries_for_authors("C. de la Fuente Marcos")
         self.assertListEqual(
             out, [('C. de la Fuente Marcos', 'de la Fuente Marcos, C')])
+
+
+    def test_split_long_author_list(self):
+        f1 = 'tests/data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs'
+        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+        alst = split_long_author_list(queries_for_authors(meta.authors), 20)
+        self.assertIs(type(alst), tuple)
+        self.assertIs(len(alst), 3)
+        self.assertIs(type(alst[0]), list)
+        self.assertIs(type(alst[1]), list)
+        self.assertGreater(len(alst[1]), 0)
+        self.assertIs(type(alst[2]), int)
