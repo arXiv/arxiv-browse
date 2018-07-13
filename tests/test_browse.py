@@ -54,6 +54,11 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs/1805.0001')
         self.assertEqual(rv.status_code, 301)
 
+    def test_abs_with_truncated_author_list(self):
+        rv = self.app.get('/abs/1411.4413')
+        assert b'additional authors not shown' in rv.data, \
+            'abs/1411.4413 should have a truncate author list'
+
 
 if __name__ == '__main__':
     unittest.main()

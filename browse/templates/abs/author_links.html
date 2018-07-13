@@ -1,11 +1,67 @@
+{% set truncate_authors_at = 5 %}
+
 {%- macro generate_link( part ) %}
         <a href="{{author_search_url_fn( part[1] )}}">{{part[0]}}</a>
 {%- endmacro -%}
 
-{%- for part in author_links -%}
-   {%- if part is string -%}
-        {{- part -}}
-    {%- else -%}
-        {{ generate_link( part ) }}
-    {%- endif -%}
-{% endfor %}
+{%- macro author_list( authors ) %}
+    {%- for part in authors -%}
+        {%- if part is string -%}
+            {{- part -}}
+        {%- else -%}
+            {{ generate_link( part ) }}
+        {%- endif -%}
+    {% endfor %}
+{%- endmacro -%}
+
+{{ author_list( author_links[0] ) }}
+
+
+{% if author_links[1] %}
+{% if author_links[2] == 1 %}
+    {{author_list(author_links[1])}}
+{% else %}
+
+<script type="text/javascript">
+<!--
+function toggleAuthorList(whichLayer,toggleThis)
+{
+  var elem, vis, tempToggle;
+  tempToggle=toggleThis;
+  if( document.getElementById ) // standard
+      elem = document.getElementById( whichLayer );
+  else if( document.all ) // old msie versions
+      elem = document.all[whichLayer];
+  else if( document.layers ) // nn4
+      elem = document.layers[whichLayer];
+  vis = elem.style;
+  // if the style.display value is blank we try to figure it out here
+  if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+    vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'inline':'none';
+  vis.display = (vis.display==''||vis.display=='inline')?'none':'inline';
+
+  // toggle link inner text
+  status = vis.display;
+  if(status=='none'){
+      document.getElementById('toggle').innerHTML = tempToggle ;
+      document.getElementById('toggle').title = "Show Entire Author List";
+  }
+  else if(status=='inline'){
+      document.getElementById('toggle').innerHTML = "(collapse list)";
+      document.getElementById('toggle').title = "Collapse Author List";
+  }
+}
+
+//-->
+</script>
+
+  <div id="long-author-list" style="display: none;">
+        {{ author_list( author_links[1]) }}
+  </div>
+  <a href="javascript:toggleAuthorList('long-author-list','et al. ({{ author_links[2] }} additional authors not shown)');"
+     title="Show Entire Author List" id="toggle">
+    et al. ({{ author_links[2] }} additional authors not shown)</a>
+  <noscript>&nbsp;You must enable JavaScript to view entire author list.</noscript>
+
+{% endif %}
+{% endif %}

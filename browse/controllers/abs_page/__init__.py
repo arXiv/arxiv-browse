@@ -14,7 +14,7 @@ from werkzeug.datastructures import MultiDict
 from arxiv import status, taxonomy
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors
+from browse.services.search.search_authors import queries_for_authors,split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
@@ -31,6 +31,7 @@ from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
+truncate_author_list_size = 100
 
 def get_abs_page(arxiv_id: str,
                  request_params: MultiDict,
@@ -73,7 +74,8 @@ def get_abs_page(arxiv_id: str,
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
-        response_data['author_links'] = queries_for_authors(abs_meta.authors)
+        response_data['author_links'] = \
+            split_long_author_list(queries_for_authors(abs_meta.authors), truncate_author_list_size)
         response_data['author_search_url_fn'] = search_author
         response_data['include_inspire_link'] = include_inspire_link(abs_meta)
         response_data['dblp'] = _check_dblp(abs_meta)
