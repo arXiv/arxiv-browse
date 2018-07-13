@@ -12,7 +12,7 @@
 
 {% block header_class %}{% endblock %}
 {% block header %}
-  <h1><a href="/">arXiv.org</a> &gt; <a href="/list/{{ abs_meta.primary_archive.id }}/recent">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
+  <h1><a href="/">arXiv.org</a> &gt; <a href="{{url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ abs_meta.arxiv_id }}</h1>
   <div id="search">
     <form id="search-arxiv" method="GET" action="/search">
 
@@ -99,22 +99,22 @@
         {% endif %}
         <tr>
           <td class="tablecell label">Cite as:</td>
-          <td class="tablecell arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category.id }}]</td>
+          <td class="tablecell arxivid"><a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category.id }}]</td>
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category.id }}]</span> for this version)</td>
+          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category.id }}]</span> for this version)</td>
         </tr>
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="https://arxiv.org/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
-    <div class="endorsers"><a href="https://arxiv.org/auth/show-endorsers/{{ abs_meta.arxiv_id }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="/help/mathjax/">What is MathJax?</a>)</div>
+    <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="/help/mathjax/">What is MathJax?</a>)</div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
   </div>
   <!--end leftcolumn-->
@@ -122,17 +122,17 @@
 {% endblock content %}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
-  {%- if version_entry.version == this_version -%}<b>[v{{ version_entry.version }}]</b> {% else %}<a href="{{ url_for('browse.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a> {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
+  {%- if version_entry.version == this_version -%}<b>[v{{ version_entry.version }}]</b> {% else %}<a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a> {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
   (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }} (
-  {%- if abs_meta.version == 1 %}this version{% else %}<a href="{{ url_for('browse.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>{%- endif %})
+  {%- if abs_meta.version == 1 %}this version{% else %}<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>{%- endif %})
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
   , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
   {%- endif -%}
   {%- if abs_meta.version != abs_meta.version_history[-1].version -%}
-  , <em>latest version {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }}</em> (<a href="{{ url_for('browse.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, abs_meta.version_history[-1].version)) }}">v{{ abs_meta.version_history[-1].version }}</a>)
+  , <em>latest version {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }}</em> (<a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, abs_meta.version_history[-1].version)) }}">v{{ abs_meta.version_history[-1].version }}</a>)
   {%- elif abs_meta.version > 1 and abs_meta.version == abs_meta.version_history[-1].version -%}
   , last revised {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
   {%- endif -%}

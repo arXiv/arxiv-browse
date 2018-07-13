@@ -4,7 +4,7 @@
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
   </ul><div id="long-anc-list"><ul>
     {% endif %}
-  <li><a href="/src/{{ abs_meta.arxiv_id_v }}/anc/{{ anc_file['name'] }}">{{ anc_file['name'] }}</a></li>
+  <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id,file_name=anc_file['name'])}}">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
     {% set num_files_not_shown = anc_file_list|length - cutoff %}
@@ -21,21 +21,26 @@
     {% for format in format_list if not (format == 'src' and abs_meta.version != abs_meta.version_history[-1].version)  %}
   <li>
     {%- if format == 'src' -%}
-    <a href="/ps/{{ abs_meta.arxiv_id }}">Source</a>
+    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">Source</a>
     {%- elif format.startswith('ps') -%}
-    <a href="/ps/{{ abs_meta.arxiv_id }}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
-    <a href="/pdf/{{ abs_meta.arxiv_id }}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
-    {%- elif format == 'dvi' or format == 'html' -%}
-    <a href="/{{ format }}/{{ abs_meta.arxiv_id }}"{% if format == 'html' %} accesskey="f"{% endif %}>{{ format.upper() }}</a>
+    <a href="{{url_for('.pdf', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    {%- elif format == 'dvi' -%} 
+    <a href="{{url_for('.dvi', arxiv_id=abs_meta.arxiv_id)}}">{{ format.upper() }}</a>    
+    {%- elif format == 'html' -%}
+    <a href="{{url_for('.html', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
-    <a href="/format/{{ abs_meta.arxiv_id }}">Other formats</a>
+    <a href="{{url_for('.format', arxiv_id=abs_meta.arxiv_id)}}">Other formats</a>
     {%- elif format == 'nops' -%}
-    <a href="/ps/{{ abs_meta.arxiv_id }}">(PostScript unavailable)</a>
+    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
     {# TODO: consider this format for deprecation #}
     {# TODO: create clickthrough link from sciencewise link #}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a> <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info"><img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" /></a>
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a>
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">
+      <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
+    </a>
     {%- endif -%}
   </li>
     {% endfor %}
