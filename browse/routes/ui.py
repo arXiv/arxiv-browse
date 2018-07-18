@@ -6,8 +6,9 @@ from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, NotFound
 
-from browse.controllers import abs_page, get_institution_from_request
+from browse.controllers import abs_page
 from browse.util.clickthrough import is_hash_valid
+from browse.services.database import get_institution
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 
@@ -16,8 +17,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='')
 def before_request() -> None:
     """Get instituional affiliation from session."""
     if 'institution' not in session:
-        institution = get_institution_from_request()
-        session['institution'] = institution
+        session['institution'] = get_institution(request.remote_addr)
 
 
 @blueprint.after_request
@@ -54,7 +54,6 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
 
 @blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('/trackback/<path:arxiv_id>', methods=['GET', 'POST'])
-
 def trackback(arxiv_id: str) -> Union[str, Response]:
     """Route to define new trackbacks for papers."""
     # TODO implement

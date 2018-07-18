@@ -46,7 +46,6 @@ class TestAgainstClassicResults(TestCase):
                     continue
                 if not fname_path.endswith('.abs'):
                     continue
-                num_files_tested += 1
                 m = AbsMetaSession.parse_abs_file(filename=fname_path)
                 if m.arxiv_id_v in bad_data:
                     continue

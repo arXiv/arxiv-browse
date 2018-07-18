@@ -1,6 +1,5 @@
 """Convert between TeX escapes and UTF8."""
 import re
-import pprint
 from typing import Pattern, Dict, Match
 
 # Hash to lookup tex markup and convert to Unicode
@@ -92,7 +91,7 @@ textlet = {
 
 
 def _p_to_match(tex_to_chr: Dict[str, int]) -> Pattern:
-    #textsym and textlet both use the same sort of regex pattern.
+    # textsym and textlet both use the same sort of regex pattern.
     keys = r'\\(' + '|'.join(tex_to_chr.keys()) + ')'
     pstr = r'({)?' + keys + r'(\b|(?=_))(?(1)}|(\\(?= )| |{}|)?)'
     return re.compile(pstr)

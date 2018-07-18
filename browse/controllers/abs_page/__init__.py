@@ -7,6 +7,7 @@ GET requests to the abs endpoint.
 
 from typing import Tuple, Dict, Any, Optional
 from flask import url_for
+from flask import current_app as app
 from urllib.parse import urljoin
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
@@ -77,24 +78,31 @@ def get_abs_page(arxiv_id: str,
         response_data['author_links'] = \
             split_long_author_list(queries_for_authors(abs_meta.authors), truncate_author_list_size)
         response_data['author_search_url_fn'] = search_author
-        response_data['include_inspire_link'] = include_inspire_link(abs_meta)
-        response_data['dblp'] = _check_dblp(abs_meta)
-        response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data['formats'] = metadata.get_dissemination_formats(
-                                    abs_meta,
-                                    download_format_pref,
-                                    add_sciencewise_ping)
-        # Ancillary files
-        response_data['ancillary_files'] = \
-            metadata.get_ancillary_files(abs_meta)
+            abs_meta,
+            download_format_pref,
+            add_sciencewise_ping)
 
-        # Browse context
-        _check_context(arxiv_identifier,
-                       request_params,
-                       response_data)
+        # the following are less critical and the template must display without them
+        try:
+            response_data['include_inspire_link'] = include_inspire_link(abs_meta)
+            response_data['dblp'] = _check_dblp(abs_meta)
+            response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
+
+            # Ancillary files
+            response_data['ancillary_files'] = \
+                metadata.get_ancillary_files(abs_meta)
+
+            # Browse context
+            _check_context(arxiv_identifier,
+                           request_params,
+                           response_data)
+        except Exception as e:
+            app.logger.error("Error getting non-critical abs page data", exc_info=app.debug)
+
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
@@ -120,11 +128,9 @@ def get_abs_page(arxiv_id: str,
     except IdentifierException:
         raise AbsNotFound(data={'arxiv_id': arxiv_id})
     except (AbsException, Exception) as e:
-        print(f'Problem: {e}')
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
-    metadata.get_next_id(identifier=arxiv_identifier)
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -194,7 +200,6 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
     try:
         return has_sciencewise_ping(paper_id_v)
     except IOError:
-        # log this
         return False
 
 

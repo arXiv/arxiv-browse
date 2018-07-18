@@ -33,3 +33,28 @@ class TestFormats(TestCase):
         self.assertListEqual(
             formats_from_source_type('', format_pref='fname=CM'),
             ['ps(CM)', 'other'])
+        self.assertListEqual(formats_from_source_type('P'),
+                             ['pdf', 'ps', 'other'])
+        self.assertListEqual(formats_from_source_type('D','src'),
+                             ['src', 'pdf', 'other'])
+        self.assertListEqual(formats_from_source_type('F'),
+                             ['pdf','other'])
+        self.assertListEqual(formats_from_source_type('H'),
+                             ['html','other'])
+        self.assertListEqual(formats_from_source_type('X'),
+                             ['pdf', 'other'])
+
+        self.assertListEqual(formats_from_source_type('', 'pdf'),
+                             ['pdf', 'other'])
+        self.assertListEqual(formats_from_source_type('', '400'),
+                             [ 'ps(400)', 'other'])
+        self.assertListEqual(formats_from_source_type('', '600'),
+                             ['ps(600)', 'other'])
+        self.assertListEqual(formats_from_source_type('', 'fname=cm'),
+                             ['ps(cm)', 'other'])
+        self.assertListEqual(formats_from_source_type('', 'fname=CM'),
+                             ['ps(CM)', 'other'])
+        self.assertListEqual(formats_from_source_type('', 'dvi'),
+                             ['dvi', 'other'])
+
+
