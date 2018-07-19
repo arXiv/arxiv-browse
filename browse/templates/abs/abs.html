@@ -53,14 +53,14 @@
 
     <div class="dateline">{{ generate_dateline() }}</div>
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract }}</blockquote>
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|abstract_breaks }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
         {%- if abs_meta.comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
+          <td class="tablecell comments mathjax">{{ abs_meta.comments|filter_urls }}</td>
         </tr>
         {% endif -%}
         <tr>
