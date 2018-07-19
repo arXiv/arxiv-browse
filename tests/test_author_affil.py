@@ -2,6 +2,8 @@
 from unittest import TestCase
 
 from browse.services.document.author_affil import parse_author_affil, split_authors
+from browse.services.document.metadata import AbsMetaSession
+from tests import test_path_of
 
 
 class TestAuthorAffiliationParsing(TestCase):
@@ -281,3 +283,9 @@ class TestAuthorAffiliationParsing(TestCase):
             [['BELLE Collaboration', '', '']],
             'parse_author_affil (lone "BELLE Collaboration") 2/3'
         )
+
+    def test_collaboration_at_front(self):
+        f1 = test_path_of('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
+        meta = AbsMetaSession.parse_abs_file(filename=f1)
+        paflst = parse_author_affil( meta.authors )
+        self.assertListEqual(paflst, [['D0 Collaboration', '', ''], ['Abazov', 'V.', '']])

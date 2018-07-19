@@ -1,5 +1,5 @@
 <div class="bookmarks">
-  <div class="what-is-this"><h3>Bookmark</h3> (<a href="/help/social_bookmarking">what is this?</a>)</div>
+  <div class="what-is-this"><h3>Bookmark</h3> (<a href="{{url_for('help_social_bookmarking')}}">what is this?</a>)</div>
   {% set absUrl = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) %}
   {% set title = abs_meta.title %}
   <a href="{{ ('http://www.citeulike.org/posturl?url=' + absUrl) | clickthrough_url_for }}"

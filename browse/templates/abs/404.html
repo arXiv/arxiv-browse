@@ -28,7 +28,7 @@
   <p>There is no record of an article with identifier '{{ arxiv_id }}'.
   You might instead {% if reason=='version_not_found' %}look at the latest version of
   this article: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>',
-  or {% endif %}try to <a href="/search">search for articles</a>.</p>
+  or {% endif %}try to <a href="{{url_for('search_box')}}">search for articles</a>.</p>
   {{ identifier_help() }}
 
   {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
@@ -59,10 +59,10 @@
 
 {% elif arxiv_id %}
 <h1>Article identifier '{{ arxiv_id}}' not recognized</h1>
-<p>You might instead try to <a href="/search">search for articles</a> using
+<p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
 title or author information.</p>
 <p>For additional help on arXiv identifiers, see
-<a href="/help/arxiv_identifier">understanding the arXiv identifier</a>.</p>
+<a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
 
 {% else %}
 <h1>No article identifier specified</h1>
@@ -72,10 +72,10 @@ search box from most arXiv pages. Articles submitted after 1 April 2007 have ide
 <code>YYMM.NNNN</code> (e.g. <code>0704.12345</code>, there is no archive/ prefix), or
 <code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no archive/ prefix), whereas articles submitted
 before then have identifier of the form <code>archive/YYMMNNN</code> (e.g. <code>archive/0701001</code>).</p>
-<p>You might instead try to <a href="/search">search for articles</a> using
+<p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
 title or author information.</p>
 <p>For additional help on arXiv identifiers, see
-<a href="/help/arxiv_identifier">understanding the arXiv identifier</a>.</p>
+<a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
 {% endif %}
 
 {% endblock content %}
@@ -85,5 +85,5 @@ title or author information.</p>
 YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older articles,
 e.g. hep-th/9901001. To access an article simply enter the identifier in the
 search box. The web address for access to the abstract is constructed by
-prepending <code>https://arxiv.org/abs/</code>.</p>
+prepending <code>{{url_for('browse.abstract', _external=True, _scheme='https')}}</code>.</p>
 {%- endmacro %}

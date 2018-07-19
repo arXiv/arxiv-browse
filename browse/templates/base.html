@@ -47,17 +47,17 @@
       </div>
     </div>
     <div id="support-ack">
-      <a href="https://confluence.cornell.edu/x/ALlRF">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if 'institution' in session else 'member institutions' }}</a>
+      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if 'institution' in session else 'member institutions' }}</a>
     </div>
   </div>
 
   <div id="header" {% block header_class %}{% endblock %}>
     {% block header %}
-    <a href="/IgnoreMe"></a>
+    <a href="{url_path('ignore_me')}"></a>
     <h1>arXiv.org</h1>
-    <div class="login"><a href="/user/login">Login</a></div>
+    <div class="login"><a href="{{url_for('login')}}">Login</a></div>
     <div id="search">
-      <form id="search-arxiv" method="post" action="/search">
+      <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
 
         <div class="wrapper-search-arxiv">
           <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
@@ -73,7 +73,8 @@
             </select>
           </div>
           <input class="btn-search-arxiv" value="" type="submit">
-          <div class="links">(<a href="/help">Help</a> | <a href="/find">Advanced search</a>)</div>
+            <div class="links">(<a href="{{url_for('help')}}">Help</a> |
+              <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
         </div>
       </form>
     </div>
@@ -86,9 +87,9 @@
   </div>
   <div id="footer">
     <div class="footer-text">
-      <p>Link back to: <a href="http://arxiv.org/">arXiv</a>, <a href="/form">form interface</a>, <a href="/help/contact">contact</a>.</p>
+      <p>Link back to: <a href="{{url_for('home')}}">arXiv</a>, <a href="{{url_for('browse.form')}}">form interface</a>, <a href="{{url_for('contact')}}">contact</a>.</p>
     </div>
-    <div class="social"><a href="https://twitter.com/arxiv"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"></a></div>
+    <div class="social"><a href="{{url_for('twitter')}}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"></a></div>
   </div>
 </body>
 

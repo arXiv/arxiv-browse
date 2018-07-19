@@ -3,9 +3,10 @@
 from unittest import TestCase
 
 from browse.domain import metadata
+from browse.services.document.author_affil import split_authors
 from browse.services.document.metadata import AbsMetaSession
 from browse.services.search.search_authors import queries_for_authors, split_long_author_list
-
+from tests import test_path_of
 
 class TestAuthorLinkCreation(TestCase):
     def test_basic(self):
@@ -28,8 +29,8 @@ class TestAuthorLinkCreation(TestCase):
 
         out = queries_for_authors("Fred Blogs (a), Jim Smith (b) (c)")
         self.assertListEqual(out, [('Fred Blogs', 'Blogs, F'),
-                                   '(a)', ', ', ('Jim Smith', 'Smith, J'),
-                                   '(b)', '(c)'])
+                                   ' (a)', ', ', ('Jim Smith', 'Smith, J'),
+                                   ' (b)', ' (c)'])
 
         out = queries_for_authors("Francesca von Braun-Bates")
         self.assertListEqual(
@@ -44,8 +45,9 @@ class TestAuthorLinkCreation(TestCase):
             out, [('C. de la Fuente Marcos', 'de la Fuente Marcos, C')])
 
 
+
     def test_split_long_author_list(self):
-        f1 = 'tests/data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs'
+        f1 = test_path_of('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
         alst = split_long_author_list(queries_for_authors(meta.authors), 20)
         self.assertIs(type(alst), tuple)
@@ -54,3 +56,13 @@ class TestAuthorLinkCreation(TestCase):
         self.assertIs(type(alst[1]), list)
         self.assertGreater(len(alst[1]), 0)
         self.assertIs(type(alst[2]), int)
+
+    def test_split_with_collaboration(self):
+        f1 = test_path_of('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
+        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+
+        split = split_authors( meta.authors)
+        self.assertListEqual(split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
+
+        alst = queries_for_authors(meta.authors)
+        self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'), ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])

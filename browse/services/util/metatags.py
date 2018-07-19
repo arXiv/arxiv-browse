@@ -1,4 +1,5 @@
 """Functions to make HTML head metadata tags for DocMetadata."""
+from flask import url_for
 import re
 from datetime import datetime
 from typing import Union, Dict, List
@@ -6,7 +7,6 @@ import pytz
 
 from browse.services.document.author_affil import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
-from browse.services.util.routes import pdf
 
 
 def meta_tag_metadata(metadata: DocMetadata)->List:
@@ -21,6 +21,10 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
     at 100 authors makes sense.
 
     Unlike Classic, this method does not HTML escape anything.
+
+    To use this in tests use like this
+    with self.app.test_request_context():
+      gs_tags = meta_tag_metadata(m)
     """
     meta_tags = []
 
@@ -59,7 +63,7 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
     cod = metadata.get_datetime_of_version(metadata.version)
     if cod:
         meta_tags.append(_mtag('citation_online_date', cod))
-    meta_tags.append(_mtag('citation_pdf_url', pdf(metadata)))
+    meta_tags.append(_mtag('citation_pdf_url', url_for('browse.pdf', arxiv_id=metadata.arxiv_id, _external=True)))
     meta_tags.append(_mtag('citation_arxiv_id', str(metadata.arxiv_id)))
     return meta_tags
 

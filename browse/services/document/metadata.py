@@ -13,8 +13,8 @@ from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
-     formats_from_source_file_name, formats_from_source_type, \
-     has_ancillary_files, list_ancillary_files
+    formats_from_source_file_name, formats_from_source_type, \
+    has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
 
 
@@ -77,12 +77,12 @@ class AbsMetaSession(object):
                  original_versions_path: str) -> None:
         """Initialize the document metadata session."""
         if not os.path.isdir(latest_versions_path):
-            raise AbsException(f'Path to latest .abs versions '
-                               '"{latest_versions_path}" does not exist'
+            raise AbsException('Path to latest .abs versions '
+                               f'"{latest_versions_path}" does not exist'
                                )
         if not os.path.isdir(original_versions_path):
-            raise AbsException(f'Path to original .abs versions '
-                               '"{original_versions_path}" does not exist'
+            raise AbsException('Path to original .abs versions '
+                               f'"{original_versions_path}" does not exist'
                                )
 
         self.latest_versions_path = os.path.realpath(latest_versions_path)

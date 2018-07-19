@@ -73,8 +73,11 @@
 
   {% if current_context != 'arxiv' %}
   {# This fixes a bug in the classic UI logic #}
-  <div class="list">
-    <a href="https://arxiv.org/list/{{ current_context }}/new">new</a>&nbsp;| <a href="https://arxiv.org/list/{{ current_context }}/recent">recent</a>&nbsp;| <a href="https://arxiv.org/list/{{ current_context }}/{{ abs_meta.arxiv_identifier.yymm }}">{{ abs_meta.arxiv_identifier.yymm }}</a>
+<div class="list">
+  <a href="{{url_for('.list_articles',context=current_context, subcontext='new')}}">new</a>&nbsp;|
+  <a href="{{url_for('.list_articles',context=current_context, subcontext='recent')}}">recent</a>&nbsp;|
+  <a href="{{url_for('.list_articles',context=current_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
+      {{ abs_meta.arxiv_identifier.yymm }}</a>
   </div>
   {% endif %}
 
@@ -166,6 +169,7 @@
 {% if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
+    {# TODO need link to anc files details #}
     <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
@@ -178,7 +182,10 @@
       <h3>References &amp; Citations</h3>
       <ul>
         {% if include_inspire_link %}
-        <li><a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)</li>
+        <li>
+          <a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+          (<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)
+        </li>
         {% endif %}
         <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:{{ abs_meta.arxiv_id }}">NASA ADS</a></li>
       </ul>
@@ -192,7 +199,7 @@
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">
         <div class="what-is-this">
-            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog links</a></h3> (<a href="/help/trackback/">what is this?</a>)
+            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog links</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
         </div>
     </div>
     {% endif %}

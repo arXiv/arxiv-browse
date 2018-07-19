@@ -88,7 +88,9 @@ def queries_for_authors(authors: str) -> AuthorList:
         item = i
         if is_divider(item):
             out.append(item + ' ')
-        elif is_affiliation(item) or is_short(item) or is_etal(item):
+        elif is_affiliation(item):
+            out.append(' ' + item)
+        elif is_short(item) or is_etal(item):
             out.append(item)
         else:
             out = [*out, *_link_for_name_or_collab(item)]
@@ -114,38 +116,45 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
     colab_m = re.match(r'^(.+)\s+(collaboration|group|team)',
                        item, re.IGNORECASE)
     if colab_m:
-        out.append(f'{colab_m.group(1)} {colab_m.group(2)}')
+        s = f'{colab_m.group(1)} {colab_m.group(2)}'
+        out.append((s,s))
+        return out
+
+    the_m = re.match('the (.*)',item, re.IGNORECASE)
+    if the_m:
+        out.append((item, the_m.group(1)))
+        return out
+
+    # else we'll treat it as a name
+    name_bits = item.split()
+    if len(name_bits) == 0:
+        query_str = item
     else:
-        name_bits = item.split()
-        if len(name_bits) == 0:
-            query_str = item
-        else:
-            # Do not include Jr, Sr, III, etc. in search
-            if re.search(r'Jr\b|Sr\b|[IV]{2, }]', name_bits[-1]):
-                name_bits.pop()
+        # Do not include Jr, Sr, III, etc. in search
+        if re.search(r'Jr\b|Sr\b|[IV]{2, }]', name_bits[-1]):
+            name_bits.pop()
 
-            surname = name_bits.pop()
+        surname = name_bits.pop()
 
-            name_bit_count = 0
-            surname_prefixes = []
-            initials = []
-            found_prefix = False
+        name_bit_count = 0
+        surname_prefixes = []
+        initials = []
+        found_prefix = False
 
-            for name_bit in name_bits:
-                name_bit_count += 1
+        for name_bit in name_bits:
+            name_bit_count += 1
 
-                if (found_prefix or (name_bit_count > 1
-                                     and re.match('^('+PREFIX_MATCH+')$',
-                                                  name_bit, re.IGNORECASE))):
-                    surname_prefixes.append(name_bit)
-                    found_prefix = True
-                else:
-                    initials.append(name_bit[0:1])
+            if (found_prefix or (name_bit_count > 1
+                                 and re.match('^('+PREFIX_MATCH+')$',
+                                              name_bit, re.IGNORECASE))):
+                surname_prefixes.append(name_bit)
+                found_prefix = True
+            else:
+                initials.append(name_bit[0:1])
 
-            sur_initials = surname + ', ' + \
-                ' '.join(initials) if initials else surname
-            query_str = ' '.join([*surname_prefixes, sur_initials])
+        sur_initials = surname + ', ' + \
+            ' '.join(initials) if initials else surname
+        query_str = ' '.join([*surname_prefixes, sur_initials])
 
-        out.append((item, query_str))
-
+    out.append((item, query_str))
     return out

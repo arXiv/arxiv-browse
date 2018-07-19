@@ -14,14 +14,13 @@ from werkzeug.datastructures import MultiDict
 from arxiv import status, taxonomy
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors,split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
-     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
+    AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
-from browse.services.util.routes import search_author
 from browse.services.database import count_trackback_pings,\
     has_sciencewise_ping, get_dblp_listing_path, get_dblp_authors
 from browse.services.util.external_refs_cits import include_inspire_link,\
@@ -32,6 +31,7 @@ from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 truncate_author_list_size = 100
+
 
 def get_abs_page(arxiv_id: str,
                  request_params: MultiDict,
@@ -75,8 +75,8 @@ def get_abs_page(arxiv_id: str,
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = \
-            split_long_author_list(queries_for_authors(abs_meta.authors), truncate_author_list_size)
-        response_data['author_search_url_fn'] = search_author
+            split_long_author_list(queries_for_authors(
+                abs_meta.authors), truncate_author_list_size)
         response_data['include_inspire_link'] = include_inspire_link(abs_meta)
         response_data['dblp'] = _check_dblp(abs_meta)
         response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
@@ -84,9 +84,9 @@ def get_abs_page(arxiv_id: str,
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data['formats'] = metadata.get_dissemination_formats(
-                                    abs_meta,
-                                    download_format_pref,
-                                    add_sciencewise_ping)
+            abs_meta,
+            download_format_pref,
+            add_sciencewise_ping)
         # Ancillary files
         response_data['ancillary_files'] = \
             metadata.get_ancillary_files(abs_meta)

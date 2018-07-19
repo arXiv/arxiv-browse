@@ -5,19 +5,25 @@ import json
 import os
 import pprint
 from unittest import TestCase
+from tests import test_path_of
 
-# from datetime import datetime
-# from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document.metadata import AbsMetaSession
+from app import app
 
-CLASSIC_RESULTS_FILE = 'tests/data/classic_scholar_metadata_tags.json'
-ABS_FILES = 'tests/data/abs_files'
-
+CLASSIC_RESULTS_FILE = test_path_of('data/classic_scholar_metadata_tags.json')
+ABS_FILES = test_path_of('data/abs_files')
 
 class TestAgainstClassicResults(TestCase):
     """Test google scholar metadata created from abs files against classic exresults. """
+
+    def setUp(self):
+            app.testing = True
+            app.config['APPLICATION_ROOT'] = ''
+            app.config['SERVER_NAME'] = 'dev.arxiv.org'
+            self.app = app
+
 
     def test_same_as_classic(self):
 
@@ -54,7 +60,9 @@ class TestAgainstClassicResults(TestCase):
 
                 self.assertIsInstance(m, DocMetadata)
 
-                gs_tags = meta_tag_metadata(m)
+                with self.app.test_request_context():
+                    gs_tags = meta_tag_metadata(m)
+
                 self.assertIsInstance(gs_tags, list)
                 if m.arxiv_id_v not in classic_results:
                     # Could not find google scholar tags in classic results for this

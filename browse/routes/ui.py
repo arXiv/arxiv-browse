@@ -152,3 +152,8 @@ def refs(arxiv_id: str):
 @blueprint.route('/cits/<path:arxiv_id>')
 def cits(arxiv_id: str):
     raise InternalServerError('Not yet implemented')
+
+
+@blueprint.route('/form')
+def form(arxiv_id: str):
+    raise InternalServerError('Not yet implemented')
