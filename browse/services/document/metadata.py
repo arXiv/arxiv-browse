@@ -1,10 +1,10 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
-from pytz import timezone
-from dateutil import parser
-from functools import wraps
 from typing import Dict, List, Optional
+from functools import wraps
+from dateutil import parser
+from pytz import timezone
 
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
@@ -70,7 +70,7 @@ class AbsDeletedException(Exception):
     pass
 
 
-class AbsMetaSession(object):
+class AbsMetaSession():
     """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
@@ -102,10 +102,7 @@ class AbsMetaSession(object):
         :class:`DocMetadata`
 
         """
-        try:
-            paper_id = Identifier(arxiv_id=arxiv_id)
-        except IdentifierException:
-            raise
+        paper_id = Identifier(arxiv_id=arxiv_id)
 
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
@@ -146,10 +143,8 @@ class AbsMetaSession(object):
         new_month = identifier.month
         new_num = identifier.num + 1
         if (identifier.is_old_id and new_num > 999) \
-           or (not identifier.is_old_id
-               and identifier.year < 2015 and new_num > 9999) \
-           or (not identifier.is_old_id
-               and identifier.year >= 2015 and new_num > 99999):
+           or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
+           or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
             new_num = 1
             new_month = new_month + 1
             if new_month > 12:
@@ -415,7 +410,7 @@ class AbsMetaSession(object):
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""
         version = docmeta.version
-        format_code = docmeta.version_history[version-1].source_type.code
+        format_code = docmeta.version_history[version - 1].source_type.code
         if has_ancillary_files(format_code):
             source_file_path = self._get_source_path(docmeta)
             return list_ancillary_files(source_file_path)

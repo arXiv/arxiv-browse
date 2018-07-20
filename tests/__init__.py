@@ -27,6 +27,6 @@ def execute_sql_files(sql_files: List[str], engine: Engine) -> None:
     list(map(exec_sql, sql_files))
 
 
-def test_path_of(rel_path: str) -> str:
+def path_of_for_test(rel_path: str) -> str:
     """Returns absolute path of rel_path, assuming rel_path is under tests/."""
     return os.path.join(os.path.dirname(__file__), rel_path)

@@ -6,8 +6,10 @@ GET requests to the abs endpoint.
 """
 
 from typing import Tuple, Dict, Any, Optional
-from flask import url_for
 from urllib.parse import urljoin
+
+from flask import url_for
+
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 

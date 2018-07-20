@@ -7,7 +7,6 @@ from browse.services.util.tex2utf import tex2utf
 from browse.services.document.author_affil import split_authors, PREFIX_MATCH
 
 
-
 AuthorList = List[Union[str, Tuple[str, str]]]
 """Type alias for list of authors or strings that is used to display the author list."""
 
@@ -32,11 +31,11 @@ def is_divider(item: str)-> bool:
     return re.match(r'^(,|:)', item) is not None
 
 
-def split_long_author_list(authors: AuthorList, size:int) -> Tuple[AuthorList, AuthorList]:
+def split_long_author_list(authors: AuthorList, size: int) -> Tuple[AuthorList, AuthorList, int]:
     """Returns two lists where the first is of size and the second is the remaining authors.
 
-    The author list has strings which are not part of the author names, but commas between them to preserve
-    the formatting that the submitter used.
+    The author list has strings which are not part of the author names, but commas
+    between them to preserve the formatting that the submitter used.
 
     This function is used to split the list base on name count, not just list element count.
     """
@@ -47,14 +46,13 @@ def split_long_author_list(authors: AuthorList, size:int) -> Tuple[AuthorList, A
     for item in authors:
         if count > size:
             back.append(item)
-            if type(item) is tuple:
+            if isinstance(item, tuple):
                 back_count = back_count + 1
         else:
             front.append(item)
-            if type(item) is tuple:
+            if isinstance(item, tuple):
                 count = count + 1
     return front, back, back_count
-
 
 
 def queries_for_authors(authors: str) -> AuthorList:
@@ -117,10 +115,10 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
                        item, re.IGNORECASE)
     if colab_m:
         s = f'{colab_m.group(1)} {colab_m.group(2)}'
-        out.append((s,s))
+        out.append((s, s))
         return out
 
-    the_m = re.match('the (.*)',item, re.IGNORECASE)
+    the_m = re.match('the (.*)', item, re.IGNORECASE)
     if the_m:
         out.append((item, the_m.group(1)))
         return out
@@ -145,7 +143,7 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
             name_bit_count += 1
 
             if (found_prefix or (name_bit_count > 1
-                                 and re.match('^('+PREFIX_MATCH+')$',
+                                 and re.match('^(' + PREFIX_MATCH + ')$',
                                               name_bit, re.IGNORECASE))):
                 surname_prefixes.append(name_bit)
                 found_prefix = True

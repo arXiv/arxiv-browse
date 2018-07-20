@@ -2,7 +2,7 @@
 import glob
 from typing import List
 from unittest import mock, TestCase
-from tests import grep_f_count, execute_sql_files, test_path_of
+from tests import grep_f_count, execute_sql_files, path_of_for_test
 
 
 DATABASE_URL = 'sqlite:///:memory:'
@@ -72,7 +72,7 @@ class TestBrowseDatabaseService(TestCase):
         database.db.session.add(inst_other_ip)
         database.db.session.commit()
 
-        sql_dir = test_path_of('data/db/sql')
+        sql_dir = path_of_for_test('data/db/sql')
         sql_files: List[str] = glob.glob(f'{sql_dir}/*.sql')
         execute_sql_files(sql_files, database.db.engine)
         database.db.session.commit()
@@ -118,7 +118,7 @@ class TestBrowseDatabaseService(TestCase):
 
     def test_all_trackback_pings(self) -> None:
         """Test if all trackback pings are counted."""
-        doc_sql_file = test_path_of('data/db/sql/arXiv_trackback_pings.sql')
+        doc_sql_file = path_of_for_test('data/db/sql/arXiv_trackback_pings.sql')
 
         count_from_file = grep_f_count(
             doc_sql_file,

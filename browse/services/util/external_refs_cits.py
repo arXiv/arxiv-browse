@@ -30,11 +30,9 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
     today = date.today()
     this_month = date(today.year, today.month, 1)
     primary_archive = docmeta.primary_archive.id
-    if primary_archive in DBLP_ARCHIVES and \
-            orig_publish_date < this_month and \
-            orig_publish_date >= DBLP_START_DATE:
-        return True
-    return False
+    return primary_archive in DBLP_ARCHIVES and \
+        orig_publish_date < this_month and \
+        orig_publish_date >= DBLP_START_DATE
 
 
 def get_dblp_bibtex_path(url: str) -> Optional[str]:

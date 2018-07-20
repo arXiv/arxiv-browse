@@ -3,8 +3,9 @@ import os
 import re
 import tarfile
 from operator import itemgetter
-from tarfile import ReadError, CompressionError
 from typing import Dict, List
+
+from tarfile import ReadError, CompressionError
 
 # List of tuples containing the valid source file name extensions and their
 # corresponding dissemintation formats.
@@ -140,7 +141,7 @@ def list_ancillary_files(tarball_path: str) -> List[Dict]:
             size_bytes = member.size
             anc_files.append({'name': name, 'size_bytes': size_bytes})
     except (ReadError, CompressionError):
-        # TODO: log this?
+        # TODO: log this?, no probably raise and let caller handle what to do
         return []
     if len(anc_files) > 1:
         anc_files = sorted(anc_files, key=itemgetter('name'))

@@ -6,7 +6,7 @@ from browse.domain import metadata
 from browse.services.document.author_affil import split_authors
 from browse.services.document.metadata import AbsMetaSession
 from browse.services.search.search_authors import queries_for_authors, split_long_author_list
-from tests import test_path_of
+from tests import path_of_for_test
 
 class TestAuthorLinkCreation(TestCase):
     def test_basic(self):
@@ -47,7 +47,7 @@ class TestAuthorLinkCreation(TestCase):
 
 
     def test_split_long_author_list(self):
-        f1 = test_path_of('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
+        f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
         alst = split_long_author_list(queries_for_authors(meta.authors), 20)
         self.assertIs(type(alst), tuple)
@@ -58,7 +58,7 @@ class TestAuthorLinkCreation(TestCase):
         self.assertIs(type(alst[2]), int)
 
     def test_split_with_collaboration(self):
-        f1 = test_path_of('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
+        f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
 
         split = split_authors( meta.authors)

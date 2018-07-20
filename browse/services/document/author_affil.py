@@ -155,8 +155,7 @@ def parse_author_affil_utf(authors: str) -> List:
     if not authors:
         return []
     return list(map(
-        lambda author:
-            list(map(tex2utf, author)), parse_author_affil(authors)))
+        lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
 
 
 def _remove_double_commas(items: List[str]) -> List[str]:
@@ -272,7 +271,7 @@ def _parse_author_affil_back_propagate(author_list: List[List[str]],
       a.b.first (1), c.d.second (1), e.f.third (2,3), g.h.forth (2,3)
     """
     last_affil: List[str] = []
-    for x in range(len(author_list)-1, max(back_prop-1, -1), -1):
+    for x in range(len(author_list) - 1, max(back_prop - 1, -1), -1):
         author_entry = author_list[x]
         if len(author_entry) > 3:  # author has affiliation,store
             last_affil = author_entry
@@ -308,7 +307,7 @@ def split_authors(authors: str) -> List:
         depth = 0
         for bit in aus:
             if bit == '':
-                next
+                continue
             if bit == '(':  # track open parentheses
                 depth += 1
                 if depth == 1:
@@ -323,7 +322,7 @@ def split_authors(authors: str) -> List:
                     blocks.append(c)
                     c = ''
                 else:  # haven't closed, so keep accumulating
-                    next
+                    continue
             else:
                 c = c + bit
         if c:
@@ -340,7 +339,7 @@ def split_authors(authors: str) -> List:
             names = re.split(r'(,|:)\s*', block)
             for name in names:
                 if not name:
-                    next
+                    continue
                 name = name.rstrip().lstrip()
                 if name:
                     listx.append(name)

@@ -40,7 +40,7 @@ class IdentifierIsArchiveException(IdentifierException):
     pass
 
 
-class Identifier(object):
+class Identifier():
     """Class for arXiv identifiers of published papers."""
 
     def __init__(self, arxiv_id: str) -> None:

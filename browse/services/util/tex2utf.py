@@ -92,7 +92,7 @@ textlet = {
 
 
 def _p_to_match(tex_to_chr: Dict[str, int]) -> Pattern:
-    #textsym and textlet both use the same sort of regex pattern.
+    # textsym and textlet both use the same sort of regex pattern.
     keys = r'\\(' + '|'.join(tex_to_chr.keys()) + ')'
     pstr = r'({)?' + keys + r'(\b|(?=_))(?(1)}|(\\(?= )| |{}|)?)'
     return re.compile(pstr)
@@ -158,7 +158,7 @@ def tex2utf(tex: str) -> str:
 
     # reduce {{x}}, {{{x}}}, ... down to {x}
     while re.search(r'\{\{([^\}]*)\}\}', utf):
-        utf = re.sub(r'\{\{([^\}]*)\}\}', '{\g<1>}', utf)
+        utf = re.sub(r'\{\{([^\}]*)\}\}', r'{\g<1>}', utf)
         # $utf =~ s/\{\{([^\}]*)\}\}/{$1}/g;
 
     # Accents which have a non-letter prefix in TeX, first \'e
@@ -179,7 +179,7 @@ def tex2utf(tex: str) -> str:
 
     # Don't do \t{oo} yet,
     # $utf =~ s/\\t\{([^\}])\}/$2/g;
-    utf = re.sub(r'\\t{([^\}])\}', '\g<1>', utf)
+    utf = re.sub(r'\\t{([^\}])\}', r'\g<1>', utf)
 
     # bdc34: commented out in original Perl
     # $utf =~ s/\{(.)\}/$1/g; #  remove { } from around {x}

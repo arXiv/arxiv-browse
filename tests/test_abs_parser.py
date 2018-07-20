@@ -6,9 +6,9 @@ from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.services.document.metadata import AbsMetaSession
-from tests import test_path_of
+from tests import path_of_for_test
 
-ABS_FILES = test_path_of('data/abs_files')
+ABS_FILES = path_of_for_test('data/abs_files')
 
 
 class TestAbsParser(TestCase):

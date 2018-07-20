@@ -24,7 +24,7 @@ class DocumentCacheFormatException(Exception):
     pass
 
 
-class DocumentCacheSession(object):
+class DocumentCacheSession():
     """Document cache session class."""
 
     def __init__(self, document_cache_path: str) -> None:
@@ -49,20 +49,21 @@ class DocumentCacheSession(object):
             identifier.yymm,
             f'{identifier.filename}v{docmeta.version}'
         )
-        if format == 'html' and os.path.isdir(parent_path):
+        if cache_format == 'html' and os.path.isdir(parent_path):
             # HTML is directory-based
             return parent_path
-        else:
-            extension = f'.{cache_format}'
-            if re.match(r'^other', cache_format):
-                extension = '.ps.gz'
-            elif type == 'ps':
-                extension = f'{extension}.gz'
+
+        extension = f'.{cache_format}'
+        if re.match(r'^other', cache_format):
+            # TODO is this correct? extension is unused?
+            extension = '.ps.gz'
+        elif type == 'ps':
+            extension = f'{extension}.gz'
             cache_file_path = f'{parent_path}{extension}'
             if os.path.isfile(cache_file_path):
                 return cache_file_path
-
-        return None
+        else:
+            return None
 
 
 @wraps(DocumentCacheSession.get_cache_file_path)

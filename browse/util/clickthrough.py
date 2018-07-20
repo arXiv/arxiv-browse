@@ -8,8 +8,8 @@ controller to create links that look like they are on arXiv but get
 redirected to malware or something.
 """
 
-import mmh3
 from typing import Callable
+import mmh3
 
 
 def create_hash(secret: str, url: str) -> str:

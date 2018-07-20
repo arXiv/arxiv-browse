@@ -2,11 +2,11 @@
 import collections
 from typing import List, Optional
 from datetime import datetime
-
 from dataclasses import dataclass, field
+
+from arxiv import taxonomy
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-from arxiv import taxonomy
 
 
 @dataclass
