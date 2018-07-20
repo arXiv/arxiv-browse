@@ -2,6 +2,11 @@
 import glob
 from typing import List
 from unittest import mock, TestCase
+from unittest.mock import Mock, patch
+from sqlalchemy.exc import SQLAlchemyError
+
+from sqlalchemy.orm.exc import NoResultFound
+
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 
 
@@ -203,6 +208,35 @@ class TestBrowseDatabaseService(TestCase):
         self.assertListEqual(
             TestBrowseDatabaseService.database_service.get_dblp_authors(
                 test_paper_id), [])
+
+    @mock.patch('browse.services.database.models.db.session.query')
+    def test_error_conditions(self, mock_query)->None:
+        mock_query.side_effect = NoResultFound
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.get_institution('10.0.0.1'), None)
+        self.assertEqual([],
+            TestBrowseDatabaseService.database_service.get_all_trackback_pings())
+        self.assertListEqual(
+            TestBrowseDatabaseService.database_service.get_trackback_pings('0704.0361'), [])
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.count_trackback_pings('0704.0361'), 0)
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.count_all_trackback_pings(), 0)
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.has_sciencewise_ping('0704.0361'), False)
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.get_dblp_listing_path('0704.0361'), None)
+        self.assertEqual(
+            TestBrowseDatabaseService.database_service.get_dblp_authors('0704.0361'), [])
+        mock_query.side_effect = SQLAlchemyError
+        self.assertRaises(SQLAlchemyError,
+                          TestBrowseDatabaseService.database_service.get_institution, '10.0.0.1')
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_all_trackback_pings)
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_trackback_pings, 'paperx')
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.count_all_trackback_pings)
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.has_sciencewise_ping, 'px')
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_listing_path, 'px')
+        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_authors,'authx')
 
     @classmethod
     def tearDownClass(cls) -> None:

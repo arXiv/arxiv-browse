@@ -16,11 +16,11 @@ from werkzeug.datastructures import MultiDict
 from arxiv import status, taxonomy
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors, split_long_author_list
+from browse.services.search.search_authors import queries_for_authors,split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
-    AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
+     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
@@ -29,6 +29,9 @@ from browse.services.util.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
     DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
+from arxiv.base import logging
+
+logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -79,9 +82,6 @@ def get_abs_page(arxiv_id: str,
         response_data['author_links'] = \
             split_long_author_list(queries_for_authors(
                 abs_meta.authors), truncate_author_list_size)
-        response_data['include_inspire_link'] = include_inspire_link(abs_meta)
-        response_data['dblp'] = _check_dblp(abs_meta)
-        response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -89,14 +89,26 @@ def get_abs_page(arxiv_id: str,
             abs_meta,
             download_format_pref,
             add_sciencewise_ping)
-        # Ancillary files
-        response_data['ancillary_files'] = \
-            metadata.get_ancillary_files(abs_meta)
 
-        # Browse context
-        _check_context(arxiv_identifier,
-                       request_params,
-                       response_data)
+        # the following are less critical and the template must display without them
+        try:
+            response_data['include_inspire_link'] = include_inspire_link(
+                abs_meta)
+            response_data['dblp'] = _check_dblp(abs_meta)
+            response_data['trackback_ping_count'] = count_trackback_pings(
+                arxiv_id)
+
+            # Ancillary files
+            response_data['ancillary_files'] = \
+                metadata.get_ancillary_files(abs_meta)
+
+            # Browse context
+            _check_context(arxiv_identifier,
+                           request_params,
+                           response_data)
+        except Exception as e:
+            logger.error("Error getting non-critical abs page data",
+                         exc_info=app.debug)
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
@@ -122,11 +134,9 @@ def get_abs_page(arxiv_id: str,
     except IdentifierException:
         raise AbsNotFound(data={'arxiv_id': arxiv_id})
     except (AbsException, Exception) as e:
-        print(f'Problem: {e}')
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
-    metadata.get_next_id(identifier=arxiv_identifier)
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -196,7 +206,6 @@ def _check_sciencewise_ping(paper_id_v: str) -> bool:
     try:
         return has_sciencewise_ping(paper_id_v)
     except IOError:
-        # log this
         return False
 
 

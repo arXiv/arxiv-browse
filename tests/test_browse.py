@@ -4,11 +4,15 @@ from tests.test_abs_parser import ABS_FILES
 from browse.factory import create_web_app
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
+from browse.domain.metadata import DocMetadata
 
 import os
 import tempfile
 
 from app import app
+
+
+ABS_FILES = 'tests/data/abs_files'
 
 
 class BrowseTest(unittest.TestCase):
@@ -59,6 +63,13 @@ class BrowseTest(unittest.TestCase):
         assert b'additional authors not shown' in rv.data, \
             'abs/1411.4413 should have a truncate author list'
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_all_abs_as_web_pages(self):
+        num_files_tested = 0
+        for dir_name, subdir_list, file_list in os.walk(ABS_FILES):
+            for fname in file_list:
+                fname_path = os.path.join(dir_name, fname)
+                if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
+                    continue
+                m = AbsMetaSession.parse_abs_file(filename=fname_path)
+                rv = self.app.get(f'/abs/{m.arxiv_id}')
+                self.assertEqual(rv.status_code, 200)

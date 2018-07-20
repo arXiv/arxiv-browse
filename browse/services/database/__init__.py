@@ -3,7 +3,6 @@
 import ipaddress
 from typing import List, Optional
 from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -45,8 +44,6 @@ def get_institution(ip: str) -> Optional[str]:
         return institution_name  # type: ignore
     except NoResultFound:
         return None
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
 
 
 def get_all_trackback_pings() -> List[TrackbackPing]:
@@ -55,8 +52,6 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
         return list(__all_trackbacks_query().all())
     except NoResultFound:
         return []
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
 
 
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
@@ -65,14 +60,15 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
         return list(__paper_trackbacks_query(paper_id).all())
     except NoResultFound:
         return []
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
 
 
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
-    return __paper_trackbacks_query(paper_id)\
-        .group_by(TrackbackPing.url).count()
+    try:
+        return __paper_trackbacks_query(paper_id)\
+            .group_by(TrackbackPing.url).count()
+    except NoResultFound:
+        return 0
 
 
 def count_all_trackback_pings() -> int:
@@ -90,8 +86,6 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
             .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
     except NoResultFound:
         return False
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
 
 
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
@@ -102,8 +96,6 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
         return url
     except NoResultFound:
         return None
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e
 
 
 def get_dblp_authors(paper_id: str) -> List[str]:
@@ -117,5 +109,3 @@ def get_dblp_authors(paper_id: str) -> List[str]:
         return authors
     except NoResultFound:
         return []
-    except SQLAlchemyError as e:
-        raise IOError('Database error: %s' % e) from e

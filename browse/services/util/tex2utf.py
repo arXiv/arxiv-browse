@@ -1,6 +1,5 @@
 """Convert between TeX escapes and UTF8."""
 import re
-import pprint
 from typing import Pattern, Dict, Match
 
 # Hash to lookup tex markup and convert to Unicode
