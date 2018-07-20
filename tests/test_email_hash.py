@@ -16,5 +16,7 @@ class TestEmailHAsh(unittest.TestCase):
         if h is not None:
             if v != s:
                 self.assertNotEqual(h, generate_show_email_hash(v, s))
-            self.assertNotEqual(h, generate_show_email_hash(s, x))
-            self.assertNotEqual(h, generate_show_email_hash(x, v))
+            if x != v:
+                self.assertNotEqual(h, generate_show_email_hash(s, x))
+            if x != s:
+                self.assertNotEqual(h, generate_show_email_hash(x, v))
