@@ -16,7 +16,7 @@ class AbsNotFound(HTTPException):
 
     def __init__(self, description: Optional[str] = None,
                  response: Optional[Response] = None,
-                 data: dict = {}):
+                 data: dict = {}) -> None:
         """Override default to support data dict."""
         self.data = data
         super(AbsNotFound, self).__init__(description, response)

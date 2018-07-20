@@ -613,5 +613,5 @@ def current_session() -> AbsMetaSession:
     if not g:
         return get_session()
     if 'abs_meta' not in g:
-        g.abs_meta = get_session()    # type: ignore
+        g.abs_meta = get_session()
     return g.abs_meta     # type: ignore
