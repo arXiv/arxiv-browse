@@ -6,20 +6,21 @@ GET requests to the abs endpoint.
 """
 
 from typing import Tuple, Dict, Any, Optional
+from urllib.parse import urljoin
+
 from flask import url_for
 from flask import current_app as app
-from urllib.parse import urljoin
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors,split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
-     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
+    AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.util.routes import search_author
@@ -29,10 +30,14 @@ from browse.services.util.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
     DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
+from arxiv.base import logging
+
+logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 truncate_author_list_size = 100
+
 
 def get_abs_page(arxiv_id: str,
                  request_params: MultiDict,
@@ -76,7 +81,8 @@ def get_abs_page(arxiv_id: str,
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = \
-            split_long_author_list(queries_for_authors(abs_meta.authors), truncate_author_list_size)
+            split_long_author_list(queries_for_authors(
+                abs_meta.authors), truncate_author_list_size)
         response_data['author_search_url_fn'] = search_author
 
         # Dissemination formats for download links
@@ -88,9 +94,11 @@ def get_abs_page(arxiv_id: str,
 
         # the following are less critical and the template must display without them
         try:
-            response_data['include_inspire_link'] = include_inspire_link(abs_meta)
+            response_data['include_inspire_link'] = include_inspire_link(
+                abs_meta)
             response_data['dblp'] = _check_dblp(abs_meta)
-            response_data['trackback_ping_count'] = count_trackback_pings(arxiv_id)
+            response_data['trackback_ping_count'] = count_trackback_pings(
+                arxiv_id)
 
             # Ancillary files
             response_data['ancillary_files'] = \
@@ -101,8 +109,8 @@ def get_abs_page(arxiv_id: str,
                            request_params,
                            response_data)
         except Exception as e:
-            app.logger.error("Error getting non-critical abs page data", exc_info=app.debug)
-
+            logger.error("Error getting non-critical abs page data",
+                         exc_info=app.debug)
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
