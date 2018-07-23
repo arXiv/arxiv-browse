@@ -165,7 +165,7 @@ class DocMetadata():
 
     def __post_init__(self) -> None:
         """Post-initialization for DocMetadata."""
-        # see https://github.com/python/mypy/issues/2852 for type ignores:
+        # see https://github.com/python/mypy/issues/5384 for type ignores:
         self.primary_archive = Archive(   # type: ignore
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
         self.primary_group = Group(  # type: ignore
