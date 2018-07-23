@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Dict, Match, Optional
+from typing import Match, Optional, TypeVar
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -40,7 +40,10 @@ class IdentifierIsArchiveException(IdentifierException):
     pass
 
 
-class Identifier():
+I = TypeVar('I', bound='Identifier')
+
+
+class Identifier:
     """Class for arXiv identifiers of published papers."""
 
     def __init__(self, arxiv_id: str) -> None:
@@ -196,6 +199,12 @@ class Identifier():
         """Return the instance representation."""
         return f"Identifier(arxiv_id='{self.ids}')"
 
-    def __eq__(self, other: Identifier) -> bool:
-        """Return instance equality."""
+    def __eq__(self, other: object) -> bool:
+        """
+        Return instance equality: other should be type <= Instance
+
+        Note that 'other' can't be statically checked to be type Instance
+        by design: https://stackoverflow.com/a/37557540/3096687
+
+        """
         return self.__dict__ == other.__dict__

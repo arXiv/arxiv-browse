@@ -123,7 +123,7 @@ def has_ancillary_files(source_type: str) -> bool:
     """Check source type for indication of ancillary files."""
     if not source_type:
         return False
-    return re.search('A', source_type, re.IGNORECASE)
+    return re.search('A', source_type, re.IGNORECASE) is not None
 
 
 def list_ancillary_files(tarball_path: str) -> List[Dict]:

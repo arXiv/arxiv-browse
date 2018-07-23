@@ -64,7 +64,7 @@ class Category():
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
@@ -74,7 +74,7 @@ class Category():
 class Archive(Category):
     """Represents an arXiv archive."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full archive name."""
         if self.id in taxonomy.ARCHIVES:
             self.name = taxonomy.ARCHIVES[self.id]['name']
@@ -84,7 +84,7 @@ class Archive(Category):
 class Group(Category):
     """Represents an arXiv group."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full group name."""
         if self.id in taxonomy.ARCHIVES:
             self.name = taxonomy.ARCHIVES[self.id]['name']
@@ -165,19 +165,24 @@ class DocMetadata():
 
     def __post_init__(self) -> None:
         """Post-initialization for DocMetadata."""
-        self.primary_archive = Archive(
+        # see https://github.com/python/mypy/issues/2852 for type ignores:
+        self.primary_archive = Archive(   # type: ignore
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
-        self.primary_group = Group(
+        self.primary_group = Group(  # type: ignore
             id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
         if self.arxiv_identifier.is_old_id:
-            return [self.arxiv_identifier.archive]
-        options = {}
-        options[self.primary_category.id] = True
-        options[taxonomy.CATEGORIES[self.primary_category.id]['in_archive']] \
-            = True
+            if self.arxiv_identifier.archive is not None:
+                return [self.arxiv_identifier.archive]
+            else:
+                return []
+
+        options = {
+            self.primary_category.id : True,
+            taxonomy.CATEGORIES[self.primary_category.id]['in_archive'] : True
+        }
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
