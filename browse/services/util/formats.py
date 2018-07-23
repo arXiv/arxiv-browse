@@ -3,7 +3,7 @@ import os
 import re
 import tarfile
 from operator import itemgetter
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from tarfile import ReadError, CompressionError
 
@@ -33,7 +33,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
 
 
 def formats_from_source_type(source_type: str,
-                             format_pref: str = None,
+                             format_pref: Optional[str] = None,
                              cache_flag: bool = False) -> List[str]:
     """
     Get the dissemination formats based on source type and format preference.

@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match
+from typing import Dict, Match, Optional
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -50,12 +50,12 @@ class Identifier():
         """
         self.ids = arxiv_id
         """The ID as specified."""
-        self.id = None
-        self.archive = None
-        self.filename = None
-        self.year = None
+        self.id: Optional[str] = None
+        self.archive: Optional[str] = None
+        self.filename: Optional[str] = None
+        self.year: Optional[int] = None
         self.month = None
-        self.is_old_id = None
+        self.is_old_id: Optional[bool] = None
 
         if self.ids in taxonomy.ARCHIVES:
             raise IdentifierIsArchiveException(
@@ -84,14 +84,19 @@ class Identifier():
                 f'invalid arXiv identifier {self.ids}'
             )
 
-        self.num = int(id_match.group('num'))
-        if self.num == 0 \
-           or (self.num > 99999 and self.year >= 2015) \
-           or (self.num > 9999 and self.year < 2015) \
-           or (self.num > 999 and self.is_old_id):
-            raise IdentifierException(
-                'invalid arXiv identifier {}'.format(self.ids)
-            )
+        self.num: Optional[int] = int(id_match.group('num'))
+        if self.num is None:
+            raise IdentifierException('arXiv identifier is empty')
+        if self.year is None:
+            raise IdentifierException('year is empty')
+        if self.num is not None and self.year is not None:
+            if self.num == 0 \
+               or (self.num > 99999 and self.year >= 2015) \
+               or (self.num > 9999 and self.year < 2015) \
+               or (self.num > 999 and self.is_old_id):
+                raise IdentifierException(
+                    'invalid arXiv identifier {}'.format(self.ids)
+                )
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
@@ -191,6 +196,6 @@ class Identifier():
         """Return the instance representation."""
         return f"Identifier(arxiv_id='{self.ids}')"
 
-    def __eq__(self, other):
+    def __eq__(self, other: Identifier) -> bool:
         """Return instance equality."""
         return self.__dict__ == other.__dict__
