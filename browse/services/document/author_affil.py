@@ -1,7 +1,7 @@
 """Parse Authors lines to extract author and affiliation data."""
 import re
 from itertools import dropwhile
-from typing import List, Tuple, Dict
+from typing import Dict, Iterator, List, Tuple
 
 from browse.services.util.tex2utf import tex2utf
 
@@ -84,9 +84,9 @@ def _parse_author_affil_split(author_line: str) -> Dict:
 
     names = _remove_double_commas(names)
     # get rid of commas at back
-    names = list(reversed(list(dropwhile(lambda x: x == ',', reversed(names)))))
+    namesIter: Iterator[str] = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))
     # get rid of commas at front
-    names = list(dropwhile(lambda x: x == ',', names))
+    names = list(dropwhile(lambda x: x == ',', namesIter))
 
     # Extract all names (all parts not starting with comma or paren)
     names = list(map(_tidy_name, filter(
@@ -159,14 +159,15 @@ def parse_author_affil_utf(authors: str) -> List:
 
 
 def _remove_double_commas(items: List[str]) -> List[str]:
-    parts = []
+
+    parts: List[str] = []
     last = ''
-    for p in items:
-        if p == ',' and last == ',':
+    for pt in items:
+        if pt == ',' and last == ',':
             continue
         else:
-            parts.append(p)
-            last = p
+            parts.append(pt)
+            last = pt
     return parts
 
 

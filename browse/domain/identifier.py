@@ -1,7 +1,7 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match, Optional, TypeVar
+from typing import Match, Optional
 from arxiv import taxonomy
 
 # arXiv ID format used from 1991 to 2007-03
@@ -38,9 +38,6 @@ class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
 
     pass
-
-
-I = TypeVar('I', bound='Identifier')
 
 
 class Identifier:
