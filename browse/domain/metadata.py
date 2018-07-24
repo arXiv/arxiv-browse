@@ -47,12 +47,15 @@ class VersionEntry:
     """Source file type."""
 
 
-@dataclass
+@dataclass(frozen=True)
 class AuthorList:
     """Represents author names."""
 
-    raw: str = field(default_factory=str)
     """Raw author field string."""
+    raw: str = field(default_factory=str)
+
+    def __str__(self) -> str:
+        return self.raw
 
 
 @dataclass

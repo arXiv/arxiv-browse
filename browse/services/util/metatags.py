@@ -35,7 +35,7 @@ def meta_tag_metadata(metadata: DocMetadata) -> List:
 
     if metadata.authors:
 
-        hundo = parse_author_affil_utf(str(metadata.authors))[:100]
+        hundo = parse_author_affil_utf(metadata.authors.raw)[:100]
         meta_tags.extend(filter(
             lambda a: a, map(format_affil_author, hundo)))
 

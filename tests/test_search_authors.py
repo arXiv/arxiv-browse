@@ -48,7 +48,7 @@ class TestAuthorLinkCreation(TestCase):
     def test_split_long_author_list(self):
         f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
-        alst = split_long_author_list(queries_for_authors(meta.authors), 20)
+        alst = split_long_author_list(queries_for_authors(str(meta.authors)), 20)
         self.assertIs(type(alst), tuple)
         self.assertIs(len(alst), 3)
         self.assertIs(type(alst[0]), list)
@@ -60,9 +60,9 @@ class TestAuthorLinkCreation(TestCase):
         f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
 
-        split = split_authors(meta.authors)
+        split = split_authors(str(meta.authors))
         self.assertListEqual(split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
 
-        alst = queries_for_authors(meta.authors)
+        alst = queries_for_authors(str(meta.authors))
         self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'),
                                     ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])

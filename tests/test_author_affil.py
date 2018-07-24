@@ -287,5 +287,5 @@ class TestAuthorAffiliationParsing(TestCase):
     def test_collaboration_at_front(self):
         f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
         meta = AbsMetaSession.parse_abs_file(filename=f1)
-        paflst = parse_author_affil( meta.authors )
+        paflst = parse_author_affil(meta.authors.raw)
         self.assertListEqual(paflst, [['D0 Collaboration', '', ''], ['Abazov', 'V.', '']])

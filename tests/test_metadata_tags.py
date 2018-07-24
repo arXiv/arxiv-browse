@@ -93,5 +93,5 @@ classic/expected: {}
 ng/actual: {}
 
 test authors: {}
-test title: {}'''.format(mm.arxiv_id_v, num_files_tested, pprint.pformat(classic), pprint.pformat(ng), mm.authors,
+test title: {}'''.format(mm.arxiv_id_v, num_files_tested, pprint.pformat(classic), pprint.pformat(ng), mm.authors.raw,
                                             mm.title))

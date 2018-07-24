@@ -68,7 +68,7 @@ def get_abs_page(arxiv_id: str,
         Raised when there was an unexpected problem executing the query.
 
     """
-    response_data = {}  # type: Dict[str, Any]
+    response_data: Dict[str, Any] = {}
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         redirect_url = _check_supplied_identifier(arxiv_identifier)

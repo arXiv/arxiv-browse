@@ -8,8 +8,8 @@ from pytz import timezone
 
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-    VersionEntry, Category
+from browse.domain.metadata import AuthorList, Category, DocMetadata, \
+    SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -461,6 +461,9 @@ class AbsMetaSession():
         # abstract is the first main component
         fields['abstract'] = components[2]
 
+        # TODO type ignore: possibly mypy #3937
+        fields['authors'] = AuthorList(fields['authors'])  # type: ignore
+
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
         if not id_match:
@@ -507,7 +510,7 @@ class AbsMetaSession():
             fields['license'] = License(recorded_uri=fields['license'])  # type: ignore
 
         # TODO: unsure about this type ignore
-        return DocMetadata(**fields) # type: ignore
+        return DocMetadata(**fields)  # type: ignore
 
     def _get_version(self, identifier: Identifier,
                      version: Optional[int] = None) -> DocMetadata:
