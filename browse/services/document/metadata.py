@@ -1,7 +1,7 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from functools import wraps
 from dateutil import parser
 from pytz import timezone
@@ -139,55 +139,64 @@ class AbsMetaSession():
 
         """
         next_id = None
-        new_year = identifier.year
-        new_month = identifier.month
-        new_num = identifier.num + 1
-        if (identifier.is_old_id and new_num > 999) \
-           or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
-           or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
+        if identifier.year is not None and \
+                identifier.month is not None and \
+                identifier.num is not None:
+            new_year = identifier.year
+            new_month = identifier.month
+            new_num = identifier.num + 1
+            if (identifier.is_old_id and new_num > 999) \
+               or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
+               or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
+                new_num = 1
+                new_month = new_month + 1
+                if new_month > 12:
+                    new_month = 1
+                    new_year = new_year + 1
+
+            if identifier.is_old_id:
+                next_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
+            else:
+                if new_year >= 2015:
+                    next_id = '{:02d}{:02d}.{:05d}'.format(
+                        new_year % 100, new_month, new_num)
+                else:
+                    next_id = '{:02d}{:02d}.{:04d}'.format(
+                        new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=next_id)
+            except IdentifierException:
+                return None
+        else:
+            return None
+
+    def _next_yymm_id(self, identifier: Identifier) -> Optional[Identifier]:
+        """Get the first identifier for the next month."""
+        next_yymm_id = None
+        if identifier.year is not None and \
+                identifier.month is not None:
+            new_year = identifier.year
+            new_month = identifier.month + 1
             new_num = 1
-            new_month = new_month + 1
             if new_month > 12:
                 new_month = 1
                 new_year = new_year + 1
-
-        if identifier.is_old_id:
-            next_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
-                next_id = '{:02d}{:02d}.{:05d}'.format(
+            if identifier.is_old_id:
+                next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
+            elif new_year >= 2015:
+                next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
                     new_year % 100, new_month, new_num)
             else:
-                next_id = '{:02d}{:02d}.{:04d}'.format(
+                next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
                     new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=next_id)
-        except IdentifierException:
-            return None
 
-    def _next_yymm_id(self, identifier: Identifier):
-        """Get the first identifier for the next month."""
-        next_yymm_id = None
-        new_year = identifier.year
-        new_month = identifier.month + 1
-        new_num = 1
-        if new_month > 12:
-            new_month = 1
-            new_year = new_year + 1
-        if identifier.is_old_id:
-            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        elif new_year >= 2015:
-            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
-                new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=next_yymm_id)
+            except IdentifierException:
+                return None
         else:
-            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
-                new_year % 100, new_month, new_num)
-
-        try:
-            return Identifier(arxiv_id=next_yymm_id)
-        except IdentifierException:
             return None
 
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
@@ -246,34 +255,39 @@ class AbsMetaSession():
 
         """
         previous_id = None
-        new_year = identifier.year
-        new_month = identifier.month
-        new_num = identifier.num - 1
-        if new_num == 0:
-            new_month = new_month - 1
-            if new_month == 0:
-                new_month = 12
-                new_year = new_year - 1
-
-        if identifier.is_old_id:
+        if identifier.year is not None and \
+                identifier.month is not None and \
+                identifier.num is not None:
+            new_year = identifier.year
+            new_month = identifier.month
+            new_num = identifier.num - 1
             if new_num == 0:
-                new_num = 999
-            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
+                new_month = new_month - 1
+                if new_month == 0:
+                    new_month = 12
+                    new_year = new_year - 1
+
+            if identifier.is_old_id:
                 if new_num == 0:
-                    new_num = 99999
-                previous_id = '{:02d}{:02d}.{:05d}'.format(
-                    new_year % 100, new_month, new_num)
+                    new_num = 999
+                previous_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
             else:
-                if new_num == 0:
-                    new_num = 9999
-                previous_id = '{:02d}{:02d}.{:04d}'.format(
-                    new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=previous_id)
-        except IdentifierException:
+                if new_year >= 2015:
+                    if new_num == 0:
+                        new_num = 99999
+                    previous_id = '{:02d}{:02d}.{:05d}'.format(
+                        new_year % 100, new_month, new_num)
+                else:
+                    if new_num == 0:
+                        new_num = 9999
+                    previous_id = '{:02d}{:02d}.{:04d}'.format(
+                        new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=previous_id)
+            except IdentifierException:
+                return None
+        else:
             return None
 
     def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
@@ -339,7 +353,7 @@ class AbsMetaSession():
 
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
-                                  format_pref: str = None,
+                                  format_pref: Optional[str] = None,
                                   add_sciencewise: bool = False) -> List[str]:
         """
         Get a list of formats that can be disseminated for this DocMetadata.
@@ -373,9 +387,10 @@ class AbsMetaSession():
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
-        source_file_formats = formats_from_source_file_name(source_file_path)
-        if source_file_formats:
-            formats.extend(source_file_formats)
+        if source_file_path is not None:
+            source_file_formats = formats_from_source_file_name(source_file_path)
+            if source_file_formats:
+                formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -413,7 +428,10 @@ class AbsMetaSession():
         format_code = docmeta.version_history[version - 1].source_type.code
         if has_ancillary_files(format_code):
             source_file_path = self._get_source_path(docmeta)
-            return list_ancillary_files(source_file_path)
+            if source_file_path is not None:
+                return list_ancillary_files(source_file_path)
+            else:
+                return []
         return []
 
     @staticmethod
@@ -460,7 +478,8 @@ class AbsMetaSession():
             raise AbsParsingException('Could not extract submitter data.')
         name = from_match.group('name').rstrip()
         email = from_match.group('email') or None
-        fields['submitter'] = Submitter(name=name, email=email)
+        # type ignores here are for https://github.com/python/mypy/issues/5384
+        fields['submitter'] = Submitter(name=name, email=email)  # type: ignore
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
@@ -481,14 +500,15 @@ class AbsMetaSession():
 
         # some transformations
         categories = fields['categories'].split()
-        fields['primary_category'] = Category(id=categories[0])
+        fields['primary_category'] = Category(id=categories[0])  # type: ignore
         fields['secondary_categories'] = [
-            Category(id=x) for x in categories[1:] if len(categories) > 1
+            Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
         ]
         if 'license' in fields:
-            fields['license'] = License(recorded_uri=fields['license'])
+            fields['license'] = License(recorded_uri=fields['license'])  # type: ignore
 
-        return DocMetadata(**fields)
+        # TODO: unsure about this type ignore
+        return DocMetadata(**fields) # type: ignore
 
     def _get_version(self, identifier: Identifier,
                      version: int = None) -> DocMetadata:

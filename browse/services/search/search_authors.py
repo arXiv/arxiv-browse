@@ -1,5 +1,4 @@
 """Produces search service query strings for authors."""
-import itertools
 import re
 from typing import List, Tuple, Union
 
@@ -96,7 +95,7 @@ def queries_for_authors(authors: str) -> AuthorList:
 
 
 def _link_for_name_or_collab(item: str) -> AuthorList:
-    out = []
+    out: List[Union[str, Tuple[str, str]]] = []
 
     # deal with 'for the _whatever_' or 'for _whatever_'
     not_linked = re.match(r'\s*((for\s+?the\s+))(.*)',

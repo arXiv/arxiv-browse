@@ -8,6 +8,7 @@ from browse.services.document.metadata import AbsMetaSession
 from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from tests import path_of_for_test
 
+
 class TestAuthorLinkCreation(TestCase):
     def test_basic(self):
         out = queries_for_authors('')
@@ -44,8 +45,6 @@ class TestAuthorLinkCreation(TestCase):
         self.assertListEqual(
             out, [('C. de la Fuente Marcos', 'de la Fuente Marcos, C')])
 
-
-
     def test_split_long_author_list(self):
         f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
@@ -61,8 +60,9 @@ class TestAuthorLinkCreation(TestCase):
         f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
 
-        split = split_authors( meta.authors)
+        split = split_authors(meta.authors)
         self.assertListEqual(split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
 
         alst = queries_for_authors(meta.authors)
-        self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'), ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])
+        self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'),
+                                    ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])

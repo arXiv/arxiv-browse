@@ -10,7 +10,7 @@ from browse.domain.license import License
 
 
 @dataclass
-class SourceType():
+class SourceType:
     """Represents arXiv article source file type."""
 
     code: str = field(default_factory=str)
@@ -18,7 +18,7 @@ class SourceType():
 
 
 @dataclass
-class Submitter():
+class Submitter:
     """Represents the person who submitted an arXiv article."""
 
     name: str = field(default_factory=str)
@@ -29,7 +29,7 @@ class Submitter():
 
 
 @dataclass
-class VersionEntry():
+class VersionEntry:
     """Represents a single arXiv article version history entry."""
 
     version: int
@@ -48,7 +48,7 @@ class VersionEntry():
 
 
 @dataclass
-class AuthorList():
+class AuthorList:
     """Represents author names."""
 
     raw: str = field(default_factory=str)
@@ -56,7 +56,7 @@ class AuthorList():
 
 
 @dataclass
-class Category():
+class Category:
     """Represents an arXiv category."""
 
     id: str = field(default_factory=str)

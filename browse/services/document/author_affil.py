@@ -78,13 +78,13 @@ def _parse_author_affil_split(author_line: str) -> Dict:
     if not author_line:
         return {'author_list': [], 'back_prop': 0}
 
-    names = split_authors(author_line)
+    names: List[str] = split_authors(author_line)
     if not names:
         return {'author_list': [], 'back_prop': 0}
 
     names = _remove_double_commas(names)
     # get rid of commas at back
-    names = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))
+    names = list(reversed(list(dropwhile(lambda x: x == ',', reversed(names)))))
     # get rid of commas at front
     names = list(dropwhile(lambda x: x == ',', names))
 
