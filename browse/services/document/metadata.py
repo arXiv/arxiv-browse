@@ -437,8 +437,6 @@ class AbsMetaSession():
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
-        fields = {}  # type: Dict[str, Any]
-
         try:
             with open(filename) as absf:
                 raw = absf.read()
@@ -455,11 +453,14 @@ class AbsMetaSession():
             raise AbsParsingException(
                 'Unexpected number of components parsed from .abs.')
 
+        # everything else is in the second main component
+        prehistory, misc_fields = re.split(r'\n\n', components[1])
+
+        fields: Dict[str, Any] = AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
+
         # abstract is the first main component
         fields['abstract'] = components[2]
 
-        # everything else is in the second main component
-        prehistory, misc_fields = re.split(r'\n\n', components[1])
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
         if not id_match:
@@ -490,8 +491,6 @@ class AbsMetaSession():
             version_entry_list=parsed_version_entries
         )
         # named (key-value) fields
-        AbsMetaSession._parse_metadata_fields(fields=fields,
-                                              key_value_block=misc_fields)
         if 'categories' not in fields and fields['arxiv_identifier'].is_old_id:
             fields['categories'] = fields['arxiv_identifier'].archive
 
@@ -568,22 +567,23 @@ class AbsMetaSession():
                                f"{version_entries[-1].version}"
 
     @staticmethod
-    def _parse_metadata_fields(fields: Dict, key_value_block: str) -> Dict:
+    def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:
         """Parse the key-value block from the arXiv .abs string."""
         key_value_block = key_value_block.lstrip()
         field_lines = re.split(r'\n', key_value_block)
         field_name = 'unknown'
+        fields_builder: Dict[str, str] = {}
         for field_line in field_lines:
             field_match = RE_FIELD_COMPONENTS.match(field_line)
             if field_match and field_match.group('field') in NAMED_FIELDS:
                 field_name = field_match.group(
                     'field').lower().replace('-', '_')
                 field_name = re.sub(r'_no$', '_num', field_name)
-                fields[field_name] = field_match.group('value').rstrip()
+                fields_builder[field_name] = field_match.group('value').rstrip()
             elif field_name != 'unknown':
                 # we have a line with leading spaces
-                fields[field_name] += re.sub(r'^\s+', ' ', field_line)
-        return fields
+                fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
+        return fields_builder
 
 
 @wraps(AbsMetaSession.get_ancillary_files)
