@@ -101,12 +101,11 @@ class Identifier:
                     'invalid arXiv identifier {}'.format(self.ids)
                 )
         self.has_version: bool = False
+        self.idv: str = self.id
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
             self.has_version = True
-        else:
-            self.idv = self.id
         self.squashed = self.id.replace('/', '')
         self.squashedv = self.idv.replace('/', '')
         self.yymm: str = id_match.group('yymm')
