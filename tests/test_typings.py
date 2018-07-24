@@ -3,6 +3,7 @@ import os
 import glob
 import subprocess
 import unittest
+from subprocess import CalledProcessError
 from typing import Dict, List
 from unittest import TestCase
 
@@ -19,14 +20,22 @@ class MyPyTest(TestCase):
 
     def test_run_mypy_tests(self) -> None:
         """Run mypy on all tests in module under the tests directory."""
+
+        test_failures: int = 0
         for test_file in glob.iglob(f'{os.getcwd()}/tests/**/*.py',
                                     recursive=True):
             mypy_call: List[str] = ["mypy"] + self.mypy_opts + [test_file]
-            test_result: int = subprocess.call(
-                mypy_call, env=os.environ, cwd=self.pypath)
-            print(test_result)    # Kind of nice to see what failed.
-            # Choose 5 as the number of test errors to tolerate:
-            self.assertLessEqual(test_result, 5, f'mypy on test {test_file}')
+            test_result: str = ""
+            try:
+                test_result = subprocess.check_output(
+                    mypy_call, env=os.environ, cwd=self.pypath)
+            except CalledProcessError as ex:
+                test_result = ex.output.decode()
+            print(test_result)
+            test_failures += len(test_result.splitlines())
+        # Choose arbitrary number of test errors to tolerate:
+        # TODO: probably need to bring this down slightly
+        self.assertLessEqual(test_failures, 150, f'mypy on test {test_file}')
 
     def __init__(self, *args: str, **kwargs: Dict) -> None:
         """Set up some common variables."""

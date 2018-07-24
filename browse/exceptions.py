@@ -19,7 +19,7 @@ class AbsNotFound(HTTPException):
                  data: dict = {}) -> None:
         """Override default to support data dict."""
         self.data = data
-        super(AbsNotFound, self).__init__(description, response)  # type: ignore
+        super(AbsNotFound, self).__init__(description, response)
 
 
 @handler(AbsNotFound)

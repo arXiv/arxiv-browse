@@ -5,15 +5,17 @@ The primary entrypoint to this module is :func:`.get_abs_page`, which handles
 GET requests to the abs endpoint.
 """
 
-from typing import Tuple, Dict, Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
+from flask import current_app as app
 from flask import url_for
 
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
+from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors,split_long_author_list
@@ -29,7 +31,6 @@ from browse.services.util.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
     DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
-from arxiv.base import logging
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ truncate_author_list_size = 100
 
 def get_abs_page(arxiv_id: str,
                  request_params: MultiDict,
-                 download_format_pref: str = None) -> Response:
+                 download_format_pref: Optional[str] = None) -> Response:
     """
     Get abs page data from the document metadata service.
 
@@ -109,7 +110,7 @@ def get_abs_page(arxiv_id: str,
             _check_context(arxiv_identifier,
                            request_params,
                            response_data)
-        except Exception as e:
+        except Exception as ex:
             logger.error("Error getting non-critical abs page data",
                          exc_info=app.debug)
 
@@ -160,10 +161,10 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
     """
     if arxiv_identifier and arxiv_identifier.ids != arxiv_identifier.id and \
             arxiv_identifier.ids != arxiv_identifier.idv:
-        redirect_url = url_for('browse.abstract',
-                               arxiv_id=arxiv_identifier.idv
-                               if arxiv_identifier.has_version
-                               else arxiv_identifier.id)
+        redirect_url: str = url_for('browse.abstract',
+                                    arxiv_id=arxiv_identifier.idv
+                                    if arxiv_identifier.has_version
+                                    else arxiv_identifier.id)
         return redirect_url
     return None
 
@@ -219,12 +220,14 @@ def _check_dblp(docmeta: DocMetadata,
         return None
     identifier = docmeta.arxiv_identifier
     listing_path = None
-    author_list = []
+    author_list: List[str] = []
     # fallback check in case DB service is not available
     if db_override:
         listing_path = get_computed_dblp_listing_path(docmeta)
     else:
         try:
+            if identifier.id is None:
+                return None
             listing_path = get_dblp_listing_path(identifier.id)
             if not listing_path:
                 return None
@@ -232,7 +235,10 @@ def _check_dblp(docmeta: DocMetadata,
         except IOError:
             # log this
             return None
-    bibtex_path = get_dblp_bibtex_path(listing_path)
+    if listing_path is not None:
+        bibtex_path = get_dblp_bibtex_path(listing_path)
+    else:
+        return None
     return {
         'base_url': DBLP_BASE_URL,
         'author_search_url':

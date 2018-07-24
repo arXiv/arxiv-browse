@@ -19,8 +19,6 @@ def get_orig_publish_date(ident: Identifier) -> Optional[date]:
 
 def include_inspire_link(docmeta: DocMetadata) -> bool:
     """Check whether to include INSPIRE reference/citation link on abs page."""
-    if not docmeta:
-        return False
     identifier = docmeta.arxiv_identifier
     orig_publish_date = get_orig_publish_date(identifier)
     if orig_publish_date is not None:
@@ -35,8 +33,6 @@ def include_inspire_link(docmeta: DocMetadata) -> bool:
 
 def include_dblp_section(docmeta: DocMetadata) -> bool:
     """Check whether DBLP section should be included based only on metadata."""
-    if not docmeta:
-        return False
     identifier = docmeta.arxiv_identifier
     orig_publish_date = get_orig_publish_date(identifier)
     today = date.today()
@@ -52,8 +48,6 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
 
 def get_dblp_bibtex_path(url: str) -> Optional[str]:
     """Get the end of the DBLP bibtex URL path based on the listing path."""
-    if not url:
-        return None
     try:
         (response_type, dblp_id) = url.split('#')
         type_match = re.search(r'(\/journals\/|conf\/[^/]+)', response_type)

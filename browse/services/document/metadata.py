@@ -511,7 +511,7 @@ class AbsMetaSession():
         return DocMetadata(**fields) # type: ignore
 
     def _get_version(self, identifier: Identifier,
-                     version: int = None) -> DocMetadata:
+                     version: Optional[int] = None) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata."""
         parent_path = self._get_parent_path(identifier=identifier,
                                             version=version)
@@ -521,12 +521,13 @@ class AbsMetaSession():
         return self.parse_abs_file(filename=path)
 
     def _get_parent_path(self, identifier: Identifier,
-                         version: int = None) -> str:
+                         version: Optional[int] = None) -> str:
         """Get the absolute parent path of the provided identifier."""
         parent_path = os.path.join(
             (self.latest_versions_path if not version
              else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id else identifier.archive),
+            ('arxiv' if not identifier.is_old_id or identifier.archive is None
+             else identifier.archive),
             'papers',
             identifier.yymm,
         )
@@ -550,8 +551,9 @@ class AbsMetaSession():
                 raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
-            source_type = SourceType(code=date_match.group('source_type'))
-            ve = VersionEntry(
+            # type ignores here are for https://github.com/python/mypy/issues/5384
+            source_type = SourceType(code=date_match.group('source_type'))  # type: ignore
+            ve = VersionEntry(  # type: ignore
                 raw=date_match.group(0),
                 source_type=source_type,
                 size_kilobytes=int(date_match.group('size_kilobytes')),
@@ -566,7 +568,7 @@ class AbsMetaSession():
                                f"{version_entries[-1].version}"
 
     @staticmethod
-    def _parse_metadata_fields(fields: Dict, key_value_block: str) -> None:
+    def _parse_metadata_fields(fields: Dict, key_value_block: str) -> Dict:
         """Parse the key-value block from the arXiv .abs string."""
         key_value_block = key_value_block.lstrip()
         field_lines = re.split(r'\n', key_value_block)
@@ -592,7 +594,7 @@ def get_ancillary_files(docmeta: DocMetadata) -> List[Dict]:
 
 @wraps(AbsMetaSession.get_dissemination_formats)
 def get_dissemination_formats(docmeta: DocMetadata,
-                              format_pref: str = None,
+                              format_pref: Optional[str] = None,
                               add_sciencewise: bool = False) -> List:
     """Get list of dissemination formats."""
     return current_session().get_dissemination_formats(docmeta,
@@ -601,13 +603,13 @@ def get_dissemination_formats(docmeta: DocMetadata,
 
 
 @wraps(AbsMetaSession.get_next_id)
-def get_next_id(identifier: Identifier) -> Identifier:
+def get_next_id(identifier: Identifier) -> Optional[Identifier]:
     """Retrieve next arxiv document metadata by id."""
     return current_session().get_next_id(identifier)
 
 
 @wraps(AbsMetaSession.get_previous_id)
-def get_previous_id(identifier: Identifier) -> Identifier:
+def get_previous_id(identifier: Identifier) -> Optional[Identifier]:
     """Retrieve previous arxiv document metadata by id."""
     return current_session().get_previous_id(identifier)
 

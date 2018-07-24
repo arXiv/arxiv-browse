@@ -100,16 +100,16 @@ class Identifier:
                 raise IdentifierException(
                     'invalid arXiv identifier {}'.format(self.ids)
                 )
+        self.has_version: bool = False
         if id_match.group('version'):
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
             self.has_version = True
         else:
-            self.has_version = False
             self.idv = self.id
         self.squashed = self.id.replace('/', '')
         self.squashedv = self.idv.replace('/', '')
-        self.yymm = id_match.group('yymm')
+        self.yymm: str = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
         if self.month > 12 or self.month < 1:
             raise IdentifierException(

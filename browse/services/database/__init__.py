@@ -65,8 +65,9 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
     try:
-        return __paper_trackbacks_query(paper_id)\
+        count: int = __paper_trackbacks_query(paper_id) \
             .group_by(TrackbackPing.url).count()
+        return count
     except NoResultFound:
         return 0
 
@@ -82,8 +83,9 @@ def count_all_trackback_pings() -> int:
 def has_sciencewise_ping(paper_id_v: str) -> bool:
     """Determine whether versioned document has a ScienceWISE ping."""
     try:
-        return db.session.query(SciencewisePing) \
+        test: bool = db.session.query(SciencewisePing) \
             .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
+        return test
     except NoResultFound:
         return False
 
@@ -91,7 +93,7 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     try:
-        url = db.session.query(DBLP.url).join(Document).filter(
+        url: str = db.session.query(DBLP.url).join(Document).filter(
             Document.paper_id == paper_id).one().url
         return url
     except NoResultFound:
