@@ -3,7 +3,7 @@
         {%- if part is string -%}
             {{- part -}}
         {%- else -%}
-            <a href="{{url_for('search_box',searchtype='author',query=part[1])}}">{{part[0]}}</a>
+            <a href="{{url_for_author_search(part[1])}}">{{part[0]}}</a>
         {%- endif -%}
     {% endfor %}
 {%- endmacro -%}
