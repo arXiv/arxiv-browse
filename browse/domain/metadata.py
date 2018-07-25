@@ -64,10 +64,15 @@ class Category():
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
+    canonical: 'Category' = field(init=False)
+
     def __post_init__(self):
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
+
+        if self.id in taxonomy.ARCHIVES_SUBSUMED:
+            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
 
 
 @dataclass
