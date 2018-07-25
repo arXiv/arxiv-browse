@@ -73,6 +73,8 @@ class Category():
 
         if self.id in taxonomy.ARCHIVES_SUBSUMED:
             self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
+        else:
+            self.canonical = None
 
 
 @dataclass

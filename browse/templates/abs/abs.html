@@ -57,46 +57,46 @@
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
-        {% if abs_meta.comments %}
+        {%- if abs_meta.comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
           <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
         </tr>
-        {% endif %}
+        {% endif -%}
         <tr>
           <td class="tablecell label">Subjects:</td>
-          <td class="tablecell subjects"><span class="primary-subject">{{ abs_meta.primary_category.name }} ({{ abs_meta.primary_category.id }})</span>{% if abs_meta.secondary_categories %}{% for category in abs_meta.secondary_categories %}; {{ category.name}} ({{ category.id }}){% endfor %}{% endif %}</td>
+          <td class="tablecell subjects">{{ category_line() }}</td>
         </tr>
-        {% if abs_meta.msc_class %}
+        {%- if abs_meta.msc_class %}
         <tr>
           <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
           <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
         </tr>
-        {% endif %}
-        {% if abs_meta.acm_class %}
+        {% endif -%}
+        {%- if abs_meta.acm_class %}
         <tr>
           <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
           <td class="tablecell acm-classes">{{ abs_meta.acm_class }}</td>
         </tr>
-        {% endif %}
-        {% if abs_meta.journal_ref %}
+        {% endif -%}
+        {%- if abs_meta.journal_ref %}
         <tr>
           <td class="tablecell label">Journal&nbsp;reference:</td>
           <td class="tablecell jref">{{ abs_meta.journal_ref }}</td>
         </tr>
-        {% endif %}
-        {% if abs_meta.doi %}
+        {% endif -%}
+        {%- if abs_meta.doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
           <td class="tablecell msc_classes">TODO: link {{ abs_meta.doi }}</td>
         </tr>
-        {% endif %}
-        {% if abs_meta.report_num %}
+        {% endif -%}
+        {%- if abs_meta.report_num %}
         <tr>
           <td class="tablecell label">Report&nbsp;number:</td>
           <td class="tablecell jref">{{ abs_meta.report_num }}</td>
         </tr>
-        {% endif %}
+        {% endif -%}
         <tr>
           <td class="tablecell label">Cite as:</td>
           <td class="tablecell arxivid"><a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category.id }}]</td>
@@ -145,4 +145,11 @@
 <meta name="{{tag.name}}" content="{{tag.content}}"/>
     {%- endfor -%}
 {%- endif -%}
+{%- endmacro -%}
+
+{%- macro category_line() -%}
+  <span class="primary-subject">{{- abs_meta.primary_category.canonical.name or abs_meta.primary_category.name  }} ({{ abs_meta.primary_category.canonical.id or abs_meta.primary_category.id }})</span>
+  {%- if abs_meta.secondary_categories -%}
+    {%- for category in abs_meta.secondary_categories %}
+     {%- if abs_meta.primary_category.canonical and category.id != abs_meta.primary_category.canonical.id %}; {{ category.name}} ({{ category.id }}){% endif %}{% endfor %}{% endif %}
 {%- endmacro -%}
