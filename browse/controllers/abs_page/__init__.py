@@ -82,7 +82,7 @@ def get_abs_page(arxiv_id: str,
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = \
             split_long_author_list(queries_for_authors(
-                abs_meta.authors), truncate_author_list_size)
+                abs_meta.authors.raw), truncate_author_list_size)
         response_data['url_for_author_search'] = \
             lambda author_query: url_for('search_archive',
                                           searchtype='author', archive=abs_meta.primary_archive.id, query=author_query)
