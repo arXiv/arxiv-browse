@@ -34,6 +34,7 @@ stdenv.mkDerivation {
     ncurses # needed by uWSGI
     openssl
     pcre
+    pyre # for typechecking
     (uwsgi.override { plugins = [ "python3" ]; })
     zlib
   ];

@@ -3,7 +3,7 @@ import os
 import re
 import tarfile
 from operator import itemgetter
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from tarfile import ReadError, CompressionError
 
@@ -33,7 +33,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
 
 
 def formats_from_source_type(source_type: str,
-                             format_pref: str = None,
+                             format_pref: Optional[str] = None,
                              cache_flag: bool = False) -> List[str]:
     """
     Get the dissemination formats based on source type and format preference.
@@ -123,7 +123,7 @@ def has_ancillary_files(source_type: str) -> bool:
     """Check source type for indication of ancillary files."""
     if not source_type:
         return False
-    return re.search('A', source_type, re.IGNORECASE)
+    return re.search('A', source_type, re.IGNORECASE) is not None
 
 
 def list_ancillary_files(tarball_path: str) -> List[Dict]:

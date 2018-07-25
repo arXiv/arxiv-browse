@@ -15,6 +15,7 @@ from app import app
 CLASSIC_RESULTS_FILE = path_of_for_test('data/classic_scholar_metadata_tags.json')
 ABS_FILES = path_of_for_test('data/abs_files')
 
+
 class TestAgainstClassicResults(TestCase):
     """Test google scholar metadata created from abs files against classic exresults. """
 
@@ -23,7 +24,6 @@ class TestAgainstClassicResults(TestCase):
             app.config['APPLICATION_ROOT'] = ''
             app.config['SERVER_NAME'] = 'dev.arxiv.org'
             self.app = app
-
 
     def test_same_as_classic(self):
 
@@ -52,18 +52,18 @@ class TestAgainstClassicResults(TestCase):
                     continue
                 if not fname_path.endswith('.abs'):
                     continue
-                m = AbsMetaSession.parse_abs_file(filename=fname_path)
-                if m.arxiv_id_v in bad_data:
+                mm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                if mm.arxiv_id_v in bad_data:
                     continue
                 num_files_tested = num_files_tested + 1
 
-                self.assertIsInstance(m, DocMetadata)
+                self.assertIsInstance(mm, DocMetadata)
 
                 with self.app.test_request_context():
-                    gs_tags = meta_tag_metadata(m)
+                    gs_tags = meta_tag_metadata(mm)
 
                 self.assertIsInstance(gs_tags, list)
-                if m.arxiv_id_v not in classic_results:
+                if mm.arxiv_id_v not in classic_results:
                     # Could not find google scholar tags in classic results for this
                     # arxiv_id. Not a problem. Probably this abs was added to the
                     # test data after the classic results were generated.
@@ -72,7 +72,7 @@ class TestAgainstClassicResults(TestCase):
                     continue
 
                 classic = set(map(html.unescape, to_set(
-                    classic_results[m.arxiv_id_v])))
+                    classic_results[mm.arxiv_id_v])))
                 ng = set(map(html.unescape, to_set(gs_tags)))
 
                 if ng != classic:
@@ -93,5 +93,5 @@ classic/expected: {}
 ng/actual: {}
 
 test authors: {}
-test title: {}'''.format(m.arxiv_id_v, num_files_tested, pprint.pformat(classic), pprint.pformat(ng), m.authors,
-                                            m.title))
+test title: {}'''.format(mm.arxiv_id_v, num_files_tested, pprint.pformat(classic), pprint.pformat(ng), mm.authors.raw,
+                                            mm.title))

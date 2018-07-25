@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-arxiv-base = "==0.9.1"
+arxiv-base = ">=0.9.1"
 dataclasses = "*"
 inflect = "*"
 python-dateutil = "*"
@@ -14,7 +14,6 @@ Flask-SQLAlchemy = "*"
 "jinja2" = "==2.10"
 MarkupSafe = "*"
 SQLAlchemy = "*"
-werkzeug = "==0.13"
 pytz = "*"
 pylint = "*"
 coverage = "*"
@@ -25,8 +24,8 @@ mysqlclient = "*"
 
 [dev-packages]
 pylama = "*"
-mypy = "==0.560"
-"nose2" = "==0.7.3"
+mypy = "*"
+"nose2" = "*"
 sqlacodegen = "*"
 Flask-Testing = "*"
 pycodestyle = "*"

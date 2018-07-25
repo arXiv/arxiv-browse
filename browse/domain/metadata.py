@@ -10,7 +10,7 @@ from browse.domain.license import License
 
 
 @dataclass
-class SourceType():
+class SourceType:
     """Represents arXiv article source file type."""
 
     code: str = field(default_factory=str)
@@ -18,7 +18,7 @@ class SourceType():
 
 
 @dataclass
-class Submitter():
+class Submitter:
     """Represents the person who submitted an arXiv article."""
 
     name: str = field(default_factory=str)
@@ -29,7 +29,7 @@ class Submitter():
 
 
 @dataclass
-class VersionEntry():
+class VersionEntry:
     """Represents a single arXiv article version history entry."""
 
     version: int
@@ -47,16 +47,19 @@ class VersionEntry():
     """Source file type."""
 
 
-@dataclass
-class AuthorList():
+@dataclass(frozen=True)
+class AuthorList:
     """Represents author names."""
 
     raw: str = field(default_factory=str)
     """Raw author field string."""
 
+    def __str__(self) -> str:
+        return self.raw
+
 
 @dataclass
-class Category():
+class Category:
     """Represents an arXiv category."""
 
     id: str = field(default_factory=str)
@@ -64,7 +67,7 @@ class Category():
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
@@ -74,7 +77,7 @@ class Category():
 class Archive(Category):
     """Represents an arXiv archive."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full archive name."""
         if self.id in taxonomy.ARCHIVES:
             self.name = taxonomy.ARCHIVES[self.id]['name']
@@ -84,14 +87,14 @@ class Archive(Category):
 class Group(Category):
     """Represents an arXiv group."""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Get the full group name."""
         if self.id in taxonomy.ARCHIVES:
             self.name = taxonomy.ARCHIVES[self.id]['name']
 
 
 @dataclass
-class DocMetadata():
+class DocMetadata:
     """Class for representing the core arXiv document metadata."""
 
     arxiv_id: str = field(default_factory=str)
@@ -116,6 +119,7 @@ class DocMetadata():
 
     primary_category: Category = field(default_factory=Category)
     """Primary category."""
+
     primary_archive: Archive = field(init=False)
     primary_group: Group = field(init=False)
 
@@ -165,19 +169,24 @@ class DocMetadata():
 
     def __post_init__(self) -> None:
         """Post-initialization for DocMetadata."""
-        self.primary_archive = Archive(
+        # see https://github.com/python/mypy/issues/5384 for type ignores:
+        self.primary_archive = Archive(   # type: ignore
             id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
-        self.primary_group = Group(
+        self.primary_group = Group(  # type: ignore
             id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
         if self.arxiv_identifier.is_old_id:
-            return [self.arxiv_identifier.archive]
-        options = {}
-        options[self.primary_category.id] = True
-        options[taxonomy.CATEGORIES[self.primary_category.id]['in_archive']] \
-            = True
+            if self.arxiv_identifier.archive is not None:
+                return [self.arxiv_identifier.archive]
+            else:
+                return []
+
+        options = {
+            self.primary_category.id : True,
+            taxonomy.CATEGORIES[self.primary_category.id]['in_archive'] : True
+        }
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
