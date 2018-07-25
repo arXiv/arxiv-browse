@@ -1,5 +1,8 @@
 import unittest
 
+from bs4 import BeautifulSoup
+
+from tests import path_of_for_test
 from tests.test_abs_parser import ABS_FILES
 from browse.factory import create_web_app
 from browse.services.document.metadata import AbsMetaSession
@@ -12,8 +15,7 @@ import tempfile
 from app import app
 
 
-ABS_FILES = 'tests/data/abs_files'
-
+ABS_FILES =  path_of_for_test('data/abs_files')
 
 class BrowseTest(unittest.TestCase):
 
@@ -73,3 +75,23 @@ class BrowseTest(unittest.TestCase):
                 m = AbsMetaSession.parse_abs_file(filename=fname_path)
                 rv = self.app.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
+
+    def test_canonical_category(self):
+        # test these two
+        #  ./ftp/adap-org/papers/9303/9303002.abs:Categories: adap-org nlin.AO q-bio.PE
+        # ./ftp/adap-org/papers/9303/9303001.abs:Categories: adap-org nlin.AO
+
+        rv = self.app.get('/abs/adap-org/9303002')
+        self.assertEqual(rv.status_code, 200)
+
+        html = BeautifulSoup(rv.data.decode('utf-8'),'html.parser')
+        subject_elmt = html.find('td','subjects')
+        self.assertTrue(subject_elmt,'Should have <td class="subjects"> element')
+
+        sub_txt = subject_elmt.get_text()
+        self.assertRegex(sub_txt, r'nlin\.AO', 'should have canonical category of nlin.AO')
+        self.assertNotRegex(sub_txt, r'adap-org', 'should NOT have subsumed category name adap-org on subject line')
+        self.assertRegex(sub_txt, r'q-bio\.PE', 'should have secondary category of q-bio.PE')
+        self.assertNotRegex(sub_txt, r'nlin\.AO.*nlin\.AO', 'should NOT have nlin.AO twice')
+
+

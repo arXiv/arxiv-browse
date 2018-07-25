@@ -36,6 +36,7 @@ pytest = "*"
 pytest-html = "*"
 "ansi2html" = "*"
 hypothesis = "*"
+"beautifulsoup4" = "*"
 
 [requires]
 python_version = "3.6"
