@@ -18,10 +18,10 @@
     "default": {
         "arxiv-base": {
             "hashes": [
-                "sha256:cbe27464fcb5f7766c1c5d2b671104e07781abeeea7d7acb4c1cb5cb7a4c46d2"
+                "sha256:2666ebedc3d14262dfe49eb2f966b7b8b7366cfb69bdea5783605c4143c7af50"
             ],
             "index": "pypi",
-            "version": "==0.9.1"
+            "version": "==0.9.2"
         },
         "astroid": {
             "hashes": [
@@ -32,17 +32,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:330a80a341cccbd8f5f1b77be16e102e006c571f8519534538a5df34d96d0d4c",
-                "sha256:474c2c3aa070a2dae9ecf9d14d974e726960539deec43707385e02cdedae2221"
+                "sha256:6ab3147ae26399fc33b4af77491d1df985e0ebfd6fb64980d96ad33d91ba96ba",
+                "sha256:f0354982ab28e0f3bc3d969b28e07c1bebb87c3c7a28105c45ee509a3dfc52c6"
             ],
-            "version": "==1.7.62"
+            "version": "==1.7.63"
         },
         "botocore": {
             "hashes": [
-                "sha256:047d553ec2a4c7f80f9ca02f73c3ab443577bad6bcb079c698fb9dd8cc93c0af",
-                "sha256:379492474ce4151a26e41e3373cb07ac9642d06a297c78be3c382e3b8c1adbb7"
+                "sha256:a72d99f48f3b65c4440b1c059f9063b9d353692c78227ad290709590e041c17e",
+                "sha256:bbafb2a29e3a249c9d6ae00109bdbdb11049d0d860dc5531ff95ba86d61e587c"
             ],
-            "version": "==1.10.62"
+            "version": "==1.10.63"
         },
         "certifi": {
             "hashes": [
@@ -477,10 +477,12 @@
         },
         "hypothesis": {
             "hashes": [
-                "sha256:ab7426a4999bfdc3a1e8bf068fe9fe187d9f19eb91ac7025b475c44843846bf5"
+                "sha256:3cb0e53cbc1cfbce4d16f9560d17314ba3aa742fd945ba0db8fe1feae0f48273",
+                "sha256:3f53981fe4f038b188e8c7406e2475b470b42d7716611ebd592201131ac00c07",
+                "sha256:c3f6399c703117baaa845daa2037982a80342ff83d881d98c0dd252e4be4033f"
             ],
             "index": "pypi",
-            "version": "==3.66.7"
+            "version": "==3.66.8"
         },
         "inflect": {
             "hashes": [
