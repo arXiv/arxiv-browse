@@ -1,7 +1,7 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
 from pytz import timezone
@@ -70,7 +70,7 @@ class AbsDeletedException(Exception):
     pass
 
 
-class AbsMetaSession():
+class AbsMetaSession:
     """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
@@ -461,17 +461,13 @@ class AbsMetaSession():
         # abstract is the first main component
         fields['abstract'] = components[2]
 
-        # TODO type ignore: possibly mypy #3937
-        fields['authors'] = AuthorList(fields['authors'])  # type: ignore
-
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
         if not id_match:
             raise AbsParsingException(
                 'Could not extract arXiv ID from prehistory component.')
 
-        fields['arxiv_id'] = id_match.group('arxiv_id')
-        fields['arxiv_identifier'] = Identifier(arxiv_id=fields['arxiv_id'])
+        arxiv_id = id_match.group('arxiv_id')
 
         prehistory = re.sub(r'^.*\n', '', prehistory)
         parsed_version_entries = re.split(r'\n', prehistory)
@@ -482,35 +478,59 @@ class AbsMetaSession():
             raise AbsParsingException('Could not extract submitter data.')
         name = from_match.group('name').rstrip()
         email = from_match.group('email') or None
-        # type ignores here are for https://github.com/python/mypy/issues/5384
-        fields['submitter'] = Submitter(name=name, email=email)  # type: ignore
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        AbsMetaSession._parse_version_entries(
-            fields=fields,
-            version_entry_list=parsed_version_entries
+        (version, version_history, arxiv_id_v) = AbsMetaSession._parse_version_entries(
+            arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
         )
+
+        # TODO type ignore: possibly mypy #3937, also see #5389
+        arxiv_identifier=Identifier(arxiv_id=arxiv_id)
+
         # named (key-value) fields
-        if 'categories' not in fields and fields['arxiv_identifier'].is_old_id:
-            fields['categories'] = fields['arxiv_identifier'].archive
+        if 'categories' not in fields and arxiv_identifier.is_old_id:
+            fields['categories'] = arxiv_identifier.archive
 
         if not all(rf in fields for rf in REQUIRED_FIELDS):
             raise AbsParsingException(f'missing required field(s)')
 
         # some transformations
         categories = fields['categories'].split()
-        fields['primary_category'] = Category(id=categories[0])  # type: ignore
-        fields['secondary_categories'] = [
-            Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
-        ]
-        if 'license' in fields:
-            fields['license'] = License(recorded_uri=fields['license'])  # type: ignore
 
-        # TODO: unsure about this type ignore
-        return DocMetadata(**fields)  # type: ignore
+        doc_license: License = \
+            License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
+
+        return DocMetadata(  # type: ignore
+            arxiv_id=arxiv_id,
+            arxiv_id_v=arxiv_id_v,
+            arxiv_identifier=Identifier(arxiv_id=arxiv_id),
+            title=fields['title'],
+            abstract=fields['abstract'],
+            authors=AuthorList(fields['authors']),  # type: ignore
+            # TODO type ignores here are for https://github.com/python/mypy/issues/5384
+            submitter=Submitter(name=name, email=email),  # type: ignore
+            categories=fields['categories'],
+            primary_category=Category(id=categories[0]),  # type: ignore
+            # primary_archive=???
+            # primary_group=???
+            secondary_categories= [
+                Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
+            ],
+            # journal_ref=???
+            # report_num=???
+            # doi=???
+            # acm_class=???
+            # msc_class=???
+            license=doc_license,
+            # proxy=???
+            comments=fields['comments'] if 'comments' in fields else None,
+            version_history=version_history,
+            version=version,
+            # private=private
+        )
 
     def _get_version(self, identifier: Identifier,
                      version: Optional[int] = None) -> DocMetadata:
@@ -536,7 +556,8 @@ class AbsMetaSession():
         return parent_path
 
     @staticmethod
-    def _parse_version_entries(fields: Dict, version_entry_list: List) -> None:
+    def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
+            -> Tuple[int, List[VersionEntry], str]:
         """Parse the version entries from the arXiv .abs file."""
         version_count = 0
         version_entries = list()
@@ -545,7 +566,7 @@ class AbsMetaSession():
             date_match = RE_DATE_COMPONENTS.match(parsed_version_entry)
             if not date_match:
                 raise AbsParsingException(
-                    'Could not extract date componenents from date line.')
+                    'Could not extract date components from date line.')
             try:
                 sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
@@ -564,10 +585,8 @@ class AbsMetaSession():
             )
             version_entries.append(ve)
 
-        fields['version'] = version_count
-        fields['version_history'] = version_entries
-        fields['arxiv_id_v'] = f"{fields['arxiv_id']}v" \
-                               f"{version_entries[-1].version}"
+        return (version_count, version_entries, f"{arxiv_id}v"
+                                                f"{version_entries[-1].version}")
 
     @staticmethod
     def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:

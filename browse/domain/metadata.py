@@ -51,8 +51,8 @@ class VersionEntry:
 class AuthorList:
     """Represents author names."""
 
-    """Raw author field string."""
     raw: str = field(default_factory=str)
+    """Raw author field string."""
 
     def __str__(self) -> str:
         return self.raw
@@ -94,7 +94,7 @@ class Group(Category):
 
 
 @dataclass
-class DocMetadata():
+class DocMetadata:
     """Class for representing the core arXiv document metadata."""
 
     arxiv_id: str = field(default_factory=str)
@@ -119,6 +119,7 @@ class DocMetadata():
 
     primary_category: Category = field(default_factory=Category)
     """Primary category."""
+
     primary_archive: Archive = field(init=False)
     primary_group: Group = field(init=False)
 
