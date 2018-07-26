@@ -35,7 +35,7 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
 
     """
     if recorded_uri is None:
-        return ASSUMED_LICENSE_URI
+        return ASSUMED_LICENSE_URI  # type: ignore
 
     if not isinstance(recorded_uri, str):
         raise TypeError(
@@ -46,7 +46,7 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
 
 
 @dataclass
-class License():
+class License:
     """Represents an arXiv article license."""
 
     recorded_uri: Optional[str] = field(default=None)
@@ -61,10 +61,10 @@ class License():
     into account assumed license.
     """
 
-    icon_uri_path: str = field(init=False)
+    icon_uri_path: Optional[str] = field(init=False)
     """Path to license icon."""
 
-    label: str = field(init=False)
+    label: Optional[str] = field(init=False)
     """The license label."""
 
     def __post_init__(self) -> None:

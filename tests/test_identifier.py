@@ -6,7 +6,7 @@ from browse.domain.identifier import Identifier
 class TestIdentifier(TestCase):
     """Tests for the ArXivIdentifier class."""
 
-    def test_identifier_fields(self):
+    def test_identifier_fields(self) -> None:
         """Test individual fields in Identifier object."""
         tid1 = Identifier(arxiv_id='0803.1924')
         self.assertIsInstance(tid1, Identifier, 'valid instance')
@@ -64,7 +64,7 @@ class TestIdentifier(TestCase):
         # self.assertIsInstance(tid3_next, Identifier)
         # self.assertEqual(tid3_next.id, '1201.0002')
 
-    def test_bad_identifiers(self):
+    def test_bad_identifiers(self) -> None:
         """Test known bad identifiers."""
         bad_ids = ('BAD_ID', 'hep-th/990100', 'hep-th/99010011', '0703.123',
                    '0703.123456', '', '/', '0713.0001', '0800.0001'
@@ -93,7 +93,7 @@ class TestIdentifier(TestCase):
 
             self.assertIn('invalid arXiv identifier', str(context.exception))
 
-    def test_good_identifiers(self):
+    def test_good_identifiers(self) -> None:
         """Test known good identifiers."""
         good_ids = {
             'hep-th/9901001': 'hep-th/9901001',

@@ -11,7 +11,7 @@ from browse.services.document.author_affil import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
 
 
-def meta_tag_metadata(metadata: DocMetadata)->List:
+def meta_tag_metadata(metadata: DocMetadata) -> List:
     """
     Return data for HTML <meta> tags as used by Google Scholar.
 
@@ -34,7 +34,8 @@ def meta_tag_metadata(metadata: DocMetadata)->List:
         meta_tags.append(_mtag('citation_title', metadata.title))
 
     if metadata.authors:
-        hundo = parse_author_affil_utf(metadata.authors)[:100]
+
+        hundo = parse_author_affil_utf(metadata.authors.raw)[:100]
         meta_tags.extend(filter(
             lambda a: a, map(format_affil_author, hundo)))
 

@@ -1,15 +1,15 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import os
 import re
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
 from pytz import timezone
 
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-    VersionEntry, Category
+from browse.domain.metadata import AuthorList, Category, DocMetadata, \
+    SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -70,7 +70,7 @@ class AbsDeletedException(Exception):
     pass
 
 
-class AbsMetaSession():
+class AbsMetaSession:
     """Class for arXiv document metadata sessions."""
 
     def __init__(self, latest_versions_path: str,
@@ -139,55 +139,64 @@ class AbsMetaSession():
 
         """
         next_id = None
-        new_year = identifier.year
-        new_month = identifier.month
-        new_num = identifier.num + 1
-        if (identifier.is_old_id and new_num > 999) \
-           or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
-           or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
+        if identifier.year is not None and \
+                identifier.month is not None and \
+                identifier.num is not None:
+            new_year = identifier.year
+            new_month = identifier.month
+            new_num = identifier.num + 1
+            if (identifier.is_old_id and new_num > 999) \
+               or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
+               or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
+                new_num = 1
+                new_month = new_month + 1
+                if new_month > 12:
+                    new_month = 1
+                    new_year = new_year + 1
+
+            if identifier.is_old_id:
+                next_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
+            else:
+                if new_year >= 2015:
+                    next_id = '{:02d}{:02d}.{:05d}'.format(
+                        new_year % 100, new_month, new_num)
+                else:
+                    next_id = '{:02d}{:02d}.{:04d}'.format(
+                        new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=next_id)
+            except IdentifierException:
+                return None
+        else:
+            return None
+
+    def _next_yymm_id(self, identifier: Identifier) -> Optional[Identifier]:
+        """Get the first identifier for the next month."""
+        next_yymm_id = None
+        if identifier.year is not None and \
+                identifier.month is not None:
+            new_year = identifier.year
+            new_month = identifier.month + 1
             new_num = 1
-            new_month = new_month + 1
             if new_month > 12:
                 new_month = 1
                 new_year = new_year + 1
-
-        if identifier.is_old_id:
-            next_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
-                next_id = '{:02d}{:02d}.{:05d}'.format(
+            if identifier.is_old_id:
+                next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
+            elif new_year >= 2015:
+                next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
                     new_year % 100, new_month, new_num)
             else:
-                next_id = '{:02d}{:02d}.{:04d}'.format(
+                next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
                     new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=next_id)
-        except IdentifierException:
-            return None
 
-    def _next_yymm_id(self, identifier: Identifier):
-        """Get the first identifier for the next month."""
-        next_yymm_id = None
-        new_year = identifier.year
-        new_month = identifier.month + 1
-        new_num = 1
-        if new_month > 12:
-            new_month = 1
-            new_year = new_year + 1
-        if identifier.is_old_id:
-            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        elif new_year >= 2015:
-            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
-                new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=next_yymm_id)
+            except IdentifierException:
+                return None
         else:
-            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
-                new_year % 100, new_month, new_num)
-
-        try:
-            return Identifier(arxiv_id=next_yymm_id)
-        except IdentifierException:
             return None
 
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
@@ -246,34 +255,39 @@ class AbsMetaSession():
 
         """
         previous_id = None
-        new_year = identifier.year
-        new_month = identifier.month
-        new_num = identifier.num - 1
-        if new_num == 0:
-            new_month = new_month - 1
-            if new_month == 0:
-                new_month = 12
-                new_year = new_year - 1
-
-        if identifier.is_old_id:
+        if identifier.year is not None and \
+                identifier.month is not None and \
+                identifier.num is not None:
+            new_year = identifier.year
+            new_month = identifier.month
+            new_num = identifier.num - 1
             if new_num == 0:
-                new_num = 999
-            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
-                identifier.archive, new_year % 100, new_month, new_num)
-        else:
-            if new_year >= 2015:
+                new_month = new_month - 1
+                if new_month == 0:
+                    new_month = 12
+                    new_year = new_year - 1
+
+            if identifier.is_old_id:
                 if new_num == 0:
-                    new_num = 99999
-                previous_id = '{:02d}{:02d}.{:05d}'.format(
-                    new_year % 100, new_month, new_num)
+                    new_num = 999
+                previous_id = '{}/{:02d}{:02d}{:03d}'.format(
+                    identifier.archive, new_year % 100, new_month, new_num)
             else:
-                if new_num == 0:
-                    new_num = 9999
-                previous_id = '{:02d}{:02d}.{:04d}'.format(
-                    new_year % 100, new_month, new_num)
-        try:
-            return Identifier(arxiv_id=previous_id)
-        except IdentifierException:
+                if new_year >= 2015:
+                    if new_num == 0:
+                        new_num = 99999
+                    previous_id = '{:02d}{:02d}.{:05d}'.format(
+                        new_year % 100, new_month, new_num)
+                else:
+                    if new_num == 0:
+                        new_num = 9999
+                    previous_id = '{:02d}{:02d}.{:04d}'.format(
+                        new_year % 100, new_month, new_num)
+            try:
+                return Identifier(arxiv_id=previous_id)
+            except IdentifierException:
+                return None
+        else:
             return None
 
     def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
@@ -339,7 +353,7 @@ class AbsMetaSession():
 
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
-                                  format_pref: str = None,
+                                  format_pref: Optional[str] = None,
                                   add_sciencewise: bool = False) -> List[str]:
         """
         Get a list of formats that can be disseminated for this DocMetadata.
@@ -373,9 +387,10 @@ class AbsMetaSession():
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
-        source_file_formats = formats_from_source_file_name(source_file_path)
-        if source_file_formats:
-            formats.extend(source_file_formats)
+        if source_file_path is not None:
+            source_file_formats = formats_from_source_file_name(source_file_path)
+            if source_file_formats:
+                formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -413,14 +428,15 @@ class AbsMetaSession():
         format_code = docmeta.version_history[version - 1].source_type.code
         if has_ancillary_files(format_code):
             source_file_path = self._get_source_path(docmeta)
-            return list_ancillary_files(source_file_path)
+            if source_file_path is not None:
+                return list_ancillary_files(source_file_path)
+            else:
+                return []
         return []
 
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
-        fields = {}  # type: Dict[str, Any]
-
         try:
             with open(filename) as absf:
                 raw = absf.read()
@@ -437,19 +453,21 @@ class AbsMetaSession():
             raise AbsParsingException(
                 'Unexpected number of components parsed from .abs.')
 
+        # everything else is in the second main component
+        prehistory, misc_fields = re.split(r'\n\n', components[1])
+
+        fields: Dict[str, Any] = AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
+
         # abstract is the first main component
         fields['abstract'] = components[2]
 
-        # everything else is in the second main component
-        prehistory, misc_fields = re.split(r'\n\n', components[1])
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
         if not id_match:
             raise AbsParsingException(
                 'Could not extract arXiv ID from prehistory component.')
 
-        fields['arxiv_id'] = id_match.group('arxiv_id')
-        fields['arxiv_identifier'] = Identifier(arxiv_id=fields['arxiv_id'])
+        arxiv_id = id_match.group('arxiv_id')
 
         prehistory = re.sub(r'^.*\n', '', prehistory)
         parsed_version_entries = re.split(r'\n', prehistory)
@@ -460,38 +478,62 @@ class AbsMetaSession():
             raise AbsParsingException('Could not extract submitter data.')
         name = from_match.group('name').rstrip()
         email = from_match.group('email') or None
-        fields['submitter'] = Submitter(name=name, email=email)
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        AbsMetaSession._parse_version_entries(
-            fields=fields,
-            version_entry_list=parsed_version_entries
+        (version, version_history, arxiv_id_v) = AbsMetaSession._parse_version_entries(
+            arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
         )
+
+        # TODO type ignore: possibly mypy #3937, also see #5389
+        arxiv_identifier=Identifier(arxiv_id=arxiv_id)
+
         # named (key-value) fields
-        AbsMetaSession._parse_metadata_fields(fields=fields,
-                                              key_value_block=misc_fields)
-        if 'categories' not in fields and fields['arxiv_identifier'].is_old_id:
-            fields['categories'] = fields['arxiv_identifier'].archive
+        if 'categories' not in fields and arxiv_identifier.is_old_id:
+            fields['categories'] = arxiv_identifier.archive
 
         if not all(rf in fields for rf in REQUIRED_FIELDS):
             raise AbsParsingException(f'missing required field(s)')
 
         # some transformations
         categories = fields['categories'].split()
-        fields['primary_category'] = Category(id=categories[0])
-        fields['secondary_categories'] = [
-            Category(id=x) for x in categories[1:] if len(categories) > 1
-        ]
-        if 'license' in fields:
-            fields['license'] = License(recorded_uri=fields['license'])
 
-        return DocMetadata(**fields)
+        doc_license: License = \
+            License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
+
+        return DocMetadata(  # type: ignore
+            arxiv_id=arxiv_id,
+            arxiv_id_v=arxiv_id_v,
+            arxiv_identifier=Identifier(arxiv_id=arxiv_id),
+            title=fields['title'],
+            abstract=fields['abstract'],
+            authors=AuthorList(fields['authors']),  # type: ignore
+            # TODO type ignores here are for https://github.com/python/mypy/issues/5384
+            submitter=Submitter(name=name, email=email),  # type: ignore
+            categories=fields['categories'],
+            primary_category=Category(id=categories[0]),  # type: ignore
+            # primary_archive=???
+            # primary_group=???
+            secondary_categories= [
+                Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
+            ],
+            # journal_ref=???
+            # report_num=???
+            # doi=???
+            # acm_class=???
+            # msc_class=???
+            license=doc_license,
+            # proxy=???
+            comments=fields['comments'] if 'comments' in fields else None,
+            version_history=version_history,
+            version=version,
+            # private=private
+        )
 
     def _get_version(self, identifier: Identifier,
-                     version: int = None) -> DocMetadata:
+                     version: Optional[int] = None) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata."""
         parent_path = self._get_parent_path(identifier=identifier,
                                             version=version)
@@ -501,19 +543,21 @@ class AbsMetaSession():
         return self.parse_abs_file(filename=path)
 
     def _get_parent_path(self, identifier: Identifier,
-                         version: int = None) -> str:
+                         version: Optional[int] = None) -> str:
         """Get the absolute parent path of the provided identifier."""
         parent_path = os.path.join(
             (self.latest_versions_path if not version
              else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id else identifier.archive),
+            ('arxiv' if not identifier.is_old_id or identifier.archive is None
+             else identifier.archive),
             'papers',
             identifier.yymm,
         )
         return parent_path
 
     @staticmethod
-    def _parse_version_entries(fields: Dict, version_entry_list: List) -> None:
+    def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
+            -> Tuple[int, List[VersionEntry], str]:
         """Parse the version entries from the arXiv .abs file."""
         version_count = 0
         version_entries = list()
@@ -522,7 +566,7 @@ class AbsMetaSession():
             date_match = RE_DATE_COMPONENTS.match(parsed_version_entry)
             if not date_match:
                 raise AbsParsingException(
-                    'Could not extract date componenents from date line.')
+                    'Could not extract date components from date line.')
             try:
                 sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
@@ -530,8 +574,9 @@ class AbsMetaSession():
                 raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
-            source_type = SourceType(code=date_match.group('source_type'))
-            ve = VersionEntry(
+            # type ignores here are for https://github.com/python/mypy/issues/5384
+            source_type = SourceType(code=date_match.group('source_type'))  # type: ignore
+            ve = VersionEntry(  # type: ignore
                 raw=date_match.group(0),
                 source_type=source_type,
                 size_kilobytes=int(date_match.group('size_kilobytes')),
@@ -540,28 +585,27 @@ class AbsMetaSession():
             )
             version_entries.append(ve)
 
-        fields['version'] = version_count
-        fields['version_history'] = version_entries
-        fields['arxiv_id_v'] = f"{fields['arxiv_id']}v" \
-                               f"{version_entries[-1].version}"
+        return (version_count, version_entries, f"{arxiv_id}v"
+                                                f"{version_entries[-1].version}")
 
     @staticmethod
-    def _parse_metadata_fields(fields: Dict, key_value_block: str) -> None:
+    def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:
         """Parse the key-value block from the arXiv .abs string."""
         key_value_block = key_value_block.lstrip()
         field_lines = re.split(r'\n', key_value_block)
         field_name = 'unknown'
+        fields_builder: Dict[str, str] = {}
         for field_line in field_lines:
             field_match = RE_FIELD_COMPONENTS.match(field_line)
             if field_match and field_match.group('field') in NAMED_FIELDS:
                 field_name = field_match.group(
                     'field').lower().replace('-', '_')
                 field_name = re.sub(r'_no$', '_num', field_name)
-                fields[field_name] = field_match.group('value').rstrip()
+                fields_builder[field_name] = field_match.group('value').rstrip()
             elif field_name != 'unknown':
                 # we have a line with leading spaces
-                fields[field_name] += re.sub(r'^\s+', ' ', field_line)
-        return fields
+                fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
+        return fields_builder
 
 
 @wraps(AbsMetaSession.get_ancillary_files)
@@ -572,7 +616,7 @@ def get_ancillary_files(docmeta: DocMetadata) -> List[Dict]:
 
 @wraps(AbsMetaSession.get_dissemination_formats)
 def get_dissemination_formats(docmeta: DocMetadata,
-                              format_pref: str = None,
+                              format_pref: Optional[str] = None,
                               add_sciencewise: bool = False) -> List:
     """Get list of dissemination formats."""
     return current_session().get_dissemination_formats(docmeta,
@@ -581,13 +625,13 @@ def get_dissemination_formats(docmeta: DocMetadata,
 
 
 @wraps(AbsMetaSession.get_next_id)
-def get_next_id(identifier: Identifier) -> Identifier:
+def get_next_id(identifier: Identifier) -> Optional[Identifier]:
     """Retrieve next arxiv document metadata by id."""
     return current_session().get_next_id(identifier)
 
 
 @wraps(AbsMetaSession.get_previous_id)
-def get_previous_id(identifier: Identifier) -> Identifier:
+def get_previous_id(identifier: Identifier) -> Optional[Identifier]:
     """Retrieve previous arxiv document metadata by id."""
     return current_session().get_previous_id(identifier)
 
@@ -613,5 +657,5 @@ def current_session() -> AbsMetaSession:
     if not g:
         return get_session()
     if 'abs_meta' not in g:
-        g.abs_meta = get_session()    # type: ignore
+        g.abs_meta = get_session()
     return g.abs_meta     # type: ignore

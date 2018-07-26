@@ -35,8 +35,8 @@ class DocumentCacheSession():
                                          'not exist')
         self.document_cache_path = os.path.realpath(document_cache_path)
 
-    def get_cache_file_path(self, docmeta: DocMetadata,
-                            cache_format: str) -> Optional[str]:
+    def get_cache_file_path(self, docmeta: DocMetadata, cache_format: str)\
+            -> Optional[str]:
         """Get the absolute path of the cache file/directory if it exists."""
         if cache_format not in CACHE_FORMATS:
             raise DocumentCacheFormatException('Invalid cache file format: '
@@ -44,7 +44,8 @@ class DocumentCacheSession():
         identifier = docmeta.arxiv_identifier
         parent_path = os.path.join(
             self.document_cache_path,
-            ('arxiv' if not identifier.is_old_id else identifier.archive),
+            ('arxiv' if not identifier.is_old_id or identifier.archive is None
+                 else identifier.archive),
             cache_format,
             identifier.yymm,
             f'{identifier.filename}v{docmeta.version}'
@@ -55,8 +56,8 @@ class DocumentCacheSession():
 
         extension = f'.{cache_format}'
         if re.match(r'^other', cache_format):
-            # TODO is this correct? extension is unused?
             extension = '.ps.gz'
+            return None  # TODO is this correct? extension is unused?
         elif type == 'ps':
             extension = f'{extension}.gz'
             cache_file_path = f'{parent_path}{extension}'
@@ -64,6 +65,7 @@ class DocumentCacheSession():
                 return cache_file_path
         else:
             return None
+        return None
 
 
 @wraps(DocumentCacheSession.get_cache_file_path)
@@ -86,5 +88,5 @@ def current_session() -> DocumentCacheSession:
     if not g:
         return get_session()
     if 'doc_cache' not in g:
-        g.doc_cache = get_session()    # type: ignore
+        g.doc_cache = get_session()
     return g.doc_cache     # type: ignore

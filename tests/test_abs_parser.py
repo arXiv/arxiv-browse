@@ -39,19 +39,19 @@ class TestAbsParser(TestCase):
     def test_individual_files(self):
         """Test individual .abs files."""
         f1 = ABS_FILES + '/orig/arxiv/papers/0906/0906.5132v3.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        ams = AbsMetaSession.parse_abs_file(filename=f1)
 
-        self.assertIsInstance(m, DocMetadata)
-        self.assertEqual(m.arxiv_id, '0906.5132', 'arxiv_id')
+        self.assertIsInstance(ams, DocMetadata)
+        self.assertEqual(ams.arxiv_id, '0906.5132', 'arxiv_id')
         self.assertEqual(
-            m.submitter,
+            ams.submitter,
             Submitter(
                 name='Vladimir P. Mineev',
                 email='WTUwTuyJ.Owwldw@sOD.n4'
             )
         )
         self.assertListEqual(
-            m.version_history,
+            ams.version_history,
             [
                 VersionEntry(
                     version=1,
@@ -81,19 +81,19 @@ class TestAbsParser(TestCase):
                 )
             ]
         )
-        self.assertEqual(m.version, 3)
-        self.assertEqual(m.title, 'Recent developments in unconventional '
-                                  'superconductivity theory')
-        self.assertEqual(m.authors, 'V.P.Mineev')
-        self.assertEqual(m.categories, 'cond-mat.supr-con cond-mat.mtrl-sci')
-        self.assertEqual(m.comments, '15 pages')
-        self.assertNotEqual(m.license, None)
+        self.assertEqual(ams.version, 3)
+        self.assertEqual(ams.title, 'Recent developments in unconventional '
+                                    'superconductivity theory')
+        self.assertEqual(str(ams.authors), 'V.P.Mineev')
+        self.assertEqual(ams.categories, 'cond-mat.supr-con cond-mat.mtrl-sci')
+        self.assertEqual(ams.comments, '15 pages')
+        self.assertNotEqual(ams.license, None)
         self.assertEqual(
-            m.license.effective_uri,
+            ams.license.effective_uri,
             'http://arxiv.org/licenses/nonexclusive-distrib/1.0/'
         )
         self.assertMultiLineEqual(
-            m.abstract,
+            ams.abstract,
             '''  The review of recent developments in the unconventional superconductivity
 theory is given. In the fist part I consider the physical origin of the Kerr
 rotation polarization of light reflected from the surface of superconducting
@@ -112,8 +112,8 @@ orthorhombic symmetry. Finally the Josephson coupling between two adjacent
 ferromagnet superconducting domains is discussed.
 '''
         )
-        for value in [m.acm_class, m.doi, m.journal_ref, m.report_num,
-                      m.proxy]:
+        for value in [ams.acm_class, ams.doi, ams.journal_ref, ams.report_num,
+                      ams.proxy]:
             self.assertIsNone(value)
 
     def test_subsumed_category(self):
