@@ -1,9 +1,9 @@
 """Browse jinja filters."""
 import re
+import urllib
 from jinja2 import evalcontextfilter, Markup, escape
 from flask import url_for
-from typing import Match
-from urllib import quote_plus
+from typing import List, Match
 
 
 def _escape_special_chracters(text: str) -> str:
@@ -13,17 +13,29 @@ def _escape_special_chracters(text: str) -> str:
     result = re.sub(r'>', '&gt;', result)
     return result
 
+
 @evalcontextfilter
 def doi_filter(eval_ctx, text: str) -> str:
+    """Creates links to one or more DOIs."""
+    result = text
+    doi_list = []
 
     def single_doi_link(match: Match[str]) -> str:
-        doi_url = f'https://dx.doi.org/{quote_plus(match.group(0))}'
-        # return f'<a href="{doi_url}">{_escape_special_chracters()}
-    for segment in re.split(r'[;,]?\s+', text):
-        result = re.sub(r'^10\.\d{4,5}\/\S+$', segment)
+        # should only get called on match
+        quoted_doi = urllib.parse.quote_plus(match.group(0))
+        doi_url = f'https://dx.doi.org/{quoted_doi}'
+        # TODO: this needs to be turned into a clickthrough link before return
+        return f'<a href="{doi_url}">{_escape_special_chracters(match.group(0))}</a>'
 
+    for segment in re.split(r'[;,]?\s+', text):
+        doi_link = re.sub(r'^10\.\d{4,5}\/\S+$', single_doi_link, segment)
+        doi_list.append(doi_link)
+    if doi_list:
+        result = str.join(' ', doi_list)
     if eval_ctx.autoescape:
         result = Markup(result)
+    return result
+
 
 @evalcontextfilter
 def url_filter(eval_ctx, text: str) -> str:
@@ -33,18 +45,21 @@ def url_filter(eval_ctx, text: str) -> str:
         url = f'{match.group(1)}<a href="{url_path}">{match.group(2)}</a>'
         return url
 
-    result = re.sub(r'((ftp|https?)://[^\[\]*{}()\s",>&;]+)\s',
+    result = re.sub(r'((ftp|https?)://[^\[\]*{}()\s",>&;]+)',
                     r'<a href="\g<1>">this \g<2> URL</a>',
                     text,
                     re.IGNORECASE)
+    # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
         r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re)
-    result = re.sub(id_re, arxiv_id_link, result)
+    result = re.sub(id_re, arxiv_id_link, result, re.IGNORECASE)
     if eval_ctx.autoescape:
         result = Markup(result)
     return result
 
+
+# TODO: filter_urls_ids_escape from perl; it's slightly different from above
 
 @evalcontextfilter
 def abstract_filter(eval_ctx, text: str) -> str:

@@ -60,7 +60,8 @@
         {%- if abs_meta.comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ abs_meta.comments|url_filter }}</td>
+          {# TODO: apply filtering to comments field per classic  #}
+          <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
         </tr>
         {% endif -%}
         <tr>
@@ -88,7 +89,7 @@
         {%- if abs_meta.doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">TODO: link {{ abs_meta.doi }}</td>
+          <td class="tablecell msc_classes">{{ abs_meta.doi|doi_filter}}</td>
         </tr>
         {% endif -%}
         {%- if abs_meta.report_num %}
