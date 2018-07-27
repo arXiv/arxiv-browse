@@ -6,10 +6,11 @@ from functools import wraps
 from dateutil import parser
 from pytz import timezone
 
+from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
 from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    SourceType, Submitter, VersionEntry
+    Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -499,12 +500,14 @@ class AbsMetaSession:
 
         # some transformations
         categories = fields['categories'].split()
-
+        primary_category = Category(id=categories[0])  # type: ignore
+        # see https://github.com/python/mypy/issues/5384 for type ignores:
+        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])  # type: ignore
+        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])  # type: ignore
         doc_license: License = \
             License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
 
         return DocMetadata(  # type: ignore
-            primary_archive=Archive() if 'primary_archive' not in fields else fields['primary_archive'],
             arxiv_id=arxiv_id,
             arxiv_id_v=arxiv_id_v,
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
@@ -514,22 +517,23 @@ class AbsMetaSession:
             # TODO type ignores here are for https://github.com/python/mypy/issues/5384
             submitter=Submitter(name=name, email=email),  # type: ignore
             categories=fields['categories'],
-            primary_category=Category(id=categories[0]),  # type: ignore
-            # primary_group=???
-            secondary_categories= [
+            primary_category=primary_category,
+            primary_archive=primary_archive,
+            primary_group=primary_group,
+            secondary_categories=[
                 Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
             ],
-            # journal_ref=???
-            # report_num=???
-            # doi=???
-            # acm_class=???
-            # msc_class=???
-            license=doc_license,
-            # proxy=???
+            journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
+            report_num=None if 'report_num' not in fields else fields['report_num'],
+            doi=None if 'doi' not in fields else fields['doi'],
+            acm_class=None if 'acm_class' not in fields else fields['acm_class'],
+            msc_class=None if 'msc_class' not in fields else fields['msc_class'],
+            proxy=None if 'proxy' not in fields else fields['proxy'],
             comments=fields['comments'] if 'comments' in fields else None,
-            version_history=version_history,
             version=version,
-            # private=private
+            license=doc_license,
+            version_history=version_history,
+            # private=private  # TODO, not implemented
         )
 
     def _get_version(self, identifier: Identifier,

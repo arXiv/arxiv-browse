@@ -60,7 +60,21 @@ class AuthorList:
 
 @dataclass
 class Category:
-    """Represents an arXiv category."""
+    """Represents an arXiv category.
+
+    arXiv categories are arranged in a hierarchy where there are archives
+    (asrto-ph, cs, math, etc.) that contain subject classes (astro-ph has
+    subject classes CO, GA, etc.). We now use the term category to refer
+    to any archive or archive.subject_class that one can submit to (so
+    hep-th and math.IT are both categories). No subject class can be in
+    more than one archive. However, our scientific advisors identify some
+    categories that should appear in more than one archive because they
+    bridge major subject areas. Examples include math.MP == math-ph and
+    stat.TH = math.ST. These are called category aliases and the idea is
+    that any article classified in one of the aliases categories also appears
+    in the other, but that most of the arXiv code for display, search, etc.
+    does not need to understand the break with hierarchy.
+    """
 
     id: str
     """The category identifier (e.g. cs.DL)."""
@@ -103,37 +117,35 @@ class Group(Category):
 
 @dataclass
 class DocMetadata:
-
-    primary_archive: Archive
-
     """Class for representing the core arXiv document metadata."""
 
-    arxiv_id: str = field(default_factory=str)
+    arxiv_id: str
     """arXiv paper identifier"""
 
-    arxiv_id_v: str = field(default_factory=str)
+    arxiv_id_v: str
     """Identifier and version ex. 1402.12345v2"""
 
-    arxiv_identifier: Identifier = field(default_factory=Identifier)
+    arxiv_identifier: Identifier
 
-    title: str = field(default_factory=str)
-    abstract: str = field(default_factory=str)
+    title: str
+    abstract: str
 
-    authors: AuthorList = field(default_factory=AuthorList)
+    authors: AuthorList
     """Article authors."""
 
-    submitter: Submitter = field(default_factory=Submitter)
+    submitter: Submitter
     """Submitter of the article."""
 
-    categories: str = field(default_factory=str)
+    categories: str
     """Article classification (raw string)."""
 
-    primary_category: Category = field(default_factory=Category)
+    primary_category: Category
     """Primary category."""
 
-    primary_group: Group = field(init=False)
+    primary_archive: Archive
+    primary_group: Group
 
-    secondary_categories: List[Category] = field(default_factory=list)
+    secondary_categories: List[Category]
     """Secondary categor(y|ies)."""
 
     journal_ref: Optional[str] = None
@@ -152,20 +164,20 @@ class DocMetadata:
     """American Mathematical Society Mathematics Subject (MSC)
        classification(s)."""
 
-    license: License = field(default_factory=License)
-    """License associated with the article."""
-
     proxy: Optional[str] = None
     """Proxy submitter."""
 
     comments: Optional[str] = None
     """Submitter- and/or administrator-provided comments about the article."""
 
-    version_history: List[VersionEntry] = field(default_factory=list)
-    """Version history, consisting of at least one version history entry."""
-
     version: int = 1
     """Version of this paper."""
+
+    license: License = field(default_factory=License)
+    """License associated with the article."""
+
+    version_history: List[VersionEntry] = field(default_factory=list)
+    """Version history, consisting of at least one version history entry."""
 
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """
@@ -176,14 +188,6 @@ class DocMetadata:
     authentication redirect is required.
 
     """
-
-    def __post_init__(self) -> None:
-        """Post-initialization for DocMetadata."""
-        # see https://github.com/python/mypy/issues/5384 for type ignores:
-        self.primary_archive = Archive(   # type: ignore
-            id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
-        self.primary_group = Group(  # type: ignore
-            id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
