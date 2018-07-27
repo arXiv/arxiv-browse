@@ -9,26 +9,30 @@ from browse.domain.identifier import Identifier
 from browse.domain.license import License
 
 
-@dataclass
+@dataclass(frozen=True)
 class SourceType:
     """Represents arXiv article source file type."""
 
-    code: str = field(default_factory=str)
+    code: str
     """Internal code for the source type."""
 
+    __slots__ = ['code']
 
-@dataclass
+
+@dataclass(frozen=True)
 class Submitter:
     """Represents the person who submitted an arXiv article."""
 
-    name: str = field(default_factory=str)
+    name: str
     """Full name."""
 
-    email: str = field(default_factory=str)
+    email: str
     """Email address."""
 
+    __slots__ = ['name', 'email']
 
-@dataclass
+
+@dataclass(frozen=True)
 class VersionEntry:
     """Represents a single arXiv article version history entry."""
 
@@ -51,8 +55,10 @@ class VersionEntry:
 class AuthorList:
     """Represents author names."""
 
-    raw: str = field(default_factory=str)
+    raw: str
     """Raw author field string."""
+
+    __slots__ = ['raw']
 
     def __str__(self) -> str:
         return self.raw
@@ -115,7 +121,7 @@ class Group(Category):
             self.name = taxonomy.ARCHIVES[self.id]['name']
 
 
-@dataclass
+@dataclass(frozen=True)
 class DocMetadata:
     """Class for representing the core arXiv document metadata."""
 
