@@ -62,13 +62,13 @@ class AuthorList:
 class Category:
     """Represents an arXiv category."""
 
+    id: str
+    """The category identifier (e.g. cs.DL)."""
+
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
     canonical: Union['Category', None] = field(init=False)
-
-    id: str
-    """The category identifier (e.g. cs.DL)."""
 
     def __post_init__(self) -> None:
         """Get the full category name."""
@@ -76,7 +76,7 @@ class Category:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
         if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
+            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
         else:
             self.canonical = None
 
@@ -103,6 +103,9 @@ class Group(Category):
 
 @dataclass
 class DocMetadata:
+
+    primary_archive: Archive
+
     """Class for representing the core arXiv document metadata."""
 
     arxiv_id: str = field(default_factory=str)
@@ -127,7 +130,7 @@ class DocMetadata:
 
     primary_category: Category = field(default_factory=Category)
     """Primary category."""
-    primary_archive: Archive = field(init=False)
+
     primary_group: Group = field(init=False)
 
     secondary_categories: List[Category] = field(default_factory=list)

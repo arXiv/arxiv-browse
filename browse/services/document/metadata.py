@@ -8,7 +8,7 @@ from pytz import timezone
 
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import AuthorList, Category, DocMetadata, \
+from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
     SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
@@ -504,6 +504,7 @@ class AbsMetaSession:
             License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
 
         return DocMetadata(  # type: ignore
+            primary_archive=Archive() if 'primary_archive' not in fields else fields['primary_archive'],
             arxiv_id=arxiv_id,
             arxiv_id_v=arxiv_id_v,
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
@@ -514,7 +515,6 @@ class AbsMetaSession:
             submitter=Submitter(name=name, email=email),  # type: ignore
             categories=fields['categories'],
             primary_category=Category(id=categories[0]),  # type: ignore
-            # primary_archive=???
             # primary_group=???
             secondary_categories= [
                 Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
