@@ -2,20 +2,14 @@ import unittest
 
 from bs4 import BeautifulSoup
 
-from tests import path_of_for_test
 from tests.test_abs_parser import ABS_FILES
-from browse.factory import create_web_app
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.domain.metadata import DocMetadata
 
 import os
-import tempfile
 
 from app import app
 
-
-ABS_FILES =  path_of_for_test('data/abs_files')
 
 class BrowseTest(unittest.TestCase):
 
@@ -66,7 +60,6 @@ class BrowseTest(unittest.TestCase):
             'abs/1411.4413 should have a truncate author list'
 
     def test_all_abs_as_web_pages(self):
-        num_files_tested = 0
         for dir_name, subdir_list, file_list in os.walk(ABS_FILES):
             for fname in file_list:
                 fname_path = os.path.join(dir_name, fname)
