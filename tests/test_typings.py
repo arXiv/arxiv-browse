@@ -44,7 +44,7 @@ class MyPyTest(TestCase):
               f'{test_failures}  * * * *****\n'
               f'***** * * *   See {test_out_file_name} for error log  * * * *****'
               )
-        self.assertLessEqual(test_failures, 150, f'mypy on test {test_file}')
+        self.assertLessEqual(test_failures, 150, f'mypy run on tests')
 
     def __init__(self, *args: str, **kwargs: Dict) -> None:
         """Set up some common variables."""

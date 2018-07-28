@@ -9,26 +9,30 @@ from browse.domain.identifier import Identifier
 from browse.domain.license import License
 
 
-@dataclass
+@dataclass(frozen=True)
 class SourceType:
     """Represents arXiv article source file type."""
 
-    code: str = field(default_factory=str)
+    code: str
     """Internal code for the source type."""
 
+    __slots__ = ['code']
 
-@dataclass
+
+@dataclass(frozen=True)
 class Submitter:
     """Represents the person who submitted an arXiv article."""
 
-    name: str = field(default_factory=str)
+    name: str
     """Full name."""
 
-    email: str = field(default_factory=str)
+    email: str
     """Email address."""
 
+    __slots__ = ['name', 'email']
 
-@dataclass
+
+@dataclass(frozen=True)
 class VersionEntry:
     """Represents a single arXiv article version history entry."""
 
@@ -51,8 +55,10 @@ class VersionEntry:
 class AuthorList:
     """Represents author names."""
 
-    raw: str = field(default_factory=str)
+    raw: str
     """Raw author field string."""
+
+    __slots__ = ['raw']
 
     def __str__(self) -> str:
         return self.raw
@@ -60,15 +66,29 @@ class AuthorList:
 
 @dataclass
 class Category:
-    """Represents an arXiv category."""
+    """Represents an arXiv category.
+
+    arXiv categories are arranged in a hierarchy where there are archives
+    (asrto-ph, cs, math, etc.) that contain subject classes (astro-ph has
+    subject classes CO, GA, etc.). We now use the term category to refer
+    to any archive or archive.subject_class that one can submit to (so
+    hep-th and math.IT are both categories). No subject class can be in
+    more than one archive. However, our scientific advisors identify some
+    categories that should appear in more than one archive because they
+    bridge major subject areas. Examples include math.MP == math-ph and
+    stat.TH = math.ST. These are called category aliases and the idea is
+    that any article classified in one of the aliases categories also appears
+    in the other, but that most of the arXiv code for display, search, etc.
+    does not need to understand the break with hierarchy.
+    """
+
+    id: str
+    """The category identifier (e.g. cs.DL)."""
 
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
     canonical: Union['Category', None] = field(init=False)
-
-    id: str
-    """The category identifier (e.g. cs.DL)."""
 
     def __post_init__(self) -> None:
         """Get the full category name."""
@@ -76,7 +96,7 @@ class Category:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
         if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
+            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
         else:
             self.canonical = None
 
@@ -101,36 +121,37 @@ class Group(Category):
             self.name = taxonomy.ARCHIVES[self.id]['name']
 
 
-@dataclass
+@dataclass(frozen=True)
 class DocMetadata:
     """Class for representing the core arXiv document metadata."""
 
-    arxiv_id: str = field(default_factory=str)
+    arxiv_id: str
     """arXiv paper identifier"""
 
-    arxiv_id_v: str = field(default_factory=str)
+    arxiv_id_v: str
     """Identifier and version ex. 1402.12345v2"""
 
-    arxiv_identifier: Identifier = field(default_factory=Identifier)
+    arxiv_identifier: Identifier
 
-    title: str = field(default_factory=str)
-    abstract: str = field(default_factory=str)
+    title: str
+    abstract: str
 
-    authors: AuthorList = field(default_factory=AuthorList)
+    authors: AuthorList
     """Article authors."""
 
-    submitter: Submitter = field(default_factory=Submitter)
+    submitter: Submitter
     """Submitter of the article."""
 
-    categories: str = field(default_factory=str)
+    categories: str
     """Article classification (raw string)."""
 
-    primary_category: Category = field(default_factory=Category)
+    primary_category: Category
     """Primary category."""
-    primary_archive: Archive = field(init=False)
-    primary_group: Group = field(init=False)
 
-    secondary_categories: List[Category] = field(default_factory=list)
+    primary_archive: Archive
+    primary_group: Group
+
+    secondary_categories: List[Category]
     """Secondary categor(y|ies)."""
 
     journal_ref: Optional[str] = None
@@ -149,20 +170,20 @@ class DocMetadata:
     """American Mathematical Society Mathematics Subject (MSC)
        classification(s)."""
 
-    license: License = field(default_factory=License)
-    """License associated with the article."""
-
     proxy: Optional[str] = None
     """Proxy submitter."""
 
     comments: Optional[str] = None
     """Submitter- and/or administrator-provided comments about the article."""
 
-    version_history: List[VersionEntry] = field(default_factory=list)
-    """Version history, consisting of at least one version history entry."""
-
     version: int = 1
     """Version of this paper."""
+
+    license: License = field(default_factory=License)
+    """License associated with the article."""
+
+    version_history: List[VersionEntry] = field(default_factory=list)
+    """Version history, consisting of at least one version history entry."""
 
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """
@@ -173,14 +194,6 @@ class DocMetadata:
     authentication redirect is required.
 
     """
-
-    def __post_init__(self) -> None:
-        """Post-initialization for DocMetadata."""
-        # see https://github.com/python/mypy/issues/5384 for type ignores:
-        self.primary_archive = Archive(   # type: ignore
-            id=taxonomy.CATEGORIES[self.primary_category.id]['in_archive'])
-        self.primary_group = Group(  # type: ignore
-            id=taxonomy.ARCHIVES[self.primary_archive.id]['in_group'])
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
