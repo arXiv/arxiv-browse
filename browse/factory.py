@@ -3,7 +3,7 @@ from functools import partial
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
-from flask import Flask
+from flask import Flask, url_for
 
 from browse.util.clickthrough import create_ct_url
 from browse.routes import ui

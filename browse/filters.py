@@ -1,6 +1,6 @@
 """Browse jinja filters."""
 import re
-import urllib
+from urllib import parse
 from jinja2 import evalcontextfilter, Markup, escape
 from flask import url_for
 from typing import List, Match
@@ -22,7 +22,7 @@ def doi_filter(eval_ctx, text: str) -> str:
 
     def single_doi_link(match: Match[str]) -> str:
         # should only get called on match
-        quoted_doi = urllib.parse.quote_plus(match.group(0))
+        quoted_doi = parse.quote_plus(match.group(0))
         doi_url = f'https://dx.doi.org/{quoted_doi}'
         # TODO: this needs to be turned into a clickthrough link before return
         return f'<a href="{doi_url}">{_escape_special_chracters(match.group(0))}</a>'
