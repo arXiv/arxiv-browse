@@ -27,14 +27,15 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    app.jinja_env.filters['clickthrough_url_for'] = partial(
-        create_ct_url, app.config.get('SECRET_KEY'), url_for)
+    ct_url_for = partial(create_ct_url, app.config.get('SECRET_KEY'), url_for)
+
+    app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
 
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
                 secret=app.config.get('SHOW_EMAIL_SECRET'))
 
-    app.jinja_env.filters['doi_urls'] = doi_urls
+    app.jinja_env.filters['doi_urls'] = partial( doi_urls, ct_url_for )
     app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
 
     return app
