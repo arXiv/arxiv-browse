@@ -9,7 +9,7 @@ from browse.util.clickthrough import create_ct_url
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
-from browse.filters import abstract_filter, doi_filter, url_filter
+from browse.filters import doi_urls, arxiv_id_urls
 
 
 def create_web_app() -> Flask:
@@ -34,8 +34,7 @@ def create_web_app() -> Flask:
         partial(generate_show_email_hash,
                 secret=app.config.get('SHOW_EMAIL_SECRET'))
 
-    app.jinja_env.filters['abstract_filter'] = abstract_filter
-    app.jinja_env.filters['doi_filter'] = doi_filter
-    app.jinja_env.filters['url_filter'] = url_filter
+    app.jinja_env.filters['doi_urls'] = doi_urls
+    app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
 
     return app
