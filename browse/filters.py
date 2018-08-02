@@ -5,7 +5,6 @@ from jinja2 import Markup, escape
 from flask import url_for
 from typing import Match, Callable
 
-# TODO tests for these
 
 def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
     """Creates links to one or more DOIs.
@@ -46,7 +45,8 @@ def arxiv_id_urls(text: str) -> str:
     words = []
     vix_spotted=False
 
-    for tkn in re.split(r'(\s|,|vixra:)', text, re.IGNORECASE):
+    split = re.split(r'(\s+|,|vixra:)', text, 0, re.IGNORECASE)
+    for tkn in split:
         mtc = re.match(id_re, tkn)
         if mtc and not vix_spotted:
             url_path = url_for('browse.abstract', arxiv_id=mtc.group(3))
@@ -56,16 +56,3 @@ def arxiv_id_urls(text: str) -> str:
             words.append(tkn)
 
     return Markup(u''.join(words))
-
-    #
-    # def arxiv_id_link(match: Match[str]) -> str:
-    #     url_path = url_for('browse.abstract', arxiv_id=match.group(5))
-    #     url = f'{match.group(1)}<a href="{url_path}">{match.group(2)}</a>'
-    #     return url
-    #
-    # # TODO: consider supporting more than just new ID patterns?
-    #
-    # id_re = re.compile(r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re )
-    # result = re.sub(id_re, arxiv_id_link, text, re.IGNORECASE)
-    # return Markup(result)
-    #
