@@ -17,10 +17,11 @@ def create_web_app() -> Flask:
     app = Flask('browse', static_folder='static', template_folder='templates')
     app.config.from_pyfile('config.py')
 
-    #TODO Only needed until this route is added to arxiv-base
+    # TODO Only needed until this route is added to arxiv-base
     if 'URLS' not in app.config:
         app.config['URLS'] = []
-    app.config['URLS'].append(('search_archive', '/search/<archive>', BASE_SERVER))
+    app.config['URLS'].append(
+        ('search_archive', '/search/<archive>', BASE_SERVER))
 
     models.init_app(app)
 
@@ -30,12 +31,10 @@ def create_web_app() -> Flask:
     ct_url_for = partial(create_ct_url, app.config.get('SECRET_KEY'), url_for)
 
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
-
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
                 secret=app.config.get('SHOW_EMAIL_SECRET'))
-
-    app.jinja_env.filters['doi_urls'] = partial( doi_urls, ct_url_for )
+    app.jinja_env.filters['doi_urls'] = partial(doi_urls, ct_url_for)
     app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
 
     return app
