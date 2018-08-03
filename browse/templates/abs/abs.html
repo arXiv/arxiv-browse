@@ -53,7 +53,7 @@
 
     <div class="dateline">{{ generate_dateline() }}</div>
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|urlize|arxiv_id_urls }}</blockquote>
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|urlize|arxiv_id_urls|line_feed_to_br }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
