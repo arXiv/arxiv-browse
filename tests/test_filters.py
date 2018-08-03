@@ -6,7 +6,7 @@ from jinja2 import escape, Markup, Environment
 from jinja2.utils import urlize
 
 from app import app
-from browse.filters import doi_urls, arxiv_id_urls
+from browse.filters import doi_urls, arxiv_id_urls, line_feed_to_br
 
 
 class Jinja_Custom_Fitlers_Test(unittest.TestCase):
@@ -223,3 +223,35 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                             '<a href="http://google.com" rel="noopener">http://google.com</a> something or '\
                             f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a> other'),
                         'should not double escape')
+
+    def test_line_break(self):
+        assert_that(line_feed_to_br('blal\n  bla'), equal_to('blal\n<br />bla'))
+
+        assert_that(line_feed_to_br('\nblal\n  bla'), equal_to('\nblal\n<br />bla'))
+
+        assert_that(line_feed_to_br('\n blal\n  bla'), equal_to('\n blal\n<br />bla'), 'need to not do <br /> on first line')
+        assert_that(line_feed_to_br('blal\n\nbla'), equal_to('blal\nbla'), 'skip blank lines')
+
+    def test_line_brake_jinja(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['arxiv_id_urls'] = arxiv_id_urls
+            jenv.filters['line_brake'] = line_feed_to_br
+            jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
+
+            assert_that(jenv.from_string(
+                '{{" <script>bad junk</script> http://google.com something or \n' \
+                '\n'
+                'no double \\n'
+                ' should have br\n'
+                'hep-th/9901002 other"|urlize|line_brake|arxiv_id_urls}}').render(),
+                equal_to(
+                    ' &lt;script&gt;bad junk&lt;/script&gt; '\
+                    '<a href="http://google.com" rel="noopener">http://google.com</a>'\
+                    ' something or \n'\
+                    'no double \n'\
+                    '<br />should have br\n'\
+                    '<a href="http://sosmooth.org/abs/hep-th/9901002">hep-th/9901002</a> other'),
+                    'urlize, line_brake and arxiv_id_urls should all work together')

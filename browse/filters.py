@@ -45,6 +45,17 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
 
     return Markup(result)
 
+def line_feed_to_br(text: str) -> str:
+    """Lines that start with two spaces should be broken"""
+
+    if hasattr(text, '__html__'):
+        etxt = text
+    else:
+        etxt = Markup(escape(text))
+
+    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  # if line starts with spaces, replace the white space with <br\>
+    dedup = re.sub(r'\n\n', '\n', br) # skip if blank
+    return Markup(dedup)
 
 def arxiv_id_urls(text: str) -> str:
     """Will link either arXiv:<internal_id> or <internal_id> with the full text as the anchor.
