@@ -45,7 +45,7 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title }}</h1>
+    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|arxiv_id_urls }}</h1>
     {# TODO: authors section #}
     <div class="authors"><span class="descriptor">Authors:</span>
       {%- include "/abs/author_links.html" %}
@@ -53,14 +53,15 @@
 
     <div class="dateline">{{ generate_dateline() }}</div>
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract }}</blockquote>
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|urlize|arxiv_id_urls|line_feed_to_br }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
         {%- if abs_meta.comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ abs_meta.comments }}</td>
+          {# TODO: apply filtering to comments field per classic  #}
+          <td class="tablecell comments mathjax">{{ abs_meta.comments|urlize|arxiv_id_urls }}</td>
         </tr>
         {% endif -%}
         <tr>
@@ -88,7 +89,7 @@
         {%- if abs_meta.doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">TODO: link {{ abs_meta.doi }}</td>
+          <td class="tablecell msc_classes">{{ abs_meta.doi|doi_urls}}</td>
         </tr>
         {% endif -%}
         {%- if abs_meta.report_num %}

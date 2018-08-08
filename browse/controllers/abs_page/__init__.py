@@ -18,11 +18,11 @@ from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors,split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
-     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
+    AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
@@ -85,7 +85,9 @@ def get_abs_page(arxiv_id: str,
                 abs_meta.authors.raw), truncate_author_list_size)
         response_data['url_for_author_search'] = \
             lambda author_query: url_for('search_archive',
-                                          searchtype='author', archive=abs_meta.primary_archive.id, query=author_query)
+                                         searchtype='author',
+                                         archive=abs_meta.primary_archive.id,
+                                         query=author_query)
 
         # Dissemination formats for download links
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -110,7 +112,7 @@ def get_abs_page(arxiv_id: str,
             _check_context(arxiv_identifier,
                            request_params,
                            response_data)
-        except Exception as ex:
+        except Exception:
             logger.error("Error getting non-critical abs page data",
                          exc_info=app.debug)
 

@@ -36,6 +36,8 @@ pytest-html = "*"
 "ansi2html" = "*"
 hypothesis = "*"
 "beautifulsoup4" = "*"
+pyhamcrest = "*"
+pytest-easyread = "*"
 
 [requires]
 python_version = "3.6"
