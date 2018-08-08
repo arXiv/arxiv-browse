@@ -21,6 +21,7 @@ coveralls = "*"
 sqlacodegen = "*"
 mysqlclient = "*"
 "mmh3" = "*"
+aiohttp = "*"
 
 [dev-packages]
 pylama = "*"
