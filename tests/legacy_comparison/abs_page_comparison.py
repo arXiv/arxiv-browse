@@ -1,6 +1,34 @@
-import asyncio
+import sys
+sys.path.append('') #BDC34: some how I need this under pipenv to get to browse
 
-import aiohttp
+
+import os
+from functools import partial
+from multiprocessing import Pool
+import requests
+from typing import Iterator
+
+from browse.services.document.metadata import AbsMetaSession
+from tests import path_of_for_test
+
+ABS_FILES = path_of_for_test('data/abs_files')
+
+
+
+def paperid_iterator( path ) :
+    """Return an iterator of paperId strings for all abs found below path."""
+    ids = []
+    for (dir_name, subdir_list, file_list) in os.walk(path):
+        for fname in file_list:
+            fname_path = os.path.join(dir_name, fname)
+            if os.stat(fname_path).st_size == 0:
+                continue
+            if not fname_path.endswith('.abs'):
+                continue
+            ids.append(AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id)
+
+    return ids
+
 
 # Should end with /
 ng_abs_base_url = 'http://localhost:5000/abs/'
@@ -9,27 +37,20 @@ ng_abs_base_url = 'http://localhost:5000/abs/'
 legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 
 
-# get both pages, get response.text, parse, return (yield?) comparison report.
-
-async def fetch_and_compare_abs(paperid, compare_res_fn):
+def fetch_and_compare_abs(compare_res_fn , paperid ):
     ng_url = ng_abs_base_url + paperid
     legacy_url = legacy_abs_base_url + paperid
-
-    async with aiohttp.ClientSession() as client:
-        ng_res = await client.get(ng_url)
-        legacy_res = await client.get(legacy_url)
-        return await compare_res_fn(ng_url=ng_url, legacy_url=legacy_url, ng_res=ng_res, legacy_res=legacy_res,
-            paperid=paperid)
+    return compare_res_fn(ng_url=ng_url, legacy_url=legacy_url,
+                          ng_res=requests.get(ng_url), legacy_res=requests.get(legacy_url),
+                          paperid=paperid)
 
 
-async def compare_res(ng_url=None, legacy_url=None,
+def compare_res(ng_url=None, legacy_url=None,
                       ng_res=None, legacy_res=None,
                       paperid=None):
-    print( f'Paper: {paperid} ng_url:{ng_url} status: {ng_res.status} legacy_url: {legacy_url} status: {legacy_res.status}')
+    print( f'Paper: {paperid} ng_url:{ng_url} status: {ng_res.status_code} legacy_url: {legacy_url} status: {legacy_res.status_code}')
 
 
-paperids = [ '0704.0001']
-futures = [fetch_and_compare_abs(paperid, compare_res) for paperid in paperids]
+with Pool(10) as p:
+    p.map( partial( fetch_and_compare_abs, compare_res), paperid_iterator(ABS_FILES))
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(asyncio.wait(futures))
