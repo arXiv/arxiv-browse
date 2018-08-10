@@ -21,11 +21,7 @@ from bs4 import BeautifulSoup
 ABS_FILES = path_of_for_test('data/abs_files')
 
 
-def bad(a: str, b: str) -> Any:
-    return a + b
-
-
-res_comparisons: List[res_comparison_fn] = [compare_status, bad]
+res_comparisons: List[res_comparison_fn] = [compare_status]
 text_comparisons: List[text_comparison_fn] = []
 html_comparisons: List[html_comparison_fn] = []
 
