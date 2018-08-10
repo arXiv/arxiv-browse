@@ -1,3 +1,24 @@
+""" Script to compare abs pages from NG and beta.arxiv.org
+
+To run this I do:
+Open terminal:
+cd arxiv-browse
+pipenv sync
+FLASK_APP=app.py FLASK_DEBUG=1 pipenv run flask run
+
+In another terminal:
+cd arxiv-browse
+pipenv sync
+pipenv shell
+python tests/legacy_comparison/abs_page_comparison.py
+
+Improvements:
+ Real comparisons, Only one toy comparision right now.
+ Better reporting format, right now the comparisons produce just strings.
+ Better recording of reports, right now they are just printed to STDOUT
+ Better tracking of which IDs have been compared, right now it just tries to do the whole list every time.
+"""
+
 import itertools
 import sys
 # BDC34: some how I need this under pipenv to get to browse, not sure why
@@ -21,8 +42,13 @@ from bs4 import BeautifulSoup
 ABS_FILES = path_of_for_test('data/abs_files')
 
 
+# List of comparison functions to run on response
 res_comparisons: List[res_comparison_fn] = [compare_status]
+
+# List of comparison functions to run on text of response
 text_comparisons: List[text_comparison_fn] = []
+
+# List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = []
 
 
@@ -103,7 +129,7 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
 
     return filter(None, map(call_it, html_comparisons))
 
-
+# TODO would be great this only ran IDs of papers that haven't been compared
 papers = ['0704.0001', '0704.0600']
 # papers = paperid_iterator(ABS_FILES)
 with Pool(10) as p:
