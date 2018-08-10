@@ -3,14 +3,15 @@ import sys
 # BDC34: some how I need this under pipenv to get to browse, not sure why
 sys.path.append('')
 
-
+from tests.legacy_comparison.comparison_types import res_comparison_fn, text_comparison_fn,html_comparison_fn
 from tests.legacy_comparison.response_comparisons import compare_status
 
 import os
 from functools import partial
 from multiprocessing import Pool
 import requests
-from typing import Iterator
+from typing import Iterator, Callable, List, Any
+from mypy_extensions import TypedDict
 
 from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
@@ -19,9 +20,14 @@ from bs4 import BeautifulSoup
 
 ABS_FILES = path_of_for_test('data/abs_files')
 
-res_comparisons = [compare_status]
-text_comparisons = []
-html_comparisons = []
+
+def bad(a: str, b: str) -> Any:
+    return a + b
+
+
+res_comparisons: List[res_comparison_fn] = [compare_status, bad]
+text_comparisons: List[text_comparison_fn] = []
+html_comparisons: List[html_comparison_fn] = []
 
 
 def paperid_iterator(path) -> Iterator[str]:
@@ -66,10 +72,10 @@ def run_compare_response(ng_url: str=None,
         except Exception as ex:
             return ex
 
-    return list(filter(None,itertools.chain(
-                                    map(call_it, res_comparisons),
-                                    run_compare_text(ng_url=ng_url, legacy_url=legacy_url, ng_text=ng_res.text,
-                                             legacy_text=legacy_res.text, paperid=paperid))))
+    return list(filter(None, itertools.chain(
+        map(call_it, res_comparisons),
+        run_compare_text(ng_url=ng_url, legacy_url=legacy_url, ng_text=ng_res.text,
+                         legacy_text=legacy_res.text, paperid=paperid))))
 
 
 def run_compare_text(ng_url: str=None, legacy_url: str=None,
@@ -81,12 +87,12 @@ def run_compare_text(ng_url: str=None, legacy_url: str=None,
         except Exception as ex:
             return ex
 
-    return filter(None,itertools.chain(
-                                    map(call_it, text_comparisons),
-                                    run_compare_html(ng_url=ng_url, legacy_url=legacy_url,
-                                        ng_html=BeautifulSoup(ng_text, 'html.parser'),
-                                        legacy_html=BeautifulSoup(legacy_text, 'html.parser'),
-                                        paperid=paperid)))
+    return filter(None, itertools.chain(
+        map(call_it, text_comparisons),
+        run_compare_html(ng_url=ng_url, legacy_url=legacy_url,
+                         ng_html=BeautifulSoup(ng_text, 'html.parser'),
+                         legacy_html=BeautifulSoup(legacy_text, 'html.parser'),
+                         paperid=paperid)))
 
 
 def run_compare_html(ng_url: str=None, legacy_url: str=None,
@@ -98,14 +104,14 @@ def run_compare_html(ng_url: str=None, legacy_url: str=None,
         except Exception as ex:
             return ex
 
-    return itertools.filterfalse(lambda  x: x, map(call_it, html_comparisons))
+    return itertools.filterfalse(lambda x: x, map(call_it, html_comparisons))
 
 
 #papers =  ['0704.0001', '0704.0600']
 papers = paperid_iterator(ABS_FILES)
 with Pool(10) as p:
-    results = p.imap(partial(fetch_and_compare_abs, run_compare_response), papers)
+    compare = partial(fetch_and_compare_abs, run_compare_response)
+    results = p.imap(compare, papers)
     for result in results:
-        #TODO need to replace this with writing to a report file or something
+        # TODO need to replace this with writing to a report file or something
         print(result)
-

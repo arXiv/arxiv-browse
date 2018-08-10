@@ -22,6 +22,7 @@ sqlacodegen = "*"
 mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
+mypy-extensions = "*"
 
 [dev-packages]
 pylama = "*"
