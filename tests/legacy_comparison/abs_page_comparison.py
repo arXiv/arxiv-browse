@@ -19,17 +19,20 @@ Improvements:
  Better tracking of which IDs have been compared, right now it just tries to do the whole list every time.
 """
 
+import argparse
 import itertools
 import sys
 # BDC34: some how I need this under pipenv to get to browse, not sure why
 sys.path.append('')
 
-from tests.legacy_comparison.comparison_types import res_comparison_fn, text_comparison_fn, html_comparison_fn, \
-    res_arg_dict, text_arg_dict, html_arg_dict
+from tests.legacy_comparison.comparison_types import res_comparison_fn, \
+    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
+    html_arg_dict
 from tests.legacy_comparison.response_comparisons import compare_status
 
 import os
 from functools import partial
+import logging
 from multiprocessing import Pool
 import requests
 from typing import Iterator, List, Callable, TypeVar
@@ -40,6 +43,7 @@ from tests import path_of_for_test
 from bs4 import BeautifulSoup
 
 ABS_FILES = path_of_for_test('data/abs_files')
+LOG_FILE_NAME = 'legacy_comparison.log'
 
 
 # List of comparison functions to run on response
@@ -129,12 +133,30 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
 
     return filter(None, map(call_it, html_comparisons))
 
-# TODO would be great this only ran IDs of papers that haven't been compared
-papers = ['0704.0001', '0704.0600']
-# papers = paperid_iterator(ABS_FILES)
-with Pool(10) as p:
-    compare = partial(fetch_and_compare_abs, run_compare_response)
-    results = p.imap(compare, papers)
-    for result in results:
-        # TODO need to replace this with writing to a report file or something
-        print(result)
+
+def main():
+    parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
+    parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
+    args = parser.parse_args()
+    if args.reset:
+        print('Restarting analysis and deleting logs!')
+        os.remove(LOG_FILE_NAME)
+
+    else:
+        print('Continuing analysis')
+
+    logging.basicConfig(filename=LOG_FILE_NAME, level=logging.DEBUG)
+
+    # TODO would be great this only ran IDs of papers that haven't been compared
+    papers = ['0704.0001', '0704.0600']
+    # papers = paperid_iterator(ABS_FILES)
+    with Pool(50) as p:
+        compare = partial(fetch_and_compare_abs, run_compare_response)
+        results = p.imap(compare, papers)
+        for result in results:
+            # TODO need to replace this with writing to a report file or something
+            print(result)
+
+
+if __name__ == '__main__':
+    main()
