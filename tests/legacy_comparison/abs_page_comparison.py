@@ -12,14 +12,16 @@ pipenv sync
 pipenv shell
 python tests/legacy_comparison/abs_page_comparison.py
 
+To reset the analysis to start over, add the `--reset` arg.
+
 Improvements:
  Real comparisons, Only one toy comparision right now.
  Better reporting format, right now the comparisons produce just strings.
- Better recording of reports, right now they are just printed to STDOUT
- Better tracking of which IDs have been compared, right now it just tries to do the whole list every time.
+ Local caching of results (both ng and legacy) to speed up runtime.
 """
 
 import argparse
+from dataclasses import dataclass
 import itertools
 import sys
 # BDC34: some how I need this under pipenv to get to browse, not sure why
@@ -35,7 +37,7 @@ from functools import partial
 import logging
 from multiprocessing import Pool
 import requests
-from typing import Iterator, List, Callable, TypeVar
+from typing import Callable, Iterator, List, TypeVar
 
 from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
@@ -44,7 +46,7 @@ from bs4 import BeautifulSoup
 
 ABS_FILES = path_of_for_test('data/abs_files')
 LOG_FILE_NAME = 'legacy_comparison.log'
-
+VISITED_ABS_FILE_NAME = 'visited.log'
 
 # List of comparison functions to run on response
 res_comparisons: List[res_comparison_fn] = [compare_status]
@@ -56,7 +58,7 @@ text_comparisons: List[text_comparison_fn] = []
 html_comparisons: List[html_comparison_fn] = []
 
 
-def paperid_iterator(path: str) -> List[str]:
+def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
     """Return an iterator of paperId strings for all abs found below path."""
     ids = []
     for (dir_name, subdir_list, file_list) in os.walk(path):
@@ -66,8 +68,9 @@ def paperid_iterator(path: str) -> List[str]:
                 continue
             if not fname_path.endswith('.abs'):
                 continue
-            ids.append(AbsMetaSession.parse_abs_file(
-                filename=fname_path).arxiv_id)
+            aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+            if aid not in excluded:
+                ids.append(aid)
     return ids
 
 
@@ -81,17 +84,26 @@ legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 T = TypeVar('T')
 
 
-def fetch_and_compare_abs(compare_res_fn: Callable[[res_arg_dict], List[T]], paperid: str) -> List[T]:
-    ng_url = ng_abs_base_url + paperid
-    legacy_url = legacy_abs_base_url + paperid
+@dataclass
+class Result:
+    paper_id: str
+    message: str
+    __slots__ = ['paper_id', 'message']
+
+
+def fetch_and_compare_abs(
+        compare_res_fn: Callable[[res_arg_dict], List[Result]], paper_id: str
+) -> List[Result]:
+    ng_url = ng_abs_base_url + paper_id
+    legacy_url = legacy_abs_base_url + paper_id
 
     res_dict: res_arg_dict = {'ng_url': ng_url,
                               'legacy_url': legacy_url,
                               'ng_res': requests.get(ng_url),
                               'legacy_res': requests.get(legacy_url),
-                              'paperid': paperid}
+                              'paperid': paper_id}
 
-    return compare_res_fn(res_dict)
+    return list(map(lambda msg: Result(paper_id, msg), compare_res_fn(res_dict)))
 
 
 def run_compare_response(res_args: res_arg_dict) -> List[str]:
@@ -134,28 +146,32 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
     return filter(None, map(call_it, html_comparisons))
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
     parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
     args = parser.parse_args()
+    visited: List[str] = []
     if args.reset:
         print('Restarting analysis and deleting logs!')
-        os.remove(LOG_FILE_NAME)
-
+        if os.path.exists(LOG_FILE_NAME):
+            os.remove(LOG_FILE_NAME)
+        if os.path.exists(VISITED_ABS_FILE_NAME):
+            os.remove(VISITED_ABS_FILE_NAME)
     else:
         print('Continuing analysis')
+        with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
+            visited = [line.rstrip() for line in visited_fh.readlines()]
 
-    logging.basicConfig(filename=LOG_FILE_NAME, level=logging.DEBUG)
-
-    # TODO would be great this only ran IDs of papers that haven't been compared
-    papers = ['0704.0001', '0704.0600']
-    # papers = paperid_iterator(ABS_FILES)
-    with Pool(50) as p:
-        compare = partial(fetch_and_compare_abs, run_compare_response)
-        results = p.imap(compare, papers)
-        for result in results:
-            # TODO need to replace this with writing to a report file or something
-            print(result)
+    logging.basicConfig(filename=LOG_FILE_NAME, level=logging.INFO)
+    # papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
+    papers = paperid_iterator(ABS_FILES, excluded=visited)
+    with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
+        with Pool(50) as pool:
+            compare = partial(fetch_and_compare_abs, run_compare_response)
+            results = pool.imap(compare, papers)
+            for result in sum(results, []):
+                visited_fh.write(f'{result.paper_id}\n')
+                print(result.message)
 
 
 if __name__ == '__main__':
