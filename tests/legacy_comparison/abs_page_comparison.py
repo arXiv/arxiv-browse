@@ -30,8 +30,10 @@ sys.path.append('')
 from tests.legacy_comparison.comparison_types import res_comparison_fn, \
     text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
     html_arg_dict
-from tests.legacy_comparison.response_comparisons import compare_status
 
+from tests.legacy_comparison.html_comparisons import html_similarity
+from tests.legacy_comparison.response_comparisons import compare_status
+from tests.legacy_comparison.text_comparisons import text_similarity
 import os
 from functools import partial
 import logging
@@ -52,10 +54,11 @@ VISITED_ABS_FILE_NAME = 'visited.log'
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
-text_comparisons: List[text_comparison_fn] = []
+text_comparisons: List[text_comparison_fn] = [text_similarity]
 
 # List of comparison functions to run on HTML parsed text of response
-html_comparisons: List[html_comparison_fn] = []
+html_comparisons: List[html_comparison_fn] = [html_similarity]
+
 
 
 def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
@@ -158,15 +161,16 @@ def main() -> None:
         if os.path.exists(VISITED_ABS_FILE_NAME):
             os.remove(VISITED_ABS_FILE_NAME)
     else:
-        print('Continuing analysis')
-        with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
-            visited = [line.rstrip() for line in visited_fh.readlines()]
+        if os.path.exists(VISITED_ABS_FILE_NAME):
+            print('Continuing analysis')
+            with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
+                visited = [line.rstrip() for line in visited_fh.readlines()]
 
     logging.basicConfig(filename=LOG_FILE_NAME, level=logging.INFO)
     # papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
     papers = paperid_iterator(ABS_FILES, excluded=visited)
     with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
-        with Pool(50) as pool:
+        with Pool(10) as pool:
             compare = partial(fetch_and_compare_abs, run_compare_response)
             results = pool.imap(compare, papers)
             for result in sum(results, []):
