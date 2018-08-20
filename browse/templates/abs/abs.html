@@ -127,8 +127,8 @@
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
-  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }} (
-  {%- if abs_meta.version == 1 %}this version{% else %}<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>{%- endif %})
+  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }} 
+  {%- if abs_meta.version != 1 %}(<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
   , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
   {%- endif -%}
@@ -152,5 +152,13 @@
   <span class="primary-subject">{{- abs_meta.primary_category.canonical.name or abs_meta.primary_category.name  }} ({{ abs_meta.primary_category.canonical.id or abs_meta.primary_category.id }})</span>
   {%- if abs_meta.secondary_categories -%}
     {%- for category in abs_meta.secondary_categories %}
-     {%- if abs_meta.primary_category.canonical and category.id != abs_meta.primary_category.canonical.id %}; {{ category.name}} ({{ category.id }}){% endif %}{% endfor %}{% endif %}
+     {%- if abs_meta.primary_category.canonical %}
+       {%- if category.id != abs_meta.primary_category.canonical.id -%}
+        ; {{ category.name}} ({{ category.id }})
+       {% endif %}
+     {% else -%}
+        ; {{ category.name}} ({{ category.id }})
+     {% endif -%}
+    {% endfor %}
+  {% endif %}
 {%- endmacro -%}

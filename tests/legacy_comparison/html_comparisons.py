@@ -40,6 +40,7 @@ def _element_similarity(name: str,
     )
 
     res = f"similarity for {name} of {html_arg['paperid']} = {sim}"
+
     if sim < min_sim:
         logging.warning(res)
     return res
@@ -59,10 +60,6 @@ history_similarity = partial(
 
 title_similarity = partial(
     _element_similarity, 'title div', lambda bs: bs.select('.title'), 0.9)
-
-
-endorers_similarity = partial(
-    _element_similarity, 'endorsers div', lambda bs: bs.select('.endorsers'), 0.9)
 
 
 subject_similarity = partial(
