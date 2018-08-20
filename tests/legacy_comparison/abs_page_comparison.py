@@ -34,7 +34,6 @@ from tests.legacy_comparison.comparison_types import res_comparison_fn, \
 from tests.legacy_comparison.html_comparisons import html_similarity, author_similarity,dateline_similarity,\
     history_similarity,\
     title_similarity,\
-    endorers_similarity,\
     subject_similarity,\
     comments_similarity,\
     extra_services_similarity,\
@@ -72,7 +71,6 @@ html_comparisons: List[html_comparison_fn] = [
     dateline_similarity,
     history_similarity,
     title_similarity,
-    endorers_similarity,
     subject_similarity,
     comments_similarity,
     extra_services_similarity,
