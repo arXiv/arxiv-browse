@@ -31,7 +31,16 @@ from tests.legacy_comparison.comparison_types import res_comparison_fn, \
     text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
     html_arg_dict
 
-from tests.legacy_comparison.html_comparisons import html_similarity
+from tests.legacy_comparison.html_comparisons import html_similarity, author_similarity,dateline_similarity,\
+    history_similarity,\
+    title_similarity,\
+    endorers_similarity,\
+    subject_similarity,\
+    comments_similarity,\
+    extra_services_similarity,\
+    head_similarity
+
+
 from tests.legacy_comparison.response_comparisons import compare_status
 from tests.legacy_comparison.text_comparisons import text_similarity
 import os
@@ -51,14 +60,24 @@ LOG_FILE_NAME = 'legacy_comparison.log'
 VISITED_ABS_FILE_NAME = 'visited.log'
 
 # List of comparison functions to run on response
+
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
 text_comparisons: List[text_comparison_fn] = [text_similarity]
 
 # List of comparison functions to run on HTML parsed text of response
-html_comparisons: List[html_comparison_fn] = [html_similarity]
-
+html_comparisons: List[html_comparison_fn] = [
+    author_similarity,
+    dateline_similarity,
+    history_similarity,
+    title_similarity,
+    endorers_similarity,
+    subject_similarity,
+    comments_similarity,
+    extra_services_similarity,
+    head_similarity,
+]
 
 
 def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
