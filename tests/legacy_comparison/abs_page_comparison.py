@@ -158,6 +158,25 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
     return filter(None, map(call_it, html_comparisons))
 
 
+def rm_email_hash(text: str) -> str:
+    return re.sub(r'show-email/\w+/', 'show-email/', text)
+
+
+def process_text(text_args: text_arg_dict) -> html_arg_dict:
+    text_args['ng_text'] = ' '.join(text_args['ng_text'].split())
+    text_args['legacy_text'] = ' '.join(text_args['legacy_text'].split())
+
+    text_args['ng_text'] = rm_email_hash(text_args['ng_text'])
+    text_args['legacy_text'] = rm_email_hash(text_args['legacy_text'])
+
+    html_dict: html_arg_dict = {**text_args, **{
+        'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
+        'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')
+    }}
+
+    return html_dict
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
     parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
