@@ -1,8 +1,10 @@
 import argparse
+from dataclasses import dataclass
 import itertools
 import sys
 
 import os
+import re
 from functools import partial
 from multiprocessing import Pool
 from typing import Callable, Iterator, List, Tuple, Dict
@@ -46,11 +48,10 @@ Improvements:
 """
 
 ABS_FILES = path_of_for_test('data/abs_files')
-LOG_FILE_NAME = 'legacy_comparison.log'
+LOG_FILE_NAME = 'legacy_comparison.org'
 VISITED_ABS_FILE_NAME = 'visited.log'
 
 # List of comparison functions to run on response
-
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
@@ -95,6 +96,7 @@ legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
     ng_url = ng_abs_base_url + paper_id
     legacy_url = legacy_abs_base_url + paper_id
+
     res_dict: res_arg_dict = {'ng_url': ng_url,
                               'legacy_url': legacy_url,
                               'ng_res': requests.get(ng_url),
@@ -120,10 +122,8 @@ def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
         map(call_it, res_comparisons), run_compare_text(text_dict)))
 
 
-def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
-
-    html_dict: html_arg_dict = {**text_args, **{'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
-                                                'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')}}
+def run_compare_text(text_args: text_arg_dict) -> Iterator[str]:
+    html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         try:
@@ -145,6 +145,25 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
     return filter(None, map(call_it, html_comparisons))
 
 
+def rm_email_hash(text: str) -> str:
+    return re.sub(r'show-email/\w+/', 'show-email/', text)
+
+
+def process_text(text_args: text_arg_dict) -> html_arg_dict:
+    text_args['ng_text'] = ' '.join(text_args['ng_text'].split())
+    text_args['legacy_text'] = ' '.join(text_args['legacy_text'].split())
+
+    text_args['ng_text'] = rm_email_hash(text_args['ng_text'])
+    text_args['legacy_text'] = rm_email_hash(text_args['legacy_text'])
+
+    html_dict: html_arg_dict = {**text_args, **{
+        'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
+        'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')
+    }}
+
+    return html_dict
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
     parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
@@ -162,7 +181,7 @@ def main() -> None:
             print('Continuing analysis')
             with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
                 visited = [line.rstrip() for line in visited_fh.readlines()]
-
+ 
     if args.short:
         papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
     else:
