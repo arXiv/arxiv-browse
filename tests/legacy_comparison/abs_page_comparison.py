@@ -1,3 +1,31 @@
+import argparse
+from dataclasses import dataclass
+import itertools
+import sys
+
+import os
+import re
+from functools import partial
+import logging
+from multiprocessing import Pool
+from typing import Callable, Iterator, List, TypeVar
+
+import requests
+from bs4 import BeautifulSoup
+
+sys.path.append('')  # BDC34: some how I need this under pipenv to get to browse, not sure why
+
+from tests.legacy_comparison.comparison_types import res_comparison_fn, \
+    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
+    html_arg_dict
+from tests.legacy_comparison.html_comparisons import author_similarity,dateline_similarity, history_similarity,\
+    title_similarity,subject_similarity, comments_similarity, extra_services_similarity, head_similarity
+from tests.legacy_comparison.response_comparisons import compare_status
+from tests.legacy_comparison.text_comparisons import text_similarity
+from browse.services.document.metadata import AbsMetaSession
+from tests import path_of_for_test
+
+
 """ Script to compare abs pages from NG and beta.arxiv.org
 
 To run this I do:
@@ -13,49 +41,11 @@ pipenv shell
 python tests/legacy_comparison/abs_page_comparison.py
 
 To reset the analysis to start over, add the `--reset` arg.
+To run a short test add '--short' arg.
 
 Improvements:
- Real comparisons, Only one toy comparision right now.
- Better reporting format, right now the comparisons produce just strings.
- Local caching of results (both ng and legacy) to speed up runtime.
+ Better reporting format, right now the comparisons produce just strings. 
 """
-
-import argparse
-from dataclasses import dataclass
-import itertools
-import sys
-# BDC34: some how I need this under pipenv to get to browse, not sure why
-sys.path.append('')
-
-from tests.legacy_comparison.comparison_types import res_comparison_fn, \
-    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
-    html_arg_dict
-
-from tests.legacy_comparison.html_comparisons import html_similarity, author_similarity,dateline_similarity,\
-    history_similarity,\
-    title_similarity,\
-    subject_similarity,\
-    comments_similarity,\
-    extra_services_similarity,\
-    head_similarity
-
-
-from tests.legacy_comparison.response_comparisons import compare_status
-from tests.legacy_comparison.text_comparisons import text_similarity
-
-from functools import partial
-import logging
-import os
-import re
-
-from multiprocessing import Pool
-import requests
-from typing import Callable, Iterator, List, TypeVar
-
-from browse.services.document.metadata import AbsMetaSession
-from tests import path_of_for_test
-
-from bs4 import BeautifulSoup
 
 ABS_FILES = path_of_for_test('data/abs_files')
 LOG_FILE_NAME = 'legacy_comparison.log'
@@ -189,6 +179,7 @@ def process_text(text_args: text_arg_dict) -> html_arg_dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
     parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
+    parser.add_argument('--short', default=False, const=True, action='store_const', dest='short')
     args = parser.parse_args()
     visited: List[str] = []
     if args.reset:
@@ -204,8 +195,10 @@ def main() -> None:
                 visited = [line.rstrip() for line in visited_fh.readlines()]
 
     logging.basicConfig(filename=LOG_FILE_NAME, level=logging.INFO)
-    # papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
-    papers = paperid_iterator(ABS_FILES, excluded=visited)
+    if args.short:
+        papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
+    else:
+        papers = paperid_iterator(ABS_FILES, excluded=visited)
     with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
         with Pool(10) as pool:
             compare = partial(fetch_and_compare_abs, run_compare_response)
