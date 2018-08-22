@@ -29,6 +29,9 @@ def _element_similarity(name: str,
     legacy = get_element(html_arg['legacy_html'])
     ng = get_element(html_arg['ng_html'])
 
+    if len(ng) == 0 and len(legacy) == 0:
+        return ''
+
     if len(legacy) != len(ng) or len(ng) != 1 or len(legacy) != 1:
         res = f"bad counts for {name} for {html_arg['paperid']} ng: {len(ng)} legacy: {len(legacy)}"
         logging.warning(res)
