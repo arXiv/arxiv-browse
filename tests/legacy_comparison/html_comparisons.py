@@ -1,52 +1,48 @@
-import logging
 from functools import partial
 from typing import Callable
 
 from tests.legacy_comparison.abstract_comparisons import lev_similarity
-from tests.legacy_comparison.comparison_types import html_arg_dict
+from tests.legacy_comparison.comparison_types import html_arg_dict, BadResult
 
 from bs4 import BeautifulSoup
 
 
-def html_similarity(html_arg: html_arg_dict) -> str:
+def html_similarity(html_arg: html_arg_dict) -> BadResult:
     sim = lev_similarity(
         html_arg['ng_html'].prettify().encode(
             'utf-8').decode('ascii', 'ignore'),
         html_arg['legacy_html'].prettify().encode(
             'utf-8').decode('ascii', 'ignore')
     )
-    res = f"html_pretty_sim for {html_arg['paperid']} = {sim}"
     if sim < 0.69:
-        logging.warning(res)
-    return res
+        return BadResult(html_arg['paper_id'], f"html_pretty_sim for {html_arg['paper_id']} = {sim}")
+    return None
 
 
 def _element_similarity(name: str,
                         get_element: Callable[[BeautifulSoup], BeautifulSoup],
                         min_sim: float,
-                        html_arg: html_arg_dict) -> str:
+                        html_arg: html_arg_dict) -> BadResult:
     """ Uses get_element to select an element of the BS doc on both NG and Legacy do a similarity. """
     legacy = get_element(html_arg['legacy_html'])
     ng = get_element(html_arg['ng_html'])
 
     if len(ng) == 0 and len(legacy) == 0:
-        return ''
+        return None
 
     if len(legacy) != len(ng) or len(ng) != 1 or len(legacy) != 1:
-        res = f"bad counts for {name} for {html_arg['paperid']} ng: {len(ng)} legacy: {len(legacy)}"
-        logging.warning(res)
-        return res
+        return BadResult(html_arg['paper_id'], name,
+                         f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}")
 
     sim = lev_similarity(
         ng[0].prettify().encode('utf-8').decode('ascii', 'ignore'),
         legacy[0].prettify().encode('utf-8').decode('ascii', 'ignore')
     )
 
-    res = f"similarity for {name} of {html_arg['paperid']} = {sim}"
-
     if sim < min_sim:
-        logging.warning(res)
-    return res
+        msg = f"Elements did not meet min similarity of {min_sim}"
+        return BadResult(html_arg['paper_id'], name, msg, legacy[0], ng[0], sim)
+    return None
 
 
 author_similarity = partial(

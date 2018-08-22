@@ -1,22 +1,21 @@
 import argparse
-from dataclasses import dataclass
 import itertools
 import sys
 
 import os
 from functools import partial
-import logging
 from multiprocessing import Pool
-from typing import Callable, Iterator, List, TypeVar
+from typing import Callable, Iterator, List, Tuple, Dict
 
 import requests
 from bs4 import BeautifulSoup
 
 sys.path.append('')  # BDC34: some how I need this under pipenv to get to browse, not sure why
+sys.setrecursionlimit(10000)
 
 from tests.legacy_comparison.comparison_types import res_comparison_fn, \
-    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict,\
-    html_arg_dict
+    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict, \
+    html_arg_dict, BadResult
 from tests.legacy_comparison.html_comparisons import author_similarity,dateline_similarity, history_similarity,\
     title_similarity,subject_similarity, comments_similarity, extra_services_similarity, head_similarity
 from tests.legacy_comparison.response_comparisons import compare_status
@@ -93,67 +92,55 @@ ng_abs_base_url = 'http://localhost:5000/abs/'
 legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 
 
-T = TypeVar('T')
-
-
-@dataclass
-class Result:
-    paper_id: str
-    message: str
-    __slots__ = ['paper_id', 'message']
-
-
-def fetch_and_compare_abs(
-        compare_res_fn: Callable[[res_arg_dict], List[Result]], paper_id: str
-) -> List[Result]:
+def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
     ng_url = ng_abs_base_url + paper_id
     legacy_url = legacy_abs_base_url + paper_id
-
     res_dict: res_arg_dict = {'ng_url': ng_url,
                               'legacy_url': legacy_url,
                               'ng_res': requests.get(ng_url),
                               'legacy_res': requests.get(legacy_url),
-                              'paperid': paper_id}
+                              'paper_id': paper_id}
+    compare_config = {'ng_url': ng_url,
+                      'legacy_url': legacy_url,
+                      'paper_id': paper_id}
+    return compare_config, list(compare_res_fn(res_dict))
 
-    return list(map(lambda msg: Result(paper_id, msg), compare_res_fn(res_dict)))
 
-
-def run_compare_response(res_args: res_arg_dict) -> List[str]:
-
+def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
     text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
                                                'legacy_text': res_args['legacy_res'].text}}
 
-    def call_it(fn: Callable[[text_arg_dict], str]) -> str:
-        try:
+    def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
+        #try:
             return fn(text_dict)
-        except Exception as ex:
-            return str(ex)
+        # except Exception as ex:
+        #     return BadResult(res_args['paper_id'], 'run_compare_response', ex)
 
-    return list(filter(None, itertools.chain(
-        map(call_it, res_comparisons), run_compare_text(text_dict))))
+    return filter(None, itertools.chain(
+        map(call_it, res_comparisons), run_compare_text(text_dict)))
 
 
-def run_compare_text(text_args: text_arg_dict) -> Iterator[str]:
+def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
 
     html_dict: html_arg_dict = {**text_args, **{'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
                                                 'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')}}
 
-    def call_it(fn: Callable[[html_arg_dict], str]) -> str:
+    def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         try:
             return fn(html_dict)
         except Exception as ex:
-            return str(ex)
+            return BadResult(text_args['paper_id'], 'run_compare_text', ex)
 
     return filter(None, itertools.chain(
         map(call_it, text_comparisons), run_compare_html(html_dict)))
 
 
-def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
-    def call_it(fn: Callable[[html_arg_dict], str]) -> str:
+def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
+    def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         try:
             return fn(html_args)
         except Exception as ex:
-            return str(ex)
+            return BadResult(html_args['paper_id'], 'run_compare_html', ex)
 
     return filter(None, map(call_it, html_comparisons))
 
@@ -176,18 +163,44 @@ def main() -> None:
             with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
                 visited = [line.rstrip() for line in visited_fh.readlines()]
 
-    logging.basicConfig(filename=LOG_FILE_NAME, level=logging.INFO)
     if args.short:
         papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
     else:
         papers = paperid_iterator(ABS_FILES, excluded=visited)
+
     with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
-        with Pool(10) as pool:
-            compare = partial(fetch_and_compare_abs, run_compare_response)
-            results = pool.imap(compare, papers)
-            for result in sum(results, []):
-                visited_fh.write(f'{result.paper_id}\n')
-                print(result.message)
+        with open(LOG_FILE_NAME, 'w')as report_fh:
+            with Pool(10) as pool:
+                fetch_and_compare_fn = partial(fetch_abs, run_compare_response)
+                completed_jobs = pool.imap(fetch_and_compare_fn, papers)
+                for job in completed_jobs:
+                    (config, bad_results) = job
+                    visited_fh.write(f"{config['paper_id']}\n")
+                    write_comparison(report_fh, (config,bad_results))
+
+
+def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
+    (config, bad_results) = result
+    if not bad_results:
+        report_fh.write(f"* {config['paper_id']}: okay.\n")
+        return
+    report_fh.write(f"* {config['paper_id']}: not okay, had {len(bad_results)} bad results.\n")
+    for br in bad_results:
+        report_fh.write(format_bad_result(br))
+
+
+def format_bad_result(bad: BadResult)->str:
+    rpt = f"** {bad.comparison}\n" \
+          f"{bad.message} "
+    if bad.similarity:
+        rpt = rpt + f"sim: {bad.similarity}\n"
+    else:
+        rpt = rpt + "\n"
+
+    if bad.legacy or bad.ng:
+        rpt = rpt + f"Legacy: '{bad.legacy}'\nNG: '{bad.ng}'\n"
+
+    return rpt
 
 
 if __name__ == '__main__':
