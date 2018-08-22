@@ -42,9 +42,12 @@ from tests.legacy_comparison.html_comparisons import html_similarity, author_sim
 
 from tests.legacy_comparison.response_comparisons import compare_status
 from tests.legacy_comparison.text_comparisons import text_similarity
-import os
+
 from functools import partial
 import logging
+import os
+import re
+
 from multiprocessing import Pool
 import requests
 from typing import Callable, Iterator, List, TypeVar
@@ -142,9 +145,7 @@ def run_compare_response(res_args: res_arg_dict) -> List[str]:
 
 
 def run_compare_text(text_args: text_arg_dict) -> Iterator[str]:
-
-    html_dict: html_arg_dict = {**text_args, **{'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
-                                                'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')}}
+    html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], str]) -> str:
         try:
@@ -164,6 +165,25 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[str]:
             return str(ex)
 
     return filter(None, map(call_it, html_comparisons))
+
+
+def rm_email_hash(text: str) -> str:
+    return re.sub(r'show-email/\w+/', 'show-email/', text)
+
+
+def process_text(text_args: text_arg_dict) -> html_arg_dict:
+    text_args['ng_text'] = ' '.join(text_args['ng_text'].split())
+    text_args['legacy_text'] = ' '.join(text_args['legacy_text'].split())
+
+    text_args['ng_text'] = rm_email_hash(text_args['ng_text'])
+    text_args['legacy_text'] = rm_email_hash(text_args['legacy_text'])
+
+    html_dict: html_arg_dict = {**text_args, **{
+        'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
+        'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')
+    }}
+
+    return html_dict
 
 
 def main() -> None:
@@ -192,6 +212,7 @@ def main() -> None:
             results = pool.imap(compare, papers)
             for result in sum(results, []):
                 visited_fh.write(f'{result.paper_id}\n')
+                # TODO: why isn't this printing?:
                 print(result.message)
 
 
