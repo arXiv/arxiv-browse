@@ -31,6 +31,13 @@ def apply_response_headers(response: Response) -> Response:
 
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs() -> None:
+    if request.args:
+        if 'id' in request.args:
+            return abstract(request.args['id'])
+        elif 'archive' in request.args and 'papernum' in request.args:
+            return abstract(
+                f"{request.args['archive']}/{request.args['papernum']}")
+
     """Return 404."""
     raise NotFound
 
