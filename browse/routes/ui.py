@@ -1,4 +1,5 @@
 """Provides the user intefaces for browse."""
+import re
 from typing import Union
 
 from arxiv import status
@@ -7,6 +8,7 @@ from flask import Blueprint, render_template, request, Response, session, \
 from werkzeug.exceptions import InternalServerError, NotFound
 
 from browse.controllers import abs_page
+from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
 
@@ -31,22 +33,31 @@ def apply_response_headers(response: Response) -> Response:
 
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs() -> None:
+    """Check several legacy request parameters."""
     if request.args:
         if 'id' in request.args:
             return abstract(request.args['id'])
         elif 'archive' in request.args and 'papernum' in request.args:
             return abstract(
                 f"{request.args['archive']}/{request.args['papernum']}")
+        else:
+            for param in request.args:
+                # singleton case, where the parameter is the value
+                # e.g. /abs?<archive>/\d{7}
+                if not request.args[param] \
+                   and re.match(r'^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$', param):
+                    return abstract(param)
 
     """Return 404."""
-    raise NotFound
+    raise AbsNotFound
 
 
 @blueprint.route('/abs/', methods=['GET'], defaults={'arxiv_id': ''})
-@blueprint.route('/abs/<path:arxiv_id>', methods=['GET', 'POST'])
+@blueprint.route('/abs/<path:arxiv_id>', methods=['GET'])
 def abstract(arxiv_id: str) -> Union[str, Response]:
     """Abstract (abs) page view."""
     download_format_pref = request.cookies.get('xxx-ps-defaults')
+
     response, code, headers = abs_page.get_abs_page(arxiv_id,
                                                     request.args,
                                                     download_format_pref)

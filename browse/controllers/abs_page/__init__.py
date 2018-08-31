@@ -5,6 +5,7 @@ The primary entrypoint to this module is :func:`.get_abs_page`, which handles
 GET requests to the abs endpoint.
 """
 
+import re
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
@@ -70,6 +71,20 @@ def get_abs_page(arxiv_id: str,
     """
     response_data: Dict[str, Any] = {}
     try:
+
+        if request_params and '/' not in arxiv_id:
+            if 'papernum' in request_params:
+                # To support old references to /abs/<archive>?papernum=\d{7}
+                arxiv_id = f"{arxiv_id}/{request_params['papernum']}"
+            else:
+                for param in request_params:
+                    # singleton case, where the parameter is the value
+                    # To support old references to /abs/<archive>?\d{7}
+                    if not request_params[param] \
+                       and re.match(r'^\d{7}$', param):
+                        arxiv_id = f"{arxiv_id}/{param}"
+                        break
+
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         redirect_url = _check_supplied_identifier(arxiv_identifier)
         if redirect_url:
