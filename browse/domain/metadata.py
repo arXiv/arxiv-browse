@@ -125,6 +125,9 @@ class Group(Category):
 class DocMetadata:
     """Class for representing the core arXiv document metadata."""
 
+    raw_safe: str
+    """The raw abs string without submitter email address."""
+
     arxiv_id: str
     """arXiv paper identifier"""
 

@@ -63,6 +63,12 @@ def abstract(arxiv_id: str) -> Union[str, Response]:
                                                     download_format_pref)
 
     if code == status.HTTP_200_OK:
+        if request.args \
+          and 'fmt' in request.args \
+          and request.args['fmt'] == 'txt':
+            return Response(
+                    response['abs_meta'].raw_safe,
+                    mimetype='text/plain')
         return render_template('abs/abs.html', **response), code, headers
     if code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)

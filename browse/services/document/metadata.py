@@ -23,7 +23,7 @@ ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
-    r'From:\s*(?P<name>[^<]+)?\s*(<(?P<email>.*)>)?')
+    r'(?P<from>From:\s*)(?P<name>[^<]+)?\s+(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
     r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
@@ -457,7 +457,8 @@ class AbsMetaSession:
         # everything else is in the second main component
         prehistory, misc_fields = re.split(r'\n\n', components[1])
 
-        fields: Dict[str, Any] = AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
+        fields: Dict[str, Any] = \
+            AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
 
         # abstract is the first main component
         fields['abstract'] = components[2]
@@ -484,12 +485,13 @@ class AbsMetaSession:
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        (version, version_history, arxiv_id_v) = AbsMetaSession._parse_version_entries(
-            arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
-        )
+        (version, version_history, arxiv_id_v) = \
+            AbsMetaSession._parse_version_entries(
+                arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
+            )
 
         # TODO type ignore: possibly mypy #3937, also see #5389
-        arxiv_identifier=Identifier(arxiv_id=arxiv_id)
+        arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
         # named (key-value) fields
         if 'categories' not in fields and arxiv_identifier.is_old_id:
@@ -506,8 +508,9 @@ class AbsMetaSession:
         primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])  # type: ignore
         doc_license: License = \
             License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
-
+        raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
         return DocMetadata(  # type: ignore
+            raw_safe=raw_safe,
             arxiv_id=arxiv_id,
             arxiv_id_v=arxiv_id_v,
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
