@@ -17,6 +17,8 @@ class TestAbsParser(TestCase):
     def test_bulk_parsing(self):
         """Parse all nonempty .abs files in test set."""
         num_files_tested = 0
+        from_regex = r'(?m)From:\s+[^<]+<[^@]+@[^>]+>'
+        self.assertRegex('From: J Doe <jdoe@example.org>', from_regex)
         for dir_name, subdir_list, file_list in os.walk(ABS_FILES):
             for fname in file_list:
                 fname_path = os.path.join(dir_name, fname)
@@ -26,13 +28,17 @@ class TestAbsParser(TestCase):
                 if not fname_path.endswith('.abs'):
                     continue
                 num_files_tested += 1
-                m = AbsMetaSession.parse_abs_file(filename=fname_path)
-                self.assertIsInstance(m, DocMetadata)
-                self.assertNotEqual(m.license, None)
-                self.assertNotEqual(m.license.effective_uri, None,
+                dm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                self.assertIsInstance(dm, DocMetadata)
+                self.assertNotEqual(dm.license, None)
+                self.assertNotEqual(dm.license.effective_uri, None,
                                     'should have an effectiveLicenseUri')
-                # self.assertTrue(m.initialized, 'instance initialized')
-
+                self.assertRegex(dm.raw_safe,
+                                 r'(?m)From:\s+',
+                                 'has a From: line')
+                self.assertNotRegex(dm.raw_safe,
+                                    from_regex,
+                                    'has a From: line but no email')
         # our test set should be sufficiently large
         self.assertGreater(num_files_tested, 1_000, 'comprehensive dataset')
 

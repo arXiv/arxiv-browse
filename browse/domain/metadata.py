@@ -103,7 +103,7 @@ class Category:
 
 @dataclass
 class Archive(Category):
-    """Represents an arXiv archive."""
+    """Represents an arXiv archive--the middle level of the taxonomy."""
 
     def __post_init__(self) -> None:
         """Get the full archive name."""
@@ -113,12 +113,12 @@ class Archive(Category):
 
 @dataclass
 class Group(Category):
-    """Represents an arXiv group."""
+    """Represents an arXiv group--the highest (most general) taxonomy level."""
 
     def __post_init__(self) -> None:
         """Get the full group name."""
-        if self.id in taxonomy.ARCHIVES:
-            self.name = taxonomy.ARCHIVES[self.id]['name']
+        if self.id in taxonomy.GROUPS:
+            self.name = taxonomy.GROUPS[self.id]['name']
 
 
 @dataclass(frozen=True)

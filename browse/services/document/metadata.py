@@ -147,8 +147,11 @@ class AbsMetaSession:
             new_month = identifier.month
             new_num = identifier.num + 1
             if (identifier.is_old_id and new_num > 999) \
-               or (not identifier.is_old_id and identifier.year < 2015 and new_num > 9999) \
-               or (not identifier.is_old_id and identifier.year >= 2015 and new_num > 99999):
+               or (not identifier.is_old_id
+                   and identifier.year < 2015
+                   and new_num > 9999) \
+               or (not identifier.is_old_id
+                   and identifier.year >= 2015 and new_num > 99999):
                 new_num = 1
                 new_month = new_month + 1
                 if new_month > 12:
@@ -364,7 +367,7 @@ class AbsMetaSession:
             1. a check for source files with specific, valid file name
                extensions (i.e. for a subset of the allowed source file name
                extensions, the dissemintation formats are predictable)
-            2. if formats cannot be inferred from source file, inspect the
+            2. if formats cannot be inferred from the source file, inspect the
                source type in the document metadata.
 
         Format names are strings. These include 'src', 'pdf', 'ps', 'html',

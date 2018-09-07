@@ -1,12 +1,11 @@
 """Provides the user intefaces for browse."""
 import re
 from typing import Union
-
-from arxiv import status
 from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, NotFound
 
+from arxiv import status
 from browse.controllers import abs_page
 from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
@@ -32,7 +31,7 @@ def apply_response_headers(response: Response) -> Response:
 
 
 @blueprint.route('/abs', methods=['GET'])
-def bare_abs() -> None:
+def bare_abs() -> Response:
     """Check several legacy request parameters."""
     if request.args:
         if 'id' in request.args:
@@ -48,13 +47,13 @@ def bare_abs() -> None:
                    and re.match(r'^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$', param):
                     return abstract(param)
 
-    """Return 404."""
+    """Return abs-specific 404."""
     raise AbsNotFound
 
 
 @blueprint.route('/abs/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('/abs/<path:arxiv_id>', methods=['GET'])
-def abstract(arxiv_id: str) -> Union[str, Response]:
+def abstract(arxiv_id: str) -> Response:
     """Abstract (abs) page view."""
     download_format_pref = request.cookies.get('xxx-ps-defaults')
 
@@ -117,11 +116,12 @@ def clickthrough() -> Response:
 
 @blueprint.route('/list/<context>/<subcontext>')
 def list_articles(current_context: str, yymm: str) -> Response:
-    """List articals by context, month etc.
+    """
+    List articles by context, month etc.
 
     Context might be a context or an archive
     Subcontext should be 'recent' 'new' or a string of format yymm
-"""
+    """
     raise InternalServerError(f'Not yet implemented {current_context} {yymm}')
 
 
