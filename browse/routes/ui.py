@@ -23,10 +23,12 @@ def before_request() -> None:
 
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
+    """Apply response headers to all responses."""
     """Prevent UI redress attacks."""
-    """Hook for applying response headers to all responses."""
     response.headers["Content-Security-Policy"] = "frame-ancestors 'none'"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    if request.endpoint == 'browse.abstract':
+        # TODO: set Expires, Last-Modified, ETag response headers
     return response
 
 
