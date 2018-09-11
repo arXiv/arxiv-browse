@@ -38,10 +38,17 @@ def metadata_fields_similarity( html_arg: html_arg_dict) -> BadResult:
                          f"NG: {ng_labels} Legacy: {legacy_labels}")
 
 
+def _strip_href( ele: BeautifulSoup ):
+    for a in ele.find_all('a'):
+        if a['href']:
+            a['href'] = 'stripped_href'
+
+
 def _element_similarity(name: str,
                         get_element: Callable[[BeautifulSoup], BeautifulSoup],
                         min_sim: float,
                         required: bool,
+                        strip_href: bool,
                         html_arg: html_arg_dict) -> BadResult:
     """ Uses get_element to select an element of the BS doc on both NG and Legacy do a similarity. """
     legacy = get_element(html_arg['legacy_html'])
@@ -62,9 +69,15 @@ def _element_similarity(name: str,
         return BadResult(html_arg['paper_id'], name,
                          f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}")
 
+    ng_ele = ng[0]
+    legacy_ele = legacy[0]
+    if strip_href :
+        _strip_href(ng_ele)
+        _strip_href(legacy_ele)
+
     sim = lev_similarity(
-        ng[0].prettify().encode('utf-8').decode('ascii', 'ignore'),
-        legacy[0].prettify().encode('utf-8').decode('ascii', 'ignore')
+        ng_ele.prettify().encode('utf-8').decode('ascii', 'ignore'),
+        legacy_ele.prettify().encode('utf-8').decode('ascii', 'ignore')
     )
 
     if sim < min_sim:
@@ -74,33 +87,33 @@ def _element_similarity(name: str,
 
 
 author_similarity = partial(
-    _element_similarity, 'authors div', lambda bs: bs.select('.authors'), 0.9, True)
+    _element_similarity, 'authors div', lambda bs: bs.select('.authors'), 0.9, True, True)
 
 
 dateline_similarity = partial(
-    _element_similarity, 'dateline div', lambda bs: bs.select('.dateline'), 0.8, True)
+    _element_similarity, 'dateline div', lambda bs: bs.select('.dateline'), 0.8, True, True)
 
 
 history_similarity = partial(
-    _element_similarity, 'submission-history div', lambda bs: bs.select('.submission-history'), 0.9, True)
+    _element_similarity, 'submission-history div', lambda bs: bs.select('.submission-history'), 0.9, True, True)
 
 
 title_similarity = partial(
-    _element_similarity, 'title div', lambda bs: bs.select('.title'), 0.9, True)
+    _element_similarity, 'title div', lambda bs: bs.select('.title'), 0.9, True, False)
 
 
 subject_similarity = partial(
-    _element_similarity, 'subjects td', lambda bs: bs.select('.subjects'), 0.98, True)
+    _element_similarity, 'subjects td', lambda bs: bs.select('.subjects'), 0.98, True, False)
 
 
 comments_similarity = partial(
-    _element_similarity, 'comments td', lambda bs: bs.select('.comments'), 0.9, False)
+    _element_similarity, 'comments td', lambda bs: bs.select('.comments'), 0.9, False, False)
 
 
 extra_services_similarity = partial(
-    _element_similarity, 'extra-services div', lambda bs: bs.select('.extra-services'), 0.9, False)
+    _element_similarity, 'extra-services div', lambda bs: bs.select('.extra-services'), 0.9, False, True)
 
 
 head_similarity = partial(
-    _element_similarity, 'head element', lambda bs: bs.select('head'), 0.85, True)
+    _element_similarity, 'head element', lambda bs: bs.select('head'), 0.85, True, True)
 
