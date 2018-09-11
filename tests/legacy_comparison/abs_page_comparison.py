@@ -24,7 +24,7 @@ from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
 
 
-""" Script to compare abs pages from NG and beta.arxiv.org
+""" Script to compare abs pages from NG and arxiv.org
 
 To run this I do:
 Open terminal:
@@ -89,7 +89,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
 ng_abs_base_url = 'http://localhost:5000/abs/'
 
 # Should end with /
-legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
+legacy_abs_base_url = 'https://arxiv.org/abs/'
 
 
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
@@ -107,8 +107,11 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
 
 
 def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
+    """ This is also where we do most of the cleanining on text, for things
+    we know that we do not want to compare."""
+    legacy_text = piwik_strip(res_args['legacy_res'].text)
     text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
-                                               'legacy_text': res_args['legacy_res'].text}}
+                                               'legacy_text': legacy_text}}
 
     def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
         #try:
@@ -220,6 +223,20 @@ def format_bad_result(bad: BadResult)->str:
         rpt = rpt + f"Legacy: '{bad.legacy}'\nNG: '{bad.ng}'\n"
 
     return rpt
+
+
+def piwik_strip(text: str) -> str:
+
+    piwik_start = '<!-- Piwik -->'
+    piwik_end = '<!-- End Piwik Code -->'
+
+    def find_piwik_start() -> int:
+        return text.index(piwik_start)
+
+    def find_piwik_end() -> int:
+        return text.index(piwik_end) + len(piwik_end)
+
+    return text[:find_piwik_start()] + text[find_piwik_end():]
 
 
 if __name__ == '__main__':
