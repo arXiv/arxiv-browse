@@ -83,16 +83,14 @@ def _element_similarity(name: str,
         return BadResult(html_arg['paper_id'], name,
                          f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}")
 
-    ng_ele = ng[0]
-    legacy_ele = legacy[0]
-    sim = lev_similarity(
-        ng_ele.prettify().encode('utf-8').decode('ascii', 'ignore'),
-        legacy_ele.prettify().encode('utf-8').decode('ascii', 'ignore')
-    )
+    ng_ele_txt = ng[0].prettify().encode('utf-8').decode('ascii', 'ignore')
+    legacy_ele_txt = legacy[0].prettify().encode(
+        'utf-8').decode('ascii', 'ignore')
+    sim = lev_similarity(ng_ele_txt, legacy_ele_txt)
 
     if sim < min_sim:
         msg = f"Elements did not meet min similarity of {min_sim}"
-        return BadResult(html_arg['paper_id'], name, msg, legacy[0], ng[0], sim)
+        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, sim)
     return None
 
 
