@@ -69,6 +69,49 @@ class BrowseTest(unittest.TestCase):
                 rv = self.app.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
 
+    def test_legacy_id_params(self):
+        """Test legacy parameters that support specifying arXiv identifer."""
+        rv = self.app.get('/abs?id=0704.0600')
+        self.assertEqual(rv.status_code, 200, 'id param with new ID')
+
+        rv = self.app.get('/abs?id=adap-org/9303002')
+        self.assertEqual(rv.status_code, 200, 'id param with old ID')
+
+        rv = self.app.get('/abs?adap-org/9303002')
+        self.assertEqual(rv.status_code, 200, 'singleton case for old IDs')
+
+        rv = self.app.get('/abs?0704.0600')
+        self.assertEqual(rv.status_code, 404,
+                         'singleton case for new IDs not supported')
+
+        rv = self.app.get('/abs?archive=adap-org&papernum=9303002')
+        self.assertEqual(rv.status_code, 200, 'archive and papernum params')
+
+        rv = self.app.get('/abs?archive=foo&papernum=1234567')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/abs/adap-org?papernum=9303002')
+        self.assertEqual(rv.status_code, 200,
+                         'archive in path with papernum param')
+
+        rv = self.app.get('/abs/adap-org?9303002')
+        self.assertEqual(rv.status_code, 200,
+                         'archive in path with paper number as singleton')
+
+    def test_fmt_param(self):
+        rv = self.app.get('/abs/adap-org/9303001?fmt=txt')
+        self.assertEqual(rv.status_code, 200,
+                         'get abs with fmt=txt')
+        self.assertEqual(rv.mimetype, 'text/plain',
+                         'check mimetype is text/plain')
+
+        rv = self.app.get('/abs/adap-org/9303001?fmt=foo')
+        # Should this be 400 instead?
+        self.assertEqual(rv.status_code, 200,
+                         'get abs with fmt=foo')
+        self.assertEqual(rv.mimetype, 'text/html',
+                         'check mimetype is text/html')
+
     def test_canonical_category(self):
         # test these two
         #  ./ftp/adap-org/papers/9303/9303002.abs:Categories: adap-org nlin.AO q-bio.PE
@@ -77,7 +120,7 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs/adap-org/9303002')
         self.assertEqual(rv.status_code, 200)
 
-        html = BeautifulSoup(rv.data.decode('utf-8'),'html.parser')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         subject_elmt = html.find('td','subjects')
         self.assertTrue(subject_elmt,'Should have <td class="subjects"> element')
 
@@ -86,5 +129,3 @@ class BrowseTest(unittest.TestCase):
         self.assertNotRegex(sub_txt, r'adap-org', 'should NOT have subsumed category name adap-org on subject line')
         self.assertRegex(sub_txt, r'q-bio\.PE', 'should have secondary category of q-bio.PE')
         self.assertNotRegex(sub_txt, r'nlin\.AO.*nlin\.AO', 'should NOT have nlin.AO twice')
-
-

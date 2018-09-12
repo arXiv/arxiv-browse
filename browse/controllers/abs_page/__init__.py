@@ -5,6 +5,7 @@ The primary entrypoint to this module is :func:`.get_abs_page`, which handles
 GET requests to the abs endpoint.
 """
 
+import re
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
@@ -70,6 +71,9 @@ def get_abs_page(arxiv_id: str,
     """
     response_data: Dict[str, Any] = {}
     try:
+
+        arxiv_id = _check_legacy_id_params(arxiv_id, request_params)
+
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         redirect_url = _check_supplied_identifier(arxiv_identifier)
         if redirect_url:
@@ -96,7 +100,7 @@ def get_abs_page(arxiv_id: str,
             download_format_pref,
             add_sciencewise_ping)
 
-        # the following are less critical and the template must display without them
+        # Following are less critical and template must display without them
         try:
             response_data['include_inspire_link'] = include_inspire_link(
                 abs_meta)
@@ -169,6 +173,36 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
                                     else arxiv_identifier.id)
         return redirect_url
     return None
+
+
+def _check_legacy_id_params(arxiv_id: str, request_params: MultiDict) -> str:
+    """
+    Check for legacy request parameters related to old arXiv identifiers.
+
+    Parameters
+    ----------
+    arxiv_id : str
+
+    request_params: MultiDict
+
+    Returns
+    -------
+    arxiv_id: str
+        A possibly modified version of the input arxiv_id string.
+
+    """
+    if request_params and '/' not in arxiv_id:
+        # To support old references to /abs/<archive>?papernum=\d{7}
+        if 'papernum' in request_params:
+            return f"{arxiv_id}/{request_params['papernum']}"
+        else:
+            for param in request_params:
+                # singleton case, where the parameter is the value
+                # To support old references to /abs/<archive>?\d{7}
+                if not request_params[param] \
+                   and re.match(r'^\d{7}$', param):
+                    return f'{arxiv_id}/{param}'
+    return arxiv_id
 
 
 def _check_context(arxiv_identifier: Identifier,
