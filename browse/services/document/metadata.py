@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
 from pytz import timezone
+import dataclasses
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
@@ -32,14 +33,17 @@ RE_FIELD_COMPONENTS = re.compile(
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
     r'(Paper:\s+|arXiv:)(?P<arxiv_id>\S+)')
 
-# (non-normalized) fields that may be parsed from the key-value pairs in second
-# major component of .abs file.
+
 NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
                 'Report-no', 'ACM-class', 'MSC-class', 'Journal-ref',
                 'DOI', 'License']
-# (normalized) required parsed fields
-REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
+"""
+Fields that may be parsed from the key-value pairs in second
+major component of .abs string. Field names are not normalized.
+"""
 
+REQUIRED_FIELDS = ['title', 'authors', 'abstract']
+"""Required parsed fields with normalized field names."""
 
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
@@ -122,8 +126,17 @@ class AbsMetaSession:
             else:
                 raise AbsVersionNotFoundException(e)
 
-        this_version.version_history = latest_version.version_history
-        return this_version
+        # Several fields need to reflect the latest version's data
+        combined_version: DocMetadata = dataclasses.replace(
+            this_version,
+            version_history=latest_version.version_history,
+            categories=latest_version.categories,
+            primary_category=latest_version.primary_category,
+            secondary_categories=latest_version.secondary_categories,
+            primary_archive=latest_version.primary_archive,
+            primary_group=latest_version.primary_group)
+
+        return combined_version
 
     def _next_id(self, identifier: Identifier) -> Optional['Identifier']:
         """
