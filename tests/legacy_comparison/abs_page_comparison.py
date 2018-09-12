@@ -1,8 +1,7 @@
 import argparse
-from dataclasses import dataclass
 import itertools
 import sys
-
+import traceback
 import os
 import re
 from functools import partial
@@ -109,30 +108,30 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
 
 
 def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
-    """ This is also where we do most of the cleanining on text, for things
+    """ This is also where we do most of the cleaning on text, for things
     we know that we do not want to compare."""
     legacy_text = piwik_strip(res_args['legacy_res'].text)
     text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
                                                'legacy_text': legacy_text}}
 
     def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
-        #try:
+        try:
             return fn(text_dict)
-        # except Exception as ex:
-        #     return BadResult(res_args['paper_id'], 'run_compare_response', ex)
+        except Exception as ex:
+             return BadResult(res_args['paper_id'], 'run_compare_response', traceback.format_exc())
 
     return filter(None, itertools.chain(
         map(call_it, res_comparisons), run_compare_text(text_dict)))
 
 
-def run_compare_text(text_args: text_arg_dict) -> Iterator[str]:
+def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
     html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         try:
             return fn(html_dict)
         except Exception as ex:
-            return BadResult(text_args['paper_id'], 'run_compare_text', ex)
+            return BadResult(text_args['paper_id'], 'run_compare_text', traceback.format_exc())
 
     return filter(None, itertools.chain(
         map(call_it, text_comparisons), run_compare_html(html_dict)))
@@ -143,7 +142,7 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
         try:
             return fn(html_args)
         except Exception as ex:
-            return BadResult(html_args['paper_id'], 'run_compare_html', ex)
+            return BadResult(html_args['paper_id'], 'run_compare_html', traceback.format_exc())
 
     return filter(None, map(call_it, html_comparisons))
 
