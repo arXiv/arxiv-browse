@@ -29,6 +29,7 @@ def apply_response_headers(response: Response) -> Response:
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     if request.endpoint == 'browse.abstract':
         # TODO: set Expires, Last-Modified, ETag response headers
+        pass
     return response
 
 

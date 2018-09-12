@@ -9,8 +9,8 @@ from pytz import timezone
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, \
+    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -32,13 +32,16 @@ RE_FIELD_COMPONENTS = re.compile(
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
     r'(Paper:\s+|arXiv:)(?P<arxiv_id>\S+)')
 
-# (non-normalized) fields that may be parsed from the key-value pairs in second
-# major component of .abs file.
 NAMED_FIELDS = ['Title', 'Authors', 'Categories', 'Comments', 'Proxy',
                 'Report-no', 'ACM-class', 'MSC-class', 'Journal-ref',
                 'DOI', 'License']
-# (normalized) required parsed fields
+"""
+(non-normalized) fields that may be parsed from the key-value pairs in second
+major component of .abs string.
+"""
+
 REQUIRED_FIELDS = ['title', 'authors', 'abstract', 'categories']
+"""(normalized) required parsed fields."""
 
 
 class AbsException(Exception):
