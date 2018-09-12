@@ -1,8 +1,10 @@
 import argparse
+from dataclasses import dataclass
 import itertools
 import sys
-
+import traceback
 import os
+import re
 from functools import partial
 from multiprocessing import Pool
 from typing import Callable, Iterator, List, Tuple, Dict
@@ -46,11 +48,10 @@ Improvements:
 """
 
 ABS_FILES = path_of_for_test('data/abs_files')
-LOG_FILE_NAME = 'legacy_comparison.log'
+LOG_FILE_NAME = 'legacy_comparison.org'
 VISITED_ABS_FILE_NAME = 'visited.log'
 
 # List of comparison functions to run on response
-
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
@@ -95,6 +96,7 @@ legacy_abs_base_url = 'https://arxiv.org/abs/'
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
     ng_url = ng_abs_base_url + paper_id
     legacy_url = legacy_abs_base_url + paper_id
+
     res_dict: res_arg_dict = {'ng_url': ng_url,
                               'legacy_url': legacy_url,
                               'ng_res': requests.get(ng_url),
@@ -107,32 +109,30 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
 
 
 def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
-    """ This is also where we do most of the cleanining on text, for things
+    """ This is also where we do most of the cleaning on text, for things
     we know that we do not want to compare."""
     legacy_text = piwik_strip(res_args['legacy_res'].text)
     text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
                                                'legacy_text': legacy_text}}
 
     def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
-        #try:
+        try:
             return fn(text_dict)
-        # except Exception as ex:
-        #     return BadResult(res_args['paper_id'], 'run_compare_response', ex)
+        except Exception as ex:
+             return BadResult(res_args['paper_id'], 'run_compare_response', traceback.format_exc())
 
     return filter(None, itertools.chain(
         map(call_it, res_comparisons), run_compare_text(text_dict)))
 
 
 def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
-
-    html_dict: html_arg_dict = {**text_args, **{'ng_html': BeautifulSoup(text_args['ng_text'], 'html.parser'),
-                                                'legacy_html': BeautifulSoup(text_args['legacy_text'], 'html.parser')}}
+    html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         try:
             return fn(html_dict)
         except Exception as ex:
-            return BadResult(text_args['paper_id'], 'run_compare_text', ex)
+            return BadResult(text_args['paper_id'], 'run_compare_text', traceback.format_exc())
 
     return filter(None, itertools.chain(
         map(call_it, text_comparisons), run_compare_html(html_dict)))
@@ -143,7 +143,7 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
         try:
             return fn(html_args)
         except Exception as ex:
-            return BadResult(html_args['paper_id'], 'run_compare_html', ex)
+            return BadResult(html_args['paper_id'], 'run_compare_html', traceback.format_exc())
 
     return filter(None, map(call_it, html_comparisons))
 
@@ -184,7 +184,7 @@ def main() -> None:
             print('Continuing analysis')
             with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
                 visited = [line.rstrip() for line in visited_fh.readlines()]
-
+ 
     if args.short:
         papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
     else:
