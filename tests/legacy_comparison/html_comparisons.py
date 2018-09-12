@@ -6,7 +6,7 @@ import re
 from tests.legacy_comparison.abstract_comparisons import lev_similarity
 from tests.legacy_comparison.comparison_types import html_arg_dict, BadResult
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 
 
 def html_similarity(html_arg: html_arg_dict) -> BadResult:
@@ -41,20 +41,17 @@ def metadata_fields_similarity(html_arg: html_arg_dict) -> BadResult:
                          f"NG: {ng_labels} Legacy: {legacy_labels}")
 
 
-def _strip_href(eles: BeautifulSoup):
+def _replace(tag: element.Tag, att: str, new_value: str):
+    if tag and tag.attrs and att in tag.attrs:
+        tag[att] = new_value
+
+
+def _strip_href(eles: List[BeautifulSoup]):
     for ele in eles:
-        for a in ele.find_all('a'):
-            if a['href']:
-                a['href'] = 'stripped_href'
-        for link in ele.find_all('link'):
-            if link['href']:
-                link['href'] = 'stripped_href'
-        for meta in ele.find_all('meta'):
-            if meta['content']:
-                meta['content'] = 'stripped_content'
-        for script in ele.find_all('script'):
-            if script['src']:
-                script['src'] = 'stripped_src'
+        for a in ele.find_all('a'): _replace(a,'href','stripped_href')
+        for link in ele.find_all('link'): _replace(link,'href','stripped_href')
+        for meta in ele.find_all('meta'): _replace(meta, 'content', 'stripped_content')
+        for script in ele.find_all('script'): _replace(script,'src','stripped_src')
     return eles
 
 
