@@ -115,6 +115,7 @@ def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
                                                'legacy_text': legacy_text}}
 
     def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
+        # noinspection PyBroadException
         try:
             return fn(text_dict)
         except Exception as ex:
@@ -128,6 +129,7 @@ def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
     html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
+        # noinspection PyBroadException
         try:
             return fn(html_dict)
         except Exception as ex:
@@ -139,6 +141,7 @@ def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
 
 def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
+        # noinspection PyBroadException
         try:
             return fn(html_args)
         except Exception as ex:
