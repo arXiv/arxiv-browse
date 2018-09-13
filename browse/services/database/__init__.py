@@ -1,6 +1,8 @@
 """Import db instance and define utility functions."""
 
 import ipaddress
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 from typing import List, Optional
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
@@ -60,6 +62,21 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
         return list(__paper_trackbacks_query(paper_id).all())
     except NoResultFound:
         return []
+
+
+def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
+    """Get the most recent accepted trackback datetime for a paper_id."""
+    try:
+        timestamp: int = db.session.query(
+                func.max(TrackbackPing.approved_time)
+            ).filter(TrackbackPing.document_id == Document.document_id) \
+            .filter(Document.paper_id == paper_id) \
+            .filter(TrackbackPing.status == 'accepted').scalar()
+        dt = datetime.fromtimestamp(timestamp, tz=gettz('US/Eastern'))
+        dt = dt.astimezone(tz=tzutc())
+        return dt
+    except NoResultFound:
+        return None
 
 
 def count_trackback_pings(paper_id: str) -> int:

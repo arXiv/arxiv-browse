@@ -10,6 +10,7 @@ from browse.controllers import abs_page
 from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
+from browse.services.util.response_headers import abs_expires_header, mime_header_date
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 
@@ -25,11 +26,18 @@ def before_request() -> None:
 def apply_response_headers(response: Response) -> Response:
     """Apply response headers to all responses."""
     """Prevent UI redress attacks."""
-    response.headers["Content-Security-Policy"] = "frame-ancestors 'none'"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'none'"
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+
     if request.endpoint == 'browse.abstract':
+
+        if 'If-Modified-Since' in request.headers:
+            print(f"If-Modified-Since: {request.headers.get('If-Modified-Since')}")
         # TODO: set Expires, Last-Modified, ETag response headers
-        pass
+        for hfn in [abs_expires_header]:
+            (key, value) = hfn()
+            response.headers[key] = value
+
     return response
 
 

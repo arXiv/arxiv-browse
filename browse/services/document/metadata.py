@@ -4,7 +4,9 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
+from datetime import datetime
 from pytz import timezone
+from dateutil.tz import tzutc, gettz
 import dataclasses
 
 from arxiv import taxonomy
@@ -460,6 +462,11 @@ class AbsMetaSession:
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
 
+        # TODO: clean up
+        modified = datetime.fromtimestamp(
+                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+        modified = modified.astimezone(tz=tzutc())
+
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
         components = RE_ABS_COMPONENTS.split(raw)
@@ -549,6 +556,7 @@ class AbsMetaSession:
             version=version,
             license=doc_license,
             version_history=version_history,
+            modified=modified
             # private=private  # TODO, not implemented
         )
 

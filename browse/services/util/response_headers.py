@@ -1,5 +1,5 @@
 """Response header utility functions."""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil.tz import tzutc, gettz
 from typing import Tuple
 
@@ -11,7 +11,7 @@ PUBLISH_ISO_WEEKDAYS = [1, 2, 3, 4, 7]
 """Days of the week publish happens: Sunday-Thursday."""
 
 
-def guess_next_update_utc(dt: datetime = datetime.utcnow()) \
+def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
         -> Tuple[datetime, bool]:
     """
     Make a sensible guess at earliest possible datetime of next update.
@@ -62,6 +62,17 @@ def guess_next_update_utc(dt: datetime = datetime.utcnow()) \
     possible_publish_dt = possible_publish_dt + delta_to_next_publish
 
     return (possible_publish_dt.astimezone(tz=tzutc()), likely_in_publish)
+
+
+def abs_expires_header() -> Tuple[str, str]:
+    (next_update_dt, likely_in_publish) = guess_next_update_utc()
+    if likely_in_publish:
+        return ('Expires', -1)
+    else:
+        return ('Expires', mime_header_date(next_update_dt))
+
+
+# abs_modified_header() -> Tuple[str, str]:
 
 
 def mime_header_date(dt: datetime) -> str:

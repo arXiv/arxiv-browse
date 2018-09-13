@@ -19,15 +19,18 @@ from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors, split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, \
+    split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
+from browse.services.util.response_headers import mime_header_date
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
-    has_sciencewise_ping, get_dblp_listing_path, get_dblp_authors
+    get_trackback_ping_latest_date, has_sciencewise_ping, \
+    get_dblp_listing_path, get_dblp_authors
 from browse.services.util.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
@@ -70,6 +73,7 @@ def get_abs_page(arxiv_id: str,
 
     """
     response_data: Dict[str, Any] = {}
+    response_headers: Dict[str, Any] = {}
     try:
 
         arxiv_id = _check_legacy_id_params(arxiv_id, request_params)
@@ -107,6 +111,9 @@ def get_abs_page(arxiv_id: str,
             response_data['dblp'] = _check_dblp(abs_meta)
             response_data['trackback_ping_count'] = count_trackback_pings(
                 arxiv_id)
+            if response_data['trackback_ping_count'] > 0:
+                response_data['trackback_ping_latest'] = \
+                    get_trackback_ping_latest_date(arxiv_id)
 
             # Ancillary files
             response_data['ancillary_files'] = \
@@ -147,7 +154,21 @@ def get_abs_page(arxiv_id: str,
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
-    return response_data, status.HTTP_200_OK, {}
+
+    response_status = status.HTTP_200_OK
+
+    if response_data['trackback_ping_latest'] \
+       and abs_meta.modified \
+       and response_data['trackback_ping_latest'] > abs_meta.modified:
+        response_headers['Last-Modified'] = \
+            mime_header_date(response_data['trackback_ping_latest'])
+    elif abs_meta.modified:
+        response_headers['Last-Modified'] = mime_header_date(abs_meta.modified)
+
+    if response_headers['Last-Modified']:
+        response_headers['ETag'] = response_headers['Last-Modified']
+
+    return response_data, response_status, response_headers
 
 
 def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
@@ -284,12 +305,3 @@ def _check_dblp(docmeta: DocMetadata,
         'listing_url': urljoin(DBLP_BASE_URL, listing_path),
         'author_list': author_list
     }
-
-
-# def _check_trackback_pings(paper_id: str) -> int:
-#     """Check general tracback pings"""
-#     try:
-#         return count_trackback_pings(paper_id)
-#     except IOError:
-#
-#         return 0
