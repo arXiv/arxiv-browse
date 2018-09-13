@@ -31,8 +31,11 @@ def apply_response_headers(response: Response) -> Response:
 
     if request.endpoint == 'browse.abstract':
 
+        # TODO
         if 'If-Modified-Since' in request.headers:
             print(f"If-Modified-Since: {request.headers.get('If-Modified-Since')}")
+        if 'If-None-Match' in request.headers:
+            print(f"If-None-Match: {request.headers.get('If-None-Match')}")
         # TODO: set Expires, Last-Modified, ETag response headers
         for hfn in [abs_expires_header]:
             (key, value) = hfn()
@@ -80,7 +83,8 @@ def abstract(arxiv_id: str) -> Response:
                     response['abs_meta'].raw_safe,
                     mimetype='text/plain')
         return render_template('abs/abs.html', **response), code, headers
-    if code == status.HTTP_301_MOVED_PERMANENTLY:
+    elif code in [status.HTTP_301_MOVED_PERMANENTLY,
+                  status.HTTP_304_NOT_MODIFIED]:
         return redirect(headers['Location'], code=code)
 
     raise InternalServerError('Unexpected error')
