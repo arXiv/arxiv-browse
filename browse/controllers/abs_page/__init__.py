@@ -8,9 +8,12 @@ GET requests to the abs endpoint.
 import re
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
+from email.utils import parsedate_to_datetime
+from datetime import datetime
 
 from flask import current_app as app
 from flask import url_for
+from flask import request
 
 from werkzeug.exceptions import InternalServerError
 from werkzeug.datastructures import MultiDict
@@ -22,6 +25,8 @@ from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
+from browse.services.util.response_headers import abs_expires_header, \
+    mime_header_date
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
@@ -43,9 +48,7 @@ Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 100
 
 
-def get_abs_page(arxiv_id: str,
-                 request_params: MultiDict,
-                 download_format_pref: Optional[str] = None) -> Response:
+def get_abs_page(arxiv_id: str) -> Response:
     """
     Get abs page data from the document metadata service.
 
@@ -53,7 +56,6 @@ def get_abs_page(arxiv_id: str,
     ----------
     arxiv_id : str
         The arXiv identifier as provided in the request.
-    request_params : dict
     download_format_pref: str
         Download format preference.
 
@@ -76,7 +78,7 @@ def get_abs_page(arxiv_id: str,
     response_headers: Dict[str, Any] = {}
     try:
 
-        arxiv_id = _check_legacy_id_params(arxiv_id, request_params)
+        arxiv_id = _check_legacy_id_params(arxiv_id)
 
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         redirect_url = _check_supplied_identifier(arxiv_identifier)
@@ -98,6 +100,7 @@ def get_abs_page(arxiv_id: str,
                                          query=author_query)
 
         # Dissemination formats for download links
+        download_format_pref = request.cookies.get('xxx-ps-defaults')
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data['formats'] = metadata.get_dissemination_formats(
             abs_meta,
@@ -121,7 +124,6 @@ def get_abs_page(arxiv_id: str,
 
             # Browse context
             _check_context(arxiv_identifier,
-                           request_params,
                            response_data)
         except Exception:
             logger.error("Error getting non-critical abs page data",
@@ -157,16 +159,11 @@ def get_abs_page(arxiv_id: str,
 
     response_status = status.HTTP_200_OK
 
-    if response_data['trackback_ping_latest'] \
-       and abs_meta.modified \
-       and response_data['trackback_ping_latest'] > abs_meta.modified:
-        response_headers['Last-Modified'] = \
-            mime_header_date(response_data['trackback_ping_latest'])
-    elif abs_meta.modified:
-        response_headers['Last-Modified'] = mime_header_date(abs_meta.modified)
-
-    if response_headers['Last-Modified']:
-        response_headers['ETag'] = response_headers['Last-Modified']
+    not_modified = _check_request_headers(
+        abs_meta, response_data, response_headers)
+    if not_modified:
+        # TODO: It's not clear whether HTTP_304_NOT_MODIFIED
+        pass
 
     return response_data, response_status, response_headers
 
@@ -196,7 +193,55 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
     return None
 
 
-def _check_legacy_id_params(arxiv_id: str, request_params: MultiDict) -> str:
+def _check_request_headers(docmeta: DocMetadata,
+                           response_data: Dict[str, Any],
+                           headers: Dict[str, Any]) -> bool:
+    """Check the request headers, update the response headers accordingly."""
+
+    last_mod_dt: datetime = docmeta.modified
+    if_mod_since_dt: datetime = None
+    if_none_match_dt: datetime = None
+    not_modified: bool = False
+
+    if 'trackback_ping_latest' in response_data:
+        print(f'latest tb ping: {response_data["trackback_ping_latest"]}')
+        if response_data['trackback_ping_latest'] > last_mod_dt:
+            last_mod_dt = response_data['trackback_ping_latest']
+
+    # Not clear if these checks are even necessary
+    if 'If-Modified-Since' in request.headers:
+        try:
+            if_mod_since_dt = parsedate_to_datetime(
+                request.headers.get('If-Modified-Since'))
+        except ValueError:
+            pass
+    if 'If-None-Match' in request.headers:
+        try:
+            if_none_match_dt = parsedate_to_datetime(
+                request.headers.get('If-None-Match'))
+        except ValueError:
+            pass
+    try:
+        if ((if_mod_since_dt and if_none_match_dt)
+            and if_mod_since_dt > last_mod_dt
+            and if_none_match_dt > last_mod_dt) \
+            or ((if_mod_since_dt and not if_none_match_dt)
+                and if_mod_since_dt > last_mod_dt) \
+            or ((if_none_match_dt and not if_mod_since_dt)
+                and if_none_match_dt > last_mod_dt):
+            not_modified = True
+    except Exception as e:
+        pass
+
+    last_mod_mime = mime_header_date(last_mod_dt)
+    headers['Last-Modified'] = last_mod_mime
+    headers['ETag'] = last_mod_mime
+    headers['Expires'] = abs_expires_header()[1]
+
+    return not_modified
+
+
+def _check_legacy_id_params(arxiv_id: str) -> str:
     """
     Check for legacy request parameters related to old arXiv identifiers.
 
@@ -204,30 +249,28 @@ def _check_legacy_id_params(arxiv_id: str, request_params: MultiDict) -> str:
     ----------
     arxiv_id : str
 
-    request_params: MultiDict
-
     Returns
     -------
     arxiv_id: str
         A possibly modified version of the input arxiv_id string.
 
     """
-    if request_params and '/' not in arxiv_id:
+    # if request_params and '/' not in arxiv_id:
+    if request.args and '/' not in arxiv_id:
         # To support old references to /abs/<archive>?papernum=\d{7}
-        if 'papernum' in request_params:
-            return f"{arxiv_id}/{request_params['papernum']}"
+        if 'papernum' in request.args:
+            return f"{arxiv_id}/{request.args['papernum']}"
         else:
-            for param in request_params:
+            for param in request.args:
                 # singleton case, where the parameter is the value
                 # To support old references to /abs/<archive>?\d{7}
-                if not request_params[param] \
+                if not request.args[param] \
                    and re.match(r'^\d{7}$', param):
                     return f'{arxiv_id}/{param}'
     return arxiv_id
 
 
 def _check_context(arxiv_identifier: Identifier,
-                   request_params: MultiDict,
                    response_data: Dict[str, Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
@@ -245,16 +288,16 @@ def _check_context(arxiv_identifier: Identifier,
     None
 
     """
-    if 'context' in request_params\
-       and (request_params['context'] in taxonomy.CATEGORIES
-            or request_params['context'] in taxonomy.ARCHIVES
-            or request_params['context'] == 'arxiv'):
-        if request_params['context'] == 'arxiv':
+    if 'context' in request.args\
+       and (request.args['context'] in taxonomy.CATEGORIES
+            or request.args['context'] in taxonomy.ARCHIVES
+            or request.args['context'] == 'arxiv'):
+        if request.args['context'] == 'arxiv':
             response_data['browse_context_next_id'] = \
                 metadata.get_next_id(arxiv_identifier)
             response_data['browse_context_previous_id'] = \
                 metadata.get_previous_id(arxiv_identifier)
-        response_data['browse_context'] = request_params['context']
+        response_data['browse_context'] = request.args['context']
     elif arxiv_identifier.is_old_id:
         response_data['browse_context_next_id'] = \
             metadata.get_next_id(arxiv_identifier)

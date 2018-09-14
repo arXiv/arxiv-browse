@@ -4,7 +4,6 @@ from typing import Union
 from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, NotFound
-
 from arxiv import status
 from browse.controllers import abs_page
 from browse.exceptions import AbsNotFound
@@ -28,18 +27,6 @@ def apply_response_headers(response: Response) -> Response:
     """Prevent UI redress attacks."""
     response.headers['Content-Security-Policy'] = "frame-ancestors 'none'"
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-
-    if request.endpoint == 'browse.abstract':
-
-        # TODO
-        if 'If-Modified-Since' in request.headers:
-            print(f"If-Modified-Since: {request.headers.get('If-Modified-Since')}")
-        if 'If-None-Match' in request.headers:
-            print(f"If-None-Match: {request.headers.get('If-None-Match')}")
-        # TODO: set Expires, Last-Modified, ETag response headers
-        for hfn in [abs_expires_header]:
-            (key, value) = hfn()
-            response.headers[key] = value
 
     return response
 
@@ -69,11 +56,7 @@ def bare_abs() -> Response:
 @blueprint.route('/abs/<path:arxiv_id>', methods=['GET'])
 def abstract(arxiv_id: str) -> Response:
     """Abstract (abs) page view."""
-    download_format_pref = request.cookies.get('xxx-ps-defaults')
-
-    response, code, headers = abs_page.get_abs_page(arxiv_id,
-                                                    request.args,
-                                                    download_format_pref)
+    response, code, headers = abs_page.get_abs_page(arxiv_id)
 
     if code == status.HTTP_200_OK:
         if request.args \
@@ -83,9 +66,10 @@ def abstract(arxiv_id: str) -> Response:
                     response['abs_meta'].raw_safe,
                     mimetype='text/plain')
         return render_template('abs/abs.html', **response), code, headers
-    elif code in [status.HTTP_301_MOVED_PERMANENTLY,
-                  status.HTTP_304_NOT_MODIFIED]:
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
+    # elif code == status.HTTP_304_NOT_MODIFIED:
+        # return redirect(url_for('browse.abstract', arxiv_id), code=code, response=response)
 
     raise InternalServerError('Unexpected error')
 
@@ -108,26 +92,6 @@ def clickthrough() -> Response:
 
     raise NotFound()
 
-# Satic resources (not sure how to do these in NG):
-# @blueprint.route(//static.arxiv.org/css/arXiv.css?v=20170424)
-# @blueprint.route(/favicon.ico)
-# @blueprint.route(http://arxiv.org/)
-
-# Not sure how to do these cross repo links,
-# Will talk to Erick or look into arxiv-base to see.
-# @blueprint.route(/IgnoreMe)
-# @blueprint.route(/find)
-# @blueprint.route(/form)
-# @blueprint.route(/help)
-# @blueprint.route(/help/arxiv_identifier)
-# @blueprint.route(/help/arxiv_identifier)
-# @blueprint.route(/help/mathjax/)
-# @blueprint.route(/help/trackback/)
-# @blueprint.route(/help/contact)
-# @blueprint.route(/help/social_bookmarking)
-# @blueprint.route(/search)
-# @blueprint.route(/user/login)
-
 
 @blueprint.route('/list/<context>/<subcontext>')
 def list_articles(current_context: str, yymm: str) -> Response:
@@ -138,7 +102,6 @@ def list_articles(current_context: str, yymm: str) -> Response:
     Subcontext should be 'recent' 'new' or a string of format yymm
     """
     raise InternalServerError(f'Not yet implemented {current_context} {yymm}')
-
 
 @blueprint.route('/format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
