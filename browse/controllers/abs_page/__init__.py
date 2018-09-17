@@ -209,13 +209,15 @@ def _check_request_headers(docmeta: DocMetadata,
         last_mod_dt = response_data['trackback_ping_latest']
 
     # Not clear if these checks are even necessary
-    if 'If-Modified-Since' in request.headers:
+    if 'If-Modified-Since' in request.headers \
+       and request.headers['If-Modified-Since'] is not None:
         try:
             if_mod_since_dt = parsedate_to_datetime(
                 request.headers.get('If-Modified-Since'))
         except ValueError:
             print(f'Exception parsing the If-Modified-Since request header')
-    if 'If-None-Match' in request.headers:
+    if 'If-None-Match' in request.headers \
+       and request.headers['If-None-Match'] is not None:
         try:
             if_none_match_dt = parsedate_to_datetime(
                 request.headers.get('If-None-Match'))
