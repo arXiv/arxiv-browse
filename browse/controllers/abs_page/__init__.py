@@ -8,8 +8,9 @@ GET requests to the abs endpoint.
 import re
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
-from email.utils import parsedate_to_datetime
 from datetime import datetime
+from dateutil import parser
+from dateutil.tz import tzutc
 
 from flask import current_app as app
 from flask import url_for
@@ -212,16 +213,22 @@ def _check_request_headers(docmeta: DocMetadata,
     if 'If-Modified-Since' in request.headers \
        and request.headers['If-Modified-Since'] is not None:
         try:
-            if_mod_since_dt = parsedate_to_datetime(
+            print(f"ims: {request.headers.get('If-Modified-Since')}")
+            if_mod_since_dt = parser.parse(
                 request.headers.get('If-Modified-Since'))
-        except ValueError:
+            if not if_mod_since_dt.tzinfo:
+                if_mod_since_dt = if_mod_since_dt.replace(tzinfo=tzutc())
+        except (ValueError, TypeError):
             print(f'Exception parsing the If-Modified-Since request header')
     if 'If-None-Match' in request.headers \
        and request.headers['If-None-Match'] is not None:
         try:
-            if_none_match_dt = parsedate_to_datetime(
+            print(f"inm: {request.headers.get('If-None-Match')}")
+            if_none_match_dt = parser.parse(
                 request.headers.get('If-None-Match'))
-        except ValueError:
+            if not if_none_match_dt.tzinfo:
+                if_none_match_dt = if_none_match_dt.replace(tzinfo=tzutc())
+        except (ValueError, TypeError):
             print(f'Exception parsing the If-None-Match request header')
     try:
         if ((if_mod_since_dt and if_none_match_dt)
