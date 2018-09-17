@@ -70,7 +70,6 @@ def abstract(arxiv_id: str) -> Response:
         return redirect(headers['Location'], code=code)
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers
-        # return redirect(url_for('browse.abstract', arxiv_id), code=code, response=response)
 
     raise InternalServerError('Unexpected error')
 
