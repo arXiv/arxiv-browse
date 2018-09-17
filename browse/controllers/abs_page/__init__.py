@@ -113,10 +113,10 @@ def get_abs_page(arxiv_id: str) -> Response:
                 abs_meta)
             response_data['dblp'] = _check_dblp(abs_meta)
             response_data['trackback_ping_count'] = count_trackback_pings(
-                arxiv_id)
+                arxiv_identifier.id)
             if response_data['trackback_ping_count'] > 0:
                 response_data['trackback_ping_latest'] = \
-                    get_trackback_ping_latest_date(arxiv_id)
+                    get_trackback_ping_latest_date(arxiv_identifier.id)
 
             # Ancillary files
             response_data['ancillary_files'] = \
@@ -278,8 +278,6 @@ def _check_context(arxiv_identifier: Identifier,
     Parameters
     ----------
     arxiv_identifier : :class:`Identifier`
-
-    request_params: MultiDict
 
     response_data: dict
 
