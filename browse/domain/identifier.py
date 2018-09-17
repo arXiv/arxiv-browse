@@ -50,7 +50,7 @@ class Identifier:
         """
         self.ids = arxiv_id
         """The ID as specified."""
-        self.id: Optional[str] = None
+        self.id: str = arxiv_id
         self.archive: Optional[str] = None
         self.filename: Optional[str] = None
         self.year: Optional[int] = None
