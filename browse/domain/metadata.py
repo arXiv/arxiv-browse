@@ -96,10 +96,10 @@ class Category:
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
-        if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
-        else:
-            self.canonical = None
+        # if self.id in taxonomy.ARCHIVES_SUBSUMED:
+        #     self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
+        # else:
+        #     self.canonical = None
 
 
 @dataclass
