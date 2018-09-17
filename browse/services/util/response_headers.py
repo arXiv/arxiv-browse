@@ -67,12 +67,9 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
 def abs_expires_header() -> Tuple[str, str]:
     (next_update_dt, likely_in_publish) = guess_next_update_utc()
     if likely_in_publish:
-        return ('Expires', -1)
+        return ('Expires', '-1')
     else:
         return ('Expires', mime_header_date(next_update_dt))
-
-
-# abs_modified_header() -> Tuple[str, str]:
 
 
 def mime_header_date(dt: datetime) -> str:

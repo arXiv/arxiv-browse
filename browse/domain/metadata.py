@@ -139,6 +139,9 @@ class DocMetadata:
     title: str
     abstract: str
 
+    modified: datetime
+    """Datetime this version was modified."""
+
     authors: AuthorList
     """Article authors."""
 
@@ -187,9 +190,6 @@ class DocMetadata:
 
     version_history: List[VersionEntry] = field(default_factory=list)
     """Version history, consisting of at least one version history entry."""
-
-    modified: Optional[datetime] = None
-    """Datetime this version was modified."""
 
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """

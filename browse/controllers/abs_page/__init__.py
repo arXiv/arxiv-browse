@@ -199,14 +199,14 @@ def _check_request_headers(docmeta: DocMetadata,
     """Check the request headers, update the response headers accordingly."""
 
     last_mod_dt: datetime = docmeta.modified
-    if_mod_since_dt: datetime = None
-    if_none_match_dt: datetime = None
+    if_mod_since_dt: Optional[datetime] = None
+    if_none_match_dt: Optional[datetime] = None
     not_modified: bool = False
 
-    if 'trackback_ping_latest' in response_data:
-        print(f'latest tb ping: {response_data["trackback_ping_latest"]}')
-        if response_data['trackback_ping_latest'] > last_mod_dt:
-            last_mod_dt = response_data['trackback_ping_latest']
+    if 'trackback_ping_latest' in response_data \
+       and isinstance(response_data['trackback_ping_latest'], datetime) \
+       and response_data['trackback_ping_latest'] > last_mod_dt:
+        last_mod_dt = response_data['trackback_ping_latest']
 
     # Not clear if these checks are even necessary
     if 'If-Modified-Since' in request.headers:
@@ -214,24 +214,24 @@ def _check_request_headers(docmeta: DocMetadata,
             if_mod_since_dt = parsedate_to_datetime(
                 request.headers.get('If-Modified-Since'))
         except ValueError:
-            pass
+            print(f'Exception parsing the If-Modified-Since request header')
     if 'If-None-Match' in request.headers:
         try:
             if_none_match_dt = parsedate_to_datetime(
                 request.headers.get('If-None-Match'))
         except ValueError:
-            pass
+            print(f'Exception parsing the If-None-Match request header')
     try:
         if ((if_mod_since_dt and if_none_match_dt)
-            and if_mod_since_dt > last_mod_dt
+            and if_mod_since_dt > last_mod_dt  # ignore
             and if_none_match_dt > last_mod_dt) \
             or ((if_mod_since_dt and not if_none_match_dt)
                 and if_mod_since_dt > last_mod_dt) \
-            or ((if_none_match_dt and not if_mod_since_dt)
+            or ((if_none_match_dt and not if_mod_since_dt)  # ignore
                 and if_none_match_dt > last_mod_dt):
             not_modified = True
     except Exception as e:
-        pass
+        print(f'Exception parsing the request headers: {e}')
 
     last_mod_mime = mime_header_date(last_mod_dt)
     headers['Last-Modified'] = last_mod_mime
