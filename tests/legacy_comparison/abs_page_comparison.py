@@ -1,5 +1,4 @@
 import argparse
-from dataclasses import dataclass
 import itertools
 import sys
 import traceback
@@ -7,7 +6,7 @@ import os
 import re
 from functools import partial
 from multiprocessing import Pool
-from typing import Callable, Iterator, List, Tuple, Dict
+from typing import Callable, Iterator, List, Set, Tuple, Dict
 
 import requests
 from bs4 import BeautifulSoup
@@ -42,6 +41,8 @@ python tests/legacy_comparison/abs_page_comparison.py
 
 To reset the analysis to start over, add the `--reset` arg.
 To run a short test add '--short' arg.
+
+To skip ancillary file comparisons: '--skip-ancillary'
 
 Improvements:
  Better reporting format, right now the comparisons produce just strings. 
@@ -108,10 +109,16 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
     return compare_config, list(compare_res_fn(res_dict))
 
 
-def run_compare_response(res_args: res_arg_dict) -> Iterator[BadResult]:
+def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[BadResult]:
     """ This is also where we do most of the cleaning on text, for things
     we know that we do not want to compare."""
-    legacy_text = piwik_strip(res_args['legacy_res'].text)
+    legacy_text = res_args['legacy_res'].text
+    legacy_text = strip_by_delim(legacy_text, '<!-- Piwik -->',  '<!-- End Piwik Code -->')
+    legacy_text = strip_by_delim(legacy_text, '<!--\nfunction toggleList',  '//-->')
+
+    if 'skip_anc' in skips:
+        legacy_text = strip_by_delim(legacy_text, '<div class="ancillary">',  '<!--end ancillary-->')
+
     text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
                                                'legacy_text': legacy_text}}
 
@@ -174,8 +181,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
     parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
     parser.add_argument('--short', default=False, const=True, action='store_const', dest='short')
+    parser.add_argument('--skip-ancillary', default=False, const=True, action='store_const', dest='skip_anc')
     args = parser.parse_args()
     visited: List[str] = []
+    skip_checks: Set[str] = set()
     if args.reset:
         print('Restarting analysis and deleting logs!')
         if os.path.exists(LOG_FILE_NAME):
@@ -193,10 +202,15 @@ def main() -> None:
     else:
         papers = paperid_iterator(ABS_FILES, excluded=visited)
 
+    if args.skip_anc:
+        skip_checks.add('skip_anc')
+
+    run_selected_compare_response = partial(run_compare_response, skip_checks)
+
     with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
         with open(LOG_FILE_NAME, 'w')as report_fh:
             with Pool(10) as pool:
-                fetch_and_compare_fn = partial(fetch_abs, run_compare_response)
+                fetch_and_compare_fn = partial(fetch_abs, run_selected_compare_response)
                 completed_jobs = pool.imap(fetch_and_compare_fn, papers)
                 for job in completed_jobs:
                     (config, bad_results) = job
@@ -228,18 +242,18 @@ def format_bad_result(bad: BadResult)->str:
     return rpt
 
 
-def piwik_strip(text: str) -> str:
+def strip_by_delim(text: str, start: str, end: str) -> str:
 
-    piwik_start = '<!-- Piwik -->'
-    piwik_end = '<!-- End Piwik Code -->'
+    if (start in text) and (end in text):
+        def find_start() -> int:
+            return text.index(start)
 
-    def find_piwik_start() -> int:
-        return text.index(piwik_start)
+        def find_end() -> int:
+            return text.index(end) + len(end)
 
-    def find_piwik_end() -> int:
-        return text.index(piwik_end) + len(piwik_end)
-
-    return text[:find_piwik_start()] + text[find_piwik_end():]
+        return text[:find_start()] + text[find_end():]
+    else:
+        return text
 
 
 if __name__ == '__main__':
