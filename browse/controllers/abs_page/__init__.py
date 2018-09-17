@@ -15,9 +15,7 @@ from dateutil.tz import tzutc
 from flask import current_app as app
 from flask import url_for
 from flask import request
-
 from werkzeug.exceptions import InternalServerError
-from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
@@ -31,7 +29,6 @@ from browse.services.util.response_headers import abs_expires_header, \
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
-from browse.services.util.response_headers import mime_header_date
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
@@ -197,7 +194,6 @@ def _check_request_headers(docmeta: DocMetadata,
                            response_data: Dict[str, Any],
                            headers: Dict[str, Any]) -> bool:
     """Check the request headers, update the response headers accordingly."""
-
     last_mod_dt: datetime = docmeta.modified
     if_mod_since_dt: Optional[datetime] = None
     if_none_match_dt: Optional[datetime] = None

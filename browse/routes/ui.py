@@ -9,7 +9,6 @@ from browse.controllers import abs_page
 from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
-from browse.services.util.response_headers import abs_expires_header, mime_header_date
 
 blueprint = Blueprint('browse', __name__, url_prefix='')
 
@@ -83,7 +82,7 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 
 @blueprint.route('/ct')
 def clickthrough() -> Response:
-    """Controller to log clickthrough to bookmarking sites."""
+    """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args \
             and is_hash_valid(current_app.config['SECRET_KEY'],
                               request.args.get('url'),
@@ -102,6 +101,7 @@ def list_articles(current_context: str, yymm: str) -> Response:
     Subcontext should be 'recent' 'new' or a string of format yymm
     """
     raise InternalServerError(f'Not yet implemented {current_context} {yymm}')
+
 
 @blueprint.route('/format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
@@ -142,13 +142,13 @@ def src(arxiv_id: str, file_name: str) -> Response:
 
 @blueprint.route('/tb/<path:arxiv_id>')
 def tb(arxiv_id: str) -> Response:
-    """Get tb for article."""
+    """Get trackbacks for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('/show-email/<path:show_email_hash>/<path:arxiv_id>')
 def show_email(show_email_hash: str, arxiv_id: str) -> Response:
-    """show the email for the submitter for an article."""
+    """Show the email for the submitter for an article."""
     raise InternalServerError(
         f'Not Yet Implemented{show_email_hash} {arxiv_id}')
 
@@ -158,23 +158,23 @@ def show_email(show_email_hash: str, arxiv_id: str) -> Response:
 #  repo to be protected?')
 @blueprint.route('/auth/show-endorsers/<path:arxiv_id>')
 def show_endorsers(arxiv_id: str) -> Response:
-    """show endorsers for an article."""
+    """Show endorsers for an article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('/refs/<path:arxiv_id>')
 def refs(arxiv_id: str) -> Response:
-    """Show the references for an article. (Links/proxy to inspire?)"""
+    """Show the references for an article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('/cits/<path:arxiv_id>')
 def cits(arxiv_id: str) -> Response:
-    """Show the citations for an artcile. (links/proxy inspire?)"""
+    """Show the citations for an artcile."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('/form')
 def form(arxiv_id: str) -> Response:
-    """Old form interface to lists of articles.(Mabye get rid of this?)"""
+    """Old form interface to lists of articles."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
