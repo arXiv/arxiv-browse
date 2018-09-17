@@ -68,7 +68,8 @@ def abstract(arxiv_id: str) -> Response:
         return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
-    # elif code == status.HTTP_304_NOT_MODIFIED:
+    elif code == status.HTTP_304_NOT_MODIFIED:
+        return '', code, headers
         # return redirect(url_for('browse.abstract', arxiv_id), code=code, response=response)
 
     raise InternalServerError('Unexpected error')

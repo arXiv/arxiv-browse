@@ -164,7 +164,9 @@ def get_abs_page(arxiv_id: str) -> Response:
         abs_meta, response_data, response_headers)
     if not_modified:
         # TODO: It's not clear whether HTTP_304_NOT_MODIFIED
-        pass
+        print('NOT MODIFIED')
+        return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+        # pass
 
     return response_data, response_status, response_headers
 
