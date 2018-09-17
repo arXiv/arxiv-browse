@@ -149,8 +149,8 @@
 {%- endmacro -%}
 
 {%- macro category_line() -%}
-  <span class="primary-subject">{{- abs_meta.primary_category.canonical.name or abs_meta.primary_category.name  }} ({{ abs_meta.primary_category.canonical.id or abs_meta.primary_category.id }})</span>
+  <span class="primary-subject">{{- abs_meta.primary_category.name  }} ({{ abs_meta.primary_category.id }})</span>
   {%- if abs_meta.secondary_categories -%}
-    {%- for category in abs_meta.secondary_categories %}
-     {%- if abs_meta.primary_category.canonical and category.id != abs_meta.primary_category.canonical.id %}; {{ category.name}} ({{ category.id }}){% endif %}{% endfor %}{% endif %}
+    {%- for category in abs_meta.secondary_categories %}; {{ category.name}} ({{ category.id }}){% endfor %}
+  {%- endif -%}
 {%- endmacro -%}

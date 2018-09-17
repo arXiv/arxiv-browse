@@ -89,7 +89,7 @@ class Category:
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    canonical: Union['Category', None] = field(init=False)
+    # canonical: Union['Category', None] = field(init=False)
 
     def __post_init__(self) -> None:
         """Get the full category name."""
