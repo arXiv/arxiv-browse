@@ -197,7 +197,7 @@ class Identifier:
 
     def __eq__(self, other: object) -> bool:
         """
-        Return instance equality: other should be type <= Instance
+        Return instance equality: other should be type <= Instance.
 
         Note that 'other' can't be statically checked to be type Instance
         by design: https://stackoverflow.com/a/37557540/3096687

@@ -5,7 +5,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
 from datetime import datetime
-from pytz import timezone
 from dateutil.tz import tzutc, gettz
 import dataclasses
 
@@ -42,7 +41,15 @@ major component of .abs string. Field names are not normalized.
 """
 
 REQUIRED_FIELDS = ['title', 'authors', 'abstract']
-"""Required parsed fields with normalized field names."""
+"""
+Required parsed fields with normalized field names.
+
+Note the absense of 'categories'. Some v1 .abs files with the old identifiers
+do not have a Categories: line, presumably because could be inferred by the
+identifier itself. Subsequent versions of these papers do have the Categories:
+line.
+"""
+
 
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
@@ -404,7 +411,8 @@ class AbsMetaSession:
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
         if source_file_path is not None:
-            source_file_formats = formats_from_source_file_name(source_file_path)
+            source_file_formats = \
+                formats_from_source_file_name(source_file_path)
             if source_file_formats:
                 formats.extend(source_file_formats)
         else:
@@ -544,7 +552,7 @@ class AbsMetaSession:
             primary_archive=primary_archive,
             primary_group=primary_group,
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
+                Category(id=x) for x in categories[1:] if len(categories) > 1  # type: ignore
             ],
             journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
             report_num=None if 'report_num' not in fields else fields['report_num'],

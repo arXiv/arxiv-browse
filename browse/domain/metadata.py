@@ -61,6 +61,7 @@ class AuthorList:
     __slots__ = ['raw']
 
     def __str__(self) -> str:
+        """Return the string representation of AuthorList."""
         return self.raw
 
 
@@ -210,8 +211,8 @@ class DocMetadata:
                 return []
 
         options = {
-            self.primary_category.id : True,
-            taxonomy.CATEGORIES[self.primary_category.id]['in_archive'] : True
+            self.primary_category.id: True,
+            taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
         }
         for category in self.secondary_categories:
             options[category.id] = True
@@ -235,7 +236,7 @@ class DocMetadata:
 
     def get_datetime_of_version(
             self, version: Optional[int])->Optional[datetime]:
-        """Returns python datetime of version.
+        """Return python datetime of version.
 
         version: Version to get datetime of. Must be in range
             1..highest_version. Uses highest_version if not specified.

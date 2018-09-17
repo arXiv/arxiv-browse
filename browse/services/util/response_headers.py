@@ -33,7 +33,6 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
         normal publish days specified by PUBLISH_ISO_WEEKDAYS.
 
     """
-    # local_dt = datetime.now(tz=ARXIV_BUSINESS_TZ)
     config = get_application_config()
     tz = gettz(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
     dt = dt.astimezone(tz=tz)
@@ -65,6 +64,7 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
 
 
 def abs_expires_header() -> Tuple[str, str]:
+    """Get the expires header key and value that should be used by abs."""
     (next_update_dt, likely_in_publish) = guess_next_update_utc()
     if likely_in_publish:
         return ('Expires', '-1')
