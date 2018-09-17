@@ -1,9 +1,11 @@
 """Browse jinja filters."""
 import re
 from urllib import parse
-from typing import Match, Callable
+from typing import Callable, Match, Optional
 
 from jinja2 import Markup, escape
+from jinja2._compat import text_type
+from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re # type: ignore
 from flask import url_for
 
 
@@ -45,6 +47,79 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
 
     return Markup(result)
 
+
+def arxiv_urlize(
+        text: str, trim_url_limit: Optional[int]=None,
+        rel: Optional[str]=None, target: Optional[str]=None
+) -> str:
+    """ Based directly on jinja2 urlize;
+    Copyright (c) 2009 by the Jinja Team, see AUTHORS in
+    https://github.com/pallets/jinja or other distribution of jinja2
+    for more details.
+
+    The main purpose of using a modified version of urlize, is, for now,
+    to replace the URL link (just the URL itself in urlize) with
+    "this http URL" to save space and maintain feature parity with legacy
+    arXiv code. Thus, for now, trim_url_limit is not used. Additionally,
+    escape checks and Markup wrapping are performed.
+
+    Converts any URLs in text into clickable links. Works on http://,
+    https:// and www. links. Links can have trailing punctuation (periods,
+    commas, close-parens) and leading punctuation (opening parens) and
+    it'll still do the right thing.
+    If trim_url_limit is not None, the URLs in link text will be limited
+    to trim_url_limit characters.
+    If nofollow is True, the URLs in link text will get a rel="nofollow"
+    attribute.
+    If target is not None, a target attribute will be added to the link.
+    """
+
+    if hasattr(text, '__html__'):
+        result = text
+    else:
+        result = Markup(escape(text))
+
+    # Note: currently unused; using link_text instead
+    # trim_url = lambda x, limit=trim_url_limit: limit is not None \
+    #                                            and (x[:limit] + (len(x) >=limit and '...'
+    #                                                              or '')) or x
+    link_text = 'this http URL'
+
+    words = _word_split_re.split(text_type(escape(result)))
+    rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
+    target_attr = target and ' target="%s"' % escape(target) or ''
+
+    for i, word in enumerate(words):
+        match = _punctuation_re.match(word)
+        if match:
+            lead, middle, trail = match.groups()
+            if middle.startswith('www.') or (
+                    '@' not in middle and
+                    not middle.startswith('http://') and
+                    not middle.startswith('https://') and
+                    len(middle) > 0 and
+                    middle[0] in _letters + _digits and (
+                            middle.endswith('.org') or
+                            middle.endswith('.net') or
+                            middle.endswith('.com')
+                    )):
+                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                middle = '<a href="http://%s"%s%s>%s</a>' \
+                         % (middle, rel_attr, target_attr, link_text)
+            if middle.startswith('http://') or \
+                    middle.startswith('https://'):
+                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                middle = '<a href="%s"%s%s>%s</a>' \
+                         % (middle, rel_attr, target_attr, link_text)
+            if '@' in middle and not middle.startswith('www.') and \
+                    not ':' in middle and _simple_email_re.match(middle):
+                middle = '<a href="mailto:%s">%s</a>' % (middle, middle)
+            if lead + middle + trail != word:
+                words[i] = lead + middle + trail
+    result = u''.join(words)
+    return Markup(result)
+
+
 def line_feed_to_br(text: str) -> str:
     """Lines that start with two spaces should be broken"""
 
@@ -56,6 +131,7 @@ def line_feed_to_br(text: str) -> str:
     br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  # if line starts with spaces, replace the white space with <br\>
     dedup = re.sub(r'\n\n', '\n', br) # skip if blank
     return Markup(dedup)
+
 
 def arxiv_id_urls(text: str) -> str:
     """Will link either arXiv:<internal_id> or <internal_id> with the full text as the anchor.
