@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from arxiv import taxonomy
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-
+from browse.domain.category import Category
 
 @dataclass(frozen=True)
 class SourceType:
@@ -62,43 +62,6 @@ class AuthorList:
 
     def __str__(self) -> str:
         return self.raw
-
-
-@dataclass
-class Category:
-    """Represents an arXiv category.
-
-    arXiv categories are arranged in a hierarchy where there are archives
-    (asrto-ph, cs, math, etc.) that contain subject classes (astro-ph has
-    subject classes CO, GA, etc.). We now use the term category to refer
-    to any archive or archive.subject_class that one can submit to (so
-    hep-th and math.IT are both categories). No subject class can be in
-    more than one archive. However, our scientific advisors identify some
-    categories that should appear in more than one archive because they
-    bridge major subject areas. Examples include math.MP == math-ph and
-    stat.TH = math.ST. These are called category aliases and the idea is
-    that any article classified in one of the aliases categories also appears
-    in the other, but that most of the arXiv code for display, search, etc.
-    does not need to understand the break with hierarchy.
-    """
-
-    id: str
-    """The category identifier (e.g. cs.DL)."""
-
-    name: str = field(init=False)
-    """The name of the category (e.g. Digital Libraries)."""
-
-    canonical: Union['Category', None] = field(init=False)
-
-    def __post_init__(self) -> None:
-        """Get the full category name."""
-        if self.id in taxonomy.CATEGORIES:
-            self.name = taxonomy.CATEGORIES[self.id]['name']
-
-        if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
-        else:
-            self.canonical = None
 
 
 @dataclass
@@ -207,8 +170,8 @@ class DocMetadata:
                 return []
 
         options = {
-            self.primary_category.id : True,
-            taxonomy.CATEGORIES[self.primary_category.id]['in_archive'] : True
+            self.primary_category.id: True,
+            taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
         }
         for category in self.secondary_categories:
             options[category.id] = True
@@ -216,7 +179,7 @@ class DocMetadata:
             options[in_archive] = True
         return sorted(options.keys())
 
-    def highest_version(self)-> int:
+    def highest_version(self) -> int:
         """Return highest version number from metadata.
 
         This is determined by counting the entries in the
@@ -231,7 +194,7 @@ class DocMetadata:
         return max(map(lambda ve: ve.version, self.version_history))
 
     def get_datetime_of_version(
-            self, version: Optional[int])->Optional[datetime]:
+            self, version: Optional[int]) -> Optional[datetime]:
         """Returns python datetime of version.
 
         version: Version to get datetime of. Must be in range
@@ -251,3 +214,20 @@ class DocMetadata:
             return None
         else:
             return versions[0].submitted_date
+
+    def display_secondaries(self)-> List[str]:
+        """Unalias, dedup and sort secondaries for display."""
+        if not self.secondary_categories or len(self.secondary_categories) == 0:
+            return []
+
+        def unalias(secs): return map(lambda c: c.unalias(), secs)
+        prim = self.primary_category.unalias()
+
+        def de_prim(secs): return filter(lambda c: c.id != prim.id, secs)
+
+        de_primaried = de_prim(unalias(self.secondary_categories))
+        if not de_primaried or len(de_primaried):
+            return []
+
+        def to_display(secs): map( lambda c: c.display_str(), secs)
+        return sorted(to_display(de_primaried))
