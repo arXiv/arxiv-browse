@@ -163,10 +163,7 @@ def get_abs_page(arxiv_id: str) -> Response:
     not_modified = _check_request_headers(
         abs_meta, response_data, response_headers)
     if not_modified:
-        # TODO: It's not clear whether HTTP_304_NOT_MODIFIED
-        print('NOT MODIFIED')
         return {}, status.HTTP_304_NOT_MODIFIED, response_headers
-        # pass
 
     return response_data, response_status, response_headers
 
@@ -209,13 +206,15 @@ def _check_request_headers(docmeta: DocMetadata,
     if 'trackback_ping_latest' in response_data \
        and isinstance(response_data['trackback_ping_latest'], datetime) \
        and response_data['trackback_ping_latest'] > last_mod_dt:
+        # If there is a more recent trackback ping, use that datetime
         last_mod_dt = response_data['trackback_ping_latest']
 
-    # Not clear if these checks are even necessary
+    # Check for request headers If-Modified-Since and If-None-Match and compare
+    # them to the last modified time to determine whether we will return a
+    # "not modified" response
     if 'If-Modified-Since' in request.headers \
        and request.headers['If-Modified-Since'] is not None:
         try:
-            print(f"ims: {request.headers.get('If-Modified-Since')}")
             if_mod_since_dt = parser.parse(
                 request.headers.get('If-Modified-Since'))
             if not if_mod_since_dt.tzinfo:
@@ -225,7 +224,6 @@ def _check_request_headers(docmeta: DocMetadata,
     if 'If-None-Match' in request.headers \
        and request.headers['If-None-Match'] is not None:
         try:
-            print(f"inm: {request.headers.get('If-None-Match')}")
             if_none_match_dt = parser.parse(
                 request.headers.get('If-None-Match'))
             if not if_none_match_dt.tzinfo:
