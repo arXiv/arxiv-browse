@@ -47,7 +47,7 @@ class VersionEntry:
     size_kilobytes: int = 0
     """Size of the article source, in kilobytes."""
 
-    source_type: SourceType = field(default_factory=SourceType)
+    source_type: SourceType = field(default_factory=SourceType) # type: ignore
     """Source file type."""
 
 
@@ -89,7 +89,7 @@ class Category:
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    # canonical: Union['Category', None] = field(init=False)
+    canonical: Union['Category', None] = field(init=False)
 
     def __post_init__(self) -> None:
         """Get the full category name."""
@@ -97,10 +97,10 @@ class Category:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
         # TODO: fix
-        # if self.id in taxonomy.ARCHIVES_SUBSUMED:
-        #     self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
-        # else:
-        #     self.canonical = None
+        if self.id in taxonomy.ARCHIVES_SUBSUMED:
+            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
+        else:
+            self.canonical = None
 
 
 @dataclass
