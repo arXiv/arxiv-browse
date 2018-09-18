@@ -410,11 +410,12 @@ class AbsMetaSession:
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
+        source_file_formats = []
         if source_file_path is not None:
             source_file_formats = \
                 formats_from_source_file_name(source_file_path)
-            if source_file_formats:
-                formats.extend(source_file_formats)
+        if source_file_formats:
+            formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
