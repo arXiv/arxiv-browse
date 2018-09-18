@@ -260,7 +260,6 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
         A possibly modified version of the input arxiv_id string.
 
     """
-    # if request_params and '/' not in arxiv_id:
     if request.args and '/' not in arxiv_id:
         # To support old references to /abs/<archive>?papernum=\d{7}
         if 'papernum' in request.args:
