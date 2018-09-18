@@ -215,19 +215,22 @@ class DocMetadata:
         else:
             return versions[0].submitted_date
 
-    def display_str_secondaries(self)-> List[str]:
+    def display_secondaries(self)-> List[str]:
         """Unalias, dedup and sort secondaries for display."""
         if not self.secondary_categories:
             return []
 
-        def unalias(secs): return map(lambda c: c.unalias(), secs)
+        def unalias(secs):
+            return map(lambda c: c.unalias(), secs)  # type: ignore
         prim = self.primary_category.unalias()
 
-        def de_prim(secs): return filter(lambda c: c.id != prim.id, secs)
+        def de_prim(secs):
+            return filter(lambda c: c.id != prim.id, secs)  # type: ignore
 
         de_primaried = set(de_prim(unalias(self.secondary_categories)))
         if not de_primaried:
             return []
 
-        def to_display(secs): return map( lambda c: c.display_str(), secs)
+        def to_display(secs):
+            return map(lambda c: c.display_str(), secs)  # type: ignore
         return list(to_display(sorted(de_primaried)))

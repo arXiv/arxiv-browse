@@ -518,21 +518,21 @@ class AbsMetaSession:
 
         # some transformations
         categories = fields['categories'].split()
-        primary_category = Category(id=categories[0])  # type: ignore
+        primary_category = Category(id=categories[0])  
         # see https://github.com/python/mypy/issues/5384 for type ignores:
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])  # type: ignore
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])  # type: ignore
+        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive']) 
+        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group']) 
         doc_license: License = \
-            License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
+            License() if 'license' not in fields else License(recorded_uri=fields['license']) 
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
-        return DocMetadata(  # type: ignore
+        return DocMetadata(
             raw_safe=raw_safe,
             arxiv_id=arxiv_id,
             arxiv_id_v=arxiv_id_v,
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
             title=fields['title'],
             abstract=fields['abstract'],
-            authors=AuthorList(fields['authors']),  # type: ignore
+            authors=AuthorList(fields['authors']), 
             # TODO type ignores here are for https://github.com/python/mypy/issues/5384
             submitter=Submitter(name=name, email=email),  # type: ignore
             categories=fields['categories'],
@@ -540,7 +540,7 @@ class AbsMetaSession:
             primary_archive=primary_archive,
             primary_group=primary_group,
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
+                Category(id=x) for x in categories[1:] if len(categories) > 1
             ],
             journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
             report_num=None if 'report_num' not in fields else fields['report_num'],
@@ -597,9 +597,8 @@ class AbsMetaSession:
                 raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
-            # type ignores here are for https://github.com/python/mypy/issues/5384
-            source_type = SourceType(code=date_match.group('source_type'))  # type: ignore
-            ve = VersionEntry(  # type: ignore
+            source_type = SourceType(code=date_match.group('source_type')) 
+            ve = VersionEntry( 
                 raw=date_match.group(0),
                 source_type=source_type,
                 size_kilobytes=int(date_match.group('size_kilobytes')),

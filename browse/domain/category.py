@@ -5,7 +5,6 @@ from arxiv import taxonomy
 from dataclasses import dataclass, field
 from typing import Union, Tuple, List
 
-
 @dataclass(eq=True, order=True)
 class Category:
     """Represents an arXiv category.
@@ -32,7 +31,7 @@ class Category:
 
     canonical: Union['Category', None] = field(init=False, compare=False)
 
-    def __hash__(self):
+    def __hash__(self): # type: ignore
         return id.__hash__()
 
     # def __eq__(self,other):
@@ -40,19 +39,18 @@ class Category:
 
     # def __lt__(self,other):
     #     return self.name.__lt__(other)
-    
+
     def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
         if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(
-                id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
+            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
         else:
             self.canonical = None
 
-    def unalias(self):
+    def unalias(self)->'Category':
         """Follow any EQUIV or SUBSUMED settings to get the current
         category code for the category code given."""
         if self.id in taxonomy.CATEGORY_ALIASES:
@@ -71,13 +69,15 @@ class Category:
         sp = _split_cat_str(self.id)
         hassub = len(sp) == 2
         if hassub:
-            (arc, sub) = sp
+            (arc, _) = sp
             if arc in taxonomy.ARCHIVES:
                 arcname = taxonomy.ARCHIVES[arc]['name']
                 return f'{arcname} ({self.id})'
+            else:
+                return self.id
         else:
             return self.id
 
 
-def _split_cat_str(cat):
+def _split_cat_str(cat: str)-> List[str]:
     return cat.split('.', 2)

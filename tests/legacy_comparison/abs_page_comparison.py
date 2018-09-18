@@ -56,18 +56,14 @@ VISITED_ABS_FILE_NAME = 'visited.log'
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
-text_comparisons: List[text_comparison_fn] = [text_similarity]
+#text_comparisons: List[text_comparison_fn] = [text_similarity]
+text_comparisons: List[text_comparison_fn] = []
 
 # List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = [
-    author_similarity,
-    dateline_similarity,
-    history_similarity,
-    title_similarity,
+
     subject_similarity,
-    comments_similarity,
-    extra_services_similarity,
-    head_similarity,
+
 ]
 
 
@@ -91,7 +87,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
 ng_abs_base_url = 'http://localhost:5000/abs/'
 
 # Should end with /
-legacy_abs_base_url = 'https://arxiv.org/abs/'
+legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 
 
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:

@@ -16,7 +16,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0906_3421_cats(self):
         (id, primary, secondaries) = ('0906.3421', 'Combinatorics (math.CO)',
@@ -24,7 +24,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0129_cats(self):
         (id, primary, secondaries) = ('0704.0129', 'Dynamical Systems (math.DS)',
@@ -32,7 +32,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0914_cats(self):
         (id, primary, secondaries) = ('0704.0914', 'Analysis of PDEs (math.AP)',
@@ -40,7 +40,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0582_cats(self):
         (id, primary, secondaries) = ('0704.0582',
@@ -48,7 +48,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0495_cats(self):
         (id, primary, secondaries) = ('0704.0495', 'Quantum Physics (quant-ph)',
@@ -56,7 +56,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0681_cats(self):
         (id, primary, secondaries) = ('0704.0681', 'Soft Condensed Matter (cond-mat.soft)',
@@ -64,7 +64,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0761_cats(self):
         (id, primary, secondaries) = ('0704.0761', 'Statistical Mechanics (cond-mat.stat-mech)',
@@ -72,7 +72,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0528_cats(self):
         (id, primary, secondaries) = ('0704.0528', 'Networking and Internet Architecture (cs.NI)',
@@ -80,7 +80,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0869_cats(self):
         (id, primary, secondaries) = ('0704.0869', 'Statistical Mechanics (cond-mat.stat-mech)',
@@ -88,7 +88,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0796_cats(self):
         (id, primary, secondaries) = ('0704.0796', 'Quantum Physics (quant-ph)',
@@ -96,7 +96,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0046_cats(self):
         (id, primary, secondaries) = ('0704.0046',
@@ -104,7 +104,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0976_cats(self):
         (id, primary, secondaries) = ('0704.0976', 'Statistical Mechanics (cond-mat.stat-mech)',
@@ -113,7 +113,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0041_cats(self):
         (id, primary, secondaries) = ('0704.0041', 'Quantum Algebra (math.QA)',
@@ -121,7 +121,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0918_cats(self):
         (id, primary, secondaries) = ('0704.0918',
@@ -129,7 +129,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0123_cats(self):
         (id, primary, secondaries) = ('0704.0123', 'Chaotic Dynamics (nlin.CD)',
@@ -137,7 +137,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0520_cats(self):
         (id, primary, secondaries) = ('0704.0520', 'Quantum Physics (quant-ph)',
@@ -146,7 +146,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0084_cats(self):
         (id, primary, secondaries) = ('0704.0084', 'Soft Condensed Matter (cond-mat.soft)',
@@ -155,7 +155,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0588_cats(self):
         (id, primary, secondaries) = ('0704.0588',
@@ -163,7 +163,7 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
 
     def test_categories_for_0704_0687_cats(self):
         (id, primary, secondaries) = ('0704.0687', 'Analysis of PDEs (math.AP)',
@@ -171,4 +171,4 @@ class CategoriesTest(unittest.TestCase):
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
+        assert_that(doc.display_secondaries(), equal_to(secondaries))
