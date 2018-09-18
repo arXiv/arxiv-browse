@@ -9,7 +9,8 @@ from browse.util.clickthrough import create_ct_url
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
-from browse.filters import doi_urls, arxiv_id_urls, line_feed_to_br
+from browse.filters import doi_urls, arxiv_urlize, arxiv_id_urls, \
+    line_feed_to_br
 
 
 def create_web_app() -> Flask:
@@ -37,4 +38,5 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['doi_urls'] = partial(doi_urls, ct_url_for)
     app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
     app.jinja_env.filters['line_feed_to_br'] = line_feed_to_br
+    app.jinja_env.filters['arxiv_urlize'] = arxiv_urlize
     return app

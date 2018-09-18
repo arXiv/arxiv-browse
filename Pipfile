@@ -21,6 +21,8 @@ coveralls = "*"
 sqlacodegen = "*"
 mysqlclient = "*"
 "mmh3" = "*"
+aiohttp = "*"
+mypy-extensions = "*"
 
 [dev-packages]
 pylama = "*"
@@ -38,6 +40,7 @@ hypothesis = "*"
 "beautifulsoup4" = "*"
 pyhamcrest = "*"
 pytest-easyread = "*"
+weighted-levenshtein = "*"
 
 [requires]
 python_version = "3.6"
