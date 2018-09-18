@@ -31,12 +31,13 @@ class DocMetadataTest(TestCase):
             run_on_empty_args()
 
         # Do not indent us or we will not run and be tested!:
-        self.assertTrue('missing 13 required positional arguments' in str(ctx.exception))
+        self.assertTrue('missing 14 required positional arguments' in str(ctx.exception))
         #
         self.assertTrue('raw_safe' in str(ctx.exception))
         self.assertTrue('arxiv_id' in str(ctx.exception))
         self.assertTrue('arxiv_id_v' in str(ctx.exception))
         self.assertTrue('arxiv_identifier' in str(ctx.exception))
+        self.assertTrue('modified' in str(ctx.exception))
         self.assertTrue('title' in str(ctx.exception))
         self.assertTrue('abstract' in str(ctx.exception))
         self.assertTrue('authors' in str(ctx.exception))

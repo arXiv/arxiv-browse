@@ -26,8 +26,8 @@
     <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
     <a href="{{url_for('.pdf', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
-    {%- elif format == 'dvi' -%} 
-    <a href="{{url_for('.dvi', arxiv_id=abs_meta.arxiv_id)}}">{{ format.upper() }}</a>    
+    {%- elif format == 'dvi' -%}
+    <a href="{{url_for('.dvi', arxiv_id=abs_meta.arxiv_id)}}">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
     <a href="{{url_for('.html', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
@@ -81,7 +81,7 @@
   </div>
   {% endif %}
 
-  {% if not abs_meta.arxiv_identifier.is_old_id %}
+  {% if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) %}
   <h3>Change to browse by:</h3>
   <div class="switch">
     {% for category in abs_meta.get_browse_context_list() if not (current_context==category) %}

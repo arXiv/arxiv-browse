@@ -61,6 +61,7 @@ class AuthorList:
     __slots__ = ['raw']
 
     def __str__(self) -> str:
+        """Return the string representation of AuthorList."""
         return self.raw
 
 
@@ -88,17 +89,18 @@ class Category:
     name: str = field(init=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    canonical: Union['Category', None] = field(init=False)
+    # canonical: Union['Category', None] = field(init=False)
 
     def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
             self.name = taxonomy.CATEGORIES[self.id]['name']
 
-        if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
-        else:
-            self.canonical = None
+        # TODO: fix
+        # if self.id in taxonomy.ARCHIVES_SUBSUMED:
+        #     self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])  # type: ignore
+        # else:
+        #     self.canonical = None
 
 
 @dataclass
@@ -138,6 +140,9 @@ class DocMetadata:
 
     title: str
     abstract: str
+
+    modified: datetime
+    """Datetime this version was modified."""
 
     authors: AuthorList
     """Article authors."""
@@ -207,8 +212,8 @@ class DocMetadata:
                 return []
 
         options = {
-            self.primary_category.id : True,
-            taxonomy.CATEGORIES[self.primary_category.id]['in_archive'] : True
+            self.primary_category.id: True,
+            taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
         }
         for category in self.secondary_categories:
             options[category.id] = True
@@ -232,7 +237,7 @@ class DocMetadata:
 
     def get_datetime_of_version(
             self, version: Optional[int])->Optional[datetime]:
-        """Returns python datetime of version.
+        """Return python datetime of version.
 
         version: Version to get datetime of. Must be in range
             1..highest_version. Uses highest_version if not specified.
