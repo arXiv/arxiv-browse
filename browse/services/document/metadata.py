@@ -4,23 +4,21 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
-from pytz import timezone
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 import dataclasses
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, \
+    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file_name, formats_from_source_type, \
     has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
-
-
-ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
@@ -43,7 +41,15 @@ major component of .abs string. Field names are not normalized.
 """
 
 REQUIRED_FIELDS = ['title', 'authors', 'abstract']
-"""Required parsed fields with normalized field names."""
+"""
+Required parsed fields with normalized field names.
+
+Note the absense of 'categories'. Some v1 .abs files with the old identifiers
+do not have a Categories: line, presumably because could be inferred by the
+identifier itself. Subsequent versions of these papers do have the Categories:
+line.
+"""
+
 
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
@@ -404,10 +410,12 @@ class AbsMetaSession:
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
+        source_file_formats = []
         if source_file_path is not None:
-            source_file_formats = formats_from_source_file_name(source_file_path)
-            if source_file_formats:
-                formats.extend(source_file_formats)
+            source_file_formats = \
+                formats_from_source_file_name(source_file_path)
+        if source_file_formats:
+            formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -462,6 +470,11 @@ class AbsMetaSession:
         except UnicodeDecodeError as e:
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
+
+        # TODO: clean up
+        modified = datetime.fromtimestamp(
+                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+        modified = modified.astimezone(tz=tzutc())
 
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
@@ -540,7 +553,7 @@ class AbsMetaSession:
             primary_archive=primary_archive,
             primary_group=primary_group,
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1 # type: ignore
+                Category(id=x) for x in categories[1:] if len(categories) > 1  # type: ignore
             ],
             journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
             report_num=None if 'report_num' not in fields else fields['report_num'],
@@ -552,6 +565,7 @@ class AbsMetaSession:
             version=version,
             license=doc_license,
             version_history=version_history,
+            modified=modified
             # private=private  # TODO, not implemented
         )
 
