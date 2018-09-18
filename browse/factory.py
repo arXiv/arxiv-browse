@@ -10,7 +10,7 @@ from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import doi_urls, arxiv_urlize, arxiv_id_urls, \
-    line_feed_to_br
+    line_feed_to_br, tex_to_utf
 
 
 def create_web_app() -> Flask:
@@ -39,4 +39,5 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
     app.jinja_env.filters['line_feed_to_br'] = line_feed_to_br
     app.jinja_env.filters['arxiv_urlize'] = arxiv_urlize
+    app.jinja_env.filters['tex_to_utf'] = tex_to_utf
     return app

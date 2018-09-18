@@ -45,8 +45,7 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|arxiv_id_urls }}</h1>
-    {# TODO: authors section #}
+    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>
       {%- include "/abs/author_links.html" %}
     </div>
@@ -131,7 +130,7 @@
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
-  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }} 
+  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
   {%- if abs_meta.version != 1 %}(<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
   , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
