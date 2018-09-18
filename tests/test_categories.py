@@ -26,22 +26,6 @@ class CategoriesTest(unittest.TestCase):
         assert_that(doc.primary_category.display_str(), equal_to(primary))
         assert_that(doc.display_str_secondaries(), equal_to(secondaries))
 
-    def test_categories_for_1501_00001_cats(self):
-        (id, primary, secondaries) = ('1501.00001', 'Information Theory (cs.IT)',
-                                      ['Networking and Internet Architecture (cs.NI)'],)
-        doc = self.absService.get_abs(id)
-        self.assertIsNotNone(doc)
-        assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
-
-    def test_categories_for_1501_00002_cats(self):
-        (id, primary, secondaries) = ('1501.00002', 'Strongly Correlated Electrons (cond-mat.str-el)',
-                                      ['Superconductivity (cond-mat.supr-con)'])
-        doc = self.absService.get_abs(id)
-        self.assertIsNotNone(doc)
-        assert_that(doc.primary_category.display_str(), equal_to(primary))
-        assert_that(doc.display_str_secondaries(), equal_to(secondaries))
-
     def test_categories_for_0704_0129_cats(self):
         (id, primary, secondaries) = ('0704.0129', 'Dynamical Systems (math.DS)',
                                       ['Mathematical Physics (math-ph)', 'Analysis of PDEs (math.AP)'])
@@ -166,7 +150,7 @@ class CategoriesTest(unittest.TestCase):
 
     def test_categories_for_0704_0084_cats(self):
         (id, primary, secondaries) = ('0704.0084', 'Soft Condensed Matter (cond-mat.soft)',
-                                      ['Pattern Formation and Solutions (nlin.PS)',
+                                      ['Pattern Formation and Solitons (nlin.PS)',
                                        'Fluid Dynamics (physics.flu-dyn)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
