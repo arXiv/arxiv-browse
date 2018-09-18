@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Union, Tuple, List
 
 
-@dataclass
+@dataclass(eq=True, order=True)
 class Category:
     """Represents an arXiv category.
 
@@ -24,14 +24,23 @@ class Category:
     does not need to understand the break with hierarchy.
     """
 
-    id: str
+    id: str = field(compare=True)
     """The category identifier (e.g. cs.DL)."""
 
-    name: str = field(init=False)
+    name: str = field(init=False, compare=False)
     """The name of the category (e.g. Digital Libraries)."""
 
-    canonical: Union['Category', None] = field(init=False)
+    canonical: Union['Category', None] = field(init=False, compare=False)
 
+    def __hash__(self):
+        return id.__hash__()
+
+    # def __eq__(self,other):
+    #     return self.name == other.name
+
+    # def __lt__(self,other):
+    #     return self.name.__lt__(other)
+    
     def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
