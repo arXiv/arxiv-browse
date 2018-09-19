@@ -114,7 +114,11 @@ def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[Ba
     we know that we do not want to compare."""
     legacy_text = res_args['legacy_res'].text
     legacy_text = strip_by_delim(legacy_text, '<!-- Piwik -->',  '<!-- End Piwik Code -->')
-    legacy_text = strip_by_delim(legacy_text, '<!--\nfunction toggleList',  '//-->')
+    legacy_text = strip_by_delim(
+        legacy_text,
+        '<script type="text/javascript">\n<!--\nfunction toggleList',
+        '//-->\n</script>'
+    )
 
     if 'skip_anc' in skips:
         legacy_text = strip_by_delim(legacy_text, '<div class="ancillary">',  '<!--end ancillary-->')
