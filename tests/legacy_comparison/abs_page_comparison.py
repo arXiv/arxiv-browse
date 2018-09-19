@@ -25,7 +25,7 @@ from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
 
 
-""" Script to compare abs pages from NG and arxiv.org
+""" Script to compare abs pages from NG and beta.arxiv.org
 
 To run this I do:
 Open terminal:
@@ -91,7 +91,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
 ng_abs_base_url = 'http://localhost:5000/abs/'
 
 # Should end with /
-legacy_abs_base_url = 'https://arxiv.org/abs/'
+legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
 
 
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
@@ -113,6 +113,8 @@ def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[Ba
     """ This is also where we do most of the cleaning on text, for things
     we know that we do not want to compare."""
     legacy_text = res_args['legacy_res'].text
+    ng_text = res_args['ng_res'].text
+
     legacy_text = strip_by_delim(legacy_text, '<!-- Piwik -->',  '<!-- End Piwik Code -->')
     legacy_text = strip_by_delim(
         legacy_text,
@@ -123,8 +125,7 @@ def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[Ba
     if 'skip_anc' in skips:
         legacy_text = strip_by_delim(legacy_text, '<div class="ancillary">',  '<!--end ancillary-->')
 
-    text_dict: text_arg_dict = {**res_args, **{'ng_text': res_args['ng_res'].text,
-                                               'legacy_text': legacy_text}}
+    text_dict: text_arg_dict = {**res_args, **{'ng_text': ng_text, 'legacy_text': legacy_text}}
 
     def call_it(fn: Callable[[text_arg_dict], BadResult]) -> BadResult:
         # noinspection PyBroadException

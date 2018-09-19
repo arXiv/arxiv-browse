@@ -11,10 +11,8 @@ from bs4 import BeautifulSoup, element
 
 def html_similarity(html_arg: html_arg_dict) -> BadResult:
     sim = lev_similarity(
-        html_arg['ng_html'].prettify().encode(
-            'utf-8').decode('ascii', 'ignore'),
-        html_arg['legacy_html'].prettify().encode(
-            'utf-8').decode('ascii', 'ignore')
+        html_arg['ng_html'].prettify(),
+        html_arg['legacy_html'].prettify()
     )
     if sim < 0.69:
         return BadResult(html_arg['paper_id'], f"html_pretty_sim for {html_arg['paper_id']} = {sim}")
@@ -80,15 +78,29 @@ def _element_similarity(name: str,
         return BadResult(html_arg['paper_id'], name,
                          f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}")
 
-    ng_ele_txt = ng[0].prettify().encode('utf-8').decode('ascii', 'ignore')
-    legacy_ele_txt = legacy[0].prettify().encode(
-        'utf-8').decode('ascii', 'ignore')
-    sim = lev_similarity(ng_ele_txt, legacy_ele_txt)
+    ng_ele_txt = ''
+    legacy_ele_txt = ''
 
-    if sim < min_sim:
-        msg = f"Elements did not meet min similarity of {min_sim}"
-        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, sim)
-    return None
+    if len(ng) > 0 and len(legacy) > 0:
+        ng_ele_txt = ng[0].prettify()
+        legacy_ele_txt = legacy[0].prettify()
+        sim = lev_similarity(ng_ele_txt, legacy_ele_txt)
+
+        if sim < min_sim:
+            msg = f"Elements did not meet min similarity of {min_sim}"
+            return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, sim)
+        return None
+    else:
+        if len(ng) > 0:
+            ng_ele_txt = ng[0].prettify()
+        if len(legacy) > 0:
+            legacy_ele_txt = legacy[0].prettify()
+
+        msg = 'zero elements detected: ' \
+              + f'legacy length was {len(legacy)}; ng length was {len(ng)} '
+        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, 0.0)
+
+
 
 
 def strip_dig(eles: List[BeautifulSoup]):
