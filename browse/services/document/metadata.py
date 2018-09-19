@@ -5,6 +5,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
 from pytz import timezone
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 import dataclasses
 
 from arxiv import taxonomy
@@ -43,7 +45,15 @@ major component of .abs string. Field names are not normalized.
 """
 
 REQUIRED_FIELDS = ['title', 'authors', 'abstract']
-"""Required parsed fields with normalized field names."""
+"""
+Required parsed fields with normalized field names.
+
+Note the absense of 'categories'. Some v1 .abs files with the old identifiers
+do not have a Categories: line, presumably because could be inferred by the
+identifier itself. Subsequent versions of these papers do have the Categories:
+line.
+"""
+
 
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
@@ -400,14 +410,16 @@ class AbsMetaSession:
             A list of format strings.
 
         """
-        formats = []
+        formats: List[str] = []
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
+        source_file_formats: List[str] = []
         if source_file_path is not None:
-            source_file_formats = formats_from_source_file_name(source_file_path)
-            if source_file_formats:
-                formats.extend(source_file_formats)
+            source_file_formats = \
+                formats_from_source_file_name(source_file_path)
+        if source_file_formats:
+            formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -463,6 +475,11 @@ class AbsMetaSession:
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
 
+        # TODO: clean up
+        modified = datetime.fromtimestamp(
+                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+        modified = modified.astimezone(tz=tzutc())
+
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
         components = RE_ABS_COMPONENTS.split(raw)
@@ -495,7 +512,7 @@ class AbsMetaSession:
         if not from_match:
             raise AbsParsingException('Could not extract submitter data.')
         name = from_match.group('name').rstrip()
-        email = from_match.group('email') or None
+        email = from_match.group('email')
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
@@ -518,12 +535,11 @@ class AbsMetaSession:
 
         # some transformations
         categories = fields['categories'].split()
-        primary_category = Category(id=categories[0])  
-        # see https://github.com/python/mypy/issues/5384 for type ignores:
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive']) 
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group']) 
+        primary_category = Category(id=categories[0])
+        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
         doc_license: License = \
-            License() if 'license' not in fields else License(recorded_uri=fields['license']) 
+            License() if 'license' not in fields else License(recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
         return DocMetadata(
             raw_safe=raw_safe,
@@ -532,9 +548,8 @@ class AbsMetaSession:
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
             title=fields['title'],
             abstract=fields['abstract'],
-            authors=AuthorList(fields['authors']), 
-            # TODO type ignores here are for https://github.com/python/mypy/issues/5384
-            submitter=Submitter(name=name, email=email),  # type: ignore
+            authors=AuthorList(fields['authors']),
+            submitter=Submitter(name=name, email=email),
             categories=fields['categories'],
             primary_category=primary_category,
             primary_archive=primary_archive,
@@ -552,6 +567,7 @@ class AbsMetaSession:
             version=version,
             license=doc_license,
             version_history=version_history,
+            modified=modified
             # private=private  # TODO, not implemented
         )
 
@@ -597,8 +613,8 @@ class AbsMetaSession:
                 raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
-            source_type = SourceType(code=date_match.group('source_type')) 
-            ve = VersionEntry( 
+            source_type = SourceType(code=date_match.group('source_type'))
+            ve = VersionEntry(
                 raw=date_match.group(0),
                 source_type=source_type,
                 size_kilobytes=int(date_match.group('size_kilobytes')),

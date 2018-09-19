@@ -8,26 +8,32 @@ GET requests to the abs endpoint.
 import re
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
+from datetime import datetime
+from dateutil import parser
+from dateutil.tz import tzutc
 
 from flask import current_app as app
 from flask import url_for
-
+from flask import request
 from werkzeug.exceptions import InternalServerError
-from werkzeug.datastructures import MultiDict
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors, split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, \
+    split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
+from browse.services.util.response_headers import abs_expires_header, \
+    mime_header_date
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
-    has_sciencewise_ping, get_dblp_listing_path, get_dblp_authors
+    get_trackback_ping_latest_date, has_sciencewise_ping, \
+    get_dblp_listing_path, get_dblp_authors
 from browse.services.util.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.document.config.external_refs_cits import DBLP_BASE_URL,\
@@ -40,9 +46,7 @@ Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 100
 
 
-def get_abs_page(arxiv_id: str,
-                 request_params: MultiDict,
-                 download_format_pref: Optional[str] = None) -> Response:
+def get_abs_page(arxiv_id: str) -> Response:
     """
     Get abs page data from the document metadata service.
 
@@ -50,7 +54,6 @@ def get_abs_page(arxiv_id: str,
     ----------
     arxiv_id : str
         The arXiv identifier as provided in the request.
-    request_params : dict
     download_format_pref: str
         Download format preference.
 
@@ -70,9 +73,10 @@ def get_abs_page(arxiv_id: str,
 
     """
     response_data: Dict[str, Any] = {}
+    response_headers: Dict[str, Any] = {}
     try:
 
-        arxiv_id = _check_legacy_id_params(arxiv_id, request_params)
+        arxiv_id = _check_legacy_id_params(arxiv_id)
 
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         redirect_url = _check_supplied_identifier(arxiv_identifier)
@@ -94,6 +98,7 @@ def get_abs_page(arxiv_id: str,
                                          query=author_query)
 
         # Dissemination formats for download links
+        download_format_pref = request.cookies.get('xxx-ps-defaults')
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data['formats'] = metadata.get_dissemination_formats(
             abs_meta,
@@ -106,7 +111,10 @@ def get_abs_page(arxiv_id: str,
                 abs_meta)
             response_data['dblp'] = _check_dblp(abs_meta)
             response_data['trackback_ping_count'] = count_trackback_pings(
-                arxiv_id)
+                arxiv_identifier.id)
+            if response_data['trackback_ping_count'] > 0:
+                response_data['trackback_ping_latest'] = \
+                    get_trackback_ping_latest_date(arxiv_identifier.id)
 
             # Ancillary files
             response_data['ancillary_files'] = \
@@ -114,7 +122,6 @@ def get_abs_page(arxiv_id: str,
 
             # Browse context
             _check_context(arxiv_identifier,
-                           request_params,
                            response_data)
         except Exception:
             logger.error("Error getting non-critical abs page data",
@@ -147,7 +154,15 @@ def get_abs_page(arxiv_id: str,
         raise InternalServerError(
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
-    return response_data, status.HTTP_200_OK, {}
+
+    response_status = status.HTTP_200_OK
+
+    not_modified = _check_request_headers(
+        abs_meta, response_data, response_headers)
+    if not_modified:
+        return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+
+    return response_data, response_status, response_headers
 
 
 def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
@@ -175,7 +190,63 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
     return None
 
 
-def _check_legacy_id_params(arxiv_id: str, request_params: MultiDict) -> str:
+def _check_request_headers(docmeta: DocMetadata,
+                           response_data: Dict[str, Any],
+                           headers: Dict[str, Any]) -> bool:
+    """Check the request headers, update the response headers accordingly."""
+    last_mod_dt: datetime = docmeta.modified
+    if_mod_since_dt: Optional[datetime] = None
+    if_none_match_dt: Optional[datetime] = None
+    not_modified: bool = False
+
+    if 'trackback_ping_latest' in response_data \
+       and isinstance(response_data['trackback_ping_latest'], datetime) \
+       and response_data['trackback_ping_latest'] > last_mod_dt:
+        # If there is a more recent trackback ping, use that datetime
+        last_mod_dt = response_data['trackback_ping_latest']
+
+    # Check for request headers If-Modified-Since and If-None-Match and compare
+    # them to the last modified time to determine whether we will return a
+    # "not modified" response
+    if 'If-Modified-Since' in request.headers \
+       and request.headers['If-Modified-Since'] is not None:
+        try:
+            if_mod_since_dt = parser.parse(
+                request.headers.get('If-Modified-Since'))
+            if not if_mod_since_dt.tzinfo:
+                if_mod_since_dt = if_mod_since_dt.replace(tzinfo=tzutc())
+        except (ValueError, TypeError):
+            print(f'Exception parsing the If-Modified-Since request header')
+    if 'If-None-Match' in request.headers \
+       and request.headers['If-None-Match'] is not None:
+        try:
+            if_none_match_dt = parser.parse(
+                request.headers.get('If-None-Match'))
+            if not if_none_match_dt.tzinfo:
+                if_none_match_dt = if_none_match_dt.replace(tzinfo=tzutc())
+        except (ValueError, TypeError):
+            print(f'Exception parsing the If-None-Match request header')
+    try:
+        if ((if_mod_since_dt and if_none_match_dt)
+            and if_mod_since_dt >= last_mod_dt  # ignore
+            and if_none_match_dt >= last_mod_dt) \
+            or ((if_mod_since_dt and not if_none_match_dt)
+                and if_mod_since_dt >= last_mod_dt) \
+            or ((if_none_match_dt and not if_mod_since_dt)  # ignore
+                and if_none_match_dt >= last_mod_dt):
+            not_modified = True
+    except Exception as e:
+        print(f'Exception parsing the request headers: {e}')
+
+    last_mod_mime = mime_header_date(last_mod_dt)
+    headers['Last-Modified'] = last_mod_mime
+    headers['ETag'] = last_mod_mime
+    headers['Expires'] = abs_expires_header()[1]
+
+    return not_modified
+
+
+def _check_legacy_id_params(arxiv_id: str) -> str:
     """
     Check for legacy request parameters related to old arXiv identifiers.
 
@@ -183,30 +254,27 @@ def _check_legacy_id_params(arxiv_id: str, request_params: MultiDict) -> str:
     ----------
     arxiv_id : str
 
-    request_params: MultiDict
-
     Returns
     -------
     arxiv_id: str
         A possibly modified version of the input arxiv_id string.
 
     """
-    if request_params and '/' not in arxiv_id:
+    if request.args and '/' not in arxiv_id:
         # To support old references to /abs/<archive>?papernum=\d{7}
-        if 'papernum' in request_params:
-            return f"{arxiv_id}/{request_params['papernum']}"
+        if 'papernum' in request.args:
+            return f"{arxiv_id}/{request.args['papernum']}"
         else:
-            for param in request_params:
+            for param in request.args:
                 # singleton case, where the parameter is the value
                 # To support old references to /abs/<archive>?\d{7}
-                if not request_params[param] \
+                if not request.args[param] \
                    and re.match(r'^\d{7}$', param):
                     return f'{arxiv_id}/{param}'
     return arxiv_id
 
 
 def _check_context(arxiv_identifier: Identifier,
-                   request_params: MultiDict,
                    response_data: Dict[str, Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
@@ -215,8 +283,6 @@ def _check_context(arxiv_identifier: Identifier,
     ----------
     arxiv_identifier : :class:`Identifier`
 
-    request_params: MultiDict
-
     response_data: dict
 
     Returns
@@ -224,16 +290,16 @@ def _check_context(arxiv_identifier: Identifier,
     None
 
     """
-    if 'context' in request_params\
-       and (request_params['context'] in taxonomy.CATEGORIES
-            or request_params['context'] in taxonomy.ARCHIVES
-            or request_params['context'] == 'arxiv'):
-        if request_params['context'] == 'arxiv':
+    if 'context' in request.args\
+       and (request.args['context'] in taxonomy.CATEGORIES
+            or request.args['context'] in taxonomy.ARCHIVES
+            or request.args['context'] == 'arxiv'):
+        if request.args['context'] == 'arxiv':
             response_data['browse_context_next_id'] = \
                 metadata.get_next_id(arxiv_identifier)
             response_data['browse_context_previous_id'] = \
                 metadata.get_previous_id(arxiv_identifier)
-        response_data['browse_context'] = request_params['context']
+        response_data['browse_context'] = request.args['context']
     elif arxiv_identifier.is_old_id:
         response_data['browse_context_next_id'] = \
             metadata.get_next_id(arxiv_identifier)
@@ -284,12 +350,3 @@ def _check_dblp(docmeta: DocMetadata,
         'listing_url': urljoin(DBLP_BASE_URL, listing_path),
         'author_list': author_list
     }
-
-
-# def _check_trackback_pings(paper_id: str) -> int:
-#     """Check general tracback pings"""
-#     try:
-#         return count_trackback_pings(paper_id)
-#     except IOError:
-#
-#         return 0

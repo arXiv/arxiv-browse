@@ -47,7 +47,7 @@
       </div>
     </div>
     <div id="support-ack">
-      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if 'institution' in session else 'member institutions' }}</a>
+      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}</a>
     </div>
   </div>
 

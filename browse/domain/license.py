@@ -49,7 +49,7 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
 class License:
     """Represents an arXiv article license."""
 
-    recorded_uri: Optional[str] = field(default=None)
+    recorded_uri: Optional[str] = None
     """URI of a license if one is in the article record."""
 
     effective_uri: str = field(init=False)

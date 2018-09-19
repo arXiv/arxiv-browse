@@ -47,7 +47,7 @@ class VersionEntry:
     size_kilobytes: int = 0
     """Size of the article source, in kilobytes."""
 
-    source_type: SourceType = field(default_factory=SourceType)
+    source_type: SourceType = field(default_factory=SourceType) # type: ignore
     """Source file type."""
 
 
@@ -61,6 +61,7 @@ class AuthorList:
     __slots__ = ['raw']
 
     def __str__(self) -> str:
+        """Return the string representation of AuthorList."""
         return self.raw
 
 
@@ -101,6 +102,9 @@ class DocMetadata:
 
     title: str
     abstract: str
+
+    modified: datetime
+    """Datetime this version was modified."""
 
     authors: AuthorList
     """Article authors."""
@@ -179,7 +183,7 @@ class DocMetadata:
             options[in_archive] = True
         return sorted(options.keys())
 
-    def highest_version(self) -> int:
+    def highest_version(self)-> int:
         """Return highest version number from metadata.
 
         This is determined by counting the entries in the
@@ -194,7 +198,7 @@ class DocMetadata:
         return max(map(lambda ve: ve.version, self.version_history))
 
     def get_datetime_of_version(
-            self, version: Optional[int]) -> Optional[datetime]:
+            self, version: Optional[int])->Optional[datetime]:
         """Returns python datetime of version.
 
         version: Version to get datetime of. Must be in range
@@ -214,23 +218,23 @@ class DocMetadata:
             return None
         else:
             return versions[0].submitted_date
-
+        
     def display_secondaries(self)-> List[str]:
         """Unalias, dedup and sort secondaries for display."""
         if not self.secondary_categories:
             return []
 
-        def unalias(secs):
-            return map(lambda c: c.unalias(), secs)  # type: ignore
+        def unalias(secs): # type: ignore
+            return map(lambda c: c.unalias(), secs) 
         prim = self.primary_category.unalias()
 
-        def de_prim(secs):
-            return filter(lambda c: c.id != prim.id, secs)  # type: ignore
+        def de_prim(secs):  # type: ignore
+            return filter(lambda c: c.id != prim.id, secs)
 
         de_primaried = set(de_prim(unalias(self.secondary_categories)))
         if not de_primaried:
             return []
 
-        def to_display(secs):
-            return map(lambda c: c.display_str(), secs)  # type: ignore
+        def to_display(secs) :  # type: ignore
+            return map(lambda c: c.display_str(), secs) 
         return list(to_display(sorted(de_primaried)))
