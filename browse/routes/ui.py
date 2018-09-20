@@ -3,7 +3,7 @@ import re
 from typing import Union
 from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
-from werkzeug.exceptions import InternalServerError, NotFound
+from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
 from browse.controllers import abs_page
 from browse.exceptions import AbsNotFound
@@ -83,13 +83,15 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route('/ct')
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
-    if 'url' in request.args and 'v' in request.args \
-            and is_hash_valid(current_app.config['SECRET_KEY'],
-                              request.args.get('url'),
-                              request.args.get('v')):
-        return redirect(request.args.get('url'))
+    if 'url' in request.args and 'v' in request.args:
+        if is_hash_valid(current_app.config['CLICKTHROUGH_SECRET'],
+                         request.args.get('url'),
+                         request.args.get('v')):
+            return redirect(request.args.get('url'))
+        else:
+            raise BadRequest('Bad click-through redirect')
 
-    raise NotFound()
+    raise NotFound
 
 
 @blueprint.route('/list/<context>/<subcontext>')

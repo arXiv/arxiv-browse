@@ -224,3 +224,6 @@ DOCUMENT_CACHE_PATH = os.environ.get(
 
 # Used in linking to /show-email
 SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
+
+# Used in linking to /ct
+CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
