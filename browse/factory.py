@@ -29,7 +29,8 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    ct_url_for = partial(create_ct_url, app.config.get('SECRET_KEY'), url_for)
+    ct_url_for = partial(create_ct_url, app.config.get(
+        'CLICKTHROUGH_SECRET'), url_for)
 
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
     app.jinja_env.filters['show_email_hash'] = \
