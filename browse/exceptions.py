@@ -4,7 +4,7 @@ from typing import Optional
 
 from arxiv import status
 from arxiv.base.exceptions import handler
-from flask import render_template, make_response, Response, jsonify
+from flask import render_template, make_response, Response
 from werkzeug.exceptions import HTTPException, BadRequest
 
 
