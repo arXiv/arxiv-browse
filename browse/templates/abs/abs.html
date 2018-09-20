@@ -152,8 +152,10 @@
 {%- endmacro -%}
 
 {%- macro category_line() -%}
-  <span class="primary-subject">{{- abs_meta.primary_category.name  }} ({{ abs_meta.primary_category.id }})</span>
+  <span class="primary-subject">{{- abs_meta.primary_category.unalias().display_str() -}}</span>
   {%- if abs_meta.secondary_categories -%}
-    {%- for category in abs_meta.secondary_categories %}; {{ category.name}} ({{ category.id }}){% endfor %}
+    {%- for category in abs_meta.display_secondaries() -%}
+        ; {{ category }}
+    {%- endfor -%}
   {%- endif -%}
 {%- endmacro -%}

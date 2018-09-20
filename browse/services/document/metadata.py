@@ -4,6 +4,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
+from pytz import timezone
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 import dataclasses
@@ -11,14 +12,17 @@ import dataclasses
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, \
-    DocMetadata, Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
+    Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file_name, formats_from_source_type, \
     has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
+
+
+ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
@@ -406,11 +410,11 @@ class AbsMetaSession:
             A list of format strings.
 
         """
-        formats = []
+        formats: List[str] = []
 
         # first, get possible list of formats based on available source file
         source_file_path = self._get_source_path(docmeta)
-        source_file_formats = []
+        source_file_formats: List[str] = []
         if source_file_path is not None:
             source_file_formats = \
                 formats_from_source_file_name(source_file_path)
@@ -508,7 +512,7 @@ class AbsMetaSession:
         if not from_match:
             raise AbsParsingException('Could not extract submitter data.')
         name = from_match.group('name').rstrip()
-        email = from_match.group('email') or None
+        email = from_match.group('email')
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
@@ -531,29 +535,27 @@ class AbsMetaSession:
 
         # some transformations
         categories = fields['categories'].split()
-        primary_category = Category(id=categories[0])  # type: ignore
-        # see https://github.com/python/mypy/issues/5384 for type ignores:
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])  # type: ignore
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])  # type: ignore
+        primary_category = Category(id=categories[0])
+        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
         doc_license: License = \
-            License() if 'license' not in fields else License(recorded_uri=fields['license'])  # type: ignore
+            License() if 'license' not in fields else License(recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
-        return DocMetadata(  # type: ignore
+        return DocMetadata(
             raw_safe=raw_safe,
             arxiv_id=arxiv_id,
             arxiv_id_v=arxiv_id_v,
             arxiv_identifier=Identifier(arxiv_id=arxiv_id),
             title=fields['title'],
             abstract=fields['abstract'],
-            authors=AuthorList(fields['authors']),  # type: ignore
-            # TODO type ignores here are for https://github.com/python/mypy/issues/5384
-            submitter=Submitter(name=name, email=email),  # type: ignore
+            authors=AuthorList(fields['authors']),
+            submitter=Submitter(name=name, email=email),
             categories=fields['categories'],
             primary_category=primary_category,
             primary_archive=primary_archive,
             primary_group=primary_group,
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1  # type: ignore
+                Category(id=x) for x in categories[1:] if len(categories) > 1
             ],
             journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
             report_num=None if 'report_num' not in fields else fields['report_num'],
@@ -611,9 +613,8 @@ class AbsMetaSession:
                 raise AbsParsingException(
                     f'Could not parse submitted date {sd} as datetime')
 
-            # type ignores here are for https://github.com/python/mypy/issues/5384
-            source_type = SourceType(code=date_match.group('source_type'))  # type: ignore
-            ve = VersionEntry(  # type: ignore
+            source_type = SourceType(code=date_match.group('source_type'))
+            ve = VersionEntry(
                 raw=date_match.group(0),
                 source_type=source_type,
                 size_kilobytes=int(date_match.group('size_kilobytes')),
