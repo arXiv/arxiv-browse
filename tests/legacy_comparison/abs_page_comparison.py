@@ -56,18 +56,14 @@ VISITED_ABS_FILE_NAME = 'visited.log'
 res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
-text_comparisons: List[text_comparison_fn] = [text_similarity]
+#text_comparisons: List[text_comparison_fn] = [text_similarity]
+text_comparisons: List[text_comparison_fn] = []
 
 # List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = [
-    author_similarity,
-    dateline_similarity,
-    history_similarity,
-    title_similarity,
+
     subject_similarity,
-    comments_similarity,
-    extra_services_similarity,
-    head_similarity,
+
 ]
 
 
