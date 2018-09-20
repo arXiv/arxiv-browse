@@ -1,7 +1,7 @@
 """Browse jinja filters."""
 import re
 from urllib import parse
-from typing import Callable, Match, Optional
+from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
@@ -9,7 +9,7 @@ from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _
 from flask import url_for
 
 
-def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
+def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]) -> str:
     """Creates links to one or more DOIs.
 
     clickthrough_url_for is a Callable that takes the URL and returns a clickthrough URL.
@@ -25,7 +25,7 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
     # In both of cases the value in result ends up escaped after this conditional.
     # Then we sub DOI with HTML elements, and return the result as Markup()
 
-    if hasattr(text, '__html__'):
+    if hasattr(text, '__html__') and hasattr(text,'unescape'):
         result = text
     else:
         result = Markup(escape(text))
@@ -34,14 +34,19 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: str) -> str:
 
     def single_doi_link(match: Match[str]) -> str:
         # should only get called on match
+        # match is NOT jinja Markup
         quoted_doi = parse.quote_plus(match.group(0))
-        doi_url = clickthrough_url_for(f'https://dx.doi.org/{quoted_doi}')
-        return f'<a href="{doi_url}">{escape(match.group(0))}</a>'
 
-    slt = re.split(r'([;,]?\s+)', result)
+        doi_url = clickthrough_url_for(f'https://dx.doi.org/{quoted_doi}')
+        return Markup(f'<a href="{doi_url}">{escape(match.group(0))}</a>')
+
+    slt = re.split(r'([;,]?\s+)', result.unescape())
     for segment in slt:
-        doi_link = re.sub(r'^10\.\d{4,5}\/\S+$', single_doi_link, segment)
-        doi_list.append(doi_link)
+        if re.match( r'^10\.\d{4,5}\/\S+$' , segment):        
+            doi_link = re.sub(r'^10\.\d{4,5}\/\S+$', single_doi_link, segment)
+            doi_list.append(doi_link)
+        else:
+            doi_list.append( escape( segment))
     if doi_list:
         result = ''.join(doi_list)
 

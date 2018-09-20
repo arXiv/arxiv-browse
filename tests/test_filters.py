@@ -39,7 +39,6 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
 
         s = 'some test string 23$6#$5<>&456 http://google.com/notadoi'
         assert_that(doi_fn(s), equal_to(escape(s)))
-        assert_that(doi_fn(s), equal_to(escape(doi_fn(s))))
 
         doi = '10.1103/PhysRevD.76.013009'
         doiurl = doi_fn(doi)
