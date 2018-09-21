@@ -8,6 +8,8 @@ from jinja2._compat import text_type
 from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re # type: ignore
 from flask import url_for
 
+from browse.services.util.tex2utf import tex2utf
+
 
 def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]) -> str:
     """Creates links to one or more DOIs.
@@ -109,8 +111,8 @@ def arxiv_urlize(
                             middle.endswith('.com')
                     )):
                 # in jinja2 urlize, an additional last argument is trim_url(middle)
-                middle = '<a href="http://%s"%s%s>%s</a>' \
-                         % (middle, rel_attr, target_attr, link_text)
+                middle = '<a href="http://%s"%s%s>%s</a>' % \
+                    (middle, rel_attr, target_attr, link_text)
             if middle.startswith('http://') or \
                     middle.startswith('https://'):
                 # in jinja2 urlize, an additional last argument is trim_url(middle)
@@ -139,9 +141,12 @@ def line_feed_to_br(text: str) -> str:
 
 
 def arxiv_id_urls(text: str) -> str:
-    """Will link either arXiv:<internal_id> or <internal_id> with the full text as the anchor.
+    """
+    Link either arXiv:<internal_id> or <internal_id> with text as anchor.
 
-    The link to just /abs/<internal_id>. However, we do not link viXra:<like_our_internal_id>.
+    The link is simply to /abs/<internal_id>; However, we do not link to
+    viXra:<looks_like_our_internal_id>.
+
     In most cases this should happen after jinja's urlize().
     """
     # Need to escape: if jinja sends us raw txt, needs it,
@@ -156,31 +161,15 @@ def arxiv_id_urls(text: str) -> str:
         url = f'{match.group(1)}<a href="{url_path}">{match.group(2)}</a>'
         return url
 
-    # result = re.sub(r'((ftp|https?)://[^\[\]*{}()\s",>&;]+)',
-    #                 r'<a href="\g<1>">this \g<2> URL</a>',
-    #                 text,
-    #                 re.IGNORECASE)
     # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
         r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re, re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
-#
-#     id_re = r'(\W*)(arXiv:|(?<!viXra:))(([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?)(.*)'
-#     words = []
-#     vix_spotted=False
-#
-#     split = re.split(r'(\s+|,|vixra:)', text, 0, re.IGNORECASE)
-#     for tkn in split:
-#         mtc = re.match(id_re, tkn)
-#         if mtc and not vix_spotted:
-#             url_path = url_for('browse.abstract', arxiv_id=mtc.group(3))
-#             words.append(f'{mtc.group(1)}<a href="{url_path}">{mtc.group(2)}'\
-#                           '{mtc.group(3)}</a>{mtc.group(7)}')
-#         else:
-#             vix_spotted = re.match('viXra', tkn)
-#             words.append(tkn)
-#
-#     return Markup(u''.join(words))
-#
+
+
+def tex_to_utf(text: str) -> str:
+    """Wraps tex2utf as a filter."""
+
+    return Markup(tex2utf(text))

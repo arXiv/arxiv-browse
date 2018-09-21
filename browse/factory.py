@@ -10,7 +10,7 @@ from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import doi_urls, arxiv_urlize, arxiv_id_urls, \
-    line_feed_to_br
+    line_feed_to_br, tex_to_utf
 
 
 def create_web_app() -> Flask:
@@ -29,7 +29,8 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    ct_url_for = partial(create_ct_url, app.config.get('SECRET_KEY'), url_for)
+    ct_url_for = partial(create_ct_url, app.config.get(
+        'CLICKTHROUGH_SECRET'), url_for)
 
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
     app.jinja_env.filters['show_email_hash'] = \
@@ -39,4 +40,5 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['arxiv_id_urls'] = arxiv_id_urls
     app.jinja_env.filters['line_feed_to_br'] = line_feed_to_br
     app.jinja_env.filters['arxiv_urlize'] = arxiv_urlize
+    app.jinja_env.filters['tex_to_utf'] = tex_to_utf
     return app
