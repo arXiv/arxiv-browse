@@ -5,13 +5,14 @@ from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
-from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re # type: ignore
+from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
 
 from browse.services.util.tex2utf import tex2utf
 
 
-def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]) -> str:
+def doi_urls(clickthrough_url_for: Callable[[
+             str], str], text: Union[Markup, str]) -> str:
     """Creates links to one or more DOIs.
 
     clickthrough_url_for is a Callable that takes the URL and returns a clickthrough URL.
@@ -27,7 +28,7 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]
     # In both of cases the value in result ends up escaped after this conditional.
     # Then we sub DOI with HTML elements, and return the result as Markup()
 
-    if hasattr(text, '__html__') and hasattr(text,'unescape'):
+    if hasattr(text, '__html__') and hasattr(text, 'unescape'):
         result = text
     else:
         result = Markup(escape(text))
@@ -44,11 +45,11 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]
 
     slt = re.split(r'([;,]?\s+)', result.unescape())
     for segment in slt:
-        if re.match( r'^10\.\d{4,5}\/\S+$' , segment):        
+        if re.match(r'^10\.\d{4,5}\/\S+$', segment):
             doi_link = re.sub(r'^10\.\d{4,5}\/\S+$', single_doi_link, segment)
             doi_list.append(doi_link)
         else:
-            doi_list.append( escape( segment))
+            doi_list.append(escape(segment))
     if doi_list:
         result = ''.join(doi_list)
 
@@ -93,7 +94,8 @@ def arxiv_urlize(
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
-    rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
+    rel_attr = rel and ' rel="%s"' % text_type(
+        escape(rel)) or ' rel="noopener"'
     target_attr = target and ' target="%s"' % escape(target) or ''
 
     for i, word in enumerate(words):
@@ -106,20 +108,22 @@ def arxiv_urlize(
                     not middle.startswith('https://') and
                     len(middle) > 0 and
                     middle[0] in _letters + _digits and (
-                            middle.endswith('.org') or
-                            middle.endswith('.net') or
-                            middle.endswith('.com')
+                        middle.endswith('.org') or
+                        middle.endswith('.net') or
+                        middle.endswith('.com')
                     )):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="http://%s"%s%s>%s</a>' % \
                     (middle, rel_attr, target_attr, link_text)
             if middle.startswith('http://') or \
                     middle.startswith('https://'):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="%s"%s%s>%s</a>' \
                          % (middle, rel_attr, target_attr, link_text)
             if '@' in middle and not middle.startswith('www.') and \
-                    not ':' in middle and _simple_email_re.match(middle):
+                    ':' not in middle and _simple_email_re.match(middle):
                 middle = '<a href="mailto:%s">%s</a>' % (middle, middle)
             if lead + middle + trail != word:
                 words[i] = lead + middle + trail
@@ -135,8 +139,9 @@ def line_feed_to_br(text: str) -> str:
     else:
         etxt = Markup(escape(text))
 
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  # if line starts with spaces, replace the white space with <br\>
-    dedup = re.sub(r'\n\n', '\n', br) # skip if blank
+    # if line starts with spaces, replace the white space with <br\>
+    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
+    dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
     return Markup(dedup)
 
 
@@ -164,7 +169,8 @@ def arxiv_id_urls(text: str) -> str:
     # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
-        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re, re.IGNORECASE)
+        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' %
+        new_id_re, re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
 

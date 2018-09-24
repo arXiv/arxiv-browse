@@ -41,7 +41,7 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
     if orig_publish_date is not None:
         date_test: bool = DBLP_START_DATE <= orig_publish_date < this_month
         in_dblp_test: bool = primary_archive in DBLP_ARCHIVES
-        return date_test and  in_dblp_test
+        return date_test and in_dblp_test
     else:
         return False
 

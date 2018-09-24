@@ -410,6 +410,7 @@ class AbsMetaSession:
             A list of format strings.
 
         """
+        
         formats: List[str] = []
 
         # first, get possible list of formats based on available source file
@@ -477,7 +478,7 @@ class AbsMetaSession:
 
         # TODO: clean up
         modified = datetime.fromtimestamp(
-                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+            os.path.getmtime(filename), tz=gettz('US/Eastern'))
         modified = modified.astimezone(tz=tzutc())
 
         # there are two main components to an .abs file that contain data,
@@ -521,7 +522,7 @@ class AbsMetaSession:
         (version, version_history, arxiv_id_v) = \
             AbsMetaSession._parse_version_entries(
                 arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
-            )
+        )
 
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
@@ -535,10 +536,12 @@ class AbsMetaSession:
         # some transformations
         categories = fields['categories'].split()
         primary_category = Category(id=categories[0])
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
-        doc_license: License = \
-            License() if 'license' not in fields else License(recorded_uri=fields['license'])
+        primary_archive = Archive(
+            id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        primary_group = Group(
+            id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
+        doc_license: License = License() if 'license' not in fields else License(
+            recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
         return DocMetadata(
             raw_safe=raw_safe,
@@ -622,8 +625,11 @@ class AbsMetaSession:
             )
             version_entries.append(ve)
 
-        return (version_count, version_entries, f"{arxiv_id}v"
-                                                f"{version_entries[-1].version}")
+        return (
+            version_count,
+            version_entries,
+            f"{arxiv_id}v"
+            f"{version_entries[-1].version}")
 
     @staticmethod
     def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:
@@ -638,7 +644,8 @@ class AbsMetaSession:
                 field_name = field_match.group(
                     'field').lower().replace('-', '_')
                 field_name = re.sub(r'_no$', '_num', field_name)
-                fields_builder[field_name] = field_match.group('value').rstrip()
+                fields_builder[field_name] = field_match.group(
+                    'value').rstrip()
             elif field_name != 'unknown':
                 # we have a line with leading spaces
                 fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
@@ -695,5 +702,5 @@ def current_session() -> AbsMetaSession:
         return get_session()
     if 'abs_meta' not in g:
         g.abs_meta = get_session()
-    assert isinstance( g.abs_meta, AbsMetaSession)
+    assert isinstance(g.abs_meta, AbsMetaSession)
     return g.abs_meta

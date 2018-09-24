@@ -19,7 +19,7 @@ RE_ARXIV_NEW_ID = re.compile(
     r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
 )
 
-SUBSTITUTIONS: List[Tuple[str, Union[str,Callable[[Match[str]], str ] ] ,int, Union[int,RegexFlag] ]] = [
+SUBSTITUTIONS: List[Tuple[str, Union[str, Callable[[Match[str]], str]], int, Union[int, RegexFlag]]] = [
     # pattern, replacement, count, flags
     (r'\.(pdf|ps|gz|ps\.gz)$', '', 0, 0),
     (r'^/', '', 0, 0),
@@ -65,7 +65,7 @@ class Identifier:
                 taxonomy.ARCHIVES[self.ids]['name'])
 
         for subtup in SUBSTITUTIONS:
-            arxiv_id = re.sub(subtup[0],  
+            arxiv_id = re.sub(subtup[0],
                               subtup[1],
                               arxiv_id,
                               count=subtup[2],
@@ -207,11 +207,11 @@ class Identifier:
 
         """
         return self.__dict__ == other.__dict__
-        
 
-def canonical_url(id:str, version:int = 0)->str:
+
+def canonical_url(id: str, version: int = 0)->str:
     """
-    Return canonical URL for this ID. 
+    Return canonical URL for this ID.
     This can be done from just the ID because the
     category is only needed if it is in the ID.
     id can be just the id or idv or cat/id or cat/idv
@@ -224,8 +224,7 @@ def canonical_url(id:str, version:int = 0)->str:
     # There should be a MAIN_HOSTNAME to decouple the canonical URLs
     # from the hostname of the server they are being generated on.
     # We might want hostnames like search.arxiv.org etc.
-    if version :
+    if version:
         return f'{EXTERNAL_URL_SCHEME}://{BASE_SERVER}/abs/{id}v{version}'
     else:
         return f'{EXTERNAL_URL_SCHEME}://{BASE_SERVER}/abs/{id}'
-

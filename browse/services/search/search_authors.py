@@ -30,7 +30,8 @@ def is_divider(item: str)-> bool:
     return re.match(r'^(,|:)', item) is not None
 
 
-def split_long_author_list(authors: AuthorList, size: int) -> Tuple[AuthorList, AuthorList, int]:
+def split_long_author_list(
+        authors: AuthorList, size: int) -> Tuple[AuthorList, AuthorList, int]:
     """Returns two lists where the first is of size and the second is the remaining authors.
 
     The author list has strings which are not part of the author names, but commas

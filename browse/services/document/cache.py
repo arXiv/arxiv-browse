@@ -45,7 +45,7 @@ class DocumentCacheSession():
         parent_path = os.path.join(
             self.document_cache_path,
             ('arxiv' if not identifier.is_old_id or identifier.archive is None
-                 else identifier.archive),
+             else identifier.archive),
             cache_format,
             identifier.yymm,
             f'{identifier.filename}v{docmeta.version}'

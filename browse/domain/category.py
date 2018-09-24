@@ -5,6 +5,7 @@ from arxiv import taxonomy
 from dataclasses import dataclass, field
 from typing import Union, Tuple, List
 
+
 @dataclass(eq=True, order=True)
 class Category:
     """Represents an arXiv category.
@@ -31,7 +32,7 @@ class Category:
 
     canonical: Union['Category', None] = field(init=False, compare=False)
 
-    def __hash__(self)->int: 
+    def __hash__(self)->int:
         return id.__hash__()
 
     # def __eq__(self,other):

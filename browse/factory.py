@@ -34,7 +34,7 @@ def create_web_app() -> Flask:
         'CLICKTHROUGH_SECRET'), url_for)
 
     app.jinja_env.globals['canonical_url'] = canonical_url
-    
+
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,

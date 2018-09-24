@@ -35,7 +35,7 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
 
     """
     if recorded_uri is None:
-        return str( ASSUMED_LICENSE_URI  )
+        return str(ASSUMED_LICENSE_URI)
 
     if not isinstance(recorded_uri, str):
         raise TypeError(
