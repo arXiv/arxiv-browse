@@ -1,7 +1,8 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match, Optional, Union
+from re import RegexFlag
+from typing import Match, Optional, Union, Tuple, Callable, AnyStr, List
 from arxiv import taxonomy
 from arxiv.base.config import BASE_SERVER, EXTERNAL_URL_SCHEME
 from browse.domain.category import Category
@@ -18,7 +19,7 @@ RE_ARXIV_NEW_ID = re.compile(
     r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
 )
 
-SUBSTITUTIONS = (
+SUBSTITUTIONS: List[Tuple[str, Union[str,Callable[[Match[str]], str ] ] ,int, Union[int,RegexFlag] ]] = [
     # pattern, replacement, count, flags
     (r'\.(pdf|ps|gz|ps\.gz)$', '', 0, 0),
     (r'^/', '', 0, 0),
@@ -27,7 +28,7 @@ SUBSTITUTIONS = (
     (r'--+', '-', 0, 0),
     (r'^([^/]+)', lambda x: str.lower(x.group(0)), 1, 0),
     (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', r'\g<1>-\g<2>\g<3>', 1, 0)
-)
+]
 
 
 class IdentifierException(Exception):
@@ -64,7 +65,7 @@ class Identifier:
                 taxonomy.ARCHIVES[self.ids]['name'])
 
         for subtup in SUBSTITUTIONS:
-            arxiv_id = re.sub(subtup[0],  # type: ignore
+            arxiv_id = re.sub(subtup[0],  
                               subtup[1],
                               arxiv_id,
                               count=subtup[2],

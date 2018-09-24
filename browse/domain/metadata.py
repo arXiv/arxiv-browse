@@ -1,6 +1,6 @@
 """Representations of arXiv document metadata."""
 import collections
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Iterator
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -226,20 +226,20 @@ class DocMetadata:
         if not self.secondary_categories:
             return []
 
-        def unalias(secs): # type: ignore
+        def unalias(secs:Iterator[Category])->Iterator[Category]:
             return map(lambda c: c.unalias(), secs) 
         prim = self.primary_category.unalias()
 
-        def de_prim(secs):  # type: ignore
+        def de_prim(secs:Iterator[Category])->Iterator[Category]:
             return filter(lambda c: c.id != prim.id, secs)
 
-        de_primaried = set(de_prim(unalias(self.secondary_categories)))
+        de_primaried = set(de_prim(unalias(iter(self.secondary_categories))))
         if not de_primaried:
             return []
 
-        def to_display(secs) :  # type: ignore
-            return map(lambda c: c.display_str(), secs) 
-        return list(to_display(sorted(de_primaried)))
+        def to_display(secs:List[Category])->List[str] :  
+            return list(map(lambda c: c.display_str(), secs) )
+        return to_display(sorted(de_primaried))
 
 
     def canonical_url(self, no_version:bool=False) ->str:

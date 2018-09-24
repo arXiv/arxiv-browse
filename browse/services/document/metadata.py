@@ -523,7 +523,6 @@ class AbsMetaSession:
                 arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
             )
 
-        # TODO type ignore: possibly mypy #3937, also see #5389
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
         # named (key-value) fields
@@ -696,4 +695,5 @@ def current_session() -> AbsMetaSession:
         return get_session()
     if 'abs_meta' not in g:
         g.abs_meta = get_session()
-    return g.abs_meta     # type: ignore
+    assert isinstance( g.abs_meta, AbsMetaSession)
+    return g.abs_meta

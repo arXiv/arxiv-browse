@@ -228,11 +228,11 @@ def _check_request_headers(docmeta: DocMetadata,
             print(f'Exception parsing the If-None-Match request header')
     try:
         if ((if_mod_since_dt and if_none_match_dt)
-            and if_mod_since_dt >= last_mod_dt  # ignore
+            and if_mod_since_dt >= last_mod_dt
             and if_none_match_dt >= last_mod_dt) \
             or ((if_mod_since_dt and not if_none_match_dt)
                 and if_mod_since_dt >= last_mod_dt) \
-            or ((if_none_match_dt and not if_mod_since_dt)  # ignore
+            or ((if_none_match_dt and not if_mod_since_dt)
                 and if_none_match_dt >= last_mod_dt):
             not_modified = True
     except Exception as e:

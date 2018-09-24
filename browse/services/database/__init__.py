@@ -42,8 +42,9 @@ def get_institution(ip: str) -> Optional[str]:
             subquery()
         )
         institution_name = db.session.query(stmt.c.label).\
-            filter(stmt.c.exclusions == 0).one().label
-        return institution_name  # type: ignore
+            filter(stmt.c.exclusions == 0).one().label        
+        assert isinstance(institution_name,str)        
+        return institution_name
     except NoResultFound:
         return None
 
@@ -92,7 +93,9 @@ def count_trackback_pings(paper_id: str) -> int:
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
     try:
-        return __all_trackbacks_query().count()  # type: ignore
+        c= __all_trackbacks_query().count()
+        assert isinstance( c, int)
+        return c
     except NoResultFound:
         return 0
 

@@ -89,4 +89,5 @@ def current_session() -> DocumentCacheSession:
         return get_session()
     if 'doc_cache' not in g:
         g.doc_cache = get_session()
-    return g.doc_cache     # type: ignore
+    assert isinstance(g.doc_cache, DocumentCacheSession)
+    return g.doc_cache

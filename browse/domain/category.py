@@ -31,7 +31,7 @@ class Category:
 
     canonical: Union['Category', None] = field(init=False, compare=False)
 
-    def __hash__(self): # type: ignore
+    def __hash__(self)->int: 
         return id.__hash__()
 
     # def __eq__(self,other):
