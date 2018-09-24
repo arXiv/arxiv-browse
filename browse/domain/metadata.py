@@ -5,7 +5,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 from arxiv import taxonomy
-from browse.domain.identifier import Identifier
+from browse.domain.identifier import Identifier, canonical_url
 from browse.domain.license import License
 from browse.domain.category import Category
 
@@ -71,6 +71,7 @@ class Archive(Category):
 
     def __post_init__(self) -> None:
         """Get the full archive name."""
+        super().__post_init__()
         if self.id in taxonomy.ARCHIVES:
             self.name = taxonomy.ARCHIVES[self.id]['name']
 
@@ -81,6 +82,7 @@ class Group(Category):
 
     def __post_init__(self) -> None:
         """Get the full group name."""
+        super().__post_init__()
         if self.id in taxonomy.GROUPS:
             self.name = taxonomy.GROUPS[self.id]['name']
 
@@ -238,3 +240,11 @@ class DocMetadata:
         def to_display(secs) :  # type: ignore
             return map(lambda c: c.display_str(), secs) 
         return list(to_display(sorted(de_primaried)))
+
+
+    def canonical_url(self, no_version:bool=False) ->str:
+        """Returns canonical URL for this ID and version"""
+        if no_version:
+            return canonical_url( self.arxiv_identifier.id)
+        else:
+            return canonical_url(self.arxiv_identifier.idv)

@@ -98,12 +98,14 @@
         </tr>
         {% endif -%}
         <tr>
-          <td class="tablecell label">Cite as:</td>
-          <td class="tablecell arxivid"><a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id) }}">arXiv:{{ abs_meta.arxiv_id }}</a> [{{ abs_meta.primary_category.id }}]</td>
+          <td class="tablecell label">Cite as:</td>          
+          <td class="tablecell arxivid">{{ version_atag( abs_meta.arxiv_identifier.id, 0) }}</td>
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid"><a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id_v) }}">arXiv:{{ abs_meta.arxiv_id }}v{{ abs_meta.version }}</a> [{{ abs_meta.primary_category.id }}]</span> for this version)</td>
+          <td class="tablecell arxividv">(or <span class="arxivid">              
+              {{version_atag(abs_meta.arxiv_identifier.id, abs_meta.version)}}</span> for this version)
+          </td>
         </tr>
       </table>
     </div>
@@ -124,9 +126,9 @@
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}
   <b>[v{{ version_entry.version }}]</b>
-  {% else %}
-  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>
-  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
+{% else %}   
+  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>  
+  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>  
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
@@ -157,5 +159,19 @@
     {%- for category in abs_meta.display_secondaries() -%}
         ; {{ category }}
     {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{%- macro version_atag(id, version) -%}
+  {% if version %}
+    {% set vpart = 'v' ~ version %}
+  {% else %}
+    {% set vpart = '' %}
+  {% endif %}
+  {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
+    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
+    {%- else -%}
+    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
   {%- endif -%}
 {%- endmacro -%}
