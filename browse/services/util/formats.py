@@ -1,10 +1,10 @@
 """Functions that support determintation of dissemination formats."""
 import os
 import re
-import tarfile
 from operator import itemgetter
 from typing import Dict, List, Optional
 
+import tarfile
 from tarfile import ReadError, CompressionError
 
 # List of tuples containing the valid source file name extensions and their

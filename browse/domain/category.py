@@ -1,9 +1,9 @@
 """Class that represents a single category."""
 
+from typing import Union, List
+from dataclasses import dataclass, field
 
 from arxiv import taxonomy
-from dataclasses import dataclass, field
-from typing import Union, List
 
 
 @dataclass(eq=True, order=True)

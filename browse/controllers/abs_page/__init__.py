@@ -264,13 +264,13 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
         # To support old references to /abs/<archive>?papernum=\d{7}
         if 'papernum' in request.args:
             return f"{arxiv_id}/{request.args['papernum']}"
-        else:
-            for param in request.args:
-                # singleton case, where the parameter is the value
-                # To support old references to /abs/<archive>?\d{7}
-                if not request.args[param] \
-                   and re.match(r'^\d{7}$', param):
-                    return f'{arxiv_id}/{param}'
+
+        for param in request.args:
+            # singleton case, where the parameter is the value
+            # To support old references to /abs/<archive>?\d{7}
+            if not request.args[param] \
+               and re.match(r'^\d{7}$', param):
+                return f'{arxiv_id}/{param}'
     return arxiv_id
 
 

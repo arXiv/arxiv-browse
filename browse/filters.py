@@ -12,8 +12,8 @@ from flask import url_for
 from browse.services.util.tex2utf import tex2utf
 
 
-def doi_urls(clickthrough_url_for: Callable[[
-             str], str], text: Union[Markup, str]) -> str:
+def doi_urls(clickthrough_url_for: Callable[[str], str],
+             text: Union[Markup, str]) -> str:
     """Creates links to one or more DOIs.
 
     clickthrough_url_for is a Callable that takes the URL and returns
@@ -60,10 +60,8 @@ def doi_urls(clickthrough_url_for: Callable[[
     return Markup(result)
 
 
-def arxiv_urlize(
-        text: str, trim_url_limit: Optional[int]=None,
-        rel: Optional[str]=None, target: Optional[str]=None
-) -> str:
+def arxiv_urlize(text: str, rel: Optional[str] = None, target: Optional[str] = None
+                 )-> str:
     """Like jinja2 urlize but uses link text of 'this http URL'.
 
     Based directly on jinja2 urlize;
@@ -99,8 +97,7 @@ def arxiv_urlize(
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
-    rel_attr = rel and ' rel="%s"' % text_type(
-        escape(rel)) or ' rel="noopener"'
+    rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
     target_attr = target and ' target="%s"' % escape(target) or ''
 
     for i, word in enumerate(words):
@@ -111,7 +108,7 @@ def arxiv_urlize(
                     '@' not in middle and
                     not middle.startswith('http://') and
                     not middle.startswith('https://') and
-                    len(middle) > 0 and
+                    middle and
                     middle[0] in _letters + _digits and (
                         middle.endswith('.org') or
                         middle.endswith('.net') or

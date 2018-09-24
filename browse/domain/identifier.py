@@ -18,8 +18,9 @@ RE_ARXIV_NEW_ID = re.compile(
     r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
 )
 
-SUBSTITUTIONS: List[Tuple[str, Union[str, Callable[[Match[str]], str]],
-                          int, Union[int, RegexFlag]]] = [
+Sub_type = List[Tuple[str, Union[str, Callable[[Match[str]], str]],
+                      int, Union[int, RegexFlag]]]
+SUBSTITUTIONS: Sub_type = [
     # pattern, replacement, count, flags
     (r'\.(pdf|ps|gz|ps\.gz)$', '', 0, 0),
     (r'^/', '', 0, 0),

@@ -517,10 +517,10 @@ class AbsMetaSession:
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        (version, version_history, arxiv_id_v) = \
-            AbsMetaSession._parse_version_entries(
-                arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
-        )
+        (version, version_history, arxiv_id_v) \
+            = AbsMetaSession._parse_version_entries(
+                arxiv_id=arxiv_id,
+                version_entry_list=parsed_version_entries)
 
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 

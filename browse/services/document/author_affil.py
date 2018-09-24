@@ -197,7 +197,7 @@ def _collaboration_at_start(names: List[str]) \
         # Remove from names
         names.pop(0)
         # Also swallow and following comma or colon
-        if len(names) > 0 and (names[0] == ',' or names[0] == ':'):
+        if names and (names[0] == ',' or names[0] == ':'):
             names.pop(0)
 
     return names, author_list, back_propagate_affiliations_to

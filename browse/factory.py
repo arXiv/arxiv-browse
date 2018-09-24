@@ -33,7 +33,13 @@ def create_web_app() -> Flask:
     ct_url_for = partial(create_ct_url, app.config.get(
         'CLICKTHROUGH_SECRET'), url_for)
 
+    if not app.jinja_env.globals:
+        app.jinja_env.globals = {}
+
     app.jinja_env.globals['canonical_url'] = canonical_url
+
+    if not app.jinja_env.filters:
+        app.jinja_env.filters = {}
 
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
     app.jinja_env.filters['show_email_hash'] = \
