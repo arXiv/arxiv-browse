@@ -208,7 +208,7 @@ class Identifier:
         return self.__dict__ == other.__dict__
         
 
-def canonical_url(id:str, version:int = 0):
+def canonical_url(id:str, version:int = 0)->str:
     """
     Return canonical URL for this ID. 
     This can be done from just the ID because the

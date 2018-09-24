@@ -242,7 +242,7 @@ class DocMetadata:
         return list(to_display(sorted(de_primaried)))
 
 
-    def canonical_url(self, no_version=False) ->str:
+    def canonical_url(self, no_version:bool=False) ->str:
         """Returns canonical URL for this ID and version"""
         if no_version:
             return canonical_url( self.arxiv_identifier.id)
