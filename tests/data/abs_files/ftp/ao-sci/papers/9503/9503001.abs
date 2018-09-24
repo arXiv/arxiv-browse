@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:ao-sci/9503001
+From: Isaac Held
+Date: Mon, 13 Mar 1995 20:09:57 GMT   (0kb,I)
+Date (revised v2): Tue, 14 Mar 1995 16:00:54 GMT   (37kb)
+
+Title: A Scaling Theory for Horizontally Homogeneous, Baroclinically Unstable
+  Flow on a Beta-Plane
+Authors: Isaac M. Held and Vitaly D. Larichev
+Categories: ao-sci physics.ao-ph
+Comments: Submitted to Journal of the Atmospheric Sciences. Latex source file.
+  Figures are included in an uuencoded file. Revision only involves submission
+  format, not content of paper. User may wish to obtain postscript version of
+  full paper from http://www.gfdl.gov/~ih
+DOI: 10.1175/1520-0469(1996)053<0946:ASTFHH>2.0.CO;2
+\\
+  The scaling argument developed by Larichev and Held (1995) for eddy
+amplitudes and fluxes in a horizontally homogeneous, two-layer model on an
+f-plane is extended to a beta-plane. In terms of the non-dimensional number x =
+U/(beta*lambda^2), where lambda is the deformation radius and U is the mean
+thermal wind, the result for the RMS eddy velocity V, the characteristic
+wavenumber of the energy-containing eddies and of the eddy-driven jets k, and
+the magnitude of the eddy diffusivity for potential vorticity D, in the limit
+x>>1, are as follows: V/U ~ x ; k*lambda ~ 1/x ; D/(U*lambda) ~ x^2. Numerical
+simulations provide qualitative support for this scaling, but suggest that it
+underestimates the sensitivity of these eddy statistics to the value of x. A
+generalization that is applicable to continuous stratification is suggested
+which leads to the estimates: V ~ 1/(beta T^2); k ~ beta*T; D ~
+1/{[beta^2][T^3]} where T is a time-scale determined by the environment; in
+particular, it equals lambda/U in the two-layer model and N/(fS) in a
+continuous flow with uniform shear S and stratification N. This same scaling
+has also been suggested as relevant to a continuously stratified fluid in the
+opposite limit, x<<1 (Held, 1980). Therefore, we suggest that it may be of
+general relevance in planetary atmospheres and in the oceans.
+\\

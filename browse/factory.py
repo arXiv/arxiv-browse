@@ -5,6 +5,7 @@ from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 from flask import Flask, url_for
 
+from browse.domain.identifier import canonical_url
 from browse.util.clickthrough import create_ct_url
 from browse.routes import ui
 from browse.services.database import models
@@ -32,6 +33,8 @@ def create_web_app() -> Flask:
     ct_url_for = partial(create_ct_url, app.config.get(
         'CLICKTHROUGH_SECRET'), url_for)
 
+    app.jinja_env.globals['canonical_url'] = canonical_url
+    
     app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,

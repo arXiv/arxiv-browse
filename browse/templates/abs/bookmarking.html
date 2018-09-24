@@ -1,6 +1,6 @@
 <div class="bookmarks">
   <div class="what-is-this"><h3>Bookmark</h3> (<a href="{{url_for('help_social_bookmarking')}}">what is this?</a>)</div>
-  {% set absUrl = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) %}
+  {% set absUrl = canonical_url( abs_meta.arxiv_id ) %}  
   {% set title = abs_meta.title %}
   <a href="{{ ('http://www.citeulike.org/posturl?url=' + absUrl) | clickthrough_url_for }}"
      title="Bookmark on CiteULike">
@@ -27,7 +27,7 @@
     <img src="//static.arxiv.org/icons/social/reddit.png"
          alt="Reddit logo"/>
   </a>
-  <a href="{{('http://sciencewise.info/bookmarks/add?url=' + absUrl + '&title=' + title) | clickthrough_url_for}}"
+  <a href="{{('http://sciencewise.info/bookmarks/add?url=' + absUrl ) | clickthrough_url_for}}"
      title="Bookmark on ScienceWISE">
     <img src="//static.arxiv.org/icons/social/sciencewise.png"
          alt="ScienceWISE logo"/>
