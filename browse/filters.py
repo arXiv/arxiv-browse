@@ -5,7 +5,8 @@ from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
-from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re  # type: ignore
+from jinja2.utils import _digits, _letters, _punctuation_re  # type: ignore
+from jinja2.utils import _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
 
 from browse.services.util.tex2utf import tex2utf
@@ -15,19 +16,22 @@ def doi_urls(clickthrough_url_for: Callable[[
              str], str], text: Union[Markup, str]) -> str:
     """Creates links to one or more DOIs.
 
-    clickthrough_url_for is a Callable that takes the URL and returns a clickthrough URL.
+    clickthrough_url_for is a Callable that takes the URL and returns
+    a clickthrough URL.
+
     An example of this is in factory.py
     While this is called clickthrough_url_for it could be any str -> str fn.
     For testing this could be the identity function:
     value = doi_urls( lambda x: x , 'test text bla bla bla')
+
     """
     # How does this ensure escaping?
     # Two cases:
     #  1. we get a markup object for text, ex from a previously filter stage
     #  2. we get a raw str for text, ex meta.abstract
-    # In both of cases the value in result ends up escaped after this conditional.
+    # In both of cases the value in result ends up escaped after this
+    # conditional.
     # Then we sub DOI with HTML elements, and return the result as Markup()
-
     if hasattr(text, '__html__') and hasattr(text, 'unescape'):
         result = text
     else:
@@ -60,7 +64,9 @@ def arxiv_urlize(
         text: str, trim_url_limit: Optional[int]=None,
         rel: Optional[str]=None, target: Optional[str]=None
 ) -> str:
-    """ Based directly on jinja2 urlize;
+    """Like jinja2 urlize but uses link text of 'this http URL'.
+
+    Based directly on jinja2 urlize;
     Copyright (c) 2009 by the Jinja Team, see AUTHORS in
     https://github.com/pallets/jinja or other distribution of jinja2
     for more details.
@@ -81,7 +87,6 @@ def arxiv_urlize(
     attribute.
     If target is not None, a target attribute will be added to the link.
     """
-
     if hasattr(text, '__html__'):
         result = text
     else:
@@ -89,8 +94,8 @@ def arxiv_urlize(
 
     # Note: currently unused; using link_text instead
     # trim_url = lambda x, limit=trim_url_limit: limit is not None \
-    #                                            and (x[:limit] + (len(x) >=limit and '...'
-    #                                                              or '')) or x
+    #    and (x[:limit] + (len(x) >=limit and '...'
+    #    or '')) or x
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
@@ -132,8 +137,7 @@ def arxiv_urlize(
 
 
 def line_feed_to_br(text: str) -> str:
-    """Lines that start with two spaces should be broken"""
-
+    """Lines that start with two spaces should be broken."""
     if hasattr(text, '__html__'):
         etxt = text
     else:
@@ -177,5 +181,4 @@ def arxiv_id_urls(text: str) -> str:
 
 def tex_to_utf(text: str) -> str:
     """Wraps tex2utf as a filter."""
-
     return Markup(tex2utf(text))

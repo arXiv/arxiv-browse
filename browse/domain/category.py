@@ -3,7 +3,7 @@
 
 from arxiv import taxonomy
 from dataclasses import dataclass, field
-from typing import Union, Tuple, List
+from typing import Union, List
 
 
 @dataclass(eq=True, order=True)
@@ -33,6 +33,7 @@ class Category:
     canonical: Union['Category', None] = field(init=False, compare=False)
 
     def __hash__(self)->int:
+        """Hash."""
         return id.__hash__()
 
     # def __eq__(self,other):
@@ -52,8 +53,7 @@ class Category:
             self.canonical = None
 
     def unalias(self)->'Category':
-        """Follow any EQUIV or SUBSUMED settings to get the current
-        category code for the category code given."""
+        """Follow any EQUIV or SUBSUMED to get the current category."""
         if self.id in taxonomy.CATEGORY_ALIASES:
             return Category(taxonomy.CATEGORY_ALIASES[self.id])
         if self.id in taxonomy.ARCHIVES_SUBSUMED:
@@ -61,9 +61,11 @@ class Category:
         return self
 
     def display_str(self)->str:
-        """ Returns string to use in display of a category that looks like
-        Earth and Planetary Astrophysics (astro-ph.EP)"""
+        """String to use in display of a category.
 
+        Ex:
+        Earth and Planetary Astrophysics (astro-ph.EP)
+        """
         if self.id in taxonomy.CATEGORIES:
             catname = taxonomy.CATEGORIES[self.id]['name']
             return f'{catname} ({self.id})'

@@ -1,6 +1,6 @@
 """Representations of arXiv document metadata."""
 import collections
-from typing import List, Optional, Union, Iterator
+from typing import List, Optional, Iterator
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -243,7 +243,7 @@ class DocMetadata:
         return to_display(sorted(de_primaried))
 
     def canonical_url(self, no_version: bool=False) ->str:
-        """Returns canonical URL for this ID and version"""
+        """Returns canonical URL for this ID and version."""
         if no_version:
             return canonical_url(self.arxiv_identifier.id)
         else:

@@ -2,10 +2,9 @@
 import json
 import re
 from re import RegexFlag
-from typing import Match, Optional, Union, Tuple, Callable, AnyStr, List
+from typing import Match, Optional, Union, Tuple, Callable, List
 from arxiv import taxonomy
 from arxiv.base.config import BASE_SERVER, EXTERNAL_URL_SCHEME
-from browse.domain.category import Category
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
@@ -19,7 +18,8 @@ RE_ARXIV_NEW_ID = re.compile(
     r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
 )
 
-SUBSTITUTIONS: List[Tuple[str, Union[str, Callable[[Match[str]], str]], int, Union[int, RegexFlag]]] = [
+SUBSTITUTIONS: List[Tuple[str, Union[str, Callable[[Match[str]], str]],
+                          int, Union[int, RegexFlag]]] = [
     # pattern, replacement, count, flags
     (r'\.(pdf|ps|gz|ps\.gz)$', '', 0, 0),
     (r'^/', '', 0, 0),
@@ -212,11 +212,11 @@ class Identifier:
 def canonical_url(id: str, version: int = 0)->str:
     """
     Return canonical URL for this ID.
+
     This can be done from just the ID because the
     category is only needed if it is in the ID.
     id can be just the id or idv or cat/id or cat/idv
     """
-
     # TODO: This should be better.
     # There should probably be something like INTERNAL_URL_SCHEMA
     # Also, /abs should probably be specified somewhere else

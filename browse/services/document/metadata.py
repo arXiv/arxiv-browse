@@ -12,8 +12,8 @@ import dataclasses
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, \
+    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -408,9 +408,7 @@ class AbsMetaSession:
         -------
         List[str]
             A list of format strings.
-
         """
-        
         formats: List[str] = []
 
         # first, get possible list of formats based on available source file
@@ -540,8 +538,8 @@ class AbsMetaSession:
             id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
         primary_group = Group(
             id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
-        doc_license: License = License() if 'license' not in fields else License(
-            recorded_uri=fields['license'])
+        doc_license: License = License() if 'license' not in fields \
+            else License(recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
         return DocMetadata(
             raw_safe=raw_safe,
@@ -559,11 +557,15 @@ class AbsMetaSession:
             secondary_categories=[
                 Category(id=x) for x in categories[1:] if len(categories) > 1
             ],
-            journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
-            report_num=None if 'report_num' not in fields else fields['report_num'],
+            journal_ref=None if 'journal_ref' not in fields
+            else fields['journal_ref'],
+            report_num=None if 'report_num' not in fields
+            else fields['report_num'],
             doi=None if 'doi' not in fields else fields['doi'],
-            acm_class=None if 'acm_class' not in fields else fields['acm_class'],
-            msc_class=None if 'msc_class' not in fields else fields['msc_class'],
+            acm_class=None if 'acm_class' not in fields else
+            fields['acm_class'],
+            msc_class=None if 'msc_class' not in fields else
+            fields['msc_class'],
             proxy=None if 'proxy' not in fields else fields['proxy'],
             comments=fields['comments'] if 'comments' in fields else None,
             version=version,
