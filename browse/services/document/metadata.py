@@ -12,8 +12,8 @@ import dataclasses
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, \
+    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -48,10 +48,13 @@ REQUIRED_FIELDS = ['title', 'authors', 'abstract']
 """
 Required parsed fields with normalized field names.
 
-Note the absense of 'categories'. Some v1 .abs files with the old identifiers
-do not have a Categories: line, presumably because could be inferred by the
-identifier itself. Subsequent versions of these papers do have the Categories:
-line.
+Note the absense of 'categories' as a required field. A subset of version-
+affixed .abs files with the old identifiers predate the introduction of
+categories and therefore do not have a "Categories:" line; only the (higher-
+level) archive and group can be be inferred, and this must be done via the
+identifier itself.
+
+The latest versions of these papers should always have the "Categories:" line.
 """
 
 
@@ -527,20 +530,29 @@ class AbsMetaSession:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
         # named (key-value) fields
-        if 'categories' not in fields and arxiv_identifier.is_old_id:
-            fields['categories'] = arxiv_identifier.archive
-
         if not all(rf in fields for rf in REQUIRED_FIELDS):
             raise AbsParsingException(f'missing required field(s)')
 
         # some transformations
-        categories = fields['categories'].split()
-        primary_category = Category(id=categories[0])
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
+        category_list: List[str] = []
+        primary_category = None
+        if 'categories' in fields and fields['categories']:
+            category_list = fields['categories'].split()
+            try:
+                primary_category = Category(id=category_list[0])
+            except KeyError:
+                raise AbsException(
+                    f'Invalid primary category: {category_list[0]}')
+            primary_archive = \
+                Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        elif arxiv_identifier.is_old_id:
+            primary_archive = \
+                Archive(id=arxiv_identifier.archive)  # type: ignore
+
         doc_license: License = \
             License() if 'license' not in fields else License(recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
+
         return DocMetadata(
             raw_safe=raw_safe,
             arxiv_id=arxiv_id,
@@ -550,12 +562,13 @@ class AbsMetaSession:
             abstract=fields['abstract'],
             authors=AuthorList(fields['authors']),
             submitter=Submitter(name=name, email=email),
-            categories=fields['categories'],
+            categories=fields['categories'] if 'categories' in fields else None,
             primary_category=primary_category,
             primary_archive=primary_archive,
-            primary_group=primary_group,
+            primary_group=Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group']),
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1
+                Category(id=x) for x in category_list[1:]
+                if (category_list and len(category_list) > 1)
             ],
             journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
             report_num=None if 'report_num' not in fields else fields['report_num'],

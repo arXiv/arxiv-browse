@@ -117,7 +117,7 @@ class DocMetadata:
     categories: str
     """Article classification (raw string)."""
 
-    primary_category: Category
+    primary_category: Optional[Category]
     """Primary category."""
 
     primary_archive: Archive
@@ -175,10 +175,11 @@ class DocMetadata:
             else:
                 return []
 
-        options = {
-            self.primary_category.id: True,
-            taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
-        }
+        if self.primary_category:
+            options = {
+                self.primary_category.id: True,
+                taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
+            }
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
@@ -220,14 +221,14 @@ class DocMetadata:
             return None
         else:
             return versions[0].submitted_date
-        
+
     def display_secondaries(self)-> List[str]:
         """Unalias, dedup and sort secondaries for display."""
-        if not self.secondary_categories:
+        if not self.secondary_categories or not self.primary_category:
             return []
 
         def unalias(secs): # type: ignore
-            return map(lambda c: c.unalias(), secs) 
+            return map(lambda c: c.unalias(), secs)
         prim = self.primary_category.unalias()
 
         def de_prim(secs):  # type: ignore
@@ -238,7 +239,7 @@ class DocMetadata:
             return []
 
         def to_display(secs) :  # type: ignore
-            return map(lambda c: c.display_str(), secs) 
+            return map(lambda c: c.display_str(), secs)
         return list(to_display(sorted(de_primaried)))
 
 

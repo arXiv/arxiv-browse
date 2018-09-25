@@ -21,7 +21,7 @@ def include_inspire_link(docmeta: DocMetadata) -> bool:
     """Check whether to include INSPIRE reference/citation link on abs page."""
     identifier = docmeta.arxiv_identifier
     orig_publish_date = get_orig_publish_date(identifier)
-    if orig_publish_date is not None:
+    if orig_publish_date is not None and docmeta.primary_category is not None:
         primary_category = docmeta.primary_category.id
         if primary_category in INSPIRE_REF_CIT_CATEGORIES and \
                 orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category]:
