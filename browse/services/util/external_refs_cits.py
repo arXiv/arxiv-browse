@@ -18,13 +18,14 @@ def get_orig_publish_date(ident: Identifier) -> Optional[date]:
         return None
 
 
-def inspire_category(primary_category: Category, orig_publish_date: date)-> bool:
+def inspire_category(primary_category: Category,
+                     orig_publish_date: date)-> bool:
     """Get inspire category for primary and date."""
     if primary_category.id in INSPIRE_REF_CIT_CATEGORIES and \
         orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category.id]:
         return True
     else:
-        return False # workaround of mypy error
+        return False  # workaround of mypy error
 
 
 def include_inspire_link(docmeta: DocMetadata) -> bool:

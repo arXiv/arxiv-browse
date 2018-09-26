@@ -60,7 +60,8 @@ def doi_urls(clickthrough_url_for: Callable[[str], str],
     return Markup(result)
 
 
-def arxiv_urlize(text: str, rel: Optional[str] = None, target: Optional[str] = None
+def arxiv_urlize(text: str, rel: Optional[str] = None,
+                 target: Optional[str] = None
                  )-> str:
     """Like jinja2 urlize but uses link text of 'this http URL'.
 
