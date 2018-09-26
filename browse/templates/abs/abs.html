@@ -110,7 +110,10 @@
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name if abs_meta.submitter.name != None }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
+      {# Extra message for proxy sites (i.e. Proxy line has username and id) #}
+      {# TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name #}
+      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex_to_utf|upper }} proxy]{% endif %}
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
