@@ -131,7 +131,9 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
         if re.search(r'Jr\b|Sr\b|[IV]{2, }]', name_bits[-1]):
             name_bits.pop()
 
-        surname = name_bits.pop()
+        surname = ''
+        if len(name_bits) > 0:
+            surname = name_bits.pop()
 
         name_bit_count = 0
         surname_prefixes = []
