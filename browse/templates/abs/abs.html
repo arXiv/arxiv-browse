@@ -98,19 +98,19 @@
         </tr>
         {% endif -%}
         <tr>
-          <td class="tablecell label">Cite as:</td>          
+          <td class="tablecell label">Cite as:</td>
           <td class="tablecell arxivid">{{ version_atag( abs_meta.arxiv_identifier.id, 0) }}</td>
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid">              
+          <td class="tablecell arxividv">(or <span class="arxivid">
               {{version_atag(abs_meta.arxiv_identifier.id, abs_meta.version)}}</span> for this version)
           </td>
         </tr>
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name if abs_meta.submitter.name != None }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
@@ -126,9 +126,9 @@
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}
   <b>[v{{ version_entry.version }}]</b>
-{% else %}   
-  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>  
-  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>  
+{% else %}
+  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>
+  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}

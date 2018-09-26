@@ -514,7 +514,9 @@ class AbsMetaSession:
         from_match = RE_FROM_FIELD.match(parsed_version_entries.pop(0))
         if not from_match:
             raise AbsParsingException('Could not extract submitter data.')
-        name = from_match.group('name').rstrip()
+        name = from_match.group('name')
+        if name is not None:
+            name = name.rstrip()
         email = from_match.group('email')
 
         # get the version history for this particular version of the document
