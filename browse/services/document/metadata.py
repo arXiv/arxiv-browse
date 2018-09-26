@@ -470,11 +470,12 @@ class AbsMetaSession:
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
         try:
-            with open(filename) as absf:
+            with open(filename, mode='r', encoding='latin-1') as absf:
                 raw = absf.read()
         except FileNotFoundError:
             raise AbsNotFoundException
         except UnicodeDecodeError as e:
+            # TODO: log this
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
 
