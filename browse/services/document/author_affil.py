@@ -84,7 +84,8 @@ def _parse_author_affil_split(author_line: str) -> Dict:
 
     names = _remove_double_commas(names)
     # get rid of commas at back
-    namesIter: Iterator[str] = reversed(list(dropwhile(lambda x: x == ',', reversed(names))))
+    namesIter: Iterator[str] = reversed(
+        list(dropwhile(lambda x: x == ',', reversed(names))))
     # get rid of commas at front
     names = list(dropwhile(lambda x: x == ',', namesIter))
 
@@ -154,8 +155,8 @@ def parse_author_affil_utf(authors: str) -> List:
     """
     if not authors:
         return []
-    return list(map(
-        lambda author: list(map(tex2utf, author)), parse_author_affil(authors)))
+    return list(map(lambda author: list(map(tex2utf, author)),
+                    parse_author_affil(authors)))
 
 
 def _remove_double_commas(items: List[str]) -> List[str]:
@@ -196,7 +197,7 @@ def _collaboration_at_start(names: List[str]) \
         # Remove from names
         names.pop(0)
         # Also swallow and following comma or colon
-        if len(names) > 0 and (names[0] == ',' or names[0] == ':'):
+        if names and (names[0] == ',' or names[0] == ':'):
             names.pop(0)
 
     return names, author_list, back_propagate_affiliations_to

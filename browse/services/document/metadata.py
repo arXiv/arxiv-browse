@@ -411,7 +411,6 @@ class AbsMetaSession:
         -------
         List[str]
             A list of format strings.
-
         """
         formats: List[str] = []
 
@@ -481,7 +480,7 @@ class AbsMetaSession:
 
         # TODO: clean up
         modified = datetime.fromtimestamp(
-                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+            os.path.getmtime(filename), tz=gettz('US/Eastern'))
         modified = modified.astimezone(tz=tzutc())
 
         # there are two main components to an .abs file that contain data,
@@ -524,12 +523,11 @@ class AbsMetaSession:
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        (version, version_history, arxiv_id_v) = \
-            AbsMetaSession._parse_version_entries(
-                arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
-            )
+        (version, version_history, arxiv_id_v) \
+            = AbsMetaSession._parse_version_entries(
+                arxiv_id=arxiv_id,
+                version_entry_list=parsed_version_entries)
 
-        # TODO type ignore: possibly mypy #3937, also see #5389
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
         # named (key-value) fields
@@ -573,11 +571,15 @@ class AbsMetaSession:
                 Category(id=x) for x in category_list[1:]
                 if (category_list and len(category_list) > 1)
             ],
-            journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
-            report_num=None if 'report_num' not in fields else fields['report_num'],
+            journal_ref=None if 'journal_ref' not in fields
+            else fields['journal_ref'],
+            report_num=None if 'report_num' not in fields
+            else fields['report_num'],
             doi=None if 'doi' not in fields else fields['doi'],
-            acm_class=None if 'acm_class' not in fields else fields['acm_class'],
-            msc_class=None if 'msc_class' not in fields else fields['msc_class'],
+            acm_class=None if 'acm_class' not in fields else
+            fields['acm_class'],
+            msc_class=None if 'msc_class' not in fields else
+            fields['msc_class'],
             proxy=None if 'proxy' not in fields else fields['proxy'],
             comments=fields['comments'] if 'comments' in fields else None,
             version=version,
@@ -639,8 +641,11 @@ class AbsMetaSession:
             )
             version_entries.append(ve)
 
-        return (version_count, version_entries, f"{arxiv_id}v"
-                                                f"{version_entries[-1].version}")
+        return (
+            version_count,
+            version_entries,
+            f"{arxiv_id}v"
+            f"{version_entries[-1].version}")
 
     @staticmethod
     def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:
@@ -655,7 +660,8 @@ class AbsMetaSession:
                 field_name = field_match.group(
                     'field').lower().replace('-', '_')
                 field_name = re.sub(r'_no$', '_num', field_name)
-                fields_builder[field_name] = field_match.group('value').rstrip()
+                fields_builder[field_name] = field_match.group(
+                    'value').rstrip()
             elif field_name != 'unknown':
                 # we have a line with leading spaces
                 fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
@@ -712,4 +718,5 @@ def current_session() -> AbsMetaSession:
         return get_session()
     if 'abs_meta' not in g:
         g.abs_meta = get_session()
-    return g.abs_meta     # type: ignore
+    assert isinstance(g.abs_meta, AbsMetaSession)
+    return g.abs_meta

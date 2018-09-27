@@ -6,8 +6,7 @@ from hypothesis.strategies import text
 from browse.services.util.email import generate_show_email_hash
 
 
-class TestEmailHAsh(unittest.TestCase):
-
+class TestEmailHash(unittest.TestCase):
     @given(text(), text(), text())
     def test_fuzz_email_hash(self, s, v, x):
         h = generate_show_email_hash(s, v)

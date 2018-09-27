@@ -1,7 +1,8 @@
 """Response header utility functions."""
 from datetime import datetime, timedelta, timezone
-from dateutil.tz import tzutc, gettz
 from typing import Tuple
+from dateutil.tz import tzutc, gettz
+
 
 from arxiv.base.globals import get_application_config
 
@@ -53,7 +54,7 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
     if weekday == 4 and after_todays_publish:
         # It's Thursday and after publish; next update would be Sunday
         delta_to_next_publish = timedelta(days=3)
-    elif weekday == 5 or weekday == 6:
+    elif weekday in (5, 6):
         # It's Friday or Saturday
         days_to_add = 7 - weekday
         delta_to_next_publish = timedelta(days=days_to_add)
