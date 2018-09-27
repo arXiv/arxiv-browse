@@ -59,11 +59,11 @@ def abstract(arxiv_id: str) -> Response:
 
     if code == status.HTTP_200_OK:
         if request.args \
-          and 'fmt' in request.args \
-          and request.args['fmt'] == 'txt':
+                and 'fmt' in request.args \
+                and request.args['fmt'] == 'txt':
             return Response(
-                    response['abs_meta'].raw_safe,
-                    mimetype='text/plain')
+                response['abs_meta'].raw_safe,
+                mimetype='text/plain')
         return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)

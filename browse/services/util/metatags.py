@@ -74,7 +74,7 @@ def meta_tag_metadata(metadata: DocMetadata) -> List:
 
 def format_affil_author(au: List[str]) -> Dict:
     """Formats author for citation tag."""
-    if not au or len(au) < 1 or not au[0]:
+    if not au or not au[0]:
         return {}
     name = au[0]
     name = name + ' ' + au[2] if (len(au) > 2 and au[2]) else name

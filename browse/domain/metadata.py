@@ -1,6 +1,6 @@
 """Representations of arXiv document metadata."""
 import collections
-from typing import List, Optional, Union
+from typing import List, Optional, Iterator
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -8,6 +8,7 @@ from arxiv import taxonomy
 from browse.domain.identifier import Identifier, canonical_url
 from browse.domain.license import License
 from browse.domain.category import Category
+
 
 @dataclass(frozen=True)
 class SourceType:
@@ -47,7 +48,7 @@ class VersionEntry:
     size_kilobytes: int = 0
     """Size of the article source, in kilobytes."""
 
-    source_type: SourceType = field(default_factory=SourceType) # type: ignore
+    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
     """Source file type."""
 
 
@@ -220,31 +221,30 @@ class DocMetadata:
             return None
         else:
             return versions[0].submitted_date
-        
+
     def display_secondaries(self)-> List[str]:
         """Unalias, dedup and sort secondaries for display."""
         if not self.secondary_categories:
             return []
 
-        def unalias(secs): # type: ignore
-            return map(lambda c: c.unalias(), secs) 
+        def unalias(secs: Iterator[Category])->Iterator[Category]:
+            return map(lambda c: c.unalias(), secs)
         prim = self.primary_category.unalias()
 
-        def de_prim(secs):  # type: ignore
+        def de_prim(secs: Iterator[Category])->Iterator[Category]:
             return filter(lambda c: c.id != prim.id, secs)
 
-        de_primaried = set(de_prim(unalias(self.secondary_categories)))
+        de_primaried = set(de_prim(unalias(iter(self.secondary_categories))))
         if not de_primaried:
             return []
 
-        def to_display(secs) :  # type: ignore
-            return map(lambda c: c.display_str(), secs) 
-        return list(to_display(sorted(de_primaried)))
+        def to_display(secs: List[Category])->List[str]:
+            return list(map(lambda c: c.display_str(), secs))
+        return to_display(sorted(de_primaried))
 
-
-    def canonical_url(self, no_version:bool=False) ->str:
-        """Returns canonical URL for this ID and version"""
+    def canonical_url(self, no_version: bool = False) ->str:
+        """Returns canonical URL for this ID and version."""
         if no_version:
-            return canonical_url( self.arxiv_identifier.id)
+            return canonical_url(self.arxiv_identifier.id)
         else:
             return canonical_url(self.arxiv_identifier.idv)
