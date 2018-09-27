@@ -31,7 +31,7 @@ def inspire_category(primary_category: Category,
 def include_inspire_link(docmeta: DocMetadata) -> bool:
     """Check whether to include INSPIRE reference/citation link on abs page."""
     orig_publish_date = get_orig_publish_date(docmeta.arxiv_identifier)
-    if orig_publish_date is not None:
+    if orig_publish_date is not None and docmeta.primary_category is not None:
         return inspire_category(docmeta.primary_category, orig_publish_date)
     else:
         return False

@@ -115,10 +115,10 @@ class DocMetadata:
     submitter: Submitter
     """Submitter of the article."""
 
-    categories: str
+    categories: Optional[str]
     """Article classification (raw string)."""
 
-    primary_category: Category
+    primary_category: Optional[Category]
     """Primary category."""
 
     primary_archive: Archive
@@ -176,10 +176,11 @@ class DocMetadata:
             else:
                 return []
 
-        options = {
-            self.primary_category.id: True,
-            taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
-        }
+        if self.primary_category:
+            options = {
+                self.primary_category.id: True,
+                taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
+            }
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
@@ -224,7 +225,7 @@ class DocMetadata:
 
     def display_secondaries(self)-> List[str]:
         """Unalias, dedup and sort secondaries for display."""
-        if not self.secondary_categories:
+        if not self.secondary_categories or not self.primary_category:
             return []
 
         def unalias(secs: Iterator[Category])->Iterator[Category]:

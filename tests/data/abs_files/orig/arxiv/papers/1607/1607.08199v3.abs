@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1607.08199
+From: Benjamin Schmidt <latin-1@example.org>
+Date: Wed, 27 Jul 2016 17:52:31 GMT   (39kb,D)
+Date (revised v2): Thu, 18 Aug 2016 16:20:16 GMT   (39kb,D)
+Date (revised v3): Mon, 9 Jan 2017 18:52:20 GMT   (41kb,D)
+
+Title: Bridgeland Stability Conditions on Fano Threefolds
+Authors: Marcello Bernardara, Emanuele Macr\`i, Benjamin Schmidt, Xiaolei Zhao
+Categories: math.AG
+Comments: 23 pages, 1 figure. Third version: Corrected an error in Theorem 3.1
+  pointed out by the referee
+MSC-class: 14F05 (Primary), 14J30, 18E30 (Secondary)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We show the existence of Bridgeland stability conditions on all Fano
+threefolds, by proving a modified version of a conjecture by Bayer, Toda, and
+the second author. The key technical ingredient is a strong Bogomolov
+inequality, proved recently by Chunyi Li. Additionally, we prove the original
+conjecture for some toric threefolds by using the toric Frobenius morphism.
+\\
