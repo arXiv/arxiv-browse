@@ -7,6 +7,7 @@ from jinja2 import Markup, escape
 from jinja2._compat import text_type
 from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re # type: ignore
 from flask import url_for
+import html
 
 from browse.services.util.tex2utf import tex2utf
 
@@ -134,9 +135,10 @@ def line_feed_to_br(text: str) -> str:
         etxt = text
     else:
         etxt = Markup(escape(text))
-
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  # if line starts with spaces, replace the white space with <br\>
-    dedup = re.sub(r'\n\n', '\n', br) # skip if blank
+        
+    # if line starts with spaces, replace the white space with <br\>
+    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
+    dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
     return Markup(dedup)
 
 
@@ -164,12 +166,17 @@ def arxiv_id_urls(text: str) -> str:
     # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
-        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re, re.IGNORECASE)
+        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re,
+        re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
 
 
+def entity_to_utf(text: str) -> str:
+    """Converts HTML entities to unicode.  For example '&amp;' becomes '&'."""
+    return html.unescape(text)
+
+
 def tex_to_utf(text: str) -> str:
     """Wraps tex2utf as a filter."""
-
     return Markup(tex2utf(text))

@@ -106,8 +106,9 @@
     </div>
     {% if dblp.author_list %}
     <div class="list">
-    {% for author in dblp.author_list[:author_cutoff] %}
-      <a href="{{ dblp.author_search_url }}?author={{ author }}">{{ author }}</a><br/>
+      {% for author in dblp.author_list[:author_cutoff] %}
+      {# The only reason entity_to_utf is being used is becasue dblp has xml entities in the DB #}
+      <a href="{{ dblp.author_search_url }}?author={{ author|entity_to_utf }}">{{ author|entity_to_utf }}</a><br/>
     {% endfor %}
     {% if dblp.author_list|length > author_cutoff %}
       <div class="list">&hellip;</div>

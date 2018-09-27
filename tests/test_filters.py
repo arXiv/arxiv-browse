@@ -5,34 +5,35 @@ from functools import partial
 from jinja2 import escape, Markup, Environment
 
 from app import app
-from browse.filters import arxiv_urlize, doi_urls, arxiv_id_urls, line_feed_to_br
+from browse.filters import arxiv_urlize, doi_urls, arxiv_id_urls, \
+    line_feed_to_br, entity_to_utf
 
 
 class Jinja_Custom_Fitlers_Test(unittest.TestCase):
     def test_with_jinja(self):
-        jenv= Environment(autoescape=True)
-        jenv.filters['doi_urls'] = partial(doi_urls, lambda x:x)
-        assert_that( jenv.from_string( '{{"something 10.1103/PhysRevD.76.013009 or other"|doi_urls}}').render(),
-                     equal_to( 'something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other' ))
+        jenv = Environment(autoescape=True)
+        jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
+        assert_that(jenv.from_string('{{"something 10.1103/PhysRevD.76.013009 or other"|doi_urls}}').render(),
+                    equal_to('something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'))
 
     def test_with_jinja_escapes(self):
         jenv = Environment(autoescape=True)
         jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
         jenv.filters['arxiv_urlize'] = arxiv_urlize
         assert_that(jenv.from_string('{{"something 10.1103/PhysRevD.76.013009 or other"|doi_urls}}').render(),
-                        equal_to(
-                            'something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'))
+                    equal_to(
+            'something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'))
 
-        assert_that( jenv.from_string('{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}').render(),
-                     equal_to('&lt;script&gt;bad junk&lt;/script&gt; something 10.1103/PhysRevD.76.013009'))
+        assert_that(jenv.from_string('{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}').render(),
+                    equal_to('&lt;script&gt;bad junk&lt;/script&gt; something 10.1103/PhysRevD.76.013009'))
 
-        assert_that( jenv.from_string( '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009 or other"|arxiv_urlize|doi_urls}}').render(),
-                     equal_to( '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other' ),
-                     'should not double escape')
-
+        assert_that(jenv.from_string('{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009 or other"|arxiv_urlize|doi_urls}}').render(),
+                    equal_to(
+                        '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'),
+                    'should not double escape')
 
     def test_doi_filter(self):
-        doi_fn = partial( doi_urls, lambda x: x)
+        doi_fn = partial(doi_urls, lambda x: x)
 
         s = ''
         self.assertEqual(doi_fn(s), s)
@@ -54,22 +55,22 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
 
         txt = '10.1103/PhysRevA.99.013009 10.1103/PhysRevZ.44.023009 10.1103/PhysRevX.90.012309 10.1103/BioRevX.44.123456'
         assert_that(doi_fn(txt),
-                    equal_to(Markup('<a href="https://dx.doi.org/10.1103%2FPhysRevA.99.013009">10.1103/PhysRevA.99.013009</a>'\
-                                    ' <a href="https://dx.doi.org/10.1103%2FPhysRevZ.44.023009">10.1103/PhysRevZ.44.023009</a>'\
-                                    ' <a href="https://dx.doi.org/10.1103%2FPhysRevX.90.012309">10.1103/PhysRevX.90.012309</a>'\
+                    equal_to(Markup('<a href="https://dx.doi.org/10.1103%2FPhysRevA.99.013009">10.1103/PhysRevA.99.013009</a>'
+                                    ' <a href="https://dx.doi.org/10.1103%2FPhysRevZ.44.023009">10.1103/PhysRevZ.44.023009</a>'
+                                    ' <a href="https://dx.doi.org/10.1103%2FPhysRevX.90.012309">10.1103/PhysRevX.90.012309</a>'
                                     ' <a href="https://dx.doi.org/10.1103%2FBioRevX.44.123456">10.1103/BioRevX.44.123456</a>')))
 
-        mkup = arxiv_urlize( txt )
+        mkup = arxiv_urlize(txt)
         assert_that(doi_fn(mkup),
                     equal_to(Markup(
-                        '<a href="https://dx.doi.org/10.1103%2FPhysRevA.99.013009">10.1103/PhysRevA.99.013009</a>' \
-                        ' <a href="https://dx.doi.org/10.1103%2FPhysRevZ.44.023009">10.1103/PhysRevZ.44.023009</a>' \
-                        ' <a href="https://dx.doi.org/10.1103%2FPhysRevX.90.012309">10.1103/PhysRevX.90.012309</a>' \
+                        '<a href="https://dx.doi.org/10.1103%2FPhysRevA.99.013009">10.1103/PhysRevA.99.013009</a>'
+                        ' <a href="https://dx.doi.org/10.1103%2FPhysRevZ.44.023009">10.1103/PhysRevZ.44.023009</a>'
+                        ' <a href="https://dx.doi.org/10.1103%2FPhysRevX.90.012309">10.1103/PhysRevX.90.012309</a>'
                         ' <a href="https://dx.doi.org/10.1103%2FBioRevX.44.123456">10.1103/BioRevX.44.123456</a>')))
 
         txt = '<script>Im from the user and Im bad</script>'
-        assert_that(doi_fn( f'{doi} {txt}'),
-                    equal_to( f'<a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> {escape(txt)}' ))
+        assert_that(doi_fn(f'{doi} {txt}'),
+                    equal_to(f'<a href="https://dx.doi.org/10.1103%2FPhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> {escape(txt)}'))
 
     def test_arxiv_id_urls_basic(self):
         h = 'sosmooth.org'  # Totally bogus setup for testing, at least url_for returns something
@@ -103,8 +104,10 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                     f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>\n', ),
             )
             assert_that(
-                arxiv_id_urls('arXiv:dg-ga/9401001 hep-th/9901001 hep-th/9901002'),
-                equal_to(f'<a href="http://{h}/abs/dg-ga/9401001">arXiv:dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>',),
+                arxiv_id_urls(
+                    'arXiv:dg-ga/9401001 hep-th/9901001 hep-th/9901002'),
+                equal_to(
+                    f'<a href="http://{h}/abs/dg-ga/9401001">arXiv:dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>',),
             )
 
     def test_arxiv_id_urls_punct(self):
@@ -126,7 +129,8 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
             )
             assert_that(
                 arxiv_id_urls('hep-th/9901001,hep-th/9901002'),
-                equal_to(f'<a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a>,<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>'),
+                equal_to(
+                    f'<a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a>,<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>'),
                 'filter_urls_ids_escape (ID linking) 3/7'
             )
             assert_that(
@@ -153,14 +157,14 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 'filter_urls_ids_escape (ID linking) 5/7'
             )
 
-
     def test_arxiv_id_v(self):
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
             assert_that(arxiv_id_urls('arXiv:dg-ga/9401001v12 hep-th/9901001v2 0704.0001v1'),
-                equal_to(f'<a href="http://{h}/abs/dg-ga/9401001v12">arXiv:dg-ga/9401001v12</a> <a href="http://{h}/abs/hep-th/9901001v2">hep-th/9901001v2</a> <a href="http://{h}/abs/0704.0001v1">0704.0001v1</a>'),
-                'arxiv ids with version numbers' )
+                        equal_to(
+                            f'<a href="http://{h}/abs/dg-ga/9401001v12">arXiv:dg-ga/9401001v12</a> <a href="http://{h}/abs/hep-th/9901001v2">hep-th/9901001v2</a> <a href="http://{h}/abs/0704.0001v1">0704.0001v1</a>'),
+                        'arxiv ids with version numbers')
 
     def test_vixra(self):
         h = 'sosmooth.org'
@@ -182,21 +186,21 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
         with app.app_context():
             ax_id = 'hep-th/9901002'
 
-            user_entered_txt=' <div>div should be escaped</div>'
+            user_entered_txt = ' <div>div should be escaped</div>'
             ex_txt = escape(user_entered_txt).__html__()
             assert_that(
                 arxiv_id_urls(ax_id + user_entered_txt),
                 equal_to(
                     f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>{ex_txt}'),
-                    'Dealing with user entered text with html that should be escaped for safety')
+                'Dealing with user entered text with html that should be escaped for safety')
 
-            jinja_escaped_txt = Markup(' <div>div should already be escaped by jinja2</div>')
+            jinja_escaped_txt = Markup(
+                ' <div>div should already be escaped by jinja2</div>')
             assert_that(
                 arxiv_id_urls(ax_id + jinja_escaped_txt),
                 equal_to(
                     f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>{jinja_escaped_txt}'),
-                    'Dealing with text that has been escaped by Jinja2 already')
-
+                'Dealing with text that has been escaped by Jinja2 already')
 
     def test_arxiv_id_jinja_escapes(self):
         h = 'sosmooth.org'
@@ -212,25 +216,30 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                             f'something <a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a> or other'))
 
             assert_that(
-                jenv.from_string('{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}').render(),
+                jenv.from_string(
+                    '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}').render(),
                 equal_to('&lt;script&gt;bad junk&lt;/script&gt; something 10.1103/PhysRevD.76.013009'))
 
             assert_that(jenv.from_string(
-                '{{"<script>bad junk</script> http://google.com something or '\
+                '{{"<script>bad junk</script> http://google.com something or '
                 'hep-th/9901002 other"|arxiv_urlize|arxiv_id_urls}}').render(),
                 equal_to(
-                            '&lt;script&gt;bad junk&lt;/script&gt; '\
-                            '<a href="http://google.com" rel="noopener">this http URL</a> something or '\
-                            f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a> other'),
-                        'should not double escape')
+                '&lt;script&gt;bad junk&lt;/script&gt; '
+                '<a href="http://google.com" rel="noopener">this http URL</a> something or '
+                f'<a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a> other'),
+                'should not double escape')
 
     def test_line_break(self):
-        assert_that(line_feed_to_br('blal\n  bla'), equal_to('blal\n<br />bla'))
+        assert_that(line_feed_to_br('blal\n  bla'),
+                    equal_to('blal\n<br />bla'))
 
-        assert_that(line_feed_to_br('\nblal\n  bla'), equal_to('\nblal\n<br />bla'))
+        assert_that(line_feed_to_br('\nblal\n  bla'),
+                    equal_to('\nblal\n<br />bla'))
 
-        assert_that(line_feed_to_br('\n blal\n  bla'), equal_to('\n blal\n<br />bla'), 'need to not do <br /> on first line')
-        assert_that(line_feed_to_br('blal\n\nbla'), equal_to('blal\nbla'), 'skip blank lines')
+        assert_that(line_feed_to_br('\n blal\n  bla'), equal_to(
+            '\n blal\n<br />bla'), 'need to not do <br /> on first line')
+        assert_that(line_feed_to_br('blal\n\nbla'),
+                    equal_to('blal\nbla'), 'skip blank lines')
 
     def test_line_break_jinja(self):
         h = 'sosmooth.org'
@@ -243,16 +252,27 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
             jenv.filters['arxiv_urlize'] = arxiv_urlize
 
             assert_that(jenv.from_string(
-                '{{" <script>bad junk</script> http://google.com something or \n' \
+                '{{" <script>bad junk</script> http://google.com something or \n'
                 '\n'
                 'no double \\n'
                 ' should have br\n'
                 'hep-th/9901002 other"|arxiv_urlize|line_break|arxiv_id_urls}}').render(),
                 equal_to(
-                    ' &lt;script&gt;bad junk&lt;/script&gt; '\
-                    '<a href="http://google.com" rel="noopener">this http URL</a>'\
-                    ' something or \n'\
-                    'no double \n'\
-                    '<br />should have br\n'\
+                    ' &lt;script&gt;bad junk&lt;/script&gt; '
+                    '<a href="http://google.com" rel="noopener">this http URL</a>'
+                    ' something or \n'
+                    'no double \n'
+                    '<br />should have br\n'
                     '<a href="http://sosmooth.org/abs/hep-th/9901002">hep-th/9901002</a> other'),
-                    'urlize, line_break and arxiv_id_urls should all work together')
+                'urlize, line_break and arxiv_id_urls should all work together')
+
+    def test_entity_to_utf(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['entity_to_utf'] = entity_to_utf
+
+            assert_that(jenv.from_string(
+                '{{ "Mart&#xED;n"|entity_to_utf }}').render(),
+                equal_to('Martín'), 'entity_to_utf should work')
