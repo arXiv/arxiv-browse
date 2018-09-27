@@ -114,7 +114,7 @@ class DocMetadata:
     submitter: Submitter
     """Submitter of the article."""
 
-    categories: str
+    categories: Optional[str]
     """Article classification (raw string)."""
 
     primary_category: Optional[Category]
