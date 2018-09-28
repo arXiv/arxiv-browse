@@ -12,8 +12,8 @@ import dataclasses
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, DocMetadata, \
-    Group, SourceType, Submitter, VersionEntry
+from browse.domain.metadata import Archive, AuthorList, Category, \
+    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
@@ -48,10 +48,13 @@ REQUIRED_FIELDS = ['title', 'authors', 'abstract']
 """
 Required parsed fields with normalized field names.
 
-Note the absense of 'categories'. Some v1 .abs files with the old identifiers
-do not have a Categories: line, presumably because could be inferred by the
-identifier itself. Subsequent versions of these papers do have the Categories:
-line.
+Note the absense of 'categories' as a required field. A subset of version-
+affixed .abs files with the old identifiers predate the introduction of
+categories and therefore do not have a "Categories:" line; only the (higher-
+level) archive and group can be be inferred, and this must be done via the
+identifier itself.
+
+The latest versions of these papers should always have the "Categories:" line.
 """
 
 
@@ -408,7 +411,6 @@ class AbsMetaSession:
         -------
         List[str]
             A list of format strings.
-
         """
         formats: List[str] = []
 
@@ -467,17 +469,18 @@ class AbsMetaSession:
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
         try:
-            with open(filename) as absf:
+            with open(filename, mode='r', encoding='latin-1') as absf:
                 raw = absf.read()
         except FileNotFoundError:
             raise AbsNotFoundException
         except UnicodeDecodeError as e:
+            # TODO: log this
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
 
         # TODO: clean up
         modified = datetime.fromtimestamp(
-                    os.path.getmtime(filename), tz=gettz('US/Eastern'))
+            os.path.getmtime(filename), tz=gettz('US/Eastern'))
         modified = modified.astimezone(tz=tzutc())
 
         # there are two main components to an .abs file that contain data,
@@ -511,36 +514,46 @@ class AbsMetaSession:
         from_match = RE_FROM_FIELD.match(parsed_version_entries.pop(0))
         if not from_match:
             raise AbsParsingException('Could not extract submitter data.')
-        name = from_match.group('name').rstrip()
+        name = from_match.group('name')
+        if name is not None:
+            name = name.rstrip()
         email = from_match.group('email')
 
         # get the version history for this particular version of the document
         if not len(parsed_version_entries) >= 1:
             raise AbsParsingException('At least one version entry expected.')
 
-        (version, version_history, arxiv_id_v) = \
-            AbsMetaSession._parse_version_entries(
-                arxiv_id=arxiv_id, version_entry_list=parsed_version_entries
-            )
+        (version, version_history, arxiv_id_v) \
+            = AbsMetaSession._parse_version_entries(
+                arxiv_id=arxiv_id,
+                version_entry_list=parsed_version_entries)
 
-        # TODO type ignore: possibly mypy #3937, also see #5389
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
         # named (key-value) fields
-        if 'categories' not in fields and arxiv_identifier.is_old_id:
-            fields['categories'] = arxiv_identifier.archive
-
         if not all(rf in fields for rf in REQUIRED_FIELDS):
             raise AbsParsingException(f'missing required field(s)')
 
         # some transformations
-        categories = fields['categories'].split()
-        primary_category = Category(id=categories[0])
-        primary_archive = Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
-        primary_group = Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group'])
+        category_list: List[str] = []
+        primary_category = None
+        if 'categories' in fields and fields['categories']:
+            category_list = fields['categories'].split()
+            try:
+                primary_category = Category(id=category_list[0])
+            except KeyError:
+                raise AbsException(
+                    f'Invalid primary category: {category_list[0]}')
+            primary_archive = \
+                Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        elif arxiv_identifier.is_old_id:
+            primary_archive = \
+                Archive(id=arxiv_identifier.archive)  # type: ignore
+
         doc_license: License = \
             License() if 'license' not in fields else License(recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
+
         return DocMetadata(
             raw_safe=raw_safe,
             arxiv_id=arxiv_id,
@@ -550,18 +563,23 @@ class AbsMetaSession:
             abstract=fields['abstract'],
             authors=AuthorList(fields['authors']),
             submitter=Submitter(name=name, email=email),
-            categories=fields['categories'],
+            categories=fields['categories'] if 'categories' in fields else None,
             primary_category=primary_category,
             primary_archive=primary_archive,
-            primary_group=primary_group,
+            primary_group=Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group']),
             secondary_categories=[
-                Category(id=x) for x in categories[1:] if len(categories) > 1
+                Category(id=x) for x in category_list[1:]
+                if (category_list and len(category_list) > 1)
             ],
-            journal_ref=None if 'journal_ref' not in fields else fields['journal_ref'],
-            report_num=None if 'report_num' not in fields else fields['report_num'],
+            journal_ref=None if 'journal_ref' not in fields
+            else fields['journal_ref'],
+            report_num=None if 'report_num' not in fields
+            else fields['report_num'],
             doi=None if 'doi' not in fields else fields['doi'],
-            acm_class=None if 'acm_class' not in fields else fields['acm_class'],
-            msc_class=None if 'msc_class' not in fields else fields['msc_class'],
+            acm_class=None if 'acm_class' not in fields else
+            fields['acm_class'],
+            msc_class=None if 'msc_class' not in fields else
+            fields['msc_class'],
             proxy=None if 'proxy' not in fields else fields['proxy'],
             comments=fields['comments'] if 'comments' in fields else None,
             version=version,
@@ -623,8 +641,11 @@ class AbsMetaSession:
             )
             version_entries.append(ve)
 
-        return (version_count, version_entries, f"{arxiv_id}v"
-                                                f"{version_entries[-1].version}")
+        return (
+            version_count,
+            version_entries,
+            f"{arxiv_id}v"
+            f"{version_entries[-1].version}")
 
     @staticmethod
     def _parse_metadata_fields(key_value_block: str) -> Dict[str, str]:
@@ -639,7 +660,8 @@ class AbsMetaSession:
                 field_name = field_match.group(
                     'field').lower().replace('-', '_')
                 field_name = re.sub(r'_no$', '_num', field_name)
-                fields_builder[field_name] = field_match.group('value').rstrip()
+                fields_builder[field_name] = field_match.group(
+                    'value').rstrip()
             elif field_name != 'unknown':
                 # we have a line with leading spaces
                 fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
@@ -696,4 +718,5 @@ def current_session() -> AbsMetaSession:
         return get_session()
     if 'abs_meta' not in g:
         g.abs_meta = get_session()
-    return g.abs_meta     # type: ignore
+    assert isinstance(g.abs_meta, AbsMetaSession)
+    return g.abs_meta

@@ -70,20 +70,16 @@ def get_abs_page(arxiv_id: str) -> Response:
     ------
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
-
     """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
     try:
-
         arxiv_id = _check_legacy_id_params(arxiv_id)
-
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-        redirect_url = _check_supplied_identifier(arxiv_identifier)
-        if redirect_url:
-            return {},\
-                status.HTTP_301_MOVED_PERMANENTLY,\
-                {'Location': redirect_url}
+
+        redirect = _check_supplied_identifier(arxiv_identifier)
+        if redirect:
+            return redirect
 
         abs_meta = metadata.get_abs(arxiv_id)
         response_data['abs_meta'] = abs_meta
@@ -107,25 +103,10 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         # Following are less critical and template must display without them
         try:
-            response_data['include_inspire_link'] = include_inspire_link(
-                abs_meta)
-            response_data['dblp'] = _check_dblp(abs_meta)
-            response_data['trackback_ping_count'] = count_trackback_pings(
-                arxiv_identifier.id)
-            if response_data['trackback_ping_count'] > 0:
-                response_data['trackback_ping_latest'] = \
-                    get_trackback_ping_latest_date(arxiv_identifier.id)
-
-            # Ancillary files
-            response_data['ancillary_files'] = \
-                metadata.get_ancillary_files(abs_meta)
-
-            # Browse context
-            _check_context(arxiv_identifier,
-                           response_data)
+            _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
         except Exception:
-            logger.error("Error getting non-critical abs page data",
-                         exc_info=app.debug)
+            logger.warning("Error getting non-critical abs page data",
+                           exc_info=app.debug)
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
@@ -165,7 +146,7 @@ def get_abs_page(arxiv_id: str) -> Response:
     return response_data, response_status, response_headers
 
 
-def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
+def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
     """
     Provide redirect URL if supplied ID does not match parsed ID.
 
@@ -178,16 +159,36 @@ def _check_supplied_identifier(arxiv_identifier: Identifier) -> Optional[str]:
     redirect_url: str
         A `browse.abstract` redirect URL that uses the canonical
         arXiv identifier.
-
     """
-    if arxiv_identifier and arxiv_identifier.ids != arxiv_identifier.id and \
-            arxiv_identifier.ids != arxiv_identifier.idv:
-        redirect_url: str = url_for('browse.abstract',
-                                    arxiv_id=arxiv_identifier.idv
-                                    if arxiv_identifier.has_version
-                                    else arxiv_identifier.id)
-        return redirect_url
-    return None
+    if not id or id.ids == id.id or id.ids == id.idv:
+        return None
+
+    arxiv_id = id.idv if id.has_version else id.id
+    redirect_url: str = url_for('browse.abstract',
+                                arxiv_id=arxiv_id)
+    return {},\
+        status.HTTP_301_MOVED_PERMANENTLY,\
+        {'Location': redirect_url}
+
+
+def _non_critical_abs_data(abs_meta:DocMetadata, arxiv_identifier:Identifier, response_data:Dict)->None:
+    """Some additional non critical data for the abs page."""
+    response_data['include_inspire_link'] = include_inspire_link(
+        abs_meta)
+    response_data['dblp'] = _check_dblp(abs_meta)
+    response_data['trackback_ping_count'] = count_trackback_pings(
+        arxiv_identifier.id)
+    if response_data['trackback_ping_count'] > 0:
+        response_data['trackback_ping_latest'] = \
+                get_trackback_ping_latest_date(arxiv_identifier.id)
+
+    # Ancillary files
+    response_data['ancillary_files'] = \
+        metadata.get_ancillary_files(abs_meta)
+
+    # Browse context
+    _check_context(arxiv_identifier,
+                   response_data)
 
 
 def _check_request_headers(docmeta: DocMetadata,
@@ -195,9 +196,6 @@ def _check_request_headers(docmeta: DocMetadata,
                            headers: Dict[str, Any]) -> bool:
     """Check the request headers, update the response headers accordingly."""
     last_mod_dt: datetime = docmeta.modified
-    if_mod_since_dt: Optional[datetime] = None
-    if_none_match_dt: Optional[datetime] = None
-    not_modified: bool = False
 
     if 'trackback_ping_latest' in response_data \
        and isinstance(response_data['trackback_ping_latest'], datetime) \
@@ -208,35 +206,9 @@ def _check_request_headers(docmeta: DocMetadata,
     # Check for request headers If-Modified-Since and If-None-Match and compare
     # them to the last modified time to determine whether we will return a
     # "not modified" response
-    if 'If-Modified-Since' in request.headers \
-       and request.headers['If-Modified-Since'] is not None:
-        try:
-            if_mod_since_dt = parser.parse(
-                request.headers.get('If-Modified-Since'))
-            if not if_mod_since_dt.tzinfo:
-                if_mod_since_dt = if_mod_since_dt.replace(tzinfo=tzutc())
-        except (ValueError, TypeError):
-            print(f'Exception parsing the If-Modified-Since request header')
-    if 'If-None-Match' in request.headers \
-       and request.headers['If-None-Match'] is not None:
-        try:
-            if_none_match_dt = parser.parse(
-                request.headers.get('If-None-Match'))
-            if not if_none_match_dt.tzinfo:
-                if_none_match_dt = if_none_match_dt.replace(tzinfo=tzutc())
-        except (ValueError, TypeError):
-            print(f'Exception parsing the If-None-Match request header')
-    try:
-        if ((if_mod_since_dt and if_none_match_dt)
-            and if_mod_since_dt >= last_mod_dt  # ignore
-            and if_none_match_dt >= last_mod_dt) \
-            or ((if_mod_since_dt and not if_none_match_dt)
-                and if_mod_since_dt >= last_mod_dt) \
-            or ((if_none_match_dt and not if_mod_since_dt)  # ignore
-                and if_none_match_dt >= last_mod_dt):
-            not_modified = True
-    except Exception as e:
-        print(f'Exception parsing the request headers: {e}')
+    mod_since_dt = _time_header_parse(headers, 'If-Modified-Since')
+    none_match_dt = _time_header_parse(headers, 'If-None-Match')
+    not_modified = _not_modified(last_mod_dt, mod_since_dt, none_match_dt)
 
     last_mod_mime = mime_header_date(last_mod_dt)
     headers['Last-Modified'] = last_mod_mime
@@ -244,6 +216,36 @@ def _check_request_headers(docmeta: DocMetadata,
     headers['Expires'] = abs_expires_header()[1]
 
     return not_modified
+
+
+def _not_modified(last_mod_dt: datetime,
+                  mod_since_dt: Optional[datetime],
+                  none_match_dt: Optional[datetime])->bool:
+    if mod_since_dt and none_match_dt:
+        not_modified = (mod_since_dt >= last_mod_dt
+                        and none_match_dt >= last_mod_dt)
+    elif mod_since_dt and not none_match_dt:
+        not_modified = mod_since_dt >= last_mod_dt
+    elif none_match_dt and not mod_since_dt:
+        not_modified = none_match_dt >= last_mod_dt
+    else:
+        not_modified = False
+    return not_modified
+
+
+def _time_header_parse(headers: Dict[str,Any], header: str)->Optional[datetime]:
+    if (header in request.headers
+        and request.headers[header] is not None):
+        try:
+            dt = parser.parse(request.headers.get(header))
+            if not dt.tzinfo:
+                dt = dt.replace(tzinfo=tzutc())
+            return dt
+        except (ValueError, TypeError):
+            print(f'Exception parsing the If-None-Match request header')
+            return None
+    else:
+        return None
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
@@ -264,13 +266,13 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
         # To support old references to /abs/<archive>?papernum=\d{7}
         if 'papernum' in request.args:
             return f"{arxiv_id}/{request.args['papernum']}"
-        else:
-            for param in request.args:
-                # singleton case, where the parameter is the value
-                # To support old references to /abs/<archive>?\d{7}
-                if not request.args[param] \
-                   and re.match(r'^\d{7}$', param):
-                    return f'{arxiv_id}/{param}'
+
+        for param in request.args:
+            # singleton case, where the parameter is the value
+            # To support old references to /abs/<archive>?\d{7}
+            if not request.args[param] \
+               and re.match(r'^\d{7}$', param):
+                return f'{arxiv_id}/{param}'
     return arxiv_id
 
 

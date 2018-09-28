@@ -1,0 +1,37 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math/0202001
+From: Laurent Bartholdi <user@example.org>
+Date: Fri, 1 Feb 2002 02:02:03 GMT   (391kb)
+Date (revised v2): Sun, 3 Feb 2002 21:43:30 GMT   (439kb)
+Date (revised v3): Sat, 13 Jul 2002 22:44:27 GMT   (441kb)
+Date (revised v4): Fri, 13 Sep 2002 18:26:29 GMT   (442kb)
+
+Title: From fractal groups to fractal sets
+Authors: Laurent Bartholdi, Rostislav I. Grigorchuk and Volodymyr V.
+  Nekrashevych
+Categories: math.GR math.DS
+Comments: about 75 pages, with many postscript figures
+MSC-class: 20E08; 37B10; 28A80
+Journal-ref: Fractals in Graz 2001, 25--118, Trends Math., Birkhauser, Basel,
+  2003
+\\
+  This paper is a survey, with few proofs, of ideas and notions related to
+self-similarity of groups, semi-groups and their actions. It attempts to relate
+these concepts to more familiar ones, such as fractals, self-similar sets, and
+renormalizable dynamical systems. In particular, it presents a plausible
+definition of what a "fractal group" should be, and gives many examples of such
+groups.
+  A particularly interesting class of examples, derived from monodromy groups
+of iterated branch coverings, or equivalently from Galois groups of iterated
+polynomials, is presented. This class contains interesting groups from an
+algebraic point of view (just-non-solvable groups, groups of intermediate
+growth, branch groups,...), and at the same time the geometry of the group is
+apparent in that a limit of the group identifies naturally with the Julia set
+of the covering map.
+  In its survey, the paper discusses finite-state transducers, growth of groups
+and languages, limit spaces of groups, hyperbolic spaces and groups, dynamical
+systems, Hecke-type operators, C^*-algebras, random matrices, ergodic theorems
+and entropy of non-commuting transformations. Self-similar groups appear then
+as a natural weaving thread through these seemingly different topics.
+\\

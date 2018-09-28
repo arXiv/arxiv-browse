@@ -45,7 +45,7 @@ class DocumentCacheSession():
         parent_path = os.path.join(
             self.document_cache_path,
             ('arxiv' if not identifier.is_old_id or identifier.archive is None
-                 else identifier.archive),
+             else identifier.archive),
             cache_format,
             identifier.yymm,
             f'{identifier.filename}v{docmeta.version}'
@@ -89,4 +89,5 @@ def current_session() -> DocumentCacheSession:
         return get_session()
     if 'doc_cache' not in g:
         g.doc_cache = get_session()
-    return g.doc_cache     # type: ignore
+    assert isinstance(g.doc_cache, DocumentCacheSession)
+    return g.doc_cache

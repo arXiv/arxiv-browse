@@ -139,7 +139,9 @@ disable=invalid-name,
         dict-items-not-iterating,
         dict-keys-not-iterating,
         dict-values-not-iterating,
-        pointless-string-statement
+        pointless-string-statement,
+        no-else-return
+        
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -488,7 +490,7 @@ max-args=5
 max-attributes=7
 
 # Maximum number of boolean expressions in a if statement
-max-bool-expr=5
+max-bool-expr=12
 
 # Maximum number of branch for function / method body
 max-branches=12

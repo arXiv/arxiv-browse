@@ -43,7 +43,8 @@ def get_institution(ip: str) -> Optional[str]:
         )
         institution_name = db.session.query(stmt.c.label).\
             filter(stmt.c.exclusions == 0).one().label
-        return institution_name  # type: ignore
+        assert isinstance(institution_name, str)
+        return institution_name
     except NoResultFound:
         return None
 
@@ -68,8 +69,8 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
     try:
         timestamp: int = db.session.query(
-                func.max(TrackbackPing.approved_time)
-            ).filter(TrackbackPing.document_id == Document.document_id) \
+            func.max(TrackbackPing.approved_time)
+        ).filter(TrackbackPing.document_id == Document.document_id) \
             .filter(Document.paper_id == paper_id) \
             .filter(TrackbackPing.status == 'accepted').scalar()
         dt = datetime.fromtimestamp(timestamp, tz=gettz('US/Eastern'))
@@ -92,7 +93,9 @@ def count_trackback_pings(paper_id: str) -> int:
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
     try:
-        return __all_trackbacks_query().count()  # type: ignore
+        c = __all_trackbacks_query().count()
+        assert isinstance(c, int)
+        return c
     except NoResultFound:
         return 0
 
@@ -121,9 +124,9 @@ def get_dblp_authors(paper_id: str) -> List[str]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
     try:
         authors_t = db.session.query(DBLPAuthor.name).\
-                join(DBLPDocumentAuthor).\
-                join(Document).filter(Document.paper_id == paper_id).\
-                order_by(DBLPDocumentAuthor.position).all()
+            join(DBLPDocumentAuthor).\
+            join(Document).filter(Document.paper_id == paper_id).\
+            order_by(DBLPDocumentAuthor.position).all()
         authors = [a for (a,) in authors_t]
         return authors
     except NoResultFound:

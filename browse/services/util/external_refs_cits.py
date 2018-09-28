@@ -7,6 +7,7 @@ from browse.domain.identifier import Identifier
 from browse.services.document.config.external_refs_cits import \
     INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES, DBLP_START_DATE
 from browse.domain.metadata import DocMetadata
+from browse.domain.category import Category
 
 
 def get_orig_publish_date(ident: Identifier) -> Optional[date]:
@@ -17,16 +18,21 @@ def get_orig_publish_date(ident: Identifier) -> Optional[date]:
         return None
 
 
+def inspire_category(primary_category: Category,
+                     orig_publish_date: date)-> bool:
+    """Get inspire category for primary and date."""
+    if primary_category.id in INSPIRE_REF_CIT_CATEGORIES and \
+        orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category.id]:
+        return True
+    else:
+        return False  # workaround of mypy error
+
+
 def include_inspire_link(docmeta: DocMetadata) -> bool:
     """Check whether to include INSPIRE reference/citation link on abs page."""
-    identifier = docmeta.arxiv_identifier
-    orig_publish_date = get_orig_publish_date(identifier)
-    if orig_publish_date is not None:
-        primary_category = docmeta.primary_category.id
-        if primary_category in INSPIRE_REF_CIT_CATEGORIES and \
-                orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category]:
-            return True
-        return False
+    orig_publish_date = get_orig_publish_date(docmeta.arxiv_identifier)
+    if orig_publish_date is not None and docmeta.primary_category is not None:
+        return inspire_category(docmeta.primary_category, orig_publish_date)
     else:
         return False
 
@@ -41,7 +47,7 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
     if orig_publish_date is not None:
         date_test: bool = DBLP_START_DATE <= orig_publish_date < this_month
         in_dblp_test: bool = primary_archive in DBLP_ARCHIVES
-        return date_test and  in_dblp_test
+        return date_test and in_dblp_test
     else:
         return False
 

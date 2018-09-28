@@ -1,10 +1,10 @@
 """Base domain classes for browse service."""
 import json
 import re
-from typing import Match, Optional, Union
+from re import RegexFlag
+from typing import Match, Optional, Union, Tuple, Callable, List
 from arxiv import taxonomy
 from arxiv.base.config import BASE_SERVER, EXTERNAL_URL_SCHEME
-from browse.domain.category import Category
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
@@ -18,7 +18,9 @@ RE_ARXIV_NEW_ID = re.compile(
     r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
 )
 
-SUBSTITUTIONS = (
+Sub_type = List[Tuple[str, Union[str, Callable[[Match[str]], str]],
+                      int, Union[int, RegexFlag]]]
+SUBSTITUTIONS: Sub_type = [
     # pattern, replacement, count, flags
     (r'\.(pdf|ps|gz|ps\.gz)$', '', 0, 0),
     (r'^/', '', 0, 0),
@@ -27,7 +29,7 @@ SUBSTITUTIONS = (
     (r'--+', '-', 0, 0),
     (r'^([^/]+)', lambda x: str.lower(x.group(0)), 1, 0),
     (r'([^a\-])(ph|ex|th|qc|mat|lat|sci)(\/|$)', r'\g<1>-\g<2>\g<3>', 1, 0)
-)
+]
 
 
 class IdentifierException(Exception):
@@ -64,7 +66,7 @@ class Identifier:
                 taxonomy.ARCHIVES[self.ids]['name'])
 
         for subtup in SUBSTITUTIONS:
-            arxiv_id = re.sub(subtup[0],  # type: ignore
+            arxiv_id = re.sub(subtup[0],
                               subtup[1],
                               arxiv_id,
                               count=subtup[2],
@@ -206,16 +208,16 @@ class Identifier:
 
         """
         return self.__dict__ == other.__dict__
-        
 
-def canonical_url(id:str, version:int = 0)->str:
+
+def canonical_url(id: str, version: int = 0)->str:
     """
-    Return canonical URL for this ID. 
+    Return canonical URL for this ID.
+
     This can be done from just the ID because the
     category is only needed if it is in the ID.
     id can be just the id or idv or cat/id or cat/idv
     """
-
     # TODO: This should be better.
     # There should probably be something like INTERNAL_URL_SCHEMA
     # Also, /abs should probably be specified somewhere else
@@ -223,8 +225,7 @@ def canonical_url(id:str, version:int = 0)->str:
     # There should be a MAIN_HOSTNAME to decouple the canonical URLs
     # from the hostname of the server they are being generated on.
     # We might want hostnames like search.arxiv.org etc.
-    if version :
+    if version:
         return f'{EXTERNAL_URL_SCHEME}://{BASE_SERVER}/abs/{id}v{version}'
     else:
         return f'{EXTERNAL_URL_SCHEME}://{BASE_SERVER}/abs/{id}'
-

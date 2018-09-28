@@ -5,30 +5,35 @@ from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
-from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re # type: ignore
+from jinja2.utils import _digits, _letters, _punctuation_re  # type: ignore
+from jinja2.utils import _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
 import html
 
 from browse.services.util.tex2utf import tex2utf
 
 
-def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]) -> str:
+def doi_urls(clickthrough_url_for: Callable[[str], str],
+             text: Union[Markup, str]) -> str:
     """Creates links to one or more DOIs.
 
-    clickthrough_url_for is a Callable that takes the URL and returns a clickthrough URL.
+    clickthrough_url_for is a Callable that takes the URL and returns
+    a clickthrough URL.
+
     An example of this is in factory.py
     While this is called clickthrough_url_for it could be any str -> str fn.
     For testing this could be the identity function:
     value = doi_urls( lambda x: x , 'test text bla bla bla')
+
     """
     # How does this ensure escaping?
     # Two cases:
     #  1. we get a markup object for text, ex from a previously filter stage
     #  2. we get a raw str for text, ex meta.abstract
-    # In both of cases the value in result ends up escaped after this conditional.
+    # In both of cases the value in result ends up escaped after this
+    # conditional.
     # Then we sub DOI with HTML elements, and return the result as Markup()
-
-    if hasattr(text, '__html__') and hasattr(text,'unescape'):
+    if hasattr(text, '__html__') and hasattr(text, 'unescape'):
         result = text
     else:
         result = Markup(escape(text))
@@ -45,22 +50,23 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: Union[Markup,str]
 
     slt = re.split(r'([;,]?\s+)', result.unescape())
     for segment in slt:
-        if re.match( r'^10\.\d{4,5}\/\S+$' , segment):        
+        if re.match(r'^10\.\d{4,5}\/\S+$', segment):
             doi_link = re.sub(r'^10\.\d{4,5}\/\S+$', single_doi_link, segment)
             doi_list.append(doi_link)
         else:
-            doi_list.append( escape( segment))
+            doi_list.append(escape(segment))
     if doi_list:
         result = ''.join(doi_list)
 
     return Markup(result)
 
 
-def arxiv_urlize(
-        text: str, trim_url_limit: Optional[int]=None,
-        rel: Optional[str]=None, target: Optional[str]=None
-) -> str:
-    """ Based directly on jinja2 urlize;
+def arxiv_urlize(text: str, rel: Optional[str] = None,
+                 target: Optional[str] = None
+                 )-> str:
+    """Like jinja2 urlize but uses link text of 'this http URL'.
+
+    Based directly on jinja2 urlize;
     Copyright (c) 2009 by the Jinja Team, see AUTHORS in
     https://github.com/pallets/jinja or other distribution of jinja2
     for more details.
@@ -81,7 +87,6 @@ def arxiv_urlize(
     attribute.
     If target is not None, a target attribute will be added to the link.
     """
-
     if hasattr(text, '__html__'):
         result = text
     else:
@@ -89,8 +94,8 @@ def arxiv_urlize(
 
     # Note: currently unused; using link_text instead
     # trim_url = lambda x, limit=trim_url_limit: limit is not None \
-    #                                            and (x[:limit] + (len(x) >=limit and '...'
-    #                                                              or '')) or x
+    #    and (x[:limit] + (len(x) >=limit and '...'
+    #    or '')) or x
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
@@ -105,22 +110,24 @@ def arxiv_urlize(
                     '@' not in middle and
                     not middle.startswith('http://') and
                     not middle.startswith('https://') and
-                    len(middle) > 0 and
+                    middle and
                     middle[0] in _letters + _digits and (
-                            middle.endswith('.org') or
-                            middle.endswith('.net') or
-                            middle.endswith('.com')
+                        middle.endswith('.org') or
+                        middle.endswith('.net') or
+                        middle.endswith('.com')
                     )):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="http://%s"%s%s>%s</a>' % \
                     (middle, rel_attr, target_attr, link_text)
             if middle.startswith('http://') or \
                     middle.startswith('https://'):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="%s"%s%s>%s</a>' \
                          % (middle, rel_attr, target_attr, link_text)
             if '@' in middle and not middle.startswith('www.') and \
-                    not ':' in middle and _simple_email_re.match(middle):
+                    ':' not in middle and _simple_email_re.match(middle):
                 middle = '<a href="mailto:%s">%s</a>' % (middle, middle)
             if lead + middle + trail != word:
                 words[i] = lead + middle + trail
@@ -129,13 +136,12 @@ def arxiv_urlize(
 
 
 def line_feed_to_br(text: str) -> str:
-    """Lines that start with two spaces should be broken"""
-
+    """Lines that start with two spaces should be broken."""
     if hasattr(text, '__html__'):
         etxt = text
     else:
         etxt = Markup(escape(text))
-        
+
     # if line starts with spaces, replace the white space with <br\>
     br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
     dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
@@ -166,8 +172,8 @@ def arxiv_id_urls(text: str) -> str:
     # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
-        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re,
-        re.IGNORECASE)
+        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' %
+        new_id_re, re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
 
