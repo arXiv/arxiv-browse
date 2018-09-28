@@ -8,6 +8,7 @@ from jinja2._compat import text_type
 from jinja2.utils import _digits, _letters, _punctuation_re  # type: ignore
 from jinja2.utils import _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
+import html
 
 from browse.services.util.tex2utf import tex2utf
 
@@ -175,6 +176,11 @@ def arxiv_id_urls(text: str) -> str:
         new_id_re, re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
+
+
+def entity_to_utf(text: str) -> str:
+    """Converts HTML entities to unicode.  For example '&amp;' becomes '&'."""
+    return html.unescape(text)
 
 
 def tex_to_utf(text: str) -> str:
