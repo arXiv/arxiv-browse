@@ -55,7 +55,13 @@
   <div class="prevnext">
     <span class="arrow">
     {%- if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
-      {% if browse_context_previous_id %}<a href="{{ url_for('browse.abstract', arxiv_id=browse_context_previous_id.id, context='arxiv' if current_context == 'arxiv' else None) }}" accesskey="p" title="previous in {{ current_context }} (accesskey n)">&lt;&nbsp;prev</a>{% else %}<span class="nolink">&lt;&nbsp;prev</span>{% endif %}
+      {% if browse_context_previous_id %}
+        <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_previous_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
+           accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
+         {% else %}
+           {# TODO might be a bug from the legacy system, this should probably be &lt;&nbsp;prev see ARXIVNG-1221 #}
+        <span class="nolink">previous</span>
+      {% endif %}
     {% else %}
       {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
       <a href="{{ prevnext_url }}&function=prev" accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
@@ -63,7 +69,12 @@
     </span>&nbsp;|&nbsp;
     <span class="arrow">
     {%- if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
-      {% if browse_context_next_id %}<a href="{{ url_for('browse.abstract', arxiv_id=browse_context_next_id.id, context='arxiv' if current_context == 'arxiv' else None) }}" accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a></span>{% else %}<span class="nolink">next&nbsp;&gt;</span>{% endif %}
+      {% if browse_context_next_id %}
+        <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_next_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
+           accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
+      {% else %}
+        <span class="nolink">next&nbsp;&gt;</span>
+      {% endif %}
     {% else %}
       <a href="{{ prevnext_url }}&function=next" accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
     {%- endif -%}
