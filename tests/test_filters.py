@@ -5,8 +5,9 @@ from functools import partial
 from jinja2 import escape, Markup, Environment
 
 from app import app
+
 from browse.filters import arxiv_urlize, doi_urls, arxiv_id_urls, \
-    line_feed_to_br, entity_to_utf
+    line_feed_to_br, tex_to_utf, entity_to_utf
 
 
 class Jinja_Custom_Fitlers_Test(unittest.TestCase):
@@ -264,15 +265,45 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                     'no double \n'
                     '<br />should have br\n'
                     '<a href="http://sosmooth.org/abs/hep-th/9901002">hep-th/9901002</a> other'),
-                'urlize, line_break and arxiv_id_urls should all work together')
+                    'urlize, line_break and arxiv_id_urls should all work together')
+
+    def test_tex_to_utf(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['arxiv_id_urls'] = arxiv_id_urls
+            jenv.filters['line_break'] = line_feed_to_br
+            jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
+            jenv.filters['arxiv_urlize'] = arxiv_urlize
+            jenv.filters['tex_to_utf'] = tex_to_utf
+
+            assert_that(jenv.from_string(
+                '{{""|tex_to_utf|arxiv_id_urls}}').render(),
+                equal_to(''))
+
+            title = jenv.from_string('{{"Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2<d<4"|tex_to_utf|arxiv_id_urls}}').render()
+            assert_that(title,
+                        equal_to('Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2&lt;d&lt;4'),
+                        'tex_to_utf and arxiv_id_urls should handle < and > ARXIVNG-1227')
+
+    
+            jenv.filters['entity_to_utf'] = entity_to_utf
 
     def test_entity_to_utf(self):
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
             jenv = Environment(autoescape=True)
+            jenv.filters['arxiv_id_urls'] = arxiv_id_urls
+            jenv.filters['line_break'] = line_feed_to_br
+            jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
+            jenv.filters['arxiv_urlize'] = arxiv_urlize
+            jenv.filters['tex_to_utf'] = tex_to_utf
             jenv.filters['entity_to_utf'] = entity_to_utf
-
             assert_that(jenv.from_string(
                 '{{ "Mart&#xED;n"|entity_to_utf }}').render(),
                 equal_to('Martín'), 'entity_to_utf should work')
+            assert_that(jenv.from_string(
+                '{{ "<Mart&#xED;n>"|entity_to_utf }}').render(),
+                equal_to('&lt;Martín&gt;'), 'entity_to_utf should work even with < or >')

@@ -13,8 +13,17 @@ import html
 from browse.services.util.tex2utf import tex2utf
 
 
-def doi_urls(clickthrough_url_for: Callable[[str], str],
-             text: Union[Markup, str]) -> str:
+JinjaFilterInput = Union[Markup, str]
+"""Jinja filters will receive their text input as either
+   a Markup object or a str. It is critical for proper escaping to
+   to ensure that str is correctly HTML escaped.
+   
+   Markup is decnded from str so this type is redundent but
+   the hope is to make it clear what is going on to arXiv developers.
+"""
+
+
+def doi_urls(clickthrough_url_for: Callable[[str], str], text: JinjaFilterInput) -> Markup:
     """Creates links to one or more DOIs.
 
     clickthrough_url_for is a Callable that takes the URL and returns
@@ -30,9 +39,10 @@ def doi_urls(clickthrough_url_for: Callable[[str], str],
     # Two cases:
     #  1. we get a markup object for text, ex from a previously filter stage
     #  2. we get a raw str for text, ex meta.abstract
-    # In both of cases the value in result ends up escaped after this
-    # conditional.
+    # In both of cases the value in result ends up escaped after
+    # this conditional.
     # Then we sub DOI with HTML elements, and return the result as Markup()
+
     if hasattr(text, '__html__') and hasattr(text, 'unescape'):
         result = text
     else:
@@ -61,9 +71,11 @@ def doi_urls(clickthrough_url_for: Callable[[str], str],
     return Markup(result)
 
 
-def arxiv_urlize(text: str, rel: Optional[str] = None,
-                 target: Optional[str] = None
-                 )-> str:
+
+def arxiv_urlize(
+        text: JinjaFilterInput, trim_url_limit: Optional[int] = None,
+        rel: Optional[str] = None, target: Optional[str] = None
+) -> Markup:
     """Like jinja2 urlize but uses link text of 'this http URL'.
 
     Based directly on jinja2 urlize;
@@ -135,20 +147,21 @@ def arxiv_urlize(text: str, rel: Optional[str] = None,
     return Markup(result)
 
 
-def line_feed_to_br(text: str) -> str:
-    """Lines that start with two spaces should be broken."""
+def line_feed_to_br(text: JinjaFilterInput) -> Markup:
+    """Lines that start with two spaces should be broken"""
+
     if hasattr(text, '__html__'):
         etxt = text
     else:
         etxt = Markup(escape(text))
 
     # if line starts with spaces, replace the white space with <br\>
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
+    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  
     dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
     return Markup(dedup)
 
 
-def arxiv_id_urls(text: str) -> str:
+def arxiv_id_urls(text: JinjaFilterInput) -> Markup:
     """
     Link either arXiv:<internal_id> or <internal_id> with text as anchor.
 
@@ -179,10 +192,39 @@ def arxiv_id_urls(text: str) -> str:
 
 
 def entity_to_utf(text: str) -> str:
-    """Converts HTML entities to unicode.  For example '&amp;' becomes '&'."""
-    return html.unescape(text)
+    """Converts HTML entities to unicode.  
+
+    For example '&amp;' becomes '&'.
+
+    Must be first filter in list because it does not do anything to a
+    Markup. On a Markup object it will do nothing and just return the
+    input Markup.
+
+    DANGEROUS because this is basically an unescape.
+    It tries to avoid junk like <script> but it is a bad idea.
+    This MUST NEVER BE USED ON USER PROVIDED INPUT. Submission titles etc.
+
+    """
+
+    if hasattr(text, '__html__'):
+        return text
+    
+    without_lt = re.sub('<', 'XXX_LESS_THAN_XXX', text)
+    without_lt_gt = re.sub('>', 'XXX_GREATER_THAN_XXX', without_lt)
+
+    unes = html.unescape(without_lt_gt)
+
+    with_lt = re.sub('XXX_LESS_THAN_XXX', '&lt;', unes)
+    with_lt_gt = re.sub('XXX_GREATER_THAN_XXX', '&gt;', with_lt)
+
+    return Markup(with_lt_gt)
 
 
-def tex_to_utf(text: str) -> str:
+def tex_to_utf(text: JinjaFilterInput) -> Markup:
     """Wraps tex2utf as a filter."""
-    return Markup(tex2utf(text))
+
+    if hasattr(text, '__html__'):
+        etxt = text
+    else:
+        etxt = Markup(escape(text))
+    return Markup(tex2utf(etxt))
