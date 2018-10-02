@@ -138,9 +138,7 @@ def arxiv_urlize(
                 # trim_url(middle)
                 middle = '<a href="%s"%s%s>%s</a>' \
                          % (middle, rel_attr, target_attr, link_text)
-            if '@' in middle and not middle.startswith('www.') and \
-                    ':' not in middle and _simple_email_re.match(middle):
-                middle = '<a href="mailto:%s">%s</a>' % (middle, middle)
+            # creation of email links removed ARXIVNG-1226
             if lead + middle + trail != word:
                 words[i] = lead + middle + trail
     result = u''.join(words)

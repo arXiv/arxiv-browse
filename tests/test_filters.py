@@ -307,3 +307,17 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
             assert_that(jenv.from_string(
                 '{{ "<Mart&#xED;n>"|entity_to_utf }}').render(),
                 equal_to('&lt;Martín&gt;'), 'entity_to_utf should work even with < or >')
+
+    def test_arxiv_urlize_no_email_links(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['arxiv_urlize'] = arxiv_urlize
+
+            assert_that(jenv.from_string(
+                '{{ "bob@example.com"|arxiv_urlize }}').render(),
+                equal_to('bob@example.com'), 'arxiv_urlize should not turn emails into links')
+            assert_that(jenv.from_string(
+                '{{ "<bob@example.com>"|arxiv_urlize }}').render(),
+                equal_to('&lt;bob@example.com&gt;'), 'arxiv_urlize should work even with < or >')
