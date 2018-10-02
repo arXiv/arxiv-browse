@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1611.08171
+From: Nilde Nisse Tyss{\o}y <with_proxy@example.org>
+Date: Thu, 24 Nov 2016 13:08:52 GMT   (724kb)
+
+Title: Cutoff latitude variation during solar proton events: Causes and
+  consequences
+Authors: H. Nesse Tyss{\o}y and J. Stadsnes
+Categories: physics.space-ph
+Proxy: Kavitha Østgaard
+DOI: 10.1002/2014JA020508
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  To accurately quantify the effect of solar proton events (SPEs) on the
+atmosphere requires a good estimate of the particle energy deposition in the
+middle atmosphere (60- 100 km) and how the energy is distributed globally.
+Protons in the energy range 1-20MeV, depositing their energy in the middle
+atmosphere, are subject to more complex dynamics with strong day-night
+asymmetries compared to higher-energy particles. Our study targets six SPEs
+from 2003 to 2012. By using measurements from the Medium Energy Proton and
+Electron Detector on all available Polar Orbit Environment Satellites (POES),
+we show that in the main phase of geomagnetic storms the dayside cutoff
+latitudes are pushed poleward, while the nightside cutoff latitudes have the
+opposite response, resulting in strong day-night asymmetries in the energy
+deposition. These features cannot bemeasured by the frequently used
+Geostationary Operational Environmental Satellites (GOES). Assuming that the
+protons impact the polar atmosphere homogeneously above a fixed nominal
+latitude boundary will therefore give a significant overestimate of the energy
+deposited in the middle atmosphere during SPEs. We discuss the magnetospheric
+mechanisms responsible for the local time response in the cutoff latitudes and
+provide a simple applicable parameterization which includes both dayside and
+nightside cutoff latitude variability using only the Dst, the northward
+component of the interplanetary magnetic field, and solar wind pressure. The
+parameterization is utilized on the GOES particle fluxes, and the resulting
+energy deposition successfully captures the day-night asymmetry in good
+agreement with the energy deposition predicted from the POES measurement.
+\\

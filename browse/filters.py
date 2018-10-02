@@ -5,8 +5,10 @@ from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
-from jinja2.utils import _digits, _letters, _punctuation_re, _simple_email_re, _word_split_re  # type: ignore
+from jinja2.utils import _digits, _letters, _punctuation_re  # type: ignore
+from jinja2.utils import _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
+import html
 
 from browse.services.util.tex2utf import tex2utf
 
@@ -24,11 +26,14 @@ JinjaFilterInput = Union[Markup, str]
 def doi_urls(clickthrough_url_for: Callable[[str], str], text: JinjaFilterInput) -> Markup:
     """Creates links to one or more DOIs.
 
-    clickthrough_url_for is a Callable that takes the URL and returns a clickthrough URL.
+    clickthrough_url_for is a Callable that takes the URL and returns
+    a clickthrough URL.
+
     An example of this is in factory.py
     While this is called clickthrough_url_for it could be any str -> str fn.
     For testing this could be the identity function:
     value = doi_urls( lambda x: x , 'test text bla bla bla')
+
     """
     # How does this ensure escaping?
     # Two cases:
@@ -66,11 +71,14 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: JinjaFilterInput)
     return Markup(result)
 
 
+
 def arxiv_urlize(
         text: JinjaFilterInput, trim_url_limit: Optional[int] = None,
         rel: Optional[str] = None, target: Optional[str] = None
 ) -> Markup:
-    """ Based directly on jinja2 urlize;
+    """Like jinja2 urlize but uses link text of 'this http URL'.
+
+    Based directly on jinja2 urlize;
     Copyright (c) 2009 by the Jinja Team, see AUTHORS in
     https://github.com/pallets/jinja or other distribution of jinja2
     for more details.
@@ -91,7 +99,6 @@ def arxiv_urlize(
     attribute.
     If target is not None, a target attribute will be added to the link.
     """
-
     if hasattr(text, '__html__'):
         result = text
     else:
@@ -99,8 +106,8 @@ def arxiv_urlize(
 
     # Note: currently unused; using link_text instead
     # trim_url = lambda x, limit=trim_url_limit: limit is not None \
-    #                                            and (x[:limit] + (len(x) >=limit and '...'
-    #                                                              or '')) or x
+    #    and (x[:limit] + (len(x) >=limit and '...'
+    #    or '')) or x
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
@@ -121,12 +128,14 @@ def arxiv_urlize(
                         middle.endswith('.net') or
                         middle.endswith('.com')
                     )):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="http://%s"%s%s>%s</a>' % \
                     (middle, rel_attr, target_attr, link_text)
             if middle.startswith('http://') or \
                     middle.startswith('https://'):
-                # in jinja2 urlize, an additional last argument is trim_url(middle)
+                # in jinja2 urlize, an additional last argument is
+                # trim_url(middle)
                 middle = '<a href="%s"%s%s>%s</a>' \
                          % (middle, rel_attr, target_attr, link_text)
             if '@' in middle and not middle.startswith('www.') and \
@@ -176,7 +185,8 @@ def arxiv_id_urls(text: JinjaFilterInput) -> Markup:
     # TODO: consider supporting more than just new ID patterns?
     new_id_re = r'([a-z-]+(.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
     id_re = re.compile(
-        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' % new_id_re, re.IGNORECASE)
+        r'(^|[^/A-Za-z-])((arXiv:|(?<!viXra:))(%s))' %
+        new_id_re, re.IGNORECASE)
     result = re.sub(id_re, arxiv_id_link, etxt)
     return Markup(result)
 

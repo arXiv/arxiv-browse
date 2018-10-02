@@ -88,9 +88,13 @@ def _element_similarity(name: str,
 
         if sim < min_sim:
             msg = f"Elements did not meet min similarity of {min_sim}"
-            return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, sim)
+            return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt,
+                             ng_ele_txt, sim)
         return None
     else:
+        if not required:
+            return None
+
         if len(ng) > 0:
             ng_ele_txt = ng[0].prettify()
         if len(legacy) > 0:
@@ -98,7 +102,8 @@ def _element_similarity(name: str,
 
         msg = 'zero elements detected: ' \
               + f'legacy length was {len(legacy)}; ng length was {len(ng)} '
-        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt, ng_ele_txt, 0.0)
+        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt,
+                         ng_ele_txt, 0.0)
 
 
 
