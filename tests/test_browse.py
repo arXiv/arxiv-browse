@@ -129,3 +129,13 @@ class BrowseTest(unittest.TestCase):
         self.assertNotRegex(sub_txt, r'adap-org', 'should NOT have subsumed category name adap-org on subject line')
         self.assertRegex(sub_txt, r'q-bio\.PE', 'should have secondary category of q-bio.PE')
         self.assertNotRegex(sub_txt, r'nlin\.AO.*nlin\.AO', 'should NOT have nlin.AO twice')
+
+    def test_hep_th_9809096(self):
+        # Test for malformed html on this abs
+        # https://culibrary.atlassian.net/browse/ARXIVNG-1227
+        rv = self.app.get('/abs/hep-th/9809096')
+        self.assertEqual(rv.status_code, 200)
+        self.assertTrue( "<d<4</h1>" not in rv.data.decode('utf-8'), "Odd malformed HTML in /abs/hep-th/9809096")
+
+        
+        
