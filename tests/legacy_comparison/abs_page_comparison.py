@@ -7,18 +7,20 @@ import re
 from functools import partial
 from multiprocessing import Pool
 from typing import Callable, Iterator, List, Set, Tuple, Dict
+import gzip
 
 import requests
 from bs4 import BeautifulSoup
 
-sys.path.append('')  # BDC34: some how I need this under pipenv to get to browse, not sure why
+# BDC34: some how I need this under pipenv to get to browse, not sure why
+sys.path.append('')
 sys.setrecursionlimit(10000)
 
 from tests.legacy_comparison.comparison_types import res_comparison_fn, \
     text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict, \
     html_arg_dict, BadResult
-from tests.legacy_comparison.html_comparisons import author_similarity,dateline_similarity, history_similarity,\
-    title_similarity,subject_similarity, comments_similarity, extra_services_similarity, head_similarity
+from tests.legacy_comparison.html_comparisons import author_similarity, dateline_similarity, history_similarity,\
+    title_similarity, subject_similarity, comments_similarity, extra_services_similarity, head_similarity
 from tests.legacy_comparison.response_comparisons import compare_status
 from tests.legacy_comparison.text_comparisons import text_similarity
 from browse.services.document.metadata import AbsMetaSession
@@ -57,14 +59,37 @@ res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
 #text_comparisons: List[text_comparison_fn] = [text_similarity]
-text_comparisons: List[text_comparison_fn] = []
+text_comparisons: List[text_comparison_fn] = [text_similarity]
 
 # List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = [
-
+    author_similarity,
+    dateline_similarity,
+    history_similarity,
+    title_similarity,
     subject_similarity,
-
+    comments_similarity,
+    extra_services_similarity,
+    head_similarity,
 ]
+
+
+def _paperid_generator_from_gzip(path:str, excluded:List[str])->Iterator[str]:
+    with gzip.open(path,'rt') as f:
+        for line in f:            
+            aid = line.strip()
+            if aid not in excluded:
+                yield aid
+
+
+def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
+    for ( dir_name, subdir_list, file_list) in os.walk(path):
+        for fname in file_list:
+            fname_path = os.path.join(dir_name, fname)
+            print(f'looking at {fname_path}')
+            if os.stat(fname_path).st_size != 0 and fname_path.endswith('.abs'):
+                aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+                yield aid
 
 
 def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
@@ -84,6 +109,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
 
 
 # Should end with /
+#ng_abs_base_url = 'https://beta.arxiv.org/ng/abs/'
 ng_abs_base_url = 'http://localhost:5000/abs/'
 
 # Should end with /
@@ -179,10 +205,15 @@ def process_text(text_args: text_arg_dict) -> html_arg_dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
-    parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
-    parser.add_argument('--short', default=False, const=True, action='store_const', dest='short')
-    parser.add_argument('--skip-ancillary', default=False, const=True, action='store_const', dest='skip_anc')
+    parser = argparse.ArgumentParser(
+        description='Compare ng browse to legacy browse')
+    parser.add_argument('--ids', default=False, )
+    parser.add_argument('--reset', default=False, const=True,
+                        action='store_const', dest='reset')
+    parser.add_argument('--short', default=False, const=True,
+                        action='store_const', dest='short')
+    parser.add_argument('--skip-ancillary', default=False, const=True,
+                        action='store_const', dest='skip_anc')
     args = parser.parse_args()
     visited: List[str] = []
     skip_checks: Set[str] = set()
@@ -197,26 +228,45 @@ def main() -> None:
             print('Continuing analysis')
             with open(VISITED_ABS_FILE_NAME, 'r') as visited_fh:
                 visited = [line.rstrip() for line in visited_fh.readlines()]
- 
-    if args.short:
-        papers = paperid_iterator(ABS_FILES, excluded=visited)[:5]
+
+    if args.ids:
+        papers = _paperid_generator_from_gzip(args.ids, excluded=visited)
     else:
-        papers = paperid_iterator(ABS_FILES, excluded=visited)
+        papers = iter(paperid_iterator(ABS_FILES, excluded=visited))
 
     if args.skip_anc:
         skip_checks.add('skip_anc')
 
     run_selected_compare_response = partial(run_compare_response, skip_checks)
 
+
+    if args.short:
+        n=0
+        total = 10
+
+        def done()->bool:
+            nonlocal n
+            if n >= total:
+                return True
+            n = n + 1
+            return False
+    else:
+
+        def done()->bool:
+            return False
+
     with open(VISITED_ABS_FILE_NAME, 'a') as visited_fh:
         with open(LOG_FILE_NAME, 'w')as report_fh:
             with Pool(10) as pool:
-                fetch_and_compare_fn = partial(fetch_abs, run_selected_compare_response)
+                fetch_and_compare_fn = partial(fetch_abs,
+                                               run_selected_compare_response)
                 completed_jobs = pool.imap(fetch_and_compare_fn, papers)
                 for job in completed_jobs:
                     (config, bad_results) = job
                     visited_fh.write(f"{config['paper_id']}\n")
                     write_comparison(report_fh, (config,bad_results))
+                    if done():
+                        exit(0)
 
 
 def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
@@ -224,7 +274,8 @@ def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
     if not bad_results:
         report_fh.write(f"* {config['paper_id']}: okay.\n")
         return
-    report_fh.write(f"* {config['paper_id']}: not okay, had {len(bad_results)} bad results.\n")
+    report_fh.write(f"* {config['paper_id']}: not okay, had {len(bad_results)} "
+                    "bad results.\n")
     for br in bad_results:
         report_fh.write(format_bad_result(br))
 
@@ -244,7 +295,6 @@ def format_bad_result(bad: BadResult)->str:
 
 
 def strip_by_delim(text: str, start: str, end: str) -> str:
-
     if (start in text) and (end in text):
         def find_start() -> int:
             return text.index(start)
