@@ -172,4 +172,9 @@ def arxiv_id_urls(text: str) -> str:
 def tex_to_utf(text: str) -> str:
     """Wraps tex2utf as a filter."""
 
-    return Markup(tex2utf(text))
+    if hasattr(text, '__html__'):
+        etxt = text
+    else:
+        etxt = Markup(escape(text))
+
+    return Markup(tex2utf(etxt))

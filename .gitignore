@@ -119,3 +119,6 @@ private_vars.sh
 
 #misc
 .fuse_hidden*
+.pycheckers
+.pyre
+legacy_comparison.org
