@@ -13,7 +13,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-sys.path.append('')  # BDC34: some how I need this under pipenv to get to browse, not sure why
+# BDC34: some how I need this under pipenv to get to browse, not sure why
+sys.path.append('')
 sys.setrecursionlimit(10000)
 
 from tests.legacy_comparison.comparison_types import res_comparison_fn, \
@@ -66,7 +67,7 @@ res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
 #text_comparisons: List[text_comparison_fn] = [text_similarity]
-text_comparisons: List[text_comparison_fn] = []
+text_comparisons: List[text_comparison_fn] = [text_similarity]
 
 # List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = [
@@ -94,7 +95,6 @@ def _paperid_generator_from_gzip(path: str, excluded: List[str])->Iterator[str]:
                 logging.debug(f'yielding id {aid}')
                 yield aid
 
-    subject_similarity,
 
 
 def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
@@ -119,15 +119,14 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
             if not fname_path.endswith('.abs'):
                 continue
             aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
-            if aid not in excluded:                
+            if aid not in excluded:
                 ids.append(aid)
     logging.debug(f'finished getting the ids count:{len(ids)}')
     return ids
 
 
 # Should end with /
-ng_abs_base_url = 'https://beta.arxiv.org/ng/abs/'
-#ng_abs_base_url = 'http://localhost:5000/abs/'
+ng_abs_base_url = 'http://localhost:5000/abs/'
 
 # Should end with /
 legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
@@ -228,10 +227,15 @@ def process_text(text_args: text_arg_dict) -> html_arg_dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Compare ng browse to legacy browse')
-    parser.add_argument('--reset', default=False, const=True, action='store_const', dest='reset')
-    parser.add_argument('--short', default=False, const=True, action='store_const', dest='short')
-    parser.add_argument('--skip-ancillary', default=False, const=True, action='store_const', dest='skip_anc')
+    parser = argparse.ArgumentParser(
+        description='Compare ng browse to legacy browse')
+    parser.add_argument('--ids', default=False, )
+    parser.add_argument('--reset', default=False, const=True,
+                        action='store_const', dest='reset')
+    parser.add_argument('--short', default=False, const=True,
+                        action='store_const', dest='short')
+    parser.add_argument('--skip-ancillary', default=False, const=True,
+                        action='store_const', dest='skip_anc')
     args = parser.parse_args()
     visited: Set[str] = []
     skip_checks: Set[str] = set()
