@@ -287,8 +287,11 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                         equal_to('Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2&lt;d&lt;4'),
                         'tex_to_utf and arxiv_id_urls should handle < and > ARXIVNG-1227')
 
-    
-            jenv.filters['entity_to_utf'] = entity_to_utf
+
+            assert_that(tex_to_utf( 'Lu\\\'i'),equal_to('Luí'))
+            assert_that(tex_to_utf( Markup('Lu\\\'i') ),equal_to('Luí'))
+            assert_that(tex_to_utf( Markup(escape('Lu\\\'i')) ),equal_to('Luí'))
+
 
     def test_entity_to_utf(self):
         h = 'sosmooth.org'

@@ -190,7 +190,7 @@ def arxiv_id_urls(text: JinjaFilterInput) -> Markup:
 
 
 def entity_to_utf(text: str) -> str:
-    """Converts HTML entities to unicode.  
+    """Converts HTML entities to unicode.
 
     For example '&amp;' becomes '&'.
 
@@ -201,12 +201,13 @@ def entity_to_utf(text: str) -> str:
     DANGEROUS because this is basically an unescape.
     It tries to avoid junk like <script> but it is a bad idea.
     This MUST NEVER BE USED ON USER PROVIDED INPUT. Submission titles etc.
-
     """
 
+    # TODO it would be good to move this out of a jinja filter
+    # and to the controller, it is only used for things coming from DBLP
     if hasattr(text, '__html__'):
         return text
-    
+
     without_lt = re.sub('<', 'XXX_LESS_THAN_XXX', text)
     without_lt_gt = re.sub('>', 'XXX_GREATER_THAN_XXX', without_lt)
 
@@ -222,7 +223,7 @@ def tex_to_utf(text: JinjaFilterInput) -> Markup:
     """Wraps tex2utf as a filter."""
 
     if hasattr(text, '__html__'):
-        etxt = text
+        # Need to unescape so nothing that is tex is escaped
+        return Markup(escape(tex2utf(text.unescape())))  # type: ignore
     else:
-        etxt = Markup(escape(text))
-    return Markup(tex2utf(etxt))
+        return Markup(escape(tex2utf(text)))
