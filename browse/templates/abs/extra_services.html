@@ -210,17 +210,17 @@
       </ul>
     </div>
 
-    {# DBLP is a bibliographical database primarily for Computer Science papers #}
-    {% if dblp %}
-      {{ generate_dblp_section() }}
-    {% endif %}
-
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">
         <div class="what-is-this">
             <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog links</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
         </div>
     </div>
+    {% endif %}
+    
+    {# DBLP is a bibliographical database primarily for Computer Science papers #}
+    {% if dblp %}
+      {{ generate_dblp_section() }}
     {% endif %}
 
     {% include "abs/bookmarking.html" %}
