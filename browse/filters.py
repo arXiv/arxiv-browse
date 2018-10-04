@@ -5,7 +5,7 @@ from typing import Callable, Match, Optional, Union
 
 from jinja2 import Markup, escape
 from jinja2._compat import text_type
-from jinja2.utils import _digits, _letters, _punctuation_re  # type: ignore
+from jinja2.utils import _digits, _letters  # type: ignore
 from jinja2.utils import _simple_email_re, _word_split_re  # type: ignore
 from flask import url_for
 import html
@@ -71,6 +71,15 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: JinjaFilterInput)
     return Markup(result)
 
 
+_start_tokens = ('(', '<', '&lt;', '[')
+_terminator_tokens = ('. ', ',', ')', '>', '\n', '&gt;', ']')
+_punctuation_re = re.compile(
+    '^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % (
+        '|'.join(map(re.escape, _start_tokens)),
+        '|'.join(map(re.escape, _terminator_tokens))
+    )
+)
+
 def arxiv_urlize(text: JinjaFilterInput,
                  rel: Optional[str] = None,
                  target: Optional[str] = None
@@ -109,7 +118,7 @@ def arxiv_urlize(text: JinjaFilterInput,
     # trim_url = lambda x, limit=trim_url_limit: limit is not None \
     #    and (x[:limit] + (len(x) >=limit and '...'
     #    or '')) or x
-    link_text = 'this http URL'
+    link_text = 'this %s URL'
 
     words = _word_split_re.split(text_type(escape(result)))
     # rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
@@ -123,11 +132,13 @@ def arxiv_urlize(text: JinjaFilterInput,
             lead, middle, trail = match.groups()
             if middle.startswith('ftp://'):
                 middle = '<a href="%s"%s%s>%s</a>' \
-                          % (middle, rel_attr, target_attr, link_text)
-            if middle.startswith('http://') or \
-                    middle.startswith('https://'):
+                          % (middle, rel_attr, target_attr, link_text % 'ftp')
+            if middle.startswith('http://'):
                 middle = '<a href="%s"%s%s>%s</a>' \
-                         % (middle, rel_attr, target_attr, link_text)
+                         % (middle, rel_attr, target_attr, link_text % 'http')
+            if middle.startswith('https://'):
+                middle = '<a href="%s"%s%s>%s</a>' \
+                         % (middle, rel_attr, target_attr, link_text % 'https')
             # creation of email links removed ARXIVNG-1226
             if lead + middle + trail != word:
                 words[i] = lead + middle + trail
