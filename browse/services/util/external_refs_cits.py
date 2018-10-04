@@ -18,23 +18,28 @@ def get_orig_publish_date(ident: Identifier) -> Optional[date]:
         return None
 
 
-def inspire_category(primary_category: Category,
+def inspire_category(category: Category,
                      orig_publish_date: date)-> bool:
-    """Get inspire category for primary and date."""
-    if primary_category.id in INSPIRE_REF_CIT_CATEGORIES and \
-        orig_publish_date >= INSPIRE_REF_CIT_CATEGORIES[primary_category.id]:
-        return True
-    else:
-        return False  # workaround of mypy error
+    """Get if inspire is in affect for category and date."""
+    return bool(category and
+                category.id in INSPIRE_REF_CIT_CATEGORIES
+                and orig_publish_date >=
+                INSPIRE_REF_CIT_CATEGORIES[category.id])
 
 
 def include_inspire_link(docmeta: DocMetadata) -> bool:
     """Check whether to include INSPIRE reference/citation link on abs page."""
     orig_publish_date = get_orig_publish_date(docmeta.arxiv_identifier)
-    if orig_publish_date is not None and docmeta.primary_category is not None:
-        return inspire_category(docmeta.primary_category, orig_publish_date)
-    else:
+    if not orig_publish_date:
         return False
+
+    if docmeta.primary_category and inspire_category(docmeta.primary_category,
+                                                     orig_publish_date):
+        return True
+
+    cats = docmeta.secondary_categories
+    return len([cat for cat in cats
+                if inspire_category(cat, orig_publish_date)]) > 0
 
 
 def include_dblp_section(docmeta: DocMetadata) -> bool:
