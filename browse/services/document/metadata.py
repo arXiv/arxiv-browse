@@ -21,6 +21,8 @@ from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     has_ancillary_files, list_ancillary_files
 from browse.services.document import cache
 
+import logging
+logger = logging.getLogger(__name__)
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
@@ -421,7 +423,15 @@ class AbsMetaSession:
             source_file_formats = \
                 formats_from_source_file_name(source_file_path)
         if source_file_formats:
+            logger.debug(f'adding formats from source_file_formats {source_file_formats}')
             formats.extend(source_file_formats)
+
+            if add_sciencewise:
+                if formats and formats[-1] == 'other':
+                    formats.insert(-1, 'sciencewise_pdf')
+                else:
+                    formats.append('sciencewise_pdf')
+
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -437,19 +447,16 @@ class AbsMetaSession:
                     and os.path.getmtime(source_file_path) \
                     < os.path.getmtime(cached_ps_file_path):
                 cache_flag = True
+
             source_type_formats = formats_from_source_type(format_code,
                                                            format_pref,
-                                                           cache_flag)
+                                                           cache_flag,
+                                                           add_sciencewise)
             if source_type_formats:
                 formats.extend(source_type_formats)
+            logger.debug(f'after adding from metadat source type: {formats}')
 
-        # Separate check for ScienceWISE annotated PDF
-        if add_sciencewise:
-            if formats and formats[-1] == 'other':
-                formats.insert(-1, 'sciencewise_pdf')
-            else:
-                formats.append('sciencewise_pdf')
-
+        logger.debug(f'final formats: {formats}')
         return formats
 
     def get_ancillary_files(self, docmeta: DocMetadata) \

@@ -7,6 +7,9 @@ from typing import Dict, List, Optional
 import tarfile
 from tarfile import ReadError, CompressionError
 
+import logging
+logger = logging.getLogger(__name__)
+
 # List of tuples containing the valid source file name extensions and their
 # corresponding dissemintation formats.
 # There are minor performance implications in the ordering when doing
@@ -34,7 +37,8 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
 
 def formats_from_source_type(source_type: str,
                              format_pref: Optional[str] = None,
-                             cache_flag: bool = False) -> List[str]:
+                             cache_flag: bool = False,
+                             add_sciencewise:bool = False) -> List[str]:
     """
     Get the dissemination formats based on source type and format preference.
 
@@ -74,7 +78,10 @@ def formats_from_source_type(source_type: str,
     has_html = re.search('H', source_type, re.IGNORECASE)
     has_docx_or_odf = re.search(r'[XO]', source_type, re.IGNORECASE)
     has_src_pref = format_pref and re.search('src', format_pref)
-
+    append_other = False
+    logger.debug(f'In formats_from_source_type: source_type is '
+                 f'"{source_type}", format_pref is {format_pref} cache_flag is {cache_flag}')
+    
     if has_ignore and not has_encrypted_source:
         formats.append('src')
     elif has_ps_only:
@@ -114,6 +121,12 @@ def formats_from_source_type(source_type: str,
         else:
             formats.extend(['pdf', 'ps'])
 
+        append_other = True
+
+    if add_sciencewise:
+        formats.append('sciencewise_pdf')
+
+    if append_other:
         formats.append('other')
 
     return formats
