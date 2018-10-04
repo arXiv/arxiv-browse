@@ -137,5 +137,11 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertTrue( "<d<4</h1>" not in rv.data.decode('utf-8'), "Odd malformed HTML in /abs/hep-th/9809096")
 
-        
-        
+
+    def test_1501_9999(self):
+        rv = self.app.get('/abs/1501.99999')
+        self.assertEqual(rv.status_code, 200)
+        self.assertTrue(
+            "Luí" in rv.data.decode('utf-8'),
+            "Submitter should be properly tex_to_utf for 1501.99999")
+
