@@ -17,7 +17,7 @@ JinjaFilterInput = Union[Markup, str]
 """Jinja filters will receive their text input as either
    a Markup object or a str. It is critical for proper escaping to
    to ensure that str is correctly HTML escaped.
-   
+
    Markup is decnded from str so this type is redundent but
    the hope is to make it clear what is going on to arXiv developers.
 """
@@ -71,13 +71,14 @@ def doi_urls(clickthrough_url_for: Callable[[str], str], text: JinjaFilterInput)
     return Markup(result)
 
 
-
-def arxiv_urlize(
-        text: JinjaFilterInput, trim_url_limit: Optional[int] = None,
-        rel: Optional[str] = None, target: Optional[str] = None
+def arxiv_urlize(text: JinjaFilterInput,
+                 rel: Optional[str] = None,
+                 target: Optional[str] = None
 ) -> Markup:
     """Like jinja2 urlize but uses link text of 'this http URL'.
 
+    Don't make hostnames without http:// into links ARXIVNG-1243
+    Do make ftp:// into links 
     Based directly on jinja2 urlize;
     Copyright (c) 2009 by the Jinja Team, see AUTHORS in
     https://github.com/pallets/jinja or other distribution of jinja2
@@ -111,31 +112,20 @@ def arxiv_urlize(
     link_text = 'this http URL'
 
     words = _word_split_re.split(text_type(escape(result)))
-    rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
+    # rel_attr = rel and ' rel="%s"' % text_type(escape(rel)) or ' rel="noopener"'
+    rel_attr = '' # TODO ARXIVNG-1232 Change to add rel="noopender" for external sites
+
     target_attr = target and ' target="%s"' % escape(target) or ''
 
     for i, word in enumerate(words):
         match = _punctuation_re.match(word)
         if match:
             lead, middle, trail = match.groups()
-            if middle.startswith('www.') or (
-                    '@' not in middle and
-                    not middle.startswith('http://') and
-                    not middle.startswith('https://') and
-                    middle and
-                    middle[0] in _letters + _digits and (
-                        middle.endswith('.org') or
-                        middle.endswith('.net') or
-                        middle.endswith('.com')
-                    )):
-                # in jinja2 urlize, an additional last argument is
-                # trim_url(middle)
-                middle = '<a href="http://%s"%s%s>%s</a>' % \
-                    (middle, rel_attr, target_attr, link_text)
+            if middle.startswith('ftp://'):
+                middle = '<a href="%s"%s%s>%s</a>' \
+                          % (middle, rel_attr, target_attr, link_text)
             if middle.startswith('http://') or \
                     middle.startswith('https://'):
-                # in jinja2 urlize, an additional last argument is
-                # trim_url(middle)
                 middle = '<a href="%s"%s%s>%s</a>' \
                          % (middle, rel_attr, target_attr, link_text)
             # creation of email links removed ARXIVNG-1226
@@ -154,7 +144,7 @@ def line_feed_to_br(text: JinjaFilterInput) -> Markup:
         etxt = Markup(escape(text))
 
     # if line starts with spaces, replace the white space with <br\>
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)  
+    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
     dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
     return Markup(dedup)
 

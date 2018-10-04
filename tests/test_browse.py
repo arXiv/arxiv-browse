@@ -145,3 +145,14 @@ class BrowseTest(unittest.TestCase):
             "Luí" in rv.data.decode('utf-8'),
             "Submitter should be properly tex_to_utf for 1501.99999")
 
+        self.assertTrue(
+            'href="www.bogus.org"' not in rv.data.decode('utf-8'),
+            "hostnames should NOT be turned into links ARXIVNG-1243")
+
+        self.assertTrue(
+            'href="bogus.org"' not in rv.data.decode('utf-8'),
+            "hostnames should NOT be turned into links ARXIVNG-1243")
+
+        self.assertTrue(
+            'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
+            "FTP URLs should be turned into links ARXIVNG-1242")
