@@ -175,7 +175,6 @@ class BrowseTest(unittest.TestCase):
             f"link should not include closing square bracket")
 
 
-    @unittest.skip("TODO ARXIVNG-1246, may require refactoring jinja filters")
     def test_arxivng_1246(self):
         """ ARXIVNG-1246 Problem with Urlize in comments for 1604.08245v1 """
         id = '1604.08245'

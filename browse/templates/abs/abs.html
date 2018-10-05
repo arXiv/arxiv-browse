@@ -52,7 +52,7 @@
 
     <div class="dateline">{{ generate_dateline() }}</div>
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|arxiv_urlize|arxiv_id_urls|line_feed_to_br }}</blockquote>
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|arxiv_urlize|line_feed_to_br }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
@@ -60,7 +60,7 @@
         <tr>
           <td class="tablecell label">Comments:</td>
           {# TODO: apply filtering to comments field per classic  #}
-          <td class="tablecell comments mathjax">{{ abs_meta.comments|arxiv_urlize|arxiv_id_urls }}</td>
+          <td class="tablecell comments mathjax">{{ abs_meta.comments|arxiv_urlize }}</td>
         </tr>
         {% endif -%}
         <tr>
