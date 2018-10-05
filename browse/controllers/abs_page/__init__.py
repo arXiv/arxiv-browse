@@ -102,11 +102,11 @@ def get_abs_page(arxiv_id: str) -> Response:
             add_sciencewise_ping)
 
         # Following are less critical and template must display without them
-        try:
-            _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
-        except Exception:
-            logger.warning("Error getting non-critical abs page data",
-                           exc_info=app.debug)
+        # try:
+        _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
+        #except Exception:
+        #    logger.warning("Error getting non-critical abs page data",
+        #                   exc_info=app.debug)
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \

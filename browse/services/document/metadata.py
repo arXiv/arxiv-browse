@@ -357,6 +357,8 @@ class AbsMetaSession:
 
         for _, _, file_list in os.walk(path):
             abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
+            if not abs_files:
+                return None
             max_id = max(abs_files)
             try:
                 if previous_id.is_old_id:
