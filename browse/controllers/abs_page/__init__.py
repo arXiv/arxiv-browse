@@ -292,22 +292,28 @@ def _check_context(arxiv_identifier: Identifier,
     None
 
     """
-    if 'context' in request.args\
-       and (request.args['context'] in taxonomy.CATEGORIES
-            or request.args['context'] in taxonomy.ARCHIVES
-            or request.args['context'] == 'arxiv'):
-        if request.args['context'] == 'arxiv':
-            response_data['browse_context_next_id'] = \
-                metadata.get_next_id(arxiv_identifier)
-            response_data['browse_context_previous_id'] = \
-                metadata.get_previous_id(arxiv_identifier)
-        response_data['browse_context'] = request.args['context']
-    elif arxiv_identifier.is_old_id:
-        response_data['browse_context_next_id'] = \
-            metadata.get_next_id(arxiv_identifier)
-        response_data['browse_context_previous_id'] = \
-            metadata.get_previous_id(arxiv_identifier)
+    if 'context' not in request.args:
+        if arxiv_identifier.is_old_id:
+            # This is just because legacy use the archive as the browse
+            # context for old IDs.
+            response_data['browse_context'] \
+                = arxiv_identifier.archive
+    return
 
+    context = request.args['context']
+    
+    if (context in taxonomy.CATEGORIES
+        or context in taxonomy.ARCHIVES
+        or context == 'arxiv'):
+        response_data['browse_context'] = context
+
+    if arxiv_identifier.is_old_id or context == 'arxiv':
+        response_data['browse_context_next_id'] = \
+                metadata.get_next_id(arxiv_identifier)
+        response_data['browse_context_previous_id'] = \
+                metadata.get_previous_id(arxiv_identifier)
+
+    
 
 def _check_sciencewise_ping(paper_id_v: str) -> bool:
     """Check whether paper has a ScienceWISE ping."""
