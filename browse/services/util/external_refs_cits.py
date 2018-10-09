@@ -50,7 +50,7 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
     this_month = date(today.year, today.month, 1)
     primary_archive = docmeta.primary_archive.id
     if orig_publish_date is not None:
-        date_test: bool = DBLP_START_DATE <= orig_publish_date < this_month
+        date_test: bool = orig_publish_date < this_month
         in_dblp_test: bool = primary_archive in DBLP_ARCHIVES
         return date_test and in_dblp_test
     else:
@@ -76,9 +76,10 @@ def get_dblp_bibtex_path(url: str) -> Optional[str]:
 def get_computed_dblp_listing_path(docmeta: DocMetadata) -> Optional[str]:
     """Get the DBLP listing path based on the metadata."""
     identifier = docmeta.arxiv_identifier
-    if identifier.id is not None:
+    orig_publish_date = get_orig_publish_date(identifier)
+    if orig_publish_date >= DBLP_START_DATE and identifier.id is not None:
         if identifier.is_old_id:
-            dblp_id = f'abs-cs-{identifier.num}'
+            dblp_id = f'abs-cs-{identifier.filename}'
         else:
             dashed_id = identifier.id.replace('.', '-', 1)
             dblp_id = f'abs-{dashed_id}'
