@@ -64,7 +64,7 @@
         </span>
          {% else %}
            {# TODO might be a bug from the legacy system, this should probably be &lt;&nbsp;prev see ARXIVNG-1221 #}
-        <span class="nolink">previous</span>
+        <span class="nolink">&lt;&nbsp;previous</span>
       {% endif %}
     {% else %}
       {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
@@ -215,7 +215,7 @@
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">
         <div class="what-is-this">
-            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog links</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
+            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
         </div>
     </div>
     {% endif %}
