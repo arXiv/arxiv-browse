@@ -128,7 +128,7 @@ class AbsMetaSession:
         latest_version = self._get_version(identifier=paper_id)
         if not paper_id.has_version \
            or paper_id.version == latest_version.version:
-            return latest_version
+            return dataclasses.replace(latest_version, is_definitive=True)
 
         try:
             this_version = self._get_version(identifier=paper_id,
@@ -147,7 +147,8 @@ class AbsMetaSession:
             primary_category=latest_version.primary_category,
             secondary_categories=latest_version.secondary_categories,
             primary_archive=latest_version.primary_archive,
-            primary_group=latest_version.primary_group)
+            primary_group=latest_version.primary_group,
+            is_definitive=True)
 
         return combined_version
 
@@ -541,18 +542,22 @@ class AbsMetaSession:
         # some transformations
         category_list: List[str] = []
         primary_category = None
+
         if 'categories' in fields and fields['categories']:
             category_list = fields['categories'].split()
-            try:
+            if category_list[0] in taxonomy.CATEGORIES:
                 primary_category = Category(id=category_list[0])
-            except KeyError:
-                raise AbsException(
-                    f'Invalid primary category: {category_list[0]}')
-            primary_archive = \
-                Archive(id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+                primary_archive = \
+                    Archive(
+                        id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+            elif arxiv_identifier.is_old_id:
+                    primary_archive = \
+                        Archive(id=arxiv_identifier.archive)  # type: ignore
         elif arxiv_identifier.is_old_id:
-            primary_archive = \
-                Archive(id=arxiv_identifier.archive)  # type: ignore
+                primary_archive = \
+                    Archive(id=arxiv_identifier.archive)  # type: ignore
+        else:
+            raise AbsException('Cannot infer archive from identifier.')
 
         doc_license: License = \
             License() if 'license' not in fields else License(recorded_uri=fields['license'])

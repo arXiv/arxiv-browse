@@ -11,7 +11,7 @@ class Category:
     """Represents an arXiv category.
 
     arXiv categories are arranged in a hierarchy where there are archives
-    (asrto-ph, cs, math, etc.) that contain subject classes (astro-ph has
+    (astro-ph, cs, math, etc.) that contain subject classes (astro-ph has
     subject classes CO, GA, etc.). We now use the term category to refer
     to any archive or archive.subject_class that one can submit to (so
     hep-th and math.IT are both categories). No subject class can be in
@@ -20,8 +20,8 @@ class Category:
     bridge major subject areas. Examples include math.MP == math-ph and
     stat.TH = math.ST. These are called category aliases and the idea is
     that any article classified in one of the aliases categories also appears
-    in the other, but that most of the arXiv code for display, search, etc.
-    does not need to understand the break with hierarchy.
+    in the other (canonical), but that most of the arXiv code for display,
+    search, etc. does not need to understand the break with hierarchy.
     """
 
     id: str = field(compare=True)
@@ -36,12 +36,6 @@ class Category:
         """Hash."""
         return id.__hash__()
 
-    # def __eq__(self,other):
-    #     return self.name == other.name
-
-    # def __lt__(self,other):
-    #     return self.name.__lt__(other)
-
     def __post_init__(self) -> None:
         """Get the full category name."""
         if self.id in taxonomy.CATEGORIES:
@@ -52,7 +46,7 @@ class Category:
         else:
             self.canonical = None
 
-    def unalias(self)->'Category':
+    def unalias(self) -> 'Category':
         """Follow any EQUIV or SUBSUMED to get the current category."""
         if self.id in taxonomy.CATEGORY_ALIASES:
             return Category(taxonomy.CATEGORY_ALIASES[self.id])
