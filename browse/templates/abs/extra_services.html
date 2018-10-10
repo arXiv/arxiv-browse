@@ -2,13 +2,15 @@
 <ul>
   {%- for anc_file in anc_file_list -%}
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
-  </ul><div id="long-anc-list"><ul>
+</ul><div id="long-anc-list"><ul>
     {% endif %}
   <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id,file_name=anc_file['name'])}}">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
     {% set num_files_not_shown = anc_file_list|length - cutoff %}
   </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
+  {% else %}
+</ul>
   {% endif %}
 {%- endmacro -%}
 
@@ -189,7 +191,6 @@
 {% if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
-    {# TODO need link to anc files details #}
     <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
@@ -218,14 +219,14 @@
         </div>
     </div>
     {% endif %}
-    
+
     {# DBLP is a bibliographical database primarily for Computer Science papers #}
     {% if dblp %}
       {{ generate_dblp_section() }}
     {% endif %}
 
     {% include "abs/bookmarking.html" %}
-    
+
   </div>
   <!--end extra-services-->
 {% endblock extra_services %}

@@ -6,7 +6,7 @@
     {{ super() }}
     <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
     {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-    <script src="/bibex/bibex.css?20181010" type="text/javascript" defer></script>
+    <script src="/bibex/bibex.css?20181010" type="text/javascript" defer="defer"></script>
     {% endif %}
     {{ generate_scholar_tags() }}
 {%- endblock head -%}
