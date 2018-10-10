@@ -5,6 +5,9 @@
 {%- block head -%}
     {{ super() }}
     <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
+    {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+    <script src="/bibex/bibex.css?20181010" type="text/javascript" defer></script>
+    {% endif %}
     {{ generate_scholar_tags() }}
 {%- endblock head -%}
 
@@ -121,6 +124,10 @@
     </div>
     <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)</div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+    {# The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer #}
+    {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+    <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
+    {% endif %}
   </div>
   <!--end leftcolumn-->
 </div>
