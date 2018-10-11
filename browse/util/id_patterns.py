@@ -73,10 +73,10 @@ basic_arxiv_id_patterns = [
                          % _category, re.I))
 ]
 
-OKCHARS = r'([a-z0-9_.\-~]|%[a-f0-9]*)'
+OKCHARS = r'([a-z0-9,_.\-~:]|%[a-f0-9]*)'
 """Chacters that are acceptable during PATH, QUERY and ANCHOR parts"""
 
-HOST_NAME = r'(?:[a-z0-9][a-z0-9\-.]+[a-z])'
+HOST_NAME = r'(?:[a-z0-9][a-z0-9\-.:]+[a-z0-9])'
 """Regex used to match host names in arXiv urlize.
 
 This is not a perfect regex for a host name, It accepts only a sub-set
@@ -97,7 +97,7 @@ ANCHOR = rf'(?P<ANCHOR>#{OKCHARS}*)?'
 
 
 URLINTEXT_PAT = re.compile(r'(?P<url>(?:https?://)'
-                           + f'{HOST_NAME}{PATH}{QUERY}{ANCHOR})',
+                           f'{HOST_NAME}{PATH}{QUERY}{ANCHOR})',
                            re.I)
 """Regex to match URLs in text."""
 
@@ -126,6 +126,11 @@ URLs are first because some URLs contain DOIs or arXiv IDS.
 DOI are before arXiv ids because many DOIs are falsely matched by the
 arxiv_id patterns.
 """
+
+
+_bad_endings = ['.', ',', ':', ';', '&', '(', '[', '{']
+"""These should not appear at the end of URLs because they are likely
+part of the surrounding text"""
 
 
 def _find_match(patterns: List[Matchable], token: str)-> Optional[Tuple[Match, Matchable]]:
@@ -175,20 +180,32 @@ def _transform_token(patterns: List[Matchable],
 
 def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Markup:
     """Returns match.string transformed for a arxiv id match"""
-    arxiv_url = id_to_url(match.group('arxiv_id'))
-    anchor = match.group('arxiv_id')
+    m = match.group('arxiv_id')
+    if m[-1] in _bad_endings:
+        arxiv_url = id_to_url(m)[:-1]
+        anchor = m[:-1]
+        back = m[-1] + match.string[match.end():]
+    else:
+        arxiv_url = id_to_url(m)
+        anchor = m
+        back = match.string[match.end():]
+
     front = match.string[0:match.start()]
-    back = match.string[match.end():]
     return Markup(f'{front}<a href="{arxiv_url}">{anchor}</a>{back}')
 
 
 def _doi_sub(match: Match)->str:
     """Returns match.string transformed for a DOI match"""
     doi = match.group('doi')
+    if(doi[-1] in _bad_endings):
+        back = match.string[match.end():] + doi[-1]
+        doi = doi[:-1]
+    else:
+        back = match.string[match.end():]
+
     doi_url = f'http://dx.doi.org/{doi}'
     anchor = escape('doi:'+doi)
     front = match.string[0:match.start()]
-    back = match.string[match.end():]
     return Markup(f'{front}<a href="{doi_url}">{anchor}</a>{back}')
 
 
@@ -205,7 +222,11 @@ def _url_sub(match: Match)->str:
         anchor = 'this URL'
 
     front = match.string[0:match.start()]
-    back = match.string[match.end():]
+    if url[-1] in _bad_endings:        
+        back = url[-1] + match.string[match.end():]
+        url = url[:-1]
+    else:
+        back = match.string[match.end():]
     return Markup(f'{front}<a href="{url}">{anchor}</a>{back}')
 
 

@@ -188,6 +188,15 @@ class Id_Patterns_Test(unittest.TestCase):
             equal_to('Accepted for publication in A&amp;A. The data will be available via CDS, and can be found &#34;<a href=\"http://atlasgal.mpifr-bonn.mpg.de/cgi-bin/ATLASGAL_FILAMENTS.cgi">this http URL</a>&#34;')
             )
 
+        assert_that(
+            do_arxiv_urlize('see http://www.tandfonline.com/doi/abs/doi:10.1080/15980316.2013.860928?journalCode=tjid20'),
+            equal_to('see <a href="http://www.tandfonline.com/doi/abs/doi:10.1080/15980316.2013.860928?journalCode=tjid20">this http URL</a>')
+        )
+
+        assert_that(
+            do_arxiv_urlize('http://authors.elsevier.com/a/1TcSd,Ig45ZtO'),
+            equal_to('<a href="http://authors.elsevier.com/a/1TcSd,Ig45ZtO">this http URL</a>'))
+        
     def category_id_test(self):
         def do_arxiv_urlize(txt):
             return do_dois_id_urls_to_tags(lambda x: x, txt)
@@ -195,3 +204,16 @@ class Id_Patterns_Test(unittest.TestCase):
         assert_that(
             do_arxiv_urlize('version of arXiv.math.GR/0512484 (2011).'),
             equal_to('version of arXiv.<a href=\"math.GR/0512484\">math.GR/0512484</a> (2011).'))
+
+    def hosts_tests(self):
+        def do_arxiv_urlize(txt):
+            return do_dois_id_urls_to_tags(lambda x: x, txt)
+        
+        assert_that(do_arxiv_urlize('can be downloaded from http://rwcc.bao.ac.cn:8001/swap/NLFFF_DBIE_code/HeHan_NLFFF_JGR.pdf'),
+                    equal_to("can be downloaded from <a href=\"http://rwcc.bao.ac.cn:8001/swap/NLFFF_DBIE_code/HeHan_NLFFF_JGR.pdf\">this http URL</a>"),
+                    "Should deal with ports correctly")
+
+
+        assert_that(do_arxiv_urlize("images is at http://85.20.11.14/hosting/punsly/APJLetter4.2.07/"),
+                    equal_to('images is at <a href="http://85.20.11.14/hosting/punsly/APJLetter4.2.07/">this http URL</a>'),
+                    "should deal with numeric IP correctly")
