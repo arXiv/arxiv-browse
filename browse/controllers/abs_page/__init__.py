@@ -292,28 +292,26 @@ def _check_context(arxiv_identifier: Identifier,
     None
 
     """
+    context = None
     if 'context' not in request.args:
         if arxiv_identifier.is_old_id:
-            # This is just because legacy use the archive as the browse
+            # This is just because legacy uses the archive as the browse
             # context for old IDs.
             response_data['browse_context'] \
                 = arxiv_identifier.archive
-    return
+    else:
+        context = request.args['context']
 
-    context = request.args['context']
-    
     if (context in taxonomy.CATEGORIES
-        or context in taxonomy.ARCHIVES
-        or context == 'arxiv'):
+            or context in taxonomy.ARCHIVES or context == 'arxiv'):
         response_data['browse_context'] = context
 
     if arxiv_identifier.is_old_id or context == 'arxiv':
         response_data['browse_context_next_id'] = \
-                metadata.get_next_id(arxiv_identifier)
+            metadata.get_next_id(arxiv_identifier)
         response_data['browse_context_previous_id'] = \
-                metadata.get_previous_id(arxiv_identifier)
+            metadata.get_previous_id(arxiv_identifier)
 
-    
 
 def _check_sciencewise_ping(paper_id_v: str) -> bool:
     """Check whether paper has a ScienceWISE ping."""

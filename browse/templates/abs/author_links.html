@@ -8,9 +8,9 @@
     {% endfor %}
 {%- endmacro -%}
 
-{{ author_list( author_links[0] ) }}
+{{- author_list( author_links[0] ) }}
 
-{% if author_links[1] %}
+{%- if author_links[1] %}
   {% if author_links[2] == 1 %}
     {{author_list(author_links[1])}}
   {% else %}
@@ -44,7 +44,6 @@ function toggleAuthorList(whichLayer,toggleThis)
       document.getElementById('toggle').title = "Collapse Author List";
   }
 }
-
 //-->
 </script>
 
@@ -56,5 +55,5 @@ function toggleAuthorList(whichLayer,toggleThis)
     et al. ({{ author_links[2] }} additional authors not shown)</a>
   <noscript>&nbsp;You must enable JavaScript to view entire author list.</noscript>
 
-  {% endif %}
-{% endif %}
+  {%- endif -%}
+{% endif -%}
