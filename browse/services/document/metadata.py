@@ -128,7 +128,9 @@ class AbsMetaSession:
         latest_version = self._get_version(identifier=paper_id)
         if not paper_id.has_version \
            or paper_id.version == latest_version.version:
-            return dataclasses.replace(latest_version, is_definitive=True)
+            return dataclasses.replace(latest_version,
+                                       is_definitive=True,
+                                       is_latest=True)
 
         try:
             this_version = self._get_version(identifier=paper_id,
@@ -148,7 +150,8 @@ class AbsMetaSession:
             secondary_categories=latest_version.secondary_categories,
             primary_archive=latest_version.primary_archive,
             primary_group=latest_version.primary_group,
-            is_definitive=True)
+            is_definitive=True,
+            is_latest=False)
 
         return combined_version
 
@@ -375,11 +378,18 @@ class AbsMetaSession:
     def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
         """Get the absolute path of this DocMetadata's source file."""
         identifier = docmeta.arxiv_identifier
-        parent_path = self._get_parent_path(identifier)
+        version = identifier.version
+        file_noex = identifier.filename
+        if not docmeta.is_latest:
+            parent_path = self._get_parent_path(identifier, version)
+        else:
+            parent_path = self._get_parent_path(identifier)
+            file_noex = f'{file_noex}v{version}'
+
         for extension in VALID_SOURCE_EXTENSIONS:
             possible_path = os.path.join(
                 parent_path,
-                f'{identifier.filename}{extension[0]}')
+                f'{file_noex}{extension[0]}')
             if os.path.isfile(possible_path):
                 return possible_path
         return None

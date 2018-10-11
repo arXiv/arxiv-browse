@@ -163,6 +163,8 @@ class DocMetadata:
        this article; i.e. it includes metadata from the latest version of the
        article that is needed for the abs page display."""
 
+    is_latest: bool = field(default=False)
+
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """
     """Description from arxiv classic: Flag set by init_from_file to
