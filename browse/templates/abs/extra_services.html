@@ -7,7 +7,7 @@
   <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id,file_name=anc_file['name'])}}">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
-    {% set num_files_not_shown = anc_file_list|length - cutoff %}
+    {%- set num_files_not_shown = anc_file_list|length - cutoff -%}
   </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
   {% else %}
 </ul>
@@ -66,9 +66,9 @@
         <span class="nolink">&lt;&nbsp;previous</span>
       {% endif -%}
     {% else -%}
-      {%- set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&amp;id='+abs_meta.arxiv_identifier.id+'&amp;context='+current_context -%}
+      {%- set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context -%}
         <span class="arrow">
-          <a href="{{ prevnext_url }}&function=prev"
+          <a href="{{ prevnext_url }}&amp;function=prev"
              accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
         </span>
     {%- endif -%}
@@ -84,7 +84,7 @@
         {%- endif -%}
     {%- else -%}
           <span class="arrow">
-          <a href="{{ prevnext_url }}&function=next"
+          <a href="{{ prevnext_url }}&amp;function=next"
              accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
           </span>
     {%- endif -%}
@@ -127,7 +127,7 @@
     <div class="list">
       {% for author in dblp.author_list[:author_cutoff] %}
       {#- The only reason entity_to_utf is being used is becasue dblp has xml entities in the DB -#}
-      <a href="{{ dblp.author_search_url }}?author={{ author|entity_to_utf|urlencode }}" title="DBLP author search">{{ author|entity_to_utf }}</a><br/>
+      <a href="{{ dblp.author_search_url }}?author={{ author|entity_to_utf|urlencode }}" title="DBLP author search">{{ author|entity_to_utf }}</a>{% if not loop.last %}<br/>{%- endif -%}
     {% endfor %}
     {% if dblp.author_list|length > author_cutoff %}
       <div class="list">&hellip;</div>
