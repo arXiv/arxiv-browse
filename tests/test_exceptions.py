@@ -12,6 +12,12 @@ class TestExceptionHandling(TestCase):
 
     def setUp(self):
         """Initialize an app and install :class:`.Base`."""
+
+        """Disable logging to avoid messy output during testing"""
+        import logging
+        wlog = logging.getLogger('werkzeug')
+        wlog.disabled = True
+
         self.app = create_web_app()
         self.client = self.app.test_client()
 
@@ -44,6 +50,9 @@ class TestExceptionHandling(TestCase):
         """A 500 response should be returned."""
         # Raise a general exception from the get_abs_page controller.
         mock_abs.side_effect = AbsException
+
+        """Disable logging to avoid messy output during testing"""
+        self.app.logger.disabled = True
 
         response = self.client.get('/abs/1234.5678')
         self.assertEqual(response.status_code,

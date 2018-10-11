@@ -80,15 +80,8 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs?adap-org/9303002')
         self.assertEqual(rv.status_code, 200, 'singleton case for old IDs')
 
-        rv = self.app.get('/abs?0704.0600')
-        self.assertEqual(rv.status_code, 404,
-                         'singleton case for new IDs not supported')
-
         rv = self.app.get('/abs?archive=adap-org&papernum=9303002')
         self.assertEqual(rv.status_code, 200, 'archive and papernum params')
-
-        rv = self.app.get('/abs?archive=foo&papernum=1234567')
-        self.assertEqual(rv.status_code, 404)
 
         rv = self.app.get('/abs/adap-org?papernum=9303002')
         self.assertEqual(rv.status_code, 200,
@@ -183,5 +176,6 @@ class BrowseTest(unittest.TestCase):
         
         goodtag = '<a href="http://www.tandfonline.com/doi/abs/10.1080/15980316.2013.860928?journalCode=tjid20">'
         self.assertTrue(goodtag in rv.data.decode('utf-8'),
-                         'should have good tag, arxiv-id-to-url and urlize should not'
-                        ' stomp on each others work, might need to combine them.')
+                         'should have good tag, arxiv-id-to-url and urlize'
+                        ' should not stomp on each others work, might need'
+                        ' to combine them.')
