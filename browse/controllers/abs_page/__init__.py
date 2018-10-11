@@ -82,6 +82,8 @@ def get_abs_page(arxiv_id: str) -> Response:
             return redirect
 
         abs_meta = metadata.get_abs(arxiv_id)
+        response_data['requested_id'] = arxiv_identifier.idv \
+            if arxiv_identifier.has_version else arxiv_identifier.id
         response_data['abs_meta'] = abs_meta
         response_data['meta_tags'] = meta_tag_metadata(abs_meta)
         response_data['author_links'] = \
