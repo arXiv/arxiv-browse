@@ -4,10 +4,10 @@
 
 {%- block head -%}
     {{ super() }}
-    <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
     {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-    <script src="/bibex/bibex.css?20181010" type="text/javascript" defer="defer"></script>
+    <link rel="stylesheet" media="screen" type="text/css" href="/bibex/bibex.css?20181010"/>
     {% endif %}
+    <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
     {{ generate_scholar_tags() }}
 {%- endblock head -%}
 
