@@ -227,3 +227,6 @@ SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
 
 # Used in linking to /ct
 CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
+
+# arXiv Labs options
+LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)

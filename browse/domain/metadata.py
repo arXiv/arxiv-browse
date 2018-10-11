@@ -158,6 +158,11 @@ class DocMetadata:
     version_history: List[VersionEntry] = field(default_factory=list)
     """Version history, consisting of at least one version history entry."""
 
+    is_definitive: bool = field(default=False)
+    """Indicates whether this is the definitive DocMetadata representation of
+       this article; i.e. it includes metadata from the latest version of the
+       article that is needed for the abs page display."""
+
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """
     """Description from arxiv classic: Flag set by init_from_file to
@@ -167,6 +172,14 @@ class DocMetadata:
     authentication redirect is required.
 
     """
+
+    def __post_init__(self) -> None:
+        """Post-initialization checks if is_definitive is True."""
+        if self.is_definitive:
+            if self.categories is None:
+                raise ValueError('categories must be defined')
+            if self.primary_category is None:
+                raise ValueError('primary category must be defined')
 
     def get_browse_context_list(self) -> List[str]:
         """Get the list of archive/category IDs to generate browse context."""
@@ -187,7 +200,7 @@ class DocMetadata:
             options[in_archive] = True
         return sorted(options.keys())
 
-    def highest_version(self)-> int:
+    def highest_version(self) -> int:
         """Return highest version number from metadata.
 
         This is determined by counting the entries in the
@@ -202,7 +215,7 @@ class DocMetadata:
         return max(map(lambda ve: ve.version, self.version_history))
 
     def get_datetime_of_version(
-            self, version: Optional[int])->Optional[datetime]:
+            self, version: Optional[int]) -> Optional[datetime]:
         """Returns python datetime of version.
 
         version: Version to get datetime of. Must be in range
@@ -223,7 +236,7 @@ class DocMetadata:
         else:
             return versions[0].submitted_date
 
-    def display_secondaries(self)-> List[str]:
+    def display_secondaries(self) -> List[str]:
         """Unalias, dedup and sort secondaries for display."""
         if not self.secondary_categories or not self.primary_category:
             return []
@@ -239,11 +252,11 @@ class DocMetadata:
         if not de_primaried:
             return []
 
-        def to_display(secs: List[Category])->List[str]:
+        def to_display(secs: List[Category]) -> List[str]:
             return list(map(lambda c: c.display_str(), secs))
         return to_display(sorted(de_primaried))
 
-    def canonical_url(self, no_version: bool = False) ->str:
+    def canonical_url(self, no_version: bool = False) -> str:
         """Returns canonical URL for this ID and version."""
         if no_version:
             return canonical_url(self.arxiv_identifier.id)

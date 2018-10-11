@@ -153,11 +153,11 @@ class BrowseTest(unittest.TestCase):
     def test_160408245(self):
         id = '1604.08245'
         rv = self.app.get('/abs/'+id)
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.status_code, 200, f'status 200 for {id}')
 
         badtag=\
         '<a 0316.2013"="" abs="" href="http://'
-        
+
         self.assertTrue(
             badtag not in rv.data.decode('utf-8'),
             f"should not have malformed <a> tag in {id}")
@@ -168,12 +168,13 @@ class BrowseTest(unittest.TestCase):
             f"link should not include closing square bracket")
 
 
+    @unittest.skip("TODO ARXIVNG-1246, may require refactoring jinja filters")
     def test_arxivng_1246(self):
         """ ARXIVNG-1246 Problem with Urlize in comments for 1604.08245v1 """
         id = '1604.08245'
         rv = self.app.get('/abs/'+id)
         self.assertEqual(rv.status_code, 200)
-        
+
         goodtag = '<a href="http://www.tandfonline.com/doi/abs/10.1080/15980316.2013.860928?journalCode=tjid20">'
         self.assertTrue(goodtag in rv.data.decode('utf-8'),
                          'should have good tag, arxiv-id-to-url and urlize'

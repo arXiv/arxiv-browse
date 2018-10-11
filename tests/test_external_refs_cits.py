@@ -8,7 +8,7 @@ from browse.domain.identifier import Identifier
 from browse.services.document.config.external_refs_cits \
     import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
 from browse.services.util.external_refs_cits import include_inspire_link,\
-    get_dblp_bibtex_path, include_dblp_section
+    get_dblp_bibtex_path, include_dblp_section, get_computed_dblp_listing_path
 
 
 class TestExternalReferencesCitations(TestCase):
@@ -69,14 +69,19 @@ class TestExternalReferencesCitations(TestCase):
         mock_docmeta.arxiv_identifier = Identifier('1806.00001')
         mock_docmeta.primary_archive = Archive('cs')
         self.assertTrue(include_dblp_section(mock_docmeta))
+        self.assertEqual(get_computed_dblp_listing_path(mock_docmeta),
+                         'db/journals/corr/corr1806.html#abs-1806-00001')
 
         mock_docmeta.arxiv_identifier = Identifier('cs/0501001')
         mock_docmeta.primary_archive = Archive('cs')
         self.assertTrue(include_dblp_section(mock_docmeta))
+        self.assertEqual(get_computed_dblp_listing_path(mock_docmeta),
+                         'db/journals/corr/corr0501.html#abs-cs-0501001')
 
         mock_docmeta.arxiv_identifier = Identifier('cs/0412001')
         mock_docmeta.primary_archive = Archive('cs')
-        self.assertFalse(include_dblp_section(mock_docmeta))
+        self.assertTrue(include_dblp_section(mock_docmeta))
+        self.assertIsNone(get_computed_dblp_listing_path(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1806.00002')
         mock_docmeta.primary_archive = Archive('math')
