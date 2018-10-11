@@ -33,8 +33,7 @@
 
   {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
   <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive does not exist</h1>
-
-  {# TODO: will need to support papernum param in this route if we want to support this #}
+  {#- TODO: will need to support papernum param in this route if we want to support this -#}
   <form action="{{ url_for('browse.abstract', arxiv_id=archive_id) }}" method="get">
     <p>To view the abstract of a particular article in the {{ archive_name }}
     archive, enter an article number: {{ archive_id }} / <input name="papernum" type="text" size="7"></p>

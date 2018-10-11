@@ -16,12 +16,12 @@
 
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
-  {% set current = abs_meta.version == abs_meta.version_history[-1].version %}
-  {% if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) %}
+  {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
+  {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
   <li>Unavailable</li>
   {% else %}
-    {# We have to skip the 'src' format unless we're viewing the current version of the article #}
-    {% for format in format_list if not (format == 'src' and not current)  %}
+    {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
+    {%- for format in format_list if not (format == 'src' and not current) %}
   <li>
     {%- if format == 'src' -%}
     <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">Source</a>
@@ -38,36 +38,35 @@
     {%- elif format == 'nops' -%}
     <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
-    {# TODO: consider this format for deprecation #}
-    {# TODO: create clickthrough link from sciencewise link #}
+    {#- TODO: consider this format for deprecation -#}
+    {#- TODO: create clickthrough link from sciencewise link -#}
     <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a>
     <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">
       <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
     </a>
     {%- endif -%}
   </li>
-    {% endfor %}
-  {% endif %}
+    {%- endfor -%}
+  {%- endif -%}
 </ul>
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  {% set current_context = browse_context if browse_context else abs_meta.primary_category.id %}
+  {%- set current_context = browse_context if browse_context else abs_meta.primary_category.id -%}
   <h3>Current browse context:</h3>
   <div class="current">{{ current_context }}</div>
   <div class="prevnext">
-    {%- if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
-      {% if browse_context_previous_id %}
+    {% if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
+      {% if browse_context_previous_id -%}
         <span class="arrow">
         <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_previous_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
            accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
         </span>
-         {% else %}
-           {# TODO might be a bug from the legacy system, this should probably be &lt;&nbsp;prev see ARXIVNG-1221 #}
+         {%- else -%}
         <span class="nolink">&lt;&nbsp;previous</span>
-      {% endif %}
-    {% else %}
-      {% set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context %}
+      {% endif -%}
+    {% else -%}
+      {%- set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&amp;id='+abs_meta.arxiv_identifier.id+'&amp;context='+current_context -%}
         <span class="arrow">
           <a href="{{ prevnext_url }}&function=prev"
              accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
@@ -80,10 +79,10 @@
           <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_next_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
              accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
           </span>
-        {% else %}
+        {%- else -%}
           <span class="nolink">next&nbsp;&gt;</span>
-        {% endif %}
-    {% else %}
+        {%- endif -%}
+    {%- else -%}
           <span class="arrow">
           <a href="{{ prevnext_url }}&function=next"
              accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
@@ -92,21 +91,21 @@
     <br/>
   </div>
 
-  {% if current_context != 'arxiv' %}
-  {# This fixes a bug in the classic UI logic #}
+  {%- if current_context != 'arxiv' -%}
+  {#- This fixes a bug in the classic UI logic -#}
 <div class="list">
   <a href="{{url_for('.list_articles',context=current_context, subcontext='new')}}">new</a>&nbsp;|
   <a href="{{url_for('.list_articles',context=current_context, subcontext='recent')}}">recent</a>&nbsp;|
   <a href="{{url_for('.list_articles',context=current_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
-      {{ abs_meta.arxiv_identifier.yymm }}</a>
+      {{- abs_meta.arxiv_identifier.yymm -}}</a>
   </div>
-  {% endif %}
+  {%- endif -%}
 
-  {% if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) %}
+  {%- if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) -%}
   <h3>Change to browse by:</h3>
   <div class="switch">
     {% for category in abs_meta.get_browse_context_list() if not (current_context==category) %}
-      {% set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) %}
+      {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
       {% if '.' in category %}
       <span class="subclass"><a href="{{ switch_url}}">{{ category }}</a></span>
       {% else %}
@@ -118,7 +117,6 @@
   {% endif %}
 {%- endmacro -%}
 
-
 {%- macro generate_dblp_section(author_cutoff=5) -%}
   <div class="dblp">
     <h3><a href="{{ dblp.base_url }}">DBLP</a> - CS Bibliography</h3>
@@ -128,7 +126,7 @@
     {% if dblp.author_list %}
     <div class="list">
       {% for author in dblp.author_list[:author_cutoff] %}
-      {# The only reason entity_to_utf is being used is becasue dblp has xml entities in the DB #}
+      {#- The only reason entity_to_utf is being used is becasue dblp has xml entities in the DB -#}
       <a href="{{ dblp.author_search_url }}?author={{ author|entity_to_utf|urlencode }}" title="DBLP author search">{{ author|entity_to_utf }}</a><br/>
     {% endfor %}
     {% if dblp.author_list|length > author_cutoff %}
@@ -140,10 +138,10 @@
   </div>
 {%- endmacro -%}
 
-{% block extra_services %}
+{%- block extra_services -%}
   <div class="extra-services">
-{# TODO: check whether anything but the ancillary files section uses this #}
-{% if ancillary_files %}
+{#- TODO: check whether anything but the ancillary files section uses this -#}
+{%- if ancillary_files %}
     <script type="text/javascript">
     <!--
      function toggleList(whichLayer,toggleThis)
@@ -177,18 +175,17 @@
       <span class="descriptor">Full-text links:</span>
       <h2>Download:</h2>
       {{ generate_download_links(format_list=formats) }}
-
       <div class="abs-license">
-        {% if abs_meta.license.icon_uri_path %}
+        {%- if abs_meta.license.icon_uri_path -%}
         <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
-        {% else %}
+        {%- else -%}
         (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">license</a>)
-        {% endif %}
+        {%- endif -%}
       </div>
     </div>
     <!--end full-text-->
 
-{% if ancillary_files %}
+{%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
     <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
@@ -220,13 +217,12 @@
     </div>
     {% endif %}
 
-    {# DBLP is a bibliographical database primarily for Computer Science papers #}
-    {% if dblp %}
+    {#- DBLP is a bibliographical database primarily for Computer Science papers -#}
+    {%- if dblp -%}
       {{ generate_dblp_section() }}
-    {% endif %}
+    {%- endif -%}
 
     {% include "abs/bookmarking.html" %}
-
   </div>
   <!--end extra-services-->
 {% endblock extra_services %}
