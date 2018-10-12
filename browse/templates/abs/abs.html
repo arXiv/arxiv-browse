@@ -89,7 +89,7 @@
         {%- if abs_meta.doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">{{ abs_meta.doi|doi_urls}}</td>
+          <td class="tablecell msc_classes">{{ abs_meta.doi|single_doi_url }}</td>
         </tr>
         {% endif -%}
         {%- if abs_meta.report_num %}

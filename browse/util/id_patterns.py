@@ -32,6 +32,7 @@ from typing import Optional, List, Pattern, Match, Tuple, Callable
 import re
 from dataclasses import dataclass
 
+from urllib.parse import quote
 from jinja2 import Markup, escape
 
 from arxiv import taxonomy
@@ -44,16 +45,23 @@ class Matchable:
     pattern: Pattern
 
 
-# We should probably match DOIs first because
-# they are the source of a lot of false positives
-# for arxiv matches.
+def _identity(x: str)->str:
+    """identity funciton for default in some places"""
+    return x
 
-# from https://www.crossref.org/blog/dois-and-matching-regular-expressions/
+
 doi_patterns = [
     Matchable(['10.1145/0001234.1234567'],
               re.compile(r'(?P<doi>10.\d{4,9}/[-._;()/:A-Z0-9]+)', re.I))
 ]
-"""List of Matchable for DOIs in text"""
+"""List of Matchable for DOIs in text.
+
+We should probably match DOIs first because they are the source of a
+lot of false positives for arxiv matches.
+
+Only using the most general express from
+https://www.crossref.org/blog/dois-and-matching-regular-expressions/
+"""
 
 _archive = '|'.join([re.escape(key) for key in taxonomy.ARCHIVES.keys()])
 """string for use in Regex for all arXiv archives"""
@@ -66,9 +74,9 @@ basic_arxiv_id_patterns = [
                          % _archive, re.I)),
     Matchable(['1609.05068', '1207.1234v1', '1207.1234', '1807.12345',
                '1807.12345v1', '1807.12345v12'],
-              re.compile(r'(?<!\d)(?P<arxiv_id>\d{4}\.\d{4,5}(v\d*)?)',
+              re.compile(r'(?<![\d=])(?P<arxiv_id>\d{4}\.\d{4,5}(v\d*)?)',
                          re.I)),
-    Matchable(['math.GR/0601136v3','math.GR/0601136'],
+    Matchable(['math.GR/0601136v3', 'math.GR/0601136'],
               re.compile(r'(?P<arxiv_id>(%s)\/\d{2}[01]\d{4}(v\d*)?)'
                          % _category, re.I))
 ]
@@ -118,7 +126,7 @@ bad_arxiv_id_patterns = [
 """List of Regex patterns that will cause matching to be skipped for
 the token."""
 
-dois_ids_and_urls = basic_url_patterns + doi_patterns + basic_arxiv_id_patterns 
+dois_ids_and_urls = basic_url_patterns + doi_patterns + basic_arxiv_id_patterns
 """List of Matchable to use when finding DOIs, arXiv IDs, and URLs.
 
 URLs are first because some URLs contain DOIs or arXiv IDS.  
@@ -148,6 +156,8 @@ def _find_match(patterns: List[Matchable], token: str)-> Optional[Tuple[Match, M
 def _transform_token(patterns: List[Matchable],
                      bad_patterns: List[Pattern],
                      id_to_url: Callable[[str], str],
+                     doi_to_url: Callable[[str], str],
+                     url_to_url: Callable[[str], str],
                      token: str) -> str:
     """Transform a token from text to one of the Matchables.
 
@@ -155,8 +165,10 @@ def _transform_token(patterns: List[Matchable],
     Matching on this token will be skipped if any of the bad_patterns
     match the token (that is re.search).
     """
-    if id_to_url is None:
-        id_to_url = lambda x: x
+
+    id_to_url = id_to_url or (lambda x: x)
+    doi_to_url = doi_to_url or (lambda x: x)
+    url_to_url = url_to_url or (lambda x: x)
 
     for pattern in bad_patterns:
         if re.search(pattern, token):
@@ -169,16 +181,24 @@ def _transform_token(patterns: List[Matchable],
     (match, _) = mtch
     keys = match.groupdict().keys()
     if 'arxiv_id' in keys:
-        return _arxiv_id_sub(match, id_to_url)
+        (front, back) = _arxiv_id_sub(match, id_to_url)
     elif 'doi' in keys:
-        return _doi_sub(match)
+        (front, back) = _doi_sub(match, doi_to_url)
     elif 'url' in keys:
-        return _url_sub(match)
+        (front, back) = _url_sub(match, url_to_url)
     else:
+        # unclear how to substitute in for this match
         return token
 
+    if back:
+        t_back = _transform_token(patterns, bad_patterns,
+                              id_to_url, doi_to_url, url_to_url, back)
+        return front + Markup(t_back)
+    else:
+        return front
 
-def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Markup:
+
+def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Tuple[Markup, str]:
     """Returns match.string transformed for a arxiv id match"""
     m = match.group('arxiv_id')
     if m[-1] in _bad_endings:
@@ -191,10 +211,10 @@ def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Markup:
         back = match.string[match.end():]
 
     front = match.string[0:match.start()]
-    return Markup(f'{front}<a href="{arxiv_url}">{anchor}</a>{back}')
+    return (Markup(f'{front}<a href="{arxiv_url}">{anchor}</a>'), back)
 
 
-def _doi_sub(match: Match)->str:
+def _doi_sub(match: Match, doi_to_url: Callable[[str], str])->Tuple[Markup, str]:
     """Returns match.string transformed for a DOI match"""
     doi = match.group('doi')
     if(doi[-1] in _bad_endings):
@@ -203,13 +223,16 @@ def _doi_sub(match: Match)->str:
     else:
         back = match.string[match.end():]
 
-    doi_url = f'http://dx.doi.org/{doi}'
+    quoted_doi = quote(doi, safe='/')
+    doi_url = f'https://dx.doi.org/{quoted_doi}'
+    doi_url = doi_to_url(doi_url)
+
     anchor = escape('doi:'+doi)
     front = match.string[0:match.start()]
-    return Markup(f'{front}<a href="{doi_url}">{anchor}</a>{back}')
+    return (Markup(f'{front}<a href="{doi_url}">{anchor}</a>'), back)
 
 
-def _url_sub(match: Match)->str:
+def _url_sub(match: Match, url_to_url: Callable[[str], str])->Tuple[Markup, str]:
     """Returns match.string transformed for a URL match"""
     url = match.group('url')
     if url.startswith('https'):
@@ -222,25 +245,35 @@ def _url_sub(match: Match)->str:
         anchor = 'this URL'
 
     front = match.string[0:match.start()]
-    if url[-1] in _bad_endings:        
+    if url[-1] in _bad_endings:
         back = url[-1] + match.string[match.end():]
         url = url[:-1]
     else:
         back = match.string[match.end():]
-    return Markup(f'{front}<a href="{url}">{anchor}</a>{back}')
+
+    url = url_to_url(url)
+    return (Markup(f'{front}<a href="{url}">{anchor}</a>'), back)
 
 
-_word_split_re = re.compile(r'(\s)+')
-"""Regex to split to tokens during _to_tags"""
+_word_split_re = re.compile(r'(\s+)')
+"""Regex to split to tokens during _to_tags.
+
+Capturing group causes the splitting spaces to be included
+in the returned list.
+"""
 
 
 def _to_tags(patterns: List[Matchable],
              bad_patterns: List[Pattern],
              id_to_url: Callable[[str], str],
+             doi_to_url: Callable[[str], str],
+             url_to_url: Callable[[str], str],
              text: str)-> str:
     """Split text to tokens, do _transform_token for each, return results"""
     def transform_token(tkn: str)-> str:
-        return _transform_token(patterns, bad_patterns, id_to_url, tkn)
+        return _transform_token(patterns, bad_patterns,
+                                id_to_url, doi_to_url, url_to_url,
+                                tkn)
 
     if not hasattr(text, '__html__'):
         text = Markup(escape(text))
@@ -259,12 +292,15 @@ def do_id_to_tags(id_to_url: Callable[[str], str],
     """Transform arxiv ids in text to <a> tags"""
     return _to_tags(basic_arxiv_id_patterns,
                     bad_arxiv_id_patterns,
-                    id_to_url, text)
+                    id_to_url, _identity, _identity,
+                    text)
 
 
 def do_dois_id_urls_to_tags(id_to_url: Callable[[str], str],
+                            doi_to_url: Callable[[str], str],
                             text: str)-> str:
     """Transform DOIs, arxiv ids and URLs in text to <a> tags"""
     return _to_tags(dois_ids_and_urls,
                     bad_arxiv_id_patterns,
-                    id_to_url, text)
+                    id_to_url, doi_to_url, _identity,
+                    text)

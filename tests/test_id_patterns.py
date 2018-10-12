@@ -1,5 +1,5 @@
-from hamcrest import *
 import unittest
+from hamcrest import *
 import re
 
 from jinja2 import Markup, escape
@@ -69,34 +69,34 @@ class Id_Patterns_Test(unittest.TestCase):
         #     return doi_id_url_transform_token(fn, tkn)
         
         assert_that(
-            do_dois_id_urls_to_tags( None, ''),
+            do_dois_id_urls_to_tags( None, None, ''),
             equal_to(''))
         
         assert_that(
-            do_dois_id_urls_to_tags( None, 
+            do_dois_id_urls_to_tags( None, None, 
                      'it is fine, chapter 234 see<xxyx,234>'),
             equal_to(Markup(escape('it is fine, chapter 234 see<xxyx,234>'))))
 
         assert_that(
-            do_dois_id_urls_to_tags( None, 'http://arxiv.org'),
+            do_dois_id_urls_to_tags( None, None, 'http://arxiv.org'),
             equal_to('<a href="http://arxiv.org">this http URL</a>'))
 
         assert_that(
-            do_dois_id_urls_to_tags( None, 
+            do_dois_id_urls_to_tags( None, None, 
                 'Stuff in the front http://arxiv.org other stuff'),
             equal_to('Stuff in the front <a href="http://arxiv.org">this http URL</a> other stuff'))
 
         assert_that(
-            do_dois_id_urls_to_tags( None, '.http://arxiv.org.'),
+            do_dois_id_urls_to_tags( None, None, '.http://arxiv.org.'),
             equal_to('.<a href="http://arxiv.org">this http URL</a>.'))
 
         assert_that(
-            do_dois_id_urls_to_tags( None, '"http://arxiv.org"'),
+            do_dois_id_urls_to_tags( None, None, '"http://arxiv.org"'),
             equal_to(Markup('&#34;<a href="http://arxiv.org">this http URL</a>&#34;')))
 
     def test_urlize(self):
         def do_arxiv_urlize(txt):
-            return do_dois_id_urls_to_tags(lambda x: x, txt)
+            return do_dois_id_urls_to_tags(None,None, txt)
 
         assert_that(
             do_arxiv_urlize('http://example.com/'),
