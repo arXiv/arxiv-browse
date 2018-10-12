@@ -138,17 +138,17 @@ class BrowseTest(unittest.TestCase):
         h1_elmt = html.find('h1')
         h1_txt = h1_elmt.get_text()
         self.assertRegex(h1_txt, r'arXiv:physics\/9707012')
-        self.assertNotRegex(h1_txt, r'arXiv:physics\/9707012v4')
+        self.assertNotRegex(h1_txt, r'arXiv:physics\/9707012v')
 
         title_elmt = html.find('title')
         title_txt = title_elmt.get_text()
         self.assertRegex(title_txt, r'physics\/9707012')
-        self.assertNotRegex(title_txt, r'arXiv:physics\/9707012v4')
+        self.assertNotRegex(title_txt, r'arXiv:physics\/9707012v')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link without version affix exists')
-        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
-        self.assertIsNone(pdf_dl_elmt, 'pdf download link without version affix does not exist')
+        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v'})
+        self.assertIsNone(pdf_dl_elmt, 'pdf download link with version affix does not exist')
 
         rv = self.app.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
