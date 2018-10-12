@@ -20,6 +20,7 @@ from werkzeug.exceptions import InternalServerError
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
+from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
@@ -188,6 +189,7 @@ def _non_critical_abs_data(abs_meta:DocMetadata, arxiv_identifier:Identifier, re
 
     # Browse context
     _check_context(arxiv_identifier,
+                   abs_meta.primary_category,
                    response_data)
 
 
@@ -277,40 +279,81 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
 
 
 def _check_context(arxiv_identifier: Identifier,
-                   response_data: Dict[str, Any]) -> None:
+                   primary_category: Category,
+                   response_data) -> None:
     """
     Check context in request parameters and update response accordingly.
 
     Parameters
     ----------
     arxiv_identifier : :class:`Identifier`
-
-    response_data: dict
+    primary_category : :class: `Category`
 
     Returns
     -------
-    None
+    Dict of values to add to response_data
 
     """
+    
+    # Setup the context
     context = None
-    if 'context' not in request.args:
-        if arxiv_identifier.is_old_id:
-            # This is just because legacy uses the archive as the browse
-            # context for old IDs.
-            response_data['browse_context'] \
-                = arxiv_identifier.archive
-    else:
+    if ('context' in request.args and (
+            context == 'arxiv'
+            or context in taxonomy.CATEGORIES
+            or context in taxonomy.ARCHIVES)):
         context = request.args['context']
+    else:
+        pc = primary_category.canonical or primary_category
+        if not arxiv_identifier.is_old_id:
+            context = pc.id
+        else:  # Old style id
+            if pc.id in taxonomy.ARCHIVES:
+                context = pc.id
+            else:
+                context = arxiv_identifier.archive
 
-    if (context in taxonomy.CATEGORIES
-            or context in taxonomy.ARCHIVES or context == 'arxiv'):
-        response_data['browse_context'] = context
+    response_data['browse_context'] = context
 
+    # Setup prev/next URLs
     if arxiv_identifier.is_old_id or context == 'arxiv':
-        response_data['browse_context_next_id'] = \
-            metadata.get_next_id(arxiv_identifier)
-        response_data['browse_context_previous_id'] = \
-            metadata.get_previous_id(arxiv_identifier)
+        next_id = metadata.get_next_id(arxiv_identifier)
+        #TODO might have to pass non-arxiv context to url_for becuase
+        #of examples like physics/9707012
+        if next_id:
+            next_url = url_for('browse.abstract',
+                               arxiv_id=next_id,
+                               context='arxiv' if context == 'arxiv' else None)
+        else:
+            next_url = None
+
+        previous_id = metadata.get_previous_id(arxiv_identifier)
+        if previous_id:
+            prev_url = url_for('browse.abstract',
+                               arxiv_id=previous_id,
+                               context='arxiv' if context == 'arxiv' else None)
+        else:
+            prev_url = None
+            
+    else:
+        # This is the case where not in arXiv or a archive,
+        # so just let the prevnext controller figure it out.
+        
+        #TODO do url_for() here
+        next_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+arxiv_identifier.id+'&function=next'
+        prev_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+arxiv_identifier.id+'&function=prev'
+        if context:
+            next_url = next_url + '&context='+context
+            prev_url = prev_url + '&context='+context
+
+
+    print('next_url is ')
+    print( next_url )
+
+    print('prev_url is ')
+    print( prev_url )
+
+    response_data['browse_context_previous_url'] = prev_url
+    response_data['browse_context_next_url'] = next_url
 
 
 def _check_sciencewise_ping(paper_id_v: str) -> bool:

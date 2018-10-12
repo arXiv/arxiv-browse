@@ -207,7 +207,10 @@ class Identifier:
         by design: https://stackoverflow.com/a/37557540/3096687
 
         """
-        return self.__dict__ == other.__dict__
+        try:
+            return self.__dict__ == other.__dict__
+        except AttributeError:
+            return False
 
 
 def canonical_url(id: str, version: int = 0)->str:
