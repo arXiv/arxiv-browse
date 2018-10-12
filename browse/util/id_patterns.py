@@ -192,7 +192,7 @@ def _transform_token(patterns: List[Matchable],
 
     if back:
         t_back = _transform_token(patterns, bad_patterns,
-                              id_to_url, doi_to_url, url_to_url, back)
+                                  id_to_url, doi_to_url, url_to_url, back)
         return front + Markup(t_back)
     else:
         return front
@@ -304,3 +304,9 @@ def do_dois_id_urls_to_tags(id_to_url: Callable[[str], str],
                     bad_arxiv_id_patterns,
                     id_to_url, doi_to_url, _identity,
                     text)
+
+
+def do_dois_to_tags(doi_to_url: Callable[[str], str], text: str)->str:
+    """Transform DOIs in text to <a> tags."""
+    return _to_tags(doi_patterns, [], _identity, doi_to_url, _identity, text)
+

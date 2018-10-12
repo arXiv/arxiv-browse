@@ -1,5 +1,5 @@
-from hamcrest import *
 import unittest
+from hamcrest import *
 from functools import partial
 
 from jinja2 import escape, Markup, Environment
@@ -8,7 +8,8 @@ from flask import appcontext_pushed, url_for
 from app import app
 
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
-from browse.util.id_patterns import do_doi_to_tags, do_dois_id_urls_to_tags , do_id_to_tags
+from browse.util.id_patterns import do_dois_to_tags, do_dois_id_urls_to_tags,\
+    do_id_to_tags
 
 
 def _id_to_url(id: str):
@@ -18,7 +19,7 @@ def arxiv_urlize(txt):
     return do_dois_id_urls_to_tags(_id_to_url,None,txt)
 
 def doi_urls(fn, txt):
-    return do_doi_to_tags(fn, txt)
+    return do_dois_to_tags(fn, txt)
 
 def arxiv_id_urls(txt):
     return do_id_to_tags(_id_to_url, txt)
