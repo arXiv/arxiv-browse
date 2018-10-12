@@ -48,7 +48,6 @@ class DoiTest(unittest.TestCase):
         self.assertIsNotNone(doiurl,
                              'url query part should deurlencode to a URL')
 
-        print( doiurl )
         self.assertEqual(doiurl.netloc, 'dx.doi.org',
                          'decoded URL from CT should have DOI resolver hostname')
         self.assertEqual(doiurl.path, '/10.1175/1520-0469(1996)053<0946:ASTFHH>2.0.CO',

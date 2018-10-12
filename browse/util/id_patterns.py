@@ -310,3 +310,12 @@ def do_dois_to_tags(doi_to_url: Callable[[str], str], text: str)->str:
     """Transform DOIs in text to <a> tags."""
     return _to_tags(doi_patterns, [], _identity, doi_to_url, _identity, text)
 
+
+def do_dois_arxiv_ids_to_tags(id_to_url: Callable[[str], str],
+                               doi_to_url: Callable[[str], str],
+                               text: str)->str:
+    """Transform DOIs and arXiv IDs to <a> tags."""
+    return _to_tags(doi_patterns + basic_arxiv_id_patterns,
+                    bad_arxiv_id_patterns,
+                    id_to_url, doi_to_url, _identity,
+                    text)

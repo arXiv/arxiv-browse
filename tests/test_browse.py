@@ -180,3 +180,19 @@ class BrowseTest(unittest.TestCase):
                          'should have good tag, arxiv-id-to-url and urlize'
                         ' should not stomp on each others work, might need'
                         ' to combine them.')
+
+    def test_arxiv_in_title(self):
+        id = '1501.99999'
+        rv = self.app.get('/abs/'+id)
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        title_elmt = html.find('h1','title')
+        self.assertTrue(title_elmt,'Should title element')
+
+        ida = title_elmt.find('a')
+        self.assertTrue(ida, 'Should be <a> tag in title')
+
+        self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
+        self.assertEqual(ida['href'], '/abs/1501.99998')
+        self.assertEqual(ida.text, '1501.99998')
+        
