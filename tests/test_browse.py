@@ -148,7 +148,7 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link without version affix exists')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
-        self.assertItNone(pdf_dl_elmt, 'pdf download link without version affix does not exist')
+        self.assertIsNone(pdf_dl_elmt, 'pdf download link without version affix does not exist')
 
         rv = self.app.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
