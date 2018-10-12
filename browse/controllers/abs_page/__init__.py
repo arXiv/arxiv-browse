@@ -316,7 +316,6 @@ def _check_context(arxiv_identifier: Identifier,
 
     response_data['browse_context'] = context
 
-    # Setup prev/next URLs
     if arxiv_identifier.is_old_id or context == 'arxiv':
         next_id = metadata.get_next_id(arxiv_identifier)
         #TODO might have to pass non-arxiv context to url_for becuase
