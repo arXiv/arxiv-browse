@@ -30,6 +30,7 @@ class Category:
     name: str = field(init=False, compare=False)
     """The name of the category (e.g. Digital Libraries)."""
 
+    #TODO should probably be changed to get_canonical to avoid confusion
     canonical: Union['Category', None] = field(init=False, compare=False)
 
     def __hash__(self)->int:
