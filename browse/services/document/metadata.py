@@ -378,13 +378,13 @@ class AbsMetaSession:
     def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
         """Get the absolute path of this DocMetadata's source file."""
         identifier = docmeta.arxiv_identifier
-        version = identifier.version
+        version = docmeta.version
         file_noex = identifier.filename
         if not docmeta.is_latest:
             parent_path = self._get_parent_path(identifier, version)
+            file_noex = f'{file_noex}v{version}'
         else:
             parent_path = self._get_parent_path(identifier)
-            file_noex = f'{file_noex}v{version}'
 
         for extension in VALID_SOURCE_EXTENSIONS:
             possible_path = os.path.join(

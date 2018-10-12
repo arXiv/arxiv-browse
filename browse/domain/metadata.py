@@ -96,12 +96,13 @@ class DocMetadata:
     """The raw abs string without submitter email address."""
 
     arxiv_id: str
-    """arXiv paper identifier"""
+    """arXiv paper identifier string without version affix, e.g. 1810.12345."""
 
     arxiv_id_v: str
-    """Identifier and version ex. 1402.12345v2"""
+    """arXiv paper identifier string with version affix, e.g. 1810.12345v2."""
 
     arxiv_identifier: Identifier
+    """arXiv Identifier for this paper. Does not include version data."""
 
     title: str
     abstract: str
@@ -150,7 +151,7 @@ class DocMetadata:
     """Submitter- and/or administrator-provided comments about the article."""
 
     version: int = 1
-    """Version of this paper."""
+    """Version of this article."""
 
     license: License = field(default_factory=License)
     """License associated with the article."""
@@ -159,11 +160,17 @@ class DocMetadata:
     """Version history, consisting of at least one version history entry."""
 
     is_definitive: bool = field(default=False)
-    """Indicates whether this is the definitive DocMetadata representation of
-       this article; i.e. it includes metadata from the latest version of the
-       article that is needed for the abs page display."""
+    """
+       Indicates whether this is the definitive DocMetadata for this article;
+       i.e. it includes metadata from the latest version of the article that is
+       needed for the abs page display.
+    """
 
     is_latest: bool = field(default=False)
+    """
+        Indicates whether this DocMetadata is from the latest
+        version of this article.
+    """
 
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """
