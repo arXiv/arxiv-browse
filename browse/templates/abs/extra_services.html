@@ -52,51 +52,40 @@
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  {%- set current_context = browse_context if browse_context else abs_meta.primary_category.id -%}
   <h3>Current browse context:</h3>
-  <div class="current">{{ current_context }}</div>
-  <div class="prevnext">
-    {% if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
-      {% if browse_context_previous_id -%}
-        <span class="arrow">
-        <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_previous_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
-           accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
-        </span>
-         {%- else -%}
-        <span class="nolink">&lt;&nbsp;previous</span>
-      {% endif -%}
-    {% else -%}
-      {%- set prevnext_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+abs_meta.arxiv_identifier.id+'&context='+current_context -%}
-        <span class="arrow">
-          <a href="{{ prevnext_url }}&amp;function=prev"
-             accesskey="p" title="previous in {{ current_context }} (accesskey p)">&lt;&nbsp;prev</a>
-        </span>
-    {%- endif -%}
-    &nbsp;|&nbsp;
-    {%- if abs_meta.arxiv_identifier.is_old_id or current_context == 'arxiv' -%}
-        {% if browse_context_next_id %}
-          <span class="arrow">
-          <a href="{{ url_for('browse.abstract', arxiv_id=browse_context_next_id.id, context='arxiv' if current_context == 'arxiv' else None) }}"
-             accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
-          </span>
-        {%- else -%}
-          <span class="nolink">next&nbsp;&gt;</span>
-        {%- endif -%}
-    {%- else -%}
-          <span class="arrow">
-          <a href="{{ prevnext_url }}&amp;function=next"
-             accesskey="n" title="next in {{ current_context }} (accesskey n)">next&nbsp;&gt;</a>
-          </span>
-    {%- endif -%}
-    <br/>
-  </div>
+  <div class="current">{{ browse_context }}</div>
 
-  {%- if current_context != 'arxiv' -%}
+  <div class="prevnext">
+    
+  {% if browse_context_previous_url -%}
+  <span class="arrow">
+    <a href="{{browse_context_previous_url }}"
+       accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
+  </span>
+  {%- else -%}
+  <span class="nolink">&lt;&nbsp;previous</span>
+  {% endif -%}        
+
+  &nbsp;|&nbsp;
+  
+  {% if browse_context_next_url %}
+  <span class="arrow">
+    <a href="{{browse_context_next_url}}" accesskey="n"
+       title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
+  </span>
+  {%- else -%}
+  <span class="nolink">next&nbsp;&gt;</span>
+  {%- endif -%}
+
+  <br/>
+  </div>{#end div.prevnext#}
+
+  {%- if browse_context != 'arxiv' -%}
   {#- This fixes a bug in the classic UI logic -#}
-<div class="list">
-  <a href="{{url_for('.list_articles',context=current_context, subcontext='new')}}">new</a>&nbsp;|
-  <a href="{{url_for('.list_articles',context=current_context, subcontext='recent')}}">recent</a>&nbsp;|
-  <a href="{{url_for('.list_articles',context=current_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
+  <div class="list">
+    <a href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>&nbsp;|
+    <a href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>&nbsp;|
+    <a href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
       {{- abs_meta.arxiv_identifier.yymm -}}</a>
   </div>
   {%- endif -%}
@@ -104,7 +93,7 @@
   {%- if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) -%}
   <h3>Change to browse by:</h3>
   <div class="switch">
-    {% for category in abs_meta.get_browse_context_list() if not (current_context==category) %}
+    {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
       {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
       {% if '.' in category %}
       <span class="subclass"><a href="{{ switch_url}}">{{ category }}</a></span>
@@ -116,6 +105,7 @@
   </div>
   {% endif %}
 {%- endmacro -%}
+
 
 {%- macro generate_dblp_section(author_cutoff=5) -%}
   <div class="dblp">
