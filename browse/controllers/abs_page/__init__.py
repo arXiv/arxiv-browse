@@ -279,8 +279,8 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
 
 
 def _check_context(arxiv_identifier: Identifier,
-                   primary_category: Category,
-                   response_data) -> None:
+                   primary_category: Optional[Category],
+                   response_data: Dict[str,Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
 
@@ -302,15 +302,17 @@ def _check_context(arxiv_identifier: Identifier,
             or context in taxonomy.CATEGORIES
             or context in taxonomy.ARCHIVES)):
         context = request.args['context']
-    else:
+    elif primary_category:
         pc = primary_category.canonical or primary_category
-        if not arxiv_identifier.is_old_id:
+        if not arxiv_identifier.is_old_id: # new style IDs
             context = pc.id
         else:  # Old style id
             if pc.id in taxonomy.ARCHIVES:
                 context = pc.id
             else:
                 context = arxiv_identifier.archive
+    else:
+        context = None
 
     response_data['browse_context'] = context
 
@@ -344,13 +346,6 @@ def _check_context(arxiv_identifier: Identifier,
         if context:
             next_url = next_url + '&context='+context
             prev_url = prev_url + '&context='+context
-
-
-    print('next_url is ')
-    print( next_url )
-
-    print('prev_url is ')
-    print( prev_url )
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url

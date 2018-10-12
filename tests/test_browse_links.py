@@ -88,7 +88,7 @@ class BrowseLinksTest(unittest.TestCase):
         self.assertTrue(len(atags) >= 1, 'Shold be at least one <a> tags for prev/next')
         
         self.assertEqual(pn_div.find_all('a')[0]['title'],
-                         'previous in physics (accesskey p)',
+                         'previous in math-ph (accesskey p)',
                          'Should have previous span.arrow subtags with correct category')
 
         switches = html.find_all('div', 'switch')
@@ -97,7 +97,7 @@ class BrowseLinksTest(unittest.TestCase):
 
         other_atags = html.find('div','list').find_all('a')
         self.assertTrue(other_atags)
-        self.assertTrue( len(other_atags) >= 3, "should be at least 3 a tags in list")
-        self.assertEqual( other_atags[0].href , '/list/physics/new')
-        self.assertEqual( other_atags[1].href , '/list/physics/recent')
-        self.assertEqual( other_atags[2].href , '/list/physics/9707')
+        self.assertTrue(len(other_atags) >= 3, "should be at least 3 a tags in list")
+        self.assertEqual(other_atags[0]['href'], '/list/math-ph/new')
+        self.assertEqual(other_atags[1]['href'], '/list/math-ph/recent')
+        self.assertEqual(other_atags[2]['href'], '/list/math-ph/9707')
