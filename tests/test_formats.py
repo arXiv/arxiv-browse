@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 from browse.services.util.formats import formats_from_source_file_name,\
-                                         formats_from_source_type
+    formats_from_source_type
 
 
 class TestFormats(TestCase):
@@ -35,19 +35,19 @@ class TestFormats(TestCase):
             ['ps(CM)', 'other'])
         self.assertListEqual(formats_from_source_type('P'),
                              ['pdf', 'ps', 'other'])
-        self.assertListEqual(formats_from_source_type('D','src'),
+        self.assertListEqual(formats_from_source_type('D', 'src'),
                              ['src', 'pdf', 'other'])
         self.assertListEqual(formats_from_source_type('F'),
-                             ['pdf','other'])
+                             ['pdf', 'other'])
         self.assertListEqual(formats_from_source_type('H'),
-                             ['html','other'])
+                             ['html', 'other'])
         self.assertListEqual(formats_from_source_type('X'),
                              ['pdf', 'other'])
 
         self.assertListEqual(formats_from_source_type('', 'pdf'),
                              ['pdf', 'other'])
         self.assertListEqual(formats_from_source_type('', '400'),
-                             [ 'ps(400)', 'other'])
+                             ['ps(400)', 'other'])
         self.assertListEqual(formats_from_source_type('', '600'),
                              ['ps(600)', 'other'])
         self.assertListEqual(formats_from_source_type('', 'fname=cm'),
@@ -56,5 +56,3 @@ class TestFormats(TestCase):
                              ['ps(CM)', 'other'])
         self.assertListEqual(formats_from_source_type('', 'dvi'),
                              ['dvi', 'other'])
-
-

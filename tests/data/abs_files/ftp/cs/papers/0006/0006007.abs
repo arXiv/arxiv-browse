@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cs/0006008
+From: Joseph Y. Halpern <user@example.org>
+Date: Fri, 2 Jun 2000 18:35:55 GMT   (48kb)
+
+Title: Performing work efficiently in the presence of faults
+Authors: Cynthia Dwork, Joseph Y. Halpern, and O. Waarts
+Categories: cs.DC
+ACM-class: C.2.4
+Journal-ref: SIAM Journal on Computing 27:5, 1998, pp. 1457--1491
+\\
+  We consider a system of t synchronous processes that communicate only by
+sending messages to one another, and that together must perform $n$ independent
+units of work. Processes may fail by crashing; we want to guarantee that in
+every execution of the protocol in which at least one process survives, all n
+units of work will be performed. We consider three parameters: the number of
+messages sent, the total number of units of work performed (including
+multiplicities), and time. We present three protocols for solving the problem.
+All three are work-optimal, doing O(n+t) work. The first has moderate costs in
+the remaining two parameters, sending O(t\sqrt{t}) messages, and taking O(n+t)
+time. This protocol can be easily modified to run in any completely
+asynchronous system equipped with a failure detection mechanism. The second
+sends only O(t log{t}) messages, but its running time is large (exponential in
+n and t). The third is essentially time-optimal in the (usual) case in which
+there are no failures, and its time complexity degrades gracefully as the
+number of failures increases.
+\\

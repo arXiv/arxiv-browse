@@ -24,19 +24,19 @@
     {%- for format in format_list if not (format == 'src' and not current) %}
   <li>
     {%- if format == 'src' -%}
-    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">Source</a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">Source</a>
     {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
     {%- elif format == 'dvi' -%}
-    <a href="{{url_for('.dvi', arxiv_id=abs_meta.arxiv_id)}}">{{ format.upper() }}</a>
+    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
-    <a href="{{url_for('.html', arxiv_id=abs_meta.arxiv_id)}}" accesskey="f">{{ format.upper() }}</a>
+    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
-    <a href="{{url_for('.format', arxiv_id=abs_meta.arxiv_id)}}">Other formats</a>
+    <a href="{{url_for('.format', arxiv_id=requested_id)}}">Other formats</a>
     {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=abs_meta.arxiv_id)}}">(PostScript unavailable)</a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
     {#- TODO: consider this format for deprecation -#}
     {#- TODO: create clickthrough link from sciencewise link -#}
