@@ -199,7 +199,7 @@ class Id_Patterns_Test(unittest.TestCase):
         
     def category_id_test(self):
         def do_arxiv_urlize(txt):
-            return do_dois_id_urls_to_tags(lambda x: x, txt)
+            return do_dois_id_urls_to_tags(None,None, txt)
         
         assert_that(
             do_arxiv_urlize('version of arXiv.math.GR/0512484 (2011).'),
@@ -207,7 +207,7 @@ class Id_Patterns_Test(unittest.TestCase):
 
     def hosts_tests(self):
         def do_arxiv_urlize(txt):
-            return do_dois_id_urls_to_tags(lambda x: x, txt)
+            return do_dois_id_urls_to_tags(None,None, txt)
         
         assert_that(do_arxiv_urlize('can be downloaded from http://rwcc.bao.ac.cn:8001/swap/NLFFF_DBIE_code/HeHan_NLFFF_JGR.pdf'),
                     equal_to("can be downloaded from <a href=\"http://rwcc.bao.ac.cn:8001/swap/NLFFF_DBIE_code/HeHan_NLFFF_JGR.pdf\">this http URL</a>"),
@@ -217,3 +217,11 @@ class Id_Patterns_Test(unittest.TestCase):
         assert_that(do_arxiv_urlize("images is at http://85.20.11.14/hosting/punsly/APJLetter4.2.07/"),
                     equal_to('images is at <a href="http://85.20.11.14/hosting/punsly/APJLetter4.2.07/">this http URL</a>'),
                     "should deal with numeric IP correctly")
+
+    def urls_with_plus(self):
+        def do_arxiv_urlize(txt):
+            return do_dois_id_urls_to_tags(lambda x: x, lambda x:x,  txt)
+        
+        assert_that(do_arxiv_urlize('http://www.fkf.mpg.de/andersen/docs/pub/abstract2004+/pavarini_02.pdf'),
+                    equal_to("<a href=\"http://www.fkf.mpg.de/andersen/docs/pub/abstract2004+/pavarini_02.pdf\">this http URL</a>"),
+                    "Should deal with plus in URL correctly")

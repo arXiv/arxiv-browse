@@ -81,7 +81,7 @@ basic_arxiv_id_patterns = [
                          % _category, re.I))
 ]
 
-OKCHARS = r'([a-z0-9,_.\-~:]|%[a-f0-9]*)'
+OKCHARS = r'([a-z0-9,_.\-+~:]|%[a-f0-9]*)'
 """Chacters that are acceptable during PATH, QUERY and ANCHOR parts"""
 
 HOST_NAME = r'(?:[a-z0-9][a-z0-9\-.:]+[a-z0-9])'
