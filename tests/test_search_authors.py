@@ -30,8 +30,8 @@ class TestAuthorLinkCreation(TestCase):
 
         out = queries_for_authors("Fred Blogs (a), Jim Smith (b) (c)")
         self.assertListEqual(out, [('Fred Blogs', 'Blogs, F'),
-                                   ' (a)', ', ', ('Jim Smith', 'Smith, J'),
-                                   ' (b)', ' (c)'])
+                                   ' (a) ', ', ', ('Jim Smith', 'Smith, J'),
+                                   ' (b) ', ' (c) '])
 
         out = queries_for_authors("Francesca von Braun-Bates")
         self.assertListEqual(
@@ -66,3 +66,21 @@ class TestAuthorLinkCreation(TestCase):
         alst = queries_for_authors(str(meta.authors))
         self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'),
                                     ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])
+
+    def test_collaboration_space(self):
+        f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/1210/1210.8438.abs')
+        meta = AbsMetaSession.parse_abs_file(filename=f1)
+        
+        au_links = queries_for_authors(meta.authors.raw)
+        self.assertListEqual(au_links,
+                             [('Louis Leblanc', 'Leblanc, L'),
+                              ', ',
+                              ('Maha Manoubi', 'Manoubi, M'),
+                              ', ',
+                              ('Kadeem Dennis', 'Dennis, K'),
+                              ', ',
+                              'Zhe',
+                              ' (Rita) ',
+                              ('Liang', 'Liang'),
+                              ', ',
+                              ('Matei I. Radulescu', 'Radulescu, M I')])

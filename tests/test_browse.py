@@ -260,3 +260,15 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
         self.assertEqual(colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
         
+
+    def test_space_in_author_list(self):
+        id = '1210.8438'
+        rv = self.app.get('/abs/'+id)
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        auths_elmt = html.find('div','authors')
+        self.assertTrue(auths_elmt,'Should authors div element')
+
+        self.assertIn('Zhe (Rita) Liang,', auths_elmt.text,
+                      'Should be a space after (Rita)')

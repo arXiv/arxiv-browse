@@ -93,7 +93,7 @@ def queries_for_authors(authors: str) -> AuthorList:
         if is_divider(item):
             out.append(item + ' ')
         elif is_affiliation(item):
-            out.append(' ' + item)
+            out.append(' ' + item + ' ')
         elif is_short(item) or is_etal(item):
             out.append(item)
         else:
