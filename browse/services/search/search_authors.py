@@ -117,11 +117,11 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
     item = re.sub(r'([^\\])~', r'\1', item)
     item = re.sub(r',\s*', ' ', item)
 
-    colab_m = re.match(r'^(.+)\s+(collaboration|group|team)',
+    colab_m = re.match(r'^(.+)\s+(collaboration|group|team)(\s?.*)',
                        item, re.IGNORECASE)
     if colab_m:
         s = f'{colab_m.group(1)} {colab_m.group(2)}'
-        out.append((s, s))
+        out.append((item, s))
         return out
 
     the_m = re.match('the (.*)', item, re.IGNORECASE)

@@ -241,3 +241,22 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(ida['href'], '/abs/1501.99998')
         self.assertEqual(ida.text, '1501.99998')
         
+
+    def test_long_author_colab(self):
+        id = '1501.05201'
+        rv = self.app.get('/abs/'+id)
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        auths_elmt = html.find('div','authors')
+        self.assertTrue(auths_elmt,'Should authors div element')
+
+        a_tags = auths_elmt.find_all('a')
+        self.assertEqual(len(a_tags), 2, 'Should be two <a> tags in authors div')
+
+        colab=a_tags[1]
+
+        self.assertIsNotNone(colab['href'],'<a> tag in title should have href')
+        self.assertEqual(colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
+        self.assertEqual(colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
+        
