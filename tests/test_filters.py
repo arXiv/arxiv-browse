@@ -33,7 +33,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 '{{"something 10.1103/PhysRevD.76.013009 or other"|doi_urls}}'
             ).render(),
             equal_to(
-                'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a> or other'
+                'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'
             ))
 
     def test_with_jinja_escapes(self):
@@ -45,7 +45,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 '{{"something 10.1103/PhysRevD.76.013009 or other"|doi_urls}}'
             ).render(),
             equal_to(
-                'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a> or other'
+                'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'
             ))
 
         assert_that(
@@ -53,7 +53,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}'
             ).render(),
             equal_to(
-                '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a>'
+                '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a>'
             ))
 
     def test_doi_filter(self):
@@ -70,7 +70,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
         self.assertRegex(doiurl, r'^<a', 'should start with a tag')
         assert_that(doiurl,
                     equal_to(
-                        Markup('<a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a>')))
+                        Markup('<a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a>')))
 
         s = f'something something {doi} endthing'
         doiurl = doi_fn(s)
@@ -83,17 +83,17 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
             doi_fn(txt),
             equal_to(
                 Markup(
-                    '<a href="https://dx.doi.org/10.1103/PhysRevA.99.013009">doi:10.1103/PhysRevA.99.013009</a>'
-                    ' <a href="https://dx.doi.org/10.1103/PhysRevZ.44.023009">doi:10.1103/PhysRevZ.44.023009</a>'
-                    ' <a href="https://dx.doi.org/10.1103/PhysRevX.90.012309">doi:10.1103/PhysRevX.90.012309</a>'
-                    ' <a href="https://dx.doi.org/10.1103/BioRevX.44.123456">doi:10.1103/BioRevX.44.123456</a>'
+                    '<a href="https://dx.doi.org/10.1103/PhysRevA.99.013009">10.1103/PhysRevA.99.013009</a>'
+                    ' <a href="https://dx.doi.org/10.1103/PhysRevZ.44.023009">10.1103/PhysRevZ.44.023009</a>'
+                    ' <a href="https://dx.doi.org/10.1103/PhysRevX.90.012309">10.1103/PhysRevX.90.012309</a>'
+                    ' <a href="https://dx.doi.org/10.1103/BioRevX.44.123456">10.1103/BioRevX.44.123456</a>'
                 )))
 
         txt = '<script>Im from the user and Im bad</script>'
         assert_that(
             doi_fn(f'{doi} {txt}'),
             equal_to(
-                Markup(f'<a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a> {escape(txt)}')
+                Markup(f'<a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> {escape(txt)}')
             ))
 
     def test_arxiv_id_urls_basic(self):
@@ -253,7 +253,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                     '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|arxiv_urlize}}'
                 ).render(),
                 equal_to(
-                    '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">doi:10.1103/PhysRevD.76.013009</a>'
+                    '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a>'
                 ))
 
             assert_that(
