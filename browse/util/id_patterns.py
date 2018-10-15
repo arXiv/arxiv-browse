@@ -227,7 +227,7 @@ def _doi_sub(match: Match, doi_to_url: Callable[[str], str])->Tuple[Markup, str]
     doi_url = f'https://dx.doi.org/{quoted_doi}'
     doi_url = doi_to_url(doi_url)
 
-    anchor = escape('doi:'+doi)
+    anchor = escape(doi)
     front = match.string[0:match.start()]
     return (Markup(f'{front}<a href="{doi_url}">{anchor}</a>'), back)
 
