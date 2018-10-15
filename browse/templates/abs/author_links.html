@@ -1,7 +1,7 @@
 {%- macro author_list( authors ) %}
     {%- for part in authors -%}
         {%- if part is string -%}
-            {{- part -}}
+            {{- part|arxiv_urlize -}}
         {%- else -%}
             <a href="{{url_for_author_search(part[1])}}">{{part[0]}}</a>
         {%- endif -%}
