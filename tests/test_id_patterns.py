@@ -225,3 +225,11 @@ class Id_Patterns_Test(unittest.TestCase):
         assert_that(do_arxiv_urlize('http://www.fkf.mpg.de/andersen/docs/pub/abstract2004+/pavarini_02.pdf'),
                     equal_to("<a href=\"http://www.fkf.mpg.de/andersen/docs/pub/abstract2004+/pavarini_02.pdf\">this http URL</a>"),
                     "Should deal with plus in URL correctly")
+
+    def anchors_with_slash(self):
+        def do_arxiv_urlize(txt):
+            return do_dois_id_urls_to_tags(lambda x: x, lambda x:x,  txt)
+        
+        assert_that(do_arxiv_urlize('https://dms.sztaki.hu/ecml-pkkd-2016/#/app/privateleaderboard'),
+                    equal_to(Markup("<a href=\"https://dms.sztaki.hu/ecml-pkkd-2016/#/app/privateleaderboard\">this https URL</a>")),
+                    "Should deal with slash in URL anchor correctly")
