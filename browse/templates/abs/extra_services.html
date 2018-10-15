@@ -1,4 +1,4 @@
-{%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=5) -%}
+{%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=6) -%}
 <ul>
   {%- for anc_file in anc_file_list -%}
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
@@ -7,7 +7,7 @@
   <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id_v,file_name=anc_file['name'])}}">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
-    {%- set num_files_not_shown = anc_file_list|length - cutoff -%}
+    {%- set num_files_not_shown = anc_file_list|length - cutoff + 1 -%}
   </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
   {% else %}
 </ul>
