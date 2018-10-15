@@ -100,9 +100,8 @@ PATH = rf'(?P<PATH>(/{OKCHARS}*)+)?'
 QUERY = rf'(?P<QUUERY>\?(&?({OKCHARS}*(={OKCHARS}*)?))*)?'
 """Regex for query part of URLs for use in urlize"""
 
-ANCHOR = rf'(?P<ANCHOR>#{OKCHARS}*)?'
+ANCHOR = rf'(?P<ANCHOR>#({OKCHARS}|/)*)?'
 """Regex for anchor part of URLs for use in urlize"""
-
 
 URLINTEXT_PAT = re.compile(r'(?P<url>(?:https?://)'
                            f'{HOST_NAME}{PATH}{QUERY}{ANCHOR})',
