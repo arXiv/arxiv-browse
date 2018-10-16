@@ -345,9 +345,9 @@ def _check_context(arxiv_identifier: Identifier,
         # so just let the prevnext controller figure it out.
 
         # TODO do url_for() here
-        next_url = 'https://arxiv.org/prevnext?site=arxiv.org&id=' + \
+        next_url = '/prevnext?site=arxiv.org&id=' + \
             arxiv_identifier.id + '&function=next'
-        prev_url = 'https://arxiv.org/prevnext?site=arxiv.org&id=' + \
+        prev_url = '/prevnext?site=arxiv.org&id=' + \
             arxiv_identifier.id + '&function=prev'
         if context:
             next_url = next_url + '&context=' + context
