@@ -1,12 +1,7 @@
 """Application factory for browse service components."""
 from functools import partial
 from typing import Any
-
-from arxiv.base.config import BASE_SERVER
-from arxiv.base import Base
 from flask import Flask, url_for
-
-from jinja2 import Markup
 from browse.domain.identifier import canonical_url
 from browse.util.clickthrough import create_ct_url
 from browse.util.id_patterns import do_dois_id_urls_to_tags, do_id_to_tags, \
@@ -16,6 +11,9 @@ from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
     single_doi_url
+
+from arxiv.base.config import BASE_SERVER
+from arxiv.base import Base
 
 
 def create_web_app() -> Flask:

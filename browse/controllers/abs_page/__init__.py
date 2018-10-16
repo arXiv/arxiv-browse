@@ -12,7 +12,6 @@ from datetime import datetime
 from dateutil import parser
 from dateutil.tz import tzutc
 
-from flask import current_app as app
 from flask import url_for
 from flask import request
 from werkzeug.exceptions import InternalServerError
@@ -71,6 +70,7 @@ def get_abs_page(arxiv_id: str) -> Response:
     ------
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
+
     """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
@@ -107,7 +107,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         # Following are less critical and template must display without them
         # try:
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
-        #except Exception:
+        # except Exception:
         #    logger.warning("Error getting non-critical abs page data",
         #                   exc_info=app.debug)
 
@@ -162,6 +162,7 @@ def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
     redirect_url: str
         A `browse.abstract` redirect URL that uses the canonical
         arXiv identifier.
+
     """
     if not id or id.ids == id.id or id.ids == id.idv:
         return None
@@ -174,8 +175,10 @@ def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
         {'Location': redirect_url}
 
 
-def _non_critical_abs_data(abs_meta:DocMetadata, arxiv_identifier:Identifier, response_data:Dict)->None:
-    """Some additional non critical data for the abs page."""
+def _non_critical_abs_data(abs_meta: DocMetadata,
+                           arxiv_identifier: Identifier,
+                           response_data: Dict)->None:
+    """Get additional non-essential data for the abs page."""
     response_data['include_inspire_link'] = include_inspire_link(
         abs_meta)
     response_data['dblp'] = _check_dblp(abs_meta)
@@ -183,7 +186,7 @@ def _non_critical_abs_data(abs_meta:DocMetadata, arxiv_identifier:Identifier, re
         arxiv_identifier.id)
     if response_data['trackback_ping_count'] > 0:
         response_data['trackback_ping_latest'] = \
-                get_trackback_ping_latest_date(arxiv_identifier.id)
+            get_trackback_ping_latest_date(arxiv_identifier.id)
 
     # Ancillary files
     response_data['ancillary_files'] = \
@@ -237,9 +240,10 @@ def _not_modified(last_mod_dt: datetime,
     return not_modified
 
 
-def _time_header_parse(headers: Dict[str,Any], header: str)->Optional[datetime]:
+def _time_header_parse(headers: Dict[str, Any], header: str) \
+        -> Optional[datetime]:
     if (header in request.headers
-        and request.headers[header] is not None):
+            and request.headers[header] is not None):
         try:
             dt = parser.parse(request.headers.get(header))
             if not dt.tzinfo:
@@ -282,7 +286,7 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
 
 def _check_context(arxiv_identifier: Identifier,
                    primary_category: Optional[Category],
-                   response_data: Dict[str,Any]) -> None:
+                   response_data: Dict[str, Any]) -> None:
     """
     Check context in request parameters and update response accordingly.
 
@@ -296,8 +300,7 @@ def _check_context(arxiv_identifier: Identifier,
     Dict of values to add to response_data
 
     """
-    
-    # Setup the context
+    # Set up the context
     context = None
     if ('context' in request.args and (
             context == 'arxiv'
@@ -306,7 +309,7 @@ def _check_context(arxiv_identifier: Identifier,
         context = request.args['context']
     elif primary_category:
         pc = primary_category.canonical or primary_category
-        if not arxiv_identifier.is_old_id: # new style IDs
+        if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id
             if pc.id in taxonomy.ARCHIVES:
@@ -320,8 +323,8 @@ def _check_context(arxiv_identifier: Identifier,
 
     if arxiv_identifier.is_old_id or context == 'arxiv':
         next_id = metadata.get_next_id(arxiv_identifier)
-        #TODO might have to pass non-arxiv context to url_for becuase
-        #of examples like physics/9707012
+        # TODO: might have to pass non-arxiv context to url_for becuase
+        # of examples like physics/9707012
         if next_id:
             next_url = url_for('browse.abstract',
                                arxiv_id=next_id.id,
@@ -336,17 +339,19 @@ def _check_context(arxiv_identifier: Identifier,
                                context='arxiv' if context == 'arxiv' else None)
         else:
             prev_url = None
-            
+
     else:
         # This is the case where not in arXiv or a archive,
         # so just let the prevnext controller figure it out.
-        
-        #TODO do url_for() here
-        next_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+arxiv_identifier.id+'&function=next'
-        prev_url = 'https://arxiv.org/prevnext?site=arxiv.org&id='+arxiv_identifier.id+'&function=prev'
+
+        # TODO do url_for() here
+        next_url = 'https://arxiv.org/prevnext?site=arxiv.org&id=' + \
+            arxiv_identifier.id + '&function=next'
+        prev_url = 'https://arxiv.org/prevnext?site=arxiv.org&id=' + \
+            arxiv_identifier.id + '&function=prev'
         if context:
-            next_url = next_url + '&context='+context
-            prev_url = prev_url + '&context='+context
+            next_url = next_url + '&context=' + context
+            prev_url = prev_url + '&context=' + context
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
