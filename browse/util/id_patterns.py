@@ -108,9 +108,8 @@ URLINTEXT_PAT = re.compile(r'(?P<url>(?:https?://)'
                            re.I)
 """Regex to match URLs in text."""
 
-FTP_PAT = re.compile(r'(?P<url>(?:ftp://)'
-                     f'{HOST_NAME}{PATH}{QUERY})',
-                     re.I)
+#Not really sure what a good FTP url is like
+FTP_PAT = re.compile(rf'(?P<url>(?:ftp://)({OKCHARS}|(@))*{PATH})', re.I)
 """Regex to match FTP URLs in text."""
 
 basic_url_patterns = [
@@ -120,7 +119,7 @@ basic_url_patterns = [
 """List of Matchable to use when finding URLs in text"""
 
 bad_arxiv_id_patterns = [
-    re.compile('vixra', re.I)
+    re.compile('vixra', re.I), #don't need to link to vixra
 ]
 """List of Regex patterns that will cause matching to be skipped for
 the token."""

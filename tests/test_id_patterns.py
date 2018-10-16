@@ -233,3 +233,11 @@ class Id_Patterns_Test(unittest.TestCase):
         assert_that(do_arxiv_urlize('https://dms.sztaki.hu/ecml-pkkd-2016/#/app/privateleaderboard'),
                     equal_to(Markup("<a href=\"https://dms.sztaki.hu/ecml-pkkd-2016/#/app/privateleaderboard\">this https URL</a>")),
                     "Should deal with slash in URL anchor correctly")
+
+    def ftp_test(self):
+        cmt = "7 Pages; ftp://ftp%40micrognu%2Ecom:anon%40anon@ftp.micrognu.com/pnenp/conclusion.pdf"
+        def do_arxiv_urlize(txt):
+            return do_dois_id_urls_to_tags(lambda x: x, lambda x:x,  txt)
+        
+        assert_that(do_arxiv_urlize(cmt),
+                    equal_to(Markup('7 Pages; <a href="ftp://ftp%40micrognu%2Ecom:anon%40anon@ftp.micrognu.com/pnenp/conclusion.pdf">this ftp URL</a>')))
