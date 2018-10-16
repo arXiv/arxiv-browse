@@ -194,6 +194,7 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(
             'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
             "FTP URLs should be turned into links ARXIVNG-1242")
+        
 
     def test_160408245(self):
         """Test linking in 1604.08245."""
@@ -226,7 +227,7 @@ class BrowseTest(unittest.TestCase):
                         ' should not stomp on each others work, might need'
                         ' to combine them.')
 
-    def test_arxiv_in_title(self):
+    def test_authors_and_arxivId_in_title(self):
         id = '1501.99999'
         rv = self.app.get('/abs/'+id)
         self.assertEqual(rv.status_code, 200)
@@ -240,7 +241,13 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
         self.assertEqual(ida['href'], '/abs/1501.99998')
         self.assertEqual(ida.text, '1501.99998')
-        
+
+        au_a_tags = html.find('div','authors').find_all('a')
+        self.assertGreater(len(au_a_tags), 1, 'Should be some a tags for authors')
+        self.assertNotIn('query=The', au_a_tags[0]['href'],
+                         'Collaboration author query should not have "The"')
+        self.assertEqual(au_a_tags[0].text, 'SuperSuper Collaboration')
+
 
     def test_long_author_colab(self):
         id = '1501.05201'

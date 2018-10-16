@@ -88,8 +88,7 @@ def queries_for_authors(authors: str) -> AuthorList:
     out: AuthorList = []
 
     splits: List[str] = split_authors(authors)
-    for i in splits:
-        item = i
+    for item in splits:
         if is_divider(item):
             out.append(item + ' ')
         elif is_affiliation(item):
@@ -98,18 +97,19 @@ def queries_for_authors(authors: str) -> AuthorList:
             out.append(item)
         else:
             out = [*out, *_link_for_name_or_collab(item)]
+
     return out
 
 
 def _link_for_name_or_collab(item: str) -> AuthorList:
     out: List[Union[str, Tuple[str, str]]] = []
 
-    # deal with 'for the _whatever_' or 'for _whatever_'
-    not_linked = re.match(r'\s*((for\s+?the\s+))(.*)',
+    # deal with 'for the _whatever_' or 'for _whatever_' or 'the'
+    not_linked = re.match(r'\s*((for\s+the\s+)|(the\s+))(?P<rest>.*)',
                           item, flags=re.IGNORECASE)
     if not_linked:
         out.append(not_linked.group(1))
-        item = not_linked.group(3)
+        item = not_linked.group('rest')
 
     item = tex2utf(item)
     item = re.sub(r'\.(?!) ', '.', item)
@@ -120,8 +120,8 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
     colab_m = re.match(r'^(.+)\s+(collaboration|group|team)(\s?.*)',
                        item, re.IGNORECASE)
     if colab_m:
-        s = f'{colab_m.group(1)} {colab_m.group(2)}'
-        out.append((item, s))
+        colab = f'{colab_m.group(1)} {colab_m.group(2)}'
+        out.append((item, colab))
         return out
 
     the_m = re.match('the (.*)', item, re.IGNORECASE)
