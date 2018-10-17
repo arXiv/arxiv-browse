@@ -31,6 +31,7 @@
   </script>
   <!-- End Piwik Code -->
   {% endif -%}
+  {%- include "feedback_collector_js.html" -%}
   {%- endblock head -%}
 </head>
 
@@ -86,7 +87,7 @@
   </div>
   <div id="footer">
     <div class="footer-text">
-      <p>Link back to: <a href="{{url_for('home')}}">arXiv</a>, <a href="{{url_for('browse.form')}}">form interface</a>, <a href="{{url_for('contact')}}">contact</a>.</p>
+      <p>Link back to: <a href="{{url_for('home')}}">arXiv</a>, <a href="{{url_for('browse.form')}}">form interface</a>, <a href="{{url_for('contact')}}">contact</a>.&nbsp;&nbsp;<span class="help" style="display: inline-block;"><a href="https://confluence.cornell.edu/x/wtJyFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span></p>
     </div>
     <div class="social"><a href="{{url_for('twitter')}}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a></div>
   </div>

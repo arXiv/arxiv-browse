@@ -8,6 +8,7 @@
   <link rel="stylesheet" media="screen" type="text/css" href="/bibex/bibex.css?20181010"/>
   {%- endif %}
   <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
+  {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
 {% endblock head %}
 
@@ -49,7 +50,7 @@
     </div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "/abs/author_links.html" %}
+      {%- include "abs/author_links.html" %}
     </div>
 
     <div class="dateline">{{ generate_dateline() }}</div>
