@@ -210,6 +210,9 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
 
+# Disable DB queries even if other SQLAlchemy config are defined
+BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
+
 # Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')

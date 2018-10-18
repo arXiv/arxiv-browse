@@ -3,18 +3,48 @@
 import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
-from typing import List, Optional
+from typing import List, Optional, Any
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError, DBAPIError
+from arxiv.base.globals import get_application_config
 
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
 from arxiv.base import logging
+from logging import Logger
 
 logger = logging.getLogger(__name__)
+app_config = get_application_config()
+
+def db_handle_operational_error(logger: Logger, default_return_val: Any):
+    """Decorator for handling operational database errors."""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            # Bypass attempt to perform query and just return default value
+            is_db_disabled: bool = app_config.get(
+                'BROWSE_DISABLE_DATABASE') or False
+            if is_db_disabled:
+                if logger:
+                    logger.info(
+                        'Database is disabled per BROWSE_DISABLE_DATABASE')
+                return default_return_val
+            try:
+                return func(*args, **kwargs)
+            except (OperationalError, DBAPIError) as ex:
+                if logger:
+                    logger.warning(
+                        f'Error executing query in {func.__name__}: {ex}')
+                return default_return_val
+            except Exception as ex:
+                if logger:
+                    logger.warning(
+                        f'Unknown exception in {func.__name__}: {ex}')
+                raise
+        return wrapper
+    return decorator
 
 
 def __all_trackbacks_query() -> Query:
@@ -28,6 +58,7 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
         .filter(TrackbackPing.status == 'accepted')
 
 
+@db_handle_operational_error(logger=logger, default_return_val=None)
 def get_institution(ip: str) -> Optional[str]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
@@ -51,33 +82,28 @@ def get_institution(ip: str) -> Optional[str]:
         return institution_name
     except NoResultFound:
         return None
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return None
 
 
+@db_handle_operational_error(logger=logger, default_return_val=[])
 def get_all_trackback_pings() -> List[TrackbackPing]:
     """Get all trackback pings in database."""
     try:
         return list(__all_trackbacks_query().all())
     except NoResultFound:
         return []
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return []
 
 
+@db_handle_operational_error(logger=logger, default_return_val=[])
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     try:
         return list(__paper_trackbacks_query(paper_id).all())
     except NoResultFound:
         return []
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return []
+    return []
 
 
+@db_handle_operational_error(logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
     try:
@@ -91,11 +117,9 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
         return dt
     except NoResultFound:
         return None
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return None
 
 
+@db_handle_operational_error(logger=logger, default_return_val=0)
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
     try:
@@ -104,11 +128,10 @@ def count_trackback_pings(paper_id: str) -> int:
         return count
     except NoResultFound:
         return 0
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return 0
+    return 0
 
 
+@db_handle_operational_error(logger=logger, default_return_val=0)
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
     try:
@@ -117,11 +140,9 @@ def count_all_trackback_pings() -> int:
         return c
     except NoResultFound:
         return 0
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return 0
 
 
+@db_handle_operational_error(logger=logger, default_return_val=False)
 def has_sciencewise_ping(paper_id_v: str) -> bool:
     """Determine whether versioned document has a ScienceWISE ping."""
     try:
@@ -130,11 +151,10 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
         return test
     except NoResultFound:
         return False
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return False
+    return False
 
 
+@db_handle_operational_error(logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     try:
@@ -143,11 +163,9 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
         return url
     except NoResultFound:
         return None
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
-        return 0
 
 
+@db_handle_operational_error(logger=logger, default_return_val=None)
 def get_dblp_authors(paper_id: str) -> List[str]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
     try:
@@ -158,7 +176,4 @@ def get_dblp_authors(paper_id: str) -> List[str]:
         authors = [a for (a,) in authors_t]
         return authors
     except NoResultFound:
-        return []
-    except (OperationalError, DBAPIError) as ex:
-        logger.warning(f'Could not complete query: {ex}')
         return []
