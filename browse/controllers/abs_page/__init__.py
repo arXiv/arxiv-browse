@@ -364,7 +364,7 @@ def _check_context(arxiv_identifier: Identifier,
 def _check_sciencewise_ping(paper_id_v: str) -> bool:
     """Check whether paper has a ScienceWISE ping."""
     try:
-        return has_sciencewise_ping(paper_id_v)
+        return has_sciencewise_ping(paper_id_v)  # type: ignore
     except IOError:
         return False
 

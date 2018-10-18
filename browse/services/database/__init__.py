@@ -3,7 +3,7 @@
 import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Callable
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -19,10 +19,12 @@ from logging import Logger
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
 
-def db_handle_operational_error(logger: Logger, default_return_val: Any):
-    """Decorator for handling operational database errors."""
-    def decorator(func):
-        def wrapper(*args, **kwargs):
+
+def db_handle_operational_error(logger: Logger, default_return_val: Any) \
+        -> Any:
+    """Handle operational database errors via decorator."""
+    def decorator(func: Callable) -> Any:
+        def wrapper(*args, **kwargs):  # type: ignore
             # Bypass attempt to perform query and just return default value
             is_db_disabled: bool = app_config.get(
                 'BROWSE_DISABLE_DATABASE') or False
