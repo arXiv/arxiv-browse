@@ -128,7 +128,6 @@ def count_trackback_pings(paper_id: str) -> int:
         return count
     except NoResultFound:
         return 0
-    return 0
 
 
 @db_handle_operational_error(logger=logger, default_return_val=0)
