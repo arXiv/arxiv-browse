@@ -7,10 +7,14 @@ from typing import List, Optional
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import OperationalError, DBAPIError
 
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
+from arxiv.base import logging
+
+logger = logging.getLogger(__name__)
 
 
 def __all_trackbacks_query() -> Query:
@@ -47,6 +51,9 @@ def get_institution(ip: str) -> Optional[str]:
         return institution_name
     except NoResultFound:
         return None
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
+        return None
 
 
 def get_all_trackback_pings() -> List[TrackbackPing]:
@@ -55,6 +62,9 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
         return list(__all_trackbacks_query().all())
     except NoResultFound:
         return []
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
+        return []
 
 
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
@@ -62,6 +72,9 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     try:
         return list(__paper_trackbacks_query(paper_id).all())
     except NoResultFound:
+        return []
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
         return []
 
 
@@ -78,6 +91,9 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
         return dt
     except NoResultFound:
         return None
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
+        return None
 
 
 def count_trackback_pings(paper_id: str) -> int:
@@ -87,6 +103,9 @@ def count_trackback_pings(paper_id: str) -> int:
             .group_by(TrackbackPing.url).count()
         return count
     except NoResultFound:
+        return 0
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
         return 0
 
 
@@ -98,6 +117,9 @@ def count_all_trackback_pings() -> int:
         return c
     except NoResultFound:
         return 0
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
+        return 0
 
 
 def has_sciencewise_ping(paper_id_v: str) -> bool:
@@ -107,6 +129,9 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
             .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
         return test
     except NoResultFound:
+        return False
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
         return False
 
 
@@ -118,6 +143,9 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
         return url
     except NoResultFound:
         return None
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
+        return 0
 
 
 def get_dblp_authors(paper_id: str) -> List[str]:
@@ -130,4 +158,7 @@ def get_dblp_authors(paper_id: str) -> List[str]:
         authors = [a for (a,) in authors_t]
         return authors
     except NoResultFound:
+        return []
+    except (OperationalError, DBAPIError) as ex:
+        logger.warning(f'Could not complete query: {ex}')
         return []
