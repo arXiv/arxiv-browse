@@ -1,4 +1,4 @@
-r"""Patterns and functions to detect arXiv ids and Urls in text.
+"""Patterns and functions to detect arXiv ids and Urls in text.
 
 Functions to detech arXiv ids, URLs and DOI in text.
 Functions to transform them to <a> tags.
@@ -98,7 +98,7 @@ period.
 PATH = rf'(?P<PATH>(/{OKCHARS}*)+)?'
 """Regex for path part of URLs for use in urlize"""
 
-QUERY = rf'(?P<QUUERY>\?(&?({OKCHARS}*(={OKCHARS}*)?))*)?'
+QUERY = rf'(?P<QUERY>\?(&?({OKCHARS}*(={OKCHARS}*)?))*)?'
 """Regex for query part of URLs for use in urlize"""
 
 ANCHOR = rf'(?P<ANCHOR>#({OKCHARS}|/)*)?'
