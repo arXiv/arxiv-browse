@@ -211,6 +211,9 @@ SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
 
 # Disable DB queries even if other SQLAlchemy config are defined
+# This, for example, could be used in conjunction with the `no-write` runlevel
+# in the legacy infrastructure, which is a case where we know the DB is
+# unavailable and thus intentionally bypass any DB access.
 BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
 
 # Paths to .abs and source files
