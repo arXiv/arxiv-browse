@@ -177,7 +177,7 @@
 {%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
-    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}
