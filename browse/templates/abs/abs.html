@@ -141,6 +141,7 @@
 
 {%- macro generate_dateline() -%}
   (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
+  {%- if abs_meta.version == 1 and abs_meta.version < abs_meta.version_history[-1].version %} (this version){%- endif -%}
   {%- if abs_meta.version != 1 %} (<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
   , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
