@@ -179,14 +179,17 @@ def _non_critical_abs_data(abs_meta: DocMetadata,
                            arxiv_identifier: Identifier,
                            response_data: Dict)->None:
     """Get additional non-essential data for the abs page."""
-    response_data['include_inspire_link'] = include_inspire_link(
-        abs_meta)
+    # The DBLP listing and trackback counts depend on the DB.
     response_data['dblp'] = _check_dblp(abs_meta)
     response_data['trackback_ping_count'] = count_trackback_pings(
         arxiv_identifier.id)
     if response_data['trackback_ping_count'] > 0:
         response_data['trackback_ping_latest'] = \
             get_trackback_ping_latest_date(arxiv_identifier.id)
+
+    # Include INSPIRE link in references & citations section
+    response_data['include_inspire_link'] = include_inspire_link(
+        abs_meta)
 
     # Ancillary files
     response_data['ancillary_files'] = \
@@ -204,6 +207,7 @@ def _check_request_headers(docmeta: DocMetadata,
     """Check the request headers, update the response headers accordingly."""
     last_mod_dt: datetime = docmeta.modified
 
+    # Latest trackback ping time depends on the database
     if 'trackback_ping_latest' in response_data \
        and isinstance(response_data['trackback_ping_latest'], datetime) \
        and response_data['trackback_ping_latest'] > last_mod_dt:
@@ -360,7 +364,7 @@ def _check_context(arxiv_identifier: Identifier,
 def _check_sciencewise_ping(paper_id_v: str) -> bool:
     """Check whether paper has a ScienceWISE ping."""
     try:
-        return has_sciencewise_ping(paper_id_v)
+        return has_sciencewise_ping(paper_id_v)  # type: ignore
     except IOError:
         return False
 
