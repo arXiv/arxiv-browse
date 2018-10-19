@@ -1,4 +1,4 @@
-"""Patterns and functions to detect arXiv ids and Urls in text.
+r"""Patterns and functions to detect arXiv ids and Urls in text.
 
 Functions to detech arXiv ids, URLs and DOI in text.
 Functions to transform them to <a> tags.
