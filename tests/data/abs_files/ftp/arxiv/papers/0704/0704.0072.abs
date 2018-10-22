@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0072
+From: Yurii Kosovtsov <KKzMFw3Zr@xMIZbI.LsVp.bN6>
+Date: Sun, 1 Apr 2007 07:58:53 GMT   (9kb)
+
+Title: The decomposition method and Maple procedure for finding first integrals
+  of nonlinear PDEs of any order with any number of independent variables
+Authors: Yu.N. Kosovtsov
+Categories: math-ph math.MP
+Comments: 13 pages; Submitted to the 10th International Workshop in Computer
+  Algebra in Scientific Computing, CASC 2007
+MSC-class: 34A05; 34A34; 34A35
+\\
+  In present paper we propose seemingly new method for finding solutions of
+some types of nonlinear PDEs in closed form. The method is based on
+decomposition of nonlinear operators on sequence of operators of lower orders.
+It is shown that decomposition process can be done by iterative procedure(s),
+each step of which is reduced to solution of some auxiliary PDEs system(s) for
+one dependent variable. Moreover, we find on this way the explicit expression
+of the first-order PDE(s) for first integral of decomposable initial PDE.
+Remarkably that this first-order PDE is linear if initial PDE is linear in its
+highest derivatives.
+  The developed method is implemented in Maple procedure, which can really
+solve many of different order PDEs with different number of independent
+variables. Examples of PDEs with calculated their general solutions demonstrate
+a potential of the method for automatic solving of nonlinear PDEs.
+\\

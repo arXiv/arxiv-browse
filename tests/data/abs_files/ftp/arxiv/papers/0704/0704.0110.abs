@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0110
+From: Debashish Goswami <9fOOarEk@S7eYBy.7l.hR>
+Date: Mon, 2 Apr 2007 00:46:51 GMT   (12kb)
+Date (revised v2): Mon, 23 Jul 2007 19:16:25 GMT   (12kb)
+
+Title: On Equivariant Embedding of Hilbert C^* modules
+Authors: Debashish Goswami
+Categories: math.OA
+Comments: revised substantially, by correcting a wrong argument, pointed out by
+  an anonymous referee (thanks to him/her for this!)
+\\
+  We prove that an arbitrary (not necessarily countably generated) Hilbert
+$G$-$\cla$ module on a G-C^* algebra $\cla$ admits an equivariant embedding
+into a trivial $G-\cla$ module, provided G is a compact Lie group and its
+action on $\cla$ is ergodic.
+\\

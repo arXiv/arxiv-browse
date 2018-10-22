@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0469
+From: Giancarlo Urzua A <JdGg@Q4EEo.OU5>
+Date: Tue, 3 Apr 2007 21:45:37 GMT   (57kb)
+Date (revised v2): Wed, 9 May 2007 13:13:39 GMT   (57kb)
+Date (revised v3): Thu, 26 Jun 2008 14:44:14 GMT   (80kb)
+Date (revised v4): Mon, 26 Oct 2009 15:46:09 GMT   (44kb)
+
+Title: On line arrangements with applications to 3-nets
+Authors: Giancarlo Urzua
+Categories: math.AG math.CO
+Comments: 19 pages, to appear in Advances in Geometry. Sections 5, 6 and 7 of
+  old version are worked out in more detail at the beginning of "Arrangements
+  of rational sections over curves and the varieties they define"
+MSC-class: 52C30; 14J10; 05B15
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We show a one-to-one correspondence between arrangements of d lines in the
+projective plane, and lines in P^{d-2}. We apply this correspondence to
+classify (3,q)-nets over the complex numbers for all q<=6. When q=6, we have
+twelve possible combinatorial cases, but we prove that only nine of them are
+realizable. This new case shows several new properties for 3-nets: different
+dimensions for moduli, strict realization over certain fields, etc. We also
+construct a three dimensional family of (3,8)-nets corresponding to the
+Quaternion group.
+\\

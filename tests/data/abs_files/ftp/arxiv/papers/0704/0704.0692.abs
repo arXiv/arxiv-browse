@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0692
+From: Gheorghe Adam <EmvJw@sIpM.eg>
+Date: Thu, 5 Apr 2007 08:44:06 GMT   (29kb)
+
+Title: Rigorous derivation of the mean field Green functions of the two-band
+  Hubbard model of superconductivity
+Authors: Gh. Adam and S. Adam (LIT-JINR, Dubna, Russia and IFIN-HH,
+  Magurele-Bucharest, Romania)
+Categories: cond-mat.supr-con cond-mat.str-el
+Comments: 16 pages, Submitted to J. Phys. A: Mathematical and Theoretical
+DOI: 10.1088/1751-8113/40/37/001
+\\
+  The Green function (GF) equation of motion technique for solving the
+effective two-band Hubbard model of high-T_c superconductivity in cuprates
+[N.M. Plakida et al., Phys. Rev. B, v. 51, 16599 (1995); JETP, v. 97, 331
+(2003)] rests on the Hubbard operator (HO) algebra. We show that, if we take
+into account the invariance to translations and spin reversal, the HO algebra
+results in invariance properties of several specific correlation functions. The
+use of these properties allows rigorous derivation and simplification of the
+expressions of the frequency matrix (FM) and of the generalized mean field
+approximation (GMFA) Green functions (GFs) of the model.
+  For the normal singlet hopping and anomalous exchange pairing correlation
+functions which enter the FM and GMFA-GFs, an approximation procedure based on
+the identification and elimination of exponentially small quantities is
+described. It secures the reduction of the correlation order to GMFA-GF
+expressions.
+\\

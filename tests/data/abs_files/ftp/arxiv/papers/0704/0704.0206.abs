@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0206
+From: Stefano Lepri <BMtcCfQ.Ho4zm@nzi.RZD.Uy>
+Date: Mon, 2 Apr 2007 14:28:51 GMT   (54kb)
+
+Title: Resonant activation in bistable semiconductor lasers
+Authors: Stefano Lepri, Giovanni Giacomelli
+Categories: physics.optics
+Comments: Submitted to Phys. Rev. A
+DOI: 10.1103/PhysRevA.76.023815
+\\
+  We theoretically investigate the possibility of observing resonant activation
+in the hopping dynamics of two-mode semiconductor lasers. We present a series
+of simulations of a rate-equations model under random and periodic modulation
+of the bias current. In both cases, for an optimal choice of the modulation
+time-scale, the hopping times between the stable lasing modes attain a minimum.
+The simulation data are understood by means of an effective one-dimensional
+Langevin equation with multiplicative fluctuations. Our conclusions apply to
+both Edge Emitting and Vertical Cavity Lasers, thus opening the way to several
+experimental tests in such optical systems.
+\\

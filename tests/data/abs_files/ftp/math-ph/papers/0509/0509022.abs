@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509022
+From: Frederic Klopp <03GDZ@mKF7.g9KG-DNK2Vf2.AP>
+Date: Mon, 12 Sep 2005 15:22:18 GMT   (29kb)
+
+Title: Lifshitz Tails in Constant Magnetic Fields
+Authors: Fr\'{e}d\'{e}ric Klopp (LAGA), Georgi Raikov
+Categories: math-ph math.MP
+Proxy: ccsd ccsd-00008636
+MSC-class: 82B44, 47B80, 47N55, 81Q10
+\\
+  We consider the 2D Landau Hamiltonian $H$ perturbed by a random alloy-type
+potential, and investigate the Lifshitz tails, i.e. the asymptotic behavior of
+the corresponding integrated density of states (IDS) near the edges in the
+spectrum of $H$. If a given edge coincides with a Landau level, we obtain
+different asymptotic formulae for power-like, exponential sub-Gaussian, and
+super-Gaussian decay of the one-site potential. If the edge is away from the
+Landau levels, we impose a rational-flux assumption on the magnetic field,
+consider compactly supported one-site potentials, and formulate a theorem which
+is analogous to a result obtained in the case of a vanishing magnetic field.
+\\

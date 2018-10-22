@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0095
+From: Emmanuel Breuillard F. <Fl7G5CLY.QeuvobewyI@vVR0.3-ifW5.dX>
+Date: Sun, 1 Apr 2007 16:59:04 GMT   (340kb)
+Date (revised v2): Tue, 10 Apr 2012 05:13:40 GMT   (360kb)
+
+Title: Geometry of Locally Compact Groups of Polynomial Growth and Shape of
+  Large Balls
+Authors: Emmanuel Breuillard
+Categories: math.GR math.DG
+Comments: slightly expanded and polished new version, 57 pages, 2 figures
+MSC-class: 22E25, 20F18, 37A15, 53C17
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We get asymptotics for the volume of large balls in an arbitrary locally
+compact group G with polynomial growth. This is done via a study of the
+geometry of G and a generalization of P. Pansu's thesis. In particular, we show
+that any such G is weakly commensurable to some simply connected solvable Lie
+group S, the Lie shadow of G. We also show that large balls in G have an
+asymptotic shape, i.e. after a suitable renormalization, they converge to a
+limiting compact set which can be interpreted geometrically. We then discuss
+the speed of convergence, treat some examples and give an application to
+ergodic theory. We also answer a question of Burago about left invariant
+metrics and recover some results of Stoll on the irrationality of growth series
+of nilpotent groups.
+\\

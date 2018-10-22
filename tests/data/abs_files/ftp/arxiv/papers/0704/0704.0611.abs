@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0611
+From: Igor Grabec <W0jd.beuHjh@U2.Fcc-vH.qv>
+Date: Wed, 4 Apr 2007 16:43:59 GMT   (286kb)
+
+Title: Modeling the field of laser welding melt pool by RBFNN
+Authors: A. Borstnik Bracic, E. Govekar and I. Grabec
+Categories: physics.comp-ph physics.data-an
+Comments: 5 pages, 6 eps figures, uses IEEEtran.cls
+\\
+  Efficient control of a laser welding process requires the reliable prediction
+of process behavior. A statistical method of field modeling, based on
+normalized RBFNN, can be successfully used to predict the spatiotemporal
+dynamics of surface optical activity in the laser welding process. In this
+article we demonstrate how to optimize RBFNN to maximize prediction quality.
+Special attention is paid to the structure of sample vectors, which represent
+the bridge between the field distributions in the past and future.
+\\

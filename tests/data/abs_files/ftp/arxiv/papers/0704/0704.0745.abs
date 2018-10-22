@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0745
+From: Maria Siopacha <33R6KpFg@zxE.0wzIAw.Xf.CJ>
+Date: Thu, 5 Apr 2007 15:45:03 GMT   (16kb)
+
+Title: Weak and Strong Taylor methods for numerical solutions of stochastic
+  differential equations
+Authors: Maria Siopacha and Josef Teichmann
+Categories: q-fin.CP math.PR
+Comments: 18 pages
+MSC-class: 60G; 60H; 58J37
+\\
+  We apply results of Malliavin-Thalmaier-Watanabe for strong and weak Taylor
+expansions of solutions of perturbed stochastic differential equations (SDEs).
+In particular, we work out weight expressions for the Taylor coefficients of
+the expansion. The results are applied to LIBOR market models in order to deal
+with the typical stochastic drift and with stochastic volatility. In contrast
+to other accurate methods like numerical schemes for the full SDE, we obtain
+easily tractable expressions for accurate pricing. In particular, we present an
+easily tractable alternative to ``freezing the drift'' in LIBOR market models,
+which has an accuracy similar to the full numerical scheme. Numerical examples
+underline the results.
+\\

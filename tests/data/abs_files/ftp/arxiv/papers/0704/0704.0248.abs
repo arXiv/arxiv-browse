@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0248
+From: Ricardo Weder <3FpiQ@9U4QR4Z8.xt44.hL>
+Date: Mon, 2 Apr 2007 17:42:00 GMT   (12kb)
+Date (revised v2): Sat, 7 Apr 2007 02:30:18 GMT   (15kb)
+Date (revised v3): Mon, 30 Apr 2007 15:40:38 GMT   (19kb)
+Date (revised v4): Mon, 4 Feb 2008 17:39:52 GMT   (20kb)
+
+Title: A Rigorous Time-Domain Analysis of Full--Wave Electromagnetic Cloaking
+  (Invisibility)
+Authors: Ricardo Weder
+Categories: physics.optics math-ph math.MP
+Comments: The presentation of the results has been simplified. Comments and
+  references have been added
+\\
+  There is currently a great deal of interest in the theoretical and practical
+possibility of cloaking objects from the observation by electromagnetic waves.
+The basic idea of these invisibility devices \cite{glu1, glu2, le},\cite{pss1}
+is to use anisotropic {\it transformation media} whose permittivity and
+permeability $\var^{\lambda\nu}, \mu^{\lambda\nu}$, are obtained from the ones,
+$\var_0^{\lambda\nu}, \mu^{\lambda\nu}_0$, of isotropic media, by singular
+transformations of coordinates. In this paper we study electromagnetic cloaking
+in the time-domain using the formalism of time-dependent scattering theory.
+This formalism allows us to settle in an unambiguous way the mathematical
+problems posed by the singularities of the inverse of the permittivity and the
+permeability of the {\it transformation media} on the boundary of the cloaked
+objects. We write Maxwell's equations in Schr\"odinger form with the
+electromagnetic propagator playing the role of the Hamiltonian. We prove that
+the electromagnetic propagator outside of the cloaked objects is essentially
+self-adjoint. Moreover, the unique self-adjoint extension is unitarily
+equivalent to the electromagnetic propagator in the medium
+$\var_0^{\lambda\nu}, \mu^{\lambda\nu}_0$. Using this fact, and since the
+coordinate transformation is the identity outside of a ball, we prove that the
+scattering operator is the identity. Our results give a rigorous proof that the
+construction of \cite{glu1, glu2, le}, \cite{pss1} perfectly cloaks passive and
+active devices from observation by electromagnetic waves. Furthermore, we prove
+cloaking for general anisotropic materials. In particular, our results prove
+that it is possible to cloak objects inside general crystals.
+\\

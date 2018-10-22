@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0396
+From: Min-Chul Cha <BA8kz@gP0akmn.Lo.zT>
+Date: Tue, 3 Apr 2007 13:53:07 GMT   (48kb)
+
+Title: Finite-temperature phase transitions in a two-dimensional boson Hubbard
+  model
+Authors: Min-Chul Cha and Ji-Woo Lee
+Categories: cond-mat.str-el
+Comments: 4 pages, 7 figures
+DOI: 10.1103/PhysRevLett.98.266406
+\\
+  We study finite-temperature phase transitions in a two-dimensional boson
+Hubbard model with zero-point quantum fluctuations via Monte Carlo simulations
+of quantum rotor model, and construct the corresponding phase diagram.
+Compressibility shows a thermally activated gapped behavior in the insulating
+regime. Finite-size scaling of the superfluid stiffness clearly shows the
+nature of the Kosterlitz-Thouless transition. The transition temperature,
+$T_c$, confirms a scaling relation $T_c \propto \rho_0^x$ with $x=1.0$. Some
+evidences of anomalous quantum behavior at low temperatures are presented.
+\\

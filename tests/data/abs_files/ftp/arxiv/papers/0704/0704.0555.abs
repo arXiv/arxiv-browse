@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0555
+From: Liangpan Li <VM8prD9Qc5@T0xd.aAN.F3>
+Date: Wed, 4 Apr 2007 11:59:25 GMT   (3kb)
+
+Title: The Graham conjecture implies the Erdos-Turan conjecture
+Authors: Liangpan Li
+Categories: math.NT
+Comments: 3 pages
+MSC-class: 11B25
+\\
+  Erd\"{o}s and Tur\'{a}n once conjectured that any set $A\subset\mathbb{N}$
+with $\sum_{a\in A}{1}/{a}=\infty$ should contain infinitely many progressions
+of arbitrary length $k\geq3$. For the two-dimensional case Graham conjectured
+that if $B\subset \mathbb{N}\times\mathbb{N}$ satisfies $$\sum\limits_{(x,y)\in
+B}\frac{1}{x^2+y^2}=\infty,$$ then for any $s\geq2$, $B$ contains an $s\times
+s$ axes-parallel grid. In this paper it is shown that if the Graham conjecture
+is true for some $s\geq2$, then the Erd\"{o}s-Tur\'{a}n conjecture is true for
+$k=2s-1$.
+\\

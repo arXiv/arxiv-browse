@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0043
+From: Alexander Gorban <Pgjn3@ZS.W9.6s>
+Date: Sat, 31 Mar 2007 17:31:12 GMT   (900kb)
+
+Title: Nonequilibrium entropy limiters in lattice Boltzmann methods
+Authors: R.A. Brownlee, A.N. Gorban, J. Levesley
+Categories: cond-mat.stat-mech cond-mat.mtrl-sci
+Comments: 30 pages, 9 figures, 1 table
+Journal-ref: Physica A, V. 387, Issues 2-3 (2008), Pages 385-406
+DOI: 10.1016/j.physa.2007.09.031
+\\
+  We construct a system of nonequilibrium entropy limiters for the lattice
+Boltzmann methods (LBM). These limiters erase spurious oscillations without
+blurring of shocks, and do not affect smooth solutions. In general, they do the
+same work for LBM as flux limiters do for finite differences, finite volumes
+and finite elements methods, but for LBM the main idea behind the construction
+of nonequilibrium entropy limiter schemes is to transform a field of a scalar
+quantity - nonequilibrium entropy. There are two families of limiters: (i)
+based on restriction of nonequilibrium entropy (entropy "trimming") and (ii)
+based on filtering of nonequilibrium entropy (entropy filtering). The physical
+properties of LBM provide some additional benefits: the control of entropy
+production and accurate estimate of introduced artificial dissipation are
+possible. The constructed limiters are tested on classical numerical examples:
+1D athermal shock tubes with an initial density ratio 1:2 and the 2D lid-driven
+cavity for Reynolds numbers Re between 2000 and 7500 on a coarse 100*100 grid.
+All limiter constructions are applicable for both entropic and non-entropic
+quasiequilibria.
+\\

@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0540
+From: Jinhua Jiang <1y00M3.DT29A@QNJ7m.vob>
+Date: Wed, 4 Apr 2007 10:28:16 GMT   (30kb)
+Date (revised v2): Thu, 5 Apr 2007 01:41:14 GMT   (30kb)
+
+Title: On the Achievable Rate Regions for Interference Channels with Degraded
+  Message Sets
+Authors: Jinhua Jiang and Xin Yan
+Categories: cs.IT math.IT
+Comments: 22 pages, 8 figures, submitted to IEEE Trans. Inform. Theory
+\\
+  The interference channel with degraded message sets (IC-DMS) refers to a
+communication model in which two senders attempt to communicate with their
+respective receivers simultaneously through a common medium, and one of the
+senders has complete and a priori (non-causal) knowledge about the message
+being transmitted by the other. A coding scheme that collectively has
+advantages of cooperative coding, collaborative coding, and dirty paper coding,
+is developed for such a channel. With resorting to this coding scheme,
+achievable rate regions of the IC-DMS in both discrete memoryless and Gaussian
+cases are derived, which, in general, include several previously known rate
+regions. Numerical examples for the Gaussian case demonstrate that in the
+high-interference-gain regime, the derived achievable rate regions offer
+considerable improvements over these existing results.
+\\

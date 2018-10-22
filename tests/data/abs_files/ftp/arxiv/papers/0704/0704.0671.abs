@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0671
+From: Maxim Raginsky <h7m02@m65k.FGg>
+Date: Thu, 5 Apr 2007 02:57:15 GMT   (415kb)
+
+Title: Learning from compressed observations
+Authors: Maxim Raginsky
+Categories: cs.IT cs.LG math.IT
+Comments: 6 pages; submitted to the 2007 IEEE Information Theory Workshop (ITW
+  2007)
+\\
+  The problem of statistical learning is to construct a predictor of a random
+variable $Y$ as a function of a related random variable $X$ on the basis of an
+i.i.d. training sample from the joint distribution of $(X,Y)$. Allowable
+predictors are drawn from some specified class, and the goal is to approach
+asymptotically the performance (expected loss) of the best predictor in the
+class. We consider the setting in which one has perfect observation of the
+$X$-part of the sample, while the $Y$-part has to be communicated at some
+finite bit rate. The encoding of the $Y$-values is allowed to depend on the
+$X$-values. Under suitable regularity conditions on the admissible predictors,
+the underlying family of probability distributions and the loss function, we
+give an information-theoretic characterization of achievable predictor
+performance in terms of conditional distortion-rate functions. The ideas are
+illustrated on the example of nonparametric regression in Gaussian noise.
+\\

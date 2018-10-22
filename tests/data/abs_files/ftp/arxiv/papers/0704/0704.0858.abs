@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0858
+From: Mohamed Kaaniche <knk1Ndg.KYedfjub@6e8Y.B4>
+Date: Fri, 6 Apr 2007 08:22:50 GMT   (347kb)
+
+Title: Lessons Learned from the deployment of a high-interaction honeypot
+Authors: Eric Alata (LAAS), Vincent Nicomette (LAAS), Mohamed Ka{\^a}niche
+  (LAAS), Marc Dacier (LAAS), Matthieu Herrb (LAAS)
+Categories: cs.CR
+Proxy: ccsd hal-00140355
+Journal-ref: Proc. 6th European Dependable Computing Conference (EDCC-6),
+  Coimbra (Portugal), 18-20 octobre 2006 (18/10/2006) 39-44
+\\
+  This paper presents an experimental study and the lessons learned from the
+observation of the attackers when logged on a compromised machine. The results
+are based on a six months period during which a controlled experiment has been
+run with a high interaction honeypot. We correlate our findings with those
+obtained with a worldwide distributed system of lowinteraction honeypots.
+\\

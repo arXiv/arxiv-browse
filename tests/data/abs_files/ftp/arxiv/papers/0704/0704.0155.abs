@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0155
+From: Floris van der Tak <2NOdY@2iw41-awqj.2Cw.lw>
+Date: Mon, 2 Apr 2007 09:38:00 GMT   (439kb)
+
+Title: A computer program for fast non-LTE analysis of interstellar line
+  spectra
+Authors: Floris van der Tak (SRON Groningen), John Black (Onsala), Fredrik
+  Schoeier (Stockholm), David Jansen and Ewine van Dishoeck (Leiden)
+Categories: astro-ph
+Comments: Accepted by A&A; 18 A4 pages, 11 figures
+\\
+  The large quantity and high quality of modern radio and infrared line
+observations require efficient modeling techniques to infer physical and
+chemical parameters such as temperature, density, and molecular abundances. We
+present a computer program to calculate the intensities of atomic and molecular
+lines produced in a uniform medium, based on statistical equilibrium
+calculations involving collisional and radiative processes and including
+radiation from background sources. Optical depth effects are treated with an
+escape probability method. The program is available on the World Wide Web at
+http://www.sron.rug.nl/~vdtak/radex/index.shtml . The program makes use of
+molecular data files maintained in the Leiden Atomic and Molecular Database
+(LAMDA), which will continue to be improved and expanded. The performance of
+the program is compared with more approximate and with more sophisticated
+methods. An Appendix provides diagnostic plots to estimate physical parameters
+from line intensity ratios of commonly observed molecules. This program should
+form an important tool in analyzing observations from current and future radio
+and infrared telescopes.
+\\

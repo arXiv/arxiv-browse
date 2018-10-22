@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0189
+From: Jean-Camille Birget <qs1m2c@GwxyeE.LHodJzh.Zk1>
+Date: Mon, 2 Apr 2007 13:34:02 GMT   (34kb)
+Date (revised v2): Mon, 28 Apr 2008 19:23:20 GMT   (33kb)
+
+Title: Monoid generalizations of the Richard Thompson groups
+Authors: Jean-Camille Birget
+Categories: math.GR
+Comments: 27 pages
+MSC-class: 20M99, 20F10, 68Q17
+\\
+  The groups G_{k,1} of Richard Thompson and Graham Higman can be generalized
+in a natural way to monoids, that we call M_{k,1}, and to inverse
+monoids,called Inv_{k,1}; this is done by simply generalizing bijections to
+partial functions or partial injective functions. The monoids M_{k,1} have
+connections with circuit complexity (studied in another paper). Here we prove
+that M_{k,1} and Inv_{k,1} are congruence-simple for all k. Their Green
+relations J and D are characterized: M_{k,1} and Inv_{k,1} are J-0-simple, and
+they have k-1 non-zero D-classes. They are submonoids of the multiplicative
+part of the Cuntz algebra O_k. They are finitely generated, and their word
+problem over any finite generating set is in P. Their word problem is
+coNP-complete over certain infinite generating sets.
+\\

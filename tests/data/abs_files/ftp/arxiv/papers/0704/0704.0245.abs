@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0245
+From: Konstantinos Zoubos <I.Wyqyvj@UZS2.1p.eh>
+Date: Mon, 2 Apr 2007 18:14:10 GMT   (37kb)
+Date (revised v2): Fri, 6 Jul 2007 17:00:23 GMT   (37kb)
+
+Title: One-loop MHV Rules and Pure Yang-Mills
+Authors: Andreas Brandhuber, Bill Spence, Gabriele Travaglini, Konstantinos
+  Zoubos
+Categories: hep-th hep-ph
+Comments: 40 pages. v2: Minor corrections, references added. Published version
+Report-no: QMUL-PH-07-09
+Journal-ref: JHEP0707:002,2007
+DOI: 10.1088/1126-6708/2007/07/002
+\\
+  It has been known for some time that the standard MHV diagram formulation of
+perturbative Yang-Mills theory is incomplete, as it misses rational terms in
+one-loop scattering amplitudes of pure Yang-Mills. We propose that certain
+Lorentz violating counterterms, when expressed in the field variables which
+give rise to standard MHV vertices, produce precisely these missing terms.
+These counterterms appear when Yang-Mills is treated with a regulator,
+introduced by Thorn and collaborators, which arises in worldsheet formulations
+of Yang-Mills theory in the lightcone gauge. As an illustration of our
+proposal, we show that a simple one-loop, two-point counterterm is the
+generating function for the infinite sequence of one-loop, all-plus helicity
+amplitudes in pure Yang-Mills, in complete agreement with known expressions.
+\\

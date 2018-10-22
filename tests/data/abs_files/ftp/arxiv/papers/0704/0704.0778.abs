@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0778
+From: Xuhua He <9mZH@t0oz.cZXXIA.xjs>
+Date: Thu, 5 Apr 2007 18:58:44 GMT   (29kb)
+Date (revised v2): Wed, 10 Sep 2008 13:36:49 GMT   (36kb)
+
+Title: Frobenius splitting and geometry of $G$-Schubert varieties
+Authors: Xuhua He and Jesper Funch Thomsen
+Categories: math.AG math.AC math.RT
+Comments: Final version, 44 pages
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Let $X$ be an equivariant embedding of a connected reductive group $G$ over
+an algebraically closed field $k$ of positive characteristic. Let $B$ denote a
+Borel subgroup of $G$. A $G$-Schubert variety in $X$ is a subvariety of the
+form $\diag(G) \cdot V$, where $V$ is a $B \times B$-orbit closure in $X$. In
+the case where $X$ is the wonderful compactification of a group of adjoint
+type, the $G$-Schubert varieties are the closures of Lusztig's $G$-stable
+pieces. We prove that $X$ admits a Frobenius splitting which is compatible with
+all $G$-Schubert varieties. Moreover, when $X$ is smooth, projective and
+toroidal, then any $G$-Schubert variety in $X$ admits a stable Frobenius
+splitting along an ample divisors. Although this indicates that $G$-Schubert
+varieties have nice singularities we present an example of a non-normal
+$G$-Schubert variety in the wonderful compactification of a group of type
+$G_2$. Finally we also extend the Frobenius splitting results to the more
+general class of $\mathcal R$-Schubert varieties.
+\\

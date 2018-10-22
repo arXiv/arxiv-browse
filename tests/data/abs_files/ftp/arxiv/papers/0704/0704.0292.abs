@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0292
+From: Gregory Soyez <5.aAoIo@STS.8A.aY>
+Date: Tue, 3 Apr 2007 18:03:13 GMT   (99kb)
+Date (revised v2): Wed, 4 Apr 2007 14:57:40 GMT   (99kb)
+
+Title: A practical Seedless Infrared-Safe Cone jet algorithm
+Authors: Gavin P. Salam and Gregory Soyez
+Categories: hep-ph
+Comments: 42 pages, 11 figures. SISCone, the C++ implementation of the
+  algorithm, is available at http://projects.hepforge.org/siscone/
+  (standalone), http://www.lpthe.jussieu.fr/~salam/fastjet/ (FastJet plugin).
+  v2: FastJet URL corrected
+Journal-ref: JHEP 0705:086,2007
+DOI: 10.1088/1126-6708/2007/05/086
+\\
+  Current cone jet algorithms, widely used at hadron colliders, take event
+particles as seeds in an iterative search for stable cones. A longstanding
+infrared (IR) unsafety issue in such algorithms is often assumed to be solvable
+by adding extra `midpoint' seeds, but actually is just postponed to one order
+higher in the coupling. A proper solution is to switch to an exact seedless
+cone algorithm, one that provably identifies all stable cones. The only
+existing approach takes N 2^N time to find jets among N particles, making it
+unusable at hadron level. This can be reduced to N^2 ln(N) time, leading to
+code (SISCone) whose speed is similar to that of public midpoint
+implementations. Monte Carlo tests provide a strong cross-check of an
+analytical proof of the IR safety of the new algorithm, and the absence of any
+'R_{sep}' issue implies a good practical correspondence between parton and
+hadron levels. Relative to a midpoint cone, the use of an IR safe seedless
+algorithm leads to modest changes for inclusive jet spectra, mostly through
+reduced sensitivity to the underlying event, and significant changes for some
+multi-jet observables.
+\\

@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0148
+From: Prof. Dr. M. W. Wu <3XC8@6XON.pIe.yZ>
+Date: Mon, 2 Apr 2007 09:15:20 GMT   (258kb)
+Date (revised v2): Fri, 4 May 2007 06:59:07 GMT   (258kb)
+Date (revised v3): Wed, 27 Jun 2007 03:17:27 GMT   (526kb)
+Date (revised v4): Tue, 11 Dec 2007 01:21:29 GMT   (524kb)
+Date (revised v5): Mon, 17 Dec 2007 22:42:44 GMT   (523kb)
+
+Title: Reexamination of spin decoherence in semiconductor quantum dots from
+  equation-of-motion approach
+Authors: J. H. Jiang, Y. Y. Wang, and M. W. Wu
+Categories: cond-mat.mtrl-sci
+Comments: 20 pages, 13 figures, to be published in PRB
+Journal-ref: Phys. Rev. B 77, 035323 (2008)
+DOI: 10.1103/PhysRevB.77.035323
+\\
+  The longitudinal and transversal spin decoherence times, $T_1$ and $T_2$, in
+semiconductor quantum dots are investigated from equation-of-motion approach
+for different magnetic fields, quantum dot sizes, and temperatures. Various
+mechanisms, such as the hyperfine interaction with the surrounding nuclei, the
+Dresselhaus spin-orbit coupling together with the electron--bulk-phonon
+interaction, the $g$-factor fluctuations, the direct spin-phonon coupling due
+to the phonon-induced strain, and the coaction of the
+electron--bulk/surface-phonon interaction together with the hyperfine
+interaction are included. The relative contributions from these spin
+decoherence mechanisms are compared in detail. In our calculation, the
+spin-orbit coupling is included in each mechanism and is shown to have marked
+effect in most cases. The equation-of-motion approach is applied in studying
+both the spin relaxation time $T_1$ and the spin dephasing time $T_2$, either
+in Markovian or in non-Markovian limit. When many levels are involved at finite
+temperature, we demonstrate how to obtain the spin relaxation time from the
+Fermi Golden rule in the limit of weak spin-orbit coupling. However, at high
+temperature and/or for large spin-orbit coupling, one has to use the
+equation-of-motion approach when many levels are involved. Moreover, spin
+dephasing can be much more efficient than spin relaxation at high temperature,
+though the two only differs by a factor of two at low temperature.
+\\

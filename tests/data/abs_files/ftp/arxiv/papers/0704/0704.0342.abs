@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0342
+From: Patrice Ntumba Pungu <LvFsgP6.j9uuyl@aW.TF.9A>
+Date: Tue, 3 Apr 2007 08:10:39 GMT   (20kb)
+
+Title: Cofibrations in the Category of Frolicher Spaces. Part I
+Authors: B. Dugmore & PP. Ntumba
+Categories: math.AT
+Comments: 27 pages
+MSC-class: 55P05
+\\
+  Cofibrations are defined in the category of Fr\"olicher spaces by weakening
+the analog of the classical definition to enable smooth homotopy extensions to
+be more easily constructed, using flattened unit intervals. We later relate
+smooth cofibrations to smooth neighborhood deformation retracts. The notion of
+smooth neighborhood deformation retract gives rise to an analogous result that
+a closed Fr\"olicher subspace $A$ of the Fr\"olicher space $X$ is a smooth
+neighborhood deformation retract of $X$ if and only if the inclusion $i:
+A\hookrightarrow X$ comes from a certain subclass of cofibrations. As an
+application we construct the right Puppe sequence.
+\\

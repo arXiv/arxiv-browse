@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0906.5602
+From: S\'ilvio Duarte Queir\'os M. <paRxSgc9@1B6x.la>
+Date: Tue, 30 Jun 2009 18:29:46 GMT   (1255kb)
+
+Title: Effect of platy- and leptokurtic distributions in the random-field Ising
+  model: Mean field approach
+Authors: Silvio M. Duarte Queiros, Nuno Crokidakis and Diogo O. Soares-Pinto
+Categories: cond-mat.stat-mech cond-mat.dis-nn cond-mat.other
+Comments: 12 pages, 4 figures To be published in Physical Review E
+Journal-ref: Phys. Rev E 80, 011143 (2009)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The influence of the tail features of the local magnetic field probability
+density function (PDF) on the ferromagnetic Ising model is studied in the limit
+of infinite range interactions. Specifically, we assign a quenched random field
+whose value is in accordance with a generic distribution that bears platykurtic
+and leptokurtic distributions depending on a single parameter $\tau < 3$ to
+each site. For $\tau< 5/3$, such distributions, which are basically Student-$t$
+and $r$-distribution extended for all plausible real degrees of freedom,
+present a finite standard deviation, if not the distribution has got the same
+asymptotic power-law behavior as a $\alpha $-stable L\'evy distribution with
+$\alpha = (3 - \tau)/(\tau - 1)$. For every value of $\tau $, at specific
+temperature and width of the distribution, the system undergoes a continuous
+phase transition. Strikingly, we impart the emergence of an inflexion point in
+the temperature-PDF width phase diagrams for distributions broader than the
+Cauchy-Lorentz ($\tau = 2$) which is accompanied with a divergent free energy
+per spin (at zero temperature).
+\\

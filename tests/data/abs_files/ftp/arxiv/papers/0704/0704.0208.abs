@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0208
+From: Seung-Moon Hong Mr <cIm8F4M@XEsKH1S.odZ>
+Date: Mon, 2 Apr 2007 14:36:30 GMT   (30kb)
+Date (revised v2): Mon, 24 Sep 2007 18:21:38 GMT   (34kb)
+
+Title: Some non-braided fusion categories of rank 3
+Authors: Tobias J. Hagge and Seung-Moon Hong
+Categories: math.GT math.QA
+Comments: 18 pages, 7 figures, v2. Many expository improvements based on
+  referee feedback, most notably to the proof of the main theorem and the
+  section on pivotal structures. Fewer details are left to the reader. A new
+  section outlines the structure of the proof of the main theorem and its
+  relation to other results in the paper
+MSC-class: 57M
+\\
+  We classify all fusion categories for a given set of fusion rules with three
+simple object types. If a conjecture of Ostrik is true, our classification
+completes the classification of fusion categories with three simple object
+types. To facilitate the discussion we describe a convenient, concrete and
+useful variation of graphical calculus for fusion categories, discuss
+pivotality and sphericity in this framework, and give a short and elementary
+re-proof of the fact that the quadruple dual functor is naturally isomorphic to
+the identity.
+\\

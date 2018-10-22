@@ -192,7 +192,7 @@ passed by mod_wsgi. For example:
 
 .. code-block:: python
 
-   from reflink.factory import create_web_app
+   from browse.factory import create_web_app
    import os
 
 

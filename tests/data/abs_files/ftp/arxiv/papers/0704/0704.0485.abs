@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0485
+From: Gao ZhiMing <FVezBKY@X8HlE.nS6>
+Date: Wed, 4 Apr 2007 02:43:36 GMT   (44kb)
+
+Title: Optimal Shape Design for Stokes Flow Via Minimax Differentiability
+Authors: Z.M. Gao, Y.C. Ma, H.W. Zhuang
+Categories: math.OC
+MSC-class: 49J35;49K35;49K40;35B37
+\\
+  This paper is concerned with a shape sensitivity analysis of a viscous
+incompressible fluid driven by Stokes equations with nonhomogeneous boundary
+condition. The structure of shape gradient with respect to the shape of the
+variable domain for a given cost function is established by using the
+differentiability of a minimax formulation involving a Lagrangian functional
+combining with function space parametrization technique or function space
+embedding technique. We apply an gradient type algorithm to our problem.
+Numerical examples show that our theory is useful for practical purpose and the
+proposed algorithm is feasible.
+\\

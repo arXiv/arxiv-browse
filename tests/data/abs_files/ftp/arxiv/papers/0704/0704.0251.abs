@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0251
+From: Gilad Gour <mMjh@tIZV.8pzO0Yo9.PS>
+Date: Mon, 2 Apr 2007 17:55:47 GMT   (13kb)
+Date (revised v2): Fri, 5 Oct 2007 20:01:54 GMT   (14kb)
+
+Title: Entanglement of Subspaces and Error Correcting Codes
+Authors: Gilad Gour, Nolan R. Wallach
+Categories: quant-ph
+Comments: 8 pages, Published Version
+Journal-ref: Phys. Rev. A 76, 042309 (2007)
+DOI: 10.1103/PhysRevA.76.042309
+\\
+  We introduce the notion of entanglement of subspaces as a measure that
+quantify the entanglement of bipartite states in a randomly selected subspace.
+We discuss its properties and in particular we show that for maximally
+entangled subspaces it is additive. Furthermore, we show that maximally
+entangled subspaces can play an important role in the study of quantum error
+correction codes. We discuss both degenerate and non-degenerate codes and show
+that the subspace spanned by the logical codewords of a non-degenerate code is
+a 2k-totally (maximally) entangled subspace. As for non-degenerate codes, we
+provide a mathematical definition in terms of subspaces and, as an example, we
+analyze Shor's nine qubits code in terms of 22 mutually orthogonal subspaces.
+\\

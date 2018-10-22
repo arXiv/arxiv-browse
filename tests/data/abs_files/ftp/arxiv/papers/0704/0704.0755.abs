@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0755
+From: Branko Malesevic <MS7UY9@Yz6Ec.2u>
+Date: Thu, 5 Apr 2007 19:58:45 GMT   (4kb)
+Date (revised v2): Sun, 8 Apr 2007 11:00:00 GMT   (4kb)
+
+Title: A procedure for finding the k-th power of a matrix
+Authors: Branko Malesevic, Ivana Jovovic
+Categories: math.GM
+Comments: Published elec. at http://www.maplesoft.com
+\\
+  We give a new procedure in Maple for finding the k-th power of a martix. The
+algorithm is based on the article [1].
+\\

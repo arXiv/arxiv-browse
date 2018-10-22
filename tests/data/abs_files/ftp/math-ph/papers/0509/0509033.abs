@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509033
+From: Jiri Tolar <703J.RnSBw@yJXZ.n7Nh.ms>
+Date: Thu, 15 Sep 2005 14:52:46 GMT   (38kb)
+Date (revised v2): Thu, 13 Oct 2005 13:08:29 GMT   (38kb)
+Date (revised v3): Thu, 7 Sep 2006 08:21:59 GMT   (38kb)
+
+Title: Graded contractions of the Pauli graded sl(3,C)
+Authors: J. Hrivnak, P. Novotny, J. Patera and J. Tolar
+Categories: math-ph math.MP
+Comments: 48 pages, 1 figure, 4 tables, 2 appendices
+MSC-class: 15B81
+Journal-ref: Linear Algebra and its Applications, Vol. 418, Issues 2-3 (15
+  October 2006), pp. 498-550
+DOI: 10.1016/j.laa.2006.02.026
+\\
+  The Lie algebra $sl(3,\C)$ is considered in the basis of generalized Pauli
+matrices. Corresponding grading is the Pauli grading here. It is one of the
+four gradings of the algebra which cannot be further refined.
+  The set $\es$ of 48 contraction equations for 24 contraction parameters is
+solved. Our main tools are the symmetry group of the Pauli grading of
+$sl(3,\C)$, which is essentially the finite group $SL(2,\Z_3)$, and the induced
+symmetry of the system $\es$. A list of all equivalence classes of solutions of
+the contraction equations is provided. Among the solutions, 175 equivalence
+classes are non-parametric and 13 solutions depend on one or two continuous
+parameters, providing a continuum of equivalence classes and subsequently
+continuum of non-isomorphic Lie algebras.
+  Solutions of the contraction equations of Pauli graded $sl(3,\bC)$ are
+identified here as specific solvable Lie algebras of dimensions up to 8.
+Earlier algorithms for identification of Lie algebras, given by their structure
+constants, had to be made more efficient in order to distinguish non-isomorphic
+Lie algebras encountered here.
+  Resulting Lie algebras are summarized in tabular form. There are 88
+indecomposable solvable Lie algebras of dimension 8, 77 of them being
+nilpotent. There are 11 infinite sets of parametric Lie algebras which still
+deserve further study.
+\\

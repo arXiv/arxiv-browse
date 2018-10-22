@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0325
+From: Antoine Naert <vKcwrx@xgN-90zY.SP>
+Date: Tue, 3 Apr 2007 06:56:09 GMT   (542kb)
+Date (revised v2): Thu, 19 Jun 2008 12:29:34 GMT   (425kb)
+Date (revised v3): Fri, 1 Aug 2008 08:57:10 GMT   (416kb)
+
+Title: Fluctuation-dissipation relation on a Melde string in a turbulent flow,
+  considerations on a "dynamical temperature"
+Authors: Vincent Grenard (Phys-ENS), Nicolas Garnier (Phys-ENS), Antoine Naert
+  (Phys-ENS)
+Categories: cond-mat.stat-mech physics.ins-det
+Comments: 3,5 new printed pages
+Proxy: ccsd ensl-00139546
+DOI: 10.1088/1742-5468/2008/09/L09003
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We report on measurements of the transverse fluctuations of a string in a
+turbulent air jet flow. Harmonic modes are excited by the fluctuating drag
+force, at different wave-numbers. This simple mechanical probe makes it
+possible to measure excitations of the flow at specific scales, averaged over
+space and time: it is a scale-resolved, global measurement. We also measure the
+dissipation associated to the string motion, and we consider the ratio of the
+fluctuations over dissipation (FDR). In an exploratory approach, we investigate
+the concept of {\it effective temperature} defined through the FDR. We compare
+our observations with other definitions of temperature in turbulence. From the
+theory of Kolmogorov (1941), we derive the exponent -11/3 expected for the
+spectrum of the fluctuations. This simple model and our experimental results
+are in good agreement, over the range of wave-numbers, and Reynolds number
+accessible ($74000 \leq Re \leq 170000$).
+\\

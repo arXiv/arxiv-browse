@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0516
+From: Gui Lu Long <DZ6WkU@3fvD.NKwNft5r.9CZ.Jk>
+Date: Wed, 4 Apr 2007 08:21:40 GMT   (41kb)
+
+Title: Effects of Imperfect Gate Operations in Shor's Prime Factorization
+  Algorithm
+Authors: Hao Guo, Gui Lu Long and Yang Sun
+Categories: quant-ph
+Comments: 8 pages 4 figures
+Journal-ref: Journal of the Chinese Chemical Society, 2001, 48: 449-454
+\\
+  The effects of imperfect gate operations in implementation of Shor's prime
+factorization algorithm are investigated. The gate imperfections may be
+classified into three categories: the systematic error, the random error, and
+the one with combined errors. It is found that Shor's algorithm is robust
+against the systematic errors but is vulnerable to the random errors. Error
+threshold is given to the algorithm for a given number $N$ to be factorized.
+\\

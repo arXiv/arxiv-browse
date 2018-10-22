@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0998
+From: Louise Nyssen <NBPfQbl@yaJ0.AQg6-3Adl2F.55>
+Date: Sat, 7 Apr 2007 19:42:53 GMT   (11kb)
+
+Title: Test vectors for trilinear forms, when two representations are
+  unramified and one is special
+Authors: Louise Nyssen (I3M)
+Categories: math.NT
+Proxy: ccsd hal-00140582
+\\
+  Let F be a finite extension of Qp and G be GL(2,F). When V is the tensor
+product of three admissible, irreducible, finite dimensional representations of
+G, the space of G-invariant linear forms has dimension at most one. When a non
+zero linear form exists, one wants to find an element of V which is not in its
+kernel: this is a test vector. Gross and Prasad found explicit test vectors for
+some triple of representations. In this paper, others are found, and they
+almost complete the case when the conductor of each representation is at most
+1.
+\\

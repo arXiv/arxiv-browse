@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0337
+From: Francois Golse <nuICF@3IVq.gpTwXt1yGq4DL.aU>
+Date: Tue, 3 Apr 2007 07:37:15 GMT   (31kb)
+
+Title: Bursting Dynamics of the 3D Euler Equations in Cylindrical Domains
+Authors: Fran\c{c}ois Golse (CMLS-EcolePolytechnique, LJLL), Alex Mahalov,
+  Basil Nicolaenko
+Categories: math.AP
+Proxy: ccsd hal-00139624
+MSC-class: 35Q35, 76B03, 76U05
+Journal-ref: Instability in models connected with fluid flows I, Int. Math.
+  Ser. (N. Y.), 6, (Springer, New York, 2008), 301--338
+\\
+  A class of three-dimensional initial data characterized by uniformly large
+vorticity is considered for the Euler equations of incompressible fluids. The
+fast singular oscillating limits of the Euler equations are studied for
+parametrically resonant cylinders. Resonances of fast swirling Beltrami waves
+deplete the Euler nonlinearity. The resonant Euler equations are systems of
+three-dimensional rigid body equations, coupled or not. Some cases of these
+resonant systems have homoclinic cycles, and orbits in the vicinity of these
+homoclinic cycles lead to bursts of the Euler solution measured in Sobolev
+norms of order higher than that corresponding to the enstrophy.
+\\

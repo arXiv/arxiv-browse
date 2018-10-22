@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0534
+From: Juergen Horbach <xmeyUvm.dkxzDFb@DGt.Xq>
+Date: Wed, 4 Apr 2007 09:52:46 GMT   (166kb)
+
+Title: Self-diffusion and Interdiffusion in Al80Ni20 Melts: Simulation and
+  Experiment
+Authors: Juergen Horbach, Subir K. Das, Axel Griesche, Michael-Peter Macht,
+  Guenter Frohberg, Andreas Meyer
+Categories: cond-mat.dis-nn cond-mat.mtrl-sci
+Comments: 9 pages, 7 figures. Phys. Rev. B, accepted for publication
+DOI: 10.1103/PhysRevB.75.174304
+\\
+  A combination of experimental techniques and molecular dynamics (MD) computer
+simulation is used to investigate the diffusion dynamics in Al80Ni20 melts.
+Experimentally, the self-diffusion coefficient of Ni is measured by the
+long-capillary (LC) method and by quasielastic neutron scattering. The LC
+method yields also the interdiffusion coefficient. Whereas the experiments were
+done in the normal liquid state, the simulations provided the determination of
+both self-diffusion and interdiffusion constants in the undercooled regime as
+well. The simulation results show good agreement with the experimental data. In
+the temperature range 3000 K >= T >= 715 K, the interdiffusion coefficient is
+larger than the self-diffusion constants. Furthermore the simulation shows that
+this difference becomes larger in the undercooled regime. This result can be
+refered to a relatively strong temperature dependence of the thermodynamic
+factor \Phi, which describes the thermodynamic driving force for
+interdiffusion. The simulations also indicate that the Darken equation is a
+good approximation, even in the undercooled regime. This implies that dynamic
+cross correlations play a minor role for the temperature range under
+consideration.
+\\

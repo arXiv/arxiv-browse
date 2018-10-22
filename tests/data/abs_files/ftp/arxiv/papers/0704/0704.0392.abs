@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0392
+From: Marcus Kaiser <I.meTkuM@6en.7J.wG>
+Date: Tue, 3 Apr 2007 13:38:14 GMT   (166kb)
+
+Title: Simulation of Robustness against Lesions of Cortical Networks
+Authors: Marcus Kaiser, Robert Martin, Peter Andras and Malcolm P. Young
+Categories: q-bio.NC cond-mat.dis-nn physics.soc-ph
+Comments: submitted to European Journal of Neuroscience (under review)
+Journal-ref: European Journal of Neuroscience, 25:3185--3192, 2007
+DOI: 10.1111/j.1460-9568.2007.05574.x
+\\
+  Structure entails function and thus a structural description of the brain
+will help to understand its function and may provide insights into many
+properties of brain systems, from their robustness and recovery from damage, to
+their dynamics and even their evolution. Advances in the analysis of complex
+networks provide useful new approaches to understanding structural and
+functional properties of brain networks. Structural properties of networks
+recently described allow their characterization as small-world, random
+(exponential) and scale-free. They complement the set of other properties that
+have been explored in the context of brain connectivity, such as topology,
+hodology, clustering, and hierarchical organization. Here we apply new network
+analysis methods to cortical inter-areal connectivity networks for the cat and
+macaque brains. We compare these corticocortical fibre networks to benchmark
+rewired, small-world, scale-free and random networks, using two analysis
+strategies, in which we measure the effects of the removal of nodes and
+connections on the structural properties of the cortical networks. The brain
+networks' structural decay is in most respects similar to that of scale-free
+networks. The results implicate highly connected hub-nodes and bottleneck
+connections as structural basis for some of the conditional robustness of brain
+systems. This informs the understanding of the development of brain networks'
+connectivity.
+\\

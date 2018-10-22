@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0151
+From: Igor Grabec <YfAd.SOn8bj@Iq.QEu-jH.XW>
+Date: Mon, 2 Apr 2007 09:28:28 GMT   (581kb)
+
+Title: Extraction of physical laws from joint experimental data
+Authors: I. Grabec
+Categories: physics.data-an physics.comp-ph
+Comments: 18 pages, 11 eps figures, uses svjour.cls
+Journal-ref: Eur. Phys. J. - B, 48, 279-289 (2005)
+DOI: 10.1140/epjb/e2005-00391-0
+\\
+  The extraction of a physical law y=yo(x) from joint experimental data about x
+and y is treated. The joint, the marginal and the conditional probability
+density functions (PDF) are expressed by given data over an estimator whose
+kernel is the instrument scattering function. As an optimal estimator of yo(x)
+the conditional average is proposed. The analysis of its properties is based
+upon a new definition of prediction quality. The joint experimental information
+and the redundancy of joint measurements are expressed by the relative entropy.
+With the number of experiments the redundancy on average increases, while the
+experimental information converges to a certain limit value. The difference
+between this limit value and the experimental information at a finite number of
+data represents the discrepancy between the experimentally determined and the
+true properties of the phenomenon. The sum of the discrepancy measure and the
+redundancy is utilized as a cost function. By its minimum a reasonable number
+of data for the extraction of the law yo(x) is specified. The mutual
+information is defined by the marginal and the conditional PDFs of the
+variables. The ratio between mutual information and marginal information is
+used to indicate which variable is the independent one. The properties of the
+introduced statistics are demonstrated on deterministically and randomly
+related variables.
+\\

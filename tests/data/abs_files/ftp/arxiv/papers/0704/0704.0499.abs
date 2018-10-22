@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0499
+From: Lawrence Ong <OYMwsqFq@eFK.tqP.xe>
+Date: Wed, 4 Apr 2007 07:22:56 GMT   (85kb)
+
+Title: Optimal Routing for Decode-and-Forward based Cooperation in Wireless
+  Networks
+Authors: Lawrence Ong and Mehul Motani
+Categories: cs.IT math.IT
+Comments: Accepted and to be presented at Fourth Annual IEEE Communications
+  Society Conference on Sensor, Mesh, and Ad Hoc Communications and Networks
+  (SECON 2007), San Diego, California, June 18-21 2007
+Journal-ref: Proceedings of the 4th Annual IEEE Communications Society
+  Conference on Sensor, Mesh, and Ad Hoc Communications and Networks (SECON
+  2007), San Diego, CA, pp. 334-343, Jun. 18-21 2007.
+DOI: 10.1109/SAHCN.2007.4292845
+\\
+  We investigate cooperative wireless relay networks in which the nodes can
+help each other in data transmission. We study different coding strategies in
+the single-source single-destination network with many relay nodes. Given the
+myriad of ways in which nodes can cooperate, there is a natural routing
+problem, i.e., determining an ordered set of nodes to relay the data from the
+source to the destination. We find that for a given route, the
+decode-and-forward strategy, which is an information theoretic cooperative
+coding strategy, achieves rates significantly higher than that achievable by
+the usual multi-hop coding strategy, which is a point-to-point non-cooperative
+coding strategy. We construct an algorithm to find an optimal route (in terms
+of rate maximizing) for the decode-and-forward strategy. Since the algorithm
+runs in factorial time in the worst case, we propose a heuristic algorithm that
+runs in polynomial time. The heuristic algorithm outputs an optimal route when
+the nodes transmit independent codewords. We implement these coding strategies
+using practical low density parity check codes to compare the performance of
+the strategies on different routes.
+\\

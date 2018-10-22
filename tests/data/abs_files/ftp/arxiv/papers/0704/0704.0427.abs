@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0427
+From: Ettore Vicari <0PX2r3@do.Vogrj.vP>
+Date: Tue, 3 Apr 2007 16:11:25 GMT   (71kb)
+
+Title: The 3D +-J Ising model at the ferromagnetic transition line
+Authors: Martin Hasenbusch, Francesco Parisen Toldin, Andrea Pelissetto, Ettore
+  Vicari
+Categories: cond-mat.dis-nn cond-mat.stat-mech
+Comments: 23 pages, 12 figs
+Journal-ref: Phys. Rev. B 76 (2007) 094402
+DOI: 10.1103/PhysRevB.76.094402
+\\
+  We study the critical behavior of the three-dimensional $\pm J$ Ising model
+[with a random-exchange probability $P(J_{xy}) = p \delta(J_{xy} - J) + (1-p)
+\delta(J_{xy} + J)$] at the transition line between the paramagnetic and
+ferromagnetic phase, which extends from $p=1$ to a multicritical (Nishimori)
+point at $p=p_N\approx 0.767$. By a finite-size scaling analysis of Monte Carlo
+simulations at various values of $p$ in the region $p_N<p<1$, we provide strong
+numerical evidence that the critical behavior along the ferromagnetic
+transition line belongs to the same universality class as the three-dimensional
+randomly-dilute Ising model. We obtain the results $\nu=0.682(3)$ and
+$\eta=0.036(2)$ for the critical exponents, which are consistent with the
+estimates $\nu=0.683(2)$ and $\eta=0.036(1)$ at the transition of
+randomly-dilute Ising models.
+\\

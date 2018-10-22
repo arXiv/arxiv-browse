@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0792
+From: Mark R. Krumholz <L5m2LiJG@wfMxT.VExbqpFPS.7MP>
+Date: Thu, 5 Apr 2007 20:02:02 GMT   (45kb)
+Date (revised v2): Tue, 17 Jul 2007 15:54:57 GMT   (80kb)
+
+Title: The Relationship Between Molecular Gas Tracers and Kennicutt-Schmidt
+  Laws
+Authors: Mark R. Krumholz and Todd A. Thompson (Princeton University)
+Categories: astro-ph
+Comments: Accepted to ApJ. 11 pages, 4 figures, emulateapj format. This version
+  has some additional models exploring the effects of varying metallicity and
+  temperature. The conclusions are unchanged
+DOI: 10.1086/521642
+\\
+  We provide a model for how Kennicutt-Schmidt (KS) laws, which describe the
+correlation between star formation rate and gas surface or volume density,
+depend on the molecular line chosen to trace the gas. We show that, for lines
+that can be excited at low temperatures, the KS law depends on how the line
+critical density compares to the median density in a galaxy's star-forming
+molecular clouds. High critical density lines trace regions with similar
+physical properties across galaxy types, and this produces a linear correlation
+between line luminosity and star formation rate. Low critical density lines
+probe regions whose properties vary across galaxies, leading to a star
+formation rate that varies superlinearly with line luminosity. We show that a
+simple model in which molecular clouds are treated as isothermal and homogenous
+can quantitatively reproduce the observed correlations between galactic
+luminosities in far infrared and in the CO(1->0) and HCN(1->0) lines, and
+naturally explains why these correlations have different slopes. We predict
+that IR-line luminosity correlations should change slope for galaxies in which
+the median density is close to the line critical density. This prediction may
+be tested by observations of lines such as HCO^+(1->0) with intermediate
+critical densities, or by HCN(1->0) observations of intensely star-forming high
+redshift galaxies with very high densities. Recent observations by Gao et al.
+hint at just such a change in slope. We argue that deviations from linearity in
+the HCN(1->0)-IR correlation at high luminosity are consistent with the
+assumption of a constant star formation efficiency.
+\\

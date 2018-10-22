@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0788
+From: Kerry Soileau <LeqGT.4.JRj3Ung@rgGJ.ZGO>
+Date: Thu, 5 Apr 2007 19:47:54 GMT   (301kb)
+
+Title: Optimal Synthesis of Multiple Algorithms
+Authors: Kerry M. Soileau
+Categories: cs.DS cs.PF
+\\
+  In this paper we give a definition of "algorithm," "finite algorithm,"
+"equivalent algorithms," and what it means for a single algorithm to dominate a
+set of algorithms. We define a derived algorithm which may have a smaller mean
+execution time than any of its component algorithms. We give an explicit
+expression for the mean execution time (when it exists) of the derived
+algorithm. We give several illustrative examples of derived algorithms with two
+component algorithms. We include mean execution time solutions for
+two-algorithm processors whose joint density of execution times are of several
+general forms. For the case in which the joint density for a two-algorithm
+processor is a step function, we give a maximum-likelihood estimation scheme
+with which to analyze empirical processing time data.
+\\

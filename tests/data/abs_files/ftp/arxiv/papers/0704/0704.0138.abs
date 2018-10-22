@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0138
+From: Enrico Barausse <s9DK0MZP@nmkeG.Pb>
+Date: Mon, 2 Apr 2007 08:16:16 GMT   (53kb)
+Date (revised v2): Fri, 20 Jul 2007 07:32:22 GMT   (52kb)
+
+Title: Circular and non-circular nearly horizon-skimming orbits in Kerr
+  spacetimes
+Authors: Enrico Barausse, Scott A. Hughes, Luciano Rezzolla
+Categories: gr-qc astro-ph
+Comments: 15 pages, 4 figures, 5 tables. Small changes following referee's
+  suggestion, typos corrected. Accepted for publication in PRD
+Journal-ref: Phys.Rev.D76:044007,2007
+DOI: 10.1103/PhysRevD.76.044007
+\\
+  We have performed a detailed analysis of orbital motion in the vicinity of a
+nearly extremal Kerr black hole. For very rapidly rotating black holes (spin
+a=J/M>0.9524M) we have found a class of very strong field eccentric orbits
+whose angular momentum L_z increases with the orbit's inclination with respect
+to the equatorial plane, while keeping latus rectum and eccentricity fixed.
+This behavior is in contrast with Newtonian intuition, and is in fact opposite
+to the "normal" behavior of black hole orbits. Such behavior was noted
+previously for circular orbits; since it only applies to orbits very close to
+the black hole, they were named "nearly horizon-skimming orbits". Our analysis
+generalizes this result, mapping out the full generic (inclined and eccentric)
+family of nearly horizon-skimming orbits. The earlier work on circular orbits
+reported that, under gravitational radiation emission, nearly horizon-skimming
+orbits tend to evolve to smaller orbit inclination, toward prograde equatorial
+configuration. Normal orbits, by contrast, always demonstrate slowly growing
+orbit inclination (orbits evolve toward the retrograde equatorial
+configuration). Using up-to-date Teukolsky-fluxes, we have concluded that the
+earlier result was incorrect: all circular orbits, including nearly
+horizon-skimming ones, exhibit growing orbit inclination. Using kludge fluxes
+based on a Post-Newtonian expansion corrected with fits to circular and to
+equatorial Teukolsky-fluxes, we argue that the inclination grows also for
+eccentric nearly horizon-skimming orbits. We also find that the inclination
+change is, in any case, very small. As such, we conclude that these orbits are
+not likely to have a clear and peculiar imprint on the gravitational waveforms
+expected to be measured by the space-based detector LISA.
+\\

@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0190
+From: Eiichi Konishi <mHZRyd@zb.Tf90po5C-3.ti.N6>
+Date: Mon, 2 Apr 2007 13:36:39 GMT   (307kb)
+
+Title: The Reliability on the Direction of the Incident Neutrino for the Fully
+  Contained Events and Partially Contained Events due to QEL in the
+  Super-Kamiokande
+Authors: E. Konishi (1), Y. Minorikawa (2), V.I. Galkin (3), M. Ishiwata (4),
+  I. Nakamura (4), N. Takahashit (1), M. Kato (5) and A. Misaki (6) ((1)
+  Graduate School of Science and Technology, Hirosaki University (2) School of
+  Science and Engineering, Kinki University (3) Department of Physics, Moscow
+  State University (4) Department of Physics, Saitama University (5) Kyowa
+  Interface Science Co., Ltd., Saitama (6)Advanced Research Institute for
+  Science and Engineering, Waseda University, Tokyo)
+Categories: hep-ex astro-ph hep-ph
+Comments: 12 pages 28 figures with 4appendices 4 figures, latex
+\\
+  In the SK analysis of the neutrino events for [Fully Contained Events] and
+[Partially Contained Events] on their zenith angle distribution, it is assumed
+that the zenith angle of the incident neutrino is the same as that of the
+detected charged lepton. In the present paper, we examine the validity of [the
+SK assumption on the direction] of the incident neutrinos. Concretely speaking,
+we analyze muon-like events due to QEL. For the purpose, we develop [Time
+Sequential Monte Carlo Simulation] to extract the conclusion on the validity of
+the SK assumption. In our [Time Sequential Simulation], we simulate every
+physical process concerned as exactly as possible without any approximation.
+  From the comparison between the zenith angle distributon of the emitted muons
+under [the SK assumption on the direction] and the corresponding one obtained
+under our [Time Sequential Simulation], it is concluded that the measurement of
+the direction of the incident neutrino for the neutrino events occurring inside
+the detector in the SK analysis turns out to be unreliable, which holds
+irrespective of the existence and/or non-existence of the neutrino oscillation.
+\\

@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0271
+From: Edgardo Brigatti <o7B8mBM@oa.kMp.YR>
+Date: Mon, 2 Apr 2007 21:31:06 GMT   (194kb)
+Date (revised v2): Wed, 27 Feb 2008 18:37:00 GMT   (170kb)
+
+Title: An individual based model with global competition interaction:
+  fluctuations effects in pattern formation
+Authors: E. Brigatti, V. Schwammle and Minos A. Neto
+Categories: cond-mat.stat-mech q-bio.PE
+Comments: 9 pages, 9 figures, minor changes
+Journal-ref: Physical Review E 77, 021914 (2008)
+DOI: 10.1103/PhysRevE.77.021914
+\\
+  We present some numerical results obtained from a simple individual based
+model that describes clustering of organisms caused by competition. Our aim is
+to show how, even when a deterministic description developed for continuum
+models predicts no pattern formation, an individual based model displays well
+defined patterns, as a consequence of fluctuations effects caused by the
+discrete nature of the interacting agents.
+\\

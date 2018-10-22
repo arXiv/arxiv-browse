@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0556
+From: Christopher Jesudason Prof <JO7h@1K.FY1.yo>
+Date: Wed, 4 Apr 2007 12:05:19 GMT   (28kb)
+
+Title: Effective conservation of energy and momentum algorithm using switching
+  potentials suitable for molecular dynamics simulation of thermodynamical
+  systems
+Authors: Christopher G Jesudason
+Categories: physics.comp-ph physics.chem-ph
+Comments: 8 pages, Submitted to International Conference on Dynamical Systems
+  and Applications, Atlanta, Georgia, USA (29 May -3 June, 2007)
+\\
+  During a crossover via a switching mechanism from one 2-body potential to
+another as might be applied in modeling (chemical) reactions in the vicinity of
+bond formation, energy violations would occur due to finite step size which
+determines the trajectory of the particles relative to the potential
+interactions of the unbonded state by numerical (e.g. Verlet) integration. This
+problem is overcome by an algorithm which preserves the coordinates of the
+system for each move, but corrects for energy discrepancies by ensuring both
+energy and momentum conservation in the dynamics. The algorithm is tested for a
+hysteresis loop reaction model with an without the implementation of the
+algorithm. The tests involve checking the rate of energy flow out of the MD
+simulation box; in the equilibrium state, no net rate of flows within
+experimental error should be observed. The temperature and pressure of the box
+should also be invariant within the range of fluctuation of these quantities.
+It is demonstrated that the algorithm satisfies these criteria.
+\\

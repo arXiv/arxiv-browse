@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0477
+From: Britton Smith <9M5GQzE@85jgx.F3m.VLW>
+Date: Wed, 4 Apr 2007 00:13:05 GMT   (207kb)
+
+Title: The Transition from the First Stars to the Second Stars in the Early
+  Universe
+Authors: Britton D. Smith, Steinn Sigurdsson
+Categories: astro-ph
+Comments: 13 pages, 3 color figures, 1 table, submitted to ApJL
+DOI: 10.1086/518692
+\\
+  We observe a sharp transition from a singular, high-mass mode of star
+formation, to a low-mass dominated mode, in numerical simulations, at a
+metallicity of 10^-3 Zsolar. We incorporate a new method for including the
+radiative cooling from metals into adaptive mesh-refinement hydrodynamic
+simulations. Our results illustrate how metals, produced by the first stars,
+led to a transition from the high-mass star formation mode of Pop III stars, to
+the low-mass mode that dominates today. We ran hydrodynamic simulations with
+cosmological initial conditions in the standard LambdaCDM model, with
+metallicities, from zero to 10^-2 Zsolar, beginnning at redshift, z = 99. The
+simulations were run until a dense core forms at the center of a 5 x 10^5
+Msolar dark matter halo, at z ~ 18. Analysis of the central 1 Msolar core
+reveals that the two simulations with the lowest metallicities, Z = 0 and 10^-4
+Zsolar, contain one clump with 99% of the mass, while the two with
+metallicities, Z = 10^-3 and 10^-2 Zsolar, each contain two clumps that share
+most of the mass. The Z = 10^-3 Zsolar simulation also produced two low-mass
+proto-stellar objects with masses between 10^-2 and 10^-1 Msolar. Gas with Z >=
+10^-3 Zsolar is able to cool to the temperature of the CMB, which sets a lower
+limit to the minimum fragmentation mass. This suggests that the second
+generation stars produced a spectrum of lower mass stars, but were still more
+massive on average than stars formed in the local universe.
+\\

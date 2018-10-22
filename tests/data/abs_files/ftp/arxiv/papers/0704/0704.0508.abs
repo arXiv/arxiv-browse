@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0508
+From: Alexey Kulik <0d80W@wLmkH.ni5a.Gz>
+Date: Wed, 4 Apr 2007 07:28:14 GMT   (22kb)
+
+Title: Invariance principle for additive functionals of Markov chains
+Authors: Yuri N.Kartashov, Alexey M.Kulik
+Categories: math.PR
+Comments: 18 pages
+MSC-class: 60J55; 60F17
+\\
+  We consider a sequence of additive functionals {\phi_n}, set on a sequence of
+Markov chains {X_n} that weakly converges to a Markov process X. We give
+sufficient condition for such a sequence to converge in distribution,
+formulated in terms of the characteristics of the additive functionals, and
+related to the Dynkin's theorem on the convergence of W-functionals. As an
+application of the main theorem, the general sufficient condition for
+convergence of additive functionals in terms of transition probabilities of the
+chains X_n is proved.
+\\

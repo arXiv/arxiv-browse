@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509021
+From: Patrick Desrosiers <C.nnasKa3FZG@2b.uBIt8lf.7Bq.xm>
+Date: Mon, 12 Sep 2005 04:33:25 GMT   (53kb)
+Date (revised v2): Wed, 28 Jun 2006 01:33:31 GMT   (53kb)
+
+Title: Hermite and Laguerre $\beta$-ensembles: asymptotic corrections to the
+  eigenvalue density
+Authors: Patrick Desrosiers and Peter J. Forrester
+Categories: math-ph math.MP
+Comments: 26 pages, 6 figures; published version, minor changes, 2 refs added
+MSC-class: 15A52, 41A60, 33D52
+Journal-ref: Nucl. Phys. B 743 (2006) 307--322
+DOI: 10.1016/j.nuclphysb.2006.03.002
+\\
+  We consider Hermite and Laguerre $\beta$-ensembles of large $N\times N$
+random matrices. For all $\beta$ even, corrections to the limiting global
+density are obtained, and the limiting density at the soft edge is evaluated.
+We use the saddle point method on multidimensional integral representations of
+the density which are based on special realizations of the generalized
+(multivariate) classical orthogonal polynomials. The corrections to the bulk
+density are oscillatory terms that depends on $\beta$. At the edges, the
+density can be expressed as a multiple integral of the Konstevich type which
+constitutes a $\beta$-deformation of the Airy function. This allows us to
+obtain the main contribution to the soft edge density when the spectral
+parameter tends to $\pm\infty$.
+\\

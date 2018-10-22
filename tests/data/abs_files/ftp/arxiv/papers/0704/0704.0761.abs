@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0761
+From: Jose Vilar <o2YxC@pvUT.kdvke.XVy>
+Date: Thu, 5 Apr 2007 16:47:31 GMT   (343kb)
+Date (revised v2): Sun, 8 Apr 2007 14:57:23 GMT   (53kb)
+
+Title: Failure of the work-Hamiltonian connection for free energy calculations
+Authors: Jose M. G. Vilar and J. Miguel Rubi
+Categories: cond-mat.stat-mech cond-mat.soft physics.chem-ph
+DOI: 10.1103/PhysRevLett.100.020601
+\\
+  Extensions of statistical mechanics are routinely being used to infer free
+energies from the work performed over single-molecule nonequilibrium
+trajectories. A key element of this approach is the ubiquitous expression
+dW/dt=\partial H(x,t)/ \partial t which connects the microscopic work W
+performed by a time-dependent force on the coordinate x with the corresponding
+Hamiltonian H(x,t) at time t. Here we show that this connection, as pivotal as
+it is, cannot be used to estimate free energy changes. We discuss the
+implications of this result for single-molecule experiments and atomistic
+molecular simulations and point out possible avenues to overcome these
+limitations.
+\\

@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0460
+From: Joshua Pepper <bnuVB8@esW2Pqpnz.YQzz-Id0cX.QBw>
+Date: Tue, 3 Apr 2007 20:43:52 GMT   (622kb)
+Date (revised v2): Mon, 30 Jul 2007 19:04:49 GMT   (622kb)
+
+Title: The Kilodegree Extremely Little Telescope (KELT): A Small Robotic
+  Telescope for Large-Area Synoptic Surveys
+Authors: Joshua Pepper (1), Richard W. Pogge (1), D. L. DePoy (1), J. L.
+  Marshall (1), K. Z. Stanek (1), Amelia M. Stutz (2), Shawn Poindexter (1),
+  Robert Siverd (1), Thomas P. O'Brien (1), Mark Trueblood (3), Patricia
+  Trueblood (3) ((1) The Ohio State University Department of Astronomy, (2)
+  University of Arizona Department of Astronomy, (3) Winer Observatory)
+Categories: astro-ph
+Comments: 21 pages, 13 figures; accepted to PASP
+Journal-ref: Publ.Astron.Soc.Pac.119:923,2007
+DOI: 10.1086/521836
+\\
+  The Kilodegree Extremely Little Telescope (KELT) project is a survey for
+planetary transits of bright stars. It consists of a small-aperture, wide-field
+automated telescope located at Winer Observatory near Sonoita, Arizona. The
+telescope surveys a set of 26 x 26 degree fields, together covering about 25%
+of the Northern sky, targeting stars in the range of 8<V<10 mag, searching for
+transits by close-in Jupiters. This paper describes the system hardware and
+software and discusses the quality of the observations. We show that KELT is
+able to achieve the necessary photometric precision to detect planetary
+transits around solar-type main sequence stars.
+\\

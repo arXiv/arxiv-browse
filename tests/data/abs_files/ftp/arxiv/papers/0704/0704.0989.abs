@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0989
+From: Henry Wilton <IDZ1z.Rf1qyr@sz0A.NmWqyZ.DxZ>
+Date: Mon, 9 Apr 2007 15:35:15 GMT   (8kb)
+Date (revised v2): Tue, 22 May 2007 09:05:57 GMT   (9kb)
+
+Title: Enumerating limit groups
+Authors: Daniel Groves, Henry Wilton
+Categories: math.GR
+Comments: 14 pages; added recognition algorithms for free groups and surface
+  groups
+MSC-class: 20F10; 20F65
+\\
+  We prove that the set of limit groups is recursive, answering a question of
+Delzant. One ingredient of the proof is the observation that a finitely
+presented group with local retractions (a la Long and Reid) is coherent and,
+furthermore, there exists an algorithm that computes presentations for finitely
+generated subgroups. The other main ingredient is the ability to
+algorithmically calculate centralizers in relatively hyperbolic groups.
+Applications include the existence of recognition algorithms for limit groups
+and free groups.
+\\

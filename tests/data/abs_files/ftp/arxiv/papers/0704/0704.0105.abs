@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0105
+From: Michael Entov <xo8sJ@wkzL.0JfIUVKW.PZ.wX>
+Date: Sun, 1 Apr 2007 19:57:30 GMT   (62kb)
+Date (revised v2): Sun, 26 Oct 2008 06:58:31 GMT   (69kb)
+
+Title: Rigid subsets of symplectic manifolds
+Authors: Michael Entov and Leonid Polterovich
+Categories: math.SG
+Comments: Significant corrections and changes in the part on monotone
+  Lagrangian submanifolds; a comment on the relation between Futaki invariant
+  and mixed action-Maslov homomorphism added
+MSC-class: 53D40, 53D12, 53D20,
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We show that there is an hierarchy of intersection rigidity properties of
+sets in a closed symplectic manifold: some sets cannot be displaced by
+symplectomorphisms from more sets than the others. We also find new examples of
+rigidity of intersections involving, in particular, specific fibers of moment
+maps of Hamiltonian torus actions, monotone Lagrangian submanifolds (following
+the works of P.Albers and P.Biran-O.Cornea), as well as certain, possibly
+singular, sets defined in terms of Poisson-commutative subalgebras of smooth
+functions. In addition, we get some geometric obstructions to semi-simplicity
+of the quantum homology of symplectic manifolds. The proofs are based on the
+Floer-theoretical machinery of partial symplectic quasi-states.
+\\

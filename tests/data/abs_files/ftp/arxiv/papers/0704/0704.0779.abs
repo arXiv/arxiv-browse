@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0779
+From: Markos Georganopoulos <YtwIHe@FhtImkxO.MyOw.0HCe.UXU>
+Date: Thu, 5 Apr 2007 18:59:41 GMT   (25kb,D)
+
+Title: High Energy Variability Of Synchrotron-Self Compton Emitting Sources:
+  Why One Zone Models Do Not Work And How We Can Fix It
+Authors: Philip B. Graff, Markos Georganopoulos, Eric S. Perlman, Demosthenes
+  Kazanas
+Categories: astro-ph
+Comments: to appear in the 1st GLAST symposium proceedings
+Journal-ref: AIP Conf.Proc.921:333-334,2007
+DOI: 10.1063/1.2757338
+\\
+  With the anticipated launch of GLAST, the existing X-ray telescopes, and the
+enhanced capabilities of the new generation of TeV telescopes, developing tools
+for modeling the variability of high energy sources such as blazars is becoming
+a high priority. We point out the serious, innate problems one zone
+synchrotron-self Compton models have in simulating high energy variability. We
+then present the first steps toward a multi zone model where non-local, time
+delayed Synchrotron-self Compton electron energy losses are taken into account.
+By introducing only one additional parameter, the length of the system, our
+code can simulate variability properly at Compton dominated stages, a situation
+typical of flaring systems. As a first application, we were able to reproduce
+variability similar to that observed in the case of the puzzling `orphan' TeV
+flares that are not accompanied by a corresponding X-ray flare.
+\\

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0430
+From: Alvaro Pelayo <kHmJedI@i7z98.Rf2>
+Date: Tue, 3 Apr 2007 16:35:19 GMT   (21kb)
+
+Title: Reduced phase space and toric variety coordinatizations of Delzant
+  spaces
+Authors: J.J. Duistermaat and A. Pelayo
+Categories: math.SG math.AG
+Comments: 18 pages
+MSC-class: 53D20; 14M25
+\\
+  In this note we describe the natural coordinatizations of a Delzant space
+defined as a reduced phase space (symplectic geometry view-point) and give
+explicit formulas for the coordinate transformations. For each fixed point of
+the torus action on the Delzant polytope, we have a maximal coordinatization of
+an open cell in the Delzant space which contains the fixed point. This cell is
+equal to the domain of definition of one of the natural coordinatizations of
+the Delzant space as a toric variety (complex algebraic geometry view-point),
+and we give an explicit formula for the toric variety coordinates in terms of
+the reduced phase space coordinates. We use considerations in the maximal
+coordinate neighborhoods to give simple proofs of some of the basic facts about
+the Delzant space, as a reduced phase space, and as a toric variety. These can
+be viewed as a first application of the coordinatizations, and serve to make
+the presentation more self-contained.
+\\

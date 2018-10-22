@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0865
+From: Mohamed Kaaniche <G4MbhNu.uaeSjzH9@Sw6K.sz>
+Date: Fri, 6 Apr 2007 09:33:06 GMT   (375kb)
+
+Title: An architecture-based dependability modeling framework using AADL
+Authors: Ana-Elena Rugina (LAAS), Karama Kanoun (LAAS), Mohamed Kaaniche (LAAS)
+Categories: cs.PF cs.SE
+Proxy: ccsd hal-00140407
+Journal-ref: Proc. 10th IASTED International Conference on Software Engineering
+  and Applications (SEA'2006), Dallas (USA), 13-15 November2006 (13/11/2006)
+  222-227
+\\
+  For efficiency reasons, the software system designers' will is to use an
+integrated set of methods and tools to describe specifications and designs, and
+also to perform analyses such as dependability, schedulability and performance.
+AADL (Architecture Analysis and Design Language) has proved to be efficient for
+software architecture modeling. In addition, AADL was designed to accommodate
+several types of analyses. This paper presents an iterative dependency-driven
+approach for dependability modeling using AADL. It is illustrated on a small
+example. This approach is part of a complete framework that allows the
+generation of dependability analysis and evaluation models from AADL models to
+support the analysis of software and system architectures, in critical
+application domains.
+\\

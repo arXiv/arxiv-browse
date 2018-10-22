@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0474
+From: Ahmed E. Ismail <fv6@RheE.ojL.WH5>
+Date: Wed, 4 Apr 2007 00:35:25 GMT   (432kb,D)
+Date (revised v2): Fri, 13 Jul 2007 16:52:11 GMT   (433kb,D)
+
+Title: Application of Ewald summations to long-range dispersion forces
+Authors: Pieter J. in 't Veld, Ahmed E. Ismail, and Gary S. Grest
+Categories: cond-mat.mtrl-sci cond-mat.stat-mech
+Comments: 9 pages, 3 figures, accepted by J. Chem. Phys. v. 2: Expanded
+  discussion of results, definitions added, performance comparison for water
+  added
+Journal-ref: J. Chem. Phys. 127, 144711 (2007)
+DOI: 10.1063/1.2770730
+\\
+  We present results illustrating the effects of using explicit summation terms
+for the $r^{-6}$ dispersion term on the interfacial properties of a
+Lennard-Jones fluid and SPC/E water. For the Lennard-Jones fluid, we find that
+the use of long-range summations, even with a short ``crossover radius,''
+yields results that are consistent with simulations using large cutoff radii.
+Simulations of SPC/E water demonstrate that the long-range dispersion forces
+are of secondary importance to the Coulombic forces. In both cases, we find
+that the ratio of box size $L_{\parallel}$ to crossover radius $r_{\rm
+c}^{\mathbf k}$ plays an important role in determining the magnitude of the
+long-range dispersion correction, although its effect is secondary when
+Coulombic interactions are also present.
+\\

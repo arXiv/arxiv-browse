@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0791
+From: Vladimir Avila-Reese <ba9fL@YzttEH3T.7CZ3.tk>
+Date: Thu, 5 Apr 2007 20:00:11 GMT   (192kb)
+Date (revised v2): Sun, 24 Jun 2007 22:35:17 GMT   (182kb)
+Date (revised v3): Thu, 23 Aug 2007 00:46:52 GMT   (184kb)
+
+Title: Spectral analysis of Swift long GRBs with known redshift
+Authors: J. I. Cabrera (1), C. Firmani (2,1), V. Avila-Reese (1), G. Ghirlanda
+  (2), G. Ghisellini (2), L. Nava (2,3) ((1)U.N.A.M., (2)INAF-OAB, (3)Univ.
+  Insubria)
+Categories: astro-ph
+Comments: 16 pages. To appear in MNRAS. Minor changes were introduced in this
+  last version
+Journal-ref: Mon.Not.Roy.Astron.Soc.382:342-355, 2007
+DOI: 10.1111/j.1365-2966.2007.12374.x
+\\
+  We study the spectral and energetics properties of 47 long-duration gamma-ray
+bursts (GRBs) with known redshift, all of them detected by the Swift satellite.
+Due to the narrow energy range (15-150 keV) of the Swift-BAT detector, the
+spectral fitting is reliable only for fitting models with 2 or 3 parameters. As
+high uncertainty and correlation among the errors is expected, a careful
+analysis of the errors is necessary. We fit both the power law (PL, 2
+parameters) and cut--off power law (CPL, 3 parameters) models to the
+time-integrated spectra of the 47 bursts, and present the corresponding
+parameters, their uncertainties, and the correlations among the uncertainties.
+The CPL model is reliable only for 29 bursts for which we estimate the nuf_nu
+peak energy Epk. For these GRBs, we calculate the energy fluence and the rest-
+frame isotropic-equivalent radiated energy, Eiso, as well as the propagated
+uncertainties and correlations among them. We explore the distribution of our
+homogeneous sample of GRBs on the rest-frame diagram E'pk vs Eiso. We confirm a
+significant correlation between these two quantities (the "Amati" relation) and
+we verify that, within the uncertainty limits, no outliers are present. We also
+fit the spectra to a Band model with the high energy power law index frozen to
+-2.3, obtaining a rather good agreement with the "Amati" relation of non-Swift
+GRBs.
+\\

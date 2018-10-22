@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0461
+From: Anil Shaji <eaL4L@Q6A.yYK>
+Date: Tue, 3 Apr 2007 20:54:51 GMT   (9kb)
+Date (revised v2): Mon, 21 May 2007 16:56:48 GMT   (10kb)
+
+Title: Entanglement increase from local interactions with
+  not-completely-positive maps
+Authors: Thomas F. Jordan, Anil Shaji and E. C. G. Sudarshan
+Categories: quant-ph
+Comments: 6 Pages, new title, substantially revised
+DOI: 10.1103/PhysRevA.76.022102
+\\
+  Simple examples are constructed that show the entanglement of two qubits
+being both increased and decreased by interactions on just one of them. One of
+the two qubits interacts with a third qubit, a control, that is never entangled
+or correlated with either of the two entangled qubits and is never entangled,
+but becomes correlated, with the system of those two qubits. The two entangled
+qubits do not interact, but their state can change from maximally entangled to
+separable or from separable to maximally entangled. Similar changes for the two
+qubits are made with a swap operation between one of the qubits and a control;
+then there are compensating changes of entanglement that involve the control.
+When the entanglement increases, the map that describes the change of the state
+of the two entangled qubits is not completely positive. Combination of two
+independent interactions that individually give exponential decay of the
+entanglement can cause the entanglement to not decay exponentially but,
+instead, go to zero at a finite time.
+\\

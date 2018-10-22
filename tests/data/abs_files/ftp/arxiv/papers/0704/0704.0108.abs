@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0108
+From: Sergey Gubin <fT3h7v@5KYAga7MIa.xrf>
+Date: Sun, 1 Apr 2007 23:16:27 GMT   (5kb)
+
+Title: Reducing SAT to 2-SAT
+Authors: Sergey Gubin
+Categories: cs.CC
+Comments: 8 pages
+ACM-class: F.2.0; G.2.1; G.2.2
+\\
+  Description of a polynomial time reduction of SAT to 2-SAT of polynomial
+size.
+\\

@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0397
+From: Anne Ersbak Bang Nielsen <EFz4Ta@HBFA.FM.Wn>
+Date: Tue, 3 Apr 2007 13:53:31 GMT   (26kb)
+Date (revised v2): Thu, 7 Jun 2007 17:50:50 GMT   (27kb)
+
+Title: Conditional generation of path-entangled optical NOON states
+Authors: Anne E. B. Nielsen and Klaus Molmer
+Categories: quant-ph
+Comments: 7 pages, 5 figures, v2: added references and minor changes
+Journal-ref: Phys. Rev. A 75, 063803 (2007)
+DOI: 10.1103/PhysRevA.75.063803
+\\
+  We propose a measurement protocol to generate path-entangled NOON states
+conditionally from two pulsed type II optical parametric oscillators. We
+calculate the fidelity of the produced states and the success probability of
+the protocol. The trigger detectors are assumed to have finite dead time, and
+for short pulse trigger fields they are modeled as on/off detectors with finite
+efficiency. Continuous-wave operation of the parametric oscillators is also
+considered.
+\\

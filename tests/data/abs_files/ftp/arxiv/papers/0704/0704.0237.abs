@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0237
+From: Christopher W. Mauche <isJJFS@5AxG4c.lbvx.18A>
+Date: Mon, 2 Apr 2007 17:14:27 GMT   (65kb)
+
+Title: Hydrodynamic and Spectral Simulations of HMXB Winds
+Authors: Christopher W. Mauche, Duane A. Liedahl, Shizuka Akiyama (Lawrence
+  Livermore Nat'l Lab.), Tomasz Plewa (University of Chicago)
+Categories: astro-ph
+Comments: 4 pages including 2 color encapsulated postscript figures; LaTeX
+  format, uses ptptex.cls; submitted for inclusion in the proceedings of "The
+  Extreme Universe in the Suzaku Era" conference, to be published in Progress
+  of Theoretical Physics, Supplement.
+Journal-ref: Prog.Theor.Phys.Suppl.169:196-199,2007
+DOI: 10.1143/PTPS.169.196
+\\
+  We describe preliminary results of a global model of the radiatively-driven
+photoionized wind and accretion flow of the high-mass X-ray binary Vela X-1.
+The full model combines FLASH hydrodynamic calculations, XSTAR photoionization
+calculations, HULLAC atomic data, and Monte Carlo radiation transport. We
+present maps of the density, temperature, velocity, and ionization parameter
+from a FLASH two-dimensional time-dependent simulation of Vela X-1, as well as
+maps of the emissivity distributions of the X-ray emission lines.
+\\

@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0038
+From: Maxim A. Yurkin <kGYClnG@9hlaMeh.oHy.Z2>
+Date: Sat, 31 Mar 2007 16:25:01 GMT   (693kb)
+
+Title: The discrete dipole approximation: an overview and recent developments
+Authors: Maxim A. Yurkin, Alfons G. Hoekstra
+Categories: physics.optics physics.comp-ph
+Comments: 36 pages, 1 figure
+Journal-ref: J.Quant.Spectrosc.Radiat.Transf. 106, 558-589 (2007)
+DOI: 10.1016/j.jqsrt.2007.01.034
+\\
+  We present a review of the discrete dipole approximation (DDA), which is a
+general method to simulate light scattering by arbitrarily shaped particles. We
+put the method in historical context and discuss recent developments, taking
+the viewpoint of a general framework based on the integral equations for the
+electric field. We review both the theory of the DDA and its numerical aspects,
+the latter being of critical importance for any practical application of the
+method. Finally, the position of the DDA among other methods of light
+scattering simulation is shown and possible future developments are discussed.
+\\

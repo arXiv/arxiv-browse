@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0435
+From: Marcello Ortaggio <P9s3DCEl.uMXZiGFW@cXhWoO.mc>
+Date: Tue, 3 Apr 2007 16:59:08 GMT   (42kb)
+Date (revised v2): Sun, 22 Jul 2007 14:19:37 GMT   (44kb)
+
+Title: Type D Einstein spacetimes in higher dimensions
+Authors: Vojtech Pravda, Alena Pravdova, Marcello Ortaggio
+Categories: gr-qc hep-th
+Comments: 24 pages. v2: new appendix on geometric optics of higher dimensional
+  Kerr-NUT-AdS black holes, minor changes in the text. To appear in
+  Class.Quant.Grav
+Journal-ref: Class.Quant.Grav.24:4407-4428,2007
+DOI: 10.1088/0264-9381/24/17/009
+\\
+  We show that all static spacetimes in higher dimensions are of Weyl types G,
+I_i, D or O. This applies also to stationary spacetimes if additional
+conditions are fulfilled, as for most known black hole/ring solutions. (The
+conclusions change when the Killing generator becomes null, such as at Killing
+horizons.) Next we demonstrate that the same Weyl types characterize warped
+product spacetimes with a one-dimensional Lorentzian (timelike) factor, whereas
+warped spacetimes with a two-dimensional Lorentzian factor are restricted to
+the types D or O. By exploring the Bianchi identities, we then analyze the
+simplest non-trivial case from the above classes - type D vacuum spacetimes,
+possibly with a cosmological constant, dropping, however, the assumptions that
+the spacetime is static, stationary or warped. It is shown that for ``generic''
+type D vacuum spacetimes the corresponding principal null directions are
+geodetic in any dimension (this applies also to type II spacetimes). For n>=5,
+however, there may exist particular cases of type D spacetimes which admit
+non-geodetic multiple principal null directions and we present such examples in
+any n>=7. Further studies are restricted to five dimensions, where the type D
+Weyl tensor is described by a 3x3 matrix \Phi_{ij}. In the case with
+``twistfree'' (A_{ij}=0) principal null geodesics we show that in a ``generic''
+case \Phi_{ij} is symmetric and eigenvectors of \Phi_{ij} coincide with those
+of the expansion matrix S_{ij}, providing us with three preferred spacelike
+directions of the spacetime. Similar results are also obtained when relaxing
+the twistfree condition and assuming instead that \Phi_{ij} is symmetric. The
+n=5 Myers-Perry black hole and Kerr-NUT-AdS metrics in arbitrary dimension are
+briefly studied as specific examples of type D vacuum spacetime.
+\\

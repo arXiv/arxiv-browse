@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0278
+From: Igor Khavkine <ijNWnGhx@NyH.2y>
+Date: Mon, 2 Apr 2007 22:08:44 GMT   (142kb)
+
+Title: q-Deformed spin foam models of quantum gravity
+Authors: Igor Khavkine, J. Daniel Christensen
+Categories: gr-qc
+Comments: 21 pages, 6 figures, amsrefs
+Journal-ref: Class.Quant.Grav.24:3271-3290,2007
+DOI: 10.1088/0264-9381/24/13/009
+\\
+  We numerically study Barrett-Crane models of Riemannian quantum gravity. We
+have extended the existing numerical techniques to handle q-deformed models and
+arbitrary space-time triangulations. We present and interpret expectation
+values of a few selected observables for each model, including a spin-spin
+correlation function which gives insight into the behaviour of the models. We
+find the surprising result that, as the deformation parameter q goes to 1
+through roots of unity, the limit is discontinuous.
+\\

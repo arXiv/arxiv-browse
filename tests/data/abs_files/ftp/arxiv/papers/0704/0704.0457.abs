@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0457
+From: Miles P. Blencowe <R5HXq.N.hWiULXBR@zSLb8IpjZ.DI7>
+Date: Tue, 3 Apr 2007 20:36:03 GMT   (725kb)
+Date (revised v2): Thu, 19 Jul 2007 13:44:42 GMT   (723kb)
+
+Title: Quantum analysis of a linear DC SQUID mechanical displacement detector
+Authors: M. P. Blencowe, E. Buks
+Categories: cond-mat.supr-con cond-mat.mes-hall quant-ph
+Comments: 33 pages, 4 figures, published version
+Journal-ref: Physical Review B 76, 014511 (2007)
+DOI: 10.1103/PhysRevB.76.014511
+\\
+  We provide a quantum analysis of a DC SQUID mechanical displacement detector
+within the sub-critical Josephson current regime. A segment of the SQUID loop
+forms the mechanical resonator and motion of the latter is transduced
+inductively through changes in the flux threading the loop. Expressions are
+derived for the detector signal response and noise, which are used to evaluate
+the position and force detection sensitivity. We also investigate cooling of
+the mechanical resonator due to back reaction noise from the detector.
+\\

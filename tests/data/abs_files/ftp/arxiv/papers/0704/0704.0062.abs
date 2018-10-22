@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0062
+From: Tom\'a\v{s} Vina\v{r} <tNZi@GLYLCpe.aC0>
+Date: Sat, 31 Mar 2007 23:52:33 GMT   (185kb)
+
+Title: On-line Viterbi Algorithm and Its Relationship to Random Walks
+Authors: Rastislav \v{S}r\'amek, Bro\v{n}a Brejov\'a, Tom\'a\v{s} Vina\v{r}
+Categories: cs.DS
+ACM-class: G.3; E.1; F.1.2; J.3
+Journal-ref: Algorithms in Bioinformatics: 7th International Workshop (WABI),
+  4645 volume of Lecture Notes in Computer Science, pp. 240-251, Philadelphia,
+  PA, USA, September 2007. Springer
+DOI: 10.1007/978-3-540-74126-8_23
+\\
+  In this paper, we introduce the on-line Viterbi algorithm for decoding hidden
+Markov models (HMMs) in much smaller than linear space. Our analysis on
+two-state HMMs suggests that the expected maximum memory used to decode
+sequence of length $n$ with $m$-state HMM can be as low as $\Theta(m\log n)$,
+without a significant slow-down compared to the classical Viterbi algorithm.
+Classical Viterbi algorithm requires $O(mn)$ space, which is impractical for
+analysis of long DNA sequences (such as complete human genome chromosomes) and
+for continuous data streams. We also experimentally demonstrate the performance
+of the on-line Viterbi algorithm on a simple HMM for gene finding on both
+simulated and real DNA sequences.
+\\

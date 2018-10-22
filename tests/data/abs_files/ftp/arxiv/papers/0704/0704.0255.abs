@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0255
+From: Felipe Marin <h3dawuq@zHj5mIWl.6nI>
+Date: Mon, 2 Apr 2007 21:38:55 GMT   (140kb)
+Date (revised v2): Tue, 6 Nov 2007 20:44:52 GMT   (141kb)
+
+Title: Modeling the three-point correlation function
+Authors: Felipe Marin (Chicago, KICP), Risa Wechsler (KIPAC, Stanford), Joshua
+  Frieman (Chicago, KICP and Fermilab), Robert Nichol (ICG, Portsmouth)
+Categories: astro-ph
+Comments: 12 pages, 11 figures, ApJ accepted. Corrected typos, minor changes
+  from referee comments
+Journal-ref: Astrophys.J.672:849-860,2008
+DOI: 10.1086/523628
+\\
+  We present new predictions for the galaxy three-point correlation function
+(3PCF) using high-resolution dissipationless cosmological simulations of a flat
+LCDM Universe which resolve galaxy-size halos and subhalos. We create realistic
+mock galaxy catalogs by assigning luminosities and colors to dark matter halos
+and subhalos, and we measure the reduced 3PCF as a function of luminosity and
+color in both real and redshift space. As galaxy luminosity and color are
+varied, we find small differences in the amplitude and shape dependence of the
+reduced 3PCF, at a level qualitatively consistent with recent measurements from
+the SDSS and 2dFGRS. We confirm that discrepancies between previous 3PCF
+measurements can be explained in part by differences in binning choices. We
+explore the degree to which a simple local bias model can fit the simulated
+3PCF. The agreement between the model predictions and galaxy 3PCF measurements
+lends further credence to the straightforward association of galaxies with CDM
+halos and subhalos.
+\\

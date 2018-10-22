@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0628
+From: Bernard Kelly <tIgfs1@1WGdcuXA.5iHs.q1Iq.1RF>
+Date: Wed, 4 Apr 2007 17:43:04 GMT   (215kb)
+Date (revised v2): Thu, 2 Aug 2007 21:12:47 GMT   (214kb)
+
+Title: Black hole puncture initial data with realistic gravitational wave
+  content
+Authors: Bernard J Kelly, Wolfgang Tichy, Manuela Campanelli, Bernard F Whiting
+Categories: gr-qc
+Comments: 13 pages, 7 figures; replaced with published version
+Journal-ref: Phys.Rev.D76:024008,2007
+DOI: 10.1103/PhysRevD.76.024008
+\\
+  We present improved post-Newtonian-inspired initial data for non-spinning
+black-hole binaries, suitable for numerical evolution with punctures. We
+revisit the work of Tichy et al. [W. Tichy, B. Bruegmann, M. Campanelli, and P.
+Diener, Phys. Rev. D 67, 064008 (2003)], explicitly calculating the remaining
+integral terms. These terms improve accuracy in the far zone and, for the first
+time, include realistic gravitational waves in the initial data. We investigate
+the behavior of these data both at the center of mass and in the far zone,
+demonstrating agreement of the transverse-traceless parts of the new metric
+with quadrupole-approximation waveforms. These data can be used for numerical
+evolutions, enabling a direct connection between the merger waveforms and the
+post-Newtonian inspiral waveforms.
+\\

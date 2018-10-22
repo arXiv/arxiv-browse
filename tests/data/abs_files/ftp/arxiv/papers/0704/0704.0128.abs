@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0128
+From: Kim Page <e6X@8u34.lf.WO.O9>
+Date: Mon, 2 Apr 2007 06:22:08 GMT   (239kb)
+Date (revised v2): Thu, 19 Apr 2007 14:27:25 GMT   (380kb)
+
+Title: An online repository of Swift/XRT light curves of GRBs
+Authors: P.A. Evans (1), A.P. Beardmore (1), K.L. Page (1), L.G. Tyler (1),
+  J.P. Osborne (1), M.R. Goad (1), P.T. O'Brien (1), L. Vetere (2), J. Racusin
+  (2), D. Morris (2), D.N. Burrows (2), M. Capalbi (3), M. Perri (3), N.
+  Gehrels (4) and P. Romano (5,6) ((1) University of Leicester, (2)
+  Pennsylvania State University, (3) ASI Science Data Center, (4) NASA/Goddard
+  Space Flight Center, (5) INAF-Osservatorio Astronomico di Brera, (6)
+  Universita' degli Studi di Milano)
+Categories: astro-ph
+Comments: 8 pages, 6 figures, Accepted for publication in A&A
+DOI: 10.1051/0004-6361:20077530
+\\
+  Context. Swift data are revolutionising our understanding of Gamma Ray
+Bursts. Since bursts fade rapidly, it is desirable to create and disseminate
+accurate light curves rapidly.
+  Aims. To provide the community with an online repository of X-ray light
+curves obtained with Swift. The light curves should be of the quality expected
+of published data, but automatically created and updated so as to be
+self-consistent and rapidly available. Methods. We have produced a suite of
+programs which automatically generates Swift/XRT light curves of GRBs. Effects
+of the damage to the CCD, automatic readout-mode switching and pile-up are
+appropriately handled, and the data are binned with variable bin durations, as
+necessary for a fading source.
+  Results. The light curve repository website
+(http://www.swift.ac.uk/xrt_curves) contains light curves, hardness ratios and
+deep images for every GRB which Swift's XRT has observed. When new GRBs are
+detected, light curves are created and updated within minutes of the data
+arriving at the UK Swift Science Data Centre.
+\\

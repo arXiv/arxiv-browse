@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0524
+From: Fulvia Confortola <3xTQmk.jEzwY3Sb1c@McmqMO.Hw>
+Date: Wed, 4 Apr 2007 08:51:23 GMT   (19kb)
+
+Title: Optimal control of stochastic differential equations with dynamical
+  boundary conditions
+Authors: S. Bonaccorsi, F. Confortola, E. Mastrogiacomo
+Categories: math.PR
+Comments: 18 pages
+\\
+  In this paper we investigate the optimal control problem for a class of
+stochastic Cauchy evolution problem with non standard boundary dynamic and
+control. The model is composed by an infinite dimensional dynamical system
+coupled with a finite dimensional dynamics, which describes the boundary
+conditions of the internal system. In other terms, we are concerned with non
+standard boundary conditions, as the value at the boundary is governed by a
+different stochastic differential equation.
+\\

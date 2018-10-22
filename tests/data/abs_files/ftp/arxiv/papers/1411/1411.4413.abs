@@ -1,0 +1,507 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1411.4413
+From: Marc-Olivier Bettler <xkd234sas@xrrxdr2s243c.exx>
+Date: Mon, 17 Nov 2014 10:10:25 GMT   (3249kb,D)
+
+Title: Observation of the rare $B^0_s\to\mu^+\mu^-$ decay from the combined
+  analysis of CMS and LHCb data
+Authors: The CMS and LHCb Collaborations: V. Khachatryan, A.M. Sirunyan, A.
+  Tumasyan, W. Adam, T. Bergauer, M. Dragicevic, J. Er\"o, M. Friedl, R.
+  Fr\"uhwirth, V.M. Ghete, C. Hartl, N. H\"ormann, J. Hrubec, M. Jeitler, W.
+  Kiesenhofer, V. Kn\"unz, M. Krammer, I. Kr\"atschmer, D. Liko, I. Mikulec, D.
+  Rabady, B. Rahbaran, H. Rohringer, R. Sch\"ofbeck, J. Strauss, W.
+  Treberer-Treberspurg, W. Waltenberger, C.-E. Wulz, V. Mossolov, N. Shumeiko,
+  J. Suarez Gonzalez, S. Alderweireldt, S. Bansal, T. Cornelis, E.A. De Wolf,
+  X. Janssen, A. Knutsson, J. Lauwers, S. Luyckx, S. Ochesanu, R. Rougny, M.
+  Van De Klundert, H. Van Haevermaet, P. Van Mechelen, N. Van Remortel, A. Van
+  Spilbeeck, F. Blekman, S. Blyweert, J. D'Hondt, N. Daci, N. Heracleous, J.
+  Keaveney, S. Lowette, M. Maes, A. Olbrechts, Q. Python, D. Strom, S.
+  Tavernier, W. Van Doninck, P. Van Mulders, G.P. Van Onsem, I. Villella, C.
+  Caillol, B. Clerbaux, G. De Lentdecker, D. Dobur, L. Favart, A.P.R. Gay, A.
+  Grebenyuk, A. L\'eonard, A. Mohammadi, L. Perni\`e, A. Randle-conde, T. Reis,
+  T. Seva, L. Thomas, C. Vander Velde, P. Vanlaer, J. Wang, F. Zenoni, V.
+  Adler, K. Beernaert, L. Benucci, A. Cimmino, S. Costantini, S. Crucy, S.
+  Dildick, A. Fagot, G. Garcia, J. Mccartin, A.A. Ocampo Rios, D. Ryckbosch, S.
+  Salva Diblen, M. Sigamani, N. Strobbe, F. Thyssen, M. Tytgat, E. Yazgan, N.
+  Zaganidis, S. Basegmez, C. Beluffi, G. Bruno, R. Castello, A. Caudron, L.
+  Ceard, G.G. Da Silveira, C. Delaere, T. du Pree, D. Favart, L. Forthomme, A.
+  Giammanco, J. Hollar, A. Jafari, P. Jez, M. Komm, V. Lemaitre, C. Nuttens, D.
+  Pagano, L. Perrini, A. Pin, K. Piotrzkowski, A. Popov, L. Quertenmont, M.
+  Selvaggi, M. Vidal Marono, J.M. Vizan Garcia, N. Beliy, T. Caebergs, E.
+  Daubie, G.H. Hammad, W.L. Ald\'a J\'unior, G.A. Alves, L. Brito, M. Correa
+  Martins Junior, T. Dos Reis Martins, C. Mora Herrera, M.E. Pol, P. Rebello
+  Teles, W. Carvalho, J. Chinellato, A. Cust\'odio, E.M. Da Costa, D. De Jesus
+  Damiao, C. De Oliveira Martins, S. Fonseca De Souza, H. Malbouisson, D. Matos
+  Figueiredo, L. Mundim, H. Nogima, W.L. Prado Da Silva, J. Santaolalla, A.
+  Santoro, A. Sznajder, E.J. Tonelli Manganote, A. Vilela Pereira, C.A.
+  Bernardes, S. Dogra, T.R. Fernandez Perez Tomei, E.M. Gregores, P.G.
+  Mercadante, S.F. Novaes, Sandra S. Padula, A. Aleksandrov, V. Genchev, R.
+  Hadjiiska, P. Iaydjiev, A. Marinov, S. Piperov, M. Rodozov, G. Sultanov, M.
+  Vutova, A. Dimitrov, I. Glushkov, L. Litov, B. Pavlov, P. Petkov, J.G. Bian,
+  G.M. Chen, H.S. Chen, M. Chen, T. Cheng, R. Du, C.H. Jiang, R. Plestina, F.
+  Romeo, J. Tao, Z. Wang, C. Asawatangtrakuldee, Y. Ban, Q. Li, S. Liu, Y. Mao,
+  S.J. Qian, D. Wang, Z. Xu, W. Zou, C. Avila, A. Cabrera, L.F. Chaparro
+  Sierra, C. Florez, J.P. Gomez, B. Gomez Moreno, J.C. Sanabria, N. Godinovic,
+  D. Lelas, D. Polic, I. Puljak, Z. Antunovic, M. Kovac, V. Brigljevic, K.
+  Kadija, J. Luetic, D. Mekterovic, L. Sudic, A. Attikis, G. Mavromanolakis, J.
+  Mousa, C. Nicolaou, F. Ptochos, P.A. Razis, M. Bodlak, M. Finger, M. Finger
+  Jr., Y. Assran, A. Ellithi Kamel, M.A. Mahmoud, A. Radi, M. Kadastik, M.
+  Murumaa, M. Raidal, A. Tiko, P. Eerola, G. Fedi, M. Voutilainen, J.
+  H\"ark\"onen, V. Karim\"aki, R. Kinnunen, M.J. Kortelainen, T. Lamp\'en, K.
+  Lassila-Perini, S. Lehti, T. Lind\'en, P. Luukka, T. M\"aenp\"a\"a, T.
+  Peltola, E. Tuominen, J. Tuominiemi, E. Tuovinen, L. Wendland, J. Talvitie,
+  T. Tuuva, M. Besancon, F. Couderc, M. Dejardin, D. Denegri, B. Fabbro, J.L.
+  Faure, C. Favaro, F. Ferri, S. Ganjour, A. Givernaud, P. Gras, G. Hamel de
+  Monchenault, P. Jarry, E. Locci, J. Malcles, J. Rander, A. Rosowsky, M.
+  Titov, S. Baffioni, F. Beaudette, P. Busson, C. Charlot, T. Dahms, M.
+  Dalchenko, L. Dobrzynski, N. Filipovic, A. Florent, R. Granier de Cassagnac,
+  L. Mastrolorenzo, P. Min\'e, C. Mironov, I.N. Naranjo, M. Nguyen, C. Ochando,
+  G. Ortona, P. Paganini, S. Regnard, R. Salerno, J.B. Sauvan, Y. Sirois, C.
+  Veelken, Y. Yilmaz, A. Zabi, J.-L. Agram, J. Andrea, A. Aubin, D. Bloch,
+  J.-M. Brom, E.C. Chabert, C. Collard, E. Conte, J.-C. Fontaine, D. Gel\'e, U.
+  Goerlach, C. Goetzmann, A.-C. Le Bihan, K. Skovpen, P. Van Hove, S. Gadrat,
+  S. Beauceron, N. Beaupere, G. Boudoul, E. Bouvier, S. Brochet, C.A. Carrillo
+  Montoya, J. Chasserat, R. Chierici, D. Contardo, P. Depasse, H. El Mamouni,
+  J. Fan, J. Fay, S. Gascon, M. Gouzevitch, B. Ille, T. Kurca, M. Lethuillier,
+  L. Mirabito, S. Perries, J.D. Ruiz Alvarez, D. Sabes, L. Sgandurra, V.
+  Sordini, M. Vander Donckt, P. Verdier, S. Viret, H. Xiao, Z. Tsamalaidze, C.
+  Autermann, S. Beranek, M. Bontenackels, M. Edelhoff, L. Feld, A. Heister, O.
+  Hindrichs, K. Klein, A. Ostapchuk, F. Raupach, J. Sammet, S. Schael, J.F.
+  Schulte, H. Weber, B. Wittmer, V. Zhukov, M. Ata, M. Brodski, E.
+  Dietz-Laursonn, D. Duchardt, M. Erdmann, R. Fischer, A. G\"uth, T. Hebbeker,
+  C. Heidemann, K. Hoepfner, D. Klingebiel, S. Knutzen, P. Kreuzer, M.
+  Merschmeyer, A. Meyer, P. Millet, M. Olschewski, K. Padeken, P. Papacz, H.
+  Reithler, S.A. Schmitz, L. Sonnenschein, D. Teyssier, S. Th\"uer, M. Weber,
+  V. Cherepanov, Y. Erdogan, G. Fl\"ugge, H. Geenen, M. Geisler, W. Haj Ahmad,
+  F. Hoehle, B. Kargoll, T. Kress, Y. Kuessel, A. K\"unsken, J. Lingemann, A.
+  Nowack, I.M. Nugent, O. Pooth, A. Stahl, M. Aldaya Martin, I. Asin, N.
+  Bartosik, J. Behr, U. Behrens, A.J. Bell, A. Bethani, K. Borras, A.
+  Burgmeier, A. Cakir, L. Calligaris, A. Campbell, S. Choudhury, F. Costanza,
+  C. Diez Pardos, G. Dolinska, S. Dooling, T. Dorland, G. Eckerlin, D.
+  Eckstein, T. Eichhorn, G. Flucke, J. Garay Garcia, A. Geiser, P. Gunnellini,
+  J. Hauk, M. Hempel, H. Jung, A. Kalogeropoulos, M. Kasemann, P. Katsas, J.
+  Kieseler, C. Kleinwort, I. Korol, D. Kr\"ucker, W. Lange, J. Leonard, K.
+  Lipka, A. Lobanov, W. Lohmann, B. Lutz, R. Mankel, I. Marfin, I.-A.
+  Melzer-Pellmann, A.B. Meyer, G. Mittag, J. Mnich, A. Mussgiller, S.
+  Naumann-Emme, A. Nayak, E. Ntomari, H. Perrey, D. Pitzl, R. Placakyte, A.
+  Raspereza, P.M. Ribeiro Cipriano, B. Roland, E. Ron, M.\"O. Sahin, J.
+  Salfeld-Nebgen, P. Saxena, T. Schoerner-Sadenius, M. Schr\"oder, C. Seitz, S.
+  Spannagel, A.D.R. Vargas Trevino, R. Walsh, C. Wissing, V. Blobel, M. Centis
+  Vignali, A.R. Draeger, J. Erfle, E. Garutti, K. Goebel, M. G\"orner, J.
+  Haller, M. Hoffmann, R.S. H\"oing, A. Junkes, H. Kirschenmann, R. Klanner, R.
+  Kogler, J. Lange, T. Lapsien, T. Lenz, I. Marchesini, J. Ott, T. Peiffer, A.
+  Perieanu, N. Pietsch, J. Poehlsen, T. Poehlsen, D. Rathjens, C. Sander, H.
+  Schettler, P. Schleper, E. Schlieckau, A. Schmidt, M. Seidel, V. Sola, H.
+  Stadie, G. Steinbr\"uck, D. Troendle, E. Usai, L. Vanelderen, A. Vanhoefer,
+  C. Barth, C. Baus, J. Berger, C. B\"oser, E. Butz, T. Chwalek, W. De Boer, A.
+  Descroix, A. Dierlamm, M. Feindt, F. Frensch, M. Giffels, A. Gilbert, F.
+  Hartmann, T. Hauth, U. Husemann, I. Katkov, A. Kornmayer, E. Kuznetsova, P.
+  Lobelle Pardo, M.U. Mozer, T. M\"uller, Th. M\"uller, A. N\"urnberg, G.
+  Quast, K. Rabbertz, S. R\"ocker, H.J. Simonis, F.M. Stober, R. Ulrich, J.
+  Wagner-Kuhr, S. Wayand, T. Weiler, R. Wolf, G. Anagnostou, G. Daskalakis, T.
+  Geralis, V.A. Giakoumopoulou, A. Kyriakis, D. Loukas, A. Markou, C. Markou,
+  A. Psallidas, I. Topsis-Giotis, A. Agapitos, S. Kesisoglou, A. Panagiotou, N.
+  Saoulidou, E. Stiliaris, X. Aslanoglou, I. Evangelou, G. Flouris, C. Foudas,
+  P. Kokkas, N. Manthos, I. Papadopoulos, E. Paradas, J. Strologas, G. Bencze,
+  C. Hajdu, P. Hidas, D. Horvath, F. Sikler, V. Veszpremi, G. Vesztergombi,
+  A.J. Zsigmond, N. Beni, S. Czellar, J. Karancsi, J. Molnar, J. Palinkas, Z.
+  Szillasi, A. Makovec, P. Raics, Z.L. Trocsanyi, B. Ujvari, N. Sahoo, S.K.
+  Swain, S.B. Beri, V. Bhatnagar, R. Gupta, U.Bhawandeep, A.K. Kalsi, M. Kaur,
+  R. Kumar, M. Mittal, N. Nishu, J.B. Singh, Ashok Kumar, Arun Kumar, S. Ahuja,
+  A. Bhardwaj, B.C. Choudhary, A. Kumar, S. Malhotra, M. Naimuddin, K. Ranjan,
+  V. Sharma, S. Banerjee, S. Bhattacharya, K. Chatterjee, S. Dutta, B. Gomber,
+  Sa. Jain, Sh. Jain, R. Khurana, A. Modak, S. Mukherjee, D. Roy, S. Sarkar, M.
+  Sharan, A. Abdulsalam, D. Dutta, S. Kailas, V. Kumar, A.K. Mohanty, L.M.
+  Pant, P. Shukla, A. Topkar, T. Aziz, S. Banerjee, S. Bhowmik, R.M.
+  Chatterjee, R.K. Dewanjee, S. Dugad, S. Ganguly, S. Ghosh, M. Guchait, A.
+  Gurtu, G. Kole, S. Kumar, M. Maity, G. Majumder, K. Mazumdar, G.B. Mohanty,
+  B. Parida, K. Sudhakar, N. Wickramage, H. Bakhshiansohi, H. Behnamian, S.M.
+  Etesami, A. Fahim, R. Goldouzian, M. Khakzad, M. Mohammadi Najafabadi, M.
+  Naseri, S. Paktinat Mehdiabadi, F. Rezaei Hosseinabadi, B. Safarzadeh, M.
+  Zeinali, M. Felcini, M. Grunewald, M. Abbrescia, C. Calabria, S.S. Chhibra,
+  A. Colaleo, D. Creanza, N. De Filippis, M. De Palma, L. Fiore, G. Iaselli, G.
+  Maggi, M. Maggi, S. My, S. Nuzzo, A. Pompili, G. Pugliese, R. Radogna, G.
+  Selvaggi, A. Sharma, L. Silvestris, R. Venditti, P. Verwilligen, G. Abbiendi,
+  A.C. Benvenuti, D. Bonacorsi, S. Braibant-Giacomelli, L. Brigliadori, R.
+  Campanini, P. Capiluppi, A. Castro, F.R. Cavallo, G. Codispoti, M. Cuffiani,
+  G.M. Dallavalle, F. Fabbri, A. Fanfani, D. Fasanella, P. Giacomelli, C.
+  Grandi, L. Guiducci, S. Marcellini, G. Masetti, A. Montanari, F.L. Navarria,
+  A. Perrotta, F. Primavera, A.M. Rossi, T. Rovelli, G.P. Siroli, N. Tosi, R.
+  Travaglini, S. Albergo, G. Cappello, M. Chiorboli, S. Costa, F. Giordano, R.
+  Potenza, A. Tricomi, C. Tuve, G. Barbagli, V. Ciulli, C. Civinini, R.
+  D'Alessandro, E. Focardi, E. Gallo, S. Gonzi, V. Gori, P. Lenzi, M. Meschini,
+  S. Paoletti, G. Sguazzoni, A. Tropiano, L. Benussi, S. Bianco, F. Fabbri, D.
+  Piccolo, R. Ferretti, F. Ferro, M. Lo Vetere, E. Robutti, S. Tosi, M.E.
+  Dinardo, S. Fiorendi, S. Gennai, R. Gerosa, A. Ghezzi, P. Govoni, M.T.
+  Lucchini, S. Malvezzi, R.A. Manzoni, A. Martelli, B. Marzocchi, D. Menasce,
+  L. Moroni, M. Paganoni, D. Pedrini, S. Ragazzi, N. Redaelli, T. Tabarelli de
+  Fatis, S. Buontempo, N. Cavallo, S. Di Guida, F. Fabozzi, A.O.M. Iorio, L.
+  Lista, S. Meola, M. Merola, P. Paolucci, P. Azzi, N. Bacchetta, D. Bisello,
+  A. Branca, R. Carlin, P. Checchia, M. Dall'Osso, T. Dorigo, U. Dosselli, M.
+  Galanti, F. Gasparini, U. Gasparini, P. Giubilato, A. Gozzelino, K.
+  Kanishchev, S. Lacaprara, M. Margoni, A.T. Meneguzzo, J. Pazzini, N.
+  Pozzobon, P. Ronchese, F. Simonetto, E. Torassa, M. Tosi, P. Zotto, A.
+  Zucchetta, G. Zumerle, M. Gabusi, S.P. Ratti, V. Re, C. Riccardi, P. Salvini,
+  P. Vitulo, M. Biasini, G.M. Bilei, D. Ciangottini, L. Fan\`o, P. Lariccia, G.
+  Mantovani, M. Menichelli, A. Saha, A. Santocchia, A. Spiezia, K. Androsov, P.
+  Azzurri, G. Bagliesi, J. Bernardini, T. Boccali, G. Broccolo, R. Castaldi,
+  M.A. Ciocci, R. Dell'Orso, S. Donato, F. Fiori, L. Fo\`a, A. Giassi, M.T.
+  Grippo, F. Ligabue, T. Lomtadze, L. Martini, A. Messineo, C.S. Moon, F.
+  Palla, A. Rizzi, A. Savoy-Navarro, A.T. Serban, P. Spagnolo, P. Squillacioti,
+  R. Tenchini, G. Tonelli, A. Venturi, P.G. Verdini, C. Vernieri, L. Barone, F.
+  Cavallari, G. D'imperio, D. Del Re, M. Diemoz, C. Jorda, E. Longo, F.
+  Margaroli, P. Meridiani, F. Micheli, S. Nourbakhsh, G. Organtini, R.
+  Paramatti, S. Rahatlou, C. Rovelli, F. Santanastasio, L. Soffi, P. Traczyk,
+  N. Amapane, R. Arcidiacono, S. Argiro, M. Arneodo, R. Bellan, C. Biino, N.
+  Cartiglia, S. Casasso, M. Costa, A. Degano, N. Demaria, L. Finco, C.
+  Mariotti, S. Maselli, E. Migliore, V. Monaco, M. Musich, M.M. Obertino, L.
+  Pacher, N. Pastrone, M. Pelliccioni, G.L. Pinna Angioni, A. Potenza, A.
+  Romero, M. Ruspa, R. Sacchi, A. Solano, A. Staiano, U. Tamponi, S. Belforte,
+  V. Candelise, M. Casarsa, F. Cossutti, G. Della Ricca, B. Gobbo, C. La
+  Licata, M. Marone, A. Schizzi, T. Umer, A. Zanetti, S. Chang, A.
+  Kropivnitskaya, S.K. Nam, D.H. Kim, G.N. Kim, M.S. Kim, D.J. Kong, S. Lee,
+  Y.D. Oh, H. Park, A. Sakharov, D.C. Son, T.J. Kim, J.Y. Kim, S. Song, S.
+  Choi, D. Gyun, B. Hong, M. Jo, H. Kim, Y. Kim, B. Lee, K.S. Lee, S.K. Park,
+  Y. Roh, H.D. Yoo, M. Choi, J.H. Kim, I.C. Park, G. Ryu, M.S. Ryu, Y. Choi,
+  Y.K. Choi, J. Goh, D. Kim, E. Kwon, J. Lee, I. Yu, A. Juodagalvis, J.R.
+  Komaragiri, M.A.B. Md Ali, E. Casimiro Linares, H. Castilla-Valdez, E. De La
+  Cruz-Burelo, I. Heredia-de La Cruz, A. Hernandez-Almada, R. Lopez-Fernandez,
+  A. Sanchez-Hernandez, S. Carrillo Moreno, F. Vazquez Valencia, I. Pedraza,
+  H.A. Salazar Ibarguen, A. Morelos Pineda, D. Krofcheck, P.H. Butler, S.
+  Reucroft, A. Ahmad, M. Ahmad, Q. Hassan, H.R. Hoorani, W.A. Khan, T.
+  Khurshid, M. Shoaib, H. Bialkowska, M. Bluj, B. Boimska, T. Frueboes, M.
+  G\'orski, M. Kazana, K. Nawrocki, K. Romanowska-Rybinska, M. Szleper, P.
+  Zalewski, G. Brona, K. Bunkowski, M. Cwiok, W. Dominik, K. Doroba, A.
+  Kalinowski, M. Konecki, J. Krolikowski, M. Misiura, M. Olszewski, W.
+  Wolszczak, P. Bargassa, C. Beir\~ao Da Cruz E Silva, P. Faccioli, P.G.
+  Ferreira Parracho, M. Gallinaro, L. Lloret Iglesias, F. Nguyen, J. Rodrigues
+  Antunes, J. Seixas, J. Varela, P. Vischia, S. Afanasiev, P. Bunin, M.
+  Gavrilenko, I. Golutvin, I. Gorbunov, A. Kamenev, V. Karjavin, V.
+  Konoplyanikov, A. Lanev, A. Malakhov, V. Matveev, P. Moisenz, V. Palichik, V.
+  Perelygin, S. Shmatov, N. Skatchkov, V. Smirnov, A. Zarubin, V. Golovtsov, Y.
+  Ivanov, V. Kim, P. Levchenko, V. Murzin, V. Oreshkin, I. Smirnov, V. Sulimov,
+  L. Uvarov, S. Vavilov, A. Vorobyev, An. Vorobyev, Yu. Andreev, A. Dermenev,
+  S. Gninenko, N. Golubev, M. Kirsanov, N. Krasnikov, A. Pashenkov, D. Tlisov,
+  A. Toropin, V. Epshteyn, V. Gavrilov, N. Lychkovskaya, V. Popov, I.
+  Pozdnyakov, G. Safronov, S. Semenov, A. Spiridonov, V. Stolin, E. Vlasov, A.
+  Zhokin, V. Andreev, M. Azarkin, I. Dremin, M. Kirakosyan, A. Leonidov, G.
+  Mesyats, S.V. Rusakov, A. Vinogradov, A. Belyaev, E. Boos, M. Dubinin, L.
+  Dudko, A. Ershov, A. Gribushin, V. Klyukhin, O. Kodolova, I. Lokhtin, S.
+  Obraztsov, S. Petrushanko, V. Savrin, A. Snigirev, I. Azhgirey, I. Bayshev,
+  S. Bitioukov, V. Kachanov, A. Kalinin, D. Konstantinov, V. Krychkine, V.
+  Petrov, R. Ryutin, A. Sobol, L. Tourtchanovitch, S. Troshin, N. Tyurin, A.
+  Uzunian, A. Volkov, P. Adzic, M. Ekmedzic, J. Milosevic, V. Rekovic, J.
+  Alcaraz Maestre, C. Battilana, E. Calvo, M. Cerrada, M. Chamizo Llatas, N.
+  Colino, B. De La Cruz, A. Delgado Peris, D. Dom\'inguez V\'azquez, A.
+  Escalante Del Valle, C. Fernandez Bedoya, J.P. Fern\'andez Ramos, J. Flix,
+  M.C. Fouz, P. Garcia-Abia, O. Gonzalez Lopez, S. Goy Lopez, J.M. Hernandez,
+  M.I. Josa, E. Navarro De Martino, A. P\'erez-Calero Yzquierdo, J. Puerta
+  Pelayo, A. Quintario Olmeda, I. Redondo, L. Romero, M.S. Soares, C. Albajar,
+  J.F. de Troc\'oniz, M. Missiroli, D. Moran, H. Brun, J. Cuevas, J. Fernandez
+  Menendez, S. Folgueras, I. Gonzalez Caballero, J.A. Brochero Cifuentes, I.J.
+  Cabrillo, A. Calderon, J. Duarte Campderros, M. Fernandez, G. Gomez, A.
+  Graziano, A. Lopez Virto, J. Marco, R. Marco, C. Martinez Rivero, F.
+  Matorras, F.J. Munoz Sanchez, J. Piedra Gomez, T. Rodrigo, A.Y.
+  Rodr\'iguez-Marrero, A. Ruiz-Jimeno, L. Scodellaro, I. Vila, R. Vilar
+  Cortabitarte, D. Abbaneo, E. Auffray, G. Auzinger, M. Bachtis, P. Baillon,
+  A.H. Ball, D. Barney, A. Benaglia, J. Bendavid, L. Benhabib, J.F. Benitez, C.
+  Bernet, P. Bloch, A. Bocci, A. Bonato, O. Bondu, C. Botta, H. Breuker, T.
+  Camporesi, G. Cerminara, S. Colafranceschi, M. D'Alfonso, D. d'Enterria, A.
+  Dabrowski, A. David, F. De Guio, A. De Roeck, S. De Visscher, E. Di Marco, M.
+  Dobson, M. Dordevic, N. Dupont-Sagorin, A. Elliott-Peisert, G. Franzoni, W.
+  Funk, D. Gigi, K. Gill, D. Giordano, M. Girone, F. Glege, R. Guida, S.
+  Gundacker, M. Guthoff, J. Hammer, M. Hansen, P. Harris, J. Hegeman, V.
+  Innocente, P. Janot, K. Kousouris, K. Krajczar, P. Lecoq, C. Louren\c{c}o, N.
+  Magini, L. Malgeri, M. Mannelli, J. Marrouche, L. Masetti, F. Meijers, S.
+  Mersi, E. Meschi, F. Moortgat, S. Morovic, M. Mulders, L. Orsini, L. Pape, E.
+  Perez, L. Perrozzi, A. Petrilli, G. Petrucciani, A. Pfeiffer, M. Pimi\"a, D.
+  Piparo, M. Plagge, A. Racz, G. Rolandi, M. Rovere, H. Sakulin, C. Sch\"afer,
+  C. Schwick, A. Sharma, P. Siegrist, P. Silva, M. Simon, P. Sphicas, D. Spiga,
+  J. Steggemann, B. Stieger, M. Stoye, Y. Takahashi, D. Treille, A. Tsirou,
+  G.I. Veres, N. Wardle, H.K. W\"ohri, H. Wollny, W.D. Zeuner, W. Bertl, K.
+  Deiters, W. Erdmann, R. Horisberger, Q. Ingram, H.C. Kaestli, D. Kotlinski,
+  U. Langenegger, D. Renker, T. Rohe, F. Bachmair, L. B\"ani, L. Bianchini,
+  M.A. Buchmann, B. Casal, N. Chanon, G. Dissertori, M. Dittmar, M. Doneg\`a,
+  M. D\"unser, P. Eller, C. Grab, D. Hits, J. Hoss, W. Lustermann, B. Mangano,
+  A.C. Marini, M. Marionneau, P. Martinez Ruiz del Arbol, M. Masciovecchio, D.
+  Meister, N. Mohr, P. Musella, C. N\"ageli, F. Nessi-Tedaldi, F. Pandolfi, F.
+  Pauss, M. Peruzzi, M. Quittnat, L. Rebane, M. Rossini, A. Starodumov, M.
+  Takahashi, K. Theofilatos, R. Wallny, H.A. Weber, C. Amsler, M.F. Canelli, V.
+  Chiochia, A. De Cosa, A. Hinzmann, T. Hreus, B. Kilminster, C. Lange, B.
+  Millan Mejias, J. Ngadiuba, D. Pinna, P. Robmann, F.J. Ronga, S. Taroni, M.
+  Verzetti, Y. Yang, M. Cardaci, K.H. Chen, C. Ferro, C.M. Kuo, W. Lin, Y.J.
+  Lu, R. Volpe, S.S. Yu, P. Chang, Y.H. Chang, Y.W. Chang, Y. Chao, K.F. Chen,
+  P.H. Chen, C. Dietz, U. Grundler, W.-S. Hou, K.Y. Kao, Y.F. Liu, R.-S. Lu, D.
+  Majumder, E. Petrakou, Y.M. Tzeng, R. Wilken, B. Asavapibhop, G. Singh, N.
+  Srimanobhas, N. Suwonjandee, A. Adiguzel, M.N. Bakirci, S. Cerci, C. Dozen,
+  I. Dumanoglu, E. Eskut, S. Girgis, G. Gokbulut, E. Gurpinar, I. Hos, E.E.
+  Kangal, A. Kayis Topaksu, G. Onengut, K. Ozdemir, S. Ozturk, A. Polatoz, D.
+  Sunar Cerci, B. Tali, H. Topakli, M. Vergili, I.V. Akin, B. Bilin, S. Bilmis,
+  H. Gamsizkan, B. Isildak, G. Karapinar, K. Ocalan, S. Sekmen, U.E. Surat, M.
+  Yalvac, M. Zeyrek, E.A. Albayrak, E. G\"ulmez, M. Kaya, O. Kaya, T. Yetkin,
+  K. Cankocak, F.I. Vardarl{\i}, L. Levchuk, P. Sorokin, J.J. Brooke, E.
+  Clement, D. Cussans, H. Flacher, J. Goldstein, M. Grimes, G.P. Heath, H.F.
+  Heath, J. Jacob, L. Kreczko, C. Lucas, Z. Meng, D.M. Newbold, S.
+  Paramesvaran, A. Poll, T. Sakuma, S. Senkin, V.J. Smith, K.W. Bell, A.
+  Belyaev, C. Brew, R.M. Brown, D.J.A. Cockerill, J.A. Coughlan, K. Harder, S.
+  Harper, E. Olaiya, D. Petyt, C.H. Shepherd-Themistocleous, A. Thea, I.R.
+  Tomalin, T. Williams, W.J. Womersley, S.D. Worm, M. Baber, R. Bainbridge, O.
+  Buchmuller, D. Burton, D. Colling, N. Cripps, P. Dauncey, G. Davies, M. Della
+  Negra, P. Dunne, W. Ferguson, J. Fulcher, D. Futyan, G. Hall, G. Iles, M.
+  Jarvis, G. Karapostoli, M. Kenzie, R. Lane, R. Lucas, L. Lyons, A.-M. Magnan,
+  S. Malik, B. Mathias, J. Nash, A. Nikitenko, J. Pela, M. Pesaresi, K.
+  Petridis, D.M. Raymond, S. Rogerson, A. Rose, C. Seez, P. Sharp, A. Tapper,
+  M. Vazquez Acosta, T. Virdee, S.C. Zenz, J.E. Cole, P.R. Hobson, A. Khan, P.
+  Kyberd, D. Leggat, D. Leslie, I.D. Reid, P. Symonds, L. Teodorescu, M.
+  Turner, J. Dittmann, K. Hatakeyama, A. Kasmi, H. Liu, T. Scarborough, O.
+  Charaf, S.I. Cooper, C. Henderson, P. Rumerio, A. Avetisyan, T. Bose, C.
+  Fantasia, P. Lawson, C. Richardson, J. Rohlf, J. St. John, L. Sulak, J.
+  Alimena, E. Berry, S. Bhattacharya, G. Christopher, D. Cutts, Z. Demiragli,
+  N. Dhingra, A. Ferapontov, A. Garabedian, U. Heintz, G. Kukartsev, E. Laird,
+  G. Landsberg, M. Luk, M. Narain, M. Segala, T. Sinthuprasith, T. Speer, J.
+  Swanson, R. Breedon, G. Breto, M. Calderon De La Barca Sanchez, S. Chauhan,
+  M. Chertok, J. Conway, R. Conway, P.T. Cox, R. Erbacher, M. Gardner, W. Ko,
+  R. Lander, M. Mulhearn, D. Pellett, J. Pilot, F. Ricci-Tam, S. Shalhout, J.
+  Smith, M. Squires, D. Stolp, M. Tripathi, S. Wilbur, R. Yohay, R. Cousins, P.
+  Everaerts, C. Farrell, J. Hauser, M. Ignatenko, G. Rakness, E. Takasugi, V.
+  Valuev, M. Weber, K. Burt, R. Clare, J. Ellison, J.W. Gary, G. Hanson, J.
+  Heilman, M. Ivova Rikova, P. Jandir, E. Kennedy, F. Lacroix, O.R. Long, A.
+  Luthra, M. Malberti, M. Olmedo Negrete, A. Shrinivas, S. Sumowidagdo, S.
+  Wimpenny, J.G. Branson, G.B. Cerati, S. Cittolin, R.T. D'Agnolo, A. Holzner,
+  R. Kelley, D. Klein, D. Kovalskyi, J. Letts, I. Macneill, D. Olivito, S.
+  Padhi, C. Palmer, M. Pieri, M. Sani, V. Sharma, S. Simon, Y. Tu, A. Vartak,
+  C. Welke, F. W\"urthwein, A. Yagil, D. Barge, J. Bradmiller-Feld, C.
+  Campagnari, T. Danielson, A. Dishaw, V. Dutta, K. Flowers, M. Franco Sevilla,
+  P. Geffert, C. George, F. Golf, L. Gouskos, J. Incandela, C. Justus, N.
+  Mccoll, J. Richman, D. Stuart, W. To, C. West, J. Yoo, A. Apresyan, A.
+  Bornheim, J. Bunn, Y. Chen, J. Duarte, A. Mott, H.B. Newman, C. Pena, M.
+  Pierini, M. Spiropulu, J.R. Vlimant, R. Wilkinson, S. Xie, R.Y. Zhu, V.
+  Azzolini, A. Calamba, B. Carlson, T. Ferguson, Y. Iiyama, M. Paulini, J.
+  Russ, H. Vogel, I. Vorobiev, J.P. Cumalat, W.T. Ford, A. Gaz, M. Krohn, E.
+  Luiggi Lopez, U. Nauenberg, J.G. Smith, K. Stenson, S.R. Wagner, J.
+  Alexander, A. Chatterjee, J. Chaves, J. Chu, S. Dittmer, N. Eggert, N.
+  Mirman, G. Nicolas Kaufman, J.R. Patterson, A. Ryd, E. Salvati, L. Skinnari,
+  W. Sun, W.D. Teo, J. Thom, J. Thompson, J. Tucker, Y. Weng, L. Winstrom, P.
+  Wittich, D. Winn, S. Abdullin, M. Albrow, J. Anderson, G. Apollinari, L.A.T.
+  Bauerdick, A. Beretvas, J. Berryhill, P.C. Bhat, G. Bolla, K. Burkett, J.N.
+  Butler, H.W.K. Cheung, F. Chlebana, S. Cihangir, V.D. Elvira, I. Fisk, J.
+  Freeman, Y. Gao, E. Gottschalk, L. Gray, D. Green, S. Gr\"unendahl, O.
+  Gutsche, J. Hanlon, D. Hare, R.M. Harris, J. Hirschauer, B. Hooberman, S.
+  Jindariani, M. Johnson, U. Joshi, K. Kaadze, B. Klima, B. Kreis, S. Kwan, J.
+  Linacre, D. Lincoln, R. Lipton, T. Liu, J. Lykken, K. Maeshima, J.M.
+  Marraffino, V.I. Martinez Outschoorn, S. Maruyama, D. Mason, P. McBride, P.
+  Merkel, K. Mishra, S. Mrenna, S. Nahn, C. Newman-Holmes, V. O'Dell, O.
+  Prokofyev, E. Sexton-Kennedy, S. Sharma, A. Soha, W.J. Spalding, L. Spiegel,
+  L. Taylor, S. Tkaczyk, N.V. Tran, L. Uplegger, E.W. Vaandering, R. Vidal, A.
+  Whitbeck, J. Whitmore, F. Yang, D. Acosta, P. Avery, P. Bortignon, D.
+  Bourilkov, M. Carver, D. Curry, S. Das, M. De Gruttola, G.P. Di Giovanni,
+  R.D. Field, M. Fisher, I.K. Furic, J. Hugon, J. Konigsberg, A. Korytov, T.
+  Kypreos, J.F. Low, K. Matchev, H. Mei, P. Milenovic, G. Mitselmakher, L.
+  Muniz, A. Rinkevicius, L. Shchutska, M. Snowball, D. Sperka, J. Yelton, M.
+  Zakaria, S. Hewamanage, S. Linn, P. Markowitz, G. Martinez, J.L. Rodriguez,
+  T. Adams, A. Askew, J. Bochenek, B. Diamond, J. Haas, S. Hagopian, V.
+  Hagopian, K.F. Johnson, H. Prosper, V. Veeraraghavan, M. Weinberg, M.M.
+  Baarmand, M. Hohlmann, H. Kalakhety, F. Yumiceva, M.R. Adams, L. Apanasevich,
+  D. Berry, R.R. Betts, I. Bucinskaite, R. Cavanaugh, O. Evdokimov, L.
+  Gauthier, C.E. Gerber, D.J. Hofman, P. Kurt, D.H. Moon, C. O'Brien, I.D.
+  Sandoval Gonzalez, C. Silkworth, P. Turner, N. Varelas, B. Bilki, W. Clarida,
+  K. Dilsiz, M. Haytmyradov, J.-P. Merlo, H. Mermerkaya, A. Mestvirishvili, A.
+  Moeller, J. Nachtman, H. Ogul, Y. Onel, F. Ozok, A. Penzo, R. Rahmat, S. Sen,
+  P. Tan, E. Tiras, J. Wetzel, K. Yi, B.A. Barnett, B. Blumenfeld, S.
+  Bolognesi, D. Fehling, A.V. Gritsan, P. Maksimovic, C. Martin, M. Swartz, P.
+  Baringer, A. Bean, G. Benelli, C. Bruner, R.P. Kenny III, M. Malek, M.
+  Murray, D. Noonan, S. Sanders, J. Sekaric, R. Stringer, Q. Wang, J.S. Wood,
+  I. Chakaberia, A. Ivanov, S. Khalil, M. Makouski, Y. Maravin, L.K. Saini, N.
+  Skhirtladze, I. Svintradze, J. Gronberg, D. Lange, F. Rebassoo, D. Wright, A.
+  Baden, A. Belloni, B. Calvert, S.C. Eno, J.A. Gomez, N.J. Hadley, R.G.
+  Kellogg, T. Kolberg, Y. Lu, A.C. Mignerey, K. Pedro, A. Skuja, M.B. Tonjes,
+  S.C. Tonwar, A. Apyan, R. Barbieri, G. Bauer, W. Busza, I.A. Cali, M. Chan,
+  L. Di Matteo, G. Gomez Ceballos, M. Goncharov, D. Gulhan, M. Klute, Y.S. Lai,
+  Y.-J. Lee, A. Levin, P.D. Luckey, T. Ma, C. Paus, D. Ralph, C. Roland, G.
+  Roland, G.S.F. Stephans, K. Sumorok, D. Velicanu, J. Veverka, B. Wyslouch, M.
+  Yang, M. Zanetti, V. Zhukova, B. Dahmes, A. Gude, S.C. Kao, K. Klapoetke, Y.
+  Kubota, J. Mans, N. Pastika, R. Rusack, A. Singovsky, N. Tambe, J. Turkewitz,
+  J.G. Acosta, S. Oliveros, E. Avdeeva, K. Bloom, S. Bose, D.R. Claes, A.
+  Dominguez, R. Gonzalez Suarez, J. Keller, D. Knowlton, I. Kravchenko, J.
+  Lazo-Flores, F. Meier, F. Ratnikov, G.R. Snow, M. Zvada, J. Dolen, A.
+  Godshalk, I. Iashvili, A. Kharchilava, A. Kumar, S. Rappoccio, G. Alverson,
+  E. Barberis, D. Baumgartel, M. Chasco, A. Massironi, D.M. Morse, D. Nash, T.
+  Orimoto, D. Trocino, R.-J. Wang, D. Wood, J. Zhang, K.A. Hahn, A. Kubik, N.
+  Mucia, N. Odell, B. Pollack, A. Pozdnyakov, M. Schmitt, S. Stoynev, K. Sung,
+  M. Velasco, S. Won, A. Brinkerhoff, K.M. Chan, A. Drozdetskiy, M. Hildreth,
+  C. Jessop, D.J. Karmgard, N. Kellams, K. Lannon, S. Lynch, N. Marinelli, Y.
+  Musienko, T. Pearson, M. Planer, R. Ruchti, G. Smith, N. Valls, M. Wayne, M.
+  Wolf, A. Woodard, L. Antonelli, J. Brinson, B. Bylsma, L.S. Durkin, S.
+  Flowers, A. Hart, C. Hill, R. Hughes, K. Kotov, T.Y. Ling, W. Luo, D. Puigh,
+  M. Rodenburg, B.L. Winer, H. Wolfe, H.W. Wulsin, O. Driga, P. Elmer, J.
+  Hardenbrook, P. Hebda, A. Hunt, S.A. Koay, P. Lujan, D. Marlow, T. Medvedeva,
+  M. Mooney, J. Olsen, P. Pirou\'e, X. Quan, H. Saka, D. Stickland, C. Tully,
+  J.S. Werner, A. Zuranski, E. Brownson, S. Malik, H. Mendez, J.E. Ramirez
+  Vargas, V.E. Barnes, D. Benedetti, D. Bortoletto, M. De Mattia, L. Gutay, Z.
+  Hu, M.K. Jha, M. Jones, K. Jung, M. Kress, N. Leonardo, D.H. Miller, N.
+  Neumeister, B.C. Radburn-Smith, X. Shi, I. Shipsey, D. Silvers, A.
+  Svyatkovskiy, F. Wang, W. Xie, L. Xu, J. Zablocki, N. Parashar, J. Stupak, A.
+  Adair, B. Akgun, K.M. Ecklund, F.J.M. Geurts, W. Li, B. Michlin, B.P. Padley,
+  R. Redjimi, J. Roberts, J. Zabel, B. Betchart, A. Bodek, R. Covarelli, P. de
+  Barbaro, R. Demina, Y. Eshaq, T. Ferbel, A. Garcia-Bellido, P. Goldenzweig,
+  J. Han, A. Harel, A. Khukhunaishvili, S. Korjenevski, G. Petrillo, D.
+  Vishnevskiy, R. Ciesielski, L. Demortier, K. Goulianos, C. Mesropian, S.
+  Arora, A. Barker, J.P. Chou, C. Contreras-Campana, E. Contreras-Campana, D.
+  Duggan, D. Ferencek, Y. Gershtein, R. Gray, E. Halkiadakis, D. Hidas, S.
+  Kaplan, A. Lath, S. Panwalkar, M. Park, R. Patel, S. Salur, S. Schnetzer, S.
+  Somalwar, R. Stone, S. Thomas, P. Thomassen, M. Walker, K. Rose, S. Spanier,
+  A. York, O. Bouhali, A. Castaneda Hernandez, R. Eusebi, W. Flanagan, J.
+  Gilmore, T. Kamon, V. Khotilovich, V. Krutelyov, R. Montalvo, I. Osipenkov,
+  Y. Pakhotin, A. Perloff, J. Roe, A. Rose, A. Safonov, I. Suarez, A.
+  Tatarinov, K.A. Ulmer, N. Akchurin, C. Cowden, J. Damgov, C. Dragoiu, P.R.
+  Dudero, J. Faulkner, K. Kovitanggoon, S. Kunori, S.W. Lee, T. Libeiro, I.
+  Volobouev, E. Appelt, A.G. Delannoy, S. Greene, A. Gurrola, W. Johns, C.
+  Maguire, Y. Mao, A. Melo, M. Sharma, P. Sheldon, B. Snook, S. Tuo, J.
+  Velkovska, M.W. Arenton, S. Boutle, B. Cox, B. Francis, J. Goodell, R.
+  Hirosky, A. Ledovskoy, H. Li, C. Lin, C. Neu, J. Wood, C. Clarke, R. Harr,
+  P.E. Karchin, C. Kottachchi Kankanamge Don, P. Lamichhane, J. Sturdy, D.A.
+  Belknap, D. Carlsmith, M. Cepeda, S. Dasu, L. Dodd, S. Duric, E. Friis, R.
+  Hall-Wilton, M. Herndon, A. Herv\'e, P. Klabbers, A. Lanaro, C. Lazaridis, A.
+  Levine, R. Loveless, A. Mohapatra, I. Ojalvo, T. Perry, G.A. Pierro, G.
+  Polese, I. Ross, T. Sarangi, A. Savin, W.H. Smith, D. Taylor, C. Vuosalo, N.
+  Woods, I. Bediaga, J.M. De Miranda, F. Ferreira Rodrigues, A. Gomes, A.
+  Massafferri, A.C. dos Reis, A.B. Rodrigues, S. Amato, K. Carvalho Akiba, L.
+  De Paula, O. Francisco, M. Gandelman, A. Hicheur, J.H. Lopes, D. Martins
+  Tostes, I. Nasteva, J.M. Otalora Goicochea, E. Polycarpo, C. Potterat, M.S.
+  Rangel, V. Salustino Guimaraes, B. Souza De Paula, D. Vieira, L. An, Y. Gao,
+  F. Jing, Y. Li, Z. Yang, X. Yuan, Y. Zhang, L. Zhong, L. Beaucourt, M.
+  Chefdeville, D. Decamp, N. D\'el\'eage, Ph. Ghez, J.-P. Lees, J.F. Marchand,
+  M.-N. Minard, B. Pietrzyk, W. Qian, S. T'Jampens, V. Tisserand, E.
+  Tournefier, Z. Ajaltouni, M. Baalouch, E. Cogneras, O. Deschamps, I. El
+  Rifai, M. Grabalosa G\'andara, P. Henrard, M. Hoballah, R. Lef\`evre, J.
+  Maratas, S. Monteil, V. Niess, P. Perret, C. Adrover, S. Akar, E. Aslanides,
+  J. Cogan, W. Kanso, R. Le Gac, O. Leroy, G. Mancinelli, A. Mord\`a, M.
+  Perrin-Terrin, J. Serrano, A. Tsaregorodtsev, Y. Amhis, S. Barsuk, M.
+  Borsato, O. Kochebina, J. Lefran\c{c}ois, F. Machefert, A. Mart\'in
+  S\'anchez, M. Nicol, P. Robbe, M.-H. Schune, M. Teklishyn, A. Vallier, B.
+  Viaud, G. Wormser, E. Ben-Haim, M. Charles, S. Coquereau, P. David, L. Del
+  Buono, L. Henry, F. Polci, J. Albrecht, T. Brambach, Ch. Cauet, M.
+  Deckenhoff, U. Eitschberger, R. Ekelhof, L. Gavardi, F. Kruse, F. Meier, R.
+  Niet, C.J. Parkinson, M. Schlupp, A. Shires, B. Spaan, S. Swientek, J.
+  Wishahi, O. Aquines Gutierrez, J. Blouw, M. Britsch, M. Fontana, D. Popov, M.
+  Schmelling, D. Volyanskyy, M. Zavertyaev, S. Bachmann, A. Bien, A.
+  Comerma-Montells, M. De Cian, F. Dordei, S. Esen, C. F\"arber, E. Gersabeck,
+  L. Grillo, X. Han, S. Hansmann-Menzemer, A. Jaeger, M. Kolpin, K. Kreplin, G.
+  Krocker, B. Leverington, J. Marks, M. Meissner, M. Neuner, T. Nikodem, P.
+  Seyfert, M. Stahl, S. Stahl, U. Uwer, M. Vesterinen, S. Wandernoth, D.
+  Wiedner, A. Zhelezov, R. McNulty, R. Wallace, W.C. Zhang, A. Palano, A.
+  Carbone, A. Falabella, D. Galli, U. Marconi, N. Moggi, M. Mussini, S.
+  Perazzini, V. Vagnoni, G. Valenti, M. Zangoli, W. Bonivento, S. Cadeddu, A.
+  Cardini, V. Cogoni, A. Contu, A. Lai, B. Liu, G. Manca, R. Oldeman, B.
+  Saitta, C. Vacca, M. Andreotti, W. Baldini, C. Bozzi, R. Calabrese, M. Corvo,
+  M. Fiore, M. Fiorini, E. Luppi, L.L. Pappalardo, I. Shapoval, G. Tellarini,
+  L. Tomassetti, S. Vecchi, L. Anderlini, A. Bizzeti, M. Frosini, G. Graziani,
+  G. Passaleva, M. Veltri, G. Bencivenni, P. Campana, P. De Simone, G.
+  Lanfranchi, M. Palutan, M. Rama, A. Sarti, B. Sciascia, R. Vazquez Gomez, R.
+  Cardinale, F. Fontanelli, S. Gambetta, C. Patrignani, A. Petrolini, A.
+  Pistone, M. Calvi, L. Cassina, C. Gotti, B. Khanji, M. Kucharczyk, C.
+  Matteuzzi, J. Fu, A. Geraci, N. Neri, F. Palombo, S. Amerio, G. Collazuol, S.
+  Gallorini, A. Gianelle, D. Lucchesi, A. Lupato, M. Morandin, M. Rotondo, L.
+  Sestini, G. Simi, R. Stroili, F. Bedeschi, R. Cenci, S. Leo, P. Marino, M.J.
+  Morello, G. Punzi, S. Stracka, J. Walsh, G. Carboni, E. Furfaro, E.
+  Santovetti, A. Satta, A.A. Alves Jr, G. Auriemma, V. Bocci, G. Martellotti,
+  G. Penso, D. Pinci, R. Santacesaria, C. Satriano, A. Sciubba, A. Dziurda, W.
+  Kucewicz, T. Lesiak, B. Rachwal, M. Witek, M. Firlej, T. Fiutowski, M. Idzik,
+  P. Morawski, J. Moron, A. Oblakowska-Mucha, K. Swientek, T. Szumlak, V.
+  Batozskaya, K. Klimaszewski, K. Kurek, M. Szczekowski, A. Ukleja, W.
+  Wislicki, L. Cojocariu, L. Giubega, A. Grecu, F. Maciuc, M. Orlandea, B.
+  Popovici, S. Stoica, M. Straticiuc, G. Alkhazov, N. Bondar, A. Dzyuba, O.
+  Maev, N. Sagidova, Y. Shcheglov, A. Vorobyev, S. Belogurov, I. Belyaev, V.
+  Egorychev, D. Golubkov, T. Kvaratskheliya, I.V. Machikhiliyan, I. Polyakov,
+  D. Savrina, A. Semennikov, A. Zhokhov, A. Berezhnoy, M. Korolev, A. Leflat,
+  N. Nikitin, S. Filippov, E. Gushchin, L. Kravchuk, A. Bondar, S. Eidelman, P.
+  Krokovny, V. Kudryavtsev, L. Shekhtman, V. Vorobyev, A. Artamonov, K. Belous,
+  R. Dzhelyadin, Yu. Guz, A. Novoselov, V. Obraztsov, A. Popov, V. Romanovsky,
+  M. Shapkin, O. Stenyakin, O. Yushchenko, A. Badalov, M. Calvo Gomez, L.
+  Garrido, D. Gascon, R. Graciani Diaz, E. Graug\'es, C. Marin Benito, E.
+  Picatoste Olloqui, V. Rives Molina, H. Ruiz, X. Vilasis-Cardona, B. Adeva, P.
+  Alvarez Cartelle, A. Dosil Su\'arez, V. Fernandez Albor, A. Gallas Torreira,
+  J. Garc\'ia Pardi\~nas, J.A. Hernando Morata, M. Plo Casasus, A. Romero
+  Vidal, J.J. Saborido Silva, B. Sanmartin Sedes, C. Santamarina Rios, P.
+  Vazquez Regueiro, C. V\'azquez Sierra, M. Vieites Diaz, F. Alessio, F.
+  Archilli, C. Barschel, S. Benson, J. Buytaert, D. Campora Perez, L. Castillo
+  Garcia, M. Cattaneo, Ph. Charpentier, X. Cid Vidal, M. Clemencic, J. Closier,
+  V. Coco, P. Collins, G. Corti, B. Couturier, C. D'Ambrosio, F. Dettori, A. Di
+  Canto, H. Dijkstra, P. Durante, M. Ferro-Luzzi, R. Forty, M. Frank, C. Frei,
+  C. Gaspar, V.V. Gligorov, L.A. Granado Cardoso, T. Gys, C. Haen, J. He, T.
+  Head, E. van Herwijnen, R. Jacobsson, D. Johnson, C. Joram, B. Jost, M.
+  Karacson, T.M. Karbach, D. Lacarrere, B. Langhans, R. Lindner, C. Linn, S.
+  Lohn, A. Mapelli, R. Matev, Z. Mathe, S. Neubert, N. Neufeld, A. Otto, J.
+  Panman, M. Pepe Altarelli, N. Rauschmayr, M. Rihl, S. Roiser, T. Ruf, H.
+  Schindler, B. Schmidt, A. Schopper, R. Schwemmer, S. Sridharan, F. Stagni,
+  V.K. Subbiah, F. Teubert, E. Thomas, D. Tonelli, A. Trisovic, M. Ubeda
+  Garcia, J. Wicht, K. Wyllie, V. Battista, A. Bay, F. Blanc, M. Dorigo, F.
+  Dupertuis, C. Fitzpatrick, S. Gian\`i, G. Haefeli, P. Jaton, C.
+  Khurewathanakul, I. Komarov, V.N. La Thi, N. Lopez-March, R. M\"arki, M.
+  Martinelli, B. Muster, T. Nakada, A.D. Nguyen, T.D. Nguyen, C. Nguyen-Mau, J.
+  Prisciandaro, A. Puig Navarro, B. Rakotomiaramanana, J. Rouvinet, O.
+  Schneider, F. Soomro, P. Szczypka, M. Tobin, S. Tourneur, M.T. Tran, G.
+  Veneziano, Z. Xu, J. Anderson, R. Bernet, E. Bowen, A. Bursche, N.
+  Chiapolini, M. Chrzaszcz, Ch. Elsasser, E. Graverini, F. Lionetto, P. Lowdon,
+  K. M\"uller, N. Serra, O. Steinkamp, B. Storaci, U. Straumann, M. Tresch, A.
+  Vollhardt, R. Aaij, S. Ali, M. van Beuzekom, P.N.Y. David, K. De Bruyn, C.
+  Farinelli, V. Heijne, W. Hulsbergen, E. Jans, P. Koppenburg, A. Kozlinskiy,
+  J. van Leerdam, M. Merk, S. Oggero, A. Pellegrino, H. Snoek, J. van Tilburg,
+  P. Tsopelas, N. Tuning, J.A. de Vries, T. Ketel, R.F. Koopman, R.W. Lambert,
+  D. Martinez Santos, G. Raven, M. Schiller, V. Syropoulos, S. Tolk, A.
+  Dovbnya, S. Kandybei, I. Raniuk, O. Okhrimenko, V. Pugatch, S. Bifani, N.
+  Farley, P. Griffith, I.R. Kenyon, C. Lazzeroni, A. Mazurov, J. McCarthy, L.
+  Pescatore, N.K. Watson, M. Williams, M. Adinolfi, J. Benton, N.H. Brook, A.
+  Cook, M. Coombes, J. Dalseno, T. Hampson, S.T. Harnew, P. Naik, E. Price, C.
+  Prouve, J.H. Rademacker, S. Richards, D.M. Saunders, N. Skidmore, D. Souza,
+  J.J. Velthuis, D. Voong, M.-O. Bettler, W. Barter, H.V. Cliff, H.-M. Evans,
+  J. Garra Tico, V. Gibson, S. Gregson, S.C. Haines, C.R. Jones, M. Sirendi, J.
+  Smith, D.R. Ward, S.A. Wotton, S. Wright, J.J. Back, T. Blake, D.C. Craik,
+  A.C. Crocombe, D. Dossett, T. Gershon, M. Kreps, C. Langenbruch, T. Latham,
+  D.P. O'Hanlon, T. Pila\v{r}, A. Poluektov, M.M. Reid, R. Silva Coutinho, C.
+  Wallace, M. Whitehead, S. Easo, R. Nandakumar, A. Papanestis, S. Ricciardi,
+  F.F. Wilson, L. Carson, P.E.L. Clarke, G.A. Cowan, S. Eisenhardt, D.
+  Ferguson, D. Lambert, H. Luo, A.-B. Morris, F. Muheim, M. Needham, S.
+  Playfer, M. Alexander, J. Beddow, C.-T. Dean, L. Eklund, D. Hynds, S.
+  Karodia, I. Longstaff, S. Ogilvy, M. Pappagallo, P. Sail, I. Skillicorn,
+  F.J.P. Soler, P. Spradlin, A. Affolder, T.J.V. Bowcock, H. Brown, G. Casse,
+  S. Donleavy, K. Dreimanis, S. Farry, R. Fay, K. Hennessy, D. Hutchcroft, M.
+  Liles, B. McSkelly, G.D. Patel, J.D. Price, A. Pritchard, K. Rinnert, T.
+  Shears, N.A. Smith, G. Ciezarek, S. Cunliffe, R. Currie, U. Egede, P. Fol, A.
+  Golutvin, S. Hall, M. McCann, P. Owen, M. Patel, K. Petridis, F. Redi, I.
+  Sepp, E. Smith, W. Sutcliffe, D. Websdale, R.B. Appleby, R.J. Barlow, T.
+  Bird, P.M. Bj{\o}rnstad, S. Borghi, D. Brett, J. Brodzicka, L. Capriotti, S.
+  Chen, S. De Capua, G. Dujany, M. Gersabeck, J. Harrison, C. Hombach, S.
+  Klaver, G. Lafferty, A. McNab, C. Parkes, A. Pearce, S. Reichert, E.
+  Rodrigues, P. Rodriguez Perez, M. Smith, S.-F. Cheung, D. Derkach, T. Evans,
+  R. Gauld, E. Greening, N. Harnew, D. Hill, P. Hunt, N. Hussain, J. Jalocha,
+  M. John, O. Lupton, S. Malde, E. Smith, S. Stevenson, C. Thomas, S.
+  Topp-Joergensen, N. Torr, G. Wilkinson, I. Counts, P. Ilten, M. Williams, R.
+  Andreassen, A. Davis, W. De Silva, B. Meadows, M.D. Sokoloff, L. Sun, J.
+  Todd, J.E. Andrews, B. Hamilton, A. Jawahery, J. Wimberley, M. Artuso, S.
+  Blusk, A. Borgia, T. Britton, S. Ely, P. Gandini, J. Garofoli, B. Gui, C.
+  Hadjivasiliou, N. Jurik, M. Kelsey, R. Mountain, B.K. Pal, T. Skwarnicki, S.
+  Stone, J. Wang, Z. Xing, L. Zhang, C. Baesso, M. Cruz Torres, C. G\"obel, J.
+  Molina Rodriguez, Y. Xie, D.A. Milanes, O. Gr\"unberg, M. He{\ss}, C.
+  Vo{\ss}, R. Waldi, T. Likhomanenko, A. Malinin, V. Shevchenko, A.
+  Ustyuzhanin, F. Martinez Vidal, A. Oyanguren, P. Ruiz Valls, C. Sanchez
+  Mayordomo, C.J.G. Onderwater, H.W. Wilschut, E. Pesen
+Categories: hep-ex hep-ph
+Comments: Submitted to Nature. Correspondence should be addressed to x
+Report-no: CERN-PH-EP-2014-220, CMS-BPH-13-007, LHCb-PAPER-2014-049
+Journal-ref: Nature 522, 68-72 (04 June 2015)
+DOI: 10.1038/nature14474
+License: http://creativecommons.org/licenses/by/3.0/
+\\
+  A joint measurement is presented of the branching fractions
+$B^0_s\to\mu^+\mu^-$ and $B^0\to\mu^+\mu^-$ in proton-proton collisions at the
+LHC by the CMS and LHCb experiments. The data samples were collected in 2011 at
+a centre-of-mass energy of 7 TeV, and in 2012 at 8 TeV. The combined analysis
+produces the first observation of the $B^0_s\to\mu^+\mu^-$ decay, with a
+statistical significance exceeding six standard deviations, and the best
+measurement of its branching fraction so far, and three standard deviation
+evidence for the $B^0\to\mu^+\mu^-$ decay. The measurements are statistically
+compatible with SM predictions and impose stringent constraints on several
+theories beyond the SM.
+\\

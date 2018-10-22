@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0026
+From: Robert P. C. de Marrais <osm1DVhDPv@j1ea.sqL.lef>
+Date: Sat, 31 Mar 2007 12:24:06 GMT   (28kb)
+Date (revised v2): Sun, 8 Apr 2007 14:07:19 GMT   (28kb)
+Date (revised v3): Thu, 22 Nov 2007 01:13:37 GMT   (33kb)
+
+Title: Placeholder Substructures II: Meta-Fractals, Made of Box-Kites, Fill
+  Infinite-Dimensional Skies
+Authors: Robert P. C. de Marrais
+Categories: math.RA
+Comments: 31 pp. Second of 3-part "theorem/proof" exposition of 78-slide
+  Powerpoint from Wolfram Science's NKS 2006, available at
+  http://wolframscience.com/conference/2006/presentations/materials/demarrais.ppt
+  [v2: small fixes][v3: Added new Appendix B and small number of corrections
+  (pp. 7, 14, 20) RE: 2nd type of box-kite flow pattern.]
+MSC-class: 17D99 (Primary), 68Q80 (Secondary)
+\\
+  Zero-divisors (ZDs) derived by Cayley-Dickson Process (CDP) from
+N-dimensional hypercomplex numbers (N a power of 2, at least 4) can represent
+singularities and, as N approaches infinite, fractals -- and thereby,scale-free
+networks. Any integer greater than 8 and not a power of 2 generates a
+meta-fractal or "Sky" when it is interpreted as the "strut constant" (S) of an
+ensemble of octahedral vertex figures called "Box-Kites" (the fundamental
+building blocks of ZDs). Remarkably simple bit-manipulation rules or "recipes"
+provide tools for transforming one fractal genus into others within the context
+of Wolfram's Class 4 complexity.
+\\

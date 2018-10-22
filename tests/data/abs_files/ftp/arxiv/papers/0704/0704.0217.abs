@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0217
+From: Wiroonsak Santipach <uJLrqZA9q.I@Vz.oJ.gx>
+Date: Mon, 2 Apr 2007 15:35:24 GMT   (115kb)
+Date (revised v2): Tue, 17 Feb 2009 03:49:20 GMT   (753kb)
+
+Title: Capacity of a Multiple-Antenna Fading Channel with a Quantized Precoding
+  Matrix
+Authors: Wiroonsak Santipach and Michael L. Honig
+Categories: cs.IT math.IT
+Journal-ref: IEEE Trans. Inf. Theory, vol. 55, no. 3, pp. 1218--1234, March
+  2009
+DOI: 10.1109/TIT.2008.2011437
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Given a multiple-input multiple-output (MIMO) channel, feedback from the
+receiver can be used to specify a transmit precoding matrix, which selectively
+activates the strongest channel modes. Here we analyze the performance of
+Random Vector Quantization (RVQ), in which the precoding matrix is selected
+from a random codebook containing independent, isotropically distributed
+entries. We assume that channel elements are i.i.d. and known to the receiver,
+which relays the optimal (rate-maximizing) precoder codebook index to the
+transmitter using B bits. We first derive the large system capacity of
+beamforming (rank-one precoding matrix) as a function of B, where large system
+refers to the limit as B and the number of transmit and receive antennas all go
+to infinity with fixed ratios. With beamforming RVQ is asymptotically optimal,
+i.e., no other quantization scheme can achieve a larger asymptotic rate. The
+performance of RVQ is also compared with that of a simpler reduced-rank scalar
+quantization scheme in which the beamformer is constrained to lie in a random
+subspace. We subsequently consider a precoding matrix with arbitrary rank, and
+approximate the asymptotic RVQ performance with optimal and linear receivers
+(matched filter and Minimum Mean Squared Error (MMSE)). Numerical examples show
+that these approximations accurately predict the performance of finite-size
+systems of interest. Given a target spectral efficiency, numerical examples
+show that the amount of feedback required by the linear MMSE receiver is only
+slightly more than that required by the optimal receiver, whereas the matched
+filter can require significantly more feedback.
+\\

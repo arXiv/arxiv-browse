@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0970
+From: Mark Wardle <yYlRml@VTDB0yL.mO.EMZ.bc>
+Date: Sat, 7 Apr 2007 04:41:23 GMT   (207kb,D)
+Date (revised v2): Wed, 27 Jun 2007 09:05:01 GMT   (276kb,D)
+Date (revised v3): Wed, 15 Aug 2007 09:20:21 GMT   (277kb,D)
+
+Title: Magnetic fields in protoplanetary disks
+Authors: Mark Wardle (Macquarie University)
+Categories: astro-ph
+Comments: 11 pages, 11 figs, aastex.cls. Accepted for publication in
+  Astrophysics & Space Science. v3 corrects bibliography
+Journal-ref: Astrophys.Space Sci.311:35-45,2007
+DOI: 10.1007/s10509-007-9575-8
+\\
+  Magnetic fields likely play a key role in the dynamics and evolution of
+protoplanetary discs. They have the potential to efficiently transport angular
+momentum by MHD turbulence or via the magnetocentrifugal acceleration of
+outflows from the disk surface, and magnetically-driven mixing has implications
+for disk chemistry and evolution of the grain population. However, the weak
+ionisation of protoplanetary discs means that magnetic fields may not be able
+to effectively couple to the matter. I present calculations of the ionisation
+equilibrium and magnetic diffusivity as a function of height from the disk
+midplane at radii of 1 and 5 AU. Dust grains tend to suppress magnetic coupling
+by soaking up electrons and ions from the gas phase and reducing the
+conductivity of the gas by many orders of magnitude. However, once grains have
+grown to a few microns in size their effect starts to wane and magnetic fields
+can begin to couple to the gas even at the disk midplane. Because ions are
+generally decoupled from the magnetic field by neutral collisions while
+electrons are not, the Hall effect tends to dominate the diffusion of the
+magnetic field when it is able to partially couple to the gas.
+  For a standard population of 0.1 micron grains the active surface layers have
+a combined column of about 2 g/cm^2 at 1 AU; by the time grains have aggregated
+to 3 microns the active surface density is 80 g/cm^2. In the absence of grains,
+x-rays maintain magnetic coupling to 10% of the disk material at 1 AU (150
+g/cm^2). At 5 AU the entire disk thickness becomes active once grains have
+aggregated to 1 micron in size.
+\\

@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0688
+From: Lionel Levine <B8KcXi@32GQ.iJvRxHul.kJz>
+Date: Thu, 5 Apr 2007 08:09:21 GMT   (523kb,D)
+Date (revised v2): Fri, 11 May 2007 00:03:18 GMT   (771kb,D)
+Date (revised v3): Thu, 27 Sep 2007 23:24:01 GMT   (772kb,D)
+Date (revised v4): Wed, 28 Nov 2007 23:41:46 GMT   (773kb,D)
+Date (revised v5): Tue, 14 Oct 2008 19:43:07 GMT   (774kb,D)
+
+Title: Strong Spherical Asymptotics for Rotor-Router Aggregation and the
+  Divisible Sandpile
+Authors: Lionel Levine and Yuval Peres
+Categories: math.PR cond-mat.stat-mech math-ph math.CO math.MP
+Comments: [v3] Added Theorem 4.1, which generalizes Theorem 1.4 for the abelian
+  sandpile. [v4] Added references and improved exposition in sections 2 and 4.
+  [v5] Final version, to appear in Potential Analysis
+MSC-class: 60G50 (Primary); 35R35 (Secondary)
+Journal-ref: Potential Analysis 30, no. 1 (Jan. 2009), 1--27. See
+  arXiv:0901.3805 for a correction to the proof of the outer bound of Theorem
+  4.1.
+DOI: 10.1007/s11118-008-9104-6
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The rotor-router model is a deterministic analogue of random walk. It can be
+used to define a deterministic growth model analogous to internal DLA. We prove
+that the asymptotic shape of this model is a Euclidean ball, in a sense which
+is stronger than our earlier work. For the shape consisting of $n=\omega_d r^d$
+sites, where $\omega_d$ is the volume of the unit ball in $\R^d$, we show that
+the inradius of the set of occupied sites is at least $r-O(\log r)$, while the
+outradius is at most $r+O(r^\alpha)$ for any $\alpha > 1-1/d$. For a related
+model, the divisible sandpile, we show that the domain of occupied sites is a
+Euclidean ball with error in the radius a constant independent of the total
+mass. For the classical abelian sandpile model in two dimensions, with $n=\pi
+r^2$ particles, we show that the inradius is at least $r/\sqrt{3}$, and the
+outradius is at most $(r+o(r))/\sqrt{2}$. This improves on bounds of Le Borgne
+and Rossin. Similar bounds apply in higher dimensions.
+\\

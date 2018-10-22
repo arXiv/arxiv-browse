@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0802
+From: Caleb Lo <Sbf@AcF.Svxn9w.G7p>
+Date: Thu, 5 Apr 2007 20:37:44 GMT   (56kb)
+
+Title: Hybrid-ARQ in Multihop Networks with Opportunistic Relay Selection
+Authors: Caleb K. Lo, Robert W. Heath, Jr. and Sriram Vishwanath
+Categories: cs.IT math.IT
+Comments: 4 pages, 5 figures, to appear in Proceedings of the 2007
+  International Conference on Acoustics, Speech, and Signal Processing in
+  Honolulu, HI
+\\
+  This paper develops a contention-based opportunistic feedback technique
+towards relay selection in a dense wireless network. This technique enables the
+forwarding of additional parity information from the selected relay to the
+destination. For a given network, the effects of varying key parameters such as
+the feedback probability are presented and discussed. A primary advantage of
+the proposed technique is that relay selection can be performed in a
+distributed way. Simulation results find its performance to closely match that
+of centralized schemes that utilize GPS information, unlike the proposed
+method. The proposed relay selection method is also found to achieve throughput
+gains over a point-to-point transmission strategy.
+\\

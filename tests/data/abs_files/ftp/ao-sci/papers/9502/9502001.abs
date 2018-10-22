@@ -1,0 +1,42 @@
+------------------------------------------------------------------------------
+\\
+arXiv:ao-sci/9502001
+From: Stephen Griffies <XUO@TriX.STF>
+Date: Wed, 8 Feb 1995 20:23:11 GMT   (0kb,I)
+Date (revised v2): Wed, 8 Feb 1995 20:59:00 GMT   (0kb,I)
+Date (revised v3): Thu, 9 Feb 1995 17:37:10 GMT   (0kb,I)
+Date (revised v4): Fri, 10 Mar 1995 22:40:57 GMT   (69kb)
+
+Title: North Atlantic thermohaline circulation predictability in a coupled
+  ocean-atmosphere model
+Authors: Stephen M. Griffies and Kirk Bryan
+Categories: ao-sci physics.ao-ph
+Comments: Submitted to Journal of Climate. Latex source file. Figures are
+  included in an uuencoded file; see top of figures for uncompressing
+  information. Revisions are merely due to changes in e-print submission
+  format; paper's content has not changed. User may wish to obtain postscript
+  version of full paper from
+  http://www.gfdl.gov/~smg/pointers/geo_physics_abstracts/GB.html
+\\
+ Predictability of the North Atlantic thermohaline circulation (THC)
+variability as simulated in the GFDL coupled ocean-atmosphere general
+circulation model is established for a set of ensemble experiments. The
+ensembles consist of identical oceanic initial conditions underneath a model
+atmosphere chosen randomly from the model climatology. This experimental design
+is based on the separation in time scales present in the model which motivates
+the assumption that the predictability deduced from these ensembles provides an
+upper limit to the model's THC predictability. The climatology is taken from a
+multi-century model integration whose THC variability has power concentrated at
+the 40-60 year time scale. A linear stochastic perspective is shown to be
+generally consistent with the ensemble statistics. The linear theory suggests a
+natural measure of ensemble predictability as the time at which the ensemble
+variance becomes a subjectively defined fraction (0.5 used here) of the
+climatological variance. It is furthermore of interest to distinguish
+predictability of the rapidly de-correlating portion of the model's THC from
+the longer time correlated portion. The rapidly de-correlating portion shows
+predictability for $\approx 1.5$ years. The slower portion shows predictability
+for $\approx 5-7$ years. The linear stochastic framework provides for the
+straightforward construction of an optimal forecast of the model's THC
+variability and an understanding of why the optimal forecast is useless beyond
+a particular limit.
+\\

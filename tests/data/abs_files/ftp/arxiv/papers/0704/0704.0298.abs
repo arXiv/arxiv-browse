@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0298
+From: Sergiy Torba M. <D9syGY.3U5Pk@wDkIF.Etu>
+Date: Tue, 3 Apr 2007 19:01:44 GMT   (13kb)
+Date (revised v2): Mon, 23 Apr 2007 13:04:25 GMT   (13kb)
+Date (revised v3): Tue, 23 Sep 2008 21:26:17 GMT   (13kb)
+
+Title: Direct Theorems in the Theory of Approximation of the Banach Space
+  Vectors by Entire Vectors of Exponential Type
+Authors: Ya. Grushka and S. Torba
+Categories: math.FA math.SP
+Comments: 13 pages, typos corrected
+MSC-class: 41A25; 41A17; 41A65
+Journal-ref: Grushka Ya. and Torba S., "Direct Theorems in the Theory of
+  Approximation of Banach Space Vectors by Exponential Type Entire Vectors",
+  Methods Funct. Anal. Topology. 11 (2007), no. 3, 267-278
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  For an arbitrary operator A on a Banach space X which is a generator of
+C_0-group with certain growth condition at the infinity, the direct theorems on
+connection between the smoothness degree of a vector $x\in X$ with respect to
+the operator A, the order of convergence to zero of the best approximation of x
+by exponential type entire vectors for the operator A, and the k-module of
+continuity are given. Obtained results allows to acquire Jackson-type
+inequalities in many classic spaces of periodic functions and weighted $L_p$
+spaces.
+\\

@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509007
+From: Jens Marklof <U.TeYenYj@L84r.Sw.3U>
+Date: Mon, 5 Sep 2005 14:53:42 GMT   (47kb)
+
+Title: Multidimensional continued fractions, dynamical renormalization and KAM
+  theory
+Authors: K Khanin, J Lopes-Dias, J Marklof
+Categories: math-ph math.DS math.MP
+Comments: 51 pages
+MSC-class: 70H08, 11J70
+Journal-ref: Comm Math Phys 270 (2007) 197-231
+\\
+  The disadvantage of `traditional' multidimensional continued fraction
+algorithms is that it is not known whether they provide simultaneous rational
+approximations for generic vectors. Following ideas of Dani, Lagarias and
+Kleinbock-Margulis we describe a simple algorithm based on the dynamics of
+flows on the homogeneous space SL(2,Z)\SL(2,R) (the space of lattices of
+covolume one) that indeed yields best possible approximations to any irrational
+vector. The algorithm is ideally suited for a number of dynamical applications
+that involve small divisor problems. We explicitely construct renormalization
+schemes for (a) the linearization of vector fields on tori of arbitrary
+dimension and (b) the construction of invariant tori for Hamiltonian systems.
+\\

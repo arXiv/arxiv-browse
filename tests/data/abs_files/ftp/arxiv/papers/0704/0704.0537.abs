@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0537
+From: J\'er\'emy Blanc <L9UZdD@aPMW.1fQ1d.Mx>
+Date: Wed, 4 Apr 2007 10:08:33 GMT   (50kb)
+Date (revised v2): Sun, 21 Sep 2008 08:52:07 GMT   (42kb)
+
+Title: Linearisation of finite abelian subgroups of the Cremona group of the
+  plane
+Authors: J\'er\'emy Blanc
+Categories: math.AG
+Comments: 41 pages, 2 figures, is a part of the author's PHD whose full text is
+  available at math.AG/0610368. To appear in Groups Geom. Dyn
+MSC-class: 14E07, 14E05, 14J26
+Journal-ref: Groups Geom. Dyn. 3 (2009), no. 2, 215-266
+DOI: 10.4171/GGD/55
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  This article gives the proof of results announced in [J. Blanc, Finite
+Abelian subgroups of the Cremona group of the plane, C.R. Acad. Sci. Paris,
+S\'er. I 344 (2007), 21-26.] and some description of automorphisms of rational
+surfaces.
+  Given a finite Abelian subgroup of the Cremona group of the plane, we provide
+a way to decide whether it is birationally conjugate to a group of
+automorphisms of a minimal surface.
+  In particular, we prove that a finite cyclic group of birational
+transformations of the plane is linearisable if and only if none of its
+non-trivial elements fix a curve of positive genus. For finite Abelian groups,
+there exists only one surprising exception, a group isomorphic to Z/2ZxZ/4Z,
+whose non-trivial elements do not fix a curve of positive genus but which is
+not conjugate to a group of automorphisms of a minimal rational surface.
+  We also give some descriptions of automorphisms (not necessarily of finite
+order) of del Pezzo surfaces and conic bundles.
+\\

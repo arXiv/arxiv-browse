@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0648
+From: Kaushik Majumdar <TuH3R3k@tjnx.09i.XI>
+Date: Wed, 4 Apr 2007 20:04:02 GMT   (214kb)
+
+Title: Behavioral response to strong aversive stimuli: A neurodynamical model
+Authors: Kaushik Majumdar
+Categories: q-bio.NC
+Comments: Submitted to journal
+\\
+  In this paper a theoretical model of functioning of a neural circuit during a
+behavioral response has been proposed. A neural circuit can be thought of as a
+directed multigraph whose each vertex is a neuron and each edge is a synapse.
+It has been assumed in this paper that the behavior of such circuits is
+manifested through the collective behavior of neurons belonging to that
+circuit. Behavioral information of each neuron is contained in the coefficients
+of the fast Fourier transform (FFT) over the output spike train. Those
+coefficients form a vector in a multidimensional vector space. Behavioral
+dynamics of a neuronal network in response to strong aversive stimuli has been
+studied in a vector space in which a suitable pseudometric has been defined.
+The neurodynamical model of network behavior has been formulated in terms of
+existing memory, synaptic plasticity and feelings. The model has an analogy in
+classical electrostatics, by which the notion of force and potential energy has
+been introduced. Since the model takes input from each neuron in a network and
+produces a behavior as the output, it would be extremely difficult or may even
+be impossible to implement. But with the help of the model a possible
+explanation for an hitherto unexplained neurological observation in human brain
+has been offered. The model is compatible with a recent model of sequential
+behavioral dynamics. The model is based on electrophysiology, but its relevance
+to hemodynamics has been outlined.
+\\

@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509028
+From: Roderich Tumulka <37lRKxW@jX.MR76coNkhU.5RM-eBNRdvXl.1b>
+Date: Tue, 13 Sep 2005 19:51:34 GMT   (15kb)
+
+Title: Smoothness of Wave Functions in Thermal Equilibrium
+Authors: Roderich Tumulka, Nino Zanghi
+Categories: math-ph math.MP quant-ph
+Comments: 16 pages LaTeX, no figures
+MSC-class: 82B10; 60G15; 60G17
+Journal-ref: J. Math. Phys. 46 (2005) 112104
+DOI: 10.1063/1.2109767
+\\
+  We consider the thermal equilibrium distribution at inverse temperature
+$\beta$, or canonical ensemble, of the wave function $\Psi$ of a quantum
+system. Since $L^2$ spaces contain more nondifferentiable than differentiable
+functions, and since the thermal equilibrium distribution is very spread-out,
+one might expect that $\Psi$ has probability zero to be differentiable.
+However, we show that for relevant Hamiltonians the contrary is the case: with
+probability one, $\Psi$ is infinitely often differentiable and even analytic.
+We also show that with probability one, $\Psi$ lies in the domain of the
+Hamiltonian.
+\\

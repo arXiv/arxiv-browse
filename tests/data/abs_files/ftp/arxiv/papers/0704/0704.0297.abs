@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0297
+From: Sung-Chul Yoon <pO5EWz@DMtN9gr.AXl.XR>
+Date: Tue, 3 Apr 2007 01:50:26 GMT   (844kb)
+Date (revised v2): Wed, 4 Apr 2007 17:28:44 GMT   (845kb)
+
+Title: Remnant evolution after a carbon-oxygen white dwarf merger
+Authors: Sung-Chul Yoon, Philipp Podsiadlowski & Stephan Rosswog
+Categories: astro-ph
+Comments: 15 pages, 15 figures, 3 tables, submitted to MNRAS (Low resolution
+  version; a high resolution version can be found at:
+  http://www.astro.uva.nl/~scyoon/papers/wdmerger.pdf)
+DOI: 10.1111/j.1365-2966.2007.12161.x
+\\
+  We systematically explore the evolution of the merger of two carbon-oxygen
+(CO) white dwarfs. The dynamical evolution of a 0.9 Msun + 0.6 Msun CO white
+dwarf merger is followed by a three-dimensional SPH simulation. We use an
+elaborate prescription in which artificial viscosity is essentially absent,
+unless a shock is detected, and a much larger number of SPH particles than
+earlier calculations. Based on this simulation, we suggest that the central
+region of the merger remnant can, once it has reached quasi-static equilibrium,
+be approximated as a differentially rotating CO star, which consists of a
+slowly rotating cold core and a rapidly rotating hot envelope surrounded by a
+centrifugally supported disc. We construct a model of the CO remnant that
+mimics the results of the SPH simulation using a one-dimensional hydrodynamic
+stellar evolution code and then follow its secular evolution. The stellar
+evolution models indicate that the growth of the cold core is controlled by
+neutrino cooling at the interface between the core and the hot envelope, and
+that carbon ignition in the envelope can be avoided despite high effective
+accretion rates. This result suggests that the assumption of forced accretion
+of cold matter that was adopted in previous studies of the evolution of double
+CO white dwarf merger remnants may not be appropriate. Our results imply that
+at least some products of double CO white dwarfs merger may be considered good
+candidates for the progenitors of Type Ia supernovae. In this case, the
+characteristic time delay between the initial dynamical merger and the eventual
+explosion would be ~10^5 yr. (Abridged).
+\\

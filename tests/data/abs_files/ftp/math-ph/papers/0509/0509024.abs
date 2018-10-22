@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509024
+From: Elena Kartashova <y6mLU.LYFw@3lp.iy>
+Date: Mon, 12 Sep 2005 21:50:40 GMT   (18kb)
+
+Title: Computable Integrability. Chapter 2: Riccati equation
+Authors: E. Kartashova, A. Shabat
+Categories: math-ph math.MP
+Comments: This text is preliminary version of Chapter 2 of the ook "Computable
+  Integrability", it consists of 31 pages
+\\
+  In this Chapter, using Riccati equation as our main example, we tried to
+demonstrate at least some of the ideas and notions introduced in Chapter 1 -
+integrability in quadratures, conservation laws, etc. Regarding transformation
+group and singularities of solutions for RE, we constructed some equivalent
+forms of Riccati equation. We also compared three different approaches to the
+solutions of Riccati equation and its equivalent forms. The classical form of
+RE allowed us to construct easily asymptotic solutions represented by formal
+series. Linear equation of the second order turned out to be more convenient to
+describe finite-gap potentials for exact solitonic solutions which would be a
+much more complicated task for a RE itself while generalization of soliton-like
+potentials to finite-gap potentials demanded modified Schwarzian equation.
+\\

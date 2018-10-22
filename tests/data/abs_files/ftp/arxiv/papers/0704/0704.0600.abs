@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0600
+From: Alexander Fish <5xMnr@qSKt.Osul-xQpil.6Aa>
+Date: Wed, 4 Apr 2007 15:57:06 GMT   (28kb)
+Date (revised v2): Tue, 10 Nov 2009 05:14:16 GMT   (27kb)
+
+Title: Solvability of linear equations within weak mixing sets
+Authors: Alexander Fish
+Categories: math.CO math.DS
+Comments: 30 pages, to appear in Israel Journal of Mathematics
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We introduce a new class of "random" subsets of natural numbers, WM sets.
+This class contains normal sets (sets whose characteristic function is a normal
+binary sequence). We establish necessary and sufficient conditions for
+solvability of systems of linear equations within every WM set and within every
+normal set. We also show that partition-regular system of linear equations with
+integer coefficients is solvable in any WM set.
+\\

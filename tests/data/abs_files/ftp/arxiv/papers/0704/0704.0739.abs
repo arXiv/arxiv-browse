@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0739
+From: Lucas Gallindo <NA1lIms2u@2Jisq.jI1>
+Date: Thu, 5 Apr 2007 15:10:16 GMT   (9kb,D)
+Date (revised v2): Wed, 11 Apr 2007 16:10:01 GMT   (9kb,D)
+
+Title: Computation of Power Loss in Likelihood Ratio Tests for Probability
+  Densities Extended by Lehmann Alternatives
+Authors: Lucas Gallindo Martins Soares
+Categories: math.ST math.PR stat.ME stat.TH
+Comments: 6 pages, one figure; Corrected minor typographic errors (pay special
+  attention to one in equation 4)
+MSC-class: 62B10;62F03;62E10
+\\
+  We compute the loss of power in likelihood ratio tests when we test the
+original parameter of a probability density extended by the first Lehmann
+alternative.
+\\

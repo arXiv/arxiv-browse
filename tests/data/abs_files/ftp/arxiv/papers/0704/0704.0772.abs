@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0772
+From: Sebastien Zimmermann <4nGd4A1iw.GINwbuqSAx@Ue-zqPC.MK>
+Date: Thu, 5 Apr 2007 18:08:10 GMT   (42kb)
+
+Title: Stability of a colocated finite volume scheme for the incompressible
+  Navier-Stokes equations
+Authors: Sebastien Zimmermann
+Categories: math.NA
+Comments: preprint; 18 pages; no figures
+MSC-class: 76M12; 76B99
+\\
+  We introduce a finite volume scheme for the two-dimensional incompressible
+Navier-Stokes equations. We use a triangular mesh. The unknowns for the
+velocity and pressure are both piecewise constant (colocated scheme). We use a
+projection (fractional-step) method to deal with the incompressibility
+constraint. We prove that the differential operators in the Navier-Stokes
+equations and their discrete counterparts share similar properties. In
+particular, we state an inf-sup (Babuska-Brezzi) condition. We infer from it
+the stability of the scheme.
+\\

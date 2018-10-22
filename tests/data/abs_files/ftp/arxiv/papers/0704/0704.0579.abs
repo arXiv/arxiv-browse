@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0579
+From: Massimo Ramella <FplWLVS@VpHq.cPXo.do>
+Date: Wed, 4 Apr 2007 14:07:45 GMT   (937kb)
+
+Title: Substructures in WINGS clusters
+Authors: M. Ramella, A. Biviano, A. Pisani, J. Varela, D. Bettoni, W.J. Couch,
+  M. D'Onofrio, A. Dressler, G. Fasano, P. Kjaergaard, M. Moles, E. Pignatelli,
+  B.M. Poggianti
+Categories: astro-ph
+Comments: A&A accepted - figure 6 is available from
+  http://adlibitum.oats.inaf.it/ramella/WINGSfigs
+DOI: 10.1051/0004-6361:20077245
+\\
+  We search for and characterize substructures in the projected distribution of
+galaxies observed in the wide field CCD images of the 77 nearby clusters of the
+WIde-field Nearby Galaxy-cluster Survey (WINGS). This sample is complete in
+X-ray flux in the redshift range 0.04<z<0.07. We search for substructures in
+WINGS clusters with DEDICA, an adaptive-kernel procedure. We test the procedure
+on Monte-Carlo simulations of the observed frames and determine the reliability
+for the detected structures. DEDICA identifies at least one reliable structure
+in the field of 55 clusters. 40 of these clusters have a total of 69
+substructures at the same redshift of the cluster (redshift estimates of
+substructures are from color-magnitude diagrams). The fraction of clusters with
+subclusters (73%) is higher than in most studies. The presence of subclusters
+affects the relative luminosities of the brightest cluster galaxies (BCGs).
+Down to L ~ 10^11.2 L_Sun, our observed differential distribution of subcluster
+luminosities is consistent with the theoretical prediction of the differential
+mass function of substructures in cosmological simulations.
+\\

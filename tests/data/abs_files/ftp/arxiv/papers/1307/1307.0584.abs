@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1307.0584
+From: Shankar C. Venkataramani <d2HPmbq@afaA.h9uuTUU.oqv>
+Date: Tue, 2 Jul 2013 03:44:43 GMT   (486kb,D)
+
+Title: Using Data to Tune Nearshore Dynamics Models: A Bayesian Approach with
+  Parametric Likelihood
+Authors: Nusret Balci, Juan M. Restrepo and Shankar C. Venkataramani
+Categories: physics.data-an math.ST physics.ao-ph stat.TH
+Comments: 18 pages, 7 figures, Submitted Ocean Modeling
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We propose a modification of a maximum likelihood procedure for tuning
+parameter values in models, based upon the comparison of their output to field
+data. Our methodology, which uses polynomial approximations of the sample space
+to increase the computational efficiency, differs from similar Bayesian
+estimation frameworks in the use of an alternative likelihood distribution, is
+shown to better address problems in which covariance information is lacking,
+than its more conventional counterpart.
+  Lack of covariance information is a frequent challenge in large-scale
+geophysical estimation. This is the case in the geophysical problem considered
+here. We use a nearshore model for long shore currents and observational data
+of the same to show the contrast between both maximum likelihood methodologies.
+  Beyond a methodological comparison, this study gives estimates of parameter
+values for the bottom drag and surface forcing that make the particular model
+most consistent with data; furthermore, we also derive sensitivity estimates
+that provide useful insights regarding the estimation procedure as well as of
+the model itself.
+\\

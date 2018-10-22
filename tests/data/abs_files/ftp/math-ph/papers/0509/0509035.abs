@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509035
+From: Sigitas Alisauskas <uNzpc@1NxU.kO>
+Date: Fri, 16 Sep 2005 13:23:48 GMT   (33kb)
+
+Title: Integrals involving triplets of Jacobi and Gegenbauer polynomials and
+  some 3j-symbols of SO(n), SU(n) and Sp(4)
+Authors: S. Alisauskas
+Categories: math-ph math.MP
+Comments: 28 pages, Chapter 9 (invited contribution) in Studies of Mathematical
+  Physics Research, Ed. Ch. V.Benton (Nova Science Publ., Hauppauge NY), pp.
+  203--241, 2004
+\\
+  The coupling coefficients (3j-symbols) for the symmetric (most degenerate)
+irreducible representations of the orthogonal groups SO(n) in a canonical basis
+and different semicanonical (tree) bases [with SO(n) restricted to SO(n')\times
+SO(n''), n'+n''=n] are expressed in terms of the integrals involving triplets
+of the Gegenbauer and the Jacobi polynomials. The derived usual
+triple-hypergeometric series (which do not reveal the apparent triangle
+conditions of the 3j-symbols) are rearranged (in contrast with math-ph/0201048)
+directly [without using their relation with the semistretched isofactors of the
+second kind for the complementary chain Sp(4)\supset SU(2)\times SU(2)] into
+formulas with more rich limits for summation intervals and obvious triangle
+conditions. The isofactors for the class-one representations of the orthogonal
+groups and for the class-two representations of the unitary groups (and, of
+course, the related integrals) turn into the double sums in the cases of the
+canonical SO(n)\supset SO(n-1) or U(n)\supset U(n-1) and semicanonical
+SO(n)\supset SO(n-2)\times SO(2) chains, as well as into the $_4F_3(1)$ series
+under more specific conditions. Expressions for the most general isofactors of
+SO(n) for coupling of the two symmetric irreps in the canonical basis are also
+derived.
+\\

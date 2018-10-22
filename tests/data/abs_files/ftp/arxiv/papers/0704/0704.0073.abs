@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0073
+From: Osamu Fujino <rdlrcr@FLYa.S7dwr-2.ji.uA>
+Date: Sun, 1 Apr 2007 08:40:19 GMT   (17kb)
+Date (revised v2): Tue, 4 Jan 2011 00:41:06 GMT   (18kb)
+Date (revised v3): Mon, 5 Mar 2012 01:44:29 GMT   (19kb)
+
+Title: A transcendental approach to Koll\'ar's injectivity theorem
+Authors: Osamu Fujino
+Categories: math.AG
+Comments: 22 pages; a minor revision of the preprint circulated in January
+  2006, v2: minor modifications, v3: final version, to appear in Osaka J. Math
+MSC-class: 32L10, 32W05
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We treat Koll\'ar's injectivity theorem from the analytic (or differential
+geometric) viewpoint. More precisely, we give a curvature condition which
+implies Koll\'ar type cohomology injectivity theorems. Our main theorem is
+formulated for a compact K\"ahler manifold, but the proof uses the space of
+harmonic forms on a Zariski open set with a suitable complete K\"ahler metric.
+We need neither covering tricks, desingularizations, nor Leray's spectral
+sequence.
+\\

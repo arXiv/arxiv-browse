@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0125
+From: Jens Wirth <mPfQw@fjek.DT-gCO5hRJ1.2O>
+Date: Mon, 2 Apr 2007 06:09:31 GMT   (23kb)
+Date (revised v2): Tue, 21 Aug 2007 09:54:35 GMT   (26kb)
+Date (revised v3): Thu, 15 Nov 2007 13:32:24 GMT   (23kb)
+
+Title: Anisotropic thermo-elasticity in 2D -- Part I: A unified approach
+Authors: Michael Reissig and Jens Wirth
+Categories: math.AP
+Comments: 22 pages;
+MSC-class: 74H40, 35B45, 35Q72, 74F05
+Journal-ref: Asymptotic Analysis, 57 No. 1-2, 1-27, 2008
+DOI: 10.3233/ASY-2008-0863
+\\
+  In this note we develop tools and techniques for the treatment of anisotropic
+thermo-elasticity in two space dimensions. We use a diagonalisation technique
+to obtain properties of the characteristic roots of the full symbol of the
+system in order to prove $L^p$--$L^q$ decay rates for its solutions.
+\\

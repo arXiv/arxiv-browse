@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cond-mat/9805021
+From: Semjon Stepanow <user@example.org>
+Date: Sat, 2 May 1998 14:46:43 GMT   (277kb)
+Date (revised v2): Thu, 14 Jan 1999 14:47:38 GMT   (8kb)
+
+Title: Localization transition of random copolymers at interfaces
+Authors: Semjon Stepanow, Jens-Uwe Sommer, and Igor Ya. Erukhimovich
+Categories: cond-mat.soft
+Comments: 5 pages
+Journal-ref: Phys. Rev. Lett. 81, 4412 (1998)
+DOI: 10.1103/PhysRevLett.81.4412
+\\
+  We consider adsorption of random copolymer chains onto an interface within
+the model of Garel et al. Europhysics Letters 8, 9 (1989). By using the replica
+method the adsorption of the copolymer at the interface is mapped onto the
+problem of finding the ground state of a quantum mechanical Hamiltonian. To
+study this ground state we introduce a novel variational principle for the
+Green's function, which generalizes the well-known Rayleigh-Ritz method of
+Quantum Mechanics to nonstationary states. Minimization with an appropriate
+trial Green's function enables us to find the phase diagram for the
+localization-delocalization transition for an ideal random copolymer at the
+interface.
+\\

@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0273
+From: David Cimasoni <uVxdqsHo@wWqQ.nJNf13ny.HoO>
+Date: Mon, 2 Apr 2007 21:37:30 GMT   (60kb)
+
+Title: Dimers on surface graphs and spin structures. II
+Authors: David Cimasoni, Nicolai Reshetikhin
+Categories: math-ph math.GT math.MP
+Comments: 23 pages, 3 figures
+MSC-class: 82B20, 57R15
+Journal-ref: Comm. Math. Phys. 281 (2008), 445-468
+DOI: 10.1007/s00220-008-0488-3
+\\
+  In a previous paper, we showed how certain orientations of the edges of a
+graph G embedded in a closed oriented surface S can be understood as discrete
+spin structures on S. We then used this correspondence to give a geometric
+proof of the Pfaffian formula for the partition function of the dimer model on
+G. In the present article, we generalize these results to the case of compact
+oriented surfaces with boundary. We also show how the operations of cutting and
+gluing act on discrete spin structures and how they change the partition
+function. These operations allow to reformulate the dimer model as a quantum
+field theory on surface graphs.
+\\

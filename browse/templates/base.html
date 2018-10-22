@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+  {%- block head -%}
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20170424" />
+  {# disable for now #}
+  {%- if config['BROWSE_PIWIK_ENABLED'] %}
+  <!-- Piwik -->
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(["setDomains", ["*.arxiv.org"]]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u = "//webanalytics.library.cornell.edu/";
+      _paq.push(['setTrackerUrl', u + 'piwik.php']);
+      _paq.push(['setSiteId', 538]);
+      var d = document,
+        g = d.createElement('script'),
+        s = d.getElementsByTagName('script')[0];
+      g.type = 'text/javascript';
+      g.async = true;
+      g.defer = true;
+      g.src = u + 'piwik.js';
+      s.parentNode.insertBefore(g, s);
+    })();
+  </script>
+  <!-- End Piwik Code -->
+  {% endif -%}
+  {%- include "feedback_collector_js.html" -%}
+  {%- endblock head -%}
+</head>
+
+<body {% block body_id %}id="front"{% endblock %} class="with-cu-identity">
+  {%- if config['BROWSE_PIWIK_ENABLED'] -%}
+  <noscript><img src="//webanalytics.library.cornell.edu/piwik.php?idsite=538&amp;rec=1" style="border:0;" alt="" /></noscript>
+  {% endif -%}
+  <div id="cu-identity">
+    <div id="cu-logo">
+      <a id="insignia-link" href="http://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cul_signature_unstyled.gif" alt="Cornell University" width="283" height="76" border="0" /></a>
+      <div id="unit-signature-links">
+        <a id="cornell-link" href="http://www.cornell.edu/">Cornell University</a>
+        <a id="unit-link" href="http://www.library.cornell.edu/">Library</a>
+      </div>
+    </div>
+    <div id="support-ack">
+      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}</a>
+    </div>
+  </div>
+
+  <div id="header" {% block header_class %}{% endblock %}>
+    {% block header %}
+    {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. -#}
+    <a href="{url_path('ignore_me')}"></a>
+    <h1>arXiv.org</h1>
+    <div class="login"><a href="{{url_for('login')}}">Login</a></div>
+    <div id="search">
+      <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
+
+        <div class="wrapper-search-arxiv">
+          <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
+
+          <div class="filter-field">
+            <select name="searchtype">
+              <option value="all" selected="selected">All papers</option>
+              <option value="ti">Titles</option>
+              <option value="au">Authors</option>
+              <option value="abs">Abstracts</option>
+              <option value="ft">Full text</option>
+              <option value="help">Help pages</option>
+            </select>
+          </div>
+          <input class="btn-search-arxiv" value="" type="submit">
+            <div class="links">(<a href="{{url_for('help')}}">Help</a> |
+              <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
+        </div>
+      </form>
+    </div>
+   {% endblock header %}
+  </div>
+
+  <div id="content">
+    {% block content %}
+    {% endblock content %}
+  </div>
+  <div id="footer">
+    <div class="footer-text">
+      <p>Link back to: <a href="{{url_for('home')}}">arXiv</a>, <a href="{{url_for('browse.form')}}">form interface</a>, <a href="{{url_for('contact')}}">contact</a>.&nbsp;&nbsp;<span class="help" style="display: inline-block; float: right"><a href="https://confluence.cornell.edu/x/MjmLFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span></p>
+    </div>
+    <div class="social"><a href="{{url_for('twitter')}}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a></div>
+  </div>
+</body>
+
+</html>

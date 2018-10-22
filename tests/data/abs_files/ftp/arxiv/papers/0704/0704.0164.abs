@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0164
+From: Lilia Rosati <H9MJd.2SHrcN@T57N.q8c4m.r7>
+Date: Mon, 2 Apr 2007 10:58:58 GMT   (214kb)
+
+Title: On smooth foliations with Morse singularities
+Authors: Lilia Rosati
+Categories: math.GT
+Comments: 15 pages, 14 figures
+MSC-class: 57R30
+\\
+  Let $M$ be a smooth manifold and let $\F$ be a codimension one, $C^\infty$
+foliation on $M$, with isolated singularities of Morse type. The study and
+classification of pairs $(M,\F)$ is a challenging (and difficult) problem. In
+this setting, a classical result due to Reeb \cite{Reeb} states that a manifold
+admitting a foliation with exactly two center-type singularities is a sphere.
+In particular this is true if the foliation is given by a function. Along these
+lines a result due to Eells and Kuiper \cite{Ku-Ee} classify manifolds having a
+real-valued function admitting exactly three non-degenerate singular points. In
+the present paper, we prove a generalization of the above mentioned results. To
+do this, we first describe the possible arrangements of pairs of singularities
+and the corresponding codimension one invariant sets, and then we give an
+elimination procedure for suitable center-saddle and some saddle-saddle
+configurations (of consecutive indices). In the second part, we investigate if
+other classical results, such as Haefliger and Novikov (Compact Leaf) theorems,
+proved for regular foliations, still hold true in presence of singularities. At
+this purpose, in the singular set, $Sing(\F)$ of the foliation $\F$, we
+consider {\em{weakly stable}} components, that we define as those components
+admitting a neighborhood where all leaves are compact. If $Sing(\F)$ admits
+only weakly stable components, given by smoothly embedded curves diffeomorphic
+to $S^1$, we are able to extend Haefliger's theorem. Finally, the existence of
+a closed curve, transverse to the foliation, leads us to state a Novikov-type
+result.
+\\

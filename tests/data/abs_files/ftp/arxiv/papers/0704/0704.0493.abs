@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0493
+From: Hiroshi Koibuchi <ylFoXgcJ@yQY5.R9X0sYu-2N.MA.Q5>
+Date: Wed, 4 Apr 2007 04:53:28 GMT   (334kb)
+
+Title: Phase structure of a surface model on dynamically triangulated spheres
+  with elastic skeletons
+Authors: Hiroshi Koibuchi
+Categories: cond-mat.stat-mech cond-mat.soft
+Comments: 9 pages with 10 figures
+Report-no: ICT-Koi-2007-2
+Journal-ref: Phys. Rev. E75, 051115 (2007)
+DOI: 10.1103/PhysRevE.75.051115
+\\
+  We find three distinct phases; a tubular phase, a planar phase, and the
+spherical phase, in a triangulated fluid surface model. It is also found that
+these phases are separated by discontinuous transitions. The fluid surface
+model is investigated within the framework of the conventional curvature model
+by using the canonical Monte Carlo simulations with dynamical triangulations.
+The mechanical strength of the surface is given only by skeletons, and no
+two-dimensional bending energy is assumed in the Hamiltonian. The skeletons are
+composed of elastic linear-chains and rigid junctions and form a
+compartmentalized structure on the surface, and for this reason the vertices of
+triangles can diffuse freely only inside the compartments. As a consequence, an
+inhomogeneous structure is introduced in the model; the surface strength inside
+the compartments is different from the surface strength on the compartments.
+However, the rotational symmetry is not influenced by the elastic skeletons;
+there is no specific direction on the surface. In addition to the three phases
+mentioned above, a collapsed phase is expected to exist in the low bending
+rigidity regime that was not studied here. The inhomogeneous structure and the
+fluidity of vertices are considered to be the origin of such variety of phases.
+\\

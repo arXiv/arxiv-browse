@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509002
+From: Guowu Meng <7qePSv@t5L.sz>
+Date: Fri, 2 Sep 2005 03:32:56 GMT   (6kb)
+Date (revised v2): Sat, 10 Sep 2005 03:20:35 GMT   (6kb)
+Date (revised v3): Tue, 13 Sep 2005 01:55:01 GMT   (6kb)
+Date (revised v4): Mon, 10 Oct 2005 08:56:58 GMT   (6kb)
+Date (revised v5): Wed, 2 Nov 2005 13:25:25 GMT   (7kb)
+Date (revised v6): Fri, 14 Mar 2008 05:40:44 GMT   (7kb)
+
+Title: A Generalization of the Kepler Problem
+Authors: Guowu Meng
+Categories: math-ph math.MP
+Comments: The final version. To appear in J. Yadernaya fizika
+Journal-ref: Physics of Atomic Nuclei (J. Yadernaya fizika), Vol. 71 (2008),
+  946-950
+\\
+  We construct and analyze a generalization of the Kepler problem. These
+generalized Kepler problems are parameterized by a triple $(D, \kappa, \mu)$
+where the dimension $D\ge 3$ is an integer, the curvature $\kappa$ is a real
+number, the magnetic charge $\mu$ is a half integer if $D$ is odd and is 0 or
+1/2 if $D$ is even. The key to construct these generalized Kepler problems is
+the observation that the Young powers of the fundamental spinors on a punctured
+space with cylindrical metric are the right analogues of the Dirac monopoles.
+\\

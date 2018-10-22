@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0598
+From: Ignazio Licata <aufmoaU.G71Jun@wlPv.2XZV>
+Date: Wed, 4 Apr 2007 15:56:08 GMT   (549kb)
+
+Title: Evolutionary Neural Gas (ENG): A Model of Self Organizing Network from
+  Input Categorization
+Authors: Ignazio Licata, Luigi Lella
+Categories: physics.gen-ph q-bio.PE
+Comments: 16 pages, 8 figures
+Journal-ref: EJTP,vol.4,, No.14 (2007),31-50
+\\
+  Despite their claimed biological plausibility, most self organizing networks
+have strict topological constraints and consequently they cannot take into
+account a wide range of external stimuli. Furthermore their evolution is
+conditioned by deterministic laws which often are not correlated with the
+structural parameters and the global status of the network, as it should happen
+in a real biological system. In nature the environmental inputs are noise
+affected and fuzzy. Which thing sets the problem to investigate the possibility
+of emergent behaviour in a not strictly constrained net and subjected to
+different inputs. It is here presented a new model of Evolutionary Neural Gas
+(ENG) with any topological constraints, trained by probabilistic laws depending
+on the local distortion errors and the network dimension. The network is
+considered as a population of nodes that coexist in an ecosystem sharing local
+and global resources. Those particular features allow the network to quickly
+adapt to the environment, according to its dimensions. The ENG model analysis
+shows that the net evolves as a scale-free graph, and justifies in a deeply
+physical sense- the term gas here used.
+\\

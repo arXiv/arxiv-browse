@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509005
+From: Elena Kartashova <Vjtr3.mCZ6@mTX.zE>
+Date: Mon, 5 Sep 2005 05:54:15 GMT   (18kb)
+
+Title: Computable Integrability. Chapter 5: Factorization of LPDOs
+Authors: E.Kartashova, A. Shabat
+Categories: math-ph math.MP
+Comments: This is Chapter 5 of the book "Computable Integrability", it consists
+  of 33 pages
+\\
+  Different definitions of integrability, as a rule, use linearization of
+initial equation and/or expansion on some basic functions which are themselves
+solutions of some linear differential equation. Important fact here is that
+linearization of some differential equation is its simplification but not
+solving yet. For instance, in case of linear Schroedinger equation, we are not
+able to find its solutions explicitly but only to name them Jost functions and
+to exploit their useful properties (see previous Chapters).
+  On the other hand, well-known fact is that for LODE with constant
+coefficients operator itself can always be factorized into first-order factors
+and thus the problem is reduced to the solving of a few first-order LODEs which
+are solvable in quadratures.
+  In case of differential operators with variable coefficients factorization is
+not always possible but for the great number of operators BK-factorization
+gives factorization conditions explicitly which we are going to demonstrate in
+this Chapter. BK factorization is used to construct set of invariants for LPDO
+of arbitrary order; interconnections of these new invariants with classic
+Laplace invariants for second order hyperbolic LPDOs are discussed.
+\\

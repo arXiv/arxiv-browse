@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509023
+From: Ivan Avramidi <rAUGh8fj@8zQ.n4h>
+Date: Mon, 12 Sep 2005 16:54:35 GMT   (18kb)
+Date (revised v2): Mon, 19 Sep 2005 15:13:26 GMT   (26kb)
+Date (revised v3): Tue, 25 Oct 2005 23:16:59 GMT   (26kb)
+
+Title: Non-Laplace type Operators on Manifolds with Boundary
+Authors: Ivan G. Avramidi
+Categories: math-ph hep-th math.AP math.MP math.SP
+Comments: Introduction and bibliography significantly expanded. 39 pages, no
+  figures, to be published in: Proceedings of the Workshop ``Krzysztof
+  Wojciechowski 50 years - Analysis and Geometry of Boundary Value Problems'',
+  Roskilde, Denmark, 20-22 May, 2005; Minor cosmetic changes in version 3
+MSC-class: 58J32, 58J50, 58J37
+Journal-ref: Analysis, Geometry and Topology of Elliptic Operators, Eds. B.
+  Booss-Bavnbek, S. Klimek, M. Lesch and W. Zhang (Singapore: World Scientific,
+  2006), pp. 119-152
+\\
+  We study second-order elliptic partial differential operators acting on
+sections of vector bundles over a compact manifold with boundary with a
+non-scalar positive definite leading symbol. Such operators, called non-Laplace
+type operators, appear, in particular, in gauge field theories, string theory
+as well as models of non-commutative gravity theories, when instead of a
+Riemannian metric there is a matrix valued self-adjoint symmetric two-tensor
+that plays the role of a ``non-commutative'' metric. It is well known that
+there is a small-time asymptotic expansion of the trace of the corresponding
+heat kernel in half-integer powers of time. We initiate the development of a
+systematic approach for the explicit calculation of these coefficients,
+construct the corresponding parametrix of the heat equation and compute
+explicitly the first two heat trace coefficients.
+\\

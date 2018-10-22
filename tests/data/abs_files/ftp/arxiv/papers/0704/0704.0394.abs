@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0394
+From: Anna Ja\'{s}kiewicz <I6IHYlHk@rY.6dH.ddjb.l2>
+Date: Tue, 3 Apr 2007 13:42:37 GMT   (78kb,S)
+
+Title: Average optimality for risk-sensitive control with general state space
+Authors: Anna Ja\'{s}kiewicz
+Categories: q-fin.RM math.PR
+Comments: Published at http://dx.doi.org/10.1214/105051606000000790 in the
+  Annals of Applied Probability (http://www.imstat.org/aap/) by the Institute
+  of Mathematical Statistics (http://www.imstat.org)
+Proxy: vtex
+Report-no: IMS-AAP-AAP410
+MSC-class: 60J05, 90C39 (Primary) 60A10 (Secondary)
+Journal-ref: Annals of Applied Probability 2007, Vol. 17, No. 2, 654-675
+DOI: 10.1214/105051606000000790
+\\
+  This paper deals with discrete-time Markov control processes on a general
+state space. A long-run risk-sensitive average cost criterion is used as a
+performance measure. The one-step cost function is nonnegative and possibly
+unbounded. Using the vanishing discount factor approach, the optimality
+inequality and an optimal stationary strategy for the decision maker are
+established.
+\\

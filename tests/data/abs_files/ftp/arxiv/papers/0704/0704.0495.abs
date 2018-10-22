@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0495
+From: Metod Saniga <CStIBKE@iyBlW.G3>
+Date: Wed, 4 Apr 2007 06:47:14 GMT   (78kb)
+Date (revised v2): Tue, 17 Apr 2007 07:01:08 GMT   (78kb)
+Date (revised v3): Mon, 2 Jul 2007 06:54:50 GMT   (79kb)
+
+Title: The Veldkamp Space of Two-Qubits
+Authors: Metod Saniga (ASTRINSTSAV), Michel Planat (FEMTO-ST), Petr Pracna
+  (JH-Inst), Hans Havlicek (TUW)
+Categories: quant-ph math-ph math.MP
+Comments: 7 pages, 3 figures, 2 tables; Version 2 - math nomenclature
+  fine-tuned and two references added; Version 3 - published in SIGMA
+  (Symmetry, Integrability and Geometry: Methods and Applications) at
+  http://www.emis.de/journals/SIGMA/
+Journal-ref: SIGMA 3 (2007) 075, 7 pages
+\\
+  Given a remarkable representation of the generalized Pauli operators of
+two-qubits in terms of the points of the generalized quadrangle of order two,
+W(2), it is shown that specific subsets of these operators can also be
+associated with the points and lines of the four-dimensional projective space
+over the Galois field with two elements - the so-called Veldkamp space of W(2).
+An intriguing novelty is the recognition of (uni- and tri-centric) triads and
+specific pentads of the Pauli operators in addition to the "classical" subsets
+answering to geometric hyperplanes of W(2).
+\\

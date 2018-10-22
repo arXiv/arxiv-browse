@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0472
+From: David P. Sanders <TA59fqFZ@jzZ.itgi.sa>
+Date: Tue, 3 Apr 2007 22:57:45 GMT   (190kb)
+Date (revised v2): Thu, 5 Apr 2007 18:28:43 GMT   (190kb)
+Date (revised v3): Mon, 9 Apr 2007 05:32:43 GMT   (190kb)
+
+Title: Competitive nucleation and the Ostwald rule in a generalized Potts model
+  with multiple metastable phases
+Authors: David P. Sanders, Hern\'an Larralde, Fran\c{c}ois Leyvraz (Instituto
+  de Ciencias F\'isicas, Universidad Nacional Aut\'onoma de M\'exico)
+Categories: cond-mat.stat-mech cond-mat.mtrl-sci cond-mat.soft
+Comments: 4 pages, 5 figures. Version with one higher-quality figure available
+  at http://www.fis.unam.mx/~dsanders/publications.html v2: Corrected labels on
+  inset of figure 3. v3: Corrected link
+Journal-ref: Phys. Rev. B 75, 132101 (2007) (Brief Report)
+DOI: 10.1103/PhysRevB.75.132101
+\\
+  We introduce a simple nearest-neighbor spin model with multiple metastable
+phases, the number and decay pathways of which are explicitly controlled by the
+parameters of the system. With this model we can construct, for example, a
+system which evolves through an arbitrarily long succession of metastable
+phases. We also construct systems in which different phases may nucleate
+competitively from a single initial phase. For such a system, we present a
+general method to extract from numerical simulations the individual nucleation
+rates of the nucleating phases. The results show that the Ostwald rule, which
+predicts which phase will nucleate, must be modified probabilistically when the
+new phases are almost equally stable. Finally, we show that the nucleation rate
+of a phase depends, among other things, on the number of other phases
+accessible from it.
+\\

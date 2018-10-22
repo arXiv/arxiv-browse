@@ -1,0 +1,43 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+arxiv-base = ">=0.9.1"
+dataclasses = "*"
+python-dateutil = "*"
+flask = "==0.12.*"
+Flask-API = "*"
+Flask-SQLAlchemy = "*"
+"jinja2" = "==2.10"
+MarkupSafe = "*"
+SQLAlchemy = "*"
+pytz = "*"
+mysqlclient = "*"
+"mmh3" = "*"
+aiohttp = "*"
+
+[dev-packages]
+pylama = "*"
+mypy = ">=0.630"
+mypy-extensions = "*"
+"nose2" = "*"
+sqlacodegen = "*"
+Flask-Testing = "*"
+pycodestyle = "*"
+pydocstyle = "*"
+pylint = "*"
+pytest = "*"
+pytest-html = "*"
+"ansi2html" = "*"
+hypothesis = "*"
+"beautifulsoup4" = "*"
+pyhamcrest = "*"
+pytest-easyread = "*"
+weighted-levenshtein = "*"
+coverage = "*"
+coveralls = "*"
+
+[requires]
+python_version = "3.6"

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0906.3421
+From: Philippe Di Francesco <QKfcjjkl.6m-81htJqhno@UYK.gZ>
+Date: Thu, 18 Jun 2009 12:03:57 GMT   (67kb)
+Date (revised v2): Mon, 14 Sep 2009 09:39:31 GMT   (67kb)
+Date (revised v3): Tue, 2 Feb 2010 06:38:00 GMT   (383kb,D)
+
+Title: Q-system Cluster Algebras, Paths and Total Positivity
+Authors: Philippe Di Francesco and Rinat Kedem
+Categories: math.CO cond-mat.stat-mech math-ph math.MP
+Comments: 36 pages, 16 Postscript figures, typos corrected and one reference
+  added
+Report-no: t09-083
+Journal-ref: SIGMA 6 (2010), 014, 36 pages
+DOI: 10.3842/SIGMA.2010.014
+License: http://creativecommons.org/licenses/by-nc-sa/3.0/
+\\
+  In the first part of this paper, we provide a concise review of our method of
+solution of the $A_r$ Q-systems in terms of the partition function of paths on
+a weighted graph. In the second part, we show that it is possible to modify the
+graphs and transfer matrices so as to provide an explicit connection to the
+theory of planar networks introduced in the context of totally positive
+matrices by Fomin and Zelevinsky. As an illustration of the further generality
+of our method, we apply it to give a simple solution for the rank 2 affine
+cluster algebras studied by Caldero and Zelevinsky.
+\\

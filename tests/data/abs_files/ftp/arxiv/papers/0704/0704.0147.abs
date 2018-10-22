@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0147
+From: Umesh Vijayashanker <VkKLnXWt@lyQAL5x.c4WF.1qlr2.0l>
+Date: Mon, 2 Apr 2007 18:01:33 GMT   (8kb)
+Date (revised v2): Wed, 20 Jun 2007 18:05:42 GMT   (12kb)
+
+Title: A POVM view of the ensemble approach to polarization optics
+Authors: Sudha, A. V. Gopala Rao, A. R. Usha Devi and A. K. Rajagopal
+Categories: physics.optics physics.class-ph quant-ph
+Comments: 14 pages, 1 table; RevTeX
+\\
+  Statistical ensemble formalism of Kim, Mandel and Wolf (J. Opt. Soc. Am. A 4,
+433 (1987)) offers a realistic model for characterizing the effect of
+stochastic non-image forming optical media on the state of polarization of
+transmittedlight. With suitable choice of the Jones ensemble, various Mueller
+transformations - some of which have been unknown so far - are deduced. It is
+observed that the ensemble approach is formally identical to the positive
+operator valued measures (POVM) on the quantum density matrix. This
+observation, in combination with the recent suggestion by Ahnert and Payne
+(Phys. Rev. A 71, 012330, (2005)) - in the context of generalized quantum
+measurement on single photon polarization states - that linear optics elements
+can be employed in setting up all possible POVMs, enables us to propose a way
+of realizing different types of Mueller devices.
+\\

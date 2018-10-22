@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0686
+From: Ioannis Antoniou <DJ3z9qLt@B2xV.v0uD.H8>
+Date: Thu, 5 Apr 2007 07:58:56 GMT   (262kb)
+Date (revised v2): Wed, 16 May 2007 07:55:00 GMT   (239kb)
+
+Title: Statistical analysis of weighted networks
+Authors: Antoniou Ioannis, Tsompa Eleni
+Categories: physics.soc-ph
+Comments: 20 pages, 6 figures
+\\
+  The purpose of this paper is to assess the statistical characterization of
+weighted networks in terms of the generalization of the relevant parameters,
+namely average path length, degree distribution and clustering coefficient.
+Although the degree distribution and the average path length admit
+straightforward generalizations, for the clustering coefficient several
+different definitions have been proposed in the literature. We examined the
+different definitions and identified the similarities and differences between
+them. In order to elucidate the significance of different definitions of the
+weighted clustering coefficient, we studied their dependence on the weights of
+the connections. For this purpose, we introduce the relative perturbation norm
+of the weights as an index to assess the weight distribution. This study
+revealed new interesting statistical regularities in terms of the relative
+perturbation norm useful for the statistical characterization of weighted
+graphs.
+\\

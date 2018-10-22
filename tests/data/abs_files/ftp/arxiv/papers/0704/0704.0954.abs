@@ -1,0 +1,37 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0954
+From: Jos\'e M. F. Moura <zTqmj@paI.82z.ZLb>
+Date: Fri, 6 Apr 2007 21:58:52 GMT   (441kb)
+
+Title: Sensor Networks with Random Links: Topology Design for Distributed
+  Consensus
+Authors: Soummya Kar and Jose M. F. Moura
+Categories: cs.IT cs.LG math.IT
+Comments: Submitted to IEEE Transactions
+DOI: 10.1109/TSP.2008.920143
+\\
+  In a sensor network, in practice, the communication among sensors is subject
+to:(1) errors or failures at random times; (3) costs; and(2) constraints since
+sensors and networks operate under scarce resources, such as power, data rate,
+or communication. The signal-to-noise ratio (SNR) is usually a main factor in
+determining the probability of error (or of communication failure) in a link.
+These probabilities are then a proxy for the SNR under which the links operate.
+The paper studies the problem of designing the topology, i.e., assigning the
+probabilities of reliable communication among sensors (or of link failures) to
+maximize the rate of convergence of average consensus, when the link
+communication costs are taken into account, and there is an overall
+communication budget constraint. To consider this problem, we address a number
+of preliminary issues: (1) model the network as a random topology; (2)
+establish necessary and sufficient conditions for mean square sense (mss) and
+almost sure (a.s.) convergence of average consensus when network links fail;
+and, in particular, (3) show that a necessary and sufficient condition for both
+mss and a.s. convergence is for the algebraic connectivity of the mean graph
+describing the network topology to be strictly positive. With these results, we
+formulate topology design, subject to random link failures and to a
+communication cost constraint, as a constrained convex optimization problem to
+which we apply semidefinite programming techniques. We show by an extensive
+numerical study that the optimal design improves significantly the convergence
+speed of the consensus algorithm and can achieve the asymptotic performance of
+a non-random network at a fraction of the communication cost.
+\\

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0741
+From: Christophe Texier <LHzEOr@i47sV.1-U3jk.um>
+Date: Thu, 5 Apr 2007 15:16:18 GMT   (25kb)
+
+Title: Al'tshuler-Aronov correction to the conductivity of a large metallic
+  square network
+Authors: Christophe Texier and Gilles Montambaux
+Categories: cond-mat.dis-nn cond-mat.mes-hall
+Comments: 6 pages, RevTex4, 3 eps figures
+Journal-ref: Phys. Rev. B 76, 094202 (2007)
+DOI: 10.1103/PhysRevB.76.094202
+\\
+  We consider the correction $\Delta\sigma_\mathrm{ee}$ due to
+electron-electron interaction to the conductivity of a weakly disordered metal
+(Al'tshuler-Aronov correction). The correction is related to the spectral
+determinant of the Laplace operator. The case of a large square metallic
+network is considered. The variation of $\Delta\sigma_\mathrm{ee}(L_T)$ as a
+function of the thermal length $L_T$ is found very similar to the variation of
+the weak localization $\Delta\sigma_\mathrm{WL}(L_\phi)$ as a function of the
+phase coherence length. Our result for $\Delta\sigma_\mathrm{ee}$ interpolates
+between the known 1d and 2d results, but the interaction parameter entering the
+expression of $\Delta\sigma_\mathrm{ee}$ keeps a 1d behaviour. Quite
+surprisingly, the result is very close to the 2d logarithmic behaviour already
+for $L_T\sim{a}/2$, where $a$ is the lattice parameter.
+\\

@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0243
+From: Johannes Bauer <k.7hPnd@Bo.mh.JF>
+Date: Mon, 2 Apr 2007 17:27:29 GMT   (210kb)
+Date (revised v2): Fri, 22 Jun 2007 18:11:26 GMT   (225kb)
+
+Title: Renormalized quasiparticles in antiferromagnetic states of the Hubbard
+  model
+Authors: J. Bauer and A.C. Hewson
+Categories: cond-mat.str-el
+Comments: 15 pages, 17 figures; some minor changes and additional figure
+Journal-ref: Eur. Phys. J. B 57 (2007), 235.
+DOI: 10.1140/epjb/e2007-00175-6
+\\
+  We analyze the properties of the quasiparticle excitations of metallic
+antiferromagnetic states in a strongly correlated electron system. The study is
+based on dynamical mean field theory (DMFT) for the infinite dimensional
+Hubbard model with antiferromagnetic symmetry breaking. Self-consistent
+solutions of the DMFT equations are calculated using the numerical
+renormalization group (NRG). The low energy behavior in these results is then
+analyzed in terms of renormalized quasiparticles. The parameters for these
+quasiparticles are calculated directly from the NRG derived self-energy, and
+also from the low energy fixed point of the effective impurity. They are found
+to be in good agreement. We show that the main low energy features of the $\bf
+k$-resolved spectral density can be understood in terms of the quasiparticle
+picture. We also find that Luttinger's theorem is satisfied for the total
+electron number in the doped antiferromagnetic state.
+\\

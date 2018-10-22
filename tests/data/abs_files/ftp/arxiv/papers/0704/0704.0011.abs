@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0011
+From: Clifton Cunningham <3v8s0fN@5H3u.ZtNOuhS4.SS>
+Date: Sat, 31 Mar 2007 05:32:49 GMT   (12kb)
+Date (revised v2): Tue, 19 Aug 2008 04:46:47 GMT   (13kb)
+Date (revised v3): Wed, 20 Aug 2008 13:15:09 GMT   (13kb)
+
+Title: Computing genus 2 Hilbert-Siegel modular forms over $\Q(\sqrt{5})$ via
+  the Jacquet-Langlands correspondence
+Authors: Clifton Cunningham and Lassina Dembele
+Categories: math.NT math.AG
+Comments: 14 pages; title changed; to appear in Experimental Mathematics
+MSC-class: 11F42
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  In this paper we present an algorithm for computing Hecke eigensystems of
+Hilbert-Siegel cusp forms over real quadratic fields of narrow class number
+one. We give some illustrative examples using the quadratic field
+$\Q(\sqrt{5})$. In those examples, we identify Hilbert-Siegel eigenforms that
+are possible lifts from Hilbert eigenforms.
+\\

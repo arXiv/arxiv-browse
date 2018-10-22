@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0927
+From: Steven Miller <CrSf3qoG@CVGo.NFnKp.Gho>
+Date: Fri, 6 Apr 2007 19:59:58 GMT   (29kb)
+Date (revised v2): Wed, 25 Apr 2007 12:30:42 GMT   (29kb)
+Date (revised v3): Sun, 3 Jun 2007 15:30:35 GMT   (29kb)
+Date (revised v4): Wed, 18 Jul 2007 12:45:48 GMT   (29kb)
+Date (revised v5): Tue, 20 Nov 2007 15:15:29 GMT   (29kb)
+
+Title: A Symplectic Test of the L-Functions Ratios Conjecture
+Authors: Steven J. Miller
+Categories: math.NT
+Comments: 29 pages, version 1.3 (corrected a typo in the proof of Lemma 3.2 and
+  a few other typos, updated some references). To appear in IMRN
+MSC-class: 11M26 (Primary), 11M41, 15A52 (Secondary)
+Journal-ref: Int Math Res Notices (2008) Vol. 2008, article ID rnm146, 36 pages
+DOI: 10.1093/imrn/rnm146
+\\
+  Recently Conrey, Farmer and Zirnbauer conjectured formulas for the averages
+over a family of ratios of products of shifted L-functions. Their L-functions
+Ratios Conjecture predicts both the main and lower order terms for many
+problems, ranging from n-level correlations and densities to mollifiers and
+moments to vanishing at the central point. There are now many results showing
+agreement between the main terms of number theory and random matrix theory;
+however, there are very few families where the lower order terms are known.
+These terms often depend on subtle arithmetic properties of the family, and
+provide a way to break the universality of behavior. The L-functions Ratios
+Conjecture provides a powerful and tractable way to predict these terms. We
+test a specific case here, that of the 1-level density for the symplectic
+family of quadratic Dirichlet characters arising from even fundamental
+discriminants d \le X. For test functions supported in (-1/3, 1/3) we calculate
+all the lower order terms up to size O(X^{-1/2+epsilon}) and observe perfect
+agreement with the conjecture (for test functions supported in (-1, 1) we show
+agreement up to errors of size O(X^{-epsilon}) for any epsilon). Thus for this
+family and suitably restricted test functions, we completely verify the Ratios
+Conjecture's prediction for the 1-level density.
+\\

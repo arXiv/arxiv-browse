@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0142
+From: J. Kaupuzs <Gi0Fir2@0VmBOo.87>
+Date: Mon, 2 Apr 2007 09:15:03 GMT   (10kb)
+Date (revised v2): Fri, 9 Apr 2010 10:08:07 GMT   (14kb)
+
+Title: Some aspects of the nonperturbative renormalization of the phi^4 model
+Authors: J. Kaupuzs
+Categories: cond-mat.stat-mech
+Comments: 11 pages, no figures. This version is consistent with the accepted
+  (now published) paper.
+Journal-ref: Int.J.Mod.Phys.B23:5935-5947,2009
+DOI: 10.1142/S0217979209054697
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  A nonperturbative renormalization of the phi^4 model is considered. First we
+integrate out only a single pair of conjugated modes with wave vectors +/- q.
+Then we are looking for the RG equation which would describe the transformation
+of the Hamiltonian under the integration over a shell Lambda - d Lambda < k <
+Lambda, where d Lambda -> 0. We show that the known Wegner--Houghton equation
+is consistent with the assumption of a simple superposition of the integration
+results for +/- q. The renormalized action can be expanded in powers of the
+phi^4 coupling constant u in the high temperature phase at u -> 0. We compare
+the expansion coefficients with those exactly calculated by the diagrammatic
+perturbative method, and find some inconsistency. It causes a question in which
+sense the Wegner-Houghton equation is really exact.
+\\

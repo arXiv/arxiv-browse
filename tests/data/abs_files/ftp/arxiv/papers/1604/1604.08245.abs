@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1604.08245
+From: Muhammad Fahad Khan <kslkdr.dkkd@xfdsffkdi.edu.pk>
+Date: Wed, 27 Apr 2016 21:11:22 GMT   (1543kb)
+
+Title: Text writing in the air
+Authors: Saira Beg, M. Fahad Khan, Faisal Baig
+Categories: cs.MM
+Comments: 19 pages, 19 figures,2 tables. see
+  http://www.tandfonline.com/doi/abs/10.1080/15980316.2013.860928?journalCode=tjid20
+MSC-class: 68T10
+ACM-class: C.3
+DOI: 10.1080/15980316.2013.860928
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+  This paper presents a real time video based pointing method which allows
+sketching and writing of English text over air in front of mobile camera.
+Proposed method have two main tasks: first it track the colored finger tip in
+the video frames and then apply English OCR over plotted images in order to
+recognize the written characters. Moreover, proposed method provides a natural
+human-system interaction in such way that it do not require keypad, stylus, pen
+or glove etc for character input. For the experiments, we have developed an
+application using OpenCv with JAVA language. We tested the proposed method on
+Samsung Galaxy3 android mobile. Results show that proposed algorithm gains the
+average accuracy of 92.083% when tested for different shaped alphabets. Here,
+more than 3000 different Magnetic 3D shaped characters were used [Ref:
+http://learnrnd.com/news.php?id=Magnetic_3D_Bio_Printing]. Our proposed system
+is the software based approach and relevantly very simple, fast and easy. It
+does not require sensors or any hardware rather than camera and red tape.
+Moreover, proposed methodology can be applicable for all disconnected languages
+but having one issue that it is color sensitive in such a way that existence of
+any red color in the background before starting the character writing can lead
+to false results.
+\\

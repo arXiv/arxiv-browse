@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0720
+From: Daniel Wilczak <YoiBodOf@RcT-KeV.wUw.qs>
+Date: Thu, 5 Apr 2007 13:19:03 GMT   (347kb)
+
+Title: $C^r$-Lohner algorithm
+Authors: D. Wilczak, P. Zgliczy\'nski
+Categories: math.NA math.DS
+Comments: for associated movie file, see
+  http://www.ii.uj.edu.pl/~wilczak/papers/cnlohner/mpp.mov, 35 pages, 1 Figure
+\\
+  We present a Lohner type algorithm for the computation of rigorous bounds for
+solutions of ordinary differential equations and its derivatives with respect
+to initial conditions up to arbitrary order. As an application we prove the
+existence of multiple invariant tori around some elliptic periodic orbits for
+the pendulum equation with periodic forcing and for Michelson system.
+\\

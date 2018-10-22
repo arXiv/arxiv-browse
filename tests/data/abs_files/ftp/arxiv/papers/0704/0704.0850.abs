@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0850
+From: Jun Sato <gWXrx@a2nu.9-v3z8V.lX.Wy>
+Date: Fri, 6 Apr 2007 07:19:49 GMT   (607kb)
+
+Title: Density matrix elements and entanglement entropy for the spin-1/2 XXZ
+  chain at $\Delta$=1/2
+Authors: Jun Sato, Masahiro Shiroishi
+Categories: cond-mat.stat-mech
+Comments: 12 pages, 3 eps figures, 2 authors
+Journal-ref: J. Phys. A: Math. Theor. 40 8739-8749 (2007)
+DOI: 10.1088/1751-8113/40/30/009
+\\
+  We have analytically obtained all the density matrix elements up to six
+lattice sites for the spin-1/2 Heisenberg XXZ chain at $\Delta=1/2$. We use the
+multiple integral formula of the correlation function for the massless XXZ
+chain derived by Jimbo and Miwa. As for the spin-spin correlation functions, we
+have newly obtained the fourth- and fifth-neighbour transverse correlation
+functions. We have calculated all the eigenvalues of the density matrix and
+analyze the eigenvalue-distribution. Using these results the exact values of
+the entanglement entropy for the reduced density matrix up six lattice sites
+have been obtained. We observe that our exact results agree quite well with the
+asymptotic formula predicted by the conformal field theory.
+\\

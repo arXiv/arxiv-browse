@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1307.0001
+From: Santanu Das <IxDWPGDa@eZJVs.WwdZu.rb>
+Date: Fri, 28 Jun 2013 07:06:44 GMT   (735kb,D)
+
+Title: Leakage of power from dipole to higher multipoles due to non-symmetric
+  WMAP beam
+Authors: Santanu Das, Tarun Souradeep
+Categories: astro-ph.CO
+Comments: 12 pages, 18 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  A number of studies of WMAP and Planck have highlighted that the power at the
+low multipoles in CMB power spectrum are lower than their theoretically
+predicted values. Possible angular correlation between the orientations of
+these low multipoles have also been claimed. It is important to investigate the
+possibility that the power deficiency at low multipoles may not be of
+primordial origin and is only an observation artifact coming from the scan
+procedure adapted in the WMAP or Planck satellites. Therefore, its always
+important to investigate all the observational artifacts that can mimic them.
+The CMB dipole which is almost 550 times higher than the quadrupole can leak to
+the higher multipoles due to the non-symmetric beam shape of the WMAP. In this
+paper a formalism has been developed and simulations are carried out to study
+the effect of the non-symmetric beam on this power transfer. It is interesting
+to observed that a small but non-negligible amount of power from the dipole can
+get transferred to the quadrupole and the higher multipoles due to the
+non-symmetric beam. It is shown that in case of WMAP scan strategy the shape of
+the quadrupole coming due to this power leakage is very much similar to the
+observed quadrupole from WMAP data. Simulations have also been carried out for
+Planck scan strategy. It is seen that for Planck scan strategy the power
+transfer is not only limited to the quadrupole but also to a few higher low
+multipoles. Since the actual beam shapes of Planck are not publicly available
+we present results in terms of upper limits on asymmetric beam parameters that
+would contaminate of the quadrupole power at the level of $1\mu K$.
+\\

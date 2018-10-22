@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0037
+From: Maxim A. Yurkin <OIAmWer@GPIgfTQ.xqc.Iv>
+Date: Sat, 31 Mar 2007 16:06:05 GMT   (384kb)
+
+Title: The discrete dipole approximation for simulation of light scattering by
+  particles much larger than the wavelength
+Authors: Maxim A. Yurkin, Valeri P. Maltsev, Alfons G. Hoekstra
+Categories: physics.optics physics.comp-ph
+Comments: 13 pages, 10 figures
+Journal-ref: J.Quant.Spectrosc.Radiat.Transf. 106, 546-557 (2007)
+DOI: 10.1016/j.jqsrt.2007.01.033
+\\
+  In this manuscript we investigate the capabilities of the Discrete Dipole
+Approximation (DDA) to simulate scattering from particles that are much larger
+than the wavelength of the incident light, and describe an optimized publicly
+available DDA computer program that processes the large number of dipoles
+required for such simulations. Numerical simulations of light scattering by
+spheres with size parameters x up to 160 and 40 for refractive index m=1.05 and
+2 respectively are presented and compared with exact results of the Mie theory.
+Errors of both integral and angle-resolved scattering quantities generally
+increase with m and show no systematic dependence on x. Computational times
+increase steeply with both x and m, reaching values of more than 2 weeks on a
+cluster of 64 processors. The main distinctive feature of the computer program
+is the ability to parallelize a single DDA simulation over a cluster of
+computers, which allows it to simulate light scattering by very large
+particles, like the ones that are considered in this manuscript. Current
+limitations and possible ways for improvement are discussed.
+\\

@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0879
+From: Mohamed Kaaniche <qps2s1t.HZJ7byJ7@9czl.Dc>
+Date: Fri, 6 Apr 2007 11:46:49 GMT   (518kb)
+
+Title: A Hierarchical Approach for Dependability Analysis of a Commercial
+  Cache-Based RAID Storage Architecture
+Authors: Mohamed Kaaniche (LAAS), Luigi Romano (UIUC), Zbigniew Kalbarczyk
+  (UIUC), Ravishankar Iyer (UIUC), Rick Karcich (STORAGETEK)
+Categories: cs.PF
+Proxy: ccsd hal-00140480
+Journal-ref: Proc. 28th IEEE International Symposium on Fault-Tolerant
+  Computing (FTCS-28), Munich (Germany), IEEE Computer Society, June 1998,
+  pp.6-15 (1998) 6-15
+\\
+  We present a hierarchical simulation approach for the dependability analysis
+and evaluation of a highly available commercial cache-based RAID storage
+system. The archi-tecture is complex and includes several layers of
+overlap-ping error detection and recovery mechanisms. Three ab-straction levels
+have been developed to model the cache architecture, cache operations, and
+error detection and recovery mechanism. The impact of faults and errors
+oc-curring in the cache and in the disks is analyzed at each level of the
+hierarchy. A simulation submodel is associated with each abstraction level. The
+models have been devel-oped using DEPEND, a simulation-based environment for
+system-level dependability analysis, which provides facili-ties to inject
+faults into a functional behavior model, to simulate error detection and
+recovery mechanisms, and to evaluate quantitative measures. Several fault
+models are defined for each submodel to simulate cache component failures, disk
+failures, transmission errors, and data errors in the cache memory and in the
+disks. Some of the parame-ters characterizing fault injection in a given
+submodel cor-respond to probabilities evaluated from the simulation of the
+lower-level submodel. Based on the proposed method-ology, we evaluate and
+analyze 1) the system behavior un-der a real workload and high error rate
+(focusing on error bursts), 2) the coverage of the error detection mechanisms
+implemented in the system and the error latency distribu-tions, and 3) the
+accumulation of errors in the cache and in the disks.
+\\

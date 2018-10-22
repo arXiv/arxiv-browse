@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0773
+From: Raj Kumar Pan <7UElh@UbBP.QCn.8A>
+Date: Thu, 5 Apr 2007 19:27:38 GMT   (93kb)
+Date (revised v2): Mon, 5 Nov 2007 02:05:39 GMT   (112kb)
+
+Title: Collective behavior of stock price movements in an emerging market
+Authors: Raj Kumar Pan and Sitabhra Sinha
+Categories: q-fin.ST cond-mat.other physics.data-an physics.soc-ph
+Comments: 10 pages, 10 figures
+Journal-ref: Phys. Rev. E 76, 046116 (2007) (9 pages)
+DOI: 10.1103/PhysRevE.76.046116
+\\
+  To investigate the universality of the structure of interactions in different
+markets, we analyze the cross-correlation matrix C of stock price fluctuations
+in the National Stock Exchange (NSE) of India. We find that this emerging
+market exhibits strong correlations in the movement of stock prices compared to
+developed markets, such as the New York Stock Exchange (NYSE). This is shown to
+be due to the dominant influence of a common market mode on the stock prices.
+By comparison, interactions between related stocks, e.g., those belonging to
+the same business sector, are much weaker. This lack of distinct sector
+identity in emerging markets is explicitly shown by reconstructing the network
+of mutually interacting stocks. Spectral analysis of C for NSE reveals that,
+the few largest eigenvalues deviate from the bulk of the spectrum predicted by
+random matrix theory, but they are far fewer in number compared to, e.g., NYSE.
+We show this to be due to the relative weakness of intra-sector interactions
+between stocks, compared to the market mode, by modeling stock price dynamics
+with a two-factor model. Our results suggest that the emergence of an internal
+structure comprising multiple groups of strongly coupled components is a
+signature of market development.
+\\

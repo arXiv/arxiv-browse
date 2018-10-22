@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:physics/9707012
+From: Haret Rosu <primary@example.org>
+Date: Thu, 10 Jul 1997 21:14:20 GMT   (3kb)
+Date (revised v2): Thu, 10 Jul 1997 23:50:03 GMT   (0kb,I)
+
+Title: Supersymmetric partner chirping of Newtonian free damping
+Authors: H.C. Rosu, J.L. Romero, J. Socorro
+Categories: physics math-ph math.MP quant-ph
+Comments: This version (physics/9707012v2) was not stored by arXiv. A
+  subsequent replacement was made before versioning was introduced.
+\\
+  We connect the classical free damping cases by means of Rosner's construction
+in supersymmetric quantum mechanics. Starting with the critical damping, one
+can obtain in the underdamping case a chirping of instantaneous physical
+frequency \omega ^{2}(t) \propto \omega_{u}^{2}sech^2(\omega_{u}t), whereas in
+the overdamped case the "chirping" is of the (unphysical) type \omega
+^{2}(t)\propto\omega_{o}^{2}sec^{2}(\omega_{o}t), where \omega_{u}$ and
+$\omega_{o} are the underdamped and overdamped frequency parameters,
+respectively
+\\

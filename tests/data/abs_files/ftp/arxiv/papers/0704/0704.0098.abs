@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0098
+From: Jack Raymond <vecm.uwLU7rh@FBLHtGM.RW4>
+Date: Sun, 1 Apr 2007 18:27:26 GMT   (81kb)
+Date (revised v2): Fri, 27 Apr 2007 12:39:14 GMT   (81kb)
+Date (revised v3): Wed, 1 Aug 2007 19:10:18 GMT   (94kb)
+Date (revised v4): Sun, 7 Oct 2007 16:50:39 GMT   (94kb)
+Date (revised v5): Wed, 30 Apr 2008 15:36:55 GMT   (83kb)
+
+Title: Sparsely-spread CDMA - a statistical mechanics based analysis
+Authors: Jack Raymond, David Saad
+Categories: cs.IT math.IT
+Comments: 23 pages, 5 figures, figure 1 amended since published version
+Journal-ref: J. Phys. A: Math. Theor. 40 No 41 (12 October 2007) 12315-12333
+DOI: 10.1088/1751-8113/40/41/004
+\\
+  Sparse Code Division Multiple Access (CDMA), a variation on the standard CDMA
+method in which the spreading (signature) matrix contains only a relatively
+small number of non-zero elements, is presented and analysed using methods of
+statistical physics. The analysis provides results on the performance of
+maximum likelihood decoding for sparse spreading codes in the large system
+limit. We present results for both cases of regular and irregular spreading
+matrices for the binary additive white Gaussian noise channel (BIAWGN) with a
+comparison to the canonical (dense) random spreading code.
+\\

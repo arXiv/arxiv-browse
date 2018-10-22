@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0655
+From: Branimir Sesar <P8kp4R@f.cWJnb5Hduo.55b>
+Date: Wed, 4 Apr 2007 20:23:22 GMT   (1256kb)
+
+Title: Exploring the Variable Sky with the Sloan Digital Sky Survey
+Authors: Branimir Sesar, Zeljko Ivezic, Robert H. Lupton, Mario Juric, James E.
+  Gunn, Gillian R. Knapp, Nathan De Lee, J. Allyn Smith, Gajus Miknaitis, Huan
+  Lin, Douglas Tucker, Mamoru Doi, Masayuki Tanaka, Masataka Fukugita, Jon
+  Holtzman, Steve Kent, Brian Yanny, David Schlegel, Douglas Finkbeiner, Nikhil
+  Padmanabhan, Constance M. Rockosi, Nicholas Bond, Brian Lee, Chris Stoughton,
+  Sebastian Jester, Hugh Harris, Paul Harding, Jon Brinkmann, Donald P.
+  Schneider, Donald York, Michael W. Richmond, Daniel Vanden Berk
+Categories: astro-ph
+Comments: 41 pages, 14 figures, submitted to Astronomical Journal
+Journal-ref: Astron.J.134:2236-2251,2007
+DOI: 10.1086/521819
+\\
+  We quantify the variability of faint unresolved optical sources using a
+catalog based on multiple SDSS imaging observations. The catalog covers SDSS
+Stripe 82, and contains 58 million photometric observations in the SDSS ugriz
+system for 1.4 million unresolved sources. In each photometric bandpass we
+compute various low-order lightcurve statistics and use them to select and
+study variable sources. We find that 2% of unresolved optical sources brighter
+than g=20.5 appear variable at the 0.05 mag level (rms) simultaneously in the g
+and r bands. The majority (2/3) of these variable sources are low-redshift (<2)
+quasars, although they represent only 2% of all sources in the adopted
+flux-limited sample. We find that at least 90% of quasars are variable at the
+0.03 mag level (rms) and confirm that variability is as good a method for
+finding low-redshift quasars as is the UV excess color selection (at high
+Galactic latitudes). We analyze the distribution of lightcurve skewness for
+quasars and find that is centered on zero. We find that about 1/4 of the
+variable stars are RR Lyrae stars, and that only 0.5% of stars from the main
+stellar locus are variable at the 0.05 mag level. The distribution of
+lightcurve skewness in the g-r vs. u-g color-color diagram on the main stellar
+locus is found to be bimodal (with one mode consistent with Algol-like
+behavior). Using over six hundred RR Lyrae stars, we demonstrate rich halo
+substructure out to distances of 100 kpc. We extrapolate these results to
+expected performance by the Large Synoptic Survey Telescope and estimate that
+it will obtain well-sampled 2% accurate, multi-color lightcurves for ~2 million
+low-redshift quasars, and will discover at least 50 million variable stars.
+\\

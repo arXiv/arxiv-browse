@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0322
+From: Liu Quanxing <hatNgGCQ@S5xig.eqd.5A>
+Date: Tue, 3 Apr 2007 06:46:55 GMT   (700kb)
+Date (revised v2): Wed, 22 Aug 2007 12:22:34 GMT   (891kb)
+Date (revised v3): Wed, 5 Dec 2007 15:47:30 GMT   (788kb)
+
+Title: Emergence of spatiotemporal chaos driven by far-field breakup of spiral
+  waves in the plankton ecological systems
+Authors: Quan-Xing Liu, Gui-Quan Sun, Bai-Lian Li and Zhen Jin
+Categories: nlin.PS nlin.CD q-bio.PE
+Comments: 9 Figures and 11 pages, REVTeX 4
+Journal-ref: 2009 Chinese Phys. B 18 506-515
+DOI: 10.1088/1674-1056/18/2/021
+\\
+  Alexander B. Medvinsky \emph{et al} [A. B. Medvinsky, I. A. Tikhonova, R. R.
+Aliev, B.-L. Li, Z.-S. Lin, and H. Malchow, Phys. Rev. E \textbf{64}, 021915
+(2001)] and Marcus R. Garvie \emph{et al} [M. R. Garvie and C. Trenchea, SIAM
+J. Control. Optim. \textbf{46}, 775-791 (2007)] shown that the minimal
+spatially extended reaction-diffusion model of phytoplankton-zooplankton can
+exhibit both regular, chaotic behavior, and spatiotemporal patterns in a patchy
+environment. Based on that, the spatial plankton model is furtherly
+investigated by means of computer simulations and theoretical analysis in the
+present paper when its parameters would be expected in the case of mixed
+Turing-Hopf bifurcation region. Our results show that the spiral waves exist in
+that region and the spatiotemporal chaos emerge, which arise from the far-field
+breakup of the spiral waves over large ranges of diffusion coefficients of
+phytoplankton and zooplankton. Moreover, the spatiotemporal chaos arising from
+the far-field breakup of spiral waves does not gradually involve the whole
+space within that region. Our results are confirmed by means of computation
+spectra and nonlinear bifurcation of wave trains. Finally, we give some
+explanations about the spatially structured patterns from the community level.
+\\

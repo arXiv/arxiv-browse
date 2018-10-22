@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0985
+From: Mohd Abubakr <LGEQ7Jk0cms@gyEh.bP4>
+Date: Sat, 7 Apr 2007 13:40:49 GMT   (80kb)
+
+Title: Architecture for Pseudo Acausal Evolvable Embedded Systems
+Authors: Mohd Abubakr, R.M.Vinay
+Categories: cs.NE cs.AI
+Comments: 4 pages, 2 figures. Submitted to SASO 2007
+\\
+  Advances in semiconductor technology are contributing to the increasing
+complexity in the design of embedded systems. Architectures with novel
+techniques such as evolvable nature and autonomous behavior have engrossed lot
+of attention. This paper demonstrates conceptually evolvable embedded systems
+can be characterized basing on acausal nature. It is noted that in acausal
+systems, future input needs to be known, here we make a mechanism such that the
+system predicts the future inputs and exhibits pseudo acausal nature. An
+embedded system that uses theoretical framework of acausality is proposed. Our
+method aims at a novel architecture that features the hardware evolability and
+autonomous behavior alongside pseudo acausality. Various aspects of this
+architecture are discussed in detail along with the limitations.
+\\

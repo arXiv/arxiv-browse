@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0868
+From: Andrea Bertoni <aTqcAZM.S3deEc@Jdm2oYJ.8H>
+Date: Fri, 6 Apr 2007 10:28:43 GMT   (89kb)
+Date (revised v2): Mon, 11 Jun 2007 09:30:17 GMT   (86kb)
+
+Title: Effect of electron-electron interaction on the phonon-mediated spin
+  relaxation in quantum dots
+Authors: Juan I. Climente, Andrea Bertoni, Guido Goldoni, Massimo Rontani,
+  Elisa Molinari
+Categories: cond-mat.mes-hall
+Comments: 12 pages, 10 figures. Revised version. Changes in section V
+  (simulation of PRL 98, 126601 experiment)
+Journal-ref: Phys. Rev. B 76, 085305 (2007)
+DOI: 10.1103/PhysRevB.76.085305
+\\
+  We estimate the spin relaxation rate due to spin-orbit coupling and acoustic
+phonon scattering in weakly-confined quantum dots with up to five interacting
+electrons. The Full Configuration Interaction approach is used to account for
+the inter-electron repulsion, and Rashba and Dresselhaus spin-orbit couplings
+are exactly diagonalized. We show that electron-electron interaction strongly
+affects spin-orbit admixture in the sample. Consequently, relaxation rates
+strongly depend on the number of carriers confined in the dot. We identify the
+mechanisms which may lead to improved spin stability in few electron (>2)
+quantum dots as compared to the usual one and two electron devices. Finally, we
+discuss recent experiments on triplet-singlet transitions in GaAs dots subject
+to external magnetic fields. Our simulations are in good agreement with the
+experimental findings, and support the interpretation of the observed spin
+relaxation as being due to spin-orbit coupling assisted by acoustic phonon
+emission.
+\\

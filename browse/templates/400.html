@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{%- block title -%}{{ error.description }}{%- endblock -%}
+
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+
+{% block content %}
+
+<h1>{{ error.description }}</h1>
+<p>An error has occured. If this problem persists, please contact
+  <a href="mailto:help@arxiv.org">help@arxiv.org</a> explaining the
+  circumstances of this error and quoting both the URL of this page in the
+  referring page.</p>
+
+<hr>
+<p><i>The following provides general information and links for use in the
+event of accident, error or problem with the e-print archives.</i></p>
+<p>Problems and errors can be reported to
+  <a href="mailto:help@arxiv.org">help@arxiv.org</a>. If you do send us email,
+  please provide:</p>
+<ol>
+  <li>The archive (e.g. astro-ph) and/or article identifier
+    (e.g. 0704.4125 or hep-th/9502213) causing the problem.</li>
+  <li>The URL which causes the problem</li>
+  <li>A brief description of what you expected to see/happen and what you
+    observed.
+  </li>
+</ol>
+<p>Thanks in advance for error reports; and apologies for any
+  inconvenience that the malfunctioning of arXiv.org may cause.</p>
+
+{%- endblock -%}

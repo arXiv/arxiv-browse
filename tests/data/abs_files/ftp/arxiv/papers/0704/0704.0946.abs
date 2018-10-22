@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0946
+From: Andrei Mesinger <WCmpoX.ogljgeli@MFoR.IND>
+Date: Mon, 9 Apr 2007 19:40:39 GMT   (811kb)
+
+Title: Efficient Simulations of Early Structure Formation and Reionization
+Authors: Andrei Mesinger and Steven Furlanetto
+Categories: astro-ph
+Comments: 13 pages, 10 figures; ApJ submitted
+DOI: 10.1086/521806
+\\
+  We present a method to construct semi-numerical ``simulations'', which can
+efficiently generate realizations of halo distributions and ionization maps at
+high redshifts. Our procedure combines an excursion-set approach with
+first-order Lagrangian perturbation theory and operates directly on the linear
+density and velocity fields. As such, the achievable dynamic range with our
+algorithm surpasses the current practical limit of N-body codes by orders of
+magnitude. This is particularly significant in studies of reionization, where
+the dynamic range is the principal limiting factor. We test our halo-finding
+and HII bubble-finding algorithms independently against N-body simulations with
+radiative transfer and obtain excellent agreement. We compute the size
+distributions of ionized and neutral regions in our maps. We find even larger
+ionized bubbles than do purely analytic models at the same volume-weighted mean
+hydrogen neutral fraction. We also generate maps and power spectra of 21-cm
+brightness temperature fluctuations, which for the first time include
+corrections due to gas bulk velocities. We find that velocities widen the tails
+of the temperature distributions and increase small-scale power, though these
+effects quickly diminish as reionization progresses. We also include some
+preliminary results from a simulation run with the largest dynamic range to
+date: a 250 Mpc box that resolves halos with masses M >~ 2.2 x10^8 M_sun. We
+show that accurately modeling the late stages of reionization requires such
+large scales. The speed and dynamic range provided by our semi-numerical
+approach will be extremely useful in the modeling of early structure formation
+and reionization.
+\\

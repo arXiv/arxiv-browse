@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0885
+From: Jan Pachl <OUYbn@eYV.fEd>
+Date: Fri, 6 Apr 2007 13:10:30 GMT   (7kb)
+
+Title: Uniform measures and countably additive measures
+Authors: Jan Pachl
+Categories: math.FA math.GN
+Comments: LaTeX; 7 pages
+MSC-class: 28C05; 54E15
+\\
+  Uniform measures are defined as the functionals on the space of bounded
+uniformly continuous functions that are continuous on bounded uniformly
+equicontinuous sets. If every cardinal has measure zero then every countably
+additive measure is a uniform measure. The functionals sequentially continuous
+on bounded uniformly equicontinuous sets are exactly uniform measures on the
+separable modification of the underlying uniform space.
+\\

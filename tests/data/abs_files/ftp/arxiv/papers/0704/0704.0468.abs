@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0468
+From: Jinsong Tan <CkGnMbj.Mww@2ESyv.l86>
+Date: Tue, 3 Apr 2007 21:39:11 GMT   (12kb)
+Date (revised v2): Mon, 23 Mar 2009 02:50:29 GMT   (12kb)
+
+Title: Inapproximability of Maximum Weighted Edge Biclique and Its Applications
+Authors: Jinsong Tan
+Categories: cs.CC cs.DS
+ACM-class: F.2.0
+Journal-ref: LNCS 4978, TAMC 2008, pp 282-293
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Given a bipartite graph $G = (V_1,V_2,E)$ where edges take on {\it both}
+positive and negative weights from set $\mathcal{S}$, the {\it maximum weighted
+edge biclique} problem, or $\mathcal{S}$-MWEB for short, asks to find a
+bipartite subgraph whose sum of edge weights is maximized. This problem has
+various applications in bioinformatics, machine learning and databases and its
+(in)approximability remains open. In this paper, we show that for a wide range
+of choices of $\mathcal{S}$, specifically when $| \frac{\min\mathcal{S}} {\max
+\mathcal{S}} | \in \Omega(\eta^{\delta-1/2}) \cap O(\eta^{1/2-\delta})$ (where
+$\eta = \max\{|V_1|, |V_2|\}$, and $\delta \in (0,1/2]$), no polynomial time
+algorithm can approximate $\mathcal{S}$-MWEB within a factor of $n^{\epsilon}$
+for some $\epsilon > 0$ unless $\mathsf{RP = NP}$. This hardness result gives
+justification of the heuristic approaches adopted for various applied problems
+in the aforementioned areas, and indicates that good approximation algorithms
+are unlikely to exist. Specifically, we give two applications by showing that:
+1) finding statistically significant biclusters in the SAMBA model, proposed in
+\cite{Tan02} for the analysis of microarray data, is
+$n^{\epsilon}$-inapproximable; and 2) no polynomial time algorithm exists for
+the Minimum Description Length with Holes problem \cite{Bu05} unless
+$\mathsf{RP=NP}$.
+\\

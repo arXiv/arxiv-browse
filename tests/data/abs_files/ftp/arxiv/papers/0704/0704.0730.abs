@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0730
+From: Hamed Haddadi MSc MIEE <H0duI@kg.nqR.94.tS>
+Date: Thu, 5 Apr 2007 14:47:25 GMT   (175kb)
+
+Title: Revisiting the Issues On Netflow Sample and Export Performance
+Authors: Hamed Haddadi, Raul Landa, Miguel Rio, Saleem Bhatti
+Categories: cs.PF cs.NI
+ACM-class: G.3
+\\
+  The high volume of packets and packet rates of traffic on some router links
+makes it exceedingly difficult for routers to examine every packet in order to
+keep detailed statistics about the traffic which is traversing the router.
+Sampling is commonly applied on routers in order to limit the load incurred by
+the collection of information that the router has to undertake when evaluating
+flow information for monitoring purposes. The sampling process in nearly all
+cases is a deterministic process of choosing 1 in every N packets on a
+per-interface basis, and then forming the flow statistics based on the
+collected sampled statistics. Even though this sampling may not be significant
+for some statistics, such as packet rate, others can be severely distorted.
+However, it is important to consider the sampling techniques and their relative
+accuracy when applied to different traffic patterns. The main disadvantage of
+sampling is the loss of accuracy in the collected trace when compared to the
+original traffic stream. To date there has not been a detailed analysis of the
+impact of sampling at a router in various traffic profiles and flow criteria.
+In this paper, we assess the performance of the sampling process as used in
+NetFlow in detail, and we discuss some techniques for the compensation of loss
+of monitoring detail.
+\\

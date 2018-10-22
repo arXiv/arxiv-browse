@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0632
+From: Jason Steffen <77WqSVA6@k2js.p3W>
+Date: Wed, 4 Apr 2007 18:15:58 GMT   (170kb)
+
+Title: Detecting and Characterizing Planetary Systems with Transit Timing
+Authors: Jason H. Steffen, B. Scott Gaudi, Eric B. Ford, Eric Agol, Mathew J.
+  Holman
+Categories: astro-ph
+Comments: 7 pages, 2 figures, white paper submitted to the Exoplanet Task Force
+\\
+  In the coming decades, research in extrasolar planets aims to advance two
+goals: 1) detecting and characterizing low-mass planets increasingly similar to
+the Earth, and 2) improving our understanding of planet formation. We present a
+new planet detection method that is capable of making large advances towards
+both of these objectives and describe a modest network of telescopes that is
+able to make the requisite observations. In a system where a known planet
+transits its host star, a second planet in that system will cause the time
+between transits to vary. These transit timing variations can be used to infer
+the orbital elements and mass of the perturbing planet even if it has a mass
+that is smaller than the mass of the Earth. This detection technique
+complements other techniques because it is most sensitive in mean-motion
+resonances where, due to degeneracies, other techniques have reduced
+sensitivity. Small ground-based observatories have already exceeded the
+photometric precision necessary to detect sub-Earth mass planets. However, TTV
+planet searches are currently limited by the relatively small number of
+high-precision transit data and insufficient observing time on existing
+telescopes. These issues will be compounded as the number of known transiting
+planets suitable for TTV study will increase substantially in the near future.
+A relatively modest investment in a ground-based network of small ($\sim 0.5
+{\rm m}$ telescopes could provide the needed coverage and so dramatically
+increase the effectiveness of transit timing observations.
+\\

@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0846
+From: Heidi Haynal <nM7GR@96KeRKQ3OOHGsx.DTK>
+Date: Fri, 6 Apr 2007 07:10:19 GMT   (32kb)
+
+Title: PI degree parity in q-skew polynomial rings
+Authors: Heidi Haynal
+Categories: math.RA math.QA
+Comments: 43 pages; Submitted to the Journal of Algebra
+MSC-class: 16R99; 81R50; 16S36; 16P40
+\\
+  For k a field of arbitrary characteristic, and R a k-algebra, we show that
+the PI degree of an iterated skew polynomial ring
+R[x_1;\tau_1,\delta_1]...b[x_n;\tau_n,\delta_n] agrees with the PI degree of
+R[x_1;\tau_1]...b[x_n;\tau_n] when each (\tau_i,\delta_i) satisfies a q_i-skew
+relation for q_i \in k^{\times} and extends to a higher q_i-skew
+\tau_i-derivation. We confirm the quantum Gel'fand-Kirillov conjecture for
+various quantized coordinate rings, and calculate their PI degrees. We extend
+these results to completely prime factor algebras.
+\\

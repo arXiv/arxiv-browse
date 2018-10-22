@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0859
+From: B\'alint Farkas <rpU4H6O@XCanl.f3v>
+Date: Fri, 6 Apr 2007 08:30:02 GMT   (19kb)
+
+Title: Transfinite diameter, Chebyshev constant and energy on locally compact
+  spaces
+Authors: Balint Farkas, Bela Nagy
+Categories: math.CA
+MSC-class: 31C15; 28A12, 54D45
+\\
+  We study the relationship between transfinite diameter, Chebyshev constant
+and Wiener energy in the abstract linear potential analytic setting pioneered
+by Choquet, Fuglede and Ohtsuka. It turns out that, whenever the potential
+theoretic kernel has the maximum principle, then all these quantities are equal
+for all compact sets. For continuous kernels even the converse statement is
+true: if the Chebyshev constant of any compact set coincides with its
+transfinite diameter, the kernel must satisfy the maximum principle. An
+abundance of examples is provided to show the sharpness of the results.
+\\

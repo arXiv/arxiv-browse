@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0798
+From: Donald M. Davis <jh4f@plQ9QU.oen>
+Date: Thu, 5 Apr 2007 20:29:32 GMT   (27kb)
+
+Title: Nonimmersions of RP^n implied by tmf, revisited
+Authors: Donald M. Davis and Mark Mahowald
+Categories: math.AT
+Comments: 35 pages; author produced PDF available at
+  http://www.lehigh.edu/~dmd1/overlook4.pdf
+MSC-class: 57R42; 55N20
+\\
+  In a 2002 paper, the authors and Bruner used the new spectrum tmf to obtain
+some new nonimmersions of real projective spaces. In this note, we
+complete/correct two oversights in that paper.
+  The first is to note that in that paper a general nonimmersion result was
+stated which yielded new nonimmersions for RP^n with n as small as 48, and yet
+it was stated there that the first new result occurred when n=1536. Here we
+give a simple proof of those overlooked results.
+  Secondly, we fill in a gap in the proof of the 2002 paper. There it was
+claimed that an axial map f must satisfy f^*(X)=X_1+X_2. We realized recently
+that this is not clear. However, here we show that it is true up multiplication
+by a unit in the appropriate ring, and so we retrieve all the nonimmersion
+results claimed in the original paper.
+  Finally, we present a complete determination of tmf^{8*}(RP^\infty\times
+RP^\infty) and tmf^*(CP^\infty\times CP^\infty) in positive dimensions.
+\\

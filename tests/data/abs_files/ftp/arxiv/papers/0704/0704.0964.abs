@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0964
+From: Sergey Bravyi <47n1KAJ@XjD2X.25y>
+Date: Mon, 9 Apr 2007 03:16:17 GMT   (21kb)
+
+Title: Upper bounds on entangling rates of bipartite Hamiltonians
+Authors: Sergey Bravyi
+Categories: quant-ph
+Comments: 14 pages, 4 figures
+Journal-ref: Phys. Rev. A 76, 052319 (2007)
+DOI: 10.1103/PhysRevA.76.052319
+\\
+  We discuss upper bounds on the rate at which unitary evolution governed by a
+non-local Hamiltonian can generate entanglement in a bipartite system. Given a
+bipartite Hamiltonian H coupling two finite dimensional particles A and B, the
+entangling rate is shown to be upper bounded by c*log(d)*norm(H), where d is
+the smallest dimension of the interacting particles, norm(H) is the operator
+norm of H, and c is a constant close to 1. Under certain restrictions on the
+initial state we prove analogous upper bound for the ancilla-assisted
+entangling rate with a constant c that does not depend upon dimensions of local
+ancillas. The restriction is that the initial state has at most two distinct
+Schmidt coefficients (each coefficient may have arbitrarily large
+multiplicity). Our proof is based on analysis of a mixing rate -- a functional
+measuring how fast entropy can be produced if one mixes a time-independent
+state with a state evolving unitarily.
+\\

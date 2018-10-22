@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0326
+From: Hans J. Haubold <DabrTlUD@S3Z.LxJ.X9z>
+Date: Tue, 3 Apr 2007 07:02:47 GMT   (10kb)
+Date (revised v2): Tue, 7 Aug 2007 16:35:32 GMT   (10kb)
+
+Title: On generalized entropy measures and pathways
+Authors: A.M. Mathai, H.J. Haubold
+Categories: math.ST cond-mat.stat-mech stat.TH
+Comments: 12 pages, LaTeX, typos corrected
+Journal-ref: Physica A 385(2007)493-500
+DOI: 10.1016/j.physa.2007.06.047
+\\
+  Product probability property, known in the literature as statistical
+independence, is examined first. Then generalized entropies are introduced, all
+of which give generalizations to Shannon entropy. It is shown that the nature
+of the recursivity postulate automatically determines the logarithmic
+functional form for Shannon entropy. Due to the logarithmic nature, Shannon
+entropy naturally gives rise to additivity, when applied to situations having
+product probability property. It is argued that the natural process is
+non-additivity, important, for example, in statistical mechanics, even in
+product probability property situations and additivity can hold due to the
+involvement of a recursivity postulate leading to a logarithmic function.
+Generalizations, including Mathai's generalized entropy are introduced and some
+of the properties are examined. Situations are examined where Mathai's entropy
+leads to pathway models, exponential and power law behavior and related
+differential equations. Connection of Mathai's entropy to Kerridge's measure of
+"inaccuracy" is also explored.
+\\

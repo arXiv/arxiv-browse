@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0490
+From: Daniel Stancil <vv4SgLD@auy.Ecd>
+Date: Wed, 4 Apr 2007 13:38:23 GMT   (133kb)
+Date (revised v2): Fri, 26 Oct 2007 04:12:28 GMT   (99kb)
+
+Title: Long Distance Signaling Using Axion-like Particles
+Authors: Daniel D. Stancil
+Categories: hep-ph astro-ph hep-th
+Comments: 18 pages, including 3 figures Version 2 has been modified to show
+  portions of the coupling-mass plane that may lead to long distance
+  communication, rather than concentrating on an example using the PVLAS
+  parameters
+Journal-ref: Phys.Rev.D76:111701,2007
+DOI: 10.1103/PhysRevD.76.111701
+\\
+  The possible existence of axion-like particles could lead to a new type of
+long distance communication. In this work, basic antenna concepts are defined
+and a Friis-like equation is derived to facilitate long-distance link
+calculations. An example calculation is presented showing that communication
+over distances of 1000 km or more may be possible for $m_{a}< 3.5$ meV and
+$g_{a\gamma \gamma} > 5 \times 10^{- 8} {\text{GeV}}^{- 1}$.
+\\

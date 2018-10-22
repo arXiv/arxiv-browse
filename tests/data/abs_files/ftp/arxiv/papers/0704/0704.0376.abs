@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0376
+From: Daniele Parodi <khXsVq5@2m.ra0P.Bi>
+Date: Tue, 3 Apr 2007 12:25:34 GMT   (100kb)
+Date (revised v2): Mon, 2 Jul 2007 14:19:40 GMT   (100kb)
+
+Title: Environmental noise reduction for holonomic quantum gates
+Authors: Daniele Parodi, Maura Sassetti, Paolo Solinas, Nino Zangh\`i
+Categories: quant-ph cond-mat.mes-hall
+Comments: 7 pages, 2 figures, to appear in Phys. Rev. A
+DOI: 10.1103/PhysRevA.76.012337
+\\
+  We study the performance of holonomic quantum gates, driven by lasers, under
+the effect of a dissipative environment modeled as a thermal bath of
+oscillators. We show how to enhance the performance of the gates by suitable
+choice of the loop in the manifold of the controllable parameters of the laser.
+For a simplified, albeit realistic model, we find the surprising result that
+for a long time evolution the performance of the gate (properly estimated in
+terms of average fidelity) increases. On the basis of this result, we compare
+holonomic gates with the so-called stimulated Raman adiabatic passage (STIRAP)
+gates.
+\\

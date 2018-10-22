@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509014
+From: Roch Cassanas <e71d8nUW@0Iu4.IL0b-IjG0U0.xy>
+Date: Fri, 9 Sep 2005 14:41:35 GMT   (30kb)
+
+Title: Reduced Gutzwiller formula with symmetry: case of a Lie group
+Authors: Roch Cassanas (LMJL)
+Categories: math-ph math.MP
+Comments: 23 pages
+Proxy: ccsd ccsd-00008566
+MSC-class: 81Q50; 58J70; 81R30
+\\
+  We consider a classical Hamiltonian $H$ on $\mathbb{R}^{2d}$, invariant by a
+Lie group of symmetry $G$, whose Weyl quantization $\hat{H}$ is a selfadjoint
+operator on $L^2(\mathbb{R}^d)$. If $\chi$ is an irreducible character of $G$,
+we investigate the spectrum of its restriction $\hat{H}\_{\chi}$ to the
+symmetry subspace $L^2\_{\chi}(\mathbb{R}^d)$ of $L^2(\mathbb{R}^d)$ coming
+from the decomposition of Peter-Weyl. We give semi-classical Weyl asymptotics
+for the eigenvalues counting function of $\hat{H}\_{\chi}$ in an interval of
+$\mathbb{R}$, and interpret it geometrically in terms of dynamics in the
+reduced space $\mathbb{R}^{2d}/G$. Besides, oscillations of the spectral
+density of $\hat{H}\_{\chi}$ are described by a Gutzwiller trace formula
+involving periodic orbits of the reduced space, corresponding to quasi-periodic
+orbits of $\mathbb{R}^{2d}$.
+\\

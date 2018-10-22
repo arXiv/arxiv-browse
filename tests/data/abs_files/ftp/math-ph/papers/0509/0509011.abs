@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509011
+From: Philippe Di Francesco <SVKBsZ6y@dpQ-xR8Y.jmessw.qdc.YP>
+Date: Tue, 6 Sep 2005 15:44:06 GMT   (23kb)
+Date (revised v2): Wed, 7 Sep 2005 18:29:21 GMT   (23kb)
+Date (revised v3): Thu, 8 Sep 2005 05:25:59 GMT   (23kb)
+
+Title: Boundary qKZ equation and generalized Razumov-Stroganov sum rules for
+  open IRF models
+Authors: P. Di Francesco
+Categories: math-ph cond-mat.stat-mech math.CO math.MP
+Comments: 21 pages, 7 figures, 1 table, uses epsf and lanlmac conclusion
+  slightly modified
+Report-no: SPhT-T05/135
+DOI: 10.1088/1742-5468/2005/11/P11003
+\\
+  We find higher rank generalizations of the Razumov--Stroganov sum rules at
+$q=-e^{i\pi\over k+1}$ for $A_{k-1}$ models with open boundaries, by
+constructing polynomial solutions of level one boundary quantum
+Knizhnik--Zamolodchikov equations for $U_q(\frak{sl}(k))$. The result takes the
+form of a character of the symplectic group, that leads to a generalization of
+the number of vertically symmetric alternating sign matrices. We also
+investigate the other combinatorial point $q=-1$, presumably related to the
+geometry of nilpotent matrix varieties.
+\\

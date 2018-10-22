@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0357
+From: Gergely J Sz\"oll\H{o}si <jiFzB@0SQ6f.ougV.4h>
+Date: Tue, 3 Apr 2007 11:02:47 GMT   (622kb,D)
+Date (revised v2): Fri, 13 Apr 2007 15:49:13 GMT   (622kb,D)
+Date (revised v3): Wed, 15 Oct 2008 11:29:30 GMT   (1295kb)
+
+Title: Evolutionary games on minimally structured populations
+Authors: Gergely J Szollosi and Imre Derenyi
+Categories: q-bio.PE q-bio.OT
+Comments: Supporting information available as EPAPS Document No.
+  E-PLEEE8-78-144809 at http://ftp.aip.org/epaps/phys_rev_e/E-PLEEE8-78-144809/
+Journal-ref: PHYSICAL REVIEW E 78, 031919 (2008)
+DOI: 10.1103/PhysRevE.78.031919
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Population structure induced by both spatial embedding and more general
+networks of interaction, such as model social networks, have been shown to have
+a fundamental effect on the dynamics and outcome of evolutionary games. These
+effects have, however, proved to be sensitive to the details of the underlying
+topology and dynamics. Here we introduce a minimal population structure that is
+described by two distinct hierarchical levels of interaction. We believe this
+model is able to identify effects of spatial structure that do not depend on
+the details of the topology. We derive the dynamics governing the evolution of
+a system starting from fundamental individual level stochastic processes
+through two successive meanfield approximations. In our model of population
+structure the topology of interactions is described by only two parameters: the
+effective population size at the local scale and the relative strength of local
+dynamics to global mixing. We demonstrate, for example, the existence of a
+continuous transition leading to the dominance of cooperation in populations
+with hierarchical levels of unstructured mixing as the benefit to cost ratio
+becomes smaller then the local population size. Applying our model of spatial
+structure to the repeated prisoner's dilemma we uncover a novel and
+counterintuitive mechanism by which the constant influx of defectors sustains
+cooperation. Further exploring the phase space of the repeated prisoner's
+dilemma and also of the "rock-paper-scissor" game we find indications of rich
+structure and are able to reproduce several effects observed in other models
+with explicit spatial embedding, such as the maintenance of biodiversity and
+the emergence of global oscillations.
+\\

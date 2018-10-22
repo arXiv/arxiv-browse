@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509020
+From: Hans F. de Groote <lCezxpu7@b7ET.jmb-DRVAACLFm.c2>
+Date: Sun, 11 Sep 2005 16:18:45 GMT   (49kb)
+
+Title: Observables I: Stone Spectra
+Authors: Hans F. de Groote
+Categories: math-ph math.MP math.OA quant-ph
+Comments: 77 pages, no figures
+\\
+  In this work we discuss the notion of observable - both quantum and classical
+- from a new point of view. In classical mechanics, an observable is
+represented as a function (measurable, continuous or smooth), whereas in (von
+Neumann's approach to) quantum physics, an observable is represented as a
+bonded selfadjoint operator on Hilbert space. We will show in part II of this
+work that there is a common structure behind these two different concepts. If
+$\mathcal{R}$ is a von Neumann algebra, a selfadjoint element $A \in
+\mathcal{R}$ induces a continuous function $f_{A} : \mathcal{Q}(\mathcal{P(R)})
+\to \mathbb{R}$ defined on the \emph{Stone spectrum}
+$\mathcal{Q}(\mathcal{P(R)})$ of the lattice $\mathcal{P(R)}$ of projections in
+$\mathcal{R}$. The Stone spectrum $\mathcal{Q}(\mathbb{L})$ of a general
+lattice $\mathbb{L}$ is the set of maximal dual ideals in $\mathbb{L}$,
+equipped with a canonical topology. $\mathcal{Q}(\mathbb{L})$ coincides with
+Stone's construction if $\mathbb{L}$ is a Boolean algebra (thereby ``Stone'')
+and is homeomorphic to the Gelfand spectrum of an abelian von Neumann algebra
+$\mathcal{R}$ in case of $\mathbb{L} = \mathcal{P(R)}$ (thereby ``spectrum'').
+\\

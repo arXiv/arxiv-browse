@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0425
+From: Tobias Gleim <Kxj8Avwu@eYGPgBnc.f9o-lAYvU.Rm>
+Date: Tue, 3 Apr 2007 16:00:56 GMT   (247kb)
+Date (revised v2): Mon, 25 Feb 2008 15:54:13 GMT   (154kb)
+
+Title: QED for fields obeying a square root operator equation
+Authors: Tobias Gleim
+Categories: hep-th
+\\
+  Instead of using local field equations - like the Dirac equation for spin-1/2
+and the Klein-Gordon equation for spin-0 particles - one could try to use
+non-local field equations in order to describe scattering processes. The latter
+equations can be obtained by means of the relativistic energy together with the
+correspondence principle, resulting in equations with a square root operator.
+By coupling them to an electromagnetic field and expanding the square root (and
+taking into account terms of quadratic order in the electromagnetic coupling
+constant e), it is possible to calculate scattering matrix elements within the
+framework of quantum electrodynamics, e.g. like those for Compton scattering or
+for the scattering of two identical particles. This will be done here for the
+scalar case. These results are then compared with the corresponding ones based
+on the Klein-Gordon equation. A proposal of how to transfer these reflections
+to the spin-1/2 case is also presented.
+\\

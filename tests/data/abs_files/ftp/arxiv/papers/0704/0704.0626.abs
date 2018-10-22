@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0626
+From: Jason McEwen <QMqjLL@DlUQ.8iL.vE.ss>
+Date: Wed, 4 Apr 2007 17:39:41 GMT   (1414kb)
+Date (revised v2): Tue, 4 Mar 2008 11:34:46 GMT   (914kb)
+
+Title: Probing dark energy with steerable wavelets through correlation of WMAP
+  and NVSS local morphological measures
+Authors: J. D. McEwen, Y. Wiaux, M. P. Hobson, P. Vandergheynst, A. N. Lasenby
+Categories: astro-ph
+Comments: 12 pages, 10 figures, replaced to match version accepted by MNRAS
+Journal-ref: Mon.Not.Roy.Astron.Soc. 384 (2008) 1289-1300
+DOI: 10.1111/j.1365-2966.2007.12776.x
+\\
+  Using local morphological measures on the sphere defined through a steerable
+wavelet analysis, we examine the three-year WMAP and the NVSS data for
+correlation induced by the integrated Sachs-Wolfe (ISW) effect. The steerable
+wavelet constructed from the second derivative of a Gaussian allows one to
+define three local morphological measures, namely the signed-intensity,
+orientation and elongation of local features. Detections of correlation between
+the WMAP and NVSS data are made with each of these morphological measures. The
+most significant detection is obtained in the correlation of the
+signed-intensity of local features at a significance of 99.9%. By inspecting
+signed-intensity sky maps, it is possible for the first time to see the
+correlation between the WMAP and NVSS data by eye. Foreground contamination and
+instrumental systematics in the WMAP data are ruled out as the source of all
+significant detections of correlation. Our results provide new insight on the
+ISW effect by probing the morphological nature of the correlation induced
+between the cosmic microwave background and large scale structure of the
+Universe. Given the current constraints on the flatness of the Universe, our
+detection of the ISW effect again provides direct and independent evidence for
+dark energy. Moreover, this new morphological analysis may be used in future to
+help us to better understand the nature of dark energy.
+\\

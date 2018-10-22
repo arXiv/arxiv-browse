@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0698
+From: Paul Wright <OmZ4wzVA@9GJB.gs4.fpH>
+Date: Thu, 5 Apr 2007 09:41:49 GMT   (68kb)
+
+Title: Rigorous Results for the Periodic Oscillation of an Adiabatic Piston
+Authors: Paul Wright
+Categories: math.DS math-ph math.MP
+Comments: Ph.D. dissertation,
+MSC-class: 34C29, 37A60, 82C22
+\\
+  We study a heavy piston of mass $M$ that moves in one dimension. The piston
+separates two gas chambers, each of which contains finitely many ideal, unit
+mass gas particles moving in $d$ dimensions, where $ d\geq 1$. Using averaging
+techniques, we prove that the actual motions of the piston converge in
+probability to the predicted averaged behavior on the time scale $M^ {1/2} $
+when $M$ tends to infinity while the total energy of the system is bounded and
+the number of gas particles is fixed. Neishtadt and Sinai previously pointed
+out that an averaging theorem due to Anosov should extend to this situation.
+  When $ d=1$, the gas particles move in just one dimension, and we prove that
+the rate of convergence of the actual motions of the piston to its averaged
+behavior is $\mathcal{O} (M^ {-1/2}) $ on the time scale $M^ {1/2} $. The
+convergence is uniform over all initial conditions in a compact set. We also
+investigate the piston system when the particle interactions have been
+smoothed. The convergence to the averaged behavior again takes place uniformly,
+both over initial conditions and over the amount of smoothing.
+  In addition, we prove generalizations of our results to $N$ pistons
+separating $N+1$ gas chambers. We also provide a general discussion of
+averaging theory and the proofs of a number of previously known averaging
+results. In particular, we include a new proof of Anosov's averaging theorem
+for smooth systems that is primarily due to Dolgopyat.
+\\

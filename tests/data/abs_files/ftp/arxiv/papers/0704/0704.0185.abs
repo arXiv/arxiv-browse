@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0185
+From: Peter Brommer <YJaOY.Z3HSOJS@fPmf.ezu-4TnDFDLxH.PO>
+Date: Mon, 2 Apr 2007 13:35:11 GMT   (27kb)
+Date (revised v2): Tue, 3 Apr 2007 08:51:17 GMT   (27kb)
+
+Title: Potfit: effective potentials from ab-initio data
+Authors: Peter Brommer and Franz G\"ahler (Institut f\"ur Theoretische und
+  Angewandte Physik, Universit\"at Stuttgart)
+Categories: cond-mat.mtrl-sci
+Comments: 11 pages
+Journal-ref: Modelling and Simulation in Materials Science and Engineering 15
+  (2007), 295
+DOI: 10.1088/0965-0393/15/3/008
+\\
+  We present a program called potfit which generates an effective atomic
+interaction potential by matching it to a set of reference data computed in
+first-principles calculations. It thus allows to perform large-scale atomistic
+simulations of materials with physically justified potentials. We describe the
+fundamental principles behind the program, emphasizing its flexibility in
+adapting to different systems and potential models, while also discussing its
+limitations. The program has been used successfully in creating effective
+potentials for a number of complex intermetallic alloys, notably quasicrystals.
+\\

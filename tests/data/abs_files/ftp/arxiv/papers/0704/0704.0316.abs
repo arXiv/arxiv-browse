@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0316
+From: Alister W. Graham <z7ns9o9@Bye5M.Aw3p.U8B.Sl>
+Date: Tue, 3 Apr 2007 05:33:17 GMT   (551kb)
+
+Title: The Millennium Galaxy Catalogue: The local supermassive black hole mass
+  function in early- and late-type galaxies
+Authors: Alister W. Graham, Simon P. Driver, Paul D. Allen, Jochen Liske
+Categories: astro-ph
+Comments: 10 pages of text plus 5 of figs and refs. MNRAS, accepted.
+Journal-ref: Mon.Not.Roy.Astron.Soc.378:198-210,2007
+DOI: 10.1111/j.1365-2966.2007.11770.x
+\\
+  We provide a new estimate of the local supermassive black hole mass function
+using (i) the empirical relation between supermassive black hole mass and the
+Sersic index of the host spheroidal stellar system and (ii) the measured
+(spheroid) Sersic indices drawn from 10k galaxies in the Millennium Galaxy
+Catalogue. The observational simplicity of our approach, and the direct
+measurements of the black hole predictor quantity, i.e. the Sersic index, for
+both elliptical galaxies and the bulges of disc galaxies makes it
+straightforward to estimate accurate black hole masses in early- and late-type
+galaxies alike. We have parameterised the supermassive black hole mass function
+with a Schechter function and find, at the low-mass end, a logarithmic slope
+(1+alpha) of ~0.7 for the full galaxy sample and ~1.0 for the early-type galaxy
+sample. Considering spheroidal stellar systems brighter than M_B = -18 mag, and
+integrating down to black hole masses of 10^6 M_sun, we find that the local
+mass density of supermassive black holes in early-type galaxies rho_{bh,
+early-type} = (3.5+/-1.2) x 10^5 h^3_{70} M_sun Mpc^{-3}, and in late-type
+galaxies rho_{bh, late-type} = (1.0+/-0.5) x 10^5 h^3_{70} M_sun Mpc^{-3}. The
+uncertainties are derived from Monte Carlo simulations which include
+uncertainties in the M_bh-n relation, the catalogue of Sersic indices, the
+galaxy weights and Malmquist bias. The combined, cosmological, supermassive
+black hole mass density is thus Omega_{bh, total} = (3.2+/-1.2) x 10^{-6} h_70.
+That is, using a new and independent method, we conclude that (0.007+/-0.003)
+h^3_{70} per cent of the universe's baryons are presently locked up in
+supermassive black holes at the centres of galaxies.
+\\

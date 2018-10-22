@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0805
+From: Caleb Lo <ZKI@fC8.gqqD5L.B0C>
+Date: Thu, 5 Apr 2007 20:52:26 GMT   (116kb)
+
+Title: Opportunistic Relay Selection with Limited Feedback
+Authors: Caleb K. Lo, Robert W. Heath, Jr. and Sriram Vishwanath
+Categories: cs.IT math.IT
+Comments: 5 pages, 6 figures, to appear in Proceedings of 2007 IEEE Vehicular
+  Technology Conference-Spring in Dublin, Ireland
+\\
+  It has been shown that a decentralized relay selection protocol based on
+opportunistic feedback from the relays yields good throughput performance in
+dense wireless networks. This selection strategy supports a hybrid-ARQ
+transmission approach where relays forward parity information to the
+destination in the event of a decoding error. Such an approach, however,
+suffers a loss compared to centralized strategies that select relays with the
+best channel gain to the destination. This paper closes the performance gap by
+adding another level of channel feedback to the decentralized relay selection
+problem. It is demonstrated that only one additional bit of feedback is
+necessary for good throughput performance. The performance impact of varying
+key parameters such as the number of relays and the channel feedback threshold
+is discussed. An accompanying bit error rate analysis demonstrates the
+importance of relay selection.
+\\

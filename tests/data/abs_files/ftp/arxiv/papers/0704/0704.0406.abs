@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0406
+From: Dariush Heidarian <jvpCOQT.P@MN0xL.2xJ>
+Date: Tue, 3 Apr 2007 14:30:15 GMT   (24kb)
+
+Title: Finite Drude weight for 1D low temperature conductors
+Authors: Dariush Heidarian and Sandro Sorella
+Categories: cond-mat.str-el cond-mat.supr-con
+Comments: 4 pages, 4 figures
+DOI: 10.1103/PhysRevB.75.241104
+\\
+  We apply well established finite temperature Quantum Monte Carlo techniques
+to one dimensional Bose systems with soft and hardcore constraint, as well as
+to spinless fermion systems. We give clear and robust numerical evidence that,
+as expected, no superfluid density for Bosons or Meissner fraction for
+fermions. is possible at {\em any} non zero temperature in one dimensional
+interacting Bose or fermi lattice models, whereas a finite Drude weight is
+generally observed in gapless systems, in partial disagreement to previous
+expectations.
+\\

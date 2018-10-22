@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0087
+From: Tuyen Truong <A66oeRQ@XLrjzHD.42w>
+Date: Sun, 1 Apr 2007 13:44:50 GMT   (5kb)
+Date (revised v2): Wed, 23 May 2007 12:49:52 GMT   (5kb)
+
+Title: Approximate solutions to the Dirichlet problem for harmonic maps between
+  hyperbolic spaces
+Authors: Duong Minh Duc and Truong Trung Tuyen
+Categories: math.DG
+MSC-class: 53A35
+\\
+  Our main result in this paper is the following: Given $H^m, H^n$ hyperbolic
+spaces of dimensional $m$ and $n$ corresponding, and given a Holder function
+$f=(s^1,...,f^{n-1}):\partial H^m\to \partial H^n$ between geometric boundaries
+of $H^m$ and $H^n$. Then for each $\epsilon >0$ there exists a harmonic map
+$u:H^m\to H^n$ which is continuous up to the boundary (in the sense of
+Euclidean) and $u|_{\partial H^m}=(f^1,...,f^{n-1},\epsilon)$.
+\\

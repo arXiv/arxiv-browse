@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0080
+From: Dean McLaughlin <hM8WL@akLDa.4b.Ta.tD>
+Date: Sun, 1 Apr 2007 10:20:37 GMT   (78kb)
+Date (revised v2): Mon, 10 Sep 2007 16:43:49 GMT   (87kb)
+Date (revised v3): Thu, 24 Jan 2008 17:02:00 GMT   (183kb)
+Date (revised v4): Wed, 11 Jun 2008 17:15:32 GMT   (146kb)
+
+Title: Shaping the Globular Cluster Mass Function by Stellar-Dynamical
+  Evaporation
+Authors: Dean E. McLaughlin and S. Michael Fall
+Categories: astro-ph
+Comments: Final version, matching the published paper
+Journal-ref: Astrophys.J.679:1272-1287,2008
+DOI: 10.1086/533485
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We show that the globular cluster mass function (GCMF) in the Milky Way
+depends on cluster half-mass density (rho_h) in the sense that the turnover
+mass M_TO increases with rho_h while the width of the GCMF decreases. We argue
+that this is the expected signature of the slow erosion of a mass function that
+initially rose towards low masses, predominantly through cluster evaporation
+driven by internal two-body relaxation. We find excellent agreement between the
+observed GCMF -- including its dependence on internal density rho_h, central
+concentration c, and Galactocentric distance r_gc -- and a simple model in
+which the relaxation-driven mass-loss rates of clusters are approximated by
+-dM/dt = mu_ev ~ rho_h^{1/2}. In particular, we recover the well-known
+insensitivity of M_TO to r_gc. This feature does not derive from a literal
+``universality'' of the GCMF turnover mass, but rather from a significant
+variation of M_TO with rho_h -- the expected outcome of relaxation-driven
+cluster disruption -- plus significant scatter in rho_h as a function of r_gc.
+Our conclusions are the same if the evaporation rates are assumed to depend
+instead on the mean volume or surface densities of clusters inside their tidal
+radii, as mu_ev ~ rho_t^{1/2} or mu_ev ~ Sigma_t^{3/4} -- alternative
+prescriptions that are physically motivated but involve cluster properties
+(rho_t and Sigma_t) that are not as well defined or as readily observable as
+rho_h. In all cases, the normalization of mu_ev required to fit the GCMF
+implies cluster lifetimes that are within the range of standard values
+(although falling towards the low end of this range). Our analysis does not
+depend on any assumptions or information about velocity anisotropy in the
+globular cluster system.
+\\

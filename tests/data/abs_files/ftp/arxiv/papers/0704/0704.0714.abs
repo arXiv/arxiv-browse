@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0714
+From: Fuquan Fang <KYRdG@Vsw6Zm.gc2.8t>
+Date: Thu, 5 Apr 2007 12:15:17 GMT   (22kb)
+
+Title: Maximum solutions of normalized Ricci flows on 4-manifolds
+Authors: Fuquan Fang, Yuguang Zhang, Zhenlei Zhang
+Categories: math.DG math.GT
+Comments: 23 pages
+DOI: 10.1007/s00220-008-0556-8
+\\
+  We consider maximum solution $g(t)$, $t\in [0, +\infty)$, to the normalized
+Ricci flow. Among other things, we prove that, if $(M, \omega) $ is a smooth
+compact symplectic 4-manifold such that $b_2^+(M)>1$ and let
+$g(t),t\in[0,\infty)$, be a solution to (1.3) on $M$ whose Ricci curvature
+satisfies that $|\text{Ric}(g(t))|\leq 3$ and additionally $\chi(M)=3 \tau
+(M)>0$, then there exists an $m\in \mathbb{N}$, and a sequence of points
+$\{x_{j,k}\in M\}$, $j=1, ..., m$, satisfying that, by passing to a
+subsequence, $$(M, g(t_{k}+t), x_{1,k},..., x_{m,k})
+\stackrel{d_{GH}}\longrightarrow (\coprod_{j=1}^m N_j, g_{\infty},
+x_{1,\infty}, ...,, x_{m,\infty}),$$ $t\in [0, \infty)$, in the $m$-pointed
+Gromov-Hausdorff sense for any sequence $t_{k}\longrightarrow \infty$, where
+$(N_{j}, g_{\infty})$, $j=1,..., m$, are complete complex hyperbolic orbifolds
+of complex dimension 2 with at most finitely many isolated orbifold points.
+Moreover, the convergence is $C^{\infty}$ in the non-singular part of
+$\coprod_1^m N_{j}$ and
+$\text{Vol}_{g_{0}}(M)=\sum_{j=1}^{m}\text{Vol}_{g_{\infty}}(N_{j})$, where
+$\chi(M)$ (resp. $\tau(M)$) is the Euler characteristic (resp. signature) of
+$M$.
+\\

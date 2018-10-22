@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509038
+From: Uwe Grimm <M.k.M3JNK@a3Fq.qX.fB>
+Date: Sun, 18 Sep 2005 22:53:43 GMT   (28kb)
+
+Title: Averaged coordination numbers of planar aperiodic tilings
+Authors: Michael Baake (Bielefeld) and Uwe Grimm (Milton Keynes)
+Categories: math-ph math.MP
+Comments: 6 pages
+MSC-class: 52C23
+Journal-ref: Philosophical Magazine 86 (2006) 567-572
+DOI: 10.1080/14786430500269022
+\\
+  We consider averaged shelling and coordination numbers of aperiodic tilings.
+Shelling numbers count the vertices on radial shells around a vertex.
+Coordination numbers, in turn, count the vertices on coordination shells of a
+vertex, defined via the graph distance given by the tiling. For the
+Ammann-Beenker tiling, we find that coordination shells consist of complete
+shelling orbits, which enables us to calculate averaged coordination numbers
+for rather large distances explicitly. The relation to topological invariants
+of tilings is briefly discussed.
+\\

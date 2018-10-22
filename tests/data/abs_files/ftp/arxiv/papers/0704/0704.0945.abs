@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0945
+From: Peter McCullagh <b9Sy@P7hNEM.o4KC8Qj2.Jle>
+Date: Fri, 6 Apr 2007 20:53:36 GMT   (17kb)
+Date (revised v2): Fri, 14 Nov 2008 12:01:05 GMT   (97kb,S)
+
+Title: Gibbs fragmentation trees
+Authors: Peter McCullagh, Jim Pitman, Matthias Winkel
+Categories: math.PR math.ST stat.TH
+Comments: Published in at http://dx.doi.org/10.3150/08-BEJ134 the Bernoulli
+  (http://isi.cbs.nl/bernoulli/) by the International Statistical
+  Institute/Bernoulli Society (http://isi.cbs.nl/BS/bshome.htm)
+Report-no: IMS-BEJ-BEJ134
+Journal-ref: Bernoulli 2008, Vol. 14, No. 4, 988-1002
+DOI: 10.3150/08-BEJ134
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We study fragmentation trees of Gibbs type. In the binary case, we identify
+the most general Gibbs-type fragmentation tree with Aldous' beta-splitting
+model, which has an extended parameter range $\beta>-2$ with respect to the
+${\rm beta}(\beta+1,\beta+1)$ probability distributions on which it is based.
+In the multifurcating case, we show that Gibbs fragmentation trees are
+associated with the two-parameter Poisson--Dirichlet models for exchangeable
+random partitions of $\mathbb {N}$, with an extended parameter range
+$0\le\alpha\le1$, $\theta\ge-2\alpha$ and $\alpha<0$, $\theta =-m\alpha$, $m\in
+\mathbb {N}$.
+\\

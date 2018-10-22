@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509029
+From: Leonid Pastur <RWGcZk@x01.SiE0fEH.T0>
+Date: Wed, 14 Sep 2005 12:59:53 GMT   (23kb)
+
+Title: From Random Matrices to Quasiperiodic Jacobi Matrices via Orthogonal
+  Polynomials
+Authors: Leonid Pastur (Institute for Low Temperature Physics, Kharkiv,
+  Ukraine)
+Categories: math-ph math.MP
+MSC-class: 15A52; 11C08; 11C20
+\\
+  We present an informal review of results on asymptotics of orthogonal
+polynomials, stressing their spectral aspects and similarity in two cases
+considered. They are polynomials orthonormal on a finite union of disjoint
+intervals with respect to the Szego weight and polynomials orthonormal on R
+with respect to varying weights and having the same union of intervals as the
+set of oscillations of asymptotics. In both cases we construct double infinite
+Jacobi matrices with generically quasiperiodic coefficients and show that each
+of them is an isospectral deformation of another. Related results on asymptotic
+eigenvalue distribution of a class of random matrices of large size are also
+shortly discussed.
+\\

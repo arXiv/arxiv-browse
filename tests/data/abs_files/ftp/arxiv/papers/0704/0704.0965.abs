@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0965
+From: Yu Zongwen <DoDWm@jR3Sj.2oQKxoSW.TGx.ha>
+Date: Sat, 7 Apr 2007 02:40:13 GMT   (6kb)
+
+Title: Separability Criterion for Multipartite Pure States
+Authors: Zongwen Yu and Su Hu
+Categories: quant-ph
+Comments: 4 pages
+\\
+  In this paper, we give out some effective criterions which can be used to
+judge the separability of multipartite pure states. We obtain the relationship
+between separability and Schmidt decomposable of multipartite pure states in
+Theorem1. The first criterion derived from Theorem2 dose not need the Schmidt
+decomposition which is hard to find for multipartite states. Theorem3 is more
+profound which can be used to deduce Corollary1 which is one of the main
+results in [1]. Finally, we give out an algorithm which can be used to judge
+the separability of multipartite pure states effectively.
+\\

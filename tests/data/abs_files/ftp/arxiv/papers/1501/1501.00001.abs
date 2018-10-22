@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1501.00001
+From: Eugene Heifets <xbTbjNM@Td6.YZ6jx7C.QHq>
+Date: Fri, 27 Dec 2013 21:39:30 GMT   (1108kb,D)
+
+Title: Information geometry of noncooperative games
+Authors: Nils Bertschinger and David H. Wolpert and Eckehard Olbrich and
+  Juergen Jost
+Categories: cs.GT
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  In some games, additional information hurts a player, e.g., in games with
+first-mover advantage, the second-mover is hurt by seeing the first-mover's
+move. What are the conditions for a game to have such negative "value of
+information" for a player? Can a game have negative value of information for
+all players? To answer such questions, we generalize the definition of marginal
+utility of a good (to a player in a decision scenario) to define the marginal
+utility of a parameter vector specifying a game (to a player in that game).
+Doing this requires a cardinal information measure; for illustration we use
+Shannon measures. The resultant formalism reveals a unique geometry underlying
+every game. It also allows us to prove that generically, every game has
+negative value of information, unless one imposes a priori constraints on the
+game's parameter vector. We demonstrate these and related results numerically,
+and discuss their implications.
+\\

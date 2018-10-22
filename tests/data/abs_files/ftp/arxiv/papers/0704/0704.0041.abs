@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0041
+From: Debashish Goswami <eHveB2iU@fesLnk.Qf.Lb>
+Date: Sat, 31 Mar 2007 21:04:54 GMT   (15kb)
+Date (revised v2): Tue, 10 Apr 2007 00:09:57 GMT   (18kb)
+Date (revised v3): Mon, 23 Jul 2007 19:24:43 GMT   (19kb)
+Date (revised v4): Fri, 26 Oct 2007 06:15:33 GMT   (25kb)
+
+Title: Quantum Group of Isometries in Classical and Noncommutative Geometry
+Authors: Debashish Goswami
+Categories: math.QA math-ph math.MP
+Comments: improvements: (i) more general approach through quantum families of
+  isometries, following Woronowicz and Soltan's ideas; (ii) construction of
+  equivaraint spectral triples. also some minor changes. Improved and enlarged
+  version of ICTP preprint IC/2007/017
+DOI: 10.1007/s00220-008-0461-1
+\\
+  We formulate a quantum generalization of the notion of the group of
+Riemannian isometries for a compact Riemannian manifold, by introducing a
+natural notion of smooth and isometric action by a compact quantum group on a
+classical or noncommutative manifold described by spectral triples, and then
+proving the existence of a universal object (called the quantum isometry group)
+in the category of compact quantum groups acting smoothly and isometrically on
+a given (possibly noncommutative) manifold satisfying certain regularity
+assumptions. In fact, we identify the quantum isometry group with the universal
+object in a bigger category, namely the category of `quantum families of smooth
+isometries', defined along the line of Woronowicz and Soltan. We also construct
+a spectral triple on the Hilbert space of forms on a noncommutative manifold
+which is equivariant with respect to a natural unitary representation of the
+quantum isometry group. We give explicit description of quantum isometry groups
+of commutative and noncommutative tori, and in this context, obtain the quantum
+double torus defined in \cite{hajac} as the universal quantum group of
+holomorphic isometries of the noncommutative torus.
+\\

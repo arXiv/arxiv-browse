@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0831
+From: Brooke Shrader <n8QyKVLj@GSJ.Ndn>
+Date: Fri, 6 Apr 2007 02:25:40 GMT   (15kb)
+
+Title: On packet lengths and overhead for random linear coding over the erasure
+  channel
+Authors: Brooke Shrader and Anthony Ephremides
+Categories: cs.IT math.IT
+Comments: 5 pages, 5 figures, submitted to the 2007 International Wireless
+  Communications and Mobile Computing Conference
+\\
+  We assess the practicality of random network coding by illuminating the issue
+of overhead and considering it in conjunction with increasingly long packets
+sent over the erasure channel. We show that the transmission of increasingly
+long packets, consisting of either of an increasing number of symbols per
+packet or an increasing symbol alphabet size, results in a data rate
+approaching zero over the erasure channel. This result is due to an erasure
+probability that increases with packet length. Numerical results for a
+particular modulation scheme demonstrate a data rate of approximately zero for
+a large, but finite-length packet. Our results suggest a reduction in the
+performance gains offered by random network coding.
+\\

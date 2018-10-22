@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0574
+From: Suzanne Aigrain <G4H@cvDgt.DQ.lm.3H>
+Date: Wed, 4 Apr 2007 13:35:45 GMT   (56kb)
+
+Title: On the potential of transit surveys in star clusters: Impact of
+  correlated noise and radial velocity follow-up
+Authors: Suzanne Aigrain (IoA Cambridge, University of Exeter) and Frederic
+  Pont (Geneva Observatory)
+Categories: astro-ph
+Comments: 14 pages, 2 figures, accepted for publication in MNRAS
+Journal-ref: Mon.Not.Roy.Astron.Soc.378:741-752,2007
+DOI: 10.1111/j.1365-2966.2007.11823.x
+\\
+  We present an extension of the formalism recently proposed by Pepper & Gaudi
+to evaluate the yield of transit surveys in homogeneous stellar systems,
+incorporating the impact of correlated noise on transit time-scales on the
+detectability of transits, and simultaneously incorporating the magnitude
+limits imposed by the need for radial velocity follow-up of transit candidates.
+New expressions are derived for the different contributions to the noise budget
+on transit time-scales and the least-squares detection statistic for box-shaped
+transits, and their behaviour as a function of stellar mass is re-examined.
+Correlated noise that is constant with apparent stellar magnitude implies a
+steep decrease in detection probability at the high mass end which, when
+considered jointly with the radial velocity requirements, can severely limit
+the potential of otherwise promising surveys in star clusters. However, we find
+that small-aperture, wide field surveys may detect hot Neptunes whose radial
+velocity signal can be measured with present-day instrumentation in very nearby
+(<100 pc) clusters.
+\\

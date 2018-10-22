@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0738
+From: Patrick Ilg <dvrP@eSY.FBig.Hw>
+Date: Thu, 5 Apr 2007 15:06:03 GMT   (82kb)
+
+Title: Driven activation versus thermal activation
+Authors: Patrick Ilg and Jean-Louis Barrat
+Categories: cond-mat.stat-mech cond-mat.dis-nn
+Comments: 5 pages, 3 figures
+Journal-ref: EPL 79 (2007) 26001
+DOI: 10.1209/0295-5075/79/26001
+\\
+  Activated dynamics in a glassy system undergoing steady shear deformation is
+studied by numerical simulations. Our results show that the external driving
+force has a strong influence on the barrier crossing rate, even though the
+reaction coordinate is only weakly coupled to the nonequilibrium system. This
+"driven activation" can be quantified by introducing in the Arrhenius
+expression an effective temperature, which is close to the one determined from
+the fluctuation-dissipation relation. This conclusion is supported by
+analytical results for a simplified model system.
+\\

@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0703
+From: Ga\"etan L\'ev\^eque <WKgMdv.SPYDwRs@sIVi.la>
+Date: Thu, 5 Apr 2007 10:24:29 GMT   (462kb)
+
+Title: Transient behavior of surface plasmon polaritons scattered at a
+  subwavelength groove
+Authors: Gaetan Leveque, Olivier J. F. Martin, John Weiner
+Categories: physics.optics
+Comments: 12 pages, 10 figures
+DOI: 10.1103/PhysRevB.76.155418
+\\
+  We present a numerical study and analytical model of the optical near-field
+diffracted in the vicinity of subwavelength grooves milled in silver surfaces.
+The Green's tensor approach permits computation of the phase and amplitude
+dependence of the diffracted wave as a function of the groove geometry. It is
+shown that the field diffracted along the interface by the groove is equivalent
+to replacing the groove by an oscillating dipolar line source. An analytic
+expression is derived from the Green's function formalism, that reproduces well
+the asymptotic surface plasmon polariton (SPP) wave as well as the transient
+surface wave in the near-zone close to the groove. The agreement between this
+model and the full simulation is very good, showing that the transient
+"near-zone" regime does not depend on the precise shape of the groove. Finally,
+it is shown that a composite diffractive evanescent wave model that includes
+the asymptotic SPP can describe the wavelength evolution in this transient
+near-zone. Such a semi-analytical model may be useful for the design and
+optimization of more elaborate photonic circuits whose behavior in large part
+will be controlled by surface waves.
+\\

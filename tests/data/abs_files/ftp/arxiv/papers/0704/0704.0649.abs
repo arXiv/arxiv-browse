@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0649
+From: Andrei Zelevinsky <FBjJQX@3CS.KKY>
+Date: Wed, 4 Apr 2007 20:04:32 GMT   (54kb)
+Date (revised v2): Wed, 18 Apr 2007 19:25:43 GMT   (54kb)
+Date (revised v3): Fri, 13 Jul 2007 15:58:36 GMT   (54kb)
+Date (revised v4): Mon, 21 Apr 2008 14:49:14 GMT   (54kb)
+
+Title: Quivers with potentials and their representations I: Mutations
+Authors: Harm Derksen, Jerzy Weyman, Andrei Zelevinsky
+Categories: math.RA math.RT
+Comments: 58 pages; v.2: a typo fixed, references rearranged in the correct
+  alphabetical order, an acknowledgment added; v.3: more typos fixed, minor
+  editorial improvements; v.4: minor editorial changes, final version to appear
+  in Selecta Math
+MSC-class: 16G10 (Primary); 16G20, 16S38 (Secondary)
+\\
+  We study quivers with relations given by non-commutative analogs of Jacobian
+ideals in the complete path algebra. This framework allows us to give a
+representation-theoretic interpretation of quiver mutations at arbitrary
+vertices. This gives a far-reaching generalization of
+Bernstein-Gelfand-Ponomarev reflection functors. The motivations for this work
+come from several sources: superpotentials in physics, Calabi-Yau algebras,
+cluster algebras.
+\\

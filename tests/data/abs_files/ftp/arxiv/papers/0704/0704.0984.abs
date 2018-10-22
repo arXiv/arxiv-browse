@@ -1,0 +1,23 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0984
+From: Dimitris G. Angelakis <t6o0EqyE.YJ08aRmxo@BXo8O.FTp>
+Date: Mon, 9 Apr 2007 19:00:30 GMT   (64kb)
+
+Title: Transfer of a Polaritonic Qubit through a Coupled Cavity Array
+Authors: Sougato Bose, Dimitris G. Angelakis, Daniel Burgarth
+Categories: quant-ph
+Comments: Contribution to Special Issue in Journal of Modern Optics celebrating
+  the 60th birthday of Peter L. Knight
+Journal-ref: Journ. of Mod. Opt. vol. 54, 2307 (2007)
+\\
+  We demonstrate a scheme for quantum communication between the ends of an
+array of coupled cavities. Each cavity is doped with a single two level system
+(atoms or quantum dots) and the detuning of the atomic level spacing and
+photonic frequency is appropriately tuned to achieve photon blockade in the
+array. We show that in such a regime, the array can simulate a dual rail
+quantum state transfer protocol where the arrival of quantum information at the
+receiving cavity is heralded through a fluorescence measurement. Communication
+is also possible between any pair of cavities of a network of connected
+cavities.
+\\

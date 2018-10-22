@@ -1,0 +1,30 @@
+------------------------------------------------------------------------------
+\\
+arXiv:math-ph/0509017
+From: Biskup Marek <tCG3e1@Gmow.1A7V.Gpr>
+Date: Sun, 11 Sep 2005 00:11:02 GMT   (51kb)
+Date (revised v2): Tue, 4 Jul 2006 23:55:56 GMT   (65kb)
+
+Title: Quantum spin systems at positive temperature
+Authors: Marek Biskup, Lincoln Chayes, Shannon Starr
+Categories: math-ph cond-mat.stat-mech math.MP math.OA quant-ph
+Comments: 47 pages, version to appear in CMP (style files included)
+MSC-class: 82B10; 82B26; 81Q20
+Journal-ref: Commun. Math. Phys. 269 (2007), no. 3, 611-657
+DOI: 10.1007/s00220-006-0135-9
+\\
+  We develop a novel approach to phase transitions in quantum spin models based
+on a relation to their classical counterparts. Explicitly, we show that
+whenever chessboard estimates can be used to prove a phase transition in the
+classical model, the corresponding quantum model will have a similar phase
+transition, provided the inverse temperature $\beta$ and the magnitude of the
+quantum spins $\CalS$ satisfy $\beta\ll\sqrt\CalS$. From the quantum system we
+require that it is reflection positive and that it has a meaningful classical
+limit; the core technical estimate may be described as an extension of the
+Berezin-Lieb inequalities down to the level of matrix elements. The general
+theory is applied to prove phase transitions in various quantum spin systems
+with $\CalS\gg1$. The most notable examples are the quantum orbital-compass
+model on $\Z^2$ and the quantum 120-degree model on $\Z^3$ which are shown to
+exhibit symmetry breaking at low-temperatures despite the infinite degeneracy
+of their (classical) ground state.
+\\

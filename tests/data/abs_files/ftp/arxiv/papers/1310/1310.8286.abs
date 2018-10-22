@@ -1,0 +1,95 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1310.8286
+From: Brant M. Johnson <long_authors@example.org>
+Date: Wed, 30 Oct 2013 19:51:30 GMT   (242kb)
+
+Title: System-size dependence of open-heavy-flavor production in
+  nucleus-nucleus collisions at $\sqrt{s_{_{NN}}}$=200 GeV
+Authors: A. Adare, S. Afanasiev, C. Aidala, N.N. Ajitanand, Y. Akiba, H.
+  Al-Bataineh, J. Alexander, K. Aoki, N. Apadula, L. Aphecetche, R. Armendariz,
+  S.H. Aronson, J. Asai, E.T. Atomssa, R. Averbeck, T.C. Awes, B. Azmoun, V.
+  Babintsev, G. Baksay, L. Baksay, A. Baldisseri, K.N. Barish, P.D. Barnes, B.
+  Bassalleck, S. Bathe, S. Batsouli, V. Baublis, S. Baumgart, A. Bazilevsky, S.
+  Belikov, R. Bennett, Y. Berdnikov, A.A. Bickley, J.G. Boissevain, H. Borel,
+  K. Boyle, M.L. Brooks, H. Buesching, V. Bumazhnov, G. Bunce, S. Butsyk, S.
+  Campbell, B.S. Chang, J.-L. Charvet, S. Chernichenko, C.Y. Chi, J. Chiba, M.
+  Chiu, I.J. Choi, T. Chujo, P. Chung, A. Churyn, V. Cianciolo, C.R. Cleven,
+  B.A. Cole, M.P. Comets, P. Constantin, M. Csan\'ad, T. Cs\"org\H{o}, T.
+  Dahms, K. Das, G. David, M.B. Deaton, K. Dehmelt, H. Delagrange, A. Denisov,
+  D. d'Enterria, A. Deshpande, E.J. Desmond, O. Dietzsch, A. Dion, M.
+  Donadelli, O. Drapier, A. Drees, A.K. Dubey, J.M. Durham, A. Durum, V.
+  Dzhordzhadze, Y.V. Efremenko, J. Egdemir, F. Ellinghaus, W.S. Emam, A.
+  Enokizono, H. En'yo, S. Esumi, K.O. Eyser, D.E. Fields, M. Finger, M.
+  Finger,\, Jr., F. Fleuret, S.L. Fokin, Z. Fraenkel, J.E. Frantz, A. Franz,
+  A.D. Frawley, K. Fujiwara, Y. Fukao, T. Fusayasu, S. Gadrat, I. Garishvili,
+  A. Glenn, H. Gong, M. Gonin, J. Gosset, Y. Goto, R. Granier de Cassagnac, N.
+  Grau, S.V. Greene, M. Grosse Perdekamp, T. Gunji, H.-{\AA}. Gustafsson, T.
+  Hachiya, A. Hadj Henni, C. Haegemann, J.S. Haggerty, H. Hamagaki, R. Han, H.
+  Harada, E.P. Hartouni, K. Haruna, E. Haslum, R. Hayano, X. He, M. Heffner,
+  T.K. Hemmick, T. Hester, H. Hiejima, J.C. Hill, R. Hobbs, M. Hohlmann, W.
+  Holzmann, K. Homma, B. Hong, T. Horaguchi, D. Hornback, T. Ichihara, H.
+  Iinuma, K. Imai, M. Inaba, Y. Inoue, D. Isenhower, L. Isenhower, M. Ishihara,
+  T. Isobe, M. Issah, A. Isupov, B.V. Jacak, J. Jia, J. Jin, O. Jinnouchi, B.M.
+  Johnson, K.S. Joo, D. Jouan, F. Kajihara, S. Kametani, N. Kamihara, J. Kamin,
+  M. Kaneta, J.H. Kang, H. Kanou, D. Kawall, A.V. Kazantsev, A. Khanzadeev, J.
+  Kikuchi, D.H. Kim, D.J. Kim, E. Kim, E. Kinney, \'A. Kiss, E. Kistenev, A.
+  Kiyomichi, J. Klay, C. Klein-Boesing, L. Kochenda, V. Kochetkov, B. Komkov,
+  M. Konno, D. Kotchetkov, A. Kozlov, A. Kr\'al, A. Kravitz, J. Kubart, G.J.
+  Kunde, N. Kurihara, K. Kurita, M.J. Kweon, Y. Kwon, G.S. Kyle, R. Lacey, Y.S.
+  Lai, J.G. Lajoie, A. Lebedev, D.M. Lee, M.K. Lee, T. Lee, M.J. Leitch, M.A.L.
+  Leite, B. Lenzi, X. Li, T. Li\v{s}ka, A. Litvinenko, M.X. Liu, B. Love, D.
+  Lynch, C.F. Maguire, Y.I. Makdisi, A. Malakhov, M.D. Malik, V.I. Manko, Y.
+  Mao, L. Ma\v{s}ek, H. Masui, F. Matathias, M. McCumber, P.L. McGaughey, D.
+  McGlinchey, Y. Miake, P. Mike\v{s}, K. Miki, T.E. Miller, A. Milov, S.
+  Mioduszewski, M. Mishra, J.T. Mitchell, M. Mitrovski, A. Morreale, D.P.
+  Morrison, T.V. Moukhanova, D. Mukhopadhyay, J. Murata, S. Nagamiya, Y.
+  Nagata, J.L. Nagle, M. Naglis, I. Nakagawa, Y. Nakamiya, T. Nakamura, K.
+  Nakano, J. Newby, M. Nguyen, B.E. Norman, R. Nouicer, A.S. Nyanin, E.
+  O'Brien, S.X. Oda, C.A. Ogilvie, H. Ohnishi, M. Oka, K. Okada, O.O. Omiwade,
+  A. Oskarsson, M. Ouchida, K. Ozawa, R. Pak, D. Pal, A.P.T. Palounek, V.
+  Pantuev, V. Papavassiliou, J. Park, W.J. Park, S.F. Pate, H. Pei, J.-C. Peng,
+  H. Pereira, V. Peresedov, D.Yu. Peressounko, C. Pinkenburg, M.L. Purschke,
+  A.K. Purwar, H. Qu, J. Rak, A. Rakotozafindrabe, I. Ravinovich, K.F. Read, S.
+  Rembeczki, M. Reuter, K. Reygers, V. Riabov, Y. Riabov, G. Roche, A. Romana,
+  M. Rosati, S.S.E. Rosendahl, P. Rosnet, P. Rukoyatkin, V.L. Rykov, B.
+  Sahlmueller, N. Saito, T. Sakaguchi, S. Sakai, H. Sakata, V. Samsonov, S.
+  Sato, S. Sawada, J. Seele, R. Seidl, V. Semenov, R. Seto, D. Sharma, I.
+  Shein, A. Shevel, T.-A. Shibata, K. Shigaki, M. Shimomura, K. Shoji, A.
+  Sickles, C.L. Silva, D. Silvermyr, C. Silvestre, K.S. Sim, C.P. Singh, V.
+  Singh, S. Skutnik, M. Slune\v{c}ka, A. Soldatov, R.A. Soltz, W.E. Sondheim,
+  S.P. Sorensen, I.V. Sourikova, F. Staley, P.W. Stankus, E. Stenlund, M.
+  Stepanov, A. Ster, S.P. Stoll, T. Sugitate, C. Suire, J. Sziklai, T. Tabaru,
+  S. Takagi, E.M. Takagui, A. Taketani, Y. Tanaka, K. Tanida, M.J. Tannenbaum,
+  A. Taranenko, P. Tarj\'an, T.L. Thomas, M. Togawa, A. Toia, J. Tojo, L.
+  Tom\'a\v{s}ek, H. Torii, R.S. Towell, V-N. Tram, I. Tserruya, Y. Tsuchimoto,
+  C. Vale, H. Valle, H.W. van Hecke, J. Velkovska, R. V\'ertesi, A.A.
+  Vinogradov, M. Virius, V. Vrba, E. Vznuzdaev, M. Wagner, D. Walker, X.R.
+  Wang, Y. Watanabe, J. Wessels, S.N. White, D. Winter, C.L. Woody, M. Wysocki,
+  W. Xie, Y.L. Yamaguchi, A. Yanovich, Z. Yasin, J. Ying, S. Yokkaichi, G.R.
+  Young, I. Younus, I.E. Yushmanov, W.A. Zajc, O. Zaudtke, C. Zhang, S. Zhou,
+  J. Zim\'anyi, L. Zolin
+Categories: nucl-ex
+Comments: 380 authors, 13 pages, 12 figures, 2 tables. Submitted to Phys. Rev.
+  C. Plain text data tables for the points plotted in figures for this and
+  previous PHENIX publications are (or will be) publicly available at
+  http://www.phenix.bnl.gov/papers.html
+Journal-ref: Phys. Rev. C 90, 034903 (2014)
+DOI: 10.1103/PhysRevC.90.034903
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The PHENIX Collaboration at the Relativistic Heavy Ion Collider has measured
+open heavy flavor production in Cu$+$Cu collisions at $\sqrt{s_{_{NN}}}$=200
+GeV through the measurement of electrons at midrapidity that originate from
+semileptonic decays of charm and bottom hadrons. In peripheral Cu$+$Cu
+collisions an enhanced production of electrons is observed relative to
+$p$$+$$p$ collisions scaled by the number of binary collisions. In the
+transverse momentum range from 1 to 5 GeV/$c$ the nuclear modification factor
+is $R_{AA}$$\sim$1.4. As the system size increases to more central Cu$+$Cu
+collisions, the enhancement gradually disappears and turns into a suppression.
+For $p_T>3$ GeV/$c$, the suppression reaches $R_{AA}$$\sim$0.8 in the most
+central collisions. The $p_T$ and centrality dependence of $R_{AA}$ in Cu$+$Cu
+collisions agree quantitatively with $R_{AA}$ in $d+$Au and Au$+$Au collisions,
+if compared at similar number of participating nucleons $\langle N_{\rm part}
+\rangle$.
+\\

@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0380
+From: J. W. Harris <FKHU.GZnpf8@4lNMfgg.f2.mZ>
+Date: Tue, 3 Apr 2007 12:51:39 GMT   (152kb,S)
+
+Title: Exponential growth rates in a typed branching diffusion
+Authors: Y. Git, J. W. Harris, S. C. Harris
+Categories: math.PR
+Comments: Published at http://dx.doi.org/10.1214/105051606000000853 in the
+  Annals of Applied Probability (http://www.imstat.org/aap/) by the Institute
+  of Mathematical Statistics (http://www.imstat.org)
+Proxy: vtex
+Report-no: IMS-AAP-AAP0219
+MSC-class: 60J80 (Primary)
+Journal-ref: Annals of Applied Probability 2007, Vol. 17, No. 2, 609-653
+DOI: 10.1214/105051606000000853
+\\
+  We study the high temperature phase of a family of typed branching diffusions
+initially studied in [Ast\'{e}risque 236 (1996) 133--154] and [Lecture Notes in
+Math. 1729 (2000) 239--256 Springer, Berlin]. The primary aim is to establish
+some almost-sure limit results for the long-term behavior of this particle
+system, namely the speed at which the population of particles colonizes both
+space and type dimensions, as well as the rate at which the population grows
+within this asymptotic shape. Our approach will include identification of an
+explicit two-phase mechanism by which particles can build up in sufficient
+numbers with spatial positions near $-\gamma t$ and type positions near $\kappa
+\sqrt{t}$ at large times $t$. The proofs involve the application of a variety
+of martingale techniques--most importantly a ``spine'' construction involving a
+change of measure with an additive martingale. In addition to the model's
+intrinsic interest, the methodologies presented contain ideas that will adapt
+to other branching settings. We also briefly discuss applications to traveling
+wave solutions of an associated reaction--diffusion equation.
+\\

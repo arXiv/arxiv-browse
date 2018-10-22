@@ -1,0 +1,21 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0090
+From: Lester Ingber <dA71Bc@Dg4hrF.9I4vaCn.yNu>
+Date: Sun, 1 Apr 2007 14:35:40 GMT   (25kb)
+
+Title: Real Options for Project Schedules (ROPS)
+Authors: Lester Ingber
+Categories: cs.CE cond-mat.stat-mech cs.MS cs.NA physics.data-an
+Report-no: Report 2007:ROPS
+ACM-class: C.4; G.1; G.1.6; G.3; J.7
+\\
+  Real Options for Project Schedules (ROPS) has three recursive
+sampling/optimization shells. An outer Adaptive Simulated Annealing (ASA)
+optimization shell optimizes parameters of strategic Plans containing multiple
+Projects containing ordered Tasks. A middle shell samples probability
+distributions of durations of Tasks. An inner shell samples probability
+distributions of costs of Tasks. PATHTREE is used to develop options on
+schedules.. Algorithms used for Trading in Risk Dimensions (TRD) are applied to
+develop a relative risk analysis among projects.
+\\

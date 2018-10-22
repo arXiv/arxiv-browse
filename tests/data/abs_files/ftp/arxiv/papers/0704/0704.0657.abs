@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0657
+From: Jonathan Slavin <pI9YFAd@Hso.oxxXTxN.TlN>
+Date: Thu, 5 Apr 2007 13:27:34 GMT   (78kb)
+Date (revised v2): Thu, 6 Dec 2007 16:26:58 GMT   (80kb)
+
+Title: The Boundary Conditions of the Heliosphere: Photoionization Models
+  Constrained by Interstellar and In Situ Data
+Authors: Jonathan D. Slavin and Priscilla C. Frisch
+Categories: astro-ph
+Comments: 14 pages, 4 figures, submitted to Astronomy & Astrophysics together
+  with papers from the International Space Sciences Institute workshop on
+  Interstellar Hydrogen in the Heliosphere
+DOI: 10.1051/0004-6361:20078101
+\\
+  The boundary conditions of the heliosphere are set by the ionization, density
+and composition of inflowing interstellar matter. Constraining the properties
+of the Local Interstellar Cloud (LIC) at the heliosphere requires radiative
+transfer ionization models. We model the background interstellar radiation
+field using observed stellar FUV and EUV emission and the diffuse soft X-ray
+background. We also model the emission from the boundary between the LIC and
+the hot Local Bubble (LB) plasma, assuming that the cloud is evaporating
+because of thermal conduction. We create a grid of models covering a plausible
+range of LIC and LB properties, and use the modeled radiation field as input to
+radiative transfer/thermal equilibrium calculations using the Cloudy code. Data
+from in situ observations of He^O, pickup ions and anomalous cosmic rays in the
+heliosphere, and absorption line measurements towards epsilon CMa were used to
+constrain the input parameters. A restricted range of assumed LIC HI column
+densities and LB plasma temperatures produce models that match all the
+observational constraints. The relative weakness of the constraints on N(HI)
+and T_h contrast with the narrow limits predicted for the H^O and electron
+density in the LIC at the Sun, n(H^0) = 0.19 - 0.20 cm^-3, and n(e) = 0.07 +/-
+0.01 cm^-3. Derived abundances are mostly typical for low density gas, with
+sub-solar Mg, Si and Fe, possibly subsolar O and N, and S about solar; however
+C is supersolar. The interstellar gas at the Sun is warm, low density, and
+partially ionized, with n(H) = 0.23 - 0.27 cm^-3, T = 6300 K, X(H^+) ~ 0.2, and
+X(He^+) ~ 0.4. These results appear to be robust since acceptable models are
+found for substantially different input radiation fields. Our results favor low
+values for the reference solar abundances for the LIC composition.
+\\

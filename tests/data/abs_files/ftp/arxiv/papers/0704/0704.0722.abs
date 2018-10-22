@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0722
+From: Axel Maas <YzlA7LNF@pay.02>
+Date: Thu, 5 Apr 2007 13:34:37 GMT   (259kb)
+Date (revised v2): Fri, 13 Apr 2007 08:43:22 GMT   (259kb)
+
+Title: Two- and three-point Green's functions in two-dimensional Landau-gauge
+  Yang-Mills theory
+Authors: Axel Maas
+Categories: hep-lat hep-ph hep-th
+Comments: 14 pages, 14 figures, 4 tables, references added
+Journal-ref: Phys.Rev.D75:116004,2007
+DOI: 10.1103/PhysRevD.75.116004
+\\
+  The ghost and gluon propagator and the ghost-gluon and three-gluon vertex of
+two-dimensional SU(2) Yang-Mills theory in (minimal) Landau gauge are studied
+using lattice gauge theory. It is found that the results are qualitatively
+similar to the ones in three and four dimensions. The propagators and the
+Faddeev-Popov operator behave as expected from the Gribov-Zwanziger scenario.
+In addition, finite volume effects affecting these Green's functions are
+investigated systematically. The critical infrared exponents of the
+propagators, as proposed in calculations using stochastic quantization and
+Dyson-Schwinger equations, are confirmed quantitatively. For this purpose
+lattices of volume up to (42.7 fm)^2 have been used.
+\\

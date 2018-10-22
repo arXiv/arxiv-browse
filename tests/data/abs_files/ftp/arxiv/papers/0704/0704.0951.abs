@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0951
+From: Jos\'e Abel Hoyos Neto <7UWaos@okj.JHo>
+Date: Sun, 8 Apr 2007 00:58:26 GMT   (292kb)
+Date (revised v2): Thu, 15 Nov 2007 22:09:43 GMT   (260kb)
+
+Title: Correlation amplitude and entanglement entropy in random spin chains
+Authors: J. A. Hoyos, Andr\'e P. Vieira, Nicolas Laflorencie, E. Miranda
+Categories: cond-mat.dis-nn cond-mat.str-el quant-ph
+Comments: v1: 16 pages, 15 figures; v2: 17 pages, improved discussions and
+  statistics, references added, published version
+Journal-ref: Phys. Rev. B 76, 174425 (2007)
+DOI: 10.1103/PhysRevB.76.174425
+\\
+  Using strong-disorder renormalization group, numerical exact diagonalization,
+and quantum Monte Carlo methods, we revisit the random antiferromagnetic XXZ
+spin-1/2 chain focusing on the long-length and ground-state behavior of the
+average time-independent spin-spin correlation function C(l)=\upsilon
+l^{-\eta}. In addition to the well-known universal (disorder-independent)
+power-law exponent \eta=2, we find interesting universal features displayed by
+the prefactor \upsilon=\upsilon_o/3, if l is odd, and \upsilon=\upsilon_e/3,
+otherwise. Although \upsilon_o and \upsilon_e are nonuniversal (disorder
+dependent) and distinct in magnitude, the combination \upsilon_o + \upsilon_e =
+-1/4 is universal if C is computed along the symmetric (longitudinal) axis. The
+origin of the nonuniversalities of the prefactors is discussed in the
+renormalization-group framework where a solvable toy model is considered.
+Moreover, we relate the average correlation function with the average
+entanglement entropy, whose amplitude has been recently shown to be universal.
+The nonuniversalities of the prefactors are shown to contribute only to surface
+terms of the entropy. Finally, we discuss the experimental relevance of our
+results by computing the structure factor whose scaling properties,
+interestingly, depend on the correlation prefactors.
+\\

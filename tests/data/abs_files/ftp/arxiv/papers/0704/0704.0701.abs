@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0701
+From: Sebastien Forget <O2xGZW@QZezsNS.2hkW-EZvWYDt.Zc>
+Date: Thu, 5 Apr 2007 09:53:30 GMT   (1865kb)
+
+Title: On thermal effects in solid state lasers: the case of ytterbium-doped
+  materials
+Authors: Sebastien Chenais (LCFIO, LPL), Frederic Druon (LCFIO), Sebastien
+  Forget (LCFIO, LPL), Francois Balembois (LCFIO), Patrick Georges (LCFIO)
+Categories: physics.optics
+Proxy: ccsd hal-00140068
+Journal-ref: Progress in quantum electronics 30 (12/2006) 89-126
+DOI: 10.1016/j.pquantelec.2006.12.001
+\\
+  A review of theoretical and experimental studies of thermal effects in
+solid-state lasers is presented, with a special focus on diode-pumped
+ytterbium-doped materials. A large part of this review provides however general
+information applicable to any kind of solid-state laser. Our aim here is not to
+make a list of the techniques that have been used to minimize thermal effects,
+but instead to give an overview of the theoretical aspects underneath, and give
+a state-of-the-art of the tools at the disposal of the laser scientist to
+measure thermal effects. After a presentation of some general properties of
+Yb-doped materials, we address the issue of evaluating the temperature map in
+Yb-doped laser crystals, both theoretically and experimentally. This is the
+first step before studying the complex problem of thermal lensing (part III).
+We will focus on some newly discussed aspects, like the definition of the
+thermo-optic coefficient: we will highlight some misleading interpretations of
+thermal lensing experiments due to the use of the dn/dT parameter in a context
+where it is not relevant. Part IV will be devoted to a state-of-the-art of
+experimental techniques used to measure thermal lensing. Eventually, in part V,
+we will give some concrete examples in Yb-doped materials, where their
+peculiarities will be pointed out.
+\\

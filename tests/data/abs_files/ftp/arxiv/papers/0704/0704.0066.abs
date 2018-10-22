@@ -1,0 +1,36 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0066
+From: Bozhidar Zakhariev Iliev <CNxf9@7Tfui.hNH.wV>
+Date: Sun, 1 Apr 2007 06:22:38 GMT   (78kb)
+
+Title: Lagrangian quantum field theory in momentum picture. IV. Commutation
+  relations for free fields
+Authors: Bozhidar Z. Iliev (Institute for Nuclear Research and Nuclear Energy,
+  Bulgarian Academy of Sciences, Sofia, Bulgaria)
+Categories: hep-th
+Comments: 60 LaTeX pages. The packages AMS-LaTeX and amsfonts are required.
+  This paper is a continuation of the e-print E-prints No. hep-th/0402006, No.
+  hep-th/0405008 and No. hep-th/0505007. For related papers, visit the
+  "publication" pages at http://theo.inrne.bas.bg/~bozho/
+\\
+  Possible (algebraic) commutation relations in the Lagrangian quantum theory
+of free (scalar, spinor and vector) fields are considered from mathematical
+view-point. As sources of these relations are employed the Heisenberg
+equations/relations for the dynamical variables and a specific condition for
+uniqueness of the operators of the dynamical variables (with respect to some
+class of Lagrangians). The paracommutation relations or some their
+generalizations are pointed as the most general ones that entail the validity
+of all Heisenberg equations. The simultaneous fulfillment of the Heisenberg
+equations and the uniqueness requirement turn to be impossible. This problem is
+solved via a redefinition of the dynamical variables, similar to the normal
+ordering procedure and containing it as a special case. That implies
+corresponding changes in the admissible commutation relations. The introduction
+of the concept of the vacuum makes narrow the class of the possible commutation
+relations; in particular, the mentioned redefinition of the dynamical variables
+is reduced to normal ordering. As a last restriction on that class is imposed
+the requirement for existing of an effective procedure for calculating vacuum
+mean values. The standard bilinear commutation relations are pointed as the
+only known ones that satisfy all of the mentioned conditions and do not
+contradict to the existing data.
+\\

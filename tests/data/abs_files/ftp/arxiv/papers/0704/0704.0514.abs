@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0514
+From: Radoslaw Hofman <haWD7C@cRjony.3v>
+Date: Wed, 4 Apr 2007 08:17:33 GMT   (161kb)
+Date (revised v2): Sat, 9 Jun 2007 11:32:45 GMT   (166kb)
+
+Title: Complexity Considerations, cSAT Lower Bound
+Authors: Radoslaw Hofman
+Categories: math.LO math.CO
+Comments: Presented at IMECS2007, presentation is avaliable here:
+  http://www.teycom.pl/docs/ICCS_160_prez.pdf Awarded with Certificate of Merit
+  for International Conference on Computer Science 2007 (ICCS2007)
+MSC-class: 68Q15, 68Q17, 03D15, 68Q19
+Journal-ref: IMECS2007 Conference Proceedings published by IAENG (ISBN:
+  978-988-98671-4-0)
+\\
+  This article discusses completeness of Boolean Algebra as First Order Theory
+in Goedel's meaning. If Theory is complete then any possible transformation is
+equivalent to some transformation using axioms, predicates etc. defined for
+this theory. If formula is to be proved (or disproved) then it has to be
+reduced to axioms. If every transformation is deducible then also optimal
+transformation is deducible. If every transformation is exponential then
+optimal one is too, what allows to define lower bound for discussed problem to
+be exponential (outside P). Then we show algorithm for NDTM solving the same
+problem in O(n^c) (so problem is in NP), what proves that P \neq NP.
+  Article proves also that result of relativisation of P=NP question and oracle
+shown by Baker-Gill-Solovay distinguish between deterministic and
+non-deterministic calculation models. If there exists oracle A for which
+P^A=NP^A then A consists of infinite number of algorithms, DTMs, axioms and
+predicates, or like NDTM infinite number of simultaneous states.
+\\

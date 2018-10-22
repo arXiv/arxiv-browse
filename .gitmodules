@@ -1,0 +1,3 @@
+[submodule "sqlalchemy-stubs"]
+	path = sqlalchemy-stubs
+	url = https://github.com/JelleZijlstra/sqlalchemy-stubs.git
