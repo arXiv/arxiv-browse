@@ -8,7 +8,7 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20170424" />
   {# disable for now #}
-  {%- if 0 %}
+  {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
   <script type="text/javascript">
     var _paq = _paq || [];
@@ -36,8 +36,9 @@
 </head>
 
 <body {% block body_id %}id="front"{% endblock %} class="with-cu-identity">
+  {%- if config['BROWSE_PIWIK_ENABLED'] -%}
   <noscript><img src="//webanalytics.library.cornell.edu/piwik.php?idsite=538&amp;rec=1" style="border:0;" alt="" /></noscript>
-
+  {% endif -%}
   <div id="cu-identity">
     <div id="cu-logo">
       <a id="insignia-link" href="http://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cul_signature_unstyled.gif" alt="Cornell University" width="283" height="76" border="0" /></a>

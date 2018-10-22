@@ -216,6 +216,9 @@ SQLALCHEMY_RECORD_QUERIES = False
 # unavailable and thus intentionally bypass any DB access.
 BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
 
+# Enable/disable Piwik (Matomo) web analytics
+BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
+
 # Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
