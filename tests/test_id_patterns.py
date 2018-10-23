@@ -241,3 +241,13 @@ class Id_Patterns_Test(unittest.TestCase):
         
         assert_that(do_arxiv_urlize(cmt),
                     equal_to(Markup('7 Pages; <a href="ftp://ftp%40micrognu%2Ecom:anon%40anon@ftp.micrognu.com/pnenp/conclusion.pdf">this ftp URL</a>')))
+
+
+    def arxiv_prefix_test(self):
+
+        def do_arxiv_urlize(txt):
+            return do_dois_id_urls_to_tags(lambda x: x, lambda x:x,  txt)
+
+        cmt = "see arxiv:1201.12345"
+        assert_that(do_arxiv_urlize(cmt),
+                    equal_to(Markup('see <a href="1201.12345">arXiv:1201.12345</a>')))

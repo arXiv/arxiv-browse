@@ -137,7 +137,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 arxiv_id_urls(
                     'arXiv:dg-ga/9401001 hep-th/9901001 hep-th/9901002'),
                 equal_to(
-                    f'arXiv:<a href="http://{h}/abs/dg-ga/9401001">dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>',
+                    f'<a href="http://{h}/abs/dg-ga/9401001">arXiv:dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/hep-th/9901002">hep-th/9901002</a>',
                 ),
             )
 
@@ -179,7 +179,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
         with app.app_context():
             self.assertEqual(
                 arxiv_id_urls('arXiv:dg-ga/9401001 hep-th/9901001 0704.0001'),
-                f'arXiv:<a href="http://{h}/abs/dg-ga/9401001">dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/0704.0001">0704.0001</a>',
+                f'<a href="http://{h}/abs/dg-ga/9401001">arXiv:dg-ga/9401001</a> <a href="http://{h}/abs/hep-th/9901001">hep-th/9901001</a> <a href="http://{h}/abs/0704.0001">0704.0001</a>',
                 'filter_urls_ids_escape (ID linking) 5/7')
 
     def test_arxiv_id_v(self):
@@ -190,7 +190,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 arxiv_id_urls(
                     'arXiv:dg-ga/9401001v12 hep-th/9901001v2 0704.0001v1'),
                 equal_to(
-                    f'arXiv:<a href="http://{h}/abs/dg-ga/9401001v12">dg-ga/9401001v12</a> <a href="http://{h}/abs/hep-th/9901001v2">hep-th/9901001v2</a> <a href="http://{h}/abs/0704.0001v1">0704.0001v1</a>'
+                    f'<a href="http://{h}/abs/dg-ga/9401001v12">arXiv:dg-ga/9401001v12</a> <a href="http://{h}/abs/hep-th/9901001v2">hep-th/9901001v2</a> <a href="http://{h}/abs/0704.0001v1">0704.0001v1</a>'
                 ), 'arxiv ids with version numbers')
 
     def test_vixra(self):

@@ -69,16 +69,20 @@ _archive = '|'.join([re.escape(key) for key in taxonomy.ARCHIVES.keys()])
 
 _category = '|'.join([re.escape(key) for key in taxonomy.CATEGORIES.keys()])
 
+_arxiv_id_prefix = r'(?P<arxiv_prefix>ar[xX]iv:)?'
+"""Attempt to catch the arxiv prefix in front of arxiv ids so it can be
+included in the <a> tag anchor. ARXIVNG-1284"""
+
 basic_arxiv_id_patterns = [
     Matchable(['math/0501233', 'hep-ph/0611734', 'gr-qc/0112123'],
-              re.compile(r'(?P<arxiv_id>(%s)\/\d{2}[01]\d{4}(v\d*)?)'
+              re.compile(_arxiv_id_prefix + r'(?P<arxiv_id>(%s)\/\d{2}[01]\d{4}(v\d*)?)'
                          % _archive, re.I)),
     Matchable(['1609.05068', '1207.1234v1', '1207.1234', '1807.12345',
                '1807.12345v1', '1807.12345v12'],
-              re.compile(r'(?<![\d=])(?P<arxiv_id>\d{4}\.\d{4,5}(v\d*)?)',
+              re.compile(r'(?<![\d=])' + _arxiv_id_prefix + r'(?P<arxiv_id>\d{4}\.\d{4,5}(v\d*)?)',
                          re.I)),
     Matchable(['math.GR/0601136v3', 'math.GR/0601136'],
-              re.compile(r'(?P<arxiv_id>(%s)\/\d{2}[01]\d{4}(v\d*)?)'
+              re.compile(_arxiv_id_prefix + r'(?P<arxiv_id>(%s)\/\d{2}[01]\d{4}(v\d*)?)'
                          % _category, re.I))
 ]
 
@@ -200,14 +204,16 @@ def _transform_token(patterns: List[Matchable],
 def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str]) \
         -> Tuple[Markup, str]:
     """Return match.string transformed for a arxiv id match."""
-    m = match.group('arxiv_id')
-    if m[-1] in _bad_endings:
-        arxiv_url = id_to_url(m)[:-1]
-        anchor = m[:-1]
-        back = m[-1] + match.string[match.end():]
+    aid = match.group('arxiv_id')
+    prefix = 'arXiv:' if match.group('arxiv_prefix') else ''
+    
+    if aid[-1] in _bad_endings:
+        arxiv_url = id_to_url(aid)[:-1]
+        anchor = aid[:-1]
+        back = aid[-1] + match.string[match.end():]
     else:
-        arxiv_url = id_to_url(m)
-        anchor = m
+        arxiv_url = id_to_url(aid)
+        anchor = prefix + aid
         back = match.string[match.end():]
 
     front = match.string[0:match.start()]
