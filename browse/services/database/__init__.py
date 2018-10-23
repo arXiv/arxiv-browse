@@ -80,9 +80,12 @@ def get_institution(ip: str) -> Optional[str]:
         group_by(MemberInstitution.label).
         subquery()
     )
-    institution_name = db.session.query(stmt.c.label).\
-        filter(stmt.c.exclusions == 0).one().label
-    assert isinstance(institution_name, str)
+    institution_row = db.session.query(stmt.c.label).\
+        filter(stmt.c.exclusions == 0).first()
+    institution_name = None
+    if institution_row:
+        institution_name = institution_row.label
+        assert isinstance(institution_name, str)
     return institution_name
 
 

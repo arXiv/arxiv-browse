@@ -28,6 +28,15 @@ def populate_test_database(drop_and_create: bool) -> None:
     )
     models.db.session.add(models.MemberInstitutionIP(
         id=1, sid=1, start=2130706433, end=2130706433, exclude=0))
+
+    # Intentionally add another insitution for the same loopback IP as above
+    models.db.session.add(
+        models.MemberInstitution(
+            id=2, name='Loopback University', label='Loopback University'),
+    )
+    models.db.session.add(models.MemberInstitutionIP(
+        id=2, sid=2, start=2130706433, end=2130706433, exclude=0))
+
     models.db.session.commit()
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
     execute_sql_files(sql_files, models.db.engine)
