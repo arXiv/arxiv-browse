@@ -12,7 +12,7 @@ Markup objects. This is because the <a> that get added need to avoid
 double escaping.
 
 There are several classes of patterns we want to match but there is
-some overlap in these patterns. To avoid looking for and parsing HTML in each 
+some overlap in these patterns. To avoid looking for and parsing HTML in each
 jinja filter, detecting these patterns is combined.
 
 So far we are looking for:
@@ -40,13 +40,14 @@ from arxiv import taxonomy
 
 @dataclass
 class Matchable:
-    """Class for paterns"""
+    """Class for paterns."""
+
     examples: List[str]
     pattern: Pattern
 
 
 def _identity(x: str)->str:
-    """identity funciton for default in some places"""
+    """Identity funciton for default in some places."""
     return x
 
 
@@ -97,7 +98,7 @@ period.
 PATH = rf'(?P<PATH>(/{OKCHARS}*)+)?'
 """Regex for path part of URLs for use in urlize"""
 
-QUERY = rf'(?P<QUUERY>\?(&?({OKCHARS}*(={OKCHARS}*)?))*)?'
+QUERY = rf'(?P<QUERY>\?(&?({OKCHARS}*(={OKCHARS}*)?))*)?'
 """Regex for query part of URLs for use in urlize"""
 
 ANCHOR = rf'(?P<ANCHOR>#({OKCHARS}|/)*)?'
@@ -108,7 +109,6 @@ URLINTEXT_PAT = re.compile(r'(?P<url>(?:https?://)'
                            re.I)
 """Regex to match URLs in text."""
 
-#Not really sure what a good FTP url is like
 FTP_PAT = re.compile(rf'(?P<url>(?:ftp://)({OKCHARS}|(@))*{PATH})', re.I)
 """Regex to match FTP URLs in text."""
 
@@ -119,7 +119,7 @@ basic_url_patterns = [
 """List of Matchable to use when finding URLs in text"""
 
 bad_arxiv_id_patterns = [
-    re.compile('vixra', re.I), #don't need to link to vixra
+    re.compile('vixra', re.I),  # don't need to link to vixra
 ]
 """List of Regex patterns that will cause matching to be skipped for
 the token."""
@@ -127,7 +127,7 @@ the token."""
 dois_ids_and_urls = basic_url_patterns + doi_patterns + basic_arxiv_id_patterns
 """List of Matchable to use when finding DOIs, arXiv IDs, and URLs.
 
-URLs are first because some URLs contain DOIs or arXiv IDS.  
+URLs are first because some URLs contain DOIs or arXiv IDS.
 
 DOI are before arXiv ids because many DOIs are falsely matched by the
 arxiv_id patterns.
@@ -139,7 +139,8 @@ _bad_endings = ['.', ',', ':', ';', '&', '(', '[', '{']
 part of the surrounding text"""
 
 
-def _find_match(patterns: List[Matchable], token: str)-> Optional[Tuple[Match, Matchable]]:
+def _find_match(patterns: List[Matchable], token: str) \
+        -> Optional[Tuple[Match, Matchable]]:
     """Find first in patterns that is found in txt."""
     for chgMtch in patterns:
         if chgMtch.pattern.flags:
@@ -157,13 +158,13 @@ def _transform_token(patterns: List[Matchable],
                      doi_to_url: Callable[[str], str],
                      url_to_url: Callable[[str], str],
                      token: str) -> str:
-    """Transform a token from text to one of the Matchables.
+    """
+    Transform a token from text to one of the Matchables.
 
     This only transforms against the first of Matchable matched.
     Matching on this token will be skipped if any of the bad_patterns
     match the token (that is re.search).
     """
-
     id_to_url = id_to_url or (lambda x: x)
     doi_to_url = doi_to_url or (lambda x: x)
     url_to_url = url_to_url or (lambda x: x)
@@ -196,8 +197,9 @@ def _transform_token(patterns: List[Matchable],
         return front
 
 
-def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Tuple[Markup, str]:
-    """Returns match.string transformed for a arxiv id match"""
+def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str]) \
+        -> Tuple[Markup, str]:
+    """Return match.string transformed for a arxiv id match."""
     m = match.group('arxiv_id')
     if m[-1] in _bad_endings:
         arxiv_url = id_to_url(m)[:-1]
@@ -212,8 +214,9 @@ def _arxiv_id_sub(match: Match, id_to_url: Callable[[str], str])->Tuple[Markup, 
     return (Markup(f'{front}<a href="{arxiv_url}">{anchor}</a>'), back)
 
 
-def _doi_sub(match: Match, doi_to_url: Callable[[str], str])->Tuple[Markup, str]:
-    """Returns match.string transformed for a DOI match"""
+def _doi_sub(match: Match, doi_to_url: Callable[[str], str]) \
+        ->Tuple[Markup, str]:
+    """Return match.string transformed for a DOI match."""
     doi = match.group('doi')
     if(doi[-1] in _bad_endings):
         back = match.string[match.end():] + doi[-1]
@@ -230,8 +233,9 @@ def _doi_sub(match: Match, doi_to_url: Callable[[str], str])->Tuple[Markup, str]
     return (Markup(f'{front}<a href="{doi_url}">{anchor}</a>'), back)
 
 
-def _url_sub(match: Match, url_to_url: Callable[[str], str])->Tuple[Markup, str]:
-    """Returns match.string transformed for a URL match"""
+def _url_sub(match: Match, url_to_url: Callable[[str], str]) \
+        ->Tuple[Markup, str]:
+    """Return match.string transformed for a URL match."""
     url = match.group('url')
     if url.startswith('https'):
         anchor = 'this https URL'
@@ -267,7 +271,7 @@ def _to_tags(patterns: List[Matchable],
              doi_to_url: Callable[[str], str],
              url_to_url: Callable[[str], str],
              text: str)-> str:
-    """Split text to tokens, do _transform_token for each, return results"""
+    """Split text to tokens, do _transform_token for each, return results."""
     def transform_token(tkn: str)-> str:
         return _transform_token(patterns, bad_patterns,
                                 id_to_url, doi_to_url, url_to_url,
@@ -287,7 +291,7 @@ def _to_tags(patterns: List[Matchable],
 
 def do_id_to_tags(id_to_url: Callable[[str], str],
                   text: str)-> str:
-    """Transform arxiv ids in text to <a> tags"""
+    """Transform arxiv ids in text to <a> tags."""
     return _to_tags(basic_arxiv_id_patterns,
                     bad_arxiv_id_patterns,
                     id_to_url, _identity, _identity,
@@ -297,7 +301,7 @@ def do_id_to_tags(id_to_url: Callable[[str], str],
 def do_dois_id_urls_to_tags(id_to_url: Callable[[str], str],
                             doi_to_url: Callable[[str], str],
                             text: str)-> str:
-    """Transform DOIs, arxiv ids and URLs in text to <a> tags"""
+    """Transform DOIs, arxiv ids and URLs in text to <a> tags."""
     return _to_tags(dois_ids_and_urls,
                     bad_arxiv_id_patterns,
                     id_to_url, doi_to_url, _identity,
@@ -310,8 +314,8 @@ def do_dois_to_tags(doi_to_url: Callable[[str], str], text: str)->str:
 
 
 def do_dois_arxiv_ids_to_tags(id_to_url: Callable[[str], str],
-                               doi_to_url: Callable[[str], str],
-                               text: str)->str:
+                              doi_to_url: Callable[[str], str],
+                              text: str)->str:
     """Transform DOIs and arXiv IDs to <a> tags."""
     return _to_tags(doi_patterns + basic_arxiv_id_patterns,
                     bad_arxiv_id_patterns,

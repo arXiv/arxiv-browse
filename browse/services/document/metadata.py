@@ -424,6 +424,7 @@ class AbsMetaSession:
         -------
         List[str]
             A list of format strings.
+
         """
         formats: List[str] = []
 
@@ -561,16 +562,17 @@ class AbsMetaSession:
                     Archive(
                         id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
             elif arxiv_identifier.is_old_id:
-                    primary_archive = \
-                        Archive(id=arxiv_identifier.archive)  # type: ignore
-        elif arxiv_identifier.is_old_id:
                 primary_archive = \
                     Archive(id=arxiv_identifier.archive)  # type: ignore
+        elif arxiv_identifier.is_old_id:
+            primary_archive = \
+                Archive(id=arxiv_identifier.archive)  # type: ignore
         else:
             raise AbsException('Cannot infer archive from identifier.')
 
         doc_license: License = \
-            License() if 'license' not in fields else License(recorded_uri=fields['license'])
+            License() if 'license' not in fields else License(
+                recorded_uri=fields['license'])
         raw_safe = re.sub(RE_FROM_FIELD, r'\g<from>\g<name>', raw, 1)
 
         return DocMetadata(
@@ -585,7 +587,8 @@ class AbsMetaSession:
             categories=fields['categories'] if 'categories' in fields else None,
             primary_category=primary_category,
             primary_archive=primary_archive,
-            primary_group=Group(id=taxonomy.ARCHIVES[primary_archive.id]['in_group']),
+            primary_group=Group(
+                id=taxonomy.ARCHIVES[primary_archive.id]['in_group']),
             secondary_categories=[
                 Category(id=x) for x in category_list[1:]
                 if (category_list and len(category_list) > 1)

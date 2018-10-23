@@ -3,9 +3,9 @@
 {%- block title -%}
   {%- if reason -%}
     {%- if (reason=='not_found' or reason=='version_not_found') and arxiv_id -%}
-[{{arxiv_id}}] Article does not exist
+[{{arxiv_id}}] Article not found
     {% elif reason=='deleted' and arxiv_id_latest %}
-[{{arxiv_id_latest}}] Article does not exist
+[{{arxiv_id_latest}}] Article not found
     {% elif reason=='is_archive' and arxiv_id and archive_name %}
 [{{arxiv_id}}] Incomplete article identifier
     {%- endif -%}
@@ -24,7 +24,7 @@
 
 {% if reason %}
   {% if (reason=='not_found' or reason=='version_not_found') and arxiv_id %}
-  <h1>Article {{ arxiv_id }} does not exist</h1>
+  <h1>Article {{ arxiv_id }} not found</h1>
   <p>There is no record of an article with identifier '{{ arxiv_id }}'.
   You might instead {% if reason=='version_not_found' %}look at the latest version of
   this article: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>',
@@ -32,7 +32,7 @@
   {{ identifier_help() }}
 
   {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
-  <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive does not exist</h1>
+  <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive not found</h1>
   {#- TODO: will need to support papernum param in this route if we want to support this -#}
   <form action="{{ url_for('browse.abstract', arxiv_id=archive_id) }}" method="get">
     <p>To view the abstract of a particular article in the {{ archive_name }}
@@ -40,7 +40,7 @@
   </form>
 
   {% elif reason=='deleted' and arxiv_id_latest %}
-  <h1>Article {{ arxiv_id_latest }} does not exist</h1>
+  <h1>Article {{ arxiv_id_latest }} not found</h1>
   <p><b>The article <i>{{ arxiv_id_latest }}</i> is recorded as having been
   deleted from arXiv. The reason recorded is <i>"{{ message }}"</i>.</b></p>
   {{ identifier_help() }}

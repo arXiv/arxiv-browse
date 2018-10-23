@@ -177,7 +177,7 @@
 {%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
-    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/0905.2326v2/anc">details</a>)</span>:</h2>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}
@@ -201,7 +201,7 @@
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">
         <div class="what-is-this">
-            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
+            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
         </div>
     </div>
     {% endif %}

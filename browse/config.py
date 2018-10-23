@@ -210,6 +210,15 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
 
+# Disable DB queries even if other SQLAlchemy config are defined
+# This, for example, could be used in conjunction with the `no-write` runlevel
+# in the legacy infrastructure, which is a case where we know the DB is
+# unavailable and thus intentionally bypass any DB access.
+BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
+
+# Enable/disable Piwik (Matomo) web analytics
+BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
+
 # Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')

@@ -24,12 +24,21 @@
 
         <div class="filter-field">
           <select name="searchtype">
-            <option value="all" selected="selected">All papers</option>
-            <option value="ti">Titles</option>
-            <option value="au">Authors</option>
-            <option value="abs">Abstracts</option>
-            <option value="ft">Full text</option>
+            <option value="all">All fields</option>
+            <option value="title">Title</option>
+            <option value="author">Author(s)</option>
+            <option value="abstract">Abstract</option>
+            <option value="comments">Comments</option>
+            <option value="journal_ref">Journal reference</option>
+            <option value="acm_class">ACM classification</option>
+            <option value="msc_class">MSC classification</option>
+            <option value="report_num">Report number</option>
+            <option value="paper_id">arXiv identifier</option>
+            <option value="doi">DOI</option>
+            <option value="orcid">ORCID</option>
+            <option value="author_id">arXiv author ID</option>
             <option value="help">Help pages</option>
+            <option value="full_text">Full text</option>
           </select>
         </div>
         <input class="btn-search-arxiv" value="" type="submit">
@@ -49,7 +58,7 @@
     </div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "/abs/author_links.html" %}
+      {%- include "abs/author_links.html" %}
     </div>
 
     <div class="dateline">{{ generate_dateline() }}</div>
@@ -111,7 +120,7 @@
       </table>
     </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="{{url_for('.show_email',show_email_hash=show_email_hash, arxiv_id=abs_meta.arxiv_id)}}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
       {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex_to_utf|upper }} proxy]{% endif %}
@@ -136,11 +145,12 @@
   <b>[v{{ version_entry.version }}]</b>
 {% else %}
   <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>
-  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ version_entry.size_kilobytes }} KB)<br/>
+  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
   (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
+  {%- if abs_meta.version == 1 and abs_meta.version < abs_meta.version_history[-1].version %} (this version){%- endif -%}
   {%- if abs_meta.version != 1 %} (<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
   , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
