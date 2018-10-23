@@ -279,3 +279,16 @@ class BrowseTest(unittest.TestCase):
 
         self.assertIn('Zhe (Rita) Liang,', auths_elmt.text,
                       'Should be a space after (Rita)')
+
+
+    def test_comma_in_author_list(self):
+        id = '0704.0155'
+        rv = self.app.get('/abs/'+id)
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
+        self.assertNotIn(' ,', auths_elmt.text,
+                         'Should not add extra spaces before commas')
+
+    
