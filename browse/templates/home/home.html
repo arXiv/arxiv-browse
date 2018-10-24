@@ -3,3 +3,35 @@
 {% block head %}
   {{ super() -}}
 {% endblock head %}
+
+{%- block content %}
+{#- TODO: handle paper count -#}
+{#- TODO: display order in taxonomy? -#}
+<p class="tagline">Open access to 1,455,301 e-prints in Physics, Mathematics, Computer Science, Quantitative Biology, Quantitative Finance, Statistics, Electrical Engineering and Systems Science, and Economics</p>
+{#- TODO: revisit -#}
+<form action="/multi" method="get">Subject search and browse:
+  <select name="group">
+  {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+    <option value="{{ group_key }}"{% if group_key == 'grp_physics' %}selected="selected"{% endif %}>{{ group_details.name }}</option>
+  {%- endfor %}
+  </select>
+  <input type="submit" name="/find" value="Search">
+  <input type="submit" name="/form" value="Form Interface">
+  <input type="submit" name="/catchup" value="Catchup">
+</form>
+{%- include "home/news.html" -%}
+{#- TODO: define display order in taxonomy? -#}
+{{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
+
+{% endblock content %}
+
+{%- macro group_section(group_keys) -%}
+  {%- for group_key in group_keys -%}
+  <h2>{{ groups[group_key].name }}</h2>
+  <ul>
+    {% for archive_key, archive_details in archives.items() if archives[archive_key].in_group == group_key  %}
+    {{ archive_key }}<br/>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+{%- endmacro -%}

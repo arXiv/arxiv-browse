@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
-from browse.controllers import abs_page
+from browse.controllers import abs_page, home_page
 from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
@@ -33,7 +33,11 @@ def apply_response_headers(response: Response) -> Response:
 @blueprint.route('/', methods=['GET'])
 def home() -> None:
     """Home page view."""
-    return render_template('home/home.html')
+    response, code, headers = home_page.get_home_page()
+    if code == status.HTTP_200_OK:
+        return render_template('home/home.html', **response), code, headers
+
+    raise InternalServerError('Unexpected error')
 
 
 @blueprint.route('/abs', methods=['GET'])
