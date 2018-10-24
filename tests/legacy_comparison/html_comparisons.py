@@ -79,8 +79,18 @@ def _element_similarity(name: str,
                              f"Missing field {name} for {html_arg['paper_id']} from legacy")
 
     if check_counts and (len(legacy) != len(ng)):
+        if ng:
+            ng_ele_txt = ng[0].prettify()
+        else:
+            ng_ele_txt = 'MISSING'
+        if legacy:
+            legacy_ele_txt = legacy[0].prettify()
+        else:
+            legacy_ele_txt = 'MISSING'
+            
         return BadResult(html_arg['paper_id'], name,
-                         f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}")
+                         f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}",
+                         legacy_ele_txt, ng_ele_txt)
 
     ng_ele_txt = ''
     legacy_ele_txt = ''
@@ -110,8 +120,6 @@ def _element_similarity(name: str,
                          ng_ele_txt, 0.0)
 
 
-
-
 def strip_dig(eles: List[BeautifulSoup]):
     for ele in eles:
         for dig in ele.find_all(title=re.compile('digg', re.I)):
@@ -119,8 +127,19 @@ def strip_dig(eles: List[BeautifulSoup]):
     return eles
 
 
+def _strip_script_and_noscript( eles: List[BeautifulSoup]):
+    for ele in eles:
+        for srpt in ele.find_all('script'):
+            srpt.extract()
+        for nos in ele.find_all('noscript'):
+            nos.extract()
+    return eles
+
+
 author_similarity = partial(
-    _element_similarity, 'authors div', lambda bs: _strip_href(bs.select('.authors')), 0.9, True, True)
+    _element_similarity, 'authors div',
+    lambda bs: _strip_href(_strip_script_and_noscript(bs.select('.authors'))),
+    0.9, True, True)
 
 
 dateline_similarity = partial(
@@ -145,37 +164,36 @@ comments_similarity = partial(
 head_similarity = partial(
     _element_similarity, 'head element', lambda bs: _strip_href(bs.select('head')), 0.80, True, True)
 
-############ Extra section #################
-
+############ div.extra-services Checks #################
 
 def ex_strip(eles: List[BeautifulSoup]):
     return _strip_href(strip_dig( eles))
-    
-# extra_services_similarity = partial(
-#     _element_similarity, 'extra-services div', lambda bs: ex_strip(bs.select('.extra-services')),
-#     0.8, False, False)
 
 
-extra_full_text_similarity = partial(
-    _element_similarity, 'extra full-text div' , lambda bs: ex_strip(bs.select('.full-text')),
-    0.9,True,True)
+extra_full_text_similarity = partial(_element_similarity, 'extra full-text div',
+                                     lambda bs: ex_strip(bs.select('div.full-text')),
+                                     0.9,True,True)
 
-ancillary_similarity = partial(
-    _element_similarity, 'extra ancillary div' , lambda bs: ex_strip(bs.select('.ancillary')),
-    0.9, False, True)
+ancillary_similarity = partial(_element_similarity, 'extra ancillary div',
+                               lambda bs: ex_strip(bs.select('div.ancillary')),
+                               0.9, False, True)
 
-extra_ref_cite_similarity = partial(
-    _element_similarity, 'extra ref_cite div' , lambda bs: ex_strip(bs.select('.extra-ref-cite')),
-    0.9, False, True)
+extra_ref_cite_similarity = partial(_element_similarity, 'extra ref_cite div',
+                                    lambda bs: ex_strip(bs.select('div.extra-ref-cite')),
+                                    0.9, False, True)
 
-extra_general_similarity = partial(
-    _element_similarity, 'extra extra-general div' , lambda bs: ex_strip(bs.select('.extra-general')),
-    0.9, False, True)
+extra_general_similarity = partial(_element_similarity, 'extra extra-general div',
+                                   lambda bs: ex_strip(bs.select('div.extra-general')),
+                                   0.9, False, True)
 
-dblp_similarity = partial(
-    _element_similarity, 'extra DBLP div' , lambda bs: ex_strip(bs.select('.dblp')),
-    0.9, False, True)
+extra_browse_similarity = partial(_element_similarity, 'extra browse div',
+                                  lambda bs: ex_strip(bs.select('div.browse')),
+                                  0.9, True, True)
 
-bookmarks_similarity = partial(
-    _element_similarity, 'extra bookmarks div' , lambda bs: ex_strip(bs.select('.bookmarks')),
-    0.9, False, True)
+dblp_similarity = partial(_element_similarity, 'extra DBLP div',
+                          lambda bs: ex_strip(bs.select('.dblp')),
+                          0.9, False, True)
+
+bookmarks_similarity = partial(_element_similarity, 'extra bookmarks div',
+                               lambda bs: ex_strip(bs.select('.bookmarks')),
+                               0.9, False, True)
