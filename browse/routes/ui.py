@@ -30,6 +30,12 @@ def apply_response_headers(response: Response) -> Response:
     return response
 
 
+@blueprint.route('/', methods=['GET'])
+def home() -> None:
+    """Home page view."""
+    return render_template('home/home.html')
+
+
 @blueprint.route('/abs', methods=['GET'])
 def bare_abs() -> Response:
     """Check several legacy request parameters."""
