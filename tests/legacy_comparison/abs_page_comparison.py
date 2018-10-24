@@ -9,6 +9,7 @@ from multiprocessing import Pool
 from typing import Callable, Iterator, List, Set, Tuple, Dict
 import gzip
 import logging
+import json
 
 import requests
 from bs4 import BeautifulSoup
@@ -67,7 +68,7 @@ res_comparisons: List[res_comparison_fn] = [compare_status]
 
 # List of comparison functions to run on text of response
 #text_comparisons: List[text_comparison_fn] = [text_similarity]
-text_comparisons: List[text_comparison_fn] = [text_similarity]
+text_comparisons: List[text_comparison_fn] = []
 
 # List of comparison functions to run on HTML parsed text of response
 html_comparisons: List[html_comparison_fn] = [
@@ -87,13 +88,22 @@ html_comparisons: List[html_comparison_fn] = [
 ]
 
 
-def _paperid_generator_from_gzip(path: str, excluded: List[str])->Iterator[str]:
-    with gzip.open(path, 'rt') as f:
-        for line in f:
-            aid = line.strip()
-            if aid not in excluded:
-                logging.debug(f'yielding id {aid}')
-                yield aid
+
+def _paperid_generator_from_file(path: str, excluded: List[str])->Iterator[str]:
+    if 'gzip' in path or 'gz' in path:
+        with gzip.open(path, 'rt') as f:
+            for line in f:
+                aid = line.strip()
+                if aid not in excluded:
+                    logging.debug(f'yielding id {aid}')
+                    yield aid
+    else:
+        with open(path, 'rt') as f:
+            for line in f:
+                aid = line.strip()
+                if aid not in excluded:
+                    logging.debug(f'yielding id {aid}')
+                    yield aid
 
 
 
@@ -126,10 +136,11 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
 
 
 # Should end with /
-ng_abs_base_url = 'http://localhost:5000/abs/'
+#ng_abs_base_url = 'http://localhost:5000/abs/'
+ng_abs_base_url = 'https://beta.arxiv.org/abs/'
 
 # Should end with /
-legacy_abs_base_url = 'https://beta.arxiv.org/abs/'
+legacy_abs_base_url = 'https://beta.arxiv.org/abs_classic/'
 
 
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
@@ -252,7 +263,7 @@ def main() -> None:
                 visited = {line.rstrip() for line in visited_fh.readlines()}
 
     if args.ids:
-        papers = _paperid_generator_from_gzip(args.ids, excluded=visited)
+        papers = _paperid_generator_from_file(args.ids, excluded=visited)
     else:
         papers = paperid_iterator(ABS_FILES, excluded=visited)
 
@@ -297,17 +308,17 @@ def main() -> None:
                 [done_job(job) for job in completed_jobs]
 
 
+def _serialize(obj):
+    """JSON serializer for objects not serializable by default json code"""
+    return obj.__dict__
+
+
 def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
     (config, bad_results) = result
-    logging.debug(f"writing report for {config['paper_id']}")
-    if not bad_results:
-        report_fh.write(f"* {config['paper_id']}: okay.\n")
-        logging.debug("done writing okay")
-        return
-    report_fh.write(f"* {config['paper_id']}: not okay, had {len(bad_results)} bad results.\n")
-    for br in bad_results:
-        report_fh.write(format_bad_result(br))
-    logging.debug("done writing bad results")
+    logging.debug("writing report for %s", config['paper_id'])
+    if bad_results:
+        data = json.dumps( [ config, bad_results],  sort_keys=True, default=_serialize)
+        report_fh.write( data + "\n")
 
 
 def format_bad_result(bad: BadResult)->str:
