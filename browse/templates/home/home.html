@@ -30,7 +30,22 @@
   <h2>{{ groups[group_key].name }}</h2>
   <ul>
     {% for archive_key, archive_details in archives.items() if archives[archive_key].in_group == group_key  %}
-    {{ archive_key }}<br/>
+      {%- set archive_search_url = url_for('search_archive', archive=archive_key) -%}
+      {%- set archive_url = '/archive/archive' if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+      {%- set archive_name = archives[archive_key].name if archive_key != 'cs' else 'Computing Research Repository' -%}
+
+    {#- TODO: url_for on /archive, /list, /catchup -#}
+    <li>
+      <a href="{{ archive_url }}">{{ archive_name }}</a> (<b>{{ archive_key if archive_key != 'cs' else 'CoRR' }}</b> <a href="/list/{{ archive_key }}/new">new</a>, <a href="/list/{{ archive_key }}/recent">recent</a>, <a href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
+      {%- if group_key == 'grp_physics' -%}<br/>includes:&nbsp;
+      {%- elif archive_key == 'cs' -%}<br/>includes (see <a href="https://arxiv.org/corr/subjectclasses">detailed description</a>):&nbsp;
+      {%- elif archive_key in ('eess', 'econ') -%}<br/>includes (see <a href="/help/{{ archive_key }}">detailed description</a>):&nbsp;
+      {%- else -%}<br/>includes (see <a href="/new/{{ archive_key }}.html">detailed description</a>):&nbsp;
+      {%- endif -%}
+      {% for category_key, category_details in categories.items() if categories[category_key].in_archive == archive_key %}
+      {{ categories[category_key].name }}&nbsp;
+      {% endfor %}
+    </li>
     {% endfor %}
   </ul>
   {% endfor %}
