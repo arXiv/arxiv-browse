@@ -41,7 +41,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'qwert2345')
 the secret key
 """
 
-SESSION_COOKIE_NAME = os.environ.get('SESSION_COOKIE_NAME', 'reflink')
+SESSION_COOKIE_NAME = os.environ.get('SESSION_COOKIE_NAME', 'arxiv_browse')
 """
 the name of the session cookie
 """
@@ -102,7 +102,7 @@ logging in debug mode, 'production' will only log in production and 'never'
 disables it entirely.
 """
 
-SERVER_NAME = os.environ.get('SERVER_NAME', None)
+SERVER_NAME = os.environ.get('BROWSE_SERVER_NAME', None)
 """
 the name and port number of the server. Required for subdomain support (e.g.:
 'myapp.dev:5000') Note that localhost does not support subdomains so setting
@@ -209,6 +209,7 @@ SQLALCHEMY_DATABASE_URI = os.environ.get(
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
+# SQLALCHEMY_POOL_SIZE = 1
 
 # Disable DB queries even if other SQLAlchemy config are defined
 # This, for example, could be used in conjunction with the `no-write` runlevel
