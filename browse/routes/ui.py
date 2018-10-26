@@ -10,7 +10,7 @@ from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
 
-blueprint = Blueprint('browse', __name__, url_prefix='')
+blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 
 @blueprint.before_request
@@ -40,7 +40,7 @@ def home() -> None:
     raise InternalServerError('Unexpected error')
 
 
-@blueprint.route('/abs', methods=['GET'])
+@blueprint.route('abs', methods=['GET'])
 def bare_abs() -> Response:
     """Check several legacy request parameters."""
     if request.args:
@@ -61,8 +61,8 @@ def bare_abs() -> Response:
     raise AbsNotFound
 
 
-@blueprint.route('/abs/', methods=['GET'], defaults={'arxiv_id': ''})
-@blueprint.route('/abs/<path:arxiv_id>', methods=['GET'])
+@blueprint.route('abs/', methods=['GET'], defaults={'arxiv_id': ''})
+@blueprint.route('abs/<path:arxiv_id>', methods=['GET'])
 def abstract(arxiv_id: str) -> Response:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
@@ -83,14 +83,14 @@ def abstract(arxiv_id: str) -> Response:
     raise InternalServerError('Unexpected error')
 
 
-@blueprint.route('/trackback/', methods=['GET'], defaults={'arxiv_id': ''})
-@blueprint.route('/trackback/<path:arxiv_id>', methods=['GET', 'POST'])
+@blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})
+@blueprint.route('trackback/<path:arxiv_id>', methods=['GET', 'POST'])
 def trackback(arxiv_id: str) -> Union[str, Response]:
     """Route to define new trackbacks for papers."""
     raise InternalServerError(f'Not Yet Implemented {arxiv_id}')
 
 
-@blueprint.route('/ct')
+@blueprint.route('ct')
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args:
@@ -104,7 +104,7 @@ def clickthrough() -> Response:
     raise NotFound
 
 
-@blueprint.route('/list/<context>/<subcontext>')
+@blueprint.route('list/<context>/<subcontext>')
 def list_articles(current_context: str, yymm: str) -> Response:
     """
     List articles by context, month etc.
@@ -115,50 +115,50 @@ def list_articles(current_context: str, yymm: str) -> Response:
     raise InternalServerError(f'Not yet implemented {current_context} {yymm}')
 
 
-@blueprint.route('/format/<arxiv_id>')
+@blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
     """Get formats article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/pdf/<arxiv_id>')
+@blueprint.route('pdf/<arxiv_id>')
 def pdf(arxiv_id: str) -> Response:
     """Get PDF for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/div/<arxiv_id>')
+@blueprint.route('div/<arxiv_id>')
 def div(arxiv_id: str) -> Response:
     """Get div for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/html/<arxiv_id>')
+@blueprint.route('html/<arxiv_id>')
 def html(arxiv_id: str) -> Response:
     """Get html for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/ps/<arxiv_id>')
+@blueprint.route('ps/<arxiv_id>')
 def ps(arxiv_id: str) -> Response:
     """Get ps for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/src/<arxiv_id>/anc', defaults={'file_name': None})
-@blueprint.route('/src/<arxiv_id>/anc/<path:file_name>')
+@blueprint.route('src/<arxiv_id>/anc', defaults={'file_name': None})
+@blueprint.route('src/<arxiv_id>/anc/<path:file_name>')
 def src(arxiv_id: str, file_name: str) -> Response:
     """Get src for article."""
     raise InternalServerError(f'Not Yet Implemented {arxiv_id} {file_name}')
 
 
-@blueprint.route('/tb/<path:arxiv_id>')
+@blueprint.route('tb/<path:arxiv_id>')
 def tb(arxiv_id: str) -> Response:
     """Get trackbacks for article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/show-email/<path:show_email_hash>/<path:arxiv_id>')
+@blueprint.route('show-email/<path:show_email_hash>/<path:arxiv_id>')
 def show_email(show_email_hash: str, arxiv_id: str) -> Response:
     """Show the email for the submitter for an article."""
     raise InternalServerError(
@@ -168,25 +168,25 @@ def show_email(show_email_hash: str, arxiv_id: str) -> Response:
 # Maybe auth protected URL in arxiv-browse?
 # ('will the auth service allow paths not defined in it's
 #  repo to be protected?')
-@blueprint.route('/auth/show-endorsers/<path:arxiv_id>')
+@blueprint.route('auth/show-endorsers/<path:arxiv_id>')
 def show_endorsers(arxiv_id: str) -> Response:
     """Show endorsers for an article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/refs/<path:arxiv_id>')
+@blueprint.route('refs/<path:arxiv_id>')
 def refs(arxiv_id: str) -> Response:
     """Show the references for an article."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/cits/<path:arxiv_id>')
+@blueprint.route('cits/<path:arxiv_id>')
 def cits(arxiv_id: str) -> Response:
     """Show the citations for an artcile."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('/form')
+@blueprint.route('form')
 def form(arxiv_id: str) -> Response:
     """Old form interface to lists of articles."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
