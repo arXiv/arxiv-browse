@@ -184,6 +184,11 @@ class BrowseTest(unittest.TestCase):
             "Submitter should be properly tex_to_utf for 1501.99999")
 
         self.assertTrue(
+            'π_1^{{é}t}' in rv.data.decode('utf-8'),
+            "abstract field should include π, é characters for 1501.99999"
+        )
+
+        self.assertTrue(
             'href="www.bogus.org"' not in rv.data.decode('utf-8'),
             "hostnames should NOT be turned into links ARXIVNG-1243")
 
@@ -194,7 +199,7 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(
             'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
             "FTP URLs should be turned into links ARXIVNG-1242")
-        
+
 
     def test_160408245(self):
         """Test linking in 1604.08245."""
@@ -266,7 +271,7 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNotNone(colab['href'],'<a> tag in title should have href')
         self.assertEqual(colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
         self.assertEqual(colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
-        
+
 
     @unittest.skip("In current implementation,  conflicts with comma test below.")
     def test_space_in_author_list(self):
@@ -291,5 +296,3 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(auths_elmt, 'Should authors div element')
         self.assertNotIn(' ,', auths_elmt.text,
                          'Should not add extra spaces before commas')
-
-    
