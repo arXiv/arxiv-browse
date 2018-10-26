@@ -6,7 +6,7 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 
-VERSION = '0.1'
+VERSION = '0.1.1'
 """The application version """
 
 ON = 'yes'
@@ -41,7 +41,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'qwert2345')
 the secret key
 """
 
-SESSION_COOKIE_NAME = os.environ.get('SESSION_COOKIE_NAME', 'reflink')
+SESSION_COOKIE_NAME = os.environ.get('SESSION_COOKIE_NAME', 'arxiv_browse')
 """
 the name of the session cookie
 """
@@ -102,7 +102,7 @@ logging in debug mode, 'production' will only log in production and 'never'
 disables it entirely.
 """
 
-SERVER_NAME = os.environ.get('SERVER_NAME', None)
+SERVER_NAME = os.environ.get('BROWSE_SERVER_NAME', None)
 """
 the name and port number of the server. Required for subdomain support (e.g.:
 'myapp.dev:5000') Note that localhost does not support subdomains so setting
