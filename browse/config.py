@@ -209,7 +209,12 @@ SQLALCHEMY_DATABASE_URI = os.environ.get(
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
-# SQLALCHEMY_POOL_SIZE = 1
+
+# The classic home page uses this file to get the total paper count
+# The file contains one line, with key "total_papers" and an integer, e.g.
+# total_papers 1456755
+BROWSE_DAILY_STATS_PATH = os.environ.get(
+    'BROWSE_DAILY_STATS_PATH', 'tests/data/daily_stats')
 
 # Disable DB queries even if other SQLAlchemy config are defined
 # This, for example, could be used in conjunction with the `no-write` runlevel
