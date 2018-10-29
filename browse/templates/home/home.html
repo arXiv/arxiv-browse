@@ -8,7 +8,7 @@
 {#- TODO: handle paper count -#}
 {#- TODO: display order in taxonomy? -#}
 <p class="tagline">Open access to 1,455,301 e-prints in Physics, Mathematics, Computer Science, Quantitative Biology, Quantitative Finance, Statistics, Electrical Engineering and Systems Science, and Economics</p>
-{#- TODO: revisit -#}
+{#- TODO: revisit when we have a plan for /multi replacement -#}
 <form action="/multi" method="get">Subject search and browse:
   <select name="group">
   {%- for group_key, group_details in groups.items() if not group_details.is_test %}
@@ -19,17 +19,33 @@
   <input type="submit" name="/form" value="Form Interface">
   <input type="submit" name="/catchup" value="Catchup">
 </form>
+<p>
 {%- include "home/news.html" -%}
+See cumulative <a href="/new/">"What's New"</a> pages.
+Read <a href="/help/robots">robots beware</a> before attempting any automated download
+</p>
 {#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
+{% endblock content -%}
 
-{% endblock content %}
+{%- block footer_content -%}
+<p>
+arXiv is an e-print service in the fields of physics, mathematics, computer science,
+quantitative biology, quantitative finance, statistics, electrical engineering and
+systems science, and economics. Submissions to arXiv should conform to Cornell
+University academic standards. arXiv is owned and operated by Cornell
+University, a private not-for-profit educational institution. arXiv is funded
+by <a href="https://www.library.cornell.edu/about">Cornell University Library</a>,
+the <a href="https://simonsfoundation.org/">Simons Foundation</a> and by the
+<a href="https://confluence.cornell.edu/x/ALlRF">member institutions</a>.
+</p>
+{%- endblock footer_content -%}
 
 {%- macro group_section(group_keys) -%}
   {%- for group_key in group_keys -%}
   <h2>{{ groups[group_key].name }}</h2>
   <ul>
-    {% for archive_key, archive_details in archives.items() if archives[archive_key].in_group == group_key  %}
+    {% for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
       {%- set archive_search_url = url_for('search_archive', archive=archive_key) -%}
       {%- set archive_url = '/archive/archive' if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
       {%- set archive_name = archives[archive_key].name if archive_key != 'cs' else 'Computing Research Repository' -%}
@@ -37,13 +53,13 @@
     {#- TODO: url_for on /archive, /list, /catchup -#}
     <li>
       <a href="{{ archive_url }}">{{ archive_name }}</a> (<b>{{ archive_key if archive_key != 'cs' else 'CoRR' }}</b> <a href="/list/{{ archive_key }}/new">new</a>, <a href="/list/{{ archive_key }}/recent">recent</a>, <a href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
-      {%- if group_key == 'grp_physics' -%}<br/>includes:&nbsp;
+      {%- if archive == 'physics' -%}<br/>includes:&nbsp;
       {%- elif archive_key == 'cs' -%}<br/>includes (see <a href="https://arxiv.org/corr/subjectclasses">detailed description</a>):&nbsp;
       {%- elif archive_key in ('eess', 'econ') -%}<br/>includes (see <a href="/help/{{ archive_key }}">detailed description</a>):&nbsp;
-      {%- else -%}<br/>includes (see <a href="/new/{{ archive_key }}.html">detailed description</a>):&nbsp;
+      {%- elif group_key != 'grp_physics' -%}<br/>includes (see <a href="/new/{{ archive_key }}.html">detailed description</a>):&nbsp;
       {%- endif -%}
-      {% for category_key, category_details in categories.items() if categories[category_key].in_archive == archive_key %}
-      {{ categories[category_key].name }}&nbsp;
+      {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
+      {% if not (loop.first and loop.last and group_key == 'grp_physics') %}<a href="/list/{{ category_key }}/recent">{{ categories[category_key].name }}</a>{% if not loop.last %}; {% endif %}{% endif %}
       {% endfor %}
     </li>
     {% endfor %}
