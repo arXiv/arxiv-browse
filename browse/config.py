@@ -211,8 +211,8 @@ SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
 # SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW are set without defaults
 # because they will not work with sqlite
-SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
-SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
+# SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
+# SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
 
 # Disable DB queries even if other SQLAlchemy config are defined
 # This, for example, could be used in conjunction with the `no-write` runlevel
