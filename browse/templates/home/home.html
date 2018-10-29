@@ -29,16 +29,7 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
 {% endblock content -%}
 
 {%- block footer_content -%}
-<p>
-arXiv is an e-print service in the fields of physics, mathematics, computer science,
-quantitative biology, quantitative finance, statistics, electrical engineering and
-systems science, and economics. Submissions to arXiv should conform to Cornell
-University academic standards. arXiv is owned and operated by Cornell
-University, a private not-for-profit educational institution. arXiv is funded
-by <a href="https://www.library.cornell.edu/about">Cornell University Library</a>,
-the <a href="https://simonsfoundation.org/">Simons Foundation</a> and by the
-<a href="https://confluence.cornell.edu/x/ALlRF">member institutions</a>.
-</p>
+{%- include "long_trailer.html" -%}
 {%- endblock footer_content -%}
 
 {%- macro group_section(group_keys) -%}
