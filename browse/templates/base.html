@@ -32,10 +32,18 @@
   <!-- End Piwik Code -->
   {% endif -%}
   {%- include "feedback_collector_js.html" -%}
+  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/user-banner.css?v=1.0" />
+  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+  <script language="javascript" src="//static.arxiv.org/js/user_banner.js"></script>
+  {% endif -%}
   {%- endblock head -%}
 </head>
 
 <body {% block body_id %}id="front"{% endblock %} class="with-cu-identity">
+  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
+  {%- include "user_banner.html" -%}
+  {% endif -%}
   {%- if config['BROWSE_PIWIK_ENABLED'] -%}
   <noscript><img src="//webanalytics.library.cornell.edu/piwik.php?idsite=538&amp;rec=1" style="border:0;" alt="" /></noscript>
   {% endif -%}
