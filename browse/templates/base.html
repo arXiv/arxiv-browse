@@ -89,10 +89,16 @@
   </div>
   <div id="footer">
     <div class="footer-text">
-      {%- block footer_content -%}
-      {%- endblock footer_content -%}
+      {%- block footer_text -%}
+      {%- endblock footer_text -%}
+      <p class="a11y-text" style="margin: 1em 0; padding-top: 1em; border-top: 1px solid #ccc">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format, contact <a href="mailto:web-accessibility@cornell.edu">web-accessibility@cornell.edu</a> for assistance.</p>
     </div>
-    <div class="social"><a href="{{ url_for('twitter') }}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a></div>
+    <div class="social">
+      <a href="{{ url_for('twitter') }}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a>
+      <address>
+        <p style="margin-top: 2em"><a href="/help/contact">Contact</a></p>
+      </address>
+    </div>
   </div>
 </body>
 
