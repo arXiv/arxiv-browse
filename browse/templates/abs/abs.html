@@ -175,8 +175,8 @@
 {%- macro generate_social_media_tags() -%}
     <meta name="twitter:site" content="@arxiv">
     <meta property="og:site_name" content="arXiv.org">
-    <meta property="og:title" content="{{ abs_meta.title|truncate(70, True, '...') }}">
-    <meta property="og:description" content="{{ abs_meta.abstract|trim|truncate(200, True, '...')|tex_to_utf }}">
+    <meta property="og:title" content="{{ abs_meta.title|truncate(70, False, '...') }}">
+    <meta property="og:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}">
 {%- endmacro -%}
 
 {%- macro category_line() -%}
