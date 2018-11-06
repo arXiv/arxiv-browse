@@ -123,6 +123,12 @@ def div(arxiv_id: str) -> Response:
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
+@blueprint.route('/e-print/<arxiv_id>')
+def eprint(arxiv_id: str) -> Response:
+    """Get e-print (source) for article."""
+    raise InternalServerError(f'Not yet implemented {arxiv_id}')
+
+
 @blueprint.route('/html/<arxiv_id>')
 def html(arxiv_id: str) -> Response:
     """Get html for article."""

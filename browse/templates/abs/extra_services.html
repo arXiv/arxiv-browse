@@ -24,7 +24,7 @@
     {%- for format in format_list if not (format == 'src' and not current) %}
   <li>
     {%- if format == 'src' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">Source</a>
+    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}">Source</a>
     {%- elif format.startswith('ps') -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
