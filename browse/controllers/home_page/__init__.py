@@ -2,6 +2,7 @@
 
 import os
 import re
+from flask import current_app
 from typing import Any, Dict, Optional, Tuple
 from werkzeug.exceptions import InternalServerError
 
@@ -39,18 +40,21 @@ def get_home_page() -> Response:
 
 def _get_document_count() -> Optional[int]:
 
-    daily_stats_path = app_config.get('BROWSE_DAILY_STATS_PATH')
-    if daily_stats_path and os.isfile(daily_stats_path):
-        try:
+    try:
+        daily_stats_path = current_app.config['BROWSE_DAILY_STATS_PATH']
+        if daily_stats_path and os.path.isfile(daily_stats_path):
             with open(daily_stats_path, mode='r') as statsf:
                 stats = statsf.read()
-            stats_match = RE_TOTAL_PAPERS.match(stats)
-            if stats_match:
-                return int(stats_match.group('count'))
-        except FileNotFoundError:
-            logger.warning(f'Daily stats file {daily_stats_path} not found.')
+                stats_match = RE_TOTAL_PAPERS.match(stats)
+                if stats_match:
+                    return int(stats_match.group('count'))
+        else:
+            raise FileNotFoundError
+    except (KeyError, FileNotFoundError):
+        logger.warning(f'Daily stats file not found')
 
     try:
+        # If stats file is not available, fall back to database
         return get_document_count()
     except Exception as ex:
         logger.warning(f'Error getting document count from DB: {ex}')
