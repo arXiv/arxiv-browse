@@ -11,6 +11,7 @@ from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
     single_doi_url
+from browse.services.document.fake_listings import FakeListingFilesService
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
@@ -21,6 +22,9 @@ def create_web_app() -> Flask:
     app = Flask('browse', static_folder='static', template_folder='templates')
     app.config.from_pyfile('config.py')
 
+    app.logger.error( 'config is ')
+    app.logger.error( app.config )
+    
     # TODO Only needed until this route is added to arxiv-base
     if 'URLS' not in app.config:
         app.config['URLS'] = []
@@ -32,14 +36,19 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
+    #bdc34: not sure how to add service to app
+    app.config['listing_service'] = FakeListingFilesService()
+    
     ct_url_for = partial(create_ct_url, app.config.get(
         'CLICKTHROUGH_SECRET'), url_for)
 
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
-
+        
     app.jinja_env.globals['canonical_url'] = canonical_url
 
+    app.jinja_env.add_extension('browse.util.jinja-debug.DebugExtension')
+    
     def ct_single_doi_filter(doi: str)->str:
         return single_doi_url(ct_url_for, doi)
 
