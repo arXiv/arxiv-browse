@@ -51,12 +51,14 @@ from typing import Any, Dict, List, Optional, Tuple
 from flask import current_app
 from arxiv import status
 from browse.services.document.listings import ListingService
+from browse.services.document import metadata
 
 _show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
 _min_show = _show_values[0]
 _max_show = _show_values[-1]
+_default_show = _show_values[2]
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
@@ -82,14 +84,38 @@ def get_listing(  # md_service: Any,
     show
        Number of articles to show.
 """
-    # TODO check parameters to see if they are sane
+
     # TODO make sure to handle POST too
+
+    if not skip or not skip.isdigit():
+        skipn = 0
+    else:
+        skipn = int(skip)
+
+    if not show or not show.isdigit():
+        shown = _default_show
+    else:
+        shown = int(show)
+        if shown > _show_values[-1]:
+            shown = _show_values[-1]
+
+    if not (time_period and
+            (time_period.isdigit() or
+             time_period in ['new', 'current', 'pastweek', 'recent'])):
+        return {}, status.HTTP_400_BAD_REQUEST, {}
+
+    if not (subject_or_category and
+            len(subject_or_category) < 20):
+        return {}, status.HTTP_400_BAD_REQUEST, {}
 
     listing_service = _get_listing_service(current_app)
     if not listing_service:
         return {}, status.HTTP_503_SERVICE_UNAVAILABLE, {}
 
-    l_ids = listing_service.list_articles_by_month('xx', 1999, 12, 10, 10)
+    # TODO need to use actual info from request
+    (l_ids, count) = listing_service.list_articles_by_month('xx', 1999, 12, skipn, shown)
+
+    articles = [metadata.get_abs(id) for id in l_ids]
 
     # TODO if it is a HEAD, and nothing has changed, then the service could not send back data for not_modified
 
@@ -106,7 +132,8 @@ def get_listing(  # md_service: Any,
     response_data = {
         'test': 'something',
         'ids': l_ids,
-        'articles': []
+        'articles': articles,
+        'count': count
     }
     return response_data, status.HTTP_200_OK, {}
 

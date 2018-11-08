@@ -112,8 +112,8 @@ def list_articles(context: str, subcontext: str) -> Response:
         return redirect(headers['Location'], code=code)
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers
-
-    raise BadRequest()
+    else:
+        return response, code, headers
 
 
 @blueprint.route('/format/<arxiv_id>')

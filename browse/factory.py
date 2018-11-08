@@ -36,7 +36,7 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    #bdc34: not sure how to add service to app
+    #bdc34: not sure how to add service to app context
     app.config['listing_service'] = FakeListingFilesService()
     
     ct_url_for = partial(create_ct_url, app.config.get(

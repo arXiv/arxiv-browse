@@ -1,3 +1,51 @@
+{%- extends "base.html" -%}
+
+{% block title %}TODO generate title ex Astrophysics authors/titles Jan 1990{% endblock %}
+
+{%- block content %}
+<div>
 <h1>LISTING OH YA!</h1>
 
+<div>[ total of {{count}} entries: TODO pages]</div>
+
+<div>[ showing {{shown}} entries per page: TODO fewer | more | all]</div>
+
+
+<dl id='articles'>
+  {% for article in articles %}
+  {% set ids = article.arxiv_identifier.ids %}
+  <dt>
+    <a name='item{{loop.index}}'>[{{loop.index}}]</a>
+    <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
+      {{ article.arxiv_identifier.ids }}
+    </a>
+    [<a href="{{url_for('.pdf', arxiv_id=ids)}}" title="Download PDF">pdf</a> |
+     <a href="{{url_for('.ps', arxiv_id=ids)}}" title="Download PostScript">ps</a> |
+     <a href="{{url_for('.format', arxiv_id=ids)}}" title="Other formats">other</a>]
+  </dt>
+  <dd>
+    <div class='meta'>
+        <div class=list-title mathjax'>{{article.title}}</div>
+        <div class='list-authors'>TODO split, and create links for authors {{article.authors}}</div>
+        <div class='list-comments mathjax''>
+          <span class='descriptor'>Comments:</span>
+          {{article.comments}}
+        </div>
+        <div class='list-journal-ref'>
+          <span class='descriptor'>Journal-ref:</span>
+          {{article.journal_ref}}
+        </div>
+        <div class='list-subjects'>
+          <span class='descriptor'>Subjects:</span>
+          <span class='primary-subject'>{{article.primary_category.display_str()}}</span>
+        </div>
+        
+    </div>
+  </dd>  
+  {% endfor %}
+</dl>
+
 <pre>{% debug %}</pre>
+
+</div>
+{%- endblock %}
