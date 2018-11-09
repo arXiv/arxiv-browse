@@ -173,10 +173,13 @@
 {%- endmacro -%}
 
 {%- macro generate_social_media_tags() -%}
-    <meta name="twitter:site" content="@arxiv">
-    <meta property="og:site_name" content="arXiv.org">
-    <meta property="og:title" content="{{ abs_meta.title|truncate(70, False, '...') }}">
-    <meta property="og:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}">
+    <meta name="twitter:site" content="@arxiv"/>
+    <meta property="twitter:title" content="{{ abs_meta.title|tex_to_utf|truncate(70, False, '...') }}"/>
+    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}"/>
+    <meta property="og:site_name" content="arXiv.org"/>
+    <meta property="og:title" content="{{ abs_meta.title|tex_to_utf }}"/>
+    <meta property="og:url" content="https://arxiv.org/{{ requested_id }}"/>
+    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex_to_utf }}"/>
 {%- endmacro -%}
 
 {%- macro category_line() -%}
