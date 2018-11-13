@@ -41,6 +41,13 @@ def get_home_page() -> Response:
 def _get_document_count() -> Optional[int]:
 
     try:
+        # check DB for document count first
+        return get_document_count()  # type: ignore
+    except Exception as ex:
+        logger.warning(f'Error getting document count from DB: {ex}')
+
+    try:
+        # if DB is unavailable, fall back to legacy static file method
         daily_stats_path = current_app.config['BROWSE_DAILY_STATS_PATH']
         if daily_stats_path and os.path.isfile(daily_stats_path):
             with open(daily_stats_path, mode='r') as statsf:
@@ -52,11 +59,5 @@ def _get_document_count() -> Optional[int]:
             raise FileNotFoundError
     except (KeyError, FileNotFoundError):
         logger.warning(f'Daily stats file not found')
-
-    try:
-        # If stats file is not available, fall back to database
-        return get_document_count()
-    except Exception as ex:
-        logger.warning(f'Error getting document count from DB: {ex}')
 
     return None

@@ -31,7 +31,7 @@ def apply_response_headers(response: Response) -> Response:
 
 
 @blueprint.route('/', methods=['GET'])
-def home() -> None:
+def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
     if code == status.HTTP_200_OK:
