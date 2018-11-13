@@ -17,7 +17,7 @@ Mainly this should handle requests like:
 
 Odd:
 ?400
-cs/14?skip=%25CRAZYSTUFF 
+cs/14?skip=%25CRAZYSTUFF
 
 1. Figure out what category and yymm is being requested
 It's either a POST or GET with params about what to get.
@@ -47,6 +47,7 @@ Doesn't server the /view path.
 """
 import calendar
 from typing import Any, Dict, List, Optional, Tuple
+import math
 
 from flask import current_app
 from flask import url_for
@@ -176,8 +177,10 @@ def get_listing(  # md_service: Any,
         'list_month': list_month,
         'list_month_name': calendar.month_abbr[list_month],
         'author_links': author_links,
+        'paging': _paging(count, skipn, shown,
+                          subject_or_category, time_period)
     }
-    
+
     def author_query(article, query):
         return url_for('search_archive',
                        searchtype='author',
@@ -221,10 +224,77 @@ def _month(tp: str)->int:
     return int(tp[-2:])
 
 
-# TODO: The list page must trunate the author list, what size does it use?
+# TODO: The list page must trunate the author list, It uses
+# the same size as the abs page but it doesn't do the
+# JS show/hide
+# So get this value from the abs page.
 _truncate_author_list_size = 10
 
 
 def _author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
                                   _truncate_author_list_size)
+
+
+def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
+    B = 3  # num of buffer pages on each side of current
+    P = skipn / shown  # short cut page to current page
+    L = math.floor(count-1 / (skipn+1))+1  # total number of pages
+    S = 2 * B + 2 * 2 + 1  # number of total links in the pages sections:
+    #  2*buffer + 2*(first number + dots) + current
+
+    def _page_dict(n,nolink=False)->Dict[Any, Any]:
+        
+        # What the @#%$, this isn't working:str(math.(n+shown, count))
+        # I get error: AttributeError: module 'math' has no attribute 'min'
+        if n+shown > count:
+            txt = str(n+1)+'-'+str(count)
+        else:
+            txt = str(n+1)+'-'+str(n+shown)
+
+        if nolink:
+            return {'nolink':txt}
+        else:
+            return {'skip': n,
+                    'txt': txt,
+                    'url': url_for('.list_articles',
+                                   context=context,
+                                   subcontext=subcontext,
+                                   skip=n,
+                                   show=shown)
+            }
+
+    R = range(0, count, shown)
+
+    if L < S:  # just show all numbers number of pages is less than slots
+        return [_page_dict(n) for n in R if n < skipn] + \
+            [{'nolink': skipn}] + [_page_dict(n) for n in R if n > skipn]
+
+    page_links = []
+    if skipn >= shown: # Not on first page?
+        page_links = [_page_dict(0)]
+
+    prebuffer = [n for n in R if n >= (skipn - shown * B) and n < skipn and n > 0]
+
+    # No dots between first and prebuffer
+    if prebuffer:
+        if prebuffer[0] <= shown * B:
+            page_links = page_links + \
+                         [_page_dict(n) for n in prebuffer]
+        else:
+            page_links.append({'nolink': '...'})
+            page_links = page_links + \
+                         [_page_dict(n) for n in prebuffer]
+
+    page_links.append(_page_dict(skipn,True))  # current page
+
+    postbuffer = [n for n in R if n > skipn and n <= (skipn + shown * B) ]
+    if postbuffer:
+        page_links = page_links + \
+                     [_page_dict(n) for n in postbuffer]
+        if postbuffer[-1] < R[-1]:  # Need dots between postbuffer and last
+            page_links.append({'nolink': '...'})
+
+    if postbuffer and postbuffer[-1] < R[-1]:
+        page_links.append(_page_dict(R[-1]))  # last
+    return page_links
