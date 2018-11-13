@@ -197,6 +197,11 @@ class BrowseTest(unittest.TestCase):
             "Submitter should be properly tex_to_utf for 1501.99999")
 
         self.assertTrue(
+            'π_1^{{é}t}' in rv.data.decode('utf-8'),
+            "abstract field should include π, é characters for 1501.99999"
+        )
+
+        self.assertTrue(
             'href="www.bogus.org"' not in rv.data.decode('utf-8'),
             "hostnames should NOT be turned into links ARXIVNG-1243")
 

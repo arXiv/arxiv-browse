@@ -6,7 +6,7 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 
-VERSION = '0.1'
+VERSION = '0.1.1'
 """The application version """
 
 ON = 'yes'
@@ -209,6 +209,10 @@ SQLALCHEMY_DATABASE_URI = os.environ.get(
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
+# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW are set without defaults
+# because they will not work with sqlite
+# SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
+# SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
 
 # The classic home page uses this file to get the total paper count
 # The file contains one line, with key "total_papers" and an integer, e.g.
@@ -224,6 +228,10 @@ BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
 
 # Enable/disable Piwik (Matomo) web analytics
 BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
+
+# Enable/disable user banner
+BROWSE_USER_BANNER_ENABLED = os.environ.get(
+    'BROWSE_USER_BANNER_ENABLED', False)
 
 # Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
