@@ -41,7 +41,7 @@
 
       {% if article.comments %}
       <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
-        {{article.comments}}
+        {{article.comments|arxiv_urlize}}
       </div>
       {% endif %}
 
@@ -64,13 +64,13 @@
 </div>
 </div>
 
-<pre> {% debug %}</pre>
+
 {%- endblock %}
 
 
 
 {%- macro page_divs() -%}
-<div>[ total of {{count}} entries: TODO pages]</div>
+<div>[ total of {{count}} entries: {{ pages() }} ]</div>
 <div>[ showing {{shown}} entries per page: TODO fewer | more | all]</div>
 {%- endmacro -%}
 
@@ -88,4 +88,16 @@
       {%- endif -%}
     {% endfor %}    
   {%- endif -%}  
+{%- endmacro -%}
+
+
+{%- macro pages() -%}
+  {%- for pg in paging -%}
+    {% if pg.nolink is defined %}
+      <span>{{pg.nolink}}</span>
+    {% else %}
+      <a href={{pg.url}}>{{pg.txt}}</a>
+    {% endif %}
+  {% endfor %}
+
 {%- endmacro -%}
