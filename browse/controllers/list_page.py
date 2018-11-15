@@ -64,14 +64,13 @@ from browse.controllers.abs_page import truncate_author_list_size
 _show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
-_min_show = _show_values[0]
 _max_show = _show_values[-1]
 _default_show = _show_values[2]
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 
-def get_listing(  # md_service: Any,
+def get_listing(
         subject_or_category: str,
         time_period: str,
         skip: str,
@@ -103,9 +102,7 @@ def get_listing(  # md_service: Any,
     if not show or not show.isdigit():
         shown = _default_show
     else:
-        shown = int(show)
-        if shown > _show_values[-1]:
-            shown = _show_values[-1]
+        shown = min(int(show), _max_show)
 
     if (not subject_or_category or
         not (time_period and
@@ -134,7 +131,7 @@ def get_listing(  # md_service: Any,
 
     if time_period == 'new':
         response_data['list_time'] = 'new'
-        (l_ids, count) = listing_service.list_new_articles(
+        (l_ids, count, time) = listing_service.list_new_articles(
             subject_or_category, skipn, shown)
     elif time_period in ['pastweek', 'recent']:
         response_data['list_time'] = time_period
@@ -151,7 +148,9 @@ def get_listing(  # md_service: Any,
         list_year, list_month = yandm
         response_data['list_time'] = time_period
         response_data['list_year'] = str(list_year)
-        if list_month:
+        if list_month or list_month == 0:
+            if list_month < 1 or list_month > 12:
+                raise BadRequest
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             (l_ids, count) = listing_service.list_articles_by_month(
@@ -160,19 +159,14 @@ def get_listing(  # md_service: Any,
             (l_ids, count) = listing_service.list_articles_by_year(
                 subject_or_category, list_year, skipn, shown)
 
+    # TODO if it is a HEAD, and nothing has changed, send not modified
+    # TODO write cache expires headers
+
     articles = [metadata.get_abs(id) for id in l_ids]
     response_data['articles'] = articles
     response_data['author_links'] = {
         ar.arxiv_id_v: _author_links(ar) for ar in articles}
-    response_data['downloads'] =  _dl_for_articles(articles, request)
-
-    # TODO if it is a HEAD, and nothing has changed, then the service could not send back data for not_modified
-
-    # TODO write cache expires headers
-
-    # TODO make sure handle HEAD
-
-    # TODO generate breadcrumbs data
+    response_data['downloads'] = _dl_for_articles(articles)
 
     response_data.update({
         'context': subject_or_category,
@@ -238,7 +232,7 @@ def _more_fewer(show: int, count: int) -> Dict[str, Any]:
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
     rd = {'mf_fewer': next(tup_f, (None, None))[0]}
 
-    if count < _show_values[-1] and show < _show_values[-1]:
+    if count < _max_show and show < _max_show:
         rd['mf_all'] = count
 
     # python lacks a find(labmda x:...) ?
@@ -304,7 +298,7 @@ def _paging(count: int, skipn: int, shown: int, context: str, subcontext: str) -
     return page_links
 
 
-def _dl_for_articles(articles, download_format_pref)->Dict[str, any]:
-    download_format_pref = request.cookies.get('xxx-ps-defaults')
-    return {ar.arxiv_id_v: metadata.get_dissemination_formats(ar, download_format_pref)
+def _dl_for_articles(articles: List[DocMetadata])->Dict[str, Any]:
+    dl_pref = request.cookies.get('xxx-ps-defaults')
+    return {ar.arxiv_id_v: metadata.get_dissemination_formats(ar, dl_pref)
             for ar in articles}
