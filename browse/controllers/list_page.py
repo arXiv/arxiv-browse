@@ -49,8 +49,7 @@ import calendar
 from typing import Any, Dict, List, Optional, Tuple
 import math
 
-from flask import current_app
-from flask import url_for
+from flask import current_app, request, url_for
 
 from werkzeug.exceptions import ServiceUnavailable, BadRequest
 from arxiv import status, taxonomy
@@ -162,7 +161,10 @@ def get_listing(  # md_service: Any,
                 subject_or_category, list_year, skipn, shown)
 
     articles = [metadata.get_abs(id) for id in l_ids]
-    author_links = {ar.arxiv_id_v: _author_links(ar) for ar in articles}
+    response_data['articles'] = articles
+    response_data['author_links'] = {
+        ar.arxiv_id_v: _author_links(ar) for ar in articles}
+    response_data['downloads'] =  _dl_for_articles(articles, request)
 
     # TODO if it is a HEAD, and nothing has changed, then the service could not send back data for not_modified
 
@@ -175,7 +177,6 @@ def get_listing(  # md_service: Any,
     response_data.update({
         'context': subject_or_category,
         'ids': l_ids,
-        'articles': articles,
         'count': count,
         'subcontext': time_period,
         'shown': shown,
@@ -184,7 +185,6 @@ def get_listing(  # md_service: Any,
         'list_ctx_name': list_ctx_name,
         'list_ctx_id': list_ctx_id,
         'list_ctx_in_archive': list_ctx_in_archive,
-        'author_links': author_links,
         'paging': _paging(count, skipn, shown,
                           subject_or_category, time_period)
     })
@@ -231,7 +231,7 @@ def _author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
                                   truncate_author_list_size)
 
 
-def _more_fewer( show: int, count: int) -> Dict[str, Any]:
+def _more_fewer(show: int, count: int) -> Dict[str, Any]:
     # we want first show_values[n] where show_values[n] < show and show_values[n+1] > show
     nplus1s = _show_values[1:]
     n_n1_tups = map(lambda n, n1: (n, n1), _show_values, nplus1s)
@@ -247,22 +247,14 @@ def _more_fewer( show: int, count: int) -> Dict[str, Any]:
     return rd
 
 
-def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
+def _paging(count: int, skipn: int, shown: int, context: str, subcontext: str) -> List[Any]:
     B = 3  # num of buffer pages on each side of current
-    P = skipn / shown  # short cut page to current page
     L = math.floor(count-1 / (skipn+1))+1  # total number of pages
     S = 2 * B + 2 * 2 + 1  # number of total links in the pages sections:
     #  2*buffer + 2*(first number + dots) + current
 
     def _page_dict(n, nolink=False)->Dict[Any, Any]:
-
-        # What the @#%$, this isn't working:str(math.(n+shown, count))
-        # I get error: AttributeError: module 'math' has no attribute 'min'
-        if n+shown > count:
-            txt = str(n+1)+'-'+str(count)
-        else:
-            txt = str(n+1)+'-'+str(n+shown)
-
+        txt = str(n+1)+'-'+str(min(count, n+shown))
         if nolink:
             return {'nolink': txt}
         else:
@@ -281,7 +273,7 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
         return [_page_dict(n) for n in R if n < skipn] + \
             [{'nolink': skipn}] + [_page_dict(n) for n in R if n > skipn]
 
-    page_links = []
+    page_links: List[Dict[str, Any]] = []
     if skipn >= shown:  # Not on first page?
         page_links = [_page_dict(0)]
 
@@ -310,3 +302,9 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
     if postbuffer and postbuffer[-1] < R[-1]:
         page_links.append(_page_dict(R[-1]))  # last
     return page_links
+
+
+def _dl_for_articles(articles, download_format_pref)->Dict[str, any]:
+    download_format_pref = request.cookies.get('xxx-ps-defaults')
+    return {ar.arxiv_id_v: metadata.get_dissemination_formats(ar, download_format_pref)
+            for ar in articles}

@@ -26,9 +26,7 @@
     <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
       arXiv:{{ article.arxiv_identifier.ids }}
     </a>
-    [<a href="{{url_for('.pdf', arxiv_id=ids)}}" title="Download PDF">pdf</a>,
-     <a href="{{url_for('.ps', arxiv_id=ids)}}" title="Download PostScript">ps</a>,
-     <a href="{{url_for('.format', arxiv_id=ids)}}" title="Other formats">other</a>]
+    {{ dl_links( article ) }}
   </dt>
   <dd>
     <div class='meta'>
@@ -115,3 +113,15 @@
   {% endif %}
 {%- endmacro -%}
       
+{%- macro dl_links( article ) -%}
+  {% set id=article.arxiv_id %}
+  {% set downloads = downloads[ article.arxiv_id_v ] %}     
+  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF">pdf</a>
+  {%- if 'ps' in downloads -%}
+    , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript">ps</a>
+  {%- endif -%}  
+  {%- if 'other' in downloads -%}
+    , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats">other</a>
+  {%- endif -%}
+  ]
+{%- endmacro -%}
