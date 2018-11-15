@@ -40,6 +40,16 @@ class ListingService:
     def version(self) -> str:
         return "0.2"
 
+     #   @abstractmethod
+    def list_articles_by_year(self,
+                               archiveOrCategory: str,
+                               year: int,
+                               skip: int,
+                               show: int,
+                               if_modified_since: Optional[str]=None) -> Tuple[List[str], int]:
+        raise NotImplementedError
+
+    
  #   @abstractmethod
     def list_articles_by_month(self,
                                archiveOrCategory: str,

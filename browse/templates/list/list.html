@@ -70,8 +70,12 @@
 
 
 {%- macro page_divs() -%}
-<div>[ total of {{count}} entries: {{ pages() }} ]</div>
-<div>[ showing {{shown}} entries per page: TODO fewer | more | all]</div>
+<div class='paging'>[ total of {{count}} entries: {{ pages() }} ]</div>
+<div class='morefewer'>[ showing {{shown}} entries per page:
+  {{ show_link('fewer',mf_fewer) }} |
+  {{ show_link('more', mf_more)  }} |
+  {{ show_link('all',  mf_all)   }} ]
+</div> 
 {%- endmacro -%}
 
 
@@ -99,5 +103,15 @@
       <a href={{pg.url}}>{{pg.txt}}</a>
     {% endif %}
   {% endfor %}
-
 {%- endmacro -%}
+
+
+{%- macro show_link( txt, to_show ) %}
+  {% if to_show %}
+    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
+      {{txt}}</a>
+  {% else %}
+    <span style="color: #999">{{txt}}</span>
+  {% endif %}
+{%- endmacro -%}
+      

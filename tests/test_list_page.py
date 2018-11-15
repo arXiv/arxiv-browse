@@ -1,0 +1,349 @@
+import unittest
+from hamcrest import *
+
+from bs4 import BeautifulSoup
+
+from tests.test_abs_parser import ABS_FILES
+from browse.services.document.metadata import AbsMetaSession
+from browse.domain.license import ASSUMED_LICENSE_URI
+from browse.services.document.fake_listings import FakeListingFilesService
+import os
+
+from app import app
+
+
+class BrowseTest(unittest.TestCase):
+
+    def setUp(self):
+        app.testing = True
+        app.config['APPLICATION_ROOT'] = ''
+
+        # BDC34 there should be a better way of setting up a
+        # service in the app. or maybe not?
+        app.config['listing_service'] = FakeListingFilesService()
+        # NB all /list requests return the same data with FakeListingFilesService
+        
+        self.app = app.test_client()
+
+    def test_basic_lists(self):
+        rv = self.app.get('/list/hep-ph/0901')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/09')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/new')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/current')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/pastweek')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/recent')
+        self.assertEqual(rv.status_code, 200)
+        
+        rv = self.app.get('/list/hep-ph/0901?skip=925&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/astro-ph/04')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/92')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/9201')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/01')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/18')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/20')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/30')
+        self.assertEqual(rv.status_code, 200)
+        
+        rv = self.app.get('/list/math/200101')
+        self.assertEqual(rv.status_code, 200)
+        
+
+
+
+    def test_listing_authors(self):
+        rv = self.app.get('/list/hep-ph/0901')
+        self.assertEqual(rv.status_code, 200)
+        au = b'Eqab M. Rabei'
+        assert au in rv.data, 'Simple check for author {au} in response.'
+
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        auDivs = html.find_all('div', 'list-authors')
+        assert_that(auDivs, not_none())
+        assert_that(len(auDivs), greater_than(5), 'Should have some .list-author divs')
+        
+        first_aus = auDivs[0].find_all('a')        
+        assert_that(first_aus, has_length(4),
+                    'expect 4 <a> tags for first artcile "Fractional WKB Approximation"')
+        
+        assert_that(first_aus[0].get_text(), equal_to('Eqab M. Rabei'))
+        assert_that(first_aus[1].get_text(), equal_to('Ibrahim M. A. Altarazi'))
+        assert_that(first_aus[2].get_text(), equal_to('Sami I. Muslih'))
+        assert_that(first_aus[3].get_text(), equal_to('Dumitru Baleanu'))
+
+        assert_that(auDivs[0].get_text(), is_not( contains_string( ' ,')),
+                    'Should not have a comma with a space in front of it')
+        
+
+    def test_paging_first(self):
+        rv = self.app.get('/list/hep-ph/0901')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 6)
+
+        assert_that( tgs[0].name, equal_to('span') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('a') )
+        assert_that( tgs[1].get_text(), equal_to('26-50') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('51-75') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('76-100') )
+        
+        assert_that( tgs[4].name, equal_to('span') )
+        assert_that( tgs[4].get_text(), equal_to('...') )
+
+        assert_that( tgs[5].name, equal_to('a') )
+        assert_that( tgs[5].get_text(), equal_to('1001-1001') )
+
+    def test_paging_second(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=25&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 7)
+
+        assert_that( tgs[0].name, equal_to('a') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('span') )
+        assert_that( tgs[1].get_text(), equal_to('26-50') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('51-75') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('76-100') )
+
+        assert_that( tgs[4].name, equal_to('a') )
+        assert_that( tgs[4].get_text(), equal_to('101-125') )
+
+        assert_that( tgs[5].name, equal_to('span') )
+        assert_that( tgs[5].get_text(), equal_to('...') )
+
+        assert_that( tgs[6].name, equal_to('a') )
+        assert_that( tgs[6].get_text(), equal_to('1001-1001') )    
+
+
+    def test_paging_middle(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=175&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 7)
+
+        assert_that( tgs[0].name, equal_to('a') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('span') )
+        assert_that( tgs[1].get_text(), equal_to('...') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('101-125') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('126-150') )
+
+        assert_that( tgs[4].name, equal_to('a') )
+        assert_that( tgs[4].get_text(), equal_to('151-175') )
+
+        assert_that( tgs[5].name, equal_to('span') )
+        assert_that( tgs[5].get_text(), equal_to('176-200') )
+
+        assert_that( tgs[6].name, equal_to('a') )
+        assert_that( tgs[6].get_text(), equal_to('201-225') )
+
+        assert_that( tgs[7].name, equal_to('a') )
+        assert_that( tgs[7].get_text(), equal_to('226-250') )
+
+        assert_that( tgs[8].name, equal_to('a') )
+        assert_that( tgs[8].get_text(), equal_to('251-275') )
+
+        assert_that( tgs[9].name, equal_to('span') )
+        assert_that( tgs[9].get_text(), equal_to('...') )
+        
+        assert_that( tgs[10].name, equal_to('a') )
+        assert_that( tgs[10].get_text(), equal_to('1001-1001') )
+
+    
+
+    def test_paging_last(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=1000&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 7)
+
+        assert_that( tgs[0].name, equal_to('a') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('span') )
+        assert_that( tgs[1].get_text(), equal_to('...') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('926-950') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('951-975') )
+
+        assert_that( tgs[4].name, equal_to('a') )
+        assert_that( tgs[4].get_text(), equal_to('976-1000') )
+
+        assert_that( tgs[5].name, equal_to('span') )
+        assert_that( tgs[5].get_text(), equal_to('1001-1001') )    
+
+
+    def test_paging_penultimate(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=975&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 7)
+
+        assert_that( tgs[0].name, equal_to('a') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('span') )
+        assert_that( tgs[1].get_text(), equal_to('...') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('901-925') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('926-950') )
+
+        assert_that( tgs[4].name, equal_to('a') )
+        assert_that( tgs[4].get_text(), equal_to('951-975') )
+
+        assert_that( tgs[5].name, equal_to('span') )
+        assert_that( tgs[5].get_text(), equal_to('976-1000') )
+
+        assert_that( tgs[6].name, equal_to('a') )
+        assert_that( tgs[6].get_text(), equal_to('1001-1001') )
+
+
+    def test_paging_925(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=925&show=25')
+        self.assertEqual(rv.status_code, 200)
+
+        rvdata = rv.data.decode('utf-8')
+        html = BeautifulSoup(rvdata, 'html.parser')
+
+        paging = html.find(id='dlpage').find_all('div')[0]
+        assert_that(paging, not_none())
+        tgs = paging.find_all(['span','a'] )
+        assert_that( tgs, not_none())
+        assert_that(len(tgs), 7)
+
+        assert_that( tgs[0].name, equal_to('a') )
+        assert_that( tgs[0].get_text(), equal_to('1-25') )
+
+        assert_that( tgs[1].name, equal_to('span') )
+        assert_that( tgs[1].get_text(), equal_to('...') )
+
+        assert_that( tgs[2].name, equal_to('a') )
+        assert_that( tgs[2].get_text(), equal_to('851-875') )
+
+        assert_that( tgs[3].name, equal_to('a') )
+        assert_that( tgs[3].get_text(), equal_to('876-900') )
+
+        assert_that( tgs[4].name, equal_to('a') )
+        assert_that( tgs[4].get_text(), equal_to('901-925') )
+
+        assert_that( tgs[5].name, equal_to('span') )
+        assert_that( tgs[5].get_text(), equal_to('926-950') )    
+
+        assert_that( tgs[6].name, equal_to('a') )
+        assert_that( tgs[6].get_text(), equal_to('951-975') )
+
+        assert_that( tgs[7].name, equal_to('a') )
+        assert_that( tgs[7].get_text(), equal_to('976-1000') )
+
+        assert_that( tgs[8].name, equal_to('a') )
+        assert_that( tgs[8].get_text(), equal_to('1001-1001') )
+
+    def test_odd_requests(self):
+        rv = self.app.get('/list/hep-ph/0901?skip=925&show=1000000')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/hep-ph/bogusTimePeriod')
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self.app.get('/list/junkarchive')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/list/ao-si/0901?skip=925&show=25')
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self.app.get('/list/math/0199')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/200199')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/2')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/2001999999')
+        self.assertEqual(rv.status_code, 200)
+        
+        
+
