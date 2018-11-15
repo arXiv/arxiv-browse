@@ -65,7 +65,7 @@ class ListingService:
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str]=None) -> Tuple[List[str], int]:
+                          if_modified_since: Optional[str]=None) -> Tuple[List[str], int, datetime]:
         raise NotImplementedError
 
 #    @abstractmethod
