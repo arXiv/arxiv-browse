@@ -52,6 +52,7 @@ import math
 from flask import current_app
 from flask import url_for
 
+from werkzeug.exceptions import ServiceUnavailable, BadRequest
 from arxiv import status, taxonomy
 
 from browse.services.search.search_authors import queries_for_authors, \
@@ -59,6 +60,7 @@ from browse.services.search.search_authors import queries_for_authors, \
 from browse.services.document.listings import ListingService
 from browse.services.document import metadata
 from browse.domain.metadata import DocMetadata
+from browse.controllers.abs_page import truncate_author_list_size
 
 _show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
@@ -110,7 +112,7 @@ def get_listing(  # md_service: Any,
         not (time_period and
              (time_period.isdigit() or
               time_period in ['new', 'current', 'pastweek', 'recent']))):
-        return {}, status.HTTP_400_BAD_REQUEST, {}
+        raise BadRequest
 
     if subject_or_category in taxonomy.CATEGORIES:
         list_type = 'category'
@@ -121,31 +123,43 @@ def get_listing(  # md_service: Any,
         list_type = 'archive'
         list_ctx_id = subject_or_category
         list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
+        list_ctx_in_archive = list_ctx_name
     else:
-        return {}, status.HTTP_400_BAD_REQUEST, {}
+        raise BadRequest
 
     listing_service = _get_listing_service(current_app)
     if not listing_service:
-        return {}, status.HTTP_503_SERVICE_UNAVAILABLE, {}
+        raise ServiceUnavailable
+
+    response_data: Dict[str, Any] = {}
 
     if time_period == 'new':
-        list_time = 'new'
+        response_data['list_time'] = 'new'
         (l_ids, count) = listing_service.list_new_articles(
             subject_or_category, skipn, shown)
     elif time_period in ['pastweek', 'recent']:
-        list_time = time_period
+        response_data['list_time'] = time_period
         (l_ids, count) = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown)
     elif time_period == 'current':
-        list_time = 'current'
+        response_data['list_time'] = 'current'
         (l_ids, count) = listing_service.list_articles_by_month(
             subject_or_category, 1999, 12, skipn, shown)
     else:
-        list_time = time_period
-        list_year = _year(time_period)
-        list_month = _month(time_period)
-        (l_ids, count) = listing_service.list_articles_by_month(
-            subject_or_category, list_year, list_month, skipn, shown)
+        yandm = _year_month(time_period)
+        if yandm is None:
+            raise BadRequest
+        list_year, list_month = yandm
+        response_data['list_time'] = time_period
+        response_data['list_year'] = str(list_year)
+        if list_month:
+            response_data['list_month'] = str(list_month)
+            response_data['list_month_name'] = calendar.month_abbr[list_month]
+            (l_ids, count) = listing_service.list_articles_by_month(
+                subject_or_category, list_year, list_month, skipn, shown)
+        else:
+            (l_ids, count) = listing_service.list_articles_by_year(
+                subject_or_category, list_year, skipn, shown)
 
     articles = [metadata.get_abs(id) for id in l_ids]
     author_links = {ar.arxiv_id_v: _author_links(ar) for ar in articles}
@@ -158,9 +172,7 @@ def get_listing(  # md_service: Any,
 
     # TODO generate breadcrumbs data
 
-    # TODO generate data for inter page navigation
-
-    response_data = {
+    response_data.update({
         'context': subject_or_category,
         'ids': l_ids,
         'articles': articles,
@@ -172,14 +184,10 @@ def get_listing(  # md_service: Any,
         'list_ctx_name': list_ctx_name,
         'list_ctx_id': list_ctx_id,
         'list_ctx_in_archive': list_ctx_in_archive,
-        'list_time': list_time,
-        'list_year': list_year,
-        'list_month': list_month,
-        'list_month_name': calendar.month_abbr[list_month],
         'author_links': author_links,
         'paging': _paging(count, skipn, shown,
                           subject_or_category, time_period)
-    }
+    })
 
     def author_query(article, query):
         return url_for('search_archive',
@@ -188,6 +196,8 @@ def get_listing(  # md_service: Any,
                        query=query)
     response_data['url_for_author_search'] = author_query
 
+    response_data.update(_more_fewer(shown, count))
+
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -195,45 +205,46 @@ def _get_listing_service(app) -> ListingService:
     return app.config['listing_service']
 
 
-def _is_yyoryymm(time_period: str)->bool:
-    try:
-        a = int(time_period)
-        if len(time_period) == 2:
-            return True  # any 2 digit year is fine
-        if len(time_period) == 4:
-            mm = int(time_period[2:])
-            return mm > 0 and mm < 13  # must be a month
+def _year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
+    if not tp or len(tp) > 6 or len(tp) < 2:
+        return None
+
+    if len(tp) == 2:  # 2dig year
+        return int(tp), None
+
+    if len(tp) == 4:  # 2 dig year, 2 dig month
+        mm_part = int(tp[2:4])
+
+        yy_part = int(tp[:2])
+        if yy_part >= 91 and yy_part <= 99:
+            return (1900 + yy_part, mm_part)
         else:
-            return False
-    except ValueError:
-        return False
+            return (2000 + yy_part, mm_part)
 
-
-def _year(tp: str)->int:
     if len(tp) == 4+2:  # wow, 4 digit year!
-        return int(tp[0:4])
-
-    yy_part = int(tp[:2])
-    if yy_part >= 91 and yy_part <= 99:
-        return 1900 + yy_part
-    else:
-        return 2000 + yy_part
-
-
-def _month(tp: str)->int:
-    return int(tp[-2:])
-
-
-# TODO: The list page must trunate the author list, It uses
-# the same size as the abs page but it doesn't do the
-# JS show/hide
-# So get this value from the abs page.
-_truncate_author_list_size = 10
+        return int(tp[0:4]), int(tp[4:])
 
 
 def _author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
+    #  Handle the author list in a very similar way to abs page.
     return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
-                                  _truncate_author_list_size)
+                                  truncate_author_list_size)
+
+
+def _more_fewer( show: int, count: int) -> Dict[str, Any]:
+    # we want first show_values[n] where show_values[n] < show and show_values[n+1] > show
+    nplus1s = _show_values[1:]
+    n_n1_tups = map(lambda n, n1: (n, n1), _show_values, nplus1s)
+    tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
+    rd = {'mf_fewer': next(tup_f, (None, None))[0]}
+
+    if count < _show_values[-1] and show < _show_values[-1]:
+        rd['mf_all'] = count
+
+    # python lacks a find(labmda x:...) ?
+    rd['mf_more'] = next(
+        filter(lambda x: x > show and x < count, _show_values), None)
+    return rd
 
 
 def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
@@ -243,8 +254,8 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
     S = 2 * B + 2 * 2 + 1  # number of total links in the pages sections:
     #  2*buffer + 2*(first number + dots) + current
 
-    def _page_dict(n,nolink=False)->Dict[Any, Any]:
-        
+    def _page_dict(n, nolink=False)->Dict[Any, Any]:
+
         # What the @#%$, this isn't working:str(math.(n+shown, count))
         # I get error: AttributeError: module 'math' has no attribute 'min'
         if n+shown > count:
@@ -253,7 +264,7 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
             txt = str(n+1)+'-'+str(n+shown)
 
         if nolink:
-            return {'nolink':txt}
+            return {'nolink': txt}
         else:
             return {'skip': n,
                     'txt': txt,
@@ -262,7 +273,7 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
                                    subcontext=subcontext,
                                    skip=n,
                                    show=shown)
-            }
+                    }
 
     R = range(0, count, shown)
 
@@ -271,27 +282,28 @@ def _paging(count, skipn, shown, context, subcontext) -> List[Any]:
             [{'nolink': skipn}] + [_page_dict(n) for n in R if n > skipn]
 
     page_links = []
-    if skipn >= shown: # Not on first page?
+    if skipn >= shown:  # Not on first page?
         page_links = [_page_dict(0)]
 
-    prebuffer = [n for n in R if n >= (skipn - shown * B) and n < skipn and n > 0]
+    prebuffer = [n for n in R if n >= (
+        skipn - shown * B) and n < skipn and n > 0]
 
     # No dots between first and prebuffer
     if prebuffer:
         if prebuffer[0] <= shown * B:
             page_links = page_links + \
-                         [_page_dict(n) for n in prebuffer]
+                [_page_dict(n) for n in prebuffer]
         else:
             page_links.append({'nolink': '...'})
             page_links = page_links + \
-                         [_page_dict(n) for n in prebuffer]
+                [_page_dict(n) for n in prebuffer]
 
-    page_links.append(_page_dict(skipn,True))  # current page
+    page_links.append(_page_dict(skipn, True))  # current page
 
-    postbuffer = [n for n in R if n > skipn and n <= (skipn + shown * B) ]
+    postbuffer = [n for n in R if n > skipn and n <= (skipn + shown * B)]
     if postbuffer:
         page_links = page_links + \
-                     [_page_dict(n) for n in postbuffer]
+            [_page_dict(n) for n in postbuffer]
         if postbuffer[-1] < R[-1]:  # Need dots between postbuffer and last
             page_links.append({'nolink': '...'})
 
