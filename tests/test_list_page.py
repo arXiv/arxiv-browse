@@ -11,8 +11,7 @@ import os
 
 from app import app
 
-
-class BrowseTest(unittest.TestCase):
+class ListPageTest(unittest.TestCase):
 
     def setUp(self):
         app.testing = True
@@ -56,20 +55,59 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/list/math/9201')
         self.assertEqual(rv.status_code, 200)
 
+        
+        rv = self.app.get('/list/math/0101')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0102')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0103')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0104')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0105')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0106')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0107')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0108')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0109')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0110')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0111')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/math/0112')
+        self.assertEqual(rv.status_code, 200)        
+        
         rv = self.app.get('/list/math/01')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/math/18')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/20')
+        rv = self.app.get('/list/math/20') #year 2020
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/30')
+        rv = self.app.get('/list/math/30') #year 2030
         self.assertEqual(rv.status_code, 200)
         
         rv = self.app.get('/list/math/200101')
         self.assertEqual(rv.status_code, 200)
+
+        
         
 
 
@@ -325,25 +363,31 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/hep-ph/bogusTimePeriod')
-        self.assertEqual(rv.status_code, 400)
+        self.assertNotEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/junkarchive')
-        self.assertEqual(rv.status_code, 404)
+        self.assertNotEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/ao-si/0901?skip=925&show=25')
-        self.assertEqual(rv.status_code, 400)
+        self.assertNotEqual(rv.status_code, 200)
 
+        rv = self.app.get('/list/math/0100')
+        self.assertNotEqual(rv.status_code, 200)
+        
+        rv = self.app.get('/list/math/0113')
+        self.assertNotEqual(rv.status_code, 200)
+        
         rv = self.app.get('/list/math/0199')
-        self.assertEqual(rv.status_code, 200)
+        self.assertNotEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/math/200199')
-        self.assertEqual(rv.status_code, 200)
+        self.assertNotEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/math/2')
-        self.assertEqual(rv.status_code, 200)
+        self.assertNotEqual(rv.status_code, 200)
 
         rv = self.app.get('/list/math/2001999999')
-        self.assertEqual(rv.status_code, 200)
+        self.assertNotEqual(rv.status_code, 200)
         
         
 
