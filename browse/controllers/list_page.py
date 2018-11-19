@@ -56,7 +56,7 @@ from arxiv import status, taxonomy
 
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
-from browse.services.document.listings import ListingService
+from browse.services.listing import ListingService
 from browse.services.document import metadata
 from browse.domain.metadata import DocMetadata
 from browse.controllers.abs_page import truncate_author_list_size

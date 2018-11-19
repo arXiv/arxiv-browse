@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple
 
-from browse.services.document.listings import ListingService
+from browse.services.listing import ListingService
 import datetime
 
 class FakeListingFilesService(ListingService):
