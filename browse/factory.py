@@ -11,7 +11,7 @@ from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
     single_doi_url
-from browse.services.document.fake_listings import FakeListingFilesService
+from browse.services.listing.fake_listings import FakeListingFilesService
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
