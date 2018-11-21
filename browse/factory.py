@@ -21,9 +21,6 @@ def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
     app = Flask('browse', static_folder='static', template_folder='templates')
     app.config.from_pyfile('config.py')
-
-    app.logger.error( 'config is ')
-    app.logger.error( app.config )
     
     # TODO Only needed until this route is added to arxiv-base
     if 'URLS' not in app.config:
