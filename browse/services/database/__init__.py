@@ -14,6 +14,7 @@ from arxiv.base.globals import get_application_config
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
+from browse.services.database.models import in_category
 from arxiv.base import logging
 from logging import Logger
 
@@ -164,3 +165,15 @@ def get_document_count() -> Optional[int]:
     document_count: int = db.session.query(Document).\
         filter(not_(Document.paper_id.like('test%'))).count()
     return document_count
+
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_sequential_id(paper_id: str,
+                      context: str = 'arxiv',
+                      is_next: bool = True) -> Optional[str]:
+    """Get the next or previous paper ID in sequence."""
+    paper_id = db.session.query(Document.paper_id).join(in_category).\
+        filter(
+            Document.paper_id.like(f'{paper_id[:4]}.%')
+    ).order_by(Document.paper_id).first().paper_id
+    return paper_id

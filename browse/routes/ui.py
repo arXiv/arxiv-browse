@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
-from browse.controllers import abs_page, home_page
+from browse.controllers import abs_page, home_page, prevnext
 from browse.exceptions import AbsNotFound
 from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
@@ -81,6 +81,16 @@ def abstract(arxiv_id: str) -> Response:
         return '', code, headers
 
     raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('prevnext', methods=['GET', 'POST'])
+def previous_next() -> Union[str, Response]:
+    """Previous/Next navigation used on /abs page."""
+    if not request.args:
+        raise BadRequest
+    response, code, headers = prevnext.get_prevnext(request.args)
+    if code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
 
 
 @blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})
