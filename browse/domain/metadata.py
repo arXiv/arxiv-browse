@@ -5,9 +5,9 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 from arxiv import taxonomy
-from arxivabs.browse.domain.identifier import Identifier, canonical_url
-from arxivabs.browse.domain.license import License
-from arxivabs.browse.domain.category import Category
+from browse.domain.identifier import Identifier, canonical_url
+from browse.domain.license import License
+from browse.domain.category import Category
 
 
 @dataclass(frozen=True)

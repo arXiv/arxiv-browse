@@ -1,6 +1,6 @@
 """Tests for arXiv identifier class Identifier."""
 from unittest import TestCase
-from arxivabs.browse.domain.identifier import Identifier
+from browse.domain.identifier import Identifier
 
 
 class TestIdentifier(TestCase):

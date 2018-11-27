@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from tests.test_abs_parser import ABS_FILES
 from browse.services.document.metadata import AbsMetaSession
-from arxivabs.browse.domain.license import ASSUMED_LICENSE_URI
+from browse.domain.license import ASSUMED_LICENSE_URI
 
 import os
 

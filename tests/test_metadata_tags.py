@@ -7,7 +7,7 @@ import pprint
 from unittest import TestCase
 from tests import path_of_for_test
 
-from arxivabs.browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.document.metadata import AbsMetaSession
 from app import app

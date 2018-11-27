@@ -6,7 +6,7 @@ from typing import Callable, Union
 from jinja2 import Markup, escape
 import html
 
-from arxivabs.browse.util.tex2utf import tex2utf
+from browse.services.util.tex2utf import tex2utf
 
 JinjaFilterInput = Union[Markup, str]
 """

@@ -3,11 +3,11 @@ import re
 from datetime import date
 from typing import Optional
 
-from arxivabs.browse.domain.identifier import Identifier
+from browse.domain.identifier import Identifier
 from browse.services.document.config.external_refs_cits import \
     INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES, DBLP_START_DATE
-from arxivabs.browse.domain.metadata import DocMetadata
-from arxivabs.browse.domain.category import Category
+from browse.domain.metadata import DocMetadata
+from browse.domain.category import Category
 
 
 def get_orig_publish_date(ident: Identifier) -> Optional[date]:
