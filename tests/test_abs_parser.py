@@ -3,7 +3,7 @@ import os
 from unittest import TestCase
 from datetime import datetime
 from dateutil.tz import tzutc
-from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
+from arxivabs.browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
 from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test

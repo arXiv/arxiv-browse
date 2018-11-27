@@ -3,7 +3,7 @@ import re
 from itertools import dropwhile
 from typing import Dict, Iterator, List, Tuple
 
-from browse.services.util.tex2utf import tex2utf
+from arxivabs.browse.util.tex2utf import tex2utf
 
 PREFIX_MATCH = 'van|der|de|la|von|del|della|da|mac|ter|dem|di|vaziri'
 

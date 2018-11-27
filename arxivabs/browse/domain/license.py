@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 
 from arxiv.license import ASSUMED_LICENSE_URI, LICENSES
 
-
 def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
     """Get the license for the value recorded in the abs file.
 

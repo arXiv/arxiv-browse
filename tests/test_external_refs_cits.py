@@ -3,8 +3,8 @@ from unittest import TestCase, mock
 from datetime import date
 
 from arxiv.taxonomy import CATEGORIES, ARCHIVES
-from browse.domain.metadata import Category, Archive
-from browse.domain.identifier import Identifier
+from arxivabs.browse.domain.metadata import Category, Archive
+from arxivabs.browse.domain.identifier import Identifier
 from browse.services.document.config.external_refs_cits \
     import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
 from browse.services.util.external_refs_cits import include_inspire_link,\
@@ -19,7 +19,7 @@ class TestExternalReferencesCitations(TestCase):
         for category in INSPIRE_REF_CIT_CATEGORIES:
             self.assertIn(category, CATEGORIES)
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
+    @mock.patch('arxivabs.browse.domain.metadata.DocMetadata')
     def test_include_inspire_link(self, mock_docmeta):
         """Tests for the include_inspire_link function."""
         mock_docmeta.arxiv_identifier = Identifier('1201.0001')
@@ -63,7 +63,7 @@ class TestExternalReferencesCitations(TestCase):
         listing_url = 'db/foo/aadebug/aadebug2000.html#Herranz-NievaM00'
         self.assertIsNone(get_dblp_bibtex_path(listing_url))
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
+    @mock.patch('arxivabs.browse.domain.metadata.DocMetadata')
     def test_include_dblp_section(self, mock_docmeta):
         """Tests for the include_dblp_section fallback (from DB) function."""
         mock_docmeta.arxiv_identifier = Identifier('1806.00001')
