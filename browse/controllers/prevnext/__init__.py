@@ -8,8 +8,11 @@ from werkzeug.exceptions import InternalServerError
 from browse.domain import Identifier
 from browse.services.database import get_sequential_id
 from arxiv import status
+from arxiv.base import logging
+
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
+logger = logging.getLogger(__name__)
 
 
 def get_prevnext(request_params: MultiDict) -> Response:
@@ -17,11 +20,12 @@ def get_prevnext(request_params: MultiDict) -> Response:
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
-    print(f'next for 0906.4150 {get_sequential_id("0906.4150")}')
+    # print(f'next for 0906.4150 {get_sequential_id("0906.4150")}')
 
     try:
         nav_id = get_sequential_id('1234')
     except Exception as ex:
+        logger.warning(f'Error getting sequential ID: {ex}')
         raise InternalServerError
 
     response_status = status.HTTP_301_MOVED_PERMANENTLY
