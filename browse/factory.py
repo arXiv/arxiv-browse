@@ -2,14 +2,14 @@
 from functools import partial
 from typing import Any
 from flask import Flask, url_for
-from arxivabs.browse.domain.identifier import canonical_url
+from arxiv.browse.domain.identifier import canonical_url
 from browse.util.clickthrough import create_ct_url
-from arxivabs.browse.util.id_patterns import do_dois_id_urls_to_tags, do_id_to_tags, \
+from arxiv.browse.util.id_patterns import do_dois_id_urls_to_tags, do_id_to_tags, \
     do_dois_arxiv_ids_to_tags
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
-from arxivabs.browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
+from arxiv.browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
     single_doi_url
 
 from arxiv.base.config import BASE_SERVER

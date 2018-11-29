@@ -1,7 +1,7 @@
 """Tests for author and affiliation parsing."""
 from unittest import TestCase
 
-from arxivabs.browse.util.author_affil import parse_author_affil, split_authors
+from arxiv.browse.util.author_affil import parse_author_affil, split_authors
 from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
 

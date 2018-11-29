@@ -7,8 +7,8 @@ import pytz
 
 from flask import url_for
 
-from arxivabs.browse.util.author_affil import parse_author_affil_utf
-from arxivabs.browse.domain.metadata import DocMetadata
+from arxiv.browse.util.author_affil import parse_author_affil_utf
+from arxiv.browse.domain.metadata import DocMetadata
 
 
 def meta_tag_metadata(metadata: DocMetadata) -> List:

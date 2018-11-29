@@ -7,8 +7,8 @@ from jinja2 import escape, Markup, Environment
 from flask import appcontext_pushed, url_for
 from app import app
 
-from arxivabs.browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
-from arxivabs.browse.util.id_patterns import do_dois_to_tags, do_dois_id_urls_to_tags,\
+from arxiv.browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
+from arxiv.browse.util.id_patterns import do_dois_to_tags, do_dois_id_urls_to_tags,\
     do_id_to_tags
 
 
