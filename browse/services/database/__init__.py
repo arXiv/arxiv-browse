@@ -4,7 +4,8 @@ import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from typing import List, Optional, Any, Callable
-from sqlalchemy import not_
+from sqlalchemy import not_, desc, asc, bindparam
+from sqlalchemy.ext import baked
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -20,6 +21,7 @@ from logging import Logger
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
+bakery = baked.bakery()
 
 
 def db_handle_error(logger: Logger, default_return_val: Any) \
@@ -172,8 +174,22 @@ def get_sequential_id(paper_id: str,
                       context: str = 'arxiv',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
-    paper_id = db.session.query(Document.paper_id).join(in_category).\
-        filter(
-            Document.paper_id.like(f'{paper_id[:4]}.%')
-    ).order_by(Document.paper_id).first().paper_id
-    return paper_id
+    local_session = db.session()
+    # nav_order = asc if is_next else desc
+    # paper_id = db.session.query(Document.paper_id).join(in_category).\
+    #     filter(
+    #         Document.paper_id.like(f'{paper_id[:4]}.%')
+    # ).order_by(nav_order(Document.paper_id)).first().paper_id
+    # return paper_id
+    like_id = f'{paper_id[:4]}.%'
+    baked_query = bakery(lambda session: session.query(Document.paper_id))
+    baked_query += lambda q: q.filter(Document.paper_id.like(bindparam('like_id')))
+    if is_next:
+        baked_query += lambda q: q.filter(Document.paper_id > bindparam('paper_id')).order_by(asc(Document.paper_id))
+    else:
+        baked_query += lambda q: q.filter(Document.paper_id < bindparam('paper_id')).order_by(desc(Document.paper_id))
+
+    result = baked_query(local_session).params(like_id=like_id, paper_id=paper_id).first()
+    if result:
+        return result.paper_id
+    return None
