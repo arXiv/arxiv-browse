@@ -18,7 +18,7 @@ from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
-from arxiv.browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata
 from arxiv.browse.domain.category import Category
 from browse.exceptions import AbsNotFound
 from arxiv.browse.util.search_authors import queries_for_authors, \

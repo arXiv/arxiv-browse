@@ -2,7 +2,7 @@
 from typing import Any, Dict
 from unittest import TestCase
 
-from arxiv.browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata
 
 
 class DocMetadataTest(TestCase):

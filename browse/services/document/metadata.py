@@ -12,7 +12,7 @@ import dataclasses
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from arxiv.browse.domain.license import License
-from arxiv.browse.domain.metadata import Archive, AuthorList, Category, \
+from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, SourceType, Submitter, VersionEntry
 from arxiv.browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
