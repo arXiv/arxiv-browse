@@ -48,8 +48,9 @@ def get_prevnext(request_params: MultiDict) -> Response:
                                    is_next=is_next,
                                    context=context)
         if seq_id:
-            # TODO: add context to URL
-            redirect_url = url_for('browse.abstract', arxiv_id=seq_id)
+            redirect_url = url_for('browse.abstract',
+                                   arxiv_id=seq_id,
+                                   context=context)
             return {},\
                 status.HTTP_301_MOVED_PERMANENTLY, {'Location': redirect_url}
         else:
