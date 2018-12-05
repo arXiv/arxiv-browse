@@ -16,6 +16,7 @@ from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
 from browse.services.database.models import in_category
+from browse.domain.identifier import Identifier
 from arxiv.base import logging
 from logging import Logger
 
@@ -170,26 +171,44 @@ def get_document_count() -> Optional[int]:
 
 
 @db_handle_error(logger=logger, default_return_val=None)
-def get_sequential_id(paper_id: str,
+def get_sequential_id(paper_id: Identifier,
                       context: str = 'arxiv',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
     local_session = db.session()
-    # nav_order = asc if is_next else desc
-    # paper_id = db.session.query(Document.paper_id).join(in_category).\
-    #     filter(
-    #         Document.paper_id.like(f'{paper_id[:4]}.%')
-    # ).order_by(nav_order(Document.paper_id)).first().paper_id
-    # return paper_id
-    like_id = f'{paper_id[:4]}.%'
     baked_query = bakery(lambda session: session.query(Document.paper_id))
-    baked_query += lambda q: q.filter(Document.paper_id.like(bindparam('like_id')))
-    if is_next:
-        baked_query += lambda q: q.filter(Document.paper_id > bindparam('paper_id')).order_by(asc(Document.paper_id))
-    else:
-        baked_query += lambda q: q.filter(Document.paper_id < bindparam('paper_id')).order_by(desc(Document.paper_id))
 
-    result = baked_query(local_session).params(like_id=like_id, paper_id=paper_id).first()
+    if paper_id.is_old_id:
+        # NB: classic did not support old identifiers in prevnext
+        if context == 'arxiv':
+            like_id = f'{paper_id.archive}/{paper_id.yymm}%'
+        else:
+            like_id = f'%/{paper_id.yymm}%'
+    else:
+        like_id = f'{paper_id.yymm}.%'
+
+    baked_query += lambda q: q.filter(
+        Document.paper_id.like(bindparam('like_id')))
+    if is_next:
+        baked_query += lambda q: q.filter(Document.paper_id >
+                                          bindparam('paper_id')).order_by(asc(Document.paper_id))
+    else:
+        baked_query += lambda q: q.filter(Document.paper_id <
+                                          bindparam('paper_id')).order_by(desc(Document.paper_id))
+
+    if context != 'arxiv':
+        archive: str = context
+        subject_class: str = ''
+        if '.' in archive:
+            (archive, subject_class) = archive.split('.')
+        baked_query += lambda q: q.join(in_category)
+        baked_query += lambda q: q.filter(in_category.archive == archive)
+        if subject_class:
+            baked_query += lambda q: q.filter(
+                in_category.subject_class == subject_class)
+
+    result = baked_query(local_session).params(
+        like_id=like_id, paper_id=paper_id.id).first()
     if result:
         return result.paper_id
     return None

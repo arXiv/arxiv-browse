@@ -22,7 +22,6 @@ def get_prevnext(request_params: MultiDict) -> Response:
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
-    # print(f'next for 0906.4150 {get_sequential_id("0906.4150")}')
     site = 'arxiv.org'
     try:
         if 'id' in request_params:
@@ -43,19 +42,21 @@ def get_prevnext(request_params: MultiDict) -> Response:
     except IdentifierException:
         raise BadRequest(f"Invalid article identifier {request_params['id']}")
 
-    print(f'GOT HERE')
-
     try:
         is_next = request_params['function'] == 'next'
-        seq_id = get_sequential_id(paper_id=arxiv_id.id, is_next=is_next)
+        seq_id = get_sequential_id(paper_id=arxiv_id, is_next=is_next)
         if seq_id:
             # TODO: add context to URL
             redirect_url = url_for('browse.abstract', arxiv_id=seq_id)
             return {},\
                 status.HTTP_301_MOVED_PERMANENTLY, {'Location': redirect_url}
         else:
-            raise NotFound('something')
-
+            raise BadRequest(
+                f'No {"next" if is_next else "previous"} article found for '
+                f'{arxiv_id.id} in {context}'
+            )
+    except BadRequest:
+        raise
     except Exception as ex:
         logger.warning(f'Error getting sequential ID: {ex}')
         raise InternalServerError
