@@ -44,7 +44,9 @@ def get_prevnext(request_params: MultiDict) -> Response:
 
     try:
         is_next = request_params['function'] == 'next'
-        seq_id = get_sequential_id(paper_id=arxiv_id, is_next=is_next)
+        seq_id = get_sequential_id(paper_id=arxiv_id,
+                                   is_next=is_next,
+                                   context=context)
         if seq_id:
             # TODO: add context to URL
             redirect_url = url_for('browse.abstract', arxiv_id=seq_id)

@@ -172,7 +172,7 @@ def get_document_count() -> Optional[int]:
 
 @db_handle_error(logger=logger, default_return_val=None)
 def get_sequential_id(paper_id: Identifier,
-                      context: str = 'arxiv',
+                      context: str = 'all',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
     local_session = db.session()
@@ -180,7 +180,7 @@ def get_sequential_id(paper_id: Identifier,
 
     if paper_id.is_old_id:
         # NB: classic did not support old identifiers in prevnext
-        if context == 'arxiv':
+        if context == 'all':
             like_id = f'{paper_id.archive}/{paper_id.yymm}%'
         else:
             like_id = f'%/{paper_id.yymm}%'
@@ -196,16 +196,16 @@ def get_sequential_id(paper_id: Identifier,
         baked_query += lambda q: q.filter(Document.paper_id <
                                           bindparam('paper_id')).order_by(desc(Document.paper_id))
 
-    if context != 'arxiv':
+    if context != 'all':
         archive: str = context
         subject_class: str = ''
         if '.' in archive:
             (archive, subject_class) = archive.split('.')
-        baked_query += lambda q: q.join(in_category)
-        baked_query += lambda q: q.filter(in_category.archive == archive)
+        baked_query += lambda q: q.join(in_category).filter(
+            in_category.c.archive == archive).filter(in_category.c.is_primary == 1)
         if subject_class:
             baked_query += lambda q: q.filter(
-                in_category.subject_class == subject_class)
+                in_category.c.subject_class == subject_class)
 
     result = baked_query(local_session).params(
         like_id=like_id, paper_id=paper_id.id).first()
