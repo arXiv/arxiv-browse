@@ -8,5 +8,5 @@ static checking easier and enhance overall intelligibility of the codebase.
 """
 
 # pylint: disable=wildcard-import
-#from .institution import *
-#from .metadata import *
+from .institution import *
+from .metadata import *

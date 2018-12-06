@@ -1,6 +1,6 @@
 """Application factory for browse service components."""
 from functools import partial
-from typing import Any, Optional, Callable, Dict
+from typing import Any
 from flask import Flask, url_for
 import jinja2
 
