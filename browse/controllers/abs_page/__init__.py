@@ -307,9 +307,9 @@ def _check_context(arxiv_identifier: Identifier,
     # Set up the context
     context = None
     if ('context' in request.args and (
-            context == 'arxiv'
-            or context in taxonomy.CATEGORIES
-            or context in taxonomy.ARCHIVES)):
+            request.args['context'] == 'arxiv'
+            or request.args['context'] in taxonomy.CATEGORIES
+            or request.args['context'] in taxonomy.ARCHIVES)):
         context = request.args['context']
     elif primary_category:
         pc = primary_category.canonical or primary_category
@@ -345,7 +345,7 @@ def _check_context(arxiv_identifier: Identifier,
             prev_url = None
 
     else:
-        # This is the case where not in arXiv or a archive,
+        # This is the case where the context is not in 'arxiv' or an archive,
         # so just let the prevnext controller figure it out.
 
         # TODO do url_for() here
