@@ -1,7 +1,7 @@
 """Tests for Tex to UTF8 parsing."""
 from unittest import TestCase
 
-from browse.services.util.tex2utf import tex2utf
+from arxiv.browse.util.tex2utf import tex2utf
 
 
 class TextTex2Utf(TestCase):

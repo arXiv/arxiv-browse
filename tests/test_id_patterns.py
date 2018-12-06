@@ -3,7 +3,7 @@ from hamcrest import *
 import re
 
 from jinja2 import Markup, escape
-from browse.util.id_patterns import _find_match, Matchable, dois_ids_and_urls, \
+from arxiv.browse.util.id_patterns import _find_match, Matchable, dois_ids_and_urls, \
  _transform_token, do_dois_id_urls_to_tags
 
 

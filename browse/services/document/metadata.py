@@ -11,10 +11,10 @@ import dataclasses
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
-from browse.domain import License
+from arxiv.browse.domain.license import License
 from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, SourceType, Submitter, VersionEntry
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
     formats_from_source_file_name, formats_from_source_type, \
