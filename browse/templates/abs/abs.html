@@ -1,4 +1,4 @@
-{%- import "abs/abs_macros.html" as abs_macros %}
+{%- import "abs_macros.html" as abs_macros %}
 {%- extends "base.html" -%}
 
   {% block title %}[{{ requested_id }}] {{ abs_meta.title }}{% endblock %}
@@ -59,7 +59,7 @@
     </div>
     {{ abs_macros.title(abs_meta) }} 
     <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "abs/author_links.html" %}
+      {%- include "author_links.html" %}
     </div>
 
     <div class="dateline">{{ abs_macros.generate_dateline(abs_meta) }}</div>
