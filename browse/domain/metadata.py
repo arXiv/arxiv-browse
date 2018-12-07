@@ -66,26 +66,12 @@ class AuthorList:
         return self.raw
 
 
-@dataclass
-class Archive(Category):
+class Archive(taxonomy.Archive):
     """Represents an arXiv archive--the middle level of the taxonomy."""
 
-    def __post_init__(self) -> None:
-        """Get the full archive name."""
-        super().__post_init__()
-        if self.id in taxonomy.ARCHIVES:
-            self.name = taxonomy.ARCHIVES[self.id]['name']
 
-
-@dataclass
-class Group(Category):
+class Group(taxonomy.Group):
     """Represents an arXiv group--the highest (most general) taxonomy level."""
-
-    def __post_init__(self) -> None:
-        """Get the full group name."""
-        super().__post_init__()
-        if self.id in taxonomy.GROUPS:
-            self.name = taxonomy.GROUPS[self.id]['name']
 
 
 @dataclass(frozen=True)
@@ -262,7 +248,7 @@ class DocMetadata:
             return []
 
         def to_display(secs: List[Category]) -> List[str]:
-            return list(map(lambda c: c.display_str(), secs))
+            return list(map(lambda c: str(c.display), secs))
         return to_display(sorted(de_primaried))
 
     def canonical_url(self, no_version: bool = False) -> str:
