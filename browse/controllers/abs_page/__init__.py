@@ -19,9 +19,9 @@ from werkzeug.exceptions import InternalServerError
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.domain.metadata import DocMetadata
-from arxiv.browse.domain.category import Category
+from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
-from arxiv.browse.util.search_authors import queries_for_authors, \
+from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.util.response_headers import abs_expires_header, \
@@ -29,7 +29,7 @@ from browse.services.util.response_headers import abs_expires_header, \
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
-from arxiv.browse.domain.identifier import Identifier, IdentifierException,\
+from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.services.database import count_trackback_pings,\
     get_trackback_ping_latest_date, has_sciencewise_ping, \

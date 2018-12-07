@@ -4,7 +4,7 @@ from datetime import date
 
 from arxiv.taxonomy import CATEGORIES, ARCHIVES
 from browse.domain.metadata import Category, Archive
-from arxiv.browse.domain.identifier import Identifier
+from browse.domain.identifier import Identifier
 from browse.services.document.config.external_refs_cits \
     import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
 from browse.services.util.external_refs_cits import include_inspire_link,\

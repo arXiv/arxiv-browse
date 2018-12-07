@@ -2,9 +2,10 @@
 
 from unittest import TestCase
 
-from arxiv.browse.util.author_affil import split_authors
+from browse.domain import metadata
+from browse.services.document.author_affil import split_authors
 from browse.services.document.metadata import AbsMetaSession
-from arxiv.browse.util.search_authors import queries_for_authors, split_long_author_list
+from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from tests import path_of_for_test
 
 

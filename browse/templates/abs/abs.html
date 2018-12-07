@@ -1,4 +1,3 @@
-{%- import "abs_macros.html" as abs_macros %}
 {%- extends "base.html" -%}
 
   {% block title %}[{{ requested_id }}] {{ abs_meta.title }}{% endblock %}
@@ -57,27 +56,79 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    {{ abs_macros.title(abs_meta) }} 
+    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "author_links.html" %}
+      {%- include "abs/author_links.html" %}
     </div>
 
-    <div class="dateline">{{ abs_macros.generate_dateline(abs_meta) }}</div>
-    {{ abs_macros.abstract(abs_meta) }}
+    <div class="dateline">{{ generate_dateline() }}</div>
+
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex_to_utf|arxiv_urlize|line_feed_to_br }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">
-        {{ abs_macros.comments(abs_meta) }}
-        {{ abs_macros.subject(abs_meta) }}
-        {{ abs_macros.msc_class(abs_meta) }}
-        {{ abs_macros.amc_class(abs_meta) }}       
-        {{ abs_macros.journal_ref(abs_meta) }}
-        {{ abs_macros.doi(abs_meta) }}
-        {{ abs_macros.report_number(abs_meta) }}
-        {{ abs_macros.cite_as(abs_meta) }}
+        {%- if abs_meta.comments %}
+        <tr>
+          <td class="tablecell label">Comments:</td>
+          <td class="tablecell comments mathjax">{{ abs_meta.comments|arxiv_urlize }}</td>
+        </tr>
+        {% endif -%}
+        <tr>
+          <td class="tablecell label">Subjects:</td>
+          <td class="tablecell subjects">{{ category_line() }}</td>
+        </tr>
+        {%- if abs_meta.msc_class %}
+        <tr>
+          <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
+          <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
+        </tr>
+        {% endif -%}
+        {%- if abs_meta.acm_class %}
+        <tr>
+          <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
+          <td class="tablecell acm-classes">{{ abs_meta.acm_class }}</td>
+        </tr>
+        {% endif -%}
+        {%- if abs_meta.journal_ref %}
+        <tr>
+          <td class="tablecell label">Journal&nbsp;reference:</td>
+          <td class="tablecell jref">{{ abs_meta.journal_ref }}</td>
+        </tr>
+        {% endif -%}
+        {%- if abs_meta.doi %}
+        <tr>
+          <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
+          <td class="tablecell msc_classes">{{ abs_meta.doi|single_doi_url }}</td>
+        </tr>
+        {% endif -%}
+        {%- if abs_meta.report_num %}
+        <tr>
+          <td class="tablecell label">Report&nbsp;number:</td>
+          <td class="tablecell jref">{{ abs_meta.report_num }}</td>
+        </tr>
+        {% endif -%}
+        <tr>
+          <td class="tablecell label">Cite as:</td>
+          <td class="tablecell arxivid">{{ version_atag( abs_meta.arxiv_identifier.id, 0) }}</td>
+        </tr>
+        <tr>
+          <td class="tablecell label">&nbsp;</td>
+          <td class="tablecell arxividv">(or <span class="arxivid">
+              {{version_atag(abs_meta.arxiv_identifier.id, abs_meta.version)}}</span> for this version)
+          </td>
+        </tr>
       </table>
     </div>
-    {{ abs_macros.submission_history(abs_meta) }}
+    <div class="submission-history">
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
+      {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
+      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex_to_utf|upper }} proxy]{% endif %}
+      <br/>
+      {%- for version_entry in abs_meta.version_history -%}
+      {{ generate_version_entry(version_entry, abs_meta.version) }}
+      {%- endfor -%}
+    </div>
     <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)</div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
     {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
@@ -89,10 +140,56 @@
 </div>
 {% endblock content %}
 
-{%- macro generate_scholar_tags(abs_meta) -%}
+{%- macro generate_version_entry(version_entry, this_version) %}
+  {%- if version_entry.version == this_version -%}
+  <b>[v{{ version_entry.version }}]</b>
+{% else %}
+  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>
+  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
+{%- endmacro -%}
+
+{%- macro generate_dateline() -%}
+  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
+  {%- if abs_meta.version == 1 and abs_meta.version < abs_meta.version_history[-1].version %} (this version){%- endif -%}
+  {%- if abs_meta.version != 1 %} (<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
+  {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
+  , revised {{ abs_meta.version_history[abs_meta.version-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
+  {%- endif -%}
+  {%- if abs_meta.version != abs_meta.version_history[-1].version -%}
+  , <em>latest version {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }}</em> (<a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, abs_meta.version_history[-1].version)) }}">v{{ abs_meta.version_history[-1].version }}</a>)
+  {%- elif abs_meta.version > 1 and abs_meta.version == abs_meta.version_history[-1].version -%}
+  , last revised {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
+  {%- endif -%}
+  )
+{%- endmacro -%}
+
+{%- macro generate_scholar_tags() -%}
 {%- if meta_tags %}
     {%- for tag in meta_tags %}
   <meta name="{{tag.name}}" content="{{tag.content}}"/>
     {%- endfor -%}
 {%- endif -%}
+{%- endmacro -%}
+
+{%- macro category_line() -%}
+  <span class="primary-subject">{{- abs_meta.primary_category.unalias().display_str() -}}</span>
+  {%- if abs_meta.secondary_categories -%}
+    {%- for category in abs_meta.display_secondaries() -%}
+        ; {{ category }}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{%- macro version_atag(id, version) -%}
+  {%- if version -%}
+    {%- set vpart = 'v' ~ version -%}
+  {%- else -%}
+    {%- set vpart = '' -%}
+  {% endif %}
+  {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
+    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
+    {%- else -%}
+    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
+  {%- endif -%}
 {%- endmacro -%}

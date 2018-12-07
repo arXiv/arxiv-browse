@@ -7,7 +7,7 @@ import pytz
 
 from flask import url_for
 
-from arxiv.browse.util.author_affil import parse_author_affil_utf
+from browse.services.document.author_affil import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
 
 
