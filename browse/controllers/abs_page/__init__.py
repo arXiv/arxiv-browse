@@ -347,12 +347,18 @@ def _check_context(arxiv_identifier: Identifier,
     else:
         # This is the case where the context is not in 'arxiv' or an archive,
         # so just let the prevnext controller figure it out.
-
-        # TODO do url_for() here
-        next_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=next'
-        prev_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=prev'
+        # next_url = '/prevnext?site=arxiv.org&id=' + \
+        #     arxiv_identifier.id + '&function=next'
+        next_url = url_for('browse.previous_next',
+                           site='arxiv.org',
+                           id=arxiv_identifier.id,
+                           function='next')
+        # prev_url = '/prevnext?site=arxiv.org&id=' + \
+        #     arxiv_identifier.id + '&function=prev'
+        prev_url = url_for('browse.previous_next',
+                           site='arxiv.org',
+                           id=arxiv_identifier.id,
+                           function='prev')
         if context:
             next_url = next_url + '&context=' + context
             prev_url = prev_url + '&context=' + context
