@@ -237,7 +237,7 @@ class DocMetadata:
             return []
 
         def unalias(secs: Iterator[Category])->Iterator[Category]:
-            return map(lambda c: c.unalias(), secs)
+            return map(lambda c: Category(c.unalias()), secs)
         prim = self.primary_category.unalias()
 
         def de_prim(secs: Iterator[Category])->Iterator[Category]:
