@@ -4,8 +4,8 @@ from typing import Any
 from flask import Flask, url_for
 from browse.domain.identifier import canonical_url
 from browse.util.clickthrough import create_ct_url
-from browse.util.id_patterns import do_dois_id_urls_to_tags, do_id_to_tags, \
-    do_dois_arxiv_ids_to_tags
+from arxiv.urlize import urlize, urlize_ids, \
+    urlize_dois_and_ids
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
@@ -40,22 +40,24 @@ def create_web_app() -> Flask:
 
     app.jinja_env.globals['canonical_url'] = canonical_url
 
-    def ct_single_doi_filter(doi: str)->str:
-        return single_doi_url(ct_url_for, doi)
+    def ct_single_doi_filter(doi: str) -> str:
+        out: str = single_doi_url(ct_url_for, doi)
+        return out
 
-    def _id_to_url(id: str)->Any:
+    def _id_to_url(id: str) -> Any:
         return url_for('browse.abstract', arxiv_id=id)
 
-    def contextualized_id_filter(text: str)->str:
-        return do_id_to_tags(_id_to_url, text)
+    def contextualized_id_filter(text: str) -> str:
+        out: str = urlize_ids(_id_to_url, text)
+        return out
 
-    def contextualized_doi_id_url_filter(text: str)->str:
-        return do_dois_id_urls_to_tags(_id_to_url, ct_url_for, text)
+    def contextualized_doi_id_url_filter(text: str) -> str:
+        out: str = urlize(_id_to_url, ct_url_for, text)
+        return out
 
-    def ct_doi_filter(text: str)->str:
-        return do_dois_arxiv_ids_to_tags(_id_to_url,
-                                         ct_url_for,
-                                         text)
+    def ct_doi_filter(text: str) -> str:
+        out: str = urlize_dois_and_ids(_id_to_url, ct_url_for, text)
+        return out
 
     if not app.jinja_env.filters:
         app.jinja_env.filters = {}

@@ -8,21 +8,24 @@ from flask import appcontext_pushed, url_for
 from app import app
 
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
-from browse.util.id_patterns import do_dois_to_tags, do_dois_id_urls_to_tags,\
-    do_id_to_tags
+from arxiv.urlize import urlize_dois, urlize, urlize_ids
 
 
 def _id_to_url(id: str):
     return url_for('browse.abstract', arxiv_id=id)
-    
+
+
 def arxiv_urlize(txt):
-    return do_dois_id_urls_to_tags(_id_to_url,None,txt)
+    return urlize(_id_to_url,None,txt)
+
 
 def doi_urls(fn, txt):
-    return do_dois_to_tags(fn, txt)
+    return urlize_dois(fn, txt)
+
 
 def arxiv_id_urls(txt):
-    return do_id_to_tags(_id_to_url, txt)
+    return urlize_ids(_id_to_url, txt)
+
 
 class Jinja_Custom_Fitlers_Test(unittest.TestCase):
     def test_with_jinja(self):
@@ -386,7 +389,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
 
             def do_arxiv_urlize(txt):
                 return arxiv_urlize(txt)
-            
+
             self.assertEqual(
                 do_arxiv_urlize('http://example.com/'),
                 '<a href="http://example.com/">this http URL</a>',
@@ -439,22 +442,21 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                 do_arxiv_urlize('cond-mat/97063007'),
                 equal_to('<a href="http://sosmooth.org/abs/cond-mat/9706300">cond-mat/9706300</a>7'),
                 'do_arxiv_urlize (should match) 7/9')
-            
+
             assert_that(
                 do_arxiv_urlize('[http://onion.com/something-funny-about-arxiv-1234]'),
                 equal_to('[<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>]'))
-            
+
             assert_that(
                 do_arxiv_urlize('[http://onion.com/?q=something-funny-about-arxiv.1234]'),
                 equal_to('[<a href="http://onion.com/?q=something-funny-about-arxiv.1234">this http URL</a>]'))
-            
+
             assert_that(
                 do_arxiv_urlize('http://onion.com/?q=something funny'),
                 equal_to('<a href="http://onion.com/?q=something">this http URL</a> funny'),
                 'Spaces CANNOT be expected to be part of URLs')
-            
+
             assert_that(
                 do_arxiv_urlize('"http://onion.com/something-funny-about-arxiv-1234"'),
                 equal_to(Markup('&#34;<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>&#34;')),
                 'Should handle URL surrounded by double quotes')
-
