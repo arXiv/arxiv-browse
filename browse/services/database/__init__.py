@@ -202,7 +202,7 @@ def get_sequential_id(paper_id: Identifier,
         if '.' in archive:
             (archive, subject_class) = archive.split('.')
         baked_query += lambda q: q.join(in_category).filter(
-            in_category.c.archive == archive).filter(in_category.c.is_primary == 1)
+            in_category.c.archive == archive)
         if subject_class:
             baked_query += lambda q: q.filter(
                 in_category.c.subject_class == subject_class)
