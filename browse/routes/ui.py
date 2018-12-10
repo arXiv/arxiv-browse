@@ -91,6 +91,7 @@ def previous_next() -> Union[str, Response]:
     response, code, headers = prevnext.get_prevnext(request.args)
     if code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
+    raise InternalServerError('Unexpected error')
 
 
 @blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})

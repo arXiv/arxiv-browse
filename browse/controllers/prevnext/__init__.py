@@ -1,9 +1,9 @@
 """Handle requests to support sequential navigation between arXiv IDs."""
 
-from flask import request, url_for
+from flask import url_for
 from typing import Tuple, Dict, Any
 from werkzeug import MultiDict
-from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
+from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id
@@ -14,36 +14,58 @@ from arxiv.base import logging
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 logger = logging.getLogger(__name__)
-REQUIRED_PARAMS = ('function', 'id')
 
 
 def get_prevnext(request_params: MultiDict) -> Response:
-    """Get the next or previous arXiv ID in the browse context."""
-    response_data: Dict[str, Any] = {}
-    response_headers: Dict[str, Any] = {}
+    """
+    Get the next or previous arXiv ID in the browse context.
 
-    site = 'arxiv.org'
+    The 'id', 'function', and 'context' request parameters are required. The
+    'site' parameter from the classic prevnext is no longer supported.
+
+    Parameters
+    ----------
+    request_params : dict
+
+    Returns
+    -------
+    dict
+        Search result response data.
+    int
+        HTTP status code.
+    dict
+        Headers to add to the response.
+
+    Raises
+    ------
+    InternalServerError
+        Raised when there was an unexpected problem executing the query.
+    BadRequest
+        Raised when request parameters are missing, invalid, or when an ID
+        redirect cannot be returned even when the request parameters are valid.
+
+    """
     try:
-        if 'id' in request_params:
-            arxiv_id = Identifier(request_params['id'])
-        else:
+        if 'id' not in request_params:
             raise BadRequest('Missing article identifier')
+        arxiv_id = Identifier(request_params['id'])
+
         if not ('function' in request_params
                 and request_params['function'] in ['prev', 'next']):
             raise BadRequest('Missing or invalid function request')
-        if 'context' in request_params:
-            context = request_params['context']
-            if not (context in CATEGORIES_ACTIVE
-                    or context in ARCHIVES or context == 'all'):
-                raise BadRequest('Invalid context')
-        else:
-            raise BadRequest('Missing context')
 
+        if 'context' not in request_params:
+            raise BadRequest('Missing context')
+        context = request_params['context']
+
+        if not (context in CATEGORIES_ACTIVE
+                or context in ARCHIVES or context == 'all'):
+            raise BadRequest('Invalid context')
     except IdentifierException:
         raise BadRequest(f"Invalid article identifier {request_params['id']}")
 
+    is_next = request_params['function'] == 'next'
     try:
-        is_next = request_params['function'] == 'next'
         seq_id = get_sequential_id(paper_id=arxiv_id,
                                    is_next=is_next,
                                    context=context)

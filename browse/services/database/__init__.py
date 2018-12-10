@@ -210,5 +210,5 @@ def get_sequential_id(paper_id: Identifier,
     result = baked_query(local_session).params(
         like_id=like_id, paper_id=paper_id.id).first()
     if result:
-        return result.paper_id
+        return f'{result.paper_id}'
     return None
