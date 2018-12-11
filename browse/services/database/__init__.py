@@ -191,24 +191,28 @@ def get_sequential_id(paper_id: Identifier,
         Document.paper_id.like(bindparam('like_id')))
     if is_next:
         baked_query += lambda q: q.filter(Document.paper_id >
-                                          bindparam('paper_id')).order_by(asc(Document.paper_id))
+                                          bindparam('paper_id')). \
+                                          order_by(asc(Document.paper_id))
     else:
         baked_query += lambda q: q.filter(Document.paper_id <
-                                          bindparam('paper_id')).order_by(desc(Document.paper_id))
-
+                                          bindparam('paper_id')). \
+                                          order_by(desc(Document.paper_id))
     if context != 'all':
         archive: str = context
         subject_class: str = ''
         if '.' in archive:
             (archive, subject_class) = archive.split('.')
         baked_query += lambda q: q.join(in_category).filter(
-            in_category.c.archive == archive)
+            in_category.c.archive == bindparam('archive'))
         if subject_class:
             baked_query += lambda q: q.filter(
-                in_category.c.subject_class == subject_class)
+                in_category.c.subject_class == bindparam('subject_class'))
 
     result = baked_query(local_session).params(
-        like_id=like_id, paper_id=paper_id.id).first()
+        like_id=like_id,
+        paper_id=paper_id.id,
+        archive=archive if archive else None,
+        subject_class=subject_class if subject_class else None).first()
     if result:
         return f'{result.paper_id}'
     return None
