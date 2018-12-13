@@ -62,6 +62,8 @@ from browse.domain.metadata import DocMetadata
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 
+from flask import current_app as app
+
 show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
@@ -137,24 +139,27 @@ def get_listing(
         response_data['list_time'] = 'new'
         new_resp = listing_service.list_new_articles(
             subject_or_category, skipn, shown)
-        l_ids = new_resp['listings']
+        listings = new_resp['listings']
         count = new_resp['count']
+        lst_resp = new_resp
         
     elif time_period in ['pastweek', 'recent']:
         response_data['list_time'] = time_period
         rec_resp = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown)
-        l_ids = rec_resp['listings']
+        listings = rec_resp['listings']
         count = rec_resp['count']
+        lst_resp = rec_resp
         
         # TODO make day table of contents anchors
         
     elif time_period == 'current':
         response_data['list_time'] = 'current'
-        resp = listing_service.list_articles_by_month(
+        cur_resp = listing_service.list_articles_by_month(
             subject_or_category, 1999, 12, skipn, shown)
-        l_ids = resp['listings']
-        count = resp['count']
+        listings = cur_resp['listings']        
+        count = cur_resp['count']
+        lst_resp = cur_resp
         
     else:  # YYMM or YYYYMM?
         yandm = year_month(time_period)
@@ -170,30 +175,44 @@ def get_listing(
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             month_reps = listing_service.list_articles_by_month(
                 subject_or_category, list_year, list_month, skipn, shown)
-            l_ids = month_reps['listings']
+            listings = month_reps['listings']
             count = month_reps['count']
+            lst_resp = month_reps
         else:
             year_resp = listing_service.list_articles_by_year(
                 subject_or_category, list_year, skipn, shown)
-            l_ids = year_resp['listings']
+            listings = year_resp['listings']
             count = year_resp['count']
+            lst_resp = year_resp
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
     # TODO write cache expires headers
+
+    # Fix up listings if too big, this doesn't work great but will prevent
+    # a huge page from being generated if the listing service screws up.
+    # if len(listings) > shown:
+    #     listings = listings[:shown]
 
     # Types of pages:
     # new and current and YYMM -> all listings in one list
     # recent -> all in one list, but anchors to specific days
 
-    articles = [metadata.get_abs(item['id']) for item in l_ids]
-    response_data['articles'] = articles
-    response_data['author_links'] = {
-        ar.arxiv_id_v: author_links(ar) for ar in articles}
-    response_data['downloads'] = dl_for_articles(articles)
+    for item in listings:
+        if not type(item) is dict:
+            app.logger.error('problem during /list for ' + time_period
+                             + ' type of item is not dict, it is ' + str(type(item)))
+        else:
+            item['article'] = metadata.get_abs(item['id'])
+
+#    articles = [metadata.get_abs(item['id']) for item in listings]
+
+
+    response_data['listings'] = listings
+    response_data['author_links'] = authors_for_articles(listings)
+    response_data['downloads'] = dl_for_articles(listings)
 
     response_data.update({
         'context': subject_or_category,
-        'ids': l_ids,
         'count': count,
         'subcontext': time_period,
         'shown': shown,
@@ -203,18 +222,22 @@ def get_listing(
         'list_ctx_id': list_ctx_id,
         'list_ctx_in_archive': list_ctx_in_archive,
         'paging': paging(count, skipn, shown,
-                          subject_or_category, time_period)
+                         subject_or_category, time_period),
+        'viewing_all' : shown >= count
     })
 
     def author_query(article:DocMetadata, query:str)->str:
-        return url_for('search_archive',
+        return str(url_for('search_archive',
                        searchtype='author',
                        archive=article.primary_archive.id,
-                       query=query)
+                       query=query))
     response_data['url_for_author_search'] = author_query
 
-    response_data.update(more_fewer(shown, count))
-
+    response_data.update(more_fewer(shown, count, shown>=count))
+    
+    if time_period  == 'new':
+        response_data.update( index_for_types( listings) )
+    
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -249,13 +272,9 @@ def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
         return None
 
 
-def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
-    """Creates author list links in a very similar way to abs page."""
-    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
-                                  truncate_author_list_size)
 
 
-def more_fewer(show: int, count: int) -> Dict[str, Any]:
+def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     """Links for the more/fewer sections.
 
     We want first show_values[n] where show_values[n] < show and show_values[n+1] > show
@@ -266,17 +285,41 @@ def more_fewer(show: int, count: int) -> Dict[str, Any]:
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
     rd = {'mf_fewer': next(tup_f, (None, None))[0]}
 
-    if count < max_show and show < max_show:
+    if not viewing_all and count < max_show and show < max_show:
         rd['mf_all'] = count
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
         filter(lambda x: x > show and x < count, show_values), None) # type: ignore
+    
     return rd
 
 
-def dl_for_articles(articles: List[DocMetadata])->Dict[str, Any]:
+def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article """
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {ar.arxiv_id_v: metadata.get_dissemination_formats(ar, dl_pref)
-            for ar in articles}
+    return {item['article'].arxiv_id_v: metadata.get_dissemination_formats(item['article'], dl_pref)
+            for item in items}
+
+def authors_for_articles(listings: List[Any])->Dict[str,Any]:
+    return {item['article'].arxiv_id_v: author_links(item['article']) for item in listings}
+
+def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
+    """Creates author list links in a very similar way to abs page."""
+    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
+                                  truncate_author_list_size)
+
+def index_for_types( items: List[Any]) ->Dict[str,Any]:
+    ift = []
+    if items and len(items):
+        ift.append( ('New submissions',0) )
+
+    first_cross = next( (ix for (ix,item) in enumerate(items) if item['listingType'] == 'cross'), None)
+    if first_cross:
+        ift.append( ('Cross-lists', first_cross) )
+        
+    first_rep = next( (ix for (ix,item) in enumerate(items) if item['listingType'] == 'rep'), None)
+    if first_rep:
+        ift.append( ('Replacements', first_rep))
+    
+    return {'index_for_types': ift }

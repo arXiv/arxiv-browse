@@ -82,6 +82,10 @@ class TestBrowseDatabaseService(TestCase):
         execute_sql_files(sql_files, database.db.engine)
         database.db.session.commit()
 
+        """Disable logging to avoid messy output during testing"""
+        import logging
+        logging.disable(logging.WARNING)
+
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
         label = TestBrowseDatabaseService.database_service.get_institution(
