@@ -1,48 +1,73 @@
+"""Example of a listing service for testing."""
+
 from typing import List, Optional, Tuple
 
-from browse.services.listing import ListingService, ListingResponse, SingleDayListingResponse
+from browse.services.listing import ListingService, ListingResponse
 import datetime
 
 
 class FakeListingFilesService(ListingService):
+    '''Listing service used for development and testing purposes.
+
+    This is intended as an example of what the /listing controller
+    needs for methods from a listing service.
+
+    This just returns examples that should be good enough. This makes
+    no attempt to return the correct articles for a date or them correct
+    primarys for articles.
+    '''
 
     def list_new_articles(self,
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> SingleDayListingResponse:
-        listings = [
-            {'id': '0704.0526', 'listingType': 'new'},
-            {'id': '0704.0988', 'listingType': 'new'},
-            {'id': '0704.0182', 'listingType': 'new'},
-            {'id': '0704.0310', 'listingType': 'new'},
-            {'id': '0704.0616', 'listingType': 'new'},
-            {'id': '0704.0732', 'listingType': 'new'},
-            {'id': '0704.0042', 'listingType': 'new'},
-            {'id': '0704.0615', 'listingType': 'new'},
-            {'id': '0704.0568', 'listingType': 'new'},
-            {'id': '0704.0319', 'listingType': 'new'},
-        ]
-
-        pd = datetime.date(2007, 4, 2)
-        dl = {'listings': listings,
-              'pubdate': pd,
-              'count': len(listings)}
-        return dl
+                          if_modified_since: Optional[str] = None) -> ListingResponse:
+        '''example of list_new_articles'''
+        listings = [{'id': '0704.0526', 'listingType': 'new', 'primary': 'cs.DB'},
+                    {'id': '0704.0988', 'listingType': 'new', 'primary': 'cs.DB'},
+                    {'id': '0704.0182', 'listingType': 'cross', 'primary': 'cs.DL'},
+                    {'id': '0704.0310', 'listingType': 'cross', 'primary': 'cs.GT'},
+                    {'id': '0704.0616', 'listingType': 'rep', 'primary': 'cs.DL'},
+                    ]
+        return {'listings': listings,
+                'pubdates': [(datetime.date(2007, 4, 1), len(listings))],
+                'count': len(listings)}
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        listings = ['0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
-                    '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
-                    '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
-                    '0704.0735', '0704.0753', '0704.0324', '0704.0600', '0704.0737']
-        pd = datetime.date(2007, 4, 2)
-        return {'listings': [ {'id':id,'listingType':'new'} for id in listings],
-                'pubdates': [(pd,0)],
-                 'count': len(listings)}
+        '''Examlpe of list_pastweek_articles.'''
+
+        listings = [
+            '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
+            '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
+            '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
+            '0704.0735', '0704.0753', '0704.0324', '0704.0600', '0704.0737', '0704.0387', '0704.0659',
+            '0704.0432', '0704.0408', '0704.0895', '0704.0088', '0704.0719', '0704.0124', '0704.0508']
+        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
+                  for id in listings],
+
+        daysize = 7
+        pd1 = (datetime.date(2007, 4, 2), daysize)
+        pd2 = (datetime.date(2007, 4, 3), daysize)
+        pd3 = (datetime.date(2007, 4, 2), daysize)
+        pd4 = (datetime.date(2007, 4, 2), daysize)
+        pd5 = (datetime.date(2007, 4, 2), daysize)
+
+        return {'listings': items2[0],
+                'pubdates': [pd1, pd2, pd3, pd4, pd5],
+                'count': len(listings)}
+
+    def list_articles_by_year(self,
+                              archiveOrCategory: str,
+                              year: int,
+                              skip: int,
+                              show: int,
+                              if_modified_since: Optional[str] = None) -> ListingResponse:
+        '''Examlpe of list_articles_by_year.'''
+        return self.list_articles_by_month(archiveOrCategory, year, 1, skip, show, if_modified_since)
 
     def list_articles_by_month(self,
                                archiveOrCategory: str,
@@ -51,6 +76,7 @@ class FakeListingFilesService(ListingService):
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
+        '''Example of list_articles_by_month.'''
         if 'skip' not in vars():
             skip = 0
         if 'show' not in vars():
@@ -200,25 +226,14 @@ class FakeListingFilesService(ListingService):
             '0704.0595', '0704.0009', '0704.0743', '0704.0102', '0704.0835', '0704.0320', '0704.0162',
             '0704.0428', '0704.0146', '0704.0876', '0704.0325', '0704.0542', '0704.0376', '0704.0297',
             '0704.0397', '0704.0968', '0704.0415', '0704.0793', '0704.0287', '0704.0767', '0704.0522']
-        pd = datetime.datetime(2007, 4, 2)
+        pd = datetime.date(2007, 4, 2)
 
-        return {'listings': [ {'id':id,'listingType':'new'} for id in listings], 
-                'pubdates': [(pd, 0)],
+
+        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
+                  for id in listings],
+
+        
+        return {'listings': items2[0],
+                'pubdates': [(pd, len(listings))],
                 'count': len(listings)
                 }
-
-    def list_articles_by_year(self,
-                              archiveOrCategory: str,
-                              year: int,
-                              skip: int,
-                              show: int,
-                              if_modified_since: Optional[str] = None) -> ListingResponse:
-        listings = [
-            '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
-            '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
-            '0704.0276']
-        pd = datetime.datetime(2007, 4, 2)
-        return {'listings': [ {'id':id,'listingType':'new'} for id in listings],
-                'pubdates': pd,
-                'count':len(listings)}
-

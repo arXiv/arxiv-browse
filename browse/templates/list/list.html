@@ -16,45 +16,49 @@
   <h1>{{list_ctx_name}}</h1>
   <h2>Authors and titles for {{list_month_name}} {{list_year}}</h2>
 
+{{ type_index() }}
 {{ page_divs() }}
 
 <dl id='articles'>
-  {% for article in articles %}
-  {% set ids = article.arxiv_identifier.ids %}
-  <dt>
-    <a name='item{{loop.index}}'>[{{loop.index}}]</a>
-    <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
-      arXiv:{{ article.arxiv_identifier.ids }}
-    </a>
-    {{ dl_links( article ) }}
-  </dt>
-  <dd>
-    <div class='meta'>
-      <div class='list-title mathjax'><span class='descriptor'>Title:</span>
-        {{article.title}}
-      </div>
-      <div class='list-authors'>
-        {{- do_author_list( article ) -}}
-      </div>
+  {% for item in listings %}
+    {% set article = item['article'] %}      
+    {% set ids = article.arxiv_identifier.ids %}
+    
+    <dt>
+      <a name='item{{loop.index}}'>[{{loop.index}}]</a>
+      <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
+        arXiv:{{ article.arxiv_identifier.ids }}
+      </a>
+      {{ type_info( item ) }}
+      {{ dl_links( article ) }}
+    </dt>
+    <dd>
+      <div class='meta'>
+        <div class='list-title mathjax'><span class='descriptor'>Title:</span>
+          {{article.title}}
+        </div>
+        <div class='list-authors'>
+          {{- do_author_list( article ) -}}
+        </div>
 
-      {% if article.comments %}
-      <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
-        {{article.comments|arxiv_urlize}}
-      </div>
-      {% endif %}
-
-      {% if article.journal_ref %}
-      <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
-        {{article.journal_ref}}
-      </div>
-      {% endif %}
-      
-      <div class='list-subjects'><span class='descriptor'>Subjects:</span>
-        <span class='primary-subject'>{{article.primary_category.display_str()}}</span>
-      </div>
+        {% if article.comments %}
+          <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
+            {{article.comments|arxiv_urlize}}
+          </div>
+        {% endif %}
         
-    </div>
-  </dd>  
+        {% if article.journal_ref %}
+          <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
+            {{article.journal_ref}}
+          </div>
+        {% endif %}
+        
+        <div class='list-subjects'><span class='descriptor'>Subjects:</span>
+          <span class='primary-subject'>{{article.primary_category.display_str()}}</span>
+        </div>
+
+      </div>
+    </dd>  
   {% endfor %}
 </dl>
 
@@ -68,7 +72,10 @@
 
 
 {%- macro page_divs() -%}
-<div class='paging'>[ total of {{count}} entries: {{ pages() }} ]</div>
+<div class='paging'>[ total of {{count}} entries
+ {{ pages() }}
+  ]
+</div>
 <div class='morefewer'>[ showing {{shown}} entries per page:
   {{ show_link('fewer',mf_fewer) }} |
   {{ show_link('more', mf_more)  }} |
@@ -94,6 +101,8 @@
 
 
 {%- macro pages() -%}
+{% if pg|length != 0 or not viewing_all %}
+:
   {%- for pg in paging -%}
     {% if pg.nolink is defined %}
       <span>{{pg.nolink}}</span>
@@ -101,6 +110,7 @@
       <a href={{pg.url}}>{{pg.txt}}</a>
     {% endif %}
   {% endfor %}
+{% endif %}
 {%- endmacro -%}
 
 
@@ -125,3 +135,22 @@
   {%- endif -%}
   ]
 {%- endmacro -%}
+
+{% macro type_info( item ) %}
+  {% if item['listingType'] == 'cross' %}
+    (cross-list from {{item['primary']}})
+  {% endif %}
+  {% if item['listingType'] == 'rep' %}
+    (replaced)
+  {% endif %}
+{% endmacro %}
+
+{% macro type_index() %}
+  {% if index_for_types %}
+    <ul>
+  {% for ityp in index_for_types %}
+    <li><a href="#item{{ityp[1]}}">{{ityp[0]}}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endmacro %}
