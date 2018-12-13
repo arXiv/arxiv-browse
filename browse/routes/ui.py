@@ -107,7 +107,7 @@ def list_articles(context: str, subcontext: str) -> Response:
         context, subcontext, request.args.get('skip'), request.args.get('show'))
     if code == status.HTTP_200_OK:
         #TODO if it is a HEAD request we don't want to render the template
-        return render_template('list/list.html', **response), code, headers
+        return render_template(response['template'], **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
     elif code == status.HTTP_304_NOT_MODIFIED:

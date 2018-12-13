@@ -12,11 +12,13 @@
 {%- block content %}
 <div id='content'>
 <div id='dlpage'>
-
+  
   <h1>{{list_ctx_name}}</h1>
-  <h2>Authors and titles for {{list_month_name}} {{list_year}}</h2>
 
-{{ type_index() }}
+{% block list_index %}
+
+{% endblock %}
+
 {{ page_divs() }}
 
 <dl id='articles'>
@@ -65,10 +67,7 @@
 {{ page_divs() }}
 </div>
 </div>
-
-
 {%- endblock %}
-
 
 
 {%- macro page_divs() -%}
@@ -143,14 +142,4 @@
   {% if item['listingType'] == 'rep' %}
     (replaced)
   {% endif %}
-{% endmacro %}
-
-{% macro type_index() %}
-  {% if index_for_types %}
-    <ul>
-  {% for ityp in index_for_types %}
-    <li><a href="#item{{ityp[1]}}">{{ityp[0]}}</a></li>
-  {% endfor %}
-  </ul>
-{% endif %}
 {% endmacro %}
