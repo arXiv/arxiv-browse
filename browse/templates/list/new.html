@@ -1,0 +1,23 @@
+{%- extends "list/base.html" -%}
+
+{% block list_index %}
+{{ listdate() }}
+{{ type_index() }}
+{% endblock %}
+
+{% macro type_index() %}
+  {% if index_for_types %}
+    <ul>
+  {% for ityp in index_for_types %}
+    <li><a href="#item{{ityp[1]}}">{{ityp[0]}}</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endmacro %}
+
+{% macro listdate() %}
+  {% if announced %}
+    <div class="list-dateline">Submissions announced {{ announced.strftime('%A, %-d %B %Y') }}
+    </div>
+  {% endif %}
+{% endmacro %}

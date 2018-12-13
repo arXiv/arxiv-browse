@@ -75,6 +75,13 @@ default_show = show_values[2]
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
+type_to_template = {
+    'new': 'list/new.html',
+    'recent': 'list/recent.html',
+    'current': 'list/month.html',
+    'month': 'list/month.html',
+    'year': 'list/year.html'
+    }
 
 def get_listing(
         subject_or_category: str,
@@ -136,31 +143,31 @@ def get_listing(
     response_data: Dict[str, Any] = {}
 
     if time_period == 'new':
-        response_data['list_time'] = 'new'
+        list_type = 'new'
         new_resp = listing_service.list_new_articles(
             subject_or_category, skipn, shown)
         listings = new_resp['listings']
         count = new_resp['count']
         lst_resp = new_resp
-        
+
     elif time_period in ['pastweek', 'recent']:
-        response_data['list_time'] = time_period
+        list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown)
         listings = rec_resp['listings']
         count = rec_resp['count']
         lst_resp = rec_resp
-        
+
         # TODO make day table of contents anchors
-        
+
     elif time_period == 'current':
-        response_data['list_time'] = 'current'
+        list_type = 'current'
         cur_resp = listing_service.list_articles_by_month(
             subject_or_category, 1999, 12, skipn, shown)
-        listings = cur_resp['listings']        
+        listings = cur_resp['listings']
         count = cur_resp['count']
         lst_resp = cur_resp
-        
+
     else:  # YYMM or YYYYMM?
         yandm = year_month(time_period)
         if yandm is None:
@@ -171,6 +178,7 @@ def get_listing(
         if list_month or list_month == 0:
             if list_month < 1 or list_month > 12:
                 raise BadRequest
+            list_type = 'month'
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             month_reps = listing_service.list_articles_by_month(
@@ -179,6 +187,7 @@ def get_listing(
             count = month_reps['count']
             lst_resp = month_reps
         else:
+            list_type = 'year'
             year_resp = listing_service.list_articles_by_year(
                 subject_or_category, list_year, skipn, shown)
             listings = year_resp['listings']
@@ -206,7 +215,6 @@ def get_listing(
 
 #    articles = [metadata.get_abs(item['id']) for item in listings]
 
-
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
     response_data['downloads'] = dl_for_articles(listings)
@@ -223,21 +231,29 @@ def get_listing(
         'list_ctx_in_archive': list_ctx_in_archive,
         'paging': paging(count, skipn, shown,
                          subject_or_category, time_period),
-        'viewing_all' : shown >= count
+        'viewing_all': shown >= count,
+        'template' : type_to_template[list_type]
     })
 
-    def author_query(article:DocMetadata, query:str)->str:
+    def author_query(article: DocMetadata, query: str)->str:
         return str(url_for('search_archive',
-                       searchtype='author',
-                       archive=article.primary_archive.id,
-                       query=query))
+                           searchtype='author',
+                           archive=article.primary_archive.id,
+                           query=query))
     response_data['url_for_author_search'] = author_query
 
-    response_data.update(more_fewer(shown, count, shown>=count))
-    
-    if time_period  == 'new':
-        response_data.update( index_for_types( listings) )
-    
+    response_data.update(more_fewer(shown, count, shown >= count))
+
+    if list_type == 'new':
+        response_data['announced'] = lst_resp['pubdates'][0][0]
+        response_data.update(index_for_types(listings))
+    if list_type == 'month' or list_type == 'current':
+        response_data['pubmonth'] = lst_resp['pubdates'][0][0]
+    if list_type == 'year':
+        response_data['pubmonth'] = lst_resp['pubdates'][0][0]
+    if list_type == 'recent':
+        response_data['pubdates'] = lst_resp['pubdates']
+        
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -272,8 +288,6 @@ def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
         return None
 
 
-
-
 def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     """Links for the more/fewer sections.
 
@@ -290,8 +304,8 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
-        filter(lambda x: x > show and x < count, show_values), None) # type: ignore
-    
+        filter(lambda x: x > show and x < count, show_values), None)  # type: ignore
+
     return rd
 
 
@@ -301,25 +315,30 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
     return {item['article'].arxiv_id_v: metadata.get_dissemination_formats(item['article'], dl_pref)
             for item in items}
 
-def authors_for_articles(listings: List[Any])->Dict[str,Any]:
+
+def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     return {item['article'].arxiv_id_v: author_links(item['article']) for item in listings}
+
 
 def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     """Creates author list links in a very similar way to abs page."""
     return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
                                   truncate_author_list_size)
 
-def index_for_types( items: List[Any]) ->Dict[str,Any]:
+
+def index_for_types(items: List[Any]) ->Dict[str, Any]:
     ift = []
     if items and len(items):
-        ift.append( ('New submissions',0) )
+        ift.append(('New submissions', 0))
 
-    first_cross = next( (ix for (ix,item) in enumerate(items) if item['listingType'] == 'cross'), None)
+    first_cross = next((ix for (ix, item) in enumerate(
+        items) if item['listingType'] == 'cross'), None)
     if first_cross:
-        ift.append( ('Cross-lists', first_cross) )
-        
-    first_rep = next( (ix for (ix,item) in enumerate(items) if item['listingType'] == 'rep'), None)
+        ift.append(('Cross-lists', first_cross))
+
+    first_rep = next((ix for (ix, item) in enumerate(
+        items) if item['listingType'] == 'rep'), None)
     if first_rep:
-        ift.append( ('Replacements', first_rep))
-    
-    return {'index_for_types': ift }
+        ift.append(('Replacements', first_rep))
+
+    return {'index_for_types': ift}

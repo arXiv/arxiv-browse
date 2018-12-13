@@ -50,11 +50,11 @@ class FakeListingFilesService(ListingService):
                   for id in listings],
 
         daysize = 7
-        pd1 = (datetime.date(2007, 4, 2), daysize)
-        pd2 = (datetime.date(2007, 4, 3), daysize)
-        pd3 = (datetime.date(2007, 4, 2), daysize)
-        pd4 = (datetime.date(2007, 4, 2), daysize)
-        pd5 = (datetime.date(2007, 4, 2), daysize)
+        pd1 = (datetime.date(2007, 4, 2), 0)
+        pd2 = (datetime.date(2007, 4, 3), daysize-1)
+        pd3 = (datetime.date(2007, 4, 4), daysize*2-1)
+        pd4 = (datetime.date(2007, 4, 5), daysize*3-1)
+        pd5 = (datetime.date(2007, 4, 6), daysize*4-1)
 
         return {'listings': items2[0],
                 'pubdates': [pd1, pd2, pd3, pd4, pd5],
