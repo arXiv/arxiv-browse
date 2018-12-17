@@ -1,6 +1,6 @@
 """Representations of arXiv document metadata."""
 import collections
-from typing import List, Optional, Iterator
+from typing import List, Optional, Iterator, Set
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -232,10 +232,10 @@ class DocMetadata:
         else:
             return versions[0].submitted_date
 
-    def get_secondaries(self) -> List[str]:
-        """Unalias, deduplicate, and sort secondary categories."""
+    def get_secondaries(self) -> Set[Category]:
+        """Unalias and deduplicate secondary categories."""
         if not self.secondary_categories or not self.primary_category:
-            return []
+            return set()
 
         def unalias(secs: Iterator[Category])->Iterator[Category]:
             return map(lambda c: Category(c.unalias()), secs)
@@ -246,7 +246,7 @@ class DocMetadata:
 
         de_primaried = set(de_prim(unalias(iter(self.secondary_categories))))
         if not de_primaried:
-            return []
+            return set()
         return de_primaried
 
     def display_secondaries(self) -> List[str]:
@@ -259,7 +259,9 @@ class DocMetadata:
 
     def canonical_url(self, no_version: bool = False) -> str:
         """Return canonical URL for this ID and version."""
+        url: str
         if no_version:
-            return canonical_url(self.arxiv_identifier.id)
+            url = canonical_url(self.arxiv_identifier.id)
         else:
-            return canonical_url(self.arxiv_identifier.idv)
+            url = canonical_url(self.arxiv_identifier.idv)
+        return url

@@ -6,24 +6,8 @@ from jinja2 import escape, Markup, Environment
 from flask import appcontext_pushed, url_for
 from app import app
 
-from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
 from arxiv.base.urls import links, urlizer, urlize
-
-
-def _id_to_url(id: str):
-    return url_for('browse.abstract', arxiv_id=id)
-
-
-def arxiv_urlize(txt):
-    return urlize(_id_to_url,None,txt)
-
-
-def doi_urls(fn, txt):
-    return urlize_dois(fn, txt)
-
-
-def arxiv_id_urls(txt):
-    return urlize_ids(_id_to_url, txt)
+from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
 
 
 class Jinja_Custom_Fitlers_Test(unittest.TestCase):
@@ -110,7 +94,7 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
         )
 
     def test_arxiv_id_urls_basic(self):
-        h = 'sosmooth.org'  # Totally bogus setup for testing, at least url_for returns something
+        h = 'arxiv.org'  # Totally bogus setup for testing, at least url_for returns something
         app.config['SERVER_NAME'] = h
 
         with app.app_context():
@@ -199,9 +183,9 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
                              'viXra:0704.0001 viXra:1003.0123')
 
             # this is what was expected in legacy, but it doesn't seem right:
-            # assert_that(
-            #     arxiv_id_urls('vixra:0704.0001'),
-            #     equal_to(f'vixra:<a href="https://arxiv.org/abs/0704.0001">0704.0001</a>'))
+            # self.assertEqual(
+            #     urlize('vixra:0704.0001'),
+            #     f'vixra:<a href="https://arxiv.org/abs/0704.0001">0704.0001</a>')
 
     def test_arxiv_id_urls_escaping(self):
         h = 'sosmooth.org'
@@ -324,123 +308,109 @@ class Jinja_Custom_Fitlers_Test(unittest.TestCase):
             self.assertEqual(tex_to_utf('Lu\\\'i'), 'Luí')
             self.assertEqual(tex_to_utf(Markup('Lu\\\'i')), 'Luí')
             self.assertEqual(tex_to_utf(Markup(escape('Lu\\\'i'))), 'Luí')
-    #
-    # def test_entity_to_utf(self):
-    #     h = 'sosmooth.org'
-    #     app.config['SERVER_NAME'] = h
-    #     with app.app_context():
-    #         jenv = Environment(autoescape=True)
-    #         jenv.filters['arxiv_id_urls'] = arxiv_id_urls
-    #         jenv.filters['line_break'] = line_feed_to_br
-    #         jenv.filters['doi_urls'] = partial(doi_urls, lambda x: x)
-    #         jenv.filters['arxiv_urlize'] = arxiv_urlize
-    #         jenv.filters['tex_to_utf'] = tex_to_utf
-    #         jenv.filters['entity_to_utf'] = entity_to_utf
-    #         assert_that(
-    #             jenv.from_string('{{ "Mart&#xED;n"|entity_to_utf }}').render(),
-    #             equal_to('Martín'), 'entity_to_utf should work')
-    #         assert_that(
-    #             jenv.from_string(
-    #                 '{{ "<Mart&#xED;n>"|entity_to_utf }}').render(),
-    #             equal_to('&lt;Martín&gt;'),
-    #             'entity_to_utf should work even with < or >')
-    #
-    # def test_arxiv_urlize_no_email_links(self):
-    #     h = 'sosmooth.org'
-    #     app.config['SERVER_NAME'] = h
-    #     with app.app_context():
-    #         jenv = Environment(autoescape=True)
-    #         jenv.filters['arxiv_urlize'] = arxiv_urlize
-    #
-    #         assert_that(
-    #             jenv.from_string(
-    #                 '{{ "bob@example.com"|arxiv_urlize }}').render(),
-    #             equal_to('bob@example.com'),
-    #             'arxiv_urlize should not turn emails into links')
-    #         assert_that(
-    #             jenv.from_string(
-    #                 '{{ "<bob@example.com>"|arxiv_urlize }}').render(),
-    #             equal_to('&lt;bob@example.com&gt;'),
-    #             'arxiv_urlize should work even with < or >')
-    #
-    # def test_arxiv_urlize(self):
-    #
-    #
-    #
-    #     h = 'sosmooth.org'
-    #     app.config['SERVER_NAME'] = h
-    #     with app.app_context():
-    #
-    #         def do_arxiv_urlize(txt):
-    #             return arxiv_urlize(txt)
-    #
-    #         self.assertEqual(
-    #             do_arxiv_urlize('http://example.com/'),
-    #             '<a href="http://example.com/">this http URL</a>',
-    #             'do_arxiv_urlize (URL linking) 1/6')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('https://example.com/'),
-    #             '<a href="https://example.com/">this https URL</a>',
-    #             'do_arxiv_urlize (URL linking) 2/6')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('ftp://example.com/'),
-    #             '<a href="ftp://example.com/">this ftp URL</a>',
-    #             'do_arxiv_urlize (URL linking) 3/6')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('http://example.com/.hep-th/9901001'),
-    #             '<a href="http://example.com/.hep-th/9901001">this http URL</a>',
-    #             'do_arxiv_urlize (URL linking) 4/6')
-    #         self.assertEqual(
-    #             do_arxiv_urlize(
-    #                 'http://projecteuclid.org/euclid.bj/1151525136'
-    #             ),
-    #             '<a href="http://projecteuclid.org/euclid.bj/1151525136">this http URL</a>',
-    #             'do_arxiv_urlize (URL linking) 6/6')
-    #         assert_that(
-    #             do_arxiv_urlize('  Correction to Bernoulli (2006), 12, 551--570 http://projecteuclid.org/euclid.bj/1151525136'),
-    #             equal_to(Markup('  Correction to Bernoulli (2006), 12, 551--570 <a href="http://projecteuclid.org/euclid.bj/1151525136">this http URL</a>')),
-    #             'do_arxiv_urlize (URL linking) 6/6')
-    #         # shouldn't match
-    #         self.assertEqual(
-    #             do_arxiv_urlize('2448446.4710(5)'), '2448446.4710(5)',
-    #             'do_arxiv_urlize (should not match) 1/9')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('HJD=2450274.4156+/-0.0009'),
-    #             'HJD=2450274.4156+/-0.0009',
-    #             'do_arxiv_urlize (should not match) 2/9')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('T_min[HJD]=49238.83662(14)+0.146352739(11)E.'),
-    #             'T_min[HJD]=49238.83662(14)+0.146352739(11)E.',
-    #             'do_arxiv_urlize (should not match) 3/9')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('Pspin=1008.3408s'), 'Pspin=1008.3408s',
-    #             'do_arxiv_urlize (should not match) 4/9')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('2453527.87455^{+0.00085}_{-0.00091}'),
-    #             '2453527.87455^{+0.00085}_{-0.00091}',
-    #             'do_arxiv_urlize (should not match) 5/9')
-    #         self.assertEqual(
-    #             do_arxiv_urlize('2451435.4353'), '2451435.4353',
-    #             'do_arxiv_urlize (should not match) 6/9')
-    #         assert_that(
-    #             do_arxiv_urlize('cond-mat/97063007'),
-    #             equal_to('<a href="http://sosmooth.org/abs/cond-mat/9706300">cond-mat/9706300</a>7'),
-    #             'do_arxiv_urlize (should match) 7/9')
-    #
-    #         assert_that(
-    #             do_arxiv_urlize('[http://onion.com/something-funny-about-arxiv-1234]'),
-    #             equal_to('[<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>]'))
-    #
-    #         assert_that(
-    #             do_arxiv_urlize('[http://onion.com/?q=something-funny-about-arxiv.1234]'),
-    #             equal_to('[<a href="http://onion.com/?q=something-funny-about-arxiv.1234">this http URL</a>]'))
-    #
-    #         assert_that(
-    #             do_arxiv_urlize('http://onion.com/?q=something funny'),
-    #             equal_to('<a href="http://onion.com/?q=something">this http URL</a> funny'),
-    #             'Spaces CANNOT be expected to be part of URLs')
-    #
-    #         assert_that(
-    #             do_arxiv_urlize('"http://onion.com/something-funny-about-arxiv-1234"'),
-    #             equal_to(Markup('&#34;<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>&#34;')),
-    #             'Should handle URL surrounded by double quotes')
+
+    def test_entity_to_utf(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['entity_to_utf'] = entity_to_utf
+            self.assertEqual(
+                jenv.from_string('{{ "Mart&#xED;n"|entity_to_utf }}').render(),
+                'Martín', 'entity_to_utf should work')
+            self.assertEqual(
+                jenv.from_string(
+                    '{{ "<Mart&#xED;n>"|entity_to_utf }}').render(),
+                '&lt;Martín&gt;',
+                'entity_to_utf should work even with < or >')
+
+    def test_arxiv_urlize_no_email_links(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['urlize'] = urlize
+
+            self.assertEqual(
+                jenv.from_string('{{ "bob@example.com"|urlize|safe }}').render(),
+                'bob@example.com',
+                'arxiv_urlize should not turn emails into links')
+            self.assertEqual(
+                jenv.from_string('{{ "<bob@example.com>"|urlize|safe }}').render(),
+                '&lt;bob@example.com&gt;',
+                'arxiv_urlize should work even with < or >')
+
+    def test_arxiv_urlize(self):
+        h = 'sosmooth.org'
+        app.config['SERVER_NAME'] = h
+        with app.app_context():
+            self.assertEqual(
+                urlize('http://example.com/'),
+                '<a href="http://example.com/">this http URL</a>',
+                'urlize (URL linking) 1/6')
+            self.assertEqual(
+                urlize('https://example.com/'),
+                '<a href="https://example.com/">this https URL</a>',
+                'urlize (URL linking) 2/6')
+            self.assertEqual(
+                urlize('ftp://example.com/'),
+                '<a href="ftp://example.com/">this ftp URL</a>',
+                'urlize (URL linking) 3/6')
+            self.assertEqual(
+                urlize('http://example.com/.hep-th/9901001'),
+                '<a href="http://example.com/.hep-th/9901001">this http URL</a>',
+                'urlize (URL linking) 4/6')
+            self.assertEqual(
+                urlize(
+                    'http://projecteuclid.org/euclid.bj/1151525136'
+                ),
+                '<a href="http://projecteuclid.org/euclid.bj/1151525136">this http URL</a>',
+                'urlize (URL linking) 6/6')
+            self.assertEqual(
+                urlize('  Correction to Bernoulli (2006), 12, 551--570 http://projecteuclid.org/euclid.bj/1151525136'),
+                Markup('  Correction to Bernoulli (2006), 12, 551--570 <a href="http://projecteuclid.org/euclid.bj/1151525136">this http URL</a>'),
+                'urlize (URL linking) 6/6')
+            # shouldn't match
+            self.assertEqual(
+                urlize('2448446.4710(5)'), '2448446.4710(5)',
+                'urlize (should not match) 1/9')
+            self.assertEqual(
+                urlize('HJD=2450274.4156+/-0.0009'),
+                'HJD=2450274.4156+/-0.0009',
+                'urlize (should not match) 2/9')
+            self.assertEqual(
+                urlize('T_min[HJD]=49238.83662(14)+0.146352739(11)E.'),
+                'T_min[HJD]=49238.83662(14)+0.146352739(11)E.',
+                'urlize (should not match) 3/9')
+            self.assertEqual(
+                urlize('Pspin=1008.3408s'), 'Pspin=1008.3408s',
+                'urlize (should not match) 4/9')
+            self.assertEqual(
+                urlize('2453527.87455^{+0.00085}_{-0.00091}'),
+                '2453527.87455^{+0.00085}_{-0.00091}',
+                'urlize (should not match) 5/9')
+            self.assertEqual(
+                urlize('2451435.4353'), '2451435.4353',
+                'urlize (should not match) 6/9')
+            self.assertEqual(
+                urlize('cond-mat/97063007'),
+                '<a href="https://arxiv.org/abs/cond-mat/9706300">cond-mat/9706300</a>7',
+                'urlize (should match) 7/9')
+
+            self.assertEqual(
+                urlize('[http://onion.com/something-funny-about-arxiv-1234]'),
+                '[<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>]')
+
+            self.assertEqual(
+                urlize('[http://onion.com/?q=something-funny-about-arxiv.1234]'),
+                '[<a href="http://onion.com/?q=something-funny-about-arxiv.1234">this http URL</a>]')
+
+            self.assertEqual(
+                urlize('http://onion.com/?q=something funny'),
+                '<a href="http://onion.com/?q=something">this http URL</a> funny',
+                'Spaces CANNOT be expected to be part of URLs')
+
+            self.assertEqual(
+                urlize('"http://onion.com/something-funny-about-arxiv-1234"'),
+                Markup('&#34;<a href="http://onion.com/something-funny-about-arxiv-1234">this http URL</a>&#34;'),
+                'Should handle URL surrounded by double quotes')
