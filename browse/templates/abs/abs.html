@@ -1,4 +1,6 @@
 {%- extends "base.html" -%}
+{% from 'abs/author_links.html' import display_authors_with_links %}
+{% import 'base/macros.html' as base_macros %}
 
   {% block title %}[{{ requested_id }}] {{ abs_meta.title }}{% endblock %}
 
@@ -56,69 +58,24 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
-    <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "abs/author_links.html" %}
-    </div>
 
-    <div class="dateline">{{ generate_dateline() }}</div>
+  {{ base_macros.abs(
+    abs_meta.arxiv_identifier.id,
+    abs_meta.title,
+    display_authors_with_links(abs_meta, author_links),
+    abs_meta.abstract,
+    abs_meta.get_datetime_of_version(abs_meta.version),
+    abs_meta.primary_category.id,
+    comments = abs_meta.comments,
+    msc_class = abs_meta.msc_class,
+    acm_class = abs_meta.acm_class,
+    journal_ref = abs_meta.journal_ref,
+    doi = abs_meta.doi,
+    report_num = abs_meta.report_num,
+    version = abs_meta.version,
+    submission_history = abs_meta.version_history,
+    secondary_categories = abs_meta.get_secondaries()) }}
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex_to_utf|arxiv_urlize|line_feed_to_br }}</blockquote>
-    <!--CONTEXT-->
-    <div class="metatable">
-      <table summary="Additional metadata">
-        {%- if abs_meta.comments %}
-        <tr>
-          <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ abs_meta.comments|arxiv_urlize }}</td>
-        </tr>
-        {% endif -%}
-        <tr>
-          <td class="tablecell label">Subjects:</td>
-          <td class="tablecell subjects">{{ category_line() }}</td>
-        </tr>
-        {%- if abs_meta.msc_class %}
-        <tr>
-          <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
-          <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.acm_class %}
-        <tr>
-          <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
-          <td class="tablecell acm-classes">{{ abs_meta.acm_class }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.journal_ref %}
-        <tr>
-          <td class="tablecell label">Journal&nbsp;reference:</td>
-          <td class="tablecell jref">{{ abs_meta.journal_ref }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.doi %}
-        <tr>
-          <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">{{ abs_meta.doi|single_doi_url }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.report_num %}
-        <tr>
-          <td class="tablecell label">Report&nbsp;number:</td>
-          <td class="tablecell jref">{{ abs_meta.report_num }}</td>
-        </tr>
-        {% endif -%}
-        <tr>
-          <td class="tablecell label">Cite as:</td>
-          <td class="tablecell arxivid">{{ version_atag( abs_meta.arxiv_identifier.id, 0) }}</td>
-        </tr>
-        <tr>
-          <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid">
-              {{version_atag(abs_meta.arxiv_identifier.id, abs_meta.version)}}</span> for this version)
-          </td>
-        </tr>
-      </table>
-    </div>
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}

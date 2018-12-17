@@ -2,10 +2,7 @@
 from functools import partial
 from typing import Any
 from flask import Flask, url_for
-from browse.domain.identifier import canonical_url
-from browse.util.clickthrough import create_ct_url
-from arxiv.urlize import urlize, urlize_ids, \
-    urlize_dois_and_ids
+from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
@@ -32,32 +29,10 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    ct_url_for = partial(create_ct_url, app.config.get(
-        'CLICKTHROUGH_SECRET'), url_for)
-
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
 
     app.jinja_env.globals['canonical_url'] = canonical_url
-
-    def ct_single_doi_filter(doi: str) -> str:
-        out: str = single_doi_url(ct_url_for, doi)
-        return out
-
-    def _id_to_url(id: str) -> Any:
-        return url_for('browse.abstract', arxiv_id=id)
-
-    def contextualized_id_filter(text: str) -> str:
-        out: str = urlize_ids(_id_to_url, text)
-        return out
-
-    def contextualized_doi_id_url_filter(text: str) -> str:
-        out: str = urlize(_id_to_url, ct_url_for, text)
-        return out
-
-    def ct_doi_filter(text: str) -> str:
-        out: str = urlize_dois_and_ids(_id_to_url, ct_url_for, text)
-        return out
 
     if not app.jinja_env.filters:
         app.jinja_env.filters = {}
@@ -66,14 +41,13 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['tex_to_utf'] = tex_to_utf
     app.jinja_env.filters['entity_to_utf'] = entity_to_utf
 
-    app.jinja_env.filters['clickthrough_url_for'] = ct_url_for
+    app.jinja_env.filters['clickthrough_url_for'] = clickthrough_url
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
                 secret=app.config.get('SHOW_EMAIL_SECRET'))
 
-    app.jinja_env.filters['single_doi_url'] = ct_single_doi_filter
-    app.jinja_env.filters['arxiv_id_urls'] = contextualized_id_filter
-    app.jinja_env.filters['arxiv_urlize'] = contextualized_doi_id_url_filter
-    app.jinja_env.filters['arxiv_id_doi_filter'] = ct_doi_filter
+    app.jinja_env.filters['arxiv_id_urls'] = urlizer(['id'])
+    app.jinja_env.filters['arxiv_urlize'] = urlizer(['id', 'doi', 'url'])
+    app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['id', 'doi'])
 
     return app

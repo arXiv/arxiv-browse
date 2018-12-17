@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-arxiv-base = ">=0.9.1"
 dataclasses = "*"
 python-dateutil = "*"
 flask = "==0.12.*"
@@ -17,6 +16,7 @@ pytz = "*"
 mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
+"17e504d" = {path = "./../arxiv-base-ui"}
 
 [dev-packages]
 pylama = "*"

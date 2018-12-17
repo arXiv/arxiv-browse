@@ -5,7 +5,8 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 from arxiv import taxonomy
-from browse.domain.identifier import Identifier, canonical_url
+from arxiv.base.urls import canonical_url
+from browse.domain.identifier import Identifier
 from browse.domain.license import License
 from browse.domain.category import Category
 
@@ -231,8 +232,8 @@ class DocMetadata:
         else:
             return versions[0].submitted_date
 
-    def display_secondaries(self) -> List[str]:
-        """Unalias, dedup and sort secondaries for display."""
+    def get_secondaries(self) -> List[str]:
+        """Unalias, deduplicate, and sort secondary categories."""
         if not self.secondary_categories or not self.primary_category:
             return []
 
@@ -246,13 +247,18 @@ class DocMetadata:
         de_primaried = set(de_prim(unalias(iter(self.secondary_categories))))
         if not de_primaried:
             return []
+        return de_primaried
+
+    def display_secondaries(self) -> List[str]:
+        """Unalias, dedup and sort secondaries for display."""
+        de_primaried = self.get_secondaries()
 
         def to_display(secs: List[Category]) -> List[str]:
             return list(map(lambda c: str(c.display), secs))
         return to_display(sorted(de_primaried))
 
     def canonical_url(self, no_version: bool = False) -> str:
-        """Returns canonical URL for this ID and version."""
+        """Return canonical URL for this ID and version."""
         if no_version:
             return canonical_url(self.arxiv_identifier.id)
         else:

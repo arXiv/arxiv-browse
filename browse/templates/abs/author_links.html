@@ -1,18 +1,20 @@
-{%- macro author_list( authors ) %}
+{%- macro author_list(abs_meta, authors) %}
     {%- for part in authors -%}
         {%- if part is string -%}
             {{- part|arxiv_urlize -}}
         {%- else -%}
-            <a href="{{url_for_author_search(part[1])}}">{{part[0]}}</a>
+            <a href="{{ url_for('search_archive', searchtype='author', archive=abs_meta.primary_archive.id, query=part[1]) }}">{{ part[0] }}</a>
         {%- endif -%}
     {% endfor %}
 {%- endmacro -%}
 
-{{- author_list( author_links[0] ) }}
+{%- macro display_authors_with_links(abs_meta, author_links) %}
+
+{{- author_list(abs_meta, author_links[0]) }}
 
 {%- if author_links[1] %}
   {% if author_links[2] == 1 %}
-    {{author_list(author_links[1])}}
+    {{ author_list(author_links[1]) }}
   {% else %}
 
 <script type="text/javascript">
@@ -48,7 +50,7 @@ function toggleAuthorList(whichLayer,toggleThis)
 </script>
 
   <div id="long-author-list" style="display: none;">
-        {{ author_list( author_links[1]) }}
+        {{ author_list(abs_meta, author_links[1]) }}
   </div>
   <a href="javascript:toggleAuthorList('long-author-list','et al. ({{ author_links[2] }} additional authors not shown)');"
      title="Show Entire Author List" id="toggle">
@@ -57,3 +59,5 @@ function toggleAuthorList(whichLayer,toggleThis)
 
   {%- endif -%}
 {% endif -%}
+
+{%- endmacro -%}
