@@ -178,7 +178,7 @@
     <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}"/>
     <meta property="og:site_name" content="arXiv.org"/>
     <meta property="og:title" content="{{ abs_meta.title|tex_to_utf }}"/>
-    <meta property="og:url" content="https://arxiv.org/{{ requested_id }}"/>
+    <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
     <meta property="og:description" content="{{ abs_meta.abstract|trim|tex_to_utf }}"/>
 {%- endmacro -%}
 
