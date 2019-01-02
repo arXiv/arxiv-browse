@@ -6,7 +6,7 @@ time period.
 The primary entrypoint to this module is :func:`.get_list_page`, which
 handles GET and POST requests to the list endpoint.
 
-Mainly this should handle requests like:
+This should handle requests like:
 /list/$category/YYMM
 /list/$category/YYMM
 /list/category/recent
@@ -15,34 +15,28 @@ Mainly this should handle requests like:
 /list/archive/YY
 /list/$category/YY
 
-Odd:
-?400
-cs/14?skip=%25CRAZYSTUFF
+Examples of odd requests to throw out:
+/list/?400
+/list/cs/14?skip=%25CRAZYSTUFF
+/list/1801.00023
 
-1. Figure out what category and yymm is being requested
-It's either a POST or GET with params about what to get.
-OR it's all in the path.
+1. Figure out what category and time_period is being requested. It's
+either a POST or GET with params about what to get OR it's all in the
+path.
 
 Things to figure out:
 A: what subject category is being requested
 B: time period aka listing_type: 'pastweek' 'new' 'current' 'pastyear'
 C: show_abstracts only if listing_type='new'
 
-2. Find the listing for that category and yymm
+2. Query the listing service for that category and time_period
 
 3. Check for not modified.
 
 4. Disply the page
-Title,
-RSS header,
-breadcrumbs
-figure out which updates to show.
-display them,
-show pagination
-
 
 Differences from legacy arxiv:
-Doesn't server the /view path.
+Doesn't handle the /view path.
 
 """
 import calendar
@@ -197,11 +191,6 @@ def get_listing(
     # TODO if it is a HEAD, and nothing has changed, send not modified
     # TODO write cache expires headers
 
-    # Fix up listings if too big, this doesn't work great but will prevent
-    # a huge page from being generated if the listing service screws up.
-    # if len(listings) > shown:
-    #     listings = listings[:shown]
-
     # Types of pages:
     # new and current and YYMM -> all listings in one list
     # recent -> all in one list, but anchors to specific days
@@ -212,8 +201,6 @@ def get_listing(
                              + ' type of item is not dict, it is ' + str(type(item)))
         else:
             item['article'] = metadata.get_abs(item['id'])
-
-#    articles = [metadata.get_abs(item['id']) for item in listings]
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
