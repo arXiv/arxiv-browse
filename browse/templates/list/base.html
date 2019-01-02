@@ -25,9 +25,9 @@
   {% for item in listings %}
     {% set article = item['article'] %}      
     {% set ids = article.arxiv_identifier.ids %}
-    
+    {% set listing_index = loop.index + skipn %}
     <dt>
-      <a name='item{{loop.index}}'>[{{loop.index}}]</a>
+      <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
         arXiv:{{ article.arxiv_identifier.ids }}
       </a>

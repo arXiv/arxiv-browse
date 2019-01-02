@@ -49,6 +49,7 @@ class FakeListingFilesService(ListingService):
         items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
                   for id in listings],
 
+        # These dates are faked
         daysize = 7
         pd1 = (datetime.date(2007, 4, 2), 0)
         pd2 = (datetime.date(2007, 4, 3), daysize-1)
@@ -82,7 +83,17 @@ class FakeListingFilesService(ListingService):
         if 'show' not in vars():
             show = 25
 
-        listings = [
+        pd = datetime.date(2007, 4, 2)
+
+        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
+                  for id in k_listings[skip:skip+show]],
+
+        return {'listings': items2[0],
+                'pubdates': [(pd, len(k_listings))],
+                'count': len(k_listings)
+                }
+
+k_listings = [
             '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
             '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
             '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
@@ -226,14 +237,3 @@ class FakeListingFilesService(ListingService):
             '0704.0595', '0704.0009', '0704.0743', '0704.0102', '0704.0835', '0704.0320', '0704.0162',
             '0704.0428', '0704.0146', '0704.0876', '0704.0325', '0704.0542', '0704.0376', '0704.0297',
             '0704.0397', '0704.0968', '0704.0415', '0704.0793', '0704.0287', '0704.0767', '0704.0522']
-        pd = datetime.date(2007, 4, 2)
-
-
-        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
-                  for id in listings],
-
-        
-        return {'listings': items2[0],
-                'pubdates': [(pd, len(listings))],
-                'count': len(listings)
-                }

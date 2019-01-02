@@ -1,4 +1,5 @@
 import unittest
+import re
 from hamcrest import *
 
 from bs4 import BeautifulSoup
@@ -21,6 +22,7 @@ class ListPageTest(unittest.TestCase):
         # service in the app. or maybe not?
         app.config['listing_service'] = FakeListingFilesService()
         # NB all /list requests return the same data with FakeListingFilesService
+        # that is the month and category do not affect the returned list.
         
         self.app = app.test_client()
 
@@ -168,6 +170,13 @@ class ListPageTest(unittest.TestCase):
         assert_that( tgs[5].name, equal_to('a') )
         assert_that( tgs[5].get_text(), equal_to('1001-1001') )
 
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , equal_to('item1'))
+        assert_that( first_index_atag.string , equal_to('[1]'))
+
+        
     def test_paging_second(self):
         rv = self.app.get('/list/hep-ph/0901?skip=25&show=25')
         self.assertEqual(rv.status_code, 200)
@@ -200,7 +209,13 @@ class ListPageTest(unittest.TestCase):
         assert_that( tgs[5].get_text(), equal_to('...') )
 
         assert_that( tgs[6].name, equal_to('a') )
-        assert_that( tgs[6].get_text(), equal_to('1001-1001') )    
+        assert_that( tgs[6].get_text(), equal_to('1001-1001') )
+
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , is_not('item1'), 'first item index should not be 1' )
+        assert_that( first_index_atag.string , equal_to('[26]'))
 
 
     def test_paging_middle(self):
@@ -249,6 +264,13 @@ class ListPageTest(unittest.TestCase):
         assert_that( tgs[10].name, equal_to('a') )
         assert_that( tgs[10].get_text(), equal_to('1001-1001') )
 
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , is_not('item1'), 'first item index should not be 1' )
+        assert_that( first_index_atag.string , equal_to('[176]'))
+
+
     
 
     def test_paging_last(self):
@@ -280,7 +302,14 @@ class ListPageTest(unittest.TestCase):
         assert_that( tgs[4].get_text(), equal_to('976-1000') )
 
         assert_that( tgs[5].name, equal_to('span') )
-        assert_that( tgs[5].get_text(), equal_to('1001-1001') )    
+        assert_that( tgs[5].get_text(), equal_to('1001-1001') )
+
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , is_not('item1'), 'first item index should not be 1' )
+        assert_that( first_index_atag.string , equal_to('[1001]'))
+
 
 
     def test_paging_penultimate(self):
@@ -316,6 +345,13 @@ class ListPageTest(unittest.TestCase):
 
         assert_that( tgs[6].name, equal_to('a') )
         assert_that( tgs[6].get_text(), equal_to('1001-1001') )
+
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , is_not('item1'), 'first item index should not be 1' )
+        assert_that( first_index_atag.string , equal_to('[976]'))
+
 
 
     def test_paging_925(self):
@@ -358,6 +394,13 @@ class ListPageTest(unittest.TestCase):
         assert_that( tgs[8].name, equal_to('a') )
         assert_that( tgs[8].get_text(), equal_to('1001-1001') )
 
+        # find the first article index tag
+        first_index_atag = html.find(id='articles').find_all('dt')[0].find('a',string=re.compile(r'\[\d*\]'))
+        assert_that( first_index_atag, not_none())
+        assert_that( first_index_atag['name'] , is_not('item1'), 'first item index should not be 1' )
+        assert_that( first_index_atag.string , equal_to('[926]'))
+
+
     def test_odd_requests(self):
         rv = self.app.get('/list/hep-ph/0901?skip=925&show=1000000')
         self.assertEqual(rv.status_code, 200)
@@ -388,6 +431,3 @@ class ListPageTest(unittest.TestCase):
 
         rv = self.app.get('/list/math/2001999999')
         self.assertNotEqual(rv.status_code, 200)
-        
-        
-
