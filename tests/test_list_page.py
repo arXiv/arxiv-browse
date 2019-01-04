@@ -57,7 +57,6 @@ class ListPageTest(unittest.TestCase):
         rv = self.app.get('/list/math/9201')
         self.assertEqual(rv.status_code, 200)
 
-        
         rv = self.app.get('/list/math/0101')
         self.assertEqual(rv.status_code, 200)
 
@@ -109,16 +108,12 @@ class ListPageTest(unittest.TestCase):
         rv = self.app.get('/list/math/200101')
         self.assertEqual(rv.status_code, 200)
 
-        
-        
-
-
 
     def test_listing_authors(self):
         rv = self.app.get('/list/hep-ph/0901')
         self.assertEqual(rv.status_code, 200)
         au = b'Eqab M. Rabei'
-        assert au in rv.data, 'Simple check for author {au} in response.'
+        assert au in rv.data, f'Simple check for author {au} in response.'
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
