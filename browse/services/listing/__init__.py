@@ -44,7 +44,7 @@ ListingResponse = TypedDict('ListingResponse',
                             {'listings': List[ListingItem],
                              'pubdates': List[Tuple[date, int]],
                              'count': int})
-'''listings is the list of items for that day.
+'''listings is the list of items a time period.
 
 pubdates are the dates of publications. The int is the number of items
 published on the associated date. 
@@ -52,10 +52,25 @@ published on the associated date.
 count is the count of all the items in the listing for the query.
 
 Why not just do listing: List[Tuple[date,List[ListingItem]}} ?
-Because pastweek needs to support conts for the days and needs to be
+Because pastweek needs to support counts for the days and needs to be
 able to support skip/show. 
 '''
 
+NewResponse = TypedDict('NewResponse',
+                        {'listings': List[ListingItem],
+                         'new_count':int,
+                         'cross_count':int,
+                         'rep_count':int,
+                         'announced': date})
+'''
+listings is the list of items for the most recent publish cycle.
+
+announced is the date of the most recent publish cycle.
+
+new_count is the count of new the items in the listing for the query.
+rep_count is the count of rep the items in the listing for the query.
+cross_count is the count of cross the items in the listing for the query.
+'''
 
 class ListingService:
     """Class for arXiv document listings."""
@@ -92,7 +107,7 @@ class ListingService:
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> ListingResponse:
+                          if_modified_since: Optional[str] = None) -> NewResponse:
         """ Gets listings for the most recent announcement/publish."""
         raise NotImplementedError
 

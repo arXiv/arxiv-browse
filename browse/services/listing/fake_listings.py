@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Tuple
 
-from browse.services.listing import ListingService, ListingResponse
+from browse.services.listing import ListingService, ListingResponse, NewResponse
 import datetime
 
 
@@ -21,7 +21,7 @@ class FakeListingFilesService(ListingService):
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> ListingResponse:
+                          if_modified_since: Optional[str] = None) -> NewResponse:
         '''example of list_new_articles'''
         listings = [{'id': '0704.0526', 'listingType': 'new', 'primary': 'cs.DB'},
                     {'id': '0704.0988', 'listingType': 'new', 'primary': 'cs.DB'},
@@ -30,8 +30,10 @@ class FakeListingFilesService(ListingService):
                     {'id': '0704.0616', 'listingType': 'rep', 'primary': 'cs.DL'},
                     ]
         return {'listings': listings,
-                'pubdates': [(datetime.date(2007, 4, 1), len(listings))],
-                'count': len(listings)}
+                'announced': datetime.date(2007, 4, 1),
+                'new_count': 2,
+                'cross_count':2,
+                'rep_count':1}
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,

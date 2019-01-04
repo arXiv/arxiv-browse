@@ -50,7 +50,7 @@ from arxiv import status, taxonomy
 
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
-from browse.services.listing import ListingService
+from browse.services.listing import ListingService, NewResponse
 from browse.services.document import metadata
 from browse.domain.metadata import DocMetadata
 from browse.controllers.abs_page import truncate_author_list_size
@@ -101,16 +101,6 @@ def get_listing(
 
     # TODO make sure to handle POST too
 
-    if not skip or not skip.isdigit():
-        skipn = 0
-    else:
-        skipn = int(skip)
-
-    if not show or not show.isdigit():
-        shown = default_show
-    else:
-        shown = min(int(show), max_show)
-
     if (not subject_or_category or
         not (time_period and
              (time_period.isdigit() or
@@ -134,15 +124,28 @@ def get_listing(
     if not listing_service:
         raise ServiceUnavailable
 
+    if not skip or not skip.isdigit():
+        skipn = 0
+    else:
+        skipn = int(skip)
+
+    if not show or not show.isdigit():
+        if time_period == 'new':
+            shown = max_show
+        else:
+            shown = default_show
+    else:
+        shown = min(int(show), max_show)
+
     response_data: Dict[str, Any] = {}
 
     if time_period == 'new':
         list_type = 'new'
-        new_resp = listing_service.list_new_articles(
-            subject_or_category, skipn, shown)
+        new_resp = listing_service.list_new_articles(subject_or_category, skipn, shown)
         listings = new_resp['listings']
-        count = new_resp['count']
-        lst_resp = new_resp
+        count = new_resp['new_count'] + new_resp['rep_count'] + new_resp['cross_count']
+        response_data['announced'] = new_resp['announced']
+        response_data.update(index_for_types(new_resp))
 
     elif time_period in ['pastweek', 'recent']:
         list_type = 'recent'
@@ -150,7 +153,7 @@ def get_listing(
             subject_or_category, skipn, shown)
         listings = rec_resp['listings']
         count = rec_resp['count']
-        lst_resp = rec_resp
+        response_data['pubdates'] = rec_resp['pubdates']
 
         # TODO make day table of contents anchors
 
@@ -160,7 +163,7 @@ def get_listing(
             subject_or_category, 1999, 12, skipn, shown)
         listings = cur_resp['listings']
         count = cur_resp['count']
-        lst_resp = cur_resp
+        response_data['pubmonth'] = cur_resp['pubdates'][0][0]
 
     else:  # YYMM or YYYYMM?
         yandm = year_month(time_period)
@@ -179,32 +182,28 @@ def get_listing(
                 subject_or_category, list_year, list_month, skipn, shown)
             listings = month_reps['listings']
             count = month_reps['count']
-            lst_resp = month_reps
+            response_data['pubmonth'] = month_reps['pubdates'][0][0]
         else:
             list_type = 'year'
             year_resp = listing_service.list_articles_by_year(
                 subject_or_category, list_year, skipn, shown)
             listings = year_resp['listings']
             count = year_resp['count']
-            lst_resp = year_resp
+            response_data['pubmonth'] = year_resp['pubdates'][0][0]
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
     # TODO write cache expires headers
 
+    items = [{'article':metadata.get_abs(item['id'])} for item in listings]
+
     # Types of pages:
-    # new and current and YYMM -> all listings in one list
-    # recent -> all in one list, but anchors to specific days
+    # current and YYMM -> all listings in one list, no anchor index
+    # new -> all in one list, index of anchors to start of new, cross and replacements
+    # recent -> all in one list, index of anchors to specific days
 
-    for item in listings:
-        if not type(item) is dict:
-            app.logger.error('problem during /list for ' + time_period
-                             + ' type of item is not dict, it is ' + str(type(item)))
-        else:
-            item['article'] = metadata.get_abs(item['id'])
-
-    response_data['listings'] = listings
-    response_data['author_links'] = authors_for_articles(listings)
-    response_data['downloads'] = dl_for_articles(listings)
+    response_data['listings'] = items
+    response_data['author_links'] = authors_for_articles(items)
+    response_data['downloads'] = dl_for_articles(items)
 
     response_data.update({
         'context': subject_or_category,
@@ -222,6 +221,8 @@ def get_listing(
         'template' : type_to_template[list_type]
     })
 
+    response_data.update(more_fewer(shown, count, shown >= count))
+    
     def author_query(article: DocMetadata, query: str)->str:
         return str(url_for('search_archive',
                            searchtype='author',
@@ -229,18 +230,6 @@ def get_listing(
                            query=query))
     response_data['url_for_author_search'] = author_query
 
-    response_data.update(more_fewer(shown, count, shown >= count))
-
-    if list_type == 'new':
-        response_data['announced'] = lst_resp['pubdates'][0][0]
-        response_data.update(index_for_types(listings))
-    if list_type == 'month' or list_type == 'current':
-        response_data['pubmonth'] = lst_resp['pubdates'][0][0]
-    if list_type == 'year':
-        response_data['pubmonth'] = lst_resp['pubdates'][0][0]
-    if list_type == 'recent':
-        response_data['pubdates'] = lst_resp['pubdates']
-        
     return response_data, status.HTTP_200_OK, {}
 
 
@@ -313,19 +302,17 @@ def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
                                   truncate_author_list_size)
 
 
-def index_for_types(items: List[Any]) ->Dict[str, Any]:
+def index_for_types(resp: NewResponse) ->Dict[str, Any]:
+    """Makes index for types of new papers in a NewResponse."""
     ift = []
-    if items and len(items):
+
+    if resp['new_count'] > 0:
         ift.append(('New submissions', 0))
 
-    first_cross = next((ix for (ix, item) in enumerate(
-        items) if item['listingType'] == 'cross'), None)
-    if first_cross:
-        ift.append(('Cross-lists', first_cross))
+    if resp['cross_count'] > 0:
+        ift.append(('Cross-lists', resp['new_count']-1))
 
-    first_rep = next((ix for (ix, item) in enumerate(
-        items) if item['listingType'] == 'rep'), None)
-    if first_rep:
-        ift.append(('Replacements', first_rep))
+    if resp['rep_count'] > 0:
+        ift.append(('Replacements', resp['new_count']+resp['cross_count']-1 ))
 
     return {'index_for_types': ift}
