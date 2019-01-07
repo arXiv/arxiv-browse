@@ -9,7 +9,7 @@
   {% if index_for_types %}
     <ul>
   {% for ityp in index_for_types %}
-    <li><a href="#item{{ityp[1]}}">{{ityp[0]}}</a></li>
+    <li><a href="{{ityp[1]}}#item{{ityp[2]}}">{{ityp[0]}}</a></li>
   {% endfor %}
   </ul>
 {% endif %}

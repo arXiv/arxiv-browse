@@ -44,8 +44,6 @@ def create_web_app() -> Flask:
         
     app.jinja_env.globals['canonical_url'] = canonical_url
 
-    app.jinja_env.add_extension('browse.util.jinja-debug.DebugExtension')
-    
     def ct_single_doi_filter(doi: str)->str:
         return single_doi_url(ct_url_for, doi)
 
