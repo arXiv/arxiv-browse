@@ -145,7 +145,8 @@ def get_listing(
         listings = new_resp['listings']
         count = new_resp['new_count'] + new_resp['rep_count'] + new_resp['cross_count']
         response_data['announced'] = new_resp['announced']
-        response_data.update(index_for_types(new_resp))
+        response_data.update(
+            index_for_types(new_resp,subject_or_category,time_period,skipn,shown))
 
     elif time_period in ['pastweek', 'recent']:
         list_type = 'recent'
@@ -194,16 +195,17 @@ def get_listing(
     # TODO if it is a HEAD, and nothing has changed, send not modified
     # TODO write cache expires headers
 
-    items = [{'article':metadata.get_abs(item['id'])} for item in listings]
-
     # Types of pages:
     # current and YYMM -> all listings in one list, no anchor index
     # new -> all in one list, index of anchors to start of new, cross and replacements
     # recent -> all in one list, index of anchors to specific days
 
-    response_data['listings'] = items
-    response_data['author_links'] = authors_for_articles(items)
-    response_data['downloads'] = dl_for_articles(items)
+    for item in listings:
+        item['article'] = metadata.get_abs(item['id']) #type: ignore 
+
+    response_data['listings'] = listings
+    response_data['author_links'] = authors_for_articles(listings)
+    response_data['downloads'] = dl_for_articles(listings)
 
     response_data.update({
         'context': subject_or_category,
@@ -302,17 +304,48 @@ def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
                                   truncate_author_list_size)
 
 
-def index_for_types(resp: NewResponse) ->Dict[str, Any]:
+def index_for_types(resp: NewResponse,
+                    context: str, subcontext: str,
+                    skipn: int, shown:int) ->Dict[str, Any]:
     """Makes index for types of new papers in a NewResponse."""
     ift = []
+    new_count = resp['new_count']
+    cross_count = resp['cross_count']
+    rep_count = resp['rep_count']
+    
+    if new_count > 0:
+        if skipn != 0:
+            ift.append(('New submissions',
+                        url_for('.list_articles',
+                                context=context, subcontext=subcontext,
+                                skip=0, show=shown),
+                        0))
+        else:
+            ift.append(('New submissions','',0))
+            
+    if cross_count > 0:
+        cross_index = new_count + 1
+        c_skip = math.floor(new_count / shown ) * shown
+        
+        if new_count > shown:
+            ift.append(('Cross-lists',
+                        url_for('.list_articles',
+                                context=context, subcontext=subcontext,
+                                skip=c_skip, show=shown),
+                        cross_index))
+        else:
+            ift.append(('Cross-lists', '', cross_index))
 
-    if resp['new_count'] > 0:
-        ift.append(('New submissions', 0))
-
-    if resp['cross_count'] > 0:
-        ift.append(('Cross-lists', resp['new_count']-1))
-
-    if resp['rep_count'] > 0:
-        ift.append(('Replacements', resp['new_count']+resp['cross_count']-1 ))
+    if rep_count > 0:
+        rep_index = new_count+cross_count + 1
+        rep_skip = math.floor( (new_count + cross_count)/shown) * shown
+        if new_count + cross_count > shown:
+            ift.append(('Replacements', 
+                        url_for('.list_articles',
+                                context=context, subcontext=subcontext,
+                                skip = rep_skip, show=shown),
+                        rep_index))
+        else:
+            ift.append(('Replacements', '', rep_index))
 
     return {'index_for_types': ift}

@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Tuple
 
-from browse.services.listing import ListingService, ListingResponse, NewResponse
+from browse.services.listing import ListingService, ListingResponse, NewResponse, ListingItem
 import datetime
 
 
@@ -23,17 +23,46 @@ class FakeListingFilesService(ListingService):
                           show: int,
                           if_modified_since: Optional[str] = None) -> NewResponse:
         '''example of list_new_articles'''
-        listings = [{'id': '0704.0526', 'listingType': 'new', 'primary': 'cs.DB'},
-                    {'id': '0704.0988', 'listingType': 'new', 'primary': 'cs.DB'},
-                    {'id': '0704.0182', 'listingType': 'cross', 'primary': 'cs.DL'},
-                    {'id': '0704.0310', 'listingType': 'cross', 'primary': 'cs.GT'},
-                    {'id': '0704.0616', 'listingType': 'rep', 'primary': 'cs.DL'},
-                    ]
-        return {'listings': listings,
+        listings = [
+            '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
+            '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
+            '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
+            '0704.0735', '0704.0753', '0704.0324', '0704.0600', '0704.0737', '0704.0387', '0704.0659',
+            '0704.0432', '0704.0408', '0704.0895', '0704.0088', '0704.0719', '0704.0124', '0704.0508']
+
+        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'} for id in listings]
+        new_count = len(items2)
+        
+        items3 =  [
+            {'id':'0704.0145', 'listingType':'cross', 'primary':'cs.DL'},
+            {'id':'0704.0075', 'listingType':'cross', 'primary':'cs.GT'},
+            {'id':'0704.0333', 'listingType':'cross', 'primary':'cs.NA'},
+            {'id':'0704.0445', 'listingType':'cross', 'primary':'cs.NE'},
+            {'id':'0704.0226', 'listingType':'cross', 'primary':'cs.NA'},
+            {'id':'0704.0266', 'listingType':'cross', 'primary':'cs.GT'},
+            {'id':'0704.0368', 'listingType':'cross', 'primary':'cs.CV'},
+            {'id':'0704.0716', 'listingType':'cross', 'primary':'cs.DL'},
+            {'id':'0704.0373', 'listingType':'cross', 'primary':'cs.DL'},
+            {'id':'0704.0378', 'listingType':'cross', 'primary':'cs.CV'},
+            {'id':'0704.0536', 'listingType':'cross', 'primary':'cs.DL'},
+            {'id':'0704.0239', 'listingType':'cross', 'primary':'cs.DL'},
+            {'id':'0704.0209', 'listingType':'cross', 'primary':'cs.GT'},
+            {'id':'0704.0916', 'listingType':'cross', 'primary':'cs.DL'},            
+        ]
+
+        items4 = [
+            {'id':'0704.0091', 'listingType':'rep'},{'id':'0704.0054', 'listingType':'rep'},
+            {'id':'0704.0225', 'listingType':'rep'},{'id':'0704.0186', 'listingType':'rep'},
+            {'id':'0704.0847', 'listingType':'rep'},{'id':'0704.0129', 'listingType':'rep'},
+            {'id':'0704.0257', 'listingType':'rep'},{'id':'0704.0481', 'listingType':'rep'}]
+
+        lstgs:List[ListingItem] = items2 + items3 + items4 #type: ignore
+        
+        return {'listings': lstgs[skip:skip+show],
                 'announced': datetime.date(2007, 4, 1),
-                'new_count': 2,
-                'cross_count':2,
-                'rep_count':1}
+                'new_count': len(items2),
+                'cross_count': len(items3),
+                'rep_count': len(items4)}
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
@@ -48,8 +77,7 @@ class FakeListingFilesService(ListingService):
             '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
             '0704.0735', '0704.0753', '0704.0324', '0704.0600', '0704.0737', '0704.0387', '0704.0659',
             '0704.0432', '0704.0408', '0704.0895', '0704.0088', '0704.0719', '0704.0124', '0704.0508']
-        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
-                  for id in listings],
+        items2:List[ListingItem] = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'} for id in listings]
 
         # These dates are faked
         daysize = 7
@@ -59,7 +87,7 @@ class FakeListingFilesService(ListingService):
         pd4 = (datetime.date(2007, 4, 5), daysize*3-1)
         pd5 = (datetime.date(2007, 4, 6), daysize*4-1)
 
-        return {'listings': items2[0],
+        return {'listings': items2,
                 'pubdates': [pd1, pd2, pd3, pd4, pd5],
                 'count': len(listings)}
 
@@ -87,10 +115,10 @@ class FakeListingFilesService(ListingService):
 
         pd = datetime.date(2007, 4, 2)
 
-        items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
-                  for id in k_listings[skip:skip+show]],
+        items2:List[ListingItem] = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
+                  for id in k_listings[skip:skip+show]]
 
-        return {'listings': items2[0],
+        return {'listings': items2,
                 'pubdates': [(pd, len(k_listings))],
                 'count': len(k_listings)
                 }
