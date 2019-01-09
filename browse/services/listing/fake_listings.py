@@ -60,6 +60,7 @@ class FakeListingFilesService(ListingService):
         
         return {'listings': lstgs[skip:skip+show],
                 'announced': datetime.date(2007, 4, 1),
+                'submitted': (datetime.date(2007, 3, 30),datetime.date(2007, 4, 1)),
                 'new_count': len(items2),
                 'cross_count': len(items3),
                 'rep_count': len(items4)}

@@ -145,6 +145,7 @@ def get_listing(
         listings = new_resp['listings']
         count = new_resp['new_count'] + new_resp['rep_count'] + new_resp['cross_count']
         response_data['announced'] = new_resp['announced']
+        response_data['submitted'] = new_resp['submitted']
         response_data.update(
             index_for_types(new_resp,subject_or_category,time_period,skipn,shown))
 

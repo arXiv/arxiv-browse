@@ -17,7 +17,10 @@
 
 {% macro listdate() %}
   {% if announced %}
-    <div class="list-dateline">Submissions announced {{ announced.strftime('%A, %-d %B %Y') }}
+    <div class="list-dateline">Submissions received from
+      {{ submitted[0].strftime('%A, %-d %B %Y') }} to {{ submitted[1].strftime('%A, %-d %B %Y') }},
+      announced {{ announced.strftime('%A, %-d %B %Y') }}
     </div>
   {% endif %}
 {% endmacro %}
+

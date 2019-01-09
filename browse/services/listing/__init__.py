@@ -61,7 +61,8 @@ NewResponse = TypedDict('NewResponse',
                          'new_count':int,
                          'cross_count':int,
                          'rep_count':int,
-                         'announced': date})
+                         'announced': date,
+                         'submitted': Tuple[date,date]})
 '''
 listings is the list of items for the most recent publish cycle.
 
@@ -70,6 +71,8 @@ announced is the date of the most recent publish cycle.
 new_count is the count of new the items in the listing for the query.
 rep_count is the count of rep the items in the listing for the query.
 cross_count is the count of cross the items in the listing for the query.
+
+submitted is the start date of when these items were submitted and the end date.
 '''
 
 class ListingService:
