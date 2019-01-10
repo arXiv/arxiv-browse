@@ -557,16 +557,14 @@ class AbsMetaSession:
         if 'categories' in fields and fields['categories']:
             category_list = fields['categories'].split()
             if category_list[0] in taxonomy.CATEGORIES:
-                primary_category = Category(id=category_list[0])
+                primary_category = Category(category_list[0])
                 primary_archive = \
                     Archive(
-                        id=taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+                        taxonomy.CATEGORIES[primary_category.id]['in_archive'])
             elif arxiv_identifier.is_old_id:
-                primary_archive = \
-                    Archive(id=arxiv_identifier.archive)  # type: ignore
+                primary_archive = Archive(arxiv_identifier.archive)
         elif arxiv_identifier.is_old_id:
-            primary_archive = \
-                Archive(id=arxiv_identifier.archive)  # type: ignore
+            primary_archive = Archive(arxiv_identifier.archive) 
         else:
             raise AbsException('Cannot infer archive from identifier.')
 
@@ -588,9 +586,9 @@ class AbsMetaSession:
             primary_category=primary_category,
             primary_archive=primary_archive,
             primary_group=Group(
-                id=taxonomy.ARCHIVES[primary_archive.id]['in_group']),
+                taxonomy.ARCHIVES[primary_archive.id]['in_group']),
             secondary_categories=[
-                Category(id=x) for x in category_list[1:]
+                Category(x) for x in category_list[1:]
                 if (category_list and len(category_list) > 1)
             ],
             journal_ref=None if 'journal_ref' not in fields
