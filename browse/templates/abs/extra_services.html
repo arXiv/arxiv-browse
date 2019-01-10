@@ -194,7 +194,7 @@
           (<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)
         </li>
         {% endif %}
-        <li><a href="http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:{{ abs_meta.arxiv_id }}">NASA ADS</a></li>
+        <li><a href="https://ui.adsabs.harvard.edu/#abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
       </ul>
     </div>
 
