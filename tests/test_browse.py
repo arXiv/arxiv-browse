@@ -1,8 +1,9 @@
 import unittest
 
 from bs4 import BeautifulSoup
-
 from tests.test_abs_parser import ABS_FILES
+
+from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
@@ -18,6 +19,19 @@ class BrowseTest(unittest.TestCase):
         app.testing = True
         app.config['APPLICATION_ROOT'] = ''
         self.app = app.test_client()
+
+    def test_home(self):
+        rv = self.app.get('/')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        for group_key, group_value in taxonomy.definitions.GROUPS.items():
+            if group_key == 'grp_test':
+                continue
+            auths_elmt = html.find('h2', text=group_value['name'])
+            self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
+        self.assertFalse(html.find('h2', text='Test'),
+                         "'Test' group should not be shown on homepage")
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
@@ -149,7 +163,8 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link without version affix exists')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v'})
-        self.assertIsNone(pdf_dl_elmt, 'pdf download link with version affix does not exist')
+        self.assertIsNone(
+            pdf_dl_elmt, 'pdf download link with version affix does not exist')
 
         rv = self.app.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
@@ -201,7 +216,6 @@ class BrowseTest(unittest.TestCase):
             'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
             "FTP URLs should be turned into links ARXIVNG-1242")
 
-
     def test_160408245(self):
         """Test linking in 1604.08245."""
         id = '1604.08245'
@@ -235,62 +249,65 @@ class BrowseTest(unittest.TestCase):
 
     def test_authors_and_arxivId_in_title(self):
         id = '1501.99999'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        title_elmt = html.find('h1','title')
-        self.assertTrue(title_elmt,'Should title element')
+        title_elmt = html.find('h1', 'title')
+        self.assertTrue(title_elmt, 'Should title element')
 
         ida = title_elmt.find('a')
         self.assertTrue(ida, 'Should be <a> tag in title')
 
-        self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
+        self.assertIsNotNone(ida['href'], '<a> tag in title should have href')
         self.assertEqual(ida['href'], 'https://arxiv.org/abs/1501.99998')
+
         self.assertEqual(ida.text, '1501.99998')
 
-        au_a_tags = html.find('div','authors').find_all('a')
-        self.assertGreater(len(au_a_tags), 1, 'Should be some a tags for authors')
+        au_a_tags = html.find('div', 'authors').find_all('a')
+        self.assertGreater(len(au_a_tags), 1,
+                           'Should be some a tags for authors')
         self.assertNotIn('query=The', au_a_tags[0]['href'],
                          'Collaboration author query should not have "The"')
         self.assertEqual(au_a_tags[0].text, 'SuperSuper Collaboration')
 
-
     def test_long_author_colab(self):
         id = '1501.05201'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        auths_elmt = html.find('div','authors')
-        self.assertTrue(auths_elmt,'Should authors div element')
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
 
         a_tags = auths_elmt.find_all('a')
-        self.assertEqual(len(a_tags), 2, 'Should be two <a> tags in authors div')
+        self.assertEqual(
+            len(a_tags), 2, 'Should be two <a> tags in authors div')
 
-        colab=a_tags[1]
+        colab = a_tags[1]
 
-        self.assertIsNotNone(colab['href'],'<a> tag in title should have href')
-        self.assertEqual(colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
-        self.assertEqual(colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
+        self.assertIsNotNone(
+            colab['href'], '<a> tag in title should have href')
+        self.assertEqual(
+            colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
+        self.assertEqual(
+            colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
 
-
-    @unittest.skip("In current implementation,  conflicts with comma test below.")
+    @unittest.skip("In current implementation, conflicts with comma test below.")
     def test_space_in_author_list(self):
         id = '1210.8438'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        auths_elmt = html.find('div','authors')
-        self.assertTrue(auths_elmt,'Should authors div element')
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
 
         self.assertIn('Zhe (Rita) Liang,', auths_elmt.text,
                       'Should be a space after (Rita)')
 
-
     def test_comma_in_author_list(self):
         id = '0704.0155'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         auths_elmt = html.find('div', 'authors')

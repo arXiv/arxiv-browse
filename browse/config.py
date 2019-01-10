@@ -214,6 +214,12 @@ SQLALCHEMY_RECORD_QUERIES = False
 # SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
 # SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
 
+# The classic home page uses this file to get the total paper count
+# The file contains one line, with key "total_papers" and an integer, e.g.
+# total_papers 1456755
+BROWSE_DAILY_STATS_PATH = os.environ.get(
+    'BROWSE_DAILY_STATS_PATH', 'tests/data/daily_stats')
+
 # Disable DB queries even if other SQLAlchemy config are defined
 # This, for example, could be used in conjunction with the `no-write` runlevel
 # in the legacy infrastructure, which is a case where we know the DB is

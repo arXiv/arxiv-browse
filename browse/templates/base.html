@@ -7,7 +7,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20181218" />
-  {# disable for now #}
+  {#- disable for now -#}
   {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
   <script type="text/javascript">
@@ -52,7 +52,7 @@
       <a href="https://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" width="200" border="0" /></a>
     </div>
     <div id="support-ack">
-      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+      <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
     {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
     <h1>arXiv.org</h1>
-    <div class="login"><a href="{{url_for('login')}}">Login</a></div>
+    <div class="login"><a href="{{ url_for('login') }}">Login</a></div>
     <div id="search">
       <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
 
@@ -80,7 +80,7 @@
           </div>
           <input class="btn-search-arxiv" value="" type="submit">
             <div class="links">(<a href="{{url_for('help')}}">Help</a> |
-              <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
+              <a href="{{ url_for('search_advanced') }}">Advanced search</a>)</div>
         </div>
       </form>
     </div>
@@ -89,14 +89,21 @@
 
   <div id="content">
     {% block content %}
+    {#- Templates that inherit from this one should include one of the trailers here. -#}
     {% endblock content %}
   </div>
   <div id="footer">
     <div class="footer-text">
-      <p>Link back to: <a href="{{url_for('home')}}">arXiv</a>, <a href="{{url_for('browse.form')}}">form interface</a>, <a href="{{url_for('contact')}}">contact</a>.&nbsp;&nbsp;<span class="help" style="display: inline-block; float: right"><a href="https://confluence.cornell.edu/x/MjmLFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span></p>
+      {%- block footer_text -%}
+      {%- endblock footer_text -%}
       <p class="a11y-text" style="margin: 1em 0; padding-top: 1em; border-top: 1px solid #ccc">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format, contact <a href="mailto:web-accessibility@cornell.edu">web-accessibility@cornell.edu</a> for assistance.</p>
     </div>
-    <div class="social"><a href="{{url_for('twitter')}}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a></div>
+    <div class="social">
+      <a href="{{ url_for('twitter') }}"><img src="//static.arxiv.org/icons/twitter_logo_blue.png" alt="Twitter" title="Follow arXiv on Twitter"/></a>
+      <address>
+        <p style="margin-top: 2em"><a href="/help/contact">Contact</a></p>
+      </address>
+    </div>
   </div>
 </body>
 

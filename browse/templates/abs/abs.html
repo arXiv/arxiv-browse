@@ -18,9 +18,9 @@
 
 {% block header_class %}{% endblock %}
 {% block header %}
-  <h1><a href="/">arXiv.org</a> &gt; <a href="{{url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
+  <h1><a href="/">arXiv.org</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
   <div id="search">
-    <form id="search-arxiv" method="get" action="{{url_for('search_box')}}">
+    <form id="search-arxiv" method="get" action="{{ url_for('search_box') }}">
 
       <div class="wrapper-search-arxiv">
         <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
@@ -45,7 +45,7 @@
           </select>
         </div>
         <input class="btn-search-arxiv" value="" type="submit">
-        <div class="links">(<a href="{{url_for('help')}}">Help</a> | <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
+        <div class="links">(<a href="{{ url_for('help') }}">Help</a> | <a href="{{ url_for('search_advanced') }}">Advanced search</a>)</div>
       </div>
     </form>
   </div>
@@ -59,7 +59,7 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-
+    
   {{ base_macros.abs(
     abs_meta.arxiv_identifier.id,
     abs_meta.title,
@@ -87,7 +87,7 @@
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
-    <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)</div>
+    <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)</div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
     {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
     {% if config['LABS_BIBEXPLORER_ENABLED'] %}
@@ -97,6 +97,9 @@
   <!--end leftcolumn-->
 </div>
 {% endblock content %}
+{%- block footer_text -%}
+{% include "short_trailer.html" %}
+{%- endblock footer_text -%}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}

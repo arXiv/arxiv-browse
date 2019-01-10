@@ -123,7 +123,8 @@ class TestBrowseDatabaseService(TestCase):
 
     def test_all_trackback_pings(self) -> None:
         """Test if all trackback pings are counted."""
-        doc_sql_file = path_of_for_test('data/db/sql/arXiv_trackback_pings.sql')
+        doc_sql_file = path_of_for_test(
+            'data/db/sql/arXiv_trackback_pings.sql')
 
         count_from_file = grep_f_count(
             doc_sql_file,
@@ -209,13 +210,21 @@ class TestBrowseDatabaseService(TestCase):
             TestBrowseDatabaseService.database_service.get_dblp_authors(
                 test_paper_id), [])
 
+    def test_get_document_count(self) -> None:
+        """Test document count function."""
+        self.assertGreater(
+            TestBrowseDatabaseService.database_service.get_document_count(),
+            0,
+            'There is at least one document in the DB.'
+        )
+
     @mock.patch('browse.services.database.models.db.session.query')
     def test_error_conditions(self, mock_query)->None:
         mock_query.side_effect = NoResultFound
         self.assertEqual(
             TestBrowseDatabaseService.database_service.get_institution('10.0.0.1'), None)
         self.assertEqual([],
-            TestBrowseDatabaseService.database_service.get_all_trackback_pings())
+                         TestBrowseDatabaseService.database_service.get_all_trackback_pings())
         self.assertListEqual(
             TestBrowseDatabaseService.database_service.get_trackback_pings('0704.0361'), [])
         self.assertEqual(
@@ -231,12 +240,18 @@ class TestBrowseDatabaseService(TestCase):
         mock_query.side_effect = SQLAlchemyError
         self.assertRaises(SQLAlchemyError,
                           TestBrowseDatabaseService.database_service.get_institution, '10.0.0.1')
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_all_trackback_pings)
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_trackback_pings, 'paperx')
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.count_all_trackback_pings)
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.has_sciencewise_ping, 'px')
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_listing_path, 'px')
-        self.assertRaises(SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_authors,'authx')
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_all_trackback_pings)
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_trackback_pings, 'paperx')
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.count_all_trackback_pings)
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.has_sciencewise_ping, 'px')
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_listing_path, 'px')
+        self.assertRaises(
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_authors, 'authx')
 
     @classmethod
     def tearDownClass(cls) -> None:

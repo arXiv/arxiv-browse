@@ -4,6 +4,7 @@ import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from typing import List, Optional, Any, Callable
+from sqlalchemy import not_
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -155,3 +156,11 @@ def get_dblp_authors(paper_id: str) -> List[str]:
         order_by(DBLPDocumentAuthor.position).all()
     authors = [a for (a,) in authors_t]
     return authors
+
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_document_count() -> Optional[int]:
+    """Get the number of documents."""
+    document_count: int = db.session.query(Document).\
+        filter(not_(Document.paper_id.like('test%'))).count()
+    return document_count
