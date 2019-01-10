@@ -37,7 +37,6 @@ C: show_abstracts only if listing_type='new'
 
 Differences from legacy arxiv:
 Doesn't handle the /view path.
-
 """
 import calendar
 from typing import Any, Dict, List, Optional, Tuple, cast
@@ -56,7 +55,6 @@ from browse.domain.metadata import DocMetadata
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 
-from flask import current_app as app
 
 show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
@@ -75,7 +73,8 @@ type_to_template = {
     'current': 'list/month.html',
     'month': 'list/month.html',
     'year': 'list/year.html'
-    }
+}
+
 
 def get_listing(
         subject_or_category: str,
@@ -97,14 +96,13 @@ def get_listing(
        Number of articles to skip for this subject and time_period.
     show
        Number of articles to show.
-"""
-
+    """
     # TODO make sure to handle POST too
 
     if (not subject_or_category or
-        not (time_period and
-             (time_period.isdigit() or
-              time_period in ['new', 'current', 'pastweek', 'recent']))):
+            not (time_period and
+                 (time_period.isdigit() or
+                  time_period in ['new', 'current', 'pastweek', 'recent']))):
         raise BadRequest
 
     if subject_or_category in taxonomy.CATEGORIES:
@@ -141,13 +139,16 @@ def get_listing(
 
     if time_period == 'new':
         list_type = 'new'
-        new_resp = listing_service.list_new_articles(subject_or_category, skipn, shown)
+        new_resp = listing_service.list_new_articles(
+            subject_or_category, skipn, shown)
         listings = new_resp['listings']
-        count = new_resp['new_count'] + new_resp['rep_count'] + new_resp['cross_count']
+        count = new_resp['new_count'] + \
+            new_resp['rep_count'] + new_resp['cross_count']
         response_data['announced'] = new_resp['announced']
         response_data['submitted'] = new_resp['submitted']
         response_data.update(
-            index_for_types(new_resp,subject_or_category,time_period,skipn,shown))
+            index_for_types(new_resp, subject_or_category, time_period, skipn, shown))
+        response_data.update(sub_sections_for_types(new_resp, skipn, shown))
 
     elif time_period in ['pastweek', 'recent']:
         list_type = 'recent'
@@ -201,8 +202,11 @@ def get_listing(
     # new -> all in one list, index of anchors to start of new, cross and replacements
     # recent -> all in one list, index of anchors to specific days
 
+    idx = 0
     for item in listings:
-        item['article'] = metadata.get_abs(item['id']) #type: ignore 
+        idx = idx + 1
+        item['article'] = metadata.get_abs(item['id'])  # type: ignore
+        item['list_index'] = idx + skipn  # type: ignore
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
@@ -221,11 +225,11 @@ def get_listing(
         'paging': paging(count, skipn, shown,
                          subject_or_category, time_period),
         'viewing_all': shown >= count,
-        'template' : type_to_template[list_type]
+        'template': type_to_template[list_type]
     })
 
     response_data.update(more_fewer(shown, count, shown >= count))
-    
+
     def author_query(article: DocMetadata, query: str)->str:
         return str(url_for('search_archive',
                            searchtype='author',
@@ -239,13 +243,13 @@ def get_listing(
 def get_listing_service(app: Any) -> ListingService:
     """Get the listing service from the Flask app.
 
-    There is probably a better way to do this."""
+    There is probably a better way to do this.
+    """
     return cast(ListingService, app.config['listing_service'])
 
 
 def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
     """Gets the year and month from the time_period parameter."""
-
     if not tp or len(tp) > 6 or len(tp) < 2:
         return None
 
@@ -270,9 +274,9 @@ def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
 def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     """Links for the more/fewer sections.
 
-    We want first show_values[n] where show_values[n] < show and show_values[n+1] > show
+    We want first show_values[n] where show_values[n] < show and
+    show_values[n+1] > show
     """
-
     nplus1s = show_values[1:]
     n_n1_tups = map(lambda n, n1: (n, n1), show_values, nplus1s)
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
@@ -289,13 +293,14 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
 
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
-    """Gets the download links for an article """
+    """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
     return {item['article'].arxiv_id_v: metadata.get_dissemination_formats(item['article'], dl_pref)
             for item in items}
 
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
+    """Returns a Dict of article id to author links."""
     return {item['article'].arxiv_id_v: author_links(item['article']) for item in listings}
 
 
@@ -307,13 +312,13 @@ def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
 
 def index_for_types(resp: NewResponse,
                     context: str, subcontext: str,
-                    skipn: int, shown:int) ->Dict[str, Any]:
-    """Makes index for types of new papers in a NewResponse."""
+                    skipn: int, shown: int) ->Dict[str, Any]:
+    """Creates index for types of new papers in a NewResponse."""
     ift = []
     new_count = resp['new_count']
     cross_count = resp['cross_count']
     rep_count = resp['rep_count']
-    
+
     if new_count > 0:
         if skipn != 0:
             ift.append(('New submissions',
@@ -322,12 +327,12 @@ def index_for_types(resp: NewResponse,
                                 skip=0, show=shown),
                         0))
         else:
-            ift.append(('New submissions','',0))
-            
+            ift.append(('New submissions', '', 0))
+
     if cross_count > 0:
         cross_index = new_count + 1
-        c_skip = math.floor(new_count / shown ) * shown
-        
+        c_skip = math.floor(new_count / shown) * shown
+
         if new_count > shown:
             ift.append(('Cross-lists',
                         url_for('.list_articles',
@@ -339,14 +344,81 @@ def index_for_types(resp: NewResponse,
 
     if rep_count > 0:
         rep_index = new_count+cross_count + 1
-        rep_skip = math.floor( (new_count + cross_count)/shown) * shown
+        rep_skip = math.floor((new_count + cross_count)/shown) * shown
         if new_count + cross_count > shown:
-            ift.append(('Replacements', 
+            ift.append(('Replacements',
                         url_for('.list_articles',
                                 context=context, subcontext=subcontext,
-                                skip = rep_skip, show=shown),
+                                skip=rep_skip, show=shown),
                         rep_index))
         else:
             ift.append(('Replacements', '', rep_index))
 
     return {'index_for_types': ift}
+
+
+def sub_sections_for_types(
+        resp: NewResponse,
+        skipn: int, shown: int) -> Dict[str, Any]:
+    """Creates data used in section headings on /list/ARCHIVE/new."""
+    secs = []
+    new_count = resp['new_count']
+    cross_count = resp['cross_count']
+    rep_count = resp['rep_count']
+
+    news = [item for item in resp['listings'] if item['listingType'] == 'new']
+    crosses = [item for item in resp['listings']
+               if item['listingType'] == 'cross']
+    reps = [item for item in resp['listings'] if item['listingType'] == 'rep']
+
+    cross_start = new_count+1
+    rep_start = new_count + cross_count + 1
+    last_shown = skipn + shown
+
+    if news:
+        secs.append({
+            'type': 'new',
+            'items': news,
+            'total': new_count,
+            'continued': skipn > 0,
+            'last': skipn >= new_count - shown
+        })
+    # else already skipped past new section
+
+    if crosses:
+        secs.append({
+            'type': 'cross',
+            'items': crosses,
+            'total': cross_count,
+            'continued': skipn + 1 > cross_start,
+            'last': skipn >= rep_start - shown
+        })
+    # else skipped past cross section
+
+    if reps:
+        secs.append({
+            'type': 'rep',
+            'items': reps,
+            'total': rep_count,
+            'continued': skipn + 1 > rep_start,
+            'last': last_shown >= new_count + cross_count + rep_count
+        })
+
+    for sec in secs:
+        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[  # type: ignore
+            sec['type']]  
+        date = resp['announced'].strftime('%A, %-d %B %Y')
+
+        showing = 'showing '
+        if sec['continued']:
+            showing = 'continued, ' + showing
+            if sec['last']:
+                showing = showing + 'last '
+        if not sec['last'] and not sec['continued']:
+            showing = showing + 'first '
+
+        n = len(sec['items'])  # type: ignore
+        tot = sec['total']
+        sec['heading'] = f'{typ} submissions for {date} ({showing}{n} of {tot} entries )'
+
+    return {'sub_sections_for_types': secs}

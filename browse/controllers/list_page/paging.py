@@ -1,4 +1,4 @@
-"""Paginiation links for listing pages"""
+"""Paginiation links for listing pages."""
 
 
 from typing import Any, Dict, List, Optional, Tuple, cast
@@ -7,8 +7,7 @@ from flask import current_app, request, url_for
 
 
 def paging(count: int, skipn: int, shown: int, context: str, subcontext: str) -> List[Dict[str, Any]]:
-    """ Get paging links. """
-
+    """Get paging links."""
     B = 3  # num of buffer pages on each side of current
     L = math.floor(count-1 / (skipn+1))+1  # total number of pages
     S = 2 * B + 2 * 2 + 1  # number of total links in the pages sections:

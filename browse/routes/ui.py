@@ -97,11 +97,10 @@ def clickthrough() -> Response:
 @blueprint.route('/list/', defaults={'context': '', 'subcontext': ''})
 @blueprint.route('/list/<context>/<subcontext>', methods=['GET', 'POST'])
 def list_articles(context: str, subcontext: str) -> Response:
-    """
-    List articles by context, month etc.
+    """List articles by context, month etc.
 
-    Context might be a context or an archive
-    Subcontext should be 'recent' 'new' or a string of format yymm
+    Context might be a context or an archive Subcontext should be
+    'recent' 'new' or a string of format yymm
     """
     response, code, headers = list_page.get_listing(
         context, subcontext, request.args.get('skip'), request.args.get('show'))

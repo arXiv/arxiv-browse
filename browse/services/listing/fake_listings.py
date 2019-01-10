@@ -7,7 +7,7 @@ import datetime
 
 
 class FakeListingFilesService(ListingService):
-    '''Listing service used for development and testing purposes.
+    """Listing service used for development and testing purposes.
 
     This is intended as an example of what the /listing controller
     needs for methods from a listing service.
@@ -15,14 +15,14 @@ class FakeListingFilesService(ListingService):
     This just returns examples that should be good enough. This makes
     no attempt to return the correct articles for a date or them correct
     primarys for articles.
-    '''
+    """
 
     def list_new_articles(self,
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
                           if_modified_since: Optional[str] = None) -> NewResponse:
-        '''example of list_new_articles'''
+        """Example of list_new_articles."""
         listings = [
             '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
             '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
@@ -70,8 +70,7 @@ class FakeListingFilesService(ListingService):
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        '''Examlpe of list_pastweek_articles.'''
-
+        """Examlpe of list_pastweek_articles."""
         listings = [
             '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
             '0704.0615', '0704.0568', '0704.0319', '0704.0265', '0704.0133', '0704.0533', '0704.0453',
@@ -98,7 +97,7 @@ class FakeListingFilesService(ListingService):
                               skip: int,
                               show: int,
                               if_modified_since: Optional[str] = None) -> ListingResponse:
-        '''Examlpe of list_articles_by_year.'''
+        """Examlpe of list_articles_by_year."""
         return self.list_articles_by_month(archiveOrCategory, year, 1, skip, show, if_modified_since)
 
     def list_articles_by_month(self,
@@ -108,7 +107,7 @@ class FakeListingFilesService(ListingService):
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        '''Example of list_articles_by_month.'''
+        """Example of list_articles_by_month."""
         if 'skip' not in vars():
             skip = 0
         if 'show' not in vars():

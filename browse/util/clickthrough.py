@@ -1,5 +1,4 @@
-"""
-Functions to create hashes for clickthrough links.
+"""Functions to create hashes for clickthrough links.
 
 These are used to log to the web acccess logs when the DOI and
 bookmarking links are clicked.

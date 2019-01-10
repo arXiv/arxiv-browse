@@ -162,8 +162,7 @@ def _transform_token(patterns: List[Matchable],
                      doi_to_url: Callable[[str], str],
                      url_to_url: Callable[[str], str],
                      token: str) -> str:
-    """
-    Transform a token from text to one of the Matchables.
+    """Transform a token from text to one of the Matchables.
 
     This only transforms against the first of Matchable matched.
     Matching on this token will be skipped if any of the bad_patterns

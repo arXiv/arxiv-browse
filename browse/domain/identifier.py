@@ -128,8 +128,7 @@ class Identifier:
                 )
 
     def _parse_old_id(self, match_obj: Match[str]) -> None:
-        """
-        Populate instance attributes parsed from old arXiv identifier.
+        """Populate instance attributes parsed from old arXiv identifier.
 
         The old identifiers were minted from 1991 until March 2007.
 
@@ -141,7 +140,6 @@ class Identifier:
         Returns
         -------
         None
-
         """
         self.is_old_id = True
         self.archive = match_obj.group('archive')
@@ -156,8 +154,7 @@ class Identifier:
         self.id = f'{self.archive}/{self.filename}'
 
     def _parse_new_id(self, match_obj: Match[str]) -> None:
-        """
-        Populate instance attributes from a new arXiv identifier.
+        """Populate instance attributes from a new arXiv identifier.
 
         New identifiers started 2007-04 with 4-digit suffix;
         starting 2015 they have a 5-digit suffix.
@@ -174,7 +171,6 @@ class Identifier:
         Returns
         -------
         None
-
         """
         self.is_old_id = False
         self.archive = 'arxiv'
@@ -200,12 +196,10 @@ class Identifier:
         return f"Identifier(arxiv_id='{self.ids}')"
 
     def __eq__(self, other: object) -> bool:
-        """
-        Return instance equality: other should be type <= Instance.
+        """Return instance equality: other should be type <= Instance.
 
-        Note that 'other' can't be statically checked to be type Instance
-        by design: https://stackoverflow.com/a/37557540/3096687
-
+        Note that 'other' can't be statically checked to be type
+        Instance by design: https://stackoverflow.com/a/37557540/3096687
         """
         try:
             return self.__dict__ == other.__dict__
@@ -214,12 +208,11 @@ class Identifier:
 
 
 def canonical_url(id: str, version: int = 0)->str:
-    """
-    Return canonical URL for this ID.
+    """Return canonical URL for this ID.
 
-    This can be done from just the ID because the
-    category is only needed if it is in the ID.
-    id can be just the id or idv or cat/id or cat/idv
+    This can be done from just the ID because the category is only
+    needed if it is in the ID. id can be just the id or idv or cat/id or
+    cat/idv
     """
     # TODO: This should be better.
     # There should probably be something like INTERNAL_URL_SCHEMA

@@ -11,21 +11,48 @@
 
 {%- block content %}
 <div id='content'>
-<div id='dlpage'>
-  
+<div id='dlpage'> 
   <h1>{{list_ctx_name}}</h1>
 
-{% block list_index %}
+  {% block list_index %}
+    {# list index is empty by default #}
+  {% endblock %}
 
-{% endblock %}
+  {{ page_divs() }}
 
-{{ page_divs() }}
+  {% block items %}
+    {{ item_list( listings, '' ) }}
+  {% endblock %}
 
+  {{ page_divs() }}
+</div>
+</div>
+{%- endblock %}
+
+
+{%- macro page_divs() -%}
+<div class='paging'>[ total of {{count}} entries
+ {{ pages() }}
+  ]
+</div>
+<div class='morefewer'>[ showing {{shown}} entries per page:
+  {{ show_link('fewer',mf_fewer) }} |
+  {{ show_link('more', mf_more)  }} |
+  {{ show_link('all',  mf_all)   }} ]
+</div> 
+{%- endmacro -%}
+
+
+{% macro item_list(items, heading) %}
 <dl id='articles'>
-  {% for item in listings %}
-    {% set article = item['article'] %}      
-    {% set ids = article.arxiv_identifier.ids %}
-    {% set listing_index = loop.index + skipn %}
+  {% if heading %}
+    <h3>{{heading}}</h3>
+  {% endif %}
+
+  {% for item in items %}
+  {% set article = item['article'] %}      
+  {% set ids = article.arxiv_identifier.ids %}
+  {% set listing_index = item['list_index'] %}    
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
@@ -63,24 +90,7 @@
     </dd>  
   {% endfor %}
 </dl>
-
-{{ page_divs() }}
-</div>
-</div>
-{%- endblock %}
-
-
-{%- macro page_divs() -%}
-<div class='paging'>[ total of {{count}} entries
- {{ pages() }}
-  ]
-</div>
-<div class='morefewer'>[ showing {{shown}} entries per page:
-  {{ show_link('fewer',mf_fewer) }} |
-  {{ show_link('more', mf_more)  }} |
-  {{ show_link('all',  mf_all)   }} ]
-</div> 
-{%- endmacro -%}
+{% endmacro %}
 
 
 {%- macro do_author_list(article) -%}

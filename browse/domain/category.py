@@ -58,8 +58,7 @@ class Category:
     def display_str(self)->str:
         """String to use in display of a category.
 
-        Ex:
-        Earth and Planetary Astrophysics (astro-ph.EP)
+        Ex: Earth and Planetary Astrophysics (astro-ph.EP)
         """
         if self.id in taxonomy.CATEGORIES:
             catname = taxonomy.CATEGORIES[self.id]['name']

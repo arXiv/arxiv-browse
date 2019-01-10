@@ -1,14 +1,27 @@
 {%- extends "list/base.html" -%}
 
+{#
+New is quite different than the other list pages.
+It has an index of types of items.
+It needs to display the submitted dates and announced dates.
+It needs to do headings for the new/cross/rep sections.
+#}
+
 {% block list_index %}
 {{ listdate() }}
 {{ type_index() }}
 {% endblock %}
 
+{% block items %}
+  {% for sec in sub_sections_for_types %}
+    {{ item_list(sec['items'], sec['heading']) }}
+  {% endfor %}
+{% endblock %}
+
 {% macro type_index() %}
   {% if index_for_types %}
     <ul>
-  {% for ityp in index_for_types %}
+      {% for ityp in index_for_types %}
     <li><a href="{{ityp[1]}}#item{{ityp[2]}}">{{ityp[0]}}</a></li>
   {% endfor %}
   </ul>

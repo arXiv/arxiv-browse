@@ -8,6 +8,7 @@ from tests.test_abs_parser import ABS_FILES
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 from browse.services.listing.fake_listings import FakeListingFilesService
+from browse.services.listing import ListingService
 import os
 
 from app import app
@@ -426,3 +427,17 @@ class ListPageTest(unittest.TestCase):
 
         rv = self.app.get('/list/math/2001999999')
         self.assertNotEqual(rv.status_code, 200)
+
+
+    def test_abs_service(self):
+        service = ListingService()
+        assert_that(calling(service.list_articles_by_year).with_args('a',1,1,1,1),
+                    raises(NotImplementedError))
+        assert_that(calling(service.list_articles_by_month).with_args('a',1,1,1,1),
+                    raises(NotImplementedError))
+        assert_that(calling(service.list_new_articles).with_args('a',1,1),
+                    raises(NotImplementedError))
+        assert_that(calling(service.list_pastweek_articles).with_args('a',1,1),
+                    raises(NotImplementedError))
+
+        assert_that(service.version(),is_not(None))

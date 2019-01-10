@@ -2,7 +2,7 @@
 
 Currently (2018-10) getting everything for a listing from the DB is
 not possible. There is no table that correctly records the publish
-history in the legacy DB. 
+history in the legacy DB.
 
 The legacy listing files are used only for the IDs of the papers
 announced. The rest of the metadata is not kept updated. An example of
@@ -80,6 +80,7 @@ class ListingService:
 
     @classmethod
     def version(self) -> str:
+        """Version."""
         return "0.2"
 
     
@@ -89,7 +90,7 @@ class ListingService:
                               skip: int,
                               show: int,
                               if_modified_since: Optional[str] = None) -> ListingResponse:
-        '''Get listing items for a whole year.'''
+        """Get listing items for a whole year."""
         raise NotImplementedError
 
     
@@ -101,7 +102,7 @@ class ListingService:
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        '''Get listings for a month'''
+        """Get listings for a month."""
         raise NotImplementedError
 
 
@@ -111,7 +112,7 @@ class ListingService:
                           skip: int,
                           show: int,
                           if_modified_since: Optional[str] = None) -> NewResponse:
-        """ Gets listings for the most recent announcement/publish."""
+        """Gets listings for the most recent announcement/publish."""
         raise NotImplementedError
 
 
@@ -120,5 +121,5 @@ class ListingService:
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        """ Gets listings for the 5 most recent announcement/publish."""
+        """Gets listings for the 5 most recent announcement/publish."""
         raise NotImplementedError
