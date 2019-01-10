@@ -6,7 +6,8 @@
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20170424" />
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20181218" />
+  {# disable for now #}
   {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
   <script type="text/javascript">
@@ -48,21 +49,17 @@
   {% endif -%}
   <div id="cu-identity">
     <div id="cu-logo">
-      <a id="insignia-link" href="http://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cul_signature_unstyled.gif" alt="Cornell University" width="283" height="76" border="0" /></a>
-      <div id="unit-signature-links">
-        <a id="cornell-link" href="http://www.cornell.edu/">Cornell University</a>
-        <a id="unit-link" href="http://www.library.cornell.edu/">Library</a>
-      </div>
+      <a href="https://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" width="200" border="0" /></a>
     </div>
     <div id="support-ack">
-      <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation<br /> and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}</a>
+      <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
     </div>
   </div>
 
   <div id="header" {% block header_class %}{% endblock %}>
     {% block header %}
-    {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. -#}
-    <a href="{{ url_for('ignore_me') }}"></a>
+    {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
+    <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
     <h1>arXiv.org</h1>
     <div class="login"><a href="{{ url_for('login') }}">Login</a></div>
     <div id="search">

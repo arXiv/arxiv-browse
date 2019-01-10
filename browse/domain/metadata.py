@@ -1,11 +1,12 @@
 """Representations of arXiv document metadata."""
 import collections
-from typing import List, Optional, Iterator
+from typing import List, Optional, Iterator, Set
 from datetime import datetime
 from dataclasses import dataclass, field
 
 from arxiv import taxonomy
-from browse.domain.identifier import Identifier, canonical_url
+from arxiv.base.urls import canonical_url
+from browse.domain.identifier import Identifier
 from browse.domain.license import License
 from browse.domain.category import Category
 
@@ -66,26 +67,12 @@ class AuthorList:
         return self.raw
 
 
-@dataclass
-class Archive(Category):
+class Archive(taxonomy.Archive):
     """Represents an arXiv archive--the middle level of the taxonomy."""
 
-    def __post_init__(self) -> None:
-        """Get the full archive name."""
-        super().__post_init__()
-        if self.id in taxonomy.ARCHIVES:
-            self.name = taxonomy.ARCHIVES[self.id]['name']
 
-
-@dataclass
-class Group(Category):
+class Group(taxonomy.Group):
     """Represents an arXiv group--the highest (most general) taxonomy level."""
-
-    def __post_init__(self) -> None:
-        """Get the full group name."""
-        super().__post_init__()
-        if self.id in taxonomy.GROUPS:
-            self.name = taxonomy.GROUPS[self.id]['name']
 
 
 @dataclass(frozen=True)
@@ -245,13 +232,13 @@ class DocMetadata:
         else:
             return versions[0].submitted_date
 
-    def display_secondaries(self) -> List[str]:
-        """Unalias, dedup and sort secondaries for display."""
+    def get_secondaries(self) -> Set[Category]:
+        """Unalias and deduplicate secondary categories."""
         if not self.secondary_categories or not self.primary_category:
-            return []
+            return set()
 
         def unalias(secs: Iterator[Category])->Iterator[Category]:
-            return map(lambda c: c.unalias(), secs)
+            return map(lambda c: Category(c.unalias()), secs)
         prim = self.primary_category.unalias()
 
         def de_prim(secs: Iterator[Category])->Iterator[Category]:
@@ -259,15 +246,22 @@ class DocMetadata:
 
         de_primaried = set(de_prim(unalias(iter(self.secondary_categories))))
         if not de_primaried:
-            return []
+            return set()
+        return de_primaried
+
+    def display_secondaries(self) -> List[str]:
+        """Unalias, dedup and sort secondaries for display."""
+        de_primaried = self.get_secondaries()
 
         def to_display(secs: List[Category]) -> List[str]:
-            return list(map(lambda c: c.display_str(), secs))
+            return list(map(lambda c: str(c.display), secs))
         return to_display(sorted(de_primaried))
 
     def canonical_url(self, no_version: bool = False) -> str:
-        """Returns canonical URL for this ID and version."""
+        """Return canonical URL for this ID and version."""
+        url: str
         if no_version:
-            return canonical_url(self.arxiv_identifier.id)
+            url = canonical_url(self.arxiv_identifier.id)
         else:
-            return canonical_url(self.arxiv_identifier.idv)
+            url = canonical_url(self.arxiv_identifier.idv)
+        return url

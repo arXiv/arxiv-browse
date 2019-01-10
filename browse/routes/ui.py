@@ -5,9 +5,9 @@ from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
+from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, home_page, prevnext
 from browse.exceptions import AbsNotFound
-from browse.util.clickthrough import is_hash_valid
 from browse.services.database import get_institution
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')

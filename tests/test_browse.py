@@ -3,7 +3,9 @@ import unittest
 from bs4 import BeautifulSoup
 
 from tests.test_abs_parser import ABS_FILES
+
 from arxiv import taxonomy
+from arxiv.base.urls import canonical_url
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 
@@ -255,8 +257,8 @@ class BrowseTest(unittest.TestCase):
         ida = title_elmt.find('a')
         self.assertTrue(ida, 'Should be <a> tag in title')
 
-        self.assertIsNotNone(ida['href'], '<a> tag in title should have href')
-        self.assertEqual(ida['href'], '/abs/1501.99998')
+        self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
+        self.assertEqual(ida['href'], 'https://arxiv.org/abs/1501.99998')
         self.assertEqual(ida.text, '1501.99998')
 
         au_a_tags = html.find('div', 'authors').find_all('a')
