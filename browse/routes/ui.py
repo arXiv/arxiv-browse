@@ -4,6 +4,7 @@ from typing import Union
 from flask import Blueprint, render_template, request, Response, session, \
     redirect, current_app
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
+
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, home_page, prevnext
