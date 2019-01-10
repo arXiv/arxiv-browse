@@ -26,9 +26,9 @@ def get_home_page() -> Response:
     response_headers: Dict[str, Any] = {}
 
     try:
-        response_data['groups'] = taxonomy.GROUPS
-        response_data['archives'] = taxonomy.ARCHIVES_ACTIVE
-        response_data['categories'] = taxonomy.CATEGORIES_ACTIVE
+        response_data['groups'] = taxonomy.definitions.GROUPS
+        response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE
+        response_data['categories'] = taxonomy.definitions.CATEGORIES_ACTIVE
         response_data['document_count'] = _get_document_count()
         response_status = status.HTTP_200_OK
     except Exception as ex:

@@ -25,11 +25,13 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        for group_key, group_value in taxonomy.GROUPS.items():
+        for group_key, group_value in taxonomy.definitions.GROUPS.items():
             if group_key == 'grp_test':
                 continue
             auths_elmt = html.find('h2', text=group_value['name'])
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
+        self.assertFalse(html.find('h2', text='Test'),
+                         "'Test' group should not be shown on homepage")
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
@@ -256,7 +258,7 @@ class BrowseTest(unittest.TestCase):
         ida = title_elmt.find('a')
         self.assertTrue(ida, 'Should be <a> tag in title')
 
-        self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
+        self.assertIsNotNone(ida['href'], '<a> tag in title should have href')
         self.assertEqual(ida['href'], 'https://arxiv.org/abs/1501.99998')
 
         self.assertEqual(ida.text, '1501.99998')
