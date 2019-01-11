@@ -7,7 +7,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page
+from browse.controllers import abs_page, home_page, tb_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -84,6 +84,16 @@ def abstract(arxiv_id: str) -> Response:
     raise InternalServerError('Unexpected error')
 
 
+@blueprint.route('tb/<path:arxiv_id>', methods=['GET'])
+def tb(arxiv_id: str) -> Response:
+    """Get trackbacks associated with an article."""
+    response, code, headers = tb_page.get_tb_page(arxiv_id)
+
+    if code == status.HTTP_200_OK:
+        return render_template('tb/tb.html', **response), code, headers
+    raise InternalServerError('Unexpected error')
+
+
 @blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('trackback/<path:arxiv_id>', methods=['GET', 'POST'])
 def trackback(arxiv_id: str) -> Union[str, Response]:
@@ -157,12 +167,6 @@ def ps(arxiv_id: str) -> Response:
 def src(arxiv_id: str, file_name: str) -> Response:
     """Get src for article."""
     raise InternalServerError(f'Not Yet Implemented {arxiv_id} {file_name}')
-
-
-@blueprint.route('tb/<path:arxiv_id>')
-def tb(arxiv_id: str) -> Response:
-    """Get trackbacks for article."""
-    raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('show-email/<path:show_email_hash>/<path:arxiv_id>')
