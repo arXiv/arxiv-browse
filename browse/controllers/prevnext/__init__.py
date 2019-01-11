@@ -8,7 +8,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id
 from arxiv import status
-from arxiv.taxonomy import ARCHIVES, CATEGORIES_ACTIVE
+from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
 from arxiv.base import logging
 
 
