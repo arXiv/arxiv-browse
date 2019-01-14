@@ -1,7 +1,7 @@
 """Application factory for browse service components."""
 from functools import partial
 from typing import Any
-from flask import Flask, url_for
+from flask import Flask, url_for, g
 from browse.domain.identifier import canonical_url
 from browse.util.clickthrough import create_ct_url
 from browse.util.id_patterns import do_dois_id_urls_to_tags, do_id_to_tags, \
@@ -33,15 +33,15 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    #bdc34: not sure how to add service to app context
-    app.config['listing_service'] = FakeListingFilesService()
-    
+    with app.app_context():
+        g.listing_service = FakeListingFilesService()
+
     ct_url_for = partial(create_ct_url, app.config.get(
         'CLICKTHROUGH_SECRET'), url_for)
 
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
-        
+
     app.jinja_env.globals['canonical_url'] = canonical_url
 
     def ct_single_doi_filter(doi: str)->str:
