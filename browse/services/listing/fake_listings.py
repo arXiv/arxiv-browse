@@ -1,8 +1,10 @@
 """Example of a listing service for testing."""
 
+
 from typing import List, Optional, Tuple
 
-from browse.services.listing import ListingService, ListingResponse, NewResponse, ListingItem
+from browse.domain.listing import NewResponse, ListingResponse, ListingItem
+from browse.services.listing import ListingService
 import datetime
 
 
