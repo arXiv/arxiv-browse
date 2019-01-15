@@ -7,7 +7,23 @@
 
 {%- block content %}
   <h2>Trackbacks for ...</h2>
-  
+  {% for tb in trackback_pings %}
+  <p><a href="{{ tb.url }}">{{ tb.title|entity_to_utf|truncate(150) }}</a> [{% if tb.blog_name %}{{ tb.blog_name|trim|entity_to_utf|truncate(50) }} @ {% endif %}{% if tb.url %}{{ tb.url|trim|truncate(30,False) }}{% else %}BAD-URL{% endif %}] <small>[trackback posted {{ tb.posted_date }}]</small></a></p>
+  {% endfor %}
+
+  <div style="font-size: smaller; margin-top: 2em;">
+  <h3>About trackbacks</h3>
+  <p>By sending a <a href="/help/trackback/">trackback</a>,  you can notify
+  arXiv.org that you have created a web page that references a paper. Popular
+  blogging software supports trackback:  you can send us a trackback about this
+  paper by giving your software the following <i>trackback URL:</i></p>
+  <blockquote><tt>https://arxiv.org/trackback/{paper_id}</tt></blockquote>
+  <p>Some blogging software supports <i>trackback autodiscovery</i> -- in this
+  case,  your software will automatically send a trackback as soon as your
+  create a link to our abstract page.  See our
+  <a href="/help/trackback/">trackback help page</a> for more information.</p>
+  </div>
+
 {% endblock content %}
 
 {%- block footer_text -%}

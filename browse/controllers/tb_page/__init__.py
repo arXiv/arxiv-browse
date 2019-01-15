@@ -1,7 +1,7 @@
 """Handle requests to display the trackbacks for a particular article ID."""
 
 from typing import Any, Dict, Tuple
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
 
 from arxiv import status
 from arxiv.base import logging
@@ -24,8 +24,9 @@ def get_tb_page(arxiv_id: str) -> Response:
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         trackback_pings = get_trackback_pings(arxiv_identifier.id)
+        response_data['trackback_pings'] = trackback_pings
     except IdentifierException:
-        raise AbsNotFound(data={'arxiv_id': arxiv_id})
+        raise BadRequest
 
     response_status = status.HTTP_200_OK
 

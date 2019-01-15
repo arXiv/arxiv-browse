@@ -1,3 +1,4 @@
+-- 0808.4142
 INSERT INTO `arXiv_trackback_pings` VALUES (695736,504934,'Omega b: the new baryon nailed by D0 &laquo; A Quantum Diaries Survivor',' pulling this new result off! You can read the details of the analysis in this paper. ','http://dorigo.wordpress.com/2008/09/19/omega-b-the-new-baryon-nailed-by-d0/','','arxiv1.library.cornell.edu','128.84.158.114',1221882921,0,0,1221883202,'accepted',61);
 INSERT INTO `arXiv_trackback_pings` VALUES (751383,504934,'Nit-Picking On The Omega_b Discovery','quark and two strange quarks- has been recently published by the DZERO collaboration. Their paper claims to observe the so-far-unseen','http://www.scientificblogging.com/quantum_diaries_survivor/nitpicking_omega_b_discovery','A Quantum Diaries Survivor','arxiv1.library.cornell.edu','128.84.158.114',1243482527,0,0,1243484559,'accepted',NULL);
 INSERT INTO `arXiv_trackback_pings` VALUES (751384,504934,'Nit-Picking On The Omega_b Baryon: Part II','the pains to check the calculation hinted at on the scientific paper where the discovery is claimed, which was sent to the ','http://www.scientificblogging.com/quantum_diaries_survivor/nitpicking_omega_b_baryon_part_ii','A Quantum Diaries Survivor','arxiv1.library.cornell.edu','128.84.158.114',1243482588,0,0,1243484559,'accepted',NULL);
@@ -13,4 +14,3 @@ INSERT INTO `arXiv_trackback_pings` VALUES (1,504934,'More On The Omega B Baryon
 INSERT INTO `arXiv_trackback_pings` VALUES (2,504934,'Foo baz','\"Observation of the','http://en.wikipedia.org/wiki/Zevatron','Wikipedia','arxiv1.library.cornell.edu','128.84.158.114',1228752458,0,0,0,'rejected',NULL);
 
 INSERT INTO `arXiv_trackback_pings` VALUES (99999999,99999998,'Nothing here','Really nothing here ','http://www.example.org','On Nothing','arxiv1.library.cornell.edu','128.84.158.114',1258488297,0,0,1248558336,'accepted',NULL);
-
