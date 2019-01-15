@@ -33,8 +33,7 @@ def create_web_app() -> Flask:
     Base(app)
     app.register_blueprint(ui.blueprint)
 
-    with app.app_context():
-        g.listing_service = FakeListingFilesService()
+    app.config['listing_service'] = FakeListingFilesService()
 
     ct_url_for = partial(create_ct_url, app.config.get(
         'CLICKTHROUGH_SECRET'), url_for)
