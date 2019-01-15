@@ -21,8 +21,7 @@ JinjaFilterInput = Union[Markup, str]
 
 def single_doi_url(clickthrough_url_for: Callable[[str], str],
                    doi: JinjaFilterInput) -> Markup:
-    """
-    DOI is made into a link.
+    """DOI is made into a link.
 
     This expects a DOI ONLY. It should not be used on general text.
 
@@ -51,8 +50,7 @@ def line_feed_to_br(text: JinjaFilterInput) -> Markup:
 
 
 def entity_to_utf(text: str) -> str:
-    """
-    Convert HTML entities to unicode.
+    """Convert HTML entities to unicode.
 
     For example '&amp;' becomes '&'.
 

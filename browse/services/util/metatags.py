@@ -12,8 +12,7 @@ from browse.domain.metadata import DocMetadata
 
 
 def meta_tag_metadata(metadata: DocMetadata) -> List:
-    """
-    Return data for HTML <meta> tags as used by Google Scholar.
+    """Return data for HTML <meta> tags as used by Google Scholar.
 
     http://scholar.google.com/intl/en/scholar/inclusion.html.
 

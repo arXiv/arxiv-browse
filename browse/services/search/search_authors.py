@@ -43,7 +43,6 @@ def split_long_author_list(
 
     This function is used to split the list base on name count, not
     just list element count.
-
     """
     front = []
     back = []
@@ -62,8 +61,7 @@ def split_long_author_list(
 
 
 def queries_for_authors(authors: str) -> AuthorList:
-    """
-    Make search service query strings for authors.
+    """Make search service query strings for authors.
 
     The main challenge here is that the HTML output of this should match as
     closely as possible the string input by the submitter.
