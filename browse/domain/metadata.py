@@ -199,9 +199,9 @@ class DocMetadata:
     def highest_version(self) -> int:
         """Return highest version number from metadata.
 
-        This is determined by counting the entries in the
-        {history}. Return 1 if the metadata is private. Returns undef
-        if this object is not initialized.
+        This is determined by counting the entries in the {history}.
+        Return 1 if the metadata is private. Returns undef if this
+        object is not initialized.
         """
         if self.private:
             return 1
@@ -216,7 +216,6 @@ class DocMetadata:
 
         version: Version to get datetime of. Must be in range
             1..highest_version. Uses highest_version if not specified.
-
         """
         if not version:
             version = self.highest_version()
