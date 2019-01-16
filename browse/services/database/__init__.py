@@ -19,6 +19,7 @@ from logging import Logger
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
+tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
 
 
 def db_handle_error(logger: Logger, default_return_val: Any) \
@@ -99,7 +100,8 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 @db_handle_error(logger=logger, default_return_val=[])
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
-    return list(__paper_trackbacks_query(paper_id).all())
+    return list(__paper_trackbacks_query(paper_id)
+                .order_by(TrackbackPing.posted_date).all())
 
 
 @db_handle_error(logger=logger, default_return_val=None)
@@ -110,7 +112,7 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     ).filter(TrackbackPing.document_id == Document.document_id) \
         .filter(Document.paper_id == paper_id) \
         .filter(TrackbackPing.status == 'accepted').scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=gettz('US/Eastern'))
+    dt = datetime.fromtimestamp(timestamp, tz=tz)
     dt = dt.astimezone(tz=tzutc())
     return dt
 

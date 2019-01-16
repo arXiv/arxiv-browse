@@ -7,13 +7,17 @@ from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from browse.services.database import get_trackback_pings
-from browse.domain.identifier import Identifier, IdentifierException,\
-    IdentifierIsArchiveException
+from browse.domain.identifier import Identifier, IdentifierException
+from browse.services.document import metadata
+from browse.services.document.metadata import AbsException
+from browse.services.search.search_authors import queries_for_authors, \
+    split_long_author_list
 
 app_config = get_application_config()
 logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
+truncate_author_list_size = 10
 
 
 def get_tb_page(arxiv_id: str) -> Response:
@@ -23,11 +27,20 @@ def get_tb_page(arxiv_id: str) -> Response:
 
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+        response_data['arxiv_identifier'] = arxiv_identifier
         trackback_pings = get_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
-    except IdentifierException:
-        raise BadRequest
+        if trackback_pings:
+            abs_meta = metadata.get_abs(arxiv_identifier.id)
+            response_data['abs_meta'] = abs_meta
+            response_data['author_links'] = \
+                split_long_author_list(queries_for_authors(
+                    abs_meta.authors.raw), truncate_author_list_size)
+        response_status = status.HTTP_200_OK
 
-    response_status = status.HTTP_200_OK
+    except [IdentifierException, AbsException]:
+        raise BadRequest
+    except Exception:
+        raise InternalServerError
 
     return response_data, response_status, response_headers

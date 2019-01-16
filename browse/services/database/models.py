@@ -1,13 +1,18 @@
 """arXiv browse database models."""
 
 from typing import Optional
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, Index, \
     Integer, SmallInteger, String, text, Text
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
+from arxiv.base.globals import get_application_config
 
 db: SQLAlchemy = SQLAlchemy()
+app_config = get_application_config()
+tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
 
 
 class Document(db.Model):
@@ -244,6 +249,12 @@ class TrackbackPing(db.Model):
                     nullable=False, index=True,
                     server_default=text("'pending'"))
     site_id = Column(Integer)
+
+    @property
+    def posted_datetime(self) -> DateTime:
+        """Get posted_date as UTC datetime."""
+        dt = datetime.fromtimestamp(self.posted_date, tz=tz)
+        return dt.astimezone(tz=tzutc())
 
 
 class TrackbackSite(db.Model):
