@@ -1,13 +1,14 @@
 """Application factory for browse service components."""
 from functools import partial
 from typing import Any
-from flask import Flask, url_for
+from flask import Flask, url_for, g
 from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf, \
     single_doi_url
+from browse.services.listing.fake_listings import FakeListingFilesService
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
@@ -28,6 +29,9 @@ def create_web_app() -> Flask:
 
     Base(app)
     app.register_blueprint(ui.blueprint)
+
+    app.config['listing_service'] = FakeListingFilesService()
+
 
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
