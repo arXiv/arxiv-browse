@@ -1,0 +1,11 @@
+{%- extends "tb/base.html" -%}
+{%- from 'abs/author_links.html' import display_authors_with_links -%}
+{%- import 'base/macros.html' as base_macros -%}
+
+{% block title %}Recent Trackbacks{% endblock %}
+
+{%- block content %}
+  <h1>Recent Trackbacks</h1>
+  <p><em>Trackbacks indicate external web sites that link to articles in arXiv.org. Trackbacks may not reflect the opinion of arXiv.org or of that article's authors.</em></p>
+  {{ super() }}
+{% endblock content %}

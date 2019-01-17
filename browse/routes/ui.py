@@ -94,6 +94,16 @@ def tb(arxiv_id: str) -> Response:
     raise InternalServerError('Unexpected error')
 
 
+@blueprint.route('tb/recent', methods=['GET', 'POST'])
+def tb_recent() -> Response:
+    """Get the recent trackbacks that have been posted across the site."""
+    response, code, headers = tb_page.get_recent_tb_page()
+
+    if code == status.HTTP_200_OK:
+        return render_template('tb/recent.html', **response), code, headers
+    raise InternalServerError('Unexpected error')
+
+
 @blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('trackback/<path:arxiv_id>', methods=['GET', 'POST'])
 def trackback(arxiv_id: str) -> Union[str, Response]:

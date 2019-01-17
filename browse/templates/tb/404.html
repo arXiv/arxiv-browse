@@ -1,0 +1,12 @@
+{%- extends "tb/base.html" -%}
+
+{% block title %}[{{ arxiv_id }}] Article identifier not recognized{% endblock %}
+
+{%- block content %}
+  <h1>Article identifier '{{ arxiv_id }}' not recognized</h1>
+  <p>We were unable to extract an arXiv article ID from the URL specified. You may:</p>
+  <ul>
+    <li><a href="{{ url_for('.tb_recent') }}">View recent trackbacks</a></li>
+    <li>View the trackbacks for a particular article at <code>https://arxiv.org{{ url_for('.tb', arxiv_id='') }}<i>article_id</i></code></li>
+  </ul>
+{% endblock content %}

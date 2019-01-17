@@ -31,6 +31,29 @@ def handle_abs_not_found(error: AbsNotFound) -> Response:
     return response
 
 
+class TrackbackNotFound(HTTPException):
+    """Trackback not found HTTPException."""
+
+    code = 404
+    description = 'Article does not exist'
+
+    def __init__(self, description: Optional[str] = None,
+                 response: Optional[Response] = None,
+                 data: dict = {}) -> None:
+        """Override default to support data dict."""
+        self.data = data
+        super(TrackbackNotFound, self).__init__(description, response)
+
+
+@handler(TrackbackNotFound)
+def handle_trackback_not_found(error: TrackbackNotFound) -> Response:
+    """Render the base 404 error page for tb."""
+    rendered = render_template('tb/404.html', **error.data)
+    response = make_response(rendered)
+    response.status_code = status.HTTP_404_NOT_FOUND
+    return response
+
+
 @handler(BadRequest)
 def handle_bad_request(error: BadRequest) -> Response:
     """Render the 400 error page for browse."""

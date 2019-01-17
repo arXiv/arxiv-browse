@@ -101,6 +101,8 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     return list(__paper_trackbacks_query(paper_id)
+                .distinct(TrackbackPing.url)
+                .group_by(TrackbackPing.url)
                 .order_by(TrackbackPing.posted_date).all())
 
 

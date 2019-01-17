@@ -6,6 +6,7 @@ from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
 from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
+from browse.exceptions import TrackbackNotFound
 from browse.services.database import get_trackback_pings
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
@@ -38,8 +39,24 @@ def get_tb_page(arxiv_id: str) -> Response:
                     abs_meta.authors.raw), truncate_author_list_size)
         response_status = status.HTTP_200_OK
 
-    except [IdentifierException, AbsException]:
-        raise BadRequest
+    except IdentifierException:
+        raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
+    except AbsException:
+        raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
+    except Exception:
+        raise InternalServerError
+
+    return response_data, response_status, response_headers
+
+
+def get_recent_tb_page() -> Response:
+    """Get the data needed to display the recent trackbacks page."""
+    response_data: Dict[str, Any] = {}
+    response_headers: Dict[str, Any] = {}
+
+    try:
+        response_status = status.HTTP_200_OK
+
     except Exception:
         raise InternalServerError
 
