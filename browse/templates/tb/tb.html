@@ -9,7 +9,7 @@
   {% if trackback_pings %}
   <h2>Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
     {% for tb in trackback_pings %}
-  <p><a href="{{ tb.url }}">{{ tb.title|entity_to_utf|truncate(150) }}</a> [{% if tb.blog_name %}{{ tb.blog_name|trim|entity_to_utf|truncate(50) }} @ {% endif %}{% if tb.url %}{{ tb.url|trim|truncate(30,False) }}{% else %}INVALID-URL{% endif %}] <small>[trackback posted {{ tb.posted_datetime.strftime('%a, %-d %b %Y %H:%M:%S %Z') }}]</small></a></p>
+  <p><a href="{{ tb.url }}">{{ tb.title|entity_to_utf|truncate(150) }}</a> [{% if tb.blog_name %}{{ tb.blog_name|trim|entity_to_utf|truncate(50) }} @ {% endif %}{% if tb.has_valid_url %}{{ tb.display_url|truncate(30,False) }}{% else %}INVALID-URL{% endif %}] <small>[trackback posted {{ tb.posted_datetime.strftime('%a, %-d %b %Y %H:%M:%S %Z') }}]</small></a></p>
     {% endfor %}
     <blockquote style="background-color: #eee; padding-top: 5px">
       {#- abstract field is deliberately suppressed in call to abs macro. -#}

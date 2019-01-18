@@ -1,6 +1,8 @@
 """arXiv browse database models."""
 
+import re
 from typing import Optional
+from validators import ValidationFailure, url as is_valid_url
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
@@ -255,6 +257,17 @@ class TrackbackPing(db.Model):
         """Get posted_date as UTC datetime."""
         dt = datetime.fromtimestamp(self.posted_date, tz=tz)
         return dt.astimezone(tz=tzutc())
+
+    @property
+    def display_url(self) -> str:
+        """Get the URL without the protocol, for display."""
+        return re.sub(r'^[a-z]+:\/\/', '',
+                      self.url.strip(), flags=re.IGNORECASE)
+
+    @property
+    def has_valid_url(self) -> bool:
+        """Determine whether the trackback URL is valid."""
+        return bool(is_valid_url(self.url, public=False))
 
 
 class TrackbackSite(db.Model):

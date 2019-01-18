@@ -39,9 +39,7 @@ def get_tb_page(arxiv_id: str) -> Response:
                     abs_meta.authors.raw), truncate_author_list_size)
         response_status = status.HTTP_200_OK
 
-    except IdentifierException:
-        raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
-    except AbsException:
+    except (AbsException, IdentifierException):
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
     except Exception:
         raise InternalServerError

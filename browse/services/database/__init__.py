@@ -103,7 +103,17 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     return list(__paper_trackbacks_query(paper_id)
                 .distinct(TrackbackPing.url)
                 .group_by(TrackbackPing.url)
-                .order_by(TrackbackPing.posted_date).all())
+                .order_by(TrackbackPing.posted_date.desc()).all())
+
+
+@db_handle_error(logger=logger, default_return_val=[])
+def get_recent_trackback_pings(count: int=20) -> List[TrackbackPing]:
+    """Get recent trackback pings across all of arXiv."""
+    return list(__all_trackbacks_query()
+                .filter(TrackbackPing.status == 'accepted')
+                .distinct(TrackbackPing.url)
+                .group_by(TrackbackPing.url)
+                .order_by(TrackbackPing.posted_date.desc()).all())
 
 
 @db_handle_error(logger=logger, default_return_val=None)
