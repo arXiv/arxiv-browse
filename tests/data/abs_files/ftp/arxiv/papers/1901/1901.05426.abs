@@ -21,9 +21,7 @@ back, while $\phi$ changes over the single period. Two corresponding solutions,
 that describe the double-valued order-parameter dependence on $\chi_{1,2}$,
 jointly form the single-valued dependence on $\phi$, operating in two adjoining
 regions of $\phi$. The phase incursion $\varphi$ plays a crucial role in
-creating such a behavior.
-
-  The current-phase relation $j(\phi,L)$ is composed of
+creating such a behavior. The current-phase relation $j(\phi,L)$ is composed of
 the two solutions and, at a fixed small $L$, is characterized by the
 phase-dependent effective transmission coefficient.
 \\

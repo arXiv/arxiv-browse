@@ -62,7 +62,7 @@ def create_web_app() -> Flask:
 
     app.jinja_env.filters['line_feed_to_br'] = line_feed_to_br
     app.jinja_env.filters['tex_to_utf'] = partial( tex_to_utf, symbols=True )
-    app.jinja_env.filters['txt_to_utf_no_symb'] = partial( tex_to_utf, symbols=False)
+    app.jinja_env.filters['tex_to_utf_no_symb'] = partial( tex_to_utf, symbols=False)
     
     app.jinja_env.filters['entity_to_utf'] = entity_to_utf
 
