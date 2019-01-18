@@ -80,10 +80,20 @@ def entity_to_utf(text: str) -> str:
     return Markup(with_lt_gt)
 
 
-def tex_to_utf(text: JinjaFilterInput) -> Markup:
-    """Wrap tex2utf as a filter."""
+def tex_to_utf(text: JinjaFilterInput, symbols: bool=True) -> Markup:
+    """
+    Convert some TeX accents and symbols to UTF-8 characters. 
+
+    :param text: Text to filter.
+
+    :param symbols: If False, do not convert greek symbols.  Greek
+    symbols can cause problems. Ex \phi is not suppose to look like φ. 
+    φ looks like \varphi to someone use to TeX.
+
+    :returns: Jinja Markup of filtered text
+    """
     if hasattr(text, '__html__'):
         # Need to unescape so nothing that is tex is escaped
-        return Markup(escape(tex2utf(text.unescape())))  # type: ignore
+        return Markup(escape(tex2utf(text.unescape(), symbols=symbols)))  # type: ignore
     else:
-        return Markup(escape(tex2utf(text)))
+        return Markup(escape(tex2utf(text, symbols=symbols)))

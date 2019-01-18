@@ -85,8 +85,9 @@ textlet = {
     'nu': 0x03bd, 'xi': 0x03be, 'omicron': 0x03bf,
     'pi': 0x03c0, 'rho': 0x03c1, 'varsigma': 0x03c2,
     'sigma': 0x03c3, 'tau': 0x03c4, 'upsion': 0x03c5,
-    'phi': 0x03c6, 'chi': 0x03c7, 'psi': 0x03c8,
-    'omega': 0x03c9,
+    'varphi': 0x03C6, # φ
+    'phi':  0x03D5, # ϕ
+    'chi': 0x03c7, 'psi': 0x03c8, 'omega': 0x03c9,
 }
 
 
@@ -141,8 +142,18 @@ def texch2UTF(acc: str) -> str:
 # }
 #
 
-def tex2utf(tex: str) -> str:
-    """Converts some accents and greek TeX to utf8."""
+def tex2utf(tex: str, symbols: bool=True) -> str:
+    """
+    Convert some TeX accents and greek symbols to UTF-8 characters. 
+
+    :param tex: Text to filter.
+
+    :param symbols: If False, do not convert greek symbols.  Greek
+    symbols can cause problems. Ex \phi is not suppose to look like φ. 
+    φ looks like \varphi to someone use to TeX.
+
+    :returns: string possibly with some TeX replaced with UTF8
+    """
     # This is Legacy stuff and might not be needed if we move toward all utf8
 
     # Do dotless i,j -> plain i,j where they are part of an accented i or j
@@ -151,7 +162,8 @@ def tex2utf(tex: str) -> str:
 
     # Now work on the Tex sequences, first those with letters only match
     utf = textlet_pattern.sub(_textlet_sub, utf)
-    utf = textsym_pattern.sub(_textsym_sub, utf)
+    if symbols:
+        utf = textsym_pattern.sub(_textsym_sub, utf)
 
     utf = re.sub(r'\{\\j\}|\\j\s', 'j', utf)  # not in Unicode?
 
