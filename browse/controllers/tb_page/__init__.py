@@ -7,7 +7,8 @@ from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from browse.exceptions import TrackbackNotFound
-from browse.services.database import get_trackback_pings
+from browse.services.database import get_trackback_pings, \
+                                     get_recent_trackback_pings
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException
@@ -53,9 +54,16 @@ def get_recent_tb_page() -> Response:
     response_headers: Dict[str, Any] = {}
 
     try:
+        recent_trackback_pings = get_recent_trackback_pings()
+        response_data['recent_trackback_pings'] = recent_trackback_pings
+        print(f'RECENT:\n{recent_trackback_pings}')
         response_status = status.HTTP_200_OK
 
     except Exception:
         raise InternalServerError
 
     return response_data, response_status, response_headers
+
+# def _transform_recent(recent_tuple: Tuple):
+#     """Transform the tuple returned by `get_recent_trackback_pings()`."""
+#

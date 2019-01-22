@@ -3,7 +3,7 @@
 import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
-from typing import List, Optional, Any, Callable
+from typing import List, Optional, Any, Callable, Tuple
 from sqlalchemy import not_
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
@@ -107,13 +107,32 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 
 
 @db_handle_error(logger=logger, default_return_val=[])
-def get_recent_trackback_pings(count: int=20) -> List[TrackbackPing]:
+def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, Document]:
     """Get recent trackback pings across all of arXiv."""
-    return list(__all_trackbacks_query()
-                .filter(TrackbackPing.status == 'accepted')
-                .distinct(TrackbackPing.url)
-                .group_by(TrackbackPing.url)
-                .order_by(TrackbackPing.posted_date.desc()).all())
+    # select d.paper_id, d.title, p.url, p.title, p.posted_date from arXiv_trackback_pings p join arXiv_documents d on d.document_id=p.document_id where p.status='accepted' group by p.url order by p.posted_date desc
+    count = max(count, 0)
+    if count == 0:
+        return tuple()
+    stmt = (
+        db.session.query(TrackbackPing.url).
+        filter(TrackbackPing.status == 'accepted').
+        distinct(TrackbackPing.url).
+        order_by(TrackbackPing.posted_date.desc()).
+        limit(count).
+        subquery()
+    )
+    tb_doc_tup = db.session.query(
+                TrackbackPing,
+                Document.paper_id,
+                Document.title
+            ).\
+        join(Document, TrackbackPing.document_id == Document.document_id).\
+        filter(TrackbackPing.status == 'accepted').\
+        filter(TrackbackPing.url == stmt.c.url).\
+        order_by(TrackbackPing.posted_date.desc()).\
+        all()
+
+    return tb_doc_tup
 
 
 @db_handle_error(logger=logger, default_return_val=None)

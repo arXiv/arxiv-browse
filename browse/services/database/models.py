@@ -2,7 +2,7 @@
 
 import re
 from typing import Optional
-from validators import ValidationFailure, url as is_valid_url
+from validators import url as is_valid_url
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
@@ -36,6 +36,8 @@ class Document(db.Model):
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
     submitter = relationship('User')
+
+    trackback_ping = relationship('TrackbackPing', primaryjoin="foreign(TrackbackPing.document_id)==Document.document_id")
 
 
 class License(db.Model):
@@ -251,6 +253,9 @@ class TrackbackPing(db.Model):
                     nullable=False, index=True,
                     server_default=text("'pending'"))
     site_id = Column(Integer)
+
+    document = relationship('Document',
+                            primaryjoin="foreign(Document.document_id)==TrackbackPing.document_id")
 
     @property
     def posted_datetime(self) -> DateTime:
