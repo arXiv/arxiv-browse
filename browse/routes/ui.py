@@ -7,7 +7,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page, prevnext
+from browse.controllers import abs_page, home_page, list_page, prevnext
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -115,16 +115,27 @@ def clickthrough() -> Response:
 
     raise NotFound
 
+@blueprint.route('list', defaults={'context': '', 'subcontext': ''})
+@blueprint.route('list/', defaults={'context': '', 'subcontext': ''})
+@blueprint.route('list/<context>/<subcontext>', methods=['GET', 'POST'])
+def list_articles(context: str, subcontext: str) -> Response:
+    """List articles by context, month etc.
 
-@blueprint.route('list/<context>/<subcontext>')
-def list_articles(current_context: str, yymm: str) -> Response:
+    Context might be a context or an archive Subcontext should be
+    'recent' 'new' or a string of format yymm
     """
-    List articles by context, month etc.
+    response, code, headers = list_page.get_listing(
+        context, subcontext, request.args.get('skip'), request.args.get('show'))
+    if code == status.HTTP_200_OK:
+        #TODO if it is a HEAD request we don't want to render the template
+        return render_template(response['template'], **response), code, headers
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
+    elif code == status.HTTP_304_NOT_MODIFIED:
+        return '', code, headers
+    else:
+        return response, code, headers
 
-    Context might be a context or an archive
-    Subcontext should be 'recent' 'new' or a string of format yymm
-    """
-    raise InternalServerError(f'Not yet implemented {current_context} {yymm}')
 
 
 @blueprint.route('format/<arxiv_id>')

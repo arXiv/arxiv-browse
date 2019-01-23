@@ -14,8 +14,7 @@ PUBLISH_ISO_WEEKDAYS = [1, 2, 3, 4, 7]
 
 def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
         -> Tuple[datetime, bool]:
-    """
-    Make a sensible guess at earliest possible datetime of next update.
+    """Make a sensible guess at earliest possible datetime of next update.
 
     Guess is based on provided datetime.
 
@@ -32,7 +31,6 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
         whether the provided dt is likely to coincide with a publish process,
         which is the APPROX_PUBLISH_DURATION window starting 20:00 on the
         normal publish days specified by PUBLISH_ISO_WEEKDAYS.
-
     """
     config = get_application_config()
     tz = gettz(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))

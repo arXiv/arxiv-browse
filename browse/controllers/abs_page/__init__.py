@@ -1,8 +1,7 @@
-"""
-Handle requests to support the abs feature.
+"""Handle requests to support the abs feature.
 
-The primary entrypoint to this module is :func:`.get_abs_page`, which handles
-GET requests to the abs endpoint.
+The primary entrypoint to this module is :func:`.get_abs_page`, which
+handles GET requests to the abs endpoint.
 """
 
 import re
@@ -47,8 +46,7 @@ truncate_author_list_size = 100
 
 
 def get_abs_page(arxiv_id: str) -> Response:
-    """
-    Get abs page data from the document metadata service.
+    """Get abs page data from the document metadata service.
 
     Parameters
     ----------
@@ -70,7 +68,6 @@ def get_abs_page(arxiv_id: str) -> Response:
     ------
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
-
     """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
@@ -150,8 +147,7 @@ def get_abs_page(arxiv_id: str) -> Response:
 
 
 def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
-    """
-    Provide redirect URL if supplied ID does not match parsed ID.
+    """Provide redirect URL if supplied ID does not match parsed ID.
 
     Parameters
     ----------
@@ -162,7 +158,6 @@ def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
     redirect_url: str
         A `browse.abstract` redirect URL that uses the canonical
         arXiv identifier.
-
     """
     if not id or id.ids == id.id or id.ids == id.idv:
         return None
@@ -261,8 +256,7 @@ def _time_header_parse(headers: Dict[str, Any], header: str) \
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
-    """
-    Check for legacy request parameters related to old arXiv identifiers.
+    """Check for legacy request parameters related to old arXiv identifiers.
 
     Parameters
     ----------
@@ -272,7 +266,6 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
     -------
     arxiv_id: str
         A possibly modified version of the input arxiv_id string.
-
     """
     if request.args and '/' not in arxiv_id:
         # To support old references to /abs/<archive>?papernum=\d{7}
@@ -291,8 +284,7 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
 def _check_context(arxiv_identifier: Identifier,
                    primary_category: Optional[Category],
                    response_data: Dict[str, Any]) -> None:
-    """
-    Check context in request parameters and update response accordingly.
+    """Check context in request parameters and update response accordingly.
 
     Parameters
     ----------
@@ -302,7 +294,6 @@ def _check_context(arxiv_identifier: Identifier,
     Returns
     -------
     Dict of values to add to response_data
-
     """
     # Set up the context
     context = None

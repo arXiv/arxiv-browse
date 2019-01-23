@@ -1,5 +1,4 @@
-"""
-Flask configuration.
+"""Flask configuration.
 
 Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.

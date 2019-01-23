@@ -117,8 +117,7 @@ def _textsym_sub(match: Match) -> str:
 
 
 def texch2UTF(acc: str) -> str:
-    """
-    Convert single character TeX accents to UTF-8.
+    """Convert single character TeX accents to UTF-8.
 
     Strip non-whitepsace characters from any sequence not recognized (hence
     could return an empty string if there are no word characters in the input

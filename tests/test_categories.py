@@ -3,7 +3,7 @@ import unittest
 
 from tests.test_abs_parser import ABS_FILES
 from browse.services.document.metadata import AbsMetaSession
-
+from browse.domain.category import Category
 
 class CategoriesTest(unittest.TestCase):
 
@@ -172,3 +172,14 @@ class CategoriesTest(unittest.TestCase):
         self.assertIsNotNone(doc)
         assert_that(doc.primary_category.display, equal_to(primary))
         assert_that(doc.display_secondaries(), equal_to(secondaries))
+
+
+    def test_non_tax_cats(self):
+        cat = Category('nontx.AL')
+        assert_that(cat.display , equal_to('nontx.AL'))
+
+        cat = Category('math.XX')
+        assert_that(cat.display , equal_to('Mathematics (math.XX)'))
+
+        cat = Category('notaxArc')
+        assert_that(cat.display , equal_to('notaxArc'))
