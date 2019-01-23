@@ -1,6 +1,7 @@
 """Handle requests to display the trackbacks for a particular article ID."""
 
 from typing import Any, Dict, List, Tuple
+from flask import url_for
 from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
 
 from arxiv import status
@@ -65,6 +66,14 @@ def get_recent_tb_page() -> Response:
         raise InternalServerError
 
     return response_data, response_status, response_headers
+
+
+def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
+    """Get the redirect location for a trackback ID and hashed_document_id."""
+    response_status = status.HTTP_301_MOVED_PERMANENTLY
+    url = url_for('browse.home')
+    return {}, response_status, {'Location': url}
+
 
 
 def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict:

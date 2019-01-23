@@ -7,7 +7,8 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page, list_page, prevnext, tb_page
+from browse.controllers import abs_page, home_page, list_page, prevnext, \
+    tb_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -103,12 +104,14 @@ def tb_recent() -> Response:
         return render_template('tb/recent.html', **response), code, headers
     raise InternalServerError('Unexpected error')
 
+
 @blueprint.route('tb/redirect/<string:trackback_id>/<string:hashed_document_id>', methods=['GET', 'POST'])
-def tb_redirect() -> Response:
+def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     """Get the trackback redirect link."""
-    # response, code, headers =
-    # if code == status.HTTP_301_MOVED_PERMANENTLY:
-    #     return redirect(headers['Location'], code=code)
+    response, code, headers = tb_page.get_tb_redirect(trackback_id,
+                                                      hashed_document_id)
+    if code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
     raise InternalServerError('Not yet implemented')
 
 @blueprint.route('prevnext', methods=['GET', 'POST'])
