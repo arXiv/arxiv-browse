@@ -1,6 +1,6 @@
 """Handle requests to display the trackbacks for a particular article ID."""
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
 
 from arxiv import status
@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 10
+trackback_count_options = [20, 40, 100]
 
 
 def get_tb_page(arxiv_id: str) -> Response:
@@ -56,6 +57,7 @@ def get_recent_tb_page() -> Response:
     try:
         recent_trackback_pings = get_recent_trackback_pings()
         response_data['recent_trackback_pings'] = recent_trackback_pings
+        response_data['article_map'] = _get_article_map(recent_trackback_pings)
         print(f'RECENT:\n{recent_trackback_pings}')
         response_status = status.HTTP_200_OK
 
@@ -64,6 +66,15 @@ def get_recent_tb_page() -> Response:
 
     return response_data, response_status, response_headers
 
-# def _transform_recent(recent_tuple: Tuple):
-#     """Transform the tuple returned by `get_recent_trackback_pings()`."""
-#
+
+def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict:
+    """Get a mapping of trackback URLs to articles`."""
+    article_map = {}
+    for rtb in recent_trackbacks:
+        url = rtb[0].url
+        article = (rtb[1], rtb[2])
+        if url not in article_map:
+            article_map[url] = []
+        if article not in article_map[url]:
+            article_map[url].append(article)
+    return article_map

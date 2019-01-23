@@ -3,7 +3,10 @@
 {%- import 'base/macros.html' as base_macros -%}
 {%- from 'tb/macros.html' import generate_trackback_link -%}
 
-{% block title %}View Trackbacks{% endblock %}
+{% block title %}Article Trackbacks{% endblock %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Article Trackbacks</h1>{% endblock %}
+{# Disable login on this page for now, per classic #}
+{% block login_link %}{% endblock %}
 
 {%- block content %}
 

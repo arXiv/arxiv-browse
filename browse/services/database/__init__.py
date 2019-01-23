@@ -111,11 +111,14 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 
 
 @db_handle_error(logger=logger, default_return_val=tuple())
-def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, str, str]:
+def get_recent_trackback_pings(count: int = 20) \
+        -> List[Tuple[TrackbackPing, str, str]]:
     """Get recent trackback pings across all of arXiv."""
     count = max(count, 0)
     if count == 0:
-        return tuple()
+        return list(tuple())
+
+    # subquery to get the specified number of distinct trackback URLs
     stmt = (
         db.session.query(TrackbackPing.url).
         filter(TrackbackPing.status == 'accepted').
@@ -135,7 +138,7 @@ def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, str, str
         order_by(TrackbackPing.posted_date.desc()).\
         all()
 
-    return tb_doc_tup
+    return list(tb_doc_tup)
 
 
 @db_handle_error(logger=logger, default_return_val=None)
