@@ -1,5 +1,5 @@
 {%- extends "tb/base.html" -%}
-{%- from 'abs/author_links.html' import display_authors_with_links -%}
+{%- from 'tb/macros.html' import generate_trackback_link -%}
 {%- import 'base/macros.html' as base_macros -%}
 
 {% block title %}Recent Trackbacks{% endblock %}
@@ -10,12 +10,24 @@
   {% if recent_trackback_pings -%}
 
     {%- set ns = namespace(cur_tb_ymd='', cur_tb_url='') -%}
-    {%- for rtb in recent_trackback_pings -%}
-      {%- set this_tb_ymd = rtb[0].posted_datetime.strftime('%B %-d, %Y') -%}
-      {%- set this_tb_url = rtb[0].url -%}
+    {%- for recent_tb in recent_trackback_pings -%}
+      {%- set this_tb_ymd = recent_tb[0].posted_datetime.strftime('%B %-d, %Y') -%}
+      {%- set this_tb_url = recent_tb[0].url -%}
       {%- if this_tb_ymd != ns.cur_tb_ymd -%}
         {%- set ns.cur_tb_ymd = this_tb_ymd -%}
         <p><b>{{ this_tb_ymd }}</b></p>
+      {%- endif -%}
+      {%- if this_tb_url != ns.cur_tb_url -%}
+        {%- set ns.cur_tb_url = this_tb_url -%}
+      <p class="blog">{{- generate_trackback_link(recent_tb[0], include_posted_date=False) }} links the following articles:</p>
+        <ul class="blog">
+          {#- TODO: FIX--INEFFICIENT -#}
+          {%- for rtb in recent_trackback_pings -%}
+            {%- if rtb[0].url == this_tb_url -%}
+          <li><span class="mathjax">{{ recent_tb[2] }}</span> [<a href="{{ url_for('.abstract', arxiv_id=recent_tb[1]) }}">{{ recent_tb[1] }}</a>]</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
       {%- endif -%}
     {%- endfor -%}
   {%- endif %}
