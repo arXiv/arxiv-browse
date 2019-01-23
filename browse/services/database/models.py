@@ -6,15 +6,18 @@ from validators import url as is_valid_url
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, Index, \
-    Integer, SmallInteger, String, text, Text
+from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, \
+    ForeignKeyConstraint, Index, \
+    Integer, SmallInteger, String, Table, text, Text
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
 from arxiv.base.globals import get_application_config
 
 db: SQLAlchemy = SQLAlchemy()
+
 app_config = get_application_config()
 tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+metadata = db.metadata
 
 
 class Document(db.Model):
@@ -320,6 +323,93 @@ class DBLPDocumentAuthor(db.Model):
 
     author = relationship('DBLPAuthor')
     document = relationship('Document')
+
+
+class Category(db.Model):
+    """Model for category in taxonomy."""
+
+    __tablename__ = 'arXiv_categories'
+
+    archive = Column(ForeignKey('arXiv_archives.archive_id'),
+                     primary_key=True,
+                     nullable=False, server_default=text("''"))
+    subject_class = Column(String(16), primary_key=True,
+                           nullable=False, server_default=text("''"))
+    definitive = Column(Integer, nullable=False, server_default=text("'0'"))
+    active = Column(Integer, nullable=False, server_default=text("'0'"))
+    category_name = Column(String(255))
+    endorse_all = Column(Enum('y', 'n', 'd'), nullable=False,
+                         server_default=text("'d'"))
+    endorse_email = Column(Enum('y', 'n', 'd'),
+                           nullable=False, server_default=text("'d'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'0'"))
+    endorsement_domain = Column(ForeignKey(
+        'arXiv_endorsement_domains.endorsement_domain'), index=True)
+
+    arXiv_archive = relationship('Archive')
+    arXiv_endorsement_domain = relationship('EndorsementDomain')
+
+
+class Archive(db.Model):
+    """Model for archive in taxonomy."""
+
+    __tablename__ = 'arXiv_archives'
+
+    archive_id = Column(String(16), primary_key=True,
+                        server_default=text("''"))
+    in_group = Column(ForeignKey('arXiv_groups.group_id'),
+                      nullable=False, index=True, server_default=text("''"))
+    archive_name = Column(String(255), nullable=False,
+                          server_default=text("''"))
+    start_date = Column(String(4), nullable=False, server_default=text("''"))
+    end_date = Column(String(4), nullable=False, server_default=text("''"))
+    subdivided = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    arXiv_group = relationship('Group')
+
+
+class Group(db.Model):
+    """Model for group in taxonomy."""
+
+    __tablename__ = 'arXiv_groups'
+
+    group_id = Column(String(16), primary_key=True, server_default=text("''"))
+    group_name = Column(String(255), nullable=False, server_default=text("''"))
+    start_year = Column(String(4), nullable=False, server_default=text("''"))
+
+
+class EndorsementDomain(db.Model):
+    """Model for endorsement domain."""
+
+    __tablename__ = 'arXiv_endorsement_domains'
+
+    endorsement_domain = Column(
+        String(32), primary_key=True, server_default=text("''"))
+    endorse_all = Column(Enum('y', 'n'), nullable=False,
+                         server_default=text("'n'"))
+    mods_endorse_all = Column(
+        Enum('y', 'n'), nullable=False, server_default=text("'n'"))
+    endorse_email = Column(Enum('y', 'n'), nullable=False,
+                           server_default=text("'y'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'4'"))
+
+
+in_category = Table(
+    'arXiv_in_category', metadata,
+    Column('document_id', ForeignKey('arXiv_documents.document_id'),
+           nullable=False, index=True, server_default=text("'0'")),
+    Column('archive', String(16), nullable=False, server_default=text("''")),
+    Column('subject_class', String(16),
+           nullable=False, server_default=text("''")),
+    Column('is_primary', Integer, nullable=False, server_default=text("'0'")),
+    ForeignKeyConstraint(['archive', 'subject_class'], [
+                         'arXiv_categories.archive',
+                         'arXiv_categories.subject_class']),
+    Index('archive', 'archive', 'subject_class', 'document_id', unique=True),
+    Index('arXiv_in_category_mp', 'archive', 'subject_class')
+)
 
 
 def init_app(app: Optional[LocalProxy]) -> None:

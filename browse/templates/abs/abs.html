@@ -2,7 +2,7 @@
 {% from 'abs/author_links.html' import display_authors_with_links %}
 {% import 'base/macros.html' as base_macros %}
 
-  {% block title %}[{{ requested_id }}] {{ abs_meta.title }}{% endblock %}
+  {% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
 
 {% block head %}
   {{ super() -}}
@@ -59,7 +59,7 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    
+
   {{ base_macros.abs(
     abs_meta.arxiv_identifier.id,
     abs_meta.title,

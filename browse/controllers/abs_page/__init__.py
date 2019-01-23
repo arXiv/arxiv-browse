@@ -1,8 +1,7 @@
-"""
-Handle requests to support the abs feature.
+"""Handle requests to support the abs feature.
 
-The primary entrypoint to this module is :func:`.get_abs_page`, which handles
-GET requests to the abs endpoint.
+The primary entrypoint to this module is :func:`.get_abs_page`, which
+handles GET requests to the abs endpoint.
 """
 
 import re
@@ -47,8 +46,7 @@ truncate_author_list_size = 100
 
 
 def get_abs_page(arxiv_id: str) -> Response:
-    """
-    Get abs page data from the document metadata service.
+    """Get abs page data from the document metadata service.
 
     Parameters
     ----------
@@ -70,7 +68,6 @@ def get_abs_page(arxiv_id: str) -> Response:
     ------
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
-
     """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
@@ -150,8 +147,7 @@ def get_abs_page(arxiv_id: str) -> Response:
 
 
 def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
-    """
-    Provide redirect URL if supplied ID does not match parsed ID.
+    """Provide redirect URL if supplied ID does not match parsed ID.
 
     Parameters
     ----------
@@ -162,7 +158,6 @@ def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
     redirect_url: str
         A `browse.abstract` redirect URL that uses the canonical
         arXiv identifier.
-
     """
     if not id or id.ids == id.id or id.ids == id.idv:
         return None
@@ -261,8 +256,7 @@ def _time_header_parse(headers: Dict[str, Any], header: str) \
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
-    """
-    Check for legacy request parameters related to old arXiv identifiers.
+    """Check for legacy request parameters related to old arXiv identifiers.
 
     Parameters
     ----------
@@ -272,7 +266,6 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
     -------
     arxiv_id: str
         A possibly modified version of the input arxiv_id string.
-
     """
     if request.args and '/' not in arxiv_id:
         # To support old references to /abs/<archive>?papernum=\d{7}
@@ -291,8 +284,7 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
 def _check_context(arxiv_identifier: Identifier,
                    primary_category: Optional[Category],
                    response_data: Dict[str, Any]) -> None:
-    """
-    Check context in request parameters and update response accordingly.
+    """Check context in request parameters and update response accordingly.
 
     Parameters
     ----------
@@ -302,7 +294,6 @@ def _check_context(arxiv_identifier: Identifier,
     Returns
     -------
     Dict of values to add to response_data
-
     """
     # Set up the context
     context = None
@@ -325,37 +316,15 @@ def _check_context(arxiv_identifier: Identifier,
 
     response_data['browse_context'] = context
 
-    if arxiv_identifier.is_old_id or context == 'arxiv':
-        next_id = metadata.get_next_id(arxiv_identifier)
-        # TODO: might have to pass non-arxiv context to url_for becuase
-        # of examples like physics/9707012
-        if next_id:
-            next_url = url_for('browse.abstract',
-                               arxiv_id=next_id.id,
-                               context='arxiv' if context == 'arxiv' else None)
-        else:
-            next_url = None
-
-        previous_id = metadata.get_previous_id(arxiv_identifier)
-        if previous_id:
-            prev_url = url_for('browse.abstract',
-                               arxiv_id=previous_id.id,
-                               context='arxiv' if context == 'arxiv' else None)
-        else:
-            prev_url = None
-
-    else:
-        # This is the case where the context is not in 'arxiv' or an archive,
-        # so just let the prevnext controller figure it out.
-
-        # TODO do url_for() here
-        next_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=next'
-        prev_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=prev'
-        if context:
-            next_url = next_url + '&context=' + context
-            prev_url = prev_url + '&context=' + context
+    # Use prevnext controller to determine what the previous or next ID is.
+    next_url = url_for('browse.previous_next',
+                       id=arxiv_identifier.id,
+                       function='next',
+                       context=context if context else None)
+    prev_url = url_for('browse.previous_next',
+                       id=arxiv_identifier.id,
+                       function='prev',
+                       context=context if context else None)
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url

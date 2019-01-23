@@ -107,7 +107,7 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 
 
 @db_handle_error(logger=logger, default_return_val=[])
-def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, Document]:
+def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, str, str]:
     """Get recent trackback pings across all of arXiv."""
     # select d.paper_id, d.title, p.url, p.title, p.posted_date from arXiv_trackback_pings p join arXiv_documents d on d.document_id=p.document_id where p.status='accepted' group by p.url order by p.posted_date desc
     count = max(count, 0)
