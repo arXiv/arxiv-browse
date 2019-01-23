@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 10
-trackback_count_options = [20, 40, 100]
+trackback_count_options = [25, 50, 100, 200]
 
 
 def get_tb_page(arxiv_id: str) -> Response:
@@ -58,7 +58,7 @@ def get_recent_tb_page() -> Response:
         recent_trackback_pings = get_recent_trackback_pings()
         response_data['recent_trackback_pings'] = recent_trackback_pings
         response_data['article_map'] = _get_article_map(recent_trackback_pings)
-        print(f'RECENT:\n{recent_trackback_pings}')
+        response_data['trackback_count_options'] = trackback_count_options
         response_status = status.HTTP_200_OK
 
     except Exception:

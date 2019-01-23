@@ -13,9 +13,9 @@
   <form action="/tb/recent" method="post">
   <b>View last
     <select name="views">
-      <option value="20" selected="selected">20</option>
-      <option value="40">40</option>
-      <option value="100">100</option>
+      {%- for option in trackback_count_options -%}
+      <option value="{{ option }}"{% if loop.first %} selected="selected"{% endif %}>{{ option }}</option>
+      {%- endfor -%}
       </select> trackbacks
     </b>
     <input type="submit" name="foo" value="Refresh">
