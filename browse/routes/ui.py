@@ -101,7 +101,15 @@ def tb_recent() -> Response:
 
     if code == status.HTTP_200_OK:
         return render_template('tb/recent.html', **response), code, headers
+    raise InternalServerError('Unexpected error')
 
+@blueprint.route('tb/redirect/<string:trackback_id>/<string:hashed_document_id>', methods=['GET', 'POST'])
+def tb_redirect() -> Response:
+    """Get the trackback redirect link."""
+    # response, code, headers =
+    # if code == status.HTTP_301_MOVED_PERMANENTLY:
+    #     return redirect(headers['Location'], code=code)
+    raise InternalServerError('Not yet implemented')
 
 @blueprint.route('prevnext', methods=['GET', 'POST'])
 def previous_next() -> Union[str, Response]:
