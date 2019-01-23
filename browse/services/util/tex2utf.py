@@ -85,8 +85,9 @@ textlet = {
     'nu': 0x03bd, 'xi': 0x03be, 'omicron': 0x03bf,
     'pi': 0x03c0, 'rho': 0x03c1, 'varsigma': 0x03c2,
     'sigma': 0x03c3, 'tau': 0x03c4, 'upsion': 0x03c5,
-    'phi': 0x03c6, 'chi': 0x03c7, 'psi': 0x03c8,
-    'omega': 0x03c9,
+    'varphi': 0x03C6, # φ
+    'phi':  0x03D5, # ϕ
+    'chi': 0x03c7, 'psi': 0x03c8, 'omega': 0x03c9,
 }
 
 
@@ -141,16 +142,25 @@ def texch2UTF(acc: str) -> str:
 # }
 #
 
-def tex2utf(tex: str) -> str:
-    """Converts some accents and greek TeX to utf8."""
-    # This is Legacy stuff and might not be needed if we move toward all utf8
+def tex2utf(tex: str, letters: bool=True) -> str:
+    """Convert some TeX accents and greek symbols to UTF-8 characters. 
 
+    :param tex: Text to filter.
+
+    :param letters: If False, do not convert greek letters or
+    ligatures.  Greek symbols can cause problems. Ex. \phi is not
+    suppose to look like φ.  φ looks like \varphi.  See ARXIVNG-1612
+
+    :returns: string, possibly with some TeX replaced with UTF8
+
+    """
     # Do dotless i,j -> plain i,j where they are part of an accented i or j
     utf = re.sub(r"/(\\['`\^\"\~\=\.uvH])\{\\([ij])\}", r"\g<1>\{\g<2>\}", tex)
-    # $utf =~ s/(\\['`\^"\~\=\.uvH])\{\\([ij])\}/$1\{$2\}/g; #'
 
     # Now work on the Tex sequences, first those with letters only match
-    utf = textlet_pattern.sub(_textlet_sub, utf)
+    if letters:
+        utf = textlet_pattern.sub(_textlet_sub, utf)
+
     utf = textsym_pattern.sub(_textsym_sub, utf)
 
     utf = re.sub(r'\{\\j\}|\\j\s', 'j', utf)  # not in Unicode?
@@ -158,26 +168,21 @@ def tex2utf(tex: str) -> str:
     # reduce {{x}}, {{{x}}}, ... down to {x}
     while re.search(r'\{\{([^\}]*)\}\}', utf):
         utf = re.sub(r'\{\{([^\}]*)\}\}', r'{\g<1>}', utf)
-        # $utf =~ s/\{\{([^\}]*)\}\}/{$1}/g;
 
     # Accents which have a non-letter prefix in TeX, first \'e
-    # $utf =~ s/\\(['`\^"\~\=\.][a-zA-Z])/&texch2UTF($1)/eg; #'
     utf = re.sub(r'\\([\'`^"~=.][a-zA-Z])',
                  lambda m: texch2UTF(m.group(1)), utf)
 
     # then \'{e} form:
-    # $utf =~ s/\\(['`\^"\~\=\.])\{([a-zA-Z])\}/&texch2UTF("$1$2")/eg; #'
     utf = re.sub(r'\\([\'`^"~=.])\{([a-zA-Z])\}',
                  lambda m: texch2UTF(m.group(1) + m.group(2)), utf)
 
     # Accents which have a letter prefix in TeX
     #  \u{x} u above (breve), \v{x}   v above (caron), \H{x}   double accute...
-    # $utf =~ s/\\([Hckoruv])\{([a-zA-Z])\}/&texch2UTF("$1$2")/eg;
     utf = re.sub(r'\\([Hckoruv])\{([a-zA-Z])\}',
                  lambda m: texch2UTF(m.group(1) + m.group(2)), utf)
 
     # Don't do \t{oo} yet,
-    # $utf =~ s/\\t\{([^\}])\}/$2/g;
     utf = re.sub(r'\\t{([^\}])\}', r'\g<1>', utf)
 
     # bdc34: commented out in original Perl

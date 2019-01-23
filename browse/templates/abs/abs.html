@@ -64,7 +64,8 @@
 
     <div class="dateline">{{ generate_dateline() }}</div>
 
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex_to_utf|arxiv_urlize|line_feed_to_br }}</blockquote>
+    {# Below must equlvelent to what is done in the submission preview so the abstract appears as the author saw it in the preview. #}
+    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex_to_utf_no_symb|arxiv_urlize|line_feed_to_br }}</blockquote>
     <!--CONTEXT-->
     <div class="metatable">
       <table summary="Additional metadata">

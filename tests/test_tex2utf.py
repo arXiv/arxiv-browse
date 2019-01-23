@@ -11,6 +11,9 @@ class TextTex2Utf(TestCase):
         utf_out = tex2utf(test_str)
         self.assertEqual(utf_out, test_str)
 
+        utf_out = tex2utf(test_str, letters=False)
+        self.assertEqual(utf_out, test_str)
+        
         test_str = "\\'e"
         utf_out = tex2utf(test_str)
         self.assertEqual(utf_out, chr(0xe9))
@@ -20,6 +23,20 @@ class TextTex2Utf(TestCase):
         utf_out = tex2utf(test_str)
         self.assertEqual(utf_out, chr(
             0xc9))
+
+        test_str = "\\'E"
+        utf_out = tex2utf(test_str,letters=True)
+        self.assertEqual(utf_out, chr(
+            0xc9))
+
+        test_str = "\\'E"
+        utf_out = tex2utf(test_str,letters=False)
+        self.assertEqual(utf_out, chr(0xc9))
+                         
+
+        test_str = "\\'E"
+        utf_out = tex2utf(test_str,False)
+        self.assertEqual(utf_out, chr(0xc9))
 
         # single textsymbol
         test_str = '\\OE'
@@ -54,6 +71,15 @@ class TextTex2Utf(TestCase):
         self.assertEqual(utf_out, chr(
             0x03b1))
 
+        test_str = '\\alpha'
+        utf_out = tex2utf(test_str,True)
+        self.assertEqual(utf_out, chr(
+            0x03b1))
+
+        test_str = '\\alpha'
+        utf_out = tex2utf(test_str,False)
+        self.assertEqual(utf_out, r'\alpha')
+        
         # simple test_string of greek
         test_str = '\\alpha\\beta\gamma'
         utf_out = tex2utf(test_str)
