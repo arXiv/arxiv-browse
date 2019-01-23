@@ -7,7 +7,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page, list_page
+from browse.controllers import abs_page, home_page, list_page, prevnext
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -81,6 +81,17 @@ def abstract(arxiv_id: str) -> Response:
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers
 
+    raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('prevnext', methods=['GET', 'POST'])
+def previous_next() -> Union[str, Response]:
+    """Previous/Next navigation used on /abs page."""
+    if not request.args:
+        raise BadRequest
+    response, code, headers = prevnext.get_prevnext(request.args)
+    if code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
     raise InternalServerError('Unexpected error')
 
 

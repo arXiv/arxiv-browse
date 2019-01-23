@@ -316,37 +316,15 @@ def _check_context(arxiv_identifier: Identifier,
 
     response_data['browse_context'] = context
 
-    if arxiv_identifier.is_old_id or context == 'arxiv':
-        next_id = metadata.get_next_id(arxiv_identifier)
-        # TODO: might have to pass non-arxiv context to url_for becuase
-        # of examples like physics/9707012
-        if next_id:
-            next_url = url_for('browse.abstract',
-                               arxiv_id=next_id.id,
-                               context='arxiv' if context == 'arxiv' else None)
-        else:
-            next_url = None
-
-        previous_id = metadata.get_previous_id(arxiv_identifier)
-        if previous_id:
-            prev_url = url_for('browse.abstract',
-                               arxiv_id=previous_id.id,
-                               context='arxiv' if context == 'arxiv' else None)
-        else:
-            prev_url = None
-
-    else:
-        # This is the case where the context is not in 'arxiv' or an archive,
-        # so just let the prevnext controller figure it out.
-
-        # TODO do url_for() here
-        next_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=next'
-        prev_url = '/prevnext?site=arxiv.org&id=' + \
-            arxiv_identifier.id + '&function=prev'
-        if context:
-            next_url = next_url + '&context=' + context
-            prev_url = prev_url + '&context=' + context
+    # Use prevnext controller to determine what the previous or next ID is.
+    next_url = url_for('browse.previous_next',
+                       id=arxiv_identifier.id,
+                       function='next',
+                       context=context if context else None)
+    prev_url = url_for('browse.previous_next',
+                       id=arxiv_identifier.id,
+                       function='prev',
+                       context=context if context else None)
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
