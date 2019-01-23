@@ -40,7 +40,7 @@
   {%- endblock head -%}
 </head>
 
-<body {% block body_id %}id="front"{% endblock %} class="with-cu-identity">
+<body {% block body_id %}{% endblock %} class="with-cu-identity">
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
@@ -60,9 +60,8 @@
     {% block header %}
     {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-    <h1>arXiv.org</h1>
     {% block header_h1 %}<h1>arXiv.org</h1>{% endblock header_h1%}
-    <div class="login"><a href="{{ url_for('login') }}">Login</a></div>
+    {% block login_link %}<div class="login"><a href="{{ url_for('login') }}">Login</a></div>{% endblock %}
     <div id="search">
       <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
 
