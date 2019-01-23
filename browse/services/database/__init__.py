@@ -4,7 +4,8 @@ import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from typing import List, Optional, Any, Callable, Tuple
-from sqlalchemy import not_
+from sqlalchemy import not_, desc, asc, bindparam
+from sqlalchemy.ext import baked
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -14,12 +15,15 @@ from arxiv.base.globals import get_application_config
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
+from browse.services.database.models import in_category
+from browse.domain.identifier import Identifier
 from arxiv.base import logging
 from logging import Logger
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+bakery = baked.bakery()
 
 
 def db_handle_error(logger: Logger, default_return_val: Any) \
@@ -106,10 +110,9 @@ def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
                 .order_by(TrackbackPing.posted_date.desc()).all())
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+@db_handle_error(logger=logger, default_return_val=tuple())
 def get_recent_trackback_pings(count: int = 20) -> Tuple[TrackbackPing, str, str]:
     """Get recent trackback pings across all of arXiv."""
-    # select d.paper_id, d.title, p.url, p.title, p.posted_date from arXiv_trackback_pings p join arXiv_documents d on d.document_id=p.document_id where p.status='accepted' group by p.url order by p.posted_date desc
     count = max(count, 0)
     if count == 0:
         return tuple()
@@ -143,7 +146,7 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     ).filter(TrackbackPing.document_id == Document.document_id) \
         .filter(Document.paper_id == paper_id) \
         .filter(TrackbackPing.status == 'accepted').scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=tz)
+    dt = datetime.fromtimestamp(timestamp, tz=gettz('US/Eastern'))
     dt = dt.astimezone(tz=tzutc())
     return dt
 
@@ -197,3 +200,51 @@ def get_document_count() -> Optional[int]:
     document_count: int = db.session.query(Document).\
         filter(not_(Document.paper_id.like('test%'))).count()
     return document_count
+
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_sequential_id(paper_id: Identifier,
+                      context: str = 'all',
+                      is_next: bool = True) -> Optional[str]:
+    """Get the next or previous paper ID in sequence."""
+    local_session = db.session()
+    baked_query = bakery(lambda session: session.query(Document.paper_id))
+
+    if paper_id.is_old_id:
+        # NB: classic did not support old identifiers in prevnext
+        if context == 'all':
+            like_id = f'{paper_id.archive}/{paper_id.yymm}%'
+        else:
+            like_id = f'%/{paper_id.yymm}%'
+    else:
+        like_id = f'{paper_id.yymm}.%'
+
+    baked_query += lambda q: q.filter(
+        Document.paper_id.like(bindparam('like_id')))
+    if is_next:
+        baked_query += lambda q: q.filter(Document.paper_id >
+                                          bindparam('paper_id')). \
+                                          order_by(asc(Document.paper_id))
+    else:
+        baked_query += lambda q: q.filter(Document.paper_id <
+                                          bindparam('paper_id')). \
+                                          order_by(desc(Document.paper_id))
+    if context != 'all':
+        archive: str = context
+        subject_class: str = ''
+        if '.' in archive:
+            (archive, subject_class) = archive.split('.')
+        baked_query += lambda q: q.join(in_category).filter(
+            in_category.c.archive == bindparam('archive'))
+        if subject_class:
+            baked_query += lambda q: q.filter(
+                in_category.c.subject_class == bindparam('subject_class'))
+
+    result = baked_query(local_session).params(
+        like_id=like_id,
+        paper_id=paper_id.id,
+        archive=archive if archive else None,
+        subject_class=subject_class if subject_class else None).first()
+    if result:
+        return f'{result.paper_id}'
+    return None
