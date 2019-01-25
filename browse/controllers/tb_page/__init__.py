@@ -70,6 +70,15 @@ def get_recent_tb_page() -> Response:
 
 def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     """Get the redirect location for a trackback ID and hashed_document_id."""
+
+    try:
+        int(trackback_id)
+    except ValueError:
+        raise TrackbackNotFound()
+
+    except Exception:
+        raise InternalServerError
+
     response_status = status.HTTP_301_MOVED_PERMANENTLY
     url = url_for('browse.home')
     return {}, response_status, {'Location': url}
@@ -77,7 +86,7 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
 
 
 def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict:
-    """Get a mapping of trackback URLs to articles`."""
+    """Get a mapping of trackback URLs to articles."""
     article_map = {}
     for rtb in recent_trackbacks:
         url = rtb[0].url
