@@ -113,6 +113,7 @@ mypy_test_errors.txt
 arxiv-browse.iml
 .vscode
 *~
+TAGS
 
 # DB connection, etc
 private_vars.sh

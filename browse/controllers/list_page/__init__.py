@@ -39,22 +39,29 @@ Differences from legacy arxiv:
 Doesn't handle the /view path.
 """
 import calendar
-from typing import Any, Dict, List, Optional, Tuple, cast
+import logging
 import math
+from datetime import datetime
+from email.utils import formatdate
+from typing import Any, Dict, List, Optional, Tuple, cast, Union
 
-from flask import current_app, request, url_for
-
-from werkzeug.exceptions import ServiceUnavailable, BadRequest
 from arxiv import status, taxonomy
+from dateutil import parser
+from dateutil.tz import tzutc
+from flask import current_app, request, url_for
+from werkzeug.exceptions import ServiceUnavailable, BadRequest
 
-from browse.services.search.search_authors import queries_for_authors, \
-    split_long_author_list, AuthorList
-from browse.services.listing import ListingService, NewResponse
-from browse.services.document import metadata
-from browse.domain.metadata import DocMetadata
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
+from browse.domain.metadata import DocMetadata
+from browse.services.document import metadata
+from browse.services.listing import ListingService
+from browse.domain.listing import NewResponse, NotModifiedResponse, ListingResponse
+from browse.services.search.search_authors import queries_for_authors, \
+    split_long_author_list, AuthorList
 
+
+logger = logging.getLogger(__name__)
 
 show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
@@ -135,12 +142,18 @@ def get_listing(
     else:
         shown = min(int(show), max_show)
 
+    if_mod_since = request.headers.get('If-Modified-Since', None)
+
     response_data: Dict[str, Any] = {}
+    response_headers: Dict[str, Any] = {}
 
     if time_period == 'new':
         list_type = 'new'
         new_resp = listing_service.list_new_articles(
-            subject_or_category, skipn, shown)
+            subject_or_category, skipn, shown, if_mod_since)
+        response_headers.update(_expires_headers(new_resp))
+        if _not_modified(new_resp):
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
         listings = new_resp['listings']
         count = new_resp['new_count'] + \
             new_resp['rep_count'] + new_resp['cross_count']
@@ -153,17 +166,21 @@ def get_listing(
     elif time_period in ['pastweek', 'recent']:
         list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
-            subject_or_category, skipn, shown)
+            subject_or_category, skipn, shown, if_mod_since)
+        response_headers.update(_expires_headers(rec_resp))
+        if _not_modified(rec_resp):
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
         listings = rec_resp['listings']
         count = rec_resp['count']
         response_data['pubdates'] = rec_resp['pubdates']
 
-        # TODO make day table of contents anchors
-
     elif time_period == 'current':
         list_type = 'current'
         cur_resp = listing_service.list_articles_by_month(
-            subject_or_category, 1999, 12, skipn, shown)
+            subject_or_category, 1999, 12, skipn, shown, if_mod_since)
+        response_headers.update(_expires_headers(cur_resp))
+        if _not_modified(cur_resp):
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
         listings = cur_resp['listings']
         count = cur_resp['count']
         response_data['pubmonth'] = cur_resp['pubdates'][0][0]
@@ -182,27 +199,28 @@ def get_listing(
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             month_reps = listing_service.list_articles_by_month(
-                subject_or_category, list_year, list_month, skipn, shown)
+                subject_or_category, list_year, list_month, skipn, shown, if_mod_since)
+            response_headers.update(_expires_headers(month_reps))
+            if _not_modified(month_reps):
+                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
             listings = month_reps['listings']
             count = month_reps['count']
             response_data['pubmonth'] = month_reps['pubdates'][0][0]
         else:
             list_type = 'year'
             year_resp = listing_service.list_articles_by_year(
-                subject_or_category, list_year, skipn, shown)
+                subject_or_category, list_year, skipn, shown, if_mod_since)
+            response_headers.update(_expires_headers(year_resp))
+            if _not_modified(year_resp):
+                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
             listings = year_resp['listings']
             count = year_resp['count']
             response_data['pubmonth'] = year_resp['pubdates'][0][0]
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
-    # TODO write cache expires headers
-
-    # Types of pages:
-    # current and YYMM -> all listings in one list, no anchor index
-    # new -> all in one list, index of anchors to start of new, cross and replacements
-    # recent -> all in one list, index of anchors to specific days
 
     idx = 0
+
     for item in listings:
         idx = idx + 1
         item['article'] = metadata.get_abs(item['id'])  # type: ignore
@@ -237,7 +255,7 @@ def get_listing(
                            query=query))
     response_data['url_for_author_search'] = author_query
 
-    return response_data, status.HTTP_200_OK, {}
+    return response_data, status.HTTP_200_OK, response_headers
 
 
 def get_listing_service(app: Any) -> ListingService:
@@ -406,7 +424,7 @@ def sub_sections_for_types(
 
     for sec in secs:
         typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[  # type: ignore
-            sec['type']]  
+            sec['type']]
         date = resp['announced'].strftime('%A, %-d %B %Y')
 
         showing = 'showing '
@@ -422,3 +440,16 @@ def sub_sections_for_types(
         sec['heading'] = f'{typ} submissions for {date} ({showing}{n} of {tot} entries )'
 
     return {'sub_sections_for_types': secs}
+
+
+def _not_modified(response: Union[ListingResponse, NewResponse, NotModifiedResponse])->bool:
+    return bool(response and response.get('not_modified', False))
+
+
+def _expires_headers(listing_resp:
+                     Union[ListingResponse, NewResponse, NotModifiedResponse]) \
+                     -> Dict[str, str]:
+    if listing_resp and listing_resp.get('expires', False):
+        return {'Expires': str(listing_resp['expires'])}
+    else:
+        return {}
