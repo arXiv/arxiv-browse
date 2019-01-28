@@ -272,7 +272,7 @@ class TrackbackPing(db.Model):
     @property
     def display_url(self) -> str:
         """Get the URL without the protocol, for display."""
-        return re.sub(r'^[a-z]+:\/\/', '',
+        return re.sub(r'^[a-z]+:\/\/', '',  # type: ignore
                       self.url.strip(), flags=re.IGNORECASE)
 
     @property
@@ -282,6 +282,7 @@ class TrackbackPing(db.Model):
 
     @property
     def hashed_document_id(self) -> str:
+        """Get the hashed document_id."""
         s = f'{self.document_id}{self.trackback_id}{tb_secret}'
         return hashlib.md5(s.encode()).hexdigest()[0:9]
 

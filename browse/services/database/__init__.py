@@ -113,16 +113,18 @@ def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 @db_handle_error(logger=logger, default_return_val=None)
 def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     """Get an individual trackback ping by its id (trackback_id)."""
-    return db.session.query(TrackbackPing).filter(TrackbackPing.trackback_id == trackback_id).first()
+    trackback: TrackbackPing = db.session.query(TrackbackPing).\
+        filter(TrackbackPing.trackback_id == trackback_id).first()
+    return trackback
 
 
 @db_handle_error(logger=logger, default_return_val=tuple())
-def get_recent_trackback_pings(count: int = 20) \
+def get_recent_trackback_pings(max_trackbacks: int = 25) \
         -> List[Tuple[TrackbackPing, str, str]]:
     """Get recent trackback pings across all of arXiv."""
-    count = max(count, 0)
-    if count == 0:
-        return list(tuple())
+    max_trackbacks = min(max(max_trackbacks, 0), 500)
+    if max_trackbacks == 0:
+        return list()
 
     # subquery to get the specified number of distinct trackback URLs
     stmt = (
@@ -130,7 +132,7 @@ def get_recent_trackback_pings(count: int = 20) \
         filter(TrackbackPing.status == 'accepted').
         distinct(TrackbackPing.url).
         order_by(TrackbackPing.posted_date.desc()).
-        limit(count).
+        limit(max_trackbacks).
         subquery()
     )
     tb_doc_tup = db.session.query(

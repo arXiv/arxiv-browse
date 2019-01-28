@@ -8,18 +8,17 @@
 {%- block content %}
   <h1>Recent Trackbacks</h1>
   <p><em>Trackbacks indicate external web sites that link to articles in arXiv.org. Trackbacks may not reflect the opinion of arXiv.org or of that article's authors.</em></p>
-  <form action="/tb/recent" method="post">
+  <form action="{{ url_for('browse.tb_recent') }}" method="post">
   <b>View last
     <select name="views">
       {%- for option in trackback_count_options -%}
-      <option value="{{ option }}"{% if loop.first %} selected="selected"{% endif %}>{{ option }}</option>
+      <option value="{{ option }}"{% if num_trackbacks == option %} selected="selected"{% endif %}>{{ option }}</option>
       {%- endfor -%}
       </select> trackbacks
     </b>
-    <input type="submit" name="foo" value="Refresh">
+    <input type="submit" name="recent_trackbacks_refresh" value="Refresh">
   </form>
   {% if recent_trackback_pings -%}
-
     {%- set ns = namespace(cur_tb_ymd='', cur_tb_url='') -%}
     {%- for recent_tb in recent_trackback_pings -%}
       {%- set this_tb_ymd = recent_tb[0].posted_datetime.strftime('%B %-d, %Y') -%}

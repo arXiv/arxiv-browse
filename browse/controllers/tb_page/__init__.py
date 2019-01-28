@@ -1,7 +1,6 @@
 """Handle requests to display the trackbacks for a particular article ID."""
 
 from typing import Any, Dict, List, Tuple
-from flask import url_for
 from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
 
 from arxiv import status
@@ -51,18 +50,22 @@ def get_tb_page(arxiv_id: str) -> Response:
     return response_data, response_status, response_headers
 
 
-def get_recent_tb_page() -> Response:
+def get_recent_tb_page(views: str = '') -> Response:
     """Get the data needed to display the recent trackbacks page."""
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-
+    num_trackbacks = trackback_count_options[0]
     try:
-        recent_trackback_pings = get_recent_trackback_pings()
+        if views:
+            num_trackbacks = int(views)
+        recent_trackback_pings = get_recent_trackback_pings(num_trackbacks)
+        response_data['num_trackbacks'] = num_trackbacks
         response_data['recent_trackback_pings'] = recent_trackback_pings
         response_data['article_map'] = _get_article_map(recent_trackback_pings)
         response_data['trackback_count_options'] = trackback_count_options
         response_status = status.HTTP_200_OK
-
+    except ValueError:
+        raise BadRequest
     except Exception:
         raise InternalServerError
 
@@ -85,9 +88,10 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
 
     raise TrackbackNotFound()
 
-def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict:
-    """Get a mapping of trackback URLs to articles."""
-    article_map = {}
+
+def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict[str, List[tuple]]:
+    """Get a mapping of trackback URLs to articles to simplify display."""
+    article_map: Dict[str, List[tuple]] = {}
     for rtb in recent_trackbacks:
         url = rtb[0].url
         article = (rtb[1], rtb[2])
