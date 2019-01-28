@@ -161,7 +161,7 @@ class TestBrowseDatabaseService(TestCase):
         count_from_db: int = TestBrowseDatabaseService.database_service\
             .count_trackback_pings(test_paper_id)
         count_from_db_list: int = TestBrowseDatabaseService.database_service\
-            .get_trackback_pings(test_paper_id).__len__()
+            .get_paper_trackback_pings(test_paper_id).__len__()
         self.assertEqual(
             count_from_db, 8,
             f'Correct count of pings returned for paper {test_paper_id}'
@@ -230,7 +230,7 @@ class TestBrowseDatabaseService(TestCase):
         self.assertEqual([],
                          TestBrowseDatabaseService.database_service.get_all_trackback_pings())
         self.assertListEqual(
-            TestBrowseDatabaseService.database_service.get_trackback_pings('0704.0361'), [])
+            TestBrowseDatabaseService.database_service.get_paper_trackback_pings('0704.0361'), [])
         self.assertEqual(
             TestBrowseDatabaseService.database_service.count_trackback_pings('0704.0361'), 0)
         self.assertEqual(
@@ -247,7 +247,7 @@ class TestBrowseDatabaseService(TestCase):
         self.assertRaises(
             SQLAlchemyError, TestBrowseDatabaseService.database_service.get_all_trackback_pings)
         self.assertRaises(
-            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_trackback_pings, 'paperx')
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_paper_trackback_pings, 'paperx')
         self.assertRaises(
             SQLAlchemyError, TestBrowseDatabaseService.database_service.count_all_trackback_pings)
         self.assertRaises(

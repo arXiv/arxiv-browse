@@ -32,7 +32,6 @@ def create_web_app() -> Flask:
 
     app.config['listing_service'] = FakeListingFilesService()
 
-
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
 

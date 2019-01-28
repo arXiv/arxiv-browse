@@ -1,6 +1,7 @@
 """arXiv browse database models."""
 
 import re
+import hashlib
 from typing import Optional
 from validators import url as is_valid_url
 from datetime import datetime
@@ -17,6 +18,7 @@ db: SQLAlchemy = SQLAlchemy()
 
 app_config = get_application_config()
 tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+tb_secret = app_config.get('TRACKBACK_SECRET', 'baz')
 metadata = db.metadata
 
 
@@ -40,7 +42,8 @@ class Document(db.Model):
     created = Column(DateTime)
     submitter = relationship('User')
 
-    trackback_ping = relationship('TrackbackPing', primaryjoin="foreign(TrackbackPing.document_id)==Document.document_id")
+    trackback_ping = relationship('TrackbackPing',
+                                  primaryjoin="foreign(TrackbackPing.document_id)==Document.document_id")
 
 
 class License(db.Model):
@@ -276,6 +279,11 @@ class TrackbackPing(db.Model):
     def has_valid_url(self) -> bool:
         """Determine whether the trackback URL is valid."""
         return bool(is_valid_url(self.url, public=False))
+
+    @property
+    def hashed_document_id(self) -> str:
+        s = f'{self.document_id}{self.trackback_id}{tb_secret}'
+        return hashlib.md5(s.encode()).hexdigest()[0:9]
 
 
 class TrackbackSite(db.Model):

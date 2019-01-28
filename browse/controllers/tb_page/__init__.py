@@ -8,8 +8,9 @@ from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from browse.exceptions import TrackbackNotFound
-from browse.services.database import get_trackback_pings, \
-                                     get_recent_trackback_pings
+from browse.services.database import get_paper_trackback_pings, \
+                                     get_recent_trackback_pings, \
+                                     get_trackback_ping
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException
@@ -32,7 +33,7 @@ def get_tb_page(arxiv_id: str) -> Response:
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
         response_data['arxiv_identifier'] = arxiv_identifier
-        trackback_pings = get_trackback_pings(arxiv_identifier.id)
+        trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
         if trackback_pings:
             abs_meta = metadata.get_abs(arxiv_identifier.id)
@@ -72,18 +73,17 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     """Get the redirect location for a trackback ID and hashed_document_id."""
 
     try:
-        int(trackback_id)
+        tb_id = int(trackback_id)
+        trackback = get_trackback_ping(trackback_id=tb_id)
+        if trackback.hashed_document_id == hashed_document_id:
+            response_status = status.HTTP_301_MOVED_PERMANENTLY
+            return {}, response_status, {'Location': trackback.url}
     except ValueError:
         raise TrackbackNotFound()
-
     except Exception:
         raise InternalServerError
 
-    response_status = status.HTTP_301_MOVED_PERMANENTLY
-    url = url_for('browse.home')
-    return {}, response_status, {'Location': url}
-
-
+    raise TrackbackNotFound()
 
 def _get_article_map(recent_trackbacks: List[Tuple]) -> Dict:
     """Get a mapping of trackback URLs to articles."""

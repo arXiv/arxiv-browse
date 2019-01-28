@@ -102,12 +102,18 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 
 
 @db_handle_error(logger=logger, default_return_val=[])
-def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
+def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     return list(__paper_trackbacks_query(paper_id)
                 .distinct(TrackbackPing.url)
                 .group_by(TrackbackPing.url)
                 .order_by(TrackbackPing.posted_date.desc()).all())
+
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
+    """Get an individual trackback ping by its id (trackback_id)."""
+    return db.session.query(TrackbackPing).filter(TrackbackPing.trackback_id == trackback_id).first()
 
 
 @db_handle_error(logger=logger, default_return_val=tuple())

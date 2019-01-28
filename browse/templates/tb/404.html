@@ -14,6 +14,7 @@ Trackback not found
   <p>We were unable to extract an arXiv article ID from the URL specified. You may:</p>
 {% else %}
   <h1>Trackback not found</h1>
+  <p>Badly formed redirect request. If the link you followed was on arXiv, please report this error to us. If it was elsewhere, we suggest you report it to the maintainer of that site.</p>
 {% endif %}
   <ul>
     <li><a href="{{ url_for('.tb_recent') }}">View recent trackbacks</a></li>
