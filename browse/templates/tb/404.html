@@ -3,14 +3,20 @@
 {% block title %}
 {% if arxiv_id %}
 [{{ arxiv_id }}] Article identifier not recognized
+{% elif missing_id %}
+No article ID specified
 {% else %}
 Trackback not found
 {% endif %}
 {% endblock %}
 
 {%- block content %}
-{% if arxiv_id %}
+{% if arxiv_id or missing_id %}
+  {% if arxiv_id %}
   <h1>Article identifier '{{ arxiv_id }}' not recognized</h1>
+  {% else %}
+  <h1>No article identifier specified</h1>
+  {% endif %}
   <p>We were unable to extract an arXiv article ID from the URL specified. You may:</p>
 {% else %}
   <h1>Trackback not found</h1>

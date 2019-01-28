@@ -12,7 +12,7 @@
   <b>View last
     <select name="views">
       {%- for option in trackback_count_options -%}
-      <option value="{{ option }}"{% if num_trackbacks == option %} selected="selected"{% endif %}>{{ option }}</option>
+      <option value="{{ option }}"{% if max_num_trackbacks == option %} selected="selected"{% endif %}>{{ option }}</option>
       {%- endfor -%}
       </select> trackbacks
     </b>

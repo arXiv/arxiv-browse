@@ -1,7 +1,9 @@
 """Handle requests to display the trackbacks for a particular article ID."""
 
+import re
 from typing import Any, Dict, List, Tuple
 from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
+from werkzeug.datastructures import MultiDict
 
 from arxiv import status
 from arxiv.base import logging
@@ -10,6 +12,7 @@ from browse.exceptions import TrackbackNotFound
 from browse.services.database import get_paper_trackback_pings, \
                                      get_recent_trackback_pings, \
                                      get_trackback_ping
+from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsException
@@ -28,13 +31,19 @@ def get_tb_page(arxiv_id: str) -> Response:
     """Get the data needed to display the trackback display page."""
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-
+    if not arxiv_id:
+        raise TrackbackNotFound(data={'missing_id': True})
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+        redirect = check_supplied_identifier(arxiv_identifier,
+                                             'browse.tb')
+        if redirect:
+            return redirect
         response_data['arxiv_identifier'] = arxiv_identifier
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
         if len(trackback_pings) > 0:
+            # Don't need to get article metadata if there are no trackbacks
             abs_meta = metadata.get_abs(arxiv_identifier.id)
             response_data['abs_meta'] = abs_meta
             response_data['author_links'] = \
@@ -51,16 +60,25 @@ def get_tb_page(arxiv_id: str) -> Response:
     return response_data, response_status, response_headers
 
 
-def get_recent_tb_page(views: str = '') -> Response:
+def get_recent_tb_page(request_params: MultiDict) -> Response:
     """Get the data needed to display the recent trackbacks page."""
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-    num_trackbacks = trackback_count_options[0]
+    max_num_trackbacks = trackback_count_options[0]
+
+    views = ''
+    if request_params:
+        if 'views' in request_params:
+            views = request_params['views']
+            print(f'views: {views}')
+        else:
+            raise BadRequest
+
     try:
         if views:
-            num_trackbacks = int(views)
-        recent_trackback_pings = get_recent_trackback_pings(num_trackbacks)
-        response_data['num_trackbacks'] = num_trackbacks
+            max_num_trackbacks = int(views)
+        recent_trackback_pings = get_recent_trackback_pings(max_num_trackbacks)
+        response_data['max_num_trackbacks'] = max_num_trackbacks
         response_data['recent_trackback_pings'] = recent_trackback_pings
         response_data['article_map'] = _get_article_map(recent_trackback_pings)
         response_data['trackback_count_options'] = trackback_count_options
@@ -79,6 +97,9 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
 
     try:
         tb_id = int(trackback_id)
+        m = re.match(r'[\da-f]+', hashed_document_id)
+        if not m:
+            raise ValueError
         trackback = get_trackback_ping(trackback_id=tb_id)
         if trackback.hashed_document_id == hashed_document_id:
             response_status = status.HTTP_301_MOVED_PERMANENTLY

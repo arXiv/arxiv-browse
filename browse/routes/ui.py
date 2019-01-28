@@ -85,6 +85,7 @@ def abstract(arxiv_id: str) -> Response:
     raise InternalServerError('Unexpected error')
 
 
+@blueprint.route('tb/', defaults={'arxiv_id': ''}, methods=['GET'])
 @blueprint.route('tb/<path:arxiv_id>', methods=['GET'])
 def tb(arxiv_id: str) -> Response:
     """Get trackbacks associated with an article."""
@@ -92,6 +93,8 @@ def tb(arxiv_id: str) -> Response:
 
     if code == status.HTTP_200_OK:
         return render_template('tb/tb.html', **response), code, headers
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
     raise InternalServerError('Unexpected error')
 
 
@@ -99,14 +102,7 @@ def tb(arxiv_id: str) -> Response:
 def tb_recent() -> Response:
     """Get the recent trackbacks that have been posted across the site."""
 
-    views = ''
-    if request.form:
-        if 'views' in request.form:
-            views = request.form['views']
-        else:
-            raise BadRequest
-
-    response, code, headers = tb_page.get_recent_tb_page(views=views)
+    response, code, headers = tb_page.get_recent_tb_page(request.form)
 
     if code == status.HTTP_200_OK:
         return render_template('tb/recent.html', **response), code, headers
