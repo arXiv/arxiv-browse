@@ -34,7 +34,7 @@ def get_tb_page(arxiv_id: str) -> Response:
         response_data['arxiv_identifier'] = arxiv_identifier
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
-        if trackback_pings:
+        if len(trackback_pings) > 0:
             abs_meta = metadata.get_abs(arxiv_identifier.id)
             response_data['abs_meta'] = abs_meta
             response_data['author_links'] = \
@@ -44,7 +44,8 @@ def get_tb_page(arxiv_id: str) -> Response:
 
     except (AbsException, IdentifierException):
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
-    except Exception:
+    except Exception as ex:
+        logger.warning(f'Error getting trackbacks: {ex}')
         raise InternalServerError
 
     return response_data, response_status, response_headers
@@ -66,7 +67,8 @@ def get_recent_tb_page(views: str = '') -> Response:
         response_status = status.HTTP_200_OK
     except ValueError:
         raise BadRequest
-    except Exception:
+    except Exception as ex:
+        logger.warning(f'Error getting trackbacks: {ex}')
         raise InternalServerError
 
     return response_data, response_status, response_headers

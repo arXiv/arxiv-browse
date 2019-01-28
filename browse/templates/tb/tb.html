@@ -9,7 +9,6 @@
 {% block login_link %}{% endblock %}
 
 {%- block content %}
-
   {% if trackback_pings %}
   <h2>Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
     {% for tb in trackback_pings %}
@@ -17,6 +16,7 @@
     {% endfor %}
     <blockquote style="background-color: #eee; padding-top: 5px">
       {#- abstract field is deliberately suppressed in call to abs macro. -#}
+      {%- if abs_meta -%}
       {{ base_macros.abs(
         abs_meta.arxiv_identifier.id,
         abs_meta.title,
@@ -34,8 +34,9 @@
         submission_history = abs_meta.version_history,
         secondary_categories = abs_meta.get_secondaries()) }}
     </blockquote>
+    {%- endif -%}
   {% else %}
-  <p><em>There are no trackback pings recorded for <a href="{{ url_for('.abstract', arxiv_id=abs_meta.arxiv_id) }}">{{ abs_meta.arxiv_id }}</a>.</em></p>
+  <p><em>There are no trackback pings recorded for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a>.</em></p>
   {% endif %}
   {{ super() }}
 {% endblock content %}
