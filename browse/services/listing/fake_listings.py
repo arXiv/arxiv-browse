@@ -1,5 +1,6 @@
 """Example of a listing service for testing."""
 
+# pylint: skip-file
 
 from typing import List, Optional, Tuple
 
@@ -65,7 +66,9 @@ class FakeListingFilesService(ListingService):
                 'submitted': (datetime.date(2007, 3, 30),datetime.date(2007, 4, 1)),
                 'new_count': len(items2),
                 'cross_count': len(items3),
-                'rep_count': len(items4)}
+                'rep_count': len(items4),
+                'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'
+        }
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
@@ -91,7 +94,9 @@ class FakeListingFilesService(ListingService):
 
         return {'listings': items2,
                 'pubdates': [pd1, pd2, pd3, pd4, pd5],
-                'count': len(listings)}
+                'count': len(listings),
+                'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'
+        }
 
     def list_articles_by_year(self,
                               archiveOrCategory: str,
@@ -122,7 +127,8 @@ class FakeListingFilesService(ListingService):
 
         return {'listings': items2,
                 'pubdates': [(pd, len(k_listings))],
-                'count': len(k_listings)
+                'count': len(k_listings),
+                'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'
                 }
 
 k_listings = [

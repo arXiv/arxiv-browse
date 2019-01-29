@@ -1,4 +1,6 @@
-from datetime import date
+"""Return types for listing service."""
+
+from datetime import date, datetime
 from typing import List, Optional, Tuple
 
 from mypy_extensions import TypedDict
@@ -24,26 +26,34 @@ primary is the primary category of the article.
 ListingResponse = TypedDict('ListingResponse',
                             {'listings': List[ListingItem],
                              'pubdates': List[Tuple[date, int]],
-                             'count': int})
+                             'count': int,
+                             'expires': str})
 '''listings is the list of items a time period.
 
 pubdates are the dates of publications. The int is the number of items
-published on the associated date. 
+published on the associated date.
 
 count is the count of all the items in the listing for the query.
 
+expires is the time at which this data may no longer be cached. It
+should be the sort of datetime that could go in an HTTP Expires response
+header. It must be in rfc-1123 format ex. Wed, 22 Oct 2008 10:55:46 GMT
+The timezone for this expires should be when the cache expires and does not need
+to be the timezone of the listing service, listing client or web client.
+
 Why not just do listing: List[Tuple[date,List[ListingItem]}} ?
 Because pastweek needs to support counts for the days and needs to be
-able to support skip/show. 
+able to support skip/show.
 '''
 
 NewResponse = TypedDict('NewResponse',
                         {'listings': List[ListingItem],
-                         'new_count':int,
-                         'cross_count':int,
-                         'rep_count':int,
+                         'new_count': int,
+                         'cross_count': int,
+                         'rep_count': int,
                          'announced': date,
-                         'submitted': Tuple[date,date]})
+                         'submitted': Tuple[date, date],
+                         'expires': str})
 '''
 listings is the list of items for the most recent publish cycle.
 
@@ -54,4 +64,25 @@ rep_count is the count of rep the items in the listing for the query.
 cross_count is the count of cross the items in the listing for the query.
 
 submitted is the start date of when these items were submitted and the end date.
+
+expires is the time at which this data may no longer be cached. It
+should be the sort of datetime that could go in an HTTP Expires response
+header. It must be in rfc-1123 format ex. Wed, 22 Oct 2008 10:55:46 GMT
+The timezone for this expires should be when the cache expires and does not need
+to be the timezone of the listing service, listing client or web client.
+
+'''
+
+
+NotModifiedResponse = TypedDict('NotModifiedResponse',
+                                {'not_modified': bool,
+                                 'expires': str})
+'''
+Listing response that indicates that the listing has not been modified since
+the date in the if-modified-since parameter.
+
+expires must be in rfc-1123 format ex. Wed, 22 Oct 2008 10:55:46 GMT
+The timezone for this expires should be when the cache expires and does not need
+to be the timezone of the listing service, listing client or web client.
+
 '''
