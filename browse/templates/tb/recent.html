@@ -32,7 +32,7 @@
       <p class="blog">{{- generate_trackback_link(recent_tb[0], include_posted_date=False) }} links the following articles:</p>
         <ul class="blog">
           {%- for article in article_map[this_tb_url] -%}
-          <li><span class="mathjax">{{ article[1] }}<span> [<a href="{{ url_for('.abstract', arxiv_id=article[0]) }}">{{ article[0] }}</a>]</li>
+          <li><span class="mathjax">{{ article[1] }}<span> [<a class="mathjax" href="{{ url_for('.abstract', arxiv_id=article[0]) }}">{{ article[0]|tex_to_utf }}</a>]</li>
           {%- endfor -%}
         </ul>
       {%- endif -%}
