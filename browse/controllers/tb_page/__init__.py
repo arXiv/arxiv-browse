@@ -1,8 +1,8 @@
-"""Handle requests to display the trackbacks for a particular article ID."""
+"""Handle requests to display the trackbacks for arXiv articles."""
 
 import re
 from typing import Any, Dict, List, Tuple
-from werkzeug.exceptions import InternalServerError, NotFound, BadRequest
+from werkzeug.exceptions import InternalServerError, BadRequest
 from werkzeug.datastructures import MultiDict
 
 from arxiv import status
@@ -28,7 +28,30 @@ trackback_count_options = [25, 50, 100, 200]
 
 
 def get_tb_page(arxiv_id: str) -> Response:
-    """Get the data needed to display the trackback display page."""
+    """Get the data needed to display the trackback page for an arXiv article.
+
+    Parameters
+    ----------
+    arxiv_id : str
+
+    Returns
+    -------
+    dict
+        Response data.
+    int
+        HTTP status code.
+    dict
+        Headers to add to the response.
+
+    Raises
+    ------
+    InternalServerError
+        Raised when there was an unexpected problem executing the query.
+    TrackbackNotFound
+        Raised when trackbacks for an article cannot be found, either because
+        the identifier is invalid or the article metadata is not available.
+
+    """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
     if not arxiv_id:
@@ -61,24 +84,45 @@ def get_tb_page(arxiv_id: str) -> Response:
 
 
 def get_recent_tb_page(request_params: MultiDict) -> Response:
-    """Get the data needed to display the recent trackbacks page."""
+    """Get the data needed to display the recent trackbacks page.
+
+    Parameters
+    ----------
+    request_params : dict
+
+    Returns
+    -------
+    dict
+        Response data.
+    int
+        HTTP status code.
+    dict
+        Headers to add to the response.
+
+    Raises
+    ------
+    BadRequest
+        Raised when form option is invalid
+    InternalServerError
+        Raised when there was an unexpected problem executing the query.
+
+    """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-    max_num_trackbacks = trackback_count_options[0]
+    max_trackbacks = trackback_count_options[0]
 
     views = ''
     if request_params:
         if 'views' in request_params:
             views = request_params['views']
-            print(f'views: {views}')
         else:
             raise BadRequest
 
     try:
         if views:
-            max_num_trackbacks = int(views)
-        recent_trackback_pings = get_recent_trackback_pings(max_num_trackbacks)
-        response_data['max_num_trackbacks'] = max_num_trackbacks
+            max_trackbacks = int(views)
+        recent_trackback_pings = get_recent_trackback_pings(max_trackbacks)
+        response_data['max_trackbacks'] = max_trackbacks
         response_data['recent_trackback_pings'] = recent_trackback_pings
         response_data['article_map'] = _get_article_map(recent_trackback_pings)
         response_data['trackback_count_options'] = trackback_count_options
@@ -86,19 +130,42 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
     except ValueError:
         raise BadRequest
     except Exception as ex:
-        logger.warning(f'Error getting trackbacks: {ex}')
+        logger.warning(f'Error getting recent trackbacks: {ex}')
         raise InternalServerError
 
     return response_data, response_status, response_headers
 
 
 def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
-    """Get the redirect location for a trackback ID and hashed_document_id."""
+    """Get the redirect location for a trackback ID and hashed_document_id.
 
+    Parameters
+    ----------
+    trackback_id : str
+        trackback Identifier
+    hashed_document_id : str
+        MD5 hex digest of the document_id + trackback_id + secret
+
+    Returns
+    -------
+    dict
+        Response data.
+    int
+        HTTP status code.
+    dict
+        Headers to add to the response.
+
+    Raises
+    ------
+    BadRequest
+        Raised when form option is invalid
+    InternalServerError
+        Raised when there was an unexpected problem executing the query.
+
+    """
     try:
         tb_id = int(trackback_id)
-        m = re.match(r'[\da-f]+', hashed_document_id)
-        if not m:
+        if not re.match(r'^[\da-f]+$', hashed_document_id):
             raise ValueError
         trackback = get_trackback_ping(trackback_id=tb_id)
         if trackback.hashed_document_id == hashed_document_id:

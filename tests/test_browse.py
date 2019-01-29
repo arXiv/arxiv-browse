@@ -21,6 +21,7 @@ class BrowseTest(unittest.TestCase):
         self.app = app.test_client()
 
     def test_home(self):
+        """Test the home page."""
         rv = self.app.get('/')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
@@ -32,6 +33,10 @@ class BrowseTest(unittest.TestCase):
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
         self.assertFalse(html.find('h2', text='Test'),
                          "'Test' group should not be shown on homepage")
+
+    # def test_tb(self):
+    #     """Test the /tb/<arxiv_id> page."""
+
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'

@@ -56,10 +56,10 @@ class TestRecentTbPageController(TestCase):
         })
         response_data, code, headers = tb_page.get_recent_tb_page(form_data)
         self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
-        self.assertIn('max_num_trackbacks', response_data,
-                      "Response data should include 'max_num_trackbacks'")
-        self.assertEqual(response_data['max_num_trackbacks'], 25,
-                         "'max_num_trackbacks' should equal value from form")
+        self.assertIn('max_trackbacks', response_data,
+                      "Response data should include 'max_trackbacks'")
+        self.assertEqual(response_data['max_trackbacks'], 25,
+                         "'max_trackbacks' should equal value from form")
         self.assertIn('recent_trackback_pings', response_data,
                       "Response data should include 'recent_trackback_pings'")
         self.assertIn('article_map', response_data,
@@ -75,6 +75,6 @@ class TestTbRedirect(TestCase):
             tb_page.get_tb_redirect(
                 trackback_id='foo', hashed_document_id='feedface')
 
-        # with self.assertRaises(TrackbackNotFound):
-        #     tb_page.get_tb_redirect(
-        #         trackback_id='1', hashed_document_id='baz')
+        with self.assertRaises(TrackbackNotFound):
+            tb_page.get_tb_redirect(
+                trackback_id='1', hashed_document_id='baz')
