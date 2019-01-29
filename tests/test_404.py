@@ -16,7 +16,7 @@ class Test_404(unittest.TestCase):
         app.config['APPLICATION_ROOT'] = ''
         self.app = app.test_client()
 
-    def test_its_should_be_404(self):
+    def test_it_should_be_404(self):
         rv = self.app.get('/abs?archive=foo&papernum=1234567')
         self.assertEqual(rv.status_code, 404)
 

@@ -118,7 +118,7 @@ def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     return trackback
 
 
-@db_handle_error(logger=logger, default_return_val=tuple())
+@db_handle_error(logger=logger, default_return_val=list())
 def get_recent_trackback_pings(max_trackbacks: int = 25) \
         -> List[Tuple[TrackbackPing, str, str]]:
     """Get recent trackback pings across all of arXiv."""

@@ -12,7 +12,8 @@ class TestTbPageController(TestCase):
     """Tests for :func:`.get_tb_page`."""
 
     @mock.patch('browse.controllers.tb_page.get_paper_trackback_pings')
-    def test_good_id_no_trackbacks(self, mock_get_paper_trackback_pings) -> None:  # type: ignore
+    # type: ignore
+    def test_good_id_no_trackbacks(self, mock_get_paper_trackback_pings) -> None:
         """Test requests with good arXiv identifiers."""
         mock_get_paper_trackback_pings.return_value = list()
         response_data, code, _ = tb_page.get_tb_page(arxiv_id='1801.00001')
@@ -69,12 +70,40 @@ class TestRecentTbPageController(TestCase):
 class TestTbRedirect(TestCase):
     """Tests for :func:`.get_tb_redirect`."""
 
-    def test_arguments(self) -> None:
+    @mock.patch('browse.controllers.tb_page.get_trackback_ping')
+    def test_arguments(self, mock_trackback_ping) -> None:
         """Test /tb/redirect arguments."""
         with self.assertRaises(TrackbackNotFound):
+            # 'foo' is not an integer
             tb_page.get_tb_redirect(
                 trackback_id='foo', hashed_document_id='feedface')
 
         with self.assertRaises(TrackbackNotFound):
+            # 'baz' is not a hex string
             tb_page.get_tb_redirect(
                 trackback_id='1', hashed_document_id='baz')
+
+        mtb = mock.Mock(
+            trackback_id=1,
+            hashed_document_id='feaedface',
+            url='https://example.org'
+        )
+        mock_trackback_ping.return_value = mtb
+        with self.assertRaises(TrackbackNotFound):
+            # parameters are OK, but hashed_document_id does not match
+            response_data, code, headers = tb_page.get_tb_redirect(
+                trackback_id='1', hashed_document_id='feedface')
+
+        mtb = mock.Mock(
+            trackback_id=2,
+            hashed_document_id='ba5eba11',
+            url='https://example.com'
+        )
+        mock_trackback_ping.return_value = mtb
+
+        response_data, code, headers = tb_page.get_tb_redirect(
+            trackback_id='2', hashed_document_id='ba5eba11')
+        self.assertEqual(
+            code, 301, 'Expect redirect for matching hashed_document_id')
+        self.assertEqual(headers['Location'], mtb.url,
+                         'Redirect location header matches trackback URL')
