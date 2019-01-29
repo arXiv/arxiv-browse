@@ -1,0 +1,60 @@
+{%- extends "base.html" -%}
+
+{% block title %}TODO: SOME ARCHIVE TITLE{% endblock %}
+
+{% block header_h1 %}
+<h1>
+  > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
+</h1>
+{% endblock %}
+
+
+{%- block content %}
+<div id='content'>
+  <h1>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date}})</span></h1>
+
+  <p>For a <em>specific paper</em>, enter the identifier into the top right search box.</p>
+
+  <ul>
+    <li><b>Browse:</b>
+      <ul>
+        <li>
+          <a href="{{url_for('.list_articles', context=archive_id, subcontext='new')}}">new</a>
+          (most recent mailing, with abstracts)
+        </li>
+        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">recent</a>
+          (last 5 mailings)
+        </li>
+        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
+          nlin listings</li>
+        <li>specific year/month:          
+          <form action="/list" method="get">
+            {{ list_form.archive }}
+            {{ list_form.year}} {{ list_form.month}} {{list_form.submit}}
+          </form>
+        </li>
+      </ul>
+    </li>
+    
+    <li><b>Catch-up:</b>
+      <form action="/catchup" method="post">
+        {{ catchup_form.archive }}
+        Changes since:
+        {{ catchup_form.day }} {{ catchup_form.month }}  {{ catchup_form.year }}
+        abstracts {{ catchup_form.abstracts }}
+        {{ catchup_form.submit }}
+      </form>      
+    </li>
+    
+    <li><b>Search</b> within the <a href="/find/hep-ph">hep-ph archive</a></li>
+    
+    <li>Article statistics by year:<br>
+      {% for url, year in stats_by_year %}
+      <a href="{{url}}">{{year}}</a>
+      {% endfor %} 
+    </li>
+    
+  </ul>
+</div>
+{%- endblock %}
+

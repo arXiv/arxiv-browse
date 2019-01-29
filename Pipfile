@@ -17,6 +17,7 @@ mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
 arxiv-base = "==0.12.1rc2"
+flask-wtf = "*"
 
 [dev-packages]
 pylama = "*"

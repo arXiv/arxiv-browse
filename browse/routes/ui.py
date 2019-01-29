@@ -7,7 +7,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page, list_page, prevnext
+from browse.controllers import abs_page, home_page, list_page, prevnext, archive_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -219,3 +219,23 @@ def cits(arxiv_id: str) -> Response:
 def form(arxiv_id: str) -> Response:
     """Old form interface to lists of articles."""
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
+
+@blueprint.route('archive/', defaults={'archive':None})
+@blueprint.route('archive/<archive>')
+def archive(archive:str) -> Response:
+    """Landing page for an archive."""
+    response, code, headers = archive_page.get_archive(archive)
+    if code == status.HTTP_200_OK:
+        return render_template(response['template'], **response), code, headers
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)
+    elif code == status.HTTP_304_NOT_MODIFIED:
+        return '', code, headers
+    else:
+        return response, code, headers
+
+
+@blueprint.route('year/<archive>/<year>')
+def year(archive:str, year:str) -> Response:
+    """Year's stats for an archive."""
+    raise InternalServerError('Not yet implemented')

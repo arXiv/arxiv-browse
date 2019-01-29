@@ -314,3 +314,13 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(auths_elmt, 'Should authors div element')
         self.assertNotIn(' ,', auths_elmt.text,
                          'Should not add extra spaces before commas')
+
+
+    def test_astroph_archive(self):
+        rv = self.app.get('/archive/astro-ph')
+        self.assertEqual(rv.status_code, 200)
+        src = rv.data.decode('utf-8')
+        html = BeautifulSoup(src, 'html.parser')
+        self.assertIn('Astrophysics', html.get_text())
+        self.assertIn('/year/astro-ph/92', src)
+        self.assertIn('/year/astro-ph/19', src)
