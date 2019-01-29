@@ -34,9 +34,33 @@ class BrowseTest(unittest.TestCase):
         self.assertFalse(html.find('h2', text='Test'),
                          "'Test' group should not be shown on homepage")
 
-    # def test_tb(self):
-    #     """Test the /tb/<arxiv_id> page."""
+    def test_tb(self):
+        """Test the /tb/<arxiv_id> page."""
+        rv = self.app.get('/tb/0808.4142')
+        self.assertEqual(rv.status_code, 200)
 
+        rv = self.app.get('/tb/1901.99999')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/foo')
+        self.assertEqual(rv.status_code, 404)
+
+    def test_tb(self):
+        """Test the /tb/recent page."""
+        rv = self.app.get('/tb/recent')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.post('/tb/recent', data=dict(views='50'))
+        self.assertEqual(rv.status_code, 200, 'POST with integer OK')
+
+        rv = self.app.post('/tb/recent', data=dict(views='bar'))
+        self.assertEqual(rv.status_code, 400, 'POST with non-integer not OK')
+
+        rv = self.app.get('/tb/recent/foo')
+        self.assertEqual(rv.status_code, 404)
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
