@@ -17,28 +17,31 @@ be better date granularity for new papers.
 """
 
 from typing import Optional
+from datetime import datetime
 
 from browse.domain.listing import NewResponse, ListingResponse
+
 
 class ListingService:
     """Class for arXiv document listings."""
 
     @classmethod
-    def version(self) -> str:
+    def version(cls) -> str:
         """Version."""
         return "0.2"
 
-    
     def list_articles_by_year(self,
                               archiveOrCategory: str,
                               year: int,
                               skip: int,
                               show: int,
                               if_modified_since: Optional[str] = None) -> ListingResponse:
-        """Get listing items for a whole year."""
-        raise NotImplementedError
+        """Get listing items for a whole year.
 
-    
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+        raise NotImplementedError
 
     def list_articles_by_month(self,
                                archiveOrCategory: str,
@@ -47,24 +50,33 @@ class ListingService:
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        """Get listings for a month."""
+        """Get listings for a month.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
         raise NotImplementedError
-
-
 
     def list_new_articles(self,
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
                           if_modified_since: Optional[str] = None) -> NewResponse:
-        """Gets listings for the most recent announcement/publish."""
-        raise NotImplementedError
+        """Gets listings for the most recent announcement/publish.
 
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+        raise NotImplementedError
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
-        """Gets listings for the 5 most recent announcement/publish."""
+        """Gets listings for the 5 most recent announcement/publish.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
         raise NotImplementedError
