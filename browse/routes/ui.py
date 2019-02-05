@@ -35,6 +35,10 @@ def apply_response_headers(response: Response) -> Response:
 def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
+
+    if request.session:
+        print("got session")
+        print(request.session)
     if code == status.HTTP_200_OK:
         return render_template('home/home.html', **response), code, headers
 

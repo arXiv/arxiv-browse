@@ -12,6 +12,7 @@ from browse.services.listing.fake_listings import FakeListingFilesService
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
+from arxiv.users.auth import Auth
 
 
 def create_web_app() -> Flask:
@@ -26,8 +27,8 @@ def create_web_app() -> Flask:
         ('search_archive', '/search/<archive>', BASE_SERVER))
 
     models.init_app(app)
-
     Base(app)
+    Auth(app)
     app.register_blueprint(ui.blueprint)
 
     app.config['listing_service'] = FakeListingFilesService()
