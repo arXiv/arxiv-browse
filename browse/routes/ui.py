@@ -137,6 +137,19 @@ def list_articles(context: str, subcontext: str) -> Response:
         return response, code, headers
 
 
+@blueprint.route('/stats/hourly',
+                 defaults={'page': 'hourly'},
+                 methods=['GET'])
+@blueprint.route('/stats/submissions',
+                 defaults={'page': 'submissions'},
+                 methods=['GET'])
+@blueprint.route('/stats/monthly_downloads',
+                 defaults={'page': 'monthly_downloads'},
+                 methods=['GET'])
+def stats() -> Response:
+    """Display various statistics about the service."""
+    return render_template(f'stats/{page}.html')
+
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
