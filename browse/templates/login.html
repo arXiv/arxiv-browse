@@ -1,0 +1,8 @@
+<div class="login">
+{% if request.session and request.session.user %}
+{#- TODO: url_for for user and logout -#}
+Logged in as <b>{{ request.session.user.username }}</b> | <a href="/user/{{ request.session.user.username }}">My Account</a> | <a href="/logout">Logout</a>
+{% else %}
+<a href="{{ url_for('login') }}">Login {{ request.session.user.username }}</a>
+{% endif %}
+</div>

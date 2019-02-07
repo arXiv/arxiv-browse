@@ -255,8 +255,10 @@ LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)
 
 # Auth settings
 AUTH_SESSION_COOKIE_NAME = 'ARXIVNG_SESSION_ID'
-AUTH_SESSION_COOKIE_DOMAIN = os.environ.get('AUTH_SESSION_COOKIE_DOMAIN', '.arxiv.org')
-AUTH_SESSION_COOKIE_SECURE = bool(int(os.environ.get('AUTH_SESSION_COOKIE_SECURE', '1')))
+AUTH_SESSION_COOKIE_DOMAIN = os.environ.get(
+    'AUTH_SESSION_COOKIE_DOMAIN', '.arxiv.org')
+AUTH_SESSION_COOKIE_SECURE = bool(
+    int(os.environ.get('AUTH_SESSION_COOKIE_SECURE', '1')))
 
 CLASSIC_COOKIE_NAME = os.environ.get('CLASSIC_COOKIE_NAME', 'tapir_session')
 CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
@@ -264,7 +266,8 @@ CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
     'tapir_permanent'
 )
 CLASSIC_TRACKING_COOKIE = os.environ.get('CLASSIC_TRACKING_COOKIE', 'browser')
-CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI')
+CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
+    'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db'))
 """If not set, legacy database integrations for auth will not be available."""
 
 CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')

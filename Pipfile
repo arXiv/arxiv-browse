@@ -16,7 +16,7 @@ pytz = "*"
 mysqlclient = "==1.4.1"
 "mmh3" = "*"
 aiohttp = "*"
-arxiv-base = "*"
+arxiv-base = "==0.12.1rc2"
 arxiv-auth = {file = "file:///users/mhl10/Development/arxiv-auth/users"}
 mypy-extensions = "*"
 
