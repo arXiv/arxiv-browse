@@ -6,10 +6,13 @@ from flask import Blueprint, render_template, request, Response, session, \
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
+from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, home_page, list_page, prevnext
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
+
+logger = logging.getLogger(__name__)
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -18,6 +21,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='/')
 def before_request() -> None:
     """Get instituional affiliation from session."""
     if 'institution' not in session:
+        logger.debug('Adding institution to session')
         session['institution'] = get_institution(request.remote_addr)
 
 
@@ -35,10 +39,9 @@ def apply_response_headers(response: Response) -> Response:
 def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
-
-    if request.session:
-        print("got session")
-        print(request.session)
+    logger.debug("Home page.")
+    # if request.session:
+    #     logger.debug("Got session: \n%s", request.session)
     if code == status.HTTP_200_OK:
         return render_template('home/home.html', **response), code, headers
 
@@ -118,6 +121,7 @@ def clickthrough() -> Response:
             raise BadRequest('Bad click-through redirect')
 
     raise NotFound
+
 
 @blueprint.route('list', defaults={'context': '', 'subcontext': ''})
 @blueprint.route('list/', defaults={'context': '', 'subcontext': ''})
