@@ -131,6 +131,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
         db.session.query(TrackbackPing.url).
         filter(TrackbackPing.status == 'accepted').
         distinct(TrackbackPing.url).
+        group_by(TrackbackPing.url).
         order_by(TrackbackPing.posted_date.desc()).
         limit(max_trackbacks).
         subquery()
