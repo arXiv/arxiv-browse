@@ -48,7 +48,7 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/tb/foo')
         self.assertEqual(rv.status_code, 404)
 
-    def test_tb(self):
+    def test_tb_recent(self):
         """Test the /tb/recent page."""
         rv = self.app.get('/tb/recent')
         self.assertEqual(rv.status_code, 200)
@@ -360,5 +360,3 @@ class BrowseTest(unittest.TestCase):
         self.assertIn('The phase difference $\phi$, between the superconducting',
                       abs_elmt.text,
                       "Expecting uncoverted $\phi$ in html abstract.")
-        
-

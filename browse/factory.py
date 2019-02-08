@@ -43,7 +43,7 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['line_feed_to_br'] = line_feed_to_br
     app.jinja_env.filters['tex_to_utf'] = partial( tex_to_utf, letters=True )
     app.jinja_env.filters['tex_to_utf_no_symb'] = partial( tex_to_utf, letters=False)
-    
+
     app.jinja_env.filters['entity_to_utf'] = entity_to_utf
 
     app.jinja_env.filters['clickthrough_url_for'] = clickthrough_url
@@ -51,8 +51,8 @@ def create_web_app() -> Flask:
         partial(generate_show_email_hash,
                 secret=app.config.get('SHOW_EMAIL_SECRET'))
 
-    app.jinja_env.filters['arxiv_id_urls'] = urlizer(['id'])
-    app.jinja_env.filters['arxiv_urlize'] = urlizer(['id', 'doi', 'url'])
-    app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['id', 'doi'])
+    app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
+    app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])
+    app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
 
     return app
