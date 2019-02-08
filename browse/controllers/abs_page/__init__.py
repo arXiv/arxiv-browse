@@ -113,8 +113,8 @@ def get_abs_page(arxiv_id: str) -> Response:
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
-           in taxonomy.ARCHIVES:
-            archive_name = taxonomy.ARCHIVES[arxiv_identifier.archive]['name']
+           in taxonomy.definitions.ARCHIVES:
+            archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive]['name']
             raise AbsNotFound(data={'reason': 'old_id_not_found',
                                     'arxiv_id': arxiv_id,
                                     'archive_id': arxiv_identifier.archive,
@@ -308,15 +308,15 @@ def _check_context(arxiv_identifier: Identifier,
     context = None
     if ('context' in request.args and (
             request.args['context'] == 'arxiv'
-            or request.args['context'] in taxonomy.CATEGORIES
-            or request.args['context'] in taxonomy.ARCHIVES)):
+            or request.args['context'] in taxonomy.definitions.CATEGORIES
+            or request.args['context'] in taxonomy.definitions.ARCHIVES)):
         context = request.args['context']
     elif primary_category:
         pc = primary_category.canonical or primary_category
         if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id
-            if pc.id in taxonomy.ARCHIVES:
+            if pc.id in taxonomy.definitions.ARCHIVES:
                 context = pc.id
             else:
                 context = arxiv_identifier.archive

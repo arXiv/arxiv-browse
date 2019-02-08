@@ -131,7 +131,9 @@
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
-    <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)</div>
+    <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)
+      <span class="help" style="display: inline-block; font-style: normal; float: right"><a href="https://confluence.cornell.edu/x/MjmLFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span>
+    </div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
     {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
     {% if config['LABS_BIBEXPLORER_ENABLED'] %}

@@ -68,13 +68,13 @@ class AuthorList:
 
 @dataclass
 class Archive(Category):
-    """Represents an arXiv archive--the middle level of the taxonomy."""
+    """Represents an arXiv archive--the middle level of the taxonomy.definitions."""
 
     def __post_init__(self) -> None:
         """Get the full archive name."""
         super().__post_init__()
-        if self.id in taxonomy.ARCHIVES:
-            self.name = taxonomy.ARCHIVES[self.id]['name']
+        if self.id in taxonomy.definitions.ARCHIVES:
+            self.name = taxonomy.definitions.ARCHIVES[self.id]['name']
 
 
 @dataclass
@@ -84,8 +84,8 @@ class Group(Category):
     def __post_init__(self) -> None:
         """Get the full group name."""
         super().__post_init__()
-        if self.id in taxonomy.GROUPS:
-            self.name = taxonomy.GROUPS[self.id]['name']
+        if self.id in taxonomy.definitions.GROUPS:
+            self.name = taxonomy.definitions.GROUPS[self.id]['name']
 
 
 @dataclass(frozen=True)
@@ -201,11 +201,11 @@ class DocMetadata:
         if self.primary_category:
             options = {
                 self.primary_category.id: True,
-                taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
+                taxonomy.definitions.CATEGORIES[self.primary_category.id]['in_archive']: True
             }
         for category in self.secondary_categories:
             options[category.id] = True
-            in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
+            in_archive = taxonomy.definitions.CATEGORIES[category.id]['in_archive']
             options[in_archive] = True
         return sorted(options.keys())
 

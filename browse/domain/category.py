@@ -39,20 +39,20 @@ class Category:
 
     def __post_init__(self) -> None:
         """Get the full category name."""
-        if self.id in taxonomy.CATEGORIES:
-            self.name = taxonomy.CATEGORIES[self.id]['name']
+        if self.id in taxonomy.definitions.CATEGORIES:
+            self.name = taxonomy.definitions.CATEGORIES[self.id]['name']
 
-        if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            self.canonical = Category(id=taxonomy.ARCHIVES_SUBSUMED[self.id])
+        if self.id in taxonomy.definitions.ARCHIVES_SUBSUMED:
+            self.canonical = Category(id=taxonomy.definitions.ARCHIVES_SUBSUMED[self.id])
         else:
             self.canonical = None
 
     def unalias(self) -> 'Category':
         """Follow any EQUIV or SUBSUMED to get the current category."""
-        if self.id in taxonomy.CATEGORY_ALIASES:
-            return Category(taxonomy.CATEGORY_ALIASES[self.id])
-        if self.id in taxonomy.ARCHIVES_SUBSUMED:
-            return Category(taxonomy.ARCHIVES_SUBSUMED[self.id])
+        if self.id in taxonomy.definitions.CATEGORY_ALIASES:
+            return Category(taxonomy.definitions.CATEGORY_ALIASES[self.id])
+        if self.id in taxonomy.definitions.ARCHIVES_SUBSUMED:
+            return Category(taxonomy.definitions.ARCHIVES_SUBSUMED[self.id])
         return self
 
     def display_str(self)->str:
@@ -61,15 +61,15 @@ class Category:
         Ex:
         Earth and Planetary Astrophysics (astro-ph.EP)
         """
-        if self.id in taxonomy.CATEGORIES:
-            catname = taxonomy.CATEGORIES[self.id]['name']
+        if self.id in taxonomy.definitions.CATEGORIES:
+            catname = taxonomy.definitions.CATEGORIES[self.id]['name']
             return f'{catname} ({self.id})'
         sp = _split_cat_str(self.id)
         hassub = len(sp) == 2
         if hassub:
             (arc, _) = sp
-            if arc in taxonomy.ARCHIVES:
-                arcname = taxonomy.ARCHIVES[arc]['name']
+            if arc in taxonomy.definitions.ARCHIVES:
+                arcname = taxonomy.definitions.ARCHIVES[arc]['name']
                 return f'{arcname} ({self.id})'
             else:
                 return self.id
