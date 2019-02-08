@@ -132,3 +132,11 @@ ferromagnet superconducting domains is discussed.
         self.assertTrue(m.primary_category)
         self.assertTrue(m.primary_category.canonical,
                         'subsumed category adap-org should have a canonical')
+
+    def test_psi_in_abs(self):
+        """Test text in abs ARXIVNG-1612"""
+        f1 = ABS_FILES + '/ftp/arxiv/papers/1901/1901.05426.abs'
+        m = AbsMetaSession.parse_abs_file(filename=f1)
+        self.assertIsInstance(m, DocMetadata)
+        self.assertNotIn('$φ$', m.abstract,
+                         'TeX psi in abstract should not get converted to UTF8')
