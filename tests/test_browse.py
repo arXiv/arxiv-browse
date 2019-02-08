@@ -343,3 +343,22 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(auths_elmt, 'Should authors div element')
         self.assertNotIn(' ,', auths_elmt.text,
                          'Should not add extra spaces before commas')
+
+    def test_psi_in_abs(self):
+        # see https://arxiv-org.atlassian.net/browse/ARXIVNG-1612
+        # "phi being displayed as varphi in abstract on /abs page"
+        # phi being displayed incorrectly in abstract on /abs page
+        rv = self.app.get('/abs/1901.05426')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        abs_elmt = html.find('blockquote', 'abstract')
+        self.assertTrue(abs_elmt, 'Should have abstract div element')
+        self.assertNotIn('$ φ$', abs_elmt.text,
+                         'TeX psi in abstract should not get converted to UTF8')
+        self.assertNotIn('$j(φ,L)$', abs_elmt.text,
+                         'TeX psi in abstract should not get converted to UTF8')
+        self.assertIn('The phase difference $\phi$, between the superconducting',
+                      abs_elmt.text,
+                      "Expecting uncoverted $\phi$ in html abstract.")
+        
+
