@@ -1,4 +1,4 @@
-from typing import List, Any, Dict, Tuple
+from typing import List, Any, Dict, Tuple, Iterator
 from datetime import datetime
 
 from flask_wtf import FlaskForm
@@ -38,13 +38,8 @@ class ByMonthForm(FlaskForm):
     archive = HiddenField('archive', validators=[DataRequired()])
     submit = SubmitField('Go')
     
-    def __init__(self, archive_id:str, archive:Dict[str,Any]):
+    def __init__(self, archive_id:str, archive:Dict[str,Any], years:List[int]):
         super(ByMonthForm, self).__init__()
-        self.year.choices = year_choices( archive )
+        self.year.choices = [ (str(ye)[-2:], str(ye) ) for ye in years]
         self.archive.data = archive_id
 
-
-
-def year_choices(archive:Dict[str,Any])->List[Tuple[str,str]]:
-    # TODO make list based on start date, end date and current date
-    return [('2000','2000'), ('2001','2001'), ('2002','2002'), ('2003','2003'), ('2004','2004'), ('2005','2005'), ('2006','2006'), ('2007','2007'), ('2008','2008'), ('2009','2009'), ]
