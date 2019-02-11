@@ -17,6 +17,10 @@ def get_archive( archive_id: str) -> Response:
     archive = ARCHIVES.get( archive_id, None)    
     subsumed_by = ARCHIVES_SUBSUMED.get( archive_id, None)
     data.update(subsumed_msg(archive, subsumed_by))
+
+    #TODO handle single category archive like hep-ph
+
+    #TODO for a single category that is not an archive, astro-py.CO, do category's archive
     
     if not archive:
         return archive_index( archive_id , status=404)
@@ -27,9 +31,8 @@ def get_archive( archive_id: str) -> Response:
     data['archive'] = archive
     data['list_form'] = ByMonthForm(archive_id, archive, years)
     data['catchup_form'] = CatchupForm(archive_id, archive, years)
-    data['stats_by_year'] = stats_by_year(archive_id, archive, years)
-        
-    # TODO categories within archive
+    data['stats_by_year'] = stats_by_year(archive_id, archive, years)        
+    data['category_list'] = category_list(archive_id)
 
     data['template'] = 'archive/single_archive.html'
     return data, status.HTTP_200_OK, {}
@@ -78,3 +81,15 @@ def _year_stats_link(archive_id:str, num:int)->Any:
     return url_for('browse.year' ,
                    year=str(num)[-2:], #danger: 2 digit year, NG can accept 4 digit
                    archive=archive_id)
+
+
+def category_list( archive_id:str) -> List[Dict[str,str]]:
+    cats = []    
+    for cat_id in CATEGORIES:
+        cat = CATEGORIES[cat_id]
+        if cat.get('in_archive','yuck') == archive_id and cat.get('is_active',True) :
+            cats.append({'id':cat_id,
+                         'name': cat.get('name', ''),
+                         'description': cat.get('description','') })
+    #TODO not sure how these are sorted in Legacy
+    return cats

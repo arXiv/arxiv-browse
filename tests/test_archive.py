@@ -16,3 +16,7 @@ class BrowseTest(unittest.TestCase):
         self.assertIn("Astrophysics", src)
         self.assertIn("/year/astro-ph/92", src)
         self.assertIn("/year/astro-ph/19", src)
+
+        self.assertIn("Astrophysics of Galaxies", src, "Subcategories of astro-ph should be on archive page")
+        self.assertIn("Earth and Planetary Astrophysics", src, "Subcategories of astro-ph should be on archive page")
+

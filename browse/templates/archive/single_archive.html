@@ -57,6 +57,19 @@
     </li> 
     
   </ul>
+
+  <h2>Categories within {{archive.name}}</h2>
+  <ul>
+    {%  for category in category_list %}
+      <li><b>{{category.id}} - {{category.name}}</b>
+        (<a href="{{url_for('.list_articles', context=category.id, subcontext='new')}}">new</a>,
+        <a href="{{url_for('.list_articles', context=category.id, subcontext='recent')}}">recent</a>,
+        <a href="{{url_for('.list_articles', context=category.id, subcontext='current')}}">current month</a>)
+       <div class="description">{{category.description}}</div> 
+    </li>
+    {% endfor %}
+    
+  </ul>
 </div>
 {%- endblock %}
 
