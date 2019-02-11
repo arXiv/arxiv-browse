@@ -41,3 +41,23 @@ class BrowseTest(unittest.TestCase):
 
         rv = self.app.get("/archive/bogus-archive")
         self.assertEqual(rv.status_code, 404)
+
+    def test_subsumed_archive(self):
+        rv = self.app.get("/archive/comp-lg")
+        self.assertEqual(rv.status_code, 404)
+        src = rv.data.decode("utf-8")
+
+        self.assertIn("Computer Science", src)
+        self.assertIn("cs.CL", src)
+
+        rv = self.app.get("/archive/acc-phys")
+        self.assertEqual(rv.status_code, 200)
+        src = rv.data.decode("utf-8")
+
+        self.assertIn("Accelerator Physics", src)
+        self.assertIn("physics.acc-ph", src)
+
+
+
+
+

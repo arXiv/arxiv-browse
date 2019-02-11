@@ -18,10 +18,22 @@ def get_archive( archive_id: str) -> Response:
     
     archive = ARCHIVES.get( archive_id, None)
     if not archive:
-        return archive_index(archive_id, status=status.HTTP_404_NOT_FOUND)
-    
+        archive_id = CATEGORIES.get(archive_id, {}).get('in_archive',None)
+        archive = ARCHIVES.get( archive_id, None)
+        if not archive:
+            return archive_index(archive_id, status=status.HTTP_404_NOT_FOUND)
+
     subsumed_by = ARCHIVES_SUBSUMED.get( archive_id, None)
-    data.update(subsumed_msg(archive, subsumed_by))
+    if subsumed_by:
+        data['subsumed_id'] = archive_id
+        data['subsumed_category'] = CATEGORIES.get(archive_id,{})
+        data['subsumed_by'] = subsumed_by
+        subsuming_category = CATEGORIES.get(subsumed_by,{})
+        data['subsuming_category'] = subsuming_category
+        archive_id = subsuming_category.get('in_archive',None)
+        archive = ARCHIVES.get( archive_id, None)
+
+    #data.update(subsumed_msg(archive, subsumed_by))
 
     #TODO handle single category archive like hep-ph
 
@@ -31,7 +43,7 @@ def get_archive( archive_id: str) -> Response:
     # my $header_extras="<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$ARCHIVE_NAME{$archive}\" href=\"/rss/$archive\"/>";
 
     years = years_operating(archive)
-    
+        
     data['archive_id'] = archive_id
     data['archive'] = archive
     data['list_form'] = ByMonthForm(archive_id, archive, years)
@@ -79,7 +91,7 @@ def subsumed_msg( archive:Dict[str,str], subsumed_by:str) ->Dict[str,str]:
 
 def years_operating( archive: Dict[str,Any]) -> List[int]:
     """Returns list of ints of years operating in descending order. ex [1993,1992,1991]"""
-    if ( not archive         
+    if ( not archive
          or not 'start_date' in archive
          or not isinstance(archive['start_date'], date) ):
         return []
