@@ -12,7 +12,7 @@ from dateutil import parser
 from dateutil.tz import tzutc
 
 from flask import url_for
-from flask import request
+from flask import request, Response
 from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
@@ -244,7 +244,7 @@ def _time_header_parse(headers: Dict[str, Any], header: str) \
     if (header in request.headers
             and request.headers[header] is not None):
         try:
-            dt = parser.parse(request.headers.get(header))
+            dt = parser.parse(str(request.headers.get(header)))
             if not dt.tzinfo:
                 dt = dt.replace(tzinfo=tzutc())
             return dt
