@@ -12,7 +12,7 @@ from dateutil import parser
 from dateutil.tz import tzutc
 
 from flask import url_for
-from flask import request, Response
+from flask import request
 from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
