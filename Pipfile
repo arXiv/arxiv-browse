@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 dataclasses = "*"
 python-dateutil = "*"
-flask = "==0.12.*"
+flask = "==1.0.2"
 Flask-API = "*"
 Flask-SQLAlchemy = "*"
 "jinja2" = "==2.10"
