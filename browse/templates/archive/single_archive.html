@@ -66,6 +66,7 @@
     
   </ul>
 
+  {% if  category_list|length > 1 %}
   <h2>Categories within {{archive.name}}</h2>
   <ul>
     {%  for category in category_list %}
@@ -75,9 +76,9 @@
         <a href="{{url_for('.list_articles', context=category.id, subcontext='current')}}">current month</a>)
        <div class="description">{{category.description}}</div> 
     </li>
-    {% endfor %}
-    
+    {% endfor %}    
   </ul>
+  {% endif %}
 </div>
 {%- endblock %}
 

@@ -57,6 +57,14 @@ class BrowseTest(unittest.TestCase):
         self.assertIn("Accelerator Physics", src)
         self.assertIn("physics.acc-ph", src)
 
+    def test_single_archive(self):
+        rv = self.app.get("/archive/hep-ph")
+        self.assertEqual(rv.status_code, 200)
+        src = rv.data.decode("utf-8")
+
+        self.assertIn("High Energy Physics", src)
+        self.assertNotIn("Categories within", src)
+
 
 
 

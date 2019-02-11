@@ -33,12 +33,6 @@ def get_archive( archive_id: str) -> Response:
         archive_id = subsuming_category.get('in_archive',None)
         archive = ARCHIVES.get( archive_id, None)
 
-    #data.update(subsumed_msg(archive, subsumed_by))
-
-    #TODO handle single category archive like hep-ph
-
-    #TODO for a single category that is not an archive, astro-py.CO, do category's archive
-
     #TODO link to RSS in headers?
     # my $header_extras="<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$ARCHIVE_NAME{$archive}\" href=\"/rss/$archive\"/>";
 
