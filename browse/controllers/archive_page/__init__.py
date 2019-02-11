@@ -13,17 +13,22 @@ from browse.controllers.archive_page.catchup_form import CatchupForm
 
 def get_archive( archive_id: str) -> Response:
     data:Dict[str,Any] ={}
-
-    archive = ARCHIVES.get( archive_id, None)    
+    if archive_id == 'list':
+        return archive_index(archive_id, status=status.HTTP_200_OK)
+    
+    archive = ARCHIVES.get( archive_id, None)
+    if not archive:
+        return archive_index(archive_id, status=status.HTTP_404_NOT_FOUND)
+    
     subsumed_by = ARCHIVES_SUBSUMED.get( archive_id, None)
     data.update(subsumed_msg(archive, subsumed_by))
 
     #TODO handle single category archive like hep-ph
 
     #TODO for a single category that is not an archive, astro-py.CO, do category's archive
-    
-    if not archive:
-        return archive_index( archive_id , status=404)
+
+    #TODO link to RSS in headers?
+    # my $header_extras="<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$ARCHIVE_NAME{$archive}\" href=\"/rss/$archive\"/>";
 
     years = years_operating(archive)
     
@@ -39,9 +44,24 @@ def get_archive( archive_id: str) -> Response:
 
 
 def archive_index( archive_id: str, status: int) -> Response:
-    """Landing page for when there is no archive specified."""
-    # TODO do no-archive landing page
-    raise RuntimeError('/archive with no archive set is not yet implemented. See archive_index()')
+    """Landing page for when there is no archive specified."""    
+    data:Dict[str,Any]={}
+    data['bad_archive'] = archive_id
+    
+    archives = [(id,ARCHIVES[id]['name'])
+                for id in ARCHIVES.keys()
+                if id not in ARCHIVES_SUBSUMED and not id.startswith('test')]
+    archives.sort( key=lambda tpl: tpl[0])
+    data['archives']= archives
+    
+    defunct = [(id,ARCHIVES[id]['name'],ARCHIVES_SUBSUMED.get(id,''))
+               for id in ARCHIVES.keys()
+               if 'end_date' in ARCHIVES[id]]
+    defunct.sort( key=lambda tpl: tpl[0])
+    data['defunct'] = defunct
+
+    data['template'] = 'archive/archive_list_all.html'
+    return data, status, {}
 
 
 def subsumed_msg( archive:Dict[str,str], subsumed_by:str) ->Dict[str,str]:
@@ -91,5 +111,6 @@ def category_list( archive_id:str) -> List[Dict[str,str]]:
             cats.append({'id':cat_id,
                          'name': cat.get('name', ''),
                          'description': cat.get('description','') })
-    #TODO not sure how these are sorted in Legacy
+            
+    cats.sort(key=lambda x: x['name'] )
     return cats

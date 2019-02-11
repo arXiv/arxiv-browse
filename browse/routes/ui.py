@@ -225,7 +225,7 @@ def form(arxiv_id: str) -> Response:
 def archive(archive:str) -> Response:
     """Landing page for an archive."""
     response, code, headers = archive_page.get_archive(archive)
-    if code == status.HTTP_200_OK:
+    if code == status.HTTP_200_OK or code == status.HTTP_404_NOT_FOUND:
         return render_template(response['template'], **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)
