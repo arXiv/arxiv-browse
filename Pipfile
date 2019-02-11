@@ -16,7 +16,8 @@ pytz = "*"
 mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
-arxiv-base = "==0.12.1rc2"
+arxiv-base = "==0.14.3"
+mypy-extensions = "*"
 
 [dev-packages]
 pylama = "*"
