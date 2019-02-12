@@ -12,36 +12,40 @@ from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
 
 class Jinja_Custom_Filters_Test(unittest.TestCase):
     def test_with_jinja(self):
-        jenv = Environment(autoescape=True)
-        jenv.filters['urlize'] = urlizer(
-            ['doi']
-        )
-        self.assertEqual(
-            jenv.from_string(
-                '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
-            ).render(),
-            'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'
-        )
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['urlize'] = urlizer(
+                ['doi']
+            )
+            self.assertEqual(
+                jenv.from_string(
+                    '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
+                ).render(),
+                'something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
+            )
 
 
     def test_with_jinja_escapes(self):
-        jenv = Environment(autoescape=True)
-        jenv.filters['urlize'] = urlizer(
-            ['arxiv_id', 'doi']
-        )
-        self.assertEqual(
-            jenv.from_string(
-                '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
-            ).render(),
-            'something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> or other'
-        )
+        with app.app_context():
+            jenv = Environment(autoescape=True)
+            jenv.filters['urlize'] = urlizer(
+                ['arxiv_id', 'doi']
+            )
 
-        self.assertEqual(
-            jenv.from_string(
-                '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|urlize}}'
-            ).render(),
-            '&lt;script&gt;bad junk&lt;/script&gt; something <a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a>'
-        )
+            # TODO: urlize doesn't seem to return a Markup object?
+            self.assertEqual(
+                jenv.from_string(
+                    '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
+                ).render(),
+                'something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
+            )
+
+            self.assertEqual(
+                jenv.from_string(
+                    '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|urlize}}'
+                ).render(),
+                '&lt;script&gt;bad junk&lt;/script&gt; something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt;'
+            )
 
     def test_doi_filter(self):
         self.maxDiff = None
@@ -82,7 +86,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             txt = '<script>Im from the user and Im bad</script>'
             self.assertEqual(
                 urlize_dois(f'{doi} {txt}'),
-                str(Markup(f'<a href="https://dx.doi.org/10.1103/PhysRevD.76.013009">10.1103/PhysRevD.76.013009</a> {escape(txt)}'))
+                str(Markup(f'<a class="link-https" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf">10.1103/PhysRevD.76.013009</a> <script>Im from the user and Im bad</script>'))
             )
 
     def test_arxiv_id_urls_basic(self):
