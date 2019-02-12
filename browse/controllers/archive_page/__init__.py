@@ -33,9 +33,6 @@ def get_archive( archive_id: str) -> Response:
         archive_id = subsuming_category.get('in_archive',None)
         archive = ARCHIVES.get( archive_id, None)
 
-    #TODO link to RSS in headers?
-    # my $header_extras="<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$ARCHIVE_NAME{$archive}\" href=\"/rss/$archive\"/>";
-
     years = years_operating(archive)
         
     data['archive_id'] = archive_id
