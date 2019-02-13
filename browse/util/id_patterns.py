@@ -64,10 +64,10 @@ Only using the most general express from
 https://www.crossref.org/blog/dois-and-matching-regular-expressions/
 """
 
-_archive = '|'.join([re.escape(key) for key in taxonomy.ARCHIVES.keys()])
+_archive = '|'.join([re.escape(key) for key in taxonomy.definitions.ARCHIVES.keys()])
 """string for use in Regex for all arXiv archives"""
 
-_category = '|'.join([re.escape(key) for key in taxonomy.CATEGORIES.keys()])
+_category = '|'.join([re.escape(key) for key in taxonomy.definitions.CATEGORIES.keys()])
 
 _arxiv_id_prefix = r'(?P<arxiv_prefix>ar[xX]iv:)?'
 """Attempt to catch the arxiv prefix in front of arxiv ids so it can be
