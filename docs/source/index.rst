@@ -7,8 +7,10 @@ Welcome to arXiv Browse Service's documentation!
 ================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
+
+   architecture
 
 
 
