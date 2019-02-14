@@ -11,6 +11,7 @@ Welcome to arXiv Browse Service's documentation!
    :caption: Contents:
 
    architecture
+   api/modules
 
 
 

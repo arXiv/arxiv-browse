@@ -1,5 +1,5 @@
 browse.services.document.metadata module
-================================
+========================================
 
 .. automodule:: browse.services.document.metadata
     :members:
