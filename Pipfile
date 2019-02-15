@@ -15,8 +15,8 @@ pytz = "*"
 mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
-arxiv-base = "==0.14.3"
 flask = "==1.0.2"
+arxiv-base = {editable = true,git = "https://github.com/arXiv/arxiv-base.git",ref = "ARXIVNG-1719"}
 
 [dev-packages]
 pylama = "*"
