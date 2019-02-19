@@ -7,7 +7,8 @@ from flask import appcontext_pushed, url_for
 from app import app
 
 from arxiv.base.urls import links, urlizer, urlize
-from browse.filters import line_feed_to_br, tex_to_utf, entity_to_utf
+from arxiv.base.filters import abstract_lf_to_br
+from browse.filters import tex_to_utf, entity_to_utf
 
 
 class Jinja_Custom_Filters_Test(unittest.TestCase):
@@ -242,14 +243,14 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'should not double escape')
 
     def test_line_break(self):
-        self.assertEqual(line_feed_to_br('blal\n  bla'), 'blal\n<br />bla')
+        self.assertEqual(abstract_lf_to_br('blal\n  bla'), 'blal\n<br />bla')
 
-        self.assertEqual(line_feed_to_br('\nblal\n  bla'), '\nblal\n<br />bla')
+        self.assertEqual(abstract_lf_to_br('\nblal\n  bla'), '\nblal\n<br />bla')
 
-        self.assertEqual(line_feed_to_br('\n blal\n  bla'),
+        self.assertEqual(abstract_lf_to_br('\n blal\n  bla'),
                          '\n blal\n<br />bla',
                          'need to not do <br /> on first line')
-        self.assertEqual(line_feed_to_br('blal\n\nbla'), 'blal\nbla',
+        self.assertEqual(abstract_lf_to_br('blal\n\nbla'), 'blal\nbla',
                          'skip blank lines')
 
     def test_line_break_jinja(self):
@@ -258,7 +259,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
         with app.app_context():
             jenv = Environment(autoescape=True)
             jenv.filters['urlize'] = urlize
-            jenv.filters['line_break'] = line_feed_to_br
+            jenv.filters['line_break'] = abstract_lf_to_br
 
             self.assertEqual(
                 jenv.from_string(
@@ -283,7 +284,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
         with app.app_context():
             jenv = Environment(autoescape=True)
             jenv.filters['urlize'] = urlize
-            jenv.filters['line_break'] = line_feed_to_br
+            jenv.filters['line_break'] = abstract_lf_to_br
             jenv.filters['tex_to_utf'] = tex_to_utf
 
             self.assertEqual(

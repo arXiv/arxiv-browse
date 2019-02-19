@@ -36,19 +36,6 @@ def single_doi_url(clickthrough_url_for: Callable[[str], str],
     return Markup(f'<a href="{ct_url}">{escape(doi)}</a>')
 
 
-def line_feed_to_br(text: JinjaFilterInput) -> Markup:
-    """Lines that start with two spaces should be broken."""
-    if hasattr(text, '__html__'):
-        etxt = text
-    else:
-        etxt = Markup(escape(text))
-
-    # if line starts with spaces, replace the white space with <br\>
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
-    dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
-    return Markup(dedup)
-
-
 def entity_to_utf(text: str) -> str:
     """Convert HTML entities to unicode.
 
@@ -80,12 +67,12 @@ def entity_to_utf(text: str) -> str:
 
 def tex_to_utf(text: JinjaFilterInput, letters: bool=True) -> Markup:
     """
-    Convert some TeX accents and symbols to UTF-8 characters. 
+    Convert some TeX accents and symbols to UTF-8 characters.
 
     :param text: Text to filter.
 
     :param letters: If False, do not convert greek symbols.  Greek
-    symbols can cause problems. Ex \phi is not suppose to look like φ. 
+    symbols can cause problems. Ex \phi is not suppose to look like φ.
     φ looks like \varphi to someone use to TeX.
     See ARXIVNG-1612
 
