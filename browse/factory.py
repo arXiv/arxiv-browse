@@ -6,8 +6,7 @@ from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
-from browse.filters import tex_to_utf, entity_to_utf, \
-    single_doi_url
+from browse.filters import entity_to_utf
 from browse.services.listing.fake_listings import FakeListingFilesService
 
 from arxiv.base.config import BASE_SERVER
@@ -40,9 +39,6 @@ def create_web_app() -> Flask:
 
     if not app.jinja_env.filters:
         app.jinja_env.filters = {}
-
-    app.jinja_env.filters['tex_to_utf'] = partial( tex_to_utf, letters=True )
-    app.jinja_env.filters['tex_to_utf_no_symb'] = partial( tex_to_utf, letters=False)
 
     app.jinja_env.filters['entity_to_utf'] = entity_to_utf
 

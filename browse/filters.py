@@ -19,23 +19,6 @@ JinjaFilterInput = Union[Markup, str]
 """
 
 
-def single_doi_url(clickthrough_url_for: Callable[[str], str],
-                   doi: JinjaFilterInput) -> Markup:
-    """DOI is made into a link.
-
-    This expects a DOI ONLY. It should not be used on general text.
-
-    This link is not through clickthrough. Use an additional filter in
-    the template to get that.
-
-    How does this ensure escaping? It expects just a DOI, The result
-    is created as a properly escaped Markup.
-    """
-    doi_url = f'https://dx.doi.org/{parse.quote_plus(doi)}'
-    ct_url = clickthrough_url_for(doi_url)
-    return Markup(f'<a href="{ct_url}">{escape(doi)}</a>')
-
-
 def entity_to_utf(text: str) -> str:
     """Convert HTML entities to unicode.
 
@@ -63,23 +46,3 @@ def entity_to_utf(text: str) -> str:
     with_lt_gt = re.sub('XXX_GREATER_THAN_XXX', '&gt;', with_lt)
 
     return Markup(with_lt_gt)
-
-
-def tex_to_utf(text: JinjaFilterInput, letters: bool=True) -> Markup:
-    """
-    Convert some TeX accents and symbols to UTF-8 characters.
-
-    :param text: Text to filter.
-
-    :param letters: If False, do not convert greek symbols.  Greek
-    symbols can cause problems. Ex \phi is not suppose to look like φ.
-    φ looks like \varphi to someone use to TeX.
-    See ARXIVNG-1612
-
-    :returns: Jinja Markup of filtered text
-    """
-    if hasattr(text, '__html__'):
-        # Need to unescape so nothing that is tex is escaped
-        return Markup(escape(tex2utf(text.unescape(), letters=letters)))  # type: ignore
-    else:
-        return Markup(escape(tex2utf(text, letters=letters)))

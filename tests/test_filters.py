@@ -7,8 +7,8 @@ from flask import appcontext_pushed, url_for
 from app import app
 
 from arxiv.base.urls import links, urlizer, urlize
-from arxiv.base.filters import abstract_lf_to_br
-from browse.filters import tex_to_utf, entity_to_utf
+from arxiv.base.filters import abstract_lf_to_br, f_tex2utf
+from browse.filters import entity_to_utf
 
 
 class Jinja_Custom_Filters_Test(unittest.TestCase):
@@ -278,32 +278,32 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'line_break and arxiv_id_urls should work together'
             )
 
-    def test_tex_to_utf(self):
+    def test_tex2utf(self):
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
             jenv = Environment(autoescape=True)
             jenv.filters['urlize'] = urlize
             jenv.filters['line_break'] = abstract_lf_to_br
-            jenv.filters['tex_to_utf'] = tex_to_utf
+            jenv.filters['tex2utf'] = f_tex2utf
 
             self.assertEqual(
-                jenv.from_string('{{""|tex_to_utf|urlize|safe}}').render(),
+                jenv.from_string('{{""|tex2utf|urlize|safe}}').render(),
                 ''
             )
 
             title = jenv.from_string(
-                '{{"Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2<d<4"|tex_to_utf|urlize|safe}}'
+                '{{"Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2<d<4"|tex2utf|urlize|safe}}'
             ).render()
             self.assertEqual(
                 title,
                 'Finite-Size and Finite-Temperature Effects in the Conformally Invariant O(N) Vector Model for 2&lt;d&lt;4',
-                'tex_to_utf and arxiv_id_urls should handle < and > ARXIVNG-1227'
+                'tex2utf and arxiv_id_urls should handle < and > ARXIVNG-1227'
             )
 
-            self.assertEqual(tex_to_utf('Lu\\\'i'), 'Luí')
-            self.assertEqual(tex_to_utf(Markup('Lu\\\'i')), 'Luí')
-            self.assertEqual(tex_to_utf(Markup(escape('Lu\\\'i'))), 'Luí')
+            self.assertEqual(f_tex2utf('Lu\\\'i'), 'Luí')
+            self.assertEqual(f_tex2utf(Markup('Lu\\\'i')), 'Luí')
+            self.assertEqual(f_tex2utf(Markup(escape('Lu\\\'i'))), 'Luí')
 
     def test_entity_to_utf(self):
         h = 'sosmooth.org'
