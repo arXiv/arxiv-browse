@@ -61,9 +61,9 @@ class Identifier:
         self.month = None
         self.is_old_id: Optional[bool] = None
 
-        if self.ids in taxonomy.ARCHIVES:
+        if self.ids in taxonomy.definitions.ARCHIVES:
             raise IdentifierIsArchiveException(
-                taxonomy.ARCHIVES[self.ids]['name'])
+                taxonomy.definitions.ARCHIVES[self.ids]['name'])
 
         for subtup in SUBSTITUTIONS:
             arxiv_id = re.sub(subtup[0],

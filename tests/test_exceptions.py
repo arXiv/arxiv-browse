@@ -19,6 +19,8 @@ class TestExceptionHandling(TestCase):
         wlog.disabled = True
 
         self.app = create_web_app()
+        self.app.testing = True
+        self.app.config['APPLICATION_ROOT'] = ''
         self.client = self.app.test_client()
 
     def test_404(self):
@@ -54,7 +56,8 @@ class TestExceptionHandling(TestCase):
         """Disable logging to avoid messy output during testing"""
         self.app.logger.disabled = True
 
-        response = self.client.get('/abs/1234.5678')
-        self.assertEqual(response.status_code,
-                         status.HTTP_500_INTERNAL_SERVER_ERROR)
-        self.assertIn('text/html', response.content_type)
+        with self.assertRaises(AbsException):
+            response = self.client.get('/abs/1234.5678')
+            self.assertEqual(response.status_code,
+                             status.HTTP_500_INTERNAL_SERVER_ERROR)
+            self.assertIn('text/html', response.content_type)
