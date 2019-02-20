@@ -1,1 +1,0 @@
-"""Utility code for browse."""
