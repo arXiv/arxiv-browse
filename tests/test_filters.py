@@ -12,7 +12,10 @@ from browse.filters import entity_to_utf
 
 
 class Jinja_Custom_Filters_Test(unittest.TestCase):
+    """Browse jinja filter tests."""
+
     def test_with_jinja(self):
+        """Basic urlize DOI filter test."""
         with app.app_context():
             jenv = Environment(autoescape=True)
             jenv.filters['urlize'] = urlizer(
@@ -25,8 +28,8 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
             )
 
-
     def test_with_jinja_escapes(self):
+        """Test the tex2utf filter with jinja escapes."""
         with app.app_context():
             jenv = Environment(autoescape=True)
             jenv.filters['urlize'] = urlizer(
@@ -49,6 +52,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             )
 
     def test_doi_filter(self):
+        """Test the urlizer DOI filter."""
         self.maxDiff = None
         with app.app_context():
             s = 'some test string 23$6#$5<>&456 http://google.com/notadoi'
@@ -67,7 +71,8 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
 
             s = f'something something {doi} endthing'
             doiurl = urlize_dois(s)
-            self.assertRegex(doiurl, r'<a class="link-https" data-doi="', 'Have an A tag')
+            self.assertRegex(
+                doiurl, r'<a class="link-https" data-doi="', 'Have an A tag')
             self.assertRegex(doiurl, '^something something ')
             self.assertRegex(doiurl, ' endthing$')
 
@@ -91,7 +96,9 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             )
 
     def test_arxiv_id_urls_basic(self):
-        h = 'arxiv.org'  # Totally bogus setup for testing, at least url_for returns something
+        """Test basic urlize for arXiv identifiers."""
+        # a server name is needed for url_for to return something
+        h = 'arxiv.org'
         app.config['SERVER_NAME'] = h
 
         with app.app_context():
@@ -106,9 +113,10 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             self.assertEqual(
                 urlize('hep-th/9901001 hep-th/9901002'),
                 f'<a class="link-https" data-arxiv-id="hep-th/9901001" href="https://arxiv.org/abs/hep-th/9901001">hep-th/9901001</a> <a class="link-https" data-arxiv-id="hep-th/9901002" href="https://arxiv.org/abs/hep-th/9901002">hep-th/9901002</a>'
-                )
+            )
 
     def test_arxiv_id_urls_3(self):
+        """Test more complex cases of urlize for arXiv identifiers."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
 
@@ -127,6 +135,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             )
 
     def test_arxiv_id_urls_punct(self):
+        """Test cases of of urlize for arXiv identifiers with punctuation."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
 
@@ -153,6 +162,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'in parens')
 
     def test_arxiv_id_urls_more(self):
+        """Test urlize for arXiv identifiers that have mixed formatting."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
 
@@ -160,9 +170,10 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             self.assertEqual(
                 urlize('arXiv:dg-ga/9401001 hep-th/9901001 0704.0001'),
                 f'<a class="link-https" data-arxiv-id="dg-ga/9401001" href="https://arxiv.org/abs/dg-ga/9401001">arXiv:dg-ga/9401001</a> <a class="link-https" data-arxiv-id="hep-th/9901001" href="https://arxiv.org/abs/hep-th/9901001">hep-th/9901001</a> <a class="link-https" data-arxiv-id="0704.0001" href="https://arxiv.org/abs/0704.0001">0704.0001</a>',
-                'filter_urls_ids_escape (ID linking) 5/7')
+                'urlize (ID linking) 5/7')
 
     def test_arxiv_id_v(self):
+        """Test urlize for arXiv identifers with version affix."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -173,6 +184,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
 
     @unittest.skip("TODO: confirm actual desired behavior")
     def test_vixra(self):
+        """Test urlize for identifiers prefixed by viXra."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
 
@@ -186,13 +198,13 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             #     f'vixra:<a href="https://arxiv.org/abs/0704.0001">0704.0001</a>')
 
     def test_arxiv_id_urls_escaping(self):
+        """Test proper escaping when urlize applied."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
             ax_id = 'hep-th/9901002'
 
             user_entered_txt = ' <div>div should be escaped</div>'
-            # ex_txt = escape(user_entered_txt).__html__()
             ex_txt = Markup(user_entered_txt)
             self.assertEqual(
                 urlize(ax_id + user_entered_txt),
@@ -243,9 +255,11 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'should not double escape')
 
     def test_line_break(self):
+        """Test the abstract lf to br tag filter."""
         self.assertEqual(abstract_lf_to_br('blal\n  bla'), 'blal\n<br />bla')
 
-        self.assertEqual(abstract_lf_to_br('\nblal\n  bla'), '\nblal\n<br />bla')
+        self.assertEqual(abstract_lf_to_br(
+            '\nblal\n  bla'), '\nblal\n<br />bla')
 
         self.assertEqual(abstract_lf_to_br('\n blal\n  bla'),
                          '\n blal\n<br />bla',
@@ -254,6 +268,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                          'skip blank lines')
 
     def test_line_break_jinja(self):
+        """Test the abstract lf to br tag filter with urlize on arXiv IDs."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -279,6 +294,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             )
 
     def test_tex2utf(self):
+        """Test the tex2utf filter."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -306,6 +322,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             self.assertEqual(f_tex2utf(Markup(escape('Lu\\\'i'))), 'Luí')
 
     def test_entity_to_utf(self):
+        """Test the entity to utf filter."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -321,6 +338,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'entity_to_utf should work even with < or >')
 
     def test_arxiv_urlize_no_email_links(self):
+        """Test to ensure email addresses are not turned into links."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -328,15 +346,18 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             jenv.filters['urlize'] = urlize
 
             self.assertEqual(
-                jenv.from_string('{{ "bob@example.com"|urlize|safe }}').render(),
+                jenv.from_string(
+                    '{{ "bob@example.com"|urlize|safe }}').render(),
                 'bob@example.com',
                 'arxiv_urlize should not turn emails into links')
             self.assertEqual(
-                jenv.from_string('{{ "<bob@example.com>"|urlize|safe }}').render(),
+                jenv.from_string(
+                    '{{ "<bob@example.com>"|urlize|safe }}').render(),
                 '&lt;bob@example.com&gt;',
                 'arxiv_urlize should work even with < or >')
 
     def test_arxiv_urlize(self):
+        """Multiple basic urlize tests."""
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -363,7 +384,8 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 '<a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external">this http URL</a>',
                 'urlize (URL linking) 6/6')
             self.assertEqual(
-                urlize('  Correction to Bernoulli (2006), 12, 551--570 http://projecteuclid.org/euclid.bj/1151525136'),
+                urlize(
+                    '  Correction to Bernoulli (2006), 12, 551--570 http://projecteuclid.org/euclid.bj/1151525136'),
                 Markup('  Correction to Bernoulli (2006), 12, 551--570 <a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external">this http URL</a>'),
                 'urlize (URL linking) 6/6')
             # shouldn't match

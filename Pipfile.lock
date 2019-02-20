@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9d23711cd11385c21282ec00b8c217aae1048502776d4bb1c31cdf4cd21bf299"
+            "sha256": "5bb8994688e13b4ed68a87b4e113807e5f82d31b9879082bb06f8cd589f94309"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -47,7 +47,7 @@
         "arxiv-base": {
             "editable": true,
             "git": "https://github.com/arXiv/arxiv-base.git",
-            "ref": "36f3c9f332c52d544582235eb76f7e5fa723b1aa"
+            "ref": "87ec74c7f4bda2019a4b137c7a25eb7e421a3b06"
         },
         "async-timeout": {
             "hashes": [
@@ -483,7 +483,9 @@
         },
         "hypothesis": {
             "hashes": [
-                "sha256:7f97f984d45f22b8895ee4d98c7f48e7ebc2c2fbf9d5ce07dad77989997821f6"
+                "sha256:7f97f984d45f22b8895ee4d98c7f48e7ebc2c2fbf9d5ce07dad77989997821f6",
+                "sha256:cb8c89295c36db0014409c8d7c897094f538cb880a25e3dc3e86fb768787a03d",
+                "sha256:e83442d2f74ceb1d166e351308810b394802fd9758c3b89ae36ca8daadac9fd4"
             ],
             "index": "pypi",
             "version": "==4.6.1"

@@ -1,12 +1,10 @@
 """Browse jinja filters."""
 import re
-from urllib import parse
-from typing import Callable, Union
+from typing import Union
 
-from jinja2 import Markup, escape
+from jinja2 import Markup
 import html
 
-from browse.services.util.tex2utf import tex2utf
 
 JinjaFilterInput = Union[Markup, str]
 """
