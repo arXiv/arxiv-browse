@@ -28,7 +28,7 @@ def handle_abs_not_found(error: AbsNotFound) -> Response:
     rendered = render_template('abs/404.html', **error.data)
     response = make_response(rendered)
     response.status_code = status.HTTP_404_NOT_FOUND
-    return response
+    return response  # type: ignore
 
 
 class TrackbackNotFound(HTTPException):
@@ -60,4 +60,4 @@ def handle_bad_request(error: BadRequest) -> Response:
     rendered = render_template('400.html', error=error)
     response = make_response(rendered)
     response.status_code = status.HTTP_400_BAD_REQUEST
-    return response
+    return response  # type: ignore

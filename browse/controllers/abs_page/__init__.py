@@ -112,8 +112,8 @@ def get_abs_page(arxiv_id: str) -> Response:
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
-           in taxonomy.ARCHIVES:
-            archive_name = taxonomy.ARCHIVES[arxiv_identifier.archive]['name']
+           in taxonomy.definitions.ARCHIVES:
+            archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive]['name']
             raise AbsNotFound(data={'reason': 'old_id_not_found',
                                     'arxiv_id': arxiv_id,
                                     'archive_id': arxiv_identifier.archive,
@@ -222,7 +222,7 @@ def _time_header_parse(headers: Dict[str, Any], header: str) \
     if (header in request.headers
             and request.headers[header] is not None):
         try:
-            dt = parser.parse(request.headers.get(header))
+            dt = parser.parse(str(request.headers.get(header)))
             if not dt.tzinfo:
                 dt = dt.replace(tzinfo=tzutc())
             return dt
@@ -277,15 +277,15 @@ def _check_context(arxiv_identifier: Identifier,
     context = None
     if ('context' in request.args and (
             request.args['context'] == 'arxiv'
-            or request.args['context'] in taxonomy.CATEGORIES
-            or request.args['context'] in taxonomy.ARCHIVES)):
+            or request.args['context'] in taxonomy.definitions.CATEGORIES
+            or request.args['context'] in taxonomy.definitions.ARCHIVES)):
         context = request.args['context']
     elif primary_category:
         pc = primary_category.canonical or primary_category
         if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id
-            if pc.id in taxonomy.ARCHIVES:
+            if pc.id in taxonomy.definitions.ARCHIVES:
                 context = pc.id
             else:
                 context = arxiv_identifier.archive

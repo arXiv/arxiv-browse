@@ -37,7 +37,7 @@ def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
     if code == status.HTTP_200_OK:
-        return render_template('home/home.html', **response), code, headers
+        return render_template('home/home.html', **response), code, headers  # type: ignore
 
     raise InternalServerError('Unexpected error')
 
@@ -47,9 +47,9 @@ def bare_abs() -> Response:
     """Check several legacy request parameters."""
     if request.args:
         if 'id' in request.args:
-            return abstract(request.args['id'])
+            return abstract(request.args['id'])  # type: ignore
         elif 'archive' in request.args and 'papernum' in request.args:
-            return abstract(
+            return abstract(  # type: ignore
                 f"{request.args['archive']}/{request.args['papernum']}")
         else:
             for param in request.args:
@@ -57,7 +57,7 @@ def bare_abs() -> Response:
                 # e.g. /abs?<archive>/\d{7}
                 if not request.args[param] \
                    and re.match(r'^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$', param):
-                    return abstract(param)
+                    return abstract(param)  # type: ignore
 
     """Return abs-specific 404."""
     raise AbsNotFound
@@ -76,11 +76,11 @@ def abstract(arxiv_id: str) -> Response:
             return Response(
                 response['abs_meta'].raw_safe,
                 mimetype='text/plain')
-        return render_template('abs/abs.html', **response), code, headers
+        return render_template('abs/abs.html', **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)
+        return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
-        return '', code, headers
+        return '', code, headers  # type: ignore
 
     raise InternalServerError('Unexpected error')
 
@@ -130,8 +130,7 @@ def previous_next() -> Union[str, Response]:
         raise BadRequest
     response, code, headers = prevnext.get_prevnext(request.args)
     if code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)
-
+        return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
 
 
@@ -149,7 +148,7 @@ def clickthrough() -> Response:
         if is_hash_valid(current_app.config['CLICKTHROUGH_SECRET'],
                          request.args.get('url'),
                          request.args.get('v')):
-            return redirect(request.args.get('url'))
+            return redirect(request.args.get('url'))  # type: ignore
         else:
             raise BadRequest('Bad click-through redirect')
 
@@ -164,17 +163,17 @@ def list_articles(context: str, subcontext: str) -> Response:
     Context might be a context or an archive Subcontext should be
     'recent' 'new' or a string of format yymm
     """
-    response, code, headers = list_page.get_listing(
+    response, code, headers = list_page.get_listing(  # type: ignore
         context, subcontext, request.args.get('skip'), request.args.get('show'))
     if code == status.HTTP_200_OK:
         #TODO if it is a HEAD request we don't want to render the template
-        return render_template(response['template'], **response), code, headers
+        return render_template(response['template'], **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)
+        return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
-        return '', code, headers
+        return '', code, headers  # type: ignore
     else:
-        return response, code, headers
+        return response, code, headers  # type: ignore
 
 
 
