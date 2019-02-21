@@ -26,9 +26,9 @@ class AbsNotFound(HTTPException):
 def handle_abs_not_found(error: AbsNotFound) -> Response:
     """Render the base 404 error page for abs."""
     rendered = render_template('abs/404.html', **error.data)
-    response = make_response(rendered)
+    response: Response = make_response(rendered)
     response.status_code = status.HTTP_404_NOT_FOUND
-    return response  # type: ignore
+    return response
 
 
 class TrackbackNotFound(HTTPException):
@@ -49,15 +49,15 @@ class TrackbackNotFound(HTTPException):
 def handle_trackback_not_found(error: TrackbackNotFound) -> Response:
     """Render the base 404 error page for tb."""
     rendered = render_template('tb/404.html', **error.data)
-    response = make_response(rendered)
+    response: Response = make_response(rendered)
     response.status_code = status.HTTP_404_NOT_FOUND
-    return response  # type: ignore
+    return response
 
 
 @handler(BadRequest)
 def handle_bad_request(error: BadRequest) -> Response:
     """Render the 400 error page for browse."""
     rendered = render_template('400.html', error=error)
-    response = make_response(rendered)
+    response: Response = make_response(rendered)
     response.status_code = status.HTTP_400_BAD_REQUEST
-    return response  # type: ignore
+    return response
