@@ -15,7 +15,7 @@ from browse.services.database import get_paper_trackback_pings, \
 from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
-from browse.services.document.metadata import AbsException
+from browse.services.document.metadata import AbsException, AbsNotFoundException
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
 
@@ -63,18 +63,17 @@ def get_tb_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
         response_data['arxiv_identifier'] = arxiv_identifier
+        abs_meta = metadata.get_abs(arxiv_identifier.id)
+        response_data['abs_meta'] = abs_meta
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
         if len(trackback_pings) > 0:
-            # Don't need to get article metadata if there are no trackbacks
-            abs_meta = metadata.get_abs(arxiv_identifier.id)
-            response_data['abs_meta'] = abs_meta
             response_data['author_links'] = \
                 split_long_author_list(queries_for_authors(
                     abs_meta.authors.raw), truncate_author_list_size)
         response_status = status.HTTP_200_OK
 
-    except (AbsException, IdentifierException):
+    except (AbsException, AbsNotFoundException, IdentifierException):
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
     except Exception as ex:
         logger.warning(f'Error getting trackbacks: {ex}')

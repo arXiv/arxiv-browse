@@ -92,9 +92,9 @@ def tb(arxiv_id: str) -> Response:
     response, code, headers = tb_page.get_tb_page(arxiv_id)
 
     if code == status.HTTP_200_OK:
-        return render_template('tb/tb.html', **response), code, headers
+        return render_template('tb/tb.html', **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)
+        return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
 
 
@@ -105,7 +105,7 @@ def tb_recent() -> Response:
     response, code, headers = tb_page.get_recent_tb_page(request.form)
 
     if code == status.HTTP_200_OK:
-        return render_template('tb/recent.html', **response), code, headers
+        return render_template('tb/recent.html', **response), code, headers  # type: ignore
     raise InternalServerError('Unexpected error')
 
 
@@ -119,7 +119,7 @@ def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     response, code, headers = tb_page.get_tb_redirect(trackback_id,
                                                       hashed_document_id)
     if code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)
+        return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
 
 

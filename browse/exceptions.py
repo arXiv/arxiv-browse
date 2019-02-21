@@ -51,7 +51,7 @@ def handle_trackback_not_found(error: TrackbackNotFound) -> Response:
     rendered = render_template('tb/404.html', **error.data)
     response = make_response(rendered)
     response.status_code = status.HTTP_404_NOT_FOUND
-    return response
+    return response  # type: ignore
 
 
 @handler(BadRequest)
