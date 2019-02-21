@@ -37,6 +37,8 @@ pytest-easyread = "*"
 weighted-levenshtein = "*"
 coverage = "*"
 coveralls = "*"
+sphinx = "*"
+sphinx-autodoc-typehints = "*"
 mypy-extensions = "*"
 
 [requires]

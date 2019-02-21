@@ -1,5 +1,5 @@
-Browse Application
-******************
+Browse Application Architecture
+*******************************
 
 The browse application provides reader-facing views onto arXiv documents and
 their metadata. "Browse" functionality encompasses the abstract page, content
