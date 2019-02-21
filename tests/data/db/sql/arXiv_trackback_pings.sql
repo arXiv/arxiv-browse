@@ -13,4 +13,4 @@ INSERT INTO `arXiv_trackback_pings` VALUES (1,504934,'More On The Omega B Baryon
 -- This next one is an intentional duplicate, but with different url, and not accepted
 INSERT INTO `arXiv_trackback_pings` VALUES (2,504934,'Foo baz','\"Observation of the','http://en.wikipedia.org/wiki/Zevatron','Wikipedia','arxiv1.library.cornell.edu','128.84.158.114',1228752458,0,0,0,'rejected',NULL);
 
-INSERT INTO `arXiv_trackback_pings` VALUES (99999999,99999998,'Nothing here','Really nothing here ','http://www.example.org','On Nothing','arxiv1.library.cornell.edu','128.84.158.114',1258488297,0,0,1248558336,'accepted',NULL);
+INSERT INTO `arXiv_trackback_pings` VALUES (99999999,504934,'Nothing here','Really nothing here ','http://www.example.org','On Nothing','arxiv1.library.cornell.edu','128.84.158.114',1258488294,0,0,1248558336,'accepted',NULL);

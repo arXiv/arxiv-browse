@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 10
-trackback_count_options = [25, 50, 100, 200]
+trackback_count_options = [1,2,3,4,5,6,7,25, 50, 100, 200]
 
 
 def get_tb_page(arxiv_id: str) -> Response:
@@ -64,7 +64,8 @@ def get_tb_page(arxiv_id: str) -> Response:
             return redirect
         response_data['arxiv_identifier'] = arxiv_identifier
         abs_meta = metadata.get_abs(arxiv_identifier.id)
-        response_data['abs_meta'] = abs_meta
+        if abs_meta:
+            response_data['abs_meta'] = abs_meta
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
         response_data['trackback_pings'] = trackback_pings
         if len(trackback_pings) > 0:
@@ -73,7 +74,9 @@ def get_tb_page(arxiv_id: str) -> Response:
                     abs_meta.authors.raw), truncate_author_list_size)
         response_status = status.HTTP_200_OK
 
-    except (AbsException, AbsNotFoundException, IdentifierException):
+    except AbsNotFoundException:
+        raise TrackbackNotFound(data={'arxiv_id': arxiv_id, 'not_found': True})
+    except (AbsException, IdentifierException):
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
     except Exception as ex:
         logger.warning(f'Error getting trackbacks: {ex}')

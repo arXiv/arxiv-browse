@@ -165,11 +165,11 @@ class TestBrowseDatabaseService(TestCase):
         count_from_db_list: int = TestBrowseDatabaseService.database_service\
             .get_paper_trackback_pings(test_paper_id).__len__()
         self.assertEqual(
-            count_from_db, 8,
+            count_from_db, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
         self.assertEqual(
-            count_from_db_list, 8,
+            count_from_db_list, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
 

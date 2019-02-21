@@ -2,7 +2,7 @@
 
 {% block title %}
 {% if arxiv_id %}
-[{{ arxiv_id }}] Article identifier not recognized
+[{{ arxiv_id }}] Article identifier not {% if not_found %}found{% else %}recognized{% endif %}
 {% elif missing_id %}
 No article ID specified
 {% else %}
@@ -12,7 +12,10 @@ Trackback not found
 
 {%- block content %}
 {% if arxiv_id or missing_id %}
-  {% if arxiv_id %}
+  {% if arxiv_id and not_found %}
+  <h1>Article 'arXiv:{{ arxiv_id }}' not found</h1>
+  <p>The identifier you have specified (arXiv:{{ arxiv_id }}) may be invalid. Please inform <a href="mailto:help@arxiv.org">help@arxiv.org</a> if you believe that the identifier should correspond to a valid paper in arXiv.</p>
+  {% elif arxiv_id %}
   <h1>Article identifier '{{ arxiv_id }}' not recognized</h1>
   {% else %}
   <h1>No article identifier specified</h1>

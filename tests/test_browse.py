@@ -36,9 +36,6 @@ class BrowseTest(unittest.TestCase):
 
     def test_tb(self):
         """Test the /tb/<arxiv_id> page."""
-        rv = self.app.get('/tb/0808.4142')
-        self.assertEqual(rv.status_code, 200)
-
         rv = self.app.get('/tb/1901.99999')
         self.assertEqual(rv.status_code, 404)
 
@@ -47,6 +44,25 @@ class BrowseTest(unittest.TestCase):
 
         rv = self.app.get('/tb/foo')
         self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/0808.4142')
+        self.assertEqual(rv.status_code, 200)
+
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        h2_elmt = html.find('h2')
+        h2_txt = h2_elmt.get_text()
+        self.assertTrue(h2_elmt, 'Should have <h2> element')
+        self.assertEquals(h2_txt, 'Trackbacks for 0808.4142')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertGreater(len(tb_a_tags), 1,
+                           'There should be more than one <a> tag for trackbacks')
+        h1_elmt = html.find('div', id='abs')
+        h1_txt = h1_elmt.get_text()
+        self.assertTrue(h1_elmt, 'Should have <h1 id="abs"> element')
+        self.assertRegex(
+            h1_txt,
+            r'Observation of the doubly strange b baryon Omega_b-',
+            '<h1> element contains title of article')
 
     def test_tb_recent(self):
         """Test the /tb/recent page."""
@@ -61,6 +77,13 @@ class BrowseTest(unittest.TestCase):
 
         rv = self.app.get('/tb/recent/foo')
         self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.post('/tb/recent', data=dict(views='1'))
+        self.assertEqual(rv.status_code, 200, 'POST with views==1 OK')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertEquals(len(tb_a_tags), 1,
+                          'There should be exactly one trackback link')
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
