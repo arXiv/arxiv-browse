@@ -78,23 +78,26 @@
     secondary_categories = abs_meta.get_secondaries()) }}
 
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
-      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex_to_utf|upper }} proxy]{% endif %}
+      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex2utf|upper }} proxy]{% endif %}
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
-    <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)</div>
+  </div>
+  <!--end leftcolumn-->
+    <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+      <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;"><a href="https://confluence.cornell.edu/x/MjmLFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span>
+    </div>
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
     {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
     {% if config['LABS_BIBEXPLORER_ENABLED'] %}
     <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
     {% endif %}
-  </div>
-  <!--end leftcolumn-->
+
 </div>
 {% endblock content %}
 {%- block footer_text -%}
@@ -134,12 +137,12 @@
 
 {%- macro generate_social_media_tags() -%}
     <meta name="twitter:site" content="@arxiv"/>
-    <meta property="twitter:title" content="{{ abs_meta.title|tex_to_utf|truncate(70, False, '...') }}"/>
-    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}"/>
+    <meta property="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...') }}"/>
+    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
     <meta property="og:site_name" content="arXiv.org"/>
-    <meta property="og:title" content="{{ abs_meta.title|tex_to_utf }}"/>
+    <meta property="og:title" content="{{ abs_meta.title|tex2utf }}"/>
     <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
-    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex_to_utf }}"/>
+    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex2utf }}"/>
 {%- endmacro -%}
 
 {%- macro category_line() -%}

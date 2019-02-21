@@ -552,7 +552,7 @@ class AbsMetaSession:
             elif arxiv_identifier.is_old_id:
                 primary_archive = Archive(arxiv_identifier.archive)
         elif arxiv_identifier.is_old_id:
-            primary_archive = Archive(arxiv_identifier.archive) 
+            primary_archive = Archive(arxiv_identifier.archive)
         else:
             raise AbsException('Cannot infer archive from identifier.')
 
