@@ -7,7 +7,8 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
-from browse.controllers import abs_page, home_page, list_page, prevnext
+from browse.controllers import abs_page, home_page, list_page, prevnext, \
+    tb_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -81,6 +82,44 @@ def abstract(arxiv_id: str) -> Response:
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers  # type: ignore
 
+    raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('tb/', defaults={'arxiv_id': ''}, methods=['GET'])
+@blueprint.route('tb/<path:arxiv_id>', methods=['GET'])
+def tb(arxiv_id: str) -> Response:
+    """Get trackbacks associated with an article."""
+    response, code, headers = tb_page.get_tb_page(arxiv_id)
+
+    if code == status.HTTP_200_OK:
+        return render_template('tb/tb.html', **response), code, headers  # type: ignore
+    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)  # type: ignore
+    raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('tb/recent', methods=['GET', 'POST'])
+def tb_recent() -> Response:
+    """Get the recent trackbacks that have been posted across the site."""
+
+    response, code, headers = tb_page.get_recent_tb_page(request.form)
+
+    if code == status.HTTP_200_OK:
+        return render_template('tb/recent.html', **response), code, headers  # type: ignore
+    raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('tb/redirect/',
+                 methods=['GET'],
+                 defaults={'trackback_id': '', 'hashed_document_id': ''})
+@blueprint.route('tb/redirect/<string:trackback_id>/<string:hashed_document_id>',
+                 methods=['GET'])
+def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
+    """Get the trackback redirect link."""
+    response, code, headers = tb_page.get_tb_redirect(trackback_id,
+                                                      hashed_document_id)
+    if code == status.HTTP_301_MOVED_PERMANENTLY:
+        return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
 
 
@@ -179,12 +218,6 @@ def ps(arxiv_id: str) -> Response:
 def src(arxiv_id: str, file_name: str) -> Response:
     """Get src for article."""
     raise InternalServerError(f'Not Yet Implemented {arxiv_id} {file_name}')
-
-
-@blueprint.route('tb/<path:arxiv_id>')
-def tb(arxiv_id: str) -> Response:
-    """Get trackbacks for article."""
-    raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
 @blueprint.route('show-email/<path:show_email_hash>/<path:arxiv_id>')

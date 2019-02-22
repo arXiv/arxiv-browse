@@ -4,6 +4,9 @@
   {{ super() -}}
 {% endblock head %}
 
+{% block login_link %}<div class="login"><a href="{{ url_for('login') }}">Login</a></div>{% endblock %}
+{% block body_id %}id="front"{% endblock %}
+
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
 <p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %} e-prints in Physics, Mathematics, Computer Science, Quantitative Biology, Quantitative Finance, Statistics, Electrical Engineering and Systems Science, and Economics</p>

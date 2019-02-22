@@ -17,6 +17,7 @@ from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
+from browse.controllers import check_supplied_identifier
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
@@ -75,7 +76,8 @@ def get_abs_page(arxiv_id: str) -> Response:
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
-        redirect = _check_supplied_identifier(arxiv_identifier)
+        redirect = check_supplied_identifier(arxiv_identifier,
+                                             'browse.abstract')
         if redirect:
             return redirect
 
@@ -144,30 +146,6 @@ def get_abs_page(arxiv_id: str) -> Response:
         return {}, status.HTTP_304_NOT_MODIFIED, response_headers
 
     return response_data, response_status, response_headers
-
-
-def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
-    """Provide redirect URL if supplied ID does not match parsed ID.
-
-    Parameters
-    ----------
-    arxiv_identifier : :class:`Identifier`
-
-    Returns
-    -------
-    redirect_url: str
-        A `browse.abstract` redirect URL that uses the canonical
-        arXiv identifier.
-    """
-    if not id or id.ids == id.id or id.ids == id.idv:
-        return None
-
-    arxiv_id = id.idv if id.has_version else id.id
-    redirect_url: str = url_for('browse.abstract',
-                                arxiv_id=arxiv_id)
-    return {},\
-        status.HTTP_301_MOVED_PERMANENTLY,\
-        {'Location': redirect_url}
 
 
 def _non_critical_abs_data(abs_meta: DocMetadata,
