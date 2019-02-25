@@ -188,11 +188,11 @@ class DocMetadata:
         if self.primary_category:
             options = {
                 self.primary_category.id: True,
-                taxonomy.CATEGORIES[self.primary_category.id]['in_archive']: True
+                taxonomy.definitions.CATEGORIES[self.primary_category.id]['in_archive']: True
             }
         for category in self.secondary_categories:
             options[category.id] = True
-            in_archive = taxonomy.CATEGORIES[category.id]['in_archive']
+            in_archive = taxonomy.definitions.CATEGORIES[category.id]['in_archive']
             options[in_archive] = True
         return sorted(options.keys())
 

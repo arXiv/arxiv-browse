@@ -4,8 +4,10 @@ from typing import List
 from unittest import mock, TestCase
 from unittest.mock import Mock, patch
 from sqlalchemy.exc import SQLAlchemyError
-
 from sqlalchemy.orm.exc import NoResultFound
+
+from browse.services.database.models import TrackbackPing
+from browse.domain.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 
@@ -156,20 +158,35 @@ class TestBrowseDatabaseService(TestCase):
         )
 
     def test_trackback_pings(self) -> None:
-        """Test if trackback pings for specific paper are counted."""
+        """Test if trackback pings for a specific paper are counted."""
         test_paper_id = '0808.4142'
         count_from_db: int = TestBrowseDatabaseService.database_service\
             .count_trackback_pings(test_paper_id)
         count_from_db_list: int = TestBrowseDatabaseService.database_service\
-            .get_trackback_pings(test_paper_id).__len__()
+            .get_paper_trackback_pings(test_paper_id).__len__()
         self.assertEqual(
-            count_from_db, 8,
+            count_from_db, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
         self.assertEqual(
             count_from_db_list, 9,
             f'Correct count of pings returned for paper {test_paper_id}'
         )
+
+    def test_recent_trackback_pings(self) -> None:
+        """Test if recent trackbacks can be retrieved."""
+        tbs: List = TestBrowseDatabaseService.database_service.\
+            get_recent_trackback_pings(max_trackbacks=-1)
+        self.assertEqual(len(tbs), 0, 'List should be empty')
+        tbs: List = TestBrowseDatabaseService.database_service.\
+            get_recent_trackback_pings(max_trackbacks=25)
+        self.assertGreater(len(tbs), 0, 'List should be nonempty')
+        for tb in tbs:
+            self.assertIsInstance(tb[0], TrackbackPing)
+            self.assertIsInstance(tb[1], str)
+            self.assertIsInstance(Identifier(
+                arxiv_id=tb[1]), Identifier, 'Value looks like an Identifier')
+            self.assertIsInstance(tb[2], str)
 
     def test_sciencewise_ping(self) -> None:
         """Test whether paper with version suffix has a ScienceWISE ping."""
@@ -230,7 +247,7 @@ class TestBrowseDatabaseService(TestCase):
         self.assertEqual([],
                          TestBrowseDatabaseService.database_service.get_all_trackback_pings())
         self.assertListEqual(
-            TestBrowseDatabaseService.database_service.get_trackback_pings('0704.0361'), [])
+            TestBrowseDatabaseService.database_service.get_paper_trackback_pings('0704.0361'), [])
         self.assertEqual(
             TestBrowseDatabaseService.database_service.count_trackback_pings('0704.0361'), 0)
         self.assertEqual(
@@ -247,7 +264,7 @@ class TestBrowseDatabaseService(TestCase):
         self.assertRaises(
             SQLAlchemyError, TestBrowseDatabaseService.database_service.get_all_trackback_pings)
         self.assertRaises(
-            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_trackback_pings, 'paperx')
+            SQLAlchemyError, TestBrowseDatabaseService.database_service.get_paper_trackback_pings, 'paperx')
         self.assertRaises(
             SQLAlchemyError, TestBrowseDatabaseService.database_service.count_all_trackback_pings)
         self.assertRaises(

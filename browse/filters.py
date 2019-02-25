@@ -1,12 +1,10 @@
 """Browse jinja filters."""
 import re
-from urllib import parse
-from typing import Callable, Union
+from typing import Union
 
-from jinja2 import Markup, escape
+from jinja2 import Markup
 import html
 
-from browse.services.util.tex2utf import tex2utf
 
 JinjaFilterInput = Union[Markup, str]
 """
@@ -17,36 +15,6 @@ JinjaFilterInput = Union[Markup, str]
    Markup is decoded from str so this type is redundant but
    the hope is to make it clear what is going on to arXiv developers.
 """
-
-
-def single_doi_url(clickthrough_url_for: Callable[[str], str],
-                   doi: JinjaFilterInput) -> Markup:
-    """DOI is made into a link.
-
-    This expects a DOI ONLY. It should not be used on general text.
-
-    This link is not through clickthrough. Use an additional filter in
-    the template to get that.
-
-    How does this ensure escaping? It expects just a DOI, The result
-    is created as a properly escaped Markup.
-    """
-    doi_url = f'https://dx.doi.org/{parse.quote_plus(doi)}'
-    ct_url = clickthrough_url_for(doi_url)
-    return Markup(f'<a href="{ct_url}">{escape(doi)}</a>')
-
-
-def line_feed_to_br(text: JinjaFilterInput) -> Markup:
-    """Lines that start with two spaces should be broken."""
-    if hasattr(text, '__html__'):
-        etxt = text
-    else:
-        etxt = Markup(escape(text))
-
-    # if line starts with spaces, replace the white space with <br\>
-    br = re.sub(r'((?<!^)\n +)', '\n<br />', etxt)
-    dedup = re.sub(r'\n\n', '\n', br)  # skip if blank
-    return Markup(dedup)
 
 
 def entity_to_utf(text: str) -> str:
@@ -76,12 +44,3 @@ def entity_to_utf(text: str) -> str:
     with_lt_gt = re.sub('XXX_GREATER_THAN_XXX', '&gt;', with_lt)
 
     return Markup(with_lt_gt)
-
-
-def tex_to_utf(text: JinjaFilterInput) -> Markup:
-    """Wrap tex2utf as a filter."""
-    if hasattr(text, '__html__'):
-        # Need to unescape so nothing that is tex is escaped
-        return Markup(escape(tex2utf(text.unescape())))  # type: ignore
-    else:
-        return Markup(escape(tex2utf(text)))
