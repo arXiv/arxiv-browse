@@ -4,7 +4,6 @@ from unittest import TestCase, mock
 from werkzeug import MultiDict
 from werkzeug.exceptions import BadRequest
 from arxiv import status
-from browse.domain.metadata import DocMetadata
 from browse.exceptions import TrackbackNotFound
 from browse.controllers import tb_page
 
