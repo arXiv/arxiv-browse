@@ -1,5 +1,6 @@
 """Form for Catchup."""
 from typing import List, Any, Dict
+import datetime
 
 from flask_wtf import FlaskForm
 from wtforms import SelectField, HiddenField, SubmitField
@@ -46,9 +47,17 @@ class CatchupForm(FlaskForm):
 
     def __init__(self, archive_id: str, archive: Dict[str, Any], years: List[int]):
         super(CatchupForm, self).__init__()
-        self.year.choices = [(str(yer)[-2:], str(yer)) for yer in years]
+
+        # set date to 7 days ago, that might be in the previous month or year.
+        catchup_to = datetime.date.today() - datetime.timedelta(days=7)
+        self.year.default = catchup_to.strftime('%y')  # BAD two digit year
+        self.month.default = catchup_to.strftime('%m')
+        self.day.default = catchup_to.strftime('%d')
+        
+        self.year.choices = [(str(yer)[-2:], str(yer)) for yer in years]  # BAD two digit year
         self.archive.data = archive_id
-        # self.years = years
-        # TODO how many years are we suppose to show on the catchupform?
-        # TODO set selected month to now.month - 1
-        # TODO set day to now.dayOfMonth - 7 days ago
+
+        self.process()
+
+        
+        
