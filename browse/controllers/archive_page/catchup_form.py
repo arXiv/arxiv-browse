@@ -1,7 +1,8 @@
-from typing import List, Any, Dict, Tuple
+"""Form for Catchup."""
+from typing import List, Any, Dict
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, BooleanField, HiddenField, SubmitField
+from wtforms import SelectField, HiddenField, SubmitField
 from wtforms.validators import DataRequired
 
 MONTHS = [

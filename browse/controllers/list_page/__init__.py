@@ -41,13 +41,9 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from datetime import datetime
-from email.utils import formatdate
 from typing import Any, Dict, List, Optional, Tuple, cast, Union
 
 from arxiv import status, taxonomy
-from dateutil import parser
-from dateutil.tz import tzutc
 from flask import current_app, request, url_for
 from werkzeug.exceptions import ServiceUnavailable, BadRequest
 

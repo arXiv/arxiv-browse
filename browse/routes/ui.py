@@ -101,7 +101,6 @@ def tb(arxiv_id: str) -> Response:
 @blueprint.route('tb/recent', methods=['GET', 'POST'])
 def tb_recent() -> Response:
     """Get the recent trackbacks that have been posted across the site."""
-
     response, code, headers = tb_page.get_recent_tb_page(request.form)
 
     if code == status.HTTP_200_OK:

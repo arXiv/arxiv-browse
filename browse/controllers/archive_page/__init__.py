@@ -14,6 +14,7 @@ from browse.services.util.response_headers import abs_expires_header
 
 
 def get_archive(archive_id: str) -> Response:
+    """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
@@ -86,8 +87,7 @@ def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
 
 
 def years_operating(archive: Dict[str, Any]) -> List[int]:
-    """Returns list of ints of years operating in
-descending order. ex [1993,1992,1991]"""
+    """Returns list of years operating in desc order. ex [1993,1992,1991]."""
     if (
         not archive
         or "start_date" not in archive
@@ -102,6 +102,7 @@ descending order. ex [1993,1992,1991]"""
 def stats_by_year(
     archive_id: str, archive: Dict[str, Any], years: List[int]
 ) -> List[Tuple[Any, str]]:
+    """Returns links to year pages."""
     if not archive or not archive_id or not years:
         return [("bogusURL", "NODATA")]
     else:
@@ -117,6 +118,7 @@ def _year_stats_link(archive_id: str, num: int) -> Any:
 
 
 def category_list(archive_id: str) -> List[Dict[str, str]]:
+    """Retunrs categories for archive."""
     cats = []
     for cat_id in CATEGORIES:
         cat = CATEGORIES[cat_id]
