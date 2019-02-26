@@ -23,10 +23,13 @@ def get_archive(archive_id: str) -> Response:
 
     archive = ARCHIVES.get(archive_id, None)
     if not archive:
-        archive_id = CATEGORIES.get(archive_id, {}).get("in_archive", None)
-        archive = ARCHIVES.get(archive_id, None)
+        cat_id = CATEGORIES.get(archive_id, {}).get("in_archive", None)
+        archive = ARCHIVES.get(cat_id, None)
         if not archive:
-            return archive_index(archive_id, status=status.HTTP_404_NOT_FOUND)
+            return archive_index(archive_id,
+                                 status=status.HTTP_404_NOT_FOUND)
+        else:
+            archive_id = cat_id
 
     _write_expires_header(response_headers)
 
@@ -73,7 +76,7 @@ def archive_index(archive_id: str, status: int) -> Response:
     ]
     defunct.sort(key=lambda tpl: tpl[0])
     data["defunct"] = defunct
-
+    
     data["template"] = "archive/archive_list_all.html"
     return data, status, {}  # type: ignore
 
