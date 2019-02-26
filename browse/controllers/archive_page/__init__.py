@@ -49,7 +49,7 @@ def get_archive(archive_id: str) -> Response:
     data["category_list"] = category_list(archive_id)
 
     data["template"] = "archive/single_archive.html"
-    return data, status.HTTP_200_OK, response_headers
+    return data, status.HTTP_200_OK, response_headers  # type: ignore
 
 
 def archive_index(archive_id: str, status: int) -> Response:
@@ -74,7 +74,7 @@ def archive_index(archive_id: str, status: int) -> Response:
     data["defunct"] = defunct
 
     data["template"] = "archive/archive_list_all.html"
-    return data, status, {}
+    return data, status, {}  # type: ignore
 
 
 def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:

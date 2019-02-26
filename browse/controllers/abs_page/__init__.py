@@ -17,6 +17,7 @@ from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
+from browse.controllers import check_supplied_identifier
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
@@ -75,7 +76,8 @@ def get_abs_page(arxiv_id: str) -> Response:
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 
-        redirect = _check_supplied_identifier(arxiv_identifier)
+        redirect = check_supplied_identifier(arxiv_identifier,
+                                             'browse.abstract')
         if redirect:
             return redirect
 
@@ -110,8 +112,8 @@ def get_abs_page(arxiv_id: str) -> Response:
 
     except AbsNotFoundException:
         if arxiv_identifier.is_old_id and arxiv_identifier.archive \
-           in taxonomy.ARCHIVES:
-            archive_name = taxonomy.ARCHIVES[arxiv_identifier.archive]['name']
+           in taxonomy.definitions.ARCHIVES:
+            archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive]['name']
             raise AbsNotFound(data={'reason': 'old_id_not_found',
                                     'arxiv_id': arxiv_id,
                                     'archive_id': arxiv_identifier.archive,
@@ -144,30 +146,6 @@ def get_abs_page(arxiv_id: str) -> Response:
         return {}, status.HTTP_304_NOT_MODIFIED, response_headers
 
     return response_data, response_status, response_headers
-
-
-def _check_supplied_identifier(id: Identifier) -> Optional[Response]:
-    """Provide redirect URL if supplied ID does not match parsed ID.
-
-    Parameters
-    ----------
-    arxiv_identifier : :class:`Identifier`
-
-    Returns
-    -------
-    redirect_url: str
-        A `browse.abstract` redirect URL that uses the canonical
-        arXiv identifier.
-    """
-    if not id or id.ids == id.id or id.ids == id.idv:
-        return None
-
-    arxiv_id = id.idv if id.has_version else id.id
-    redirect_url: str = url_for('browse.abstract',
-                                arxiv_id=arxiv_id)
-    return {},\
-        status.HTTP_301_MOVED_PERMANENTLY,\
-        {'Location': redirect_url}
 
 
 def _non_critical_abs_data(abs_meta: DocMetadata,
@@ -244,7 +222,7 @@ def _time_header_parse(headers: Dict[str, Any], header: str) \
     if (header in request.headers
             and request.headers[header] is not None):
         try:
-            dt = parser.parse(request.headers.get(header))
+            dt = parser.parse(str(request.headers.get(header)))
             if not dt.tzinfo:
                 dt = dt.replace(tzinfo=tzutc())
             return dt
@@ -299,15 +277,15 @@ def _check_context(arxiv_identifier: Identifier,
     context = None
     if ('context' in request.args and (
             request.args['context'] == 'arxiv'
-            or request.args['context'] in taxonomy.CATEGORIES
-            or request.args['context'] in taxonomy.ARCHIVES)):
+            or request.args['context'] in taxonomy.definitions.CATEGORIES
+            or request.args['context'] in taxonomy.definitions.ARCHIVES)):
         context = request.args['context']
     elif primary_category:
         pc = primary_category.canonical or primary_category
         if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id
-            if pc.id in taxonomy.ARCHIVES:
+            if pc.id in taxonomy.definitions.ARCHIVES:
                 context = pc.id
             else:
                 context = arxiv_identifier.archive

@@ -250,5 +250,8 @@ SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
 # Used in linking to /ct
 CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
 
+# Used in linking to trackbacks in /tb pages
+TRACKBACK_SECRET = os.environ.get('TRACKBACK_SECRET', 'baz')
+
 # arXiv Labs options
 LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)

@@ -1,0 +1,32 @@
+{%- extends "tb/base.html" -%}
+
+{% block title %}
+{% if arxiv_id %}
+[{{ arxiv_id }}] Article identifier not {% if not_found %}found{% else %}recognized{% endif %}
+{% elif missing_id %}
+No article ID specified
+{% else %}
+Trackback not found
+{% endif %}
+{% endblock %}
+
+{%- block content %}
+{% if arxiv_id or missing_id %}
+  {% if arxiv_id and not_found %}
+  <h1>Article 'arXiv:{{ arxiv_id }}' not found</h1>
+  <p>The identifier you have specified (arXiv:{{ arxiv_id }}) may be invalid. Please inform <a href="mailto:help@arxiv.org">help@arxiv.org</a> if you believe that the identifier should correspond to a valid paper in arXiv.</p>
+  {% elif arxiv_id %}
+  <h1>Article identifier '{{ arxiv_id }}' not recognized</h1>
+  {% else %}
+  <h1>No article identifier specified</h1>
+  {% endif %}
+  <p>We were unable to extract an arXiv article ID from the URL specified. You may:</p>
+{% else %}
+  <h1>Trackback not found</h1>
+  <p>Badly formed redirect request. If the link you followed was on arXiv, please report this error to us. If it was elsewhere, we suggest you report it to the maintainer of that site.</p>
+{% endif %}
+  <ul>
+    <li><a href="{{ url_for('.tb_recent') }}">View recent trackbacks</a></li>
+    <li>View the trackbacks for a particular article at <code>https://arxiv.org{{ url_for('.tb', arxiv_id='') }}{arXiv_id}</i></code></li>
+  </ul>
+{% endblock content %}

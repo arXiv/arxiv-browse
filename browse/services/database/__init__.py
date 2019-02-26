@@ -3,7 +3,7 @@
 import ipaddress
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
-from typing import List, Optional, Any, Callable
+from typing import List, Optional, Any, Callable, Tuple
 from sqlalchemy import not_, desc, asc, bindparam
 from sqlalchemy.ext import baked
 from sqlalchemy.sql import func
@@ -22,6 +22,7 @@ from logging import Logger
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
+tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
 bakery = baked.bakery()
 
 
@@ -101,9 +102,52 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 
 
 @db_handle_error(logger=logger, default_return_val=[])
-def get_trackback_pings(paper_id: str) -> List[TrackbackPing]:
+def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
-    return list(__paper_trackbacks_query(paper_id).all())
+    return list(__paper_trackbacks_query(paper_id)
+                .distinct(TrackbackPing.url)
+                .group_by(TrackbackPing.url)
+                .order_by(TrackbackPing.posted_date.desc()).all())
+
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
+    """Get an individual trackback ping by its id (trackback_id)."""
+    trackback: TrackbackPing = db.session.query(TrackbackPing).\
+        filter(TrackbackPing.trackback_id == trackback_id).first()
+    return trackback
+
+
+@db_handle_error(logger=logger, default_return_val=list())
+def get_recent_trackback_pings(max_trackbacks: int = 25) \
+        -> List[Tuple[TrackbackPing, str, str]]:
+    """Get recent trackback pings across all of arXiv."""
+    max_trackbacks = min(max(max_trackbacks, 0), 500)
+    if max_trackbacks == 0:
+        return list()
+
+    # subquery to get the specified number of distinct trackback URLs
+    stmt = (
+        db.session.query(TrackbackPing.url).
+        filter(TrackbackPing.status == 'accepted').
+        distinct(TrackbackPing.url).
+        group_by(TrackbackPing.url).
+        order_by(TrackbackPing.posted_date.desc()).
+        limit(max_trackbacks).
+        subquery()
+    )
+    tb_doc_tup = db.session.query(
+                TrackbackPing,
+                Document.paper_id,
+                Document.title
+            ).\
+        join(Document, TrackbackPing.document_id == Document.document_id).\
+        filter(TrackbackPing.status == 'accepted').\
+        filter(TrackbackPing.url == stmt.c.url).\
+        order_by(TrackbackPing.posted_date.desc()).\
+        all()
+
+    return list(tb_doc_tup)
 
 
 @db_handle_error(logger=logger, default_return_val=None)
