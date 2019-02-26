@@ -49,8 +49,9 @@
       </ul>
     </li>
     
-    <li><b>Catch-up:</b> 
-      <form action="TODO" method="post"> 
+    <li><b>Catch-up:</b>
+      {# TODO using legacy /catchup URL, change to NG when implemented #}
+      <form action="/catchup" method="post"> 
         {{ catchup_form.archive }} 
         Changes since: 
         {{ catchup_form.day }} 
