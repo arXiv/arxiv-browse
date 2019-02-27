@@ -1,7 +1,7 @@
 """Archive landing page."""
 
 from datetime import date
-from typing import Dict, Any, Tuple, List
+from typing import Dict, Any, Tuple, List, no_type_check
 
 from flask import Response, url_for
 
@@ -104,7 +104,7 @@ def years_operating(archive: Dict[str, Any]) -> List[int]:
 
 def stats_by_year(
     archive_id: str, archive: Dict[str, Any], years: List[int]
-) -> List[Tuple[Any, str]]:
+) -> List[Tuple[str, str]]:
     """Returns links to year pages."""
     if not archive or not archive_id or not years:
         return [("bogusURL", "NODATA")]
@@ -112,7 +112,8 @@ def stats_by_year(
         return [(_year_stats_link(archive_id, i), str(i)) for i in years]
 
 
-def _year_stats_link(archive_id: str, num: int) -> Any:
+@no_type_check  # url_for should return str but is not typed in Flask
+def _year_stats_link(archive_id: str, num: int) -> str:
     return url_for(
         "browse.year",
         year=str(num)[-2:],  # danger: 2 digit year, NG can accept 4 digit
