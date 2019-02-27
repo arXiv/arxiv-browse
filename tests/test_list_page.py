@@ -481,3 +481,10 @@ class ListPageTest(unittest.TestCase):
         rv = self.app.get('/list/hep-ph/18')
         self.assertEqual(
             rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
+
+    def test_list_called_from_archive(self):
+        rv = self.app.get('/list/?archive=hep-ph&year=08&month=03&submit=Go')        
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/list/?archive=hep-ph&year=08&month=all&submit=Go')        
+        self.assertEqual(rv.status_code, 200)

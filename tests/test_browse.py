@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from tests.test_abs_parser import ABS_FILES
 
 from arxiv import taxonomy
-from arxiv.base.urls import canonical_url
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 

@@ -17,7 +17,6 @@ be better date granularity for new papers.
 """
 
 from typing import Optional
-from datetime import datetime
 
 from browse.domain.listing import NewResponse, ListingResponse
 

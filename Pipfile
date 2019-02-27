@@ -19,6 +19,7 @@ flask = "==1.0.2"
 arxiv-base = {editable = true,git = "https://github.com/arXiv/arxiv-base.git",ref = "develop"}
 validators = "*"
 mypy-extensions = "*"
+flask-wtf = "*"
 
 [dev-packages]
 pylama = "*"
@@ -41,7 +42,6 @@ coverage = "*"
 coveralls = "*"
 sphinx = "*"
 sphinx-autodoc-typehints = "*"
-mypy-extensions = "*"
 
 [requires]
 python_version = "3.6"

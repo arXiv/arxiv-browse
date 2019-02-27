@@ -4,7 +4,6 @@ import re
 from re import RegexFlag
 from typing import Match, Optional, Union, Tuple, Callable, List
 from arxiv import taxonomy
-from arxiv.base.config import BASE_SERVER, EXTERNAL_URL_SCHEME
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
