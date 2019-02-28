@@ -1,9 +1,9 @@
 """Paginiation links for listing pages."""
 
 
-from typing import Any, Dict, List, Optional, Tuple, cast, Union
+from typing import Any, Dict, List, Union
 import math
-from flask import current_app, request, url_for
+from flask import url_for
 
 
 def paging(count: int, skipn: int, shown: int, context: str, subcontext: str) \

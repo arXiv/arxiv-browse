@@ -1,7 +1,7 @@
 """Return types for listing service."""
 
-from datetime import date, datetime
-from typing import List, Optional, Tuple
+from datetime import date
+from typing import List, Tuple
 
 from mypy_extensions import TypedDict
 
