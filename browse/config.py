@@ -262,6 +262,7 @@ AUTH_SESSION_COOKIE_DOMAIN = os.environ.get(
     'AUTH_SESSION_COOKIE_DOMAIN', '.arxiv.org')
 AUTH_SESSION_COOKIE_SECURE = bool(
     int(os.environ.get('AUTH_SESSION_COOKIE_SECURE', '1')))
+AUTH_UPDATED_SESSION_REF = True
 
 CLASSIC_COOKIE_NAME = os.environ.get('CLASSIC_COOKIE_NAME', 'tapir_session')
 CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(

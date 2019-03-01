@@ -41,9 +41,9 @@ def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
     logger.debug("Home page.")
-    if request.session:
+    if request.auth:
         # logger.debug("Got session: \n%s", request.session)
-        logger.debug(request.session.user.username)
+        logger.debug(request.auth.user.username)
     if code == status.HTTP_200_OK:
         return render_template('home/home.html', **response), code, headers  # type: ignore
 
