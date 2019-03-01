@@ -1,7 +1,7 @@
 <div class="login">
-{% if request.auth and 'user' in request.auth %}
-Logged in as <b>{{ request.auth.user.username }}</b> | <a href="{{ request.auth.user.username }}">My Account</a> | <a href="{{ url_for('logout') }}">Logout</a>
+{% if request.auth.user is defined %}
+  Logged in as <b>{{ request.auth.user.username }}</b> | <a href="{{ url_for('account') }}">My Account</a> | <a href="{{ url_for('logout') }}">Logout</a>
 {% else %}
-<a href="{{ url_for('login') }}">Login</a>
+  <a href="{{ url_for('login') }}">Login</a>
 {% endif %}
 </div>

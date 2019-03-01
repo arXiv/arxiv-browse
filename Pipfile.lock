@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cc19f65d0b6a6748f4e746a49ccd515fdb517649d0dfd0e03ba6bb5dc87c0282"
+            "sha256": "3d8fc0ebd7c5886658d5cc604b3b00089e7a88d2f3ab246ed0fd7e7fb23ff7f8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -52,11 +52,9 @@
             "version": "==0.3.1"
         },
         "arxiv-base": {
-            "hashes": [
-                "sha256:e8f73c7adc1b7043df290432e66d0a5cd2f83b8a254198979bd65a7dbe8e9dd8"
-            ],
-            "index": "pypi",
-            "version": "==0.15.1rc1"
+            "editable": true,
+            "git": "https://github.com/arXiv/arxiv-base.git",
+            "ref": "33fbca124d543de2e2fc7791fb75d06dc11fb2a7"
         },
         "async-timeout": {
             "hashes": [
