@@ -100,9 +100,6 @@
 
 </div>
 {% endblock content %}
-{%- block footer_text -%}
-{% include "short_trailer.html" %}
-{%- endblock footer_text -%}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}
