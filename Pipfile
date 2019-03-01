@@ -16,7 +16,7 @@ mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
 flask = "==1.0.2"
-arxiv-base = "==0.15.1rc1"
+arxiv-base = {editable = true,git = "https://github.com/arXiv/arxiv-base.git",ref = "develop"}
 validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
