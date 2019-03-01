@@ -38,7 +38,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
 def formats_from_source_type(source_type: str,
                              format_pref: Optional[str] = None,
                              cache_flag: bool = False,
-                             add_sciencewise:bool = False) -> List[str]:
+                             add_sciencewise: bool = False) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:

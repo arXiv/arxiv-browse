@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from tests.test_abs_parser import ABS_FILES
 
 from arxiv import taxonomy
-from arxiv.base.urls import canonical_url
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 
@@ -21,6 +20,7 @@ class BrowseTest(unittest.TestCase):
         self.app = app.test_client()
 
     def test_home(self):
+        """Test the home page."""
         rv = self.app.get('/')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
@@ -32,6 +32,57 @@ class BrowseTest(unittest.TestCase):
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
         self.assertFalse(html.find('h2', text='Test'),
                          "'Test' group should not be shown on homepage")
+
+    def test_tb(self):
+        """Test the /tb/<arxiv_id> page."""
+        rv = self.app.get('/tb/1901.99999')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/foo')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/0808.4142')
+        self.assertEqual(rv.status_code, 200)
+
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        h2_elmt = html.find('h2')
+        h2_txt = h2_elmt.get_text()
+        self.assertTrue(h2_elmt, 'Should have <h2> element')
+        self.assertEquals(h2_txt, 'Trackbacks for 0808.4142')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertGreater(len(tb_a_tags), 1,
+                           'There should be more than one <a> tag for trackbacks')
+        h1_elmt = html.find('div', id='abs')
+        h1_txt = h1_elmt.get_text()
+        self.assertTrue(h1_elmt, 'Should have <h1 id="abs"> element')
+        self.assertRegex(
+            h1_txt,
+            r'Observation of the doubly strange b baryon Omega_b-',
+            '<h1> element contains title of article')
+
+    def test_tb_recent(self):
+        """Test the /tb/recent page."""
+        rv = self.app.get('/tb/recent')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.post('/tb/recent', data=dict(views='50'))
+        self.assertEqual(rv.status_code, 200, 'POST with integer OK')
+
+        rv = self.app.post('/tb/recent', data=dict(views='bar'))
+        self.assertEqual(rv.status_code, 400, 'POST with non-integer not OK')
+
+        rv = self.app.get('/tb/recent/foo')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.post('/tb/recent', data=dict(views='1'))
+        self.assertEqual(rv.status_code, 200, 'POST with views==1 OK')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertEquals(len(tb_a_tags), 1,
+                          'There should be exactly one trackback link')
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
@@ -314,3 +365,20 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(auths_elmt, 'Should authors div element')
         self.assertNotIn(' ,', auths_elmt.text,
                          'Should not add extra spaces before commas')
+
+    def test_psi_in_abs(self):
+        # see https://arxiv-org.atlassian.net/browse/ARXIVNG-1612
+        # "phi being displayed as varphi in abstract on /abs page"
+        # phi being displayed incorrectly in abstract on /abs page
+        rv = self.app.get('/abs/1901.05426')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        abs_elmt = html.find('blockquote', 'abstract')
+        self.assertTrue(abs_elmt, 'Should have abstract div element')
+        self.assertNotIn('$ φ$', abs_elmt.text,
+                         'TeX psi in abstract should not get converted to UTF8')
+        self.assertNotIn('$j(φ,L)$', abs_elmt.text,
+                         'TeX psi in abstract should not get converted to UTF8')
+        self.assertIn('The phase difference $\phi$, between the superconducting',
+                      abs_elmt.text,
+                      "Expecting uncoverted $\phi$ in html abstract.")

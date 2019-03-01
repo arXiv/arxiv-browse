@@ -1,14 +1,24 @@
 """arXiv browse database models."""
 
+import re
+import hashlib
 from typing import Optional
+from validators import url as is_valid_url
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, \
     ForeignKeyConstraint, Index, \
     Integer, SmallInteger, String, Table, text, Text
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
+from arxiv.base.globals import get_application_config
 
 db: SQLAlchemy = SQLAlchemy()
+
+app_config = get_application_config()
+tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+tb_secret = app_config.get('TRACKBACK_SECRET', 'baz')
 metadata = db.metadata
 
 
@@ -31,6 +41,9 @@ class Document(db.Model):
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
     submitter = relationship('User')
+
+    trackback_ping = relationship('TrackbackPing',
+                                  primaryjoin="foreign(TrackbackPing.document_id)==Document.document_id")
 
 
 class License(db.Model):
@@ -246,6 +259,32 @@ class TrackbackPing(db.Model):
                     nullable=False, index=True,
                     server_default=text("'pending'"))
     site_id = Column(Integer)
+
+    document = relationship('Document',
+                            primaryjoin="foreign(Document.document_id)==TrackbackPing.document_id")
+
+    @property
+    def posted_datetime(self) -> DateTime:
+        """Get posted_date as UTC datetime."""
+        dt = datetime.fromtimestamp(self.posted_date, tz=tz)
+        return dt.astimezone(tz=tzutc())
+
+    @property
+    def display_url(self) -> str:
+        """Get the URL without the protocol, for display."""
+        return re.sub(r'^[a-z]+:\/\/', '',  # type: ignore
+                      self.url.strip(), flags=re.IGNORECASE)
+
+    @property
+    def has_valid_url(self) -> bool:
+        """Determine whether the trackback URL is valid."""
+        return bool(is_valid_url(self.url, public=False))
+
+    @property
+    def hashed_document_id(self) -> str:
+        """Get the hashed document_id."""
+        s = f'{self.document_id}{self.trackback_id}{tb_secret}'
+        return hashlib.md5(s.encode()).hexdigest()[0:9]
 
 
 class TrackbackSite(db.Model):

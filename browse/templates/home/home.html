@@ -4,7 +4,7 @@
   {{ super() -}}
 {% endblock head %}
 
-{% block login_link %}{% include "login.html" %}{% endblock %}
+{% block login_link %}<div class="login"><a href="{{ url_for('login') }}">Login</a></div>{% endblock %}
 {% block body_id %}id="front"{% endblock %}
 
 {%- block content %}

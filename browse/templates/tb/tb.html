@@ -1,0 +1,42 @@
+{%- extends "tb/base.html" -%}
+{%- from 'abs/author_links.html' import display_authors_with_links -%}
+{%- import 'base/macros.html' as base_macros -%}
+{%- from 'tb/macros.html' import generate_trackback_link -%}
+
+{% block title %}Article Trackbacks{% endblock %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Article Trackbacks</h1>{% endblock %}
+{# Disable login on this page for now, per classic #}
+{% block login_link %}{% endblock %}
+
+{%- block content %}
+  {% if trackback_pings %}
+  <h2>Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
+    {% for tb in trackback_pings %}
+  <p>{{- generate_trackback_link(tb) -}}</p>
+    {% endfor %}
+    <blockquote style="background-color: #eee; padding-top: 5px">
+      {#- abstract field is deliberately suppressed in call to abs macro. -#}
+      {%- if abs_meta -%}
+      {{ base_macros.abs(
+        abs_meta.arxiv_identifier.id,
+        abs_meta.title,
+        display_authors_with_links(abs_meta, author_links),
+        '',
+        abs_meta.get_datetime_of_version(abs_meta.version),
+        abs_meta.primary_category.id,
+        comments = abs_meta.comments,
+        msc_class = abs_meta.msc_class,
+        acm_class = abs_meta.acm_class,
+        journal_ref = abs_meta.journal_ref,
+        doi = abs_meta.doi,
+        report_num = abs_meta.report_num,
+        version = abs_meta.version,
+        submission_history = abs_meta.version_history,
+        secondary_categories = abs_meta.get_secondaries()) }}
+    </blockquote>
+    {%- endif -%}
+  {% else %}
+  <p><em>There are no trackback pings recorded for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a>.</em></p>
+  {% endif %}
+  {{ super() }}
+{% endblock content %}

@@ -1,0 +1,7 @@
+{%- macro generate_trackback_link(trackback, include_posted_date=True) -%}
+<a class="mathjax" rel="external nofollow" href="{{ url_for('browse.tb_redirect', trackback_id=trackback.trackback_id, hashed_document_id=trackback.hashed_document_id) }}">
+  {{- trackback.title|entity_to_utf|truncate(150) }}</a> [
+  {%- if trackback.blog_name %}{{ trackback.blog_name|trim|entity_to_utf|truncate(50) -}} @ {% endif -%}
+  {%- if trackback.has_valid_url %}{{ trackback.display_url|truncate(30,False) }}{% else %}INVALID-URL{% endif -%}]
+  {%- if include_posted_date %} <small>[trackback posted {{ trackback.posted_datetime.strftime('%a, %-d %b %Y %H:%M:%S %Z') }}]</small>{% endif %}
+{%- endmacro -%}
