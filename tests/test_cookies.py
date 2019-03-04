@@ -20,7 +20,7 @@ class CookiesPageTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = rv.data.decode('utf-8')
         self.assertIn('Select preferred download format', html)
-        self.assertIn('show debugging information', html, 'should have SHOW debugging link')
+        self.assertIn('show additional debugging information', html, 'should have SHOW debugging link')
 
     def test_cookies_with_debug(self):
         """Test the cookies page."""
