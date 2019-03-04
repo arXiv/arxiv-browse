@@ -10,6 +10,26 @@ from werkzeug.exceptions import InternalServerError
 
 from arxiv import status
 
+# Taken from legacy /users/e-prints/httpd/bin/Databases/mirrors
+mirrors = [
+    'de.arxiv.org',
+    'es.arxiv.org',
+    'in.arxiv.org',
+    'cn.arxiv.org',
+    'lanl.arxiv.org',
+    'vanguard.math.ucdavis.edu:81',
+]
+
+mirror_config = {
+    'id': 'mirror',
+    'name': 'xxx-mirror',
+    'label': 'Select download site:',
+    'options': [['default', 'always local site (default)', 1]]
+}
+
+for mirror in mirrors:
+    mirror_config['options'].append([mirror, mirror, 0])
+
 cookies_config = [
     {'id': 'ps',
      'name': 'xxx-ps-defaults',
@@ -23,11 +43,7 @@ cookies_config = [
          ['src', 'Source', 0]
      ],
      },
-    {'id': 'mirror',
-     'name': 'xxx-mirror',
-     'label': 'Select download site:',
-     'options': [['default', 'always local site (default)', 1], ]
-     },
+    mirror_config,
     {'id': 'mj',
      'name': 'arxiv_mathjax',
      'label': 'Select MathJax configuration: ',
@@ -35,14 +51,6 @@ cookies_config = [
                  ['disabled', 'disabled', 0]]
      }
 ]
-
-
-# TODO get mirrors from somewhere
-# foreach my $k (keys %map_domain) {
-#  foreach my $m (split(/\|/, $map_domain{$k})) {
-#    $cookie_description{mirror}{$m} = $m;
-#  }
-# }
 
 
 # TODO implement debug parameter
@@ -67,12 +75,14 @@ def get_cookies_page(is_debug: bool) -> Any:
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
     """
-    debug = {'debug': '1'} if is_debug else {}  #want to propogate debug to form URL
+    debug = {'debug': '1'} if is_debug else {
+    }  # want to propogate debug to form URL
     response_data = {
         'form_url': url_for('browse.cookies', set='set', **debug),
-        'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),  # Note deep copy
-        'debug': is_debug is not None,
-        'controlled_cookies': [ cc['name'] for cc in cookies_config ],
+        # Note deep copy
+        'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),
+        'debug': is_debug,
+        'controlled_cookies': [cc['name'] for cc in cookies_config],
     }
     response_headers = {'Expires': '0',
                         'Pragma': 'no-cache'}
@@ -91,12 +101,17 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> Dict[str, st
     return configs
 
 
-def cookies_to_set(request) -> List[Tuple[str, str]]:
+def cookies_to_set(request) -> List[Dict[str, str]]:
     """Get cookies from the form and return them as a list of tuples."""
     cts = []
     for (id, value) in request.form.items():
         matching_conf = next(
             (conf for conf in cookies_config if conf['id'] == id), None)
         if matching_conf is not None:
-            cts.append((matching_conf['name'], value))
+            ctoset = {'key':matching_conf['name'] }
+            cts.append(ctoset)
+            if value is None or value == '' or value == 'default':
+                ctoset['max_age'] = 0
+            else:
+                ctoset['value'] = value
     return cts
