@@ -382,3 +382,7 @@ class BrowseTest(unittest.TestCase):
         self.assertIn('The phase difference $\phi$, between the superconducting',
                       abs_elmt.text,
                       "Expecting uncoverted $\phi$ in html abstract.")
+
+    def test_year(self):
+        rv = self.app.get('/year/astro-ph/09')
+        self.assertEqual(rv.status_code, 200)
