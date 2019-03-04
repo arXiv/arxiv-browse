@@ -51,44 +51,38 @@ the old versions of the pages will be cached by your browser.</p>
 
 <hr />
 
-<p><small>(<a href="{{url_for('browse.cookies', debug=1)}}">show additional debugging information<a/>)</small></p>
-
 {% if debug %}
 <h2>Debugging information: dump of current cookie data</h2>
-<table cellpadding="4" style="background: #666666; border: 0; padding: 5;"><tr fgcolor="#FFFFFF" bgcolor="#666666"><th align="left">Name</th><th align="left">Value</th></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><em><code>arxiv_mathjax</code></em></td>
-<td align="left"><em><code>enabled</code></em></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>ARXIVNG_SESSION_ID</code></td>
-<td align="left"><code>eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjQ1MzY1Iiwic2Vzc2lvbl9pZCI6IjBjMWUyZjZjLWRmM2ItNDQzMy1hZWU1LWVjMGQ4MjUwYTk0YSIsIm5vbmNlIjoiMTM2OTQ4NjEiLCJleHBpcmVzIjoiMjAxOS0wMy0wMlQxNTo0Njo0OC40NTU3NTIrMDA6MDAifQ.3hcXDLIaoZ3KHSonjwaynb4Ac_GVWACBsBOGO0k-YqA</code></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>_pk_id.538.1db2</code></td>
-<td align="left"><code>fc97ed1469c1fe09.1549028716.28.1551380208.1551379553.</code></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>_pk_ref.538.1db2</code></td>
-<td align="left"><code>["","",1551379553,"https://arxiv-org.atlassian.net/browse/ARXIVNG-1900"]</code></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>_pk_ses.538.1db2</code></td>
-<td align="left"><code>*</code></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>arxiv_bibex</code></td>
-<td align="left"><code>{"active":false,"seen":true}</code></td></tr>
-<tr bgcolor="#EEEEEE"><td align="left"><code>browser</code></td>
-<td align="left"><code>128.84.116.89.1549028715011825</code></td></tr>
+<table cellpadding="4" style="background: #666666; border: 0; padding: 5;"><tr>
+    <th align="left" >Name</th><th align="left">Value</th></tr>
+  {% for cooname in request.cookies.keys() %}
+    <tr bgcolor="#EEEEEE">
+      {% if cooname in controlled_cookies %} 
+        <td><em><code>{{cooname}}</code></em></td>
+      {% else %}        
+        <td><code>{{cooname}}</code></td>
+      {% endif %}
+      <td><code>{{ request.cookies[cooname] }}</code></td>
+    </tr>
+    {% endfor %}
 </table>
-
 
 <p>Only those cookies shown <em>emphasized</em> in the table above are controlled 
 by this interface. arXiv uses other cookies such as <code>browser</code> and 
 <code>tapir_permanent</code> to maintain session and permanent login settings. 
-You can, if you want, clear all cookies using the controls in your browser
-(e.g. Edit -> Preferences -> Privacy -> Cookies -> Clear cookies now in FireFox).</p>
-<p><small>(<a href="/cookies">hide debugging information</a>)</small></p>
+You can, if you want, clear all cookies using the controls in your browser.</p>
 
+<p><small>(<a href="{{url_for('browse.cookies')}}">hide debugging information</a>)</small></p>
+{% else %}
+<p><small>(<a href="{{url_for('browse.cookies', debug=1)}}">show additional debugging information<a/>)</small></p>
 {% endif %}
+
 <h2>About cookies</h2>
 <p>&quot;HTTP Cookies&quot; were first half-baked by Netscape
 Communications Corporation and allow clients to retain certain state
 information to be included in future requests to a particular
 server. Most modern web clients can metabolize cookies. Cookies are
-now defined by
-<a href="https://tools.ietf.org/html/rfc6265">RFC 6265</a>.  It is
-not necessary to use/permit cookies to read articles on
-arXiv.org.</p>
-{% endblock content %}
+now defined by <a href="https://tools.ietf.org/html/rfc6265">RFC
+6265</a>.  It is not necessary to use/permit cookies to read articles
+on arXiv.org.</p>  {% endblock content %}
 

@@ -67,10 +67,12 @@ def get_cookies_page(is_debug: bool) -> Any:
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
     """
-    debug = {'debug': '1'} if is_debug else {}
+    debug = {'debug': '1'} if is_debug else {}  #want to propogate debug to form URL
     response_data = {
         'form_url': url_for('browse.cookies', set='set', **debug),
-        'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config))
+        'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),  # Note deep copy
+        'debug': is_debug is not None,
+        'controlled_cookies': [ cc['name'] for cc in cookies_config ],
     }
     response_headers = {'Expires': '0',
                         'Pragma': 'no-cache'}
