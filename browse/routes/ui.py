@@ -11,6 +11,7 @@ from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
+from browse.controllers.year import year_page
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -277,7 +278,8 @@ def archive(archive: str):  # type: ignore
         return response, code, headers
 
 
-@blueprint.route('year/<archive>/<year>')
+@blueprint.route('year/<archive>/<int:year>')
 def year(archive: str, year: str) -> Response:
     """Year's stats for an archive."""
-    raise InternalServerError('Not yet implemented')
+    response,code,headers = year_page(archive, year)
+    return render_template('year.html', **response),code,headers
