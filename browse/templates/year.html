@@ -11,76 +11,42 @@
 
 
 {% block content %}
-
 <h1>{{archive.name}}</h1>
 <h2>Article statistics for {{year}}</h2>
 <p>Available montly lists with counts of <b>{{archive_id}} articles</b> + 
-<i>cross-listings to {{archive_id}}</i> in 2009
+<i>cross-listings to {{archive_id}}</i> in {{year}}
 (each '|' represents 20 articles):</p>
 
 <h2>TODO fake data as of 2019-03-04</h2>
 
 <ul>
-  {% for month in month_ascii_art %}
+ {% for month in months %}
     <li>
-      (TODO need yymm link here)
-      {%- for txt, url in month -%}
+      <a href="{{month['url']}}">{{month['yymm']}}
+      </a>
+      {% for txt, url in month['art'] -%}
         {%- if url  -%}
           <a href={{url}}>{{txt}}</a>
         {%- else -%}          
           {{txt}}
         {%- endif -%}
-      {%- endfor -%}
-      (TODO need new+cross counts here)
+      {%- endfor %}
+      <b>{{month['new']|default('0',true)}}</b> + {{month['cross']|default('0',true)}} 
   </li>
-  {% endfor %}
-  
-{# <li><a href="/list/astro-ph/0901">0901</a> <a href="/list/astro-ph/0901">|</a>|||<a href="/list/astro-ph/0901?100">|</a>||||<a href="/list/astro-ph/0901?200">|</a>||||<a href="/list/astro-ph/0901?300">|</a>||||<a href="/list/astro-ph/0901?400">|</a>||||<a href="/list/astro-ph/0901?500">|</a>||||<a href="/list/astro-ph/0901?600">|</a>||||<a href="/list/astro-ph/0901?700">|</a>||||<a href="/list/astro-ph/0901?800">|</a>||||<a href="/list/astro-ph/0901?900">|</a>|||| <b>893</b> + <i>87</i> &nbsp;(Jan 2009)</li> #}
-{# <li><a href="/list/astro-ph/0902">0902</a> <a href="/list/astro-ph/0902">|</a>|||<a href="/list/astro-ph/0902?100">|</a>||||<a href="/list/astro-ph/0902?200">|</a>||||<a href="/list/astro-ph/0902?300">|</a>||||<a href="/list/astro-ph/0902?400">|</a>||||<a href="/list/astro-ph/0902?500">|</a>||||<a href="/list/astro-ph/0902?600">|</a>||||<a href="/list/astro-ph/0902?700">|</a>||||<a href="/list/astro-ph/0902?800">|</a>||||<a href="/list/astro-ph/0902?900">|</a>||||<a href="/list/astro-ph/0902?1000">|</a>| <b>927</b> + <i>94</i> &nbsp;(Feb 2009)</li> #}
-{# <li><a href="/list/astro-ph/0903">0903</a> <a href="/list/astro-ph/0903">|</a>|||<a href="/list/astro-ph/0903?100">|</a>||||<a href="/list/astro-ph/0903?200">|</a>||||<a href="/list/astro-ph/0903?300">|</a>||||<a href="/list/astro-ph/0903?400">|</a>||||<a href="/list/astro-ph/0903?500">|</a>||||<a href="/list/astro-ph/0903?600">|</a>||||<a href="/list/astro-ph/0903?700">|</a>||||<a href="/list/astro-ph/0903?800">|</a>||||<a href="/list/astro-ph/0903?900">|</a>||||<a href="/list/astro-ph/0903?1000">|</a>||| <b>962</b> + <i>102</i> &nbsp;(Mar 2009)</li> #}
-{# <li><a href="/list/astro-ph/0904">0904</a> <a href="/list/astro-ph/0904">|</a>|||<a href="/list/astro-ph/0904?100">|</a>||||<a href="/list/astro-ph/0904?200">|</a>||||<a href="/list/astro-ph/0904?300">|</a>||||<a href="/list/astro-ph/0904?400">|</a>||||<a href="/list/astro-ph/0904?500">|</a>||||<a href="/list/astro-ph/0904?600">|</a>||||<a href="/list/astro-ph/0904?700">|</a>||||<a href="/list/astro-ph/0904?800">|</a>|||| <b>786</b> + <i>103</i> &nbsp;(Apr 2009)</li> #}
-{# <li><a href="/list/astro-ph/0905">0905</a> <a href="/list/astro-ph/0905">|</a>|||<a href="/list/astro-ph/0905?100">|</a>||||<a href="/list/astro-ph/0905?200">|</a>||||<a href="/list/astro-ph/0905?300">|</a>||||<a href="/list/astro-ph/0905?400">|</a>||||<a href="/list/astro-ph/0905?500">|</a>||||<a href="/list/astro-ph/0905?600">|</a>||||<a href="/list/astro-ph/0905?700">|</a>||||<a href="/list/astro-ph/0905?800">|</a>||||<a href="/list/astro-ph/0905?900">|</a>|! <b>832</b> + <i>101</i> &nbsp;(May 2009)</li> #}
-{# <li><a href="/list/astro-ph/0906">0906</a> <a href="/list/astro-ph/0906">|</a>|||<a href="/list/astro-ph/0906?100">|</a>||||<a href="/list/astro-ph/0906?200">|</a>||||<a href="/list/astro-ph/0906?300">|</a>||||<a href="/list/astro-ph/0906?400">|</a>||||<a href="/list/astro-ph/0906?500">|</a>||||<a href="/list/astro-ph/0906?600">|</a>||||<a href="/list/astro-ph/0906?700">|</a>||||<a href="/list/astro-ph/0906?800">|</a>||||<a href="/list/astro-ph/0906?900">|</a>||||<a href="/list/astro-ph/0906?1000">|</a>||| <b>973</b> + <i>89</i> &nbsp;(Jun 2009)</li> #}
-{# <li><a href="/list/astro-ph/0907">0907</a> <a href="/list/astro-ph/0907">|</a>|||<a href="/list/astro-ph/0907?100">|</a>||||<a href="/list/astro-ph/0907?200">|</a>||||<a href="/list/astro-ph/0907?300">|</a>||||<a href="/list/astro-ph/0907?400">|</a>||||<a href="/list/astro-ph/0907?500">|</a>||||<a href="/list/astro-ph/0907?600">|</a>||||<a href="/list/astro-ph/0907?700">|</a>||||<a href="/list/astro-ph/0907?800">|</a>||||<a href="/list/astro-ph/0907?900">|</a>||||<a href="/list/astro-ph/0907?1000">|</a>|||! <b>972</b> + <i>103</i> &nbsp;(Jul 2009)</li> #}
-{# <li><a href="/list/astro-ph/0908">0908</a> <a href="/list/astro-ph/0908">|</a>|||<a href="/list/astro-ph/0908?100">|</a>||||<a href="/list/astro-ph/0908?200">|</a>||||<a href="/list/astro-ph/0908?300">|</a>||||<a href="/list/astro-ph/0908?400">|</a>||||<a href="/list/astro-ph/0908?500">|</a>||||<a href="/list/astro-ph/0908?600">|</a>||||<a href="/list/astro-ph/0908?700">|</a>||||<a href="/list/astro-ph/0908?800">|</a>||||<a href="/list/astro-ph/0908?900">|</a>! <b>822</b> + <i>88</i> &nbsp;(Aug 2009)</li> #}
-{# <li><a href="/list/astro-ph/0909">0909</a> <a href="/list/astro-ph/0909">|</a>|||<a href="/list/astro-ph/0909?100">|</a>||||<a href="/list/astro-ph/0909?200">|</a>||||<a href="/list/astro-ph/0909?300">|</a>||||<a href="/list/astro-ph/0909?400">|</a>||||<a href="/list/astro-ph/0909?500">|</a>||||<a href="/list/astro-ph/0909?600">|</a>||||<a href="/list/astro-ph/0909?700">|</a>||||<a href="/list/astro-ph/0909?800">|</a>||||<a href="/list/astro-ph/0909?900">|</a>||||<a href="/list/astro-ph/0909?1000">|</a>||||<a href="/list/astro-ph/0909?1100">|</a>||||! <b>1089</b> + <i>102</i> &nbsp;(Sep 2009)</li> #}
-{# <li><a href="/list/astro-ph/0910">0910</a> <a href="/list/astro-ph/0910">|</a>|||<a href="/list/astro-ph/0910?100">|</a>||||<a href="/list/astro-ph/0910?200">|</a>||||<a href="/list/astro-ph/0910?300">|</a>||||<a href="/list/astro-ph/0910?400">|</a>||||<a href="/list/astro-ph/0910?500">|</a>||||<a href="/list/astro-ph/0910?600">|</a>||||<a href="/list/astro-ph/0910?700">|</a>||||<a href="/list/astro-ph/0910?800">|</a>||||<a href="/list/astro-ph/0910?900">|</a>||||<a href="/list/astro-ph/0910?1000">|</a>||||<a href="/list/astro-ph/0910?1100">|</a>||! <b>1051</b> + <i>100</i> &nbsp;(Oct 2009)</li> #}
-{# <li><a href="/list/astro-ph/0911">0911</a> <a href="/list/astro-ph/0911">|</a>|||<a href="/list/astro-ph/0911?100">|</a>||||<a href="/list/astro-ph/0911?200">|</a>||||<a href="/list/astro-ph/0911?300">|</a>||||<a href="/list/astro-ph/0911?400">|</a>||||<a href="/list/astro-ph/0911?500">|</a>||||<a href="/list/astro-ph/0911?600">|</a>||||<a href="/list/astro-ph/0911?700">|</a>||||<a href="/list/astro-ph/0911?800">|</a>||||<a href="/list/astro-ph/0911?900">|</a>||||<a href="/list/astro-ph/0911?1000">|</a>||| <b>957</b> + <i>103</i> &nbsp;(Nov 2009)</li> #}
-{# <li><a href="/list/astro-ph/0912">0912</a> <a href="/list/astro-ph/0912">|</a>|||<a href="/list/astro-ph/0912?100">|</a>||||<a href="/list/astro-ph/0912?200">|</a>||||<a href="/list/astro-ph/0912?300">|</a>||||<a href="/list/astro-ph/0912?400">|</a>||||<a href="/list/astro-ph/0912?500">|</a>||||<a href="/list/astro-ph/0912?600">|</a>||||<a href="/list/astro-ph/0912?700">|</a>||||<a href="/list/astro-ph/0912?800">|</a>||||<a href="/list/astro-ph/0912?900">|</a>||||<a href="/list/astro-ph/0912?1000">|</a>||||<a href="/list/astro-ph/0912?1100">|</a>|| <b>1023</b> + <i>122</i> &nbsp;(Dec 2009)</li> #}
+  {% endfor %}  
 </ul>
-<p>2009 totals: <b>11287 articles</b> + <i>1194 cross-lists</i></p>
+
+<p>{{year}} totals: <b>{{listing['new_count']|default('unknown')}} articles</b> + <i>{{listing['cross_count']|default('unknown')}} cross-lists</i></p>
 
 
 <h2>TODO use something similar to what is in /list for year listings</h2>
 <p><b>Other years:</b>
-<a href="/year/astro-ph/19">2019</a>
-<a href="/year/astro-ph/18">2018</a>
-<a href="/year/astro-ph/17">2017</a>
-<a href="/year/astro-ph/16">2016</a>
-<a href="/year/astro-ph/15">2015</a>
-<a href="/year/astro-ph/14">2014</a>
-<a href="/year/astro-ph/13">2013</a>
-<a href="/year/astro-ph/12">2012</a>
-<a href="/year/astro-ph/11">2011</a>
-<a href="/year/astro-ph/10">2010</a>
-2009
-<a href="/year/astro-ph/08">2008</a>
-<a href="/year/astro-ph/07">2007</a>
-<a href="/year/astro-ph/06">2006</a>
-<a href="/year/astro-ph/05">2005</a>
-<a href="/year/astro-ph/04">2004</a>
-<a href="/year/astro-ph/03">2003</a>
-<a href="/year/astro-ph/02">2002</a>
-<a href="/year/astro-ph/01">2001</a>
-<a href="/year/astro-ph/00">2000</a>
-<a href="/year/astro-ph/99">1999</a>
-<a href="/year/astro-ph/98">1998</a>
-<a href="/year/astro-ph/97">1997</a>
-<a href="/year/astro-ph/96">1996</a>
-<a href="/year/astro-ph/95">1995</a>
-<a href="/year/astro-ph/94">1994</a>
-<a href="/year/astro-ph/93">1993</a>
-<a href="/year/astro-ph/92">1992</a>
+      <li>Article statistics by year:<br> 
+      {% for url, year in stats_by_year %} 
+      <a href="{{url}}">{{year}}</a> 
+      {% endfor %}  
+      </li>
+      
 </p>
 
 
