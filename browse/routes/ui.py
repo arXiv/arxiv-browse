@@ -8,7 +8,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
-    prevnext, tb_page
+    prevnext, tb_page, stats_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -198,6 +198,11 @@ def stats(page: str = 'today') -> Response:
     """Display various statistics about the service."""
     return render_template(f'stats/{page}.html')
 
+
+@blueprint.route('/stats/get_hourly', methods=['GET'])
+def stats_hourly_csv() -> Response:
+    stats_page.get_hourly_stats_csv()
+    return Response('a,b,1,2,3', mimetype='text/plain')
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:

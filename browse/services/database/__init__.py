@@ -1,7 +1,7 @@
 """Import db instance and define utility functions."""
 
 import ipaddress
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.tz import tzutc, gettz
 from typing import List, Optional, Any, Callable, Tuple
 from sqlalchemy import not_, desc, asc, bindparam
@@ -15,7 +15,7 @@ from arxiv.base.globals import get_application_config
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
     DBLP, DBLPAuthor, DBLPDocumentAuthor
-from browse.services.database.models import in_category
+from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
 from arxiv.base import logging
 from logging import Logger
@@ -260,3 +260,15 @@ def get_sequential_id(paper_id: Identifier,
     if result:
         return f'{result.paper_id}'
     return None
+
+
+@db_handle_error(logger=logger, default_return_val=[])
+def get_hourly_stats(stats_date: Optional[date] = None) -> List:
+    """Get the hourly stats for a given date."""
+    if not stats_date:
+        stats_date = date.today()
+
+    return list(db.session.query(stats_hourly).
+                filter(stats_hourly.c.access_type == 'N',
+                       stats_hourly.c.ymd == stats_date.isoformat()).
+                all())
