@@ -293,7 +293,7 @@ def cookies(set):  # type: ignore
         debug = {'debug': '1'} if is_debug else {}
         resp = redirect(url_for('browse.cookies', **debug))
         for ctoset in cookies_to_set(request):
-            resp.set_cookie(**ctoset)
+            resp.set_cookie(**ctoset) # type: ignore
         return resp
     else:
         response, code, headers = get_cookies_page(is_debug)

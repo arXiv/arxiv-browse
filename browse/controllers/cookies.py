@@ -28,7 +28,7 @@ mirror_config = {
 }
 
 for mirror in mirrors:
-    mirror_config['options'].append([mirror, mirror, 0])
+    mirror_config['options'].append([mirror, mirror, 0])  # type: ignore
 
 cookies_config = [
     {'id': 'ps',
@@ -89,7 +89,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     return response_data, status.HTTP_200_OK, response_headers
 
 
-def selected_options_from_request(configs: List[Dict[str, Any]]) -> Dict[str, str]:
+def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Sets the selected value on the options for the request cookies."""
     cookies = request.cookies
     for cc in configs:
@@ -101,14 +101,14 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> Dict[str, st
     return configs
 
 
-def cookies_to_set(request) -> List[Dict[str, str]]:
+def cookies_to_set(request: flask.Request) -> List[Dict[str, object]]:
     """Get cookies from the form and return them as a list of tuples."""
     cts = []
     for (id, value) in request.form.items():
         matching_conf = next(
             (conf for conf in cookies_config if conf['id'] == id), None)
         if matching_conf is not None:
-            ctoset = {'key':matching_conf['name'] }
+            ctoset = {'key': matching_conf['name']}
             cts.append(ctoset)
             if value is None or value == '' or value == 'default':
                 ctoset['max_age'] = 0
