@@ -6,7 +6,7 @@
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv-ARXIVNG-1918.css?v=20190228.1" />
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
   {# disable for now #}
   {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
@@ -108,14 +108,14 @@
         <div class="columns">
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('about') }}">About arXiv</a></li>
-              <li><a href="{{ url_for('team') }}">Leadership Team</a></li>
+              <li><a href="https://arxiv.org/about">About arXiv</a></li>
+              <li><a href="https://arxiv.org/about/people/leadership_team">Leadership Team</a></li>
             </ul>
           </div>
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="{{ url_for('contact') }}"> Contact Us</a></li>
-              <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="{{ url_for('twitter') }}"> Follow us on Twitter</a></li>
+              <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="https://arxiv.org/help/contact"> Contact Us</a></li>
+              <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="https://twitter.com/arxiv"> Follow us on Twitter</a></li>
             </ul>
           </div>
         </div>
@@ -126,14 +126,14 @@
         <div class="columns">
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('help') }}">Help</a></li>
-              <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
+              <li><a href="https://arxiv.org/help">Help</a></li>
+              <li><a href="https://arxiv.org/help/policies/privacy_policy">Privacy Policy</a></li>
             </ul>
           </div>
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('blog') }}">Blog</a></li>
-              <li><a href="{{ url_for('subscribe') }}"> Subscribe</a></li>
+              <li><a href="https://blogs.cornell.edu/arxiv">Blog</a></li>
+              <li><a href="https://arxiv.org/help/subscribe"> Subscribe</a></li>
             </ul>
           </div>
         </div>
@@ -147,7 +147,7 @@
       </div>
       <div class="column">
         <p class="help" style="margin-bottom: 0;">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format,
-        contact <a href="{{ A11Y_URL }}">web-accessibility@cornell.edu</a> for assistance.</p>
+        contact <a href="mailto:web-accessibility@cornell.edu">web-accessibility@cornell.edu</a> for assistance.</p>
       </div>
     </div>
   </footer>
