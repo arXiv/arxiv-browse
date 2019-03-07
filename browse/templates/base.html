@@ -6,7 +6,7 @@
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv-20190208.css?v=20190208" />
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv-ARXIVNG-1918.css?v=20190307" />
   {# disable for now #}
   {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
@@ -41,7 +41,7 @@
   {%- endblock head -%}
 </head>
 
-<body {% block body_id %}id="front"{% endblock %} class="with-cu-identity">
+<body {% block body_id %}{% endblock %} class="with-cu-identity">
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
@@ -53,7 +53,7 @@
       <a href="https://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" width="200" border="0" /></a>
     </div>
     <div id="support-ack">
-      <a href="{{url_for('acknowledgment')}}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+      <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
     </div>
   </div>
 
@@ -61,8 +61,8 @@
     {% block header %}
     {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-    <h1>arXiv.org</h1>
-    <div class="login"><a href="{{url_for('login')}}">Login</a></div>
+    {% block header_h1 %}<h1>arXiv.org</h1>{% endblock header_h1%}
+    {% block login_link %}{% endblock %}
     <div id="search">
       <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
 
@@ -81,7 +81,7 @@
           </div>
           <input class="btn-search-arxiv" value="" type="submit">
             <div class="links">(<a href="{{url_for('help')}}">Help</a> |
-              <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
+              <a href="{{ url_for('search_advanced') }}">Advanced search</a>)</div>
         </div>
       </form>
     </div>
@@ -90,41 +90,56 @@
 
   <div id="content">
     {% block content %}
+    {#- Templates that inherit from this one should include one of the trailers here. -#}
     {% endblock content %}
   </div>
 
-  {#- TODO: url_for on as many links as possible -#}
   <footer style="clear: both;">
-    <div class="columns" role="navigation" aria-label="Secondary" style="margin: -0.75em -0.75em 0.75em -0.75em">
-      <div class="column">
-        <ul style="list-style: none; line-height: 2;">
-          <li><a href="https://arxiv.org/about">About</a></li>
-          <li><a href="https://arxiv.org/about/people/leadership_team">Leadership Team</a></li>
-          <li><a href="https://blogs.cornell.edu/arxiv">Blog</a></li>
-        </ul>
+    <div class="columns is-desktop" role="navigation" aria-label="Secondary" style="margin: -0.75em -0.75em 0.75em -0.75em">
+      <!-- Macro-Column 1 -->
+      <div class="column" style="padding: 0;">
+        <div class="columns">
+          <div class="column">
+            <ul style="list-style: none; line-height: 2;">
+              <li><a href="https://arxiv.org/about">About arXiv</a></li>
+              <li><a href="https://arxiv.org/about/people/leadership_team">Leadership Team</a></li>
+            </ul>
+          </div>
+          <div class="column">
+            <ul style="list-style: none; line-height: 2;">
+              <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="https://arxiv.org/help/contact"> Contact Us</a></li>
+              <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="https://twitter.com/arxiv"> Follow us on Twitter</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="column">
-        <ul style="list-style: none; line-height: 2;">
-          <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="https://arxiv.org/help/contact"> Contact</a></li>
-          <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="https://twitter.com/arxiv"> Follow us on Twitter</a></li>
-          <li><span class="icon"><i class="fa fa-rss"></i></span><a href="https://arxiv.org/help/subscribe"> Subscribe</a></li>
-        </ul>
+      <!-- End Macro-Column 1 -->
+      <!-- Macro-Column 2 -->
+      <div class="column" style="padding: 0;">
+        <div class="columns">
+          <div class="column">
+            <ul style="list-style: none; line-height: 2;">
+              <li><a href="https://arxiv.org/help">Help</a></li>
+              <li><a href="https://arxiv.org/help/policies/privacy_policy">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="column">
+            <ul style="list-style: none; line-height: 2;">
+              <li><a href="https://blogs.cornell.edu/arxiv">Blog</a></li>
+              <li><a href="https://arxiv.org/help/subscribe"> Subscribe</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="column">
-        <ul style="list-style: none; line-height: 2;">
-          <li><a href="https://arxiv.org/help">Help</a></li>
-          <li><a href="https://arxiv.org/submit">Submit</a></li>
-          <li><a href="https://arxiv.org/help/policies/privacy_policy">Privacy Policy</a></li>
-        </ul>
-      </div>
+      <!-- End Macro-Column 2 -->
     </div>
 
     <div class="columns" style="border-top: 1px solid #979797; margin: -0.75em;">
       <div class="column">
-        <p class="help">arXiv&#174; is a registered trademark of Cornell University.</p>
+        <p class="help" style="margin-bottom: 0;">arXiv&#174; is a registered trademark of Cornell University.</p>
       </div>
       <div class="column">
-        <p class="help">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format,
+        <p class="help" style="margin-bottom: 0;">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format,
         contact <a href="mailto:web-accessibility@cornell.edu">web-accessibility@cornell.edu</a> for assistance.</p>
       </div>
     </div>
