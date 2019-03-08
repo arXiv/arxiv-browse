@@ -6,7 +6,7 @@
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv-ARXIVNG-1918.css?v=20190228.1" />
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
   {# disable for now #}
   {%- if config['BROWSE_PIWIK_ENABLED'] %}
   <!-- Piwik -->
@@ -38,13 +38,6 @@
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
   <script language="javascript" src="//static.arxiv.org/js/user_banner.js"></script>
   {% endif -%}
-  <style type="text/css">
-    @media screen and (max-width: 1023px) {
-      .is-desktop {
-        flex-direction: column;
-      }
-    }
-  </style>
   {%- endblock head -%}
 </head>
 
