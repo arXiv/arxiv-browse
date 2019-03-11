@@ -14,7 +14,8 @@ from arxiv.base.globals import get_application_config
 
 from browse.services.database.models import db, Document, \
     MemberInstitution, MemberInstitutionIP, TrackbackPing, SciencewisePing, \
-    DBLP, DBLPAuthor, DBLPDocumentAuthor
+    DBLP, DBLPAuthor, DBLPDocumentAuthor, StatsMonthlySubmission, \
+    StatsMonthlyDownload
 from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
 from arxiv.base import logging
@@ -271,4 +272,17 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     return list(db.session.query(stats_hourly).
                 filter(stats_hourly.c.access_type == 'N',
                        stats_hourly.c.ymd == stats_date.isoformat()).
+                order_by(asc(stats_hourly.c.hour), stats_hourly.c.node_num).
                 all())
+
+
+@db_handle_error(logger=logger, default_return_val=[])
+def get_monthly_submission_stats() -> List:
+    """Get the monthly submission stats."""
+    return list(db.session.query(StatsMonthlySubmission).all())
+
+
+@db_handle_error(logger=logger, default_return_val=[])
+def get_monthly_download_stats() -> List:
+    """Get the monthly download stats."""
+    return list(db.session.query(StatsMonthlyDownload).all())
