@@ -201,8 +201,7 @@ def stats(page: str = 'today') -> Response:
 
 @blueprint.route('/stats/get_hourly', methods=['GET'])
 def stats_hourly_csv() -> Response:
-    stats_page.get_hourly_stats_csv()
-    return Response('a,b,1,2,3', mimetype='text/plain')
+    return stats_page.get_hourly_stats_csv()
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:

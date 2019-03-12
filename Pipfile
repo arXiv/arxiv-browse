@@ -20,10 +20,10 @@ arxiv-base = "==0.15.1rc1"
 validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
+mypy = "*"
 
 [dev-packages]
 pylama = "*"
-mypy = ">=0.630"
 "nose2" = "*"
 sqlacodegen = "*"
 Flask-Testing = "*"
