@@ -2,13 +2,14 @@
 import re
 from typing import Union
 from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app
+    current_app, url_for, redirect
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page, stats_page
+from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
@@ -37,7 +38,8 @@ def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
     if code == status.HTTP_200_OK:
-        return render_template('home/home.html', **response), code, headers  # type: ignore
+        # type: ignore
+        return render_template('home/home.html', **response), code, headers
 
     raise InternalServerError('Unexpected error')
 
@@ -76,7 +78,8 @@ def abstract(arxiv_id: str) -> Response:
             return Response(
                 response['abs_meta'].raw_safe,
                 mimetype='text/plain')
-        return render_template('abs/abs.html', **response), code, headers  # type: ignore
+        # type: ignore
+        return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
@@ -92,7 +95,8 @@ def tb(arxiv_id: str) -> Response:
     response, code, headers = tb_page.get_tb_page(arxiv_id)
 
     if code == status.HTTP_200_OK:
-        return render_template('tb/tb.html', **response), code, headers  # type: ignore
+        # type: ignore
+        return render_template('tb/tb.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
@@ -104,7 +108,8 @@ def tb_recent() -> Response:
     response, code, headers = tb_page.get_recent_tb_page(request.form)
 
     if code == status.HTTP_200_OK:
-        return render_template('tb/recent.html', **response), code, headers  # type: ignore
+        # type: ignore
+        return render_template('tb/recent.html', **response), code, headers
     raise InternalServerError('Unexpected error')
 
 
@@ -176,7 +181,8 @@ def list_articles(context: str, subcontext: str) -> Response:
         context, subcontext, request.args.get('skip'), request.args.get('show'))
     if code == status.HTTP_200_OK:
         # TODO if it is a HEAD request we don't want to render the template
-        return render_template(response['template'], **response), code, headers  # type: ignore
+        # type: ignore
+        return render_template(response['template'], **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
@@ -201,7 +207,19 @@ def stats(page: str = 'today') -> Response:
 
 @blueprint.route('/stats/get_hourly', methods=['GET'])
 def stats_hourly_csv() -> Response:
-    return stats_page.get_hourly_stats_csv()
+    response, code, headers = stats_page.get_hourly_stats_csv()
+    if code == status.HTTP_200_OK:
+        return response['csv'], code, headers
+    raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('/stats/get_monthly_downloads', methods=['GET'])
+def stats_downloads_csv() -> Response:
+    response, code, headers = stats_page.get_download_stats_csv()
+    if code == status.HTTP_200_OK:
+        return response['csv'], code, headers
+    raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
@@ -299,3 +317,18 @@ def archive(archive: str):  # type: ignore
 def year(archive: str, year: str) -> Response:
     """Year's stats for an archive."""
     raise InternalServerError('Not yet implemented')
+
+
+@blueprint.route('cookies', defaults={'set': ''})
+@blueprint.route('cookies/<set>', methods=['POST', 'GET'])
+def cookies(set):  # type: ignore
+    is_debug = request.args.get('debug', None) is not None
+    if request.method == 'POST':
+        debug = {'debug': '1'} if is_debug else {}
+        resp = redirect(url_for('browse.cookies', **debug))
+        for ctoset in cookies_to_set(request):
+            resp.set_cookie(**ctoset)  # type: ignore
+        return resp
+    else:
+        response, code, headers = get_cookies_page(is_debug)
+        return render_template('cookies.html', **response), code, headers
