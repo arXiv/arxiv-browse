@@ -279,10 +279,12 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_submission_stats() -> List:
     """Get the monthly submission stats."""
-    return list(db.session.query(StatsMonthlySubmission).all())
+    return list(db.session.query(StatsMonthlySubmission).
+                order_by(asc(StatsMonthlySubmission.ym)).all())
 
 
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_download_stats() -> List:
     """Get the monthly download stats."""
-    return list(db.session.query(StatsMonthlyDownload).all())
+    return list(db.session.query(StatsMonthlyDownload).
+                order_by(asc(StatsMonthlyDownload.ym)).all())

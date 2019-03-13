@@ -221,6 +221,14 @@ def stats_downloads_csv() -> Response:
     raise InternalServerError('Unexpected error')
 
 
+@blueprint.route('/stats/get_monthly_submissions', methods=['GET'])
+def stats_submissions_csv() -> Response:
+    response, code, headers = stats_page.get_submission_stats_csv()
+    if code == status.HTTP_200_OK:
+        return response['csv'], code, headers
+    raise InternalServerError('Unexpected error')
+
+
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
     """Get formats article."""
