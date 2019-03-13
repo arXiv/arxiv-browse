@@ -9,7 +9,9 @@
 
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
-<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %} e-prints in Physics, Mathematics, Computer Science, Quantitative Biology, Quantitative Finance, Statistics, Electrical Engineering and Systems Science, and Economics</p>
+<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+ e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Submissions to arXiv should conform to Cornell University academic standards. arXiv is owned and operated by Cornell University, a private not-for-profit educational institution. arXiv is funded by Cornell University, the Simons Foundation and by the member institutions.</p>
+<br/>
 {#- TODO: revisit when we have a plan for /multi replacement -#}
 <form action="/multi" method="get">Subject search and browse:
   <select name="group">
