@@ -2,10 +2,9 @@
 
 import re
 import hashlib
-from functools import partial
 from typing import Optional
 from validators import url as is_valid_url
-from datetime import datetime, date
+from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, Column, Date, DateTime, Enum, ForeignKey, \
@@ -427,8 +426,7 @@ class StatsMonthlyDownload(db.Model):
 
     __tablename__ = 'arXiv_stats_monthly_downloads'
 
-    # ym column does not specify day in its date, so Date not supported
-    ym = Column(String(10), primary_key=True)
+    ym = Column(Date, primary_key=True)
     downloads = Column(Integer, nullable=False)
 
 
