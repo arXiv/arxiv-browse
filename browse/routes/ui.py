@@ -194,7 +194,7 @@ def list_articles(context: str, subcontext: str) -> Response:
 @blueprint.route('/stats/today',
                  defaults={'page': 'today'},
                  methods=['GET'])
-@blueprint.route('/stats/submissions',
+@blueprint.route('/stats/monthly_submissions',
                  defaults={'page': 'monthly_submissions'},
                  methods=['GET'])
 @blueprint.route('/stats/monthly_downloads',

@@ -11,5 +11,5 @@
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Site Stats</h1>{% endblock %}
 
 {%- block content %}
-<p>See also <a href="/help/stats">other arXiv usage statistics</a>.</p>
+<p>See also <a href="{{ url_for('help') }}stats">other arXiv usage statistics</a>.</p>
 {% endblock content %}

@@ -3,7 +3,6 @@
 {% block title %}Hourly Usage{% endblock %}
 
 {% block content %}
-
 <style type="text/css">
     svg {
       width: 1000;
@@ -104,9 +103,7 @@ d3.csv("/stats/get_hourly", function(hourly_stats) {
     .text("Connections");
 
 });
-
 </script>
-
 
 <h2>arXiv web server usage for Monday, February 25th, 2019 (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats_hourly_csv') }}">CSV</a>]</h2>
 

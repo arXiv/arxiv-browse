@@ -1,3 +1,179 @@
 {%- extends "stats/base.html" -%}
 
-{% block title %}Monthly Downloads{% endblock %}
+{% block title %}Monthly Download Rates{% endblock %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Monthly Downloads</h1>{% endblock %}
+
+{% block content %}
+<h2>arXiv Monthly Download Rates [<a title="download monthly download CSV data" href="{{ url_for('browse.stats_downloads_csv')}}">CSV</a>]</h2>
+
+<style>
+  svg {
+  font: 10px sans-serif;
+  }
+  path {
+  fill: steelblue;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: lightgrey;
+    shape-rendering: auto;
+  }
+
+  .axis .minor line {
+    stroke: #777;
+    stroke-dasharray: 2,2;
+  }
+
+  .x.axis .minor {
+    stroke-opacity: .5;
+  }
+
+  .y.axis line {
+    stroke: lightgrey;
+    stroke-dasharray: 1,1;
+  }
+
+  .y.axis .minor {
+    stroke-opacity: .5;
+  }
+
+  .brush .extent {
+    stroke: #fff;
+    fill-opacity: .125;
+    shape-rendering: auto;
+  }
+</style>
+<script type="text/javascript">
+  var margin = {
+      top: 10,
+      right: 10,
+      bottom: 100,
+      left: 55
+    },
+    margin2 = {
+      top: 430,
+      right: 10,
+      bottom: 20,
+      left: 55
+    },
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
+    height2 = 500 - margin2.top - margin2.bottom;
+
+  var parseDate = d3.time.format("%Y-%m").parse;
+
+  var x = d3.time.scale().range([0, width]),
+    x2 = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([height, 0]),
+    y2 = d3.scale.linear().range([height2, 0]);
+
+  var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
+    yAxis = d3.svg.axis().scale(y).tickSize(-width).orient("left");
+
+  var brush = d3.svg.brush()
+    .x(x2)
+    .on("brush", brushed);
+
+  var area = d3.svg.area()
+    .interpolate("step-before")
+    .x(function(d) {
+      return x(d.month);
+    })
+    .y0(height)
+    .y1(function(d) {
+      return y(d.downloads);
+    });
+
+  var area2 = d3.svg.area()
+    .interpolate("step-before")
+    .x(function(d) {
+      return x2(d.month);
+    })
+    .y0(height2)
+    .y1(function(d) {
+      return y2(d.downloads);
+    });
+
+  var svg = d3.select("div#content").append("svg:svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+  svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+  var focus = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var context = svg.append("g")
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+  d3.csv("/stats/get_monthly_downloads", function(error, data) {
+
+    data.forEach(function(d) {
+      d.month = parseDate(d.month);
+      d.downloads = +d.downloads;
+    });
+
+    x.domain(d3.extent(data.map(function(d) {
+      return d.month;
+    })));
+    y.domain([0, d3.max(data.map(function(d) {
+      return d.downloads;
+    }))]);
+    x2.domain(x.domain());
+    y2.domain(y.domain());
+
+    focus.append("path")
+      .datum(data)
+      .attr("clip-path", "url(#clip)")
+      .attr("d", area);
+
+    focus.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    focus.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    context.append("path")
+      .datum(data)
+      .attr("d", area2);
+
+    context.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height2 + ")")
+      .call(xAxis2);
+
+    context.append("g")
+      .attr("class", "x brush")
+      .call(brush)
+      .selectAll("rect")
+      .attr("y", -6)
+      .attr("height", height2 + 7);
+  });
+
+  function brushed() {
+    x.domain(brush.empty() ? x2.domain() : brush.extent());
+    focus.select("path").attr("d", area);
+    focus.select(".x.axis").call(xAxis);
+  }
+</script>
+<p><b style="color:steelblue">Blue</b>: Number of downloads per month.<br />Click and drag in the small graph below to pan or zoom.</p>
+<p>Total number of downloads through February 2019 = 1,305,801,617</p>
+<p>
+  <strong>Caveats:</strong> While we have attempted to extract download data representing unique full-text downloads by real users, there are many factors which affect accuracy. These factors include: 1) the data is from the main arXiv site and the
+  arXiv mirrors, though some mirror data is incomplete; 2) only web downloads are included (and not FTP or email &quot;downloads&quot; that were formerly supported); 3) we have counted downloads according to the COUNTER algorithm which excludes
+  rapid repeat downloads; 4) we have attempted to identify and remove robot or automated downloads from the count (false positives lead to undercounting, failing to identify robots leads to overcounting); 5) data prior to 2009 has not been cleaned
+  with as much care as later data, it shows trends nonetheless.
+</p>
+
+{{ super() }}
+{% endblock content %}
