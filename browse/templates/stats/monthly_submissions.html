@@ -4,7 +4,7 @@
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Monthly Submission Rates</h1>{% endblock %}
 
 {% block content %}
-<h2>arXiv Monthly Submission Rates [<a title="download monthly submission CSV data" href="{{ url_for('browse.stats_submissions_csv') }}">CSV</a>]</h2>
+<h2>arXiv Monthly Submission Rates [<a title="download monthly submission CSV data" href="{{ url_for('browse.stats_csv', command='monthly_submissions') }}">CSV</a>]</h2>
 
 <style type="text/css">
   svg {
@@ -129,7 +129,7 @@
       return y(d.submissions);
     });
 
-  d3.csv("/stats/get_monthly_submissions", function(error, data) {
+  d3.csv("{{ url_for('browse.stats_csv', command='monthly_submissions') }}", function(error, data) {
     data.forEach(function(d) {
       d.month = parseDate(d.month);
       d.submissions = +d.submissions;

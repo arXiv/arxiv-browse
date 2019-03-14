@@ -158,6 +158,7 @@ def clickthrough() -> Response:
 
     raise NotFound
 
+
 @blueprint.route('list', defaults={'context': '', 'subcontext': ''},
                  methods=['GET', 'POST'])
 @blueprint.route('list/', defaults={'context': '', 'subcontext': ''},
@@ -205,25 +206,24 @@ def stats(page: str = 'today') -> Response:
     return render_template(f'stats/{page}.html')
 
 
-@blueprint.route('/stats/get_hourly', methods=['GET'])
-def stats_hourly_csv() -> Response:
-    response, code, headers = stats_page.get_hourly_stats_csv()
-    if code == status.HTTP_200_OK:
-        return response['csv'], code, headers
-    raise InternalServerError('Unexpected error')
-
-
-@blueprint.route('/stats/get_monthly_downloads', methods=['GET'])
-def stats_downloads_csv() -> Response:
-    response, code, headers = stats_page.get_download_stats_csv()
-    if code == status.HTTP_200_OK:
-        return response['csv'], code, headers
-    raise InternalServerError('Unexpected error')
-
-
-@blueprint.route('/stats/get_monthly_submissions', methods=['GET'])
-def stats_submissions_csv() -> Response:
-    response, code, headers = stats_page.get_submission_stats_csv()
+@blueprint.route('/stats/get_hourly',
+                 defaults={'command': 'hourly'},
+                 methods=['GET'])
+@blueprint.route('/stats/get_monthly_downloads',
+                 defaults={'command': 'monthly_downloads'},
+                 methods=['GET'])
+@blueprint.route('/stats/get_monthly_submissions',
+                 defaults={'command': 'monthly_submissions'},
+                 methods=['GET'])
+def stats_csv(command: str = None) -> Response:
+    csv_getters = {
+        'hourly': stats_page.get_hourly_stats_csv,
+        'monthly_downloads': stats_page.get_download_stats_csv,
+        'monthly_submissions': stats_page.get_submission_stats_csv
+    }
+    if not command or command not in csv_getters:
+        raise NotFound
+    [response, code, headers] = csv_getters[command]()
     if code == status.HTTP_200_OK:
         return response['csv'], code, headers
     raise InternalServerError('Unexpected error')

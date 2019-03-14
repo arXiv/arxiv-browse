@@ -4,17 +4,16 @@
 
 {% block content %}
 <style type="text/css">
-    svg {
-      width: 1000;
-      height: 300px;
+  svg {
+    width: 1000;
+    height: 300px;
 
-      font: 10px sans-serif;
-      shape-rendering: crispEdges;
-    }
+    font: 10px sans-serif;
+    shape-rendering: crispEdges;
+  }
 </style>
 <script type="text/javascript">
-
-var n = 4, // number of layers (nodes)
+  var n = 4, // number of layers (nodes)
     w = 960,
     h = 300,
     p = [20, 50, 30, 20],
@@ -24,91 +23,112 @@ var n = 4, // number of layers (nodes)
     parse = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
     format = d3.time.format("%H");
 
-var svg = d3.select("div#content").append("svg:svg")
+  var svg = d3.select("div#content").append("svg:svg")
     .attr("width", w)
     .attr("height", h)
-  .append("svg:g")
+    .append("svg:g")
     .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
 
-d3.csv("/stats/get_hourly", function(hourly_stats) {
+  d3.csv("{{ url_for('browse.stats_csv', command='hourly') }}", function(hourly_stats) {
 
-  // Transpose the data into layers by node.
-  var nodes = d3.layout.stack()(["node1", "node2", "node3", "node4"].map(function(node) {
-    return hourly_stats.map(function(d) {
-      return {x: parse(d.hour), y: +d[node]};
-    });
-  }));
+    // Transpose the data into layers by node.
+    var nodes = d3.layout.stack()(["node1", "node2", "node3", "node4"].map(function(node) {
+      return hourly_stats.map(function(d) {
+        return {
+          x: parse(d.hour),
+          y: +d[node]
+        };
+      });
+    }));
 
-  // Compute the x-domain (by date) and y-domain (by top).
-  x.domain(nodes[0].map(function(d) { return d.x; }));
-  y.domain([0, d3.max(nodes[nodes.length - 1], function(d) { return d.y0 + d.y; })]);
+    // Compute the x-domain (by date) and y-domain (by top).
+    x.domain(nodes[0].map(function(d) {
+      return d.x;
+    }));
+    y.domain([0, d3.max(nodes[nodes.length - 1], function(d) {
+      return d.y0 + d.y;
+    })]);
 
-  // Add a group for each node.
-  var node = svg.selectAll("g.node")
+    // Add a group for each node.
+    var node = svg.selectAll("g.node")
       .data(nodes)
-    .enter().append("svg:g")
+      .enter().append("svg:g")
       .attr("class", "node")
-      .style("fill", function(d, i) { return z(i); })
-      .style("stroke", function(d, i) { return d3.rgb(z(i)).darker(); });
+      .style("fill", function(d, i) {
+        return z(i);
+      })
+      .style("stroke", function(d, i) {
+        return d3.rgb(z(i)).darker();
+      });
 
-  // Add a rect for each hour.
-  var rect = node.selectAll("rect")
+    // Add a rect for each hour.
+    var rect = node.selectAll("rect")
       .data(Object)
-    .enter().append("svg:rect")
-      .attr("x", function(d) { return x(d.x); })
-      .attr("y", function(d) { return -y(d.y0) - y(d.y); })
-      .attr("height", function(d) { return y(d.y); })
+      .enter().append("svg:rect")
+      .attr("x", function(d) {
+        return x(d.x);
+      })
+      .attr("y", function(d) {
+        return -y(d.y0) - y(d.y);
+      })
+      .attr("height", function(d) {
+        return y(d.y);
+      })
       .attr("width", x.rangeBand());
 
-  // Add a label per hour.
-  var label = svg.selectAll("text")
+    // Add a label per hour.
+    var label = svg.selectAll("text")
       .data(x.domain())
-    .enter().append("svg:text")
-      .attr("x", function(d) { return x(d) + x.rangeBand() / 2; })
+      .enter().append("svg:text")
+      .attr("x", function(d) {
+        return x(d) + x.rangeBand() / 2;
+      })
       .attr("y", 6)
       .attr("text-anchor", "middle")
       .attr("dy", ".71em")
       .text(format);
 
-  // x-axis label
-  svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "middle")
-    .attr("x", w/2)
-    .attr("y", 25).
-    attr("fill","red")
-    .text("Hour");
+    // x-axis label
+    svg.append("text")
+      .attr("class", "x label")
+      .attr("text-anchor", "middle")
+      .attr("x", w / 2)
+      .attr("y", 25).
+    attr("fill", "red")
+      .text("Hour");
 
-  // Add y-axis rules.
-  var rule = svg.selectAll("g.rule")
+    // Add y-axis rules.
+    var rule = svg.selectAll("g.rule")
       .data(y.ticks(5))
-    .enter().append("svg:g")
+      .enter().append("svg:g")
       .attr("class", "rule")
-      .attr("transform", function(d) { return "translate(0," + -y(d) + ")"; });
+      .attr("transform", function(d) {
+        return "translate(0," + -y(d) + ")";
+      });
 
 
-  rule.append("svg:text")
+    rule.append("svg:text")
       .attr("x", w - p[1] - p[3] + 6)
       .attr("dy", ".35em")
       .text(d3.format(",d"));
 
-   // y-axis label
-   svg.append("text")
-    .attr("transform", "rotate(90)")
-    .attr("x", -h/8)
-    .attr("y", 28-w)
-    .style("text-anchor", "middle")
-    .attr("fill","red")
-    .attr("font-size","9")
-    .text("Connections");
+    // y-axis label
+    svg.append("text")
+      .attr("transform", "rotate(90)")
+      .attr("x", -h / 8)
+      .attr("y", 28 - w)
+      .style("text-anchor", "middle")
+      .attr("fill", "red")
+      .attr("font-size", "9")
+      .text("Connections");
 
-});
+  });
 </script>
 
-<h2>arXiv web server usage for Monday, February 25th, 2019 (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats_hourly_csv') }}">CSV</a>]</h2>
+<h2>arXiv web server usage for Monday, February 25th, 2019 (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats_csv', command='hourly') }}">CSV</a>]</h2>
 
 <p>Total number of connections = 3,975,019 (+23,098 local &amp; administrative connections)<br>
-Current local time is <i>Monday, February 25th, 2019 14:24:34 EST</i></p>
+  Current local time is <i>Monday, February 25th, 2019 14:24:34 EST</i></p>
 
 {{ super() }}
 {% endblock content %}
