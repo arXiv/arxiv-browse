@@ -38,20 +38,17 @@
 
 <p>{{year}} totals: <b>{{listing['new_count']|default('unknown')}} articles</b> + <i>{{listing['cross_count']|default('unknown')}} cross-lists</i></p>
 
-
-<h2>TODO use something similar to what is in /list for year listings</h2>
 <p><b>Other years:</b>
       <li>Article statistics by year:<br> 
-      {% for url, year in stats_by_year %} 
-      <a href="{{url}}">{{year}}</a> 
+        {% for url, year in stats_by_year %}
+        {% if url %}
+        <a href="{{url}}">{{year}}</a>
+        {% else %}
+        {{year}}
+        {% endif %}
       {% endfor %}  
       </li>
       
 </p>
-
-
-<h2> Get rid of these links? (due to new footer)</h2>
-<p>Link back to: <a href="http://arxiv.org/">arXiv</a>, <a href="/form">form interface</a>, <a href="/help/contact">contact</a>.</p>
-
 
 {% endblock %}

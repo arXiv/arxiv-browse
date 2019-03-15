@@ -63,8 +63,7 @@ def year_page(archive_id: str, year: int) -> Any:
         'months': month_listing['month_counts'],
         'listing': month_listing,
         'year': str(year),
-        # TODO need to get rid of current year from this list?
-        'stats_by_year': stats_by_year(archive_id, archive, years_operating(archive)),
+        'stats_by_year': stats_by_year(archive_id, archive, years_operating(archive), year)
     }
     response_headers: Dict[str, Any] = {}
 
@@ -93,8 +92,7 @@ def ascii_art_month(archive_id: str, month: MonthCount) -> Tuple[str, Union[str,
 
     art = [makestep(idx) for idx in range(0, tot, ASCII_ART_STEP)]
 
-    # TODO not sure what the ! means, check legacy
-    if tot % ASCII_ART_STEP != 0:  # still have stuff at end
+    if tot % ASCII_ART_STEP >= ASCII_ART_STEP/2:
         art.append(('!', None))
 
     return art
