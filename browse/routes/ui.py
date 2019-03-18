@@ -192,40 +192,45 @@ def list_articles(context: str, subcontext: str) -> Response:
         return response, code, headers  # type: ignore
 
 
-@blueprint.route('/stats/today',
-                 defaults={'page': 'today'},
+@blueprint.route('stats/<string:command>',
                  methods=['GET'])
-@blueprint.route('/stats/monthly_submissions',
-                 defaults={'page': 'monthly_submissions'},
-                 methods=['GET'])
-@blueprint.route('/stats/monthly_downloads',
-                 defaults={'page': 'monthly_downloads'},
-                 methods=['GET'])
-def stats(page: str = 'today') -> Response:
+def stats(command: str) -> Response:
     """Display various statistics about the service."""
-    return render_template(f'stats/{page}.html')
+    params = {}
+    if request.args and 'date' in request.args:
+        params['requested_date_str'] = request.args['date']
 
-
-@blueprint.route('/stats/get_hourly',
-                 defaults={'command': 'hourly'},
-                 methods=['GET'])
-@blueprint.route('/stats/get_monthly_downloads',
-                 defaults={'command': 'monthly_downloads'},
-                 methods=['GET'])
-@blueprint.route('/stats/get_monthly_submissions',
-                 defaults={'command': 'monthly_submissions'},
-                 methods=['GET'])
-def stats_csv(command: str = None) -> Response:
-    csv_getters = {
-        'hourly': stats_page.get_hourly_stats_csv,
-        'monthly_downloads': stats_page.get_download_stats_csv,
-        'monthly_submissions': stats_page.get_submission_stats_csv
+    getters = {
+        'today':  {'func': stats_page.get_hourly_stats_page, 'params': params},
+        'monthly_submissions':
+            {'func': stats_page.get_monthly_submissions_page, 'params': {}},
+        'monthly_downloads':
+            {'func': stats_page.get_monthly_downloads_page, 'params': {}}
     }
-    if not command or command not in csv_getters:
+    csv_getters = {
+        'get_hourly':
+            {'func': stats_page.get_hourly_stats_csv, 'params': params},
+        'get_monthly_downloads':
+            {'func': stats_page.get_download_stats_csv, 'params': {}},
+        'get_monthly_submissions':
+            {'func': stats_page.get_submission_stats_csv, 'params': {}}
+    }
+    if not command:
         raise NotFound
-    [response, code, headers] = csv_getters[command]()
-    if code == status.HTTP_200_OK:
-        return response['csv'], code, headers
+    if command in csv_getters:
+        getter_params = csv_getters[command]['params']
+        [response, code, headers] = csv_getters[command]['func'](
+            **getter_params)
+        if code == status.HTTP_200_OK:
+            return response['csv'], code, headers
+    elif command in getters:
+        getter_params = getters[command]['params']
+        [response, code, headers] = getters[command]['func'](**getter_params)
+        if code == status.HTTP_200_OK:
+            return render_template(f'stats/{command}.html', **response),\
+                code, headers
+    else:
+        raise NotFound
     raise InternalServerError('Unexpected error')
 
 

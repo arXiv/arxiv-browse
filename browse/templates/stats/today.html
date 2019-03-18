@@ -3,6 +3,9 @@
 {% block title %}Hourly Usage{% endblock %}
 
 {% block content %}
+
+<h2>arXiv web server usage for {{ requested_dt.strftime('%A, %B %-d, %Y') }} (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">CSV</a>]</h2>
+
 <style type="text/css">
   svg {
     width: 1000;
@@ -28,8 +31,8 @@
     .attr("height", h)
     .append("svg:g")
     .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
-
-  d3.csv("{{ url_for('browse.stats_csv', command='hourly') }}", function(hourly_stats) {
+    {# ?date={{ current_date.strftime('%Y%m%d') }} #}
+    d3.csv("{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}", function(hourly_stats) {
 
     // Transpose the data into layers by node.
     var nodes = d3.layout.stack()(["node1", "node2", "node3", "node4"].map(function(node) {
@@ -125,10 +128,8 @@
   });
 </script>
 
-<h2>arXiv web server usage for Monday, February 25th, 2019 (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats_csv', command='hourly') }}">CSV</a>]</h2>
-
-<p>Total number of connections = 3,975,019 (+23,098 local &amp; administrative connections)<br>
-  Current local time is <i>Monday, February 25th, 2019 14:24:34 EST</i></p>
+<p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)<br>
+  Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M%:%S') }} US/Eastern</p>
 
 {{ super() }}
 {% endblock content %}

@@ -138,10 +138,10 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
         subquery()
     )
     tb_doc_tup = db.session.query(
-                TrackbackPing,
-                Document.paper_id,
-                Document.title
-            ).\
+        TrackbackPing,
+        Document.paper_id,
+        Document.title
+    ).\
         join(Document, TrackbackPing.document_id == Document.document_id).\
         filter(TrackbackPing.status == 'accepted').\
         filter(TrackbackPing.url == stmt.c.url).\
@@ -237,11 +237,11 @@ def get_sequential_id(paper_id: Identifier,
     if is_next:
         baked_query += lambda q: q.filter(Document.paper_id >
                                           bindparam('paper_id')). \
-                                          order_by(asc(Document.paper_id))
+            order_by(asc(Document.paper_id))
     else:
         baked_query += lambda q: q.filter(Document.paper_id <
                                           bindparam('paper_id')). \
-                                          order_by(desc(Document.paper_id))
+            order_by(desc(Document.paper_id))
     if context != 'all':
         archive: str = context
         subject_class: str = ''
@@ -263,13 +263,37 @@ def get_sequential_id(paper_id: Identifier,
     return None
 
 
+def __all_hourly_stats_query() -> Query:
+    return db.session.query(stats_hourly)
+
+
+@db_handle_error(logger=logger, default_return_val=(0, 0))
+def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int]:
+    """Get the sum of normal and admin connections for a given date."""
+    stats_date = date.today() if not isinstance(stats_date, date) \
+        else stats_date
+    normal_count = 0
+    admin_count = 0
+    rows = db.session.query(
+        func.sum(stats_hourly.c.connections).label('num_connections'),
+        stats_hourly.c.access_type).\
+        filter(stats_hourly.c.ymd == stats_date.isoformat()).\
+        group_by(stats_hourly.c.access_type).all()
+    for r in rows:
+        if r.access_type == 'A':
+            admin_count = r.num_connections
+        else:
+            normal_count = r.num_connections
+    return (normal_count, admin_count)
+
+
 @db_handle_error(logger=logger, default_return_val=[])
 def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     """Get the hourly stats for a given date."""
-    if not stats_date:
-        stats_date = date.today()
+    stats_date = date.today() if not isinstance(stats_date, date) \
+        else stats_date
 
-    return list(db.session.query(stats_hourly).
+    return list(__all_hourly_stats_query().
                 filter(stats_hourly.c.access_type == 'N',
                        stats_hourly.c.ymd == stats_date.isoformat()).
                 order_by(asc(stats_hourly.c.hour), stats_hourly.c.node_num).
@@ -281,6 +305,18 @@ def get_monthly_submission_stats() -> List:
     """Get the monthly submission stats."""
     return list(db.session.query(StatsMonthlySubmission).
                 order_by(asc(StatsMonthlySubmission.ym)).all())
+
+
+@db_handle_error(logger=logger, default_return_val=(0, 0))
+def get_monthly_submission_count() -> Tuple[int, int]:
+    """Submission totals."""
+    row = db.session.query(
+        func.sum(
+            StatsMonthlySubmission.num_submissions).label('num_submissions'),
+        func.sum(
+            StatsMonthlySubmission.historical_delta).label('num_migrated')
+    ).first()
+    return (row.num_submissions, row.num_migrated)
 
 
 @db_handle_error(logger=logger, default_return_val=[])
