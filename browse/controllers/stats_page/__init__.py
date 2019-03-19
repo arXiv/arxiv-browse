@@ -71,7 +71,7 @@ def get_hourly_stats_csv(requested_date_str: str = None) -> Response:
                 csv = csv + f",{count}"
             csv = f"{csv}\n"
         return {'csv': csv}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
-    except TypeError as ex:
+    except (TypeError, ValueError) as ex:
         logger.warning(f'Type error getting sequential hourly stats csv: {ex}')
         raise BadRequest
     except Exception as ex:
