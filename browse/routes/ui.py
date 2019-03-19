@@ -282,4 +282,6 @@ def archive(archive: str):  # type: ignore
 def year(archive: str, year: str) -> Response:
     """Year's stats for an archive."""
     response,code,headers = year_page(archive, year)
+    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+        return '', code, headers
     return render_template('year.html', **response),code,headers

@@ -34,7 +34,8 @@ def year_page(archive_id: str, year: int) -> Any:
     """
 
     if year > date.today().year:
-        raise BadRequest("Bad year.")
+        # 307 because year might be valid in the future
+        return {}, status.HTTP_307_TEMPORARY_REDIRECT, {'Location': '/'}
 
     if year < 100:
         if year >= 91:
