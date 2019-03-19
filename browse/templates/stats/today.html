@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<h2>arXiv web server usage for {{ requested_dt.strftime('%A, %B %-d, %Y') }} (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">CSV</a>]</h2>
-
+<h2>arXiv Web Server Usage from {{ requested_dt.strftime('%A, %B %-d, %Y') }} (<a href="/">arxiv.org</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">CSV</a>]</h2>
+{% if normal_count > 0 %}
 <style type="text/css">
   svg {
     width: 1000;
@@ -127,9 +127,10 @@
 
   });
 </script>
-
-<p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)<br>
-  Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M%:%S') }} US/Eastern</p>
-
+<p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)
+{% else %}
+<p>No data currently available.
+{% endif %}
+<br />Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M%:%S') }} US/Eastern</p>
 {{ super() }}
 {% endblock content %}
