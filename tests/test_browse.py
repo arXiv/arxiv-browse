@@ -386,3 +386,30 @@ class BrowseTest(unittest.TestCase):
     def test_year(self):
         rv = self.app.get('/year/astro-ph/09')
         self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph/')
+        self.assertEqual( rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph')
+        self.assertEqual( rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph/09/')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/year')
+        self.assertEqual( rv.status_code, 404)
+
+        rv = self.app.get('/year/astro-ph/9999')
+        self.assertEqual(rv.status_code, 307, 'Future year should cause temporary redirect')
+
+        rv = self.app.get('/year/fakearchive/01')
+        self.assertNotEqual(rv.status_code, 200)
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        rv = self.app.get('/year/002/0000')
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        rv = self.app.get('/year/astro-py/9223372036854775808')
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        

@@ -32,8 +32,12 @@ def year_page(archive_id: str, year: int) -> Any:
     dict
         Headers to add to the response.
     """
+    thisYear = date.today().year
 
-    if year > date.today().year:
+    if year is None:
+        year = thisYear
+        
+    if year > thisYear:
         # 307 because year might be valid in the future
         return {}, status.HTTP_307_TEMPORARY_REDIRECT, {'Location': '/'}
 
