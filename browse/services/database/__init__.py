@@ -324,3 +324,18 @@ def get_monthly_download_stats() -> List:
     """Get the monthly download stats."""
     return list(db.session.query(StatsMonthlyDownload).
                 order_by(asc(StatsMonthlyDownload.ym)).all())
+
+
+@db_handle_error(logger=logger, default_return_val=0)
+def get_monthly_download_count() -> int:
+    """Get the download total."""
+    row = db.session.query(
+        func.sum(StatsMonthlyDownload.downloads).label('total_downloads')
+    ).first()
+    return row.total_downloads if row else 0
+
+def get_max_download_stats_dt() -> Optional[datetime]:
+    row = db.session.query(
+        func.max(StatsMonthlyDownload.ym).label('max_ym')
+    ).first()
+    return row.max_ym if row else None

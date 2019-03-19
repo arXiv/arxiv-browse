@@ -9,7 +9,8 @@ from arxiv import status
 from arxiv.base import logging
 from browse.services.database import get_hourly_stats, get_hourly_stats_count, \
     get_monthly_download_stats, get_monthly_submission_stats, \
-    get_monthly_submission_count
+    get_monthly_submission_count, get_monthly_download_count, \
+    get_max_download_stats_dt
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 
 
@@ -22,21 +23,23 @@ def get_hourly_stats_page(requested_date_str: str = None) -> Response:
     """Get data for the /stats/today page."""
     response_data: Dict[str, Any] = {}
     try:
-        current_datetime = datetime.now()
-        requested_datetime = current_datetime - timedelta(hours=1)
+        current_dt = datetime.now()
+        requested_dt = current_dt - timedelta(hours=1)
         if requested_date_str:
-            requested_datetime = dateutil.parser.parse(requested_date_str)
+            requested_dt = dateutil.parser.parse(requested_date_str)
         normal_count, admin_count = \
-            get_hourly_stats_count(stats_date=requested_datetime.date())
+            get_hourly_stats_count(stats_date=requested_dt.date())
 
-        response_data['current_datetime'] = current_datetime
-        response_data['requested_datetime'] = requested_datetime
+        response_data['current_dt'] = current_dt
+        response_data['requested_dt'] = requested_dt
         response_data['normal_count'] = normal_count
         response_data['admin_count'] = admin_count
         return response_data, status.HTTP_200_OK, {}
-
     except (TypeError, ValueError):
         raise BadRequest
+    except Exception as ex:
+        logger.warning(f'Error getting hourly stats data: {ex}')
+        raise InternalServerError
 
 
 def get_hourly_stats_csv(requested_date_str: str = None) -> Response:
@@ -79,7 +82,12 @@ def get_hourly_stats_csv(requested_date_str: str = None) -> Response:
 def get_monthly_downloads_page() -> Response:
     """Get the data from the monthly downloads page."""
     response_data: Dict[str, Any] = {}
-    return response_data, status.HTTP_200_OK, {}
+    try:
+        response_data['total_downloads'] = get_monthly_download_count()
+        response_data['most_recent_dt'] = get_max_download_stats_dt()
+        return response_data, status.HTTP_200_OK, {}
+    except Exception:
+        raise InternalServerError
 
 
 def get_download_stats_csv() -> Response:

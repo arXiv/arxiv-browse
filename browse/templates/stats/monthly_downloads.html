@@ -4,7 +4,7 @@
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Monthly Downloads</h1>{% endblock %}
 
 {% block content %}
-<h2>arXiv Monthly Download Rates [<a title="download monthly download CSV data" href="{{ url_for('browse.stats_csv', command='monthly_downloads') }}">CSV</a>]</h2>
+<h2>arXiv Monthly Download Rates [<a title="download monthly download CSV data" href="{{ url_for('browse.stats', command='get_monthly_downloads') }}">CSV</a>]</h2>
 
 <style>
   svg {
@@ -113,7 +113,7 @@
   var context = svg.append("g")
     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-  d3.csv("{{ url_for('browse.stats_csv', command='monthly_downloads') }}", function(error, data) {
+  d3.csv("{{ url_for('browse.stats', command='get_monthly_downloads') }}", function(error, data) {
 
     data.forEach(function(d) {
       d.month = parseDate(d.month);
@@ -167,7 +167,7 @@
   }
 </script>
 <p><b style="color:steelblue">Blue</b>: Number of downloads per month.<br />Click and drag in the small graph below to pan or zoom.</p>
-<p>Total number of downloads through February 2019 = 1,305,801,617</p>
+<p>Total number of downloads {% if most_recent_dt %}through {{ most_recent_dt.strftime('%B %Y') }}{% endif %} = {{ "{:,}".format(total_downloads) }}</p>
 <p>
   <strong>Caveats:</strong> While we have attempted to extract download data representing unique full-text downloads by real users, there are many factors which affect accuracy. These factors include: 1) the data is from the main arXiv site and the
   arXiv mirrors, though some mirror data is incomplete; 2) only web downloads are included (and not FTP or email &quot;downloads&quot; that were formerly supported); 3) we have counted downloads according to the COUNTER algorithm which excludes
