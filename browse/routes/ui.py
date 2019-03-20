@@ -1,6 +1,6 @@
 """Provides the user intefaces for browse."""
 import re
-from typing import Union
+from typing import Callable, Dict, Mapping, Union
 from flask import Blueprint, render_template, request, Response, session, \
     current_app, url_for, redirect
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
@@ -38,8 +38,7 @@ def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
     if code == status.HTTP_200_OK:
-        # type: ignore
-        return render_template('home/home.html', **response), code, headers
+        return render_template('home/home.html', **response), code, headers  # type: ignore
 
     raise InternalServerError('Unexpected error')
 
@@ -78,8 +77,7 @@ def abstract(arxiv_id: str) -> Response:
             return Response(
                 response['abs_meta'].raw_safe,
                 mimetype='text/plain')
-        # type: ignore
-        return render_template('abs/abs.html', **response), code, headers
+        return render_template('abs/abs.html', **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
@@ -95,8 +93,7 @@ def tb(arxiv_id: str) -> Response:
     response, code, headers = tb_page.get_tb_page(arxiv_id)
 
     if code == status.HTTP_200_OK:
-        # type: ignore
-        return render_template('tb/tb.html', **response), code, headers
+        return render_template('tb/tb.html', **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     raise InternalServerError('Unexpected error')
@@ -108,8 +105,7 @@ def tb_recent() -> Response:
     response, code, headers = tb_page.get_recent_tb_page(request.form)
 
     if code == status.HTTP_200_OK:
-        # type: ignore
-        return render_template('tb/recent.html', **response), code, headers
+        return render_template('tb/recent.html', **response), code, headers  # type: ignore
     raise InternalServerError('Unexpected error')
 
 
@@ -182,8 +178,7 @@ def list_articles(context: str, subcontext: str) -> Response:
         context, subcontext, request.args.get('skip'), request.args.get('show'))
     if code == status.HTTP_200_OK:
         # TODO if it is a HEAD request we don't want to render the template
-        # type: ignore
-        return render_template(response['template'], **response), code, headers
+        return render_template(response['template'], **response), code, headers  # type: ignore
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
         return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
@@ -196,18 +191,18 @@ def list_articles(context: str, subcontext: str) -> Response:
                  methods=['GET'])
 def stats(command: str) -> Response:
     """Display various statistics about the service."""
-    params = {}
+    params: Dict = {}
     if request.args and 'date' in request.args:
-        params['requested_date_str'] = request.args['date']
+        params['requested_date_str'] = str(request.args['date'])
 
-    getters = {
+    getters: Mapping[str, Mapping[str, Union[Callable, Union[Dict, Mapping]]]] = {
         'today':  {'func': stats_page.get_hourly_stats_page, 'params': params},
         'monthly_submissions':
             {'func': stats_page.get_monthly_submissions_page, 'params': {}},
         'monthly_downloads':
             {'func': stats_page.get_monthly_downloads_page, 'params': {}}
     }
-    csv_getters = {
+    csv_getters: Mapping[str, Mapping[str, Union[Callable, Union[Dict, Mapping]]]] = {
         'get_hourly':
             {'func': stats_page.get_hourly_stats_csv, 'params': params},
         'get_monthly_downloads':
@@ -218,17 +213,16 @@ def stats(command: str) -> Response:
     if not command:
         raise NotFound
     if command in csv_getters:
-        getter_params = csv_getters[command]['params']
-        [response, code, headers] = csv_getters[command]['func'](
-            **getter_params)
+        csv_getter_params: Mapping = csv_getters[command]['params']  # type: ignore
+        [response, code, headers] = csv_getters[command]['func'](  # type: ignore
+            **csv_getter_params)
         if code == status.HTTP_200_OK:
-            return response['csv'], code, headers
+            return response['csv'], code, headers  # type: ignore
     elif command in getters:
-        getter_params = getters[command]['params']
-        [response, code, headers] = getters[command]['func'](**getter_params)
+        getter_params: Mapping = getters[command]['params']  # type: ignore
+        [response, code, headers] = getters[command]['func'](**getter_params)  # type: ignore
         if code == status.HTTP_200_OK:
-            return render_template(f'stats/{command}.html', **response),\
-                code, headers
+            return render_template(f'stats/{command}.html', **response), code, headers  # type: ignore
     else:
         raise NotFound
     raise InternalServerError('Unexpected error')
@@ -335,6 +329,7 @@ def year(archive: str, year: str) -> Response:
 @blueprint.route('cookies', defaults={'set': ''})
 @blueprint.route('cookies/<set>', methods=['POST', 'GET'])
 def cookies(set):  # type: ignore
+    """Cookies landing page and setter."""
     is_debug = request.args.get('debug', None) is not None
     if request.method == 'POST':
         debug = {'debug': '1'} if is_debug else {}

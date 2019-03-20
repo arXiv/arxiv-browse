@@ -2,7 +2,7 @@
 
 import dateutil.parser
 from datetime import datetime, timedelta
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from arxiv import status
@@ -19,7 +19,7 @@ Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 logger = logging.getLogger(__name__)
 
 
-def get_hourly_stats_page(requested_date_str: str = None) -> Response:
+def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
     """Get data for the /stats/today page."""
     response_data: Dict[str, Any] = {}
     try:
@@ -42,7 +42,7 @@ def get_hourly_stats_page(requested_date_str: str = None) -> Response:
         raise InternalServerError
 
 
-def get_hourly_stats_csv(requested_date_str: str = None) -> Response:
+def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
     """Get the hourly stats in CSV format."""
     hourly_stats: dict = {}
     max_node: int = NUM_NODES

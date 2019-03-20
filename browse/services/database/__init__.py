@@ -309,7 +309,7 @@ def get_monthly_submission_stats() -> List:
 
 @db_handle_error(logger=logger, default_return_val=(0, 0))
 def get_monthly_submission_count() -> Tuple[int, int]:
-    """Submission totals."""
+    """Get submission totals: number of submissions and number migrated."""
     row = db.session.query(
         func.sum(
             StatsMonthlySubmission.num_submissions).label('num_submissions'),
@@ -321,20 +321,23 @@ def get_monthly_submission_count() -> Tuple[int, int]:
 
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_download_stats() -> List:
-    """Get the monthly download stats."""
+    """Get all the monthly download stats."""
     return list(db.session.query(StatsMonthlyDownload).
                 order_by(asc(StatsMonthlyDownload.ym)).all())
 
 
 @db_handle_error(logger=logger, default_return_val=0)
 def get_monthly_download_count() -> int:
-    """Get the download total."""
+    """Get the sum of monthly downloads for all time."""
     row = db.session.query(
         func.sum(StatsMonthlyDownload.downloads).label('total_downloads')
     ).first()
-    return row.total_downloads if row else 0
+    total_downloads: int = row.total_downloads if row else 0
+    return total_downloads
 
+@db_handle_error(logger=logger, default_return_val=None)
 def get_max_download_stats_dt() -> Optional[datetime]:
+    """Get the datetime of the most recent download stats."""
     row = db.session.query(
         func.max(StatsMonthlyDownload.ym).label('max_ym')
     ).first()

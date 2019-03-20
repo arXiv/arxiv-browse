@@ -12,7 +12,7 @@ class TestStatsPageControllers(TestCase):
     """Tests for :mod:`browse.controllers.stats_page` controllers."""
 
     @mock.patch('browse.controllers.stats_page.get_hourly_stats_count')
-    def test_get_hourly_stats_page(self, mock_get_hourly_stats_count) -> None:
+    def test_get_hourly_stats_page(self, mock_get_hourly_stats_count) -> None:  # type: ignore
         """Tests for :func:`.get_hourly_stats_page`."""
         # test bad requested_date_str
         with self.assertRaises(BadRequest):
@@ -34,7 +34,7 @@ class TestStatsPageControllers(TestCase):
                 self.assertIn(key, response_data, f'{key} is in response_data')
 
     @mock.patch('browse.controllers.stats_page.get_hourly_stats')
-    def test_get_hourly_stats_csv(self, mock_get_hourly_stats) -> None:
+    def test_get_hourly_stats_csv(self, mock_get_hourly_stats) -> None:  # type: ignore
         """Tests for :func:`.get_hourly_stats_csv`."""
         # test bad requested_date_str
         with self.assertRaises(BadRequest):
@@ -100,7 +100,7 @@ class TestStatsPageControllers(TestCase):
 
     @mock.patch('browse.controllers.stats_page.get_max_download_stats_dt')
     @mock.patch('browse.controllers.stats_page.get_monthly_download_count')
-    def test_get_monthly_downloads_page(self,
+    def test_get_monthly_downloads_page(self,  # type: ignore
                                         mock_get_monthly_download_count,
                                         mock_get_max_download_stats_dt) -> None:
         """Tests for :func:`.get_monthly_downloads_page`."""
@@ -116,7 +116,7 @@ class TestStatsPageControllers(TestCase):
         self.assertIn('most_recent_dt', response_data)
 
     @mock.patch('browse.controllers.stats_page.get_monthly_download_stats')
-    def test_get_download_stats_csv(self, mock_get_monthly_download_stats) -> None:
+    def test_get_download_stats_csv(self, mock_get_monthly_download_stats) -> None:  # type: ignore
         """Tests for :func:`.get_monthly_download_stats_csv`."""
         # test basic response
         mock_get_monthly_download_stats.return_value = list()
@@ -142,7 +142,7 @@ class TestStatsPageControllers(TestCase):
         self.assertEqual(response_data['csv'], expected_response)
 
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_count')
-    def test_get_monthly_submissions_page(self, mock_get_monthly_submission_count) -> None:
+    def test_get_monthly_submissions_page(self, mock_get_monthly_submission_count) -> None:  # type: ignore
         """Tests for :func:`.get_monthly_submissions_page`."""
         # test basic response
         mock_get_monthly_submission_count.return_value = (0, 0)
@@ -178,7 +178,7 @@ class TestStatsPageControllers(TestCase):
         self.assertIsInstance(response_data['arxiv_start_dt'], datetime)
 
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_stats')
-    def test_get_submission_stats_csv(self, mock_get_monthly_submission_stats) -> None:
+    def test_get_submission_stats_csv(self, mock_get_monthly_submission_stats) -> None:  # type: ignore
         """Tests for :func:`.get_submission_stats_csv`."""
         # test basic response
         mock_get_monthly_submission_stats.return_value = list()
