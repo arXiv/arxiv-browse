@@ -84,6 +84,39 @@ class BrowseTest(unittest.TestCase):
         self.assertEquals(len(tb_a_tags), 1,
                           'There should be exactly one trackback link')
 
+    def test_stats_today(self):
+        """Test the /stats/today page."""
+        rv = self.app.get('/stats/today')
+        self.assertEqual(rv.status_code, 200)
+        rv = self.app.get('/stats/today?date=20190102')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_hourly?date=20190102'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
+    def test_stats_monthly_downloads(self):
+        """Test the /stats/monthly_downloads page."""
+        rv = self.app.get('/stats/monthly_downloads')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_monthly_downloads'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
+    def test_stats_monthly_submissions(self):
+        """Test the /stats/monthly_submissions page."""
+        rv = self.app.get('/stats/monthly_submissions')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_monthly_submissions'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
+
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
         m = AbsMetaSession.parse_abs_file(filename=f1)

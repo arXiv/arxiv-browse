@@ -240,7 +240,7 @@ class TestBrowseDatabaseService(TestCase):
         )
 
     @mock.patch('browse.services.database.models.db.session.query')
-    def test_error_conditions(self, mock_query)->None:
+    def test_error_conditions(self, mock_query) -> None:
         mock_query.side_effect = NoResultFound
         self.assertEqual(
             TestBrowseDatabaseService.database_service.get_institution('10.0.0.1'), None)
