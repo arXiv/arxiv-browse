@@ -211,7 +211,7 @@
   Hover over the graph to see the exact count for a given month.</p>
 <p>Total number of submissions shown in graph as of {{ current_dt.strftime('%B %-d, %Y') }} (after {{ "%.1f"|format(arxiv_age_years|float) }} years) = {{ "{:,}".format(num_submissions) }}</p>
 <p>
-  The total number of submissions excludes {{ "{:,}".format(num_migrated) }} articles that were migrated to arXiv rather than being submitted directly, and includes {{ "{:,}".format(num_deleted) }} articles that have been deleted. The total number of articles available is {{ "{:,}".format(num_submissions-num_deleted+num_migrated) }}.
+  The total number of submissions excludes {{ "{:,}".format(num_migrated) }} articles that were migrated to arXiv rather than being submitted directly, and includes {{ "{:,}".format(num_deleted) }} articles that have been deleted. The total number of articles available is {{ "{:,}".format(num_submissions_adjusted) }}.
 </p>
 {{ super() }}
 {% endblock content %}

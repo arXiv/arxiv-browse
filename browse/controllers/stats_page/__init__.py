@@ -112,13 +112,18 @@ def get_monthly_submissions_page() -> Response:
     try:
         num_submissions, historical_delta = \
             get_monthly_submission_count()
-        response_data['num_migrated'] = abs(historical_delta)
+        num_deleted = len(DELETED_PAPERS)
+        num_migrated = abs(historical_delta)
+
+        response_data['num_migrated'] = num_migrated
         response_data['num_deleted'] = len(DELETED_PAPERS)
         response_data['num_submissions'] = num_submissions
         response_data['current_dt'] = current_dt
         response_data['arxiv_start_dt'] = arxiv_start_dt
         response_data['num_deleted_papers'] = 0
         response_data['arxiv_age_years'] = arxiv_age.days / 365
+        response_data['num_submissions_adjusted'] = \
+            num_submissions - num_deleted + num_migrated
         return response_data, status.HTTP_200_OK, {}
     except Exception as ex:
         logger.warning(f'Error getting monthly submissions stats data: {ex}')
