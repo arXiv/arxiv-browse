@@ -116,7 +116,7 @@ def get_monthly_submissions_page() -> Response:
         num_migrated = abs(historical_delta)
 
         response_data['num_migrated'] = num_migrated
-        response_data['num_deleted'] = len(DELETED_PAPERS)
+        response_data['num_deleted'] = num_deleted
         response_data['num_submissions'] = num_submissions
         response_data['current_dt'] = current_dt
         response_data['arxiv_start_dt'] = arxiv_start_dt

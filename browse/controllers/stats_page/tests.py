@@ -51,7 +51,7 @@ class TestStatsPageControllers(TestCase):
         self.assertEqual(headers['Content-Type'], 'text/csv')
         self.assertIn('csv', response_data, 'csv is in response data')
         self.assertEqual(response_data['csv'],
-                         "hour,node1,node2,node3,node4\n")
+                         "hour,node1\n")
 
         # test response with mock data, when no date option is provided
         test_td = datetime(2019, 3, 19)
