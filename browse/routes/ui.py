@@ -282,7 +282,7 @@ def archive(archive: str):  # type: ignore
 @blueprint.route('year/<archive>/', defaults={'year': None}, strict_slashes=False)
 @blueprint.route('year/<archive>/<int:year>/')
 @blueprint.route('year/<archive>/<int:year>')
-def year(archive: str, year: str) -> Response:
+def year(archive: str, year: int): # type: ignore
     """Year's stats for an archive."""
     response, code, headers = year_page(archive, year)
     if code == status.HTTP_307_TEMPORARY_REDIRECT:

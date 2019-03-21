@@ -20,7 +20,7 @@ class FakeListingFilesService(ListingService):
     primarys for articles.
     """
 
-    def monthly_counts(self, archive, year) -> ListingCountResponse:
+    def monthly_counts(self, archive: str, year:int) -> ListingCountResponse:
         """Example of monthly_counts."""
         counts = [
             {'year': year, 'month': 1, 'new': 1234, 'cross': 234},
@@ -36,7 +36,7 @@ class FakeListingFilesService(ListingService):
             {'year': year, 'month': 11, 'new': 1638, 'cross': 100},
             {'year': year, 'month': 12, 'new': 1601, 'cross': 233},
         ]
-        return {'month_counts': counts,
+        return {'month_counts': counts, #type: ignore
                 'new_count': sum([mm['new'] for mm in counts]),
                 'cross_count': sum([mm['cross'] for mm in counts])}
 

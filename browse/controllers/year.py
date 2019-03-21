@@ -56,9 +56,9 @@ def year_page(archive_id: str, year: int) -> Any:
     month_listing = listing_service.monthly_counts(archive_id, year)
 
     for month in month_listing['month_counts']:
-        month['art'] = ascii_art_month(archive_id, month)
-        month['yymm'] =f"{month['year']}-{month['month']:02}"
-        month['url'] = url_for('browse.list_articles',
+        month['art'] = ascii_art_month(archive_id, month)  # type: ignore
+        month['yymm'] =f"{month['year']}-{month['month']:02}"  #type: ignore
+        month['url'] = url_for('browse.list_articles', #type: ignore
                                context=archive_id,
                                subcontext=f"{month['year']}{month['month']:02}")
 
@@ -82,12 +82,12 @@ ASCII_ART_CHR = '|'
 ASCII_ART_URL_STEP = 100
 
 
-def ascii_art_month(archive_id: str, month: MonthCount) -> Tuple[str, Union[str, None]]:
+def ascii_art_month(archive_id: str, month: MonthCount) -> List[Tuple[str, Optional[str]]]:
     """Make ascii art for a MonthCount."""
     tot = month['new'] + month['cross']
     yyyymm = f"{month['year']}{month['month']:02}"
 
-    def makestep(idx):
+    def _makestep(idx:int) -> Tuple[str, Optional[str]]:
         if idx % ASCII_ART_URL_STEP == 0:
             return (ASCII_ART_CHR,
                     url_for('browse.list_articles',
@@ -97,7 +97,7 @@ def ascii_art_month(archive_id: str, month: MonthCount) -> Tuple[str, Union[str,
         else:
             return (ASCII_ART_CHR, None)
 
-    art = [makestep(idx) for idx in range(0, tot, ASCII_ART_STEP)]
+    art = [_makestep(idx) for idx in range(0, tot, ASCII_ART_STEP)]
 
     if tot % ASCII_ART_STEP >= ASCII_ART_STEP/2:
         art.append(('!', None))
