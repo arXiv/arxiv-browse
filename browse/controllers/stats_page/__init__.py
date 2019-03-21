@@ -14,7 +14,6 @@ from browse.services.database import get_hourly_stats, get_hourly_stats_count, \
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 
 
-NUM_NODES = 4
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 logger = logging.getLogger(__name__)
 
@@ -38,14 +37,14 @@ def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
     except (TypeError, ValueError):
         raise BadRequest
     except Exception as ex:
-        logger.warning(f'Error getting hourly stats data: {ex}')
+        logger.warning(f'Error getting hourly stats page data: {ex}')
         raise InternalServerError
 
 
 def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
     """Get the hourly stats in CSV format."""
     hourly_stats: dict = {}
-    max_node: int = NUM_NODES
+    max_node = 1
     try:
         requested_dt = datetime.now() - timedelta(hours=1)
         if requested_date_str:
@@ -60,21 +59,21 @@ def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
             hourly_stats[hour_dt][r.node_num] = r.connections
             if r.node_num > max_node:
                 max_node = r.node_num
-        csv = 'hour' + \
-            ''.join(f",node{i}" for i in range(1, max_node + 1)) + "\n"
+        csv_head = 'hour' + \
+            "".join(f",node{i}" for i in range(1, max_node + 1)) + "\n"
+        csv_data = ""
         for hour in sorted(hourly_stats):
-            csv = csv + hour
+            csv_data = csv_data + hour
             for node in range(1, max_node + 1):
                 count = hourly_stats[hour][node] \
                     if node in hourly_stats[hour] else 0
-                csv = csv + f",{count}"
-            csv = f"{csv}\n"
-        return {'csv': csv}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
-    except (TypeError, ValueError) as ex:
-        logger.warning(f'Type error getting sequential hourly stats csv: {ex}')
+                csv_data = csv_data + f",{count}"
+            csv_data = csv_data + "\n"
+        return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
+    except (TypeError, ValueError):
         raise BadRequest
     except Exception as ex:
-        logger.warning(f'Error getting sequential hourly stats csv: {ex}')
+        logger.warning(f'Error getting hourly stats csv: {ex}')
         raise InternalServerError
 
 
@@ -85,18 +84,20 @@ def get_monthly_downloads_page() -> Response:
         response_data['total_downloads'] = get_monthly_download_count()
         response_data['most_recent_dt'] = get_max_download_stats_dt()
         return response_data, status.HTTP_200_OK, {}
-    except Exception:
+    except Exception as ex:
+        logger.warning(f'Error getting monthly downloads page data: {ex}')
         raise InternalServerError
 
 
 def get_download_stats_csv() -> Response:
     """Get download stats in CSV format."""
     try:
-        rows = get_monthly_download_stats()
-        csv = "month,downloads\n"
-        for r in rows:
-            csv = f"{csv}{r.ym.strftime('%Y-%m')},{r.downloads}\n"
-        return {'csv': csv}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
+        csv_head = "month,downloads\n"
+        csv_data = "".join([
+            f"{r.ym.strftime('%Y-%m')},{r.downloads}\n"
+            for r in get_monthly_download_stats()
+        ])
+        return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
     except Exception as ex:
         logger.warning(f'Error getting monthly download stats csv: {ex}')
         raise InternalServerError
@@ -132,11 +133,12 @@ def get_monthly_submissions_page() -> Response:
 def get_submission_stats_csv() -> Response:
     """Get submission stats in CSV format."""
     try:
-        rows = get_monthly_submission_stats()
-        csv = "month,submissions,historical_delta\n"
-        for r in rows:
-            csv = f"{csv}{r.ym.strftime('%Y-%m')},{r.num_submissions},{r.historical_delta}\n"
-        return {'csv': csv}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
+        csv_head = "month,submissions,historical_delta\n"
+        csv_data = "".join([
+            f"{r.ym.strftime('%Y-%m')},{r.num_submissions},{r.historical_delta}\n"
+            for r in get_monthly_submission_stats()
+        ])
+        return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
     except Exception as ex:
         logger.warning(f'Error getting monthly submission stats csv: {ex}')
         raise InternalServerError
