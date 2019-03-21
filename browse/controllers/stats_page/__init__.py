@@ -51,7 +51,6 @@ def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
         if requested_date_str:
             requested_dt = dateutil.parser.parse(requested_date_str)
         rows = get_hourly_stats(stats_date=requested_dt.date())
-        assert rows is not None
         for r in rows:
             hour_dt: str = datetime(
                 r.ymd.year, r.ymd.month, r.ymd.day,
