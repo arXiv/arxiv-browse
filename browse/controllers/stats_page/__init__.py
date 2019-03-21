@@ -120,7 +120,6 @@ def get_monthly_submissions_page() -> Response:
         response_data['num_submissions'] = num_submissions
         response_data['current_dt'] = current_dt
         response_data['arxiv_start_dt'] = arxiv_start_dt
-        response_data['num_deleted_papers'] = 0
         response_data['arxiv_age_years'] = arxiv_age.days / 365
         response_data['num_submissions_adjusted'] = \
             num_submissions - num_deleted + num_migrated

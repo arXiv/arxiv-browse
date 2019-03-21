@@ -153,8 +153,8 @@ class TestStatsPageControllers(TestCase):
         self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
 
         for key in ['num_migrated', 'num_deleted', 'num_submissions',
-                    'current_dt', 'arxiv_start_dt', 'num_deleted_papers',
-                    'arxiv_age_years', 'num_submissions_adjusted']:
+                    'current_dt', 'arxiv_start_dt', 'arxiv_age_years',
+                    'num_submissions_adjusted']:
             self.assertIn(key, response_data, f'{key} is in response_data')
             self.assertIsNotNone(response_data[key],
                                  f'response_data[{key}] is not None')
