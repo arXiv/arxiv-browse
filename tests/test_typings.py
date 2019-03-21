@@ -12,7 +12,8 @@ class MyPyTest(TestCase):
     """Class for testing modules with mypy."""
 
 
-    @unittest.skip("Causing out of memory error on travis")    def test_run_mypy_module(self) -> None:
+    @unittest.skip("Causing out of memory error on travis")
+    def test_run_mypy_module(self) -> None:
         """Run mypy on all module sources."""
         mypy_call: List[str] = ["mypy"] + self.mypy_opts + ["-p", self.pkgname]
         result: int = subprocess.call(
