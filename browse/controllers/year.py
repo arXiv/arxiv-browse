@@ -48,7 +48,7 @@ def year_page(archive_id: str, year: int) -> Any:
             year = 2000 + year
 
     if archive_id not in taxonomy.ARCHIVES:
-        raise BadRequest("Unknown archvie.")
+        raise BadRequest("Unknown archive.")
     else:
         archive = taxonomy.ARCHIVES[archive_id]
 
