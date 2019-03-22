@@ -86,3 +86,40 @@ The timezone for this expires should be when the cache expires and does not need
 to be the timezone of the listing service, listing client or web client.
 
 '''
+
+
+
+MonthCount = TypedDict('MonthCount',
+                        {'year': str,
+                         'month': str,
+                         'new': int,
+                         'cross': int})
+'''A single month's count for an archive.
+
+year is the year the listing is for.
+
+month is the month the listing is for.
+
+new is the count of new listings for that month.
+
+cross is the count of crosses for that month.
+
+rep is the count of replaced for that month.
+
+'''
+
+
+ListingCountResponse = TypedDict('ListingCountResponse',
+                                 {'month_counts': List[MonthCount],
+                                  'new_count': int,
+                                  'cross_count': int})
+'''Response with the counts for an archive for a given year.
+
+month_counts are counts for individual months.
+
+new_count is the count of new articles for the year.
+
+cross_count is the count of cross articles for the year.
+
+rep_count is the count of replaced articles for the year.
+'''
