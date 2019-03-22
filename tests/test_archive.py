@@ -16,8 +16,8 @@ class BrowseTest(unittest.TestCase):
 
         src = rv.data.decode("utf-8")
         self.assertIn("Astrophysics", src)
-        self.assertIn("/year/astro-ph/92", src)
-        self.assertIn("/year/astro-ph/19", src)
+        self.assertIn("/year/astro-ph/1992", src)
+        self.assertIn("/year/astro-ph/2019", src)
 
         self.assertIn(
             "Astrophysics of Galaxies",
