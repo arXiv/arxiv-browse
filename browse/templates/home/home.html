@@ -9,7 +9,9 @@
 
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
-<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %} e-prints in Physics, Mathematics, Computer Science, Quantitative Biology, Quantitative Finance, Statistics, Electrical Engineering and Systems Science, and Economics</p>
+<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+ e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Submissions to arXiv should conform to Cornell University academic standards. arXiv is owned and operated by Cornell University, a private not-for-profit educational institution. arXiv is funded by Cornell University, the Simons Foundation and by the member institutions.</p>
+<br/>
 {#- TODO: revisit when we have a plan for /multi replacement -#}
 <form action="/multi" method="get">Subject search and browse:
   <select name="group">
@@ -49,10 +51,10 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
   <ul>
     {% for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
       {%- set archive_search_url = url_for('search_archive', archive=archive_key) -%}
-      {%- set archive_url = '/archive/archive' if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
       {%- set archive_name = archives[archive_key].name if archive_key != 'cs' else 'Computing Research Repository' -%}
 
-    {#- TODO: url_for on /archive, /list, /catchup -#}
+    {#- TODO: url_for /list, /catchup -#}
     <li>
       <a href="{{ archive_url }}">{{ archive_name }}</a> (<b>{{ archive_key if archive_key != 'cs' else 'CoRR' }}</b> <a href="/list/{{ archive_key }}/new">new</a>, <a href="/list/{{ archive_key }}/recent">recent</a>, <a href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
       {%- if archive == 'physics' -%}<br/>includes:&nbsp;
