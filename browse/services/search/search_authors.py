@@ -74,14 +74,15 @@ def queries_for_authors(authors: str) -> AuthorList:
     a colon.
 
     If a list item is a tuple, author_search_query_str will be something like
-    "Webb J E" which can be used to query the search service.
+    "Webb J E" which can be used to query the search service. 
 
     name_text will be the text to put in side the <a> tag. Such as
     "James E. Webb,"
 
+    DO resolve tex to UTF8 in both the link and text.
     DON'T URL_encode, do that in template
     DON'T do entities, do that in template
-    DON'T escape utf8 for HTML, just return utf8
+    DON'T escape utf8 for HTML, just return utf8        
     """
     out: AuthorList = []
 
