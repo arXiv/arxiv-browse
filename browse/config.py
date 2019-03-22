@@ -5,7 +5,7 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 
-VERSION = '0.1.1'
+VERSION = '0.2.1'
 """The application version """
 
 ON = 'yes'
