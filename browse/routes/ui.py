@@ -2,16 +2,18 @@
 import re
 from typing import Union
 from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app
+    redirect, current_app, url_for, redirect
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page
+from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
+
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -288,3 +290,18 @@ def year(archive: str, year: int): # type: ignore
     if code == status.HTTP_307_TEMPORARY_REDIRECT:
         return '', code, headers
     return render_template('year.html', **response), code, headers
+
+
+@blueprint.route('cookies', defaults={'set': ''})
+@blueprint.route('cookies/<set>', methods=['POST', 'GET'])
+def cookies(set):  # type: ignore
+    is_debug = request.args.get('debug', None) is not None
+    if request.method == 'POST':
+        debug = {'debug': '1'} if is_debug else {}
+        resp = redirect(url_for('browse.cookies', **debug))
+        for ctoset in cookies_to_set(request):
+            resp.set_cookie(**ctoset) # type: ignore
+        return resp
+    else:
+        response, code, headers = get_cookies_page(is_debug)
+        return render_template('cookies.html', **response), code, headers
