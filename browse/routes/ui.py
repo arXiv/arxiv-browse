@@ -12,6 +12,7 @@ from browse.controllers import abs_page, archive_page, home_page, list_page, \
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
+from browse.controllers.year import year_page
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -320,10 +321,16 @@ def archive(archive: str):  # type: ignore
         return response, code, headers
 
 
-@blueprint.route('year/<archive>/<year>')
-def year(archive: str, year: str) -> Response:
+@blueprint.route('year/<archive>', defaults={'year': None})
+@blueprint.route('year/<archive>/', defaults={'year': None}, strict_slashes=False)
+@blueprint.route('year/<archive>/<int:year>/')
+@blueprint.route('year/<archive>/<int:year>')
+def year(archive: str, year: int): # type: ignore
     """Year's stats for an archive."""
-    raise InternalServerError('Not yet implemented')
+    response, code, headers = year_page(archive, year)
+    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+        return '', code, headers
+    return render_template('year.html', **response), code, headers
 
 
 @blueprint.route('cookies', defaults={'set': ''})

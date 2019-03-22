@@ -4,7 +4,7 @@
 
 from typing import List, Optional, Tuple
 
-from browse.domain.listing import NewResponse, ListingResponse, ListingItem
+from browse.domain.listing import NewResponse, ListingResponse, ListingItem, ListingCountResponse
 from browse.services.listing import ListingService
 import datetime
 
@@ -19,6 +19,26 @@ class FakeListingFilesService(ListingService):
     no attempt to return the correct articles for a date or them correct
     primarys for articles.
     """
+
+    def monthly_counts(self, archive: str, year:int) -> ListingCountResponse:
+        """Example of monthly_counts."""
+        counts = [
+            {'year': year, 'month': 1, 'new': 1234, 'cross': 234},
+            {'year': year, 'month': 2, 'new': 1224, 'cross': 134},
+            {'year': year, 'month': 3, 'new': 1334, 'cross': 324},
+            {'year': year, 'month': 4, 'new': 1534, 'cross': 134},
+            {'year': year, 'month': 5, 'new': 1644, 'cross': 234},
+            {'year': year, 'month': 6, 'new': 983, 'cross': 314},
+            {'year': year, 'month': 7, 'new': 876, 'cross': 132},
+            {'year': year, 'month': 8, 'new': 1233, 'cross': 294},
+            {'year': year, 'month': 9, 'new': 1453, 'cross': 273},
+            {'year': year, 'month': 10, 'new': 1502, 'cross': 120},
+            {'year': year, 'month': 11, 'new': 1638, 'cross': 100},
+            {'year': year, 'month': 12, 'new': 1601, 'cross': 233},
+        ]
+        return {'month_counts': counts, #type: ignore
+                'new_count': sum([mm['new'] for mm in counts]),
+                'cross_count': sum([mm['cross'] for mm in counts])}
 
     def list_new_articles(self,
                           archiveOrCategory: str,
@@ -72,7 +92,7 @@ class FakeListingFilesService(ListingService):
                 'cross_count': len(items3),
                 'rep_count': len(items4),
                 'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'
-        }
+                }
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
@@ -101,7 +121,7 @@ class FakeListingFilesService(ListingService):
                 'pubdates': [pd1, pd2, pd3, pd4, pd5],
                 'count': len(listings),
                 'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'
-        }
+                }
 
     def list_articles_by_year(self,
                               archiveOrCategory: str,
