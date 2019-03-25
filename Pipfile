@@ -16,14 +16,14 @@ mysqlclient = "*"
 "mmh3" = "*"
 aiohttp = "*"
 flask = "==1.0.2"
-arxiv-base = {editable = true,git = "https://github.com/arXiv/arxiv-base.git",ref = "develop"}
+arxiv-base = "==0.15.2"
 validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
+mypy = "*"
 
 [dev-packages]
 pylama = "*"
-mypy = ">=0.630"
 "nose2" = "*"
 sqlacodegen = "*"
 Flask-Testing = "*"
