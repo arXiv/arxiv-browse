@@ -26,13 +26,14 @@ def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
         requested_dt = current_dt - timedelta(hours=1)
         if requested_date_str:
             requested_dt = dateutil.parser.parse(requested_date_str)
-        normal_count, admin_count = \
+        normal_count, admin_count, num_nodes = \
             get_hourly_stats_count(stats_date=requested_dt.date())
 
         response_data['current_dt'] = current_dt
         response_data['requested_dt'] = requested_dt
         response_data['normal_count'] = normal_count
         response_data['admin_count'] = admin_count
+        response_data['num_nodes'] = num_nodes
         return response_data, status.HTTP_200_OK, {}
     except (TypeError, ValueError):
         raise BadRequest
