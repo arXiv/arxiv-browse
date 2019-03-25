@@ -18,7 +18,7 @@ be better date granularity for new papers.
 
 from typing import Optional
 
-from browse.domain.listing import NewResponse, ListingResponse
+from browse.domain.listing import NewResponse, ListingResponse, ListingCountResponse
 
 
 class ListingService:
@@ -78,4 +78,10 @@ class ListingService:
         if_modified_since is the if_modified_since header value passed by the web client
         It should be in RFC 1123 format.
         """
+        raise NotImplementedError
+
+    def monthly_counts(self,
+                       archive: str,
+                       year: int) -> ListingCountResponse:
+        """Gets monthly listing counts for the year."""
         raise NotImplementedError

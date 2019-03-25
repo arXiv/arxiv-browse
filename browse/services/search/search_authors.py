@@ -13,29 +13,29 @@ the author list.
 """
 
 
-def is_affiliation(item: str)-> bool:
+def is_affiliation(item: str) -> bool:
     """Return true if a string contains an affiliation."""
     return item.startswith('(')
 
 
-def is_short(item: str)-> bool:
+def is_short(item: str) -> bool:
     """Return true if the length of string is less than 4 characters long."""
     return len(item) < 4
 
 
-def is_etal(item: str)-> bool:
+def is_etal(item: str) -> bool:
     """Return true if the string contains et al."""
     return re.match(r'et\.? al\.?$', item) is not None
 
 
-def is_divider(item: str)-> bool:
+def is_divider(item: str) -> bool:
     """Return true if the string contains a divider character."""
     return re.match(r'^(,|:)', item) is not None
 
 
 def split_long_author_list(
         authors: AuthorList, size: int) -> Tuple[AuthorList, AuthorList, int]:
-    """Returns two lists, first is of size, second is the remaining authors.
+    """Return two lists: first is of size, second is the remaining authors.
 
     The author list has strings which are not part of the author
     names, but commas between them to preserve the formatting that the
@@ -74,14 +74,15 @@ def queries_for_authors(authors: str) -> AuthorList:
     a colon.
 
     If a list item is a tuple, author_search_query_str will be something like
-    "Webb J E" which can be used to query the search service.
+    "Webb J E" which can be used to query the search service. 
 
     name_text will be the text to put in side the <a> tag. Such as
     "James E. Webb,"
 
+    DO resolve tex to UTF8 in both the link and text.
     DON'T URL_encode, do that in template
     DON'T do entities, do that in template
-    DON'T escape utf8 for HTML, just return utf8
+    DON'T escape utf8 for HTML, just return utf8        
     """
     out: AuthorList = []
 
@@ -90,7 +91,7 @@ def queries_for_authors(authors: str) -> AuthorList:
         if is_divider(item):
             out.append(item + ' ')
         elif is_affiliation(item):
-            out.append(' ' + item )
+            out.append(' ' + tex2utf(item))
         elif is_short(item) or is_etal(item):
             out.append(item)
         else:
