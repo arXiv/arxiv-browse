@@ -210,9 +210,12 @@ def get_dblp_authors(paper_id: str) -> List[str]:
 @db_handle_error(logger=logger, default_return_val=None)
 def get_document_count() -> Optional[int]:
     """Get the number of documents."""
-    document_count: int = db.session.query(Document).\
-        filter(not_(Document.paper_id.like('test%'))).count()
-    return document_count
+    # func.count is used here because .count() forces a subquery which
+    # is inefficient
+    row = db.session.query(
+            func.count(Document.document_id).label('num_documents')
+          ).filter(not_(Document.paper_id.like('test%'))).first()
+    return row.num_documents
 
 
 @db_handle_error(logger=logger, default_return_val=None)
