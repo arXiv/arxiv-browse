@@ -21,7 +21,7 @@ class TestStatsPageControllers(TestCase):
             stats_page.get_hourly_stats_page(requested_date_str='201901')
 
         # test response for good or no date option
-        mock_get_hourly_stats_count.return_value = (0, 0)
+        mock_get_hourly_stats_count.return_value = (0, 0, 0)
         for date_str in ['2019', '2019-01-01', '20180202', None]:
             response_data, code, _ = stats_page.get_hourly_stats_page(
                 requested_date_str=date_str)
