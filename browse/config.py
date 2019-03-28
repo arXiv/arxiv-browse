@@ -4,6 +4,7 @@ Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.
 """
 import os
+import warnings
 
 VERSION = '0.2.1'
 """The application version """
@@ -205,6 +206,8 @@ to be loaded.
 # For mysql: 'mysql://user:pass@localhost/dbname'
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
+if 'sqlite' in SQLALCHEMY_DATABASE_URI:
+    warnings.warn("Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI")
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
@@ -271,8 +274,12 @@ CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
 )
 CLASSIC_TRACKING_COOKIE = os.environ.get('CLASSIC_TRACKING_COOKIE', 'browser')
 CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
-    'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db'))
+    'BROWSE_SQLALCHEMY_DATABASE_URI', default=None))
 """If not set, legacy database integrations for auth will not be available."""
+if not CLASSIC_DATABASE_URI:
+    raise ValueError("No value set for CLASSIC_DATABASE_URI")
+elif 'sqlite' in CLASSIC_DATABASE_URI:
+    warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
 
 CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')
 SESSION_DURATION = os.environ.get(
