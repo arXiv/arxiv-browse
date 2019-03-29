@@ -9,7 +9,7 @@
 
 {% block header_h1 %}
 <h1>
-<a href='/'>arXiv.org</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
+<a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
 </h1>
 {% endblock %}
 
@@ -24,7 +24,7 @@
     <p>{{subsuming_category['name']}} ({{subsumed_by}}) is part of the {{archive['name']}} archive.</p>
   {% endif %}
 
-  
+
   <p>For a <em>specific paper</em>, enter the identifier into the top right search box.</p>
 
   <ul>
@@ -39,7 +39,7 @@
         </li>
         <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
           nlin listings</li>
-        <li>specific year/month:          
+        <li>specific year/month:
           <form action="{{url_for('.list_articles')}}" method="get">
             {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
@@ -48,28 +48,28 @@
         </li>
       </ul>
     </li>
-    
+
     <li><b>Catch-up:</b>
       {# TODO using legacy /catchup URL, change to NG when implemented #}
-      <form action="/catchup" method="post"> 
-        {{ catchup_form.archive }} 
-        Changes since: 
-        {{ catchup_form.year }}  
-        {{ catchup_form.month }} 
+      <form action="/catchup" method="post">
+        {{ catchup_form.archive }}
+        Changes since:
+        {{ catchup_form.year }}
+        {{ catchup_form.month }}
         {{ catchup_form.day }},
         view results {{ catchup_form.abstracts }} abstracts
-        {{ catchup_form.submit }} 
-      </form>       
-    </li> 
-    
+        {{ catchup_form.submit }}
+      </form>
+    </li>
+
     <li><b>Search</b> within the <a href="/find/{{archive_id}}">{{archive_id}} archive</a></li>
-    
-    <li>Article statistics by year:<br> 
-      {% for url, year in stats_by_year %} 
-      <a href="{{url}}">{{year}}</a> 
-      {% endfor %}  
-    </li> 
-    
+
+    <li>Article statistics by year:<br>
+      {% for url, year in stats_by_year %}
+      <a href="{{url}}">{{year}}</a>
+      {% endfor %}
+    </li>
+
   </ul>
 
   {% if  category_list|length > 1 %}
@@ -80,11 +80,10 @@
         (<a href="{{url_for('.list_articles', context=category.id, subcontext='new')}}">new</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='recent')}}">recent</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='current')}}">current month</a>)
-       <div class="description">{{category.description}}</div> 
+       <div class="description">{{category.description}}</div>
     </li>
-    {% endfor %}    
+    {% endfor %}
   </ul>
   {% endif %}
 </div>
 {%- endblock %}
-

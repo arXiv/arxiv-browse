@@ -228,6 +228,10 @@ BROWSE_DAILY_STATS_PATH = os.environ.get(
 # unavailable and thus intentionally bypass any DB access.
 BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
 
+BROWSE_SITE_LABEL = os.environ.get('BROWSE_SITE_LABEL', 'arXiv.org')
+BROWSE_SITE_HOST = os.environ.get('BROWSE_SITE_HOST', None)
+"""This is similar to, but decoupled from SERVER_NAME."""
+
 # Enable/disable Piwik (Matomo) web analytics
 BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
 

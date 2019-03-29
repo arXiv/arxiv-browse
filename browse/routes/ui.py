@@ -38,8 +38,8 @@ def apply_response_headers(response: Response) -> Response:
     return response
 
 
-@blueprint.route('/', methods=['GET'])
 @blueprint.route('index', methods=['GET'])
+@blueprint.route('/', methods=['GET'])
 def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
