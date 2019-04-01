@@ -210,9 +210,12 @@ def get_dblp_authors(paper_id: str) -> List[str]:
 @db_handle_error(logger=logger, default_return_val=None)
 def get_document_count() -> Optional[int]:
     """Get the number of documents."""
-    document_count: int = db.session.query(Document).\
-        filter(not_(Document.paper_id.like('test%'))).count()
-    return document_count
+    # func.count is used here because .count() forces a subquery which
+    # is inefficient
+    row = db.session.query(
+            func.count(Document.document_id).label('num_documents')
+          ).filter(not_(Document.paper_id.like('test%'))).first()
+    return row.num_documents
 
 
 @db_handle_error(logger=logger, default_return_val=None)
@@ -267,16 +270,18 @@ def __all_hourly_stats_query() -> Query:
     return db.session.query(stats_hourly)
 
 
-@db_handle_error(logger=logger, default_return_val=(0, 0))
+@db_handle_error(logger=logger, default_return_val=(0, 0, 0))
 def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int]:
-    """Get the sum of normal and admin connections for a given date."""
+    """Get sum of normal/admin connections and nodes for a given date."""
     stats_date = date.today() if not isinstance(stats_date, date) \
         else stats_date
     normal_count = 0
     admin_count = 0
+    num_nodes = 0
     rows = db.session.query(
         func.sum(stats_hourly.c.connections).label('num_connections'),
-        stats_hourly.c.access_type).\
+        stats_hourly.c.access_type,
+        func.max(stats_hourly.c.node_num).label('num_nodes')).\
         filter(stats_hourly.c.ymd == stats_date.isoformat()).\
         group_by(stats_hourly.c.access_type).all()
     for r in rows:
@@ -284,7 +289,8 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int]:
             admin_count = r.num_connections
         else:
             normal_count = r.num_connections
-    return (normal_count, admin_count)
+            num_nodes = r.num_nodes
+    return (normal_count, admin_count, num_nodes)
 
 
 @db_handle_error(logger=logger, default_return_val=[])
@@ -334,6 +340,7 @@ def get_monthly_download_count() -> int:
     ).first()
     total_downloads: int = row.total_downloads if row else 0
     return total_downloads
+
 
 @db_handle_error(logger=logger, default_return_val=None)
 def get_max_download_stats_dt() -> Optional[datetime]:

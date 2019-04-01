@@ -8,7 +8,7 @@
   }
 </style>
 <script type="text/javascript">
-  var n = 4, // number of layers (nodes)
+  var n = {{ num_nodes }}, // number of layers (nodes)
     w = 960,
     h = 300,
     p = [20, 50, 30, 20],
@@ -18,16 +18,20 @@
     parse = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
     format = d3.time.format("%H");
 
+  var node_header = [];
+  for (i = 1; i <= n; i++) {
+    node_header.push("node"+i);
+  }
+
   var svg = d3.select("div#content").append("svg:svg")
     .attr("width", w)
     .attr("height", h)
     .append("svg:g")
     .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
-    {# ?date={{ current_date.strftime('%Y%m%d') }} #}
-    d3.csv("{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}", function(hourly_stats) {
+  d3.csv("{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}", function(hourly_stats) {
 
     // Transpose the data into layers by node.
-    var nodes = d3.layout.stack()(["node1", "node2", "node3", "node4"].map(function(node) {
+    var nodes = d3.layout.stack()(node_header.map(function(node) {
       return hourly_stats.map(function(d) {
         return {
           x: parse(d.hour),
