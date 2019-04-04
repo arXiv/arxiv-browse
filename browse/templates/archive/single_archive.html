@@ -61,9 +61,8 @@
         {{ catchup_form.submit }}
       </form>
     </li>
-
-    <li><b>Search</b> within the <a href="/find/{{archive_id}}">{{archive_id}} archive</a></li>
-
+    <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>
+    
     <li>Article statistics by year:<br>
       {% for url, year in stats_by_year %}
       <a href="{{url}}">{{year}}</a>
