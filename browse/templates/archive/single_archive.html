@@ -38,7 +38,7 @@
           (last 5 mailings)
         </li>
         <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
-          nlin listings</li>
+          {{archive.name}} listings</li>
         <li>specific year/month:          
           <form action="{{url_for('.list_articles')}}" method="get">
             {{ list_form.archive }}
