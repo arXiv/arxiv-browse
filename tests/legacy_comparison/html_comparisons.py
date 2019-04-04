@@ -1,10 +1,10 @@
-from functools import partial
+from functools import partial, update_wrapper
 from typing import Callable, List
 
 import re
 
-from tests.legacy_comparison.abstract_comparisons import lev_similarity
-from tests.legacy_comparison.comparison_types import html_arg_dict, BadResult
+from abstract_comparisons import lev_similarity
+from comparison_types import html_arg_dict, BadResult
 
 from bs4 import BeautifulSoup, element
 
@@ -15,7 +15,9 @@ def html_similarity(html_arg: html_arg_dict) -> BadResult:
         html_arg['legacy_html'].prettify()
     )
     if sim < 0.69:
-        return BadResult(html_arg['paper_id'], f"html_pretty_sim for {html_arg['paper_id']} = {sim}")
+        return BadResult(html_arg['id'],
+                         "html_similarity",
+                         f"html_pretty_sim for {html_arg['id']} = {sim}")
     return None
 
 
@@ -34,7 +36,7 @@ def metadata_fields_similarity(html_arg: html_arg_dict) -> BadResult:
     if ng_labels == legacy_labels:
         return None
     else:
-        return BadResult(html_arg['paper_id'],
+        return BadResult(html_arg['id'],
                          "Metadata field included on NG do not match those from legacy" +
                          f"NG: {ng_labels} Legacy: {legacy_labels}")
 
@@ -69,14 +71,14 @@ def _element_similarity(name: str,
 
     if required:
         if len(ng) == 0 and len(legacy) == 0:
-            return BadResult(html_arg['paper_id'], name,
-                             f"Missing field {name} for {html_arg['paper_id']} from NG and Legacy")
+            return BadResult(html_arg['id'], name,
+                             f"Missing field {name} for {html_arg['id']} from NG and Legacy")
         if len(ng) == 0:
-            return BadResult(html_arg['paper_id'], name,
-                             f"Missing field {name} for {html_arg['paper_id']} from NG")
+            return BadResult(html_arg['id'], name,
+                             f"Missing field {name} for {html_arg['id']} from NG")
         if len(legacy) == 0:
-            return BadResult(html_arg['paper_id'], name,
-                             f"Missing field {name} for {html_arg['paper_id']} from legacy")
+            return BadResult(html_arg['id'], name,
+                             f"Missing field {name} for {html_arg['id']} from legacy")
 
     if check_counts and (len(legacy) != len(ng)):
         if ng:
@@ -88,8 +90,8 @@ def _element_similarity(name: str,
         else:
             legacy_ele_txt = 'MISSING'
             
-        return BadResult(html_arg['paper_id'], name,
-                         f"bad counts for {name} for {html_arg['paper_id']} ng: {len(ng)} legacy: {len(legacy)}",
+        return BadResult(html_arg['id'], name,
+                         f"bad counts for {name} for {html_arg['id']} ng: {len(ng)} legacy: {len(legacy)}",
                          legacy_ele_txt, ng_ele_txt)
 
     ng_ele_txt = ''
@@ -102,9 +104,11 @@ def _element_similarity(name: str,
 
         if sim < min_sim:
             msg = f"Elements did not meet min similarity of {min_sim}"
-            return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt,
+            return BadResult(html_arg['id'], name, msg, legacy_ele_txt,
                              ng_ele_txt, sim)
-        return None
+
+        msg = f"GOOD: Elements did meet min similarity of {min_sim}"
+        return  BadResult(html_arg['id'], name, msg, '','', sim)
     else:
         if not required:
             return None
@@ -116,7 +120,7 @@ def _element_similarity(name: str,
 
         msg = 'zero elements detected: ' \
               + f'legacy length was {len(legacy)}; ng length was {len(ng)} '
-        return BadResult(html_arg['paper_id'], name, msg, legacy_ele_txt,
+        return BadResult(html_arg['id'], name, msg, legacy_ele_txt,
                          ng_ele_txt, 0.0)
 
 
@@ -197,3 +201,32 @@ dblp_similarity = partial(_element_similarity, 'extra DBLP div',
 bookmarks_similarity = partial(_element_similarity, 'extra bookmarks div',
                                lambda bs: ex_strip(bs.select('.bookmarks')),
                                0.9, False, True)
+
+################# /archive checks ################################
+
+archive_h1_similarity = partial(_element_similarity, 'top heading',
+                               lambda bs: ex_strip(bs.select('#content > h1')),
+                               0.99, True, True)
+
+archive_browse = partial(_element_similarity, 'browse',
+                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(1)')),
+                               0.99, True, True)
+
+archive_catchup = partial(_element_similarity, 'archive catchup',
+                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(2)')),
+                               0.99, True, True)
+
+archive_search= partial(_element_similarity, 'archive_search',
+                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(3)')),
+                               0.99, True, True)
+
+archive_by_year= partial(_element_similarity, 'archive_by_year',
+                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(4)')),
+                               0.99, True, True)
+
+
+archive_bogus= partial(_element_similarity, 'bogus_should_fail',
+                               lambda bs: ex_strip(bs.select('.bogusClass')),
+                               0.99, True, True)
+
+
