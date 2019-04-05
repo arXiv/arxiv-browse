@@ -9,7 +9,7 @@
 
 {% block header_h1 %}
 <h1>
-<a href='/'>arXiv.org</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
+<a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
 </h1>
 {% endblock %}
 
@@ -61,7 +61,6 @@
         {{ catchup_form.submit }}
       </form>
     </li>
-
     <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>
     
     <li>Article statistics by year:<br>

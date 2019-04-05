@@ -4,7 +4,7 @@
 {%- from 'tb/macros.html' import generate_trackback_link -%}
 
 {% block title %}Article Trackbacks{% endblock %}
-{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Article Trackbacks</h1>{% endblock %}
+{% block header_h1 %}<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; article trackbacks</h1>{% endblock %}
 {# Disable login on this page for now, per classic #}
 {% block login_link %}{% endblock %}
 

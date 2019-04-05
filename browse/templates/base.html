@@ -61,7 +61,7 @@
     {% block header %}
     {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-    {% block header_h1 %}<h1>arXiv.org</h1>{% endblock header_h1%}
+    {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
     <div id="search">
       <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">

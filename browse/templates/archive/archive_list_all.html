@@ -3,7 +3,7 @@
 {% block title %}Archives{% endblock %}
 
 {% block header_h1 %}
-<h1><a href='/'>arXiv.org</a> > archives</h1>
+<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > archives</h1>
 {% endblock %}
 
 
@@ -14,7 +14,7 @@
   {% if bad_archive is not none %}
   <h1>No archive '{{bad_archive}}' -- available archives are:</h1>
   {% endif %}
-  
+
   <p>Choose one of the following archives.</p>
 
   <ul>
@@ -25,10 +25,10 @@
     {% endfor %}
   </ul>
 
-  <p>or from one of the following archives which no longer accept submissions 
+  <p>or from one of the following archives which no longer accept submissions
     (most have been subsumed into the archives listed above)</p>
 
-  
+
   <ul>
     {% for archive in defunct %}
     {% set id = archive[0] %}
@@ -40,4 +40,3 @@
 
 </div>
 {%- endblock %}
-
