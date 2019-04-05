@@ -7,7 +7,7 @@ from validators import url as is_valid_url
 from datetime import datetime
 from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, \
+from sqlalchemy import BigInteger, Column, Date, DateTime, Enum, ForeignKey, \
     ForeignKeyConstraint, Index, \
     Integer, SmallInteger, String, Table, text, Text
 from sqlalchemy.orm import relationship
@@ -418,6 +418,37 @@ in_category = Table(
                          'arXiv_categories.subject_class']),
     Index('archive', 'archive', 'subject_class', 'document_id', unique=True),
     Index('arXiv_in_category_mp', 'archive', 'subject_class')
+)
+
+
+class StatsMonthlyDownload(db.Model):
+    """Model for monthly article download statistics."""
+
+    __tablename__ = 'arXiv_stats_monthly_downloads'
+
+    ym = Column(Date, primary_key=True)
+    downloads = Column(Integer, nullable=False)
+
+
+class StatsMonthlySubmission(db.Model):
+    """Model for monthly submission statistics."""
+
+    __tablename__ = 'arXiv_stats_monthly_submissions'
+
+    ym = Column(Date, primary_key=True,
+                server_default=text("'0000-00-00'"))
+    num_submissions = Column(SmallInteger, nullable=False)
+    historical_delta = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+
+
+stats_hourly = Table(
+    'arXiv_stats_hourly', metadata,
+    Column('ymd', Date, nullable=False, index=True),
+    Column('hour', Integer, nullable=False, index=True),
+    Column('node_num', Integer, nullable=False, index=True),
+    Column('access_type', String(1), nullable=False, index=True),
+    Column('connections', Integer, nullable=False)
 )
 
 

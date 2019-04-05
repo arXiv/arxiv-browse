@@ -5,7 +5,7 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 
-VERSION = '0.1.1'
+VERSION = '0.2.1'
 """The application version """
 
 ON = 'yes'
@@ -203,55 +203,76 @@ to be loaded.
 
 # SQLAlchemy configuration
 # For mysql: 'mysql://user:pass@localhost/dbname'
-SQLALCHEMY_DATABASE_URI = os.environ.get(
-    'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
+SQLALCHEMY_DATABASE_URI = os.environ.get('BROWSE_SQLALCHEMY_DATABASE_URI',
+                                         os.environ.get('SQLALCHEMY_DATABASE_URI',
+                                                        'sqlite:///../tests/data/browse.db'))
+"""SQLALCHEMY_DATABASE_URI is pulled from
+BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
+SQLALCHEMY_DATABASE_URI is checked. If that is not set, the SQLITE
+test DB is used.
+
+If neither of those is set and TESTING is the string 'yes', then a
+SQLITE test DB is used.
+"""
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
-# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW are set without defaults
-# because they will not work with sqlite
-# SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
-# SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
 
-# The classic home page uses this file to get the total paper count
-# The file contains one line, with key "total_papers" and an integer, e.g.
-# total_papers 1456755
+SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE', '10'))
+"""SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
+
+Ignored under sqlite."""
+
+SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW', '0'))
+"""SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
+
+Ignored under sqlite."""
+
+# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW will not work with sqlite
+if 'sqlite' in SQLALCHEMY_DATABASE_URI:
+    SQLALCHEMY_POOL_SIZE = None
+    SQLALCHEMY_MAX_OVERFLOW = None
+
 BROWSE_DAILY_STATS_PATH = os.environ.get(
     'BROWSE_DAILY_STATS_PATH', 'tests/data/daily_stats')
+"""The classic home page uses this file to get the total paper count
+The file contains one line, with key "total_papers" and an integer, e.g.
+total_papers 1456755."""
 
-# Disable DB queries even if other SQLAlchemy config are defined
-# This, for example, could be used in conjunction with the `no-write` runlevel
-# in the legacy infrastructure, which is a case where we know the DB is
-# unavailable and thus intentionally bypass any DB access.
 BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
+"""Disable DB queries even if other SQLAlchemy config are defined
+This, for example, could be used in conjunction with the `no-write` runlevel
+in the legacy infrastructure, which is a case where we know the DB is
+unavailable and thus intentionally bypass any DB access."""
 
-# Enable/disable Piwik (Matomo) web analytics
 BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
+"""Enable/disable Piwik (Matomo) web analytics"""
 
-# Enable/disable user banner
 BROWSE_USER_BANNER_ENABLED = os.environ.get(
     'BROWSE_USER_BANNER_ENABLED', False)
+"""Enable/disable user banner."""
 
-# Paths to .abs and source files
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
+"""Paths to .abs and source files."""
 
 DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_ORIGNAL_VERSIONS_PATH', 'tests/data/abs_files/orig')
+"""Paths to .abs and source files."""
 
-# Path to cache directory
 DOCUMENT_CACHE_PATH = os.environ.get(
-    'DOCUMENT_CACHE_PATH', 'tests/data/cache'
-)
+    'DOCUMENT_CACHE_PATH', 'tests/data/cache')
+"""Path to cache directory"""
 
-# Used in linking to /show-email
 SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
+"""Used in linking to /show-email."""
 
-# Used in linking to /ct
 CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
+"""Used in linking to /ct."""
 
-# Used in linking to trackbacks in /tb pages
 TRACKBACK_SECRET = os.environ.get('TRACKBACK_SECRET', 'baz')
+"""Used in linking to trackbacks in /tb pages."""
 
-# arXiv Labs options
 LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)
+"""arXiv Labs bibex enabled/disabled."""

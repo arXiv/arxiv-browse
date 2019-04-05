@@ -10,7 +10,7 @@ python:
 script:
   - pip install pipenv
   - pipenv sync --dev
-  - pipenv run nose2 --with-coverage
+  - pipenv run nose2 --with-coverage --coverage-config .coveragerc
   - tests/lint.sh
   - tests/docstyle.sh
 after_success:

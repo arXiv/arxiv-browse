@@ -1,18 +1,18 @@
 """Provides the user intefaces for browse."""
 import re
-from typing import Union
+from typing import Callable, Dict, Mapping, Union
 from flask import Blueprint, render_template, request, Response, session, \
-    redirect, current_app, url_for, redirect
+    current_app, url_for, redirect
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
-    prevnext, tb_page
+    prevnext, tb_page, stats_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
-
+from browse.controllers.year import year_page
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -155,6 +155,7 @@ def clickthrough() -> Response:
 
     raise NotFound
 
+
 @blueprint.route('list', defaults={'context': '', 'subcontext': ''},
                  methods=['GET', 'POST'])
 @blueprint.route('list/', defaults={'context': '', 'subcontext': ''},
@@ -185,6 +186,47 @@ def list_articles(context: str, subcontext: str) -> Response:
         return '', code, headers  # type: ignore
     else:
         return response, code, headers  # type: ignore
+
+
+@blueprint.route('stats/<string:command>',
+                 methods=['GET'])
+def stats(command: str) -> Response:
+    """Display various statistics about the service."""
+    params: Dict = {}
+    if request.args and 'date' in request.args:
+        params['requested_date_str'] = str(request.args['date'])
+
+    getters: Mapping[str, Mapping[str, Union[Callable, Union[Dict, Mapping]]]] = {
+        'today':  {'func': stats_page.get_hourly_stats_page, 'params': params},
+        'monthly_submissions':
+            {'func': stats_page.get_monthly_submissions_page, 'params': {}},
+        'monthly_downloads':
+            {'func': stats_page.get_monthly_downloads_page, 'params': {}}
+    }
+    csv_getters: Mapping[str, Mapping[str, Union[Callable, Union[Dict, Mapping]]]] = {
+        'get_hourly':
+            {'func': stats_page.get_hourly_stats_csv, 'params': params},
+        'get_monthly_downloads':
+            {'func': stats_page.get_download_stats_csv, 'params': {}},
+        'get_monthly_submissions':
+            {'func': stats_page.get_submission_stats_csv, 'params': {}}
+    }
+    if not command:
+        raise NotFound
+    if command in csv_getters:
+        csv_getter_params: Mapping = csv_getters[command]['params']  # type: ignore
+        [response, code, headers] = csv_getters[command]['func'](  # type: ignore
+            **csv_getter_params)
+        if code == status.HTTP_200_OK:
+            return response['csv'], code, headers  # type: ignore
+    elif command in getters:
+        getter_params: Mapping = getters[command]['params']  # type: ignore
+        [response, code, headers] = getters[command]['func'](**getter_params)  # type: ignore
+        if code == status.HTTP_200_OK:
+            return render_template(f'stats/{command}.html', **response), code, headers  # type: ignore
+    else:
+        raise NotFound
+    raise InternalServerError('Unexpected error')
 
 
 @blueprint.route('format/<arxiv_id>')
@@ -279,21 +321,28 @@ def archive(archive: str):  # type: ignore
         return response, code, headers
 
 
-@blueprint.route('year/<archive>/<year>')
-def year(archive: str, year: str) -> Response:
+@blueprint.route('year/<archive>', defaults={'year': None})
+@blueprint.route('year/<archive>/', defaults={'year': None}, strict_slashes=False)
+@blueprint.route('year/<archive>/<int:year>/')
+@blueprint.route('year/<archive>/<int:year>')
+def year(archive: str, year: int): # type: ignore
     """Year's stats for an archive."""
-    raise InternalServerError('Not yet implemented')
+    response, code, headers = year_page(archive, year)
+    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+        return '', code, headers
+    return render_template('year.html', **response), code, headers
 
 
 @blueprint.route('cookies', defaults={'set': ''})
 @blueprint.route('cookies/<set>', methods=['POST', 'GET'])
 def cookies(set):  # type: ignore
+    """Cookies landing page and setter."""
     is_debug = request.args.get('debug', None) is not None
     if request.method == 'POST':
         debug = {'debug': '1'} if is_debug else {}
         resp = redirect(url_for('browse.cookies', **debug))
         for ctoset in cookies_to_set(request):
-            resp.set_cookie(**ctoset) # type: ignore
+            resp.set_cookie(**ctoset)  # type: ignore
         return resp
     else:
         response, code, headers = get_cookies_page(is_debug)
