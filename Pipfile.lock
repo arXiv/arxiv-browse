@@ -44,6 +44,13 @@
             "index": "pypi",
             "version": "==3.5.4"
         },
+        "arxiv-auth": {
+            "hashes": [
+                "sha256:c65b73aadae3c2a7267838fadf0cc0c07a83a8f53b87b57f5d401625586e212b"
+            ],
+            "index": "pypi",
+            "version": "==0.3.1"
+        },
         "arxiv-base": {
             "hashes": [
                 "sha256:cc9c1f05298a5a8b969b2f68a5578e14d1fe894fcd72bf7155ea0a5889fe6d5f"
@@ -300,12 +307,26 @@
         },
         "mysqlclient": {
             "hashes": [
-                "sha256:425e733b05e359a714d6007c0fc44582be66b63e5a3df0a50949274ae16f4bc6",
-                "sha256:62e4770b6a797b9416bcf70488365b7d6b9c9066878108499c559293bb464380",
-                "sha256:f257d250f2675d0ef99bd318906f3cfc05cef4a2f385ea695ff32a3f04b9f9a7"
+                "sha256:6883a4dd98903bad375c859ead1a480e1245ea3a8d9b038ea2c091c1865ba673",
+                "sha256:a62220410e26ce2d2ff94dd0138c3ecfb91db634464a9afb4c8e6b50f0a67e00",
+                "sha256:e1b9f3a8928ddb4985ca3e3c9f2aa81b19e831bbf6fabf5681ee356738dbbbb2"
             ],
             "index": "pypi",
-            "version": "==1.4.2.post1"
+            "version": "==1.4.1"
+        },
+        "pycountry": {
+            "hashes": [
+                "sha256:104a8ca94c700898c42a0172da2eab5a5675c49637b729a11db9e1dac2d983cd",
+                "sha256:8ec4020b2b15cd410893d573820d42ee12fe50365332e58c0975c953b60a16de"
+            ],
+            "version": "==18.12.8"
+        },
+        "pyjwt": {
+            "hashes": [
+                "sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e",
+                "sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96"
+            ],
+            "version": "==1.7.1"
         },
         "pyrsistent": {
             "hashes": [
@@ -328,6 +349,19 @@
             ],
             "index": "pypi",
             "version": "==2018.9"
+        },
+        "redis": {
+            "hashes": [
+                "sha256:8a1900a9f2a0a44ecf6e8b5eb3e967a9909dfed219ad66df094f27f7d6f330fb",
+                "sha256:a22ca993cea2962dbb588f9f30d0015ac4afcc45bee27d3978c0dbe9e97c6c0f"
+            ],
+            "version": "==2.10.6"
+        },
+        "redis-py-cluster": {
+            "hashes": [
+                "sha256:7db54b1de60bd34da3806676b112f07fc9afae556d8260ac02c3335d574ee42c"
+            ],
+            "version": "==1.3.6"
         },
         "s3transfer": {
             "hashes": [
