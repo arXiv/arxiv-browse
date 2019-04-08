@@ -39,8 +39,11 @@
         </li>
         <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
           {{archive.name}} listings</li>
-        <li>specific year/month:
-          <form action="{{url_for('.list_articles')}}" method="get">
+          <li>specific year/month:
+            
+            {# <form action="{{url_for('.list_articles')}}" method="get"> #}
+            {# hard coded for legacy /list for now #}
+          <form action="/list" method="get"> 
             {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
@@ -49,8 +52,9 @@
       </ul>
     </li>
 
-    <li><b>Catch-up:</b>      
-      <form action="https://arxiv.org/catchup" method="post">
+    <li><b>Catch-up:</b>
+      {# hard coded for legacy /catchup for now #}
+      <form action="/catchup" method="post">
         <input name="archive" type="hidden" value="{{archive_id}}"/>
         Changes since:
         <select name="sday">
