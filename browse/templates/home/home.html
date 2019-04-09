@@ -4,7 +4,7 @@
   {{ super() -}}
 {% endblock head %}
 
-{% block login_link %}<div class="login"><a href="{{ url_for('login') }}">Login</a></div>{% endblock %}
+{% block login_link %}{% include 'login.html' %}{% endblock %}
 {% block body_id %}id="front"{% endblock %}
 
 {%- block content %}
@@ -53,11 +53,20 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
 </p>
 {#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
-{% endblock content -%}
 
-{%- block footer_content -%}
-{%- include "long_trailer.html" -%}
-{%- endblock footer_content -%}
+<hr />
+{#- TODO: remove because of new footer? -#}
+<h2>About arXiv</h2>
+<ul>
+  <li><a href="/help/general">General information</a> and <a href="/help/scientific_ad_board">Scientific Advisory Board</a></li>
+  <li><a href="/help/support">Support and Governance Model</a> and <a href="https://confluence.cornell.edu/x/NqlRF">Member Advisory Board</a></li>
+  <li><a href="/help/find">Find</a>, <a href="/help/view">view</a>, <a href="{{ url_for('subscribe') }}">email alerts</a> and <a href="/help/rss">RSS feeds</a></li>
+  <li><a href="/help/submit">Submission</a> and <a href="/help/moderation">moderation</a> details</li>
+  <li><a href="/help/stats">Usage statistics</a> and <a href="/new/">news</a></li>
+  <li>See also searchable <a href="{{ url_for('help') }}">help pages</a></li>
+</ul>
+
+{% endblock content -%}
 
 {%- macro group_section(group_keys) -%}
   {%- for group_key in group_keys -%}
@@ -84,6 +93,3 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
   </ul>
   {% endfor %}
 {%- endmacro -%}
-{%- block footer_text -%}
-{% include "long_trailer.html" %}
-{%- endblock footer_text -%}

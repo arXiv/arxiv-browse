@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, Response, session, \
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
+from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page, stats_page
@@ -14,6 +15,8 @@ from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 
+logger = logging.getLogger(__name__)
+
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 
@@ -21,6 +24,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='/')
 def before_request() -> None:
     """Get instituional affiliation from session."""
     if 'institution' not in session:
+        logger.debug('Adding institution to session')
         session['institution'] = get_institution(request.remote_addr)
 
 
@@ -34,6 +38,7 @@ def apply_response_headers(response: Response) -> Response:
     return response
 
 
+@blueprint.route('index', methods=['GET'])
 @blueprint.route('/', methods=['GET'])
 def home() -> Response:
     """Home page view."""

@@ -2,7 +2,7 @@
 
 {% block title %}Your cookie configuration{% endblock %}
 
-{% block header_h1 %}<h1>arxiv.org > cookies</h1>{% endblock header_h1 %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; cookies</h1>{% endblock header_h1 %}
 
 {%- block content %}
 <h1>Your cookie configuration for arXiv</h1>
@@ -10,7 +10,7 @@
 <p>You can use this form to set preferences that will apply to all arXiv.org sites for this
 and future sessions when access from the same machine. Cookies are snippets of information
 stored on your machine and returned to our site with each request you make (click
-show additional debugging information below to see what is stored). 
+show additional debugging information below to see what is stored).
 This facility will not work if you have disabled cookies or on browsers that do not
 support cookies.</p>
 
@@ -29,7 +29,7 @@ the old versions of the pages will be cached by your browser.</p>
     {% set label = cc['label'] %}
     {% set name = cc['name'] %}
     {% set options = cc['options'] %}
-    
+
     <p>{{label}}<select name="{{id}}">
         {% for opt in options %}
           {% set value = opt[0] %}
@@ -40,7 +40,7 @@ the old versions of the pages will be cached by your browser.</p>
                   >{{opt_label}}</option>
         {% endfor %}
     </select></p>
-  {% endfor %}    
+  {% endfor %}
   <input type="submit" name="set" value="Set Cookies" />
 </form>
 
@@ -52,9 +52,9 @@ the old versions of the pages will be cached by your browser.</p>
     <th align="left" >Name</th><th align="left">Value</th></tr>
   {% for cooname in request.cookies.keys() %}
     <tr bgcolor="#EEEEEE">
-      {% if cooname in controlled_cookies %} 
+      {% if cooname in controlled_cookies %}
         <td><em><code>{{cooname}}</code></em></td>
-      {% else %}        
+      {% else %}
         <td><code>{{cooname}}</code></td>
       {% endif %}
       <td><code>{{ request.cookies[cooname] }}</code></td>
@@ -62,14 +62,14 @@ the old versions of the pages will be cached by your browser.</p>
     {% endfor %}
 </table>
 
-<p>Only those cookies shown <em>emphasized</em> in the table above are controlled 
-by this interface. arXiv uses other cookies such as <code>browser</code> and 
-<code>tapir_permanent</code> to maintain session and permanent login settings. 
+<p>Only those cookies shown <em>emphasized</em> in the table above are controlled
+by this interface. arXiv uses other cookies such as <code>browser</code> and
+<code>tapir_permanent</code> to maintain session and permanent login settings.
 You can, if you want, clear all cookies using the controls in your browser.</p>
 
 <p><small>(<a href="{{url_for('browse.cookies')}}">hide debugging information</a>)</small></p>
 {% else %}
-<p><small>(<a href="{{url_for('browse.cookies', debug=1)}}">show additional debugging information<a/>)</small></p>
+<p><small>(<a href="{{url_for('browse.cookies', debug=1)}}">show additional debugging information</a>)</small></p>
 {% endif %}
 
 <h2>About cookies</h2>
@@ -79,4 +79,3 @@ server.  Cookies are now defined
 by <a href="https://tools.ietf.org/html/rfc6265">RFC 6265</a>.  It is
 not necessary to use/permit cookies to read articles on arXiv.org.</p>
 {% endblock content %}
-

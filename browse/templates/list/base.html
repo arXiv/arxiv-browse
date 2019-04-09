@@ -4,14 +4,14 @@
 
 {% block header_h1 %}
 <h1>
-  <a href="/">arXiv.org</a> >
+  <a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt;
   <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
   </h1>
 {% endblock %}
 
 {%- block content %}
 <div id='content'>
-<div id='dlpage'> 
+<div id='dlpage'>
   <h1>{{list_ctx_name}}</h1>
 
   {% block list_index %}
@@ -39,7 +39,7 @@
   {{ show_link('fewer',mf_fewer) }} |
   {{ show_link('more', mf_more)  }} |
   {{ show_link('all',  mf_all)   }} ]
-</div> 
+</div>
 {%- endmacro -%}
 
 
@@ -50,9 +50,9 @@
   {% endif %}
 
   {% for item in items %}
-  {% set article = item['article'] %}      
+  {% set article = item['article'] %}
   {% set ids = article.arxiv_identifier.ids %}
-  {% set listing_index = item['list_index'] %}    
+  {% set listing_index = item['list_index'] %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
@@ -75,19 +75,19 @@
             {{article.comments|arxiv_urlize}}
           </div>
         {% endif %}
-        
+
         {% if article.journal_ref %}
           <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
             {{article.journal_ref}}
           </div>
         {% endif %}
-        
+
         <div class='list-subjects'><span class='descriptor'>Subjects:</span>
           <span class='primary-subject'>{{article.primary_category.display}}</span>
         </div>
 
       </div>
-    </dd>  
+    </dd>
   {% endfor %}
 </dl>
 {% endmacro %}
@@ -97,15 +97,15 @@
   {% set au_list_tup = author_links[article.arxiv_id_v] %}
   {%- if not au_list_tup or not au_list_tup[0] -%}
     (author list is unavailable)
-  {%- else -%}    
+  {%- else -%}
     {%- for part in au_list_tup[0] -%}
       {%- if part is string -%}
         {{- part|arxiv_urlize -}}
-      {%- else -%}        
+      {%- else -%}
         <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
       {%- endif -%}
-    {% endfor %}    
-  {%- endif -%}  
+    {% endfor %}
+  {%- endif -%}
 {%- endmacro -%}
 
 
@@ -131,14 +131,14 @@
     <span style="color: #999">{{txt}}</span>
   {% endif %}
 {%- endmacro -%}
-      
+
 {%- macro dl_links( article ) -%}
   {% set id=article.arxiv_id %}
-  {% set downloads = downloads[ article.arxiv_id_v ] %}     
+  {% set downloads = downloads[ article.arxiv_id_v ] %}
   [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF">pdf</a>
   {%- if 'ps' in downloads -%}
     , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript">ps</a>
-  {%- endif -%}  
+  {%- endif -%}
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats">other</a>
   {%- endif -%}

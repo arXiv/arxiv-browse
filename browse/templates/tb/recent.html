@@ -3,7 +3,7 @@
 {%- import 'base/macros.html' as base_macros -%}
 
 {% block title %}Recent Trackbacks{% endblock %}
-{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Recent Trackbacks</h1>{% endblock %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; recent trackbacks</h1>{% endblock %}
 
 {%- block content %}
   <h1>Recent Trackbacks</h1>

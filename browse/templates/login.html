@@ -1,0 +1,7 @@
+<div class="login">
+{% if request.auth.user is defined %}
+  Logged in as <b>{{ request.auth.user.username }}</b> | <a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a> | <a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a>
+{% else %}
+  <a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a>
+{% endif %}
+</div>
