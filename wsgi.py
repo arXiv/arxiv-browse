@@ -34,7 +34,7 @@ def application(environ, start_response):
     # SetEnv vars.  It needs to be done before the call to
     # create_web_app() due to how config is setup from os in
     # browse/config.py.
-    for key,value in environ.items():        
+    for key, value in environ.items():        
         if type(value) is str:
             os.environ[key]=value
 
