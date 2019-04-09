@@ -36,7 +36,7 @@ def application(environ, start_response):
     # browse/config.py.
     for key, value in environ.items():        
         if type(value) is str:
-            os.environ[key]=value
+            os.environ[key] = value
 
     # 'global' actually means module scope, and that is exactly what
     # we want here.
