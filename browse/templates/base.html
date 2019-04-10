@@ -8,28 +8,23 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
   {# disable for now #}
-  {%- if config['BROWSE_PIWIK_ENABLED'] %}
-  <!-- Piwik -->
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  <!-- Matomo -->
   <script type="text/javascript">
-    var _paq = _paq || [];
-    _paq.push(["setDomains", ["*.arxiv.org"]]);
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setCookieDomain", "{{ config['BROWSE_ANALYTICS_COOKIE_DOMAIN'] }}"]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-      var u = "//webanalytics.library.cornell.edu/";
-      _paq.push(['setTrackerUrl', u + 'piwik.php']);
-      _paq.push(['setSiteId', 538]);
-      var d = document,
-        g = d.createElement('script'),
-        s = d.getElementsByTagName('script')[0];
-      g.type = 'text/javascript';
-      g.async = true;
-      g.defer = true;
-      g.src = u + 'piwik.js';
-      s.parentNode.insertBefore(g, s);
+      var u="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '{{ config['BROWSE_ANALYTICS_SITE_ID'] }}']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
     })();
   </script>
-  <!-- End Piwik Code -->
+  <!-- End Matomo Code -->
   {% endif -%}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
@@ -44,8 +39,8 @@
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
-  {%- if config['BROWSE_PIWIK_ENABLED'] -%}
-  <noscript><img src="//webanalytics.library.cornell.edu/piwik.php?idsite=538&amp;rec=1" style="border:0;" alt="" /></noscript>
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] -%}
+  <noscript><img src="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}matomo.php?idsite={{ config['BROWSE_ANALYTICS_SITE_ID'] }}&amp;rec=1" style="border:0" alt="" /></noscript>
   {% endif -%}
   <div id="cu-identity">
     <div id="cu-logo">
