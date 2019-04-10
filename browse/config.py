@@ -251,7 +251,6 @@ This, for example, could be used in conjunction with the `no-write` runlevel
 in the legacy infrastructure, which is a case where we know the DB is
 unavailable and thus intentionally bypass any DB access."""
 
-
 BROWSE_SITE_LABEL = os.environ.get('BROWSE_SITE_LABEL', 'arXiv.org')
 BROWSE_SITE_HOST = os.environ.get('BROWSE_SITE_HOST', None)
 """This is similar to, but decoupled from SERVER_NAME."""

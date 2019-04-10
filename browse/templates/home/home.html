@@ -12,17 +12,40 @@
 <p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
  e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Submissions to arXiv should conform to Cornell University academic standards. arXiv is owned and operated by Cornell University, a private not-for-profit educational institution. arXiv is funded by Cornell University, the Simons Foundation and by the member institutions.</p>
 <br/>
-{#- TODO: revisit when we have a plan for /multi replacement -#}
-<form action="/multi" method="get">Subject search and browse:
-  <select name="group">
+{#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
+<form name="home-adv-search" action="/multi" method="get">
+  Subject search and browse: 
+  <select name="groups_or_archives">
   {%- for group_key, group_details in groups.items() if not group_details.is_test %}
-    <option value="{{ group_key }}"{% if group_key == 'grp_physics' %}selected="selected"{% endif %}>{{ group_details.name }}</option>
-  {%- endfor %}
+    <option
+        value ="{{group_key}}"
+        data-url="{{url_for('search_archive', archive=group_key[4:])}}"        
+        {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+      {{ group_details.name }}
+    </option>
+    {%- endfor %}
   </select>
-  <input type="submit" name="/find" value="Search">
+  <input id="adv-search-btn" type="button" value="Search">
   <input type="submit" name="/form" value="Form Interface">
   <input type="submit" name="/catchup" value="Catchup">
 </form>
+
+<script type="text/javascript">
+ function doAdvSearchBtn(event) {
+     sel = document.querySelector('select[name="groups_or_archives"]')
+     if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
+         data_url = sel.options[sel.selectedIndex].dataset.url
+         if( data_url ){
+             window.location = data_url;
+         }else{
+             console.error('home page search button: no data_url found for search');
+         }
+     }
+ }
+ document.addEventListener('DOMContentLoaded',function() {
+     document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
+ },false);
+</script>
 <p>
 {%- include "home/news.html" -%}
 See cumulative <a href="/new/">"What's New"</a> pages.
