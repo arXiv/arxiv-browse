@@ -1,5 +1,5 @@
-from tests.legacy_comparison.abstract_comparisons import lev_similarity
-from tests.legacy_comparison.comparison_types import text_arg_dict, BadResult
+from abstract_comparisons import lev_similarity
+from comparison_types import text_arg_dict, BadResult
 
 
 def text_similarity(text_arg: text_arg_dict) -> BadResult:

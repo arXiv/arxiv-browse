@@ -38,9 +38,12 @@
           (last 5 mailings)
         </li>
         <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
-          nlin listings</li>
-        <li>specific year/month:
-          <form action="{{url_for('.list_articles')}}" method="get">
+          {{archive_id}} listings</li>
+          <li>specific year/month:
+            
+            {# <form action="{{url_for('.list_articles')}}" method="get"> #}
+            {# hard coded for legacy /list for now #}
+          <form action="/list" method="get"> 
             {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
@@ -50,15 +53,37 @@
     </li>
 
     <li><b>Catch-up:</b>
-      {# TODO using legacy /catchup URL, change to NG when implemented #}
+      {# hard coded for legacy /catchup for now #}
       <form action="/catchup" method="post">
-        {{ catchup_form.archive }}
+        <input name="archive" type="hidden" value="{{archive_id}}"/>
         Changes since:
-        {{ catchup_form.year }}
-        {{ catchup_form.month }}
-        {{ catchup_form.day }},
-        view results {{ catchup_form.abstracts }} abstracts
-        {{ catchup_form.submit }}
+        <select name="sday">
+          {% for day in days %}
+            <option {% if day == catchup_to.strftime('%d') %}selected="true"{% endif %}>{{day}}</option>
+          {% endfor %}
+        </select>
+        <select name="smonth">
+          {% for val, name in months %}
+            <option value="{{val}}"
+                    {% if day == catchup_to.strftime('%m') %}selected="true"{% endif %}>
+                    {{name}}</option>
+          {% endfor %}
+        </select>
+        <select name="syear">
+          {% for year in years %}
+            <option {% if year == catchup_to.strftime('%Y')%} selected="true"{% endif %}>{{year}}</option>
+          {% endfor %}
+        </select>
+        , view results <select name="method">
+        <option selected="selected">
+          without
+        </option>
+        <option>
+          with
+        </option>
+        </select>
+        abstracts
+        <input type="submit" value="Go"/>
       </form>
     </li>
     <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>

@@ -13,6 +13,7 @@ import os
 from app import app
 
 
+@unittest.skip('We will move this test and any required test data to arxiv-base in the near future')
 class DoiTest(unittest.TestCase):
 
     def setUp(self):

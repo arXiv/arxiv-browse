@@ -1,6 +1,6 @@
 """Archive landing page."""
 
-from datetime import date
+import datetime
 from typing import Dict, Any, Tuple, List, no_type_check
 
 from flask import Response, url_for
@@ -9,10 +9,10 @@ from arxiv import status
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES, ARCHIVES_SUBSUMED
 
 from browse.controllers.archive_page.by_month_form import ByMonthForm
-from browse.controllers.archive_page.catchup_form import CatchupForm
 from browse.controllers.years_operating import years_operating, stats_by_year
 from browse.services.util.response_headers import abs_expires_header
 
+  
 
 def get_archive(archive_id: str) -> Response:
     """Gets archive page."""
@@ -46,13 +46,18 @@ def get_archive(archive_id: str) -> Response:
 
     years = years_operating(archive)
 
+    data["years"] = years
+    data["months"] = MONTHS
+    data["days"] = DAYS
+    
     data["archive_id"] = archive_id
     data["archive"] = archive
     data["list_form"] = ByMonthForm(archive_id, archive, years)
-    data["catchup_form"] = CatchupForm(archive_id, archive, years)
     data["stats_by_year"] = stats_by_year(archive_id, archive, years)
     data["category_list"] = category_list(archive_id)
 
+    data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
+    
     data["template"] = "archive/single_archive.html"
     return data, status.HTTP_200_OK, response_headers  # type: ignore
 
@@ -108,3 +113,21 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
 def _write_expires_header(response_headers: Dict[str, Any]) -> None:
     """Writes an expires header for the response."""
     response_headers["Expires"] = abs_expires_header()[1]
+
+    
+DAYS = ["{:0>2d}".format(i) for i in range(1, 32)]
+
+MONTHS = [
+    ("01", "01 (Jan)"),
+    ("02", "02 (Feb)"),
+    ("03", "03 (Mar)"),
+    ("04", "04 (Apr)"),
+    ("05", "05 (May)"),
+    ("06", "06 (Jun)"),
+    ("07", "07 (Jul)"),
+    ("08", "08 (Aug)"),
+    ("09", "09 (Sep)"),
+    ("10", "10 (Oct)"),
+    ("11", "11 (Nov)"),
+    ("12", "12 (Dec)"),
+]

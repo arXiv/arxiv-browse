@@ -10,7 +10,7 @@ from arxiv.base.urls import links, urlizer, urlize
 from arxiv.base.filters import abstract_lf_to_br, f_tex2utf
 from browse.filters import entity_to_utf
 
-
+@unittest.skip("These test features implemented in arxiv-base so move these tests to arxiv-base")
 class Jinja_Custom_Filters_Test(unittest.TestCase):
     """Browse jinja filter tests."""
 
@@ -25,7 +25,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 jenv.from_string(
                     '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
                 ).render(),
-                'something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
+                'something &lt;a class=&#34;link-https link-external&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34; rel=&#34;external noopener nofollow&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
             )
 
     def test_with_jinja_escapes(self):
@@ -41,19 +41,18 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 jenv.from_string(
                     '{{"something 10.1103/PhysRevD.76.013009 or other"|urlize}}'
                 ).render(),
-                'something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
+                'something &lt;a class=&#34;link-https link-external&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34; rel=&#34;external noopener nofollow&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt; or other'
             )
 
             self.assertEqual(
                 jenv.from_string(
                     '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|urlize}}'
                 ).render(),
-                '&lt;script&gt;bad junk&lt;/script&gt; something &lt;a class=&#34;link-https&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt;'
+                '&lt;script&gt;bad junk&lt;/script&gt; something &lt;a class=&#34;link-https link-external&#34; data-doi=&#34;10.1103/PhysRevD.76.013009&#34; href=&#34;https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;amp;v=d0670bbf&#34; rel=&#34;external noopener nofollow&#34;&gt;10.1103/PhysRevD.76.013009&lt;/a&gt;'
             )
 
     def test_doi_filter(self):
         """Test the urlizer DOI filter."""
-        self.maxDiff = None
         with app.app_context():
             s = 'some test string 23$6#$5<>&456 http://google.com/notadoi'
             urlize_dois = urlizer(
@@ -66,13 +65,13 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             self.assertRegex(doiurl, r'^<a', 'should start with a tag')
             self.assertEqual(
                 doiurl,
-                str(Markup('<a class="link-https" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf">10.1103/PhysRevD.76.013009</a>'))
+                str(Markup('<a class="link-https link-external" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf" rel="external noopener nofollow">10.1103/PhysRevD.76.013009</a>'))
             )
 
             s = f'something something {doi} endthing'
             doiurl = urlize_dois(s)
             self.assertRegex(
-                doiurl, r'<a class="link-https" data-doi="', 'Have an A tag')
+                doiurl, r'<a .* href="', 'Should have an <A> tag')
             self.assertRegex(doiurl, '^something something ')
             self.assertRegex(doiurl, ' endthing$')
 
@@ -81,10 +80,10 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 urlize_dois(txt),
                 str(
                     Markup(
-                        '<a class="link-https" data-doi="10.1103/PhysRevA.99.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevA.99.013009&amp;v=94f8600c">10.1103/PhysRevA.99.013009</a> '
-                        '<a class="link-https" data-doi="10.1103/PhysRevZ.44.023009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevZ.44.023009&amp;v=bba1640c">10.1103/PhysRevZ.44.023009</a> '
-                        '<a class="link-https" data-doi="10.1103/PhysRevX.90.012309" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevX.90.012309&amp;v=3a1daa37">10.1103/PhysRevX.90.012309</a> '
-                        '<a class="link-https" data-doi="10.1103/BioRevX.44.123456" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FBioRevX.44.123456&amp;v=c8298ca6">10.1103/BioRevX.44.123456</a>'
+                        '<a class="link-https link-external" data-doi="10.1103/PhysRevA.99.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevA.99.013009&amp;v=94f8600c" rel="external noopener nofollow">10.1103/PhysRevA.99.013009</a> '
+                        '<a class="link-https link-external" data-doi="10.1103/PhysRevZ.44.023009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevZ.44.023009&amp;v=bba1640c" rel="external noopener nofollow">10.1103/PhysRevZ.44.023009</a> '
+                        '<a class="link-https link-external" data-doi="10.1103/PhysRevX.90.012309" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevX.90.012309&amp;v=3a1daa37" rel="external noopener nofollow">10.1103/PhysRevX.90.012309</a> '
+                        '<a class="link-https link-external" data-doi="10.1103/BioRevX.44.123456" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FBioRevX.44.123456&amp;v=c8298ca6" rel="external noopener nofollow">10.1103/BioRevX.44.123456</a>'
                     )
                 )
             )
@@ -92,7 +91,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
             txt = '<script>Im from the user and Im bad</script>'
             self.assertEqual(
                 urlize_dois(f'{doi} {txt}'),
-                str(Markup(f'<a class="link-https" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf">10.1103/PhysRevD.76.013009</a> <script>Im from the user and Im bad</script>'))
+                str(Markup(f'<a class="link-https link-external" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf" rel="external noopener nofollow">10.1103/PhysRevD.76.013009</a> <script>Im from the user and Im bad</script>'))
             )
 
     def test_arxiv_id_urls_basic(self):
@@ -220,7 +219,6 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 'Dealing with text that has been escaped by Jinja2 already')
 
     def test_arxiv_id_jinja_escapes(self):
-        self.maxDiff = None
         h = 'sosmooth.org'
         app.config['SERVER_NAME'] = h
         with app.app_context():
@@ -241,7 +239,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                 jenv.from_string(
                     '{{"<script>bad junk</script> something 10.1103/PhysRevD.76.013009"|urlize|safe}}'
                 ).render(),
-                '<script>bad junk</script> something <a class="link-https" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf">10.1103/PhysRevD.76.013009</a>'
+                '<script>bad junk</script> something <a class="link-https link-external" data-doi="10.1103/PhysRevD.76.013009" href="https://arxiv.org/ct?url=https%3A%2F%2Fdx.doi.org%2F10.1103%2FPhysRevD.76.013009&amp;v=d0670bbf" rel="external noopener nofollow">10.1103/PhysRevD.76.013009</a>'
             )
 
             self.assertEqual(
@@ -250,7 +248,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                     'hep-th/9901002 bla"|urlize|safe}}').
                 render(),
                 '<script>bad junk</script> '
-                '<a class="link-external link-http" href="http://google.com" rel="external">this http URL</a> bla bla '
+                '<a class="link-external link-http" href="http://google.com" rel="external noopener nofollow">this http URL</a> bla bla '
                 f'<a class="link-https" data-arxiv-id="hep-th/9901002" href="https://arxiv.org/abs/hep-th/9901002">hep-th/9901002</a> bla',
                 'should not double escape')
 
@@ -285,7 +283,7 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
                     'hep-th/9901002 other"|line_break|urlize|safe}}'
                 ).render(),
                 '&lt;script&gt;bad junk&lt;/script&gt; '
-                '<a class="link-external link-http" href="http://google.com" rel="external">this http URL</a>'
+                '<a class="link-external link-http" href="http://google.com" rel="external noopener nofollow">this http URL</a>'
                 ' something or \n'
                 'no double \n'
                 '<br>should have br\n'
@@ -363,30 +361,30 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
         with app.app_context():
             self.assertEqual(
                 urlize('http://example.com/'),
-                '<a class="link-external link-http" href="http://example.com/" rel="external">this http URL</a>',
+                '<a class="link-external link-http" href="http://example.com/" rel="external noopener nofollow">this http URL</a>',
                 'urlize (URL linking) 1/6')
             self.assertEqual(
                 urlize('https://example.com/'),
-                '<a class="link-external link-https" href="https://example.com/" rel="external">this https URL</a>',
+                '<a class="link-external link-https" href="https://example.com/" rel="external noopener nofollow">this https URL</a>',
                 'urlize (URL linking) 2/6')
             self.assertEqual(
                 urlize('ftp://example.com/'),
-                '<a class="link-external link-ftp" href="ftp://example.com/" rel="external">this ftp URL</a>',
+                '<a class="link-external link-ftp" href="ftp://example.com/" rel="external noopener nofollow">this ftp URL</a>',
                 'urlize (URL linking) 3/6')
             self.assertEqual(
                 urlize('http://example.com/.hep-th/9901001'),
-                '<a class="link-external link-http" href="http://example.com/.hep-th/9901001" rel="external">this http URL</a>',
+                '<a class="link-external link-http" href="http://example.com/.hep-th/9901001" rel="external noopener nofollow">this http URL</a>',
                 'urlize (URL linking) 4/6')
             self.assertEqual(
                 urlize(
                     'http://projecteuclid.org/euclid.bj/1151525136'
                 ),
-                '<a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external">this http URL</a>',
+                '<a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external noopener nofollow">this http URL</a>',
                 'urlize (URL linking) 6/6')
             self.assertEqual(
                 urlize(
                     '  Correction to Bernoulli (2006), 12, 551--570 http://projecteuclid.org/euclid.bj/1151525136'),
-                Markup('  Correction to Bernoulli (2006), 12, 551--570 <a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external">this http URL</a>'),
+                Markup('  Correction to Bernoulli (2006), 12, 551--570 <a class="link-external link-http" href="http://projecteuclid.org/euclid.bj/1151525136" rel="external noopener nofollow">this http URL</a>'),
                 'urlize (URL linking) 6/6')
             # shouldn't match
             self.assertEqual(
@@ -417,18 +415,18 @@ class Jinja_Custom_Filters_Test(unittest.TestCase):
 
             self.assertEqual(
                 urlize('[http://onion.com/something-funny-about-arxiv-1234]'),
-                '[<a class="link-external link-http" href="http://onion.com/something-funny-about-arxiv-1234" rel="external">this http URL</a>]')
+                '[<a class="link-external link-http" href="http://onion.com/something-funny-about-arxiv-1234" rel="external noopener nofollow">this http URL</a>]')
 
             self.assertEqual(
                 urlize('[http://onion.com/?q=something-funny-about-arxiv.1234]'),
-                '[<a class="link-external link-http" href="http://onion.com/?q=something-funny-about-arxiv.1234" rel="external">this http URL</a>]')
+                '[<a class="link-external link-http" href="http://onion.com/?q=something-funny-about-arxiv.1234" rel="external noopener nofollow">this http URL</a>]')
 
             self.assertEqual(
                 urlize('http://onion.com/?q=something funny'),
-                '<a class="link-external link-http" href="http://onion.com/?q=something" rel="external">this http URL</a> funny',
+                '<a class="link-external link-http" href="http://onion.com/?q=something" rel="external noopener nofollow">this http URL</a> funny',
                 'Spaces CANNOT be expected to be part of URLs')
 
             self.assertEqual(
                 urlize('"http://onion.com/something-funny-about-arxiv-1234"'),
-                '"<a class="link-external link-http" href="http://onion.com/something-funny-about-arxiv-1234" rel="external">this http URL</a>"',
+                '"<a class="link-external link-http" href="http://onion.com/something-funny-about-arxiv-1234" rel="external noopener nofollow">this http URL</a>"',
                 'Should handle URL surrounded by double quotes')

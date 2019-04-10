@@ -1,4 +1,4 @@
-from tests.legacy_comparison.comparison_types import res_arg_dict, BadResult
+from comparison_types import res_arg_dict, BadResult
 
 
 def compare_status(res_arg: res_arg_dict) -> BadResult:

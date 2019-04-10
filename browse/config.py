@@ -216,6 +216,10 @@ If neither of those is set and TESTING is the string 'yes', then a
 SQLITE test DB is used.
 """
 
+if os.environ.get('FLASK_ENV', False) == 'production' \
+   and 'sqlite' in SQLALCHEMY_DATABASE_URI:
+    warnings.warn("Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment")
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
