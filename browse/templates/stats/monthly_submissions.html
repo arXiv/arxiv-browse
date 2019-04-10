@@ -1,7 +1,7 @@
 {%- extends "stats/base.html" -%}
 
 {% block title %}Monthly Submissions{% endblock %}
-{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">arXiv.org</a> &gt; Monthly Submission Rates</h1>{% endblock %}
+{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a>  &gt; stats &gt; monthly submission rates</h1>{% endblock %}
 
 {% block content %}
 <h2>arXiv Monthly Submission Rates [<a title="download monthly submission CSV data" href="{{ url_for('browse.stats', command='get_monthly_submissions') }}">CSV</a>]</h2>
