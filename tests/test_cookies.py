@@ -30,3 +30,8 @@ class CookiesPageTest(unittest.TestCase):
         self.assertIn('Select preferred download format', html)
         self.assertIn('hide debugging information', html, 'should have HIDE debugging link')
 
+    def test_post_to_cookies(self):
+        rv = self.app.post('/cookies/set?debug=1', data={'ps':'pdf'})
+        self.assertEqual(rv.status_code, 302)
+        cookies =  map(lambda kv: kv[1], filter(lambda kv : kv[0]=='Set-Cookie', rv.headers.items()))
+        self.assertIn('xxx-ps-defaults=pdf; Path=/', cookies)
