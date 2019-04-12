@@ -323,7 +323,7 @@ SESSION_DURATION = os.environ.get(
 )
 
 URLS = [
-    ('ui.login', '/login', BROWSE_SITE_HOST or 'arxiv.org')
+    ('ui.login', '/login', os.environ.get('SERVER_NAME', 'arxiv.org'))
     # This is a temporary workaround for ARXIVNG-2063
 ]
 """External URLs."""
