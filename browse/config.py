@@ -5,6 +5,8 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 import warnings
+import dateutil.parser
+from datetime import datetime, timedelta
 
 VERSION = '0.2.1'
 """The application version """
@@ -269,6 +271,18 @@ BROWSE_ANALYTICS_SITE_ID = os.environ.get('BROWSE_ANALYTICS_SITE_ID', '1')
 BROWSE_USER_BANNER_ENABLED = os.environ.get(
     'BROWSE_USER_BANNER_ENABLED', False)
 """Enable/disable user banner."""
+try:
+    BROWSE_USER_BANNER_START_DATE = dateutil.parser(
+        os.environ.get('BROWSE_USER_BANNER_START_DATE')
+    )
+except Exception:
+    BROWSE_USER_BANNER_START_DATE = datetime(1991, 8, 1)
+try:
+    BROWSE_USER_BANNER_END_DATE = dateutil.parser(
+        os.environ.get('BROWSE_USER_BANNER_END_DATE')
+    )
+except Exception:
+    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=4)
 
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
