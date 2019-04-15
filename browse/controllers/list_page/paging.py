@@ -9,13 +9,15 @@ from flask import url_for
 def paging(count: int, skipn: int, shown: int, context: str, subcontext: str) \
         -> List[Dict[str, Union[str, int]]]:
     """Get paging links."""
-    B = 3  # num of buffer pages on each side of current
-    L = math.floor(count-1 / (skipn+1))+1  # total number of pages
-    S = 2 * B + 2 * 2 + 1  # number of total links in the pages sections:
-    #  2*buffer + 2*(first number + dots) + current
+    bumper_pages = 3  # num of buffer pages on each side of current
+    total_pages = math.floor(count-1 / (skipn+1))+1  # total number of pages
 
-    def page_dict(n: int, nolink: bool = False)->Dict[str, Union[str, int]]:
-        txt = str(n+1)+'-'+str(min(count, n+shown))
+    slots_in_paging = 2 * bumper_pages + 5
+    # Maximum number of slots for elements in the pages sections:
+    # 2*bumper_pages + start + end + 2*dots + current
+
+    def page_dict(n: int, nolink: bool = False) -> Dict[str, Union[str, int]]:
+        txt = f'{n + 1}-{min(count, n + shown)}'
         if nolink:
             return {'nolink': txt}
         else:
@@ -25,41 +27,45 @@ def paging(count: int, skipn: int, shown: int, context: str, subcontext: str) \
                                    context=context,
                                    subcontext=subcontext,
                                    skip=n,
-                                   show=shown)
-                    }
+                                   show=shown)}
 
-    R = range(0, count, shown)
+    page_starts = range(0, count, shown) # Paper indexs for each page start
 
-    if L < S:  # just show all numbers number of pages is less than slots
-        return [page_dict(n) for n in R if n < skipn] + \
-            [{'nolink': skipn}] + [page_dict(n) for n in R if n > skipn]
+    if total_pages < slots_in_paging:
+        # just show all numbers number of pages is less than slots
+        return [page_dict(n) for n in page_starts if n < skipn] + \
+            [{'nolink': skipn}] + \
+            [page_dict(n) for n in page_starts if n > skipn]
 
     page_links: List[Dict[str, Any]] = []
     if skipn >= shown:  # Not on first page?
         page_links = [page_dict(0)]
 
-    prebuffer = [n for n in R if n >= (
-        skipn - shown * B) and n < skipn and n > 0]
+    prebumper = [n for n in page_starts if n >= (
+        skipn - shown * bumper_pages) and n < skipn and n > 0]
 
-    # No dots between first and prebuffer
-    if prebuffer:
-        if prebuffer[0] <= shown * B:
+    if prebumper:
+        if prebumper[0] <= shown * bumper_pages:
+            # Case of no dots between first and prebumper
             page_links = page_links + \
-                [page_dict(n) for n in prebuffer]
+                [page_dict(n) for n in prebumper]
         else:
             page_links.append({'nolink': '...'})
             page_links = page_links + \
-                [page_dict(n) for n in prebuffer]
+                [page_dict(n) for n in prebumper]
 
-    page_links.append(page_dict(skipn, True))  # current page
+    page_links.append(page_dict(skipn, True))  # non-link for current page
 
-    postbuffer = [n for n in R if n > skipn and n <= (skipn + shown * B)]
-    if postbuffer:
+    postbumper = [n for n in page_starts if n > skipn and n <=
+                  (skipn + shown * bumper_pages)]
+    if postbumper:
         page_links = page_links + \
-            [page_dict(n) for n in postbuffer]
-        if postbuffer[-1] < R[-1]:  # Need dots between postbuffer and last
+            [page_dict(n) for n in postbumper]
+        if postbumper[-1] < page_starts[-1]:
+            # Case of need dots between postbumper and last
             page_links.append({'nolink': '...'})
 
-    if postbuffer and postbuffer[-1] < R[-1]:
-        page_links.append(page_dict(R[-1]))  # last
+    if postbumper and postbumper[-1] < page_starts[-1]:
+        page_links.append(page_dict(page_starts[-1]))  # last
+
     return page_links
