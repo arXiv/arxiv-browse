@@ -7,7 +7,7 @@ from flask import url_for
 
 
 def paging(count: int, skipn: int, shown: int, context: str, subcontext: str) \
-    -> List[Dict[str, Union[str, int]]]:
+        -> List[Dict[str, Union[str, int]]]:
     """Get paging links."""
     B = 3  # num of buffer pages on each side of current
     L = math.floor(count-1 / (skipn+1))+1  # total number of pages
