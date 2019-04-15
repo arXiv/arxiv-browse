@@ -41,7 +41,7 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from typing import Any, Dict, List, Optional, Tuple, cast, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import status, taxonomy
 from flask import current_app, request, url_for
@@ -51,7 +51,7 @@ from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from browse.domain.metadata import DocMetadata
 from browse.services.document import metadata
-from browse.services.listing import ListingService
+from browse.services.listing import ListingService, get_listing_service
 from browse.domain.listing import NewResponse, NotModifiedResponse, ListingResponse
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
@@ -121,7 +121,7 @@ def get_listing(
     else:
         raise BadRequest
 
-    listing_service = get_listing_service(current_app)
+    listing_service = get_listing_service()
     if not listing_service:
         raise ServiceUnavailable
 
@@ -254,12 +254,6 @@ def get_listing(
     return response_data, status.HTTP_200_OK, response_headers
 
 
-def get_listing_service(app: Any) -> ListingService:
-    """Get the listing service from the Flask app.
-
-    There is probably a better way to do this.
-    """
-    return cast(ListingService, app.config['listing_service'])
 
 
 def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:

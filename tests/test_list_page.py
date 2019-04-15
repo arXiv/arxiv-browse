@@ -9,7 +9,7 @@ from tests.test_abs_parser import ABS_FILES
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 from browse.services.listing.fake_listings import FakeListingFilesService
-from browse.services.listing import ListingService
+from browse.services.listing import ListingService, get_listing_service
 import os
 
 from app import app
@@ -20,108 +20,102 @@ class ListPageTest(unittest.TestCase):
     def setUp(self):
         app.testing = True
         app.config['APPLICATION_ROOT'] = ''
-
-        # BDC34 there should be a better way of setting up a
-        # service in the app. or maybe not?
-        app.config['listing_service'] = FakeListingFilesService()
-        # NB all /list requests return the same data with FakeListingFilesService
-        # that is the month and category do not affect the returned list.
-
-        self.app = app.test_client()
+        self.app = app
+        self.client = app.test_client()
 
     def test_basic_lists(self):
-        rv = self.app.get('/list/hep-ph/0901')
+        rv = self.client.get('/list/hep-ph/0901')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/09')
+        rv = self.client.get('/list/hep-ph/09')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/new')
+        rv = self.client.get('/list/hep-ph/new')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/current')
+        rv = self.client.get('/list/hep-ph/current')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/pastweek')
+        rv = self.client.get('/list/hep-ph/pastweek')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/recent')
+        rv = self.client.get('/list/hep-ph/recent')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/hep-ph/0901?skip=925&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=925&show=25')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/astro-ph/04')
+        rv = self.client.get('/list/astro-ph/04')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/math/92')
+        rv = self.client.get('/list/math/92')
         self.assertEqual(rv.status_code, 200)
         self.assertNotEqual(rv.headers.get('Expires', None), None)
 
-        rv = self.app.get('/list/math/9201')
+        rv = self.client.get('/list/math/9201')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0101')
+        rv = self.client.get('/list/math/0101')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0102')
+        rv = self.client.get('/list/math/0102')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0103')
+        rv = self.client.get('/list/math/0103')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0104')
+        rv = self.client.get('/list/math/0104')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0105')
+        rv = self.client.get('/list/math/0105')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0106')
+        rv = self.client.get('/list/math/0106')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0107')
+        rv = self.client.get('/list/math/0107')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0108')
+        rv = self.client.get('/list/math/0108')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0109')
+        rv = self.client.get('/list/math/0109')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0110')
+        rv = self.client.get('/list/math/0110')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0111')
+        rv = self.client.get('/list/math/0111')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0112')
+        rv = self.client.get('/list/math/0112')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/01')
+        rv = self.client.get('/list/math/01')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/18')
+        rv = self.client.get('/list/math/18')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/20')  # year 2020
+        rv = self.client.get('/list/math/20')  # year 2020
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/30')  # year 2030
+        rv = self.client.get('/list/math/30')  # year 2030
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/200101')
+        rv = self.client.get('/list/math/200101')
         self.assertEqual(rv.status_code, 200)
 
     def test_listing_authors(self):
-        rv = self.app.get('/list/hep-ph/0901')
+        rv = self.client.get('/list/hep-ph/0901')
         self.assertEqual(rv.status_code, 200)
         au = b'Eqab M. Rabei'
         assert au in rv.data, f'Simple check for author {au} in response.'
@@ -147,7 +141,7 @@ class ListPageTest(unittest.TestCase):
                     'Should not have a comma with a space in front of it')
 
     def test_paging_first(self):
-        rv = self.app.get('/list/hep-ph/0901')
+        rv = self.client.get('/list/hep-ph/0901')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -185,7 +179,7 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[1]'))
 
     def test_paging_second(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=25&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=25&show=25')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -227,7 +221,7 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[26]'))
 
     def test_paging_middle(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=175&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=175&show=25')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -281,7 +275,7 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[176]'))
 
     def test_paging_last(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=1000&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=1000&show=25')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -320,7 +314,7 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[1001]'))
 
     def test_paging_penultimate(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=975&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=975&show=25')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -362,7 +356,7 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[976]'))
 
     def test_paging_925(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=925&show=25')
+        rv = self.client.get('/list/hep-ph/0901?skip=925&show=25')
         self.assertEqual(rv.status_code, 200)
 
         rvdata = rv.data.decode('utf-8')
@@ -410,34 +404,34 @@ class ListPageTest(unittest.TestCase):
         assert_that(first_index_atag.string, equal_to('[926]'))
 
     def test_odd_requests(self):
-        rv = self.app.get('/list/hep-ph/0901?skip=925&show=1000000')
+        rv = self.client.get('/list/hep-ph/0901?skip=925&show=1000000')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/hep-ph/bogusTimePeriod')
+        rv = self.client.get('/list/hep-ph/bogusTimePeriod')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/junkarchive')
+        rv = self.client.get('/list/junkarchive')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/ao-si/0901?skip=925&show=25')
+        rv = self.client.get('/list/ao-si/0901?skip=925&show=25')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0100')
+        rv = self.client.get('/list/math/0100')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0113')
+        rv = self.client.get('/list/math/0113')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/0199')
+        rv = self.client.get('/list/math/0199')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/200199')
+        rv = self.client.get('/list/math/200199')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/2')
+        rv = self.client.get('/list/math/2')
         self.assertNotEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/math/2001999999')
+        rv = self.client.get('/list/math/2001999999')
         self.assertNotEqual(rv.status_code, 200)
 
     def test_abs_service(self):
@@ -454,37 +448,38 @@ class ListPageTest(unittest.TestCase):
         assert_that(service.version(), is_not(None))
 
     def test_not_modified_from_listing_service(self):
-        flservice = app.config['listing_service']
-        flservice.list_new_articles = MagicMock(return_value={'not_modified': True,
-                                                              'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-        rv = self.app.get('/list/hep-ph/new')
-        self.assertEqual(
-            rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-
-        flservice.list_pastweek_articles = MagicMock(return_value={'not_modified': True,
-                                                                   'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-        rv = self.app.get('/list/hep-ph/recent')
-        self.assertEqual(
-            rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')        
-        rv = self.app.get('/list/hep-ph/pastweek')
-        self.assertEqual(
-            rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-        
-        flservice.list_articles_by_month = MagicMock(return_value={'not_modified': True,
-                                                                    'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-        rv = self.app.get('/list/hep-ph/1801')
-        self.assertEqual(
-            rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-
-        flservice.list_articles_by_year = MagicMock(return_value={'not_modified': True,
+        with self.app.app_context():
+            flservice = get_listing_service()
+            flservice.list_new_articles = MagicMock(return_value={'not_modified': True,
                                                                   'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-        rv = self.app.get('/list/hep-ph/18')
-        self.assertEqual(
-            rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
+            rv = self.client.get('/list/hep-ph/new')
+            self.assertEqual(
+                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
+            
+            flservice.list_pastweek_articles = MagicMock(return_value={'not_modified': True,
+                                                                       'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
+            rv = self.client.get('/list/hep-ph/recent')
+            self.assertEqual(
+                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')        
+            rv = self.client.get('/list/hep-ph/pastweek')
+            self.assertEqual(
+                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
+            
+            flservice.list_articles_by_month = MagicMock(return_value={'not_modified': True,
+                                                                       'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
+            rv = self.client.get('/list/hep-ph/1801')
+            self.assertEqual(
+                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
+
+            flservice.list_articles_by_year = MagicMock(return_value={'not_modified': True,
+                                                                      'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
+            rv = self.client.get('/list/hep-ph/18')
+            self.assertEqual(
+                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
 
     def test_list_called_from_archive(self):
-        rv = self.app.get('/list/?archive=hep-ph&year=08&month=03&submit=Go')        
+        rv = self.client.get('/list/?archive=hep-ph&year=08&month=03&submit=Go')        
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/list/?archive=hep-ph&year=08&month=all&submit=Go')        
+        rv = self.client.get('/list/?archive=hep-ph&year=08&month=all&submit=Go')        
         self.assertEqual(rv.status_code, 200)

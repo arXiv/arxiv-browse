@@ -52,7 +52,7 @@ def year_page(archive_id: str, year: int) -> Any:
     else:
         archive = taxonomy.ARCHIVES[archive_id]
 
-    listing_service = get_listing_service(current_app)
+    listing_service = get_listing_service()
     month_listing = listing_service.monthly_counts(archive_id, year)
 
     for month in month_listing['month_counts']:
