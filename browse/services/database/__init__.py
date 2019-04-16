@@ -4,8 +4,7 @@ import ipaddress
 from datetime import date, datetime
 from dateutil.tz import tzutc, gettz
 from typing import List, Optional, Any, Callable, Tuple
-from sqlalchemy import not_, desc, asc, bindparam
-from sqlalchemy.ext import baked
+from sqlalchemy import not_, desc, asc
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -24,7 +23,6 @@ from logging import Logger
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
-bakery = baked.bakery()
 
 
 def db_handle_error(logger: Logger, default_return_val: Any) \
@@ -223,9 +221,7 @@ def get_sequential_id(paper_id: Identifier,
                       context: str = 'all',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
-    local_session = db.session()
-    baked_query = bakery(lambda session: session.query(Document.paper_id))
-
+    query = db.session.query(Document.paper_id)
     if paper_id.is_old_id:
         # NB: classic did not support old identifiers in prevnext
         if context == 'all':
@@ -234,33 +230,27 @@ def get_sequential_id(paper_id: Identifier,
             like_id = f'%/{paper_id.yymm}%'
     else:
         like_id = f'{paper_id.yymm}.%'
+    query = query.filter(Document.paper_id.like(like_id))
 
-    baked_query += lambda q: q.filter(
-        Document.paper_id.like(bindparam('like_id')))
     if is_next:
-        baked_query += lambda q: q.filter(Document.paper_id >
-                                          bindparam('paper_id')). \
+        query = query.filter(Document.paper_id > paper_id.id). \
             order_by(asc(Document.paper_id))
     else:
-        baked_query += lambda q: q.filter(Document.paper_id <
-                                          bindparam('paper_id')). \
+        query = query.filter(Document.paper_id < paper_id.id). \
             order_by(desc(Document.paper_id))
     if context != 'all':
         archive: str = context
         subject_class: str = ''
         if '.' in archive:
             (archive, subject_class) = archive.split('.')
-        baked_query += lambda q: q.join(in_category).filter(
-            in_category.c.archive == bindparam('archive'))
+        query = query.join(in_category).filter(
+            in_category.c.archive == archive)
         if subject_class:
-            baked_query += lambda q: q.filter(
-                in_category.c.subject_class == bindparam('subject_class'))
+            query = query.filter(
+                in_category.c.subject_class == subject_class)
 
-    result = baked_query(local_session).params(
-        like_id=like_id,
-        paper_id=paper_id.id,
-        archive=archive if archive else None,
-        subject_class=subject_class if subject_class else None).first()
+    result = query.first()
+
     if result:
         return f'{result.paper_id}'
     return None
