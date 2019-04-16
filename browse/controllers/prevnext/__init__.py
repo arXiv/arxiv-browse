@@ -45,43 +45,41 @@ def get_prevnext(request_params: MultiDict) -> Response:
         redirect cannot be returned even when the request parameters are valid.
 
     """
+    if 'id' not in request_params:
+        raise BadRequest('Missing article identifier')
     try:
-        if 'id' not in request_params:
-            raise BadRequest('Missing article identifier')
         arxiv_id = Identifier(request_params['id'])
-
-        if not ('function' in request_params
-                and request_params['function'] in ['prev', 'next']):
-            raise BadRequest('Missing or invalid function request')
-
-        if 'context' not in request_params:
-            raise BadRequest('Missing context')
-        context = request_params['context']
-
-        if not (context in CATEGORIES_ACTIVE
-                or context in ARCHIVES or context == 'all'):
-            raise BadRequest('Invalid context')
     except IdentifierException:
         raise BadRequest(f"Invalid article identifier {request_params['id']}")
+
+    if not ('function' in request_params
+            and request_params['function'] in ['prev', 'next']):
+        raise BadRequest('Missing or invalid function request')
+
+    if 'context' not in request_params:
+        raise BadRequest('Missing context')
+    context = request_params['context']
+
+    if not (context in CATEGORIES_ACTIVE
+            or context in ARCHIVES or context == 'all'):
+        raise BadRequest('Invalid context')
 
     is_next = request_params['function'] == 'next'
     try:
         seq_id = get_sequential_id(paper_id=arxiv_id,
                                    is_next=is_next,
                                    context=context)
-        if seq_id:
-            redirect_url = url_for('browse.abstract',
-                                   arxiv_id=seq_id,
-                                   context=context)
-            return {},\
-                status.HTTP_301_MOVED_PERMANENTLY, {'Location': redirect_url}
-        else:
-            raise BadRequest(
-                f'No {"next" if is_next else "previous"} article found for '
-                f'{arxiv_id.id} in {context}'
-            )
-    except BadRequest:
-        raise
     except Exception as ex:
         logger.warning(f'Error getting sequential ID: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
+
+    if not seq_id:
+        raise BadRequest(
+            f'No {"next" if is_next else "previous"} article found for '
+            f'{arxiv_id.id} in {context}'
+        )
+
+    redirect_url = url_for('browse.abstract',
+                           arxiv_id=seq_id,
+                           context=context)
+    return {}, status.HTTP_301_MOVED_PERMANENTLY, {'Location': redirect_url}

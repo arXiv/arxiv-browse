@@ -15,7 +15,6 @@
 
 
 {%- block content %}
-<div id='content'>
   <h1>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
 
   {% if subsumed_id %}
@@ -40,10 +39,10 @@
         <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
           {{archive_id}} listings</li>
           <li>specific year/month:
-            
+
             {# <form action="{{url_for('.list_articles')}}" method="get"> #}
             {# hard coded for legacy /list for now #}
-          <form action="/list" method="get"> 
+          <form action="/list" method="get">
             {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
@@ -87,7 +86,7 @@
       </form>
     </li>
     <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>
-    
+
     <li>Article statistics by year:<br>
       {% for url, year in stats_by_year %}
       <a href="{{url}}">{{year}}</a>
@@ -109,5 +108,4 @@
     {% endfor %}
   </ul>
   {% endif %}
-</div>
 {%- endblock %}

@@ -10,7 +10,7 @@ ListingItem = TypedDict('ListingItem',
                         {'id': str,
                          'listingType': str,
                          'primary': str})
-'''A single item for a listing.
+"""A single item for a listing.
 
 The id is the arXiv ID and may be an idv.
 
@@ -20,7 +20,7 @@ in the arXiv system.
 
 primary is the primary category of the article.
 
-'''
+"""
 
 
 ListingResponse = TypedDict('ListingResponse',
@@ -28,7 +28,7 @@ ListingResponse = TypedDict('ListingResponse',
                              'pubdates': List[Tuple[date, int]],
                              'count': int,
                              'expires': str})
-'''listings is the list of items a time period.
+"""listings is the list of items a time period.
 
 pubdates are the dates of publications. The int is the number of items
 published on the associated date.
@@ -44,7 +44,7 @@ to be the timezone of the listing service, listing client or web client.
 Why not just do listing: List[Tuple[date,List[ListingItem]}} ?
 Because pastweek needs to support counts for the days and needs to be
 able to support skip/show.
-'''
+"""
 
 NewResponse = TypedDict('NewResponse',
                         {'listings': List[ListingItem],
@@ -54,7 +54,7 @@ NewResponse = TypedDict('NewResponse',
                          'announced': date,
                          'submitted': Tuple[date, date],
                          'expires': str})
-'''
+"""
 listings is the list of items for the most recent publish cycle.
 
 announced is the date of the most recent publish cycle.
@@ -71,13 +71,13 @@ header. It must be in rfc-1123 format ex. Wed, 22 Oct 2008 10:55:46 GMT
 The timezone for this expires should be when the cache expires and does not need
 to be the timezone of the listing service, listing client or web client.
 
-'''
+"""
 
 
 NotModifiedResponse = TypedDict('NotModifiedResponse',
                                 {'not_modified': bool,
                                  'expires': str})
-'''
+"""
 Listing response that indicates that the listing has not been modified since
 the date in the if-modified-since parameter.
 
@@ -85,7 +85,7 @@ expires must be in rfc-1123 format ex. Wed, 22 Oct 2008 10:55:46 GMT
 The timezone for this expires should be when the cache expires and does not need
 to be the timezone of the listing service, listing client or web client.
 
-'''
+"""
 
 
 
@@ -94,7 +94,7 @@ MonthCount = TypedDict('MonthCount',
                          'month': str,
                          'new': int,
                          'cross': int})
-'''A single month's count for an archive.
+"""A single month's count for an archive.
 
 year is the year the listing is for.
 
@@ -106,14 +106,14 @@ cross is the count of crosses for that month.
 
 rep is the count of replaced for that month.
 
-'''
+"""
 
 
 ListingCountResponse = TypedDict('ListingCountResponse',
                                  {'month_counts': List[MonthCount],
                                   'new_count': int,
                                   'cross_count': int})
-'''Response with the counts for an archive for a given year.
+"""Response with the counts for an archive for a given year.
 
 month_counts are counts for individual months.
 
@@ -122,4 +122,4 @@ new_count is the count of new articles for the year.
 cross_count is the count of cross articles for the year.
 
 rep_count is the count of replaced articles for the year.
-'''
+"""

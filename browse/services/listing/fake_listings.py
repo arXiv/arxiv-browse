@@ -2,9 +2,10 @@
 
 # pylint: skip-file
 
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
-from browse.domain.listing import NewResponse, ListingResponse, ListingItem, ListingCountResponse
+from browse.domain.listing import NewResponse, ListingResponse, ListingItem, \
+    ListingCountResponse
 from browse.services.listing import ListingService
 import datetime
 

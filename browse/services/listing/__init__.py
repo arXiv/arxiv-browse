@@ -16,7 +16,9 @@ granularity for when a paper was announced. In the future there might
 be better date granularity for new papers.
 """
 
-from typing import Optional
+from typing import cast, Optional, Any
+
+from flask import g
 
 from browse.domain.listing import NewResponse, ListingResponse, ListingCountResponse
 
@@ -85,3 +87,18 @@ class ListingService:
                        year: int) -> ListingCountResponse:
         """Gets monthly listing counts for the year."""
         raise NotImplementedError
+
+
+
+def get_listing_service() -> ListingService:
+    """Get the listing service.
+
+    There is probably a better way to do this.
+    """
+    if 'listing_service' not in g:
+        # importing at runtime to avoid cyclic imports that kill python
+        import importlib
+        fl = importlib.import_module("browse.services.listing.fake_listings")
+        g.listing_service = fl.FakeListingFilesService()
+
+    return cast(ListingService, g.listing_service)
