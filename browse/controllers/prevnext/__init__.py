@@ -71,7 +71,7 @@ def get_prevnext(request_params: MultiDict) -> Response:
                                    context=context)
     except Exception as ex:
         logger.warning(f'Error getting sequential ID: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     if not seq_id:
         raise BadRequest(

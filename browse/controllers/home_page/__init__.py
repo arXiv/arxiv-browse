@@ -28,7 +28,7 @@ def get_home_page() -> Response:
         response_data['document_count'] = _get_document_count()
     except Exception as ex:
         logger.warning(f'Could not get abs page data: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     response_data['groups'] = taxonomy.definitions.GROUPS
     response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE

@@ -15,7 +15,8 @@ from browse.services.database import get_paper_trackback_pings, \
 from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.document import metadata
-from browse.services.document.metadata import AbsException, AbsNotFoundException
+from browse.services.document.metadata import AbsException, \
+    AbsNotFoundException
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
 
@@ -80,7 +81,7 @@ def get_tb_page(arxiv_id: str) -> Response:
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
     except Exception as ex:
         logger.warning(f'Error getting trackbacks: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     return response_data, response_status, response_headers
 
@@ -133,7 +134,7 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
         raise BadRequest
     except Exception as ex:
         logger.warning(f'Error getting recent trackbacks: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     return response_data, response_status, response_headers
 
@@ -175,8 +176,8 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
             return {}, response_status, {'Location': trackback.url}
     except ValueError:
         raise TrackbackNotFound()
-    except Exception:
-        raise InternalServerError
+    except Exception as ex:
+        raise InternalServerError from ex
 
     raise TrackbackNotFound()
 

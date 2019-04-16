@@ -38,7 +38,7 @@ def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
             get_hourly_stats_count(stats_date=requested_dt.date())
     except Exception as ex:
         logger.warning(f'Error getting hourly stats page data: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     response_data['normal_count'] = normal_count
     response_data['admin_count'] = admin_count
@@ -61,7 +61,7 @@ def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
         rows = get_hourly_stats(stats_date=requested_dt.date())
     except Exception as ex:
         logger.warning(f'Error getting hourly stats csv: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
     for r in rows:
         hour_dt: str = datetime(
@@ -94,7 +94,7 @@ def get_monthly_downloads_page() -> Response:
         return response_data, status.HTTP_200_OK, {}
     except Exception as ex:
         logger.warning(f'Error getting monthly downloads page data: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
 
 def get_download_stats_csv() -> Response:
@@ -108,7 +108,7 @@ def get_download_stats_csv() -> Response:
         return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
     except Exception as ex:
         logger.warning(f'Error getting monthly download stats csv: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
 
 
 def get_monthly_submissions_page() -> Response:
@@ -148,4 +148,4 @@ def get_submission_stats_csv() -> Response:
         return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
     except Exception as ex:
         logger.warning(f'Error getting monthly submission stats csv: {ex}')
-        raise InternalServerError
+        raise InternalServerError from ex
