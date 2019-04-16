@@ -242,7 +242,7 @@ def get_sequential_id(paper_id: Identifier,
         archive: str = context
         subject_class: str = ''
         if '.' in archive:
-            (archive, subject_class) = archive.split('.')
+            (archive, subject_class) = archive.split('.', 1)
         query = query.join(in_category).filter(
             in_category.c.archive == archive)
         if subject_class:
