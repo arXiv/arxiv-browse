@@ -272,17 +272,20 @@ BROWSE_USER_BANNER_ENABLED = os.environ.get(
     'BROWSE_USER_BANNER_ENABLED', False)
 """Enable/disable user banner."""
 try:
-    BROWSE_USER_BANNER_START_DATE = dateutil.parser(
+    BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
         os.environ.get('BROWSE_USER_BANNER_START_DATE')
-    )
+    ).replace(hour=0, minute=0, second=0)
 except Exception:
-    BROWSE_USER_BANNER_START_DATE = datetime(1991, 8, 1)
+    warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
+    BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
+
 try:
-    BROWSE_USER_BANNER_END_DATE = dateutil.parser(
+    BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
         os.environ.get('BROWSE_USER_BANNER_END_DATE')
-    )
+    ).replace(hour=23, minute=59, second=59)
 except Exception:
-    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=4)
+    warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
+    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
 
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')

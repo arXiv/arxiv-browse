@@ -1,5 +1,6 @@
 """Provides the user intefaces for browse."""
 import re
+from datetime import datetime
 from typing import Callable, Dict, Mapping, Union
 from flask import Blueprint, render_template, request, Response, session, \
     current_app, url_for, redirect
@@ -18,6 +19,11 @@ from browse.controllers.year import year_page
 logger = logging.getLogger(__name__)
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
+
+
+@blueprint.context_processor
+def inject_now() -> None:
+    return dict(request_datetime=datetime.now())
 
 
 @blueprint.before_request
