@@ -189,8 +189,7 @@ def list_articles(context: str, subcontext: str) -> Response:
         return redirect(headers['Location'], code=code)  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers  # type: ignore
-    else:
-        return response, code, headers  # type: ignore
+    return response, code, headers  # type: ignore
 
 
 @blueprint.route('stats/<string:command>',
@@ -322,15 +321,14 @@ def archive(archive: str):  # type: ignore
         return redirect(headers['Location'], code=code)
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers
-    else:
-        return response, code, headers
+    return response, code, headers
 
 
 @blueprint.route('year/<archive>', defaults={'year': None})
 @blueprint.route('year/<archive>/', defaults={'year': None}, strict_slashes=False)
 @blueprint.route('year/<archive>/<int:year>/')
 @blueprint.route('year/<archive>/<int:year>')
-def year(archive: str, year: int): # type: ignore
+def year(archive: str, year: int):  # type: ignore
     """Year's stats for an archive."""
     response, code, headers = year_page(archive, year)
     if code == status.HTTP_307_TEMPORARY_REDIRECT:
@@ -349,6 +347,5 @@ def cookies(set):  # type: ignore
         for ctoset in cookies_to_set(request):
             resp.set_cookie(**ctoset)  # type: ignore
         return resp
-    else:
-        response, code, headers = get_cookies_page(is_debug)
-        return render_template('cookies.html', **response), code, headers
+    response, code, headers = get_cookies_page(is_debug)
+    return render_template('cookies.html', **response), code, headers
