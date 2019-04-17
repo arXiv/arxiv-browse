@@ -78,13 +78,12 @@ type_to_template = {
     'year': 'list/year.html'
 }
 
-
-def get_listing(
-        subject_or_category: str,
-        time_period: str,
-        skip: str,
-        show: str) -> Response:
-    """Handle requests to list articles.
+def get_listing(subject_or_category: str,
+                time_period: str,
+                skip: str = '',
+                show: str = '') -> Response:
+    """
+    Handle requests to list articles.
 
     Parameters
     ----------
@@ -98,9 +97,18 @@ def get_listing(
     skip
        Number of articles to skip for this subject and time_period.
     show
-       Number of articles to show.
+       Number of articles to show
     """
     # TODO make sure to handle POST too
+    skip = skip or request.args.get('skip', None)
+    show = show or request.args.get('show', None)
+    if request.args.get('archive', None) is not None:
+        subject_or_category = request.args.get('archive')  # type: ignore
+    if request.args.get('year', None):
+        time_period = request.args.get('year')  # type: ignore
+        month = request.args.get('month', None)
+        if month and month != 'all':
+            time_period = time_period + request.args.get('month')  # type: ignore
 
     if (not subject_or_category or
             not (time_period and
@@ -432,7 +440,7 @@ def sub_sections_for_types(
     return {'sub_sections_for_types': secs}
 
 
-def _not_modified(response: Union[ListingResponse, NewResponse, NotModifiedResponse])->bool:
+def _not_modified(response: Union[ListingResponse, NewResponse, NotModifiedResponse]) -> bool:
     return bool(response and response.get('not_modified', False))
 
 

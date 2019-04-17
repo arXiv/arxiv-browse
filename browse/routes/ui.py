@@ -167,21 +167,14 @@ def clickthrough() -> Response:
                  methods=['GET', 'POST'])
 @blueprint.route('list/<context>/<subcontext>', methods=['GET', 'POST'])
 def list_articles(context: str, subcontext: str) -> Response:
-    """List articles by context, month etc.
-
-    Context might be a context or an archive Subcontext should be
-    'recent' 'new' or a string of format yymm
     """
-    if request.args.get('archive', None) is not None:
-        context = request.args.get('archive')  # type: ignore
-    if request.args.get('year', None):
-        subcontext = request.args.get('year')  # type: ignore
-        month = request.args.get('month', None)
-        if month and month != 'all':
-            subcontext = subcontext + request.args.get('month')  # type: ignore
+    List articles by context, month etc.
 
-    response, code, headers = list_page.get_listing(  # type: ignore
-        context, subcontext, request.args.get('skip'), request.args.get('show'))
+    Context might be a context or an archive; Subcontext should be
+    'recent', 'new' or a string of format YYMM.
+    """
+    response, code, headers = \
+        list_page.get_listing(context, subcontext)  # type: ignore
     if code == status.HTTP_200_OK:
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response['template'], **response), code, headers  # type: ignore
