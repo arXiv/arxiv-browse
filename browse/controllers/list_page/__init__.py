@@ -94,12 +94,14 @@ def get_listing(subject_or_category: str,
        recent and pastweek mean the last 5 listings,
        new means the most recent listing,
        current means the listings for the current month.
+    skip
+       Number of articles to skip for this subject and time_period.
+    show
+       Number of articles to show
     """
     # TODO make sure to handle POST too
     skip = skip or request.args.get('skip', None)
-    """Number of articles to skip for this subject and time_period."""
     show = show or request.args.get('show', None)
-    """Number of articles to show."""
     if request.args.get('archive', None) is not None:
         subject_or_category = request.args.get('archive')  # type: ignore
     if request.args.get('year', None):
