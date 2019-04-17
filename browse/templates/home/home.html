@@ -80,7 +80,7 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
     {#- TODO: url_for /list, /catchup -#}
     <li>
       <a href="{{ archive_url }}">{{ archive_name }}</a> (<b>{{ archive_key if archive_key != 'cs' else 'CoRR' }}</b> <a href="/list/{{ archive_key }}/new">new</a>, <a href="/list/{{ archive_key }}/recent">recent</a>, <a href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
-      {%- if group_key == 'grp_physics' and archive_key not in ('gr-qc', 'hep-ex', 'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex', 'nucl-th', 'quant-ph')  -%}<br/>includes:
+      {%- if group_key == 'grp_physics' and archive_key not in categories  -%}<br/>includes:
       {%- elif archive_key == 'cs' -%}<br/>includes (see <a href="https://arxiv.org/corr/subjectclasses">detailed description</a>):
       {%- elif archive_key in ('eess', 'econ') -%}<br/>includes (see <a href="/help/{{ archive_key }}">detailed description</a>):
       {%- elif group_key != 'grp_physics' -%}<br/>includes (see <a href="/new/{{ archive_key }}.html">detailed description</a>):
