@@ -27,7 +27,7 @@
   <!-- End Matomo Code -->
   {% endif -%}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
+  {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/slider.css?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
   <script language="javascript" src="//static.arxiv.org/js/donate.js"></script>
