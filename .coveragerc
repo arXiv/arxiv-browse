@@ -1,0 +1,16 @@
+# .converagtrc to control coverage.py
+# We usually use this as "nose2 --with-coverage"
+# see https://coverage.readthedocs.io/en/coverage-4.2/config.html
+
+[run]
+
+omit =
+  tests/legacy_comparison/*
+  wsgi.py
+  populate_test_database.py
+  
+
+[report]
+
+# Exit nose2 with failed if coverage under this percent
+fail_under = 80

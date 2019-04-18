@@ -7,13 +7,12 @@ import pytz
 
 from flask import url_for
 
-from browse.services.document.author_affil import parse_author_affil_utf
+from arxiv.util.authors import parse_author_affil_utf
 from browse.domain.metadata import DocMetadata
 
 
 def meta_tag_metadata(metadata: DocMetadata) -> List:
-    """
-    Return data for HTML <meta> tags as used by Google Scholar.
+    """Return data for HTML <meta> tags as used by Google Scholar.
 
     http://scholar.google.com/intl/en/scholar/inclusion.html.
 

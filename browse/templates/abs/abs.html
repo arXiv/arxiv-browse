@@ -1,6 +1,8 @@
 {%- extends "base.html" -%}
+{% from 'abs/author_links.html' import display_authors_with_links %}
+{% import 'base/macros.html' as base_macros %}
 
-  {% block title %}[{{ requested_id }}] {{ abs_meta.title }}{% endblock %}
+  {% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
 
 {% block head %}
   {{ super() -}}
@@ -8,6 +10,7 @@
   <link rel="stylesheet" media="screen" type="text/css" href="/bibex/bibex.css?20181010"/>
   {%- endif %}
   <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
+  {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
   {{- generate_social_media_tags() }}
 {% endblock head %}
@@ -16,9 +19,9 @@
 
 {% block header_class %}{% endblock %}
 {% block header %}
-  <h1><a href="/">arXiv.org</a> &gt; <a href="{{url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
+  <h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
   <div id="search">
-    <form id="search-arxiv" method="get" action="{{url_for('search_box')}}">
+    <form id="search-arxiv" method="get" action="{{ url_for('search_box') }}">
 
       <div class="wrapper-search-arxiv">
         <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
@@ -43,7 +46,7 @@
           </select>
         </div>
         <input class="btn-search-arxiv" value="" type="submit">
-        <div class="links">(<a href="{{url_for('help')}}">Help</a> | <a href="{{url_for('search_advanced')}}">Advanced search</a>)</div>
+        <div class="links">(<a href="{{ url_for('help') }}">Help</a> | <a href="{{ url_for('search_advanced') }}">Advanced search</a>)</div>
       </div>
     </form>
   </div>
@@ -57,75 +60,30 @@
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex_to_utf|arxiv_id_urls }}</h1>
-    <div class="authors"><span class="descriptor">Authors:</span>
-      {%- include "abs/author_links.html" %}
-    </div>
 
-    <div class="dateline">{{ generate_dateline() }}</div>
+  {{ base_macros.abs(
+    abs_meta.arxiv_identifier.id,
+    abs_meta.title,
+    display_authors_with_links(abs_meta, author_links),
+    abs_meta.abstract,
+    abs_meta.get_datetime_of_version(abs_meta.version),
+    abs_meta.primary_category.id,
+    comments = abs_meta.comments,
+    msc_class = abs_meta.msc_class,
+    acm_class = abs_meta.acm_class,
+    journal_ref = abs_meta.journal_ref,
+    doi = abs_meta.doi,
+    report_num = abs_meta.report_num,
+    version = abs_meta.version,
+    submission_history = abs_meta.version_history,
+    secondary_categories = abs_meta.get_secondaries(),
+    include_stylesheet = 0) }}
 
-    {# Below must equlvelent to what is done in the submission preview so the abstract appears as the author saw it in the preview. #}
-    <blockquote class="abstract mathjax"><span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex_to_utf_no_symb|arxiv_urlize|line_feed_to_br }}</blockquote>
-    <!--CONTEXT-->
-    <div class="metatable">
-      <table summary="Additional metadata">
-        {%- if abs_meta.comments %}
-        <tr>
-          <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ abs_meta.comments|arxiv_urlize }}</td>
-        </tr>
-        {% endif -%}
-        <tr>
-          <td class="tablecell label">Subjects:</td>
-          <td class="tablecell subjects">{{ category_line() }}</td>
-        </tr>
-        {%- if abs_meta.msc_class %}
-        <tr>
-          <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
-          <td class="tablecell msc-classes">{{ abs_meta.msc_class }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.acm_class %}
-        <tr>
-          <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
-          <td class="tablecell acm-classes">{{ abs_meta.acm_class }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.journal_ref %}
-        <tr>
-          <td class="tablecell label">Journal&nbsp;reference:</td>
-          <td class="tablecell jref">{{ abs_meta.journal_ref }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.doi %}
-        <tr>
-          <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">{{ abs_meta.doi|single_doi_url }}</td>
-        </tr>
-        {% endif -%}
-        {%- if abs_meta.report_num %}
-        <tr>
-          <td class="tablecell label">Report&nbsp;number:</td>
-          <td class="tablecell jref">{{ abs_meta.report_num }}</td>
-        </tr>
-        {% endif -%}
-        <tr>
-          <td class="tablecell label">Cite as:</td>
-          <td class="tablecell arxivid">{{ version_atag( abs_meta.arxiv_identifier.id, 0) }}</td>
-        </tr>
-        <tr>
-          <td class="tablecell label">&nbsp;</td>
-          <td class="tablecell arxividv">(or <span class="arxivid">
-              {{version_atag(abs_meta.arxiv_identifier.id, abs_meta.version)}}</span> for this version)
-          </td>
-        </tr>
-      </table>
-    </div>
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex_to_utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
-      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex_to_utf|upper }} proxy]{% endif %}
+      {% if abs_meta.proxy != None and abs_meta.proxy|wordcount > 1 %}&nbsp;[via {{ abs_meta.proxy.split()[0]|tex2utf|upper }} proxy]{% endif %}
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
@@ -133,14 +91,15 @@
     </div>
   </div>
   <!--end leftcolumn-->
-  <div class="endorsers"><a href="{{url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id)}}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{url_for('help_mathjax')}}">What is MathJax?</a>)
-    <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;"><a href="https://confluence.cornell.edu/x/MjmLFQ">Browse v0.1 released 2018-10-22</a>&nbsp;&nbsp;<button class="button is-small" id="feedback-button">Feedback?</button></span>
-  </div>
-  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-  {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
-  {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-  <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
-  {% endif %}
+    <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+      <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+    </div>
+    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+    {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
+    {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+    <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
+    {% endif %}
+
 </div>
 {% endblock content %}
 
@@ -177,16 +136,16 @@
 
 {%- macro generate_social_media_tags() -%}
     <meta name="twitter:site" content="@arxiv"/>
-    <meta property="twitter:title" content="{{ abs_meta.title|tex_to_utf|truncate(70, False, '...') }}"/>
-    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex_to_utf }}"/>
+    <meta property="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...') }}"/>
+    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
     <meta property="og:site_name" content="arXiv.org"/>
-    <meta property="og:title" content="{{ abs_meta.title|tex_to_utf }}"/>
+    <meta property="og:title" content="{{ abs_meta.title|tex2utf }}"/>
     <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
-    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex_to_utf }}"/>
+    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex2utf }}"/>
 {%- endmacro -%}
 
 {%- macro category_line() -%}
-  <span class="primary-subject">{{- abs_meta.primary_category.unalias().display_str() -}}</span>
+  <span class="primary-subject">{{- abs_meta.primary_category.unalias().display -}}</span>
   {%- if abs_meta.secondary_categories -%}
     {%- for category in abs_meta.display_secondaries() -%}
         ; {{ category }}

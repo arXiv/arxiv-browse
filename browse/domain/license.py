@@ -32,7 +32,6 @@ def license_for_recorded_license(recorded_uri: Optional[str]) -> str:
     failed to select a license. The classic submission system was
     explicitly written to not permit submitters to submit without
     selecting a license.
-
     """
     if recorded_uri is None:
         return str(ASSUMED_LICENSE_URI)

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{archive.name}}{% endblock %}
+
+
+{% block header_h1 %}
+<h1>
+<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a> > {{year}}
+</h1>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{archive.name}}</h1>
+<h2>Article statistics for {{year}}</h2>
+<p>Available montly lists with counts of <b>{{archive_id}} articles</b> +
+<i>cross-listings to {{archive_id}}</i> in {{year}}
+(each '|' represents 20 articles):</p>
+
+<h2>TODO fake data as of 2019-03-04</h2>
+
+<ul>
+ {% for month in months %}
+    <li>
+      <a href="{{month['url']}}">{{month['yymm']}}
+      </a>
+      {% for txt, url in month['art'] -%}
+        {%- if url  -%}
+          <a href={{url}}>{{txt}}</a>
+        {%- else -%}
+          {{txt}}
+        {%- endif -%}
+      {%- endfor %}
+      <b>{{month['new']|default('0',true)}}</b> + {{month['cross']|default('0',true)}}
+  </li>
+  {% endfor %}
+</ul>
+
+<p>{{year}} totals: <b>{{listing['new_count']|default('unknown')}} articles</b> + <i>{{listing['cross_count']|default('unknown')}} cross-lists</i></p>
+
+<p><b>Other years:</b>
+      <li>Article statistics by year:<br>
+        {% for url, year in stats_by_year %}
+        {% if url %}
+        <a href="{{url}}">{{year}}</a>
+        {% else %}
+        {{year}}
+        {% endif %}
+      {% endfor %}
+      </li>
+
+</p>
+
+{% endblock %}

@@ -8,35 +8,29 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
   {# disable for now #}
-  {%- if config['BROWSE_PIWIK_ENABLED'] %}
-  <!-- Piwik -->
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  <!-- Matomo -->
   <script type="text/javascript">
-    var _paq = _paq || [];
-    _paq.push(["setDomains", ["*.arxiv.org"]]);
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setCookieDomain", "{{ config['BROWSE_ANALYTICS_COOKIE_DOMAIN'] }}"]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-      var u = "//webanalytics.library.cornell.edu/";
-      _paq.push(['setTrackerUrl', u + 'piwik.php']);
-      _paq.push(['setSiteId', 538]);
-      var d = document,
-        g = d.createElement('script'),
-        s = d.getElementsByTagName('script')[0];
-      g.type = 'text/javascript';
-      g.async = true;
-      g.defer = true;
-      g.src = u + 'piwik.js';
-      s.parentNode.insertBefore(g, s);
+      var u="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '{{ config['BROWSE_ANALYTICS_SITE_ID'] }}']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
     })();
   </script>
-  <!-- End Piwik Code -->
+  <!-- End Matomo Code -->
   {% endif -%}
-  {%- include "feedback_collector_js.html" -%}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/user-banner.css?v=1.0" />
+  {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
+  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/slider.css?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="//static.arxiv.org/js/user_banner.js"></script>
+  <script language="javascript" src="//static.arxiv.org/js/donate.js"></script>
   {% endif -%}
   {%- endblock head -%}
 </head>
@@ -45,8 +39,8 @@
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
-  {%- if config['BROWSE_PIWIK_ENABLED'] -%}
-  <noscript><img src="//webanalytics.library.cornell.edu/piwik.php?idsite=538&amp;rec=1" style="border:0;" alt="" /></noscript>
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] -%}
+  <noscript><img src="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}matomo.php?idsite={{ config['BROWSE_ANALYTICS_SITE_ID'] }}&amp;rec=1" style="border:0" alt="" /></noscript>
   {% endif -%}
   <div id="cu-identity">
     <div id="cu-logo">
@@ -61,7 +55,7 @@
     {% block header %}
     {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-    {% block header_h1 %}<h1>arXiv.org</h1>{% endblock header_h1%}
+    {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
     <div id="search">
       <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
@@ -90,7 +84,6 @@
 
   <div id="content">
     {% block content %}
-    {#- Templates that inherit from this one should include one of the trailers here. -#}
     {% endblock content %}
   </div>
 
@@ -101,14 +94,14 @@
         <div class="columns">
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="https://arxiv.org/about">About arXiv</a></li>
-              <li><a href="https://arxiv.org/about/people/leadership_team">Leadership Team</a></li>
+              <li><a href="{{ url_for('about') }}">About arXiv</a></li>
+              <li><a href="{{ url_for('team') }}">Leadership Team</a></li>
             </ul>
           </div>
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="https://arxiv.org/help/contact"> Contact Us</a></li>
-              <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="https://twitter.com/arxiv"> Follow us on Twitter</a></li>
+              <li><span class="icon"><i class="fa fa-envelope"></i></span><a href="{{ url_for('contact') }}"> Contact Us</a></li>
+              <li><span class="icon"><i class="fa fa-twitter"></i></span><a href="{{ url_for('twitter') }}"> Follow us on Twitter</a></li>
             </ul>
           </div>
         </div>
@@ -119,14 +112,14 @@
         <div class="columns">
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="https://arxiv.org/help">Help</a></li>
-              <li><a href="https://arxiv.org/help/policies/privacy_policy">Privacy Policy</a></li>
+              <li><a href="{{ url_for('help') }}">Help</a></li>
+              <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
             </ul>
           </div>
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><a href="https://blogs.cornell.edu/arxiv">Blog</a></li>
-              <li><a href="https://arxiv.org/help/subscribe"> Subscribe</a></li>
+              <li><a href="{{ url_for('blog') }}">Blog</a></li>
+              <li><a href="{{ url_for('subscribe') }}"> Subscribe</a></li>
             </ul>
           </div>
         </div>
@@ -140,7 +133,7 @@
       </div>
       <div class="column">
         <p class="help" style="margin-bottom: 0;">If you have a disability and are having trouble accessing information on this website or need materials in an alternate format,
-        contact <a href="mailto:web-accessibility@cornell.edu">web-accessibility@cornell.edu</a> for assistance.</p>
+        contact <a href="{{ A11Y_URL }}">web-accessibility@cornell.edu</a> for assistance.</p>
       </div>
     </div>
   </footer>

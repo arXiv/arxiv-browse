@@ -1,0 +1,27 @@
+{%- extends "base.html" -%}
+{# Do not show login status on these pages for now, per classic #}
+
+{% block head %}
+  {{ super() -}}
+  <script src="//static.arxiv.org/js/mathjaxToggle.min.js" type="text/javascript"></script>
+  <style type="text/css">
+    p.blog { margin-bottom: 0; }
+    ul.blog { list-style-type: none; margin-top: 0; font-size: 90%; }
+  </style>
+{% endblock head %}
+
+{%- block content %}
+  <div style="font-size: smaller; margin-top: 2em;">
+  <h3>About trackbacks</h3>
+  <p>By sending a <a href="/help/trackback/">trackback</a>, you can notify
+  arXiv.org that you have created a web page that references a paper. Popular
+  blogging software supports trackback:  you can send us a trackback about this
+  paper by giving your software the following <i>trackback URL:</i></p>
+  <blockquote><tt>https://arxiv.org/trackback/{arXiv_id}</tt></blockquote>
+  <p>Some blogging software supports <i>trackback autodiscovery</i> -- in this
+  case,  your software will automatically send a trackback as soon as your
+  create a link to our abstract page.  See our
+  <a href="/help/trackback/">trackback help page</a> for more information.</p>
+  </div>
+  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+{% endblock content %}

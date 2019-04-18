@@ -107,8 +107,7 @@ class AbsMetaSession:
         self.original_versions_path = os.path.realpath(original_versions_path)
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:
-        """
-        Get the .abs metadata for the specified arXiv paper identifier.
+        """Get the .abs metadata for the specified arXiv paper identifier.
 
         Parameters
         ----------
@@ -118,7 +117,6 @@ class AbsMetaSession:
         Returns
         -------
         :class:`DocMetadata`
-
         """
         paper_id = Identifier(arxiv_id=arxiv_id)
 
@@ -156,8 +154,7 @@ class AbsMetaSession:
         return combined_version
 
     def _next_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """
-        Get next consecutive Identifier relative to the provided Identifier.
+        """Get next consecutive Identifier relative to the provided Identifier.
 
         Parameters
         ----------
@@ -167,7 +164,6 @@ class AbsMetaSession:
         -------
         :class:`Identifier`
             The next Indentifier in sequence
-
         """
         next_id = None
         if identifier.year is not None and \
@@ -234,8 +230,7 @@ class AbsMetaSession:
             return None
 
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """
-        Get the next identifier in sequence if it exists in the repository.
+        """Get the next identifier in sequence if it exists in the repository.
 
         Under certain conditions this is called to generate the "next" link
         in the "browse context" portion of the abs page rendering.
@@ -252,7 +247,6 @@ class AbsMetaSession:
         -------
         :class:`Identifier`
             The next identifier in sequence that exists in the repository.
-
         """
         next_id = self._next_id(identifier)
         if not next_id:
@@ -275,8 +269,7 @@ class AbsMetaSession:
         return None
 
     def _previous_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """
-        Get previous consecutive Identifier relative to provided Identifier.
+        """Get previous consecutive Identifier relative to provided Identifier.
 
         Parameters
         ----------
@@ -286,7 +279,6 @@ class AbsMetaSession:
         -------
         :class:`Identifier`
             The previous Indentifier in sequence
-
         """
         previous_id = None
         if identifier.year is not None and \
@@ -325,8 +317,7 @@ class AbsMetaSession:
             return None
 
     def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
-        """
-        Get the previous identifier in sequence if it exists in the repository.
+        """Get previous identifier in sequence if it exists in repository.
 
         Under certain conditions this is called to generate the "previous" link
         in the "browse context" portion of the abs page rendering.
@@ -343,7 +334,6 @@ class AbsMetaSession:
         -------
         :class:`Identifier`
             The previous identifier in sequence that exists in the repository.
-
         """
         previous_id = self._previous_id(identifier)
         if not previous_id:
@@ -398,8 +388,7 @@ class AbsMetaSession:
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
                                   add_sciencewise: bool = False) -> List[str]:
-        """
-        Get a list of formats that can be disseminated for this DocMetadata.
+        """Get a list of formats that can be disseminated for this DocMetadata.
 
         Several checks are performed to determine available dissemination
         formats:
@@ -424,7 +413,6 @@ class AbsMetaSession:
         -------
         List[str]
             A list of format strings.
-
         """
         formats: List[str] = []
 
@@ -556,17 +544,15 @@ class AbsMetaSession:
 
         if 'categories' in fields and fields['categories']:
             category_list = fields['categories'].split()
-            if category_list[0] in taxonomy.definitions.CATEGORIES:
-                primary_category = Category(id=category_list[0])
+            if category_list[0] in taxonomy.CATEGORIES:
+                primary_category = Category(category_list[0])
                 primary_archive = \
                     Archive(
-                        id=taxonomy.definitions.CATEGORIES[primary_category.id]['in_archive'])
+                        taxonomy.CATEGORIES[primary_category.id]['in_archive'])
             elif arxiv_identifier.is_old_id:
-                primary_archive = \
-                    Archive(id=arxiv_identifier.archive)  # type: ignore
+                primary_archive = Archive(arxiv_identifier.archive)
         elif arxiv_identifier.is_old_id:
-            primary_archive = \
-                Archive(id=arxiv_identifier.archive)  # type: ignore
+            primary_archive = Archive(arxiv_identifier.archive)
         else:
             raise AbsException('Cannot infer archive from identifier.')
 
@@ -588,9 +574,9 @@ class AbsMetaSession:
             primary_category=primary_category,
             primary_archive=primary_archive,
             primary_group=Group(
-                id=taxonomy.definitions.ARCHIVES[primary_archive.id]['in_group']),
+                taxonomy.ARCHIVES[primary_archive.id]['in_group']),
             secondary_categories=[
-                Category(id=x) for x in category_list[1:]
+                Category(x) for x in category_list[1:]
                 if (category_list and len(category_list) > 1)
             ],
             journal_ref=None if 'journal_ref' not in fields

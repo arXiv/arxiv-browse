@@ -1,12 +1,14 @@
-"""
-Flask configuration.
+"""Flask configuration.
 
 Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.
 """
 import os
+import warnings
+import dateutil.parser
+from datetime import datetime, timedelta
 
-VERSION = '0.1.1'
+VERSION = '0.2.1'
 """The application version """
 
 ON = 'yes'
@@ -204,46 +206,141 @@ to be loaded.
 
 # SQLAlchemy configuration
 # For mysql: 'mysql://user:pass@localhost/dbname'
-SQLALCHEMY_DATABASE_URI = os.environ.get(
-    'BROWSE_SQLALCHEMY_DATABASE_URI', 'sqlite:///../tests/data/browse.db')
+SQLALCHEMY_DATABASE_URI = os.environ.get('BROWSE_SQLALCHEMY_DATABASE_URI',
+                                         os.environ.get('SQLALCHEMY_DATABASE_URI',
+                                                        'sqlite:///../tests/data/browse.db'))
+"""SQLALCHEMY_DATABASE_URI is pulled from
+BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
+SQLALCHEMY_DATABASE_URI is checked. If that is not set, the SQLITE
+test DB is used.
+
+If neither of those is set and TESTING is the string 'yes', then a
+SQLITE test DB is used.
+"""
+
+if os.environ.get('FLASK_ENV', False) == 'production' \
+   and 'sqlite' in SQLALCHEMY_DATABASE_URI:
+    warnings.warn("Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment")
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
-# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW are set without defaults
-# because they will not work with sqlite
-# SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE'))
-# SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW'))
 
-# Disable DB queries even if other SQLAlchemy config are defined
-# This, for example, could be used in conjunction with the `no-write` runlevel
-# in the legacy infrastructure, which is a case where we know the DB is
-# unavailable and thus intentionally bypass any DB access.
+SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE', '10'))
+"""SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
+
+Ignored under sqlite."""
+
+SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW', '0'))
+"""SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
+
+Ignored under sqlite."""
+
+# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW will not work with sqlite
+if 'sqlite' in SQLALCHEMY_DATABASE_URI:
+    SQLALCHEMY_POOL_SIZE = None
+    SQLALCHEMY_MAX_OVERFLOW = None
+
+BROWSE_DAILY_STATS_PATH = os.environ.get(
+    'BROWSE_DAILY_STATS_PATH', 'tests/data/daily_stats')
+"""The classic home page uses this file to get the total paper count
+The file contains one line, with key "total_papers" and an integer, e.g.
+total_papers 1456755."""
+
 BROWSE_DISABLE_DATABASE = os.environ.get('BROWSE_DISABLE_DATABASE', False)
+"""Disable DB queries even if other SQLAlchemy config are defined
+This, for example, could be used in conjunction with the `no-write` runlevel
+in the legacy infrastructure, which is a case where we know the DB is
+unavailable and thus intentionally bypass any DB access."""
 
-# Enable/disable Piwik (Matomo) web analytics
-BROWSE_PIWIK_ENABLED = os.environ.get('BROWSE_PIWIK_ENABLED', False)
+BROWSE_SITE_LABEL = os.environ.get('BROWSE_SITE_LABEL', 'arXiv.org')
+BROWSE_SITE_HOST = os.environ.get('BROWSE_SITE_HOST', None)
+"""This is similar to, but decoupled from SERVER_NAME."""
 
-# Enable/disable user banner
+BROWSE_ANALYTICS_ENABLED = os.environ.get('BROWSE_ANALYTICS_ENABLED', False)
+"""Enable/disable Matomo web analytics."""
+BROWSE_ANALYTICS_BASE_URL = os.environ.get('BROWSE_ANALYTICS_BASE_URL',
+                                           'https://webstats.arxiv.org/')
+"""Base URL for tracker. Should include trailing slash."""
+BROWSE_ANALYTICS_COOKIE_DOMAIN = \
+    os.environ.get('BROWSE_ANALYTICS_COOKIE_DOMAIN', '*.arxiv.org')
+"""Cookie domain for tracker."""
+BROWSE_ANALYTICS_SITE_ID = os.environ.get('BROWSE_ANALYTICS_SITE_ID', '1')
+"""Tracker site ID."""
+
 BROWSE_USER_BANNER_ENABLED = os.environ.get(
     'BROWSE_USER_BANNER_ENABLED', False)
+"""Enable/disable user banner."""
+try:
+    BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
+        os.environ.get('BROWSE_USER_BANNER_START_DATE')
+    ).replace(hour=0, minute=0, second=0)
+except Exception:
+    warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
+    BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
 
-# Paths to .abs and source files
+try:
+    BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
+        os.environ.get('BROWSE_USER_BANNER_END_DATE')
+    ).replace(hour=23, minute=59, second=59)
+except Exception:
+    warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
+    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
+
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
+"""Paths to .abs and source files."""
 
 DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_ORIGNAL_VERSIONS_PATH', 'tests/data/abs_files/orig')
+"""Paths to .abs and source files."""
 
-# Path to cache directory
 DOCUMENT_CACHE_PATH = os.environ.get(
-    'DOCUMENT_CACHE_PATH', 'tests/data/cache'
+    'DOCUMENT_CACHE_PATH', 'tests/data/cache')
+"""Path to cache directory"""
+
+SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
+"""Used in linking to /show-email."""
+
+CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
+"""Used in linking to /ct."""
+
+TRACKBACK_SECRET = os.environ.get('TRACKBACK_SECRET', 'baz')
+"""Used in linking to trackbacks in /tb pages."""
+
+LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)
+"""arXiv Labs bibex enabled/disabled."""
+
+# Auth settings
+AUTH_SESSION_COOKIE_NAME = 'ARXIVNG_SESSION_ID'
+AUTH_SESSION_COOKIE_DOMAIN = os.environ.get(
+    'AUTH_SESSION_COOKIE_DOMAIN', '.arxiv.org')
+AUTH_SESSION_COOKIE_SECURE = bool(
+    int(os.environ.get('AUTH_SESSION_COOKIE_SECURE', '1')))
+AUTH_UPDATED_SESSION_REF = True
+
+CLASSIC_COOKIE_NAME = os.environ.get('CLASSIC_COOKIE_NAME', 'tapir_session')
+CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
+    'CLASSIC_PERMANENT_COOKIE_NAME',
+    'tapir_permanent'
+)
+CLASSIC_TRACKING_COOKIE = os.environ.get('CLASSIC_TRACKING_COOKIE', 'browser')
+CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
+    'BROWSE_SQLALCHEMY_DATABASE_URI', default=None))
+"""If not set, legacy database integrations for auth will not be available."""
+if not CLASSIC_DATABASE_URI:
+    warnings.warn("No value set for CLASSIC_DATABASE_URI")
+elif 'sqlite' in CLASSIC_DATABASE_URI:
+    warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
+
+CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')
+SESSION_DURATION = os.environ.get(
+    'SESSION_DURATION',
+    '36000'
 )
 
-# Used in linking to /show-email
-SHOW_EMAIL_SECRET = os.environ.get('SHOW_EMAIL_SECRET', 'foo')
-
-# Used in linking to /ct
-CLICKTHROUGH_SECRET = os.environ.get('CLICKTHROUGH_SECRET', 'bar')
-
-# arXiv Labs options
-LABS_BIBEXPLORER_ENABLED = os.environ.get('LABS_BIBEXPLORER_ENABLED', True)
+URLS = [
+    ('ui.login', '/login', os.environ.get('SERVER_NAME', 'arxiv.org'))
+    # This is a temporary workaround for ARXIVNG-2063
+]
+"""External URLs."""

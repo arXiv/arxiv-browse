@@ -1,0 +1,40 @@
+{%- extends "base.html" -%}
+
+{% block title %}Archives{% endblock %}
+
+{% block header_h1 %}
+<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > archives</h1>
+{% endblock %}
+
+
+{%- block content %}
+  <h1>Archives</h1>
+
+  {% if bad_archive is not none %}
+  <h1>No archive '{{bad_archive}}' -- available archives are:</h1>
+  {% endif %}
+
+  <p>Choose one of the following archives.</p>
+
+  <ul>
+    {% for archive in archives %}
+    {% set id = archive[0] %}
+    {% set name = archive[1] %}
+    <li><a href={{url_for('browse.archive',archive=id)}}>{{name}}</a> ({{id}})</li>
+    {% endfor %}
+  </ul>
+
+  <p>or from one of the following archives which no longer accept submissions
+    (most have been subsumed into the archives listed above)</p>
+
+
+  <ul>
+    {% for archive in defunct %}
+    {% set id = archive[0] %}
+    {% set name = archive[1] %}
+    {% set sub_to = archive[2] %}
+    <li><a href={{url_for('browse.archive',archive=sub_to)}}>{{name}}</a> ({{id}}, subsumed into {{sub_to}})</li>
+    {% endfor %}
+  </ul>
+
+{%- endblock %}

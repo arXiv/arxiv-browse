@@ -1,0 +1,95 @@
+{%- extends "base.html" -%}
+{% block title %}arXiv.org e-Print archive{% endblock %}
+{% block head %}
+  {{ super() -}}
+{% endblock head %}
+
+{% block login_link %}{% include 'login.html' %}{% endblock %}
+{% block body_id %}id="front"{% endblock %}
+
+{%- block content %}
+{#- TODO: display order in taxonomy? -#}
+<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+ e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Submissions to arXiv should conform to Cornell University academic standards. arXiv is owned and operated by Cornell University, a private not-for-profit educational institution. arXiv is funded by Cornell University, the Simons Foundation and by the member institutions.</p>
+<br/>
+{#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
+<form name="home-adv-search" action="/multi" method="get">
+  Subject search and browse:
+  <select name="groups_or_archives">
+  {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+    <option
+        value ="{{group_key}}"
+        data-url="{{url_for('search_archive', archive=group_key[4:])}}"
+        {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+      {{ group_details.name }}
+    </option>
+    {%- endfor %}
+  </select>
+  <input id="adv-search-btn" type="button" value="Search">
+  <input type="submit" name="/form" value="Form Interface">
+  <input type="submit" name="/catchup" value="Catchup">
+</form>
+
+<script type="text/javascript">
+ function doAdvSearchBtn(event) {
+     sel = document.querySelector('select[name="groups_or_archives"]')
+     if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
+         data_url = sel.options[sel.selectedIndex].dataset.url
+         if( data_url ){
+             window.location = data_url;
+         }else{
+             console.error('home page search button: no data_url found for search');
+         }
+     }
+ }
+ document.addEventListener('DOMContentLoaded',function() {
+     document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
+ },false);
+</script>
+<p>
+{%- include "home/news.html" -%}
+See cumulative <a href="/new/">"What's New"</a> pages.
+Read <a href="/help/robots">robots beware</a> before attempting any automated download
+</p>
+{#- TODO: define display order in taxonomy? -#}
+{{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
+
+<hr />
+{#- TODO: remove because of new footer? -#}
+<h2>About arXiv</h2>
+<ul>
+  <li><a href="/help/general">General information</a> and <a href="/help/scientific_ad_board">Scientific Advisory Board</a></li>
+  <li><a href="/help/support">Support and Governance Model</a> and <a href="https://confluence.cornell.edu/x/NqlRF">Member Advisory Board</a></li>
+  <li><a href="/help/find">Find</a>, <a href="/help/view">view</a>, <a href="{{ url_for('subscribe') }}">email alerts</a> and <a href="/help/rss">RSS feeds</a></li>
+  <li><a href="/help/submit">Submission</a> and <a href="/help/moderation">moderation</a> details</li>
+  <li><a href="/help/stats">Usage statistics</a> and <a href="/new/">news</a></li>
+  <li>See also searchable <a href="{{ url_for('help') }}">help pages</a></li>
+</ul>
+
+{% endblock content -%}
+
+{%- macro group_section(group_keys) -%}
+  {%- for group_key in group_keys -%}
+  <h2>{{ groups[group_key].name }}</h2>
+  <ul>
+    {% for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
+      {%- set archive_search_url = url_for('search_archive', archive=archive_key) -%}
+      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+      {%- set archive_name = archives[archive_key].name if archive_key != 'cs' else 'Computing Research Repository' -%}
+
+    {#- TODO: url_for /list, /catchup -#}
+    <li>
+      <a href="{{ archive_url }}">{{ archive_name }}</a> (<b>{{ archive_key if archive_key != 'cs' else 'CoRR' }}</b> <a href="/list/{{ archive_key }}/new">new</a>, <a href="/list/{{ archive_key }}/recent">recent</a>, <a href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
+      {%- if group_key == 'grp_physics' and archive_key not in categories  -%}<br/>includes:
+      {%- elif archive_key == 'cs' -%}<br/>includes (see <a href="https://arxiv.org/corr/subjectclasses">detailed description</a>):
+      {%- elif archive_key in ('eess', 'econ') -%}<br/>includes (see <a href="/help/{{ archive_key }}">detailed description</a>):
+      {%- elif group_key != 'grp_physics' -%}<br/>includes (see <a href="/new/{{ archive_key }}.html">detailed description</a>):
+      {%- endif -%}
+      {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
+      {% if not (loop.first and loop.last and group_key == 'grp_physics') %}<a href="/list/{{ category_key }}/recent">{{ categories[category_key].name }}</a>{% if not loop.last %}; {% endif %}{% endif %}
+      {% endfor %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+{%- endmacro -%}

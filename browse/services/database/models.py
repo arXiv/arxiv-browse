@@ -1,13 +1,25 @@
 """arXiv browse database models."""
 
+import re
+import hashlib
 from typing import Optional
+from validators import url as is_valid_url
+from datetime import datetime
+from dateutil.tz import tzutc, gettz
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, Index, \
-    Integer, SmallInteger, String, text, Text
+from sqlalchemy import BigInteger, Column, Date, DateTime, Enum, ForeignKey, \
+    ForeignKeyConstraint, Index, \
+    Integer, SmallInteger, String, Table, text, Text
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
+from arxiv.base.globals import get_application_config
 
 db: SQLAlchemy = SQLAlchemy()
+
+app_config = get_application_config()
+tz = gettz(app_config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+tb_secret = app_config.get('TRACKBACK_SECRET', 'baz')
+metadata = db.metadata
 
 
 class Document(db.Model):
@@ -29,6 +41,9 @@ class Document(db.Model):
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
     submitter = relationship('User')
+
+    trackback_ping = relationship('TrackbackPing',
+                                  primaryjoin="foreign(TrackbackPing.document_id)==Document.document_id")
 
 
 class License(db.Model):
@@ -245,6 +260,32 @@ class TrackbackPing(db.Model):
                     server_default=text("'pending'"))
     site_id = Column(Integer)
 
+    document = relationship('Document',
+                            primaryjoin="foreign(Document.document_id)==TrackbackPing.document_id")
+
+    @property
+    def posted_datetime(self) -> DateTime:
+        """Get posted_date as UTC datetime."""
+        dt = datetime.fromtimestamp(self.posted_date, tz=tz)
+        return dt.astimezone(tz=tzutc())
+
+    @property
+    def display_url(self) -> str:
+        """Get the URL without the protocol, for display."""
+        return re.sub(r'^[a-z]+:\/\/', '',  # type: ignore
+                      self.url.strip(), flags=re.IGNORECASE)
+
+    @property
+    def has_valid_url(self) -> bool:
+        """Determine whether the trackback URL is valid."""
+        return bool(is_valid_url(self.url, public=False))
+
+    @property
+    def hashed_document_id(self) -> str:
+        """Get the hashed document_id."""
+        s = f'{self.document_id}{self.trackback_id}{tb_secret}'
+        return hashlib.md5(s.encode()).hexdigest()[0:9]
+
 
 class TrackbackSite(db.Model):
     """Model for sites that submit trackbacks to arXiv."""
@@ -291,6 +332,124 @@ class DBLPDocumentAuthor(db.Model):
 
     author = relationship('DBLPAuthor')
     document = relationship('Document')
+
+
+class Category(db.Model):
+    """Model for category in taxonomy."""
+
+    __tablename__ = 'arXiv_categories'
+
+    archive = Column(ForeignKey('arXiv_archives.archive_id'),
+                     primary_key=True,
+                     nullable=False, server_default=text("''"))
+    subject_class = Column(String(16), primary_key=True,
+                           nullable=False, server_default=text("''"))
+    definitive = Column(Integer, nullable=False, server_default=text("'0'"))
+    active = Column(Integer, nullable=False, server_default=text("'0'"))
+    category_name = Column(String(255))
+    endorse_all = Column(Enum('y', 'n', 'd'), nullable=False,
+                         server_default=text("'d'"))
+    endorse_email = Column(Enum('y', 'n', 'd'),
+                           nullable=False, server_default=text("'d'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'0'"))
+    endorsement_domain = Column(ForeignKey(
+        'arXiv_endorsement_domains.endorsement_domain'), index=True)
+
+    arXiv_archive = relationship('Archive')
+    arXiv_endorsement_domain = relationship('EndorsementDomain')
+
+
+class Archive(db.Model):
+    """Model for archive in taxonomy."""
+
+    __tablename__ = 'arXiv_archives'
+
+    archive_id = Column(String(16), primary_key=True,
+                        server_default=text("''"))
+    in_group = Column(ForeignKey('arXiv_groups.group_id'),
+                      nullable=False, index=True, server_default=text("''"))
+    archive_name = Column(String(255), nullable=False,
+                          server_default=text("''"))
+    start_date = Column(String(4), nullable=False, server_default=text("''"))
+    end_date = Column(String(4), nullable=False, server_default=text("''"))
+    subdivided = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    arXiv_group = relationship('Group')
+
+
+class Group(db.Model):
+    """Model for group in taxonomy."""
+
+    __tablename__ = 'arXiv_groups'
+
+    group_id = Column(String(16), primary_key=True, server_default=text("''"))
+    group_name = Column(String(255), nullable=False, server_default=text("''"))
+    start_year = Column(String(4), nullable=False, server_default=text("''"))
+
+
+class EndorsementDomain(db.Model):
+    """Model for endorsement domain."""
+
+    __tablename__ = 'arXiv_endorsement_domains'
+
+    endorsement_domain = Column(
+        String(32), primary_key=True, server_default=text("''"))
+    endorse_all = Column(Enum('y', 'n'), nullable=False,
+                         server_default=text("'n'"))
+    mods_endorse_all = Column(
+        Enum('y', 'n'), nullable=False, server_default=text("'n'"))
+    endorse_email = Column(Enum('y', 'n'), nullable=False,
+                           server_default=text("'y'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'4'"))
+
+
+in_category = Table(
+    'arXiv_in_category', metadata,
+    Column('document_id', ForeignKey('arXiv_documents.document_id'),
+           nullable=False, index=True, server_default=text("'0'")),
+    Column('archive', String(16), nullable=False, server_default=text("''")),
+    Column('subject_class', String(16),
+           nullable=False, server_default=text("''")),
+    Column('is_primary', Integer, nullable=False, server_default=text("'0'")),
+    ForeignKeyConstraint(['archive', 'subject_class'], [
+                         'arXiv_categories.archive',
+                         'arXiv_categories.subject_class']),
+    Index('archive', 'archive', 'subject_class', 'document_id', unique=True),
+    Index('arXiv_in_category_mp', 'archive', 'subject_class')
+)
+
+
+class StatsMonthlyDownload(db.Model):
+    """Model for monthly article download statistics."""
+
+    __tablename__ = 'arXiv_stats_monthly_downloads'
+
+    ym = Column(Date, primary_key=True)
+    downloads = Column(Integer, nullable=False)
+
+
+class StatsMonthlySubmission(db.Model):
+    """Model for monthly submission statistics."""
+
+    __tablename__ = 'arXiv_stats_monthly_submissions'
+
+    ym = Column(Date, primary_key=True,
+                server_default=text("'0000-00-00'"))
+    num_submissions = Column(SmallInteger, nullable=False)
+    historical_delta = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+
+
+stats_hourly = Table(
+    'arXiv_stats_hourly', metadata,
+    Column('ymd', Date, nullable=False, index=True),
+    Column('hour', Integer, nullable=False, index=True),
+    Column('node_num', Integer, nullable=False, index=True),
+    Column('access_type', String(1), nullable=False, index=True),
+    Column('connections', Integer, nullable=False)
+)
 
 
 def init_app(app: Optional[LocalProxy]) -> None:

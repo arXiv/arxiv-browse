@@ -1,8 +1,9 @@
 import unittest
 
 from bs4 import BeautifulSoup
-
 from tests.test_abs_parser import ABS_FILES
+
+from arxiv import taxonomy
 from browse.services.document.metadata import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 
@@ -17,6 +18,104 @@ class BrowseTest(unittest.TestCase):
         app.testing = True
         app.config['APPLICATION_ROOT'] = ''
         self.app = app.test_client()
+
+    def test_home(self):
+        """Test the home page."""
+        rv = self.app.get('/')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        for group_key, group_value in taxonomy.definitions.GROUPS.items():
+            if group_key == 'grp_test':
+                continue
+            auths_elmt = html.find('h2', text=group_value['name'])
+            self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
+        self.assertFalse(html.find('h2', text='Test'),
+                         "'Test' group should not be shown on homepage")
+
+    def test_tb(self):
+        """Test the /tb/<arxiv_id> page."""
+        rv = self.app.get('/tb/1901.99999')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/foo')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get('/tb/0808.4142')
+        self.assertEqual(rv.status_code, 200)
+
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        h2_elmt = html.find('h2')
+        h2_txt = h2_elmt.get_text()
+        self.assertTrue(h2_elmt, 'Should have <h2> element')
+        self.assertEquals(h2_txt, 'Trackbacks for 0808.4142')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertGreater(len(tb_a_tags), 1,
+                           'There should be more than one <a> tag for trackbacks')
+        h1_elmt = html.find('div', id='abs')
+        h1_txt = h1_elmt.get_text()
+        self.assertTrue(h1_elmt, 'Should have <h1 id="abs"> element')
+        self.assertRegex(
+            h1_txt,
+            r'Observation of the doubly strange b baryon Omega_b-',
+            '<h1> element contains title of article')
+
+    def test_tb_recent(self):
+        """Test the /tb/recent page."""
+        rv = self.app.get('/tb/recent')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.post('/tb/recent', data=dict(views='50'))
+        self.assertEqual(rv.status_code, 200, 'POST with integer OK')
+
+        rv = self.app.post('/tb/recent', data=dict(views='bar'))
+        self.assertEqual(rv.status_code, 400, 'POST with non-integer not OK')
+
+        rv = self.app.get('/tb/recent/foo')
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.post('/tb/recent', data=dict(views='1'))
+        self.assertEqual(rv.status_code, 200, 'POST with views==1 OK')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
+        self.assertEquals(len(tb_a_tags), 1,
+                          'There should be exactly one trackback link')
+
+    def test_stats_today(self):
+        """Test the /stats/today page."""
+        rv = self.app.get('/stats/today')
+        self.assertEqual(rv.status_code, 200)
+        rv = self.app.get('/stats/today?date=20190102')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_hourly?date=20190102'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
+    def test_stats_monthly_downloads(self):
+        """Test the /stats/monthly_downloads page."""
+        rv = self.app.get('/stats/monthly_downloads')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_monthly_downloads'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
+    def test_stats_monthly_submissions(self):
+        """Test the /stats/monthly_submissions page."""
+        rv = self.app.get('/stats/monthly_submissions')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        csv_dl_elmt = html.find('a', {'href': '/stats/get_monthly_submissions'})
+        self.assertIsNotNone(csv_dl_elmt,
+                             'csv download link exists')
+
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
@@ -148,7 +247,8 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link without version affix exists')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v'})
-        self.assertIsNone(pdf_dl_elmt, 'pdf download link with version affix does not exist')
+        self.assertIsNone(
+            pdf_dl_elmt, 'pdf download link with version affix does not exist')
 
         rv = self.app.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
@@ -200,7 +300,6 @@ class BrowseTest(unittest.TestCase):
             'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
             "FTP URLs should be turned into links ARXIVNG-1242")
 
-
     def test_160408245(self):
         """Test linking in 1604.08245."""
         id = '1604.08245'
@@ -234,62 +333,65 @@ class BrowseTest(unittest.TestCase):
 
     def test_authors_and_arxivId_in_title(self):
         id = '1501.99999'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        title_elmt = html.find('h1','title')
-        self.assertTrue(title_elmt,'Should title element')
+        title_elmt = html.find('h1', 'title')
+        self.assertTrue(title_elmt, 'Should title element')
 
         ida = title_elmt.find('a')
         self.assertTrue(ida, 'Should be <a> tag in title')
 
-        self.assertIsNotNone(ida['href'],'<a> tag in title should have href')
-        self.assertEqual(ida['href'], '/abs/1501.99998')
+        self.assertIsNotNone(ida['href'], '<a> tag in title should have href')
+        self.assertEqual(ida['href'], 'https://arxiv.org/abs/1501.99998')
+
         self.assertEqual(ida.text, '1501.99998')
 
-        au_a_tags = html.find('div','authors').find_all('a')
-        self.assertGreater(len(au_a_tags), 1, 'Should be some a tags for authors')
+        au_a_tags = html.find('div', 'authors').find_all('a')
+        self.assertGreater(len(au_a_tags), 1,
+                           'Should be some a tags for authors')
         self.assertNotIn('query=The', au_a_tags[0]['href'],
                          'Collaboration author query should not have "The"')
         self.assertEqual(au_a_tags[0].text, 'SuperSuper Collaboration')
 
-
     def test_long_author_colab(self):
         id = '1501.05201'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        auths_elmt = html.find('div','authors')
-        self.assertTrue(auths_elmt,'Should authors div element')
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
 
         a_tags = auths_elmt.find_all('a')
-        self.assertEqual(len(a_tags), 2, 'Should be two <a> tags in authors div')
+        self.assertEqual(
+            len(a_tags), 2, 'Should be two <a> tags in authors div')
 
-        colab=a_tags[1]
+        colab = a_tags[1]
 
-        self.assertIsNotNone(colab['href'],'<a> tag in title should have href')
-        self.assertEqual(colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
-        self.assertEqual(colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
+        self.assertIsNotNone(
+            colab['href'], '<a> tag in title should have href')
+        self.assertEqual(
+            colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
+        self.assertEqual(
+            colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
 
-
-    @unittest.skip("In current implementation,  conflicts with comma test below.")
+    @unittest.skip("In current implementation, conflicts with comma test below.")
     def test_space_in_author_list(self):
         id = '1210.8438'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        auths_elmt = html.find('div','authors')
-        self.assertTrue(auths_elmt,'Should authors div element')
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
 
         self.assertIn('Zhe (Rita) Liang,', auths_elmt.text,
                       'Should be a space after (Rita)')
 
-
     def test_comma_in_author_list(self):
         id = '0704.0155'
-        rv = self.app.get('/abs/'+id)
+        rv = self.app.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         auths_elmt = html.find('div', 'authors')
@@ -313,5 +415,34 @@ class BrowseTest(unittest.TestCase):
         self.assertIn('The phase difference $\phi$, between the superconducting',
                       abs_elmt.text,
                       "Expecting uncoverted $\phi$ in html abstract.")
-        
 
+    def test_year(self):
+        rv = self.app.get('/year/astro-ph/09')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph/')
+        self.assertEqual( rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph')
+        self.assertEqual( rv.status_code, 200)
+
+        rv = self.app.get('/year/astro-ph/09/')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get('/year')
+        self.assertEqual( rv.status_code, 404)
+
+        rv = self.app.get('/year/astro-ph/9999')
+        self.assertEqual(rv.status_code, 307, 'Future year should cause temporary redirect')
+
+        rv = self.app.get('/year/fakearchive/01')
+        self.assertNotEqual(rv.status_code, 200)
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        rv = self.app.get('/year/002/0000')
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        rv = self.app.get('/year/astro-py/9223372036854775808')
+        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+
+        
