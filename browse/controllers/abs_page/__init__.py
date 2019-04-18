@@ -294,15 +294,30 @@ def _check_context(arxiv_identifier: Identifier,
 
     response_data['browse_context'] = context
 
-    # Use prevnext controller to determine what the previous or next ID is.
-    next_url = url_for('browse.previous_next',
-                       id=arxiv_identifier.id,
-                       function='next',
-                       context=context if context else None)
-    prev_url = url_for('browse.previous_next',
-                       id=arxiv_identifier.id,
-                       function='prev',
-                       context=context if context else None)
+    next_url = None
+    prev_url = None
+    if arxiv_identifier.is_old_id:
+
+        next_id = metadata.get_next_id(arxiv_identifier)
+        if next_id:
+            next_url = url_for('browse.abstract',
+                               arxiv_id=next_id.id,
+                               context='arxiv' if context == 'arxiv' else None)
+        previous_id = metadata.get_previous_id(arxiv_identifier)
+        if previous_id:
+            prev_url = url_for('browse.abstract',
+                               arxiv_id=previous_id.id,
+                               context='arxiv' if context == 'arxiv' else None)
+    else:
+        # Use prevnext controller to determine what the previous or next ID is.
+        next_url = url_for('browse.previous_next',
+                           id=arxiv_identifier.id,
+                           function='next',
+                           context=context if context else None)
+        prev_url = url_for('browse.previous_next',
+                           id=arxiv_identifier.id,
+                           function='prev',
+                           context=context if context else None)
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
