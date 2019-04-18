@@ -296,7 +296,7 @@ def _check_context(arxiv_identifier: Identifier,
 
     next_url = None
     prev_url = None
-    if arxiv_identifier.is_old_id:
+    if arxiv_identifier.is_old_id or context == 'arxiv':
 
         next_id = metadata.get_next_id(arxiv_identifier)
         if next_id:
