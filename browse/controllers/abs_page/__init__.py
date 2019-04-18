@@ -297,7 +297,7 @@ def _check_context(arxiv_identifier: Identifier,
     next_url = None
     prev_url = None
     if arxiv_identifier.is_old_id or context == 'arxiv':
-
+        # Revert to hybrid approach per ARXIVNG-2080
         next_id = metadata.get_next_id(arxiv_identifier)
         if next_id:
             next_url = url_for('browse.abstract',
