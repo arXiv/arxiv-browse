@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7d8dd5a401de07615c8ee44120b3d146cb95c24d3d51885fb175fa7436a6b3fb"
+            "sha256": "6f3c2774f9cc150288cc1199410a4e0fcf840fb8eeadecf9dcda001172b4d4e6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -191,11 +191,11 @@
         },
         "jinja2": {
             "hashes": [
-                "sha256:74c935a1b8bb9a3947c50a54766a969d4846290e1e788ea44c1392163723c3bd",
-                "sha256:f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"
+                "sha256:065c4f02ebe7f7cf559e49ee5a95fb800a9e4528727aec6f24402a5374c65013",
+                "sha256:14dd6caf1527abb21f08f86c784eac40853ba93edb79552aa1e4b8aef1b61c7b"
             ],
             "index": "pypi",
-            "version": "==2.10"
+            "version": "==2.10.1"
         },
         "jmespath": {
             "hashes": [
@@ -668,11 +668,11 @@
         },
         "jinja2": {
             "hashes": [
-                "sha256:74c935a1b8bb9a3947c50a54766a969d4846290e1e788ea44c1392163723c3bd",
-                "sha256:f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"
+                "sha256:065c4f02ebe7f7cf559e49ee5a95fb800a9e4528727aec6f24402a5374c65013",
+                "sha256:14dd6caf1527abb21f08f86c784eac40853ba93edb79552aa1e4b8aef1b61c7b"
             ],
             "index": "pypi",
-            "version": "==2.10"
+            "version": "==2.10.1"
         },
         "lazy-object-proxy": {
             "hashes": [
