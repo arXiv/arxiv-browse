@@ -58,26 +58,7 @@
     {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
     <div id="search">
-      <form id="search-arxiv" method="post" action="{{url_for('search_box')}}">
-
-        <div class="wrapper-search-arxiv">
-          <input class="keyword-field" type="text" name="query" placeholder="Search or Article ID" />
-
-          <div class="filter-field">
-            <select name="searchtype">
-              <option value="all" selected="selected">All papers</option>
-              <option value="ti">Titles</option>
-              <option value="au">Authors</option>
-              <option value="abs">Abstracts</option>
-              <option value="ft">Full text</option>
-              <option value="help">Help pages</option>
-            </select>
-          </div>
-          <input class="btn-search-arxiv" value="" type="submit">
-            <div class="links">(<a href="{{url_for('help')}}">Help</a> |
-              <a href="{{ url_for('search_advanced') }}">Advanced search</a>)</div>
-        </div>
-      </form>
+      {%- include "search_form.html" -%}
     </div>
    {% endblock header %}
   </div>
