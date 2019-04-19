@@ -18,20 +18,20 @@ from bs4 import BeautifulSoup
 sys.path.append('')
 sys.setrecursionlimit(10000)
 
-from tests.legacy_comparison.comparison_types import res_comparison_fn, \
+from comparison_types import res_comparison_fn, \
     text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict, \
     html_arg_dict, BadResult
-from tests.legacy_comparison.html_comparisons import author_similarity, \
+from html_comparisons import author_similarity, \
     dateline_similarity, history_similarity,\
     title_similarity, subject_similarity, comments_similarity, \
     head_similarity, extra_full_text_similarity, \
     ancillary_similarity, extra_ref_cite_similarity, extra_general_similarity, \
     dblp_similarity, bookmarks_similarity
 
-from tests.legacy_comparison.response_comparisons import compare_status
-from tests.legacy_comparison.text_comparisons import text_similarity
+from response_comparisons import compare_status
+from text_comparisons import text_similarity
+
 from browse.services.document.metadata import AbsMetaSession
-from tests import path_of_for_test
 
 
 """ Script to compare abs pages from NG and beta.arxiv.org
@@ -59,7 +59,7 @@ Improvements:
 
 logging.basicConfig(filename="abs_page_comparison.log", level=logging.DEBUG)
 
-ABS_FILES = path_of_for_test('data/abs_files')
+ABS_FILES = 'tests/data/abs_files'
 LOG_FILE_NAME = 'legacy_comparison.org'
 VISITED_ABS_FILE_NAME = 'visited.log'
 
@@ -78,13 +78,15 @@ html_comparisons: List[html_comparison_fn] = [
     title_similarity,
     subject_similarity,
     comments_similarity,
-    head_similarity,
+    # in 2019-04-16: not checking head due to changes to css and feedback collector etc
+#    head_similarity, #
     extra_full_text_similarity,
     ancillary_similarity,
     extra_ref_cite_similarity,
     extra_general_similarity,
     dblp_similarity,
-    bookmarks_similarity
+# in 2019-04-16: not checking bookmarks due to dropping delicious
+#    bookmarks_similarity
 ]
 
 
@@ -151,10 +153,12 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
                               'legacy_url': legacy_url,
                               'ng_res': requests.get(ng_url),
                               'legacy_res': requests.get(legacy_url),
-                              'paper_id': paper_id}
+                              'paper_id': paper_id,
+                              'id': paper_id}
     compare_config = {'ng_url': ng_url,
                       'legacy_url': legacy_url,
-                      'paper_id': paper_id}
+                      'paper_id': paper_id,
+                      'id': paper_id}
     return compare_config, list(compare_res_fn(res_dict))
 
 
@@ -291,7 +295,7 @@ def main() -> None:
         logging.debug(f'Opened {VISITED_ABS_FILE_NAME} to find visited abs')
         with open(LOG_FILE_NAME, 'w', buffering=1)as report_fh:
             logging.debug(f'Opened {LOG_FILE_NAME} to write report to')
-            with Pool(10) as pool:
+            with Pool(5) as pool:
                 fetch_and_compare_fn = partial(fetch_abs,
                                                run_selected_compare_response)
                 completed_jobs = pool.imap_unordered(fetch_and_compare_fn, papers)
@@ -317,8 +321,14 @@ def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
     (config, bad_results) = result
     logging.debug("writing report for %s", config['paper_id'])
     if bad_results:
-        data = json.dumps( [ config, bad_results],  sort_keys=True, default=_serialize)
-        report_fh.write( data + "\n")
+        # data = json.dumps( [ config, bad_results],  sort_keys=True, default=_serialize)
+        # report_fh.write( data + "\n")
+
+        report_fh.write(f"* paper {config['paper_id']}\n")
+        for br in bad_results:
+            if 'GOOD' not in br.message:
+                report_fh.write( format_bad_result( br ) )
+
 
 
 def format_bad_result(bad: BadResult)->str:
