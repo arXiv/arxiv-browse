@@ -76,3 +76,7 @@
   background-color: #440A0A;
   color: #FFF;
 }
+
+#header form select, #header form input {
+  padding: 0 0.5em;
+}

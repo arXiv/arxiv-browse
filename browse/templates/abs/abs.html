@@ -18,12 +18,9 @@
 {% block body_id %}{% endblock %}
 
 {% block header_class %}{% endblock %}
-{% block header %}
+{% block header_h1 %}
   <h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
-  <div id="search">
-    {%- include "search_form.html" -%}
-  </div>
-{% endblock header %}
+{% endblock header_h1 %}
 
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
