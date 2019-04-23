@@ -310,7 +310,7 @@ def form(arxiv_id: str) -> Response:
 
 
 @blueprint.route('archive/', defaults={'archive': None})
-@blueprint.route('archive/<archive>')
+@blueprint.route('archive/<archive>', strict_slashes=False)
 def archive(archive: str):  # type: ignore
     """Landing page for an archive."""
     response, code, headers = archive_page.get_archive(archive)  # type: ignore
