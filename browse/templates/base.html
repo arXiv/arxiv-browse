@@ -8,7 +8,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
-  <!-- <link rel="stylesheet" href="{{ url_for('base.static', filename='css/arxivstyle.css')}}" /> -->
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/search.css') }}" />
   {# disable for now #}
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   <!-- Matomo -->
@@ -60,7 +60,6 @@
     {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
     {{ base_macros.compactsearch() }}
-
    {% endblock header %}
   </div>
 
