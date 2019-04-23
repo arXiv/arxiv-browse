@@ -53,6 +53,11 @@ Path to cache directory:
 arXiv Labs options:
 * `LABS_BIBEXPLORER_ENABLED`
 
+### Serving static files on S3
+
+We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
+files via S3. Following the instructions for Flask-S3 should just work.
+
 ### Test suite
 
 Before running the test suite, install the dev packages:
