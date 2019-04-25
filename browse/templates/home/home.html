@@ -15,7 +15,7 @@
 {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
 <form name="home-adv-search" action="/multi" method="get">
   Subject search and browse:
-  <select name="groups_or_archives">
+  <select name="group">
   {%- for group_key, group_details in groups.items() if not group_details.is_test %}
     <option
         value ="{{group_key}}"
@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
  function doAdvSearchBtn(event) {
-     sel = document.querySelector('select[name="groups_or_archives"]')
+     sel = document.querySelector('select[name="group"]')
      if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
          data_url = sel.options[sel.selectedIndex].dataset.url
          if( data_url ){
