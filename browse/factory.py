@@ -29,8 +29,8 @@ def create_web_app() -> Flask:
         ('search_archive', '/search/<archive>', BASE_SERVER))
 
     models.init_app(app)  # type: ignore
-    Auth(app)
     Base(app)
+    Auth(app)
     app.register_blueprint(ui.blueprint)
     # s3.init_app(app)
 
