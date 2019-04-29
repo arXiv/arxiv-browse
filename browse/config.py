@@ -8,7 +8,6 @@ import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
 
-BROWSE_VERSION = '0.2.2'
 APP_VERSION = '0.2.2'
 """The application version """
 
