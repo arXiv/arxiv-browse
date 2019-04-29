@@ -92,7 +92,8 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        csv_dl_elmt = html.find('a', {'href': '/stats/get_hourly?date=20190102'})
+        csv_dl_elmt = html.find(
+            'a', {'href': '/stats/get_hourly?date=20190102'})
         self.assertIsNotNone(csv_dl_elmt,
                              'csv download link exists')
 
@@ -112,10 +113,10 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
-        csv_dl_elmt = html.find('a', {'href': '/stats/get_monthly_submissions'})
+        csv_dl_elmt = html.find(
+            'a', {'href': '/stats/get_monthly_submissions'})
         self.assertIsNotNone(csv_dl_elmt,
                              'csv download link exists')
-
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
@@ -421,28 +422,34 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/year/astro-ph/')
-        self.assertEqual( rv.status_code, 200)
+        self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/year/astro-ph')
-        self.assertEqual( rv.status_code, 200)
+        self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/year/astro-ph/09/')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.app.get('/year')
-        self.assertEqual( rv.status_code, 404)
+        self.assertEqual(rv.status_code, 404)
 
         rv = self.app.get('/year/astro-ph/9999')
-        self.assertEqual(rv.status_code, 307, 'Future year should cause temporary redirect')
+        self.assertEqual(rv.status_code, 307,
+                         'Future year should cause temporary redirect')
 
         rv = self.app.get('/year/fakearchive/01')
         self.assertNotEqual(rv.status_code, 200)
-        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+        self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
         rv = self.app.get('/year/002/0000')
-        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+        self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
         rv = self.app.get('/year/astro-py/9223372036854775808')
-        self.assertLess( rv.status_code, 500, 'should not cause a 5XX')
+        self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
-        
+    def test_secondary_order(self):
+        rv = self.app.get('/abs/0906.3421')
+        self.assertIn(
+            'Statistical Mechanics (cond-mat.stat-mech); Mathematical Physics (math-ph)',
+            rv.data.decode('utf-8'),
+            'Secondary categories should be orderd by category id ARXIVNG-2066')
