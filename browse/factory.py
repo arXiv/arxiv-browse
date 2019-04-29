@@ -1,9 +1,10 @@
 """Application factory for browse service components."""
 from functools import partial
 from flask import Flask, g, url_for
-# from flask_s3 import FlaskS3
+from flask_s3 import FlaskS3
 
 from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
+from browse.config import BROWSE_VERSION
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
@@ -14,12 +15,12 @@ from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 from arxiv.users.auth import Auth
 
-# s3 = FlaskS3()
+s3 = FlaskS3()
 
 
 def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
-    app = Flask('browse', static_url_path='/static')
+    app = Flask('browse', static_url_path=f'/static/browse/{BROWSE_VERSION}')
     app.config.from_pyfile('config.py')  # type: ignore
 
     # TODO Only needed until this route is added to arxiv-base
@@ -32,7 +33,7 @@ def create_web_app() -> Flask:
     Base(app)
     Auth(app)
     app.register_blueprint(ui.blueprint)
-    # s3.init_app(app)
+    s3.init_app(app)
 
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
