@@ -1,12 +1,7 @@
 <div class="bookmarks">
-  <div class="what-is-this"><h3>Bookmark</h3> (<a href="{{url_for('help_social_bookmarking')}}">what is this?</a>)</div>
+  <div class="what-is-this"><h3>Bookmark</h3></div>
   {%- set absUrl = canonical_url( abs_meta.arxiv_id ) -%}
   {%- set title = abs_meta.title -%}
-  <a href="{{ ('http://www.citeulike.org/posturl?url=' + absUrl) | clickthrough_url_for }}"
-     title="Bookmark on CiteULike">
-    <img src="//static.arxiv.org/icons/social/citeulike.png"
-         alt="CiteULike logo" />
-  </a>
   <a href="{{ ('http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=' + absUrl + '&description=' + title) | clickthrough_url_for }}"
      title="Bookmark on BibSonomy">
     <img src="//static.arxiv.org/icons/social/bibsonomy.png"
