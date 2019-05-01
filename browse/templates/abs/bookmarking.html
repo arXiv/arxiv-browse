@@ -1,5 +1,5 @@
 <div class="bookmarks">
-  <div class="what-is-this"><h3>Bookmark</h3></div>
+  <div><h3>Bookmark</h3></div>
   {%- set absUrl = canonical_url( abs_meta.arxiv_id ) -%}
   {%- set title = abs_meta.title -%}
   <a href="{{ ('http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=' + absUrl + '&description=' + title) | clickthrough_url_for }}"
