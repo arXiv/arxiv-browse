@@ -1,3 +1,4 @@
+{%- import 'base/macros.html' as base_macros -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -7,7 +8,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
-  {# disable for now #}
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   <!-- Matomo -->
   <script type="text/javascript">
@@ -57,9 +58,7 @@
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
     {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
-    <div id="search">
-      {%- include "search_form.html" -%}
-    </div>
+    {{ base_macros.compactsearch() }}
    {% endblock header %}
   </div>
 

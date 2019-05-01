@@ -1,0 +1,82 @@
+.search-block.level-right {
+  display: flex;
+  justify-content: flex-end;
+  clear: right;
+}
+
+.search-block form.level-item,
+.field.has-addons {
+  display: flex;
+}
+
+.search-block p.help {
+  margin-bottom: 0;
+}
+
+.search-block .input,
+.search-block select,
+.search-block .button {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  height: 2.25em;
+  border-radius: 2px;
+  border: 1px solid transparent;
+}
+
+.search-block .input {
+  border-color: transparent;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0.5em;
+}
+
+.search-block select {
+  -webkit-appearance: listbox;
+  border-color: #ccc;
+  padding-left: 0.5em;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+}
+
+.search-block .control {
+  position: relative;
+}
+
+/* creates downward caret */
+.search-block .select::after {
+  position: absolute;
+  display: block;
+  z-index: 4;
+  top: 50%;
+  right: 1.125em;
+  width: 0.5em;
+  height: 0.5em;
+  content: " ";
+  border: 3px solid #0068AC;
+  border-radius: 2px;
+  border-right: 0;
+  border-top: 0;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  pointer-events: none;
+  margin-top: -1.125em;
+}
+
+.search-block .button {
+  background-color: #711111;
+  color: #FFF;
+  border-color: transparent;
+}
+
+.search-block .button:hover,
+.search-block .button:focus {
+  background-color: #440A0A;
+  color: #FFF;
+}
+
+#header form select, #header form input {
+  padding: 0 0.5em;
+}

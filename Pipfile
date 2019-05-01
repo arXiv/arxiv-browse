@@ -22,6 +22,7 @@ flask-wtf = "*"
 arxiv-auth = "==0.3.1"
 mypy = "*"
 jinja2 = "==2.10.1"
+flask-s3 = "*"
 
 [dev-packages]
 pylama = "*"
