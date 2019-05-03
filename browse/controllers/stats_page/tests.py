@@ -191,9 +191,9 @@ class TestStatsPageControllers(TestCase):
 
         # test response with mock data
         mock_get_monthly_submission_stats.return_value = [
-            mock.Mock(ym=datetime(2019, 2, 1),
+            mock.Mock(ym=date(2019, 2, 1),
                       num_submissions=9999, historical_delta=-42),
-            mock.Mock(ym=datetime(2019, 3, 1),
+            mock.Mock(ym=date(2019, 3, 1),
                       num_submissions=10101, historical_delta=0)
         ]
         expected_response = "month,submissions,historical_delta\n"\
