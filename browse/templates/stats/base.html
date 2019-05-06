@@ -3,8 +3,7 @@
 
 {% block head %}
   {{ super() -}}
-  {# TODO: upgrade d3 to v5.x? #}
-  <script src="https://static.arxiv.org/js/d3/3.5.17/d3.min.js" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/lib/d3/3.5.17/d3.min.js') }}" type="text/javascript"></script>
 {% endblock head %}
 
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a>  &gt; stats  &gt; server usage</h1>{% endblock %}
