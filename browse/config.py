@@ -278,15 +278,16 @@ BROWSE_ANALYTICS_COOKIE_DOMAIN = \
 BROWSE_ANALYTICS_SITE_ID = os.environ.get('BROWSE_ANALYTICS_SITE_ID', '1')
 """Tracker site ID."""
 
-BROWSE_USER_BANNER_ENABLED = os.environ.get(
-    'BROWSE_USER_BANNER_ENABLED', False)
+BROWSE_USER_BANNER_ENABLED = bool(int(os.environ.get(
+    'BROWSE_USER_BANNER_ENABLED', '0')))
 """Enable/disable user banner."""
 try:
     BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
         os.environ.get('BROWSE_USER_BANNER_START_DATE')
     ).replace(hour=0, minute=0, second=0)
 except Exception:
-    warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
+    if BROWSE_USER_BANNER_ENABLED:
+        warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
     BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
 
 try:
@@ -294,7 +295,8 @@ try:
         os.environ.get('BROWSE_USER_BANNER_END_DATE')
     ).replace(hour=23, minute=59, second=59)
 except Exception:
-    warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
+    if BROWSE_USER_BANNER_ENABLED:
+        warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
     BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
 
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
