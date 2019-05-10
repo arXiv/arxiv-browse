@@ -70,3 +70,9 @@ class BrowseTest(unittest.TestCase):
 
         self.assertIn("High Energy Physics", src)
         self.assertNotIn("Categories within", src)
+
+    def test_301_redirects(self):
+        rv = self.app.get("/archive/astro-ph/Astrophysics")
+        self.assertEqual(rv.status_code, 301,
+                         "/archive/astro-ph/Astrophysics should get a "
+                         "301 redirect ARXIVNG-2119")
