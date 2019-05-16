@@ -314,7 +314,7 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
 
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_submission_stats() -> List:
-    """Get the monthly submission stats from StatsMonthlySubmission."""
+    """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(db.session.query(StatsMonthlySubmission).
                 order_by(asc(StatsMonthlySubmission.ym)).all())
 
