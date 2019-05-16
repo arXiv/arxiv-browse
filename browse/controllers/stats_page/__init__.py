@@ -148,7 +148,7 @@ def get_submission_stats_csv() -> Response:
             for r in rows
         ])
         last_row = rows[-1:]
-        if last_row and last_row[0].ym < current_date:
+        if rows and rows[-1].ym < current_date:
             this_month_count = get_document_count_by_yymm(current_date)
             if this_month_count > 0:
                 csv_data = csv_data + f"{current_date.strftime('%Y-%m')},{this_month_count},0\n"
