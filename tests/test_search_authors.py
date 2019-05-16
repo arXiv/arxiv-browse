@@ -47,9 +47,11 @@ class TestAuthorLinkCreation(TestCase):
             out, [('C. de la Fuente Marcos', 'de la Fuente Marcos, C')])
 
     def test_split_long_author_list(self):
-        f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
+        f1 = path_of_for_test(
+            'data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
-        alst = split_long_author_list(queries_for_authors(str(meta.authors)), 20)
+        alst = split_long_author_list(
+            queries_for_authors(str(meta.authors)), 20)
         self.assertIs(type(alst), tuple)
         self.assertIs(len(alst), 3)
         self.assertIs(type(alst[0]), list)
@@ -58,12 +60,38 @@ class TestAuthorLinkCreation(TestCase):
         self.assertIs(type(alst[2]), int)
 
     def test_split_with_collaboration(self):
-        f1 = path_of_for_test('data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
+        f1 = path_of_for_test(
+            'data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
         meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
 
         split = split_authors(str(meta.authors))
-        self.assertListEqual(split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
+        self.assertListEqual(
+            split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
 
         alst = queries_for_authors(str(meta.authors))
         self.assertListEqual(alst, [('D0 Collaboration', 'D0 Collaboration'),
                                     ': ', ('V. Abazov', 'Abazov, V'), ', ', 'et al'])
+
+    def test_split_strange_author_list(self):
+        """Test odd author list that shows '0 additional authors' ARXIVNG-2083"""
+        f1 = path_of_for_test(
+            'data/abs_files/ftp/arxiv/papers/1902/1902.05884.abs')
+        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+        alst = split_long_author_list(
+            queries_for_authors(str(meta.authors)), 100)
+
+        self.assertIs(type(alst), tuple)
+        self.assertIs(len(alst), 3)
+
+        self.assertIs(type(alst[0]), list)
+        self.assertIs(type(alst[1]), list)
+        self.assertIs(type(alst[2]), int)
+
+        self.assertEqual(
+            len(list(filter(lambda x: isinstance(x, tuple), alst[0]))),
+            101)
+
+        self.assertEqual(
+            len(alst[1]), 0, "Back list on 1902.05884 should be empty")
+        self.assertEqual(
+            alst[2], 0, "Back list size on 1902.05884 should be empty")

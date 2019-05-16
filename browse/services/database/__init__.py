@@ -216,6 +216,22 @@ def get_document_count() -> Optional[int]:
     return row.num_documents
 
 
+@db_handle_error(logger=logger, default_return_val=0)
+def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
+    """Get number of papers for a given year and month."""
+    paper_date = date.today() if not isinstance(paper_date, date) \
+        else paper_date
+    yymm = paper_date.strftime('%y%m')
+    yymm_like = f'{yymm}%'
+    if paper_date < date(2007, 4, 1):
+        yymm_like = f'%/{yymm}%'
+    row = db.session.query(
+            func.count(Document.document_id).label('num_documents')
+          ).filter(Document.paper_id.like(yymm_like))\
+           .filter(not_(Document.paper_id.like('test%'))).first()
+    return row.num_documents
+
+
 @db_handle_error(logger=logger, default_return_val=None)
 def get_sequential_id(paper_id: Identifier,
                       context: str = 'all',
@@ -298,7 +314,7 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
 
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_submission_stats() -> List:
-    """Get the monthly submission stats."""
+    """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(db.session.query(StatsMonthlySubmission).
                 order_by(asc(StatsMonthlySubmission.ym)).all())
 

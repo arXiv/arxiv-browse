@@ -310,7 +310,7 @@ def form(arxiv_id: str) -> Response:
 
 
 @blueprint.route('archive/', defaults={'archive': None})
-@blueprint.route('archive/<archive>')
+@blueprint.route('archive/<archive>', strict_slashes=False)
 def archive(archive: str):  # type: ignore
     """Landing page for an archive."""
     response, code, headers = archive_page.get_archive(archive)  # type: ignore
@@ -321,6 +321,17 @@ def archive(archive: str):  # type: ignore
     elif code == status.HTTP_304_NOT_MODIFIED:
         return '', code, headers
     return response, code, headers
+
+
+@blueprint.route('archive/<archive>/<junk>', strict_slashes=False)
+def archive_with_extra(archive: str, junk: str):  # type: ignore
+    """
+    Archive page with extra, 301 redirect to just the archive.
+
+    This handles some odd URLs that have ended up in search engines.
+    See also ARXIVOPS-2119.
+    """
+    return redirect(url_for('browse.archive', archive=archive), code=301)
 
 
 @blueprint.route('year/<archive>', defaults={'year': None})

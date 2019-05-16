@@ -8,7 +8,7 @@ import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
 
-VERSION = '0.2.1'
+APP_VERSION = '0.2.2'
 """The application version """
 
 ON = 'yes'
@@ -204,6 +204,16 @@ be useful to figure out why templates cannot be found or wrong templates appear
 to be loaded.
 """
 
+"""
+Flask-S3 plugin settings.
+See `<https://flask-s3.readthedocs.io/en/latest/>`_.
+"""
+FLASKS3_BUCKET_NAME = os.environ.get('FLASKS3_BUCKET_NAME', 'some_bucket')
+FLASKS3_CDN_DOMAIN = os.environ.get('FLASKS3_CDN_DOMAIN', 'static.arxiv.org')
+FLASKS3_USE_HTTPS = os.environ.get('FLASKS3_USE_HTTPS', 1)
+FLASKS3_FORCE_MIMETYPE = os.environ.get('FLASKS3_FORCE_MIMETYPE', 1)
+FLASKS3_ACTIVE = os.environ.get('FLASKS3_ACTIVE', 0)
+
 # SQLAlchemy configuration
 # For mysql: 'mysql://user:pass@localhost/dbname'
 SQLALCHEMY_DATABASE_URI = os.environ.get('BROWSE_SQLALCHEMY_DATABASE_URI',
@@ -268,15 +278,16 @@ BROWSE_ANALYTICS_COOKIE_DOMAIN = \
 BROWSE_ANALYTICS_SITE_ID = os.environ.get('BROWSE_ANALYTICS_SITE_ID', '1')
 """Tracker site ID."""
 
-BROWSE_USER_BANNER_ENABLED = os.environ.get(
-    'BROWSE_USER_BANNER_ENABLED', False)
+BROWSE_USER_BANNER_ENABLED = bool(int(os.environ.get(
+    'BROWSE_USER_BANNER_ENABLED', '0')))
 """Enable/disable user banner."""
 try:
     BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
         os.environ.get('BROWSE_USER_BANNER_START_DATE')
     ).replace(hour=0, minute=0, second=0)
 except Exception:
-    warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
+    if BROWSE_USER_BANNER_ENABLED:
+        warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
     BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
 
 try:
@@ -284,7 +295,8 @@ try:
         os.environ.get('BROWSE_USER_BANNER_END_DATE')
     ).replace(hour=23, minute=59, second=59)
 except Exception:
-    warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
+    if BROWSE_USER_BANNER_ENABLED:
+        warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
     BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
 
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(

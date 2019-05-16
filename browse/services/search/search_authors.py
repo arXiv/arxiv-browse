@@ -49,7 +49,7 @@ def split_long_author_list(
     count = 0
     back_count = 0
     for item in authors:
-        if count > size:
+        if count >= size:
             back.append(item)
             if isinstance(item, tuple):
                 back_count = back_count + 1
@@ -57,6 +57,14 @@ def split_long_author_list(
             front.append(item)
             if isinstance(item, tuple):
                 count = count + 1
+
+    # handle case where back doesn't have much ARXIVNG-2083
+    authors_in_back = len(list(filter(lambda x: isinstance(x, tuple), back)))
+    if authors_in_back < 2:
+        front = front + back
+        back = []
+        back_count = 0
+
     return front, back, back_count
 
 

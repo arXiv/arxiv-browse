@@ -1,7 +1,7 @@
 """Handle requests to display and return stats about the arXiv service."""
 
 import dateutil.parser
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
 from werkzeug.exceptions import InternalServerError, BadRequest
 
@@ -10,7 +10,7 @@ from arxiv.base import logging
 from browse.services.database import get_hourly_stats, get_hourly_stats_count, \
     get_monthly_download_stats, get_monthly_submission_stats, \
     get_monthly_submission_count, get_monthly_download_count, \
-    get_max_download_stats_dt
+    get_max_download_stats_dt, get_document_count_by_yymm
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 
 
@@ -140,11 +140,17 @@ def get_monthly_submissions_page() -> Response:
 def get_submission_stats_csv() -> Response:
     """Get submission stats in CSV format."""
     csv_head = "month,submissions,historical_delta\n"
+    current_date = date.today()
     try:
+        rows = get_monthly_submission_stats()
         csv_data = "".join([
             f"{r.ym.strftime('%Y-%m')},{r.num_submissions},{r.historical_delta}\n"
-            for r in get_monthly_submission_stats()
+            for r in rows
         ])
+        if rows and rows[-1].ym < current_date:
+            this_month_count = get_document_count_by_yymm(current_date)
+            if this_month_count > 0:
+                csv_data = csv_data + f"{current_date.strftime('%Y-%m')},{this_month_count},0\n"
         return {'csv': csv_head + csv_data}, status.HTTP_200_OK, {'Content-Type': 'text/csv'}
     except Exception as ex:
         logger.warning(f'Error getting monthly submission stats csv: {ex}')

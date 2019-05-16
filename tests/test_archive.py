@@ -14,6 +14,10 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertIn('Expires', rv.headers, 'Should have expires header')
 
+        rv = self.app.get("/archive/astro-ph/")
+        self.assertEqual(rv.status_code, 200,
+                         'Trailing slash should be allowed')
+
         src = rv.data.decode("utf-8")
         self.assertIn("Astrophysics", src)
         self.assertIn("/year/astro-ph/92", src)
@@ -67,5 +71,8 @@ class BrowseTest(unittest.TestCase):
         self.assertIn("High Energy Physics", src)
         self.assertNotIn("Categories within", src)
 
-
-
+    def test_301_redirects(self):
+        rv = self.app.get("/archive/astro-ph/Astrophysics")
+        self.assertEqual(rv.status_code, 301,
+                         "/archive/astro-ph/Astrophysics should get a "
+                         "301 redirect ARXIVNG-2119")

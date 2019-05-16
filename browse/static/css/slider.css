@@ -1,0 +1,221 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.slider-wrapper {
+    background-color: #084ea6;
+    color: #fff;
+    font-family: "Lucida Grande", helvetica, arial, verdana, sans-serif;
+    overflow: hidden;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    position: relative;
+    width: 100%;
+}
+.slider-wrapper .close-slider {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.slider-wrapper .close-slider:hover {
+    opacity: 0.5;
+}
+.slider-wrapper .copy-donation {
+    border-right: 1px solid #78797c;
+    float: none;
+    width: 100%;
+}
+.slider-wrapper .amount-donation {
+    float: none;
+    width: 100%;
+}
+.slider-wrapper h1 {
+    //color: #fe9600;
+    color: #F7BB59;
+    font-size: 20px;
+    padding: 0 20px;
+}
+.slider-wrapper p {
+    color: #fff;
+    font-size: 16px;
+    padding: 0 20px;
+    text-shadow: 1px 1px #000;
+}
+.slider-wrapper a {
+    //color: #fe9600;
+    color: #F7BB59;
+    text-decoration: none;
+    //text-shadow: 1px 1px #000;
+}
+.slider-wrapper a:hover {
+    color: #78797c;
+}
+.slider-wrapper .wrapper {
+    margin: 20px 0 0 20px;
+    width: 88%;
+}
+.slider-wrapper .amounts {
+    clear: both;
+}
+.slider-wrapper .other-amount {
+    display: inline-block;
+    float: left;
+}
+.slider-wrapper .donate-cta {
+    display: inline-block;
+    float: left;
+}
+.slider-wrapper .survey-cta {
+    display: inline-block;
+    float: left;
+    margin-left: 20px;
+}
+.slider-wrapper .amount-btn {
+    background-color: #268fff;
+    border: 0 solid #000000;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 8px;
+    margin-top: 5px;
+    padding: 20px;
+    width: 40px;
+}
+.slider-wrapper .amount-btn:hover {
+    color: #fff;
+    opacity: 0.5;
+}
+.slider-wrapper .other-amount input {
+    background-color: transparent;
+    border: 1px solid #9e9fa1;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    font-size: 20px;
+    margin-right: 5px;
+    margin-top: 20px;
+    padding: 20px;
+    width: 155px;
+}
+.slider-wrapper .donate-cta a {
+    //background-color: #fe9600;
+    background-color: #F5A623;
+    border: 0 solid #9e9fa1;
+    border-radius: 5px;
+    //color: #fff;
+    color: #4C2F00;
+    display: inline-block;
+    font-size: 20px;
+    margin-right: 5px;
+    margin-top: 20px;
+    padding: 16px 27px;
+}
+.slider-wrapper .survey-cta a {
+    background-color: #fe9600;
+    border: 0 solid #9e9fa1;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 5px;
+    padding: 8px 13px;
+}
+.slider-wrapper .donate-cta a:hover {
+    opacity: 0.5;
+}
+.slider-wrapper .survey-cta a:hover {
+    opacity: 0.5;
+}
+.slider-wrapper .amount-btn.active {
+    background-color: #fe9600;
+}
+.slider-wrapper .donate-cta p {
+    font-size: 9px;
+    margin-left: 0;
+    padding-left: 0;
+    text-align: center;
+}
+@media (min-width: 900px) {
+    .slider-wrapper .copy-donation {
+        float: left;
+        width: 65%;
+    }
+    .slider-wrapper .amount-donation {
+        float: right;
+        width: 30%;
+    }
+    .slider-wrapper .wrapper {
+        margin: 20px auto 0;
+        width: 88%;
+    }
+    .slider-wrapper .amounts {
+        clear: both;
+    }
+    .slider-wrapper .other-amount {
+        float: left;
+    }
+    .slider-wrapper .donate-cta {
+        float: left;
+    }
+}
+@media (min-width: 983px) {
+    .slider-wrapper .copy-donation {
+        float: left;
+        width: 65%;
+    }
+    .slider-wrapper .amount-donation {
+        float: right;
+        width: 30%;
+    }
+}
+@media (min-width: 1090px) {
+    .slider-wrapper .copy-donation {
+        float: left;
+        width: 80%;
+    }
+    .slider-wrapper .amount-donation {
+        float: right;
+        width: 18%;
+    }
+}
+@media (min-width: 1200px) {
+    .slider-wrapper {
+        margin: 0 auto;
+    }
+    .slider-donation {
+        background-color: #4d4f53;
+        width: 100%;
+    }
+}
+
+.survey-results {
+    display: none;
+    width: 100%;
+    background-color: #f0f1f2;
+    padding: 12px 10px;
+    margin: 0;
+}
+
+.survey-results p {
+    font-family: "Lucida Grande",helvetica,arial,verdana,sans-serif;
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+}
+
+.survey-results p a {
+    text-decoration: none;
+    color: #b31b1b;       
+}
+
+.survey-results p a:hover {
+    opacity: .7;
+    
+}
+
+.survey-results .close-survey-banner {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+}

@@ -1,3 +1,4 @@
+{%- import 'base/macros.html' as base_macros -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -5,9 +6,9 @@
 <head>
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/arXiv.css?v=20190307" />
-  {# disable for now #}
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20190307" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   <!-- Matomo -->
   <script type="text/javascript">
@@ -28,9 +29,9 @@
   {% endif -%}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
-  <link rel="stylesheet" type="text/css" media="screen" href="//static.arxiv.org/css/slider.css?v=1.1" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="//static.arxiv.org/js/donate.js"></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
   {% endif -%}
   {%- endblock head -%}
 </head>
@@ -44,7 +45,7 @@
   {% endif -%}
   <div id="cu-identity">
     <div id="cu-logo">
-      <a href="https://www.cornell.edu/"><img src="//static.arxiv.org/icons/cu/cornell-reduced-white-SMALL.svg" alt="Cornell University" width="200" border="0" /></a>
+      <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" width="200" border="0" /></a>
     </div>
     <div id="support-ack">
       <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
@@ -57,9 +58,7 @@
     <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
     {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
     {% block login_link %}{% endblock %}
-    <div id="search">
-      {%- include "search_form.html" -%}
-    </div>
+    {{ base_macros.compactsearch() }}
    {% endblock header %}
   </div>
 

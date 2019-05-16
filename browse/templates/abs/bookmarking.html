@@ -1,30 +1,25 @@
 <div class="bookmarks">
-  <div class="what-is-this"><h3>Bookmark</h3> (<a href="{{url_for('help_social_bookmarking')}}">what is this?</a>)</div>
+  <div><h3>Bookmark</h3></div>
   {%- set absUrl = canonical_url( abs_meta.arxiv_id ) -%}
   {%- set title = abs_meta.title -%}
-  <a href="{{ ('http://www.citeulike.org/posturl?url=' + absUrl) | clickthrough_url_for }}"
-     title="Bookmark on CiteULike">
-    <img src="//static.arxiv.org/icons/social/citeulike.png"
-         alt="CiteULike logo" />
-  </a>
   <a href="{{ ('http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=' + absUrl + '&description=' + title) | clickthrough_url_for }}"
      title="Bookmark on BibSonomy">
-    <img src="//static.arxiv.org/icons/social/bibsonomy.png"
+    <img src="{{ url_for('static', filename='images/icons/social/bibsonomy.png') }}"
          alt="BibSonomy logo"/>
   </a>
   <a href="{{('https://www.mendeley.com/import/?url=' + absUrl) | clickthrough_url_for}}"
      title="Bookmark on Mendeley">
-    <img src="//static.arxiv.org/icons/social/mendeley.png"
+    <img src="{{ url_for('static', filename='images/icons/social/mendeley.png') }}"
          alt="Mendeley logo"/>
   </a>
   <a href="{{('https://reddit.com/submit?url=' + absUrl + '&title=' + title) | clickthrough_url_for}}"
      title="Bookmark on Reddit">
-    <img src="//static.arxiv.org/icons/social/reddit.png"
+    <img src="{{ url_for('static', filename='images/icons/social/reddit.png') }}"
          alt="Reddit logo"/>
   </a>
   <a href="{{('http://sciencewise.info/bookmarks/add?url=' + absUrl ) | clickthrough_url_for}}"
      title="Bookmark on ScienceWISE">
-    <img src="//static.arxiv.org/icons/social/sciencewise.png"
+    <img src="{{ url_for('static', filename='images/icons/social/sciencewise.png') }}"
          alt="ScienceWISE logo"/>
   </a>
 </div>
