@@ -325,9 +325,12 @@ def archive(archive: str):  # type: ignore
 
 @blueprint.route('archive/<archive>/<junk>', strict_slashes=False)
 def archive_with_extra(archive: str, junk: str):  # type: ignore
-    """Archive page with extra, 301 redirect to just the archive.
+    """
+    Archive page with extra, 301 redirect to just the archive.
+
     This handles some odd URLs that have ended up in search engines.
-    ARXIVOPS-2119"""
+    See also ARXIVOPS-2119.
+    """
     return redirect(url_for('browse.archive', archive=archive), code=301)
 
 
