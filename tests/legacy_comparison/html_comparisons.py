@@ -60,7 +60,7 @@ def _element_similarity(name: str,
                         min_sim: float,
                         required: bool,
                         check_counts: bool,
-                        text_trans: Callable[[str],str],
+                        text_trans: Callable[[str], str],
                         html_arg: html_arg_dict) -> BadResult:
     """ Uses get_element to select an element of the BS doc on both NG and Legacy do a similarity. 
 
