@@ -121,6 +121,8 @@ def get_monthly_submissions_page() -> Response:
     try:
         num_submissions, historical_delta = \
             get_monthly_submission_count()
+        num_this_month = get_document_count_by_yymm(current_dt.date)
+        num_submissions += num_this_month
     except Exception as ex:
         logger.warning(f'Error getting monthly submissions stats data: {ex}')
         raise InternalServerError
