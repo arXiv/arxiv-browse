@@ -9,16 +9,33 @@
 <div id="guide" style="border-radius: 5px; border: 1px solid; width: 55%; padding-left: 5px">
   <h2>Group Name</h2>
   <ul>
-    <li>Archive Name (Archive ID) - omitted if there is only a single archive with the same name as the group</li>
+    <li>Archive Name (Archive ID) - omitted if  group consists of a single archive with the same name as the group</li>
     <ul>
-      <li><b>Category Name (Category ID)</b><br />Category description if available</li>
+      <li><strong>Category Name (Category ID)</strong><br />Category description if available</li>
     </ul>
   </ul>
 </div>
 
-{%- for group_key, group_details in groups.items() if not group_details.is_test  -%}
+{%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
 <h2>{{ groups[group_key].name }}</h2>
-
-{% endfor %}
+<ul>
+  {%- for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
+    {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+    {%- set archive_name = archives[archive_key].name -%}
+    {%- if not (loop.first and loop.last -%}
+  <li>{{ archive_name }} ({{ archive_key }})</li>
+    {%- endif -%}
+  <ul>
+      {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
+    <li><strong>{{ categories[category_key].name }} ({{ category_key }})</strong>
+        {%- if 'description' in categories[category_key] -%}
+        <br />{{ categories[category_key].description }}
+        {%- endif -%}
+    </li>
+      {% endfor %}
+  </ul>
+  {%- endfor -%}
+</ul>
+{%- endfor -%}
 
 {% endblock content %}
