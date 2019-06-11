@@ -9,6 +9,7 @@ from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 from arxiv import status
 from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
+from arxiv import taxonomy
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page, stats_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
@@ -96,6 +97,18 @@ def abstract(arxiv_id: str) -> Response:
         return '', code, headers  # type: ignore
 
     raise InternalServerError('Unexpected error')
+
+
+@blueprint.route('category_taxonomy', methods=['GET'])
+def category_taxonomy() -> Response:
+    """Display the arXiv category taxonomy."""
+    response = {
+        'groups': taxonomy.definitions.GROUPS,
+        'archives': taxonomy.definitions.ARCHIVES_ACTIVE,
+        'categories': taxonomy.definitions.CATEGORIES_ACTIVE
+    }
+    return render_template('category_taxonomy.html', **response), \
+        status.HTTP_200_OK, None  # type: ignore
 
 
 @blueprint.route('tb/', defaults={'arxiv_id': ''}, methods=['GET'])
