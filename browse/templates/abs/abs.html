@@ -53,7 +53,7 @@
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
-      {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|tex2utf|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
+      {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
       {{ generate_version_entry(version_entry, abs_meta.version) }}
