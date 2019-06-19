@@ -1,3 +1,5 @@
+{# donation banner #}
+{%- if 0 -%}
 <div class="slider-wrapper" style="display:none">
   <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}"></a>
   <div class="copy-donation">
@@ -16,4 +18,10 @@
       </div>
     </div>
   </div>
+</div>
+{%- endif -%}
+{# downtime #}
+<div class="slider-wrapper" style="display:none">
+  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}"></a>
+  <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
 </div>
