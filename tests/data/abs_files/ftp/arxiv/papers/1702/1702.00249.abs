@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1702.00249
+From: Martin Eker{\aa} <ARXIVOPS-805@example.org>
+Date: Wed, 1 Feb 2017 13:41:33 GMT   (13kb,D)
+
+Title: Quantum algorithms for computing short discrete logarithms and factoring
+  RSA integers
+Authors: Martin Eker{\aa} and Johan H{\aa}stad
+Categories: cs.CR quant-ph
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  In this paper we generalize the quantum algorithm for computing short
+discrete logarithms previously introduced by Eker{\aa} so as to allow for
+various tradeoffs between the number of times that the algorithm need be
+executed on the one hand, and the complexity of the algorithm and the
+requirements it imposes on the quantum computer on the other hand.
+  Furthermore, we describe applications of algorithms for computing short
+discrete logarithms. In particular, we show how other important problems such
+as those of factoring RSA integers and of finding the order of groups under
+side information may be recast as short discrete logarithm problems. This
+immediately gives rise to an algorithm for factoring RSA integers that is less
+complex than Shor's general factoring algorithm in the sense that it imposes
+smaller requirements on the quantum computer.
+  In both our algorithm and Shor's algorithm, the main hurdle is to compute a
+modular exponentiation in superposition. When factoring an n bit integer, the
+exponent is of length 2n bits in Shor's algorithm, compared to slightly more
+than n/2 bits in our algorithm.
+\\
