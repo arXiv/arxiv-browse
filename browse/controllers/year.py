@@ -1,19 +1,20 @@
-"""Handle requests for info about one year of archive activity"""
+"""Handle requests for info about one year of archive activity."""
 
 from datetime import date
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 from werkzeug.exceptions import BadRequest
-from flask import current_app, url_for
+from flask import url_for
 
 from arxiv import status, taxonomy
-from browse.domain.listing import MonthCount, ListingCountResponse
+from browse.domain.listing import MonthCount
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import years_operating, stats_by_year
 
 
 def year_page(archive_id: str, year: int) -> Any:
-    """Get year page for archive.
+    """
+    Get year page for archive.
 
     Parameters
     ----------
@@ -31,12 +32,13 @@ def year_page(archive_id: str, year: int) -> Any:
         HTTP status code.
     dict
         Headers to add to the response.
+
     """
     thisYear = date.today().year
 
     if year is None:
         year = thisYear
-        
+
     if year > thisYear:
         # 307 because year might be valid in the future
         return {}, status.HTTP_307_TEMPORARY_REDIRECT, {'Location': '/'}
@@ -57,8 +59,8 @@ def year_page(archive_id: str, year: int) -> Any:
 
     for month in month_listing['month_counts']:
         month['art'] = ascii_art_month(archive_id, month)  # type: ignore
-        month['yymm'] =f"{month['year']}-{month['month']:02}"  #type: ignore
-        month['url'] = url_for('browse.list_articles', #type: ignore
+        month['yymm'] = f"{month['year']}-{month['month']:02}"  # type: ignore
+        month['url'] = url_for('browse.list_articles',  # type: ignore
                                context=archive_id,
                                subcontext=f"{month['year']}{month['month']:02}")
 
@@ -87,7 +89,7 @@ def ascii_art_month(archive_id: str, month: MonthCount) -> List[Tuple[str, Optio
     tot = month['new'] + month['cross']
     yyyymm = f"{month['year']}{month['month']:02}"
 
-    def _makestep(idx:int) -> Tuple[str, Optional[str]]:
+    def _makestep(idx: int) -> Tuple[str, Optional[str]]:
         if idx % ASCII_ART_URL_STEP == 0:
             return (ASCII_ART_CHR,
                     url_for('browse.list_articles',
