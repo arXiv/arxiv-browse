@@ -7,8 +7,9 @@ from browse.factory import create_web_app
 # Double underscores excludes this from * imports.
 __flask_app__ = None
 
+
 def application(environ, start_response):
-    """WSGI application, called onece for each HTTP request.
+    """WSGI application, called once for each HTTP request.
 
     application() will be called once for each HTTP request. WSGI has
     no initialization lifecycle phase. This code will only get run
@@ -25,27 +26,26 @@ def application(environ, start_response):
     with apache's SetEnv directive. SetEnv does not seem to set an OS
     environment variable that is perserved in the WSGI deamon
     process. SetEnv values are passed to WSGI application() in the
-    environ agrument. 
+    environ agrument.
 
-    This will not be needed once each app is on docker+enginx.
+    This will not be needed once each app is on docker+nginx.
     """
-
     # Copy string WSGI envrion to os.environ. This is to get apache
     # SetEnv vars.  It needs to be done before the call to
     # create_web_app() due to how config is setup from os in
     # browse/config.py.
-    for key, value in environ.items():        
+    for key, value in environ.items():
         if type(value) is str:
             os.environ[key] = value
 
     # 'global' actually means module scope, and that is exactly what
     # we want here.
-    #    
+    #
     # Python docs are thin. I'm seeing this sort of thing on
     # stackoverflow: "In Python there is no such thing as absolute
     # globals automatically defined across all namespaces
     # (thankfully). As you correctly pointed out, a global is bound to
-    # a namespace within a module..."    
+    # a namespace within a module..."
     global __flask_app__
     if __flask_app__ is None:
         __flask_app__ = create_web_app()

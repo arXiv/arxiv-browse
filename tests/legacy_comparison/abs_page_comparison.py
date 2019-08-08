@@ -1,3 +1,4 @@
+"""Abs page comparison tests."""
 import argparse
 import itertools
 import sys
@@ -54,7 +55,7 @@ To run a short test add '--short' arg.
 To skip ancillary file comparisons: '--skip-ancillary'
 
 Improvements:
- Better reporting format, right now the comparisons produce just strings. 
+ Better reporting format, right now the comparisons produce just strings.
 """
 
 logging.basicConfig(filename="abs_page_comparison.log", level=logging.DEBUG)
@@ -110,6 +111,7 @@ def _paperid_generator_from_file(path: str, excluded: List[str])->Iterator[str]:
 
 
 def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
+    """Generate an arXiv paper ID."""
     for ( dir_name, subdir_list, file_list) in os.walk(path):
         for fname in file_list:
             fname_path = os.path.join(dir_name, fname)
@@ -146,6 +148,7 @@ legacy_abs_base_url = 'https://beta.arxiv.org/abs_classic/'
 
 
 def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_id: str) -> Tuple[Dict, List[BadResult]]:
+    """Fetch an abs page."""
     ng_url = ng_abs_base_url + paper_id
     legacy_url = legacy_abs_base_url + paper_id
 
@@ -163,8 +166,12 @@ def fetch_abs(compare_res_fn: Callable[[res_arg_dict], List[BadResult]], paper_i
 
 
 def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[BadResult]:
-    """ This is also where we do most of the cleaning on text, for things
-    we know that we do not want to compare."""
+    """
+    Compare responses.
+
+    This is also where we do most of the cleaning on text, for things
+    we know that we do not want to compare.
+    """
     legacy_text = res_args['legacy_res'].text
     ng_text = res_args['ng_res'].text
 
@@ -188,12 +195,13 @@ def run_compare_response(skips: Set[str], res_args: res_arg_dict) -> Iterator[Ba
              return BadResult(res_args['paper_id'], 'run_compare_response', traceback.format_exc())
 
     logging.debug(f"about to do compares for {res_args['paper_id']}")
-    
+
     return filter(None, itertools.chain(
         map(call_it, res_comparisons), run_compare_text(text_dict)))
 
 
 def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
+    """Run the text comparison."""
     html_dict = process_text(text_args)
 
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
@@ -208,8 +216,9 @@ def run_compare_text(text_args: text_arg_dict) -> Iterator[BadResult]:
 
 
 def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
+    """Run comparison against HTML."""
     logging.debug(f'about to run HTML compares for {html_args["paper_id"]}')
-    
+
     def call_it(fn: Callable[[html_arg_dict], BadResult]) -> BadResult:
         # noinspection PyBroadException
         try:
@@ -223,10 +232,12 @@ def run_compare_html(html_args: html_arg_dict) -> Iterator[BadResult]:
 
 
 def rm_email_hash(text: str) -> str:
+    """Remove the hash from the email link."""
     return re.sub(r'show-email/\w+/', 'show-email/', text)
 
 
 def process_text(text_args: text_arg_dict) -> html_arg_dict:
+    """Process text for comparison."""
     text_args['ng_text'] = ' '.join(text_args['ng_text'].split())
     text_args['legacy_text'] = ' '.join(text_args['legacy_text'].split())
 
@@ -242,6 +253,7 @@ def process_text(text_args: text_arg_dict) -> html_arg_dict:
 
 
 def main() -> None:
+    """Run the abs page comparison with provided arguments."""
     parser = argparse.ArgumentParser(
         description='Compare ng browse to legacy browse')
     parser.add_argument('--ids', default=False, )
@@ -302,22 +314,23 @@ def main() -> None:
 
                 def done_job( job ):
                     (config, bad_results) = job
-                    logging.debug(f"completed {config['paper_id']}")                                        
-                    visited_fh.write(f"{config['paper_id']}\n")                    
+                    logging.debug(f"completed {config['paper_id']}")
+                    visited_fh.write(f"{config['paper_id']}\n")
                     write_comparison(report_fh, (config,bad_results))
                     if done():
                         logging.info("done and existing")
                         exit(0)
-                        
+
                 [done_job(job) for job in completed_jobs]
 
 
 def _serialize(obj):
-    """JSON serializer for objects not serializable by default json code"""
+    """JSON serializer for objects not serializable by default json code."""
     return obj.__dict__
 
 
 def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
+    """Write comparison output."""
     (config, bad_results) = result
     logging.debug("writing report for %s", config['paper_id'])
     if bad_results:
@@ -332,6 +345,7 @@ def write_comparison(report_fh, result: Tuple[Dict, List[BadResult]])-> None:
 
 
 def format_bad_result(bad: BadResult)->str:
+    """Format the BadResult object to a readable string."""
     rpt = f"** {bad.comparison}\n" \
           f"{bad.message} "
     if bad.similarity:
@@ -346,7 +360,7 @@ def format_bad_result(bad: BadResult)->str:
 
 
 def strip_by_delim(text: str, start: str, end: str) -> str:
-
+    """Strip text by delimiter."""
     if (start in text) and (end in text):
         def find_start() -> int:
             return text.index(start)

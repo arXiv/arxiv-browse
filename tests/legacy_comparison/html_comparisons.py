@@ -1,3 +1,4 @@
+"""HTML comparison functions."""
 from functools import partial, update_wrapper
 from typing import Callable, List
 
@@ -10,6 +11,7 @@ from bs4 import BeautifulSoup, element
 
 
 def html_similarity(html_arg: html_arg_dict) -> BadResult:
+    """Determine similarity of HTML arguments."""
     sim = lev_similarity(
         html_arg['ng_html'].prettify(),
         html_arg['legacy_html'].prettify()
@@ -22,9 +24,12 @@ def html_similarity(html_arg: html_arg_dict) -> BadResult:
 
 
 def metadata_fields_similarity(html_arg: html_arg_dict) -> BadResult:
-    # There should be a div.metatable
-    # It may have others and if it does they must be on both NG an legacy pages.
+    """
+    Determine similarity of metadata fields.
 
+    There should be a div.metatable. It may have others and if it does they
+    must be on both NG an legacy pages.
+    """
     ng_trs = html_arg['ng_html'].find('div', 'metatable').find_all('tr')
     legacy_trs = html_arg['legacy_html'].find(
         'div', 'metatable').find_all('tr')
@@ -48,10 +53,14 @@ def _replace(tag: element.Tag, att: str, new_value: str):
 
 def _strip_href(eles: List[BeautifulSoup]):
     for ele in eles:
-        for a in ele.find_all('a'): _replace(a,'href','stripped_href')
-        for link in ele.find_all('link'): _replace(link,'href','stripped_href')
-        for meta in ele.find_all('meta'): _replace(meta, 'content', 'stripped_content')
-        for script in ele.find_all('script'): _replace(script,'src','stripped_src')
+        for a in ele.find_all('a'):
+            _replace(a, 'href', 'stripped_href')
+        for link in ele.find_all('link'):
+            _replace(link, 'href', 'stripped_href')
+        for meta in ele.find_all('meta'):
+            _replace(meta, 'content', 'stripped_content')
+        for script in ele.find_all('script'):
+            _replace(script, 'src', 'stripped_src')
     return eles
 
 
@@ -62,11 +71,16 @@ def _element_similarity(name: str,
                         check_counts: bool,
                         text_trans: Callable[[str], str],
                         html_arg: html_arg_dict) -> BadResult:
-    """ Uses get_element to select an element of the BS doc on both NG and Legacy do a similarity. 
+    """
+    Perform element similarity.
+
+    Uses get_element to select an element of the BS doc on both NG and Legacy
+    do a similarity.
 
     required: element must be in both NG and Legacy.
-    check_counts: counts of elements must be the same in both NG and Legacy, could be 0.
-"""
+    check_counts: counts of elements must be the same in both NG and Legacy,
+    could be 0.
+    """
     legacy = get_element(html_arg['legacy_html'])
     ng = get_element(html_arg['ng_html'])
 
@@ -90,7 +104,7 @@ def _element_similarity(name: str,
             legacy_ele_txt = legacy[0].prettify()
         else:
             legacy_ele_txt = 'MISSING'
-            
+
         return BadResult(html_arg['id'], name,
                          f"bad counts for {name} for {html_arg['id']} ng: {len(ng)} legacy: {len(legacy)}",
                          legacy_ele_txt, ng_ele_txt)
@@ -109,7 +123,7 @@ def _element_similarity(name: str,
                              ng_ele_txt, sim)
 
         msg = f"GOOD: Elements did meet min similarity of {min_sim}"
-        return  BadResult(html_arg['id'], name, msg, '','', sim)
+        return BadResult(html_arg['id'], name, msg, '', '', sim)
     else:
         if not required:
             return None
@@ -126,13 +140,14 @@ def _element_similarity(name: str,
 
 
 def strip_dig(eles: List[BeautifulSoup]):
+    """Strip out 'digg' links."""
     for ele in eles:
         for dig in ele.find_all(title=re.compile('digg', re.I)):
             dig.extract()
     return eles
 
 
-def _strip_script_and_noscript( eles: List[BeautifulSoup]):
+def _strip_script_and_noscript(eles: List[BeautifulSoup]):
     for ele in eles:
         for srpt in ele.find_all('script'):
             srpt.extract()
@@ -142,7 +157,9 @@ def _strip_script_and_noscript( eles: List[BeautifulSoup]):
 
 
 def ident(x):
+    """Return identity."""
     return x
+
 
 author_similarity = partial(
     _element_similarity, 'authors div',
@@ -154,8 +171,8 @@ dateline_similarity = partial(
     _element_similarity, 'dateline div', lambda bs: _strip_href(bs.select('.dateline')), 0.8, True, True, ident)
 
 
-
 def normalize_history(sin):
+    """Normalize the submission history text."""
     return sin\
         .replace('GMT', '[normalized_gmt_utc]').replace('UTC', '[normalized_gmt_utc]')\
         .replace(' KB)', ' [normalized_kb])').replace('kb)', ' [normalized_kb])')
@@ -184,24 +201,29 @@ head_similarity = partial(
 
 ############ div.extra-services Checks #################
 
+
 def ex_strip(eles: List[BeautifulSoup]):
-    return _strip_href(strip_dig( eles))
+    """Strip links."""
+    return _strip_href(strip_dig(eles))
 
 
 extra_full_text_similarity = partial(_element_similarity, 'extra full-text div',
-                                     lambda bs: ex_strip(bs.select('div.full-text')),
-                                     0.9,True,True, ident)
+                                     lambda bs: ex_strip(
+                                         bs.select('div.full-text')),
+                                     0.9, True, True, ident)
 
 ancillary_similarity = partial(_element_similarity, 'extra ancillary div',
                                lambda bs: ex_strip(bs.select('div.ancillary')),
                                0.9, False, True, ident)
 
 extra_ref_cite_similarity = partial(_element_similarity, 'extra ref_cite div',
-                                    lambda bs: ex_strip(bs.select('div.extra-ref-cite')),
+                                    lambda bs: ex_strip(
+                                        bs.select('div.extra-ref-cite')),
                                     0.9, False, True, ident)
 
 extra_general_similarity = partial(_element_similarity, 'extra extra-general div',
-                                   lambda bs: ex_strip(bs.select('div.extra-general')),
+                                   lambda bs: ex_strip(
+                                       bs.select('div.extra-general')),
                                    0.9, False, True, ident)
 
 extra_browse_similarity = partial(_element_similarity, 'extra browse div',
@@ -219,28 +241,31 @@ bookmarks_similarity = partial(_element_similarity, 'extra bookmarks div',
 ################# /archive checks ################################
 
 archive_h1_similarity = partial(_element_similarity, 'top heading',
-                               lambda bs: ex_strip(bs.select('#content > h1')),
+                                lambda bs: ex_strip(
+                                    bs.select('#content > h1')),
                                 0.99, True, True, ident)
 
 archive_browse = partial(_element_similarity, 'browse',
-                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(1)')),
-                               0.99, True, True, ident)
+                         lambda bs: ex_strip(
+                             bs.select('#content > ul > li:nth-child(1)')),
+                         0.99, True, True, ident)
 
 archive_catchup = partial(_element_similarity, 'archive catchup',
-                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(2)')),
-                               0.99, True, True, ident)
+                          lambda bs: ex_strip(
+                              bs.select('#content > ul > li:nth-child(2)')),
+                          0.99, True, True, ident)
 
-archive_search= partial(_element_similarity, 'archive_search',
-                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(3)')),
-                               0.99, True, True, ident)
+archive_search = partial(_element_similarity, 'archive_search',
+                         lambda bs: ex_strip(
+                             bs.select('#content > ul > li:nth-child(3)')),
+                         0.99, True, True, ident)
 
-archive_by_year= partial(_element_similarity, 'archive_by_year',
-                               lambda bs: ex_strip(bs.select('#content > ul > li:nth-child(4)')),
-                               0.99, True, True, ident)
-
-
-archive_bogus= partial(_element_similarity, 'bogus_should_fail',
-                               lambda bs: ex_strip(bs.select('.bogusClass')),
-                               0.99, True, True, ident)
+archive_by_year = partial(_element_similarity, 'archive_by_year',
+                          lambda bs: ex_strip(
+                              bs.select('#content > ul > li:nth-child(4)')),
+                          0.99, True, True, ident)
 
 
+archive_bogus = partial(_element_similarity, 'bogus_should_fail',
+                        lambda bs: ex_strip(bs.select('.bogusClass')),
+                        0.99, True, True, ident)

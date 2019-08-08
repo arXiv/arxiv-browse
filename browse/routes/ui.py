@@ -24,6 +24,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 @blueprint.context_processor
 def inject_now() -> None:
+    """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
 
 

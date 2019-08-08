@@ -1,12 +1,10 @@
-"""Handle requests to set cookies"""
+"""Handle requests to set cookies."""
 
-import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 import copy
 
 import flask
-from flask import url_for, request, make_response
-from werkzeug.exceptions import InternalServerError
+from flask import url_for, request
 
 from arxiv import status
 
@@ -56,10 +54,8 @@ cookies_config = [
 # TODO implement debug parameter
 
 def get_cookies_page(is_debug: bool) -> Any:
-    """Render the cookies page.
-
-    Parameters
-    ----------
+    """
+    Render the cookies page.
 
     Returns
     -------
@@ -74,6 +70,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     ------
     :class:`.InternalServerError`
         Raised when there was an unexpected problem executing the query.
+
     """
     debug = {'debug': '1'} if is_debug else {
     }  # want to propogate debug to form URL
@@ -90,7 +87,7 @@ def get_cookies_page(is_debug: bool) -> Any:
 
 
 def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Sets the selected value on the options for the request cookies."""
+    """Set the selected value on the options for the request cookies."""
     cookies = request.cookies
     for cc in configs:
         request_value = cookies.get(cc['name'], None)
