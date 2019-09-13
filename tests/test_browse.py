@@ -301,6 +301,10 @@ class BrowseTest(unittest.TestCase):
             'href="ftp://ftp.arxiv.org/cheese.txt"' in rv.data.decode('utf-8'),
             "FTP URLs should be turned into links ARXIVNG-1242")
 
+        self.assertTrue(
+            'MPES &amp;amp; Oxford' not in rv.data.decode('utf-8'),
+            "Ampersand in author affiliation should not be double escaped")       
+        
     def test_160408245(self):
         """Test linking in 1604.08245."""
         id = '1604.08245'
