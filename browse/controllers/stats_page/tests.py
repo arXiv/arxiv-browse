@@ -198,6 +198,7 @@ class TestStatsPageControllers(TestCase):
                          "month,submissions,historical_delta\n")
 
         # test response with mock data
+        mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_stats.return_value = [
             mock.Mock(ym=date(2019, 2, 1),
                       num_submissions=9999, historical_delta=-42),
