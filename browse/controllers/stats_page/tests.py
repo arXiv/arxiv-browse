@@ -142,9 +142,14 @@ class TestStatsPageControllers(TestCase):
         self.assertEqual(response_data['csv'], expected_response)
 
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_count')
-    def test_get_monthly_submissions_page(self, mock_get_monthly_submission_count) -> None:  # type: ignore
+    @mock.patch('browse.controllers.stats_page.get_document_count_by_yymm')
+    def test_get_monthly_submissions_page(self,
+                                          mock_get_document_count_by_yymm,
+                                          mock_get_monthly_submission_count)\
+                                          -> None:  # type: ignore
         """Tests for :func:`.get_monthly_submissions_page`."""
         # test basic response
+        mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_count.return_value = (0, 0)
         response_data, code, headers = \
             stats_page.get_monthly_submissions_page()
@@ -177,10 +182,16 @@ class TestStatsPageControllers(TestCase):
         self.assertIsInstance(response_data['current_dt'], datetime)
         self.assertIsInstance(response_data['arxiv_start_dt'], datetime)
 
+
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_stats')
-    def test_get_submission_stats_csv(self, mock_get_monthly_submission_stats) -> None:  # type: ignore
+    @mock.patch('browse.controllers.stats_page.get_document_count_by_yymm')
+    def test_get_submission_stats_csv(self,
+                                      mock_get_document_count_by_yymm,
+                                      mock_get_monthly_submission_stats)\
+                                      -> None:  # type: ignore
         """Tests for :func:`.get_submission_stats_csv`."""
         # test basic response
+        mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_stats.return_value = list()
         response_data, code, headers = stats_page.get_submission_stats_csv()
         self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
@@ -190,6 +201,7 @@ class TestStatsPageControllers(TestCase):
                          "month,submissions,historical_delta\n")
 
         # test response with mock data
+        mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_stats.return_value = [
             mock.Mock(ym=date(2019, 2, 1),
                       num_submissions=9999, historical_delta=-42),
