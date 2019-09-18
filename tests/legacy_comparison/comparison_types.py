@@ -1,3 +1,4 @@
+"""Define comparison types."""
 from typing import Callable, Optional
 
 from dataclasses import dataclass
@@ -8,6 +9,8 @@ import requests
 
 @dataclass
 class BadResult:
+    """Dataclass for maintaining information about a comparison result."""
+
     paper_id: str
     comparison: str
     message: str
@@ -48,4 +51,3 @@ html_arg_dict = TypedDict('html_arg_dict',
                            'paper_id': str})
 
 html_comparison_fn = Callable[[html_arg_dict], Optional[BadResult]]
-

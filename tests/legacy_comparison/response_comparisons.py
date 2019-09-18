@@ -1,7 +1,9 @@
+"""Includes function for comparing responses."""
 from comparison_types import res_arg_dict, BadResult
 
 
 def compare_status(res_arg: res_arg_dict) -> BadResult:
+    """Compare HTTP status codes from responses."""
     if res_arg['ng_res'].status_code == 200 and res_arg['legacy_res'].status_code == 200:
         return None
     else:
