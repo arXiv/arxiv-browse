@@ -4,6 +4,16 @@
   clear: right;
 }
 
+@media screen and (max-width: 768px) {
+  .search-block.level-right {
+    justify-content: center;
+    clear: left;
+  }
+  .search-block form.level-item {
+    margin-left:12px !important;
+  }
+}
+
 .search-block form.level-item,
 .field.has-addons {
   display: flex;
@@ -23,6 +33,10 @@
   border: 1px solid transparent;
 }
 
+.search-block .button {
+  margin-left:0;
+}
+
 .search-block .input {
   border-color: transparent;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
@@ -34,24 +48,17 @@
   padding: 0 0.5em;
 }
 
-.search-block select {
-  -webkit-appearance: listbox;
-  border-color: #ccc;
-  padding-left: 0.5em;
-  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
-}
-
 .search-block .control {
   position: relative;
 }
 
 /* creates downward caret */
-.search-block .select::after {
+ .search-block .select::after {
   position: absolute;
   display: block;
   z-index: 4;
   top: 50%;
-  right: 1.125em;
+  right: .65em;
   width: 0.5em;
   height: 0.5em;
   content: " ";
@@ -64,6 +71,33 @@
   pointer-events: none;
   margin-top: -1.125em;
 }
+/*hide default caret, style select*/
+.search-block .select.is-small select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: 27px;
+  float: right;
+  margin: 0px;
+  padding: 0px;
+  background-color: #ffffff;
+  background-image: none;
+  -ms-word-break: normal;
+  word-break: normal;
+  border-color: #ccc;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+  border-radius: 0;
+}
+/*fix caret in IE 11*/
+.search-block .select.is-small select::-ms-expand {
+     display: none;
+}
+
+
+
 
 .search-block .button {
   background-color: #711111;
