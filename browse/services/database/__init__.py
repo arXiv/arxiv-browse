@@ -165,9 +165,16 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
 @db_handle_error(logger=logger, default_return_val=0)
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
-    count: int = __paper_trackbacks_query(paper_id) \
-        .group_by(TrackbackPing.url).count()
-    return count
+    # count: int = __paper_trackbacks_query(paper_id) \
+    #     .group_by(TrackbackPing.url).count()
+    row = db.session.query(
+            func.count(TrackbackPing.url).label('num_pings')
+          ).filter(TrackbackPing.document_id == Document.document_id) \
+           .filter(Document.paper_id == paper_id) \
+           .filter(TrackbackPing.status == 'accepted') \
+           .distinct(TrackbackPing.url)
+
+    return row.num_pings
 
 
 @db_handle_error(logger=logger, default_return_val=0)
