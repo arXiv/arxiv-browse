@@ -44,6 +44,7 @@
   {%- if config['BROWSE_ANALYTICS_ENABLED'] -%}
   <noscript><img src="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}matomo.php?idsite={{ config['BROWSE_ANALYTICS_SITE_ID'] }}&amp;rec=1" style="border:0" alt="" /></noscript>
   {% endif -%}
+  <a href="#content" class="is-sr-only">Skip to main content</a>
   <div id="cu-identity">
     <div id="cu-logo">
       <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" width="200" border="0" /></a>
