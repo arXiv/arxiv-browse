@@ -1107,4 +1107,16 @@ body#front.with-cu-identity #header #search {
   }
 }
 
+/*extra bulma styles to bring -browse up to date*/
+@media screen and (max-width: 768px) {
+  .is-hidden-mobile {
+    display: none !important;
+  }
+  .columns.is-mobile {
+    display: flex;
+  }
+}
+
+
+
 /*# sourceMappingURL=searches.css.map */
