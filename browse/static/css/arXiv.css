@@ -1107,4 +1107,25 @@ body#front.with-cu-identity #header #search {
   }
 }
 
+/*extra bulma styles to bring -browse up to date*/
+@media screen and (max-width: 768px) {
+  .is-hidden-mobile {
+    display: none !important;
+  }
+  .columns.is-mobile {
+    display: flex;
+  }
+}
+.is-sr-only {
+  border: none !important;
+  clip: rect(0, 0, 0, 0) !important;
+  height: 0.01em !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 0.01em !important;
+}
+
+
 /*# sourceMappingURL=searches.css.map */
