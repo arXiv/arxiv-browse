@@ -95,7 +95,9 @@ em.boxed {
   height: 49px;
 }
 
-#cu-logo a {}
+#cu-logo a img {
+  width:200px;
+}
 
 #insignia-link {
   width: 68px;
@@ -182,6 +184,13 @@ em.boxed {
 body#front #header h1 {
   font-size: 2.5em;
   font-weight: normal;
+}
+
+#header .classifications a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: bold;
 }
 
 #header a, #header a:visited {
