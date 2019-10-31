@@ -533,7 +533,7 @@ div#long-author-list {
   font-size: 100%;
 }
 
-#abs .arxivid {
+#abs .arxivid a {
   font-weight: bold;
 }
 
@@ -747,7 +747,7 @@ div#long-dc-list {
   line-height: 130%;
 }
 
-#dlpage .list-identifier {
+#dlpage .list-identifier a {
   font-weight: bold;
 }
 
