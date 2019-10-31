@@ -182,6 +182,18 @@ em.boxed {
   float: left;
 }
 
+#header .header-breadcrumbs {
+  margin: 0;
+  font-size: 1em;
+  padding: 10px 0 .2em 10px;
+  font-style: normal;
+  float: left;
+}
+
+#header .header-breadcrumbs a {
+  font-weight: bold;
+}
+
 body#front #header h1 {
   font-size: 2.5em;
   font-weight: normal;
@@ -397,7 +409,7 @@ footer ul {
 /****************************************
  * Content styles
  *****************************************/
-#content {
+#content, #content-inner {
   margin: .7em;
   font-size: 90%;
 }
