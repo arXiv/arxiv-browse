@@ -19,12 +19,12 @@
 
 {% block header_class %}{% endblock %}
 {% block header_h1 %}
-  <h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</h1>
+  <div class="header-breadcrumbs"><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</div>
 {% endblock header_h1 %}
 
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
-<div id="abs">
+<div id="abs-outer">
   {% include "abs/extra_services.html" %}
   <div class="leftcolumn">
     <div class="subheader">
