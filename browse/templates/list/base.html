@@ -3,10 +3,10 @@
 {% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
 
 {% block header_h1 %}
-<h1>
+<div class="header-breadcrumbs">
   <a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt;
   <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
-  </h1>
+  </div>
 {% endblock %}
 
 {%- block content %}

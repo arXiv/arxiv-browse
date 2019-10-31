@@ -235,10 +235,10 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs/physics/9707012')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        h1_elmt = html.find('h1')
-        h1_txt = h1_elmt.get_text()
-        self.assertRegex(h1_txt, r'arXiv:physics\/9707012')
-        self.assertNotRegex(h1_txt, r'arXiv:physics\/9707012v')
+        div_elmt = html.find('div', class_= 'header-breadcrumbs')
+        div_txt = div_elmt.get_text()
+        self.assertRegex(div_txt, r'arXiv:physics\/9707012')
+        self.assertNotRegex(div_txt, r'arXiv:physics\/9707012v')
 
         title_elmt = html.find('title')
         title_txt = title_elmt.get_text()
@@ -254,9 +254,9 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        h1_elmt = html.find('h1')
-        h1_txt = h1_elmt.get_text()
-        self.assertRegex(h1_txt, r'arXiv:physics\/9707012v4')
+        div_elmt = html.find('div', class_='header-breadcrumbs')
+        div_txt = div_elmt.get_text()
+        self.assertRegex(div_txt, r'arXiv:physics\/9707012v4')
 
         title_elmt = html.find('title')
         title_txt = title_elmt.get_text()
@@ -303,8 +303,8 @@ class BrowseTest(unittest.TestCase):
 
         self.assertTrue(
             'MPES &amp;amp; Oxford' not in rv.data.decode('utf-8'),
-            "Ampersand in author affiliation should not be double escaped")       
-        
+            "Ampersand in author affiliation should not be double escaped")
+
     def test_160408245(self):
         """Test linking in 1604.08245."""
         id = '1604.08245'
