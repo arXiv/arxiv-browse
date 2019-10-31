@@ -450,25 +450,25 @@ p.tagline {
 /****************************************
  * Abstract styles (/abs)
  ****************************************/
-#abs {
+#abs-outer, #abs {
   margin: -0.7em;
 }
 
-#abs .leftcolumn {
+#abs-outer .leftcolumn {
   /* the 16 + 0.35 corresponds with the .extra-services width and border */
   margin: 0 16.35em 0 0;
   padding: 0px;
 }
 
 /* arXiv.org archive/subjclass info for abs pages... */
-#abs .subheader {
+#abs-outer .subheader {
   background-color: #eee;
   color: #000;
   padding: .25em 0;
   border-bottom: 1px solid #ccc;
 }
 
-#abs .subheader h1 {
+#abs-outer .subheader h1 {
   margin: 0;
   font-size: 1.1em;
   padding: 0 0 .2em 20px;
@@ -553,26 +553,26 @@ div#long-author-list {
 
 #abs .jref {}
 
-#abs .submission-history {
+#abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;
   font-size: 90%;
   line-height: 1.5em;
 }
 
-#abs .submission-history h2 {
+#abs-outer .submission-history h2 {
   font-size: 120%;
   margin: 0 0 .25em 0;
   font-weight: bold;
 }
 
-#abs .submission-history pre {
+#abs-outer .submission-history pre {
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   margin: 0;
   line-height: 1.4em;
   padding: 0;
 }
 
-#abs .endorsers {
+#abs-outer .endorsers {
   margin: 1em 0 1.5em 20px;
   font-size: small;
   font-style: italic;
