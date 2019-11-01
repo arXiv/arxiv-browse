@@ -75,9 +75,9 @@
 
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}
-  <b>[v{{ version_entry.version }}]</b>
+  <strong>[v{{ version_entry.version }}]</strong>
 {% else %}
-  <b><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></b>
+  <strong><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></strong>
   {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
 {%- endmacro -%}
 
