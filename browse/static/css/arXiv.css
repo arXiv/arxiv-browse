@@ -275,6 +275,18 @@ body#front.with-cu-identity #header form {
 #header form .links a {
   text-decoration: underline;
 }
+@media screen and (max-width: 768px) {
+  #header h1 {
+    text-align: center;
+    float: none;
+    margin: 0;
+    padding: 0 0 .2em 0;
+  }
+  .search-block.level-right {
+    clear:both !important;
+  }
+}
+
 
 /****************************************
  * Footer
@@ -455,9 +467,30 @@ p.tagline {
 }
 
 #abs-outer .leftcolumn {
-  /* the 16 + 0.35 corresponds with the .extra-services width and border */
-  margin: 0 16.35em 0 0;
+  margin: 0;
   padding: 0px;
+  width:80%;
+  float:left;
+}
+/*right column extra_services*/
+#abs-outer .extra-services {
+  float:right;
+  margin:0;
+  width:20%;
+}
+@media screen and (max-width: 769px) {
+  #abs-outer .leftcolumn, #abs-outer .extra-services {
+    width:100%;
+    float:left;
+  }
+  #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite, #abs-outer .extra-services .bookmarks {
+    border:0px;
+  }
+  #abs-outer .extra-services {
+    border-top: .35em solid #ddd;
+    border-bottom: .35em solid #ddd;
+    margin:.5em 0 1em 0;
+  }
 }
 
 /* arXiv.org archive/subjclass info for abs pages... */
@@ -477,6 +510,9 @@ p.tagline {
 }
 
 #abs .descriptor {
+  display: none;
+}
+#abs-outer .extra-services .descriptor {
   display: none;
 }
 
@@ -576,22 +612,19 @@ div#long-author-list {
   margin: 1em 0 1.5em 20px;
   font-size: small;
   font-style: italic;
+  clear:both;
 }
 
 /* Floating box on right for links to extra services */
 .extra-services {
-  width: 16em;
-  float: right;
-  border-left: .35em solid #ddd;
   border-bottom: .35em solid #ddd;
-  margin-left: 20px;
-  /*need to define padding in sub-elements because of borders*/
 }
 
 .extra-services h3 {
   font-size: medium;
   font-weight: normal;
-  margin: 0.3em 0 0.3em 0;
+  margin: 0 0 0.3em 0;
+  padding-top:0.3em;
 }
 
 .full-text {
@@ -600,6 +633,7 @@ div#long-author-list {
   font-size: 110%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .full-text h2 {
@@ -623,6 +657,7 @@ div#long-author-list {
   font-size: 90%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .ancillary h2 {
@@ -657,6 +692,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite {
@@ -664,6 +700,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite ul {
@@ -677,6 +714,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .browse .current {
@@ -686,9 +724,10 @@ div#long-dc-list {
 
 .browse .prevnext {
   padding: 0.2em 0 0 0;
+}
+.browse .prevnext a {
   font-weight: bold;
 }
-
 .browse .prevnext .nolink {
   font-weight: bold;
   color: #666;
@@ -712,6 +751,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .dblp .list {
@@ -725,6 +765,7 @@ div#long-dc-list {
   margin: 0;
   padding: 0 1em .5em 1em;
   font-size: 90%;
+  border-left: .35em solid #ddd;
   /* no bottom border because this is last extra services block */
 }
 
