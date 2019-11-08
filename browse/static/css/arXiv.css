@@ -285,6 +285,10 @@ body#front.with-cu-identity #header form {
   .search-block.level-right {
     clear:both !important;
   }
+  #header .header-breadcrumbs {
+    float: none;
+    text-align: center;
+  }
 }
 
 
@@ -469,22 +473,29 @@ p.tagline {
 #abs-outer .leftcolumn {
   margin: 0;
   padding: 0px;
-  width:80%;
+  width:calc(100% - 16em);
   float:left;
 }
 /*right column extra_services*/
 #abs-outer .extra-services {
   float:right;
   margin:0;
-  width:20%;
+  width:16em;
 }
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
+  #abs-outer .extra-services h2 {
+    font-size:15px;
+  }
+  #abs-outer .extra-services h3 {
+    font-size:14px;
+  }
   #abs-outer .leftcolumn, #abs-outer .extra-services {
     width:100%;
     float:left;
   }
   #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite, #abs-outer .extra-services .bookmarks {
     border:0px;
+    font-size:12px;
   }
   #abs-outer .extra-services {
     border-top: .35em solid #ddd;
@@ -613,6 +624,11 @@ div#long-author-list {
   font-size: small;
   font-style: italic;
   clear:both;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer .endorsers {
+    margin: 1em 0 .5em 20px;
+  }
 }
 
 /* Floating box on right for links to extra services */
@@ -1159,7 +1175,7 @@ body#front.with-cu-identity #header #search {
   top: 30px;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   #cu-identity {
     flex-direction: column;
   }
