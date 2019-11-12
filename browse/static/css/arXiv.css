@@ -15,7 +15,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
-  font-weight: bold;
+  /*hotfix: font-weight: bold; */
 }
 
 a:hover {
@@ -476,6 +476,9 @@ p.tagline {
   width:calc(100% - 16em);
   float:left;
 }
+#abs-outer .mobile-submission-download {
+  display:none;
+}
 /*right column extra_services*/
 #abs-outer .extra-services {
   float:right;
@@ -483,6 +486,18 @@ p.tagline {
   width:16em;
 }
 @media screen and (max-width: 768px) {
+  #abs-outer a.mobile-submission-download {
+    display: flex;
+    justify-content: center;
+    margin: 1em .25em;
+    border-radius: 10px;
+    border: 2px solid #cecece;
+    background-color: #f2f2f2;
+    padding: 1em;
+    font-weight: 800;
+    color:black;
+    text-decoration: none;
+  }
   #abs-outer .extra-services h2 {
     font-size:15px;
   }
@@ -593,7 +608,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
-  font-weight: bold;
+  /* hotfix: font-weight: bold; */
 }
 
 #abs .arxividv {}
@@ -742,7 +757,7 @@ div#long-dc-list {
   padding: 0.2em 0 0 0;
 }
 .browse .prevnext a {
-  font-weight: bold;
+  /* hotfix: font-weight: bold; */
 }
 .browse .prevnext .nolink {
   font-weight: bold;

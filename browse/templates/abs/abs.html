@@ -26,6 +26,8 @@
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
 
+  <a href="/pdf/{{ abs_meta.arxiv_id }}.pdf" class="mobile-submission-download">Download PDF</a>
+  
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
