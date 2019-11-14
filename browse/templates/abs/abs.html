@@ -25,9 +25,9 @@
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
+  <!-- mobile only button -->
+  {{ generate_download_button() }}
 
-  <a href="/pdf/{{ abs_meta.arxiv_id }}.pdf" class="mobile-submission-download">Download PDF</a>
-  
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
@@ -130,7 +130,6 @@
   {%- endif -%}
 {%- endmacro -%}
 
-
 {%- macro version_atag(id, version) -%}
   {%- if version -%}
     {%- set vpart = 'v' ~ version -%}
@@ -143,3 +142,11 @@
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
   {%- endif -%}
 {%- endmacro -%}
+
+{% macro generate_download_button() %}
+  {% if is in('pdf', format_list) %}
+    <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+  {% else %}
+    <a class="mobile-submission-download" href="#other-sources">No PDF available, click for other formats</a>
+  {% endif %}
+{% endmacro %}
