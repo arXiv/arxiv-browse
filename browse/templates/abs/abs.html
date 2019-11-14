@@ -147,6 +147,6 @@
   {% if is in('pdf', format_list) %}
     <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
   {% else %}
-    <a class="mobile-submission-download" href="#other-sources">No PDF available, click for other formats</a>
+    <a class="mobile-submission-download" href="#other">No PDF available, click for other formats</a>
   {% endif %}
 {% endmacro %}

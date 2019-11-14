@@ -14,7 +14,7 @@
   {% endif %}
 {%- endmacro -%}
 
-<a name="other-sources"></a>
+
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
   {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
@@ -162,6 +162,7 @@
     </script>
 {% endif %}
     <div class="full-text">
+      <a name="other"></a>
       <span class="descriptor">Full-text links:</span>
       <h2>Download:</h2>
       {{ generate_download_links(format_list=formats) }}
