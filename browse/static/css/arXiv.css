@@ -267,6 +267,16 @@ body#front.with-cu-identity #header form {
 /****************************************
  * Footer
  ****************************************/
+ footer ul li {
+   display: flex;
+   align-items: center;
+   font-size:14px;
+ }
+ footer ul li a {
+   font-size: 13.5px;
+   padding-left: 3px;
+ }
+
 #footer {
   background-color: #eee;
   color: #000;
@@ -373,6 +383,7 @@ footer ul {
   justify-content: center;
   height: 1.5rem;
   width: 1.5rem;
+  vertical-align: text-bottom;
 }
 
 .help {
