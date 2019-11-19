@@ -15,7 +15,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
-  /*hotfix: font-weight: bold; */
+  font-weight: normal;
 }
 
 a:hover {
@@ -608,7 +608,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
-  /* hotfix: font-weight: bold; */
+  font-weight: normal;
 }
 
 #abs .arxividv {}
