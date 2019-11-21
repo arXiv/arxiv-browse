@@ -16,6 +16,7 @@ body {
 a:link, a:visited, a:active {
   text-decoration: none;
   /*font-weight: bold;*/
+  font-weight: normal;
 }
 
 a:hover {
@@ -547,6 +548,7 @@ div#long-author-list {
 
 #abs .arxivid a {
   /*font-weight: bold;*/
+  font-weight: normal;
 }
 
 #abs .arxividv {}
