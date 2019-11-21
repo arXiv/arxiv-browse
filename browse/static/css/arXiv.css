@@ -485,6 +485,9 @@ p.tagline {
   margin:0;
   width:16em;
 }
+#abs-outer .extra-services .bib-sidebar {
+  border-left: .35em solid #ddd !important;
+}
 @media screen and (max-width: 768px) {
   #abs-outer a.mobile-submission-download {
     display: flex;
