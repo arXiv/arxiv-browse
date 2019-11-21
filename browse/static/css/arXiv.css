@@ -15,7 +15,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 a:hover {
@@ -191,7 +191,7 @@ em.boxed {
 }
 
 #header .header-breadcrumbs a {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 body#front #header h1 {
@@ -546,7 +546,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 #abs .arxividv {}
@@ -686,7 +686,7 @@ div#long-dc-list {
 
 .browse .prevnext {
   padding: 0.2em 0 0 0;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .browse .prevnext .nolink {
