@@ -410,9 +410,12 @@ footer ul {
 /****************************************
  * Content styles
  *****************************************/
-#content, #content-inner {
+#content {
   margin: .7em;
   font-size: 90%;
+}
+#content-inner {
+  
 }
 
 /* Index page tagline */
@@ -761,7 +764,7 @@ div#long-dc-list {
   line-height: 130%;
 }
 
-#dlpage .list-identifier a {
+#dlpage .list-identifier a, #dlpage dl#articles dt a {
   font-weight: bold;
 }
 
