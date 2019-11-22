@@ -3,14 +3,14 @@
 {% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
 
 {% block header_h1 %}
-<h1>
+<div class="header-breadcrumbs">
   <a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt;
   <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
-  </h1>
+  </div>
 {% endblock %}
 
 {%- block content %}
-<div id='content'>
+<div id='content-inner'>
 <div id='dlpage'>
   <h1>{{list_ctx_name}}</h1>
 
@@ -55,7 +55,7 @@
   {% set listing_index = item['list_index'] %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
-      <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract">
+      <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
         arXiv:{{ article.arxiv_identifier.ids }}
       </a>
       {{ type_info( item ) }}
@@ -128,19 +128,19 @@
     <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
       {{txt}}</a>
   {% else %}
-    <span style="color: #999">{{txt}}</span>
+    <span style="color: #454545">{{txt}}</span>
   {% endif %}
 {%- endmacro -%}
 
 {%- macro dl_links( article ) -%}
-  {% set id=article.arxiv_id %}
+  {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
-  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF">pdf</a>
+  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
   {%- if 'ps' in downloads -%}
-    , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript">ps</a>
+    , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
   {%- endif -%}
   {%- if 'other' in downloads -%}
-    , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats">other</a>
+    , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
   {%- endif -%}
   ]
 {%- endmacro -%}
