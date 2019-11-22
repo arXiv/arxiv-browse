@@ -8,6 +8,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" type="image/x-icon" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20190307" />
+  <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20190307" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   <!-- Matomo -->

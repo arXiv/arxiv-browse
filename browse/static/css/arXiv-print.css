@@ -1,0 +1,17 @@
+/****************************************
+ *  arXiv.org Cascading Style Sheet:: Print
+ *  $Date: 2019/11/20 $
+ *****************************************/
+/****************************************
+ *   Print rules
+ *****************************************/
+#cu-identity, .extra-services, .search-block, footer .columns {
+  display:none;
+}
+.header-breadcrumbs {
+  font-size:18px;
+}
+.subheader h1 {
+  font-size:14px;
+  font-weight: bold;
+}
