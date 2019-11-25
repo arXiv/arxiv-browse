@@ -15,6 +15,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -191,7 +192,7 @@ em.boxed {
 }
 
 #header .header-breadcrumbs a {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 body#front #header h1 {
@@ -429,6 +430,9 @@ footer ul {
   margin: .7em;
   font-size: 90%;
 }
+#content-inner {
+  
+}
 
 /* Index page tagline */
 p.tagline {
@@ -469,7 +473,6 @@ p.tagline {
 #abs-outer, #abs {
   margin: -0.7em;
 }
-
 #abs-outer .leftcolumn {
   margin: 0;
   padding: 0px;
@@ -484,6 +487,9 @@ p.tagline {
   float:right;
   margin:0;
   width:16em;
+}
+#abs-outer .extra-services .bib-sidebar {
+  border-left: .35em solid #ddd !important;
 }
 @media screen and (max-width: 768px) {
   #abs-outer a.mobile-submission-download {
@@ -608,6 +614,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -755,6 +762,7 @@ div#long-dc-list {
 
 .browse .prevnext {
   padding: 0.2em 0 0 0;
+  /*font-weight: bold;*/
 }
 .browse .prevnext a {
   /* hotfix: font-weight: bold; */
@@ -831,7 +839,7 @@ div#long-dc-list {
   line-height: 130%;
 }
 
-#dlpage .list-identifier a {
+#dlpage .list-identifier a, #dlpage dl#articles dt a {
   font-weight: bold;
 }
 
