@@ -143,10 +143,10 @@
     {%- endif -%}
     {%- endmacro -%}
 
-    {% macro generate_download_button() %}
-    {% if formats|length > 0 and 'pdf' in formats %}
+{% macro generate_download_button() %}
+  {% if formats|length > 0 and 'pdf' in formats %}
     <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
-    {% else %}
+  {% else %}
     <a class="mobile-submission-download" href="#other">No PDF available, click for other formats</a>
   {% endif %}
 {% endmacro %}
