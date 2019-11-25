@@ -138,10 +138,10 @@
   {% endif %}
   {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
-    {%- else -%}
+  {%- else -%}
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
-    {%- endif -%}
-    {%- endmacro -%}
+  {%- endif -%}
+{%- endmacro -%}
 
 {% macro generate_download_button() %}
   {% if formats|length > 0 and 'pdf' in formats %}
