@@ -25,29 +25,31 @@
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
-  {% include "abs/extra_services.html" %}
+  {{ generate_download_button() }}
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
 
-  {{ base_macros.abs(
-    abs_meta.arxiv_identifier.id,
-    abs_meta.title,
-    display_authors_with_links(abs_meta, author_links),
-    abs_meta.abstract,
-    abs_meta.get_datetime_of_version(abs_meta.version),
-    abs_meta.primary_category.id,
-    comments = abs_meta.comments,
-    msc_class = abs_meta.msc_class,
-    acm_class = abs_meta.acm_class,
-    journal_ref = abs_meta.journal_ref,
-    doi = abs_meta.doi,
-    report_num = abs_meta.report_num,
-    version = abs_meta.version,
-    submission_history = abs_meta.version_history,
-    secondary_categories = abs_meta.get_secondaries(),
-    include_stylesheet = 0) }}
+    {{
+      base_macros.abs(
+      abs_meta.arxiv_identifier.id,
+      abs_meta.title,
+      display_authors_with_links(abs_meta, author_links),
+      abs_meta.abstract,
+      abs_meta.get_datetime_of_version(abs_meta.version),
+      abs_meta.primary_category.id,
+      comments = abs_meta.comments,
+      msc_class = abs_meta.msc_class,
+      acm_class = abs_meta.acm_class,
+      journal_ref = abs_meta.journal_ref,
+      doi = abs_meta.doi,
+      report_num = abs_meta.report_num,
+      version = abs_meta.version,
+      submission_history = abs_meta.version_history,
+      secondary_categories = abs_meta.get_secondaries(),
+      include_stylesheet = 0)
+    }}
 
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
@@ -61,14 +63,17 @@
     </div>
   </div>
   <!--end leftcolumn-->
-    <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-      <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
-    </div>
-    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-    {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
-    {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-    <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
-    {% endif %}
+
+  {% include "abs/extra_services.html" %}
+
+  <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+    <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+  </div>
+  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+  {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
+  {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+  <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
+  {% endif %}
 
 </div>
 {% endblock content %}
@@ -123,7 +128,6 @@
   {%- endif -%}
 {%- endmacro -%}
 
-
 {%- macro version_atag(id, version) -%}
   {%- if version -%}
     {%- set vpart = 'v' ~ version -%}
@@ -132,7 +136,15 @@
   {% endif %}
   {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
-    {%- else -%}
+  {%- else -%}
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
   {%- endif -%}
 {%- endmacro -%}
+
+{% macro generate_download_button() %}
+  {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
+    <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+  {% else %}
+    <a class="mobile-submission-download" href="#other">No PDF available, click for other formats</a>
+  {% endif %}
+{% endmacro %}

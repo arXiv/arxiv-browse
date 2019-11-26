@@ -276,6 +276,22 @@ body#front.with-cu-identity #header form {
 #header form .links a {
   text-decoration: underline;
 }
+@media screen and (max-width: 768px) {
+  #header h1 {
+    text-align: center;
+    float: none;
+    margin: 0;
+    padding: 0 0 .2em 0;
+  }
+  .search-block.level-right {
+    clear:both !important;
+  }
+  #header .header-breadcrumbs {
+    float: none;
+    text-align: center;
+  }
+}
+
 
 /****************************************
  * Footer
@@ -419,7 +435,7 @@ footer ul {
 /****************************************
  * Content styles
  *****************************************/
-#content {
+#content, #content-inner {
   margin: .7em;
   font-size: 90%;
 }
@@ -466,11 +482,56 @@ p.tagline {
 #abs-outer, #abs {
   margin: -0.7em;
 }
-
 #abs-outer .leftcolumn {
-  /* the 16 + 0.35 corresponds with the .extra-services width and border */
-  margin: 0 16.35em 0 0;
+  margin: 0;
   padding: 0px;
+  width:calc(100% - 16em);
+  float:left;
+}
+#abs-outer .mobile-submission-download {
+  display:none;
+}
+/*right column extra_services*/
+#abs-outer .extra-services {
+  float:right;
+  margin:0;
+  width:16em;
+}
+#abs-outer .extra-services .bib-sidebar {
+  border-left: .35em solid #ddd !important;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer a.mobile-submission-download {
+    display: flex;
+    justify-content: center;
+    margin: 1em .25em;
+    border-radius: 10px;
+    border: 2px solid #cecece;
+    background-color: #f2f2f2;
+    padding: 1em;
+    font-weight: 800;
+    color:black;
+    text-decoration: none;
+  }
+  #abs-outer .extra-services h2 {
+    font-size:15px;
+  }
+  #abs-outer .extra-services h3 {
+    font-size:14px;
+  }
+  #abs-outer .leftcolumn, #abs-outer .extra-services {
+    width:100%;
+    float:left;
+  }
+  #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite, #abs-outer .extra-services .bookmarks {
+    border:0px;
+    font-size:12px;
+  }
+  #abs-outer .extra-services {
+    border-top: .35em solid #ddd;
+    border-bottom: .35em solid #ddd;
+    margin:.5em 0 1em 0;
+  }
 }
 
 /* arXiv.org archive/subjclass info for abs pages... */
@@ -490,6 +551,9 @@ p.tagline {
 }
 
 #abs .descriptor {
+  display: none;
+}
+#abs-outer .extra-services .descriptor {
   display: none;
 }
 
@@ -590,22 +654,24 @@ div#long-author-list {
   margin: 1em 0 1.5em 20px;
   font-size: small;
   font-style: italic;
+  clear:both;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer .endorsers {
+    margin: 1em 0 .5em 20px;
+  }
 }
 
 /* Floating box on right for links to extra services */
 .extra-services {
-  width: 16em;
-  float: right;
-  border-left: .35em solid #ddd;
   border-bottom: .35em solid #ddd;
-  margin-left: 20px;
-  /*need to define padding in sub-elements because of borders*/
 }
 
 .extra-services h3 {
   font-size: medium;
   font-weight: normal;
-  margin: 0.3em 0 0.3em 0;
+  margin: 0 0 0.3em 0;
+  padding-top:0.3em;
 }
 
 .full-text {
@@ -614,6 +680,7 @@ div#long-author-list {
   font-size: 110%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .full-text h2 {
@@ -637,6 +704,7 @@ div#long-author-list {
   font-size: 90%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .ancillary h2 {
@@ -671,6 +739,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite {
@@ -678,6 +747,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite ul {
@@ -691,6 +761,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .browse .current {
@@ -702,7 +773,9 @@ div#long-dc-list {
   padding: 0.2em 0 0 0;
   /*font-weight: bold;*/
 }
-
+.browse .prevnext a {
+  /* hotfix: font-weight: bold; */
+}
 .browse .prevnext .nolink {
   font-weight: bold;
   color: #666;
@@ -726,6 +799,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .dblp .list {
@@ -739,6 +813,7 @@ div#long-dc-list {
   margin: 0;
   padding: 0 1em .5em 1em;
   font-size: 90%;
+  border-left: .35em solid #ddd;
   /* no bottom border because this is last extra services block */
 }
 
@@ -1132,7 +1207,7 @@ body#front.with-cu-identity #header #search {
   top: 30px;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   #cu-identity {
     flex-direction: column;
   }
