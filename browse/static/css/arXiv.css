@@ -15,6 +15,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -180,6 +181,18 @@ em.boxed {
   font-style: normal;
   /*	display: inline-block; */
   float: left;
+}
+
+#header .header-breadcrumbs {
+  margin: 0;
+  font-size: 1em;
+  padding: 10px 0 .2em 10px;
+  font-style: normal;
+  float: left;
+}
+
+#header .header-breadcrumbs a {
+  /*font-weight: bold;*/
 }
 
 body#front #header h1 {
@@ -410,6 +423,9 @@ footer ul {
   margin: .7em;
   font-size: 90%;
 }
+#content-inner {
+  
+}
 
 /* Index page tagline */
 p.tagline {
@@ -447,25 +463,25 @@ p.tagline {
 /****************************************
  * Abstract styles (/abs)
  ****************************************/
-#abs {
+#abs-outer, #abs {
   margin: -0.7em;
 }
 
-#abs .leftcolumn {
+#abs-outer .leftcolumn {
   /* the 16 + 0.35 corresponds with the .extra-services width and border */
   margin: 0 16.35em 0 0;
   padding: 0px;
 }
 
 /* arXiv.org archive/subjclass info for abs pages... */
-#abs .subheader {
+#abs-outer .subheader {
   background-color: #eee;
   color: #000;
   padding: .25em 0;
   border-bottom: 1px solid #ccc;
 }
 
-#abs .subheader h1 {
+#abs-outer .subheader h1 {
   margin: 0;
   font-size: 1.1em;
   padding: 0 0 .2em 20px;
@@ -543,6 +559,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -550,26 +567,26 @@ div#long-author-list {
 
 #abs .jref {}
 
-#abs .submission-history {
+#abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;
   font-size: 90%;
   line-height: 1.5em;
 }
 
-#abs .submission-history h2 {
+#abs-outer .submission-history h2 {
   font-size: 120%;
   margin: 0 0 .25em 0;
   font-weight: bold;
 }
 
-#abs .submission-history pre {
+#abs-outer .submission-history pre {
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   margin: 0;
   line-height: 1.4em;
   padding: 0;
 }
 
-#abs .endorsers {
+#abs-outer .endorsers {
   margin: 1em 0 1.5em 20px;
   font-size: small;
   font-style: italic;
@@ -683,7 +700,7 @@ div#long-dc-list {
 
 .browse .prevnext {
   padding: 0.2em 0 0 0;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .browse .prevnext .nolink {
@@ -756,7 +773,7 @@ div#long-dc-list {
   line-height: 130%;
 }
 
-#dlpage .list-identifier a {
+#dlpage .list-identifier a, #dlpage dl#articles dt a {
   font-weight: bold;
 }
 
