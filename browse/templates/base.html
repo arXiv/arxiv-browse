@@ -27,7 +27,6 @@
   </script>
   <!-- End Matomo Code -->
   {% endif -%}
-  <script defer src="{{ url_for('static', filename='fontawesome-free-5.11.2-web/js/all.js') }}"></script>
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
@@ -86,8 +85,14 @@
           </div>
           <div class="column">
             <ul style="list-style: none; line-height: 2;">
-              <li><span class="icon"><i class="fas fa-envelope"></i></span><a href="{{ url_for('contact') }}"> Contact</a></li>
-              <li><span class="icon"><i class="fab fa-twitter"></i></span><a href="{{ url_for('twitter') }}"> <span class="is-hidden-mobile">Follow us on</span> Twitter</a></li>
+              <li>
+                <img class="icon" role="presentation" src="{{ url_for('static', filename='fontawesome-svgs/svgs/solid/envelope.svg') }}" alt="contact icon">
+                <a href="{{ url_for('contact') }}"> Contact</a>
+              </li>
+              <li>
+                <img class="icon" role="presentation" src="{{ url_for('static', filename='fontawesome-svgs/svgs/brands/twitter.svg') }}" alt="twitter icon">
+                <a href="{{ url_for('twitter') }}"> <span class="is-hidden-mobile">Follow us on</span> Twitter</a>
+              </li>
             </ul>
           </div>
         </div>

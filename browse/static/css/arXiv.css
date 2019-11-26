@@ -378,12 +378,10 @@ footer ul {
 }
 
 .icon {
-  align-items: center;
-  display: inline-flex;
-  justify-content: center;
-  height: 1.5rem;
-  width: 1.5rem;
-  vertical-align: text-bottom;
+  height:.9rem;
+  width:.9rem;
+  margin-right:.45em;
+  margin-top: -.15rem;
 }
 
 .help {
