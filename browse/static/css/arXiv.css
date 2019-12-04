@@ -440,7 +440,7 @@ footer ul {
   font-size: 90%;
 }
 #content-inner {
-  
+
 }
 
 /* Index page tagline */
@@ -1215,6 +1215,7 @@ body#front.with-cu-identity #header #search {
   #support-ack, #cu-logo {
     text-align: center;
     width: 100%;
+    left: 0px;
   }
 }
 
