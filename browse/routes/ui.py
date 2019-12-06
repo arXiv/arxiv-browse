@@ -57,6 +57,21 @@ def home() -> Response:
     raise InternalServerError('Unexpected error')
 
 
+
+
+@blueprint.route('feedback', methods=['GET'])
+def feedback() -> Response:
+    """Feedback form."""
+    response, code, headers = home_page.get_feedback_page()
+    if code == status.HTTP_200_OK:
+        return render_template('home/feedback.html', **response), code, headers  # type: ignore
+
+    raise InternalServerError('Unexpected error')
+
+
+
+
+
 @blueprint.route('abs', methods=['GET'])
 def bare_abs() -> Response:
     """Check several legacy request parameters."""

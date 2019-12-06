@@ -60,3 +60,13 @@ def _get_document_count() -> Optional[int]:
         logger.warning(f'Daily stats file not found')
 
     return None
+
+
+
+def get_feedback_page() -> Response:
+    """Get the data needed to generated the feedback page."""
+    response_data: Dict[str, Any] = {}
+    response_headers: Dict[str, Any] = {}
+    
+
+    return response_data, status.HTTP_200_OK, response_headers
