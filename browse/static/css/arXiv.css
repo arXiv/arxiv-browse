@@ -5,6 +5,7 @@
 /****************************************
  *   General rules
  *****************************************/
+
 body {
   margin: 0;
   padding: 0;
@@ -1237,6 +1238,38 @@ body#front.with-cu-identity #header #search {
   position: absolute !important;
   white-space: nowrap !important;
   width: 0.01em !important;
+}
+
+/*icon styles*/
+svg.icon {
+  height: 1em !important;
+}
+.icon.filter-white {
+  fill: #FFFFFF;
+}
+.icon.filter-black {
+  fill: #000000;
+}
+.icon.filter-grey {
+  fill: #f5f5f5;
+}
+.icon.filter-blue {
+  fill: #0068ac;
+}
+.icon.filter-red {
+  fill: #b31b1b;
+}
+a .icon {
+    transition: fill 0.3s ease;
+}
+a:hover .icon.filter-white {
+    fill: #f5f5f5;
+}
+a:hover .icon.filter-black,
+a:hover .icon.filter-grey,
+a:hover .icon.filter-blue,
+a:hover .icon.filter-red {
+    fill: #ffffff;
 }
 
 
