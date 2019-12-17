@@ -5,6 +5,7 @@
 /****************************************
  *   General rules
  *****************************************/
+
 body {
   margin: 0;
   padding: 0;
@@ -15,6 +16,7 @@ body {
 
 a:link, a:visited, a:active {
   text-decoration: none;
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -182,6 +184,18 @@ em.boxed {
   float: left;
 }
 
+#header .header-breadcrumbs {
+  margin: 0;
+  font-size: 1em;
+  padding: 10px 0 .2em 10px;
+  font-style: normal;
+  float: left;
+}
+
+#header .header-breadcrumbs a {
+  /*font-weight: bold;*/
+}
+
 body#front #header h1 {
   font-size: 2.5em;
   font-weight: normal;
@@ -263,10 +277,36 @@ body#front.with-cu-identity #header form {
 #header form .links a {
   text-decoration: underline;
 }
+@media screen and (max-width: 768px) {
+  #header h1 {
+    text-align: center;
+    float: none;
+    margin: 0;
+    padding: 0 0 .2em 0;
+  }
+  .search-block.level-right {
+    clear:both !important;
+  }
+  #header .header-breadcrumbs {
+    float: none;
+    text-align: center;
+  }
+}
+
 
 /****************************************
  * Footer
  ****************************************/
+ footer ul li {
+   display: flex;
+   align-items: center;
+   font-size:14px;
+ }
+ footer ul li a {
+   font-size: 13.5px;
+   padding-left: 3px;
+ }
+
 #footer {
   background-color: #eee;
   color: #000;
@@ -368,11 +408,10 @@ footer ul {
 }
 
 .icon {
-  align-items: center;
-  display: inline-flex;
-  justify-content: center;
-  height: 1.5rem;
-  width: 1.5rem;
+  height:.9rem;
+  width:.9rem;
+  margin-right:.45em;
+  margin-top: -.15rem;
 }
 
 .help {
@@ -397,9 +436,12 @@ footer ul {
 /****************************************
  * Content styles
  *****************************************/
-#content {
+#content, #content-inner {
   margin: .7em;
   font-size: 90%;
+}
+#content-inner {
+
 }
 
 /* Index page tagline */
@@ -438,25 +480,70 @@ p.tagline {
 /****************************************
  * Abstract styles (/abs)
  ****************************************/
-#abs {
+#abs-outer, #abs {
   margin: -0.7em;
 }
-
-#abs .leftcolumn {
-  /* the 16 + 0.35 corresponds with the .extra-services width and border */
-  margin: 0 16.35em 0 0;
+#abs-outer .leftcolumn {
+  margin: 0;
   padding: 0px;
+  width:calc(100% - 16em);
+  float:left;
+}
+#abs-outer .mobile-submission-download {
+  display:none;
+}
+/*right column extra_services*/
+#abs-outer .extra-services {
+  float:right;
+  margin:0;
+  width:16em;
+}
+#abs-outer .extra-services .bib-sidebar {
+  border-left: .35em solid #ddd !important;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer a.mobile-submission-download {
+    display: flex;
+    justify-content: center;
+    margin: 1em .25em;
+    border-radius: 10px;
+    border: 2px solid #cecece;
+    background-color: #f2f2f2;
+    padding: 1em;
+    font-weight: 800;
+    color:black;
+    text-decoration: none;
+  }
+  #abs-outer .extra-services h2 {
+    font-size:15px;
+  }
+  #abs-outer .extra-services h3 {
+    font-size:14px;
+  }
+  #abs-outer .leftcolumn, #abs-outer .extra-services {
+    width:100%;
+    float:left;
+  }
+  #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite, #abs-outer .extra-services .bookmarks {
+    border:0px;
+    font-size:12px;
+  }
+  #abs-outer .extra-services {
+    border-top: .35em solid #ddd;
+    border-bottom: .35em solid #ddd;
+    margin:.5em 0 1em 0;
+  }
 }
 
 /* arXiv.org archive/subjclass info for abs pages... */
-#abs .subheader {
+#abs-outer .subheader {
   background-color: #eee;
   color: #000;
   padding: .25em 0;
   border-bottom: 1px solid #ccc;
 }
 
-#abs .subheader h1 {
+#abs-outer .subheader h1 {
   margin: 0;
   font-size: 1.1em;
   padding: 0 0 .2em 20px;
@@ -465,6 +552,9 @@ p.tagline {
 }
 
 #abs .descriptor {
+  display: none;
+}
+#abs-outer .extra-services .descriptor {
   display: none;
 }
 
@@ -534,6 +624,7 @@ div#long-author-list {
 }
 
 #abs .arxivid a {
+  /*font-weight: bold;*/
   font-weight: normal;
 }
 
@@ -541,45 +632,47 @@ div#long-author-list {
 
 #abs .jref {}
 
-#abs .submission-history {
+#abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;
   font-size: 90%;
   line-height: 1.5em;
 }
 
-#abs .submission-history h2 {
+#abs-outer .submission-history h2 {
   font-size: 120%;
   margin: 0 0 .25em 0;
   font-weight: bold;
 }
 
-#abs .submission-history pre {
+#abs-outer .submission-history pre {
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   margin: 0;
   line-height: 1.4em;
   padding: 0;
 }
 
-#abs .endorsers {
+#abs-outer .endorsers {
   margin: 1em 0 1.5em 20px;
   font-size: small;
   font-style: italic;
+  clear:both;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer .endorsers {
+    margin: 1em 0 .5em 20px;
+  }
 }
 
 /* Floating box on right for links to extra services */
 .extra-services {
-  width: 16em;
-  float: right;
-  border-left: .35em solid #ddd;
   border-bottom: .35em solid #ddd;
-  margin-left: 20px;
-  /*need to define padding in sub-elements because of borders*/
 }
 
 .extra-services h3 {
   font-size: medium;
   font-weight: normal;
-  margin: 0.3em 0 0.3em 0;
+  margin: 0 0 0.3em 0;
+  padding-top:0.3em;
 }
 
 .full-text {
@@ -588,6 +681,7 @@ div#long-author-list {
   font-size: 110%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .full-text h2 {
@@ -611,6 +705,7 @@ div#long-author-list {
   font-size: 90%;
   font-weight: normal;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .ancillary h2 {
@@ -645,6 +740,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite {
@@ -652,6 +748,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .extra-ref-cite ul {
@@ -665,6 +762,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .browse .current {
@@ -674,9 +772,11 @@ div#long-dc-list {
 
 .browse .prevnext {
   padding: 0.2em 0 0 0;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
-
+.browse .prevnext a {
+  /* hotfix: font-weight: bold; */
+}
 .browse .prevnext .nolink {
   font-weight: bold;
   color: #666;
@@ -700,6 +800,7 @@ div#long-dc-list {
   padding: 0 1em 0 1em;
   font-size: 90%;
   border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
 }
 
 .dblp .list {
@@ -713,6 +814,7 @@ div#long-dc-list {
   margin: 0;
   padding: 0 1em .5em 1em;
   font-size: 90%;
+  border-left: .35em solid #ddd;
   /* no bottom border because this is last extra services block */
 }
 
@@ -747,7 +849,7 @@ div#long-dc-list {
   line-height: 130%;
 }
 
-#dlpage .list-identifier a {
+#dlpage .list-identifier a, #dlpage dl#articles dt a {
   font-weight: bold;
 }
 
@@ -1106,7 +1208,7 @@ body#front.with-cu-identity #header #search {
   top: 30px;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
   #cu-identity {
     flex-direction: column;
   }
@@ -1114,6 +1216,7 @@ body#front.with-cu-identity #header #search {
   #support-ack, #cu-logo {
     text-align: center;
     width: 100%;
+    left: 0px;
   }
 }
 
@@ -1135,6 +1238,38 @@ body#front.with-cu-identity #header #search {
   position: absolute !important;
   white-space: nowrap !important;
   width: 0.01em !important;
+}
+
+/*icon styles*/
+svg.icon {
+  height: 1em !important;
+}
+.icon.filter-white {
+  fill: #FFFFFF;
+}
+.icon.filter-black {
+  fill: #000000;
+}
+.icon.filter-grey {
+  fill: #f5f5f5;
+}
+.icon.filter-blue {
+  fill: #0068ac;
+}
+.icon.filter-red {
+  fill: #b31b1b;
+}
+a .icon {
+    transition: fill 0.3s ease;
+}
+a:hover .icon.filter-white {
+    fill: #f5f5f5;
+}
+a:hover .icon.filter-black,
+a:hover .icon.filter-grey,
+a:hover .icon.filter-blue,
+a:hover .icon.filter-red {
+    fill: #ffffff;
 }
 
 
