@@ -9,9 +9,9 @@
 
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
-<p class="tagline">Open access to {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
- e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Submissions to arXiv should conform to Cornell University academic standards. arXiv is owned and operated by Cornell University, a private not-for-profit educational institution. arXiv is funded by Cornell University, the Simons Foundation and by the member institutions.</p>
-<br/>
+<p class="tagline">arXiv is a free distribution service and an open archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+ scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
+ arXiv is a collaboratively funded, community-supported resource funded by Cornell University, the Simons Foundation, member institutions, and donors. Founded by Paul Ginsparg in 1991 and maintained and operated by Cornell University.</p><br/>
 {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
 <form name="home-adv-search" action="/multi" method="get" role="search">
   Subject search and browse:
@@ -60,7 +60,7 @@ Read <a href="/help/robots">robots beware</a> before attempting any automated do
   <li><a href="/about">General information</a></li>
   <li><a href="/help/submit">How to Submit to arXiv</a></li>
   <li><a href="/new">News</a></li>
-  <li><a href="/about/give">Membership & Giving</a></li>
+  <li><a href="/about/give">Membership &amp; Giving</a></li>
   <li><a href="/about/people">Who We Are</a></li>
 </ul>
 
