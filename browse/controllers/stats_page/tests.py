@@ -145,7 +145,7 @@ class TestStatsPageControllers(TestCase):
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_count')
     def test_get_monthly_submissions_page(self,
                                           mock_get_monthly_submission_count,
-                                          mock_get_document_count_by_yymm) -> None:  # type: ignore
+                                          mock_get_document_count_by_yymm) -> None:
         """Tests for :func:`.get_monthly_submissions_page`."""
         # test basic response
         mock_get_document_count_by_yymm.return_value = 0
@@ -185,7 +185,7 @@ class TestStatsPageControllers(TestCase):
     @mock.patch('browse.controllers.stats_page.get_monthly_submission_stats')
     def test_get_submission_stats_csv(self,
                                       mock_get_monthly_submission_stats,
-                                      mock_get_document_count_by_yymm) -> None:  # type: ignore
+                                      mock_get_document_count_by_yymm) -> None:
         """Tests for :func:`.get_submission_stats_csv`."""
         # test basic response
         mock_get_document_count_by_yymm.return_value = 0

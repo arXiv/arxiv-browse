@@ -11,16 +11,16 @@
 #   };
 # };};
 with import <nixpkgs> {};
-with pkgs.python36Packages;
+with pkgs.python38Packages;
 stdenv.mkDerivation {
   name = "impurePythonEnv";
   buildInputs = [
     # these packages are required for virtualenv and pip to work:
     #
-    python36Full
-    python36Packages.virtualenv
-    python36Packages.pip
-    python36Packages.pip-tools
+    python38Full
+    python38Packages.virtualenv
+    # python38Packages.pip
+    # python38Packages.pip-tools
     # pipenv
     # the following packages are related to the dependencies of your python
     # project.

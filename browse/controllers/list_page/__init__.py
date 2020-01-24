@@ -421,7 +421,7 @@ def sub_sections_for_types(
         })
 
     for sec in secs:
-        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[  # type: ignore
+        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[
             sec['type']]
         date = resp['announced'].strftime('%A, %-d %B %Y')
 

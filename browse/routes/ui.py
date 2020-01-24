@@ -23,7 +23,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 
 @blueprint.context_processor
-def inject_now() -> None:
+def inject_now() -> Dict:
     """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
 
@@ -62,9 +62,9 @@ def bare_abs() -> Response:
     """Check several legacy request parameters."""
     if request.args:
         if 'id' in request.args:
-            return abstract(request.args['id'])  # type: ignore
+            return abstract(request.args['id'])
         elif 'archive' in request.args and 'papernum' in request.args:
-            return abstract(  # type: ignore
+            return abstract(
                 f"{request.args['archive']}/{request.args['papernum']}")
         else:
             for param in request.args:
@@ -72,7 +72,7 @@ def bare_abs() -> Response:
                 # e.g. /abs?<archive>/\d{7}
                 if not request.args[param] \
                    and re.match(r'^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$', param):
-                    return abstract(param)  # type: ignore
+                    return abstract(param)
 
     """Return abs-specific 404."""
     raise AbsNotFound
@@ -194,7 +194,7 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = \
-        list_page.get_listing(context, subcontext)  # type: ignore
+        list_page.get_listing(context, subcontext)
     if code == status.HTTP_200_OK:
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response['template'], **response), code, headers  # type: ignore
