@@ -8,7 +8,7 @@ import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
 
-APP_VERSION = '0.2.7'
+APP_VERSION = '0.2.8'
 """The application version """
 
 ON = 'yes'
@@ -267,7 +267,8 @@ BROWSE_SITE_LABEL = os.environ.get('BROWSE_SITE_LABEL', 'arXiv.org')
 BROWSE_SITE_HOST = os.environ.get('BROWSE_SITE_HOST', None)
 """This is similar to, but decoupled from SERVER_NAME."""
 
-BROWSE_ANALYTICS_ENABLED = os.environ.get('BROWSE_ANALYTICS_ENABLED', False)
+BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get(
+    'BROWSE_ANALYTICS_ENABLED', '0')))
 """Enable/disable Matomo web analytics."""
 BROWSE_ANALYTICS_BASE_URL = os.environ.get('BROWSE_ANALYTICS_BASE_URL',
                                            'https://webstats.arxiv.org/')
