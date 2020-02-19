@@ -386,6 +386,15 @@ footer ul {
   margin: 0;
 }
 
+footer .columns.lower {
+  margin: -0.5em -0.75em -0.75em -0.75em;
+  border-top: 1px solid #979797;
+}
+footer .columns.lower .column .columns .column {
+  padding-top: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+}
 footer .sorry-app-links .is-link &:not(.button) {
   border-bottom: 1px dotted #fff;
 }
@@ -402,6 +411,15 @@ footer .sorry-app-links svg.icon,
 footer .sorry-app-links .button svg.icon,
 footer .sorry-app-links .button svg.icon:first-child:last-child {
   margin-bottom: -2px !important;
+}
+footer .sorry-app-links .help {
+  font-size: 0.7rem;
+  margin-bottom: 0;
+}
+@media screen and (max-width: 768px) {
+  footer .sorry-app-links.column {
+    padding: 0;
+  }
 }
 
 .endorsers .help {
