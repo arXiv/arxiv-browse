@@ -102,7 +102,7 @@
       {%- if part is string -%}
         {{- part|arxiv_urlize -}}
       {%- else -%}
-        <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
+        <span><a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a></span>
       {%- endif -%}
     {% endfor %}
   {%- endif -%}

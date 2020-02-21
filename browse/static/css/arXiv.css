@@ -926,6 +926,10 @@ div#long-dc-list {
 #dlpage .list-subjects {
   font-size: 90%;
 }
+/*some link bolding for a11y compliance */
+#dlpage .paging a, #dlpage .morefewer a, #dlpage #mathjax_toggle {
+  font-weight: bold
+}
 
 /****************************************
  * Search in arXiv
