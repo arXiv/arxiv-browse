@@ -1,7 +1,7 @@
 """Tests for tb controllers, :mod:`browse.controllers.tb_page`."""
 
 from unittest import TestCase, mock
-from werkzeug import MultiDict
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
 from arxiv import status
 from browse.exceptions import TrackbackNotFound

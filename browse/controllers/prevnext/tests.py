@@ -1,7 +1,7 @@
 """Tests for prevnext controller, :mod:`browse.controllers.prevnext`."""
 
 from unittest import TestCase, mock
-from werkzeug import MultiDict
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
 from browse.controllers import prevnext
 

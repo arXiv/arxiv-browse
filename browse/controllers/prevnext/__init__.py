@@ -2,7 +2,7 @@
 
 from flask import url_for
 from typing import Tuple, Dict, Any
-from werkzeug import MultiDict
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.domain.identifier import Identifier, IdentifierException
