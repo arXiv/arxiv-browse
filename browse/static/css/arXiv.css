@@ -927,8 +927,8 @@ div#long-dc-list {
   font-size: 90%;
 }
 /*some link bolding for a11y compliance */
-#dlpage .paging a, #dlpage .morefewer a, #dlpage #mathjax_toggle {
-  font-weight: bold
+#dlpage .paging a, #dlpage .morefewer a, #dlpage #mathjax_toggle, .home-news a {
+  font-weight: bold;
 }
 
 /****************************************
