@@ -430,19 +430,9 @@ footer .sorry-app-links .help {
 @media screen and (min-width: 990px) {
   .endorsers .help { top: 5rem; } /* adjusts for endorsers and feedback being a single line instead of double, uses desktop breakpoint */
 }
-
 @media screen and (min-width: 769px) {
   .columns { display: flex; flex-direction: row; }
 }
-
-.column {
-  display: block;
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  padding: 0.75rem;
-}
-
 .icon {
   height:.9rem;
   width:.9rem;
@@ -1274,6 +1264,185 @@ body#front.with-cu-identity #header #search {
   position: absolute !important;
   white-space: nowrap !important;
   width: 0.01em !important;
+}
+/*** limited column styles copied from base so that browse can use bulma columns too ***/
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0.75rem;
+}
+.columns.is-mobile > .column.is-three-quarters {
+  flex: none;
+  width: 75%;
+}
+.columns.is-mobile > .column.is-two-thirds {
+  flex: none;
+  width: 66.6666%;
+}
+.columns.is-mobile > .column.is-half {
+  flex: none;
+  width: 50%;
+}
+.columns.is-mobile > .column.is-one-third {
+  flex: none;
+  width: 33.3333%;
+}
+.columns.is-mobile > .column.is-one-quarter {
+  flex: none;
+  width: 25%;
+}
+.columns.is-mobile > .column.is-one-fifth {
+  flex: none;
+  width: 20%;
+}
+.columns.is-mobile > .column.is-two-fifths {
+  flex: none;
+  width: 40%;
+}
+.columns.is-mobile > .column.is-three-fifths {
+  flex: none;
+  width: 60%;
+}
+.columns.is-mobile > .column.is-four-fifths {
+  flex: none;
+  width: 80%;
+}
+.columns .column.is-three-quarters {
+  flex: none;
+  width: 75%;
+}
+.columns .column.is-two-thirds {
+  flex: none;
+  width: 66.6666%;
+}
+.columns .column.is-half {
+  flex: none;
+  width: 50%;
+}
+.columns .column.is-one-third {
+  flex: none;
+  width: 33.3333%;
+}
+.columns .column.is-one-quarter {
+  flex: none;
+  width: 25%;
+}
+.columns .column.is-one-fifth {
+  flex: none;
+  width: 20%;
+}
+.columns .column.is-two-fifths {
+  flex: none;
+  width: 40%;
+}
+.columns .column.is-three-fifths {
+  flex: none;
+  width: 60%;
+}
+.columns .column.is-four-fifths {
+  flex: none;
+  width: 80%;
+}
+
+/*** base styles for vanilla accordion. Move to base for wider use? ***/
+.accordion-body {
+  display: none;
+}
+.accordion-body.open {
+  display: block;
+}
+/*** styles for the accordion large-data-list ***/
+.large-data-list .accordion-body {
+  margin-top: 1em;
+}
+.large-data-list .accordion-head:after {
+  content: "\02C5";
+  padding-left: 1em;
+  position: relative;
+  top: .25em;
+  font-size:1.25em;
+  font-weight:100;
+}
+.large-data-list .accordion-head.open:after {
+  content: "\02C4";
+  color: #b7b8b9;
+}
+.large-data-list {
+  border-bottom: 1px solid #b7b8b9;
+}
+.large-data-list h2 {
+  border-top: 1px solid #e3e5e6;
+  padding: .75em 0;
+  margin: 0;
+  font-size: 1em;
+  cursor: pointer;
+}
+.large-data-list h2:first-child {
+  border-top: 1px solid #b7b8b9;
+}
+.large-data-list h3 {
+  margin:1em 1em 1em 0;
+  font-size: .9em;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+.large-data-list h3 span {
+  font-size: .7em;
+}
+.large-data-list h4 {
+  margin:1em 1em 1em 0;
+  font-size: .9em;
+}
+.large-data-list h4 span {
+  font-size: .8em;
+  font-weight: normal;
+}
+.large-data-list p {
+  margin:1em 1em 1em 0;
+  font-size:.85em;
+}
+.large-data-list .physics {
+  border-bottom: .5px dotted grey;
+}
+.large-data-list .physics:last-child {
+  border-bottom: 0px;
+}
+.large-data-list .accordion-body .subcategories {
+  border-bottom: .5px dotted black;
+  margin-left: .3em;
+}
+.large-data-list .accordion-body .subcategories:last-child {
+  border-bottom: 0px;
+  margin-bottom: 1.5em;
+}
+.large-data-list .column {
+  padding:0;
+}
+.guide {
+  display:none;
+}
+@media screen and (min-width: 769px) {
+  .large-data-list {
+    margin: 0 4em;
+  }
+  .large-data-list .accordion-body {
+    margin-left:2em;
+  }
+  .large-data-list h2 {
+    padding-left: 2em;
+  }
+  .guide {
+    display: block;
+    background: #f5fbff;
+    border-radius: 10px 0 0 0;
+    margin-bottom: 2em;
+    margin-top:2em;
+    margin-right: 4em;
+    padding-bottom: 1em;
+    color: grey;
+  }
 }
 
 /*icon styles*/

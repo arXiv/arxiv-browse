@@ -1,41 +1,92 @@
 {%- extends "base.html" -%}
-{% block title %}Category Taxonomy{% endblock %}
+{% block title %}CategoryTaxonomy{% endblock %}
 {% block header_h1 %}<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; category taxonomy</h1>{% endblock %}
 {# Disable login on this page for now, per classic #}
 {% block login_link %}{% endblock %}
+{% set list_name = 'category_taxonomy' %}
 
 {%- block content %}
-<h1>arXiv Category Taxonomy</h1>
-<div id="guide" style="border-radius: 5px; border: 1px solid; width: 55%; padding-left: 5px">
-  <h2>Group Name</h2>
-  <ul>
-    <li>Archive Name (Archive ID) - omitted if  group consists of a single archive with the same name as the group</li>
-    <ul>
-      <li><strong>Category Name (Category ID)</strong><br />Category description if available</li>
-    </ul>
-  </ul>
+<div class="columns">
+  <div class="column">
+    <h1>arXiv<br><span style="color:grey;">Category Taxonomy</span></h1>
+  </div>
+  <div class="column guide is-three-fifths">
+    <h2 style="margin:0 0 .5em 0;">Classification guide</h2>
+    <div class="large-data-list" style="border-bottom: 0px;margin:0;">
+      <h2 style="padding-left:1em;">Group Name</h2>
+      <div class="columns subcategories" style="padding-left:1em;">
+        <div class="column">
+          <h3>Archive Name (Archive ID)</h3>
+          <p>omitted if group consists of a single archive with the same name as the group</p>
+        </div>
+        <div class="column">
+          <h4>Category Name<br>
+            <strong>(Category ID)</strong>
+          </h4>
+        </div>
+        <div class="column">
+          <p>Category description if available</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-{%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
-<h2>{{ groups[group_key].name }}</h2>
-<ul>
-  {%- for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
-    {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
-    {%- set archive_name = archives[archive_key].name -%}
-    {%- if not (loop.first and loop.last) -%}
-  <li>{{ archive_name }} ({{ archive_key }})</li>
-    {%- endif -%}
-  <ul>
-      {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
-    <li><strong>{{ categories[category_key].name }} ({{ category_key }})</strong>
-        {%- if 'description' in categories[category_key] -%}
-        <br />{{ categories[category_key].description }}
-        {%- endif -%}
-    </li>
-      {%- endfor -%}
-  </ul>
+<div id="{{ list_name }}_list" class="large-data-list">
+  {%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
+  <h2 class="accordion-head">{{ groups[group_key].name }}</h2>
+  <div class="accordion-body">
+    {%- for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
+    <div class="{% if not (loop.first and loop.last) %}physics {% endif %} columns ">
+      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+      {%- set archive_name = archives[archive_key].name -%}
+      {%- if not (loop.first and loop.last) -%}
+      <div class="column is-one-fifth">
+        <h3>{{ archive_name }}<br><span>({{ archive_key }})</span></h3>
+      </div>
+      {%- endif -%}
+      <div class="column">
+        {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
+        <div class="columns subcategories">
+          <div class="column is-one-fifth">
+            <h4>{{ categories[category_key].name }} <span>({{ category_key }})</span></h4>
+          </div>
+          <div class="column">
+          {%- if 'description' in categories[category_key] -%}
+            <p>{{ categories[category_key].description }}</p>
+          {%- else -%}
+            <p>Description coming soon</p>
+          {%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endfor -%}
+  </div>
   {%- endfor -%}
-</ul>
-{%- endfor -%}
-
+</div><!-- end accordion -->
+<script type="text/javascript">
+// vanilla accordion script
+var jsaccordion = {
+  init : function (target) {
+  // initialize the accordion
+    var headers = document.querySelectorAll("#" + target + " .accordion-head");
+    if (headers.length > 0) { for (var head of headers) {
+      head.addEventListener("click", jsaccordion.select);
+    }}
+  },
+  select : function () {
+  // fired when user clicks on a header
+    var contents = this.nextElementSibling;
+    contents.classList.toggle("open");
+    var contents = this;
+    contents.classList.toggle("open");
+  }
+};
+// runs on page load. Dont forget to set variable 'list_name' on your page.
+window.addEventListener('load', function(){
+  jsaccordion.init("{{ list_name }}_list");
+});
+</script>
 {% endblock content %}
