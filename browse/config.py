@@ -342,10 +342,9 @@ CLASSIC_TRACKING_COOKIE = os.environ.get('CLASSIC_TRACKING_COOKIE', 'browser')
 CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', default=None))
 """If not set, legacy database integrations for auth will not be available."""
-if not CLASSIC_DATABASE_URI:
-    warnings.warn("No value set for CLASSIC_DATABASE_URI")
-elif 'sqlite' in CLASSIC_DATABASE_URI:
-    warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
+
+if 'sqlite' in CLASSIC_DATABASE_URI:
+     warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
 
 CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')
 SESSION_DURATION = os.environ.get(
