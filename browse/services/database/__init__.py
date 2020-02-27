@@ -241,16 +241,36 @@ def get_sequential_id(paper_id: Identifier,
                       context: str = 'all',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
+
+    if not isinstance(paper_id, Identifier) or not paper_id.month or not paper_id.year:
+        return None
+
+    # In case we go over month or year boundry
+    inc = 1 if is_next else -1
+    nxtmonth = int(paper_id.month) + inc
+    if nxtmonth > 12 or nxtmonth < 1:
+        nxyear = int(paper_id.year) + inc
+        nxtmonth = 1 if is_next else 12
+    else:
+        nxyear = paper_id.year
+
+    nextyymm = "{}{:02d}".format(str(nxyear)[2:],nxtmonth)
+
     query = db.session.query(Document.paper_id)
     if paper_id.is_old_id:
         # NB: classic did not support old identifiers in prevnext
         if context == 'all':
             like_id = f'{paper_id.archive}/{paper_id.yymm}%'
+            next_q = f'{paper_id.archive}/{nextyymm}%'
         else:
             like_id = f'%/{paper_id.yymm}%'
+            next_q = f'%/{nextyymm}%'
     else:
         like_id = f'{paper_id.yymm}.%'
-    query = query.filter(Document.paper_id.like(like_id))
+        next_q = f'{nextyymm}.%'
+
+    query = query.filter((Document.paper_id.like(like_id) |
+                          Document.paper_id.like(next_q)))
 
     if is_next:
         query = query.filter(Document.paper_id > paper_id.id). \
