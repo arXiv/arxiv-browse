@@ -1,5 +1,7 @@
 """Tests for prevnext controller, :mod:`browse.controllers.prevnext`."""
 
+# mypy: ignore-errors
+
 from unittest import TestCase, mock
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest

@@ -171,7 +171,7 @@ def count_trackback_pings(paper_id: str) -> int:
            .filter(Document.paper_id == paper_id) \
            .filter(TrackbackPing.status == 'accepted').first()
 
-    return row.num_pings
+    return int(row.num_pings)
 
 
 @db_handle_error(logger=logger, default_return_val=0)
@@ -217,7 +217,7 @@ def get_document_count() -> Optional[int]:
     row = db.session.query(
             func.count(Document.document_id).label('num_documents')
           ).filter(not_(Document.paper_id.like('test%'))).first()
-    return row.num_documents
+    return int(row.num_documents)
 
 
 @db_handle_error(logger=logger, default_return_val=0)
@@ -233,7 +233,7 @@ def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
             func.count(Document.document_id).label('num_documents')
           ).filter(Document.paper_id.like(yymm_like))\
            .filter(not_(Document.paper_id.like('test%'))).first()
-    return row.num_documents
+    return int(row.num_documents)
 
 
 @db_handle_error(logger=logger, default_return_val=None)
@@ -270,7 +270,6 @@ def get_sequential_id(paper_id: Identifier,
                 in_category.c.subject_class == subject_class)
 
     result = query.first()
-
     if result:
         return f'{result.paper_id}'
     return None
@@ -281,7 +280,7 @@ def __all_hourly_stats_query() -> Query:
 
 
 @db_handle_error(logger=logger, default_return_val=(0, 0, 0))
-def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int]:
+def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     """Get sum of normal/admin connections and nodes for a given date."""
     stats_date = date.today() if not isinstance(stats_date, date) \
         else stats_date

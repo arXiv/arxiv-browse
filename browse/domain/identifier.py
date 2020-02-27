@@ -57,7 +57,7 @@ class Identifier:
         self.archive: Optional[str] = None
         self.filename: Optional[str] = None
         self.year: Optional[int] = None
-        self.month = None
+        self.month: Optional[int] = None
         self.is_old_id: Optional[bool] = None
 
         if self.ids in taxonomy.definitions.ARCHIVES:

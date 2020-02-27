@@ -14,7 +14,7 @@ from browse.services.util.response_headers import abs_expires_header
 
   
 
-def get_archive(archive_id: str) -> Response:
+def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
@@ -59,10 +59,10 @@ def get_archive(archive_id: str) -> Response:
     data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
     
     data["template"] = "archive/single_archive.html"
-    return data, status.HTTP_200_OK, response_headers  # type: ignore
+    return data, status.HTTP_200_OK, response_headers
 
 
-def archive_index(archive_id: str, status: int) -> Response:
+def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Landing page for when there is no archive specified."""
     data: Dict[str, Any] = {}
     data["bad_archive"] = archive_id
@@ -84,7 +84,7 @@ def archive_index(archive_id: str, status: int) -> Response:
     data["defunct"] = defunct
     
     data["template"] = "archive/archive_list_all.html"
-    return data, status, {}  # type: ignore
+    return data, status, {} 
 
 
 def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
