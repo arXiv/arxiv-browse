@@ -343,8 +343,6 @@ CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', default=None))
 """If not set, legacy database integrations for auth will not be available."""
 
-if 'sqlite' in CLASSIC_DATABASE_URI:
-     warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
 
 CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')
 SESSION_DURATION = os.environ.get(
