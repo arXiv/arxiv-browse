@@ -25,6 +25,11 @@
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
+
+  {% set download_button %}
+    {{ generate_download_button() }}
+  {% endset %}
+
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
@@ -51,7 +56,7 @@
       version = abs_meta.version,
       submission_history = abs_meta.version_history,
       secondary_categories = abs_meta.get_secondaries(),
-      include_stylesheet = 0)
+      download_button_markup = download_button )
     }}
 
     <div class="submission-history">
@@ -146,10 +151,10 @@
   {%- endif -%}
 {%- endmacro -%}
 
-<!-- {% macro generate_download_button() %}
+{% macro generate_download_button() %}
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
     <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
   {% else %}
     <a class="mobile-submission-download" href="#other">No PDF available, click for other formats</a>
   {% endif %}
-{% endmacro %} -->
+{% endmacro %}
