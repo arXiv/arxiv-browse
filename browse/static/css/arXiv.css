@@ -666,31 +666,24 @@ div#long-author-list {
 #abs-outer .header-breadcrumbs-mobile {
   display: none;
 }
-#abs .dateline {
+#abs-outer #abs .dateline {
   margin-top: 15px;
   margin-bottom: 0;
 }
-#abs h1.title {
+#abs-outer #abs h1.title {
   margin-top: .25em;
 }
 .endorsers .help {
   display: inline-block;
 }
 @media screen and (max-width: 768px) {
-  .header-breadcrumbs-mobile {
+  #abs-outer .header-breadcrumbs-mobile {
     display: block;
     color: black;
     font-size: .85em;
     margin: .25em 0 .5em 1em;
   }
-  #abs-outer .endorsers {
-    display: block;
-    float: left;
-    border: 1px solid #eee;
-    padding: 1em;
-    margin: 1em;
-  }
-  #abs-outer a.mobile-submission-download {
+  #abs-outer #abs a.mobile-submission-download {
     display: flex;
     justify-content: center;
     margin: .7em .25em;
@@ -703,7 +696,7 @@ div#long-author-list {
     font-size: 20px;
     text-align: center;
   }
-  #abs-outer a.mobile-download-grey {
+  #abs-outer #abs a.mobile-download-grey {
     background-color: #eeeeee;
     color: #565656;
   }
@@ -783,7 +776,7 @@ div#long-author-list {
     border-radius: 5px;
     border: 1px solid #046BAF;
     font-size: 1.25em;
-    color: #046BAF;
+    color: #046BAF !important;
     padding: .5em;
     background: #E6E6E6;
     margin-right: .3em;
@@ -810,11 +803,11 @@ div#long-author-list {
     font-style: normal;
     color: #b55c06;
   }
-  #abs .dateline {
+  #abs-outer #abs .dateline {
     color: #767676;
     font-size: .85em;
     font-style: normal;
-    margin: 3em 0 0 1em;
+    margin: 2em 0 0 1em;
   }
   #abs-outer .submission-history {
     padding: 1em;
@@ -824,29 +817,38 @@ div#long-author-list {
     -moz-box-shadow: inset 0px -6px 15px 0px rgba(219,219,219,1);
     box-shadow: inset 0px -6px 15px 0px rgba(219,219,219,1);
   }
-  #abs h1.title {
+  #abs-outer #abs h1.title {
     margin: 0 .25em 0 .5em;
+    font-size: 1.5em;
   }
-  #abs .authors {
+  #abs-outer #abs .authors {
     margin: 1em .25em 0 1em;
-    font-size: 1em;
+    font-size: .9em;
+    line-height: 1.5em;
   }
-  #abs .authors a {
+  #abs-outer #abs .authors a {
     font-size: inherit;
   }
-  #abs blockquote.abstract {
+  #abs-outer #abs blockquote.abstract {
     margin: 0 1em;
   }
-  #abs .metatable {
+  #abs-outer #abs .metatable {
     margin: .75em 0 1.5em 1.5em;
   }
-  #abs a, #abs-outer a, #abs-outer .endorsers a {
+  #abs-outer #abs a, #abs-outer a, #abs-outer .endorsers a {
   color: #1777bc;
   }
-  #abs-outer .submission-history a, .extra_services a, .extra_services .browse a, .abs-switch-cat .switch a, #abs-outer .extra_services .full-text .abs-license a {
+  #abs-outer .abs-license a, #abs-outer .submission-history a, #abs-outer .extra_services a, #abs-outer .extra_services .browse a, #abs-outer .abs-switch-cat .switch a, #abs-outer .extra-services .full-text .abs-license a {
     color: #046BAF;
   }
-  .endorsers .help {
+  #abs-outer .endorsers {
+    display: block;
+    float: left;
+    border: 1px solid #eee;
+    padding: 1em;
+    margin: 1em;
+  }
+  #abs-outer .endorsers .help {
     display:none;
   }
 }
