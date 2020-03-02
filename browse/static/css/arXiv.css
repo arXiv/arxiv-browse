@@ -852,8 +852,39 @@ div#long-author-list {
     display:none;
   }
 }
-
-
+/*** styles for mobile-friendly header ***/
+@media screen and (min-width: 769px) {
+  .mobile-header { display: none; }
+}
+.mobile-header {
+  background-color: black;
+}
+.mobile-logos .logo-arxiv img {
+  height: 25px;
+}
+.mobile-logos .logo-cornell img {
+  height: 30px;
+  float: right;
+}
+.mobile-search {
+  padding-top:0;
+}
+.mobile-search .column.form {
+  padding-top:0;
+  width: 88%;
+  flex:none;
+}
+.mobile-search .column.form input {
+  width: calc(100% - 50px);
+  background-color: grey;
+  border: 0;
+  padding: 5px;
+  color: white;
+  font-size: 1.5em;
+}
+.mobile-search .column.nav {
+  padding-top:0;
+}
 
 /* Floating box on right for links to extra services */
 .extra-services {
@@ -1441,6 +1472,9 @@ svg.icon {
 }
 .icon.filter-black {
   fill: #000000;
+}
+.icon.filter-light_grey {
+  fill: #bfbfbf;
 }
 .icon.filter-grey {
   fill: #f5f5f5;

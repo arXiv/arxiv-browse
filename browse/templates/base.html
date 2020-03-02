@@ -47,7 +47,7 @@
 
   <header>
     <a href="#content" class="is-sr-only">Skip to main content</a>
-    <div id="cu-identity">
+    <div id="cu-identity" class="is-hidden-mobile">
       <div id="cu-logo">
         <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
       </div>
@@ -55,7 +55,6 @@
         <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
       </div>
     </div>
-
     <div id="header" {% block header_class %}{% endblock %}>
       {% block header %}
       {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
@@ -64,6 +63,27 @@
       {% block login_link %}{% endblock %}
       {{ base_macros.compactsearch() }}
      {% endblock header %}
+    </div>
+    <div class="mobile-header">
+      <div class="columns mobile-logos is-mobile">
+        <div class="column has-text-left logo-arxiv"><img src="{{ url_for('static', filename='images/arxiv-logo.png') }}" alt="arXiv" /></div>
+        <div class="column has-text-right logo-cornell"><a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a></div>
+      </div>
+      <div class="columns is-mobile mobile-search">
+        <div class="column form">
+          <form class="mobile-search-form" method="GET" action="{{ url_for('search_box') }}">
+            <div class="field has-addons">
+              <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+              <input type="hidden" name="source" value="header">
+              <input type="hidden" name="searchtype" value="all">
+              <button class="button">Search</button>
+            </div>
+          </form>
+        </div>
+        <div class="column nav">
+          <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-light_grey" role="menu"><title>mobile navigation</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
+        </div>
+      </div>
     </div>
   </header>
 
