@@ -865,13 +865,13 @@ div#long-author-list {
   background-color: black;
 }
 .mobile-header .columns {
-  height: 50px;
+  height: 65px;
   align-items: center;
 }
 .mobile-header .column {
   border-left: 1px solid #2D2D2D;
   border-right: 1px solid #5D5D5D;
-  height: 50px;
+  height: 65px;
   padding: 0 1em;
   display: flex;
   align-items: center;
@@ -893,7 +893,7 @@ div#long-author-list {
   display: flex;
 }
 .mobile-header .column.logo-cornell img {
-  height: 30px;
+  height:45px;
 }
 .mobile-header .column.nav {
   justify-content: flex-end;
@@ -917,7 +917,7 @@ div#long-author-list {
   flex: none;
   transition: max-height 3s;
   position: absolute;
-  top:50px;
+  top:64px;
   left:0;
   background-color:black;
   overflow: hidden;
