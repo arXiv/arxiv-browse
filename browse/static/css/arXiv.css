@@ -853,37 +853,148 @@ div#long-author-list {
   }
 }
 /*** styles for mobile-friendly header ***/
-@media screen and (min-width: 769px) {
-  .mobile-header { display: none; }
+.mobile-header .toggle-target {
+  max-height: 0;
+  visibility: hidden;
+}
+.mobile-header .toggle-target.open {
+  max-height: 500px;
+  visibility: visible;
 }
 .mobile-header {
   background-color: black;
 }
-.mobile-logos .logo-arxiv img {
+.mobile-header .columns {
+  height: 50px;
+  align-items: center;
+}
+.mobile-header .column {
+  border-left: 1px solid #2D2D2D;
+  border-right: 1px solid #5D5D5D;
+  height: 50px;
+  padding: 0 1em;
+  display: flex;
+  align-items: center;
+}
+.mobile-header .column:first-child {
+  border-left: 0;
+}
+.mobile-header .column:last-child {
+  border-right: 0;
+}
+.mobile-header .column.logo-arxiv {
+  width: 100px;
+  flex: none;
+}
+.mobile-header .column.logo-arxiv img {
   height: 25px;
 }
-.mobile-logos .logo-cornell img {
+.mobile-header .column.logo-cornell {
+  display: flex;
+}
+.mobile-header .column.logo-cornell img {
   height: 30px;
-  float: right;
 }
-.mobile-search {
-  padding-top:0;
+.mobile-header .column.nav {
+  justify-content: flex-end;
+  align-self: flex-end;
 }
-.mobile-search .column.form {
-  padding-top:0;
-  width: 88%;
-  flex:none;
+.mobile-header #toggle-container button.toggle-control {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  font-size: 25px;
+  padding: 3px;
+  margin-left: .5em;
 }
-.mobile-search .column.form input {
+.mobile-header #toggle-container button.toggle-control svg.icon {
+  width: 1.25rem;
+  margin: 0;
+}
+.mobile-header .mobile-toggle-block {
+  margin: 0;
+  width: 100%;
+  flex: none;
+  transition: max-height 3s;
+  position: absolute;
+  top:50px;
+  left:0;
+  background-color:black;
+  overflow: hidden;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form {
+  margin: .5em 1em 1em 1em;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input::-webkit-input-placeholder { /* Edge */
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input::placeholder {
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input {
   width: calc(100% - 50px);
-  background-color: grey;
+  background: #4e4e4e;
+  border-radius: 10px 0 0 10px;
   border: 0;
   padding: 5px;
   color: white;
   font-size: 1.5em;
 }
-.mobile-search .column.nav {
-  padding-top:0;
+.mobile-header .mobile-toggle-block form.mobile-search-form button.button {
+  width: 50px;
+  background: #94908c;
+  border: 0;
+  border-radius: 0 10px 10px 0;
+  padding: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fffaf4;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu {
+  padding: 1em;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu h2 {
+  margin: 0;
+  font-size: 12px;
+  color: #94908c;
+  text-transform: uppercase;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul {
+  list-style: none;
+  margin: .75em 0 0 0;
+  padding: 0;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul li {
+  display: inline-flex;
+  align-items: stretch;
+  padding:.25em;
+  margin:0;
+  border-top: 2px solid #94908c;
+  margin-right: .75em;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul li a {
+  color: white;
+  font-weight: normal;
+  font-size: 12px;
+}
+@media screen and (min-width: 769px) {
+  .mobile-header {
+    display: none;
+  }
+}
+@media screen and (max-width: 425px) {
+  .mobile-header .column.logo-cornell {
+    display:none;
+  }
+}
+@media screen and (min-width: 426px) {
+  .mobile-header .column.nav {
+    flex: none;
+    width: 100px;
+  }
 }
 
 /* Floating box on right for links to extra services */
