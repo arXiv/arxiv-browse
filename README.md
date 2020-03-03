@@ -18,8 +18,9 @@ If all goes well, http://127.0.0.1:5000/abs/0906.5132 should render the basic
 abs page.
 
 By default, the application will use the directory trees in
-`tests/data/abs_files` and `tests/data/cache` and when looking for the document metadata and cache files, respectively. These paths can be overridden via
-environment variables (see `browse/config.py`).
+`tests/data/abs_files` and `tests/data/cache` and when looking for the
+document metadata and cache files, respectively. These paths can be
+overridden via environment variables (see `browse/config.py`).
 
 ### Rebuilding the test database
 

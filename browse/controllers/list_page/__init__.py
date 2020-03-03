@@ -100,8 +100,8 @@ def get_listing(subject_or_category: str,
        Number of articles to show
     """
     # TODO make sure to handle POST too
-    skip = skip or request.args.get('skip', None)
-    show = show or request.args.get('show', None)
+    skip = skip or request.args.get('skip', '0')
+    show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
         subject_or_category = request.args.get('archive')  # type: ignore
     if request.args.get('year', None):
@@ -421,8 +421,7 @@ def sub_sections_for_types(
         })
 
     for sec in secs:
-        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[  # type: ignore
-            sec['type']]
+        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[sec['type']] # type: ignore
         date = resp['announced'].strftime('%A, %-d %B %Y')
 
         showing = 'showing '
@@ -441,7 +440,8 @@ def sub_sections_for_types(
 
 
 def _not_modified(response: Union[ListingResponse, NewResponse, NotModifiedResponse]) -> bool:
-    return bool(response and response.get('not_modified', False))
+    return bool ( response and 'not_modified' in response)
+#    return bool(response and response.get('not_modified', False))
 
 
 def _expires_headers(listing_resp:

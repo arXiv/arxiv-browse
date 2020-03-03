@@ -1,5 +1,7 @@
 """Tests for tb controllers, :mod:`browse.controllers.tb_page`."""
 
+# mypy: ignore-errors
+
 from unittest import TestCase, mock
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
