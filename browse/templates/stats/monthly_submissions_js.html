@@ -42,7 +42,6 @@
     color: red;
   }
   .area {
-    fill: #d9af0c;/*middle yellow*/
     stroke-width: 0;
   }
 </style>
@@ -121,6 +120,7 @@
   var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("id", "chart")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -168,7 +168,8 @@
     svg.append("path")
       .datum(data)
       .attr("class", "area")
-      .attr("d", area);
+      .attr("d", area)
+      .attr("fill", "url(#gradientFill)");
 
     svg.append("path")
       .datum(data)
@@ -212,4 +213,8 @@
       focus.select("text").text(subText);
     }
   });
+  document.getElementById("chart").insertAdjacentHTML("afterbegin","<defs><linearGradient id='gradientFill' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='45%' style='stop-color:rgb(255,204,0);stop-opacity:1' /><stop offset='100%' style='stop-color:rgb(181,92,6);stop-opacity:1' /></linearGradient></defs>");
+
+    //
+
 </script>
