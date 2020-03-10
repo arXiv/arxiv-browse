@@ -1,7 +1,7 @@
 """Provides the user intefaces for browse."""
 import re
 from datetime import datetime
-from typing import Callable, Dict, Mapping, Union
+from typing import Callable, Dict, Mapping, Union, Tuple, Any
 from flask import Blueprint, render_template, request, Response, session, \
     current_app, url_for, redirect
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
@@ -23,7 +23,7 @@ blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 
 @blueprint.context_processor
-def inject_now() -> None:
+def inject_now() -> Dict:
     """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
 
@@ -56,23 +56,21 @@ def home() -> Response:
 
     raise InternalServerError('Unexpected error')
 
-
 @blueprint.route('abs', methods=['GET'])
-def bare_abs() -> Response:
+def bare_abs() -> Any:
     """Check several legacy request parameters."""
     if request.args:
         if 'id' in request.args:
-            return abstract(request.args['id'])  # type: ignore
+            return abstract(request.args['id'])
         elif 'archive' in request.args and 'papernum' in request.args:
-            return abstract(  # type: ignore
-                f"{request.args['archive']}/{request.args['papernum']}")
+            return abstract(f"{request.args['archive']}/{request.args['papernum']}")
         else:
             for param in request.args:
                 # singleton case, where the parameter is the value
                 # e.g. /abs?<archive>/\d{7}
                 if not request.args[param] \
                    and re.match(r'^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$', param):
-                    return abstract(param)  # type: ignore
+                    return abstract(param)
 
     """Return abs-specific 404."""
     raise AbsNotFound
@@ -80,7 +78,7 @@ def bare_abs() -> Response:
 
 @blueprint.route('abs/', methods=['GET'], defaults={'arxiv_id': ''})
 @blueprint.route('abs/<path:arxiv_id>', methods=['GET'])
-def abstract(arxiv_id: str) -> Response:
+def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
 
@@ -91,17 +89,16 @@ def abstract(arxiv_id: str) -> Response:
             return Response(
                 response['abs_meta'].raw_safe,
                 mimetype='text/plain')
-        return render_template('abs/abs.html', **response), code, headers  # type: ignore
+        return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)  # type: ignore
+        return redirect(headers['Location'], code=code) 
     elif code == status.HTTP_304_NOT_MODIFIED:
-        return '', code, headers  # type: ignore
+        return '', code, headers 
 
-    raise InternalServerError('Unexpected error')
-
+    raise InternalServerError('Unexpected error')  
 
 @blueprint.route('category_taxonomy', methods=['GET'])
-def category_taxonomy() -> Response:
+def category_taxonomy() -> Any:
     """Display the arXiv category taxonomy."""
     response = {
         'groups': taxonomy.definitions.GROUPS,
@@ -109,7 +106,7 @@ def category_taxonomy() -> Response:
         'categories': taxonomy.definitions.CATEGORIES_ACTIVE
     }
     return render_template('category_taxonomy.html', **response), \
-        status.HTTP_200_OK, None  # type: ignore
+        status.HTTP_200_OK, None
 
 
 @blueprint.route('tb/', defaults={'arxiv_id': ''}, methods=['GET'])
@@ -150,14 +147,11 @@ def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
 
 
 @blueprint.route('prevnext', methods=['GET', 'POST'])
-def previous_next() -> Union[str, Response]:
+def previous_next() -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Previous/Next navigation used on /abs page."""
-    if not request.args:
-        raise BadRequest
-    response, code, headers = prevnext.get_prevnext(request.args)
-    if code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code)  # type: ignore
-    raise InternalServerError('Unexpected error')
+    return prevnext.get_prevnext(request.args.get('id', default=''),
+                                 request.args.get('function', default=''),
+                                 request.args.get('context', default=''))
 
 
 @blueprint.route('trackback/', methods=['GET'], defaults={'arxiv_id': ''})
@@ -194,7 +188,7 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = \
-        list_page.get_listing(context, subcontext)  # type: ignore
+        list_page.get_listing(context, subcontext)
     if code == status.HTTP_200_OK:
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response['template'], **response), code, headers  # type: ignore
@@ -331,7 +325,7 @@ def form(arxiv_id: str) -> Response:
 @blueprint.route('archive/<archive>', strict_slashes=False)
 def archive(archive: str):  # type: ignore
     """Landing page for an archive."""
-    response, code, headers = archive_page.get_archive(archive)  # type: ignore
+    response, code, headers = archive_page.get_archive(archive)
     if code == status.HTTP_200_OK or code == status.HTTP_404_NOT_FOUND:
         return render_template(response['template'], **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:

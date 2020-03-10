@@ -236,20 +236,15 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_RECORD_QUERIES = False
 
-SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE', '10'))
-"""SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
-
-Ignored under sqlite."""
-
-SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW', '0'))
-"""SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
-
-Ignored under sqlite."""
-
 # SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW will not work with sqlite
-if 'sqlite' in SQLALCHEMY_DATABASE_URI:
-    SQLALCHEMY_POOL_SIZE = None
-    SQLALCHEMY_MAX_OVERFLOW = None
+if 'sqlite' not in SQLALCHEMY_DATABASE_URI:
+    SQLALCHEMY_POOL_SIZE = int(os.environ.get('BROWSE_SQLALCHEMY_POOL_SIZE', '10'))
+    """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
+    Ignored under sqlite."""
+
+    SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get('BROWSE_SQLALCHEMY_MAX_OVERFLOW', '0'))
+    """SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
+    Ignored under sqlite."""
 
 BROWSE_DAILY_STATS_PATH = os.environ.get(
     'BROWSE_DAILY_STATS_PATH', 'tests/data/daily_stats')
@@ -283,18 +278,24 @@ BROWSE_USER_BANNER_ENABLED = bool(int(os.environ.get(
     'BROWSE_USER_BANNER_ENABLED', '0')))
 """Enable/disable user banner."""
 try:
-    BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
-        os.environ.get('BROWSE_USER_BANNER_START_DATE')
-    ).replace(hour=0, minute=0, second=0)
+    if os.environ.get('BROWSE_USER_BANNER_START_DATE',None):
+        BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
+            os.environ.get('BROWSE_USER_BANNER_START_DATE', 'nodate')
+        ).replace(hour=0, minute=0, second=0)
+    else:
+        raise ValueError
 except Exception:
     if BROWSE_USER_BANNER_ENABLED:
         warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
     BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
 
 try:
-    BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
-        os.environ.get('BROWSE_USER_BANNER_END_DATE')
-    ).replace(hour=23, minute=59, second=59)
+    if os.environ.get('BROWSE_USER_BANNER_END_DATE', None):
+        BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
+            os.environ.get('BROWSE_USER_BANNER_END_DATE', 'noate')
+        ).replace(hour=23, minute=59, second=59)
+    else:
+        raise ValueError
 except Exception:
     if BROWSE_USER_BANNER_ENABLED:
         warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
@@ -341,10 +342,7 @@ CLASSIC_TRACKING_COOKIE = os.environ.get('CLASSIC_TRACKING_COOKIE', 'browser')
 CLASSIC_DATABASE_URI = os.environ.get('CLASSIC_DATABASE_URI', os.environ.get(
     'BROWSE_SQLALCHEMY_DATABASE_URI', default=None))
 """If not set, legacy database integrations for auth will not be available."""
-if not CLASSIC_DATABASE_URI:
-    warnings.warn("No value set for CLASSIC_DATABASE_URI")
-elif 'sqlite' in CLASSIC_DATABASE_URI:
-    warnings.warn("Using sqlite in CLASSIC_DATABASE_URI")
+
 
 CLASSIC_SESSION_HASH = os.environ.get('CLASSIC_SESSION_HASH', 'foosecret')
 SESSION_DURATION = os.environ.get(
