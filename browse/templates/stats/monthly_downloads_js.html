@@ -3,7 +3,6 @@
     font: 10px sans-serif;
   }
   #chart_content path {
-    fill: #d9af0c;/*middle yellow*/
     stroke: #b18e0f;/*dark yellow*/
   }
   #chart_content .axis path,
@@ -15,8 +14,8 @@
     shape-rendering: auto;
   }
   #chart_content .small-chart path {
-    fill: #b55c06;/*middle orange*/
-    stroke: #994d04;/*dark orange*/
+    fill: #ffcc00;/*middle orange*/
+    stroke: #b55c06;/*dark orange*/
   }
   .axis .minor line {
     stroke: none;
@@ -115,7 +114,8 @@
 
   var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("id", "chart");
 
   svg.append("defs").append("clipPath")
     .attr("id", "clip")
@@ -149,6 +149,7 @@
     focus.append("path")
       .datum(data)
       .attr("clip-path", "url(#clip)")
+      .attr("fill", "url(#gradientFill)")
       .attr("d", area);
 
     focus.append("g")
@@ -182,4 +183,5 @@
     focus.select("path").attr("d", area);
     focus.select(".x.axis").call(xAxis);
   }
+  document.getElementById("chart").insertAdjacentHTML("afterbegin","<defs><linearGradient id='gradientFill' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='45%' style='stop-color:rgb(255,204,0);stop-opacity:1' /><stop offset='100%' style='stop-color:rgb(181,92,6);stop-opacity:1' /></linearGradient></defs>");
 </script>
