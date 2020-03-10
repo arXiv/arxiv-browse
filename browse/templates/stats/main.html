@@ -1,0 +1,12 @@
+{%- extends "stats/base.html" -%}
+{% set pagename = 'Statistics' %}
+{% block title %}arXiv Statistics{% endblock %}
+
+{% block content_stats %}
+  {{ super() }}
+  <p>Content about all stats here</p>
+{% endblock content_stats %}
+
+{% block content %}
+{{ super() }}
+{% endblock content %}

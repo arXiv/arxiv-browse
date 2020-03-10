@@ -205,6 +205,11 @@ def list_articles(context: str, subcontext: str) -> Response:
     return response, code, headers  # type: ignore
 
 
+@blueprint.route('stats/main', methods=['GET'])
+def main() -> Response:
+    """Display the stats main page."""
+    return render_template(f'stats/main.html'), status.HTTP_200_OK, {}
+
 @blueprint.route('stats/<string:command>',
                  methods=['GET'])
 def stats(command: str) -> Response:
@@ -244,7 +249,6 @@ def stats(command: str) -> Response:
     else:
         raise NotFound
     raise InternalServerError('Unexpected error')
-
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:

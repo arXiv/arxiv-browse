@@ -1,16 +1,31 @@
 {%- extends "stats/base.html" -%}
-
+{% set pagename = 'Hourly Usage Stats' %}
 {% block title %}hourly usage{% endblock %}
 
-{% block content %}
+{% block content_stats %}
+  {{ super() }}
+  <div class="chart_text">
+    <p>arXiv Web Server Usage from
+      {{ requested_dt.strftime('%A, %B %-d, %Y') }}
+      (<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> site only)
+      Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} US/Eastern</p>
+  </div>
+  <div id="chart_content">
+    <div class="chart_text">
+      {% if normal_count > 0 %}
+        <a class="button is-primary is-pulled-right" title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">Download CSV</a>
+        <p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)</p>
+      {% else %}
+        <p>No data currently available.</p>
+      {% endif %}
+    </div>
+    {% include "stats/today_js.html" %}
+  </div>
+  <div class="chart_text chart_notes">
+    <p>Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} US/Eastern</p>
+  </div>
+{% endblock content_stats %}
 
-<h2>arXiv Web Server Usage from {{ requested_dt.strftime('%A, %B %-d, %Y') }} (<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> site only) [<a title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">CSV</a>]</h2>
-{% if normal_count > 0 %}
-{% include "stats/today_js.html" %}
-<p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)
-{% else %}
-<p>No data currently available.
-{% endif %}
-<br />Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} US/Eastern</p>
+{% block content %}
 {{ super() }}
 {% endblock content %}

@@ -469,6 +469,85 @@ footer .sorry-app-links .help {
 #content-inner {
 
 }
+/****************************************
+ * Stats pages (/stats)
+ ****************************************/
+#chart_content {
+  background-color: #eef5f9;
+  text-align: center;
+  margin: 2em 0;
+  padding: 1em 0;
+  box-shadow: 0 0 3px 0 rgba(210, 210, 210, .5);
+}
+#chart_content .button {
+  color: #ffffff;
+  background-color: #1777bc;
+  border-color: #1777bc;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: .5em;
+  margin-right: 1em;
+}
+#chart_content p a, .chart_text p a {
+  color: #1777bc;
+}
+.columns.stats-header {
+  margin: .7em .7em 3em .7em;
+  font-size: 90% !important;
+}
+.columns.stats-header h1 {
+  margin-bottom: 0;
+}
+.column.stats-nav {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.column.stats-nav .mobile-button {
+  margin-bottom: .5em;
+  border: 1px solid #2c8cd1;
+  padding: .25em .5em;
+  border-radius: .35em;
+  color: #046baf;
+}
+.chart_text p {
+  margin: .25em 1em;
+  text-align: left;
+}
+.chart_text ol {
+  margin: .5em 3.75em;
+}
+.chart_text.chart_notes p, .chart_text.chart_notes ol {
+  font-style: italic;
+  font-size: .9em;
+}
+#chart_content .chart_text {
+  max-width: 950px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+#chart_content .chart_text p {
+    margin: 0 0 1em 0;
+    padding: 1em;
+    font-size: 12px;
+    border-bottom: 1px solid #d6dce0;
+    margin-bottom: 1em;
+}
+.stats-nav .tabs {
+  align-items: flex-end;
+  height: 100%;
+}
+@media screen and (min-width: 769px) {
+  #chart_content .button {
+    margin-right: 0;
+  }
+}
+@media screen and (min-width: 550px) {
+  .chart_text p {
+    margin: .25em 5em;
+  }
+}
 
 /* Index page tagline */
 p.tagline {
@@ -1255,6 +1334,22 @@ body#front.with-cu-identity #header #search {
     display: flex;
   }
 }
+@media screen and (max-width: 1023px) {
+  .is-hidden-touch {
+    display: none !important;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .is-hidden-desktop {
+    display: none !important;
+  }
+}
+.is-pulled-left {
+  float: left !important;
+}
+.is-pulled-right {
+  float: right !important;
+}
 .is-sr-only {
   border: none !important;
   clip: rect(0, 0, 0, 0) !important;
@@ -1265,6 +1360,99 @@ body#front.with-cu-identity #header #search {
   white-space: nowrap !important;
   width: 0.01em !important;
 }
+.button {
+  border-width: 1px;
+  cursor: pointer;
+  justify-content: center;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  text-align: center;
+  white-space: nowrap;
+}
+/*** limited bulma tab styles so browse can use them ***/
+.tabs {
+  -webkit-overflow-scrolling: touch;
+  align-items: stretch;
+  display: flex;
+  font-size: 1rem;
+  justify-content: space-between;
+  overflow: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.tabs a {
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  color: #4a4a4a;
+  display: flex;
+  justify-content: center;
+  margin-bottom: -1px;
+  padding: 0.5em 1em;
+  vertical-align: top;
+}
+.tabs a:hover {
+  border-bottom-color: #363636;
+  color: #363636;
+}
+.tabs li {
+  display: block;
+}
+.tabs li.is-active a {
+  border-bottom-color: #3273dc;
+  color: #3273dc;
+}
+.tabs ul {
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: flex-start;
+}
+.tabs ul.is-left {
+  padding-right: 0.75em;
+}
+.tabs ul.is-center {
+  flex: none;
+  justify-content: center;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+}
+.tabs ul.is-right {
+  justify-content: flex-end;
+  padding-left: 0.75em;
+}
+.tabs .icon:first-child {
+  margin-right: 0.5em;
+}
+.tabs .icon:last-child {
+  margin-left: 0.5em;
+}
+.tabs.is-centered ul {
+  justify-content: center;
+}
+.tabs.is-right ul {
+  justify-content: flex-end;
+}
+.tabs.is-boxed a {
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+.tabs.is-boxed a:hover {
+  background-color: whitesmoke;
+  border-bottom-color: #dbdbdb;
+}
+.tabs.is-boxed li.is-active a {
+  background-color: white;
+  border-color: #dbdbdb;
+  border-bottom-color: transparent !important;
+}
 /*** limited column styles copied from base so that browse can use bulma columns too ***/
 .column {
   display: block;
@@ -1272,6 +1460,10 @@ body#front.with-cu-identity #header #search {
   flex-grow: 1;
   flex-shrink: 1;
   padding: 0.75rem;
+}
+.columns.is-mobile > .column.is-full {
+  flex: none;
+  width: 100%;
 }
 .columns.is-mobile > .column.is-three-quarters {
   flex: none;
@@ -1308,6 +1500,10 @@ body#front.with-cu-identity #header #search {
 .columns.is-mobile > .column.is-four-fifths {
   flex: none;
   width: 80%;
+}
+.columns. .column.is-full {
+  flex: none;
+  width: 100%;
 }
 .columns .column.is-three-quarters {
   flex: none;
@@ -1369,8 +1565,20 @@ body#front.with-cu-identity #header #search {
   content: "\02C4";
   color: #b7b8b9;
 }
+/*** styles for general large-data-list ***/
 .large-data-list {
   border-bottom: 1px solid #b7b8b9;
+}
+.large-data-list a {
+  color: #1777bc;
+}
+.large-data-list p {
+  margin:1em 1em 1em 0;
+  font-size:.85em;
+  color: #000000;
+}
+.large-data-list .column {
+  padding: 0;
 }
 .large-data-list h2 {
   border-top: 1px solid #e3e5e6;
@@ -1399,30 +1607,71 @@ body#front.with-cu-identity #header #search {
   font-size: .8em;
   font-weight: normal;
 }
-.large-data-list p {
-  margin:1em 1em 1em 0;
-  font-size:.85em;
-}
 .large-data-list .physics {
-  border-bottom: .5px dotted grey;
+  border-bottom: .5px dotted #ccc;
 }
 .large-data-list .physics:last-child {
   border-bottom: 0px;
 }
-.large-data-list .accordion-body .subcategories {
-  border-bottom: .5px dotted black;
+.large-data-list .columns.divided {
   margin-left: .3em;
+  border-bottom: .5px dotted #ccc;
 }
-.large-data-list .accordion-body .subcategories:last-child {
-  border-bottom: 0px;
+.large-data-list .columns.divided:last-child {
   margin-bottom: 1.5em;
-}
-.large-data-list .column {
-  padding:0;
+  border-bottom: 0px;
 }
 .guide {
   display:none;
 }
+.guide .columns.divided .column {
+  border-top: .5px dotted black;
+}
+.form-trackbacks {
+  padding: .5em 0;
+  border-top: 1px solid #cccccc;
+}
+.form-trackbacks .button {
+  background-color: #d3e1e6;
+}
+/*** styles for bold-divided-list ***/
+.bold-divided-list {
+  margin: 1em .5em;
+  padding: 0 0 .5em 0;
+}
+.bold-divided-list p {
+  margin-top: 0;
+}
+.bold-divided-list .bold-divided-column {
+  padding-left: 1.5em;
+  padding-top: 1em;
+  padding-bottom: 1.75em;
+  border-top: .5px dotted #ccc;
+}
+.bold-divided-list .bold-divided-column ul {
+  margin: 0;
+  padding: 0;
+  font-size: .85em;
+  list-style: none;
+}
+.bold-divided-list .bold-divided-column ul li {
+  color: black;
+}
+.bold-divided-list .bold-divided-column ul li a {
+  font-weight: bold;
+}
+.bold-divided-list .bold-divided-column ul li:before {
+  color: #000;
+  content: "\002D";
+  margin: 0 6px 0 0;
+  font-weight: bold;
+}
+.bold-divided-list .bold-divided-header {
+  margin-top: 0;
+  padding: 1em 0 0 0;
+  border-top: 1px solid black;
+}
+
 @media screen and (min-width: 769px) {
   .large-data-list {
     margin: 0 4em;
@@ -1435,13 +1684,29 @@ body#front.with-cu-identity #header #search {
   }
   .guide {
     display: block;
-    background: #f5fbff;
+    background: #eef5f9;
     border-radius: 10px 0 0 0;
     margin-bottom: 2em;
     margin-top:2em;
     margin-right: 4em;
     padding-bottom: 1em;
-    color: grey;
+    color: black;
+    box-shadow: 0 0 3px 0 rgba(210, 210, 210, .5);
+  }
+  .guide p em {
+    color: #994D04;
+    font-style: italic;
+  }
+  .guide a {
+    color: #046BAF;
+  }
+  .form-trackbacks {
+    padding: 1em 0 2em 0;
+    text-align: right;
+  }
+  .bold-divided-list {
+    margin-top: 4em;
+    padding-bottom: 2em;
   }
 }
 

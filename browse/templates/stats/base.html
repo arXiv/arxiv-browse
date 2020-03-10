@@ -8,6 +8,25 @@
 
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a>  &gt; stats  &gt; server usage</h1>{% endblock %}
 
+{% block content_stats %}
+<div class="columns is-mobile stats-header">
+  <div class="column">
+    <h1>arXiv<br><span style="color:grey;">{{ pagename }}</span></h1>
+  </div>
+  <div class="column is-three-fifths-desktop is-three-fifths-tablet is-half-mobile stats-nav">
+    <a href="" class="mobile-button is-hidden-desktop" href="/stats/main">Stats home</a>
+    <div class="tabs is-boxed is-hidden-touch">
+      <ul>
+        <li class="{% if request.path == '/stats/main' %}is-active{% endif %}"><a href="/stats/main">Stats home</a></li>
+        <li class="{% if request.path == '/stats/today' %}is-active{% endif %}"><a href="/stats/today">Today</a></li>
+        <li class="{% if request.path == '/stats/monthly_submissions' %}is-active{% endif %}"><a href="/stats/monthly_submissions">Submissions</a></li>
+        <li class="{% if request.path == '/stats/monthly_downloads' %}is-active{% endif %}"><a href="/stats/monthly_downloads">Downloads</a></li>
+        <li><a href="{{ url_for('help') }}/stats">Other stats</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content_stats %}
+
 {%- block content %}
-<p>See also <a href="{{ url_for('help') }}/stats">other arXiv usage statistics</a>.</p>
 {% endblock content %}
