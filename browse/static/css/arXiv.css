@@ -472,6 +472,16 @@ footer .sorry-app-links .help {
 /****************************************
  * Stats pages (/stats)
  ****************************************/
+ .main-stats img.stat-thumb {
+     max-width: 50%;
+     border-radius: 25%;
+     box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
+     border: 3px solid #e2ebf1;
+ }
+ .main-stats .column h3 a {
+   font-size: 14px;
+   color: #1777bc;
+ }
 #chart_content {
   background-color: #eef5f9;
   text-align: center;
@@ -513,6 +523,7 @@ footer .sorry-app-links .help {
 .chart_text p {
   margin: .25em 1em;
   text-align: left;
+  font-size: .9em;
 }
 .chart_text ol {
   margin: .5em 3.75em;
@@ -541,6 +552,13 @@ footer .sorry-app-links .help {
 @media screen and (min-width: 769px) {
   #chart_content .button {
     margin-right: 0;
+  }
+  .main-stats img.stat-thumb {
+      max-width: 40%;
+  }
+  .main-stats {
+    max-width: 85%;
+    margin: 0 auto;
   }
 }
 @media screen and (min-width: 550px) {
