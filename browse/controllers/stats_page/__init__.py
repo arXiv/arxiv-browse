@@ -17,6 +17,10 @@ from browse.services.document.config.deleted_papers import DELETED_PAPERS
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 logger = logging.getLogger(__name__)
 
+def get_main_stats_page() -> Response:
+    """Minimal rendering of the main stats page."""
+    response_data: Dict[str, Any] = {}
+    return response_data, status.HTTP_200_OK, {}
 
 def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
     """Get data for the /stats/today page."""

@@ -202,7 +202,8 @@ def list_articles(context: str, subcontext: str) -> Response:
 @blueprint.route('stats/main', methods=['GET'])
 def main() -> Response:
     """Display the stats main page."""
-    return render_template(f'stats/main.html'), status.HTTP_200_OK, {}
+    response, code, headers = stats_page.get_main_stats_page()
+    return render_template('stats/main.html', **response), code, headers  # type: ignore
 
 @blueprint.route('stats/<string:command>',
                  methods=['GET'])
