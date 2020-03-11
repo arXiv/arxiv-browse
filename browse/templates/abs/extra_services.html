@@ -188,14 +188,14 @@
       <ul>
         {% if include_inspire_link %}
         <li>
-          <a  class="abs-button" href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-          (<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)
+          <a class="abs-button abs-button-small" href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+          <span class="inspire-links">(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by</a>)</span>
         </li>
         {% endif %}
-        <li><a  class="abs-button" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
         {#- This was previously injected by Bibliographic Explorer -#}
-        <li><a  class="abs-button" href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
-        <li><a  class="abs-button" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
       </ul>
     </div>
 

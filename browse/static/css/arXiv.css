@@ -5,7 +5,6 @@
 /****************************************
  *   General rules
  *****************************************/
-
 body {
   margin: 0;
   padding: 0;
@@ -723,6 +722,17 @@ div#long-author-list {
     margin: 0;
     padding: 1em 0;
   }
+  #abs-outer .extra-ref-cite ul li {
+    float: left;
+    height: 50px;
+  }
+  #abs-outer .extra-ref-cite ul li .inspire-links {
+    font-size: 9px;
+  }
+  #abs-outer .extra-ref-cite ul li .inspire-links a {
+    color: #046baf;
+    text-decoration: underline;
+  }
   #abs-outer .extra-services .full-text ul, #abs-outer .extra-services .extra-ref-cite ul {
     list-style: none;
     margin: 0;
@@ -862,15 +872,15 @@ div#long-author-list {
   visibility: visible;
 }
 .mobile-header {
-  background-color: black;
+  background-color: #b31b1b;
 }
 .mobile-header .columns {
   height: 65px;
   align-items: center;
 }
 .mobile-header .column {
-  border-left: 1px solid #2D2D2D;
-  border-right: 1px solid #5D5D5D;
+  border-left: 1px solid #fc5554;
+  border-right: 1px solid #731515;
   height: 65px;
   padding: 0 1em;
   display: flex;
@@ -919,7 +929,7 @@ div#long-author-list {
   position: absolute;
   top:64px;
   left:0;
-  background-color:black;
+  background-color: #b31a1a;
   overflow: hidden;
 }
 .mobile-header .mobile-toggle-block form.mobile-search-form {
@@ -936,7 +946,7 @@ div#long-author-list {
 }
 .mobile-header .mobile-toggle-block form.mobile-search-form input {
   width: calc(100% - 50px);
-  background: #4e4e4e;
+  background: #fef6f6;
   border-radius: 10px 0 0 10px;
   border: 0;
   padding: 5px;
@@ -945,8 +955,9 @@ div#long-author-list {
 }
 .mobile-header .mobile-toggle-block form.mobile-search-form button.button {
   width: 50px;
-  background: #94908c;
+  background: #fc5554;
   border: 0;
+  border-left: 1px solid #b31b1b;
   border-radius: 0 10px 10px 0;
   padding: 3px;
   font-size: 20px;
@@ -959,7 +970,7 @@ div#long-author-list {
 .mobile-header .mobile-toggle-block nav.mobile-menu h2 {
   margin: 0;
   font-size: 12px;
-  color: #94908c;
+  color: #fcd7d7;
   text-transform: uppercase;
 }
 .mobile-header .mobile-toggle-block nav.mobile-menu ul {
@@ -970,13 +981,13 @@ div#long-author-list {
 .mobile-header .mobile-toggle-block nav.mobile-menu ul li {
   display: inline-flex;
   align-items: stretch;
-  padding:.25em;
-  margin:0;
-  border-top: 2px solid #94908c;
+  padding:.1em .2em;
+  margin:0 0 .5em 0;
+  border-top: 2px solid #fc5554;
   margin-right: .75em;
 }
 .mobile-header .mobile-toggle-block nav.mobile-menu ul li a {
-  color: white;
+  color: #fef6f6;
   font-weight: normal;
   font-size: 12px;
 }
@@ -987,7 +998,7 @@ div#long-author-list {
 }
 @media screen and (max-width: 425px) {
   .mobile-header .column.logo-cornell {
-    display:none;
+    /* display:none; */
   }
 }
 @media screen and (min-width: 426px) {
@@ -1145,6 +1156,7 @@ div#long-dc-list {
 }
 
 .bookmarks {
+  clear: both;
   margin: 0;
   padding: 0 1em .5em 1em;
   font-size: 90%;
