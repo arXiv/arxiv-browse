@@ -1,6 +1,6 @@
 {# donation banner #}
-<div class="slider-wrapper" style="display:none">
-  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}"></a>
+<aside class="slider-wrapper" style="display:none">
+  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation">
     <h1>Donate to arXiv</h1>
     <p>
@@ -17,11 +17,11 @@
       </div>
     </div>
   </div>
-</div>
+</aside>
 {%- if 0 -%}
 {# downtime #}
-<div class="slider-wrapper" style="display:none">
-  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}"></a>
+<aside class="slider-wrapper" style="display:none">
+  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
-</div>
+</aside>
 {%- endif -%}

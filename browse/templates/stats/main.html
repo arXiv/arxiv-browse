@@ -1,0 +1,47 @@
+{%- extends "stats/base.html" -%}
+{% set pagename = 'Statistics' %}
+{% block title %}arXiv Statistics{% endblock %}
+
+{% block content_stats %}
+  {{ super() }}
+  <div class="chart_text">
+    <p>arXiv tracks and publishes the following statistical breakdowns: arXiv's hourly usage for any given day, monthly submissions or downloads going back to the beggining of arXiv, a breakdown of submissions by subject area over time, and institutional download rankings. Click on a chart below to view in more detail.</p>
+  </div>
+  <div id="chart_content">
+    <div class="columns main-stats">
+      <div class="column">
+        <h3><a href="/stats/today">Hourly Usage Rates</a></h3>
+        <a href="/stats/today"><img alt="Hourly Usage Rates" class="stat-thumb" src="{{ url_for('static', filename='images/stat-thumb-hourly.jpg') }}"></a>
+      </div>
+      <div class="column">
+        <h3><a href="/stats/monthly_submissions">Monthly Submissions</a></h3>
+        <a href="/stats/monthly_submissions"><img alt="Monthly Submissions" class="stat-thumb" src="{{ url_for('static', filename='images/stat-thumb-uploads.jpg') }}"></a>
+      </div>
+      <div class="column">
+        <h3><a href="/stats/monthly_downloads">Monthly Downloads</a></h3>
+        <a href="/stats/monthly_downloads"><img alt="Monthly Downloads" class="stat-thumb" src="{{ url_for('static', filename='images/stat-thumb-downloads.jpg') }}"></a>
+      </div>
+      <div class="column">
+        <h3><a href="{{ url_for('help') }}/stats/2019_by_area/index">Submissions by Subject</a></h3>
+        <a href="{{ url_for('help') }}/stats/2019_by_area/index"><img alt="Submissions by Subject" class="stat-thumb" src="{{ url_for('static', filename='images/stat-thumb-subject.jpg') }}"></a>
+      </div>
+      <div class="column">
+        <h3><a href="{{ url_for('about') }}/reports/2019_usage">Institutional Downloads</a></h3>
+        <a href="{{ url_for('about') }}/reports/2019_usage"><img alt="Institutional Downloads" class="stat-thumb" src="{{ url_for('static', filename='images/stat-thumb-institutional.jpg') }}"></a>
+      </div>
+    </div>
+  </div>
+  <div class="chart_text chart_notes">
+    <p>Caveats: While we have taken considerable effort to extract reliable data for all charts there are many factors which affect results.
+      These may include our counting methodology, excluding legitimate robot activity, and excluding data from the arXiv mirrors, among other factors.
+      For more information and detailed caveats view each chart page.<br><br>
+    For best viewing results view charts on a tablet size or larger screen.</p>
+  </div>
+
+
+
+{% endblock content_stats %}
+
+{% block content %}
+{{ super() }}
+{% endblock content %}
