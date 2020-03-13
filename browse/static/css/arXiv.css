@@ -1652,6 +1652,13 @@ body#front.with-cu-identity #header #search {
 .form-trackbacks .button {
   background-color: #d3e1e6;
 }
+.trackback-styles {
+  border-top: 1px solid #cccccc;
+  padding-top:2em;
+}
+.trackback-styles blockquote {
+  background-color: #94908c;
+}
 /*** styles for bold-divided-list ***/
 .bold-divided-list {
   margin: 1em .5em;
