@@ -27,7 +27,7 @@
     {% for tb in trackback_pings %}
   <p>{{- generate_trackback_link(tb) -}}</p>
     {% endfor %}
-    <blockquote style="background-color: #eee; padding-top: 5px">
+    <blockquote>
       {#- abstract field is deliberately suppressed in call to abs macro. -#}
       {%- if abs_meta -%}
       {{ base_macros.abs(
