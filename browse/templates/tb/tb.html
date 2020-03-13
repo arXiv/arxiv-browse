@@ -23,7 +23,7 @@
 
   <div id="_list" class="large-data-list bold-divided-list trackback-styles">
   {% if trackback_pings %}
-  <h2>Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
+  <h2 class="trackback-title">Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
     {% for tb in trackback_pings %}
   <p>{{- generate_trackback_link(tb) -}}</p>
     {% endfor %}

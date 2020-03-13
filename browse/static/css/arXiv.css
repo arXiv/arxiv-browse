@@ -1659,7 +1659,10 @@ body#front.with-cu-identity #header #search {
 .trackback-styles blockquote {
   background-color: #f7f5f3;
   margin: 1em 0;
-  padding: 1em;
+  padding: 2em 1em;
+}
+.trackback-styles h2 {
+  margin-bottom: 1em;
 }
 .trackback-styles h2, .trackback-styles p {
   margin-left:0 !important;
