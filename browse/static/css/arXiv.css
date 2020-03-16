@@ -898,7 +898,7 @@ div#long-author-list {
     color: #666666 !important;
     font-size: 1em !important;
     padding: .25em 1em;
-    margin: 0 .5em 0 .75em;
+    margin: 0 .5em 0 0;
   }
   #abs-outer .subheader {
     background-color: #fefefe;
