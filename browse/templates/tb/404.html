@@ -11,6 +11,18 @@ Trackback not found
 {% endblock %}
 
 {%- block content %}
+<div class="columns">
+  <div class="column">
+    <h1>arXiv<br><span style="color:grey;">Trackbacks</span></h1>
+    <p>Trackbacks indicate external web sites that link to articles in arXiv.org.
+      Trackbacks do not reflect the opinion of arXiv.org and may not reflect the opinions of that article's authors.</p>
+  </div>
+  <div class="column guide is-three-fifths">
+    <h2 style="margin:0;">Trackback guide</h2>
+    {{ super() }}
+  </div>
+</div>
+
 {% if arxiv_id or missing_id %}
   {% if arxiv_id and not_found %}
   <h1>Article 'arXiv:{{ arxiv_id }}' not found</h1>
