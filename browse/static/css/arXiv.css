@@ -1962,6 +1962,23 @@ body#front.with-cu-identity #header #search {
 .form-trackbacks .button {
   background-color: #d3e1e6;
 }
+.trackback-styles {
+  border-top: 1px solid #eae9e7 !important;
+  padding: 1em !important;
+}
+.trackback-styles blockquote {
+  background-color: #f7f5f3;
+  margin: 1em 0;
+  padding: 2em 1em;
+}
+.trackback-styles h2 {
+  margin-bottom: 1em;
+}
+.trackback-styles h2, .trackback-styles p {
+  margin-left:0 !important;
+  padding-left:0 !important;
+  border: 0 !important;
+}
 /*** styles for bold-divided-list ***/
 .bold-divided-list {
   margin: 1em .5em;
@@ -2001,6 +2018,9 @@ body#front.with-cu-identity #header #search {
 }
 
 @media screen and (min-width: 769px) {
+  .trackback-styles {
+    padding: 2em  !important;
+  }
   .large-data-list {
     margin: 0 4em;
   }
