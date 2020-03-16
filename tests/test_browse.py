@@ -48,7 +48,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        h2_elmt = html.find('h2')
+        h2_elmt = html.find('h2', {'class': 'trackback-title'})
         h2_txt = h2_elmt.get_text()
         self.assertTrue(h2_elmt, 'Should have <h2> element')
         self.assertEqual(h2_txt, 'Trackbacks for 0808.4142')

@@ -12,8 +12,8 @@
   </div>
   <div id="chart_content">
     <div class="chart_text">
+      <a class="button is-primary is-pulled-right" title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">Download CSV</a>
       {% if normal_count > 0 %}
-        <a class="button is-primary is-pulled-right" title="download hourly access stats CSV data" href="{{ url_for('browse.stats', command='get_hourly') }}?date={{ requested_dt.strftime('%Y%m%d')}}">Download CSV</a>
         <p>Total number of connections = {{ "{:,}".format(normal_count) }} (+{{ "{:,}".format(admin_count) }} local &amp; administrative connections)</p>
       {% else %}
         <p>No data currently available.</p>
