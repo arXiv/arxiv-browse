@@ -887,6 +887,19 @@ div#long-author-list {
     border: 1px solid #666666;
     color: #666666 !important;
   }
+  #abs-outer .extra-services .bib-sidebar {
+    border: 0 !important;
+  }
+  #abs-outer .extra-services .bib-sidebar a {
+    display: inline-block;
+    border-radius: 5px;
+    background: #E6E6E6;
+    border: 1px solid #666666;
+    color: #666666 !important;
+    font-size: 1em !important;
+    padding: .25em 1em;
+    margin: 0 .5em 0 .75em;
+  }
   #abs-outer .subheader {
     background-color: #fefefe;
     padding: .25em 0;

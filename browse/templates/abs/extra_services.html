@@ -197,6 +197,7 @@
         <li><a  class="abs-button abs-button-small" href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
         <li><a  class="abs-button abs-button-small" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
       </ul>
+      <div style="clear:both;"></div>
     </div>
 
     {% if trackback_ping_count and trackback_ping_count > 0 %}
