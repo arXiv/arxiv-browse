@@ -20,7 +20,7 @@ def get_orig_publish_date(ident: Identifier) -> Optional[date]:
 
 def inspire_category(category: Category,
                      orig_publish_date: date)-> bool:
-    """Get if inspire is in affect for category and date."""
+    """Get if inspire is in effect for category and date."""
     return bool(category and
                 category.id in INSPIRE_REF_CIT_CATEGORIES
                 and orig_publish_date >=
