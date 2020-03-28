@@ -1,6 +1,7 @@
 {#- News blurbs appear at the top of the home page. Generally there should be no more than four items. -#}
-{%- set rd_int = request_datetime.strftime("%Y%m%d")|int -%}
+{%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
+{%- if rd_int >= 202003300900 -%}
 <div class="message-covid">
   <span class="label">COVID-19 Quick Links</span>
   <p>See COVID-19 SARS-CoV-2 preprints from</p>
@@ -8,10 +9,13 @@
     <li><a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv">arXiv</a></li>
     <li><a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv">medRxiv and bioRxiv</a></li>
   </ul>
-  <p>27 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/30/new-covid-19-quick-search/">arXiv announces new COVID-19 quick search</a><br/>
+  <p>30 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/30/new-covid-19-quick-search/">arXiv announces new COVID-19 quick search</a><br/>
   12 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/12/arxiv-responds-to-covid-19-uncertainties/">arXiv responds to COVID-19 uncertainties</a></p>
 </div>
-
-{%- if rd_int >= 20190923 and rd_int <= 20190927 -%}
+{% else %}
+16 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/16/arxiv-announces-its-first-executive-director/">arXiv announces its first executive director</a><br/>
+12 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/12/arxiv-responds-to-covid-19-uncertainties/">arXiv responds to COVID-19 uncertainties</a><br/>
+{%- endif -%}
+{%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}
 23 Sep 2019: Our giving campaign is this week. <a href="https://blogs.cornell.edu/arxiv/2019/09/19/donate-to-arxiv-4/">Support arXiv with a donation!</a><br/>
 {%- endif -%}
