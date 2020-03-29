@@ -480,6 +480,138 @@ footer .sorry-app-links .help {
 
 }
 
+/****************************************
+ * Home styles
+ *****************************************/
+.message-covid {
+  border: 2px solid #b31a1a;
+  border-radius: 10px;
+  background-color: #fef6f6;
+  padding: .5em 1em;
+  margin: 2em 0em 1em 0em;
+}
+.message-covid span.label {
+  display: block;
+  background-color: #b31a1a;
+  width: 160px;
+  text-align: center;
+  margin-top: -1.5em;
+  color: #ffffff;
+  padding: .25em 0;
+  font-size: 12px;
+}
+.message-covid ul {
+  margin-bottom: 2em;
+  margin-top: 0;
+}
+.message-covid p {
+  margin-bottom: .5em;
+}
+@media screen and (min-width: 501px) {
+  .message-covid {
+    padding: .5em 1em;
+    margin: 2em 4em 1em .25em;
+  }
+}
+
+/****************************************
+ * Stats pages (/stats)
+ ****************************************/
+ .main-stats img.stat-thumb {
+     max-width: 50%;
+     border-radius: 25%;
+     box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
+     border: 3px solid #e2ebf1;
+ }
+ .main-stats .column h3 a {
+   font-size: 14px;
+   color: #046baf;
+ }
+#chart_content {
+  background-color: #eef5f9;
+  text-align: center;
+  margin: 2em 0;
+  padding: 1em 0;
+  box-shadow: 0 0 3px 0 rgba(210, 210, 210, .5);
+}
+#chart_content .button {
+  color: #ffffff;
+  background-color: #1777bc;
+  border-color: #1777bc;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: .5em;
+  margin-right: 1em;
+}
+#chart_content p a, .chart_text p a {
+  color: #1777bc;
+}
+.columns.stats-header {
+  margin: .7em .7em 3em .7em;
+  font-size: 90% !important;
+}
+.columns.stats-header h1 {
+  margin-bottom: 0;
+}
+.column.stats-nav {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.column.stats-nav .mobile-button {
+  margin-bottom: .5em;
+  border: 1px solid #2c8cd1;
+  padding: .25em .5em;
+  border-radius: .35em;
+  color: #046baf;
+}
+.chart_text p {
+  margin: .25em 1em;
+  text-align: left;
+  font-size: .9em;
+}
+.chart_text ol {
+  margin: .5em 3.75em;
+}
+.chart_text.chart_notes p, .chart_text.chart_notes ol {
+  font-style: italic;
+  font-size: .9em;
+}
+#chart_content .chart_text {
+  max-width: 950px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+#chart_content .chart_text p {
+    margin: 0 0 1em 0;
+    padding: 1em;
+    font-size: 12px;
+    border-bottom: 1px solid #d6dce0;
+    margin-bottom: 1em;
+}
+.stats-nav .tabs {
+  align-items: flex-end;
+  height: 100%;
+}
+@media screen and (min-width: 769px) {
+  #chart_content .button {
+    margin-right: 0;
+  }
+  .main-stats img.stat-thumb {
+      max-width: 40%;
+  }
+  .main-stats {
+    max-width: 85%;
+    margin: 0 auto;
+  }
+}
+@media screen and (min-width: 550px) {
+  .chart_text p {
+    margin: .25em 5em;
+  }
+}
+
 /* Index page tagline */
 p.tagline {
   margin: 0;
