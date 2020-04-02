@@ -301,6 +301,18 @@ except Exception:
         warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
     BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
 
+BROWSE_STATUS_BANNER_ENABLED = bool(int(os.environ.get(
+    'BROWSE_STATUS_BANNER_ENABLED', '0')))
+"""Enable/disable status service banner."""
+
+BROWSE_STATUS_BANNER_SCRIPT_URL = os.environ.get(
+    'BROWSE_STATUS_BANNER_SCRIPT_URL',
+    'https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js')
+
+BROWSE_STATUS_BANNER_SITE_ID = os.environ.get(
+    'BROWSE_STATUS_BANNER_SITE_ID', 'foo')
+"""Enable/disable status service banner."""
+
 DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
     'DOCUMENT_LATEST_VERSIONS_PATH', 'tests/data/abs_files/ftp')
 """Paths to .abs and source files."""
