@@ -192,7 +192,9 @@
       </div>
     </div>
   </footer>
-
+  {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
+  <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
+  {%- endif %}
 </body>
 
 </html>
