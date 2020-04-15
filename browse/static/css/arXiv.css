@@ -5,7 +5,6 @@
 /****************************************
  *   General rules
  *****************************************/
-
 body {
   margin: 0;
   padding: 0;
@@ -659,39 +658,6 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
-@media screen and (max-width: 768px) {
-  #abs-outer a.mobile-submission-download {
-    display: flex;
-    justify-content: center;
-    margin: 1em .25em;
-    border-radius: 10px;
-    border: 2px solid #cecece;
-    background-color: #f2f2f2;
-    padding: 1em;
-    font-weight: 800;
-    color:black;
-    text-decoration: none;
-  }
-  #abs-outer .extra-services h2 {
-    font-size:15px;
-  }
-  #abs-outer .extra-services h3 {
-    font-size:14px;
-  }
-  #abs-outer .leftcolumn, #abs-outer .extra-services {
-    width:100%;
-    float:left;
-  }
-  #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite, #abs-outer .extra-services .bookmarks {
-    border:0px;
-    font-size:12px;
-  }
-  #abs-outer .extra-services {
-    border-top: .35em solid #ddd;
-    border-bottom: .35em solid #ddd;
-    margin:.5em 0 1em 0;
-  }
-}
 
 /* arXiv.org archive/subjclass info for abs pages... */
 #abs-outer .subheader {
@@ -815,11 +781,413 @@ div#long-author-list {
   font-style: italic;
   clear:both;
 }
+
+
+/*** mobile friendly abs page styles ***/
+#abs-outer .header-breadcrumbs-mobile {
+  display: none;
+}
+#abs-outer #abs .dateline {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+#abs-outer #abs h1.title {
+  margin-top: .25em;
+}
+.endorsers .help {
+  display: inline-block;
+}
 @media screen and (max-width: 768px) {
+  #abs-outer .header-breadcrumbs-mobile {
+    display: block;
+    color: black;
+    font-size: .85em;
+    margin: .25em 0 .5em 1em;
+  }
+  #abs-outer #abs a.mobile-submission-download {
+    display: flex;
+    justify-content: center;
+    margin: .7em .25em;
+    border-radius: 10px;
+    background-color: #408bd0;
+    padding: .25em 1em;
+    font-weight: 800;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    text-align: center;
+  }
+  #abs-outer #abs a.mobile-download-grey {
+    background-color: #eeeeee;
+    color: #565656;
+  }
+  #abs-outer .extra-services h2 {
+    font-size:15px;
+    margin-bottom: .5em;
+  }
+  #abs-outer .extra-services h3 {
+    font-size:14px;
+  }
+  #abs-outer .leftcolumn, #abs-outer .extra-services {
+    width:100%;
+    float:left;
+  }
+  #abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite {
+    border:0px;
+    font-size:12px;
+  }
+  #abs-outer .extra-services {
+    -webkit-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    -moz-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    background-color: #E6E6E6;
+    margin: 0;
+    padding: 1em 0;
+  }
+  #abs-outer .extra-ref-cite ul li {
+    float: left;
+    height: 50px;
+  }
+  #abs-outer .extra-ref-cite ul li .inspire-links {
+    font-size: 9px;
+  }
+  #abs-outer .extra-ref-cite ul li .inspire-links a {
+    color: #046baf;
+    text-decoration: underline;
+  }
+  #abs-outer .extra-services .full-text ul, #abs-outer .extra-services .extra-ref-cite ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #abs-outer .extra-services .full-text ul li, #abs-outer .extra-services .extra-ref-cite ul li {
+    display: inline-block;
+    margin: 0 0 .25em 0;
+    padding: 0;
+  }
+  #abs-outer .extra-services .bookmarks {
+    margin: 1em 0 0 0;
+    border-left: 0;
+    padding: .25em .5em 0 1em;
+    border-top: 2px solid #cccccc;
+    font-size: 1em;
+  }
+  #abs-outer .extra-services .bookmarks .abs-button-small {
+    margin-top: .25em;
+  }
+  #abs-outer .extra-services .browse {
+    margin-top: .5em;
+    border-top: 2px solid #cccccc;
+    padding-top: 1em;
+  }
+  #abs-outer .extra-services .prevnext {
+    margin-top: .5em;
+  }
+  #abs-outer .extra-services .browse .current {
+    color: #AB4B02;
+    display:inline;
+  }
+  .abs-switch-cat {
+    margin: 0 0 1em 0;
+  }
+  .browse .abs-switch-cat .switch {
+    display: inline;
+  }
+  .browse .abs-switch-cat .switch a {
+    font-weight: bold;
+  }
+  .browse .abs-switch-cat .switch .subclass {
+    padding: 0;
+    margin-left: -3px;
+  }
+  .abs-switch-cat .subclass:before {
+    content: ", ";
+  }
+  .abs-button {
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid #046BAF;
+    font-size: 1.25em;
+    color: #046BAF !important;
+    padding: .5em;
+    background: #E6E6E6;
+    margin-right: .3em;
+  }
+  .abs-button-small {
+    font-size: 1em;
+    padding: .25em 1em;
+    margin: .75em .5em 0 0;
+  }
+  .abs-button-grey {
+    border: 1px solid #666666;
+    color: #666666 !important;
+  }
+  #abs-outer .extra-services .bib-sidebar {
+    border: 0 !important;
+  }
+  #abs-outer .extra-services .bib-sidebar a {
+    display: inline-block;
+    border-radius: 5px;
+    background: #E6E6E6;
+    border: 1px solid #666666;
+    color: #666666 !important;
+    font-size: 1em !important;
+    padding: .25em 1em;
+    margin: 0 .5em 0 0;
+  }
+  #abs-outer .subheader {
+    background-color: #fefefe;
+    padding: .25em 0;
+    border-bottom: 1px solid #ccc;
+  }
+  #abs-outer .subheader h1 {
+    margin: 0;
+    font-size: .75em;
+    padding: .2em 0 .2em 1em;
+    font-weight: normal;
+    font-style: normal;
+    color: #b55c06;
+  }
+  #abs-outer #abs .dateline {
+    color: #767676;
+    font-size: .85em;
+    font-style: normal;
+    margin: 2em 0 0 1em;
+  }
+  #abs-outer .submission-history {
+    padding: 1em;
+    margin: 0;
+    background-color: #f5f5f5;
+    -webkit-box-shadow: inset 0px -6px 15px 0px rgba(219,219,219,1);
+    -moz-box-shadow: inset 0px -6px 15px 0px rgba(219,219,219,1);
+    box-shadow: inset 0px -6px 15px 0px rgba(219,219,219,1);
+  }
+  #abs-outer #abs h1.title {
+    margin: 0 .25em 0 .5em;
+    font-size: 1.5em;
+  }
+  #abs-outer #abs .authors {
+    margin: 1em .25em 0 1em;
+    font-size: .9em;
+    line-height: 1.5em;
+  }
+  #abs-outer #abs .authors a {
+    font-size: inherit;
+  }
+  #abs-outer #abs blockquote.abstract {
+    margin: 0 1em;
+  }
+  #abs-outer #abs .metatable {
+    margin: .75em 0 1.5em 1.5em;
+  }
+  #abs-outer #abs a, #abs-outer a, #abs-outer .endorsers a {
+  color: #1777bc;
+  }
+  #abs-outer .abs-license a, #abs-outer .submission-history a, #abs-outer .extra_services a, #abs-outer .extra_services .browse a, #abs-outer .abs-switch-cat .switch a, #abs-outer .extra-services .full-text .abs-license a {
+    color: #046BAF;
+  }
   #abs-outer .endorsers {
-    margin: 1em 0 .5em 20px;
+    display: block;
+    float: left;
+    border: 1px solid #eee;
+    padding: 1em;
+    margin: 1em;
+  }
+  #abs-outer .endorsers .help {
+    display:none;
   }
 }
+
+
+
+/*** styles for mobile-friendly header ***/
+.mobile-header .toggle-target {
+  max-height: 0;
+  visibility: hidden;
+}
+.mobile-header .toggle-target.open {
+  max-height: 500px;
+  visibility: visible;
+}
+.mobile-header {
+  background-color: #b31b1b;
+}
+.mobile-header .columns {
+  height: 65px;
+  align-items: center;
+}
+.mobile-header .column {
+  border-left: 1px solid #fc5554;
+  border-right: 1px solid #731515;
+  height: 65px;
+  padding: 0 1em;
+  display: flex;
+  align-items: center;
+}
+.mobile-header .column:first-child {
+  border-left: 0;
+}
+.mobile-header .column:last-child {
+  border-right: 0;
+}
+.mobile-header .column.logo-arxiv {
+  width: 100px;
+  flex: none;
+}
+.mobile-header .column.logo-arxiv img {
+  height: 25px;
+}
+.mobile-header .column.logo-cornell {
+  display: flex;
+}
+.mobile-header .column.logo-cornell img {
+  height:45px;
+}
+.mobile-header .column.nav {
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+.mobile-header #toggle-container button.toggle-control {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  font-size: 25px;
+  padding: 3px;
+  margin-left: .5em;
+}
+.mobile-header #toggle-container button.toggle-control svg.icon {
+  width: 1.25rem;
+  margin: 0;
+}
+.mobile-header .mobile-toggle-block {
+  margin: 0;
+  width: 100%;
+  flex: none;
+  transition: max-height 3s;
+  position: absolute;
+  top:64px;
+  left:0;
+  background-color: #b31a1a;
+  overflow: hidden;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form {
+  margin: .5em 1em 1em 1em;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input::-webkit-input-placeholder { /* Edge */
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input::placeholder {
+  color: #94908c;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form input {
+  width: calc(100% - 50px);
+  background: #fef6f6;
+  border-radius: 10px 0 0 10px;
+  border: 0;
+  padding: 5px;
+  color: black;
+  font-size: 1.5em;
+}
+.mobile-header .mobile-toggle-block form.mobile-search-form button.button {
+  width: 50px;
+  background: #fc5554;
+  border: 0;
+  border-left: 1px solid #b31b1b;
+  border-radius: 0 10px 10px 0;
+  padding: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fffaf4;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu {
+  padding: .75em 1em;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu h2 {
+  margin: 0;
+  font-size: 12px;
+  color: #fcd7d7;
+  text-transform: uppercase;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul {
+  list-style: none;
+  margin: .75em 0 0 0;
+  padding: 0;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul li {
+  display: inline-flex;
+  align-items: stretch;
+  padding:.1em .2em;
+  margin:0 0 .5em 0;
+  border-top: 2px solid #fc5554;
+  margin-right: .75em;
+}
+.mobile-header .mobile-toggle-block nav.mobile-menu ul li a {
+  color: #fef6f6;
+  font-weight: normal;
+  font-size: 12px;
+}
+@media screen and (min-width: 769px) {
+  .mobile-header {
+    display: none;
+  }
+}
+@media screen and (max-width: 425px) {
+  .mobile-header .column.logo-cornell {
+    /* display:none; */
+  }
+}
+@media screen and (min-width: 426px) {
+  .mobile-header .column.nav {
+    flex: none;
+    width: 100px;
+  }
+}
+/*special styles for phone header only */
+@media screen and (max-width: 500px) {
+  .mobile-header .columns {
+    height: 80px;
+  }
+  .mobile-header .column {
+    height: 80px;
+    padding: 0 .5em;
+  }
+  .mobile-header .column.logo-arxiv {
+    border-right: 0 !important;
+  }
+  .mobile-header .column.logo-cornell {
+    justify-content: flex-end;
+    border-left: 0 !important;
+  }
+  .mobile-header .column.logo-cornell img {
+    height: 73px;
+  }
+  .mobile-header .column.nav {
+    width: 65px;
+    flex: none;
+  }
+  .mobile-header .mobile-toggle-block {
+    top: 80px;
+  }
+}
+@media screen and (min-width: 501px) {
+  .mobile-header .column {
+    height: 65px;
+  }
+  .mobile-header .column.logo-cornell img {
+    height: 45px;
+  }
+  .mobile-header .column.nav {
+    width: 65px;
+  }
+}
+
+
+
+
+
 
 /* Floating box on right for links to extra services */
 .extra-services {
@@ -969,6 +1337,7 @@ div#long-dc-list {
 }
 
 .bookmarks {
+  clear: both;
   margin: 0;
   padding: 0 1em .5em 1em;
   font-size: 90%;
@@ -1792,6 +2161,9 @@ svg.icon {
 }
 .icon.filter-black {
   fill: #000000;
+}
+.icon.filter-light_grey {
+  fill: #bfbfbf;
 }
 .icon.filter-grey {
   fill: #f5f5f5;
