@@ -59,16 +59,18 @@
     {% if browse_context_previous_url -%}
     <span class="arrow">
       <a class="abs-button" href="{{browse_context_previous_url }}"
-         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev article</a>
+         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
     </span>
+    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
     {%- else -%}
     <span class="nolink" class="abs-button">&lt;&nbsp;previous article</span>
+    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
     {% endif -%}
 
     {% if browse_context_next_url %}
     <span class="arrow">
       <a class="abs-button" href="{{browse_context_next_url}}" accesskey="n"
-         title="next in {{ browse_context }} (accesskey n)">next article&nbsp;&gt;</a>
+         title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
     </span>
     {%- else -%}
     <span class="abs-button" class="nolink">next article&nbsp;&gt;</span>
@@ -80,7 +82,9 @@
   {#- This fixes a bug in the classic UI logic -#}
   <div class="list">
     <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>
+    <span class="is-hidden-mobile"> | </span>
     <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
+    <span class="is-hidden-mobile"> | </span>
     <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
       {{- abs_meta.arxiv_identifier.yymm -}}</a>
   </div>
@@ -93,9 +97,9 @@
       {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
         {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
         {% if '.' in category %}
-        <a class="subclass" href="{{ switch_url}}">{{ category }}</a>
+        <a class="subclass" href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
         {% else %}
-        <a href="{{ switch_url}}">{{ category }}</a>
+        <a href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
         {% endif %}
       {% endfor %}
     </div>
