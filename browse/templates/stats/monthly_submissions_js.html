@@ -2,68 +2,82 @@
   svg {
     font: 10px sans-serif;
   }
-
   .axis path {
     fill: none;
   }
-
   .axis line {
     stroke: #000;
   }
-
   .axis .minor line {
     stroke: #777;
     stroke-dasharray: 2, 2;
   }
-
   .x.axis line {
     stroke: lightgrey;
   }
-
   .x.axis .minor {
     stroke-opacity: .5;
   }
-
   .y.axis line {
     stroke: lightgrey;
     stroke-dasharray: 2, 2;
   }
-
   .y.axis .minor {
     stroke-opacity: .5;
   }
-
   .line {
     fill: none;
-    stroke: steelblue;
+    stroke: #d9af0c;/*medium yellow*/
     stroke-width: 1.5px;
   }
-
   .overlay {
     fill: none;
     pointer-events: all;
   }
-
   .focus circle {
     fill: none;
-    stroke: red;
+    stroke: #994d04;/*darkest orange*/
   }
-
+  .focus {
+    color: red;
+  }
   .area {
-    fill: lightsteelblue;
     stroke-width: 0;
   }
 </style>
 
 <script type="text/javascript">
+  //responsive widths and heights, tablet breakpoint:
+  var startWidth = 960;
+  var startHeight = 550;
+  function responsiveWidth(x) {
+      if (x.matches) { // If media query matches
+        startWidth = 750;
+      }
+      return startWidth;
+    }
+  function responsiveHeight(x) {
+        if (x.matches) { // If media query matches
+          startHeight = 350;
+        }
+        return startHeight;
+      }
+  var x = window.matchMedia("(max-width: 768px)");
+  responsiveWidth(x); // Call listener function at run time
+  responsiveHeight(x); // Call listener function at run time
+  x.addListener(responsiveWidth); // Attach listener function on state changes
+  x.addListener(responsiveHeight); // Attach listener function on state changes
+  var calcWidth = responsiveWidth(startWidth);
+  var calcHeight = responsiveHeight(startHeight);
+  //set margin, width, and height vars
   var margin = {
-      top: 20,
-      right: 150,
+      top: 30,
       bottom: 30,
-      left: 50
+      right: 70,
+      left: 70
     },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = calcWidth - margin.left - margin.right,
+    height = calcHeight - margin.top - margin.bottom;
 
   var parseDate = d3.time.format("%Y-%m").parse,
     bisectDate = d3.bisector(function(d) {
@@ -103,9 +117,10 @@
       return y(d.submissions);
     });
 
-  var svg = d3.select("div#content").append("svg:svg")
+  var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("id", "chart")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -153,7 +168,8 @@
     svg.append("path")
       .datum(data)
       .attr("class", "area")
-      .attr("d", area);
+      .attr("d", area)
+      .attr("fill", "url(#gradientFill)");
 
     svg.append("path")
       .datum(data)
@@ -168,9 +184,10 @@
       .attr("r", 4.5);
 
     focus.append("text")
-      .attr("x", 9)
-      .attr("font-size", 13)
-      .attr("dy", ".45em");
+      .attr("x", -65)
+      .attr("font-size", 12)
+      .attr("dy", "-.8em")
+      .attr("color", "red");
 
     svg.append("rect")
       .attr("class", "overlay")
@@ -196,4 +213,8 @@
       focus.select("text").text(subText);
     }
   });
+  document.getElementById("chart").insertAdjacentHTML("afterbegin","<defs><linearGradient id='gradientFill' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='45%' style='stop-color:rgb(255,204,0);stop-opacity:1' /><stop offset='100%' style='stop-color:rgb(181,92,6);stop-opacity:1' /></linearGradient></defs>");
+
+    //
+
 </script>

@@ -1,21 +1,35 @@
 {%- extends "stats/base.html" -%}
-
+{% set pagename = 'Monthly Downloads' %}
 {% block title %}Monthly Download Rates{% endblock %}
 {% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; stats &gt; monthly downloads</h1>{% endblock %}
 
+{% block content_stats %}
+  {{ super() }}
+  <div class="chart_text">
+    <p>The charts below display the number of downloads per month. Click and drag in the small graph to pan or zoom in on a section.</p>
+    <p></p>
+  </div>
+  <div id="chart_content">
+    <div class="chart_text">
+      <a class="button is-pulled-right" title="download monthly download CSV data" href="{{ url_for('browse.stats', command='get_monthly_downloads') }}">Download CSV</a>
+      <p>Total number of downloads {% if most_recent_dt %}through {{ most_recent_dt.strftime('%B %Y') }}{% endif %} = {{ "{:,}".format(total_downloads) }}</p>
+    </div>
+    {% include "stats/monthly_downloads_js.html" %}
+  </div>
+  <div class="chart_text chart_notes">
+    <p><strong>Caveats:</strong> While we have attempted to extract download data representing unique full-text downloads by real users, there are many factors which affect accuracy.
+    These factors include:</p>
+    <ol>
+      <li>the data is from the main arXiv site and the arXiv mirrors, though some mirror data is incomplete.</li>
+      <li>only web downloads are included (and not FTP or email &quot;downloads&quot; that were formerly supported).</li>
+      <li>we have counted downloads according to the COUNTER algorithm which excludes rapid repeat downloads.</li>
+      <li>we have attempted to identify and remove robot or automated downloads from the count (false positives lead to undercounting, failing to identify robots leads to overcounting).</li>
+      <lidata prior to 2009 has not been cleaned with as much care as later data, but it shows trends nonetheless.</li>
+    </ol>
+  </div>
+{% endblock content_stats %}
+
+
 {% block content %}
-<h2>arXiv Monthly Download Rates [<a title="download monthly download CSV data" href="{{ url_for('browse.stats', command='get_monthly_downloads') }}">CSV</a>]</h2>
-
-{% include "stats/monthly_downloads_js.html" %}
-
-<p><b style="color:steelblue">Blue</b>: Number of downloads per month.<br />Click and drag in the small graph below to pan or zoom.</p>
-<p>Total number of downloads {% if most_recent_dt %}through {{ most_recent_dt.strftime('%B %Y') }}{% endif %} = {{ "{:,}".format(total_downloads) }}</p>
-<p>
-  <strong>Caveats:</strong> While we have attempted to extract download data representing unique full-text downloads by real users, there are many factors which affect accuracy. These factors include: 1) the data is from the main arXiv site and the
-  arXiv mirrors, though some mirror data is incomplete; 2) only web downloads are included (and not FTP or email &quot;downloads&quot; that were formerly supported); 3) we have counted downloads according to the COUNTER algorithm which excludes
-  rapid repeat downloads; 4) we have attempted to identify and remove robot or automated downloads from the count (false positives lead to undercounting, failing to identify robots leads to overcounting); 5) data prior to 2009 has not been cleaned
-  with as much care as later data, it shows trends nonetheless.
-</p>
-
 {{ super() }}
 {% endblock content %}

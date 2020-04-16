@@ -1,20 +1,42 @@
 <style type="text/css">
   svg {
     width: 1000;
-    height: 300px;
-
     font: 10px sans-serif;
     shape-rendering: crispEdges;
   }
 </style>
 <script type="text/javascript">
+  //responsive widths and heights, tablet breakpoint:
+  var startWidth = 960;
+  var startHeight = 300;
+  function responsiveWidth(scrn) {
+      if (scrn.matches) { // If media query matches
+        startWidth = 750;
+      }
+      return startWidth;
+    }
+  function responsiveHeight(scrn) {
+        if (scrn.matches) { // If media query matches
+          startHeight = 200;
+        }
+        return startHeight;
+      }
+  var scrn = window.matchMedia("(max-width: 768px)");
+  responsiveWidth(scrn); // Call listener function at run time
+  responsiveHeight(scrn); // Call listener function at run time
+  scrn.addListener(responsiveWidth); // Attach listener function on state changes
+  scrn.addListener(responsiveHeight); // Attach listener function on state changes
+  var calcWidth = responsiveWidth(startWidth);
+  var calcHeight = responsiveHeight(startHeight);
+  //set margin, width, and height vars
   var n = {{ num_nodes }}, // number of layers (nodes)
-    w = 960,
-    h = 300,
+    w = calcWidth,
+    h = calcHeight,
     p = [20, 50, 30, 20],
     x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
     y = d3.scale.linear().range([0, h - p[0] - p[2]]),
-    z = d3.scale.linear().domain([0, n - 1]).range(["#aad", "#556"]),
+    z = d3.scale.linear().domain([0, n - 1]).range(["#b55c06", "#ffcc00"]),
+    //z = d3.scale.linear().domain([0, n - 1]).range(["#1c8bd6", "#005e9d"]),
     parse = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse,
     format = d3.time.format("%H");
 
@@ -23,7 +45,7 @@
     node_header.push("node"+i);
   }
 
-  var svg = d3.select("div#content").append("svg:svg")
+  var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", w)
     .attr("height", h)
     .append("svg:g")
@@ -93,7 +115,7 @@
       .attr("text-anchor", "middle")
       .attr("x", w / 2)
       .attr("y", 25).
-    attr("fill", "red")
+    attr("fill", "black")
       .text("Hour");
 
     // Add y-axis rules.
@@ -117,7 +139,7 @@
       .attr("x", -h / 8)
       .attr("y", 28 - w)
       .style("text-anchor", "middle")
-      .attr("fill", "red")
+      .attr("fill", "black")
       .attr("font-size", "9")
       .text("Connections");
 

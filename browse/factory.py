@@ -20,7 +20,7 @@ s3 = FlaskS3()
 def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
     app = Flask('browse', static_url_path=f'/static/browse/{APP_VERSION}')
-    app.config.from_pyfile('config.py')  # type: ignore
+    app.config.from_pyfile('config.py')
 
     # TODO Only needed until this route is added to arxiv-base
     if 'URLS' not in app.config:

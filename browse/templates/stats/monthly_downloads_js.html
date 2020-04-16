@@ -1,57 +1,80 @@
 <style>
-  svg {
-  font: 10px sans-serif;
+  #chart_content svg {
+    font: 10px sans-serif;
   }
-  path {
-  fill: steelblue;
+  #chart_content path {
+    stroke: #b18e0f;/*dark yellow*/
   }
-
-  .axis path,
-  .axis line {
+  #chart_content .axis path,
+  #chart_content .axis line,
+  #chart_content .small-chart .axis path,
+  #chart_content .small-chart .axis line {
     fill: none;
-    stroke: lightgrey;
+    stroke: lightgrey;/*warm grey*/
     shape-rendering: auto;
   }
-
+  #chart_content .small-chart path {
+    fill: #ffcc00;/*middle orange*/
+    stroke: #b55c06;/*dark orange*/
+  }
   .axis .minor line {
-    stroke: #777;
+    stroke: none;
     stroke-dasharray: 2,2;
   }
-
   .x.axis .minor {
     stroke-opacity: .5;
   }
-
   .y.axis line {
-    stroke: lightgrey;
+    stroke: lightgrey;/*warm grey*/
     stroke-dasharray: 1,1;
   }
-
   .y.axis .minor {
     stroke-opacity: .5;
   }
-
   .brush .extent {
-    stroke: #fff;
+    stroke: #b18e0f;/*dark yellow*/
     fill-opacity: .125;
     shape-rendering: auto;
   }
 </style>
 <script type="text/javascript">
+  //responsive widths and heights, tablet breakpoint:
+  var startWidth = 960;
+  var startHeight = 500;
+  function responsiveWidth(scrn) {
+      if (scrn.matches) { // If media query matches
+        startWidth = 750;
+      }
+      return startWidth;
+    }
+  function responsiveHeight(scrn) {
+        if (scrn.matches) { // If media query matches
+          startHeight = 500;
+        }
+        return startHeight;
+      }
+  var scrn = window.matchMedia("(max-width: 768px)");
+  responsiveWidth(scrn); // Call listener function at run time
+  responsiveHeight(scrn); // Call listener function at run time
+  scrn.addListener(responsiveWidth); // Attach listener function on state changes
+  scrn.addListener(responsiveHeight); // Attach listener function on state changes
+  var calcWidth = responsiveWidth(startWidth);
+  var calcHeight = responsiveHeight(startHeight);
+  //set margin, width, and height vars
   var margin = {
       top: 10,
       right: 10,
       bottom: 100,
-      left: 55
+      left: 65
     },
     margin2 = {
       top: 430,
       right: 10,
       bottom: 20,
-      left: 55
+      left: 65
     },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom,
+    width = calcWidth - margin.left - margin.right,
+    height = calcHeight - margin.top - margin.bottom,
     height2 = 500 - margin2.top - margin2.bottom;
 
   var parseDate = d3.time.format("%Y-%m").parse;
@@ -89,9 +112,10 @@
       return y2(d.downloads);
     });
 
-  var svg = d3.select("div#content").append("svg:svg")
+  var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("id", "chart");
 
   svg.append("defs").append("clipPath")
     .attr("id", "clip")
@@ -103,7 +127,8 @@
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var context = svg.append("g")
-    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")")
+    .attr("class", "small-chart");
 
   d3.csv("{{ url_for('browse.stats', command='get_monthly_downloads') }}", function(error, data) {
 
@@ -124,6 +149,7 @@
     focus.append("path")
       .datum(data)
       .attr("clip-path", "url(#clip)")
+      .attr("fill", "url(#gradientFill)")
       .attr("d", area);
 
     focus.append("g")
@@ -157,4 +183,5 @@
     focus.select("path").attr("d", area);
     focus.select(".x.axis").call(xAxis);
   }
+  document.getElementById("chart").insertAdjacentHTML("afterbegin","<defs><linearGradient id='gradientFill' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='45%' style='stop-color:rgb(255,204,0);stop-opacity:1' /><stop offset='100%' style='stop-color:rgb(181,92,6);stop-opacity:1' /></linearGradient></defs>");
 </script>

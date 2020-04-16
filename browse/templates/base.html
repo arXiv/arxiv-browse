@@ -11,6 +11,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200330" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20190330" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
+  <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   <!-- Matomo -->
   <script type="text/javascript">
@@ -47,7 +48,8 @@
 
   <header>
     <a href="#content" class="is-sr-only">Skip to main content</a>
-    <div id="cu-identity">
+    <!-- start desktop header -->
+    <div id="cu-identity" class="is-hidden-mobile">
       <div id="cu-logo">
         <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
       </div>
@@ -55,8 +57,7 @@
         <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
       </div>
     </div>
-
-    <div id="header" {% block header_class %}{% endblock %}>
+    <div id="header" class="is-hidden-mobile">
       {% block header %}
       {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
       <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
@@ -64,10 +65,58 @@
       {% block login_link %}{% endblock %}
       {{ base_macros.compactsearch() }}
      {% endblock header %}
-    </div>
+   </div><!-- /end desktop header -->
+
+    <div class="mobile-header">
+      <div class="columns is-mobile">
+        <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo.png') }}" alt="arXiv" /></a></div>
+        <div class="column logo-cornell"><a href="https://www.cornell.edu/">
+          <picture>
+            <source media="(min-width: 501px)"
+              srcset="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}  400w"
+              sizes="400w" />
+            <source srcset="{{ url_for('static', filename='images/icons/cu/cornell_seal_simple_black.svg') }} 2x" />
+            <img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University Logo" />
+          </picture>
+        </a></div>
+        <div class="column nav" id="toggle-container" role="menubar">
+          <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white"><title>open search</title><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+          <div class="mobile-toggle-block toggle-target">
+            <form class="mobile-search-form" method="GET" action="{{ url_for('search_box') }}">
+              <div class="field has-addons">
+                <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+                <input type="hidden" name="source" value="header">
+                <input type="hidden" name="searchtype" value="all">
+                <button class="button">GO</button>
+              </div>
+            </form>
+          </div>
+
+          <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="menu"><title>open navigation menu</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
+          <div class="mobile-toggle-block toggle-target">
+            <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
+              <h2 id="mobilemenulabel">quick links</h2>
+              <ul>
+                  {% if request.auth is defined and request.auth.user is defined %}
+                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a></li>
+                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user/create">Start Submission</a></li>
+                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a></li>
+                  {% else %}
+                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a></li>
+                  {% endif %}
+                  <li><a href="{{ url_for('help') }}">Help Pages</a></li>
+                  <li><a href="{{ url_for('about') }}">About</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div><!-- /end mobile-header -->
   </header>
 
   <main>
+    {% block content_stats %}
+    {% endblock content_stats %}
     <div id="content">
       {% block content %}
       {% endblock content %}
@@ -143,7 +192,9 @@
       </div>
     </div>
   </footer>
-
+  {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
+  <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
+  {%- endif %}
 </body>
 
 </html>

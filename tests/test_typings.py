@@ -11,7 +11,6 @@ from unittest import TestCase
 class MyPyTest(TestCase):
     """Class for testing modules with mypy."""
 
-    @unittest.skip("Type checkes skipped due to failing with out of memory on travis")
     def test_run_mypy_module(self) -> None:
         """Run mypy on all module sources."""
         mypy_call: List[str] = ["mypy"] + self.mypy_opts + ["-p", self.pkgname]
@@ -19,7 +18,6 @@ class MyPyTest(TestCase):
             mypy_call, env=os.environ, cwd=self.pypath)
         self.assertEqual(result, 0, f'mypy on {self.pkgname}')
 
-    @unittest.skip("Type checkes skipped due to failing with out of memory on travis")
     def test_run_mypy_tests(self) -> None:
         """Run mypy on all tests in module under the tests directory."""
 

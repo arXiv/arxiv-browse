@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
 
 from browse.services.database.models import TrackbackPing
+from browse.services.database import get_sequential_id
 from browse.domain.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
@@ -273,6 +274,14 @@ class TestBrowseDatabaseService(TestCase):
             SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_listing_path, 'px')
         self.assertRaises(
             SQLAlchemyError, TestBrowseDatabaseService.database_service.get_dblp_authors, 'authx')
+
+
+    def test_sequential_id(self) -> None:
+        self.assertEqual(get_sequential_id(''), None)
+        self.assertEqual(get_sequential_id(Identifier('0906.3421'),is_next=True), '0906.4150')
+        self.assertTrue(get_sequential_id(Identifier('0906.9150'),is_next=True).startswith('0907'))
+        self.assertEqual(get_sequential_id(Identifier('0906.3421'),is_next=False), '0906.3336')
+        self.assertTrue(get_sequential_id(Identifier('0907.2020'),is_next=False).startswith('0906'))
 
     @classmethod
     def tearDownClass(cls) -> None:
