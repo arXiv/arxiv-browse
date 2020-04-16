@@ -32,11 +32,11 @@ class BrowseLinksTest(unittest.TestCase):
 
         pn_div = html.find('div', 'prevnext')
         self.assertIsNotNone(pn_div, 'Should have div.prevnext')
-        self.assertEqual(pn_div.find_all('span')[0].a['title'],
+        self.assertEqual(pn_div.find_all('span', 'arrow')[0].a['title'],
                          'previous in cs.MM (accesskey p)',
                          'Should have previous span.arrow subtags with correct category')
 
-        self.assertEqual(pn_div.find_all('span')[1].a['title'],
+        self.assertEqual(pn_div.find_all('span', 'arrow')[1].a['title'],
                          'next in cs.MM (accesskey n)',
                          'Should have next span.arrow subtags with correct category')
 
@@ -86,7 +86,7 @@ class BrowseLinksTest(unittest.TestCase):
 
         atags = pn_div.find_all('a')
         self.assertTrue(len(atags) >= 1, 'Shold be at least one <a> tags for prev/next')
-        
+
         self.assertEqual(pn_div.find_all('a')[0]['title'],
                          'previous in math-ph (accesskey p)',
                          'Should have previous span.arrow subtags with correct category')
