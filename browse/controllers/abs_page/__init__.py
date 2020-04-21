@@ -173,6 +173,8 @@ def _non_critical_abs_data(abs_meta: DocMetadata,
                    abs_meta.primary_category,
                    response_data)
 
+    response_data['is_covid_match'] = _is_covid_match(abs_meta)
+
 
 def _check_request_headers(docmeta: DocMetadata,
                            response_data: Dict[str, Any],
@@ -321,6 +323,15 @@ def _check_context(arxiv_identifier: Identifier,
 
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
+
+
+def _is_covid_match(docmeta: DocMetadata) -> bool:
+    """Check whether paper is about COVID-19."""
+    for field in (docmeta.title, docmeta.abstract):
+        if re.search(r'(covid[-\s]?19|coronavirus|sars[-\s]cov[-\s]?2)',
+                     field, flags=re.I | re.M):
+            return True
+    return False
 
 
 def _check_sciencewise_ping(paper_id_v: str) -> bool:

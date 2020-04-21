@@ -1,0 +1,43 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2004.09471
+From: Markus Kantner <covid19@example.org>
+Date: Mon, 20 Apr 2020 17:47:55 GMT   (3340kb,D)
+
+Title: Beyond just "flattening the curve": Optimal control of epidemics with
+  purely non-pharmaceutical interventions
+Authors: Markus Kantner
+Categories: q-bio.PE math.DS math.OC physics.soc-ph
+Comments: Keywords: Mathematical epidemiology, optimal control,
+  non-pharmaceutical interventions, effective reproduction number, dynamical
+  systems, COVID-19, SARS-CoV2
+MSC-class: 92D30, 37N25, 37N40, 93C10, 49N90, 34B15, 34B60
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  When effective medical treatment and vaccination are not available,
+non-pharmaceutical interventions such as social distancing, home quarantine and
+far-reaching shutdown of public life are the only available strategies to
+prevent the spreading of epidemics. Based on an extended SEIR model and
+continuous-time optimal control theory, in this paper the optimal
+non-pharmaceutical intervention strategy is presented for the case that a
+vaccine is never found. In this case, the optimal control must meet two
+competing requirements: First, the minimization of disease-related deaths, and,
+second, the establishment of a sufficient degree of herd immunity at the end of
+the measures, in order to exclude a second wave. The presented control strategy
+is a single-intervention scenario that goes beyond heuristically motivated
+interventions and simple "flattening of the curve". The characteristic time
+course of the computed optimal control is the following: After an intense but
+short initial lockdown, a dynamical equilibrium is enforced during which the
+number of actively infected is held on a constant level for a longer period of
+time. At the same time, the measures can be gradually relaxed with an ever
+increasing speed. Two simple rules for the optimal control of the effective
+reproduction number are presented, see Eqs. (13)-(14), which ensure a stable
+route out of the initial lockdown. The rules are directly applicable in
+practice, as they only depend on a precise knowledge of the cumulative number
+of cases and a reliable estimate of the effective reproduction number. The
+obtained results could serve as a guideline for the implementation and gradual
+relaxation of non-pharmaceutical intervention measures also in other scenarios,
+e.g., when the development of a vaccine is expected soon. The model system is
+calibrated to reproduce the initial exponential growth phase of the COVID-19
+epidemic in Germany.
+\\

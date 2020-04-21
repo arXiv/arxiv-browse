@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2004.05256
+From: Hao Tian <covid19@example.org>
+Date: Fri, 10 Apr 2020 23:27:55 GMT   (3203kb,D)
+
+Title: Deciphering the Protein Motion of S1 Subunit in SARS-CoV-2 Spike
+  Glycoprotein Through Integrated Computational Methods
+Authors: Hao Tian and Peng Tao
+Categories: q-bio.BM q-bio.QM
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The novel severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) is a
+major worldwide public health emergency that has infected over $1.5$ million
+people. The partially open state of S1 subunit in spike glycoprotein is
+considered vital for its infection with host cell and is represented as a key
+target for neutralizing antibodies. However, the mechanism elucidating the
+transition from the closed state to the partially open state still remains
+unclear. Here, we applied a combination of Markov state model, transition path
+theory and random forest to analyze the S1 motion. Our results explored a
+promising complete conformational movement of receptor-binding domain, from
+buried, partially open, to detached states. We also numerically confirmed the
+transition probability between those states. Based on the asymmetry in both the
+dynamics behavior and backbone C$\alpha$ importance, we further suggested a
+relation between chains in the trimer spike protein, which may help in the
+vaccine design and antibody neutralization.
+\\
