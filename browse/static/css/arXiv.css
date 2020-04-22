@@ -601,11 +601,65 @@ footer .sorry-app-links .help {
   }
 }
 
-/* Index page tagline */
+/* Index page tagline and call to action */
+.tagline-wrapper {
+    float:left;
+    width:68%;
+}
 p.tagline {
   margin: 0;
   padding: 0 0 0.3em 0;
 }
+/* call to action near tagline */
+.tagline-cta {
+    float:right;
+    width:30%;
+    margin-bottom:2em;
+    transition: background-color 0.35s ease;
+    background-color: #ffcc00;
+    border-radius:30px;
+    height:60px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(177,142,15,0.25);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(177,142,15,0.25);
+    box-shadow: 2px 2px 5px 0px rgba(177,142,15,0.25);
+}
+.tagline-cta:hover {
+    background-color: #d9af0c;
+    text-decoration: none;
+}
+.tagline-cta:hover p {
+    color: #ffffff;
+}
+.tagline-cta p {
+    margin:0 1em;
+    font-size: 12px;
+    transition: color 0.35s ease;
+    color: #8A4504;
+}
+.tagline-cta .cta-logo {
+  border-right: 1px solid white;
+  display: flex;
+  align-items: center;
+}
+.tagline-cta .cta-logo img {
+    float:left;
+    max-height: 25px;
+    margin-left: 1em;
+    margin-right: .2em;
+}
+.home-search {
+  clear:both;
+}
+@media screen and (max-width: 768px) {
+  .tagline-cta, .tagline-wrapper {
+    width: 100%;
+  }
+}
+
+
 
 /****************************************
  * Auth pages (/auth)
