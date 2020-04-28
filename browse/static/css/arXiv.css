@@ -713,6 +713,131 @@ p.tagline {
   border-left: .35em solid #ddd !important;
 }
 
+/*LABS management and display on abs*/
+.labs-toggle {
+  border-top: medium solid #ddd;
+  border-left: .35em solid #ddd;
+}
+.labs-toggle img {
+  width: 90px;
+  margin: .5rem 0 .8rem .75rem;
+}
+.labs-toggle .lab-switch label.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+/* Hide default HTML checkbox */
+.labs-toggle .lab-switch .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* The slider element */
+.labs-toggle .lab-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.labs-toggle .lab-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.labs-toggle .lab-switch input.enabled + .slider {
+  background-color: #009917;
+}
+.labs-toggle .lab-switch input.enabled + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+.labs-toggle .lab-switch input.enabled + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(86px);
+  transform: translateX(18px);
+}
+.labs-toggle .column.lab-name, .column.lab-switch {
+  padding-top: 0;
+}
+.labs-toggle .column.lab-switch {
+  padding-left: 0;
+  padding-right: 3px;
+}
+.labs-toggle .column.lab-name {
+  font-size: 12px;
+}
+.labs-toggle .column.lab-name a {
+  font-size: 11px;
+}
+.labs-toggle .labs-cta {
+  font-size: 11px;
+  padding:.75rem;
+}
+.labs-display {
+  margin: 1em;
+}
+.labs-header {
+  border-top: 2px solid #cecece;
+  padding: 0;
+  margin: 0 0 2em 0;
+}
+.labs-header img {
+  border: 1px solid #cecece;
+  border-top: 0;
+  padding: .25em;
+  margin: 0 .75em 0 0;
+  width: 80px;
+  float:left;
+}
+.labs-header a {
+  font-size: 10px;
+  color: grey;
+  line-height: 25px;
+}
+@media screen and (max-width: 768px) {
+  .labs-toggle {
+    margin: 1em 0 0 0;
+    border-left: 0;
+    padding: .25em .5em 0 1em;
+    border-top: 2px solid #cccccc;
+    font-size: 1em;
+  }
+  .labs-toggle .column.is-narrow-mobile {
+    flex: none;
+  }
+  .labs-toggle .columns.lab-row {
+    flex-direction: row-reverse;
+  }
+  .labs-toggle img {
+    width: 110px;
+    margin-left: 0;
+  }
+  .labs-toggle .labs-cta {
+    padding-left: 0;
+  }
+}
+@media screen and (min-width: 769px) {
+  .labs-toggle .column.is-one-fifth-desktop {
+    flex: none;
+    width: 20%;
+  }
+}
+
+
 /* arXiv.org archive/subjclass info for abs pages... */
 #abs-outer .subheader {
   background-color: #eee;
