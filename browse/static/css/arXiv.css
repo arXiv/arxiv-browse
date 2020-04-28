@@ -2077,10 +2077,10 @@ body#front.with-cu-identity #header #search {
 }
 .large-data-list h4 {
   margin:1em 1em 1em 0;
-  font-size: .9em;
+  font-size: 1.1em;
 }
 .large-data-list h4 span {
-  font-size: .8em;
+  font-size: .7em;
   font-weight: normal;
 }
 .large-data-list .physics {
