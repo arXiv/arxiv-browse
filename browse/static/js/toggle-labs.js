@@ -22,7 +22,6 @@ $(document).ready(function() {
       bibex_val = true;
     }
     if ( $(this).attr("id") == "bibex-toggle" ) {
-      alert($(this).attr("id"));
       bibexCookie[bibex_key] = bibex_val;
       Cookies.set("arxiv_bibex", bibexCookie);
     }
