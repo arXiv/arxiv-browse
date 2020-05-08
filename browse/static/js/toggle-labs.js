@@ -1,17 +1,33 @@
 // vanilla toggle script for LABS enabling
-document.addEventListener("DOMContentLoaded", function() {
-  Array.prototype.forEach.call(
-    document.querySelectorAll('.lab-toggle'),
-      function(element) {
-          element.onclick = enableSwitch;
+$(document).ready(function() {
+  var labsCookie = Cookies.getJSON("arxiv_labs");
+  if ( labsCookie ) {
+    for ( var key in labsCookie ) {
+      if ( labsCookie[key] == "enabled" ) {
+        $("#"+key+".lab-toggle").toggleClass("enabled", true);
       }
-  );
-  function enableSwitch(element){
-   element = this;
-    if( element.classList.contains('enabled') ){
-    element.classList.remove('enabled');
-  } else {
-   element.classList.add('enabled');
     }
   }
+
+  $(".lab-toggle").on("click", function() {
+    var labsCookie = Cookies.getJSON("arxiv_labs");
+    var bibexCookie = Cookies.getJSON("arxiv_bibex");
+
+    var cookie_val = "disabled";
+    var bibex_key = "active";
+    var bibex_val = false;
+    $(this).toggleClass("enabled");
+    if ( $(this).hasClass("enabled") ) {
+      cookie_val = "enabled";
+      bibex_val = true;
+    }
+    if ( $(this).attr("id") == "bibex-toggle" ) {
+      alert($(this).attr("id"));
+      bibexCookie[bibex_key] = bibex_val;
+      Cookies.set("arxiv_bibex", bibexCookie);
+    }
+
+    labsCookie[$(this).attr("id")] = cookie_val;
+    Cookies.set("arxiv_labs", labsCookie);
+  });
 });
