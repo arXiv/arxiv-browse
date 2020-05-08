@@ -218,8 +218,9 @@
     {%- endif -%}
 
     {% include "abs/bookmarking.html" %}
-
+    {%- if config['LABS_ENABLED'] -%}
     {% include "abs/labs-toggle.html" %}
+    {%- endif %}
   </div>
   <!--end extra-services-->
 {% endblock extra_services %}
