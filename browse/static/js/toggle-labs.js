@@ -3,14 +3,17 @@ $(document).ready(function() {
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if ( labsCookie ) {
     for ( var key in labsCookie ) {
-      if ( labsCookie[key] == "enabled" ) {
+      if ( labsCookie[key] && labsCookie[key] == "enabled" ) {
         $("#"+key+".lab-toggle").toggleClass("enabled", true);
       }
     }
   }
+  else {
+    Cookies.set("arxiv_labs", {});
+  }
 
   $(".lab-toggle").on("click", function() {
-    var labsCookie = Cookies.getJSON("arxiv_labs");
+    var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     var bibexCookie = Cookies.getJSON("arxiv_bibex");
 
     var cookie_val = "disabled";
@@ -28,5 +31,7 @@ $(document).ready(function() {
 
     labsCookie[$(this).attr("id")] = cookie_val;
     Cookies.set("arxiv_labs", labsCookie);
+    // TODO: do this without a reload
+    location.reload();
   });
 });
