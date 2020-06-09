@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 202/06/09 $
+ *  $Date: 2020/06/09 $
  *****************************************/
 /****************************************
  *   General rules
@@ -515,7 +515,6 @@ footer .sorry-app-links .help {
 }
 @media screen and (min-width: 768px) {
   .message-special {
-
     padding: .5em 1em;
     width: 44%;
     float: left;
