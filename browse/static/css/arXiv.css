@@ -496,6 +496,9 @@ footer .sorry-app-links .help {
 .message-covid p {
   margin-bottom: .5em;
 }
+.homepage-news-title {
+  margin-bottom: .25em;
+}
 @media screen and (min-width: 501px) {
   .message-covid {
     padding: .5em 1em;
