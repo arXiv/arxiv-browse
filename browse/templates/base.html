@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  {%- if 0 -%}
   <!-- Matomo -->
   <script type="text/javascript">
    var _paq = window._paq || [];
@@ -29,7 +30,7 @@
    })();
   </script>
   <!-- End Matomo Code -->
-  {% endif -%}
+  {%- endif -%}
   <!-- Pendo trial -->
   <script>
    (function(apiKey){
@@ -68,6 +69,8 @@
    })('d6494389-b427-4103-7c76-03182ecc8e60');
   </script>
   <!-- End Pendo -->
+  {% endif -%}
+
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
@@ -81,7 +84,9 @@
   {%- include "user_banner.html" -%}
   {% endif -%}
   {%- if config['BROWSE_ANALYTICS_ENABLED'] -%}
+  {%- if 0 -%}
   <noscript><img src="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}matomo.php?idsite={{ config['BROWSE_ANALYTICS_SITE_ID'] }}&amp;rec=1" style="border:0" alt="" /></noscript>
+  {%- endif -%}
   {% endif -%}
 
   <header>
