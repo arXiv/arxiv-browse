@@ -516,7 +516,8 @@ footer .sorry-app-links .help {
 @media screen and (min-width: 768px) {
   .message-special {
     padding: .5em 1em;
-    width: 44%;
+    width: 95%;
+    /* width: 44%; uncomment for side-by-side banners */
     float: left;
   }
 }
