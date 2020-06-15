@@ -8,28 +8,69 @@
   <title>{% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200330" />
-  <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20190330" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200611" />
+  <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  {%- if 0 -%}
   <!-- Matomo -->
   <script type="text/javascript">
-    var _paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(["setCookieDomain", "{{ config['BROWSE_ANALYTICS_COOKIE_DOMAIN'] }}"]);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '{{ config['BROWSE_ANALYTICS_SITE_ID'] }}']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
+   var _paq = window._paq || [];
+   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+   _paq.push(["setCookieDomain", "{{ config['BROWSE_ANALYTICS_COOKIE_DOMAIN'] }}"]);
+   _paq.push(['trackPageView']);
+   _paq.push(['enableLinkTracking']);
+   (function() {
+       var u="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}";
+       _paq.push(['setTrackerUrl', u+'matomo.php']);
+       _paq.push(['setSiteId', '{{ config['BROWSE_ANALYTICS_SITE_ID'] }}']);
+       var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+       g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+   })();
   </script>
   <!-- End Matomo Code -->
+  {%- endif -%}
+  <!-- Pendo trial -->
+  <script>
+   (function(apiKey){
+       (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
+           v=['initialize','identify','updateOptions','pageLoad'];for(w=0,x=v.length;w<x;++w)(function(m){
+               o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+           y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+           z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+       // Call this whenever information about your visitors becomes available
+       // Please use Strings, Numbers, or Bools for value types.
+       pendo.initialize({
+           visitor: {
+               id:              'VISITOR-UNIQUE-ID'   // Required if user is logged in
+               // email:        // Recommended if using Pendo Feedback, or NPS Email
+               // full_name:    // Recommended if using Pendo Feedback
+               // role:         // Optional
+
+               // You can add any additional visitor level key-values here,
+               // as long as it's not one of the above reserved names.
+           },
+
+           account: {
+               id:           'ACCOUNT-UNIQUE-ID' // Highly recommended
+               // name:         // Optional
+               // is_paying:    // Recommended if using Pendo Feedback
+               // monthly_value:// Recommended if using Pendo Feedback
+               // planLevel:    // Optional
+               // planPrice:    // Optional
+               // creationDate: // Optional
+
+               // You can add any additional account level key-values here,
+               // as long as it's not one of the above reserved names.
+           }
+       });
+   })('d6494389-b427-4103-7c76-03182ecc8e60');
+  </script>
+  <!-- End Pendo -->
   {% endif -%}
+
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
   <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
@@ -43,155 +84,159 @@
   {%- include "user_banner.html" -%}
   {% endif -%}
   {%- if config['BROWSE_ANALYTICS_ENABLED'] -%}
+  {%- if 0 -%}
   <noscript><img src="{{ config['BROWSE_ANALYTICS_BASE_URL'] }}matomo.php?idsite={{ config['BROWSE_ANALYTICS_SITE_ID'] }}&amp;rec=1" style="border:0" alt="" /></noscript>
+  {%- endif -%}
   {% endif -%}
 
-  <header>
-    <a href="#content" class="is-sr-only">Skip to main content</a>
-    <!-- start desktop header -->
-    <div id="cu-identity" class="is-hidden-mobile">
-      <div id="cu-logo">
-        <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
+  <div class="flex-wrap-footer">
+    <header>
+      <a href="#content" class="is-sr-only">Skip to main content</a>
+      <!-- start desktop header -->
+      <div id="cu-identity" class="is-hidden-mobile">
+        <div id="cu-logo">
+          <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
+        </div>
+        <div id="support-ack">
+          <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+        </div>
       </div>
-      <div id="support-ack">
-        <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
-      </div>
-    </div>
-    <div id="header" class="is-hidden-mobile">
-      {% block header %}
-      {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
-      <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-      {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
-      {% block login_link %}{% endblock %}
-      {{ base_macros.compactsearch() }}
-     {% endblock header %}
-   </div><!-- /end desktop header -->
+      <div id="header" class="is-hidden-mobile">
+        {% block header %}
+        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
+        <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
+        {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
+        {% block login_link %}{% endblock %}
+        {{ base_macros.compactsearch() }}
+       {% endblock header %}
+     </div><!-- /end desktop header -->
 
-    <div class="mobile-header">
-      <div class="columns is-mobile">
-        <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo.png') }}" alt="arXiv" /></a></div>
-        <div class="column logo-cornell"><a href="https://www.cornell.edu/">
-          <picture>
-            <source media="(min-width: 501px)"
-              srcset="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}  400w"
-              sizes="400w" />
-            <source srcset="{{ url_for('static', filename='images/icons/cu/cornell_seal_simple_black.svg') }} 2x" />
-            <img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University Logo" />
-          </picture>
-        </a></div>
-        <div class="column nav" id="toggle-container" role="menubar">
-          <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white"><title>open search</title><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
-          <div class="mobile-toggle-block toggle-target">
-            <form class="mobile-search-form" method="GET" action="{{ url_for('search_box') }}">
-              <div class="field has-addons">
-                <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
-                <input type="hidden" name="source" value="header">
-                <input type="hidden" name="searchtype" value="all">
-                <button class="button">GO</button>
-              </div>
-            </form>
+      <div class="mobile-header">
+        <div class="columns is-mobile">
+          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo.png') }}" alt="arXiv" /></a></div>
+          <div class="column logo-cornell"><a href="https://www.cornell.edu/">
+            <picture>
+              <source media="(min-width: 501px)"
+                srcset="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}  400w"
+                sizes="400w" />
+              <source srcset="{{ url_for('static', filename='images/icons/cu/cornell_seal_simple_black.svg') }} 2x" />
+              <img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University Logo" />
+            </picture>
+          </a></div>
+          <div class="column nav" id="toggle-container" role="menubar">
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white"><title>open search</title><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <form class="mobile-search-form" method="GET" action="{{ url_for('search_box') }}">
+                <div class="field has-addons">
+                  <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
+                  <input type="hidden" name="source" value="header">
+                  <input type="hidden" name="searchtype" value="all">
+                  <button class="button">GO</button>
+                </div>
+              </form>
+            </div>
+
+            <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="menu"><title>open navigation menu</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
+            <div class="mobile-toggle-block toggle-target">
+              <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
+                <h2 id="mobilemenulabel">quick links</h2>
+                <ul>
+                    {% if request.auth is defined and request.auth.user is defined %}
+                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a></li>
+                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user/create">Start Submission</a></li>
+                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a></li>
+                    {% else %}
+                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('help') }}">Help Pages</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                </ul>
+              </nav>
+            </div>
           </div>
+        </div>
+      </div><!-- /end mobile-header -->
+    </header>
 
-          <button class="toggle-control"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="menu"><title>open navigation menu</title><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/ ></svg></button>
-          <div class="mobile-toggle-block toggle-target">
-            <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
-              <h2 id="mobilemenulabel">quick links</h2>
-              <ul>
-                  {% if request.auth is defined and request.auth.user is defined %}
-                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a></li>
-                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user/create">Start Submission</a></li>
-                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a></li>
-                  {% else %}
-                  <li><a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a></li>
-                  {% endif %}
-                  <li><a href="{{ url_for('help') }}">Help Pages</a></li>
-                  <li><a href="{{ url_for('about') }}">About</a></li>
+    <main>
+      {% block content_stats %}
+      {% endblock content_stats %}
+      <div id="content">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </main>
+
+    <footer style="clear: both;">
+      <div class="columns is-desktop" role="navigation" aria-label="Secondary" style="margin: -0.75em -0.75em 0.75em -0.75em">
+        <!-- Macro-Column 1 -->
+        <div class="column" style="padding: 0;">
+          <div class="columns is-mobile">
+            <div class="column">
+              <ul style="list-style: none; line-height: 2;">
+                <li><a href="{{ url_for('about') }}">About arXiv</a></li>
+                <li><a href="{{ url_for('team') }}">Leadership Team</a></li>
               </ul>
-            </nav>
+            </div>
+            <div class="column">
+              <ul style="list-style: none; line-height: 2;">
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><title>contact arXiv</title><desc>Click here to contact arXiv</desc><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>
+                  <a href="{{ url_for('contact') }}"> Contact</a>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><title>arXiv Twitter</title><desc>arXiv Twitter</desc><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+                  <a href="{{ url_for('twitter') }}"> <span class="is-hidden-mobile">Follow us on</span> Twitter</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </div><!-- /end mobile-header -->
-  </header>
-
-  <main>
-    {% block content_stats %}
-    {% endblock content_stats %}
-    <div id="content">
-      {% block content %}
-      {% endblock content %}
-    </div>
-  </main>
-
-  <footer style="clear: both;">
-    <div class="columns is-desktop" role="navigation" aria-label="Secondary" style="margin: -0.75em -0.75em 0.75em -0.75em">
-      <!-- Macro-Column 1 -->
-      <div class="column" style="padding: 0;">
-        <div class="columns is-mobile">
-          <div class="column">
-            <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('about') }}">About arXiv</a></li>
-              <li><a href="{{ url_for('team') }}">Leadership Team</a></li>
-            </ul>
-          </div>
-          <div class="column">
-            <ul style="list-style: none; line-height: 2;">
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><title>contact arXiv</title><desc>Click here to contact arXiv</desc><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>
-                <a href="{{ url_for('contact') }}"> Contact</a>
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><title>arXiv Twitter</title><desc>arXiv Twitter</desc><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-                <a href="{{ url_for('twitter') }}"> <span class="is-hidden-mobile">Follow us on</span> Twitter</a>
-              </li>
-            </ul>
+        <!-- End Macro-Column 1 -->
+        <!-- Macro-Column 2 -->
+        <div class="column" style="padding: 0;">
+          <div class="columns is-mobile">
+            <div class="column">
+              <ul style="list-style: none; line-height: 2;">
+                <li><a href="{{ url_for('help') }}">Help</a></li>
+                <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
+              </ul>
+            </div>
+            <div class="column">
+              <ul style="list-style: none; line-height: 2;">
+                <li><a href="{{ url_for('blog') }}">Blog</a></li>
+                <li><a href="{{ url_for('subscribe') }}"> Subscribe</a></li>
+              </ul>
+            </div>
           </div>
         </div>
+        <!-- End Macro-Column 2 -->
       </div>
-      <!-- End Macro-Column 1 -->
-      <!-- Macro-Column 2 -->
-      <div class="column" style="padding: 0;">
-        <div class="columns is-mobile">
-          <div class="column">
-            <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('help') }}">Help</a></li>
-              <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
-            </ul>
-          </div>
-          <div class="column">
-            <ul style="list-style: none; line-height: 2;">
-              <li><a href="{{ url_for('blog') }}">Blog</a></li>
-              <li><a href="{{ url_for('subscribe') }}"> Subscribe</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <!-- End Macro-Column 2 -->
-    </div>
-    <div class="columns lower">
-      <div class="column">
-        <div class="columns">
-          <div class="column" style="padding-top: 0;">
-            <p class="help">arXiv&#174; is a registered trademark of Cornell University.</p>
-          </div>
-          <div class="column sorry-app-links" style="padding-top: 0;">
-            <p class="help">
-              <a class="button is-link is-outlined" href="https://status.arxiv.org" target="_blank">arXiv Operational Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" class="icon filter-dark_grey" role="presentation"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a><br>
-              Get status notifications via
-              <a class="is-link" href="https://subscribe.sorryapp.com/24846f03/email/new" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>email</a>
-              or <a class="is-link" href="https://subscribe.sorryapp.com/24846f03/slack/new" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="presentation"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>slack</a>
-            </p>
+      <div class="columns lower">
+        <div class="column">
+          <div class="columns">
+            <div class="column" style="padding-top: 0;">
+              <p class="help">arXiv&#174; is a registered trademark of Cornell University.</p>
+            </div>
+            <div class="column sorry-app-links" style="padding-top: 0;">
+              <p class="help">
+                <a class="button is-link is-outlined" href="https://status.arxiv.org" target="_blank">arXiv Operational Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" class="icon filter-dark_grey" role="presentation"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a><br>
+                Get status notifications via
+                <a class="is-link" href="https://subscribe.sorryapp.com/24846f03/email/new" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" role="presentation"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>email</a>
+                or <a class="is-link" href="https://subscribe.sorryapp.com/24846f03/slack/new" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" role="presentation"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>slack</a>
+              </p>
+            </div>
           </div>
         </div>
+        <div class="column">
+          <p class="help">If you have a disability and are having trouble accessing information
+            on this website or need materials in an alternate format, contact
+            <a href="{{ A11Y_URL }}">web-accessibility@cornell.edu</a> for
+             assistance.</p>
+        </div>
       </div>
-      <div class="column">
-        <p class="help">If you have a disability and are having trouble accessing information
-          on this website or need materials in an alternate format, contact
-          <a href="{{ A11Y_URL }}">web-accessibility@cornell.edu</a> for
-           assistance.</p>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
   {%- endif %}
