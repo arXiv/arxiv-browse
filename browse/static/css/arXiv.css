@@ -292,10 +292,21 @@ body#front.with-cu-identity #header form {
   }
 }
 
+/****************************************
+ * Main
+ ****************************************/
+main {
+  flex-grow: 1;
+}
 
 /****************************************
  * Footer
  ****************************************/
+ .flex-wrap-footer {
+   display: flex;
+   min-height: 100vh;
+   flex-direction: column;
+ }
  footer ul li {
    display: flex;
    align-items: center;
