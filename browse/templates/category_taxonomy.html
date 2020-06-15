@@ -46,10 +46,10 @@
       </div>
       {%- endif -%}
       <div class="column">
-        {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
+        {% for category_key, category_details in categories.items()|sort(attribute='0') if categories[category_key].in_archive == archive_key %}
         <div class="columns divided">
           <div class="column is-one-fifth">
-            <h4>{{ categories[category_key].name }} <span>({{ category_key }})</span></h4>
+            <h4>{{ category_key }} <span>({{ categories[category_key].name }})</span></h4>
           </div>
           <div class="column">
           {%- if 'description' in categories[category_key] -%}

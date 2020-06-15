@@ -292,10 +292,21 @@ body#front.with-cu-identity #header form {
   }
 }
 
+/****************************************
+ * Main
+ ****************************************/
+main {
+  flex-grow: 1;
+}
 
 /****************************************
  * Footer
  ****************************************/
+ .flex-wrap-footer {
+   display: flex;
+   min-height: 100vh;
+   flex-direction: column;
+ }
  footer ul li {
    display: flex;
    align-items: center;
@@ -2101,10 +2112,10 @@ body#front.with-cu-identity #header #search {
 }
 .large-data-list h4 {
   margin:1em 1em 1em 0;
-  font-size: .9em;
+  font-size: 1.1em;
 }
 .large-data-list h4 span {
-  font-size: .8em;
+  font-size: .7em;
   font-weight: normal;
 }
 .large-data-list .physics {
