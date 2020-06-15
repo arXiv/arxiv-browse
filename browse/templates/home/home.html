@@ -9,16 +9,10 @@
 
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
-<div class="tagline-wrapper"><p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+<p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
  scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
  Materials on this site are not peer-reviewed by arXiv.
-</p></div>
-<a class="tagline-cta" href="https://cornell.qualtrics.com/jfe/form/SV_1zcsUWefBhDpgqh" target="_blank">
-    <div class="cta-logo">
-      <img src="{{ url_for('static', filename='images/icons/arxiv-chi-small.png') }}" alt="arXiv survey">
-    </div>
-    <p>Help improve arXiv in under 10 minutes. Thank you!</p>
-</a>
+</p>
 
 <br>
 {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
