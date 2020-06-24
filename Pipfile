@@ -22,7 +22,7 @@ arxiv-auth = "==0.4.2rc1"
 mypy = "*"
 jinja2 = "==2.10.1"
 flask-s3 = "*"
-arxiv-base = "==0.16.8rc2"
+arxiv-base = "==0.16.8"
 retry = "==0.9.2"
 
 [dev-packages]
