@@ -36,7 +36,7 @@ def _year_stats_link(archive_id: str, year: int, page_year: int = 0) -> str:
     if year == page_year:
         return ''
     else:
-        return url_for(  # type: ignore
+        return url_for(
             "browse.year",
             year=str(year)[-2:],  # danger: 2 digit year, NG can accept 4 digit
             archive=archive_id)
