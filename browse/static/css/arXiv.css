@@ -2164,6 +2164,26 @@ body#front.with-cu-identity #header #search {
 .form-trackbacks .button {
   background-color: #d3e1e6;
 }
+h3.trackback-title {
+  font-size: 1.25em;
+  text-transform: none;
+  margin-bottom: 0;
+}
+.trackback-source {
+  font-size: .85em;
+}
+.trackback-source small {
+  font-style: italic;
+  font-size: .9em;
+}
+.trackback-source a, .trackback-source a:visited {
+  text-decoration: underline;
+  color: #6c6c6c;
+}
+.trackback-source a:hover, .trackback-source a:active {
+  text-decoration: underline;
+  color: #000000;
+}
 .trackback-styles {
   border-top: 1px solid #eae9e7 !important;
   padding: 1em !important;
@@ -2171,7 +2191,15 @@ body#front.with-cu-identity #header #search {
 .trackback-styles blockquote {
   background-color: #f7f5f3;
   margin: 1em 0;
-  padding: 2em 1em;
+  padding: 1.25em .5em;
+}
+.trackback-styles #abs h1.title {
+  font-size: 1.1em !important;
+  margin-bottom: 5px;
+}
+.trackback-styles .authors {
+  line-height: 18px;
+  margin-top: 0;
 }
 .trackback-styles h2 {
   margin-bottom: 1em;
