@@ -462,10 +462,18 @@ class BrowseTest(unittest.TestCase):
         rv = self.app.get('/abs/physics/9707012')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        self.assertIsNone(html.find('div', class_='message-covid'))
+        self.assertIsNone(html.find('div', class_='message-special'))
         covid_papers = ['2004.05256', '2004.08990', '2004.09471']
         for id in covid_papers:
             rv = self.app.get(f'/abs/{id}')
             self.assertEqual(rv.status_code, 200)
             html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-            self.assertIsNotNone(html.find('div', class_='message-covid'))
+            self.assertIsNotNone(html.find('div', class_='message-special'))
+
+    def test_tex2utf_in_jref(self):
+        rv = self.app.get('/abs/2006.02835')
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        jref_elmt = html.find('td', 'jref')
+        self.assertTrue(jref_elmt, 'Should have jref td element')
+        self.assertIn('RIMS Kôkyûroku Bessatsu', jref_elmt.text, 'Expecting converted TeX in journal reference field')

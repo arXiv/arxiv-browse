@@ -314,11 +314,11 @@ main {
  }
  footer ul li a {
    font-size: 13.5px;
-   padding-left: 3px;
+   /* padding-left: 3px; */
  }
 
 #footer {
-  background-color: #eee;
+  background-color: hsl(0, 0%, 95%);
   color: #000;
   margin: 1em 0 0 0;
   padding: .7em;
@@ -372,22 +372,23 @@ main {
 }
 
 footer {
-  background-color: #757575;
-  color: #fff;
+  background-color: hsl(0, 0%, 95%);
+  color: #000;
   padding: 1em 2em;
-  font-size: 0.9em; -webkit-font-smoothing: antialiased;
+  font-size: 0.9rem; -webkit-font-smoothing: antialiased;
   margin-top: 6rem;
 }
 
 footer a, footer a:visited {
-  color: #fff;
+  color: #000;
   text-decoration: none;
   border-bottom: 1px solid transparent;
+  line-height: 1.75em;
 }
 
 footer a:hover, footer a:active {
-  background-color: #999;
-  border-bottom: 1px dotted #fff;
+  color: #005e9d;
+  border-bottom: 1px dotted #005e9d;
   text-decoration: none;
 }
 
@@ -405,10 +406,20 @@ footer .columns.lower .column .columns .column {
   padding-left: 0;
   padding-bottom: 0;
 }
-footer .sorry-app-links .is-link &:not(.button) {
-  border-bottom: 1px dotted #fff;
+footer .sorry-app-links .help {
+  font-size: 0.75rem;
+  margin-bottom: 0;
+  line-height: 1.75em;
 }
-footer .sorry-app-links .button.is-link.is-outlined {
+footer .sorry-app-links .help a,
+footer .sorry-app-links .help a:visited {
+  border-bottom: 1px dotted #000;
+}
+footer .sorry-app-links .help a:hover,
+footer .sorry-app-links .help a:active {
+  border-bottom: 1px dotted #005e9d;
+}
+/* footer .sorry-app-links .button.is-link.is-outlined {
   background-color: transparent;
   border: 1px solid #c3c3c3;
   border-radius: 5px;
@@ -416,15 +427,23 @@ footer .sorry-app-links .button.is-link.is-outlined {
   height: auto;
   margin-bottom: .35em;
   display: inline-block;
-}
+} */
 footer .sorry-app-links svg.icon,
 footer .sorry-app-links .button svg.icon,
 footer .sorry-app-links .button svg.icon:first-child:last-child {
   margin-bottom: -2px !important;
 }
-footer .sorry-app-links .help {
-  font-size: 0.7rem;
-  margin-bottom: 0;
+footer .sorry-app-links .icon.filter-black:hover,
+footer .sorry-app-links .icon.filter-black:active,
+footer .sorry-app-links a:hover .icon.filter-black,
+footer .sorry-app-links a:hover .icon.filter-black {
+  fill: #005e9d !important;
+}
+footer .sorry-app-links .a11y-main-link {
+  font-size: 110%;
+  border-bottom: 1px solid transparent !important;
+  padding:0;
+  margin:0;
 }
 @media screen and (max-width: 768px) {
   footer .sorry-app-links.column {
