@@ -2293,6 +2293,10 @@ body#front.with-cu-identity #header #search {
   .guide a {
     color: #046BAF;
   }
+  .guide h2 {
+    font-size: 1.1em;
+    color: #4c4c4c;
+  }
   .form-trackbacks {
     padding: 1em 0 2em 0;
     text-align: right;
