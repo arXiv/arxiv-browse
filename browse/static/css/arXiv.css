@@ -915,6 +915,10 @@ p.tagline {
   display: none;
 }
 
+#abs-outer #coreRecommenderOutput {
+  max-width: 100%;
+}
+
 #abs h1.title {
   margin: .5em 0 .5em 20px;
   font-size: x-large;
