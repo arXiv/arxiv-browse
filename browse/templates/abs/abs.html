@@ -79,13 +79,21 @@
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
+    <div class="endorsers">
+      <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
+      <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+      <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+    </div>
+
+    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
     {%- if config['LABS_ENABLED'] -%}
-    <div class="labs-display">
+    <div class="labs-display" style="display: none;">
       <div class="labs-header">
         <img src="{{ url_for('static', filename='images/arxiv-LABS-wordmark.png') }}" alt="arXiv LABS">
         <a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://labs.arxiv.org/">Contribute</a>
       </div>
       <!-- DISPLAY LABS CONTENT IN THIS AREA -->
+      <div class="labs-content-placeholder"></div>
     </div>
     {%- endif %}
   </div>
@@ -93,18 +101,6 @@
 
   {% include "abs/extra_services.html" %}
 
-  <div class="endorsers">
-    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
-    <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-    <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
-  </div>
-
-  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-  {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
-  {% if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] %}
-  <!-- <script src="/bibex/bibex.js?20200507" type="text/javascript" defer></script> -->
-  <!-- <script src="{{ url_for('static', filename='bibex/bibex.js') }}?20200507" type="text/javascript" defer></script> -->
-  {% endif %}
 
 </div>
 {% endblock content %}
