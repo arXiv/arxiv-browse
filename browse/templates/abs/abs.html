@@ -2,7 +2,7 @@
 {% from 'abs/author_links.html' import display_authors_with_links %}
 {% import 'base/macros.html' as base_macros %}
 
-  {% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
+{% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
 
 {% block head %}
   {{ super() -}}
@@ -17,19 +17,31 @@
 
 {% block body_id %}{% endblock %}
 
-{% block header_class %}{% endblock %}
 {% block header_h1 %}
-  <div class="header-breadcrumbs"><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</div>
+  <div class="header-breadcrumbs is-hidden-mobile"><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</div>
 {% endblock header_h1 %}
 
 {%- block content %}
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
-  {{ generate_download_button() }}
+  {% set download_button %}
+    {{ generate_download_button() }}
+  {% endset %}
+
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
     </div>
+
+    <div class="header-breadcrumbs-mobile">
+      <strong>arXiv:{{ requested_id }}</strong> ({{ abs_meta.primary_archive.id }})
+    </div>
+    {% if is_covid_match %}
+    <div class="message-special" style="margin:2em 1em;">
+      <span class="label">COVID-19 e-print</span>
+      <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
+    </div>
+    {% endif -%}
 
     {{
       base_macros.abs(
@@ -48,7 +60,7 @@
       version = abs_meta.version,
       submission_history = abs_meta.version_history,
       secondary_categories = abs_meta.get_secondaries(),
-      include_stylesheet = 0)
+      download_button_markup = download_button )
     }}
 
     <div class="submission-history">
@@ -66,8 +78,10 @@
 
   {% include "abs/extra_services.html" %}
 
-  <div class="endorsers"><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> | <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-    <span class="help" style="display: inline-block; font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+  <div class="endorsers">
+    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
+    <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+    <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
   </div>
   <script type="text/javascript" language="javascript">mathjaxToggle();</script>
   {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
@@ -150,6 +164,6 @@
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
     <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
   {% else %}
-    <a class="mobile-submission-download" href="#other">No PDF available, click for other formats</a>
+    <a class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
 {% endmacro %}

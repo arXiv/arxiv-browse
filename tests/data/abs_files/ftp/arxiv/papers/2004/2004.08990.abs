@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2004.08990
+From: Juan C. Mora Mr <covid19@example.org>
+Date: Sun, 19 Apr 2020 23:38:05 GMT   (3307kb)
+
+Title: A Semiempirical Dynamical Model to Forecast the Propagation of
+  Epidemics: The Case of the Sars-Cov-2 in Spain
+Authors: Juan C. Mora, Sandra P\'erez, Ignacio Rodr\'iguez, Asunci\'on
+  N\'u\~nez and Alla Dvorzhak
+Categories: q-bio.QM math.DS
+License: http://creativecommons.org/licenses/by-nc-sa/4.0/
+\\
+  A semiempirical model, based in the logistic map, has been succesfully
+applied to forecast important quantities along the several phases of the
+outbreak of the covid-19 for different countries. This paper shows how the
+model was calibrated and applied to perform predictions of people needing to be
+hospitalized, needs of ventilators, or the number of deaths which would be
+produced. It is shown specifically the results obtained in the case of Spain,
+showing a prediction of diagnosed infected and deaths which will be observed
+after the ease of the total lockdown produced the 13th of March. Is also shown
+how this model can provide an insight of what the level of infection in the
+different regions of Spain is forecasted. The model predicts for Spain for the
+end of May more than 400,000 diagnosed infected cases, number which will be
+probably higher due to the change in the possibilities of performing massive
+number of tests to the general population. The number of forecasted deaths for
+that date is 46,000 +/- 15,000. The model also predicts the level of infection
+at the different Spanish regions, providing a counterintuitive result in the
+cases of Madrid and Catalonia as the result shows a higher the level of
+infection at Catalonia than the level at Madrid, according with this model. All
+of these results can be used to guide policy makers in order to optimize
+resources and to avoid future outbreaks of the covid-19.
+\\

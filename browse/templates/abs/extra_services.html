@@ -25,24 +25,24 @@
     {%- for format in format_list if not (format == 'src' and not current) %}
   <li>
     {%- if format == 'src' -%}
-    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}">Source</a>
+    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button">Source</a>
     {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button">PDF{% if format.endswith('only') %} only{% endif %}</a>
     {%- elif format == 'dvi' -%}
-    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}">{{ format.upper() }}</a>
+    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
-    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f">{{ format.upper() }}</a>
+    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
-    <a href="{{url_for('.format', arxiv_id=requested_id)}}">Other formats</a>
+    <a href="{{url_for('.format', arxiv_id=requested_id)}}" class="abs-button">Other formats</a>
     {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}">(PostScript unavailable)</a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
     {#- TODO: consider this format for deprecation -#}
     {#- TODO: create clickthrough link from sciencewise link -#}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">Tagged PDF</a>
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info">
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button">Tagged PDF</a>
+    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button">
       <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
     </a>
     {%- endif -%}
@@ -53,56 +53,56 @@
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  <h3>Current browse context:</h3>
-  <div class="current">{{ browse_context }}</div>
+  Current browse context: <div class="current">{{ browse_context }}</div>
 
   <div class="prevnext">
+    {% if browse_context_previous_url -%}
+    <span class="arrow">
+      <a class="abs-button" href="{{browse_context_previous_url }}"
+         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
+    </span>
+    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
+    {%- else -%}
+    <span class="nolink" class="abs-button">&lt;&nbsp;previous article</span>
+    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
+    {% endif -%}
 
-  {% if browse_context_previous_url -%}
-  <span class="arrow">
-    <a href="{{browse_context_previous_url }}"
-       accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
-  </span>
-  {%- else -%}
-  <span class="nolink">&lt;&nbsp;previous</span>
-  {% endif -%}
-
-  &nbsp;|&nbsp;
-
-  {% if browse_context_next_url %}
-  <span class="arrow">
-    <a href="{{browse_context_next_url}}" accesskey="n"
-       title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
-  </span>
-  {%- else -%}
-  <span class="nolink">next&nbsp;&gt;</span>
-  {%- endif -%}
-
-  <br/>
+    {% if browse_context_next_url %}
+    <span class="arrow">
+      <a class="abs-button" href="{{browse_context_next_url}}" accesskey="n"
+         title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
+    </span>
+    {%- else -%}
+    <span class="abs-button" class="nolink">next article&nbsp;&gt;</span>
+    {%- endif -%}
+    <br/>
   </div>{#end div.prevnext#}
 
   {%- if browse_context != 'arxiv' -%}
   {#- This fixes a bug in the classic UI logic -#}
   <div class="list">
-    <a href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>&nbsp;|
-    <a href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>&nbsp;|
-    <a href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
+    <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>
+    <span class="is-hidden-mobile"> | </span>
+    <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
+    <span class="is-hidden-mobile"> | </span>
+    <a class="abs-button abs-button-grey abs-button-small" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
       {{- abs_meta.arxiv_identifier.yymm -}}</a>
   </div>
   {%- endif -%}
 
   {%- if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) -%}
-  <h3>Change to browse by:</h3>
-  <div class="switch">
-    {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
-      {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
-      {% if '.' in category %}
-      <span class="subclass"><a href="{{ switch_url}}">{{ category }}</a></span>
-      {% else %}
-      <a href="{{ switch_url}}">{{ category }}</a>
-      {% endif %}
-    <br/>
-    {% endfor %}
+  <div class="abs-switch-cat">
+    Change to browse by:
+    <div class="switch">
+      {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
+        {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
+        {% if '.' in category %}
+        <a class="subclass" href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        {% else %}
+        <a href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
 {%- endmacro -%}
@@ -192,21 +192,22 @@
       <ul>
         {% if include_inspire_link %}
         <li>
-          <a href="https://inspirehep.net/search?p=find+eprint+{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-          (<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by </a>)
+          <a class="abs-button abs-button-small" href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+          <span class="inspire-links">(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by</a>)</span>
         </li>
         {% endif %}
-        <li><a href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
         {#- This was previously injected by Bibliographic Explorer -#}
-        <li><a href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
-        <li><a href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
+        <li><a  class="abs-button abs-button-small" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
       </ul>
+      <div style="clear:both;"></div>
     </div>
 
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">
         <div class="what-is-this">
-            <h3><a href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
+            <h3><a  class="abs-button abs-button-grey abs-button-small" href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}">what is this?</a>)
         </div>
     </div>
     {% endif %}
