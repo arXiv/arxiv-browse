@@ -15,7 +15,7 @@
 
   function setCookie(name, value, days) {
     if (!name && !value) return false;
-  
+
     if (days) {
       var date = new Date();
       date.setTime(date.getTime()+(days * 24 * 60 * 60 * 1000));
@@ -49,7 +49,7 @@
     linkElement.setAttribute('type', 'text/css');
     linkElement.setAttribute('href', url);
     if (id != null) linkElement.id = id;
-    
+
     document.head.appendChild(linkElement);
     return linkElement;
   }
@@ -59,7 +59,7 @@
     scriptElement.type = "text/javascript";
     scriptElement.src = url;
     if (id != null) scriptElement.id = id;
-    
+
     document.body.appendChild(scriptElement);
     return scriptElement;
   }
@@ -83,10 +83,10 @@
 
     appendStylesheet(baseUrl + '/recommender/embed-arxiv-style.css', scriptId);
     appendScript(baseUrl + '/recommender/embed.js');
-    
+
     localStorage.setItem('idRecommender', apiKey);
     localStorage.setItem('userInput', JSON.stringify(userInput));
-    if (options.overrideLocale) 
+    if (options.overrideLocale)
       localStorage.setItem('overridelocale', "en_GB");
   }
 
@@ -95,18 +95,18 @@
     document.getElementById("coreRecommenderOutput").innerHTML = "";
   }
 
-  function renderToggleButtonText(status) {
-    var buttonElement = document.getElementById("core-recommender-toggle");
-    const caption = (status ? "Disable" : "Enable") + " CORE Recommendations";
-    buttonElement.innerHTML = caption;
-  }
+  // function renderToggleButtonText(status) {
+  //   var buttonElement = document.getElementById("core-recommender-toggle");
+  //   const caption = (status ? "Disable" : "Enable") + " CORE Recommendations";
+  //   buttonElement.innerHTML = caption;
+  // }
 
   function toggleRecommender(forceStatus) {
     var nextStatus = forceStatus != null ? forceStatus : !getRecommenderStatus();
-    
+
     setRecommenderStatus(nextStatus);
 
-    renderToggleButtonText(nextStatus);
+    // renderToggleButtonText(nextStatus);
     if (nextStatus)
       loadRecommender(baseUrl);
     else
@@ -114,8 +114,8 @@
   }
 
   function initRecommender() {
-    var isEnabled = getRecommenderStatus();
-    toggleRecommender(isEnabled);
+    // var isEnabled = getRecommenderStatus();
+    toggleRecommender(true);
   }
 
   window.toggleCORERecommender = toggleRecommender;
