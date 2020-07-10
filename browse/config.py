@@ -347,6 +347,9 @@ LABS_ENABLED = bool(int(os.environ.get("LABS_ENABLED", "1")))
 LABS_BIBEXPLORER_ENABLED = bool(int(os.environ.get("LABS_BIBEXPLORER_ENABLED", "1")))
 """arXiv Labs Bibliographic Explorer enable/disable."""
 
+LABS_CORE_RECOMMENDER_ENABLED = os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', True)
+"""CORE Recommender enabled/disabled."""
+
 # Auth settings
 AUTH_SESSION_COOKIE_NAME = "ARXIVNG_SESSION_ID"
 AUTH_SESSION_COOKIE_DOMAIN = os.environ.get("AUTH_SESSION_COOKIE_DOMAIN", ".arxiv.org")
