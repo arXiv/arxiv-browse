@@ -1,4 +1,5 @@
 {%- import 'base/macros.html' as base_macros -%}
+{%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -43,6 +44,15 @@
         <div id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
+        {#- if the request date is between 2020-07-17 00:00 and 2021-07-17 00:00, include the following div -#}
+        {%- if rd_int > 202007170000 and rd_int < 202107170000 -%}
+        <div id="contintent-demo" style="vertical-align:center; line-height:40px; font-size: 1.5em">
+            {%- if 'continent' in session and session['continent'] != None -%}
+              {#- continent name (continent code) -#}
+              {{ session['continent']['name'] }} ({{ session['continent']['code'] }})
+            {%- endif -%}
+        </div>
+        {% endif %}
         <div id="support-ack">
           <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
         </div>

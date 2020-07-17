@@ -1,5 +1,7 @@
 """Provides the user intefaces for browse."""
 import re
+import geoip2.database
+
 from datetime import datetime
 from typing import Callable, Dict, Mapping, Union, Tuple, Any
 from flask import Blueprint, render_template, request, Response, session, \
@@ -22,6 +24,16 @@ logger = logging.getLogger(__name__)
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
 
+@blueprint.before_app_first_request
+def load_global_data() -> None:
+    """Load global data."""
+    global geoip_reader
+    try:
+        geoip_reader = geoip2.database.Reader('data/GeoLite2-City.mmdb')
+    except Exception as ex:
+        logger.debug(f'problem loading geoip database: {ex}')
+
+
 @blueprint.context_processor
 def inject_now() -> Dict:
     """Inject current datetime into request context."""
@@ -31,6 +43,20 @@ def inject_now() -> Dict:
 @blueprint.before_request
 def before_request() -> None:
     """Get instituional affiliation from session."""
+
+    if 'contintent' not in session:
+        session['continent'] = None
+        try:
+            response = geoip_reader.city(request.remote_addr)
+            logger.debug(f'continent {response.continent.code}')
+            session['continent'] = {
+                'code': response.continent.code,
+                'name': response.continent.names['en']
+            }
+
+        except Exception as ex:
+            logger.debug(f'problem getting match on IP: {ex}')
+
     if 'institution' not in session:
         logger.debug('Adding institution to session')
         session['institution'] = get_institution(request.remote_addr)
@@ -91,11 +117,11 @@ def abstract(arxiv_id: str) -> Any:
                 mimetype='text/plain')
         return render_template('abs/abs.html', **response), code, headers
     elif code == status.HTTP_301_MOVED_PERMANENTLY:
-        return redirect(headers['Location'], code=code) 
+        return redirect(headers['Location'], code=code)
     elif code == status.HTTP_304_NOT_MODIFIED:
-        return '', code, headers 
+        return '', code, headers
 
-    raise InternalServerError('Unexpected error')  
+    raise InternalServerError('Unexpected error')
 
 @blueprint.route('category_taxonomy', methods=['GET'])
 def category_taxonomy() -> Any:
