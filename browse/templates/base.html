@@ -46,7 +46,9 @@
         </div>
         {#- if the request date is between 2020-07-17 00:00 and 2021-07-17 00:00, include the following div -#}
         {%- if rd_int > 202007170000 and rd_int < 202107170000 -%}
+
         <div id="contintent-demo" style="vertical-align:center; line-height:40px; font-size: 1.5em">
+            {{ request.remote_addr }}&nbsp;
             {%- if 'continent' in session and session['continent'] != None -%}
               {#- continent name (continent code) -#}
               {{ session['continent']['name'] }} ({{ session['continent']['code'] }})
