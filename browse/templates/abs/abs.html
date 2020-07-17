@@ -6,10 +6,15 @@
 
 {% block head %}
   {{ super() -}}
-  {%- if config['LABS_BIBEXPLORER_ENABLED'] -%}
-  <link rel="stylesheet" media="screen" type="text/css" href="/bibex/bibex.css?20181010"/>
+  {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
+  <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/> 
   {%- endif %}
   <script src="{{ url_for('static', filename='js/mathjaxToggle.min.js') }}" type="text/javascript"></script>
+  {%- if config['LABS_ENABLED'] -%}
+  <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}" type="text/javascript"></script>
+  {%- endif %}
   {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
   {{- generate_social_media_tags() }}
@@ -73,27 +78,28 @@
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
+    <div class="endorsers">
+      <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
+      <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+      <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+    </div>
+
+    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+    {%- if config['LABS_ENABLED'] -%}
+    <div class="labs-display" style="display: none;">
+      <div class="labs-header">
+        <img src="{{ url_for('static', filename='images/arxiv-LABS-wordmark.png') }}" alt="arXiv LABS">
+        <a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://labs.arxiv.org/">Contribute</a>
+      </div>
+      <!-- DISPLAY LABS CONTENT IN THIS AREA -->
+      <div class="labs-content-placeholder"></div>
+      <div id="coreRecommenderOutput"></div>
+    </div>
+    {%- endif %}
   </div>
   <!--end leftcolumn-->
 
   {% include "abs/extra_services.html" %}
-
-  <div class="endorsers">
-    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
-    <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-    <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
-  </div>
-  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-  {#- The following supports the arXiv Labs Bibliographic Explorer project: https://labs.arxiv.org/projects/bibexplorer -#}
-  {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-  <script src="/bibex/bibex.js?20181010" type="text/javascript" defer></script>
-  {% endif %}
-
-  {% if config['LABS_CORE_RECOMMENDER_ENABLED'] %}
-  <script src="{{ url_for('static', filename='js/core-recommender.js') }}" type="text/javascript"></script>
-  <div id="coreRecommenderOutput"></div>
-  <div class="endorsers"><a id="core-recommender-toggle" href="javascript:toggleCORERecommender()">Enable CORE Recommendations</a></div>
-  {% endif %}
 </div>
 {% endblock content %}
 

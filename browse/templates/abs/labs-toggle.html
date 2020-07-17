@@ -1,0 +1,34 @@
+<div class="labs-toggle">
+  <img src="{{ url_for('static', filename='images/arxiv-LABS-wordmark.png') }}" alt="arXiv LABS">
+{% if config['LABS_BIBEXPLORER_ENABLED'] %}
+  <div class="columns is-mobile lab-row">
+    <div class="column lab-name">
+      Bibliographic Explorer
+      <br>
+      (<a href="https://labs.arxiv.org/projects/bibexplorer">What is Bibex?</a>)
+    </div>
+    <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+      <label class="switch">
+        <input id="bibex-toggle" type="checkbox" class="lab-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+{% endif %}
+
+  <div class="columns is-mobile lab-row">
+    <div class="column lab-name">
+      CORE Recommender
+      <br>
+      (<a href="https://labs.arxiv.org/">What is CORE?</a>)
+    </div>
+    <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+      <label class="switch">
+        <input id="core-recommender-toggle" type="checkbox" class="lab-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="labs-cta"><a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://labs.arxiv.org/">Contribute</a></div>
+</div>
