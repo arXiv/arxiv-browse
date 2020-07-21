@@ -46,23 +46,23 @@
         </div>
 
         <!-- timeboxed column -->
-        {#- if the request date is between 2020-07-17 00:00 and 2021-07-17 00:00, include the following div -#}
-        {%- if rd_int > 202007170000 and rd_int < 202107170000 -%}
+        {#- if the request date is between 2020-07-21 00:00 and 2020-07-28 00:00, include the following div -#}
+        {%- if rd_int > 202007210000 and rd_int < 202007280000 -%}
         <div class="column message-header message-yellow" id="contintent-demo">
           <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Global survey:</strong> In under 2 minutes <a target="_blank" href="https://cornell.qualtrics.com/jfe/form/SV_3POhYLQEALfIMLz">help us understand how arXiv is perceived around the world!</a>
-          <a class="btn-slim" target="_blank" href="https://cornell.qualtrics.com/jfe/form/SV_3POhYLQEALfIMLz">Take survey</a></p>
+          <p><strong>Global survey:</strong> In under 2 minutes help us understand how arXiv is perceived around the world!
+          <a class="btn-slim" target="_blank" href="https://cornell.qualtrics.com/jfe/form/SV_3POhYLQEALfIMLz?IP={{ request.remote_addr }}
+          {%- if 'continent' in session and session['continent'] != None -%}
+            {#- continent name (continent code) -#}
+            &Cont={{ session['continent']['name'] }}
+          {%- endif -%}
+          ">Take survey</a></p>
         </div>
         {%- endif -%}
         <!-- /end timeboxed column -->
 
         <div class="column" id="support-ack">
           <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
-          {{ request.remote_addr }}&nbsp;
-          {%- if 'continent' in session and session['continent'] != None -%}
-            {#- continent name (continent code) -#}
-            {{ session['continent']['name'] }} ({{ session['continent']['code'] }})
-          {%- endif -%}
         </div>
       </div>
 
