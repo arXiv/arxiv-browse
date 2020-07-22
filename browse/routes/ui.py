@@ -20,6 +20,7 @@ from browse.services.database import get_institution
 from browse.controllers.year import year_page
 
 logger = logging.getLogger(__name__)
+geoip_reader = None
 
 blueprint = Blueprint('browse', __name__, url_prefix='/')
 
@@ -43,8 +44,8 @@ def inject_now() -> Dict:
 @blueprint.before_request
 def before_request() -> None:
     """Get instituional affiliation from session."""
-
-    if 'contintent' not in session:
+    global geoip_reader
+    if geoip_reader and 'contintent' not in session:
         session['continent'] = None
         try:
             response = geoip_reader.city(request.remote_addr)
