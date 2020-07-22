@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2020/06/09 $
+ *  $Date: 2020/07/22 $
  *****************************************/
 /****************************************
  *   General rules
@@ -1455,7 +1455,7 @@ div#long-dc-list {
 
 /* Style to put a small (what is this?) link after a header */
 .what-is-this {
-  margin: 0.5em 0 0 0;
+  /* margin: 0.5em 0 0 0; */
   font-size: xx-small;
   padding-bottom: 0.3em;
 }
