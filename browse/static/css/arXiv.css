@@ -100,6 +100,48 @@ em.boxed {
 #cu-logo a img {
   width:200px;
 }
+#cu-identity .message-header {
+  align-items: center;
+  display: flex;
+  border-radius: .5em;
+  padding: .5em;
+  margin: .5em 0;
+}
+#cu-identity .message-header a {
+  color: #0012ef;
+}
+#cu-identity .message-header p {
+  margin:0;
+  color: #000000;
+  font-size: 1.25em;
+}
+#cu-identity .message-header img {
+  float:left;
+  margin-right:1em;
+  height: 4em;
+}
+#cu-identity .message-header .btn-slim {
+  background-color: #dddddd;
+  display: inline-block;
+  border: 2px solid #bbbbbb;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  border-radius: 5px;
+  padding: 1px 5px;
+  color: #000000 !important;
+}
+#cu-identity .message-header.message-yellow {
+  background-color:#ffcc00;
+  border: 1px solid #8d7109;
+}
+#cu-identity .message-header.message-yellow p a {
+  color:#5f4b00;
+}
+#cu-identity .message-header.message-grey {
+  background-color:#dddddd;
+  border-bottom: 2px solid #b7b8b9;
+  border-right: 2px solid #757575;
+}
 
 #insignia-link {
   width: 68px;
@@ -2200,7 +2242,9 @@ body#front.with-cu-identity #header #search {
   flex: none;
   width: 80%;
 }
-
+.columns.is-vcentered {
+  align-items: center;
+}
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;

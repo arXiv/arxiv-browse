@@ -40,25 +40,27 @@
     <header>
       <a href="#content" class="is-sr-only">Skip to main content</a>
       <!-- start desktop header -->
-      <div id="cu-identity" class="is-hidden-mobile">
-        <div id="cu-logo">
+      <div class="columns is-vcentered is-hidden-mobile" id="cu-identity">
+        <div class="column" id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
-        {#- if the request date is between 2020-07-17 00:00 and 2021-07-17 00:00, include the following div -#}
-        {%- if rd_int > 202007170000 and rd_int < 202107170000 -%}
 
-        <div id="contintent-demo" style="vertical-align:center; line-height:40px; font-size: 1.5em">
-            {{ request.remote_addr }}&nbsp;
-            {%- if 'continent' in session and session['continent'] != None -%}
-              {#- continent name (continent code) -#}
-              {{ session['continent']['name'] }} ({{ session['continent']['code'] }})
-            {%- endif -%}
+        <!-- timeboxed column -->
+        {#- if the request date is between 2020-07-21 00:00 and 2020-07-28 00:00, include the following div -#}
+        {%- if rd_int > 202007210000 and rd_int < 202008020000 -%}
+        <div class="column message-header message-yellow" id="contintent-demo">
+          <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
+          <p><strong>Global survey:</strong> In under 2 minutes help us understand how arXiv is perceived around the world!
+          <a class="btn-slim" target="_blank" href="https://cornell.qualtrics.com/jfe/form/SV_3POhYLQEALfIMLz?continent={{ session['continent']['name'] }}">Take survey</a></p>
         </div>
-        {% endif %}
-        <div id="support-ack">
+        {%- endif -%}
+        <!-- /end timeboxed column -->
+
+        <div class="column" id="support-ack">
           <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
         </div>
       </div>
+
       <div id="header" class="is-hidden-mobile">
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
