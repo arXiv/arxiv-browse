@@ -13,7 +13,6 @@ class TestPrevNextController(TestCase):
 
     def test_missing_parameters(self) -> None:
         """Test request with missing parameters."""
-
         with self.assertRaises(BadRequest):
             prevnext.get_prevnext('','','')
         with self.assertRaises(BadRequest):
@@ -27,11 +26,10 @@ class TestPrevNextController(TestCase):
 
     def test_bad_parameters(self) -> None:
         """Test parameters with bad values."""
-
         with self.assertRaises(BadRequest):
             prevnext.get_prevnext('foo',  # invalid
                                   'prev',  # valid
-                                  'cs.AI')  # valid            
+                                  'cs.AI')  # valid
         with self.assertRaises(BadRequest):
             prevnext.get_prevnext('cs/0001001',  # valid
                                   'bar',  # invalid
