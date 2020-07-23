@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2020/06/09 $
+ *  $Date: 2020/07/22 $
  *****************************************/
 /****************************************
  *   General rules
@@ -1626,7 +1626,7 @@ div#long-dc-list {
 
 /* Style to put a small (what is this?) link after a header */
 .what-is-this {
-  margin: 0.5em 0 0 0;
+  /* margin: 0.5em 0 0 0; */
   font-size: xx-small;
   padding-bottom: 0.3em;
 }
@@ -2337,23 +2337,66 @@ body#front.with-cu-identity #header #search {
 .form-trackbacks .button {
   background-color: #d3e1e6;
 }
+
 .trackback-styles {
   border-top: 1px solid #eae9e7 !important;
   padding: 1em !important;
 }
-.trackback-styles blockquote {
-  background-color: #f7f5f3;
-  margin: 1em 0;
-  padding: 2em 1em;
-}
-.trackback-styles h2 {
+.trackback-styles h2.trackback-heading {
   margin-bottom: 1em;
+  font-size: 1.5em;
 }
-.trackback-styles h2, .trackback-styles p {
+.trackback-styles h2.trackback-heading, .trackback-styles p {
   margin-left:0 !important;
   padding-left:0 !important;
   border: 0 !important;
 }
+.trackback-styles h3.trackback-title {
+  font-size: 1.25em;
+  text-transform: none;
+  margin-bottom: 0;
+}
+.trackback-styles .trackback-source {
+  font-size: .85em;
+}
+.trackback-styles .trackback-source small {
+  font-style: italic;
+  font-size: .9em;
+}
+.trackback-styles .trackback-source a, .trackback-styles .trackback-source a:visited {
+  text-decoration: underline;
+  color: #6c6c6c;
+}
+.trackback-styles .trackback-source a:hover, .trackback-styles .trackback-source a:active {
+  text-decoration: underline;
+  color: #000000;
+}
+/** trackback metadata block **/
+.trackback-styles blockquote {
+  background-color: #f7f5f3;
+  margin: 1em 0;
+  padding: 1.25em 1em 1em 1em;
+}
+.trackback-styles #abs h1.title {
+  font-size: 1.1em !important;
+  margin-bottom: 5px;
+}
+.trackback-styles .authors {
+  line-height: 18px !important;
+  margin-top: 0 !important;
+}
+.trackback-styles .authors a {
+  font-size: .85em;
+}
+.trackback-styles .accordion-head {
+  font-weight: normal;
+  font-size: .85em;
+}
+#metadata_list.trackback-styles {
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+
 /*** styles for bold-divided-list ***/
 .bold-divided-list {
   margin: 1em .5em;
@@ -2422,6 +2465,10 @@ body#front.with-cu-identity #header #search {
   }
   .guide a {
     color: #046BAF;
+  }
+  .guide h2 {
+    font-size: 1.1em;
+    color: #4c4c4c;
   }
   .form-trackbacks {
     padding: 1em 0 2em 0;

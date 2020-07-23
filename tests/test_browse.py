@@ -48,7 +48,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        h2_elmt = html.find('h2', {'class': 'trackback-title'})
+        h2_elmt = html.find('h2', {'class': 'trackback-heading'})
         h2_txt = h2_elmt.get_text()
         self.assertTrue(h2_elmt, 'Should have <h2> element')
         self.assertEqual(h2_txt, 'Trackbacks for 0808.4142')
@@ -81,8 +81,8 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200, 'POST with views==1 OK')
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
-        self.assertEqual(len(tb_a_tags), 1,
-                          'There should be exactly one trackback link')
+        self.assertGreaterEqual(len(tb_a_tags), 1,
+                          'There should at least one trackback link')
 
     def test_stats_today(self):
         """Test the /stats/today page."""
