@@ -241,7 +241,6 @@ def get_sequential_id(paper_id: Identifier,
                       context: str = 'all',
                       is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
-
     if not isinstance(paper_id, Identifier) or not paper_id.month or not paper_id.year:
         return None
 
