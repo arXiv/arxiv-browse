@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div id="header" class="is-hidden-mobile {% if 'beta' in config[SERVER_NAME] %}beta-header{% endif %}">
+      <div id="header" class="is-hidden-mobile {% if config[BROWSE_SITE_LABEL] is defined %}beta-dev-header{% endif %}">
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
         <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
