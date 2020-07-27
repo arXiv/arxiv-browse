@@ -338,7 +338,7 @@ body#front.with-cu-identity #header form {
  * dev and beta header styles
  ****************************************/
 .beta-header {
-  background-color: #fc5554 !important;
+  background-color: #ED0202 !important;
 }
 .beta-header a.return-link {
   font-size: 14px;
