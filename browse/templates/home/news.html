@@ -1,17 +1,13 @@
 {#- News blurbs appear at the top of the home page. Generally there should be no more than four items. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-
-
 {%- if rd_int >= 202003300900 -%}
-<div class="message-special">
+<div class="message-special column">
   <span class="label">COVID-19 Quick Links</span>
   <p>See COVID-19 SARS-CoV-2 preprints from</p>
   <ul>
     <li><a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv">arXiv</a></li>
     <li><a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv">medRxiv and bioRxiv</a></li>
   </ul>
-  <p>30 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/30/new-covid-19-quick-search/">arXiv announces new COVID-19 quick search</a><br/>
-  12 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/12/arxiv-responds-to-covid-19-uncertainties/">arXiv responds to COVID-19 uncertainties</a></p>
   <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
 </div>
 {% else %}
@@ -19,9 +15,7 @@
 12 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/12/arxiv-responds-to-covid-19-uncertainties/">arXiv responds to COVID-19 uncertainties</a><br/>
 {%- endif -%}
 
-<br style="clear:both;">
-
-<h4 class="homepage-news-title">News</h4>
+<!-- annual giving message -->
 {%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}
 23 Sep 2019: Our giving campaign is this week. <a href="https://blogs.cornell.edu/arxiv/2019/09/19/donate-to-arxiv-4/">Support arXiv with a donation!</a><br/>
 {%- endif -%}

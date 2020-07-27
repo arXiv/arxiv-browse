@@ -9,51 +9,55 @@
 
 {%- block content %}
 {#- TODO: display order in taxonomy? -#}
-<p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
- scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
- Materials on this site are not peer-reviewed by arXiv.
-</p>
 
-<br>
-{#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
-<form name="home-adv-search" class="home-search" action="/multi" method="get" role="search">
-  Subject search and browse:
-  <select name="group" title="Search in">
-  {%- for group_key, group_details in groups.items() if not group_details.is_test %}
-    <option
-        value ="{{group_key}}"
-        data-url="{{url_for('search_archive', archive=group_key[4:])}}"
-        {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
-      {{ group_details.name }}
-    </option>
-    {%- endfor %}
-  </select>
-  <input id="adv-search-btn" type="button" value="Search">
-  <input type="submit" name="/form" value="Form Interface">
-  <input type="submit" name="/catchup" value="Catchup">
-</form>
+<div class="columns">
+  <div class="column">
+    <p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+     scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
+     Materials on this site are not peer-reviewed by arXiv.
+    </p>
 
-<script type="text/javascript">
- function doAdvSearchBtn(event) {
-     sel = document.querySelector('select[name="group"]')
-     if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
-         data_url = sel.options[sel.selectedIndex].dataset.url
-         if( data_url ){
-             window.location = data_url;
-         }else{
-             console.error('home page search button: no data_url found for search');
+    {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
+    <form name="home-adv-search" class="home-search" action="/multi" method="get" role="search">
+      <label for="search-category">Subject search and browse:</label><br>
+      <select name="group" title="Search in" id="search-category">
+      {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+        <option
+            value ="{{group_key}}"
+            data-url="{{url_for('search_archive', archive=group_key[4:])}}"
+            {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+          {{ group_details.name }}
+        </option>
+        {%- endfor %}
+      </select>
+      <input id="adv-search-btn" type="button" value="Search">
+      <input type="submit" name="/form" value="Form Interface">
+      <input type="submit" name="/catchup" value="Catchup">
+    </form>
+    <script type="text/javascript">
+     function doAdvSearchBtn(event) {
+         sel = document.querySelector('select[name="group"]')
+         if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
+             data_url = sel.options[sel.selectedIndex].dataset.url
+             if( data_url ){
+                 window.location = data_url;
+             }else{
+                 console.error('home page search button: no data_url found for search');
+             }
          }
      }
- }
- document.addEventListener('DOMContentLoaded',function() {
-     document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
- },false);
-</script>
-<p>
-{%- include "home/news.html" -%}
-See cumulative <a href="/new/">"What's New"</a> pages.
-Read <a href="/help/robots">robots beware</a> before attempting any automated download
-</p>
+     document.addEventListener('DOMContentLoaded',function() {
+         document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
+     },false);
+    </script>
+    <h4 class="homepage-news-title">News</h4>
+    See cumulative <a href="/new/">"What's New"</a> pages.
+    Read <a href="/help/robots">robots beware</a> before attempting any automated download
+  </div>
+  <!-- special news column -->
+  {%- include "home/news.html" -%}
+</div>
+
 {#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
 
