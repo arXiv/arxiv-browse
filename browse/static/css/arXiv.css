@@ -549,7 +549,7 @@ footer .sorry-app-links .a11y-main-link {
   border-radius: 10px;
   background-color: #fef6f6;
   padding: .5em 1em;
-  margin: 2em 1% 1em 1%;
+  margin: 1em 1% 1em 1%;
   width: 92%;
 }
 .message-special span.label {
@@ -557,13 +557,13 @@ footer .sorry-app-links .a11y-main-link {
   background-color: #b31a1a;
   width: 160px;
   text-align: center;
-  margin-top: -1.5em;
+  margin-top: -1.9em;
   color: #ffffff;
   padding: .25em 0;
   font-size: 12px;
 }
 .message-special ul {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   margin-top: 0;
 }
 .message-special p {
@@ -748,6 +748,12 @@ p.tagline {
 }
 .home-search {
   clear:both;
+  border: 1px solid #dddddd;
+  padding: .5em;
+  margin-top: 1em;
+}
+.home-search label {
+  font-weight: bold;
 }
 @media screen and (max-width: 768px) {
   .tagline-cta, .tagline-wrapper {
