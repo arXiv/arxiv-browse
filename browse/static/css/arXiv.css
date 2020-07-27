@@ -347,6 +347,10 @@ body#front.with-cu-identity #header form {
   position: relative;
   top: -5px;
 }
+.beta-header a.return-link-abs {
+  color: #3333ff;
+  font-style: italic;
+}
 .beta-header svg.beta-exclamation {
   width: 1em;
   height: 1em;
