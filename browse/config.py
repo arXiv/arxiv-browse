@@ -341,10 +341,13 @@ CLICKTHROUGH_SECRET = os.environ.get("CLICKTHROUGH_SECRET", "bar")
 TRACKBACK_SECRET = os.environ.get("TRACKBACK_SECRET", "baz")
 """Used in linking to trackbacks in /tb pages."""
 
-LABS_BIBEXPLORER_ENABLED = os.environ.get("LABS_BIBEXPLORER_ENABLED", True)
-"""arXiv Labs bibex enabled/disabled."""
+LABS_ENABLED = bool(int(os.environ.get("LABS_ENABLED", "1")))
+"""arXiv Labs global enable/disable."""
 
-LABS_CORE_RECOMMENDER_ENABLED = os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', True)
+LABS_BIBEXPLORER_ENABLED = bool(int(os.environ.get("LABS_BIBEXPLORER_ENABLED", "1")))
+"""arXiv Labs Bibliographic Explorer enable/disable."""
+
+LABS_CORE_RECOMMENDER_ENABLED = bool(int(os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', "0")))
 """CORE Recommender enabled/disabled."""
 
 # Auth settings
