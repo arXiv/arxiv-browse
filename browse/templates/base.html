@@ -9,7 +9,7 @@
   <title>{% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200722" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200727" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- timeboxed column -->
-        {#- if the request date is between 2020-07-21 00:00 and 2020-07-28 00:00, include the following div -#}
+        {#- e.g. if the request date is between 2020-07-21 00:00 and 2020-08-02 00:00, include the following div -#}
         {%- if rd_int > 202007210000 and rd_int < 202008020000 -%}
         <div class="column message-header message-yellow" id="contintent-demo">
           <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
