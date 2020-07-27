@@ -340,14 +340,14 @@ body#front.with-cu-identity #header form {
 .beta-header {
   background-color: #fc5554 !important;
 }
-.beta-header h1 .return-link {
+.beta-header a.return-link {
   font-size: 14px;
   font-weight: normal;
   display: inline-block;
   position: relative;
   top: -5px;
 }
-.beta-header h1 svg.beta-exclamation {
+.beta-header svg.beta-exclamation {
   width: 1em;
   height: 1em;
   float: left;
