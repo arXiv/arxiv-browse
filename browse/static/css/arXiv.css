@@ -335,6 +335,20 @@ body#front.with-cu-identity #header form {
 }
 
 /****************************************
+ * dev and beta header styles
+ ****************************************/
+.beta-header {
+  background-color: #fc5554;
+}
+.beta-header h1 .return-link {
+  font-size: 14px;
+  font-weight: normal;
+}
+.beta-header h1 svg {
+  width: 2em;
+  height: 2em;
+}
+/****************************************
  * Main
  ****************************************/
 main {
