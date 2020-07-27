@@ -14,8 +14,6 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
-  <!-- Plausible trial -->
-  <script async defer data-domain="arxiv.org" src="https://plausible.io/js/plausible.js"></script>
   {% endif -%}
 
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
