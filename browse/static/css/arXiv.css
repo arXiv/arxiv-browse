@@ -880,7 +880,8 @@ p.tagline {
   padding-right: 3px;
 }
 .labs-toggle .column.lab-name {
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: bold;
 }
 .labs-toggle .column.lab-name a {
   font-size: 11px;
@@ -892,7 +893,7 @@ p.tagline {
 .labs-toggle p {
   margin-left: 12px;
   margin-top: 0;
-  font-size: 13px;
+  font-size: 12px;
 }
 .labs-display {
   margin: 1em;
