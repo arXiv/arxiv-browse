@@ -8,7 +8,7 @@ import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
 
-APP_VERSION = "0.3.2"
+APP_VERSION = "0.3.2.5"
 """The application version """
 
 ON = "yes"
@@ -347,7 +347,7 @@ LABS_ENABLED = bool(int(os.environ.get("LABS_ENABLED", "1")))
 LABS_BIBEXPLORER_ENABLED = bool(int(os.environ.get("LABS_BIBEXPLORER_ENABLED", "1")))
 """arXiv Labs Bibliographic Explorer enable/disable."""
 
-LABS_CORE_RECOMMENDER_ENABLED = os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', True)
+LABS_CORE_RECOMMENDER_ENABLED = bool(int(os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', "0")))
 """CORE Recommender enabled/disabled."""
 
 # Auth settings

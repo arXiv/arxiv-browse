@@ -20,7 +20,7 @@
 
 
   {% if recent_trackback_pings -%}
-  <div id="{{ list_name }}_list" class="large-data-list bold-divided-list">
+  <div id="{{ list_name }}_list" class="large-data-list bold-divided-list trackback-styles">
     <form action="{{ url_for('browse.tb_recent') }}" method="post" class="form-trackbacks">
       <label for="select_trackbacks"><span class="is-hidden-mobile">Number of trackbacks to </span>view:</label>
       <select name="views" id="select_trackbacks">

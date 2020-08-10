@@ -7,6 +7,7 @@
 {% block header_h1 %}<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; article trackbacks</h1>{% endblock %}
 {# Disable login on this page for now, per classic #}
 {% block login_link %}{% endblock %}
+{% set list_name = 'metadata' %}
 
 {%- block content %}
   <div class="columns">
@@ -21,13 +22,16 @@
     </div>
   </div>
 
-  <div id="_list" class="large-data-list bold-divided-list trackback-styles">
+  <div class="large-data-list bold-divided-list trackback-styles">
   {% if trackback_pings %}
-  <h2 class="trackback-title">Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
+    <h2 class="trackback-heading">Trackbacks for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a></h2>
     {% for tb in trackback_pings %}
-  <p>{{- generate_trackback_link(tb) -}}</p>
+      {{- generate_trackback_link(tb) -}}
     {% endfor %}
-    <blockquote>
+  </div>
+  <div id="{{ list_name }}_list" class="large-data-list trackback-styles">
+    <h4 class="accordion-head">Click to view metadata for {{ arxiv_identifier.id }}</h4>
+    <div class="accordion-body"><blockquote>
       {#- abstract field is deliberately suppressed in call to abs macro. -#}
       {%- if abs_meta -%}
       {{ base_macros.abs(
@@ -46,10 +50,33 @@
         version = abs_meta.version,
         submission_history = abs_meta.version_history,
         secondary_categories = abs_meta.get_secondaries()) }}
-    </blockquote>
+    </blockquote></div>
     {%- endif -%}
   {% else %}
   <p><em>There are no trackback pings recorded for <a href="{{ url_for('.abstract', arxiv_id=arxiv_identifier.id) }}">{{ arxiv_identifier.id }}</a>.</em></p>
   {% endif %}
   </div>
+<script type="text/javascript">
+// vanilla accordion script
+var jsaccordion = {
+  init : function (target) {
+  // initialize the accordion
+    var headers = document.querySelectorAll("#" + target + " .accordion-head");
+    if (headers.length > 0) { for (var head of headers) {
+      head.addEventListener("click", jsaccordion.select);
+    }}
+  },
+  select : function () {
+  // fired when user clicks on a header
+    var contents = this.nextElementSibling;
+    contents.classList.toggle("open");
+    var contents = this;
+    contents.classList.toggle("open");
+  }
+};
+// runs on page load. Dont forget to set variable 'list_name' on your page.
+window.addEventListener('load', function(){
+  jsaccordion.init("{{ list_name }}_list");
+});
+</script>
 {% endblock content %}

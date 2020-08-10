@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2020/06/09 $
+ *  $Date: 2020/07/27 $
  *****************************************/
 /****************************************
  *   General rules
@@ -99,6 +99,48 @@ em.boxed {
 
 #cu-logo a img {
   width:200px;
+}
+#cu-identity .message-header {
+  align-items: center;
+  display: flex;
+  border-radius: .5em;
+  padding: .5em;
+  margin: .5em 0;
+}
+#cu-identity .message-header a {
+  color: #0012ef;
+}
+#cu-identity .message-header p {
+  margin:0;
+  color: #000000;
+  font-size: 1.25em;
+}
+#cu-identity .message-header img {
+  float:left;
+  margin-right:1em;
+  height: 4em;
+}
+#cu-identity .message-header .btn-slim {
+  background-color: #dddddd;
+  display: inline-block;
+  border: 2px solid #bbbbbb;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  border-radius: 5px;
+  padding: 1px 5px;
+  color: #000000 !important;
+}
+#cu-identity .message-header.message-yellow {
+  background-color:#ffcc00;
+  border: 1px solid #8d7109;
+}
+#cu-identity .message-header.message-yellow p a {
+  color:#5f4b00;
+}
+#cu-identity .message-header.message-grey {
+  background-color:#dddddd;
+  border-bottom: 2px solid #b7b8b9;
+  border-right: 2px solid #757575;
 }
 
 #insignia-link {
@@ -507,7 +549,7 @@ footer .sorry-app-links .a11y-main-link {
   border-radius: 10px;
   background-color: #fef6f6;
   padding: .5em 1em;
-  margin: 2em 1% 1em 1%;
+  margin: 1em 1% 1em 1%;
   width: 92%;
 }
 .message-special span.label {
@@ -515,13 +557,13 @@ footer .sorry-app-links .a11y-main-link {
   background-color: #b31a1a;
   width: 160px;
   text-align: center;
-  margin-top: -1.5em;
+  margin-top: -1.9em;
   color: #ffffff;
   padding: .25em 0;
   font-size: 12px;
 }
 .message-special ul {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   margin-top: 0;
 }
 .message-special p {
@@ -706,6 +748,12 @@ p.tagline {
 }
 .home-search {
   clear:both;
+  border: 1px solid #dddddd;
+  padding: .5em;
+  margin-top: 1em;
+}
+.home-search label {
+  font-weight: bold;
 }
 @media screen and (max-width: 768px) {
   .tagline-cta, .tagline-wrapper {
@@ -1584,7 +1632,7 @@ div#long-dc-list {
 
 /* Style to put a small (what is this?) link after a header */
 .what-is-this {
-  margin: 0.5em 0 0 0;
+  /* margin: 0.5em 0 0 0; */
   font-size: xx-small;
   padding-bottom: 0.3em;
 }
@@ -2200,7 +2248,9 @@ body#front.with-cu-identity #header #search {
   flex: none;
   width: 80%;
 }
-
+.columns.is-vcentered {
+  align-items: center;
+}
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
@@ -2293,23 +2343,66 @@ body#front.with-cu-identity #header #search {
 .form-trackbacks .button {
   background-color: #d3e1e6;
 }
+
 .trackback-styles {
   border-top: 1px solid #eae9e7 !important;
   padding: 1em !important;
 }
-.trackback-styles blockquote {
-  background-color: #f7f5f3;
-  margin: 1em 0;
-  padding: 2em 1em;
-}
-.trackback-styles h2 {
+.trackback-styles h2.trackback-heading {
   margin-bottom: 1em;
+  font-size: 1.5em;
 }
-.trackback-styles h2, .trackback-styles p {
+.trackback-styles h2.trackback-heading, .trackback-styles p {
   margin-left:0 !important;
   padding-left:0 !important;
   border: 0 !important;
 }
+.trackback-styles h3.trackback-title {
+  font-size: 1.25em;
+  text-transform: none;
+  margin-bottom: 0;
+}
+.trackback-styles .trackback-source {
+  font-size: .85em;
+}
+.trackback-styles .trackback-source small {
+  font-style: italic;
+  font-size: .9em;
+}
+.trackback-styles .trackback-source a, .trackback-styles .trackback-source a:visited {
+  text-decoration: underline;
+  color: #6c6c6c;
+}
+.trackback-styles .trackback-source a:hover, .trackback-styles .trackback-source a:active {
+  text-decoration: underline;
+  color: #000000;
+}
+/** trackback metadata block **/
+.trackback-styles blockquote {
+  background-color: #f7f5f3;
+  margin: 1em 0;
+  padding: 1.25em 1em 1em 1em;
+}
+.trackback-styles #abs h1.title {
+  font-size: 1.1em !important;
+  margin-bottom: 5px;
+}
+.trackback-styles .authors {
+  line-height: 18px !important;
+  margin-top: 0 !important;
+}
+.trackback-styles .authors a {
+  font-size: .85em;
+}
+.trackback-styles .accordion-head {
+  font-weight: normal;
+  font-size: .85em;
+}
+#metadata_list.trackback-styles {
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+
 /*** styles for bold-divided-list ***/
 .bold-divided-list {
   margin: 1em .5em;
@@ -2378,6 +2471,10 @@ body#front.with-cu-identity #header #search {
   }
   .guide a {
     color: #046BAF;
+  }
+  .guide h2 {
+    font-size: 1.1em;
+    color: #4c4c4c;
   }
   .form-trackbacks {
     padding: 1em 0 2em 0;
