@@ -937,6 +937,9 @@ p.tagline {
   .labs-toggle .labs-cta {
     padding-left: 0;
   }
+  .labs-toggle p {
+    margin-left: 0px;
+  }
 }
 @media screen and (min-width: 769px) {
   .labs-toggle .column.is-one-fifth-desktop {
