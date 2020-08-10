@@ -889,6 +889,11 @@ p.tagline {
   font-size: 11px;
   padding:.75rem;
 }
+.labs-toggle p {
+  margin-left: 12px;
+  margin-top: 0;
+  font-size: 13px;
+}
 .labs-display {
   margin: 1em;
 }
