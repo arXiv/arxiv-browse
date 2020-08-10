@@ -15,7 +15,7 @@
     </div>
   </div>
 {% endif %}
-
+{% if config['LABS_CORE_RECOMMENDER_ENABLED'] %}
   <div class="columns is-mobile lab-row">
     <div class="column lab-name">
       CORE Recommender
@@ -29,6 +29,6 @@
       </label>
     </div>
   </div>
-
+{% endif %}
   <div class="labs-cta"><a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://labs.arxiv.org/">Contribute</a></div>
 </div>
