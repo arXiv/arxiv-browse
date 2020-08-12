@@ -815,7 +815,150 @@ p.tagline {
   border-left: .35em solid #ddd !important;
 }
 
-/*LABS management and display on abs*/
+/*LABS in TABS on ABS*/
+/*CSS-only, responsive tabbed display */
+#labstabs {
+  clear: both;
+  margin: 0 1em 1em 1em;
+}
+#labstabs .tabs {
+	display: flex;
+	flex-wrap: wrap;
+  white-space: normal;
+  justify-content: flex-start;
+}
+#labstabs .tabs label {
+	order: 1; // Put the labels first
+	display: block;
+  padding: .25em .5em;
+  font-size: .85em;
+  color: #4a4a4a;
+	margin-right: 0.2rem;
+	cursor: pointer;
+  background: #cecece;
+  font-weight: bold;
+  transition: background ease 0.2s;
+}
+#labstabs .tabs .tab {
+  order: 99; // Put the tabs last
+  flex-grow: 1;
+	width: 100%;
+	display: none;
+  padding: 1rem;
+  border: 1px solid black;
+  border: 1;
+  z-index: 1;
+  margin-top: -1px;
+}
+#labstabs .tabs .tab h1 {
+  font-size: .9em;
+}
+#labstabs .tabs input[type="radio"] {
+	display: none;
+}
+#labstabs .tabs input[type="radio"]:checked + label {
+  background: #ffffff;
+  border: 1px solid grey;
+  border-bottom: 0;
+  z-index: 2;
+}
+#labstabs .tabs input[type="radio"]:checked + label + .tab {
+	display: block;
+}
+
+@media (max-width: 45em) {
+  #labstabs .tabs .tab,
+  #labstabs .tabs label {
+    order: initial;
+  }
+  #labstabs .tabs label {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 0.2rem;
+  }
+}
+/*toggles*/
+#labstabs .toggle {
+  max-width: 400px;
+}
+#labstabs .toggle .lab-switch label.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  padding: 0;
+  background-color: transparent;
+}
+/* Hide default HTML checkbox */
+#labstabs .toggle .lab-switch .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* The slider element */
+#labstabs .toggle .lab-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+#labstabs .toggle .lab-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+#labstabs .toggle .lab-switch input.enabled + .slider {
+  background-color: #009917;
+}
+#labstabs .toggle .lab-switch input.enabled + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+#labstabs .toggle .lab-switch input.enabled + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(86px);
+  transform: translateX(18px);
+}
+
+
+/*need??*/
+#labstabs .column.lab-name, .column.lab-switch {
+  padding-top: 0;
+}
+#labstabs .column.lab-switch {
+  padding-left: 0;
+  padding-right: 3px;
+}
+#labstabs .column.lab-name {
+  font-size: 13px;
+  font-weight: bold;
+}
+#labstabs .column.lab-name a {
+  font-size: 11px;
+}
+#labstabs .labs-cta {
+  font-size: 11px;
+  padding:.75rem;
+}
+#labstabs p {
+  margin-left: 12px;
+  margin-top: 0;
+  font-size: 12px;
+}
+
+/*RIGHT COLUMN LABS management and display on abs*/
 .labs-toggle {
   border-top: medium solid #ddd;
   border-left: .35em solid #ddd;

@@ -81,25 +81,109 @@
     <div class="endorsers">
       <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
       <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-      <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
     </div>
 
     <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-    {%- if config['LABS_ENABLED'] -%}
-    <div class="labs-display" style="display: none;">
-      <div class="labs-header">
-        <img src="{{ url_for('static', filename='images/arxiv-LABS-wordmark.png') }}" alt="arXiv LABS">
-        <a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://arxiv.org/about/people/developers">Contribute</a>
-      </div>
-      <!-- DISPLAY LABS CONTENT IN THIS AREA -->
-      <div class="labs-content-placeholder"></div>
-      <div id="coreRecommenderOutput"></div>
-    </div>
-    {%- endif %}
   </div>
   <!--end leftcolumn-->
-
   {% include "abs/extra_services.html" %}
+
+  <!-- LABS AREA -->
+  <div id="labstabs">
+    <div class="tabs">
+      <input type="radio" name="tabs" id="tabone">
+      <label for="tabone">Bibliographic Tools</label>
+      <div class="tab">
+        <h1>Bibliographic and Citation Tools</h1>
+
+        {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+        <div class="toggle">
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-name">
+              Bibliographic Explorer
+            </div>
+            <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+              <label class="switch">
+                <input id="bibex-toggle" type="checkbox" class="lab-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-name">
+              DBLP (Coming soon)
+            </div>
+            <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+              <label class="switch">
+                <input id="" type="checkbox" class="lab-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {%- if config['LABS_ENABLED'] -%}
+          <div class="labs-content-placeholder labs-display" style="display: none;"></div>
+        {%- endif %}
+      </div>
+
+      <input type="radio" name="tabs" id="tabtwo">
+      <label for="tabtwo">Recommenders</label>
+      <div class="tab">
+        <h1>Recommenders and Search Tools</h1>
+        {% if config['LABS_CORE_RECOMMENDER_ENABLED'] %}
+        <div class="toggle">
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-name">
+              CORE Recommender
+              <br>
+              (<a href="https://labs.arxiv.org/">What is CORE?</a>)
+            </div>
+            <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+              <label class="switch">
+                <input id="core-recommender-toggle" type="checkbox" class="lab-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-name">
+              Semantic Scholar Recommender (Coming soon)
+            </div>
+            <div class="column lab-switch is-one-fifth-desktop is-narrow-mobile">
+              <label class="switch">
+                <input id="" type="checkbox" class="lab-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        <div id="coreRecommenderOutput"></div>
+      </div>
+
+      <input type="radio" name="tabs" id="tabthree" checked="checked">
+      <label for="tabthree">Key Artifacts</label>
+      <div class="tab">
+        <h1>Key Artifacts and Underlying Materials</h1>
+        <p>PwC goes here...</p>
+      </div>
+
+      <input type="radio" name="tabs" id="tabfour">
+      <label for="tabfour">About arXivLabs</label>
+      <div class="tab">
+        <h1>About arXivLabs</h1>
+        <p>All about arXivLabs description goes here...</p>
+        <p><a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://arxiv.org/about/people/developers">Contribute</a></p>
+      </div>
+    </div>
+  </div>
+  <!-- END LABS AREA -->
+
+  <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
 </div>
 {% endblock content %}
 
