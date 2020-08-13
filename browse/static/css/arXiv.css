@@ -855,6 +855,9 @@ p.tagline {
   font-size: 1em;
   font-weight: normal;
 }
+#labstabs .labstabs .tab p {
+  font-size: .8rem;
+}
 #labstabs .labstabs input[type="radio"] {
 	display: none;
 }
@@ -900,10 +903,13 @@ p.tagline {
 #labstabs .column.lab-name {
   flex-basis: auto;
   flex-grow: 0;
-  font-size: .75em;
+  font-size: .75rem;
+}
+#labstabs .tab a {
+  display: inline;
 }
 #labstabs .column.lab-name span, #labstabs .column.lab-name span a {
-  font-size: .5em;
+  font-size: 11px;
 }
 #labstabs .column.lab-name span a {
   line-height: 18px;
@@ -913,10 +919,6 @@ p.tagline {
 }
 #labstabs .column.lab-switch {
   flex-grow: 0;
-}
-#labstabs .tab a {
-  font-size: 11px;
-  display: inline;
 }
 #labstabs .toggle .lab-switch label.switch {
   position: relative;
