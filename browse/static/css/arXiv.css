@@ -828,19 +828,19 @@ p.tagline {
   justify-content: flex-start;
 }
 #labstabs .tabs label {
-	order: 1; // Put the labels first
+	order: 1;
 	display: block;
-  padding: .25em .5em;
-  font-size: .85em;
+  padding: .75em .5em;
+  font-size: .78em;
   color: #4a4a4a;
 	margin-right: 0.2rem;
 	cursor: pointer;
-  background: #cecece;
+  background: #dcdcdc;
   font-weight: bold;
   transition: background ease 0.2s;
 }
 #labstabs .tabs .tab {
-  order: 99; // Put the tabs last
+  order: 99;
   flex-grow: 1;
 	width: 100%;
 	display: none;
@@ -851,7 +851,8 @@ p.tagline {
   margin-top: -1px;
 }
 #labstabs .tabs .tab h1 {
-  font-size: .9em;
+  font-size: 1em;
+  font-weight: normal;
 }
 #labstabs .tabs input[type="radio"] {
 	display: none;
@@ -861,6 +862,8 @@ p.tagline {
   border: 1px solid grey;
   border-bottom: 0;
   z-index: 2;
+  color: black;
+  padding: .75em;
 }
 #labstabs .tabs input[type="radio"]:checked + label + .tab {
 	display: block;
@@ -876,10 +879,43 @@ p.tagline {
     margin-right: 0;
     margin-top: 0.2rem;
   }
+  #labstabs .tabs input[type="radio"]:checked + label {
+    background-color: #565656;
+    color: white;
+    padding: .75em .5em;
+  }
 }
 /*toggles*/
 #labstabs .toggle {
-  max-width: 400px;
+  border: 1px dotted #e6e5e5;
+  padding: .5em;
+}
+#labstabs .toggle .columns.lab-row {
+  align-items: center;
+}
+#labstabs .toggle .columns.lab-row .column {
+  padding: .5rem .25rem;
+}
+#labstabs .column.lab-name {
+  flex-basis: auto;
+  flex-grow: 0;
+  font-size: .75em;
+}
+#labstabs .column.lab-name span, #labstabs .column.lab-name span a {
+  font-size: .5em;
+}
+#labstabs .column.lab-name span a {
+  line-height: 18px;
+  text-decoration: none;
+  padding: 0;
+  border: 0;
+}
+#labstabs .column.lab-switch {
+  flex-grow: 0;
+}
+#labstabs .tab a {
+  font-size: 11px;
+  display: inline;
 }
 #labstabs .toggle .lab-switch label.switch {
   position: relative;
@@ -888,6 +924,7 @@ p.tagline {
   height: 20px;
   padding: 0;
   background-color: transparent;
+  margin: 0;
 }
 /* Hide default HTML checkbox */
 #labstabs .toggle .lab-switch .switch input {
@@ -933,163 +970,10 @@ p.tagline {
 }
 
 
-/*need??*/
-#labstabs .column.lab-name, .column.lab-switch {
-  padding-top: 0;
-}
-#labstabs .column.lab-switch {
-  padding-left: 0;
-  padding-right: 3px;
-}
-#labstabs .column.lab-name {
-  font-size: 13px;
-  font-weight: bold;
-}
-#labstabs .column.lab-name a {
-  font-size: 11px;
-}
-#labstabs .labs-cta {
-  font-size: 11px;
-  padding:.75rem;
-}
-#labstabs p {
-  margin-left: 12px;
-  margin-top: 0;
-  font-size: 12px;
-}
 
-/*RIGHT COLUMN LABS management and display on abs*/
-.labs-toggle {
-  border-top: medium solid #ddd;
-  border-left: .35em solid #ddd;
-}
-.labs-toggle img {
-  width: 90px;
-  margin: .5rem 0 .8rem .75rem;
-}
-.labs-toggle .lab-switch label.switch {
-  position: relative;
-  display: inline-block;
-  width: 38px;
-  height: 20px;
-}
-/* Hide default HTML checkbox */
-.labs-toggle .lab-switch .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-/* The slider element */
-.labs-toggle .lab-switch .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 24px;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-.labs-toggle .lab-switch .slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 2px;
-  bottom: 2px;
-  border-radius: 50%;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-.labs-toggle .lab-switch input.enabled + .slider {
-  background-color: #009917;
-}
-.labs-toggle .lab-switch input.enabled + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-.labs-toggle .lab-switch input.enabled + .slider:before {
-  -webkit-transform: translateX(18px);
-  -ms-transform: translateX(86px);
-  transform: translateX(18px);
-}
-.labs-toggle .column.lab-name, .column.lab-switch {
-  padding-top: 0;
-}
-.labs-toggle .column.lab-switch {
-  padding-left: 0;
-  padding-right: 3px;
-}
-.labs-toggle .column.lab-name {
-  font-size: 13px;
-  font-weight: bold;
-}
-.labs-toggle .column.lab-name a {
-  font-size: 11px;
-}
-.labs-toggle .labs-cta {
-  font-size: 11px;
-  padding:.75rem;
-}
-.labs-toggle p {
-  margin-left: 12px;
-  margin-top: 0;
-  font-size: 12px;
-}
-.labs-display {
-  margin: 1em;
-}
-.labs-header {
-  border-top: 2px solid #cecece;
-  padding: 0;
-  margin: 0 0 2em 0;
-}
-.labs-header img {
-  border: 1px solid #cecece;
-  border-top: 0;
-  padding: .25em;
-  margin: 0 .75em 0 0;
-  width: 80px;
-  float:left;
-}
-.labs-header a {
-  font-size: 10px;
-  color: grey;
-  line-height: 25px;
-}
-@media screen and (max-width: 768px) {
-  .labs-toggle {
-    margin: 1em 0 0 0;
-    border-left: 0;
-    padding: .25em .5em 0 1em;
-    border-top: 2px solid #cccccc;
-    font-size: 1em;
-  }
-  .labs-toggle .column.is-narrow-mobile {
-    flex: none;
-  }
-  .labs-toggle .columns.lab-row {
-    flex-direction: row-reverse;
-  }
-  .labs-toggle img {
-    width: 110px;
-    margin-left: 0;
-  }
-  .labs-toggle .labs-cta {
-    padding-left: 0;
-  }
-  .labs-toggle p {
-    margin-left: 0px;
-  }
-}
-@media screen and (min-width: 769px) {
-  .labs-toggle .column.is-one-fifth-desktop {
-    flex: none;
-    width: 20%;
-  }
-}
+
+
+
 
 
 /* arXiv.org archive/subjclass info for abs pages... */
@@ -1278,7 +1162,7 @@ div#long-author-list {
     -moz-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
     box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
     background-color: #E6E6E6;
-    margin: 0;
+    margin: 0 0 1em 0;
     padding: 1em 0;
   }
   #abs-outer .extra-ref-cite ul li {
