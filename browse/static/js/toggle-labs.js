@@ -12,7 +12,7 @@ $(document).ready(function() {
   };
 
   var scripts = {
-    "bibex": "https://static.arxiv.org/js/bibex-dev/bibex.js?20200709",
+    "bibex": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
     "core-recommender": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1"
   };
 
