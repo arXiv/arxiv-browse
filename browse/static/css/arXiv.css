@@ -821,13 +821,14 @@ p.tagline {
   clear: both;
   margin: 0 1em 1em 1em;
 }
-#labstabs .tabs {
+
+#labstabs .labstabs {
 	display: flex;
 	flex-wrap: wrap;
   white-space: normal;
   justify-content: flex-start;
 }
-#labstabs .tabs label {
+#labstabs .labstabs > label {
 	order: 1;
 	display: block;
   padding: .75em .5em;
@@ -839,7 +840,7 @@ p.tagline {
   font-weight: bold;
   transition: background ease 0.2s;
 }
-#labstabs .tabs .tab {
+#labstabs .labstabs .tab {
   order: 99;
   flex-grow: 1;
 	width: 100%;
@@ -850,14 +851,14 @@ p.tagline {
   z-index: 1;
   margin-top: -1px;
 }
-#labstabs .tabs .tab h1 {
+#labstabs .labstabs .tab h1 {
   font-size: 1em;
   font-weight: normal;
 }
-#labstabs .tabs input[type="radio"] {
+#labstabs .labstabs input[type="radio"] {
 	display: none;
 }
-#labstabs .tabs input[type="radio"]:checked + label {
+#labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
   border: 1px solid grey;
   border-bottom: 0;
@@ -865,21 +866,21 @@ p.tagline {
   color: black;
   padding: .75em;
 }
-#labstabs .tabs input[type="radio"]:checked + label + .tab {
+#labstabs .labstabs input[type="radio"]:checked + label + .tab {
 	display: block;
 }
 
 @media (max-width: 45em) {
-  #labstabs .tabs .tab,
-  #labstabs .tabs label {
+  #labstabs .labstabs .tab,
+  #labstabs .labstabs label {
     order: initial;
   }
-  #labstabs .tabs label {
+  #labstabs .labstabs label {
     width: 100%;
     margin-right: 0;
     margin-top: 0.2rem;
   }
-  #labstabs .tabs input[type="radio"]:checked + label {
+  #labstabs .labstabs input[type="radio"]:checked + label {
     background-color: #565656;
     color: white;
     padding: .75em .5em;
