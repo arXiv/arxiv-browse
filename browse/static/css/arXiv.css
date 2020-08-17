@@ -858,6 +858,11 @@ p.tagline {
 #labstabs .labstabs .tab p {
   font-size: .8rem;
 }
+#labstabs .labstabs .tab .icon-labs {
+  width: 150px;
+  float: right;
+  margin: .5em 0 .5em 1em;
+}
 #labstabs .labstabs input[type="radio"] {
 	display: none;
 }
