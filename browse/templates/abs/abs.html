@@ -55,6 +55,7 @@
         <div class="dateline">{{ generate_dateline() }}</div>
         <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex2utf|arxiv_id_urlize|safe }}</h1>
         <div class="authors"><span class="descriptor">Authors:</span>{{ display_authors_with_links(abs_meta, author_links) }}</div>
+        {{ download_button }}
         {% include "abs/labs_tabs.html" %}
       </div>
     </div>
@@ -74,8 +75,7 @@
       report_num = abs_meta.report_num,
       version = abs_meta.version,
       submission_history = abs_meta.version_history,
-      secondary_categories = abs_meta.get_secondaries(),
-      download_button_markup = download_button )
+      secondary_categories = abs_meta.get_secondaries() )
     }}
     {%- else -%}
     {{
