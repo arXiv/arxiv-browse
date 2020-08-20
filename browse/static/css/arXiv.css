@@ -605,24 +605,67 @@ footer .sorry-app-links .a11y-main-link {
 .container-author-profile {
   max-width: 90%;
   margin: 0 auto;
+  margin-bottom: 5em;
+}
+.container-author-profile h1 {
+
 }
 .profile {
-  background-color: yellow;
+  padding: 0;
 }
 .profile .column.user-info {
-  background-color: grey;
+  padding: 0 .75em 0 0;
+}
+.profile .column.user-info p {
+  line-height: 22px;
+}
+.profile .column.user-info p strong {
+  color: #8d7109;
+}
+.profile .columns.site-links {
+  margin-top: 3em;
 }
 .profile .columns.site-links .column {
   padding: 0;
 }
+.profile .columns.site-links .column a {
+  display: block;
+  margin: 5px;
+  padding: 3px;
+  text-align: center;
+  border-radius: 10px;
+  color: #046baf;
+  box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
+  border: 2px solid #e2ebf1;
+}
 .profile .column.semantic-scholar {
-  background-color: orange;
+  background-color: #eef5f9;
+  margin-top:2em;
 }
-.profile-papers .columns:nth-child(even){
-  background-color: grey;
+.profile-papers .columns .column {
+
 }
+.profile-papers .columns:nth-child(even) {
+  background-color: #f6f6f6;
+}
+/* .download-links:nth-of-type(2n) {
+  background-color: #000000;
+} */
+
 .profile-papers h2 {
   margin-left: 7%;
+}
+.profile-papers .download-links {
+  text-align: center;
+  font-size: 12px;
+  padding: 2em 1em;
+}
+.profile-papers .download-links a svg {
+  fill: #b31b1b;
+  width: 1.5em;
+}
+.profile-papers .download-links a span {
+  color: #046baf;
 }
 .profile-login {
 
@@ -636,6 +679,9 @@ footer .sorry-app-links .a11y-main-link {
   }
   .profile-papers h2 {
     margin-left: 11%;
+  }
+  .profile .column.semantic-scholar {
+    margin-top:0em;
   }
 }
 
@@ -2325,6 +2371,8 @@ body#front.with-cu-identity #header #search {
     flex: none;
   }
 }
+
+
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
