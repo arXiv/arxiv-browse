@@ -15,6 +15,7 @@ from arxiv import taxonomy
 from browse.controllers import abs_page, archive_page, home_page, list_page, \
     prevnext, tb_page, stats_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
+from browse.controllers.author import get_author_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
@@ -224,6 +225,11 @@ def list_articles(context: str, subcontext: str) -> Response:
         return '', code, headers  # type: ignore
     return response, code, headers  # type: ignore
 
+@blueprint.route('author', methods=['GET'])
+def author() -> Response:
+    """Display the author profile page."""
+    response, code, headers = get_author_page()
+    return render_template('author.html', **response), code, headers  # type: ignore
 
 @blueprint.route('stats/main', methods=['GET'])
 def main() -> Response:

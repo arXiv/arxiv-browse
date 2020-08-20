@@ -1,0 +1,79 @@
+{%- extends "base.html" -%}
+{% block title %}Name's arXiv Profile{% endblock %}
+{% block header_h1 %}<h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; author profile &gt; name goes here</h1>{% endblock %}
+{# Disable login on this page for now, per classic #}
+{% block login_link %}{% endblock %}
+{% set list_name = 'category_taxonomy' %}
+
+{%- block content %}
+<div class="profile-login"><a hreaf="#">Login to your account</a></div>
+
+<div class="container-author-profile">
+  <h1>Name's arXiv Profile</h1>
+  <div class="columns profile">
+    <div class="column user-info">
+      <p>
+        ORCID iD: 0000-0002-7970-7855
+        <br>
+        arXiv member since: March 2016
+        <br>
+        Default arXiv category: Computational Geometry (cs.CG)
+        <br>
+        Papers on arXiv: 18
+        <br>
+        Institutional affiliation: Cornell University
+      </p>
+      <div class="columns is-multiline site-links">
+        <div class="column is-half">Inspire</div>
+        <div class="column is-half">DBLP</div>
+        <div class="column is-half">Twitter</div>
+        <div class="column is-half">Github</div>
+        <div class="column is-half">Google Scholar</div>
+      </div>
+    </div>
+    <div class="column semantic-scholar">
+      <div>
+        semantic scholar block
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block content_profile_wide %}
+<div class="profile-papers">
+  <h2>Name's papers on arXiv</h2>
+  <div class="columns">
+    <div class="column is-narrow">logo/download</div>
+    <div class="column">
+      <strong>arxiv.12345.987654321</strong><br>
+      <h3>Probing Nuclear and Circumnuclear Properties of NGC 6300 using X-ray Observations</h3>
+      <p>A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here. A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.</p>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-narrow">logo/download</div>
+    <div class="column">
+      <strong>arxiv.12345.987654321</strong><br>
+      <h3>Uncovering the primary X-ray emission and possible starburst component in the polarized NLS1 Mrk 1239</h3>
+      <p>A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.</p>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-narrow">logo/download</div>
+    <div class="column">
+      <strong>arxiv.12345.987654321</strong><br>
+      <h3>Probing Nuclear and Circumnuclear Properties of NGC 6300 using X-ray Observations</h3>
+      <p>A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.</p>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-narrow">logo/download</div>
+    <div class="column">
+      <strong>arxiv.12345.987654321</strong><br>
+      <h3>Uncovering the primary X-ray emission and possible starburst component in the polarized NLS1 Mrk 1239</h3>
+      <p>A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here. A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.A description here.</p>
+    </div>
+  </div>
+</div>
+{% endblock content_profile_wide %}

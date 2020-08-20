@@ -600,6 +600,46 @@ footer .sorry-app-links .a11y-main-link {
 }
 
 /****************************************
+ * Author profile page
+ ****************************************/
+.container-author-profile {
+  max-width: 90%;
+  margin: 0 auto;
+}
+.profile {
+  background-color: yellow;
+}
+.profile .column.user-info {
+  background-color: grey;
+}
+.profile .columns.site-links .column {
+  padding: 0;
+}
+.profile .column.semantic-scholar {
+  background-color: orange;
+}
+.profile-papers .columns:nth-child(even){
+  background-color: grey;
+}
+.profile-papers h2 {
+  margin-left: 7%;
+}
+.profile-login {
+
+}
+@media screen and (min-width: 769px) {
+  .container-author-profile {
+    max-width: 80%;
+  }
+  .profile-login {
+    float: right;
+  }
+  .profile-papers h2 {
+    margin-left: 11%;
+  }
+}
+
+/****************************************
  * Stats pages (/stats)
  ****************************************/
  .main-stats img.stat-thumb {
@@ -2250,6 +2290,40 @@ body#front.with-cu-identity #header #search {
 }
 .columns.is-vcentered {
   align-items: center;
+}
+.columns.is-mobile > .column.is-narrow {
+  flex: none;
+}
+.column.is-narrow-mobile {
+  flex: none;
+}
+.level.is-mobile .level-item:not(.is-narrow) {
+  flex-grow: 1;
+}
+.columns.is-multiline {
+  flex-wrap: wrap;
+}
+@media screen and (max-width: 768px) {
+  .column.is-narrow-mobile {
+    flex: none;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .column.is-narrow, .column.is-narrow-tablet {
+    flex: none;
+  }
+  .field-body > .field:not(.is-narrow) {
+    flex-grow: 1;
+  }
+  .column.is-half, .column.is-half-tablet {
+    flex: none;
+    width: 50%;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .column.is-narrow-desktop {
+    flex: none;
+  }
 }
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
