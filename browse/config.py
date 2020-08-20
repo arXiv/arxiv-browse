@@ -266,17 +266,7 @@ BROWSE_SITE_HOST = os.environ.get("BROWSE_SITE_HOST", None)
 """This is similar to, but decoupled from SERVER_NAME."""
 
 BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
-"""Enable/disable Matomo web analytics."""
-BROWSE_ANALYTICS_BASE_URL = os.environ.get(
-    "BROWSE_ANALYTICS_BASE_URL", "https://webstats.arxiv.org/"
-)
-"""Base URL for tracker. Should include trailing slash."""
-BROWSE_ANALYTICS_COOKIE_DOMAIN = os.environ.get(
-    "BROWSE_ANALYTICS_COOKIE_DOMAIN", "*.arxiv.org"
-)
-"""Cookie domain for tracker."""
-BROWSE_ANALYTICS_SITE_ID = os.environ.get("BROWSE_ANALYTICS_SITE_ID", "1")
-"""Tracker site ID."""
+"""Enable/disable web analytics."""
 
 BROWSE_USER_BANNER_ENABLED = bool(
     int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0"))
