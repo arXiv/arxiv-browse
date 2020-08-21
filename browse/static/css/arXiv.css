@@ -630,7 +630,7 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile .columns.site-links .column a {
   display: block;
-  margin: 5px;
+  margin: 5px 10px 5px 0;
   padding: 3px;
   text-align: center;
   border-radius: 10px;
