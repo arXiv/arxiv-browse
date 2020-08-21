@@ -617,13 +617,29 @@ footer .sorry-app-links .a11y-main-link {
   padding: 0 .75em 0 0;
 }
 .profile .column.user-info p {
-  line-height: 22px;
+  line-height: 25px;
 }
 .profile .column.user-info p strong {
   color: #8d7109;
 }
+.profile .column.user-info p strong span.orcid {
+  color: #a5cd39;
+}
+.profile .column.user-info .view-email {
+  margin: 0;
+  padding: 1px 12px;
+  position: relative;
+  top: -2px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 6px;
+  color: #046baf;
+  box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
+  border: 1px solid #e2ebf1;
+}
 .profile .columns.site-links {
   margin-top: 3em;
+  max-width: 300px;
 }
 .profile .columns.site-links .column {
   padding: 0;
@@ -642,6 +658,33 @@ footer .sorry-app-links .a11y-main-link {
   background-color: #eef5f9;
   margin-top:2em;
 }
+.profile .column.semantic-scholar .logo-semantic-scholar {
+  height: 2em;
+}
+.profile .column.semantic-scholar.card {
+
+}
+.profile .column.semantic-scholar.card figure {
+    text-align: center;
+}
+.profile .column.semantic-scholar.card .media-content p {
+  text-align: right;
+  font-weight: bold;
+  margin: 0;
+}
+.profile .column.semantic-scholar.card footer.card-footer {
+  margin-top: 1em;
+  padding: 1em 0;
+}
+.profile .column.semantic-scholar.card footer.card-footer a {
+  color: #005e9d;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.profile .column.semantic-scholar.card footer.card-footer a:hover {
+  border: 0;
+}
+
 .profile-papers .columns .column {
 
 }
@@ -2334,6 +2377,14 @@ body#front.with-cu-identity #header #search {
   flex: none;
   width: 80%;
 }
+.column.is-one-third-desktop {
+  flex: none;
+  width: 33.3333%;
+}
+.column.is-two-thirds-desktop {
+  flex: none;
+  width: 66.6666%;
+}
 .columns.is-vcentered {
   align-items: center;
 }
@@ -2353,6 +2404,10 @@ body#front.with-cu-identity #header #search {
   .column.is-narrow-mobile {
     flex: none;
   }
+  .column.is-full-mobile {
+    flex: none;
+    width: 100%;
+  }
 }
 @media screen and (min-width: 769px), print {
   .column.is-narrow, .column.is-narrow-tablet {
@@ -2369,6 +2424,148 @@ body#front.with-cu-identity #header #search {
 @media screen and (min-width: 1024px) {
   .column.is-narrow-desktop {
     flex: none;
+  }
+}
+
+
+/***BULMA CARD***/
+
+.card {
+  background-color: white;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  color: #4a4a4a;
+  max-width: 100%;
+  position: relative;
+}
+
+.card-header {
+  background-color: transparent;
+  align-items: stretch;
+  box-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.1);
+  display: flex;
+}
+
+.card-header-title {
+  align-items: center;
+  color: #363636;
+  display: flex;
+  flex-grow: 1;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.card-header-title.is-centered {
+  justify-content: center;
+}
+
+.card-header-icon {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+.card-image {
+  display: block;
+  position: relative;
+}
+
+.card-content {
+  background-color: transparent;
+  padding: 1.5rem;
+}
+
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid #ededed;
+  align-items: stretch;
+  display: flex;
+}
+
+.card-footer-item {
+  align-items: center;
+  display: flex;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.card-footer-item:not(:last-child) {
+  border-right: 1px solid #ededed;
+}
+
+.card .media:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+/***MEDIA for CARDS***/
+.media {
+  align-items: flex-start;
+  display: flex;
+  text-align: left;
+}
+
+.media .content:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+.media .media {
+  border-top: 1px solid rgba(219, 219, 219, 0.5);
+  display: flex;
+  padding-top: 0.75rem;
+}
+
+.media .media .content:not(:last-child),
+.media .media .control:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.media .media .media {
+  padding-top: 0.5rem;
+}
+
+.media .media .media + .media {
+  margin-top: 0.5rem;
+}
+
+.media + .media {
+  border-top: 1px solid rgba(219, 219, 219, 0.5);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.media.is-large + .media {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.media-left,
+.media-right {
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.media-left {
+  margin-right: 1rem;
+}
+
+.media-right {
+  margin-left: 1rem;
+}
+
+.media-content {
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+  .media-content {
+    overflow-x: auto;
   }
 }
 
