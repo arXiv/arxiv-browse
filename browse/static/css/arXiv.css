@@ -646,7 +646,7 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile .columns.site-links .column a {
   display: block;
-  margin: 5px 10px 5px 0;
+  margin: 5px 0px 5px 0;
   padding: 3px;
   text-align: center;
   border-radius: 10px;
@@ -662,10 +662,11 @@ footer .sorry-app-links .a11y-main-link {
   height: 2em;
 }
 .profile .column.semantic-scholar.card {
-
+  padding: 0;
 }
 .profile .column.semantic-scholar.card figure {
     text-align: center;
+    padding-top: 1em;
 }
 .profile .column.semantic-scholar.card .media-content p {
   text-align: right;
@@ -683,10 +684,6 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile .column.semantic-scholar.card footer.card-footer a:hover {
   border: 0;
-}
-
-.profile-papers .columns .column {
-
 }
 .profile-papers .columns:nth-child(even) {
   background-color: #f6f6f6;
@@ -711,11 +708,17 @@ footer .sorry-app-links .a11y-main-link {
   color: #046baf;
 }
 .profile-login {
-
+    font-size: 11px;
+    text-align: center;
+    width: 100%;
 }
 @media screen and (min-width: 769px) {
   .container-author-profile {
     max-width: 80%;
+  }
+  .profile-papers .columns {
+    padding-left: 10%;
+    padding-right: 10%;
   }
   .profile-login {
     float: right;
@@ -725,6 +728,17 @@ footer .sorry-app-links .a11y-main-link {
   }
   .profile .column.semantic-scholar {
     margin-top:0em;
+  }
+  .profile .columns.site-links .column a {
+    margin-right: 10px;
+  }
+  .profile-login {
+      text-align: right;
+      width: auto;
+      margin-right: 1em;
+  }
+  .profile .column.semantic-scholar.card figure {
+      padding-top: 0;
   }
 }
 
