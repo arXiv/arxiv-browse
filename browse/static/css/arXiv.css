@@ -819,7 +819,7 @@ p.tagline {
 /*CSS-only, responsive tabbed display */
 #labstabs {
   clear: both;
-  margin: 0 1em 1em 1em;
+  margin: 1em 1.5em;
 }
 
 #labstabs .labstabs {
@@ -839,6 +839,13 @@ p.tagline {
   background: #dcdcdc;
   font-weight: bold;
   transition: background ease 0.2s;
+}
+#abs #labstabs .labstabs > label {
+  font-size: .88em;
+}
+#abs-outer #abs #labstabs blockquote.abstract {
+  margin-left: .5em;
+  margin-right: .5em;
 }
 #labstabs .labstabs .tab {
   order: 99;
@@ -879,6 +886,10 @@ p.tagline {
 }
 
 @media (max-width: 45em) {
+  #labstabs {
+    padding-bottom: 1em;
+    margin: 1em;
+  }
   #labstabs .labstabs .tab,
   #labstabs .labstabs label {
     order: initial;
@@ -892,6 +903,10 @@ p.tagline {
     background-color: #565656;
     color: white;
     padding: .75em .5em;
+  }
+  #abs-outer #abs #labstabs blockquote.abstract {
+    margin-left: .25em;
+    margin-right: .25em;
   }
 }
 /*toggles*/

@@ -1,6 +1,11 @@
 // vanilla toggle script for LABS enabling
 $(document).ready(function() {
 
+  // TODO: Remove this hack if macro for tabs-above style is created in arxiv-base
+  if ( $('.dateline').size() > 1 ) {
+    $('.dateline').last().remove();
+  }
+
   jQuery.cachedScript = function(url, options) {
     // Allow user to set any option except for dataType, cache, and url
     options = $.extend(options || {}, {

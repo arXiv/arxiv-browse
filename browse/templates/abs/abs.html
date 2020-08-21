@@ -48,6 +48,36 @@
     </div>
     {% endif -%}
 
+    {%- if request.args.get('labs-style') == 'tabs-above' -%}
+    {#- This section is a hack to support the tabs-above style with the existing abs macro in arxiv-base -#}
+    <div id="content-inner">
+      <div id="abs">
+        <div class="dateline">{{ generate_dateline() }}</div>
+        <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex2utf|arxiv_id_urlize|safe }}</h1>
+        <div class="authors"><span class="descriptor">Authors:</span>{{ display_authors_with_links(abs_meta, author_links) }}</div>
+        {{ download_button }}
+        {% include "abs/labs_tabs.html" %}
+      </div>
+    </div>
+    {{
+      base_macros.abs(
+      abs_meta.arxiv_identifier.id,
+      "",
+      "",
+      "",
+      abs_meta.get_datetime_of_version(abs_meta.version),
+      abs_meta.primary_category.id,
+      comments = abs_meta.comments,
+      msc_class = abs_meta.msc_class,
+      acm_class = abs_meta.acm_class,
+      journal_ref = abs_meta.journal_ref,
+      doi = abs_meta.doi,
+      report_num = abs_meta.report_num,
+      version = abs_meta.version,
+      submission_history = abs_meta.version_history,
+      secondary_categories = abs_meta.get_secondaries() )
+    }}
+    {%- else -%}
     {{
       base_macros.abs(
       abs_meta.arxiv_identifier.id,
@@ -67,6 +97,7 @@
       secondary_categories = abs_meta.get_secondaries(),
       download_button_markup = download_button )
     }}
+    {%- endif -%}
 
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
@@ -87,124 +118,9 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-
-  <!-- LABS AREA -->
-  <div id="labstabs">
-    <div class="labstabs">
-      <input type="radio" name="tabs" id="tabone" checked="checked">
-      <label for="tabone">Bibliographic Tools</label>
-      <div class="tab labs-display-bib">
-        <h1>Bibliographic and Citation Tools</h1>
-
-        <div class="toggle">
-          {% if config['LABS_BIBEXPLORER_ENABLED'] %}
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="bibex-toggle" type="checkbox" class="lab-toggle">
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              Bibliographic Explorer <span>(<a href="https://labs.arxiv.org/">What is Bibex?</a>)</span>
-            </div>
-          </div>
-          {% endif %}
-
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="" type="checkbox" class="lab-toggle" disabled>
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              DBLP CS Bibliography <span>(coming soon)</span>
-            </div>
-          </div>
-        </div>
-
-        {%- if config['LABS_ENABLED'] -%}
-          <div class="labs-content-placeholder labs-display" style="display: none;"></div>
-        {%- endif %}
-      </div>
-
-      <input type="radio" name="tabs" id="tabtwo">
-      <label for="tabtwo">Recommenders</label>
-      <div class="tab">
-        <h1>Recommenders and Search Tools</h1>
-        <div class="toggle">
-          {% if 1 or config['LABS_CORE_RECOMMENDER_ENABLED'] %}
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="core-recommender-toggle" type="checkbox" class="lab-toggle">
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              CORE Recommender <span>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</span>
-            </div>
-          </div>
-          {% else %}
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="" type="checkbox" class="lab-toggle" disabled>
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              CORE Recommender <span>(coming soon)</span>
-            </div>
-          </div>
-          {% endif %}
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="" type="checkbox" class="lab-toggle" disabled>
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              Semantic Scholar Recommender <span>(coming soon)</span>
-            </div>
-          </div>
-        </div>
-
-        <div id="coreRecommenderOutput"></div>
-      </div>
-
-      <input type="radio" name="tabs" id="tabthree">
-      <label for="tabthree">Key Artifacts</label>
-      <div class="tab">
-        <h1>Key Artifacts and Underlying Materials</h1>
-        <div class="toggle">
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
-                <input id="" type="checkbox" class="lab-toggle" disabled>
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              Papers with Code <span>(coming soon)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <input type="radio" name="tabs" id="tabfour">
-      <label for="tabfour">About arXivLabs</label>
-      <div class="tab">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 635.572 811" class="icon-labs" role="presentation"><path d="M175.6 676v27h-27v-27zm-54 27v27h27v-27zm-27 27v27h27v-27zm396-54v27h-27v-27zm0 27v27h27v-27zm27 27v27h27v-27zm-27-414h27v27h-27zm27 0h27v-27h-27zm27-27h27v-27h-27zm-396 45h-27v-27h27zm-27-54h-27v27h27zm-27-27h-27v27h27z"/><path d="M94.6 730v27h-27v-27zm477 0v27h-27v-27zm-27-495h27v27h-27zm-450 18h-27v-27h27zm477 9h27v27h-27zm-54 495h27v27h-27zm-423 0h27v27h-27zm-54-504h27v27h-27z" fill="#666"/><path d="M67.6 730v27h-27v-27zm54 54v27h-27v-27zm0-108v27h27v-27zm-27 27v27h27v-27zm-81 0v27h27v-27zm585 27v27h-27v-27zm-108-54v27h27v-27zm27 27v27h27v-27zm81 0v27h27v-27zm-54-495h27v27h-27zm-54 108h27v-27h-27zm27-27h27v-27h-27zm0-81h27v-27h-27zm-423 18h-27v-27h27zm54 54h-27v27h27zm-27-27h-27v27h27zm0-81h-27v27h27zm423 612v27h-27v-27zm81-522v27h-27v-27zm-585-9v27h-27v-27z" fill="#999"/><path d="M94.6 784v27h-27v-27zm-27-27v27h27v-27zm-27-54v27h27v-27zm27 0v27h27v-27zm0-27v27h27v-27zm27 0v27h27v-27zm0-27v27h27v-27zm27 0v27h27v-27zm-108 81v27h27v-27zm558 54v27h-27v-27zm-27-27v27h27v-27zm27-54v27h27v-27zm-27 0v27h27v-27zm0-27v27h27v-27zm-27 0v27h27v-27zm0-27v27h27v-27zm-27 0v27h27v-27zm108 81v27h27v-27zm0-495h27v27h-27zm-27 27h27v-27h-27zm-54-27h27v-27h-27zm0 27h27v-27h-27zm-27 0h27v-27h-27zm0 27h27v-27h-27zm-27 0h27v-27h-27zm0 27h27v-27h-27zm81-108h27v-27h-27zm-504 45h-27v-27h27zm27-27h-27v27h27zm54-27h-27v27h27zm0 27h-27v27h27zm27 0h-27v27h27zm0 27h-27v27h27zm27 0h-27v27h27zm0 27h-27v27h27zm-81-108h-27v27h27z" fill="#ccc"/><path d="M598.6 665.1H41.5C-76.5 667 176 280.2 176 280.2h53a46.5 46.5 0 0162.8-56.3 29.2 29.2 0 1128.5 35.9h-1a46.5 46.5 0 01-1.5 20.3l142.5-.1s255.3 387 138.3 385.1zM291 181a29.3 29.3 0 10-29.2-29.3A29.3 29.3 0 00291 181zm65.4-66.8a22.4 22.4 0 10-22.5-22.4 22.4 22.4 0 0022.5 22.4z" fill="#fcff2a"/><path d="M245.5 172V10h153v162s324 495 198 495h-558c-126 0 207-495 207-495zm126 54h56m-13 72h56m-9 72h56m-20 72h56m-22 72h56m-29 72h56m-457-45c20.8 41.7 87.3 81 160.7 81 72.1 0 142.1-38.2 163.4-81" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="20"/><path d="M273.3 421.7c0 31-9.8 56.3-21.9 56.3s-21.8-25.2-21.8-56.3 9.8-56.3 21.8-56.3 21.9 25.2 21.9 56.3zm114.4-56.3c-12 0-21.8 25.2-21.8 56.3s9.7 56.3 21.8 56.3 21.9-25.2 21.9-56.3-9.8-56.3-21.9-56.3zM150.1 526.6c-18.2 6.7-27.5 22.9-23.2 30.2s14.8-5.5 33-12.2 37.4-4.9 33-12.2-24.5-12.6-42.8-5.8zm296 5.8c-4.2 7.3 14.9 5.5 33.1 12.2s28.7 19.5 33 12.2-5-23.5-23.2-30.2-38.5-1.5-42.8 5.8z"/></svg><h1>About arXivLabs</h1>
-        <p>We are excited to be experimenting with a small number of collaborators on arXiv Labs projects that add value for our stakeholders and advance research. </p>
-        <p>Do you have an idea that would help arXiv users like you? <a href="https://labs.arxiv.org/">Learn more about arXiv Labs</a> and <a href="https://arxiv.org/about/people/developers">ways to get involved</a>.</p>
-        <p><a href="https://labs.arxiv.org/">Learn More</a> | <a href="https://arxiv.org/about/people/developers">Contribute</a></p>
-      </div>
-    </div>
-  </div>
-  <!-- END LABS AREA -->
+  {%- if request.args.get('labs-style') == 'tabs-below'-%}
+  {% include "abs/labs_tabs.html" %}
+  {%- endif -%}
 
   <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
 </div>
@@ -219,7 +135,7 @@
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
-  (Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
+  [Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
   {%- if abs_meta.version == 1 and abs_meta.version < abs_meta.version_history[-1].version %} (this version){%- endif -%}
   {%- if abs_meta.version != 1 %} (<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
@@ -230,7 +146,7 @@
   {%- elif abs_meta.version > 1 and abs_meta.version == abs_meta.version_history[-1].version -%}
   , last revised {{ abs_meta.version_history[-1].submitted_date.strftime('%-d %b %Y') }} (this version, v{{ abs_meta.version }})
   {%- endif -%}
-  )
+  ]
 {%- endmacro -%}
 
 {%- macro generate_scholar_tags() -%}
