@@ -607,9 +607,6 @@ footer .sorry-app-links .a11y-main-link {
   margin: 0 auto;
   margin-bottom: 5em;
 }
-.container-author-profile h1 {
-
-}
 .profile {
   padding: 0;
 }
@@ -617,8 +614,8 @@ footer .sorry-app-links .a11y-main-link {
   padding: 0 .75em 0 0;
 }
 .profile .column.user-info p {
-  line-height: 25px;
-  color: #4e4e4e;
+  line-height: 30px;
+  color: #333;
 }
 .profile .column.user-info p strong {
   color: #000000;
@@ -629,10 +626,10 @@ footer .sorry-app-links .a11y-main-link {
   font-style: italic;
 }
 .profile .column.user-info p a, .profile .column.user-info p a:visited {
-  color: #046baf;
+  color: #086db1;
 }
 .profile .column.user-info p a:hover, .profile .column.user-info p a:active {
-  text-decoration: underline;
+
 }
 .profile .column.user-info .view-email {
   margin: 0;
@@ -642,7 +639,7 @@ footer .sorry-app-links .a11y-main-link {
   font-size: 12px;
   text-align: center;
   border-radius: 6px;
-  color: #046baf;
+  color: #086db1;
   box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
   border: 1px solid #e2ebf1;
 }
@@ -659,7 +656,7 @@ footer .sorry-app-links .a11y-main-link {
   padding: 3px;
   text-align: center;
   border-radius: 10px;
-  color: #046baf;
+  color: #086db1;
   box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
   border: 2px solid #e2ebf1;
 }
@@ -692,7 +689,7 @@ footer .sorry-app-links .a11y-main-link {
   padding-bottom: 0;
 }
 .profile .column.semantic-scholar.card footer.card-footer a:hover {
-  border: 0;
+  border-bottom: 0;
 }
 .profile .column.semantic-scholar.card footer .card-footer-item:not(:last-child) {
   border-right: 1px solid #a9a7a7;
@@ -719,7 +716,7 @@ footer .sorry-app-links .a11y-main-link {
   line-height: 22px;
 }
 .profile-papers a.paper-identifier {
-  color: #046baf;
+  color: #086db1;
   font-weight: bold;
   font-size: .8em;
 }
@@ -731,11 +728,10 @@ footer .sorry-app-links .a11y-main-link {
 .profile-papers .download-links a {
   margin: 1em 0;
   display: block;
-  color: #994d04;
   border-radius: 10px;
-  color: #046baf;
+  color: #086db1;
   box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
-  border: 2px solid #f3d7b5;
+  border: 2px solid #f3e7da;
   padding: 11px 6px;
   font-size: .9em;
 }
@@ -745,12 +741,15 @@ footer .sorry-app-links .a11y-main-link {
   margin-bottom: .5em;
 }
 .profile-papers .download-links a span {
-  color: #046baf;
+  color: #086db1;
 }
 .profile-login {
     font-size: 11px;
     text-align: center;
     width: 100%;
+}
+.profile-login a {
+    color: #086db1;
 }
 @media screen and (min-width: 769px) {
   .container-author-profile {
