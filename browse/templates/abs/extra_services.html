@@ -193,7 +193,6 @@
         {% if include_inspire_link %}
         <li>
           <a class="abs-button abs-button-small" href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-          <span class="inspire-links">(<a href="/refs/{{ abs_meta.arxiv_id }}">refers to</a> | <a href="/cits/{{ abs_meta.arxiv_id }}">cited by</a>)</span>
         </li>
         {% endif %}
         <li><a  class="abs-button abs-button-small" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
