@@ -609,6 +609,7 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile {
   padding: 0;
+  align-items: flex-start;
 }
 .profile .column.user-info {
   padding: 0 .75em 0 0;
@@ -631,6 +632,10 @@ footer .sorry-app-links .a11y-main-link {
 .profile .column.user-info p a:hover, .profile .column.user-info p a:active {
 
 }
+.profile .column.user-info p.affiliation {
+  font-size: 1.2em;
+  font-weight: bold;
+}
 .profile .column.user-info .view-email {
   margin: 0;
   padding: 1px 12px;
@@ -638,9 +643,9 @@ footer .sorry-app-links .a11y-main-link {
   top: -2px;
   font-size: 12px;
   text-align: center;
-  border-radius: 6px;
+  border-radius: 4px;
   color: #086db1;
-  box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
+  box-shadow: 2px 2px 4px 1px rgba(0,0,0,.2);
   border: 1px solid #e2ebf1;
 }
 .profile .columns.site-links {
@@ -723,24 +728,41 @@ footer .sorry-app-links .a11y-main-link {
 .profile-papers .download-links {
   text-align: center;
   font-size: 12px;
-  padding: 2em 1em;
+  padding: 0em 0em 2em 1em;
 }
-.profile-papers .download-links a {
-  margin: 1em 0;
-  display: block;
-  border-radius: 10px;
+.profile-papers .download-links .columns.is-mobile.is-multiline {
+  padding: 0;
+  width: 180px;
+}
+.profile-papers .download-links .columns.is-mobile.is-multiline .column {
+  padding: 0;
+}
+.profile-papers .download-links .columns.is-mobile.is-multiline .column a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  border-radius: 40px;
   color: #086db1;
-  box-shadow: 2px 3px 6px 1px rgba(0,0,0,.2);
-  border: 2px solid #f3e7da;
-  padding: 11px 6px;
+  box-shadow: 1px 2px 3px 1px rgba(0,0,0,.1);
+  padding: 5px;
   font-size: .9em;
+  width: 70px;
+  height: 70px;
+  background-color: transparent;
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
 }
-.profile-papers .download-links a svg {
+.profile-papers .download-links .columns.is-mobile.is-multiline .column a:hover, .profile-papers .download-links .columns.is-mobile.is-multiline .column a:active {
+  background-color: #d8ccc0;
+}
+.profile-papers .download-links .columns.is-mobile.is-multiline .column a svg {
   fill: #994d04;
-  width: 1.5em;
+  height: 1.85em;
   margin-bottom: .5em;
 }
-.profile-papers .download-links a span {
+.profile-papers .download-links .columns.is-mobile.is-multiline .column a span {
   color: #086db1;
 }
 .profile-login {
@@ -764,6 +786,17 @@ footer .sorry-app-links .a11y-main-link {
   }
   .profile-papers h2 {
     margin-left: 11%;
+  }
+  .profile-papers .download-links {
+    padding: 2em 0em 2em 1em;
+  }
+  .profile-papers .download-links .columns.is-mobile.is-multiline .column {
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .profile-papers .download-links .columns.is-mobile.is-multiline .column a {
+    margin: 1em 0 0 0;
   }
   .profile .column.semantic-scholar {
     margin-top:0em;
@@ -2583,9 +2616,7 @@ body#front.with-cu-identity #header #search {
   }
 }
 
-
 /***BULMA CARD***/
-
 .card {
   background-color: white;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
