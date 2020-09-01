@@ -732,10 +732,9 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile-papers .download-links .columns.is-mobile.is-multiline {
   padding: 0;
-  width: 180px;
 }
 .profile-papers .download-links .columns.is-mobile.is-multiline .column {
-  padding: 0;
+  padding: 0 1em 0 0;
 }
 .profile-papers .download-links .columns.is-mobile.is-multiline .column a {
   display: flex;
@@ -789,6 +788,9 @@ footer .sorry-app-links .a11y-main-link {
   }
   .profile-papers .download-links {
     padding: 2em 0em 2em 1em;
+  }
+  .profile-papers .download-links .columns.is-mobile.is-multiline {
+    width: 180px;
   }
   .profile-papers .download-links .columns.is-mobile.is-multiline .column {
     padding: 0;
