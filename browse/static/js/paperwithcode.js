@@ -1,6 +1,4 @@
 (function () {
-  console.log('paperwithcode.js');
-
   var styleUrl = $('#paperwithcode-toggle').data('style-url');
   var linkElement = document.createElement('link');
   linkElement.setAttribute('rel', 'stylesheet');
