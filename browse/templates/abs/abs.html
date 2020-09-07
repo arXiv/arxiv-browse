@@ -47,37 +47,6 @@
       <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
     </div>
     {% endif -%}
-
-    {%- if request.args.get('labs-style') == 'tabs-above' -%}
-    {#- This section is a hack to support the tabs-above style with the existing abs macro in arxiv-base -#}
-    <div id="content-inner">
-      <div id="abs">
-        <div class="dateline">{{ generate_dateline() }}</div>
-        <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ abs_meta.title|tex2utf|arxiv_id_urlize|safe }}</h1>
-        <div class="authors"><span class="descriptor">Authors:</span>{{ display_authors_with_links(abs_meta, author_links) }}</div>
-        {{ download_button }}
-        {% include "abs/labs_tabs.html" %}
-      </div>
-    </div>
-    {{
-      base_macros.abs(
-      abs_meta.arxiv_identifier.id,
-      "",
-      "",
-      "",
-      abs_meta.get_datetime_of_version(abs_meta.version),
-      abs_meta.primary_category.id,
-      comments = abs_meta.comments,
-      msc_class = abs_meta.msc_class,
-      acm_class = abs_meta.acm_class,
-      journal_ref = abs_meta.journal_ref,
-      doi = abs_meta.doi,
-      report_num = abs_meta.report_num,
-      version = abs_meta.version,
-      submission_history = abs_meta.version_history,
-      secondary_categories = abs_meta.get_secondaries() )
-    }}
-    {%- else -%}
     {{
       base_macros.abs(
       abs_meta.arxiv_identifier.id,
@@ -97,8 +66,6 @@
       secondary_categories = abs_meta.get_secondaries(),
       download_button_markup = download_button )
     }}
-    {%- endif -%}
-
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
@@ -118,11 +85,20 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-  {%- if request.args.get('labs-style') == 'tabs-below'-%}
   {% include "abs/labs_tabs.html" %}
-  {%- endif -%}
 
-  <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+  <div class="endorsers">
+    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |
+    <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
+    <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;">{% include "feedback_collector.html" %}</span>
+  </div>
+  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+
+  {% if config['LABS_CORE_RECOMMENDER_ENABLED'] %}
+  <script src="{{ url_for('static', filename='js/core-recommender.js') }}" type="text/javascript"></script>
+  <div id="coreRecommenderOutput"></div>
+  <div class="endorsers"><a id="core-recommender-toggle" href="javascript:toggleCORERecommender()">Enable CORE Recommendations</a></div>
+  {% endif %}
 </div>
 {% endblock content %}
 
