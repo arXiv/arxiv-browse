@@ -1,10 +1,5 @@
-// vanilla toggle script for LABS enabling
+// toggle logic for arXivLabs integrations
 $(document).ready(function() {
-
-  // TODO: Remove this hack if macro for tabs-above style is created in arxiv-base
-  if ( $('.dateline').size() > 1 ) {
-    $('.dateline').last().remove();
-  }
 
   jQuery.cachedScript = function(url, options) {
     // Allow user to set any option except for dataType, cache, and url
@@ -17,9 +12,15 @@ $(document).ready(function() {
   };
 
   var scripts = {
-    "bibex": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
-    "core-recommender": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
+    "bibex": {
+      "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
+      "container": "#bib-main"
+    },
+    "core-recommender": {
+      "url": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
+      "container": "#coreRecommenderOutput"
+    }
   };
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
@@ -29,12 +30,13 @@ $(document).ready(function() {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
         $("#" + key + ".lab-toggle").toggleClass("enabled", true);
-        if (key === "bibex-toggle") {
-          $.cachedScript(scripts["bibex"]).done(function(script, textStatus) {
+        if (key == "bibex-toggle") {
+          $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
-        } else if (key === "core-recommender-toggle") {
-          $.cachedScript(scripts["core-recommender"]).done(function(script, textStatus) {
+        }
+        else if (key == "core-recommender-toggle") {
+          $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         } else if (key === "paperwithcode-toggle") {
@@ -60,33 +62,37 @@ $(document).ready(function() {
     var bibex_val = false;
     $(this).toggleClass("enabled");
     if ($(this).hasClass("enabled")) {
-      $('.labs-display').show();
       cookie_val = "enabled";
       bibex_val = true;
     }
+    labsCookie[$(this).attr("id")] = cookie_val;
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+
     if ($(this).attr("id") == "bibex-toggle") {
       bibexCookie[bibex_key] = bibex_val;
       Cookies.set("arxiv_bibex", bibexCookie);
       if (bibex_val) {
-        $.cachedScript(scripts["bibex"]).done(function(script, textStatus) {
+        $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
           console.log(textStatus);
         });
       }
-    } else if ($(this).attr("id") == "core-recommender-toggle") {
-      $.cachedScript(scripts["core-recommender"]).done(function(script, textStatus) {
-        console.log(textStatus);
-      });
+    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled") ) {
+        $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     }
 
-    labsCookie[$(this).attr("id")] = cookie_val;
-    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
-    // TODO: do this without a reload
+    // TODO: clean this up
     if (cookie_val == 'disabled') {
-      location.reload();
+      if ($(this).attr("id") == "core-recommender-toggle") {
+        $('#coreRecommenderOutput').empty();
+      }
+      else if ($(this).attr("id") == "bibex-toggle") {
+        $('#bib-main').remove();
+        location.reload();
+      }
     }
   });
 });

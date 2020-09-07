@@ -328,7 +328,7 @@ def _check_context(arxiv_identifier: Identifier,
 def _is_covid_match(docmeta: DocMetadata) -> bool:
     """Check whether paper is about COVID-19."""
     for field in (docmeta.title, docmeta.abstract):
-        if re.search(r'(covid[-\s]?19|coronavirus|sars[-\s]cov[-\s]?2)',
+        if re.search(r'(covid[-\s]?19|corona[\s]?virus|sars[-\s]cov[-\s]?2)',
                      field, flags=re.I | re.M):
             return True
     return False
