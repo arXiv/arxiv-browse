@@ -100,15 +100,21 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input id="" type="checkbox" class="lab-toggle" disabled>
+              <input
+                id="paperwithcode-toggle"
+                data-script-url="{{ url_for('static', filename='js/paperwithcode.js') }}"
+                data-style-url="{{ url_for('static', filename='css/paperwithcode.css') }}"
+                type="checkbox" class="lab-toggle">
               <span class="slider"></span>
             </label>
           </div>
           <div class="column lab-name">
-            Papers with Code <span>(coming soon)</span>
+            Papers with Code <span>(<a href="https://paperswithcode.com/about" target="_blank">What is pwc?</a>)</span>
           </div>
         </div>
       </div>
+
+      <div id="pwc-output"></div>
     </div>
 
     <input type="radio" name="tabs" id="tabfour">

@@ -1,0 +1,36 @@
+#pwc-output {
+    padding: 7px;
+}
+
+#pwc-output > h3 {
+    margin-top: 25px;
+}
+
+.pwc-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 3px;
+    margin-right: 5px;
+}
+
+.pwc-icon-primary {
+    color: #21cbce;
+    margin-right: 0;
+    stroke: currentColor;
+    top: 5px;
+}
+
+.pwc-avatar {
+    border-radius: 50%;
+    margin-right: 2px;
+    height: 25px;
+    margin-left: -10px;
+    border: 2px solid #fff;
+    position: relative;
+    top: 8px;
+}
+
+.pwc-code-link {
+    margin-right: 5px;
+}

@@ -18,7 +18,8 @@ $(document).ready(function() {
 
   var scripts = {
     "bibex": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
-    "core-recommender": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1"
+    "core-recommender": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
+    "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
   };
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
@@ -28,12 +29,16 @@ $(document).ready(function() {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
         $("#" + key + ".lab-toggle").toggleClass("enabled", true);
-        if (key == "bibex-toggle") {
+        if (key === "bibex-toggle") {
           $.cachedScript(scripts["bibex"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
-        } else if ("core-recommender-toggle") {
+        } else if (key === "core-recommender-toggle") {
           $.cachedScript(scripts["core-recommender"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "paperwithcode-toggle") {
+          $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         }
@@ -69,6 +74,10 @@ $(document).ready(function() {
       }
     } else if ($(this).attr("id") == "core-recommender-toggle") {
       $.cachedScript(scripts["core-recommender"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "paperwithcode-toggle") {
+      $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     }
