@@ -34,7 +34,7 @@
     output += '<h3>Community Code</h3>';
 
     if (data.unofficial_count === 0) {
-      output += `Submit your reimplementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc} Paper With Code</a>`;
+      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc} Paper With Code</a>`;
     } else {
       for (var i = 0 ; i < data.top.length ; i++) {
         output += `<img src="${data.top[i].owner.avatar}" class="pwc-avatar" />`;
@@ -44,7 +44,7 @@
       output += data.top.slice(0, 2).map(item => item.owner.name).join(', ');
 
       if (data.unofficial_count > 2) {
-        output += `and ${data.unofficial_count - 2} others reimplemented this paper`
+        output += `and ${data.unofficial_count - 2} others implemented this paper`
       }
 
       output += '</a>';
