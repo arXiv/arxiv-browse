@@ -44,7 +44,7 @@
       output += data.top.slice(0, 2).map(item => item.owner.name).join(', ');
 
       if (data.unofficial_count > 2) {
-        output += `and ${data.unofficial_count - 2} others implemented this paper`
+        output += ` and ${data.unofficial_count - 2} others implemented this paper`
       }
 
       output += '</a>';
