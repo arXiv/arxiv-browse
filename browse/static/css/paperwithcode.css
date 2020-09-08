@@ -15,9 +15,7 @@
 }
 
 .pwc-icon-primary {
-    color: #21cbce;
     margin-right: 0;
-    stroke: currentColor;
     top: 8px;
     width: 27px;
     height: 27px;
@@ -25,18 +23,4 @@
 
 .pwc-avatar-box {
     display: inline-block;
-}
-
-.pwc-avatar {
-    border-radius: 50%;
-    margin-right: 2px;
-    height: 25px;
-    border: 1px solid #777;
-    position: relative;
-    top: 8px;
-    float: right;
-}
-
-.pwc-avatar:not(:last-child) {
-    margin-left: -10px;
 }
