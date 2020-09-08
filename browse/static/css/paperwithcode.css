@@ -21,14 +21,22 @@
     top: 5px;
 }
 
+.pwc-avatar-box {
+    display: inline-block;
+}
+
 .pwc-avatar {
     border-radius: 50%;
     margin-right: 2px;
     height: 25px;
-    margin-left: -10px;
-    border: 2px solid #fff;
+    border: 1px solid #777;
     position: relative;
     top: 8px;
+    float: right;
+}
+
+.pwc-avatar:not(:last-child) {
+    margin-left: -10px;
 }
 
 .pwc-code-link {
