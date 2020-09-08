@@ -27,7 +27,7 @@
 
     if (data.official) {
       output += icons.github;
-      output += `<a target="_blank" href="${data.official}">${data.official}</a>`;
+      output += `<a target="_blank" href="${data.official.url}">${data.official.url}</a>`;
     } else {
       output += `No official code found; <a target="_blank" href="${data.paper_url}">you can submit it here</a>`;
     }
@@ -37,15 +37,17 @@
     if (data.unofficial_count === 0) {
       output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc} Paper With Code</a>`;
     } else {
-      for (var i = 0 ; i < data.top.length ; i++) {
+      output += '<div class="pwc-avatar-box">';
+      for (var i = data.top.length - 1 ; i >= 0 ; i--) {
         output += `<img src="${data.top[i].owner.avatar}" class="pwc-avatar" />`;
       }
+      output += '</div>';
 
       output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
       output += data.top.slice(0, 2).map(item => item.owner.name).join(', ');
 
       if (data.unofficial_count > 2) {
-        output += ` and ${data.unofficial_count - 2} others implemented this paper`
+        output += ` and ${data.unofficial_count - 2} other${data.unofficial_count - 2 > 1 ? 's': ''} implemented this paper`
       }
 
       output += '</a>';
