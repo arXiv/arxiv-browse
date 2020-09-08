@@ -7,7 +7,7 @@
   document.head.appendChild(linkElement);
 
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  arxivId = '1909.11065';
+  // arxivId = '1909.11065';
   var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/papers/' + arxivId;
   var $output = $('#pwc-output');
   $.get(pwcApiUrl).done(function (response) {
@@ -37,17 +37,17 @@
     if (data.unofficial_count === 0) {
       output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc} Paper With Code</a>`;
     } else {
-      output += '<div class="pwc-avatar-box">';
-      for (var i = data.top.length - 1 ; i >= 0 ; i--) {
-        output += `<img src="${data.top[i].owner.avatar}" class="pwc-avatar" />`;
-      }
-      output += '</div>';
-
       output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
-      output += data.top.slice(0, 2).map(item => item.owner.name).join(', ');
+      output += `${icons.pwc} ${data.unofficial_count} code implementation${data.unofficial_count > 1 ? 's': ''}`;
 
-      if (data.unofficial_count > 2) {
-        output += ` and ${data.unofficial_count - 2} other${data.unofficial_count - 2 > 1 ? 's': ''} implemented this paper`
+      var frameworks = [...new Set(data.top.map(item => item.framework))].filter(item => item);
+
+      if (frameworks.length === 1) {
+        output += ` (in ${frameworks[0]})`;
+      } else if (frameworks.length === 2) {
+        output += ` (in ${frameworks.join(' and ')})`;
+      } else if (frameworks.length > 2) {
+        output += ` (in ${frameworks.slice(0, -1).join(', ')} and ${frameworks[frameworks.length - 1]})`;
       }
 
       output += '</a>';
