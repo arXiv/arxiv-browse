@@ -607,6 +607,22 @@ footer .sorry-app-links .a11y-main-link {
   margin: 0 auto;
   margin-bottom: 5em;
 }
+.container-author-profile .unclaimed-message.card {
+  background-color: #eef5f9;
+  margin-top:2em;
+}
+.container-author-profile .unclaimed-message.card p {
+  margin: 0;
+}
+.container-author-profile .unclaimed-message.card .card-footer p {
+  text-align: center;
+  padding: 1em;
+  width: 100%;
+}
+.container-author-profile .unclaimed-message.card .card-footer p a {
+  font-size: .8em;
+  font-weight: bold;
+}
 .profile {
   padding: 0;
   align-items: flex-start;
@@ -634,7 +650,6 @@ footer .sorry-app-links .a11y-main-link {
 }
 .profile .column.user-info p.affiliation {
   font-size: 1.2em;
-  font-weight: bold;
 }
 .profile .column.user-info .view-email {
   margin: 0;

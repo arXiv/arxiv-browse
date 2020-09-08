@@ -7,8 +7,8 @@
 
 {%- block content %}
 <div class="profile-login">
-  {%- if request.args.get('status') == 'loggedin'-%}
-  You are logged in as (name). <a href="#">Edit your profile</a>
+  {%- if request.args.get('status') == '1'-%}
+  You are logged in as Jane Doe. <a href="#">Edit your profile</a>
   {% else %}
   <a href="#">Login to your account</a>
   {%- endif -%}
@@ -16,21 +16,32 @@
 
 <div class="container-author-profile">
   <h1>
-    {%- if request.args.get('status') == 'loggedin'-%}
+    {%- if request.args.get('status') == '1'-%}
     Your
     {% else %}
-    Name's&nbsp;
+    Jane Doe's
     {%- endif -%}
-     arXiv Profile
+    &nbsp;arXiv Profile
   </h1>
+
+  {% if request.args.get('status') == '3'-%}
+  <div class="unclaimed-message card">
+    <div class="card-content">
+      <p>This profile is unclaimed. Is this you? Help improve the accuracy of arXiv author results by <a href="">logging in and associating this page with your account</a>.</p>
+    </div>
+    <div class="card-footer">
+      <p><a href="">About arXiv Author Profiles</a> | <a href="">Login or Create an Account</a> | <a href="">How to claim papers</a></p>
+    </div>
+  </div>
+  {% else %}
   <div class="columns profile">
     <div class="column user-info">
       <p class="affiliation">
-        <strong>Institutional affiliation:</strong> <a href="#" aria-label="Institutional affiliation">Cornell University</a>
+        <strong>Institutional affiliation:</strong> Cornell University
       </p>
       <p>
         <strong>Email: </strong>
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         test@email.com
         {% else %}
         <a href="#" class="view-email">view email</a>
@@ -42,7 +53,7 @@
         <br>
         <strong>Default arXiv category:</strong> Computational Geometry (cs.CG)
         <br>
-        <strong>Papers on arXiv:</strong> 18 {%- if request.args.get('status') == 'loggedin'-%}<span class="claim-papers">(<a href="https://arxiv.org/user/login?dest=http%3A%2F%2Farxiv.org%2Fauth%2Fneed-paper-password" target="_blank">need to claim additional papers?</a>)</span>{%- endif -%}
+        <strong>Papers on arXiv:</strong> 18 {%- if request.args.get('status') == '1'-%}<span class="claim-papers">(<a href="https://arxiv.org/user/login?dest=http%3A%2F%2Farxiv.org%2Fauth%2Fneed-paper-password" target="_blank">need to claim additional papers?</a>)</span>{%- endif -%}
       </p>
       <div class="columns is-multiline site-links">
         <div class="column is-half-desktop is-half-tablet is-full-mobile"><a href="">Inspire</a></div>
@@ -51,7 +62,7 @@
         <div class="column is-half-desktop is-half-tablet is-full-mobile"><a href="">Github</a></div>
         <div class="column is-half-desktop is-half-tablet is-full-mobile"><a href="">Google Scholar</a></div>
       </div>
-      {%- if request.args.get('status') == 'loggedin'-%}
+      {%- if request.args.get('status') == '1'-%}
       <p><a href="#" class="user-manage">Edit your profile</a></p>
       {%- endif -%}
     </div>
@@ -89,28 +100,30 @@
         </div>
       </div>
       <footer class="card-footer">
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         <a href="#" class="card-footer-item" aria-label="Edit your data on Semantic Scholar">Edit</a>
         <a href="#" class="card-footer-item" aria-label="Manage display settings from your arXiv account">Manage</a>
         {%- endif -%}
-        <a href="#" class="card-footer-item" aria-label="Read more about Semantic Scholar">About {%- if request.args.get('status') != 'loggedin'-%}&nbsp;Semantic Scholar Author Profiles{%- endif -%}</a>
+        <a href="#" class="card-footer-item" aria-label="Read more about Semantic Scholar">About {%- if request.args.get('status') != '1'-%}&nbsp;Semantic Scholar Author Profiles{%- endif -%}</a>
       </footer>
     </div>
-
   </div>
-</div>
+  {%- endif -%}
+</div><!-- profile details -->
 {% endblock content %}
 
 {% block content_profile_wide %}
 <div class="profile-papers">
+  {% if request.args.get('status') != '3'-%}
   <h2>
-  {%- if request.args.get('status') == 'loggedin'-%}
-Your
-  {% else %}
-Name's&nbsp;
-  {%- endif -%}
-papers on arXiv
+    {%- if request.args.get('status') == '1'-%}
+    Your
+    {% else %}
+    Jane Doe's&nbsp;
+    {%- endif -%}
+    papers on arXiv
   </h2>
+  {%- endif -%}
   <div class="columns">
     <div class="column">
       <a href="" class="paper-identifier">arxiv.12345.987654321</a><br>
@@ -123,7 +136,7 @@ papers on arXiv
         Download</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"/></svg>
         View on arXiv</a></div>
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg>
         Edit Metadata</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 176.001C512 273.203 433.202 352 336 352c-11.22 0-22.19-1.062-32.827-3.069l-24.012 27.014A23.999 23.999 0 0 1 261.223 384H224v40c0 13.255-10.745 24-24 24h-40v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-78.059c0-6.365 2.529-12.47 7.029-16.971l161.802-161.802C163.108 213.814 160 195.271 160 176 160 78.798 238.797.001 335.999 0 433.488-.001 512 78.511 512 176.001zM336 128c0 26.51 21.49 48 48 48s48-21.49 48-48-21.49-48-48-48-48 21.49-48 48z"/></svg>
@@ -144,7 +157,7 @@ papers on arXiv
         Download</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"/></svg>
         View on arXiv</a></div>
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg>
         Edit Metadata</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 176.001C512 273.203 433.202 352 336 352c-11.22 0-22.19-1.062-32.827-3.069l-24.012 27.014A23.999 23.999 0 0 1 261.223 384H224v40c0 13.255-10.745 24-24 24h-40v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-78.059c0-6.365 2.529-12.47 7.029-16.971l161.802-161.802C163.108 213.814 160 195.271 160 176 160 78.798 238.797.001 335.999 0 433.488-.001 512 78.511 512 176.001zM336 128c0 26.51 21.49 48 48 48s48-21.49 48-48-21.49-48-48-48-48 21.49-48 48z"/></svg>
@@ -165,7 +178,7 @@ papers on arXiv
         Download</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"/></svg>
         View on arXiv</a></div>
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg>
         Edit Metadata</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 176.001C512 273.203 433.202 352 336 352c-11.22 0-22.19-1.062-32.827-3.069l-24.012 27.014A23.999 23.999 0 0 1 261.223 384H224v40c0 13.255-10.745 24-24 24h-40v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-78.059c0-6.365 2.529-12.47 7.029-16.971l161.802-161.802C163.108 213.814 160 195.271 160 176 160 78.798 238.797.001 335.999 0 433.488-.001 512 78.511 512 176.001zM336 128c0 26.51 21.49 48 48 48s48-21.49 48-48-21.49-48-48-48-48 21.49-48 48z"/></svg>
@@ -186,7 +199,7 @@ papers on arXiv
         Download</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"/></svg>
         View on arXiv</a></div>
-        {%- if request.args.get('status') == 'loggedin'-%}
+        {%- if request.args.get('status') == '1'-%}
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg>
         Edit Metadata</a></div>
         <div class="column is-narrow-mobile is-half-desktop"><a href=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true"><path d="M512 176.001C512 273.203 433.202 352 336 352c-11.22 0-22.19-1.062-32.827-3.069l-24.012 27.014A23.999 23.999 0 0 1 261.223 384H224v40c0 13.255-10.745 24-24 24h-40v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-78.059c0-6.365 2.529-12.47 7.029-16.971l161.802-161.802C163.108 213.814 160 195.271 160 176 160 78.798 238.797.001 335.999 0 433.488-.001 512 78.511 512 176.001zM336 128c0 26.51 21.49 48 48 48s48-21.49 48-48-21.49-48-48-48-48 21.49-48 48z"/></svg>
