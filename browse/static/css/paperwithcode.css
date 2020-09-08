@@ -18,7 +18,9 @@
     color: #21cbce;
     margin-right: 0;
     stroke: currentColor;
-    top: 5px;
+    top: 8px;
+    width: 27px;
+    height: 27px;
 }
 
 .pwc-avatar-box {
@@ -37,8 +39,4 @@
 
 .pwc-avatar:not(:last-child) {
     margin-left: -10px;
-}
-
-.pwc-code-link {
-    margin-left: 5px;
 }
