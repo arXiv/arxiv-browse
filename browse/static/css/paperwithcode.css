@@ -1,5 +1,6 @@
 #pwc-output {
     padding: 7px;
+    margin-bottom: 10px;
 }
 
 #pwc-output > h3 {
@@ -7,18 +8,15 @@
 }
 
 .pwc-icon {
-    width: 20px;
-    height: 20px;
+    width: 23px;
+    height: 23px;
     position: relative;
-    top: 3px;
+    top: 5px;
     margin-right: 5px;
 }
 
 .pwc-icon-primary {
-    margin-right: 0;
-    top: 8px;
-    width: 27px;
-    height: 27px;
+    top: 6px;
 }
 
 .pwc-avatar-box {

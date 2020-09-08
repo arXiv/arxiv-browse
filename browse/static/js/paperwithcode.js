@@ -26,8 +26,7 @@
     var output = '<h3>Official Code</h3>';
 
     if (data.official) {
-      output += icons.github;
-      output += `<a target="_blank" href="${data.official.url}">${data.official.url}</a>`;
+      output += `<a target="_blank" href="${data.official.url}">${icons.github} ${data.official.url}</a>`;
     } else {
       output += `No official code found; <a target="_blank" href="${data.paper_url}">you can submit it here</a>`;
     }
@@ -40,14 +39,12 @@
       output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
       output += `${icons.pwc} ${data.unofficial_count} code implementation${data.unofficial_count > 1 ? 's': ''}`;
 
-      var frameworks = [...new Set(data.top.map(item => item.framework))].filter(item => item);
-
-      if (frameworks.length === 1) {
-        output += ` (in ${frameworks[0]})`;
-      } else if (frameworks.length === 2) {
-        output += ` (in ${frameworks.join(' and ')})`;
-      } else if (frameworks.length > 2) {
-        output += ` (in ${frameworks.slice(0, -1).join(', ')} and ${frameworks[frameworks.length - 1]})`;
+      if (data.frameworks.length === 1) {
+        output += ` (in ${data.frameworks[0]})`;
+      } else if (data.frameworks.length === 2) {
+        output += ` (in ${data.frameworks.join(' and ')})`;
+      } else if (data.frameworks.length > 2) {
+        output += ` (in ${data.frameworks.slice(0, -1).join(', ')} and ${data.frameworks[data.frameworks.length - 1]})`;
       }
 
       output += '</a>';
