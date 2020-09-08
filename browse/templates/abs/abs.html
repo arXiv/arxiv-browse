@@ -76,12 +76,6 @@
       {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
-    <div class="endorsers">
-      <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}">Which authors of this paper are endorsers?</a> |
-      <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-    </div>
-
-    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
