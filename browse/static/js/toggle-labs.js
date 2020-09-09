@@ -31,13 +31,14 @@ $(document).ready(function() {
     "cs.NE": 1,
     "stat.ML": 1,
     "cs.IR": 1,
+    'math.CA': 1
   };
   var current_context = $('.current').text();
   if ( pwc_context[current_context]  ){
     $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
       console.log(textStatus);
     });
-    $("#paperwithcodetoggle.lab-toggle").toggleClass("enabled", true);
+    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
   }
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
