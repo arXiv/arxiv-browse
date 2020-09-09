@@ -12,6 +12,7 @@ $(document).ready(function() {
   };
 
   var scripts = {
+    "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
       "container": "#bib-main"
@@ -36,6 +37,10 @@ $(document).ready(function() {
         }
         else if (key == "core-recommender-toggle") {
           $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "paperwithcode-toggle") {
+          $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         }
@@ -73,6 +78,10 @@ $(document).ready(function() {
       }
     } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled") ) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
+    } else if ($(this).attr("id") == "paperwithcode-toggle") {
+      $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
     }
 
     // TODO: clean this up
