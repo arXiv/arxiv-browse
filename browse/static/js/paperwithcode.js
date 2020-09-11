@@ -12,6 +12,8 @@
   var $output = $('#pwc-output');
   $.get(pwcApiUrl).done(function (response) {
     render(response);
+  }).fail(function (response) {
+    render(null);
   });
 
   var icons = {
@@ -21,12 +23,16 @@
 
   function render (data) {
     $output.html('');
+    if (data === null) {
+      $output.html('<p>This paper has not been found in the Papers with Code database. If you are the paper author you can link your code on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
+      return
+    }
     if (data.error) return;
 
     var output = '<h3>Official Code</h3>';
 
     if (data.official) {
-      output += `<a target="_blank" href="${data.official.url}">${icons.github} ${data.official.url}</a>`;
+      output += `<a target="_blank" href="${data.official.url}">${icons.github}${data.official.url}</a>`;
     } else {
       output += `No official code found; <a target="_blank" href="${data.paper_url}">you can submit it here</a>`;
     }
@@ -34,7 +40,7 @@
     output += '<h3>Community Code</h3>';
 
     if (data.unofficial_count === 0) {
-      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc} Paper With Code</a>`;
+      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc}Paper With Code</a>`;
     } else {
       output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
       output += `${icons.pwc} ${data.unofficial_count} code implementation${data.unofficial_count > 1 ? 's': ''}`;
