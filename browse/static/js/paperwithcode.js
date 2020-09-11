@@ -24,7 +24,7 @@
   function render (data) {
     $output.html('');
     if (data === null) {
-      $output.html('<p>This paper has not been found in the Papers with Code database. If you are the paper author you can link your code on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
+      $output.html('<p>This paper has not been found in the Papers with Code database. If you are one of the registered authors of this paper, you can link your code on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
       return
     }
     if (data.error) return;
