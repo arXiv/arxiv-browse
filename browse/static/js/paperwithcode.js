@@ -40,7 +40,7 @@
     output += '<h3>Community Code</h3>';
 
     if (data.unofficial_count === 0) {
-      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc}Paper With Code</a>`;
+      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc}Papers With Code</a>`;
     } else {
       output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
       output += `${icons.pwc} ${data.unofficial_count} code implementation${data.unofficial_count > 1 ? 's': ''}`;
