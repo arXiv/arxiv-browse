@@ -8,6 +8,7 @@
   {{ super() -}}
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/paperwithcode.css') }}" />
   {%- endif %}
   <script src="{{ url_for('static', filename='js/mathjaxToggle.min.js') }}" type="text/javascript"></script>
   {%- if config['LABS_ENABLED'] -%}
