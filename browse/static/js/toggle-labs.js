@@ -30,8 +30,7 @@ $(document).ready(function() {
     "cs.CL": 1,
     "cs.NE": 1,
     "stat.ML": 1,
-    "cs.IR": 1,
-    'math.CA': 1
+    "cs.IR": 1
   };
   var current_context = $('.current').text();
   if ( pwc_context[current_context]  ){
