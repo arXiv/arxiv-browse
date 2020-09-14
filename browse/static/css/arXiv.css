@@ -919,6 +919,11 @@ p.tagline {
     color: white;
     padding: 1em .5em;
   }
+  #labstabs .labstabs .labs-display-bib label {
+    background: transparent;
+    color: black;
+    padding: 0;
+  }
   #labstabs .labstabs input[type="radio"]:checked + label {
     background-color: #ffcc00;
     color: black;
