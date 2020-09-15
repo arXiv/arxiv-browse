@@ -858,7 +858,7 @@ p.tagline {
   border-bottom: 15px solid #000000;
   border-top: 15px solid transparent;
 }
-#abs-outer span:hover.tip span, #abs-outer span:active.tip span {
+#abs-outer span:hover.tip span, #abs-outer span:active.tip span, #abs-outer span:focus.tip span {
     opacity: 1;
 }
 #abs-outer .tip-mobile-clear {
