@@ -815,6 +815,61 @@ p.tagline {
   border-left: .35em solid #ddd !important;
 }
 
+
+#abs-outer span.tip {
+  position: relative;
+  color: #575757;
+}
+#abs-outer span.tip svg {
+  width: .9em;
+  fill: #797979;
+  position: relative;
+  top: 1.5px;
+}
+#abs-outer span.tip span {
+  display: block;
+  position: absolute;
+  top: 25px;
+  left: 0px;
+  width: 200px;
+  padding: 15px;
+  z-index: 100;
+  background: #000;
+  color: #fff;
+  -moz-border-radius: 5px; /* this works only in camino/firefox */
+  -webkit-border-radius: 5px; /* this is just for Safari */
+  opacity: 0;
+  transition: opacity .5s ease-out;
+  -moz-transition: opacity .5s ease-out;
+  -webkit-transition: opacity .5s ease-out;
+  -o-transition: opacity .5s ease-out;
+}
+#abs-outer span.tip span:before{
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 8px;
+  top: 0;
+  margin-top: -29px;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #000000;
+  border-top: 15px solid transparent;
+}
+#abs-outer span:hover.tip span, #abs-outer span:active.tip span {
+    opacity: 1;
+}
+#abs-outer .tip-mobile-clear {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  #abs-outer .tip-mobile-clear {
+      display: block;
+  }
+}
+
 /*LABS management and display on abs*/
 .labs-toggle {
   border-top: medium solid #ddd;
