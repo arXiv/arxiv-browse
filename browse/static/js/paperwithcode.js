@@ -24,7 +24,7 @@
   function render (data) {
     $output.html('');
     if (data === null) {
-      $output.html('<p>This paper has not been found in the Papers with Code database. If you are the paper author you can link your code on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
+      $output.html('<p>This paper has not been found in the Papers with Code database. If you are one of the registered authors of this paper, you can link your code on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
       return
     }
     if (data.error) return;
@@ -49,7 +49,7 @@
     $output.append('<h3>Community Code</h3>');
 
     if (data.unofficial_count === 0) {
-      let link = $('<a target="_blank">${icons.pwc}Paper With Code</a>');
+      let link = $('<a target="_blank">${icons.pwc}Papers With Code</a>');
       link.attr('href', data.paper_url);
       $output
         .append('Submit your implementations of this paper on ')
