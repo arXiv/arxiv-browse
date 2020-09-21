@@ -7,7 +7,7 @@
   document.head.appendChild(linkElement);
 
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  // arxivId = '1909.11065';
+  arxivId = '1909.11065';
   var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/papers/' + arxivId;
   var $output = $('#pwc-output');
   $.get(pwcApiUrl).done(function (response) {
@@ -29,33 +29,60 @@
     }
     if (data.error) return;
 
-    var output = '<h3>Official Code</h3>';
+    $output.append('<h3>Official Code</h3>');
 
     if (data.official) {
-      output += `<a target="_blank" href="${data.official.url}">${icons.github}${data.official.url}</a>`;
+      let link = $('<a target="_blank"></a>');
+      link.attr('href', data.official.url);
+      link
+        .append(icons.github)
+        .append(document.createTextNode(data.official.url));
+      $output.append(link);
     } else {
-      output += `No official code found; <a target="_blank" href="${data.paper_url}">you can submit it here</a>`;
+      let link = $('<a target="_blank">you can submit it here</a>');
+      link.attr('href', data.paper_url);
+      $output
+        .append('No official code found; ')
+        .append(link);
     }
 
-    output += '<h3>Community Code</h3>';
+    $output.append('<h3>Community Code</h3>');
 
     if (data.unofficial_count === 0) {
-      output += `Submit your implementations of this paper on <a target="_blank" href="${data.paper_url}">${icons.pwc}Paper With Code</a>`;
+      let link = $('<a target="_blank">${icons.pwc}Paper With Code</a>');
+      link.attr('href', data.paper_url);
+      $output
+        .append('Submit your implementations of this paper on ')
+        .append(link);
     } else {
-      output += `<a class="pwc-code-link" target="_blank" href="${data.paper_url}#code">`;
-      output += `${icons.pwc} ${data.unofficial_count} code implementation${data.unofficial_count > 1 ? 's': ''}`;
+      let link = $('<a class="pwc-code-link" target="_blank"></a>');
+      link.attr('href', data.paper_url + '#code');
+      link
+        .append(icons.pwc)
+        .append(' ')
+        .append(document.createTextNode(data.unofficial_count))
+        .append(` code implementation${data.unofficial_count > 1 ? 's': ''}`);
 
       if (data.frameworks.length === 1) {
-        output += ` (in ${data.frameworks[0]})`;
+        link
+          .append(' (in ')
+          .append(document.createTextNode(data.frameworks[0]))
+          .append(')');
       } else if (data.frameworks.length === 2) {
-        output += ` (in ${data.frameworks.join(' and ')})`;
+        link
+          .append(' (in ')
+          .append(document.createTextNode(data.frameworks.join(' and ')))
+          .append(')');
       } else if (data.frameworks.length > 2) {
-        output += ` (in ${data.frameworks.slice(0, -1).join(', ')} and ${data.frameworks[data.frameworks.length - 1]})`;
+        link
+          .append(' (in ')
+          .append(document.createTextNode(data.frameworks.slice(0, -1).join(', ')))
+          .append(' and ')
+          .append(document.createTextNode(data.frameworks[data.frameworks.length - 1]))
+          .append(')');
       }
 
-      output += '</a>';
+      $output.append(link);
     }
-
-    $output.html(output);
   }
 })();
