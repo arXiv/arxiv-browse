@@ -1,4 +1,4 @@
-// bibtex citation modal 
+// bibtex citation modal based on Matt B's work.
 $(document).ready(function() {
     var cached_value=null
     var cached_provider=null
@@ -29,9 +29,12 @@ $(document).ready(function() {
         doi: 'https://www.crossref.org/labs/citation-formatting-service/'
     }
 
-    var format_crossref=function(res){
-        //TODO
-        return res
+    var format_crossref = function(data) {
+        data = data.replace(/^\s+/, '')
+        data = data.replace(/},/g, '},\n  ')
+        data = data.replace(', title=', ',\n   title=')
+        data = data.replace('}}', '}\n}')
+        return data
     }
     
     $('#bib-cite-trigger').click(function(){
