@@ -814,12 +814,17 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
-#abs-outer .extra-services span#bib-cite-trigger {
+#abs-outer .extra-services span.bib-cite-button {
   color: rgb(0, 0, 238);
   text-transform: capitalize;
   font-weight: bold;
   padding: .35em;
   display: block;
+  text-transform: capitalize;
+}
+#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /*LABS in TABS on ABS*/
@@ -1307,7 +1312,7 @@ div#long-author-list {
   #abs-outer .extra-services .bib-sidebar {
     border: 0 !important;
   }
-  #abs-outer .extra-services .bib-sidebar a, #abs-outer .extra-services span#bib-cite-trigger {
+  #abs-outer .extra-services .bib-sidebar a {
     display: inline-block;
     border-radius: 5px;
     background: #E6E6E6;
@@ -1317,6 +1322,29 @@ div#long-author-list {
     padding: .25em 1em;
     margin: 0 .5em 0 0;
   }
+  #abs-outer .extra-services span.bib-cite-button {
+    margin: .5em .5em 0 0;
+    display: inline-block !important;
+    border-radius: 5px;
+    background: #E6E6E6;
+    border: 1px solid #046BAF;
+    font-size: 1em !important;
+    padding: .25em 1em;
+    font-weight: normal;
+    text-transform: capitalize;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li {
+    margin: .5em 0;
+    padding: 0;
+    height: auto;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li a {
+    margin: .25em .5em .25em 0;
+  }
+
+
+
+
   #abs-outer .subheader {
     background-color: #fefefe;
     padding: .25em 0;
