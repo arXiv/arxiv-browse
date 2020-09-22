@@ -4,7 +4,21 @@ $(document).ready(function() {
     var cached_provider=null
     var setup=0
     var API_CROSSREF_CITE='https://dx.doi.org/'
+    
+    function error_check(response) {
+        switch (response.status) {
+        case 0:
+            return 'Query prevented by browser -- CORS, firewall, or unknown error'
+        case 404:
+            return 'Citation entry not found.'
+        case 500:
+            return 'Citation entry returned 500: internal server error'
+        default:
+            return 'Citation error ' + response.status
+        }
+    }
 
+    
     var provider_desc={
         arxiv: 'arXiv API',
         doi: 'Crossref Citation Formating Service'
@@ -46,17 +60,22 @@ $(document).ready(function() {
             do_modal(cached_value, cached_provider)
         }else if(doi){
             $.ajax({url: API_CROSSREF_CITE + doi,
-                    headers: {Accept: `text/bibliography; style=bibtex`},
-                    success: function(result){
-                        cached_value = format_crossref(result)
-                        cached_provider = 'doi'
-                        do_modal( cached_value, cached_provider )}})
+                headers: {Accept: `text/bibliography; style=bibtex`},
+                success: function(result){
+                    cached_value = format_crossref(result)
+                    cached_provider = 'doi'
+                    do_modal( cached_value, cached_provider )},
+                error: function(xhr,status,error){
+                    do_modal(`Error: ${xhr.status} ${error_check(xhr)}`, 'doi')}
+            })
         }else{
             $.ajax({url: "/bibtex/" + id,
-                    success: function(result){
-                        cached_value = result
-                        cached_provider = 'arxiv'
-                        do_modal( cached_value, cached_provider)}})
+                success: function(result){
+                    cached_value = result
+                    cached_provider = 'arxiv'
+                    do_modal( cached_value, cached_provider)},
+                error: function(xhr,status,error){
+                    do_modal(`Error: ${xhr.status} ${error_check(xhr)}`, 'arxiv')}})
         }
     })
 })
