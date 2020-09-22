@@ -1322,6 +1322,19 @@ div#long-author-list {
     padding: .25em 1em;
     margin: 0 .5em 0 0;
   }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-authors a, #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-title a {
+    display: inline;
+    border-radius: none;
+    background: none;
+    border: 0;
+    color: #000000;
+    font-size: 1em !important;
+    padding: .25em 0;
+    margin: 0;
+  }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
+    margin: 1em 0
+  }
   #abs-outer .extra-services span.bib-cite-button {
     margin: .5em .5em 0 0;
     display: inline-block !important;
