@@ -814,6 +814,13 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
+#abs-outer .extra-services span#bib-cite-trigger {
+  color: rgb(0, 0, 238);
+  text-transform: capitalize;
+  font-weight: bold;
+  padding: .35em;
+  display: block;
+}
 
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
@@ -855,7 +862,7 @@ p.tagline {
 	width: 100%;
 	display: none;
   padding: 1rem;
-  border: 1px solid black;
+  border: 1px solid #828282;
   z-index: 1;
   top: -1px;
   position: relative;
@@ -882,7 +889,7 @@ p.tagline {
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
-  border: 1px solid grey;
+  border: 1px solid #828282;
   border-bottom: 0;
   z-index: 2;
   color: black;
@@ -910,13 +917,13 @@ p.tagline {
   #labstabs .labstabs .tab {
     border-top: 0;
     margin-top: -10px !important;
-    border: 2px solid #d47500;
+    border: 2px solid #b8b8b8;
     border-top: 0px;
     background-color: #ffffff;
   }
   #labstabs .labstabs label {
-    background-color: #b55c06;
-    color: white;
+    background-color: #eef5f9;
+    color: black;
     padding: 1em .5em;
   }
   #labstabs .labstabs .labs-display-bib label {
@@ -925,9 +932,9 @@ p.tagline {
     padding: 0;
   }
   #labstabs .labstabs input[type="radio"]:checked + label {
-    background-color: #ffcc00;
+    background-color: #acd2e8;
     color: black;
-    border: 2px solid #d47500;
+    border: 2px solid #b8b8b8;
     border-bottom: 0px;
     padding: 1em .5em;
   }
@@ -1300,7 +1307,7 @@ div#long-author-list {
   #abs-outer .extra-services .bib-sidebar {
     border: 0 !important;
   }
-  #abs-outer .extra-services .bib-sidebar a {
+  #abs-outer .extra-services .bib-sidebar a, #abs-outer .extra-services span#bib-cite-trigger {
     display: inline-block;
     border-radius: 5px;
     background: #E6E6E6;
