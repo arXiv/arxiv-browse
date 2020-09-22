@@ -24,7 +24,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      year={" + year + "},\n" \
         "      eprint={" + docm.arxiv_id + "},\n" \
         "      archivePrefix={arXiv},\n" \
-        "      primaryClass={" + pc + "}\n" \
+        "      primaryClass={" + str(pc) + "}\n" \
         "}"
 
 
@@ -32,7 +32,7 @@ def _normalize_whitespace(txt: str) -> str:
     return ' '.join(txt.split()) if str else ''
 
 
-def _fmt_author_list(pauths) -> str:
+def _fmt_author_list(pauths: List[List[str]]) -> str:
     authors = [(f'{au[1]} ' if (len(au) > 1 and au[1]) else '')
                + f'{au[0]}'
                + (f' {au[2]} au2' if (len(au) > 2 and au[2]) else '')
@@ -45,7 +45,7 @@ def chars_only(data: str) -> str:
     return ''.join([cc for cc in data if cc.isalnum()])
 
 
-def txt_id(docm: DocMetadata, auths: List[str], year: int) -> str:
+def txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
     '''Create an id for the bibtex entry ex abadi2016tensorflow'''
 
     try:
@@ -59,7 +59,7 @@ def txt_id(docm: DocMetadata, auths: List[str], year: int) -> str:
     except Exception:
         title_word = 'unknown'
 
-    txt_year = str(year) if year else 'unknown'
+    txt_year = year if year else 'unknown'
     return chars_only(f'{auth}{txt_year}{title_word}').lower()
 
 

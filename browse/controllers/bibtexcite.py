@@ -1,5 +1,5 @@
 """Gets bibtex citation for the paper."""
-
+from typing import Callable
 from flask import make_response, Response
 
 from werkzeug.exceptions import InternalServerError
@@ -11,11 +11,11 @@ from browse.services.document.metadata import AbsNotFoundException, \
 from browse.services.cite import arxiv_bibtex
 
 
-def _handle_failure(func):
+def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
     """Handle errors similar to get_abs_page."""
-    def wrapper(*args, **kwargs):
+    def wrapper(arxiv_id:str) -> Response:
         try:
-            return func(*args, **kwargs)
+            return func(arxiv_id)
         except AbsNotFoundException:
             raise AbsNotFound(data={'reason': 'not_found'})
         except AbsVersionNotFoundException:
