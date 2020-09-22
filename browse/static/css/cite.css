@@ -9,7 +9,6 @@
     background-color: rgb(0,0,20);
     background-color: rgba(0,0,0,0.4);
 }
-
 .bib-modal-content {
     position: absolute;
     float: left;
@@ -19,8 +18,10 @@
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
 }
-.bib-citation-content {
+.bib-modal-content .bib-citation-content {
   width: 100%;
   min-height: 200px;
 }
@@ -47,13 +48,6 @@
     margin-top: 0.3em;
     margin-bottom: 0em;
 }
-
 .modal textarea {
     border-width: 2px;
-}
-
-@media (max-width: 45em) {
-  .bib-modal-content {
-      width: 80%;
-  }
 }
