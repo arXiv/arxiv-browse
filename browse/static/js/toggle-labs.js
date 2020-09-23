@@ -23,6 +23,23 @@ $(document).ready(function() {
     }
   };
 
+  var pwc_context = {
+    "cs.CV": 1,
+    "cs.AI": 1,
+    "cs.LG": 1,
+    "cs.CL": 1,
+    "cs.NE": 1,
+    "stat.ML": 1,
+    "cs.IR": 1
+  };
+  var current_context = $('.current').text();
+  if ( pwc_context[current_context]  ){
+    $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+      console.log(textStatus);
+    });
+    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
+  }
+
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
@@ -45,9 +62,6 @@ $(document).ready(function() {
           });
         }
       }
-    }
-    if (has_enabled) {
-      $('.labs-display').show();
     }
   } else {
     Cookies.set("arxiv_labs", { sameSite: "strict" });

@@ -797,7 +797,7 @@ p.tagline {
   margin: -0.7em;
 }
 #abs-outer .leftcolumn {
-  margin: 0;
+  margin: 0 0 1em 0;
   padding: 0px;
   width:calc(100% - 16em);
   float:left;
@@ -813,6 +813,18 @@ p.tagline {
 }
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
+}
+#abs-outer .extra-services span.bib-cite-button {
+  color: rgb(0, 0, 238);
+  text-transform: capitalize;
+  font-weight: bold;
+  padding: .35em;
+  display: block;
+  text-transform: capitalize;
+}
+#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /*LABS in TABS on ABS*/
@@ -831,15 +843,17 @@ p.tagline {
 #labstabs .labstabs > label {
 	order: 1;
 	display: block;
-  padding: .75em .5em;
-  font-size: .78em;
+  padding: .75em 1.5em;
+  font-size: .85em;
   color: #4a4a4a;
 	margin-right: 0.2rem;
 	cursor: pointer;
-  background: #dcdcdc;
   font-weight: bold;
   transition: background ease 0.2s;
+  border-radius: 6px 6px 0 0;
+  background-color: #eef5f9;
 }
+/*mobile diplay area:*/
 #abs #labstabs .labstabs > label {
   font-size: .88em;
 }
@@ -853,33 +867,37 @@ p.tagline {
 	width: 100%;
 	display: none;
   padding: 1rem;
-  border: 1px solid black;
-  border: 1;
+  border: 1px solid #828282;
   z-index: 1;
-  margin-top: -1px;
+  top: -1px;
+  position: relative;
 }
 #labstabs .labstabs .tab h1 {
-  font-size: 1em;
+  font-size: 1.25em;
   font-weight: normal;
 }
 #labstabs .labstabs .tab p {
   font-size: .8rem;
 }
+#labstabs .labstabs .tab #coreRecommenderOutput {
+  padding: 0;
+  margin: 0;
+}
 #labstabs .labstabs .tab .icon-labs {
-  width: 150px;
-  float: right;
-  margin: .5em 0 .5em 1em;
+  text-align: center;
+}
+#labstabs .labstabs .tab .icon-labs svg {
+  width: 120px;
 }
 #labstabs .labstabs input[type="radio"] {
 	display: none;
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
-  border: 1px solid grey;
+  border: 1px solid #828282;
   border-bottom: 0;
   z-index: 2;
   color: black;
-  padding: .75em;
 }
 #labstabs .labstabs input[type="radio"]:checked + label + .tab {
 	display: block;
@@ -893,16 +911,40 @@ p.tagline {
   #labstabs .labstabs .tab,
   #labstabs .labstabs label {
     order: initial;
-  }
-  #labstabs .labstabs label {
     width: 100%;
     margin-right: 0;
     margin-top: 0.2rem;
+    border-radius: 0;
+  }
+  #labstabs .labstabs > label {
+    font-size: .8em;
+  }
+  #labstabs .labstabs .tab {
+    border-top: 0;
+    margin-top: -10px !important;
+    border: 2px solid #b8b8b8;
+    border-top: 0px;
+    background-color: #ffffff;
+  }
+  #labstabs .labstabs label {
+    background-color: #eef5f9;
+    color: black;
+    padding: 1em .5em;
+  }
+  #labstabs .labstabs .labs-display-bib label {
+    background: transparent;
+    color: black;
+    padding: 0;
   }
   #labstabs .labstabs input[type="radio"]:checked + label {
-    background-color: #565656;
-    color: white;
-    padding: .75em .5em;
+    background-color: #acd2e8;
+    color: black;
+    border: 2px solid #b8b8b8;
+    border-bottom: 0px;
+    padding: 1em .5em;
+  }
+  #labstabs .labstabs input[type="radio"]:hover, #labstabs .labstabs input[type="radio"]:active {
+    background-color: #abb4b9;
   }
   #abs-outer #abs #labstabs blockquote.abstract {
     margin-left: .25em;
@@ -911,8 +953,9 @@ p.tagline {
 }
 /*toggles*/
 #labstabs .toggle {
-  border: 1px dotted #e6e5e5;
+  border: 1px dotted #c7d3db;
   padding: .5em;
+  background-color: #eef5f9;
 }
 #labstabs .toggle .columns.lab-row {
   align-items: center;
@@ -981,7 +1024,7 @@ p.tagline {
   transition: .4s;
 }
 #labstabs .toggle .lab-switch input.enabled + .slider {
-  background-color: #009917;
+  background-color: #1c8bd6;
 }
 #labstabs .toggle .lab-switch input.enabled + .slider {
   box-shadow: 0 0 1px #2196F3;
@@ -1279,6 +1322,42 @@ div#long-author-list {
     padding: .25em 1em;
     margin: 0 .5em 0 0;
   }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-authors a, #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-title a {
+    display: inline;
+    border-radius: none;
+    background: none;
+    border: 0;
+    color: #000000;
+    font-size: 1em !important;
+    padding: .25em 0;
+    margin: 0;
+  }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
+    margin: 1em 0
+  }
+  #abs-outer .extra-services span.bib-cite-button {
+    margin: .5em .5em 0 0;
+    display: inline-block !important;
+    border-radius: 5px;
+    background: #E6E6E6;
+    border: 1px solid #046BAF;
+    font-size: 1em !important;
+    padding: .25em 1em;
+    font-weight: normal;
+    text-transform: capitalize;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li {
+    margin: .5em 0;
+    padding: 0;
+    height: auto;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li a {
+    margin: .25em .5em .25em 0;
+  }
+
+
+
+
   #abs-outer .subheader {
     background-color: #fefefe;
     padding: .25em 0;
