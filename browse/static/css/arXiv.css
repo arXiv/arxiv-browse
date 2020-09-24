@@ -2488,12 +2488,12 @@ body#front.with-cu-identity #header #search {
 
 
 /**** Pendo Guide Badge Styles - when you only want a badge/text note and no corresponding guide ****/
-.intro-and-news .bb-text {
+/* .intro-and-news .bb-text {
     text-align: left !important;
 }
 .intro-and-news .\_pendo-badge\_ {
   cursor: text !important;
-}
+} */
 
 
 /*icon styles*/

@@ -51,12 +51,14 @@
      },false);
     </script>
     <h4 class="homepage-news-title">News</h4>
+    <!-- special news section -->
+    {%- include "home/news.html" -%}
     See cumulative <a href="/new/">"What's New"</a> pages.
     Read <a href="/help/robots">robots beware</a> before attempting any automated download
   </div>
-  <!-- special news column -->
-  {%- include "home/news.html" -%}
-</div>
+  <!-- special message column -->
+  {%- include "home/special-message.html" -%}
+</div><!-- /end columns -->
 
 {#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
