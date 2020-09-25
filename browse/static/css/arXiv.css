@@ -877,7 +877,7 @@ p.tagline {
   font-weight: normal;
 }
 #labstabs .labstabs .tab p {
-  font-size: .8rem;
+  font-size: .85rem;
 }
 #labstabs .labstabs .tab #coreRecommenderOutput {
   padding: 0;
@@ -976,14 +976,17 @@ p.tagline {
 #labstabs .tab a {
   display: inline;
 }
-#labstabs .column.lab-name span, #labstabs .column.lab-name span a {
+#labstabs .column.lab-name em {
   font-size: 11px;
+  color: black;
 }
-#labstabs .column.lab-name span a {
+#labstabs .column.lab-name em a {
   line-height: 18px;
   text-decoration: none;
   padding: 0;
   border: 0;
+  font-style: normal;
+  font-size: 11px;
 }
 #labstabs .column.lab-switch {
   flex-grow: 0;
