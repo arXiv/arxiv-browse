@@ -887,7 +887,7 @@ p.tagline {
   text-align: center;
 }
 #labstabs .labstabs .tab .icon-labs svg {
-  width: 120px;
+  width: 150px;
 }
 #labstabs .labstabs input[type="radio"] {
 	display: none;
@@ -902,7 +902,12 @@ p.tagline {
 #labstabs .labstabs input[type="radio"]:checked + label + .tab {
 	display: block;
 }
-
+@media screen and (max-width: 768px) {
+  .column.is-full-mobile {
+    flex: none !important;
+    width: 100% !important;
+  }
+}
 @media (max-width: 45em) {
   #labstabs {
     padding-bottom: 1em;
@@ -2388,6 +2393,24 @@ body#front.with-cu-identity #header #search {
 }
 .columns.is-vcentered {
   align-items: center;
+}
+.columns.is-mobile > .column.is-narrow {
+  flex: none;
+}
+@media screen and (max-width: 768px) {
+  .column.is-narrow-mobile {
+    flex: none;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .column.is-narrow, .column.is-narrow-tablet {
+    flex: none;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .column.is-narrow-desktop {
+    flex: none;
+  }
 }
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
