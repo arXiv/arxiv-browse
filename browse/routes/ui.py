@@ -18,6 +18,7 @@ from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
+from browse.controllers.bibtexcite import bibtex_citation
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -397,3 +398,9 @@ def cookies(set):  # type: ignore
         return resp
     response, code, headers = get_cookies_page(is_debug)
     return render_template('cookies.html', **response), code, headers
+
+
+@blueprint.route('bibtex/<arxiv_id>', methods=['GET'])
+def bibtex(arxiv_id: str):  # type: ignore
+    """bibtex for a paper."""
+    return bibtex_citation(arxiv_id)

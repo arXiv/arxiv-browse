@@ -18,7 +18,7 @@
     linkElement.setAttribute('type', 'text/css');
     linkElement.setAttribute('href', url);
     if (id != null) linkElement.id = id;
-    
+
     document.head.appendChild(linkElement);
     return linkElement;
   }
@@ -28,7 +28,7 @@
     scriptElement.type = "text/javascript";
     scriptElement.src = url;
     if (id != null) scriptElement.id = id;
-    
+
     document.body.appendChild(scriptElement);
     return scriptElement;
   }
@@ -42,10 +42,10 @@
 
     appendStylesheet(baseUrl + '/recommender/embed-arxiv-style.css', scriptId);
     appendScript(baseUrl + '/recommender/embed.js');
-    
+
     localStorage.setItem('idRecommender', apiKey);
     localStorage.setItem('userInput', JSON.stringify(userInput));
-    if (options.overrideLocale) 
+    if (options.overrideLocale)
       localStorage.setItem('overridelocale', "en_GB");
   }
 
