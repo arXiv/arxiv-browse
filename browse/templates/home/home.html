@@ -11,7 +11,7 @@
 {#- TODO: display order in taxonomy? -#}
 
 <div class="columns">
-  <div class="column">
+  <div class="column intro-and-news">
     <p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
      scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
      Materials on this site are not peer-reviewed by arXiv.
@@ -51,12 +51,15 @@
      },false);
     </script>
     <h4 class="homepage-news-title">News</h4>
-    See cumulative <a href="/new/">"What's New"</a> pages.
-    Read <a href="/help/robots">robots beware</a> before attempting any automated download
+    <!-- special news section -->
+    {%- include "home/news.html" -%}
+    Read about recent news and updates on <a href="https://blog.arxiv.org/" target="_blank">arXiv's blog</a>.
+    (View the former <a href="https://arxiv.org/new/">"what's new" pages</a> here).
+    Read <a href="/help/robots">robots beware</a> before attempting any automated download.
   </div>
-  <!-- special news column -->
-  {%- include "home/news.html" -%}
-</div>
+  <!-- special message column -->
+  {%- include "home/special-message.html" -%}
+</div><!-- /end columns -->
 
 {#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
