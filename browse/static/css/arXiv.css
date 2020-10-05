@@ -877,7 +877,7 @@ p.tagline {
   font-weight: normal;
 }
 #labstabs .labstabs .tab p {
-  font-size: .8rem;
+  font-size: .85rem;
 }
 #labstabs .labstabs .tab #coreRecommenderOutput {
   padding: 0;
@@ -887,7 +887,7 @@ p.tagline {
   text-align: center;
 }
 #labstabs .labstabs .tab .icon-labs svg {
-  width: 120px;
+  width: 130px;
 }
 #labstabs .labstabs input[type="radio"] {
 	display: none;
@@ -902,7 +902,12 @@ p.tagline {
 #labstabs .labstabs input[type="radio"]:checked + label + .tab {
 	display: block;
 }
-
+@media screen and (max-width: 768px) {
+  .column.is-full-mobile {
+    flex: none !important;
+    width: 100% !important;
+  }
+}
 @media (max-width: 45em) {
   #labstabs {
     padding-bottom: 1em;
@@ -971,14 +976,17 @@ p.tagline {
 #labstabs .tab a {
   display: inline;
 }
-#labstabs .column.lab-name span, #labstabs .column.lab-name span a {
+#labstabs .column.lab-name em {
   font-size: 11px;
+  color: black;
 }
-#labstabs .column.lab-name span a {
+#labstabs .column.lab-name em a {
   line-height: 18px;
   text-decoration: none;
   padding: 0;
   border: 0;
+  font-style: normal;
+  font-size: 11px;
 }
 #labstabs .column.lab-switch {
   flex-grow: 0;
@@ -2389,6 +2397,24 @@ body#front.with-cu-identity #header #search {
 .columns.is-vcentered {
   align-items: center;
 }
+.columns.is-mobile > .column.is-narrow {
+  flex: none;
+}
+@media screen and (max-width: 768px) {
+  .column.is-narrow-mobile {
+    flex: none;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .column.is-narrow, .column.is-narrow-tablet {
+    flex: none;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .column.is-narrow-desktop {
+    flex: none;
+  }
+}
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
@@ -2623,6 +2649,16 @@ body#front.with-cu-identity #header #search {
     padding-bottom: 2em;
   }
 }
+
+
+/**** Pendo Guide Badge Styles - when you only want a badge/text note and no corresponding guide ****/
+.intro-and-news .bb-text {
+    text-align: left !important;
+}
+.intro-and-news .\_pendo-badge\_ {
+  cursor: text !important;
+}
+
 
 /*icon styles*/
 svg.icon {

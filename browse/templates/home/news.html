@@ -1,18 +1,13 @@
-{#- News blurbs appear at the top of the home page. Generally there should be no more than four items. -#}
+{#- News items appear below the subject search. Generally there should be no more than four items. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-{%- if rd_int >= 202003300900 -%}
-<div class="message-special column">
-  <span class="label">COVID-19 Quick Links</span>
-  <p>See COVID-19 SARS-CoV-2 preprints from</p>
-  <ul>
-    <li><a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv">arXiv</a></li>
-    <li><a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv">medRxiv and bioRxiv</a></li>
-  </ul>
-  <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
-</div>
-{% else %}
-16 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/16/arxiv-announces-its-first-executive-director/">arXiv announces its first executive director</a><br/>
-12 Mar 2020: <a href="https://blogs.cornell.edu/arxiv/2020/03/12/arxiv-responds-to-covid-19-uncertainties/">arXiv responds to COVID-19 uncertainties</a><br/>
+
+{%- if rd_int >= 202009010100 and rd_int <= 202010010755 -%}
+Starting at 8am EDT on October 1, 2020, arXiv will process new submissions and replacements with TeX Live 2020. <a href="https://blogs.cornell.edu/arxiv/2020/09/24/tex-live-2020-release-oct-1-2020/" target="_blank">Learn more</a>.
+<br><br>
+{%- endif -%}
+{%- if rd_int >= 202010010756 and rd_int <= 202011300100 -%}
+arXiv now processes new submissions and replacements with TeX Live 2020. <a href="https://blogs.cornell.edu/arxiv/2020/09/24/tex-live-2020-release-oct-1-2020/" target="_blank">Learn more</a>.
+<br><br>
 {%- endif -%}
 
 <!-- annual giving message -->
