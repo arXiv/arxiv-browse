@@ -33,11 +33,10 @@
 
     $output.append('<h3>Official Code</h3>');
 
-    let icon = icons.github;
-    if (data.official.url.includes('gitlab')) icon = icons.gitlab;
-    if (data.official.url.includes('bitbucket')) icon = icons.bitbucket;
-
     if (data.official) {
+      let icon = icons.github;
+      if (data.official.url.includes('gitlab')) icon = icons.gitlab;
+      if (data.official.url.includes('bitbucket')) icon = icons.bitbucket;
       let link = $('<a target="_blank"></a>');
       link.attr('href', data.official.url);
       link
@@ -55,7 +54,7 @@
     $output.append('<h3>Community Code</h3>');
 
     if (data.unofficial_count === 0) {
-      let link = $('<a target="_blank">${icons.pwc}Papers With Code</a>');
+      let link = $(`<a target="_blank">${icons.pwc}Papers With Code</a>`);
       link.attr('href', data.paper_url);
       $output
         .append('Submit your implementations of this paper on ')
