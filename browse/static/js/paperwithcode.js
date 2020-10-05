@@ -33,10 +33,6 @@
 
     $output.append('<h3>Official Code</h3>');
 
-    let icon = icons.github;
-    if (data.official.url.includes('gitlab')) icon = icons.gitlab;
-    if (data.official.url.includes('bitbucket')) icon = icons.bitbucket;
-
     if (data.official) {
       let icon = icons.github;
       if (data.official.url.includes('gitlab')) icon = icons.gitlab;
