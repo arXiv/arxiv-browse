@@ -13,11 +13,11 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
-    "bibex": {
-      "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
-      "container": "#bib-main"
-    },
-    "core-recommender": {
+      "bibex": {
+          "url": "/bibex/bibex.js?20200709",
+          "container": "#bib-main"
+      },
+      "core-recommender": {
       "url": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
       "container": "#coreRecommenderOutput"
     }
