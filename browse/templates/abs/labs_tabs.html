@@ -56,7 +56,6 @@
               <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperwithcode.js') }}"
-                data-style-url="{{ url_for('static', filename='css/paperwithcode.css') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
               <span class="slider"></span>
               <span class="is-sr-only">arXiv Links to Code Toggle</span>
@@ -67,6 +66,32 @@
           </div>
         </div>
       </div>
+      <style>
+        #pwc-output {
+            padding: 7px;
+            margin-bottom: 10px;
+        }
+
+        #pwc-output > h3 {
+            margin-top: 25px;
+        }
+
+        .pwc-icon {
+            width: 23px;
+            height: 23px;
+            position: relative;
+            top: 5px;
+            margin-right: 5px;
+        }
+
+        .pwc-icon-primary {
+            top: 6px;
+        }
+
+        .pwc-avatar-box {
+            display: inline-block;
+        }
+      </style>
       <div id="pwc-output"></div>
     </div>
     <input type="radio" name="tabs" id="tabfour">

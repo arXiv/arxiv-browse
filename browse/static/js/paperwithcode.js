@@ -1,13 +1,5 @@
 (function () {
-  var styleUrl = $('#paperwithcode-toggle').data('style-url');
-  var linkElement = document.createElement('link');
-  linkElement.setAttribute('rel', 'stylesheet');
-  linkElement.setAttribute('type', 'text/css');
-  linkElement.setAttribute('href', styleUrl);
-  document.head.appendChild(linkElement);
-
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  // arxivId = '1909.11065';
   var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/papers/' + arxivId;
   var $output = $('#pwc-output');
   $.get(pwcApiUrl).done(function (response) {
