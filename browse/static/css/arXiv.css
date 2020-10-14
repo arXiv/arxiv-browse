@@ -827,6 +827,31 @@ p.tagline {
   cursor: pointer;
 }
 
+#pwc-output {
+    padding: 7px;
+    margin-bottom: 10px;
+}
+
+#pwc-output > h3 {
+    margin-top: 25px;
+}
+
+.pwc-icon {
+    width: 23px;
+    height: 23px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
+}
+
+.pwc-icon-primary {
+    top: 6px;
+}
+
+.pwc-avatar-box {
+    display: inline-block;
+}
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
