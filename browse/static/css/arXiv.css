@@ -826,7 +826,7 @@ p.tagline {
   text-decoration: underline;
   cursor: pointer;
 }
-
+/*added by Papers With Code*/
 #pwc-output {
     padding: 7px;
     margin-bottom: 10px;
