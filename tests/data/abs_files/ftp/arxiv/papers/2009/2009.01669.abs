@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2009.01669
+From: Felix Mackebrandt <asdf@xyz.abc.de>
+Date: Thu, 3 Sep 2020 13:54:02 GMT   (5398kb,D)
+
+Title: Timing of stellar pulsations to search for sub-stellar companions beyond
+  the main sequence
+Authors: F. Mackebrandt
+Categories: astro-ph.SR
+Comments: PhD Thesis, 140 pages
+DOI: 21.11130/00-1735-0000-0005-<146A>&-E
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+  (abridged) Stars spend most of their life on the main sequence (MS). But
+their most substantial changes occur off the MS stage, either before on the
+pre-MS or beyond at the post-MS phase. Due to very complex and varied dynamical
+processes, the evolution of planetary systems orbiting non-MS stars
+significantly differs from those of MS planetary systems.
+  This work focusses on the search for sub-stellar companions in post-MS
+systems146 and determination of the evolutionary state of their host stars,
+especially subdwarf B stars (sdB stars). The canonical model involves binary
+evolution to explain the existence of sdB stars. Formation scenarios for single
+sdBs are more controversially discussed. Besides the merger of two helium white
+dwarfs or other merger processes for apparently single sdB stars, an
+alternative formation channel involves planetary systems. During the red giant
+phase, the star would develop a common envelope w146ith a giant planet that
+leads to the loss of the envelope. Thus, sdB stars are laboratories to test how
+planets survive and influence the late phases of stellar evolution.
+  The rapid pulsations of sdB stars can be used to detect sub-stellar
+companions from periodic variations in the expected arrival times of the
+pulsation maxima. This timing method is particularly sensitive to companions at
+large distances and complementary to other exoplanet detection methods. Thus,
+the timing method opens up a new parameter range in terms of the host stars and
+helps to understand the formation process of single sdBs.
+  In this work I implemented, tested and applied the pulsation timing analysis
+to search for sub-stellar companions in late evolutionary stage stellar
+systems. The method is already established in the literature but not to an
+extent which is capable of automatically processing long-time series of
+high-cadence data, i.e., from space born observations.
+\\
