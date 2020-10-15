@@ -1,13 +1,5 @@
 (function () {
-  var styleUrl = $('#paperwithcode-toggle').data('style-url');
-  var linkElement = document.createElement('link');
-  linkElement.setAttribute('rel', 'stylesheet');
-  linkElement.setAttribute('type', 'text/css');
-  linkElement.setAttribute('href', styleUrl);
-  document.head.appendChild(linkElement);
-
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  // arxivId = '1909.11065';
   var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/papers/' + arxivId;
   var $output = $('#pwc-output');
   $.get(pwcApiUrl).done(function (response) {
@@ -33,16 +25,21 @@
 
     $output.append('<h3>Official Code</h3>');
 
-    if (data.official) {
-      let icon = icons.github;
-      if (data.official.url.includes('gitlab')) icon = icons.gitlab;
-      if (data.official.url.includes('bitbucket')) icon = icons.bitbucket;
-      let link = $('<a target="_blank"></a>');
-      link.attr('href', data.official.url);
-      link
-        .append(icon)
-        .append(document.createTextNode(data.official.url));
-      $output.append(link);
+    if (data.all_official.length > 0) {
+      for (const implementation of data.all_official) {
+        console.log({implementation})
+        let icon = icons.github;
+        if (implementation.url.includes('gitlab')) icon = icons.gitlab;
+        if (implementation.url.includes('bitbucket')) icon = icons.bitbucket;
+        let p = $('<p>');
+        let link = $('<a target="_blank"></a>');
+        link.attr('href', implementation.url);
+        link
+          .append(icon)
+          .append(document.createTextNode(implementation.url));
+        p.append(link);
+        $output.append(p);
+      }
     } else {
       let link = $('<a target="_blank">you can submit it here</a>');
       link.attr('href', data.paper_url);
