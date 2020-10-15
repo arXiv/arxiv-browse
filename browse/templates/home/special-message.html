@@ -1,7 +1,7 @@
 {#- Special messages appear in a column to the side of the website intro/news section, each in their own column. Always apply the style "message-special" to the column. You can also apply the style "dark" to override the red styles and add a message with a black background instead. There should preferably be just one, and never more than two. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
-<div class="message-special column">
+<div class="message-special column is-half-desktop">
   <span class="label">COVID-19 Quick Links</span>
   <p>See COVID-19 SARS-CoV-2 preprints from</p>
   <ul>

@@ -2414,7 +2414,24 @@ body#front.with-cu-identity #header #search {
   .column.is-narrow-desktop {
     flex: none;
   }
+  .column.is-full-desktop {
+    flex: none;
+    width: 100%;
+  }
+  .column.is-three-quarters-desktop {
+    flex: none;
+    width: 75%;
+  }
+  .column.is-two-thirds-desktop {
+    flex: none;
+    width: 66.6666%;
+  }
+  .column.is-half-desktop {
+    flex: none;
+    width: 50%;
+  }
 }
+  
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
