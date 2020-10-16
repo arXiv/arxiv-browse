@@ -135,7 +135,8 @@ em.boxed {
   border: 1px solid #8d7109;
 }
 #cu-identity .message-header.message-yellow p a {
-  color:#5f4b00;
+  color: #054169;
+  font-weight: bold;
 }
 #cu-identity .message-header.message-grey {
   background-color:#dddddd;
@@ -2408,6 +2409,13 @@ body#front.with-cu-identity #header #search {
 @media screen and (min-width: 769px), print {
   .column.is-narrow, .column.is-narrow-tablet {
     flex: none;
+  }
+  .columns:not(.is-desktop) {
+    display: flex;
+  }
+  .column.is-full, .column.is-full-tablet {
+    flex: none;
+    width: 100%;
   }
 }
 @media screen and (min-width: 1024px) {
