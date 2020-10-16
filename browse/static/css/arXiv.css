@@ -2430,8 +2430,11 @@ body#front.with-cu-identity #header #search {
     flex: none;
     width: 50%;
   }
+  .columns.is-desktop {
+    display: flex;
+  }
 }
-  
+
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
