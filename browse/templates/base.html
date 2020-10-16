@@ -76,11 +76,11 @@
         </div>
 
         <!-- timeboxed column -->
-        {#- e.g. if the request date is between 2020-07-21 00:00 and 2020-08-02 00:00, include the following div -#}
-        {%- if rd_int > 202010140000 and rd_int < 202010300000 -%}
+        {#- e.g. if the request date is between Monday 2020-10-19 00:00AM and Monday 2020-10-24 00:00, include the following div -#}
+        {%- if rd_int > 202009190000 and rd_int < 202010240000 -%}
         <div class="column message-header message-yellow">
           <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Giving Week</strong> Please join our generous members in supporting arXiv. <a href="giving link here">Donate here</a>!</p>
+          <p><strong>Giving Week:</strong> arXiv depends on donations to support essential operations and new initiatives. <a href="https://securelb.imodules.com/s/1717/alumni/event.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1?source=web">Donate today</a>!</p>
         </div>
         {%- endif -%}
         <!-- /end timeboxed column -->
