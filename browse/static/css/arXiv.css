@@ -135,7 +135,8 @@ em.boxed {
   border: 1px solid #8d7109;
 }
 #cu-identity .message-header.message-yellow p a {
-  color:#5f4b00;
+  color: #054169;
+  font-weight: bold;
 }
 #cu-identity .message-header.message-grey {
   background-color:#dddddd;
@@ -821,7 +822,7 @@ p.tagline {
   margin: -0.7em;
 }
 #abs-outer .leftcolumn {
-  margin: 0;
+  margin: 0 0 1em 0;
   padding: 0px;
   width:calc(100% - 16em);
   float:left;
@@ -838,30 +839,225 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
+#abs-outer .extra-services span.bib-cite-button {
+  color: rgb(0, 0, 238);
+  text-transform: capitalize;
+  font-weight: bold;
+  padding: .35em;
+  display: block;
+  text-transform: capitalize;
+}
+#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+  text-decoration: underline;
+  cursor: pointer;
+}
+/*added by Papers With Code*/
+#pwc-output {
+    padding: 7px;
+    margin-bottom: 10px;
+}
 
-/*LABS management and display on abs*/
-.labs-toggle {
-  border-top: medium solid #ddd;
-  border-left: .35em solid #ddd;
+#pwc-output > h3 {
+    margin-top: 25px;
 }
-.labs-toggle img {
-  width: 90px;
-  margin: .5rem 0 .8rem .75rem;
+
+.pwc-icon {
+    width: 23px;
+    height: 23px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
 }
-.labs-toggle .lab-switch label.switch {
+
+.pwc-icon-primary {
+    top: 6px;
+}
+
+.pwc-avatar-box {
+    display: inline-block;
+}
+/*END Papers With Code css*/
+/*LABS in TABS on ABS*/
+/*CSS-only, responsive tabbed display */
+#labstabs {
+  clear: both;
+  margin: 1em 1.5em;
+}
+
+#labstabs .labstabs {
+	display: flex;
+	flex-wrap: wrap;
+  white-space: normal;
+  justify-content: flex-start;
+}
+#labstabs .labstabs > label {
+	order: 1;
+	display: block;
+  padding: .75em 1.5em;
+  font-size: .85em;
+  color: #4a4a4a;
+	margin-right: 0.2rem;
+	cursor: pointer;
+  font-weight: bold;
+  transition: background ease 0.2s;
+  border-radius: 6px 6px 0 0;
+  background-color: #eef5f9;
+}
+/*mobile diplay area:*/
+#abs #labstabs .labstabs > label {
+  font-size: .88em;
+}
+#abs-outer #abs #labstabs blockquote.abstract {
+  margin-left: .5em;
+  margin-right: .5em;
+}
+#labstabs .labstabs .tab {
+  order: 99;
+  flex-grow: 1;
+	width: 100%;
+	display: none;
+  padding: 1rem;
+  border: 1px solid #828282;
+  z-index: 1;
+  top: -1px;
+  position: relative;
+}
+#labstabs .labstabs .tab h1 {
+  font-size: 1.25em;
+  font-weight: normal;
+}
+#labstabs .labstabs .tab p {
+  font-size: .85rem;
+}
+#labstabs .labstabs .tab #coreRecommenderOutput {
+  padding: 0;
+  margin: 0;
+}
+#labstabs .labstabs .tab .icon-labs {
+  text-align: center;
+}
+#labstabs .labstabs .tab .icon-labs svg {
+  width: 130px;
+}
+#labstabs .labstabs input[type="radio"] {
+	display: none;
+}
+#labstabs .labstabs input[type="radio"]:checked + label {
+  background: #ffffff;
+  border: 1px solid #828282;
+  border-bottom: 0;
+  z-index: 2;
+  color: black;
+}
+#labstabs .labstabs input[type="radio"]:checked + label + .tab {
+	display: block;
+}
+@media screen and (max-width: 768px) {
+  .column.is-full-mobile {
+    flex: none !important;
+    width: 100% !important;
+  }
+}
+@media (max-width: 45em) {
+  #labstabs {
+    padding-bottom: 1em;
+    margin: 1em;
+  }
+  #labstabs .labstabs .tab,
+  #labstabs .labstabs label {
+    order: initial;
+    width: 100%;
+    margin-right: 0;
+    margin-top: 0.2rem;
+    border-radius: 0;
+  }
+  #labstabs .labstabs > label {
+    font-size: .8em;
+  }
+  #labstabs .labstabs .tab {
+    border-top: 0;
+    margin-top: -10px !important;
+    border: 2px solid #b8b8b8;
+    border-top: 0px;
+    background-color: #ffffff;
+  }
+  #labstabs .labstabs label {
+    background-color: #eef5f9;
+    color: black;
+    padding: 1em .5em;
+  }
+  #labstabs .labstabs .labs-display-bib label {
+    background: transparent;
+    color: black;
+    padding: 0;
+  }
+  #labstabs .labstabs input[type="radio"]:checked + label {
+    background-color: #acd2e8;
+    color: black;
+    border: 2px solid #b8b8b8;
+    border-bottom: 0px;
+    padding: 1em .5em;
+  }
+  #labstabs .labstabs input[type="radio"]:hover, #labstabs .labstabs input[type="radio"]:active {
+    background-color: #abb4b9;
+  }
+  #abs-outer #abs #labstabs blockquote.abstract {
+    margin-left: .25em;
+    margin-right: .25em;
+  }
+}
+/*toggles*/
+#labstabs .toggle {
+  border: 1px dotted #c7d3db;
+  padding: .5em;
+  background-color: #eef5f9;
+}
+#labstabs .toggle .columns.lab-row {
+  align-items: center;
+}
+#labstabs .toggle .columns.lab-row .column {
+  padding: .5rem .25rem;
+}
+#labstabs .column.lab-name {
+  flex-basis: auto;
+  flex-grow: 0;
+  font-size: .75rem;
+}
+#labstabs .tab a {
+  display: inline;
+}
+#labstabs .column.lab-name em {
+  font-size: 11px;
+  color: black;
+}
+#labstabs .column.lab-name em a {
+  line-height: 18px;
+  text-decoration: none;
+  padding: 0;
+  border: 0;
+  font-style: normal;
+  font-size: 11px;
+}
+#labstabs .column.lab-switch {
+  flex-grow: 0;
+}
+#labstabs .toggle .lab-switch label.switch {
   position: relative;
   display: inline-block;
   width: 38px;
   height: 20px;
+  padding: 0;
+  background-color: transparent;
+  margin: 0;
 }
 /* Hide default HTML checkbox */
-.labs-toggle .lab-switch .switch input {
+#labstabs .toggle .lab-switch .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 /* The slider element */
-.labs-toggle .lab-switch .slider {
+#labstabs .toggle .lab-switch .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -873,7 +1069,7 @@ p.tagline {
   -webkit-transition: .4s;
   transition: .4s;
 }
-.labs-toggle .lab-switch .slider:before {
+#labstabs .toggle .lab-switch .slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -885,83 +1081,23 @@ p.tagline {
   -webkit-transition: .4s;
   transition: .4s;
 }
-.labs-toggle .lab-switch input.enabled + .slider {
-  background-color: #009917;
+#labstabs .toggle .lab-switch input.enabled + .slider {
+  background-color: #1c8bd6;
 }
-.labs-toggle .lab-switch input.enabled + .slider {
+#labstabs .toggle .lab-switch input.enabled + .slider {
   box-shadow: 0 0 1px #2196F3;
 }
-.labs-toggle .lab-switch input.enabled + .slider:before {
+#labstabs .toggle .lab-switch input.enabled + .slider:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(86px);
   transform: translateX(18px);
 }
-.labs-toggle .column.lab-name, .column.lab-switch {
-  padding-top: 0;
-}
-.labs-toggle .column.lab-switch {
-  padding-left: 0;
-  padding-right: 3px;
-}
-.labs-toggle .column.lab-name {
-  font-size: 12px;
-}
-.labs-toggle .column.lab-name a {
-  font-size: 11px;
-}
-.labs-toggle .labs-cta {
-  font-size: 11px;
-  padding:.75rem;
-}
-.labs-display {
-  margin: 1em;
-}
-.labs-header {
-  border-top: 2px solid #cecece;
-  padding: 0;
-  margin: 0 0 2em 0;
-}
-.labs-header img {
-  border: 1px solid #cecece;
-  border-top: 0;
-  padding: .25em;
-  margin: 0 .75em 0 0;
-  width: 80px;
-  float:left;
-}
-.labs-header a {
-  font-size: 10px;
-  color: grey;
-  line-height: 25px;
-}
-@media screen and (max-width: 768px) {
-  .labs-toggle {
-    margin: 1em 0 0 0;
-    border-left: 0;
-    padding: .25em .5em 0 1em;
-    border-top: 2px solid #cccccc;
-    font-size: 1em;
-  }
-  .labs-toggle .column.is-narrow-mobile {
-    flex: none;
-  }
-  .labs-toggle .columns.lab-row {
-    flex-direction: row-reverse;
-  }
-  .labs-toggle img {
-    width: 110px;
-    margin-left: 0;
-  }
-  .labs-toggle .labs-cta {
-    padding-left: 0;
-  }
-}
-@media screen and (min-width: 769px) {
-  .labs-toggle .column.is-one-fifth-desktop {
-    flex: none;
-    width: 20%;
-  }
-}
+
+
+
+
+
+
 
 
 /* arXiv.org archive/subjclass info for abs pages... */
@@ -1150,7 +1286,7 @@ div#long-author-list {
     -moz-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
     box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
     background-color: #E6E6E6;
-    margin: 0;
+    margin: 0 0 1em 0;
     padding: 1em 0;
   }
   #abs-outer .extra-ref-cite ul li {
@@ -1244,6 +1380,42 @@ div#long-author-list {
     padding: .25em 1em;
     margin: 0 .5em 0 0;
   }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-authors a, #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper .bib-sidebar-title a {
+    display: inline;
+    border-radius: none;
+    background: none;
+    border: 0;
+    color: #000000;
+    font-size: 1em !important;
+    padding: .25em 0;
+    margin: 0;
+  }
+  #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
+    margin: 1em 0
+  }
+  #abs-outer .extra-services span.bib-cite-button {
+    margin: .5em .5em 0 0;
+    display: inline-block !important;
+    border-radius: 5px;
+    background: #E6E6E6;
+    border: 1px solid #046BAF;
+    font-size: 1em !important;
+    padding: .25em 1em;
+    font-weight: normal;
+    text-transform: capitalize;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li {
+    margin: .5em 0;
+    padding: 0;
+    height: auto;
+  }
+  #abs-outer .extra-services .extra-ref-cite ul li a {
+    margin: .25em .5em .25em 0;
+  }
+
+
+
+
   #abs-outer .subheader {
     background-color: #fefefe;
     padding: .25em 0;
@@ -2275,6 +2447,51 @@ body#front.with-cu-identity #header #search {
 .columns.is-vcentered {
   align-items: center;
 }
+.columns.is-mobile > .column.is-narrow {
+  flex: none;
+}
+@media screen and (max-width: 768px) {
+  .column.is-narrow-mobile {
+    flex: none;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .column.is-narrow, .column.is-narrow-tablet {
+    flex: none;
+  }
+  .columns:not(.is-desktop) {
+    display: flex;
+  }
+  .column.is-full, .column.is-full-tablet {
+    flex: none;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .column.is-narrow-desktop {
+    flex: none;
+  }
+  .column.is-full-desktop {
+    flex: none;
+    width: 100%;
+  }
+  .column.is-three-quarters-desktop {
+    flex: none;
+    width: 75%;
+  }
+  .column.is-two-thirds-desktop {
+    flex: none;
+    width: 66.6666%;
+  }
+  .column.is-half-desktop {
+    flex: none;
+    width: 50%;
+  }
+  .columns.is-desktop {
+    display: flex;
+  }
+}
+
 /*** base styles for vanilla accordion. Move to base for wider use? ***/
 .accordion-body {
   display: none;
@@ -2509,6 +2726,16 @@ body#front.with-cu-identity #header #search {
     padding-bottom: 2em;
   }
 }
+
+
+/**** Pendo Guide Badge Styles - when you only want a badge/text note and no corresponding guide ****/
+.intro-and-news .bb-text {
+    text-align: left !important;
+}
+.intro-and-news .\_pendo-badge\_ {
+  cursor: text !important;
+}
+
 
 /*icon styles*/
 svg.icon {

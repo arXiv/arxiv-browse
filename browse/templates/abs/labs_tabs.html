@@ -1,0 +1,94 @@
+<!-- LABS AREA -->
+<div id="labstabs">
+  <div class="labstabs">
+    {%- if request.args.get('labs-style') == 'tabs-above'-%}
+    <input type="radio" name="tabs" id="tabzero" checked="checked">
+    <label for="tabzero">Abstract</label>
+    <div class="tab">
+      <blockquote class="abstract mathjax">
+        <span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+      </blockquote>
+    </div>
+    {%- endif -%}
+    <input type="radio" name="tabs" id="tabone" {%- if request.args.get('labs-style') != 'tabs-above'-%}checked="checked"{%- endif -%}>
+    <label for="tabone">
+      About arXivLabs
+    </label>
+    <div class="tab">
+      <h1>arXivLabs: experimental projects with community collaborators</h1>
+      <div class="toggle">
+        <p>arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.</p>
+        <p>Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.</p>
+        <p>Have an idea for a project that will add value for arXiv's community? <a href="https://labs.arxiv.org/"><strong>Learn more about arXivLabs</strong></a> and <a href="https://arxiv.org/about/people/developers"><strong>how to get involved</strong></a>.</p>
+      </div>
+    </div>
+
+    <input type="radio" name="tabs" id="tabtwo">
+    <label for="tabtwo">Bibliographic Tools</label>
+    <div class="tab labs-display-bib">
+      <h1>Bibliographic and Citation Tools</h1>
+      <div class="toggle">
+        {% if config['LABS_BIBEXPLORER_ENABLED'] %}
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input id="bibex-toggle" type="checkbox" class="lab-toggle">
+              <span class="slider"></span>
+              <span class="is-sr-only">Bibliographic Explorer Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-bibex">Bibliographic Explorer</span> <em>(<a href="https://labs.arxiv.org/">What is the Explorer?</a>)</em>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+        <div class="labs-content-placeholder labs-display" style="display: none;"></div>
+    </div>
+    <input type="radio" name="tabs" id="tabthree">
+    <label for="tabthree">Code</label>
+    <div class="tab">
+      <h1>Code Associated with this Article</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="paperwithcode-toggle"
+                data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
+              <span class="slider"></span>
+              <span class="is-sr-only">arXiv Links to Code Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-pwc">arXiv Links to Code</span> <em>(<a href="https://labs.arxiv.org/" target="_blank">What is Links to Code?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="pwc-output"></div>
+    </div>
+    <input type="radio" name="tabs" id="tabfour">
+    <label for="tabfour">Recommenders</label>
+    <div class="tab">
+      <h1>Recommenders and Search Tools</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input id="core-recommender-toggle" type="checkbox" class="lab-toggle" aria-labelledby="label-for-core">
+              <span class="slider"></span>
+              <span class="is-sr-only">Core recommender toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="coreRecommenderOutput"></div>
+    </div>
+
+  </div>
+</div>
+<!-- END LABS AREA -->
