@@ -76,12 +76,10 @@
         </div>
 
         <!-- timeboxed column -->
-        {#- e.g. if the request date is between 2020-07-21 00:00 and 2020-08-02 00:00, include the following div -#}
-        {%- if rd_int > 202007210000 and rd_int < 202007281000 -%}
-        <div class="column message-header message-yellow" id="contintent-demo">
+        {%- if rd_int > 202010190000 and rd_int < 202010240000 -%}
+        <div class="column message-header message-yellow">
           <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Global survey:</strong> In under 2 minutes help us understand how arXiv is perceived around the world!
-          <a class="btn-slim" target="_blank" href="https://cornell.qualtrics.com/jfe/form/SV_3POhYLQEALfIMLz?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}">Take survey</a></p>
+          <p><strong>Giving Week:</strong> arXiv depends on donations to support essential operations and new initiatives. <a href="https://securelb.imodules.com/s/1717/alumni/event.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1?source=web">Donate today</a>!</p>
         </div>
         {%- endif -%}
         <!-- /end timeboxed column -->
