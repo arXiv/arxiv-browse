@@ -67,7 +67,7 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
         for id in ARCHIVES.keys()
         if id not in ARCHIVES_SUBSUMED and not id.startswith("test")
     ]
-    archives.sort(key=lambda tpl: tpl[0])
+    archives.sort(key=lambda tpl: tpl[0])  # type:  ignore
     data["archives"] = archives
 
     defunct = [
@@ -75,7 +75,7 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
         for id in ARCHIVES.keys()
         if "end_date" in ARCHIVES[id]
     ]
-    defunct.sort(key=lambda tpl: tpl[0])
+    defunct.sort(key=lambda tpl: tpl[0])  # type:  ignore
     data["defunct"] = defunct
 
     data["template"] = "archive/archive_list_all.html"
@@ -101,7 +101,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
                          "name": cat.get("name", ""),
                          "description": cat.get("description", "")})
 
-    cats.sort(key=lambda x: x["name"])
+    cats.sort(key=lambda x: x["name"])  # type:  ignore
     return cats
 
 
