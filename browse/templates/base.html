@@ -89,16 +89,16 @@
         </div>
       </div>
 
-      <div id="header" class="is-hidden-mobile{% if config['BROWSE_SITE_HOST'] != None %} beta-header{% endif %}">
+      <div id="header" class="is-hidden-mobile{% if config['BROWSE_SITE_LABEL'] == 'dev.arxiv.org' or config['BROWSE_SITE_LABEL'] == 'beta.arxiv.org'%} beta-header{% endif %}">
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
         <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-
+        
         {% block header_h1 %}
           <h1>
-            {% if config['BROWSE_SITE_HOST'] != None %}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="beta-exclamation"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>{% endif %}
+            {% if config['BROWSE_SITE_LABEL'] == 'dev.arxiv.org' or config['BROWSE_SITE_LABEL'] == 'beta.arxiv.org'%}<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="beta-exclamation"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>{% endif %}
             {{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}
-            {% if config['BROWSE_SITE_HOST'] != None %}<a class="return-link" href="https://arxiv.org/">(go to arxiv.org)</a>{% endif %}
+            {% if config['BROWSE_SITE_LABEL'] == 'dev.arxiv.org' or config['BROWSE_SITE_LABEL'] == 'beta.arxiv.org'%}<a class="return-link" href="https://arxiv.org/">(go to arxiv.org)</a>{% endif %}
           </h1>
         {% endblock header_h1%}
 
