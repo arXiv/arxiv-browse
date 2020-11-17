@@ -92,16 +92,16 @@ class TestBrowseDatabaseService(TestCase):
     def test_get_institution_returns_a_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
         label = TestBrowseDatabaseService.database_service.get_institution(
-            '128.84.0.0')
+            '128.84.0.0').get('label')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
         label = TestBrowseDatabaseService.database_service.get_institution(
-            '128.84.255.255')
+            '128.84.255.255').get('label')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP at end of range')
 
         label = TestBrowseDatabaseService.database_service.get_institution(
-            '128.84.12.34')
+            '128.84.12.34').get('label')
         self.assertEqual(label, 'Cornell University',
                          'Institution label returned for IP within range')
         label = TestBrowseDatabaseService.database_service.get_institution(
@@ -114,7 +114,7 @@ class TestBrowseDatabaseService(TestCase):
             label, 'No institution label returned for excluded IP')
 
         label = TestBrowseDatabaseService.database_service.get_institution(
-            '128.84.10.5')
+            '128.84.10.5').get('label')
         self.assertEqual(
             label, 'Other University',
             'Institution label returned for IP excluded '

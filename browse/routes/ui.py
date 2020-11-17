@@ -1,6 +1,7 @@
-"""Provides the user intefaces for browse."""
+"""Provides the user interfaces for browse."""
 import re
 import geoip2.database
+import bcrypt
 
 from datetime import datetime
 from typing import Callable, Dict, Mapping, Union, Tuple, Any
@@ -35,7 +36,6 @@ def load_global_data() -> None:
     except Exception as ex:
         logger.debug(f'problem loading geoip database: {ex}')
 
-
 @blueprint.context_processor
 def inject_now() -> Dict:
     """Inject current datetime into request context."""
@@ -44,24 +44,54 @@ def inject_now() -> Dict:
 
 @blueprint.before_request
 def before_request() -> None:
-    """Get instituional affiliation from session."""
+    """ Get geo data and institutional affiliation from ip address. """
     global geoip_reader
-    if geoip_reader and 'contintent' not in session:
-        session['continent'] = None
-        try:
-            response = geoip_reader.city(request.remote_addr)
-            logger.debug(f'continent {response.continent.code}')
-            session['continent'] = {
-                'code': response.continent.code,
-                'name': response.continent.names['en']
-            }
+    if geoip_reader:
+        # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
+        geoip_version = '1'
+        if True or session['geoip.version'] != geoip_version:
+            session['geoip.version'] = geoip_version
+            try:
+                response = geoip_reader.city(request.remote_addr)
+                if response:
+                    if response.continent:
+                        session['continent'] = {
+                            'code': response.continent.code,
+                            'name': response.continent.names['en']
+                        }
+                    if response.country and response.country.iso_code:
+                        session['country'] = response.country.iso_code
+                    if response.subdivisions and response.subdivisions.most_specific and response.subdivisions.most_specific.iso_code:
+                        session['subnational'] = response.subdivisions.most_specific.iso_code
+                    if response.city and response.city.name:
+                        session['city'] = response.city.name
 
-        except Exception as ex:
-            logger.debug(f'problem getting match on IP: {ex}')
+            #except AddressNotFoundError as ex:
+            #    logger.debug(f'problem getting match on IP: {ex}')
+            except ValueError as ex:
+                logger.debug(f'problem with IP address format: {ex}')
+            except Exception as ex:
+                logger.debug(f'problem using geoip: {ex}')
 
-    if 'institution' not in session:
-        logger.debug('Adding institution to session')
-        session['institution'] = get_institution(request.remote_addr)
+    # TODO: untested
+    #if True or 'hashed_user_id' not in session:
+    #    if request.auth and request.auth.user:
+    #        user_id = str(request.auth.user.user_id)
+    #        session['hashed_user_id'] = bcrypt.hashpw(user_id, bcrypt.gensalt())
+
+    # Institution: store first institution found in a cookie.
+    #   Users who visit multiple institutions keep first until session expires.
+    #   Multiple device/browsers have separate pendo sessions
+    if 'institution' not in session or 'institution_id' not in session:
+        inst_hash = get_institution(request.remote_addr)
+        if inst_hash != None and inst_hash.get("id") != None:
+            session['institution_id'] = inst_hash.get("id")
+            session['institution']    = inst_hash.get("label")
+
+    # TODO:
+    #logger.error(f'SESSION: { session }')
+    #logger.error(f'REQUEST: { request }')
+    #logger.error(f'AUTH: { request.auth }')
 
 
 @blueprint.after_request
