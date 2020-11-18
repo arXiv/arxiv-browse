@@ -55,6 +55,7 @@ def before_request() -> None:
             try:
                 response = geoip_reader.city(request.remote_addr)
                 if response:
+                    # https://geoip2.readthedocs.io/en/latest/
                     if response.continent:
                         session['continent'] = {
                             'code': response.continent.code,
@@ -78,10 +79,9 @@ def before_request() -> None:
         if hasattr(request, "auth") and hasattr(request.auth, "user"):
             user_id = str(request.auth.user.user_id).encode('utf-8')
             salt = bcrypt.gensalt()
-            # TODO: I guess it's fine, would be nice to remove b'...' around the hash,
-            #   which still shows up in html as b&#39;
-            hashed_user_id = bcrypt.hashpw(user_id, salt)
-            session['hashed_user_id'] = hashed_user_id
+            tmp = bcrypt.hashpw(user_id, salt)
+            hashed_user_id = str(tmp, 'utf-8')
+            session["hashed_user_id"] = hashed_user_id
 
     # Institution: store first institution found in a cookie.
     #   Users who visit multiple institutions keep first until session expires.
@@ -91,6 +91,7 @@ def before_request() -> None:
         if inst_hash != None and inst_hash.get("id") != None:
             session['institution_id'] = inst_hash.get("id")
             session['institution']    = inst_hash.get("label")
+
 
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
