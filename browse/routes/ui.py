@@ -49,7 +49,7 @@ def before_request() -> None:
     if geoip_reader:
         # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
         geoip_version = '1'
-        if True or session['geoip.version'] != geoip_version:
+        if 'geoip.version' not in session or session['geoip.version'] != geoip_version:
             session['geoip.version'] = geoip_version
             try:
                 response = geoip_reader.city(request.remote_addr)
@@ -73,16 +73,14 @@ def before_request() -> None:
             except Exception as ex:
                 logger.debug(f'problem using geoip: {ex}')
 
-    # TODO: remove True
-    if True or 'hashed_user_id' not in session:
+    if 'hashed_user_id' not in session:
         if request.auth and request.auth.user:
-            user_id = str(request.auth.user.user_id)
+            user_id = str(request.auth.user.user_id).encode('utf-8')
             salt = bcrypt.gensalt()
-            # TODO: Attempting to remote of the b'...'
+            # TODO: I guess it's fine, would be nice to remove b'...' around the hash,
             #   which still shows up in html as b&#39;
-            hashed_user_id = bcrypt.hashpw(user_id, salt).decode('utf-8')
+            hashed_user_id = bcrypt.hashpw(user_id, salt)
             session['hashed_user_id'] = hashed_user_id
-            logger.error(f'hashed_user_id: { hashed_user_id }')
 
     # Institution: store first institution found in a cookie.
     #   Users who visit multiple institutions keep first until session expires.
@@ -92,10 +90,6 @@ def before_request() -> None:
         if inst_hash != None and inst_hash.get("id") != None:
             session['institution_id'] = inst_hash.get("id")
             session['institution']    = inst_hash.get("label")
-
-    # TODO: remove
-    #logger.error(f'AUTH: { request.auth }')
-
 
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
