@@ -34,7 +34,7 @@ def load_global_data() -> None:
     try:
         geoip_reader = geoip2.database.Reader('data/GeoLite2-City.mmdb')
     except Exception as ex:
-        logger.debug(f'problem loading geoip database: {ex}')
+        logger.error(f'problem loading geoip database: {ex}')
 
 @blueprint.context_processor
 def inject_now() -> Dict:
