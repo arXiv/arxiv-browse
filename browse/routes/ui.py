@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Callable, Dict, Mapping, Union, Tuple, Any
 from flask import Blueprint, render_template, request, Response, session, \
     current_app, url_for, redirect
+#from flask import request # type: ignore    <--  doesn't work for nose
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
@@ -74,7 +75,7 @@ def before_request() -> None:
                 logger.debug(f'problem using geoip: {ex}')
 
     if 'hashed_user_id' not in session:
-        if request.auth and request.auth.user:
+        if hasattr(request, "auth") and hasattr(request.auth, "user"):
             user_id = str(request.auth.user.user_id).encode('utf-8')
             salt = bcrypt.gensalt()
             # TODO: I guess it's fine, would be nice to remove b'...' around the hash,
