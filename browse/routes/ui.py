@@ -73,11 +73,16 @@ def before_request() -> None:
             except Exception as ex:
                 logger.debug(f'problem using geoip: {ex}')
 
-    # TODO: untested
-    #if True or 'hashed_user_id' not in session:
-    #    if request.auth and request.auth.user:
-    #        user_id = str(request.auth.user.user_id)
-    #        session['hashed_user_id'] = bcrypt.hashpw(user_id, bcrypt.gensalt())
+    # TODO: remove True
+    if True or 'hashed_user_id' not in session:
+        if request.auth and request.auth.user:
+            user_id = str(request.auth.user.user_id)
+            salt = bcrypt.gensalt()
+            # TODO: Attempting to remote of the b'...'
+            #   which still shows up in html as b&#39;
+            hashed_user_id = bcrypt.hashpw(user_id, salt).decode('utf-8')
+            session['hashed_user_id'] = hashed_user_id
+            logger.error(f'hashed_user_id: { hashed_user_id }')
 
     # Institution: store first institution found in a cookie.
     #   Users who visit multiple institutions keep first until session expires.
@@ -88,9 +93,7 @@ def before_request() -> None:
             session['institution_id'] = inst_hash.get("id")
             session['institution']    = inst_hash.get("label")
 
-    # TODO:
-    #logger.error(f'SESSION: { session }')
-    #logger.error(f'REQUEST: { request }')
+    # TODO: remove
     #logger.error(f'AUTH: { request.auth }')
 
 
