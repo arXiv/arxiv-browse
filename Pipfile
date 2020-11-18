@@ -7,9 +7,9 @@ name = "pypi"
 dataclasses = "*"
 python-dateutil = "*"
 Flask-API = "*"
-Flask-SQLAlchemy = "*"
+Flask-SQLAlchemy = "==2.4.4"  # ARXIVNG-3649
 MarkupSafe = "*"
-SQLAlchemy = "*"
+SQLAlchemy = "==1.3.20" # ARXIVNG-3649
 pytz = "*"
 mysqlclient = "==1.4.1"
 "mmh3" = "*"
