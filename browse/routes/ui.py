@@ -76,8 +76,8 @@ def before_request() -> None:
 
     try:
         if 'hashed_user_id' not in session:
-            if hasattr(request, "auth") and hasattr(request.auth, "user"):
-                user_id = str(request.auth.user.user_id).encode('utf-8')
+            if hasattr(request, "auth") and hasattr(request.auth, "user"): # type: ignore
+                user_id = str(request.auth.user.user_id).encode('utf-8')   # type: ignore
                 salt = bcrypt.gensalt()
                 tmp = bcrypt.hashpw(user_id, salt)
                 hashed_user_id = str(tmp, 'utf-8')
