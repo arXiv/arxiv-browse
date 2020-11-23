@@ -47,15 +47,15 @@ def inject_now() -> Dict:
 def before_request() -> None:
     """ Get geo data and institutional affiliation from ip address. """
     global geoip_reader
-    if geoip_reader:
-        # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
-        geoip_version = '1'
-        if 'geoip.version' not in session or session['geoip.version'] != geoip_version:
-            session['geoip.version'] = geoip_version
-            try:
+    try:
+        if geoip_reader:
+            # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
+            geoip_version = '1'
+            if 'geoip.version' not in session or session['geoip.version'] != geoip_version:
+                session['geoip.version'] = geoip_version
+                # https://geoip2.readthedocs.io/en/latest/
                 response = geoip_reader.city(request.remote_addr)
                 if response:
-                    # https://geoip2.readthedocs.io/en/latest/
                     if response.continent:
                         session['continent'] = {
                             'code': response.continent.code,
@@ -67,30 +67,35 @@ def before_request() -> None:
                         session['subnational'] = response.subdivisions.most_specific.iso_code
                     if response.city and response.city.name:
                         session['city'] = response.city.name
+    #except AddressNotFoundError as ex:
+    #    logger.debug(f'problem getting match on IP: {ex}')
+    except ValueError as ex:
+        logger.debug(f'problem with IP address format: {ex}')
+    except Exception as ex:
+        logger.debug(f'problem using geoip: {ex}')
 
-            #except AddressNotFoundError as ex:
-            #    logger.debug(f'problem getting match on IP: {ex}')
-            except ValueError as ex:
-                logger.debug(f'problem with IP address format: {ex}')
-            except Exception as ex:
-                logger.debug(f'problem using geoip: {ex}')
+    try:
+        if 'hashed_user_id' not in session:
+            if hasattr(request, "auth") and hasattr(request.auth, "user"):
+                user_id = str(request.auth.user.user_id).encode('utf-8')
+                salt = bcrypt.gensalt()
+                tmp = bcrypt.hashpw(user_id, salt)
+                hashed_user_id = str(tmp, 'utf-8')
+                session["hashed_user_id"] = hashed_user_id
+    except Exception as ex:
+        logger.debug(f'problem creating hashed_user_id: {ex}')
 
-    if 'hashed_user_id' not in session:
-        if hasattr(request, "auth") and hasattr(request.auth, "user"):
-            user_id = str(request.auth.user.user_id).encode('utf-8')
-            salt = bcrypt.gensalt()
-            tmp = bcrypt.hashpw(user_id, salt)
-            hashed_user_id = str(tmp, 'utf-8')
-            session["hashed_user_id"] = hashed_user_id
-
-    # Institution: store first institution found in a cookie.
-    #   Users who visit multiple institutions keep first until session expires.
-    #   Multiple device/browsers have separate pendo sessions
-    if 'institution' not in session or 'institution_id' not in session:
-        inst_hash = get_institution(request.remote_addr)
-        if inst_hash != None and inst_hash.get("id") != None:
-            session['institution_id'] = inst_hash.get("id")
-            session['institution']    = inst_hash.get("label")
+    try:
+        # Institution: store first institution found in a cookie.
+        #   Users who visit multiple institutions keep first until session expires.
+        #   Multiple device/browsers have separate pendo sessions
+        if 'institution' not in session or 'institution_id' not in session:
+            inst_hash = get_institution(request.remote_addr)
+            if inst_hash != None and inst_hash.get("id") != None:
+                session['institution_id'] = inst_hash.get("id")
+                session['institution']    = inst_hash.get("label")
+    except Exception as ex:
+        logger.debug(f'problem looking up institution: {ex}')
 
 
 @blueprint.after_request
