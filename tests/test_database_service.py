@@ -93,7 +93,7 @@ class TestBrowseDatabaseService(TestCase):
         """If IP address matches an institution, a label is returned."""
         inst = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.0.0')
-        self.assertEqual(inst.get('id'), '1',
+        self.assertEqual(inst.get('id'), 1,
                          'Institution ID returned for IP at end of range')
         self.assertEqual(inst.get('label'), 'Cornell University',
                          'Institution label returned for IP at end of range')
