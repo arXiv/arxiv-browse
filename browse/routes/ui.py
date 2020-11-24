@@ -35,7 +35,7 @@ def load_global_data() -> None:
     try:
         geoip_reader = geoip2.database.Reader('data/GeoLite2-City.mmdb')
     except Exception as ex:
-        logger.error(f'problem loading geoip database: {ex}')
+        logger.error('problem loading geoip database: %s', ex)
 
 @blueprint.context_processor
 def inject_now() -> Dict:
@@ -68,11 +68,11 @@ def before_request() -> None:
                     if response.city and response.city.name:
                         session['city'] = response.city.name
     #except AddressNotFoundError as ex:
-    #    logger.debug(f'problem getting match on IP: {ex}')
+    #    logger.debug('problem getting match on IP: %s', ex)
     except ValueError as ex:
-        logger.debug(f'problem with IP address format: {ex}')
+        logger.debug('problem with IP address format: %s', ex)
     except Exception as ex:
-        logger.debug(f'problem using geoip: {ex}')
+        logger.debug('problem using geoip: %s', ex)
 
     try:
         if 'hashed_user_id' not in session:
@@ -83,7 +83,7 @@ def before_request() -> None:
                 hashed_user_id = str(tmp, 'utf-8')
                 session["hashed_user_id"] = hashed_user_id
     except Exception as ex:
-        logger.debug(f'problem creating hashed_user_id: {ex}')
+        logger.debug('problem creating hashed_user_id: %s', ex)
 
     try:
         # Institution: store first institution found in a cookie.
@@ -95,7 +95,7 @@ def before_request() -> None:
                 session['institution_id'] = inst_hash.get("id")
                 session['institution']    = inst_hash.get("label")
     except Exception as ex:
-        logger.debug(f'problem looking up institution: {ex}')
+        logger.debug('problem looking up institution: %s', ex)
 
 
 @blueprint.after_request
