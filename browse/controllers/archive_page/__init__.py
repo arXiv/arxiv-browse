@@ -106,7 +106,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
                          "name": cat.get("name", ""),
                          "description": cat.get("description", "")})
 
-    cats.sort(key=lambda x: x["name"]) # type: igore
+    cats.sort(key=lambda x: x["name"]) # type: ignore
     return cats
 
 
