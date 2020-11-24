@@ -118,6 +118,7 @@ def home() -> Response:
 
     raise InternalServerError('Unexpected error')
 
+
 @blueprint.route('abs', methods=['GET'])
 def bare_abs() -> Any:
     """Check several legacy request parameters."""
@@ -158,6 +159,7 @@ def abstract(arxiv_id: str) -> Any:
         return '', code, headers
 
     raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('category_taxonomy', methods=['GET'])
 def category_taxonomy() -> Any:
@@ -245,6 +247,7 @@ def clickthrough() -> Response:
 def list_articles(context: str, subcontext: str) -> Response:
     """
     List articles by context, month etc.
+
     Context might be a context or an archive; Subcontext should be
     'recent', 'new' or a string of format YYMM.
     """
@@ -305,6 +308,7 @@ def stats(command: str) -> Response:
     else:
         raise NotFound
     raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
@@ -401,6 +405,7 @@ def archive(archive: str):  # type: ignore
 def archive_with_extra(archive: str, junk: str):  # type: ignore
     """
     Archive page with extra, 301 redirect to just the archive.
+
     This handles some odd URLs that have ended up in search engines.
     See also ARXIVOPS-2119.
     """
@@ -436,5 +441,5 @@ def cookies(set):  # type: ignore
 
 @blueprint.route('bibtex/<arxiv_id>', methods=['GET'])
 def bibtex(arxiv_id: str):  # type: ignore
-    """bibtex for a paper."""
+    """Bibtex for a paper."""
     return bibtex_citation(arxiv_id)
