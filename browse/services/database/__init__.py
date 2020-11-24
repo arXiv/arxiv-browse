@@ -95,7 +95,7 @@ def get_institution(ip: str) -> Optional[Mapping[str,str]]:
     h = None
     if institution_row:
         h = {
-          "id"    : f'{institution_row.id}',
+          "id"    : institution_row.id,
           "label" : institution_row.label,
         }
         assert isinstance(h.get("label"), str)

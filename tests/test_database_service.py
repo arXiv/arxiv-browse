@@ -89,12 +89,15 @@ class TestBrowseDatabaseService(TestCase):
         import logging
         logging.disable(logging.WARNING)
 
-    def test_get_institution_returns_a_label(self) -> None:
+    def test_get_institution_returns_an_id_and_label(self) -> None:
         """If IP address matches an institution, a label is returned."""
-        label = TestBrowseDatabaseService.database_service.get_institution(
-            '128.84.0.0').get('label')
-        self.assertEqual(label, 'Cornell University',
+        inst = TestBrowseDatabaseService.database_service.get_institution(
+            '128.84.0.0')
+        self.assertEqual(inst.get('id'), '1',
+                         'Institution ID returned for IP at end of range')
+        self.assertEqual(inst.get('label'), 'Cornell University',
                          'Institution label returned for IP at end of range')
+
         label = TestBrowseDatabaseService.database_service.get_institution(
             '128.84.255.255').get('label')
         self.assertEqual(label, 'Cornell University',
