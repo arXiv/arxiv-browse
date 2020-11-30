@@ -27,7 +27,27 @@
           // Please use Strings, Numbers, or Bools for value types.
           pendo.initialize({
               visitor: {
-                  id:              'VISITOR-UNIQUE-ID'   // Required if user is logged in
+                  {% if session.get("institution") %}
+                  institution:     '{{ session.get("institution") }}',
+                  {% endif %}
+
+                  {% if session.get("continent") and session.get("continent").get("code") %}
+                  continent:       '{{ session.get("continent").get("code") }}',
+                  {% endif %}
+
+                  {% if session.get("country") %}
+                  country:         '{{ session.get("country") }}',
+                  {% endif %}
+
+                  {% if session.get("subnational") %}
+                  subnational:     '{{ session.get("state") }}',
+                  {% endif %}
+
+                  {% if session.get("city") %}
+                  city:            '{{ session.get("city") }}',
+                  {% endif %}
+
+                  id:              '{{ session.get("hashed_user_id") if session.get("hashed_user_id") else "VISITOR-UNIQUE-ID" }}'
                   // email:        // Recommended if using Pendo Feedback, or NPS Email
                   // full_name:    // Recommended if using Pendo Feedback
                   // role:         // Optional
@@ -37,7 +57,12 @@
               },
 
               account: {
-                  id:           'ACCOUNT-UNIQUE-ID' // Highly recommended
+                  {% if session.get("institution") %}
+                  name:            '{{ session.get("institution") }}',
+                  {% endif %}
+
+                  id:              '{{ session.get("institution_id") if session.get("institution_id") else "ACCOUNT-UNIQUE-ID" }}'
+
                   // name:         // Optional
                   // is_paying:    // Recommended if using Pendo Feedback
                   // monthly_value:// Recommended if using Pendo Feedback
