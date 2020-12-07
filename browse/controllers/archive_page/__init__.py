@@ -1,9 +1,7 @@
 """Archive landing page."""
 
 import datetime
-from typing import Dict, Any, Tuple, List, no_type_check
-
-from flask import Response, url_for
+from typing import Dict, Any, Tuple, List
 
 from arxiv import status
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES, ARCHIVES_SUBSUMED
@@ -12,7 +10,6 @@ from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import years_operating, stats_by_year
 from browse.services.util.response_headers import abs_expires_header
 
-  
 
 def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Gets archive page."""
@@ -49,7 +46,6 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     data["years"] = years
     data["months"] = MONTHS
     data["days"] = DAYS
-    
     data["archive_id"] = archive_id
     data["archive"] = archive
     data["list_form"] = ByMonthForm(archive_id, archive, years)
@@ -57,7 +53,6 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     data["category_list"] = category_list(archive_id)
 
     data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
-    
     data["template"] = "archive/single_archive.html"
     return data, status.HTTP_200_OK, response_headers
 
@@ -72,7 +67,7 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
         for id in ARCHIVES.keys()
         if id not in ARCHIVES_SUBSUMED and not id.startswith("test")
     ]
-    archives.sort(key=lambda tpl: tpl[0])
+    archives.sort(key=lambda tpl: tpl[0]) # type: ignore
     data["archives"] = archives
 
     defunct = [
@@ -80,11 +75,11 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
         for id in ARCHIVES.keys()
         if "end_date" in ARCHIVES[id]
     ]
-    defunct.sort(key=lambda tpl: tpl[0])
+    defunct.sort(key=lambda tpl: tpl[0]) # type: ignore
     data["defunct"] = defunct
-    
+
     data["template"] = "archive/archive_list_all.html"
-    return data, status, {} 
+    return data, status, {}
 
 
 def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
@@ -106,7 +101,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
                          "name": cat.get("name", ""),
                          "description": cat.get("description", "")})
 
-    cats.sort(key=lambda x: x["name"])
+    cats.sort(key=lambda x: x["name"]) # type: ignore
     return cats
 
 
@@ -114,7 +109,7 @@ def _write_expires_header(response_headers: Dict[str, Any]) -> None:
     """Writes an expires header for the response."""
     response_headers["Expires"] = abs_expires_header()[1]
 
-    
+
 DAYS = ["{:0>2d}".format(i) for i in range(1, 32)]
 
 MONTHS = [

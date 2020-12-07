@@ -1,11 +1,13 @@
-"""Provides the user intefaces for browse."""
+"""Provides the user interfaces for browse."""
 import re
 import geoip2.database
+import bcrypt
 
 from datetime import datetime
 from typing import Callable, Dict, Mapping, Union, Tuple, Any
 from flask import Blueprint, render_template, request, Response, session, \
     current_app, url_for, redirect
+#from flask import request # type: ignore    <--  doesn't work for nose
 from werkzeug.exceptions import InternalServerError, BadRequest, NotFound
 
 from arxiv import status
@@ -33,8 +35,7 @@ def load_global_data() -> None:
     try:
         geoip_reader = geoip2.database.Reader('data/GeoLite2-City.mmdb')
     except Exception as ex:
-        logger.debug(f'problem loading geoip database: {ex}')
-
+        logger.error('problem loading geoip database: %s', ex)
 
 @blueprint.context_processor
 def inject_now() -> Dict:
@@ -44,24 +45,57 @@ def inject_now() -> Dict:
 
 @blueprint.before_request
 def before_request() -> None:
-    """Get instituional affiliation from session."""
+    """ Get geo data and institutional affiliation from ip address. """
     global geoip_reader
-    if geoip_reader and 'contintent' not in session:
-        session['continent'] = None
-        try:
-            response = geoip_reader.city(request.remote_addr)
-            logger.debug(f'continent {response.continent.code}')
-            session['continent'] = {
-                'code': response.continent.code,
-                'name': response.continent.names['en']
-            }
+    try:
+        if geoip_reader:
+            # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
+            geoip_version = '1'
+            if 'geoip.version' not in session or session['geoip.version'] != geoip_version:
+                session['geoip.version'] = geoip_version
+                # https://geoip2.readthedocs.io/en/latest/
+                response = geoip_reader.city(request.remote_addr)
+                if response:
+                    if response.continent:
+                        session['continent'] = {
+                            'code': response.continent.code,
+                            'name': response.continent.names['en']
+                        }
+                    if response.country and response.country.iso_code:
+                        session['country'] = response.country.iso_code
+                    if response.subdivisions and response.subdivisions.most_specific and response.subdivisions.most_specific.iso_code:
+                        session['subnational'] = response.subdivisions.most_specific.iso_code
+                    if response.city and response.city.name:
+                        session['city'] = response.city.name
+    #except AddressNotFoundError as ex:
+    #    logger.debug('problem getting match on IP: %s', ex)
+    except ValueError as ex:
+        logger.debug('problem with IP address format: %s', ex)
+    except Exception as ex:
+        logger.debug('problem using geoip: %s', ex)
 
-        except Exception as ex:
-            logger.debug(f'problem getting match on IP: {ex}')
+    try:
+        if 'hashed_user_id' not in session:
+            if hasattr(request, "auth") and hasattr(request.auth, "user"): # type: ignore
+                user_id = str(request.auth.user.user_id).encode('utf-8')   # type: ignore
+                salt = bcrypt.gensalt()
+                tmp = bcrypt.hashpw(user_id, salt)
+                hashed_user_id = str(tmp, 'utf-8')
+                session["hashed_user_id"] = hashed_user_id
+    except Exception as ex:
+        logger.debug('problem creating hashed_user_id: %s', ex)
 
-    if 'institution' not in session:
-        logger.debug('Adding institution to session')
-        session['institution'] = get_institution(request.remote_addr)
+    try:
+        # Institution: store first institution found in a cookie.
+        #   Users who visit multiple institutions keep first until session expires.
+        #   Multiple device/browsers have separate pendo sessions
+        if 'institution' not in session or 'institution_id' not in session:
+            inst_hash = get_institution(request.remote_addr)
+            if inst_hash != None and inst_hash.get("id") != None:
+                session['institution_id'] = inst_hash.get("id")
+                session['institution']    = inst_hash.get("label")
+    except Exception as ex:
+        logger.debug('problem looking up institution: %s', ex)
 
 
 @blueprint.after_request
@@ -83,6 +117,7 @@ def home() -> Response:
         return render_template('home/home.html', **response), code, headers  # type: ignore
 
     raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('abs', methods=['GET'])
 def bare_abs() -> Any:
@@ -124,6 +159,7 @@ def abstract(arxiv_id: str) -> Any:
         return '', code, headers
 
     raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('category_taxonomy', methods=['GET'])
 def category_taxonomy() -> Any:
@@ -211,6 +247,7 @@ def clickthrough() -> Response:
 def list_articles(context: str, subcontext: str) -> Response:
     """
     List articles by context, month etc.
+
     Context might be a context or an archive; Subcontext should be
     'recent', 'new' or a string of format YYMM.
     """
@@ -271,6 +308,7 @@ def stats(command: str) -> Response:
     else:
         raise NotFound
     raise InternalServerError('Unexpected error')
+
 
 @blueprint.route('format/<arxiv_id>')
 def format(arxiv_id: str) -> Response:
@@ -367,6 +405,7 @@ def archive(archive: str):  # type: ignore
 def archive_with_extra(archive: str, junk: str):  # type: ignore
     """
     Archive page with extra, 301 redirect to just the archive.
+
     This handles some odd URLs that have ended up in search engines.
     See also ARXIVOPS-2119.
     """
@@ -402,5 +441,5 @@ def cookies(set):  # type: ignore
 
 @blueprint.route('bibtex/<arxiv_id>', methods=['GET'])
 def bibtex(arxiv_id: str):  # type: ignore
-    """bibtex for a paper."""
+    """Bibtex for a paper."""
     return bibtex_citation(arxiv_id)

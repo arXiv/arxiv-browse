@@ -3,7 +3,7 @@
 import ipaddress
 from datetime import date, datetime
 from dateutil.tz import tzutc, gettz
-from typing import List, Optional, Any, Callable, Tuple
+from typing import Mapping, List, Optional, Any, Callable, Tuple
 from sqlalchemy import not_, desc, asc
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
@@ -68,12 +68,13 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
 
 
 @db_handle_error(logger=logger, default_return_val=None)
-def get_institution(ip: str) -> Optional[str]:
+def get_institution(ip: str) -> Optional[Mapping[str,str]]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
 
     stmt = (
         db.session.query(
+            MemberInstitution.id,
             MemberInstitution.label,
             func.sum(MemberInstitutionIP.exclude).label("exclusions")
         ).
@@ -82,16 +83,24 @@ def get_institution(ip: str) -> Optional[str]:
             MemberInstitutionIP.start <= decimal_ip,
             MemberInstitutionIP.end >= decimal_ip
         ).
-        group_by(MemberInstitution.label).
+        group_by(
+          MemberInstitution.id,
+          MemberInstitution.label,
+        ).
         subquery()
     )
-    institution_row = db.session.query(stmt.c.label).\
+    institution_row = db.session.query(stmt.c.id, stmt.c.label).\
         filter(stmt.c.exclusions == 0).first()
-    institution_name = None
+
+    h = None
     if institution_row:
-        institution_name = institution_row.label
-        assert isinstance(institution_name, str)
-    return institution_name
+        h = {
+          "id"    : institution_row.id,
+          "label" : institution_row.label,
+        }
+        assert isinstance(h.get("label"), str)
+
+    return h
 
 
 @db_handle_error(logger=logger, default_return_val=[])
