@@ -13,6 +13,7 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
+    "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
       "container": "#bib-main"
@@ -49,6 +50,10 @@ $(document).ready(function() {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+        } else if (key === "connectedpapers-toggle") {
+          $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
         }
       }
     }
@@ -83,6 +88,10 @@ $(document).ready(function() {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "connectedpapers-toggle") {
+      $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     }
