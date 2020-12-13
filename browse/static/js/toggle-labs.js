@@ -13,32 +13,22 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
-      "bibex": {
-          "url": "/bibex/bibex.js?20200709",
-          "container": "#bib-main"
-      },
-      "core-recommender": {
+    "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
+    "bibex": {
+      "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
+      "container": "#bib-main"
+    },
+    "core-recommender": {
       "url": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
       "container": "#coreRecommenderOutput"
     }
   };
 
-  var pwc_context = {
-    "cs.CV": 1,
-    "cs.AI": 1,
-    "cs.LG": 1,
-    "cs.CL": 1,
-    "cs.NE": 1,
-    "stat.ML": 1,
-    "cs.IR": 1
-  };
-  var current_context = $('.current').text();
-  if ( pwc_context[current_context]  ){
-    $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-      console.log(textStatus);
-    });
-    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
-  }
+  $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+    console.log(textStatus);
+  });
+  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
+
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
@@ -58,6 +48,10 @@ $(document).ready(function() {
           });
         } else if (key === "paperwithcode-toggle") {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "connectedpapers-toggle") {
+          $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         }
@@ -94,6 +88,10 @@ $(document).ready(function() {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "connectedpapers-toggle") {
+      $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     }
