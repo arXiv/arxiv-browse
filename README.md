@@ -1,6 +1,6 @@
 # arxiv-browse
 
-### Flask development server
+### Running Browse with the Flask development server
 
 You can run the browse app directly. Using pipenv:
 
@@ -33,6 +33,17 @@ To rebuild the test database, run the following script:
 ```bash
 FLASK_APP=app.py pipenv run python populate_test_database.py --drop_and_create
 ```
+
+### Running Browse in Docker
+You can also run the browse app in Docker. The following commands will build
+and run browse using defaults for the configuration parameters and will use
+the test data from `tests/data`.
+
+```bash
+docker build . -t arxiv/browse:some_tag
+docker run -it 8000:8000 arxiv/browse:some_tag
+```
+If all goes well, http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
 
