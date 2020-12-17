@@ -16,6 +16,7 @@ RUN yum install -y which mysql mysql-devel
 RUN pip install uwsgi
 
 # add python application and configuration
+ENV PIPENV_VENV_IN_PROJECT 1
 ADD app.py /opt/arxiv/
 ADD Pipfile /opt/arxiv/
 ADD Pipfile.lock /opt/arxiv/
