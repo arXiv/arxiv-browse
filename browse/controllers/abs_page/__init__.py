@@ -82,6 +82,11 @@ def get_abs_page(arxiv_id: str) -> Response:
             return redirect
 
         abs_meta = metadata.get_abs(arxiv_id)
+        not_modified = _check_request_headers(
+            abs_meta, response_data, response_headers)
+        if not_modified:
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+
         response_data['requested_id'] = arxiv_identifier.idv \
             if arxiv_identifier.has_version else arxiv_identifier.id
         response_data['abs_meta'] = abs_meta
@@ -138,14 +143,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             'There was a problem. If this problem persists, please contact '
             'help@arxiv.org.') from e
 
-    response_status = status.HTTP_200_OK
-
-    not_modified = _check_request_headers(
-        abs_meta, response_data, response_headers)
-    if not_modified:
-        return {}, status.HTTP_304_NOT_MODIFIED, response_headers
-
-    return response_data, response_status, response_headers
+    return response_data, status.HTTP_200_OK, response_headers
 
 
 def _non_critical_abs_data(abs_meta: DocMetadata,
@@ -178,7 +176,7 @@ def _non_critical_abs_data(abs_meta: DocMetadata,
 
 def _check_request_headers(docmeta: DocMetadata,
                            response_data: Dict[str, Any],
-                           headers: Dict[str, Any]) -> bool:
+                           resp_headers: Dict[str, Any]) -> bool:
     """Check the request headers, update the response headers accordingly."""
     last_mod_dt: datetime = docmeta.modified
 
@@ -189,37 +187,39 @@ def _check_request_headers(docmeta: DocMetadata,
         # If there is a more recent trackback ping, use that datetime
         last_mod_dt = response_data['trackback_ping_latest']
 
-    # Check for request headers If-Modified-Since and If-None-Match and compare
-    # them to the last modified time to determine whether we will return a
-    # "not modified" response
-    mod_since_dt = _time_header_parse(headers, 'If-Modified-Since')
-    none_match_dt = _time_header_parse(headers, 'If-None-Match')
-    not_modified = _not_modified(last_mod_dt, mod_since_dt, none_match_dt)
-
     last_mod_mime = mime_header_date(last_mod_dt)
-    headers['Last-Modified'] = last_mod_mime
-    headers['ETag'] = last_mod_mime
-    headers['Expires'] = abs_expires_header()[1]
+    etag = f'"{last_mod_mime}"'
+    
+    resp_headers['Last-Modified'] = last_mod_mime
+    resp_headers['ETag'] = etag
+    resp_headers['Expires'] = abs_expires_header()[1]
+    
+    not_modified = _not_modified(last_mod_dt,
+                                 _time_header_parse('If-Modified-Since'),
+                                 request.headers.get('If-None-March', None),
+                                 etag)
 
     return not_modified
 
 
 def _not_modified(last_mod_dt: datetime,
                   mod_since_dt: Optional[datetime],
-                  none_match_dt: Optional[datetime])->bool:
-    if mod_since_dt and none_match_dt:
-        not_modified = (mod_since_dt >= last_mod_dt
-                        and none_match_dt >= last_mod_dt)
-    elif mod_since_dt and not none_match_dt:
-        not_modified = mod_since_dt >= last_mod_dt
-    elif none_match_dt and not mod_since_dt:
-        not_modified = none_match_dt >= last_mod_dt
+                  none_match: Optional[str],
+                  current_etag: str) -> bool:
+    if none_match and none_match == current_etag:
+        return True
+
+    if mod_since_dt:
+        not_modified = (
+            mod_since_dt.replace(microsecond=0) >=
+            last_mod_dt.replace(microsecond=0))
+
     else:
         not_modified = False
     return not_modified
 
 
-def _time_header_parse(headers: Dict[str, Any], header: str) \
+def _time_header_parse(header: str) \
         -> Optional[datetime]:
     if (header in request.headers
             and request.headers[header] is not None):
