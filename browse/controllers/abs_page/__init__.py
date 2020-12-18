@@ -196,7 +196,7 @@ def _check_request_headers(docmeta: DocMetadata,
     
     not_modified = _not_modified(last_mod_dt,
                                  _time_header_parse('If-Modified-Since'),
-                                 request.headers.get('If-None-March', None),
+                                 _get_req_header('if-none-match'),
                                  etag)
 
     return not_modified
@@ -208,31 +208,30 @@ def _not_modified(last_mod_dt: datetime,
                   current_etag: str) -> bool:
     if none_match and none_match == current_etag:
         return True
-
-    if mod_since_dt:
-        not_modified = (
-            mod_since_dt.replace(microsecond=0) >=
-            last_mod_dt.replace(microsecond=0))
-
+    elif mod_since_dt:
+        return (mod_since_dt.replace(microsecond=0) >=
+                last_mod_dt.replace(microsecond=0))
     else:
-        not_modified = False
-    return not_modified
+        return False
 
 
-def _time_header_parse(header: str) \
-        -> Optional[datetime]:
-    if (header in request.headers
-            and request.headers[header] is not None):
-        try:
-            dt = parser.parse(str(request.headers.get(header)))
-            if not dt.tzinfo:
-                dt = dt.replace(tzinfo=tzutc())
-            return dt
-        except (ValueError, TypeError):
-            print(f'Exception parsing the If-None-Match request header')
-            return None
-    else:
-        return None
+def _time_header_parse(header: str) -> Optional[datetime]:
+    try:
+        dt = parser.parse(str(_get_req_header(header)))
+        if not dt.tzinfo:
+            dt = dt.replace(tzinfo=tzutc())
+        return dt
+    except (ValueError, TypeError, KeyError):
+        pass
+    return None
+
+
+def _get_req_header(header: str) -> Optional[str]:
+    """Gets request header, needs to be case insensative for keys.
+
+    HTTP header keys are case insensative. RFC 2616"""
+    return next((value for key, value in request.headers.items()
+                 if key.lower() == header.lower()), None)
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
