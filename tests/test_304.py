@@ -1,12 +1,18 @@
+"""Test"""
+
 import unittest
-from dateutil import parser
 from datetime import timedelta
+from dateutil import parser
+
 
 from browse.services.util.response_headers import mime_header_date
 
 from app import app
 
-class ListPageTest(unittest.TestCase):
+
+class ModifiedTest(unittest.TestCase):
+    """Test when page is modified and not modified for 200 and 304"""
+
     def setUp(self):
         app.testing = True
         app.config['APPLICATION_ROOT'] = ''
@@ -14,13 +20,14 @@ class ListPageTest(unittest.TestCase):
         self.client = app.test_client()
 
     def test_modified(self):
+        """Test"""
         with self.app.app_context():
             rv = self.client.get('/abs/0704.0600')
             self.assertEqual(rv.status_code, 200)
 
             last_mod = rv.headers['Last-Modified']
             etag = rv.headers['ETag']
-            
+
             rv = self.client.get('/abs/0704.0600',
                                  headers={'If-Modified-Since': last_mod})
             self.assertEqual(rv.status_code, 304)
@@ -54,6 +61,7 @@ class ListPageTest(unittest.TestCase):
             self.assertEqual(rv.status_code, 304)
 
     def test_not_modified(self):
+        """Test when pages is not modified"""
         with self.app.app_context():
             rv = self.client.get('/abs/0704.0600')
             self.assertEqual(rv.status_code, 200)
@@ -61,13 +69,12 @@ class ListPageTest(unittest.TestCase):
             mod_dt = parser.parse(rv.headers['Last-Modified'])
 
             rv = self.client.get('/abs/0704.0600',
-                                 headers={'If-Modified-Since': mime_header_date(mod_dt )})
+                                 headers={'If-Modified-Since': mime_header_date(mod_dt)})
             self.assertEqual(rv.status_code, 304)
 
             rv = self.client.get('/abs/0704.0600',
                                  headers={'If-Modified-Since': mime_header_date(mod_dt + timedelta(seconds=-1))})
             self.assertEqual(rv.status_code, 200)
-
 
             rv = self.client.get('/abs/0704.0600',
                                  headers={'If-None-Match': '"should-never-match"'})
