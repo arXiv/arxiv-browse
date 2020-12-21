@@ -1,6 +1,6 @@
 """Response header utility functions."""
 from datetime import datetime, timedelta, timezone
-from typing import Tuple
+from typing import Tuple, Optional
 from dateutil.tz import tzutc, gettz
 
 
@@ -12,11 +12,16 @@ PUBLISH_ISO_WEEKDAYS = [1, 2, 3, 4, 7]
 """Days of the week publish happens: Sunday-Thursday."""
 
 
-def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
-        -> Tuple[datetime, bool]:
+def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool]:
     """Make a sensible guess at earliest possible datetime of next update.
 
     Guess is based on provided datetime.
+
+    This is function will be needed by several services that are
+    outside of arxiv-browse. In the legacy system having this logic
+    redundently implemented lead to difficult to debug problems. Move
+    this to a common library like arxiv-base or make it a service
+    offered by arxiv-publish.
 
     Parameters
     ----------
@@ -31,7 +36,10 @@ def guess_next_update_utc(dt: datetime = datetime.now(timezone.utc)) \
         whether the provided dt is likely to coincide with a publish process,
         which is the APPROX_PUBLISH_DURATION window starting 20:00 on the
         normal publish days specified by PUBLISH_ISO_WEEKDAYS.
+
     """
+    if dt is None:
+        dt = datetime.now(timezone.utc)
     config = get_application_config()
     tz = gettz(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
     dt = dt.astimezone(tz=tz)
