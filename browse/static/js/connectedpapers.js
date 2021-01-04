@@ -16,7 +16,7 @@
   
   var arxivId = window.location.pathname.split('/').reverse()[0];
   var arxivIdToCPIdUrl = REST_ADDR + '?arxiv=' + arxivId;
-  var communicationErrorHtml = '<p>Oops, seems like communiation with the Connected Papers server is down.</p>';
+  var communicationErrorHtml = '<p>Oops, seems like communication with the Connected Papers server is down.</p>';
   var idNotRecognizedHtml = '<p>Seems like this paper is still not in our database. Please try again in a few days.</p>';
   
   
