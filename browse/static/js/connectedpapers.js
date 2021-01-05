@@ -66,7 +66,7 @@
         return 4294967296 * (2097151 & h2) + (h1>>>0);
       };
 
-      var selected_thumbnail_num = cyrb53(arxivId) & NUMBER_OF_THUMBNAILS;
+      var selected_thumbnail_num = Math.abs(cyrb53(arxivId)) % NUMBER_OF_THUMBNAILS;
 
       var chosenGraph = ARXIV_THUMBNAILS_ADDR + 'g' + selected_thumbnail_num + '.jpg';
       var choserGraphHtml = '<a href="' + graphUrl + '" target="_blank"><img src="' + chosenGraph +
