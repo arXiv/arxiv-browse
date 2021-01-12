@@ -110,6 +110,10 @@ the name and port number of the server. Required for subdomain support (e.g.:
 this to "localhost" does not help. Setting a SERVER_NAME also by default
 enables URL generation without a request context but with an application
 context.
+
+If this is set and the Host header of a request does not match the SERVER_NAME,
+then Flask will respond with a 404. Test with
+curl http://127.0.0.1:5000/ -sv -H "Host: subdomain.arxiv.org"
 """
 
 APPLICATION_ROOT = os.environ.get("APPLICATION_ROOT", None)

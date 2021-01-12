@@ -125,3 +125,7 @@ private_vars.sh
 legacy_comparison.org
 
 tests/data/browse.db
+
+*.key
+*.cer
+deploy/env_values.txt
