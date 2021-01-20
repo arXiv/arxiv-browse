@@ -46,7 +46,7 @@
       }
 
       var graphUrl = CONNECTED_PAPERS_ADDR + 'main/' + paperId + '/arxiv';
-      var buildGraphLinkHtml = '<p style="margin: 0">' + title + '</p><p><a href="' + graphUrl + '" target="_blank">View graph</a></p>';
+      var buildGraphLinkHtml = '<p style="margin: 0">' + title + '</p><p style="margin-top: 5px"><a href="' + graphUrl + '" target="_blank">View graph</a></p>';
       
       // Future compatible support for different messages for existing and nonexisting graphs
       var seeGraphLinkHtml = buildGraphLinkHtml;
