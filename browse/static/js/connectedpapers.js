@@ -50,7 +50,7 @@
                                 title + '</p></a>';
       var seeGraphLinkHtml = '<a href="' + graphUrl + '" target="_blank"><p style="margin:0;">View graph for ' +
                               title + '</p></a>';
-      var graphNotVisual = '<p>Seems like ' + title + ' is still not in our database. Please try again in a few days.</p>';
+      var graphNotVisual = '<p>Seems like this paper is still not in our database. Please try again in a few days.</p>';
 
       // A string to int hash algorithm
       // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
@@ -73,8 +73,7 @@
                             '" alt="Example graph image" width="120" height="100" style="border: 1px solid #D2D2D2;"></a>';
 
       var containerDivStyle = '"display: flex; flex-flow: row; padding: 24px 10px;"';
-      var infoLine = '<p style="font-size: 12px; opacity: 0.5; margin-top: 0; margin-bottom: 10px;">Find and explore ' +
-                      'related papers in a visual graph</p>';
+      var infoLine = '<p style="font-size: 12px; opacity: 0.5; margin-top: 0; margin-bottom: 10px;">See related papers to:</p>';
 
       var textDivOpen = '<div style="display: flex; flex-flow: column; padding: 0px 25px;">';
       var buildGraphTextDiv = textDivOpen + infoLine + buildGraphLinkHtml + '</div>';
