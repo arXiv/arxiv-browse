@@ -46,10 +46,10 @@
       }
 
       var graphUrl = CONNECTED_PAPERS_ADDR + 'main/' + paperId + '/arxiv';
-      var buildGraphLinkHtml = '<a href="' + graphUrl + '" target="_blank"><p style="margin:0;">View graph for ' + 
-                                title + '</p></a>';
-      var seeGraphLinkHtml = '<a href="' + graphUrl + '" target="_blank"><p style="margin:0;">View graph for ' +
-                              title + '</p></a>';
+      var buildGraphLinkHtml = '<p style="margin: 0">' + title + '</p><p><a href="' + graphUrl + '" target="_blank">View graph</a></p>';
+      
+      // Future compatible support for different messages for existing and nonexisting graphs
+      var seeGraphLinkHtml = buildGraphLinkHtml;
       var graphNotVisual = '<p>Seems like this paper is still not in our database. Please try again in a few days.</p>';
 
       // A string to int hash algorithm
