@@ -25,7 +25,8 @@
   const arxivId = window.location.pathname.split('/').reverse()[0];
   const arxivIdToCPIdUrl = REST_ADDR + '?arxiv=' + arxivId;
   const communicationErrorHtml = '<p>Oops, seems like communication with the Connected Papers server is down.</p>';
-  const idNotRecognizedHtml = '<p>Seems like this paper is still not in our database. Please try again in a few days.</p>';
+  const idNotRecognizedHtml = '<p>Seems like this paper is still not in our database. Please try again in a few' +
+                              ' days.</p>';
   
   
   $.get(arxivIdToCPIdUrl).done(translationResponse => {
@@ -54,11 +55,13 @@
       }
 
       const graphUrl = CONNECTED_PAPERS_ADDR + 'main/' + paperId + '/arxiv';
-      const buildGraphLinkHtml = '<p style="margin: 0">' + title + '</p><p style="margin-top: 5px"><a href="' + graphUrl + '" target="_blank">View graph</a></p>';
+      
+      const buildGraphLinkHtml = '<p class="connectedpapers-title">' + title '</p>';
       
       // Future compatible support for different messages for existing and nonexisting graphs
       const seeGraphLinkHtml = buildGraphLinkHtml;
-      const graphNotVisual = '<p>Seems like this paper is still not in our database. Please try again in a few days.</p>';
+      const graphNotVisual = '<p>Seems like this paper is still not in our database. Please try again in a few' +
+                             ' days.</p>';
 
       // A string to int hash algorithm
       // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
@@ -77,18 +80,22 @@
       const selected_thumbnail_num = Math.abs(cyrb53(arxivId)) % NUMBER_OF_THUMBNAILS;
 
       const chosenGraph = ARXIV_THUMBNAILS_ADDR + 'g' + selected_thumbnail_num + '.jpg';
-      const choserGraphHtml = '<a href="' + graphUrl + '" target="_blank"><img src="' + chosenGraph + '" alt="' +
-                              'Example graph image" width="120" height="100" style="border: 1px solid #D2D2D2;"></a>';
+      const chosenGraphHtml = '<img src="' + chosenGraph + '" alt="Example graph image" width="140" height="120"' +
+                              ' class="connectedpapers-img">';
 
-      const containerDivStyle = '"display: flex; flex-flow: row; padding: 24px 10px;"';
-      const infoLine = '<p class="info-line">See related papers to:</p>';
+      const infoLine = '<p class="connectedpapers-info-line">See related papers to:</p>';
 
-      const textDivOpen = '<div style="display: flex; flex-flow: column; padding: 0px 25px;">';
+      const textDivOpen = '<div class="connectedpapers-text-cont">';
       const buildGraphTextDiv = textDivOpen + infoLine + buildGraphLinkHtml + '</div>';
       const seeGraphTextDiv = textDivOpen + infoLine + seeGraphLinkHtml + '</div>';
 
-      const buildGraphHtml = '<div style=' + containerDivStyle + '>' + choserGraphHtml + buildGraphTextDiv + '</div>';
-      const seeGraphHtml = '<div style=' + containerDivStyle + '>' + choserGraphHtml + seeGraphTextDiv + '</div>';
+      const buildGraphHtml = '<div class="connectedpapers-width-limiter"><a class="connectedpapers-link" href="' +
+                             graphUrl + '" target="_blank"><div class="connectedpapers-container">' + chosenGraphHtml +
+                             buildGraphTextDiv + '</div></a></div>';
+
+      const seeGraphHtml = '<div class="connectedpapers-width-limiter"><a class="connectedpapers-link" href="' +
+                           graphUrl + '" target="_blank"><div class="connectedpapers-container">' + chosenGraphHtml +
+                           seeGraphTextDiv + '</div></a></div>';
 
       if (versionsResponse == null) {
         // Graph not yet built ever
