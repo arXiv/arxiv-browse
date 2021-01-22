@@ -56,7 +56,7 @@
 
       const graphUrl = CONNECTED_PAPERS_ADDR + 'main/' + paperId + '/arxiv';
       
-      const paperTitleHtml = '<p class="connectedpapers-title">' + title + '</p>';
+      const paperTitleHtml = '<p id="connectedpapers-title">' + title + '</p>';
 
       // Not enough references and citations parsed to build a graph
       const graphNotVisual = '<p>Seems like this paper is still not in our database. Please try again in a few' +
@@ -80,17 +80,19 @@
 
       const chosenGraphThumbnail = ARXIV_THUMBNAILS_ADDR + 'g' + selectedThumbnailNum + '.jpg';
       const chosenGraphThumbnailHtml = '<img src="' + chosenGraphThumbnail + '" alt="Example graph image" width="140" ' +
-                                       'height="120" class="connectedpapers-img">';
+                                       'height="120" id="connectedpapers-img">';
 
-      const infoLine = '<p class="connectedpapers-description">See related papers to:</p>';
+      const infoLine = '<p id="connectedpapers-description">See related papers to:</p>';
 
-      const textDivOpen = '<div class="connectedpapers-text-cont">';
-      const buildGraphTextDiv = textDivOpen + infoLine + paperTitleHtml + '</div>';
+      const buildGraphTextDiv = '<div id="connectedpapers-text-cont">' +
+                                  infoLine +
+                                  paperTitleHtml +
+                                '</div>';
 
-      const buildGraphHtml =  '<div class="connectedpapers-width-limiter">' +
-                                '<a class="connectedpapers-link" href="' +graphUrl + '" target="_blank">' +
-                                  '<div class="connectedpapers-hover" />' +
-                                  '<div class="connectedpapers-container">' +
+      const buildGraphHtml =  '<div id="connectedpapers-width-limiter">' +
+                                '<a id="connectedpapers-link" href="' +graphUrl + '" target="_blank">' +
+                                  '<div id="connectedpapers-hover" />' +
+                                  '<div id="connectedpapers-container">' +
                                     chosenGraphThumbnailHtml + buildGraphTextDiv +
                                   '</div>' +
                                 '</a>' +

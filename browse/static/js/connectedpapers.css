@@ -1,39 +1,39 @@
-.connectedpapers-title {
+#connectedpapers-title {
     margin: 0;
     color: #005082;
     line-height: 20px;
-    font-size: 14px;
+    font-size: 14px !important;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
 }
 
-.connectedpapers-img {
+#connectedpapers-img {
     border-right: 1px solid #D2D2D2;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
 
-.connectedpapers-description {
-    font-size: 12px;
+#connectedpapers-description {
+    font-size: 12px !important;
     opacity: 0.5;
     margin-top: 28px;
     margin-bottom: 10px;
     color: black;
 }
 
-.connectedpapers-text-cont {
+#connectedpapers-text-cont {
     display: flex;
     flex-flow: column;
     padding: 0px 25px;
 }
 
-.connectedpapers-width-limiter {
+#connectedpapers-width-limiter {
     width: min-content;
 }
 
-.connectedpapers-hover {
+#connectedpapers-hover {
     position: absolute;
     height: 120px;
     width: 550px;
@@ -42,16 +42,16 @@
     border: 1px solid #D2D2D2;
 }
 
-a.connectedpapers-link {
+#connectedpapers-link {
     width: min-content;
     text-decoration: none;
 }
 
-.connectedpapers-hover:hover {
+#connectedpapers-hover:hover {
     background: rgba(196, 196, 196, 0.08);
 }
 
-.connectedpapers-container {
+#connectedpapers-container {
     display: flex;
     flex-flow: row;
     width: 550px;
