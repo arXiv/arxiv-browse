@@ -33,9 +33,22 @@
     width: min-content;
 }
 
+.connectedpapers-hover {
+    position: absolute;
+    height: 120px;
+    width: 550px;
+    z-index: 1;
+    border-radius: 4px;
+    border: 1px solid #D2D2D2;
+}
+
 a.connectedpapers-link {
     width: min-content;
     text-decoration: none;
+}
+
+.connectedpapers-hover:hover {
+    background: rgba(196, 196, 196, 0.08);
 }
 
 .connectedpapers-container {
@@ -47,8 +60,4 @@ a.connectedpapers-link {
     border-radius: 4px;
     margin-top: 15px;
     cursor: pointer;
-}
-
-.connectedpapers-container:hover {
-    background: rgba(196, 196, 196, 0.08);
 }

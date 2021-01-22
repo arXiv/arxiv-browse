@@ -87,9 +87,14 @@
       const textDivOpen = '<div class="connectedpapers-text-cont">';
       const buildGraphTextDiv = textDivOpen + infoLine + paperTitleHtml + '</div>';
 
-      const buildGraphHtml = '<div class="connectedpapers-width-limiter"><a class="connectedpapers-link" href="' +
-                             graphUrl + '" target="_blank"><div class="connectedpapers-container">' +
-                             chosenGraphThumbnailHtml + buildGraphTextDiv + '</div></a></div>';
+      const buildGraphHtml =  '<div class="connectedpapers-width-limiter">' +
+                                '<a class="connectedpapers-link" href="' +graphUrl + '" target="_blank">' +
+                                  '<div class="connectedpapers-hover" />' +
+                                  '<div class="connectedpapers-container">' +
+                                    chosenGraphThumbnailHtml + buildGraphTextDiv +
+                                  '</div>' +
+                                '</a>' +
+                              '</div>';
 
       // Future compatability - different message for built graphs
       const seeGraphHtml = buildGraphHtml;
