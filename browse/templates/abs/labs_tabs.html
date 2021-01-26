@@ -76,26 +76,6 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input id="core-recommender-toggle" type="checkbox" class="lab-toggle" aria-labelledby="label-for-core">
-              <span class="slider"></span>
-              <span class="is-sr-only">Core recommender toggle</span>
-            </label>
-          </div>
-          <div class="column lab-name">
-            <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
-          </div>
-        </div>
-      </div>
-      <div id="coreRecommenderOutput"></div>
-    </div>
-    <input type="radio" name="tabs" id="tabfive">
-    <label for="tabfive">Connected Papers</label>
-    <div class="tab">
-      <h1>Connected Papers</h1>
-      <div class="toggle">
-        <div class="columns is-mobile lab-row">
-          <div class="column lab-switch">
-            <label class="switch">
               <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
               data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
               aria-labelledby="label-for-connected-papers" >
@@ -109,6 +89,21 @@
         </div>
       </div>
       <div id="connectedpapers-output"></div>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input id="core-recommender-toggle" type="checkbox" class="lab-toggle" aria-labelledby="label-for-core">
+              <span class="slider"></span>
+              <span class="is-sr-only">Core recommender toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="coreRecommenderOutput"></div>
     </div>
 
   </div>
