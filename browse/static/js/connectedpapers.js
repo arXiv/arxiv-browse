@@ -81,8 +81,7 @@
       const selectedThumbnailNum = Math.abs(cyrb53(arxivId)) % NUMBER_OF_THUMBNAILS;
 
       const chosenGraphThumbnail = ARXIV_THUMBNAILS_ADDR + 'g' + selectedThumbnailNum + '.jpg';
-      const chosenGraphThumbnailHtml = '<img src="' + chosenGraphThumbnail + '" alt="Example graph image" width="140" ' +
-                                       'height="120" id="connectedpapers-img">';
+      const chosenGraphThumbnailHtml = '<img src="' + chosenGraphThumbnail + '" alt="Example graph image" id="connectedpapers-img">';
 
       const infoLine = '<p id="connectedpapers-description">See related papers to:</p>';
 
