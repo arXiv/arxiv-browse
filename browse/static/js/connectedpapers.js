@@ -12,9 +12,11 @@
   const scriptDir = scriptPath.substr(0, scriptPath.lastIndexOf('/'));
 
   const cssLoader = '<link rel="stylesheet" type="text/css" href="' + scriptDir + '/connectedpapers.css"/>';
+  const connectedPapersTitle = '<h3>Connected Papers</h3>';
+  const htmlPrefix = cssLoader + connectedPapersTitle;
   const loadingHtml = '<p>Loading...</p>';
   
-  $output.html(cssLoader + loadingHtml);
+  $output.html(htmlPrefix + loadingHtml);
 
 
   const REST_ADDR = 'https://rest.migration.connectedpapers.com/';
@@ -35,14 +37,14 @@
       return;
     }
     if (translationResponse == null) {
-      $output.html(cssLoader + idNotRecognizedHtml);
+      $output.html(htmlPrefix + idNotRecognizedHtml);
       return;
     }
     const paperId = translationResponse.paperId;
     const title = translationResponse.title;
 
     if (paperId.length == 0 || title.length == 0) {
-      $output.html(cssLoader + idNotRecognizedHtml);
+      $output.html(htmlPrefix + idNotRecognizedHtml);
       return;
     }
 
@@ -103,32 +105,32 @@
 
       if (versionsResponse == null) {
         // Graph not yet built ever
-        $output.html(cssLoader + buildGraphHtml);
+        $output.html(htmlPrefix + buildGraphHtml);
         return;
       }
       const versionsData = versionsResponse.result_dates;
       if (versionsData.length == 0) {
         // Graph not yet built ever
-        $output.html(cssLoader + buildGraphHtml);
+        $output.html(htmlPrefix + buildGraphHtml);
         return;
       }
       const mostRecentVersion = versionsData[versionsData.length - 1];
       if (mostRecentVersion.visual) {
         // Graph already built, ready to be shown
-        $output.html(cssLoader + seeGraphHtml);
+        $output.html(htmlPrefix + seeGraphHtml);
         return;
       }
       if (versionsResponse.rebuild_available) {
         // Graph non-available, but rebuild available
-        $output.html(cssLoader + buildGraphHtml);
+        $output.html(htmlPrefix + buildGraphHtml);
         return;
       }
       // Graph non-available
       $output.html(graphNotVisual);
     }).fail(versionsResponse => {
-      $output.html(cssLoader + communicationErrorHtml);
+      $output.html(htmlPrefix + communicationErrorHtml);
     })
   }).fail(translationResponse => {
-    $output.html(cssLoader + communicationErrorHtml);
+    $output.html(htmlPrefix + communicationErrorHtml);
   });
 })();
