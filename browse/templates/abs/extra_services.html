@@ -1,3 +1,17 @@
+{%- macro google_scholar_link(abs_meta, authors) -%}
+  {%- set author_params = namespace(value="") -%}
+  {%- set author_count = namespace(value=0) -%}
+  {%- set max_authors = 2 -%}
+  {%- for author in authors[0] -%}
+    {%- if author_count.value < max_authors and author is not string -%}
+      {%- set author_params.value = author_params.value + '&author=' + author[0] |urlencode -%}
+      {%- set author_count.value = author_count.value + 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- set first_dt = abs_meta.get_datetime_of_version(version=0) -%}
+  <a  class="abs-button abs-button-small cite-google-scholar" href="https://scholar.google.com/scholar_lookup?title={{ abs_meta.title|urlencode }}{{ author_params.value }}&publication_date={{ first_dt.strftime('%Y/%m/%d') }}&arxiv_id={{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Google Scholar</a>
+{%- endmacro -%}
+
 {%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=6) -%}
 <ul>
   {%- for anc_file in anc_file_list -%}
@@ -13,7 +27,6 @@
 </ul>
   {% endif %}
 {%- endmacro -%}
-
 
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
@@ -197,7 +210,7 @@
         {% endif %}
         <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
         {#- This was previously injected by Bibliographic Explorer -#}
-        <li><a  class="abs-button abs-button-small cite-google-scholar" href="https://scholar.google.com/scholar?q={{ abs_meta.title|urlencode }}.%20arXiv%20{{ abs_meta.get_datetime_of_version(version=0).year }}" target="_blank" rel="noopener">Google Scholar</a></li>
+        <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
         <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
       </ul>
       <div style="clear:both;"></div>
