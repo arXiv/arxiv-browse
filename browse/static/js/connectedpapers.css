@@ -9,6 +9,14 @@
     overflow: hidden;
 }
 
+@media screen and (max-width:960px) {
+    #connectedpapers-img {
+        visibility: hidden;
+        width: 0px;
+        max-width: 0px;
+    }
+}
+
 #connectedpapers-img {
     border-right: 1px solid #D2D2D2;
     border-top-left-radius: 4px;
@@ -30,7 +38,14 @@
 }
 
 #connectedpapers-width-limiter {
-    width: min-content;
+    width: 100%;
+    max-width: 550px;
+}
+
+@media screen and (max-width:960px) {
+    #connectedpapers-hover {
+        visibility: hidden;
+    }
 }
 
 #connectedpapers-hover {
@@ -43,7 +58,8 @@
 }
 
 #connectedpapers-link {
-    width: min-content;
+    position: relative;
+    width: 100%;
     text-decoration: none;
 }
 
@@ -54,7 +70,8 @@
 #connectedpapers-container {
     display: flex;
     flex-flow: row;
-    width: 550px;
+    width: 100%;
+    max-width: 550px;
     height: 120px;
     border: 1px solid #D2D2D2;
     border-radius: 4px;
