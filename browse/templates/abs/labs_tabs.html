@@ -69,9 +69,26 @@
       <div id="pwc-output"></div>
     </div>
     <input type="radio" name="tabs" id="tabfour">
-    <label for="tabfour">Recommenders</label>
+    <label for="tabfour">Related Papers</label>
     <div class="tab">
       <h1>Recommenders and Search Tools</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
+              data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
+              aria-labelledby="label-for-connected-papers" >
+              <span class="slider"></span>
+              <span class="is-sr-only">Connected Papers Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-core">Connected Papers</span> <em>(<a href="https://www.connectedpapers.com/about" target="_blank">What is Connected Papers?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div style="min-height: 15px" id="connectedpapers-output"></div>
       <div class="toggle">
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
