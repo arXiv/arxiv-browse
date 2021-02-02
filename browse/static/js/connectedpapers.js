@@ -92,7 +92,6 @@
 
       const buildGraphHtml =  '<div id="connectedpapers-width-limiter">' +
                                 '<a id="connectedpapers-link" href="' +graphUrl + '" target="_blank">' +
-                                  '<div id="connectedpapers-hover" />' +
                                   '<div id="connectedpapers-container">' +
                                     chosenGraphThumbnailHtml + buildGraphTextDiv +
                                   '</div>' +
