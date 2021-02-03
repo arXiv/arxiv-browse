@@ -1,0 +1,68 @@
+#connectedpapers-title {
+    margin: 0;
+    color: #005082;
+    line-height: 20px;
+    font-size: 14px !important;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+#connectedpapers-img {
+    border-right: 1px solid #D2D2D2;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    width: 140px;
+    height: 120px;
+    object-fit: cover;
+}
+
+@media screen and (max-width:768px) {
+    #connectedpapers-img {
+        width: 120px;
+    }
+}
+
+#connectedpapers-description {
+    font-size: 12px !important;
+    opacity: 0.5;
+    margin-top: 28px;
+    margin-bottom: 10px;
+    color: black;
+}
+
+#connectedpapers-text-cont {
+    display: flex;
+    flex-flow: column;
+    padding: 0px 25px;
+}
+
+#connectedpapers-width-limiter {
+    width: 100%;
+    max-width: 550px;
+}
+
+#connectedpapers-link {
+    position: relative;
+    width: 100%;
+    text-decoration: none;
+}
+
+#connectedpapers-container {
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    max-width: 550px;
+    height: 120px;
+    border: 1px solid #D2D2D2;
+    border-radius: 4px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    background: white;
+}
+
+#connectedpapers-container:hover {
+    filter: brightness(92%);
+}
