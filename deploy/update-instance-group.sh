@@ -17,6 +17,7 @@ then
     gcloud container images list
     exit 1
 fi
+NEW_IMAGE_URL=$1
 
 set -ef
 TEMPLATE="browse-template-$(date +%Y%m%d-%H%M%S)"
@@ -28,7 +29,7 @@ gcloud compute instance-templates create-with-container $TEMPLATE \
        --machine-type e2-medium \
        --tags=allow-browse-health-check \
        --container-env-file=env_values.txt \
-       --container-image $IMAGE_URL
+       --container-image $NEW_IMAGE_URL
 
 # change the template of the instance group
 gcloud compute instance-groups managed set-instance-template $BROWSE_MIG \
