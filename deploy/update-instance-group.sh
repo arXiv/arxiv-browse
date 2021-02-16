@@ -2,18 +2,18 @@
 
 source config.sh
 
-if [ ! %1 ]
+if [ ! $1 ]
 then
     echo "Must pass image URL as first parm"
     exit 1
 fi
 
 
-gcloud container images describe %1
+gcloud container images describe $1
 
 if [ %! ]
 then
-    echo "No image found for %1"
+    echo "No image found for $1"
     gcloud container images list
     exit 1
 fi
@@ -26,7 +26,7 @@ TEMPLATE="browse-template-$(date +%Y%m%d-%H%M%S)"
 # create a new template with a new name
 gcloud compute instance-templates create-with-container $TEMPLATE \
        --machine-type e2-medium \
-       --tag=allow-browse-health-check \
+       --tags=allow-browse-health-check \
        --container-env-file=env_values.txt \
        --container-image $IMAGE_URL
 
