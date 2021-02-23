@@ -15,7 +15,7 @@ $(document).ready(function() {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "bibex": {
-      "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
+      "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
       "container": "#bib-main"
     },
     "core-recommender": {
