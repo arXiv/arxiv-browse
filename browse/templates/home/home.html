@@ -65,24 +65,22 @@
   </script>
 </form><!-- /end search row -->
 
-<div class="row arxiv-home-messages">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">News</h4>
-        {%- include "home/news.html" -%}
-        <a href="https://blog.arxiv.org/" class="btn btn-primary">See All News</a>
-        <a href="https://arxiv.org/new/" class="btn btn-outline-secondary">Old 'What's New' Pages</a>
-      </div>
+<div class="card-group arxiv-home-messages arxiv-cards-warm">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">News</h4>
+      {%- include "home/news.html" -%}
+      <a href="https://blog.arxiv.org/" class="btn btn-primary">See All News</a>
+      <a href="https://arxiv.org/new/" class="btn btn-outline-secondary">Old 'What's New' Pages</a>
     </div>
   </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">COVID-19 Quick Links</h4>
-        {%- include "home/special-message.html" -%}
-        <a href="#" class="btn btn-secondary">arXiv's COVID impact</a>
-      </div>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">COVID-19 Quick Links</h4>
+      <p>See COVID-19 SARS-CoV-2 preprints from:</p>
+      <a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv" class="btn-primary">arXiv</a>
+      <a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv" class="btn-primary">medRxiv and bioRxiv</a>
+      <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
     </div>
   </div>
 </div><!-- /end news and messages -->
