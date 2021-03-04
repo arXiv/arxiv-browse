@@ -1,28 +1,18 @@
-{%- extends "base.html" -%}
-
-{% block head %}
-{{ super() }}
+{%- extends "base/base.html" %}
+{% block pagetitle %} {{archive.name}} {% endblock %}
+{% block addl_head %}
 <link rel="alternate" type="application/rss+xml" title="{{archive['name']}}" href="/rss/{{archive_id}}"/>
-{% endblock head %}
-
-{% block title %}{{archive.name}}{% endblock %}
-
-{% block header_h1 %}
-<h1>
-<a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
-</h1>
-{% endblock %}
-
+{% endblock addl_head %}
 
 {%- block content %}
-  <h1>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
+  <h1><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a></h1>
+  <h2>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h2>
 
   {% if subsumed_id %}
-    <p>The <b>{{subsumed_id}}</b> archive has been subsumed into
-      <span class="primary-subject">{{subsuming_category['name']}} ({{subsumed_by}}).</span></p>
-    <p>{{subsuming_category['name']}} ({{subsumed_by}}) is part of the {{archive['name']}} archive.</p>
+  <p>The <b>{{subsumed_id}}</b> archive has been subsumed into
+    <span class="primary-subject">{{subsuming_category['name']}} ({{subsumed_by}}).</span></p>
+  <p>{{subsuming_category['name']}} ({{subsumed_by}}) is part of the {{archive['name']}} archive.</p>
   {% endif %}
-
 
   <p>For a <em>specific paper</em>, enter the identifier into the top right search box.</p>
 
@@ -108,4 +98,4 @@
     {% endfor %}
   </ul>
   {% endif %}
-{%- endblock %}
+{% endblock content -%}

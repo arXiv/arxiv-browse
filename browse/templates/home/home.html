@@ -1,10 +1,5 @@
 {%- extends "base/base.html" %}
-
-{% block title %}Testing Title{% endblock %}
-
-{% block addl_head %}
-{% endblock addl_head %}
-
+{% block pagetitle %}arXiv homepage{% endblock %} 
 {%- block content %}
 <div class="row">
   <div class="col">
@@ -23,55 +18,52 @@
 </div><!-- /end intro -->
 
 {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
-<form class="row d-flex justify-content-center p-2 g-1 arxiv-home-form">
-  <h3 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h3>
-  <div class="col-auto">
-    <select name="group" title="Search in" id="search-category" class="form-select">
-    {%- for group_key, group_details in groups.items() if not group_details.is_test %}
-      <option selected>Select a category</option>
-      <option
-          value ="{{group_key}}"
-          data-url="{{url_for('search_archive', archive=group_key[4:])}}"
-          {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
-        {{ group_details.name }}
-      </option>
-      {%- endfor %}
-    </select>
-  </div>
-  <div class="col-auto">
-    <button type="submit" id="adv-search-btn" value="Search" class="btn btn-primary">Search</button>
-  </div>
-  <div class="col-auto">
-    <button type="submit" name="/form" value="Form Interface" class="btn btn-secondary">Form Interface</button>
-  </div>
-  <div class="col-auto">
-    <button type="submit" name="/catchup" value="Catchup" class="btn btn-secondary">Catchup</button>
-  </div>
-  <script type="text/javascript">
-   function doAdvSearchBtn(event) {
-       sel = document.querySelector('select[name="group"]')
-       if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
-           data_url = sel.options[sel.selectedIndex].dataset.url
-           if( data_url ){
-               window.location = data_url;
-           }else{
-               console.error('home page search button: no data_url found for search');
-           }
-       }
-   }
-   document.addEventListener('DOMContentLoaded',function() {
-       document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
-   },false);
-  </script>
-</form><!-- /end search row -->
+<div class="d-flex justify-content-center">
+  <form class="row p-2 g-1 arxiv-home-form">
+    <h3 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h3>
+    <div class="input-group">
+      <select name="group" title="Search in" id="search-category" class="form-select">
+      {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+        <option selected>Select a category</option>
+        <option
+            value ="{{group_key}}"
+            data-url="{{url_for('search_archive', archive=group_key[4:])}}"
+            {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+          {{ group_details.name }}
+        </option>
+        {%- endfor %}
+      </select>
+      <input type="submit" id="adv-search-btn" value="Search" class="btn btn-primary">
+      <input type="submit" name="/form" value="Form Interface" class="btn btn-primary">
+      <input type="submit" name="/catchup" value="Catchup" class="btn btn-primary">
+    </div>
+    <script type="text/javascript">
+     function doAdvSearchBtn(event) {
+         sel = document.querySelector('select[name="group"]')
+         if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){
+             data_url = sel.options[sel.selectedIndex].dataset.url
+             if( data_url ){
+                 window.location = data_url;
+             }else{
+                 console.error('home page search button: no data_url found for search');
+             }
+         }
+     }
+     document.addEventListener('DOMContentLoaded',function() {
+         document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
+     },false);
+    </script>
+  </form>
+</div>
+<!-- /end search -->
 
 <div class="card-group arxiv-home-messages arxiv-cards-warm">
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">News</h4>
       {%- include "home/news.html" -%}
-      <a href="https://blog.arxiv.org/" class="btn btn-primary">See All News</a>
-      <a href="https://arxiv.org/new/" class="btn btn-outline-secondary">Old 'What's New' Pages</a>
+      <a href="https://blog.arxiv.org/" class="btn btn-primary">See All News</a><br>
+      <a href="https://arxiv.org/new/" class="btn btn-outline-secondary btn-tiny">Old 'What's New' Pages</a>
     </div>
   </div>
   <div class="card">
@@ -84,6 +76,7 @@
     </div>
   </div>
 </div><!-- /end news and messages -->
+<br><br>
 
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
 {% endblock content -%}

@@ -1,6 +1,6 @@
-{%- extends "base.html" -%}
+{%- extends "base/base.html" %}
 
-{% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
+{% block pagetitle %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
 
 {% block header_h1 %}
 <div class="header-breadcrumbs">
@@ -27,7 +27,7 @@
   {{ page_divs() }}
 </div>
 </div>
-{%- endblock %}
+{% endblock content -%}
 
 
 {%- macro page_divs() -%}
