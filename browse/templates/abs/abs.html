@@ -3,7 +3,7 @@
 {% from 'abs/author_links.html' import display_authors_with_links %}
 {% import 'base/macros.html' as base_macros %}
 
-{% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
+{% block pagetitle %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
 
 {% block head %}
   {{ super() -}}
