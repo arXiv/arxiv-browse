@@ -5,7 +5,7 @@
 
 {% block pagetitle %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
 
-{% block head %}
+{% block addl_head %}
   {{ super() -}}
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
@@ -21,7 +21,7 @@
   {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
   {{- generate_social_media_tags() }}
-{% endblock head %}
+{% endblock addl_head %}
 
 {% block body_id %}{% endblock %}
 
@@ -30,11 +30,60 @@
 {% endblock header_h1 %}
 
 {%- block content %}
+{% set download_button %}
+  {{ generate_download_button() }}
+{% endset %}
+
+<h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
+
+<strong>arXiv:{{ requested_id }}</strong> ({{ abs_meta.primary_archive.id }})
+
+{% if is_covid_match %}
+<div class="message-special" style="margin:2em 1em;">
+  <span class="label">COVID-19 e-print</span>
+  <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
+</div>
+{% endif -%}
+
+{{
+  base_macros.abs(
+  abs_meta.arxiv_identifier.id,
+  abs_meta.title,
+  display_authors_with_links(abs_meta, author_links),
+  abs_meta.abstract,
+  abs_meta.get_datetime_of_version(abs_meta.version),
+  abs_meta.primary_category.id,
+  comments = abs_meta.comments,
+  msc_class = abs_meta.msc_class,
+  acm_class = abs_meta.acm_class,
+  journal_ref = abs_meta.journal_ref,
+  doi = abs_meta.doi,
+  report_num = abs_meta.report_num,
+  version = abs_meta.version,
+  submission_history = abs_meta.version_history,
+  secondary_categories = abs_meta.get_secondaries(),
+  download_button_markup = download_button )
+}}
+
+<h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+{#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
+{#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
+{% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
+<br/>
+{%- for version_entry in abs_meta.version_history -%}
+{{ generate_version_entry(version_entry, abs_meta.version) }}
+{%- endfor -%}
+
+{% include "abs/labs_tabs.html" %}
+
+
+
+<br><br>
+<hr>
+<br><br>
+
 {%- include "abs/trackback_rdf.html" %}
 <div id="abs-outer">
-  {% set download_button %}
-    {{ generate_download_button() }}
-  {% endset %}
 
   <div class="leftcolumn">
     <div class="subheader">
@@ -82,7 +131,7 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-  {% include "abs/labs_tabs.html" %}
+  {% include "abs/labs_tabs_old.html" %}
 
   <div class="endorsers">
     <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |

@@ -24,6 +24,9 @@ $(document).ready(function() {
     }
   };
 
+
+
+
   $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
     console.log(textStatus);
   });
@@ -36,7 +39,7 @@ $(document).ready(function() {
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
-        $("#" + key + ".lab-toggle").toggleClass("enabled", true);
+        $("#" + key + ".form-check-input").toggleClass("enabled", true);
         if (key == "bibex-toggle") {
           $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -61,7 +64,7 @@ $(document).ready(function() {
     Cookies.set("arxiv_labs", { sameSite: "strict" });
   }
 
-  $(".lab-toggle").on("click", function() {
+  $(".form-check-input").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     var bibexCookie = Cookies.getJSON("arxiv_bibex") || {};
 
