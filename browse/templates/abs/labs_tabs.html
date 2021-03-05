@@ -1,22 +1,43 @@
 <!-- LABS AREA -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="bibliographic-tab" data-bs-toggle="tab" data-bs-target="#bibliographic" type="button" role="tab" aria-controls="home" aria-selected="true">Bibliographic Tools</button>
+    <button class="nav-link active" id="bibliographic-tab" data-bs-toggle="tab" data-bs-target="#bibliographic" type="button" role="tab" aria-controls="bibliographic" aria-selected="true">
+      <svg width="20" height="20" fill="currentColor" role="presentation" aria-label="Bibliographic Tools">
+        <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#book"/>
+      </svg>
+      <span class="d-none d-sm-inline">Bibliographic Tools</span>
+    </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="profile" aria-selected="false">Code</button>
+    <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="false">
+      <svg width="20" height="20" fill="currentColor" role="presentation" aria-label="Code">
+        <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#code-slash"/>
+      </svg>
+      <span class="d-none d-sm-inline">Code</span>
+    </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="related-tab" data-bs-toggle="tab" data-bs-target="#related" type="button" role="tab" aria-controls="contact" aria-selected="false">Related Papers</button>
+    <button class="nav-link" id="related-tab" data-bs-toggle="tab" data-bs-target="#related" type="button" role="tab" aria-controls="related" aria-selected="false">
+      <svg width="20" height="20" fill="currentColor" role="presentation">
+        <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#diagram-2"/>
+      </svg>
+      <span class="d-none d-sm-inline">Related Papers</span>
+    </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="contact" aria-selected="false">About arXivLabs</button>
+    <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">
+      <svg width="20" height="20" role="presentation">
+        <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#arxiv-labs-small"/>
+      </svg>
+      <span class="d-none d-sm-inline">About arXivLabs</span>
+    </button>
   </li>
 </ul>
+
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="bibliographic" role="tabpanel" aria-labelledby="bibliographic-tab">
-    <h3>Bibliographic and Citation Tools</h3>
-    <div class="container toggle">
+    <h2>Bibliographic and Citation Tools</h2>
+    <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
           <input class="form-check-input" type="checkbox" id="bibex-toggle"/>
@@ -28,10 +49,9 @@
     <div class="labs-content-placeholder labs-display" style="display: none;"></div>
   </div>
 
-
   <div class="tab-pane fade" id="code" role="tabpanel" aria-labelledby="code-tab">
-    <h3>Code Associated with this Article</h3>
-    <div class="container toggle">
+    <h2>Code Associated with this Article</h2>
+    <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
           <input class="form-check-input" type="checkbox" id="paperwithcode-toggle" data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"/>
@@ -43,10 +63,9 @@
     <div id="pwc-output"></div>
   </div>
 
-
   <div class="tab-pane fade" id="related" role="tabpanel" aria-labelledby="related-tab">
-    <h3>Recommenders and Search Tools</h3>
-    <div class="container toggle">
+    <h2>Recommenders and Search Tools</h2>
+    <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
           <input class="form-check-input" type="checkbox" id="connectedpapers-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
@@ -66,24 +85,21 @@
     <div id="coreRecommenderOutput"></div>
   </div>
 
-
   <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h1>arXivLabs: experimental projects with community collaborators</h1>
-          <p>arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.</p>
-          <p>Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.</p>
-          <p>Have an idea for a project that will add value for arXiv's community? <a href="https://labs.arxiv.org/"><strong>Learn more about arXivLabs</strong></a> and <a href="https://arxiv.org/about/people/developers"><strong>how to get involved</strong></a>.</p>
-        </div>
-        <div class="col-auto">
-          <svg width="100" role="presentation">
-            <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#arxiv-labs"/>
-          </svg>
-        </div>
+    <div class="row">
+      <div class="col">
+        <h2>arXivLabs: experimental projects with community collaborators</h2>
+        <p>arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.</p>
+        <p>Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.</p>
+        <p>Have an idea for a project that will add value for arXiv's community? <a href="https://labs.arxiv.org/"><strong>Learn more about arXivLabs</strong></a> and <a href="https://arxiv.org/about/people/developers"><strong>how to get involved</strong></a>.</p>
+      </div>
+      <div class="col-md-auto p-4 d-flex align-content-center flex-wrap justify-content-center">
+        <svg class="labs-icon" role="presentation">
+          <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#arxiv-labs"/>
+        </svg>
       </div>
     </div>
-
   </div>
+
 </div>
 <!-- END LABS AREA -->
