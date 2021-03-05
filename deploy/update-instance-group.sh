@@ -9,14 +9,14 @@ then
 fi
 
 
-gcloud container images describe $1
+#gcloud container images describe $1
 
-if [ %! ]
-then
-    echo "No image found for $1"
-    gcloud container images list
-    exit 1
-fi
+#if [ %! ]
+#then
+#    echo "No image found for $1"
+#    gcloud container images list
+#    exit 1
+#fi
 NEW_IMAGE_URL=$1
 
 set -ef

@@ -13,6 +13,6 @@ gcloud compute url-maps add-path-matcher $LOAD_BALANCER \
        --path-matcher-name=browse-paths \
        --default-service=$BACKEND \
        --delete-orphaned-path-matcher \
-       --existing-host=phoenix.arxiv.org \
+       --existing-host=$SERVER_NAME \
        --path-rules=$MAPPINGS
 
