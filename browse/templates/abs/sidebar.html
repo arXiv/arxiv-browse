@@ -16,96 +16,84 @@
 <ul>
   {%- for anc_file in anc_file_list -%}
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
-</ul><div id="long-anc-list"><ul>
+  <div id="long-anc-list"><ul>
     {% endif %}
   <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id_v,file_name=anc_file['name'])}}" class="anc-file-name">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
     {%- set num_files_not_shown = anc_file_list|length - cutoff + 1 -%}
-  </ul></div><ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle" class="anc-additional-file">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
+  </ul></div>
+  <ul class="no-bullet"><li><a href="javascript:toggleList('long-anc-list','{{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown');" title="Show entire file list." id="toggle" class="anc-additional-file">({{ num_files_not_shown }} additional file{% if num_files_not_shown > 1 %}s{% endif %} not shown)</a><noscript>&nbsp;You must enabled JavaScript to view entire file list.</noscript></li></ul>
   {% else %}
 </ul>
   {% endif %}
 {%- endmacro -%}
 
 {%- macro generate_download_links(format_list=[]) -%}
-<ul>
+<ul class="arxiv-download-links" role="group" aria-label="available download formats">
   {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
   {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
-  <li>Unavailable</li>
+  <span class="disabled">Unavailable</span>
   {% else %}
     {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
     {%- for format in format_list if not (format == 'src' and not current) %}
-  <li>
     {%- if format == 'src' -%}
-    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">Source</a>
+    <li><a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="">Source</a></li>
     {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <li><a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a></li>
     {%- elif format == 'dvi' -%}
-    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
+    <li><a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="">{{ format.upper() }}</a></li>
     {%- elif format == 'html' -%}
-    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
+    <li><a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="">{{ format.upper() }}</a></li>
     {%- elif format == 'other' -%}
-    <a href="{{url_for('.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other formats</a>
+    <li><a href="{{url_for('.format', arxiv_id=requested_id)}}" class="">Other formats</a></li>
     {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
+    <li><a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="disabled">(PostScript unavailable)</a></li>
     {%- elif format == 'sciencewise_pdf' -%}
     {#- TODO: consider this format for deprecation -#}
     {#- TODO: create clickthrough link from sciencewise link -#}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">Tagged PDF</a>
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">
+    <li><a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">Tagged PDF</a>
+    <li><a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">
       <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
-    </a>
+    </a></li>
     {%- endif -%}
-  </li>
     {%- endfor -%}
   {%- endif -%}
 </ul>
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  Current browse context: <div class="current">{{ browse_context }}</div>
-
-  <div class="prevnext">
+  {{ base_macros.universalsearch('Search within category','&test=testing') }}
+  <div class="arxiv-prevnext">
     {% if browse_context_previous_url -%}
     <span class="arrow">
       <a class="abs-button prev-url" href="{{browse_context_previous_url }}"
-         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
+         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt; prev paper</a>
     </span>
-    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
+    <span class="is-hidden-mobile"> | </span>
     {%- else -%}
-    <span class="nolink" class="abs-button prev-url">&lt;&nbsp;previous article</span>
-    <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
+    <span class="nolink" class="abs-button prev-url">&lt; prev</span>
+    <span class="is-hidden-mobile"> | </span>
     {% endif -%}
-
     {% if browse_context_next_url %}
     <span class="arrow">
       <a class="abs-button next-url" href="{{browse_context_next_url}}" accesskey="n"
-         title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
+         title="next in {{ browse_context }} (accesskey n)">next paper &gt;</a>
     </span>
     {%- else -%}
-    <span class="abs-button next-url" class="nolink">next article&nbsp;&gt;</span>
+    <span class="abs-button next-url" class="nolink">next &gt;</span>
     {%- endif -%}
     <br/>
   </div>{#end div.prevnext#}
 
   {%- if browse_context != 'arxiv' -%}
   {#- This fixes a bug in the classic UI logic -#}
-  <div class="list">
-    <a class="abs-button abs-button-grey abs-button-small context-new" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>
-    <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
-    <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
-      {{- abs_meta.arxiv_identifier.yymm -}}</a>
-  </div>
+  <a class="arxiv-browse-new-papers" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new <strong>{{ browse_context }}</strong> papers</a>
   {%- endif -%}
 
   {%- if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) -%}
   <div class="abs-switch-cat">
-    Change to browse by:
+    Change categories:
     <div class="switch context-change">
       {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
         {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
@@ -141,8 +129,8 @@
   </div>
 {%- endmacro -%}
 
-{%- block extra_services -%}
-  <div class="extra-services">
+{%- block sidebar -%}
+<div class="arxiv-sidebar">
 {#- TODO: check whether anything but the ancillary files section uses this -#}
 {%- if ancillary_files %}
     <script type="text/javascript">
@@ -172,65 +160,84 @@
         }
      }
      //-->
-    </script>
-{% endif %}
-    <div class="full-text">
-      <a name="other"></a>
-      <span class="descriptor">Full-text links:</span>
-      <h2>Download:</h2>
-      {{ generate_download_links(format_list=formats) }}
-      <div class="abs-license">
-        {%- if abs_meta.license.icon_uri_path -%}
-        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
-        {%- else -%}
-        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">license</a>)
-        {%- endif -%}
+      </script>
+  {% endif %}
+
+  <div class="row align-items-center">
+    <div class="col-md-auto">
+      {{ generate_download_button() }}
+    </div>
+    <div class="col-md px-lg-0">
+      {%- if abs_meta.license.icon_uri_path -%}
+      <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
+      {%- else -%}
+      <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">License</a>
+      {%- endif -%}
+    </div>
+    <div class="col-12 py-1">
+      <div class="accordion accordion-flush arxiv-sidebar-more border-bottom" id="other-formats">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+              Other Formats
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#other-formats">
+            <div class="accordion-body">
+              {{ generate_download_links(format_list=formats) }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!--end full-text-->
+  </div>
 
-{%- if ancillary_files %}
+  <div class="arxiv-submission-history">
+    <h4>Submission history</h4>
+    <div class="submitter">
+      <span>Submitter:</span> {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}
+      [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}" class="arxiv-view-email-link">view email</a>]
+      <br>
+      <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="arxiv-endorsers-link fst-italic">Which authors of this paper are endorsers?</a>
+      {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
+      {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
+      {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
+    </div>
+    <div class="version">
+      <span>Version:</span>
+      {%- for version_entry in abs_meta.version_history -%}
+      {{ generate_version_entry(version_entry, abs_meta.version) }}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {% include "abs/cite.html" %}
+  {% include "abs/bookmarking.html" %}
+
+  {%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
     <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
-{% endif %}
-    <div class="browse">
-    {{ generate_browse_context() }}
-    </div>
+  {% endif %}
 
-    <div class="extra-ref-cite">
-      <h3>References &amp; Citations</h3>
-      <ul>
-        {% if include_inspire_link %}
-        <li>
-          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-        </li>
-        {% endif %}
-        <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
-        {#- This was previously injected by Bibliographic Explorer -#}
-        <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
-        <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
-      </ul>
-      <div style="clear:both;"></div>
-    </div>
 
-    {% if trackback_ping_count and trackback_ping_count > 0 %}
-    <div class="extra-general">
-        <div class="what-is-this">
-            <h3><a  class="abs-button abs-button-grey abs-button-small trackback-link" href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}" class="trackback-help">what is this?</a>)
-        </div>
-    </div>
-    {% endif %}
-
-    {#- DBLP is a bibliographical database primarily for Computer Science papers -#}
-    {%- if dblp -%}
-      {{ generate_dblp_section() }}
-    {%- endif -%}
-
-    {% include "abs/cite.html" %}
-    {% include "abs/bookmarking.html" %}
+  <div class="arxiv-browse-context border rounded-2 p-3 w-100">
+  {{ generate_browse_context() }}
   </div>
-  <!--end extra-services-->
-{% endblock extra_services %}
+
+  {% if trackback_ping_count and trackback_ping_count > 0 %}
+  <div class="extra-general">
+    <div class="what-is-this">
+      <h3><a class="abs-button abs-button-grey abs-button-small trackback-link" href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}" class="trackback-help">what is this?</a>)
+    </div>
+  </div>
+  {% endif %}
+
+  {#- DBLP is a bibliographical database primarily for Computer Science papers -#}
+  {%- if dblp -%}
+  {{ generate_dblp_section() }}
+  {%- endif -%}
+</div>
+{% endblock sidebar %}
