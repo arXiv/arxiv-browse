@@ -1,6 +1,6 @@
 {%- extends "base/base.html" %}
-{% block pagetitle %} {{archive.name}} {% endblock %}
-{% block title %}Archives{% endblock %}
+
+{% set pagetitle %}All Archives{% endset %}
 
 {% block addl_head %}
 <link rel="alternate" type="application/rss+xml" title="{{archive['name']}}" href="/rss/{{archive_id}}"/>

@@ -7,7 +7,7 @@
 {% set pagetitle %}arXiv:{{ requested_id }}{% endset %}
 {#- build breadcrumb items as link : label pairs, excluding home and current page -#}
 {% set breadcrumb = {
-  url_for('.list_articles',context=abs_meta.primary_archive.name, subcontext='recent') : abs_meta.primary_archive.name,
+  url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') : abs_meta.primary_archive.id,
 } %}
 
 {% block addl_head %}
