@@ -1,15 +1,14 @@
 {%- extends "base/base.html" %}
 
-{#- build breadcrumb items as link : label pairs, excluding home and current page -#}
-{% set breadcrumb = {
-  url_for('.list_articles',context=abs_meta.primary_archive.name, subcontext='recent') : abs_meta.primary_archive.name,
-} %}
-
 {% from 'abs/author_links.html' import display_authors_with_links %}
 
 {% import 'base/macros.html' as base_macros %}
 
-{% block pagetitle %}arxiv:{{ requested_id }}{% endblock %}
+{% set pagetitle %}arXiv:{{ requested_id }}{% endset %}
+{#- build breadcrumb items as link : label pairs, excluding home and current page -#}
+{% set breadcrumb = {
+  url_for('.list_articles',context=abs_meta.primary_archive.name, subcontext='recent') : abs_meta.primary_archive.name,
+} %}
 
 {% block addl_head %}
   {{ super() -}}
@@ -29,9 +28,8 @@
 {% endblock addl_head %}
 
 {%- block content %}
-
 {% set download_button %}
-  {{ generate_download_button('d-md-none') }}
+  {{ generate_download_button('d-md-none arxiv-mobile-download') }}
 {% endset %}
 
 {% block breadcrumbs %}
@@ -67,7 +65,7 @@
       download_button_markup = download_button )
     }}
   </div>
-  <div class="col-md col-md-3 border-start">
+  <div class="arxiv-sidebar col-md col-md-3 border-start">
     {% include "abs/sidebar.html" %}
     {%- include "abs/trackback_rdf.html" %}
     <!-- <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a> -->
@@ -152,7 +150,12 @@
 {% macro generate_download_button(display) %}
   {#- to display only on mobile use this display class: d-sm-none -#}
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a class="btn btn-primary {{ display }}" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a class="btn btn-primary {{ display }}" href="{{url_for('.pdf', arxiv_id=requested_id)}}">
+      <svg width="20" height="20" fill="currentColor" role="presentation">
+        <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#pdf-file"/>
+      </svg>
+      Download PDF
+    </a>
   {% else %}
     <a class="btn disabled d-sm-none" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
