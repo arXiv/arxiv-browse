@@ -63,7 +63,7 @@
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  {{ base_macros.universalsearch('Search within category','&test=testing') }}
+  {{ base_macros.universalsearch("Search within category","&classification-{{ browse_context }}=y") }}
   <div class="arxiv-prevnext">
     {% if browse_context_previous_url -%}
     <span class="arrow">
@@ -88,19 +88,19 @@
 
   {%- if browse_context != 'arxiv' -%}
   {#- This fixes a bug in the classic UI logic -#}
-  <a class="arxiv-browse-new-papers" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new <strong>{{ browse_context }}</strong> papers</a>
+  <a class="arxiv-browse-new-papers" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">All new <strong>{{ browse_context }}</strong></a>
   {%- endif -%}
 
   {%- if not abs_meta.arxiv_identifier.is_old_id and (abs_meta.get_browse_context_list()|length > 1) -%}
   <div class="abs-switch-cat">
-    Change categories:
+    Change browse category:
     <div class="switch context-change">
       {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
         {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
         {% if '.' in category %}
-        <a class="subclass" href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        <a class="subclass" href="{{ switch_url}}">{{ category }}</a>
         {% else %}
-        <a href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        <a href="{{ switch_url}}">{{ category }}</a>
         {% endif %}
       {% endfor %}
     </div>
@@ -131,39 +131,41 @@
 
 {%- block sidebar -%}
 <div class="arxiv-sidebar">
+
+{#- TODO: CAN WE USE BOOTSTRAP ELEMENTS INSTEAD? -#}
 {#- TODO: check whether anything but the ancillary files section uses this -#}
 {%- if ancillary_files %}
-    <script type="text/javascript">
-    <!--
-     function toggleList(whichLayer,toggleThis)
-     {
-        var elem, vis;
-        if( document.getElementById ) // standard
-          elem = document.getElementById( whichLayer );
-        else if( document.all ) // old msie versions
-          elem = document.all[whichLayer];
-        else if( document.layers ) // nn4
-          elem = document.layers[whichLayer];
-        vis = elem.style;
-        // if the style.display value is blank we try to figure it out here
-        if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-          vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'inline':'none';
-        vis.display = (vis.display==''||vis.display=='inline')?'none':'inline';
-        // toggle link inner text
-        status = vis.display;
-        if(vis.display=='inline'){
-          document.getElementById('toggle').innerHTML = "(collapse list)";
-          document.getElementById('toggle').title = "Collapse list";
-        } else {
-          document.getElementById('toggle').innerHTML = "("+toggleThis+")";
-          document.getElementById('toggle').title = "Show complete list";
-        }
-     }
-     //-->
-      </script>
-  {% endif %}
+<script type="text/javascript">
+<!--
+function toggleList(whichLayer,toggleThis)
+{
+  var elem, vis;
+  if( document.getElementById ) // standard
+    elem = document.getElementById( whichLayer );
+  else if( document.all ) // old msie versions
+    elem = document.all[whichLayer];
+  else if( document.layers ) // nn4
+    elem = document.layers[whichLayer];
+  vis = elem.style;
+  // if the style.display value is blank we try to figure it out here
+  if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+    vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'inline':'none';
+  vis.display = (vis.display==''||vis.display=='inline')?'none':'inline';
+  // toggle link inner text
+  status = vis.display;
+  if(vis.display=='inline'){
+    document.getElementById('toggle').innerHTML = "(collapse list)";
+    document.getElementById('toggle').title = "Collapse list";
+  } else {
+    document.getElementById('toggle').innerHTML = "("+toggleThis+")";
+    document.getElementById('toggle').title = "Show complete list";
+  }
+}
+//-->
+</script>
+{% endif %}
 
-  <div class="row align-items-center">
+  <div class="arxiv-downloads row align-items-center">
     <div class="col-md-auto">
       {{ generate_download_button() }}
     </div>
@@ -174,15 +176,15 @@
       <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">License</a>
       {%- endif -%}
     </div>
-    <div class="col-12 py-1">
-      <div class="accordion accordion-flush arxiv-sidebar-more border-bottom" id="other-formats">
+    <div class="arxiv-sidebar-more col-12 py-1">
+      <div class="accordion accordion-flush" id="other-formats">
         <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          <h2 class="accordion-header" id="flush-headingFormats">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFormats" aria-expanded="false" aria-controls="flush-collapseFormats">
               Other Formats
             </button>
           </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#other-formats">
+          <div id="flush-collapseFormats" class="accordion-collapse collapse" aria-labelledby="flush-headingFormats" data-bs-parent="#other-formats">
             <div class="accordion-body">
               {{ generate_download_links(format_list=formats) }}
             </div>
@@ -191,6 +193,12 @@
       </div>
     </div>
   </div>
+
+  <div class="arxiv-browse-context border rounded-2 p-3 w-100">
+  {{ generate_browse_context() }}
+  </div>
+
+  {% include "abs/cite.html" %}
 
   <div class="arxiv-submission-history">
     <h4>Submission history</h4>
@@ -211,21 +219,15 @@
     </div>
   </div>
 
-  {% include "abs/cite.html" %}
   {% include "abs/bookmarking.html" %}
 
   {%- if ancillary_files %}
-  <div class="ancillary">
+  <div class="arxiv-ancillary">
     <span class="descriptor">Ancillary-file links:</span>
     <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
   {% endif %}
-
-
-  <div class="arxiv-browse-context border rounded-2 p-3 w-100">
-  {{ generate_browse_context() }}
-  </div>
 
   {% if trackback_ping_count and trackback_ping_count > 0 %}
   <div class="extra-general">

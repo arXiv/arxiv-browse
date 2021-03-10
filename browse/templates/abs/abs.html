@@ -2,7 +2,7 @@
 
 {#- build breadcrumb items as link : label pairs, excluding home and current page -#}
 {% set breadcrumb = {
-  url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') : abs_meta.primary_archive.id,
+  url_for('.list_articles',context=abs_meta.primary_archive.name, subcontext='recent') : abs_meta.primary_archive.name,
 } %}
 
 {% from 'abs/author_links.html' import display_authors_with_links %}
@@ -39,6 +39,7 @@
 
 <div class="row">
   <div class="col-md">
+
     {% if is_covid_match %}
     <div class="alert alert-primary" role="alert">
       <h4 class="alert-heading">COVID-19 e-print</h4>
@@ -46,7 +47,6 @@
     </div>
     {% endif -%}
 
-    <strong>arXiv:{{ requested_id }}</strong> ({{ abs_meta.primary_archive.id }}, {{ abs_meta.primary_archive.name }})
     {{
       base_macros.abs(
       abs_meta.arxiv_identifier.id,
@@ -75,10 +75,6 @@
   </div>
 </div><!-- /end row -->
 {% endblock content %}
-
-
-
-
 
 {% block content_extra %}
 <div class="arxiv-labs">
