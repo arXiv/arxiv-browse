@@ -39,9 +39,12 @@
     <h2>Bibliographic and Citation Tools</h2>
     <div class="toggles">
       <div class="row">
-        <div class="col-auto form-check form-switch">
-          <input class="form-check-input lab-toggle" type="checkbox" id="bibex-toggle"/>
-          <label class="form-check-label" for="bibex-toggle">Bibliographic Explorer</label>
+        <div class="col-auto">
+          <label class="md_switch">
+            <input class="form-check-input" type="checkbox" id="bibex-toggle" />
+            <span class="md_switch__toggle"></span>
+            Bibliographic Explorer
+          </label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/">What is the Explorer?</a>)</em></div>
       </div>
@@ -53,9 +56,12 @@
     <h2>Code Associated with this Article</h2>
     <div class="toggles">
       <div class="row">
-        <div class="col-auto form-check form-switch">
-          <input class="form-check-input lab-toggle" type="checkbox" id="paperwithcode-toggle" data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"/>
-          <label class="form-check-label" for="paperwithcode-toggle">arXiv Links to Code</label>
+        <div class="col-auto">
+          <label class="md_switch">
+            <input type="checkbox" class="form-check-input" id="paperwithcode-toggle" data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"/>
+            <span class="md_switch__toggle"></span>
+            arXiv Links to Code
+          </label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/" target="_blank">What is Links to Code?</a>)</em></div>
       </div>
@@ -67,16 +73,22 @@
     <h2>Recommenders and Search Tools</h2>
     <div class="toggles">
       <div class="row">
-        <div class="col-auto form-check form-switch">
-          <input class="form-check-input lab-toggle" type="checkbox" id="connectedpapers-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
-          <label class="form-check-label" for="connectedpapers-toggle">Connected Papers</label>
+        <div class="col-auto">
+          <label class="md_switch">
+            <input class="form-check-input" type="checkbox" id="connectedpapers-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
+            <span class="md_switch__toggle"></span>
+            Connected Papers
+          </label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/" target="_blank">What is Connected Papers?</a>)</em></div>
       </div>
       <div class="row">
-        <div class="col-auto form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="core-recommender-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
-          <label class="form-check-label" for="core-recommender-toggle">CORE Recommender</label>
+        <div class="col-auto">
+          <label class="md_switch">
+            <input class="form-check-input" type="checkbox" id="core-recommender-toggle" />
+            <span class="md_switch__toggle"></span>
+            CORE Recommender
+          </label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em></div>
       </div>
