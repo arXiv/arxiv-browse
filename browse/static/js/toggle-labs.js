@@ -25,21 +25,22 @@ $(document).ready(function() {
   };
 
 
-
-
   $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
     console.log(textStatus);
   });
-  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
+  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true).prop("checked", true);
 
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
+    if ( labsCookie["last_tab"] ){
+      $("#"+labsCookie["last_tab"]).click();
+    }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
-        $("#" + key + ".form-check-input").toggleClass("enabled", true);
+        $("#" + key + ".form-check-input").toggleClass("enabled", true).prop("checked", true);
         if (key == "bibex-toggle") {
           $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -64,6 +65,13 @@ $(document).ready(function() {
     Cookies.set("arxiv_labs", { sameSite: "strict" });
   }
 
+  // record last-clicked tab
+  $("button.lab-tab").on("click", function() {
+    var labsCookie = Cookies.getJSON("arxiv_labs") || {};
+    labsCookie["last_tab"] = $(this).attr("id");
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+  });
+
   $(".form-check-input").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     var bibexCookie = Cookies.getJSON("arxiv_bibex") || {};
@@ -87,7 +95,7 @@ $(document).ready(function() {
           console.log(textStatus);
         });
       }
-    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled") ) {
+    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {

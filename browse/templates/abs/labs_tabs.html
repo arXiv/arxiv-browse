@@ -1,7 +1,7 @@
 <!-- LABS AREA -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="bibliographic-tab" data-bs-toggle="tab" data-bs-target="#bibliographic" type="button" role="tab" aria-controls="bibliographic" aria-selected="true">
+    <button class="nav-link active lab-tab" id="bibliographic-tab" data-bs-toggle="tab" data-bs-target="#bibliographic" type="button" role="tab" aria-controls="bibliographic" aria-selected="true">
       <svg width="20" height="20" fill="currentColor" role="presentation" aria-label="Bibliographic Tools">
         <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#book"/>
       </svg>
@@ -9,7 +9,7 @@
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="false">
+    <button class="nav-link lab-tab" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="false">
       <svg width="20" height="20" fill="currentColor" role="presentation" aria-label="Code">
         <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#code-slash"/>
       </svg>
@@ -17,7 +17,7 @@
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="related-tab" data-bs-toggle="tab" data-bs-target="#related" type="button" role="tab" aria-controls="related" aria-selected="false">
+    <button class="nav-link lab-tab" id="related-tab" data-bs-toggle="tab" data-bs-target="#related" type="button" role="tab" aria-controls="related" aria-selected="false">
       <svg width="20" height="20" fill="currentColor" role="presentation">
         <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#diagram-2"/>
       </svg>
@@ -25,7 +25,7 @@
     </button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">
+    <button class="nav-link lab-tab" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">
       <svg width="20" height="20" role="presentation">
         <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#arxiv-labs-small"/>
       </svg>
@@ -40,7 +40,7 @@
     <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="bibex-toggle"/>
+          <input class="form-check-input lab-toggle" type="checkbox" id="bibex-toggle"/>
           <label class="form-check-label" for="bibex-toggle">Bibliographic Explorer</label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/">What is the Explorer?</a>)</em></div>
@@ -54,7 +54,7 @@
     <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="paperwithcode-toggle" data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"/>
+          <input class="form-check-input lab-toggle" type="checkbox" id="paperwithcode-toggle" data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"/>
           <label class="form-check-label" for="paperwithcode-toggle">arXiv Links to Code</label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/" target="_blank">What is Links to Code?</a>)</em></div>
@@ -68,7 +68,7 @@
     <div class="toggles">
       <div class="row">
         <div class="col-auto form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="connectedpapers-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
+          <input class="form-check-input lab-toggle" type="checkbox" id="connectedpapers-toggle" data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}" />
           <label class="form-check-label" for="connectedpapers-toggle">Connected Papers</label>
         </div>
         <div class="col"><em>(<a href="https://labs.arxiv.org/" target="_blank">What is Connected Papers?</a>)</em></div>
