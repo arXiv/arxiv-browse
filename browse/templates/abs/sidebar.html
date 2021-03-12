@@ -170,12 +170,12 @@ function toggleList(whichLayer,toggleThis)
   <div class="col-auto">
     {%- if abs_meta.license.icon_uri_path -%}
     <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
-    <svg width="20" height="20" fill="currentColor" role="presentation" id="mytooltip" type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+    <svg width="20" height="20" fill="currentColor" role="presentation" id="mytooltip" type="button" data-bs-custom-class="arxiv-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
       <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#question-circle"/>
     </svg>
     {%- else -%}
     <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">License</a>
-    <a href="{{abs_meta.license.effective_uri}}" class="" data-bs-toggle="tooltip" data-placement="top" title="Copyright is owned by the author. Check the license for usage rights.">
+    <a href="{{abs_meta.license.effective_uri}}" data-bs-custom-class="arxiv-tooltip" data-bs-toggle="tooltip" data-placement="top" title="Copyright is owned by the author. Check the license for usage rights.">
       <svg width="20" height="20" fill="currentColor" role="presentation">
         <use xlink:href="{{ url_for('base.static', filename='bootstrap/bootstrap-icons.svg') }}#question-circle"/>
       </svg>
