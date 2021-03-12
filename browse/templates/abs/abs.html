@@ -153,7 +153,7 @@
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
     <a class="btn btn-primary {{ display }}" href="{{url_for('.pdf', arxiv_id=requested_id)}}">
       <svg width="20" height="20" fill="currentColor" role="presentation">
-        <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#alarm"/>
+        <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#pdf-file"/>
       </svg>
       Download PDF
     </a>
