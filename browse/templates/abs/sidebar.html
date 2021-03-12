@@ -204,41 +204,34 @@ function toggleList(whichLayer,toggleThis)
 {{ generate_browse_context() }}
 </div>
 
-{% include "abs/cite.html" %}
+{% include "abs/submission-history.html" %}
 
-<div class="arxiv-submission-history">
-  <h4>Submission history</h4>
-  <div class="submitter">
-    <span>Submitter:</span> {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}
-    [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}" class="arxiv-view-email-link">view email</a>]
-    <br>
-    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="arxiv-endorsers-link fst-italic">Which authors of this paper are endorsers?</a>
-    {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
-    {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
-    {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
-  </div>
-  <div class="version">
-    <span>Version:</span>
-    {%- for version_entry in abs_meta.version_history -%}
-    {{ generate_version_entry(version_entry, abs_meta.version) }}
-    {%- endfor -%}
-  </div>
-</div>
+{% include "abs/cite.html" %}
 
 {% include "abs/bookmarking.html" %}
 
+{% include "abs/other-services.html" %}
+
 {%- if ancillary_files %}
-<div class="arxiv-ancillary">
-  <span class="descriptor">Ancillary-file links:</span>
-  <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
-  {{ generate_ancillary_file_list(ancillary_files)}}
-</div><!--end ancillary-->
+<div class="card arxiv-submission-history">
+  <div class="card-body">
+    <h4 class="card-title">Ancillary-file links</h4>
+    <div class="card-text">
+      <h5>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h5>
+      {{ generate_ancillary_file_list(ancillary_files)}}
+    </div>
+  </div>
+</div>
 {% endif %}
 
 {% if trackback_ping_count and trackback_ping_count > 0 %}
-<div class="extra-general">
-  <div class="what-is-this">
-    <h3><a class="abs-button abs-button-grey abs-button-small trackback-link" href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h3> (<a href="{{url_for('help_trackback')}}" class="trackback-help">what is this?</a>)
+<div class="card arxiv-submission-history">
+  <div class="card-body">
+    <h4 class="card-title">Trackbacks</h4>
+    <div class="card-text">
+      <h5><a class="trackback-link" href="/tb/{{ abs_meta.arxiv_id }}"> {{ trackback_ping_count }} blog link{% if trackback_ping_count > 1 %}s{% endif %}</a></h5>
+      <p>(<a href="{{url_for('help_trackback')}}" class="trackback-help">what is this?</a>)</p>
+    </div>
   </div>
 </div>
 {% endif %}

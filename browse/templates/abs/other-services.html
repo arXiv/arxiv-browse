@@ -1,0 +1,15 @@
+<div class="card arxiv-otherservices-block">
+  <div class="card-body">
+    <h4 class="card-title">View this paper on:</h4>
+    <div class="card-text">
+      <p>
+      {% if include_inspire_link %}
+        <a href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br>
+      {% endif %}
+        <a href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a><br>
+        {{- google_scholar_link(abs_meta, author_links) -}}<br>
+        <a href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a>
+      </p>
+    </div>
+  </div>
+</div>
