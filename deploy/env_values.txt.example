@@ -1,6 +1,6 @@
 BROWSE_SERVER_NAME=phoenix.arxiv.org
 BROWSE_SITE_HOST=phoenix.arxiv.org
-BROWSE_SITE_LABEL="arXiv Phoenix"
+BROWSE_SITE_LABEL=arXiv Phoenix
 PREFERRED_URL_SCHEME=https
 DEBUG=0
 FLASK_DEBUG=0

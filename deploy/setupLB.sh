@@ -25,10 +25,10 @@ gcloud compute backend-services add-backend browse-backend \
 
 
 
-#################### Load Balancer ####################
+#################### Load Balancers ####################
 
 gcloud compute ssl-certificates  create phoenix-arxiv-org-cert \
-     --project=arxiv-phoenix \
+     --project=$PROJ \
      --certificate=phoenix_arxiv_org_cert.cer \
      --private-key=phoenix.arxiv.org.key \
      --global
@@ -38,12 +38,13 @@ gcloud compute addresses create lb-ipv4-accounts \
        --project=$PROJ \
        --ip-version=IPV4 \
        --global
-       
+
 
 #################### Phoenix load balancer ####################
+LB_ADDRESS=lb-ipv4-accounts
 
 # This becomes the name of the load balancer in the GCP UI
-gcloud compute url-maps create phoenix-lb \
+gcloud compute url-maps create ${LOAD_BALANCER_BASE}-https \
        --project=$PROJ \
        --default-service browse-backend \
        --global
@@ -54,15 +55,15 @@ gcloud compute url-maps create phoenix-lb \
 gcloud compute target-https-proxies create target-https-proxy \
        --project=$PROJ \
        --ssl-certificates=phoenix-arxiv-org-cert \
-       --url-map=phoenix-lb \
+       --url-map=${LOAD_BALANCER_BASE}-https \
        --global
 
 
 # Create the frontend of the LB
 # Create a global forwarding rule to route incoming requests to the proxy.
-gcloud compute forwarding-rules create phoenix-lb-forwarding-rule \
+gcloud compute forwarding-rules create ${LOAD_BALANCER_BASE}-https-forwarding-rule \
        --project=$PROJ \
-       --address=lb-ipv4-accounts \
+       --address=$LB_ADDRESS \
        --target-https-proxy=target-https-proxy \
        --ports=443 \
        --global
@@ -72,4 +73,24 @@ gcloud compute forwarding-rules create phoenix-lb-forwarding-rule \
 # this script creates, click edit, click finalize and then save (or update)
 # Even without changing anything this seems to kick the LB into working sometimes.
 
+# HTTPS load balancers will also need an accompanying HTTP load balancer that
+# configured to redirect all requests to the HTTPS load balancer.
+# It does not need a backend to be defined; the .yaml configuration is used
+# here so that the load balancer (url-map) can be created without a backend.
 
+gcloud compute url-maps import ${LOAD_BALANCER_BASE}-http \
+       --project=$PROJ \
+       --source ./${LOAD_BALANCER_BASE}-http.yaml \
+       --global
+
+gcloud compute target-http-proxies create target-http-proxy \
+       --project=$PROJ \
+       --url-map=${LOAD_BALANCER_BASE}-http \
+       --global
+
+gcloud compute forwarding-rules create ${LOAD_BALANCER_BASE}-http-content-rule \
+       --project=$PROJ \
+       --address=$LB_ADDRESS \
+       --target-http-proxy=target-http-proxy \
+       --ports=80 \
+       --global
