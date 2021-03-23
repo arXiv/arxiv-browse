@@ -24,7 +24,6 @@ from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
-RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
     r'(?P<from>From:\s*)(?P<name>[^<]+)?\s+(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
@@ -487,21 +486,13 @@ class AbsMetaSession:
             os.path.getmtime(filename), tz=gettz('US/Eastern'))
         modified = modified.astimezone(tz=tzutc())
 
-        # there are two main components to an .abs file that contain data,
-        # but the split must always return four components
-        components = RE_ABS_COMPONENTS.split(raw)
-        if not len(components) == 4:
-            raise AbsParsingException(
-                'Unexpected number of components parsed from .abs.')
+        (metadata_fields, abstract) = _split_abs(raw)
 
-        # everything else is in the second main component
-        prehistory, misc_fields = re.split(r'\n\n', components[1])
-
+        prehistory, misc_fields = re.split(r'\n\n', metadata_fields)
         fields: Dict[str, Any] = \
             AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
 
-        # abstract is the first main component
-        fields['abstract'] = components[2]
+        fields['abstract'] = abstract
 
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
@@ -728,3 +719,49 @@ def current_session() -> AbsMetaSession:
         g.abs_meta = get_session()
     assert isinstance(g.abs_meta, AbsMetaSession)
     return g.abs_meta
+
+
+def _split_abs(raw: str) -> List[str]:
+    """Split the .abs text into the first components.
+
+    First is most of the metadata and the second component, the abstract field.
+    """
+    tmp_metadata: List[str] = []
+    tmp_abs: List[str] = []
+    metadata: Optional[str] = None
+    abs: Optional[str] = None
+    for idx, line in enumerate(raw.split("\n")):
+        if idx == 0 and '--' not in line:   # first line is just dashes
+            raise AbsParsingException(
+                'expected first line to be all dashes')
+
+        if idx == 1 and line != r'\\':
+            raise AbsParsingException(r"expected \\ on line 2")
+
+        if idx > 1 and metadata is None:  # gather metadata
+            if line == r'\\':
+                metadata = "\n".join(tmp_metadata)
+            else:
+                tmp_metadata.append(line)
+
+        if idx > 2 and metadata is not None:  # gather abstract
+            tmp_abs.append(line)
+
+    if tmp_abs[0].strip() == r'\\':  #strip leading \\
+        del(tmp_abs[0])
+
+    if tmp_abs[-1].strip() == '':  #strip trailing \n
+        del(tmp_abs[-1])
+
+    if tmp_abs[-1].strip() == r'\\':  #strip trailing \\
+        del(tmp_abs[-1])
+
+    abs = "\n".join(tmp_abs) + "\n"
+
+    if not abs:
+        raise AbsParsingException("lacks abstract")
+
+    if not metadata:
+        raise AbsParsingException("lacks metadata fields")
+
+    return [metadata, abs]
