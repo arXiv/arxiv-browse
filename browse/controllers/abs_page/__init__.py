@@ -229,7 +229,8 @@ def _time_header_parse(header: str) -> Optional[datetime]:
 def _get_req_header(header: str) -> Optional[str]:
     """Gets request header, needs to be case insensative for keys.
 
-    HTTP header keys are case insensative. RFC 2616"""
+    HTTP header keys are case insensative. RFC 2616.
+    """
     return next((value for key, value in request.headers.items()
                  if key.lower() == header.lower()), None)
 
