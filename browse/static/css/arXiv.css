@@ -836,7 +836,6 @@ p.tagline {
 #pwc-output > h3 {
     margin-top: 25px;
 }
-
 .pwc-icon {
     width: 23px;
     height: 23px;
@@ -852,7 +851,60 @@ p.tagline {
 .pwc-avatar-box {
     display: inline-block;
 }
+
+/* Papers with Code Datasets specific section */
+
+#pwc-data-output {
+    padding: 7px;
+    margin-bottom: 10px;
+}
+
+#labstabs #pwc-data-output > p.pwc-provided {
+  color: #666;
+  font-size: 0.75rem;
+  margin-top: 0;
+}
+
+#labstabs #pwc-data-output > p.pwc-provided > a {
+  color: #666;
+}
+
+#labstabs #pwc-data-output .pwc-icon-primary {
+  width: 14px;
+  height: 14px;
+  top: 3px;
+}
+
+#pwc-data-output > h3 {
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+#pwc-data-output > .pwc-data-card {
+  margin-top: 25px;
+}
+
+#pwc-data-output > .pwc-data-card img {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-name {
+  position:relative;
+  top: -4px;
+  margin-left: 3px;
+}
+
+#pwc-data-output > .pwc-data-card div {
+  font-size: 0.75rem;
+  margin-top: 7px;
+  margin-left: 2px;
+}
+
+
 /*END Papers With Code css*/
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
