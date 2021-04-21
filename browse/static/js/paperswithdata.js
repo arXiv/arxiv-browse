@@ -89,7 +89,7 @@
     // Datasets introduced by this paper
     if (data.introduced.length > 0) {
       $output.append('<h3>Datasets Introduced</h3>');
-      //$output.append(pProvided);
+      $output.append(pProvided);
 
       for (const dataObj of data.introduced) {
         $output.append(makePWCCard(dataObj));
@@ -100,7 +100,7 @@
     // Datasets used in this paper
     if (data.mentioned.length > 0) {
       $output.append('<h3>Datasets Used</h3>');
-      //$output.append(pProvided);
+      $output.append(pProvided);
 
       for (const dataObj of data.mentioned) {
         $output.append(makePWCCard(dataObj));
