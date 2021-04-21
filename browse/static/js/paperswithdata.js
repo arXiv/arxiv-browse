@@ -17,8 +17,12 @@
       return "Image";
     } else if (mod === "Videos") {
       return "Video";
+    } else if (mod === "Texts") {
+      return "Text";
+    } else if (mod === "Graphs") {
+      return "Graph";
     } else {
-      return mode;
+      return mod;
     }
   }
 
