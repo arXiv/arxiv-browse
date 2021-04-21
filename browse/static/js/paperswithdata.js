@@ -81,18 +81,18 @@
       return;
     }
 
-    // Common "Provided by..." component
-    let pProvided = $('<p class="pwc-provided">');
-    let aProvided = $('<a target="_blank">paperswithcode.com</a>');
-    aProvided.attr('href', data.paper_url);
-
-    pProvided.append('Data provided by ')
-             .append(icons['pwc'])
-             .append(aProvided);
-
     // Datasets introduced by this paper
     if (data.introduced.length > 0) {
       $output.append('<h3>Datasets Introduced</h3>');
+
+      let pProvided = $('<p class="pwc-provided">');
+      let aProvided = $('<a target="_blank">paperswithcode.com</a>');
+      aProvided.attr('href', data.paper_url);
+
+      pProvided.append('Data provided by ')
+               .append(icons['pwc'])
+               .append(aProvided);
+
       $output.append(pProvided);
 
       for (const dataObj of data.introduced) {
@@ -103,7 +103,20 @@
 
     // Datasets used in this paper
     if (data.mentioned.length > 0) {
+      // extra separator if both sections visible
+      if (data.introduced.length > 0) {
+        $output.append('<br/>')
+      }
       $output.append('<h3>Datasets Used</h3>');
+
+      let pProvided = $('<p class="pwc-provided">');
+      let aProvided = $('<a target="_blank">paperswithcode.com</a>');
+      aProvided.attr('href', data.paper_url);
+
+      pProvided.append('Data provided by ')
+               .append(icons['pwc'])
+               .append(aProvided);
+
       $output.append(pProvided);
 
       for (const dataObj of data.mentioned) {
