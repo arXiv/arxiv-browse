@@ -9,53 +9,55 @@
   });
 
   var icons = {
-    pwc: '<svg xmlns="http://www.w3.org/2000/svg" class="pwc-icon pwc-icon-primary" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
-  }
-
-  function modalityPrettyPrint(mod){
-    if (mod === "Images") {
-      return "Image";
-    } else if (mod === "Videos") {
-      return "Video";
-    } else if (mod === "Texts") {
-      return "Text";
-    } else if (mod === "Graphs") {
-      return "Graph";
-    } else {
-      return mod;
-    }
+    pwc: '<svg xmlns="http://www.w3.org/2000/svg" class="pwc-icon pwc-icon-primary" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>',
+    datadefault: '<svg xmlns="http://www.w3.org/2000/svg" class="" viewBox="0 0 512 512" ><path stroke="#cccccc" fill="#cccccc" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#cccccc" fill="#cccccc" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
   }
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  function makePWCCard (dataObj) {
+  // Create a dataset card
+  function makePWCCard (dataObj, isIntroduced) {
     let cardDiv = $('<div class="pwc-data-card">');
 
-    // line with the name
+    // image
+    let imageDiv = $('<div class="pwc-data-card-image">');
+    if (dataObj.image !== null) {
+      let datasetImage = $('<img>');
+      datasetImage.attr("src", dataObj.image);
+      imageDiv.append(datasetImage);
+    } else {
+      imageDiv.append(icons['datadefault']);
+    }
+
+    // name
+    let nameDiv = $('<div class="pwc-data-card-name">');
     let nameA = $('<a class="pwc-data-name" target="_blank">');
-    let datasetImage = $('<img>');
-    datasetImage.attr("src", dataObj.image);
     nameA.attr("href", dataObj.url);
     nameA.append(dataObj.name);
 
-    // assemble the first line
-    cardDiv.append(datasetImage)
-           .append(" ")
-           .append(nameA)
-           .append($('<br>'));
-
-    let metaSpan = $('<div>');
-
-    if (dataObj.modalities.length > 0) {
-      let mainMod = dataObj.modalities[0];
-      metaSpan.append(document.createTextNode(modalityPrettyPrint(mainMod).concat(' dataset')));
-      metaSpan.append(' &middot; ');
+    // meta line
+    let metaDiv = $('<div class="pwc-data-name-meta">');
+    if (dataObj.num_papers === 1) {
+      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" paper also use this dataset")));
+    } else {
+      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" papers also use this dataset")));
     }
-    metaSpan.append(document.createTextNode("used by ".concat(numberWithCommas(dataObj.num_papers)).concat(" papers")));
 
-    cardDiv.append(metaSpan);
+    // assemble name div
+    nameDiv.append(nameA);
+
+    // additional is introduced line
+    if (isIntroduced) {
+      let introDiv = $('<div class="pwc-data-name-introduced">');
+      introDiv.append("&starf; introduced in this paper");
+      nameDiv.append(introDiv);
+    }
+
+    nameDiv.append(metaDiv);
+    cardDiv.append(imageDiv);
+    cardDiv.append(nameDiv);
 
     return cardDiv;
 
@@ -81,47 +83,32 @@
       return;
     }
 
+    $output.append('<h3>Datasets</h3>');
+
     // Datasets introduced by this paper
     if (data.introduced.length > 0) {
-      $output.append('<h3>Datasets Introduced</h3>');
-
-      let pProvided = $('<p class="pwc-provided">');
-      let aProvided = $('<a target="_blank">paperswithcode.com</a>');
-      aProvided.attr('href', data.paper_url);
-
-      pProvided.append('Data provided by ')
-               .append(icons['pwc'])
-               .append(aProvided);
-
-      $output.append(pProvided);
-
       for (const dataObj of data.introduced) {
-        $output.append(makePWCCard(dataObj));
+        $output.append(makePWCCard(dataObj, true));
       }
 
     }
 
     // Datasets used in this paper
     if (data.mentioned.length > 0) {
-      // extra separator if both sections visible
-      if (data.introduced.length > 0) {
-        $output.append('<br/>')
-      }
-      $output.append('<h3>Datasets Used</h3>');
-
-      let pProvided = $('<p class="pwc-provided">');
-      let aProvided = $('<a target="_blank">paperswithcode.com</a>');
-      aProvided.attr('href', data.paper_url);
-
-      pProvided.append('Data provided by ')
-               .append(icons['pwc'])
-               .append(aProvided);
-
-      $output.append(pProvided);
-
       for (const dataObj of data.mentioned) {
-        $output.append(makePWCCard(dataObj));
+        $output.append(makePWCCard(dataObj, false));
       }
     }
+
+    // Attribution
+    let pProvided = $('<p class="pwc-provided">');
+    let aProvided = $('<a target="_blank">paperswithcode.com</a>');
+    aProvided.attr('href', data.paper_url);
+
+    pProvided.append('&nbsp;via ')
+             .append(icons['pwc'])
+             .append(aProvided);
+
+    $output.append(pProvided);
   }
 })();
