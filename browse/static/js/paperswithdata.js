@@ -65,15 +65,15 @@
 
   function render (data) {
     $output.html('');
-    if (data === null) {
-      $output.html('<p>This paper has not been found in the Papers with Code database. If you are one of the authors of this paper, you can link data on your <a href="https://arxiv.org/user">arxiv user page</a></p>');
+    if (data === null || data.paper_url === null) {
+      $output.html('<p>This paper has not been found in the Papers with Code database. If you are one of the registered authors of this paper, you can link data on your <a href="https://arxiv.org/user">arxiv user page</a>.</p>');
       return;
     }
     if (data.error) return;
 
     // If there is nothing just put a simple message
     if (data.introduced.length === 0 && data.mentioned.length === 0) {
-      let link = $('<a target="_blank">submit datasets used and introduced here</a>');
+      let link = $('<a target="_blank">link datasets here</a>');
       link.attr('href', data.paper_url);
       let p = $('<p>');
       p.append('No dataset metadata found, you can ')
