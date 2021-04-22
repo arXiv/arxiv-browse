@@ -25,12 +25,9 @@
     <h3 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h3>
     <div class="input-group">
       <select name="group" title="Search in" id="search-category" class="form-select">
-      {%- for group_key, group_details in groups.items() if not group_details.is_test %}
-        <option selected>Select a category</option>
-        <option
-            value ="{{group_key}}"
-            data-url="{{url_for('search_archive', archive=group_key[4:])}}"
-            {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+        <option value="" selected disabled>Select a category</option>
+        {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+        <option value ="{{group_key}}" data-url="{{url_for('search_archive', archive=group_key[4:])}}">
           {{ group_details.name }}
         </option>
         {%- endfor %}
