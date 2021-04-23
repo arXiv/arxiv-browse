@@ -40,7 +40,7 @@
     // meta line
     let metaDiv = $('<div class="pwc-data-name-meta">');
     if (dataObj.num_papers === 1) {
-      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" paper also use this dataset")));
+      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" paper also uses this dataset")));
     } else {
       metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" papers also use this dataset")));
     }
