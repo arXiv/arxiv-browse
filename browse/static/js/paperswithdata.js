@@ -10,7 +10,7 @@
 
   var icons = {
     pwc: '<svg xmlns="http://www.w3.org/2000/svg" class="pwc-icon pwc-icon-primary" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>',
-    datadefault: '<svg xmlns="http://www.w3.org/2000/svg" class="" viewBox="0 0 512 512" ><path stroke="#cccccc" fill="#cccccc" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#cccccc" fill="#cccccc" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
+    datadefault: '<svg xmlns="http://www.w3.org/2000/svg" class="" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
   }
 
   function numberWithCommas(x) {
@@ -38,11 +38,12 @@
     nameA.append(dataObj.name);
 
     // meta line
+    let num_papers = dataObj.num_papers - 1;
     let metaDiv = $('<div class="pwc-data-name-meta">');
-    if (dataObj.num_papers === 1) {
-      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" paper also uses this dataset")));
-    } else {
-      metaDiv.append(document.createTextNode(numberWithCommas(dataObj.num_papers).concat(" papers also use this dataset")));
+    if (num_papers === 1) {
+      metaDiv.append(document.createTextNode(numberWithCommas(num_papers).concat(" paper also uses this dataset")));
+    } else if (num_papers > 1) {
+      metaDiv.append(document.createTextNode(numberWithCommas(num_papers).concat(" papers also use this dataset")));
     }
 
     // assemble name div
