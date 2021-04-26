@@ -1,6 +1,6 @@
 (function () {
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  var pwcApiUrl = 'https://arxiv-beta.paperswithcode.com/api/v0/datasets/' + arxivId;
+  var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/datasets/' + arxivId;
   var $output = $('#pwc-data-output');
   $.get(pwcApiUrl).done(function (response) {
     render(response);
@@ -9,12 +9,37 @@
   });
 
   var icons = {
-    pwc: '<svg xmlns="http://www.w3.org/2000/svg" class="pwc-icon pwc-icon-primary" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>',
-    datadefault: '<svg xmlns="http://www.w3.org/2000/svg" class="" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
+    pwc: '<svg xmlns="http://www.w3.org/2000/svg" class="pwc-icon pwc-icon-primary" viewBox="0 0 512 512" ><path stroke="#21cbce" fill="#21cbce" d="M88 128h48v256H88zM232 128h48v256h-48zM160 144h48v224h-48zM304 144h48v224h-48zM376 128h48v256h-48z"></path><path stroke="#21cbce" fill="#21cbce" d="M104 104V56H16v400h88v-48H64V104zM408 56v48h40v304h-40v48h88V56z"></path></svg>'
   }
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function mapPWCModalityToDefaultColor(modalities) {
+    if(modalities.length > 0) {
+      const colors = {
+        "images": "#A395C6",
+        "audio": "#7A9FB8",
+        "videos": "#F37668",
+        "interactive": "#A28497",
+        "tabular": "#62AEE4",
+        "time series": "#FF6B6B",
+        "graphs": "#90B06D",
+        "texts": "#CD933C",
+        "geospatial": "#C87E91",
+        "3d": "#DF7C87",
+        "parallel corpus": "#8CB369",
+      }
+
+      let modality_lower = modalities[0].toLowerCase();
+      if (modality_lower in colors) {
+        return colors[modality_lower];
+      }
+    }
+
+    // default color
+    return "#A59F78";
   }
 
   // Create a dataset card
@@ -28,7 +53,13 @@
       datasetImage.attr("src", dataObj.image);
       imageDiv.append(datasetImage);
     } else {
-      imageDiv.append(icons['datadefault']);
+      // show placeholder image
+      let placeholderDiv = $('<div class="pwc-data-card-image-placeholder">');
+      let placeholderText = $('<span>');
+      placeholderText.append(document.createTextNode(dataObj.name[0]));
+      placeholderDiv.append(placeholderText);
+      placeholderDiv.attr("style", "background-color:"+mapPWCModalityToDefaultColor(dataObj.modalities));
+      imageDiv.append(placeholderDiv);
     }
 
     // name

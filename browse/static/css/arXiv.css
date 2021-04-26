@@ -905,14 +905,22 @@ p.tagline {
   margin: 0.25rem;
 }
 
-#pwc-data-output > .pwc-data-card .pwc-data-card-image svg {
-  height: 19px;
-  width: 19px;
+#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
   margin: 0.25rem;
-  opacity: 50%;
-  padding: 3px;
+  text-align: center;
+  opacity: 0.3;
 }
 
+#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder span {
+  position: relative;
+  top: 4px;
+  text-align: center;
+  color: #fff;
+  font-size: 13px;
+}
 
 #pwc-data-output > .pwc-data-card .pwc-data-card-name {
   display: inline-block;
