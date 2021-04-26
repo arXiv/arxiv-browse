@@ -87,7 +87,9 @@
       nameDiv.append(introDiv);
     }
 
-    nameDiv.append(metaDiv);
+    if (num_papers > 0 ) {
+      nameDiv.append(metaDiv);
+    }
     cardDiv.append(imageDiv);
     cardDiv.append(nameDiv);
 
