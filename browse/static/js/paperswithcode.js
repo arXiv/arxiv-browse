@@ -1,6 +1,6 @@
 (function () {
   var arxivId = window.location.pathname.split('/').reverse()[0];
-  var pwcApiUrl = 'https://arxiv-beta.paperswithcode.com/api/v0/repos-and-datasets/' + arxivId;
+  var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/repos-and-datasets/' + arxivId;
   var $outputCode = $('#pwc-output');
   var $outputData = $('#pwc-data-output');
   $.get(pwcApiUrl).done(function (response) {
@@ -177,12 +177,15 @@
   }
 
   function renderData ($output, data) {
+    if (data.error) return;
     $output.html('');
-    if (data === null || data.paper_url === null) {
-      $output.html('<p>This paper has not been found in the Papers with Code database. If you are one of the registered authors of this paper, you can link data on your <a href="https://arxiv.org/user">arxiv user page</a>.</p>');
+
+    // don't show anything for non-ml/cs/stats when there are no datasets
+    var portal_name = data["portal_name"];
+    if ( portal_name !== "ml" && portal_name !== "cs" && portal_name !== "stat" && data.introduced.length === 0 && data.mentioned.length === 0){
+      $outputData.attr("style", "display:none");
       return;
     }
-    if (data.error) return;
 
     $output.append('<h3>Datasets</h3>');
 
