@@ -13,7 +13,6 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
-    "paperwithdata": $('#paperwithdata-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
@@ -29,16 +28,6 @@ $(document).ready(function() {
     console.log(textStatus);
   });
   $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
-
-
-  // Turn on the Papers with Code data widget for all of cs, stats
-  var current_context = $('.current').text();
-  if ( current_context.startsWith("cs.") || current_context.startsWith("stat.")){
-    $.cachedScript(scripts["paperwithdata"]).done(function(script, textStatus) {
-      console.log(textStatus);
-    });
-    $("#paperwithdata-toggle.lab-toggle").toggleClass("enabled", true);
-  }
 
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
@@ -59,10 +48,6 @@ $(document).ready(function() {
           });
         } else if (key === "paperwithcode-toggle") {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-            console.log(textStatus);
-          });
-        } else if (key === "paperwithdata-toggle") {
-          $.cachedScript(scripts["paperwithdata"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         } else if (key === "connectedpapers-toggle") {
@@ -103,10 +88,6 @@ $(document).ready(function() {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-        console.log(textStatus);
-      });
-    } else if ($(this).attr("id") == "paperwithdata-toggle") {
-      $.cachedScript(scripts["paperwithdata"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
