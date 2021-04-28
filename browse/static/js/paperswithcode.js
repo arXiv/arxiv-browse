@@ -3,6 +3,19 @@
   var pwcApiUrl = 'https://arxiv.paperswithcode.com/api/v0/repos-and-datasets/' + arxivId;
   var $outputCode = $('#pwc-output');
   var $outputData = $('#pwc-data-output');
+
+  if ($outputCode.html() != '') {
+    // Toggled off
+    $outputCode.html('');
+    $outputData.html('');
+    $outputCode.attr("style", "display:none");
+    $outputData.attr("style", "display:none");
+    return;
+  } else {
+    $outputCode.attr("style", "");
+    $outputData.attr("style", "");
+  }
+
   $.get(pwcApiUrl).done(function (response) {
     renderCode($outputCode, response["code"]);
     renderData($outputData, response["data"]);
