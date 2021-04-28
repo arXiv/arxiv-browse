@@ -930,6 +930,7 @@ p.tagline {
 #pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-introduced {
   margin-top: 4px;
   font-size: 11px;
+  color: #666;
 }
 
 #pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-meta {
