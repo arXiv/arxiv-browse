@@ -24,11 +24,7 @@ $(document).ready(function() {
     }
   };
 
-  $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-    console.log(textStatus);
-  });
-  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
-
+  var pwcEnabled = true;
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
@@ -55,10 +51,21 @@ $(document).ready(function() {
             console.log(textStatus);
           });
         }
+      } else if (labsCookie[key] && labsCookie[key] == "disabled"){
+        if (key === "paperwithcode-toggle") {
+          pwcEnabled = false;
+        }
       }
     }
   } else {
     Cookies.set("arxiv_labs", { sameSite: "strict" });
+  }
+
+  if(pwcEnabled){
+    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled",true);
+    $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+      console.log(textStatus);
+    });
   }
 
   $(".lab-toggle").on("click", function() {
