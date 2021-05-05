@@ -64,20 +64,19 @@
         .append(link);
     }
 
-    $output.append('<h3>Community Code</h3>');
-
     if (data.unofficial_count === 0) {
+      $output.append('<h3 class="pwc-community-nocode">Community Code</h3>');
       let link = $(`<a target="_blank">${icons.pwc}Papers With Code</a>`);
       link.attr('href', data.paper_url);
       $output
         .append('Submit your implementations of this paper on ')
         .append(link);
     } else {
+      $output.append('<h3 class="pwc-community-code">Community Code</h3>');
       let link = $('<a class="pwc-code-link" target="_blank"></a>');
       link.attr('href', data.paper_url + '#code');
       link
         .append(icons.pwc)
-        .append(' ')
         .append(document.createTextNode(data.unofficial_count))
         .append(` code implementation${data.unofficial_count > 1 ? 's': ''}`);
 
@@ -200,7 +199,7 @@
       return;
     }
 
-    $output.append('<h3>Datasets</h3>');
+    $output.append('<h3>Datasets Used</h3>');
 
     // If there is nothing just put a simple message
     if (data.introduced.length === 0 && data.mentioned.length === 0) {

@@ -836,27 +836,39 @@ p.tagline {
 #pwc-output > h3 {
     margin-top: 25px;
 }
-.pwc-icon {
+#pwc-output .pwc-icon {
     width: 23px;
     height: 23px;
     position: relative;
     top: 5px;
-    margin-right: 5px;
+    margin-left: 3px;
+    margin-right: 6px;
 }
 
-.pwc-icon-primary {
+#pwc-output .pwc-icon-primary {
     top: 6px;
+    margin-left: 3px;
 }
 
-.pwc-avatar-box {
+#pwc-output .pwc-avatar-box {
     display: inline-block;
 }
+
+#pwc-output h3.pwc-community-nocode {
+  margin-bottom: 8px;
+}
+
+#pwc-output h3.pwc-community-code {
+  margin-bottom: 15px;
+}
+
 
 /* Papers with Code **Datasets** specific section */
 
 #pwc-data-output {
     padding: 7px;
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 #labstabs #pwc-data-output > p.pwc-provided {
