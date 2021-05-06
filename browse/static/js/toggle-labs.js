@@ -29,6 +29,9 @@ $(document).ready(function() {
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
+    if ( labsCookie["last_tab"] ){
+      $("input#"+labsCookie["last_tab"]).click();
+    }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
@@ -67,6 +70,12 @@ $(document).ready(function() {
       console.log(textStatus);
     });
   }
+  // record last-clicked tab
+  $("div.labstabs input[name='tabs']").on("click", function() {
+    var labsCookie = Cookies.getJSON("arxiv_labs") || {};
+    labsCookie["last_tab"] = $(this).attr("id");
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+  });
 
   $(".lab-toggle").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
@@ -91,7 +100,7 @@ $(document).ready(function() {
           console.log(textStatus);
         });
       }
-    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled") ) {
+    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
