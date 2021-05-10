@@ -67,7 +67,7 @@
     if (data.unofficial_count === 0) {
       $output.append('<h3 class="pwc-community-nocode">Community Code</h3>');
       let link = $(`<a target="_blank">${icons.pwc}Papers With Code</a>`);
-      link.attr('href', data.paper_url);
+      link.attr('href', data.paper_url + "#code");
       $output
         .append('Submit your implementations of this paper on ')
         .append(link);
@@ -204,7 +204,7 @@
     // If there is nothing just put a simple message
     if (data.introduced.length === 0 && data.mentioned.length === 0) {
       let link = $('<a target="_blank">link datasets here</a>');
-      link.attr('href', data.paper_url);
+      link.attr('href', data.paper_url + "#datasets");
       let p = $('<span>');
       p.append('No dataset metadata found, you can ')
        .append(link)
