@@ -12,7 +12,7 @@ $(document).ready(function() {
   };
 
   var scripts = {
-    "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
+    "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210513",
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
