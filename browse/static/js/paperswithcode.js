@@ -74,7 +74,7 @@
     } else {
       $output.append('<h3 class="pwc-community-code">Community Code</h3>');
       let link = $('<a class="pwc-code-link" target="_blank"></a>');
-      link.attr('href', data.paper_url + '#code');
+      link.attr('href', data.paper_url);
       link
         .append(icons.pwc)
         .append(document.createTextNode(data.unofficial_count))
