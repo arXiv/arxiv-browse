@@ -8,7 +8,8 @@ omit =
   tests/legacy_comparison/*
   wsgi.py
   populate_test_database.py
-  upload_static_assets.py  
+  upload_static_assets.py
+  browse/pathmap.py
 
 [report]
 
