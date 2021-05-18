@@ -22,7 +22,7 @@
 {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
 <div class="d-flex justify-content-center">
   <form class="row p-2 g-1 arxiv-home-form">
-    <h3 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h3>
+    <h2 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h2>
     <div class="input-group">
       <select name="group" title="Search in" id="search-category" class="form-select">
         <option value="" selected disabled>Select a category</option>
@@ -59,18 +59,18 @@
 <div class="card-group arxiv-home-messages arxiv-cards-warm">
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">News</h4>
+      <h3 class="card-title">News</h3>
       {%- include "home/news.html" -%}
-      <a href="https://blog.arxiv.org/" class="btn btn-primary">See All News</a><br>
+      <a href="https://blog.arxiv.org/" class="btn btn-secondary">See All News</a><br>
       <a href="https://arxiv.org/new/" class="btn btn-outline-secondary btn-tiny">Old 'What's New' Pages</a>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">COVID-19 Quick Links</h4>
+      <h3 class="card-title">COVID-19 Quick Links</h3>
       <p>See COVID-19 SARS-CoV-2 preprints from:</p>
-      <a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv" class="btn btn-primary">arXiv</a>
-      <a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv" class="btn btn-primary">medRxiv and bioRxiv</a>
+      <a href="/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv" class="btn btn-secondary">arXiv</a>
+      <a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv" class="btn btn-secondary">medRxiv and bioRxiv</a>
       <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
     </div>
   </div>
