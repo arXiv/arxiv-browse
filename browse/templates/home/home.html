@@ -13,7 +13,7 @@
         to arXiv
       {% endif %}
     </h1>
-    <p>arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+    <p>{{ accessible_name() }} is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
      scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
      Materials on this site are not peer-reviewed by arXiv.</p>
   </div>
