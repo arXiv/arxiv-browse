@@ -2,9 +2,9 @@
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <ul>
   <li>Welcome to Phoenix, the arXiv beta! <a href="#">View the Phoenix roadmap</a>.</li>
-  <li>We are please to announce <a href="https://blog.arxiv.org/2021/05/13/linking-to-datasets-on-arxiv/" target="_blank">linking to datasets is now possible</a> on arXiv, in partnership with Papers With Code.</li>
-  <li><a href="https://blog.arxiv.org/2021/02/26/why-arxiv-needs-a-brand/" target="_blank">Why arXiv needs a brand</a> to thrive for the next 30 years.</li>
+  <li>We are please to announce <a href="https://blog.arxiv.org/2021/05/13/linking-to-datasets-on-arxiv/" target="_blank">linking to datasets is now possible</a> on {{ macros.accessible_name() }}, in partnership with Papers With Code.</li>
+  <li><a href="https://blog.arxiv.org/2021/02/26/why-arxiv-needs-a-brand/" target="_blank">Why {{ macros.accessible_name() }} needs a brand</a> to thrive for the next 30 years.</li>
   {%- if rd_int >= 2020051800 and rd_int <= 2020052700 -%}
-  <li>Our giving campaign is from DATE to DATE. <a href="{{ url_for('donate')}}">Support arXiv with a donation!</a></li>
+  <li>Our giving campaign is from DATE to DATE. <a href="{{ url_for('donate')}}">Support {{ macros.accessible_name() }} with a donation!</a></li>
   {%- endif -%}
 </ul>
