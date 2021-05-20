@@ -1,23 +1,10 @@
-{#- News items appear below the subject search. Generally there should be no more than four items. -#}
+{#- News items appear in the news block on the homepage. Generally there should be no more than four items. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-
-{%- if rd_int >= 202009010100 and rd_int <= 202010010755 -%}
-Starting at 8am EDT on October 1, 2020, arXiv will process new submissions and replacements with TeX Live 2020. <a href="https://blogs.cornell.edu/arxiv/2020/09/24/tex-live-2020-release-oct-1-2020/" target="_blank">Learn more</a>.
-<br><br>
-{%- endif -%}
-{%- if rd_int >= 202010010756 and rd_int <= 202011300100 -%}
-arXiv now processes new submissions and replacements with TeX Live 2020. <a href="https://blogs.cornell.edu/arxiv/2020/09/24/tex-live-2020-release-oct-1-2020/" target="_blank">Learn more</a>.
-<br><br>
-{%- endif -%}
-
-<!-- annual giving message -->
-{%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}
-23 Sep 2019: Our giving campaign is this week. <a href="https://blogs.cornell.edu/arxiv/2019/09/19/donate-to-arxiv-4/">Support arXiv with a donation!</a><br/>
-{%- endif -%}
-
-
 <ul>
-  <li>Welcome to the {{ macros.accessible_name() }} beta! We call it Phoenix. <a href="#">View the Phoenix roadmap</a>.</li>
+  <li>Welcome to Phoenix, the arXiv beta! <a href="#">View the Phoenix roadmap</a>.</li>
   <li>We are please to announce <a href="https://blog.arxiv.org/2021/05/13/linking-to-datasets-on-arxiv/" target="_blank">linking to datasets is now possible</a> on arXiv, in partnership with Papers With Code.</li>
-  <li><a href="https://blog.arxiv.org/2021/02/26/why-arxiv-needs-a-brand/" target="_blank">Why {{ macros.accessible_name() }} needs a brand</a> to thrive for the next 30 years.</li>
+  <li><a href="https://blog.arxiv.org/2021/02/26/why-arxiv-needs-a-brand/" target="_blank">Why arXiv needs a brand</a> to thrive for the next 30 years.</li>
+  {%- if rd_int >= 2020051800 and rd_int <= 2020052700 -%}
+  <li>Our giving campaign is from DATE to DATE. <a href="{{ url_for('donate')}}">Support arXiv with a donation!</a></li>
+  {%- endif -%}
 </ul>
