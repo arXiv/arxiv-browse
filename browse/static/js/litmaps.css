@@ -1,0 +1,53 @@
+#litmaps_card_container {
+    width: 300px;
+    background-color: white;
+    padding: 18px 10px 10px 10px;
+}
+#litmaps_card_link {
+    text-decoration: none;
+}
+#litmaps_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+#litmaps_card_logo {
+    width: 100px;
+    height: 18px;
+    padding: 0px 18px 18px 18px;
+}
+#litmaps_card_title {
+    font-family: sans-serif;
+    color: #1D1E20;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0px 18px 0px 18px;
+}
+#litmaps_map_placeholder {
+    width: 100%;
+    max-height: 196px;
+    object-fit: cover;
+}
+#litmaps_error_group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 300px;
+}
+#litmaps_error_logo {
+    width: 100px;
+    height: 18px;
+    padding: 18px 0px 0px 0px;
+}
+#litmaps_body {
+    font-family: sans-serif;
+    color: #1D1E20;
+    font-weight: 500;
+    font-size: 12px;
+}

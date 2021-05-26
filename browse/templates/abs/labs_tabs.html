@@ -35,8 +35,26 @@
           </div>
         </div>
         {% endif %}
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input 
+                id="litmaps-toggle" 
+                type="checkbox" 
+                class="lab-toggle" 
+                data-script-url="{{ url_for('static', filename='js/litmaps.js') }}" 
+                aria-labelledby="label-for-litmaps">
+              <span class="slider"></span>
+              <span class="is-sr-only">Litmaps Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-litmaps">Litmaps</span> <em>(<a href="https://www.litmaps.co/" target="_blank">What is Litmaps?</a>)</em>
+          </div>
+        </div>
       </div>
         <div class="labs-content-placeholder labs-display" style="display: none;"></div>
+        <div style="min-height: 15px" id="litmaps-open-in"></div>
     </div>
 
 
