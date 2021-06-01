@@ -1,5 +1,5 @@
 (function () {
-    const arxivId = window.location.pathname.split('/').reverse()[0];
+    const arxivId = document.head.querySelector("[name~=citation_arxiv_id][content]").content;
     const litmapsBaseUrl = 'https://api.litmaps.co';
     const litmapsAppUrl = 'https://app.litmaps.co';
     const litmapsCheckSeed = `${litmapsBaseUrl}/article/arxiv:${arxivId}/seed/`;
