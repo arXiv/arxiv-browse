@@ -229,7 +229,7 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args:
-        if is_hash_valid(current_app.config['CLICKTHROUGH_SECRET'],
+        if is_hash_valid(current_app.config.CLICKTHROUGH_SECRET.get_secret_value(),
                          request.args.get('url'),
                          request.args.get('v')):
             return redirect(request.args.get('url'))  # type: ignore
