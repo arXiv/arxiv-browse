@@ -5,8 +5,8 @@ from flask import make_response, Response
 from werkzeug.exceptions import InternalServerError
 
 from browse.exceptions import AbsNotFound
-from browse.services.document import metadata
-from browse.services.document.metadata import AbsNotFoundException, \
+from browse.services.abstracts import get_abs_service
+from browse.services.abstracts.fs_abs import AbsNotFoundException, \
     AbsVersionNotFoundException, AbsDeletedException
 from browse.services.cite import arxiv_bibtex
 
@@ -42,7 +42,7 @@ def bibtex_citation(arxiv_id: str) -> Response:
     Flask response
 
     """
-    abs_meta = metadata.get_abs(arxiv_id)
+    abs_meta = get_abs_service().get_abs(arxiv_id)
     bibtex = arxiv_bibtex(abs_meta)
     response = make_response(bibtex, 200)
     response.mimetype = 'text/plain'

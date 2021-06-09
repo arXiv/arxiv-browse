@@ -26,8 +26,8 @@ from browse.services.search.search_authors import queries_for_authors, \
 from browse.services.util.metatags import meta_tag_metadata
 from browse.services.util.response_headers import abs_expires_header, \
     mime_header_date
-from browse.services.document import metadata
-from browse.services.document.metadata import AbsException,\
+from browse.services.abstracts import get_abs_service
+from browse.services.abstracts.fs_abs import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
@@ -81,8 +81,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
 
-        metadatax = current_app.abs
-        abs_meta = metadatax.get_abs(arxiv_id)
+        abs_meta = get_abs_service().get_abs(arxiv_id)
         not_modified = _check_request_headers(
             abs_meta, response_data, response_headers)
         if not_modified:

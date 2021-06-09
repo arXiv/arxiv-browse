@@ -8,7 +8,7 @@ import warnings
 from datetime import date
 from typing import Optional
 
-from pydantic import BaseSettings, AnyHttpUrl, SecretStr
+from pydantic import BaseSettings, AnyHttpUrl, SecretStr, PyObject
 
 import logging
 log = logging.getLogger(__name__)
@@ -86,6 +86,7 @@ class Settings(BaseSettings):
     BROWSE_STATUS_BANNER_SITE_ID: str = "not-set"
     """Enable/disable status service banner."""
 
+    DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.abstracts.fs_abs'
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files."""
     DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"

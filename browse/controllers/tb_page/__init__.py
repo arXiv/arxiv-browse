@@ -14,8 +14,8 @@ from browse.services.database import get_paper_trackback_pings, \
                                      get_trackback_ping
 from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
-from browse.services.document import metadata
-from browse.services.document.metadata import AbsException, \
+from browse.services.abstracts import get_abs_service
+from browse.services.abstracts.fs_abs import AbsException, \
     AbsNotFoundException
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
@@ -64,7 +64,7 @@ def get_tb_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
         response_data['arxiv_identifier'] = arxiv_identifier
-        abs_meta = metadata.get_abs(arxiv_identifier.id)
+        abs_meta = get_abs_service().get_abs(arxiv_identifier.id)
         if abs_meta:
             response_data['abs_meta'] = abs_meta
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)

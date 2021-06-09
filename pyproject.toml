@@ -1,19 +1,21 @@
-[[source]]
-url = "https://pypi.python.org/simple"
-verify_ssl = true
-name = "pypi"
+[tool.poetry]
+name = "browse"
+version = "0.3.2.6"
+description = ""
+authors = ["Your Name <you@example.com>"]
 
-[packages]
+[tool.poetry.dependencies]
+python = "^3.8"
 python-dateutil = "*"
 Flask-API = "*"
-Flask-SQLAlchemy = "==2.4.4"  # ARXIVNG-3649
+Flask-SQLAlchemy = "==2.4.4"  
 MarkupSafe = "*"
-SQLAlchemy = "==1.3.20" # ARXIVNG-3649
+SQLAlchemy = "==1.3.20" 
 pytz = "*"
 mysqlclient = "==1.4.1"
-"mmh3" = "*"
+mmh3 = "*"
 aiohttp = "==3.6.2"
-flask = "1.1.4"  # Problem with 2.0 and version prefixed static routes
+flask = "1.1.4"  
 validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
@@ -26,9 +28,9 @@ geoip2 = "*"
 bcrypt = "*"
 pydantic = "*"
 
-[dev-packages]
+[tool.poetry.dev-dependencies]
 pylama = "*"
-"nose2" = "*"
+nose2 = "*"
 sqlacodegen = "*"
 Flask-Testing = "*"
 pycodestyle = "*"
@@ -36,9 +38,9 @@ pydocstyle = "*"
 pylint = "==2.3.0"
 pytest = "*"
 pytest-html = "*"
-"ansi2html" = "*"
+ansi2html = "*"
 hypothesis = "*"
-"beautifulsoup4" = "*"
+beautifulsoup4 = "*"
 pyhamcrest = "*"
 pytest-easyread = "*"
 weighted-levenshtein = "*"
@@ -47,8 +49,6 @@ coveralls = "*"
 sphinx = "*"
 sphinx-autodoc-typehints = "*"
 
-[requires]
-python_version = "3.8"
-
-[pipenv]
-allow_prereleases = true
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
