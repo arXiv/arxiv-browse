@@ -23,7 +23,7 @@ def create_web_app() -> Flask:
     app = Flask('browse', static_url_path=f'/static/browse/{settings.APP_VERSION}')
     app.config.from_object(settings)  # facilitates sqlalchemy and other flask plugins
     app.settings = settings  # facilitates typed access to settings
-    
+
     # TODO Only needed until this route is added to arxiv-base
     # TODO Remove this, this is in arxiv.base.config.URLS
     if 'URLS' not in app.config:
@@ -33,8 +33,6 @@ def create_web_app() -> Flask:
 
     models.init_app(app)  # type: ignore
     Base(app)
-    # TODO nothing from auth is imported and no auth decorators are used, is it in use?
-    # Auth(app)
     app.register_blueprint(ui.blueprint)
     s3.init_app(app)
 

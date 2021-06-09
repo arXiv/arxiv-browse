@@ -7,10 +7,10 @@ import os
 import warnings
 from datetime import date
 from typing import Optional
+import logging
 
 from pydantic import BaseSettings, SecretStr, PyObject, AnyHttpUrl
 
-import logging
 log = logging.getLogger(__name__)
 
 
@@ -18,6 +18,8 @@ DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 
 
 class Settings(BaseSettings):
+    """Class for settings for arxiv-browse web app"""
+
     APP_VERSION = "0.3.2.6"
     """The application version """
 
@@ -90,7 +92,8 @@ class Settings(BaseSettings):
     """Paths to .abs and source files."""
     DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
     """Paths to .abs and source files."""
-    DOCUMENT_CACHE_PATH = os.environ.get("DOCUMENT_CACHE_PATH", "tests/data/cache")
+    DOCUMENT_CACHE_PATH = os.environ.get(
+        "DOCUMENT_CACHE_PATH", "tests/data/cache")
     """Path to cache directory"""
 
     SHOW_EMAIL_SECRET: SecretStr = "not-set-bar"  # type: ignore
@@ -116,7 +119,8 @@ class Settings(BaseSettings):
 
     CLASSIC_COOKIE_NAME: str = "tapir_session"
     CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
-    CLASSIC_TRACKING_COOKIE: str = "browser"  # TODO Remove since never used in browse
+    # TODO Remove since never used in browse
+    CLASSIC_TRACKING_COOKIE: str = "browser"
 
     # TODO What is the difference between CLASSIC_DATABASE_URI and BROWSE_SQLALCHEMY_DATABASE_URI?
     # BROWSE_SQLALCHEMY_DATABASE_URI is the one set in the deploy files.
@@ -133,12 +137,13 @@ class Settings(BaseSettings):
         # This is a temporary workaround for ARXIVNG-2063
     ]
     """External URLs."""
-    
-    
+
     """XXXXXXXXXXXXXXX Some flask specific configs XXXXXXXXXXXX"""
-    
+
     #DEBUG = os.environ.get("DEBUG") == ON
-    # debugging doesn't work when set from code, so don't try to use it here
+    # Setts werkzeug debugging mode
+    # May not work when set from code, so don't try to use it here
+    # Set in the env vars
 
     TESTING: bool = True
     """enable/disable testing mode. Enable testing mode. Exceptions are
@@ -283,7 +288,7 @@ class Settings(BaseSettings):
     X-Requested-With header).
     """
 
-    JSONIFY_MIMETYPE: str =  "application/json"
+    JSONIFY_MIMETYPE: str = "application/json"
     """MIME type used for jsonify responses."""
 
     TEMPLATES_AUTO_RELOAD: Optional[bool] = None
@@ -302,33 +307,37 @@ class Settings(BaseSettings):
     """
 
     class Config:
+        """Additional pydantic config of these settings"""
         fields = {
             'SQLALCHEMY_DATABASE_URI': {
                 'env': ['BROWSE_SQLALCHEMY_DATABASE_URI']
             },
-            'CLASSIC_DATABASE_URI':{
+            'CLASSIC_DATABASE_URI': {
                 'env': ["CLASSIC_DATABASE_URI", "BROWSE_SQLALCHEMY_DATABASE_URI"]
             }
         }
 
     def check(self) -> None:
+        """A check and fix up of a settings object"""
 
         if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
             self.SQLALCHEMY_MAX_OVERFLOW = None
             self.SQLALCHEMY_POOL_SIZE = None
-            
+
         if (os.environ.get("FLASK_ENV", False) == "production"
-            and "sqlite" in self.SQLALCHEMY_DATABASE_URI):
+                and "sqlite" in self.SQLALCHEMY_DATABASE_URI):
             warnings.warn(
                 "Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment"
-        )
+            )
 
         if self.BROWSE_USER_BANNER_ENABLED:
             if not self.BROWSE_USER_BANNER_START_DATE:
-                log.warn("BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_START_DATE")
+                log.warning(
+                    "BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_START_DATE")
 
             if not self.BROWSE_USER_BANNER_END_DATE:
-                log.warn("BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_END_DATE")
+                log.warning(
+                    "BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_END_DATE")
 
 
 settings = Settings()

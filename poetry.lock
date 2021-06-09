@@ -72,7 +72,7 @@ uwsgi = "*"
 
 [[package]]
 name = "astroid"
-version = "2.5.8"
+version = "2.5.6"
 description = "An abstract syntax tree for Python with inference support."
 category = "dev"
 optional = false
@@ -749,17 +749,18 @@ pyflakes = ">=1.5.0"
 
 [[package]]
 name = "pylint"
-version = "2.3.0"
+version = "2.8.3"
 description = "python code static checker"
 category = "dev"
 optional = false
-python-versions = ">=3.4.*"
+python-versions = "~=3.6"
 
 [package.dependencies]
-astroid = ">=2.2.0"
+astroid = "2.5.6"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
-isort = ">=4.2.5"
-mccabe = "*"
+isort = ">=4.2.5,<6"
+mccabe = ">=0.6,<0.7"
+toml = ">=0.7.1"
 
 [[package]]
 name = "pyparsing"
@@ -1211,7 +1212,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f8fb3179ef35960cca314e22fbc3058bfd5590c5ad35207bd84d2d4100b44eff"
+content-hash = "6d9cb7d2f67871ce358ac58fba78f3f9847e853443159462281a73b777d2eb1b"
 
 [metadata.files]
 aiohttp = [
@@ -1243,8 +1244,8 @@ arxiv-base = [
     {file = "arxiv-base-0.17.2.1.tar.gz", hash = "sha256:ea5afc2012ddaa8ae568ff1ca78c82bc0427ce370be10fbb74bc405f85a793e0"},
 ]
 astroid = [
-    {file = "astroid-2.5.8-py3-none-any.whl", hash = "sha256:f0c8bfebc3da61bde8e3e3df1e879dc16e6d26d6078ddc34813fcb07045782d3"},
-    {file = "astroid-2.5.8.tar.gz", hash = "sha256:2476b7f0d6cec13f4c1f53b54bea2ce072310ac9fc7acb669d5270190c748042"},
+    {file = "astroid-2.5.6-py3-none-any.whl", hash = "sha256:4db03ab5fc3340cf619dbc25e42c2cc3755154ce6009469766d7143d1fc2ee4e"},
+    {file = "astroid-2.5.6.tar.gz", hash = "sha256:8a398dfce302c13f14bab13e2b14fe385d32b73f4e4853b9bdfb64598baa1975"},
 ]
 async-timeout = [
     {file = "async-timeout-3.0.1.tar.gz", hash = "sha256:0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f"},
@@ -1707,8 +1708,8 @@ pylama = [
     {file = "pylama-7.7.1.tar.gz", hash = "sha256:9bae53ef9c1a431371d6a8dca406816a60d547147b60a4934721898f553b7d8f"},
 ]
 pylint = [
-    {file = "pylint-2.3.0-py3-none-any.whl", hash = "sha256:2bf4bd58d6d5d87174fbc9d1d134a9aeee852d4dc29cbd422a7015772770bc63"},
-    {file = "pylint-2.3.0.tar.gz", hash = "sha256:ee80c7af4f127b2a480d83010c9f0e97beb8eaa652b78c2837d3ed30b12e1182"},
+    {file = "pylint-2.8.3-py3-none-any.whl", hash = "sha256:792b38ff30903884e4a9eab814ee3523731abd3c463f3ba48d7b627e87013484"},
+    {file = "pylint-2.8.3.tar.gz", hash = "sha256:0a049c5d47b629d9070c3932d13bff482b12119b6a241a93bc460b0be16953c8"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},

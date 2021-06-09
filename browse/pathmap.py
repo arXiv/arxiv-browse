@@ -17,6 +17,7 @@ app = create_web_app()
 
 
 def mappingline(rule):
+    """Makes GCP path map string for use with load balancers"""
     hasParam = '<' in rule.rule
     if hasParam:
         path = rule.rule.split('<')[0] + "*"

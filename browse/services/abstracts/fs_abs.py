@@ -2,12 +2,13 @@
 import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
-from functools import wraps
-from dateutil import parser
-from pytz import timezone
-from datetime import datetime
-from dateutil.tz import tzutc, gettz
 import dataclasses
+from datetime import datetime
+
+from pytz import timezone
+from dateutil.tz import tzutc, gettz
+from dateutil import parser
+
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
@@ -108,8 +109,8 @@ class AbsMetaSession(AbstractService):
         except AbsNotFoundException as e:
             if paper_id.is_old_id:
                 raise
-            else:
-                raise AbsVersionNotFoundException(e)
+
+            raise AbsVersionNotFoundException(e) from e
 
         # Several fields need to reflect the latest version's data
         combined_version: DocMetadata = dataclasses.replace(
@@ -125,81 +126,6 @@ class AbsMetaSession(AbstractService):
 
         return combined_version
 
-    def _next_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """Get next consecutive Identifier relative to the provided Identifier.
-
-        Parameters
-        ----------
-        identifier : :class:`Identifier`
-
-        Returns
-        -------
-        :class:`Identifier`
-            The next Indentifier in sequence
-        """
-        next_id = None
-        if identifier.year is not None and \
-                identifier.month is not None and \
-                identifier.num is not None:
-            new_year = identifier.year
-            new_month = identifier.month
-            new_num = identifier.num + 1
-            if (identifier.is_old_id and new_num > 999) \
-               or (not identifier.is_old_id
-                   and identifier.year < 2015
-                   and new_num > 9999) \
-               or (not identifier.is_old_id
-                   and identifier.year >= 2015 and new_num > 99999):
-                new_num = 1
-                new_month = new_month + 1
-                if new_month > 12:
-                    new_month = 1
-                    new_year = new_year + 1
-
-            if identifier.is_old_id:
-                next_id = '{}/{:02d}{:02d}{:03d}'.format(
-                    identifier.archive, new_year % 100, new_month, new_num)
-            else:
-                if new_year >= 2015:
-                    next_id = '{:02d}{:02d}.{:05d}'.format(
-                        new_year % 100, new_month, new_num)
-                else:
-                    next_id = '{:02d}{:02d}.{:04d}'.format(
-                        new_year % 100, new_month, new_num)
-            try:
-                return Identifier(arxiv_id=next_id)
-            except IdentifierException:
-                return None
-        else:
-            return None
-
-    def _next_yymm_id(self, identifier: Identifier) -> Optional[Identifier]:
-        """Get the first identifier for the next month."""
-        next_yymm_id = None
-        if identifier.year is not None and \
-                identifier.month is not None:
-            new_year = identifier.year
-            new_month = identifier.month + 1
-            new_num = 1
-            if new_month > 12:
-                new_month = 1
-                new_year = new_year + 1
-            if identifier.is_old_id:
-                next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
-                    identifier.archive, new_year % 100, new_month, new_num)
-            elif new_year >= 2015:
-                next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
-                    new_year % 100, new_month, new_num)
-            else:
-                next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
-                    new_year % 100, new_month, new_num)
-
-            try:
-                return Identifier(arxiv_id=next_yymm_id)
-            except IdentifierException:
-                return None
-        else:
-            return None
 
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
         """Get the next identifier in sequence if it exists in the repository.
@@ -220,7 +146,7 @@ class AbsMetaSession(AbstractService):
         :class:`Identifier`
             The next identifier in sequence that exists in the repository.
         """
-        next_id = self._next_id(identifier)
+        next_id = _next_id(identifier)
         if not next_id:
             return None
 
@@ -229,7 +155,7 @@ class AbsMetaSession(AbstractService):
         if os.path.isfile(file_path):
             return next_id
 
-        next_yymm_id = self._next_yymm_id(identifier)
+        next_yymm_id = _next_yymm_id(identifier)
         if not next_yymm_id:
             return None
 
@@ -240,53 +166,6 @@ class AbsMetaSession(AbstractService):
 
         return None
 
-    def _previous_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """Get previous consecutive Identifier relative to provided Identifier.
-
-        Parameters
-        ----------
-        identifier : :class:`Identifier`
-
-        Returns
-        -------
-        :class:`Identifier`
-            The previous Indentifier in sequence
-        """
-        previous_id = None
-        if identifier.year is not None and \
-                identifier.month is not None and \
-                identifier.num is not None:
-            new_year = identifier.year
-            new_month = identifier.month
-            new_num = identifier.num - 1
-            if new_num == 0:
-                new_month = new_month - 1
-                if new_month == 0:
-                    new_month = 12
-                    new_year = new_year - 1
-
-            if identifier.is_old_id:
-                if new_num == 0:
-                    new_num = 999
-                previous_id = '{}/{:02d}{:02d}{:03d}'.format(
-                    identifier.archive, new_year % 100, new_month, new_num)
-            else:
-                if new_year >= 2015:
-                    if new_num == 0:
-                        new_num = 99999
-                    previous_id = '{:02d}{:02d}.{:05d}'.format(
-                        new_year % 100, new_month, new_num)
-                else:
-                    if new_num == 0:
-                        new_num = 9999
-                    previous_id = '{:02d}{:02d}.{:04d}'.format(
-                        new_year % 100, new_month, new_num)
-            try:
-                return Identifier(arxiv_id=previous_id)
-            except IdentifierException:
-                return None
-        else:
-            return None
 
     def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
         """Get previous identifier in sequence if it exists in repository.
@@ -307,7 +186,7 @@ class AbsMetaSession(AbstractService):
         :class:`Identifier`
             The previous identifier in sequence that exists in the repository.
         """
-        previous_id = self._previous_id(identifier)
+        previous_id = _previous_id(identifier)
         if not previous_id:
             return None
 
@@ -508,7 +387,7 @@ class AbsMetaSession(AbstractService):
 
         # named (key-value) fields
         if not all(rf in fields for rf in REQUIRED_FIELDS):
-            raise AbsParsingException(f'missing required field(s)')
+            raise AbsParsingException('missing required field(s)')
 
         # some transformations
         category_list: List[str] = []
@@ -607,9 +486,9 @@ class AbsMetaSession(AbstractService):
             try:
                 sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
-            except (ValueError, TypeError):
+            except (ValueError, TypeError) as ex:
                 raise AbsParsingException(
-                    f'Could not parse submitted date {sd} as datetime')
+                    f'Could not parse submitted date {sd} as datetime') from ex
 
             source_type = SourceType(code=date_match.group('source_type'))
             ve = VersionEntry(
@@ -648,55 +527,126 @@ class AbsMetaSession(AbstractService):
         return fields_builder
 
 
-@wraps(AbsMetaSession.get_ancillary_files)
-def get_ancillary_files(docmeta: DocMetadata) -> List[Dict]:
-    """Get list of ancillary file names and sizes."""
-    return current_session().get_ancillary_files(docmeta)
+def _next_id(identifier: Identifier) -> Optional['Identifier']:
+    """Get next consecutive Identifier relative to the provided Identifier.
 
+    Parameters
+    ----------
+    identifier : :class:`Identifier`
 
-@wraps(AbsMetaSession.get_dissemination_formats)
-def get_dissemination_formats(docmeta: DocMetadata,
-                              format_pref: Optional[str] = None,
-                              add_sciencewise: bool = False) -> List:
-    """Get list of dissemination formats."""
-    return current_session().get_dissemination_formats(docmeta,
-                                                       format_pref,
-                                                       add_sciencewise)
+    Returns
+    -------
+    :class:`Identifier`
+        The next Indentifier in sequence
+    """
+    next_id = None
+    if identifier.year is not None and \
+            identifier.month is not None and \
+            identifier.num is not None:
+        new_year = identifier.year
+        new_month = identifier.month
+        new_num = identifier.num + 1
+        if (identifier.is_old_id and new_num > 999) \
+           or (not identifier.is_old_id
+               and identifier.year < 2015
+               and new_num > 9999) \
+           or (not identifier.is_old_id
+               and identifier.year >= 2015 and new_num > 99999):
+            new_num = 1
+            new_month = new_month + 1
+            if new_month > 12:
+                new_month = 1
+                new_year = new_year + 1
 
+        if identifier.is_old_id:
+            next_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        else:
+            if new_year >= 2015:
+                next_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                next_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=next_id)
+        except IdentifierException:
+            return None
+    else:
+        return None
 
-@wraps(AbsMetaSession.get_next_id)
-def get_next_id(identifier: Identifier) -> Optional[Identifier]:
-    """Retrieve next arxiv document metadata by id."""
-    return current_session().get_next_id(identifier)
+def _next_yymm_id(identifier: Identifier) -> Optional[Identifier]:
+    """Get the first identifier for the next month."""
+    next_yymm_id = None
+    if identifier.year is not None and \
+            identifier.month is not None:
+        new_year = identifier.year
+        new_month = identifier.month + 1
+        new_num = 1
+        if new_month > 12:
+            new_month = 1
+            new_year = new_year + 1
+        if identifier.is_old_id:
+            next_yymm_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        elif new_year >= 2015:
+            next_yymm_id = '{:02d}{:02d}.{:05d}'.format(
+                new_year % 100, new_month, new_num)
+        else:
+            next_yymm_id = '{:02d}{:02d}.{:04d}'.format(
+                new_year % 100, new_month, new_num)
 
+        try:
+            return Identifier(arxiv_id=next_yymm_id)
+        except IdentifierException:
+            return None
+    else:
+        return None
 
-@wraps(AbsMetaSession.get_previous_id)
-def get_previous_id(identifier: Identifier) -> Optional[Identifier]:
-    """Retrieve previous arxiv document metadata by id."""
-    return current_session().get_previous_id(identifier)
+def _previous_id(identifier: Identifier) -> Optional['Identifier']:
+    """Get previous consecutive Identifier relative to provided Identifier.
 
+    Parameters
+    ----------
+    identifier : :class:`Identifier`
 
-@wraps(AbsMetaSession.get_abs)
-def get_abs(arxiv_id: str) -> DocMetadata:
-    """Retrieve arxiv document metadata by id."""
-    return current_session().get_abs(arxiv_id)
+    Returns
+    -------
+    :class:`Identifier`
+        The previous Indentifier in sequence
+    """
+    previous_id = None
+    if identifier.year is not None and \
+            identifier.month is not None and \
+            identifier.num is not None:
+        new_year = identifier.year
+        new_month = identifier.month
+        new_num = identifier.num - 1
+        if new_num == 0:
+            new_month = new_month - 1
+            if new_month == 0:
+                new_month = 12
+                new_year = new_year - 1
 
-
-def get_session(app: object = None) -> AbsMetaSession:
-    """Get a new session with the abstract metadata service."""
-    config = get_application_config(app)
-    orignal_versions_path = config.get('DOCUMENT_ORIGNAL_VERSIONS_PATH', None)
-    latest_versions_path = config.get('DOCUMENT_LATEST_VERSIONS_PATH', None)
-
-    return AbsMetaSession(latest_versions_path, orignal_versions_path)
-
-
-def current_session() -> AbsMetaSession:
-    """Get/create :class:`.AbsMetaSession` for this context."""
-    g = get_application_global()
-    if not g:
-        return get_session()
-    if 'abs_meta' not in g:
-        g.abs_meta = get_session()
-    assert isinstance(g.abs_meta, AbsMetaSession)
-    return g.abs_meta
+        if identifier.is_old_id:
+            if new_num == 0:
+                new_num = 999
+            previous_id = '{}/{:02d}{:02d}{:03d}'.format(
+                identifier.archive, new_year % 100, new_month, new_num)
+        else:
+            if new_year >= 2015:
+                if new_num == 0:
+                    new_num = 99999
+                previous_id = '{:02d}{:02d}.{:05d}'.format(
+                    new_year % 100, new_month, new_num)
+            else:
+                if new_num == 0:
+                    new_num = 9999
+                previous_id = '{:02d}{:02d}.{:04d}'.format(
+                    new_year % 100, new_month, new_num)
+        try:
+            return Identifier(arxiv_id=previous_id)
+        except IdentifierException:
+            return None
+    else:
+        return None
