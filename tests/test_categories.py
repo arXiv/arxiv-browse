@@ -1,8 +1,8 @@
 from hamcrest import *
 import unittest
 
-from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
+from tests.test_fs_abs_parser import ABS_FILES
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from browse.domain.category import Category
 
 class CategoriesTest(unittest.TestCase):

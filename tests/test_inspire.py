@@ -4,8 +4,8 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
-from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
+from tests.test_fs_abs_parser import ABS_FILES
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 from browse.services.util.external_refs_cits import include_inspire_link, \
     get_orig_publish_date, INSPIRE_REF_CIT_CATEGORIES

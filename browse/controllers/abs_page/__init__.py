@@ -12,7 +12,7 @@ from dateutil import parser
 from dateutil.tz import tzutc
 
 from flask import url_for
-from flask import request, current_app
+from flask import request
 from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
@@ -27,7 +27,7 @@ from browse.services.util.metatags import meta_tag_metadata
 from browse.services.util.response_headers import abs_expires_header, \
     mime_header_date
 from browse.services.abstracts import get_abs_service
-from browse.services.abstracts.fs_abs import AbsException,\
+from browse.services.abstracts.base import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
 from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
@@ -103,7 +103,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         # Dissemination formats for download links
         download_format_pref = request.cookies.get('xxx-ps-defaults')
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
-        response_data['formats'] = metadata.get_dissemination_formats(
+        response_data['formats'] = get_abs_service().get_dissemination_formats(
             abs_meta,
             download_format_pref,
             add_sciencewise_ping)
@@ -164,7 +164,7 @@ def _non_critical_abs_data(abs_meta: DocMetadata,
 
     # Ancillary files
     response_data['ancillary_files'] = \
-        metadata.get_ancillary_files(abs_meta)
+        get_abs_service().get_ancillary_files(abs_meta)
 
     # Browse context
     _check_context(arxiv_identifier,
@@ -299,12 +299,12 @@ def _check_context(arxiv_identifier: Identifier,
     prev_url = None
     if arxiv_identifier.is_old_id or context == 'arxiv':
         # Revert to hybrid approach per ARXIVNG-2080
-        next_id = metadata.get_next_id(arxiv_identifier)
+        next_id = get_abs_service().get_next_id(arxiv_identifier)
         if next_id:
             next_url = url_for('browse.abstract',
                                arxiv_id=next_id.id,
                                context='arxiv' if context == 'arxiv' else None)
-        previous_id = metadata.get_previous_id(arxiv_identifier)
+        previous_id = get_abs_service().get_previous_id(arxiv_identifier)
         if previous_id:
             prev_url = url_for('browse.abstract',
                                arxiv_id=previous_id.id,

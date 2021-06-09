@@ -21,8 +21,9 @@ def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
     settings.check()
     app = Flask('browse', static_url_path=f'/static/browse/{settings.APP_VERSION}')
-    app.config.from_object(settings)
-
+    app.config.from_object(settings)  # facilitates sqlalchemy and other flask plugins
+    app.settings = settings  # facilitates typed access to settings
+    
     # TODO Only needed until this route is added to arxiv-base
     # TODO Remove this, this is in arxiv.base.config.URLS
     if 'URLS' not in app.config:
@@ -50,7 +51,7 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['clickthrough_url_for'] = clickthrough_url
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
-                secret=app.config.get('SHOW_EMAIL_SECRET').get_secret_value())
+                secret=app.settings.SHOW_EMAIL_SECRET.get_secret_value())
 
     app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
     app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])

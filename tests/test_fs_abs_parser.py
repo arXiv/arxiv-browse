@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
     VersionEntry
-from browse.services.document.metadata import AbsMetaSession
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from tests import path_of_for_test
 
 ABS_FILES = path_of_for_test('data/abs_files')

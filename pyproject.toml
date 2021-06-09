@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "browse"
+name = "arxiv-browse"
 version = "0.3.2.6"
 description = ""
 authors = ["Your Name <you@example.com>"]

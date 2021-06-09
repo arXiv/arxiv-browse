@@ -4,7 +4,7 @@ from unittest import TestCase, mock
 
 from arxiv import status
 from browse.factory import create_web_app
-from browse.services.document.metadata import AbsException
+from browse.services.abstracts.fs_abs import AbsException
 
 
 class TestExceptionHandling(TestCase):

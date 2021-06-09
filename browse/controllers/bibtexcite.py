@@ -6,7 +6,7 @@ from werkzeug.exceptions import InternalServerError
 
 from browse.exceptions import AbsNotFound
 from browse.services.abstracts import get_abs_service
-from browse.services.abstracts.fs_abs import AbsNotFoundException, \
+from browse.services.abstracts.base import AbsNotFoundException, \
     AbsVersionNotFoundException, AbsDeletedException
 from browse.services.cite import arxiv_bibtex
 

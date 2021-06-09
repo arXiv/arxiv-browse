@@ -5,8 +5,8 @@ from unittest.mock import MagicMock
 
 from bs4 import BeautifulSoup
 
-from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
+from tests.test_fs_abs_parser import ABS_FILES
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from browse.domain.license import ASSUMED_LICENSE_URI
 from browse.services.listing.fake_listings import FakeListingFilesService
 from browse.services.listing import ListingService, get_listing_service

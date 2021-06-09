@@ -9,7 +9,7 @@ from tests import path_of_for_test
 
 from browse.domain.metadata import DocMetadata
 from browse.services.util.metatags import meta_tag_metadata
-from browse.services.document.metadata import AbsMetaSession
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from app import app
 
 CLASSIC_RESULTS_FILE = path_of_for_test('data/classic_scholar_metadata_tags.json')

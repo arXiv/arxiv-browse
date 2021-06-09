@@ -15,7 +15,7 @@ from browse.services.database import get_paper_trackback_pings, \
 from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.abstracts import get_abs_service
-from browse.services.abstracts.fs_abs import AbsException, \
+from browse.services.abstracts.base import AbsException, \
     AbsNotFoundException
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list

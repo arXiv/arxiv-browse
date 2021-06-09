@@ -1,6 +1,6 @@
 """Tests for bibtex citations."""
 from unittest import TestCase
-from browse.services.document.metadata import AbsMetaSession
+from browse.services.abstracts.fs_abs import AbsMetaSession
 from browse.services.cite import arxiv_bibtex
 from tests import path_of_for_test
 

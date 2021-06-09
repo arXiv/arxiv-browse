@@ -8,7 +8,7 @@ import warnings
 from datetime import date
 from typing import Optional
 
-from pydantic import BaseSettings, AnyHttpUrl, SecretStr, PyObject
+from pydantic import BaseSettings, SecretStr, PyObject, AnyHttpUrl
 
 import logging
 log = logging.getLogger(__name__)
@@ -73,20 +73,19 @@ class Settings(BaseSettings):
 
     BROWSE_USER_BANNER_ENABLED: bool = False
     """Enable/disable user banner."""
-    BROWSE_USER_BANNER_START_DATE: Optional[date] 
+    BROWSE_USER_BANNER_START_DATE: Optional[date]
     """Use a format like YYYY-MM-DD"""
     BROWSE_USER_BANNER_END_DATE: Optional[date]
     """Use a format like YYYY-MM-DD, banner is up till end of day."""
 
-    
     BROWSE_STATUS_BANNER_ENABLED: bool = False
     """Enable/disable status service banner."""
     BROWSE_STATUS_BANNER_SCRIPT_URL: AnyHttpUrl = \
-        "https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js"
+        "https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js"  # type: ignore
     BROWSE_STATUS_BANNER_SITE_ID: str = "not-set"
     """Enable/disable status service banner."""
 
-    DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.abstracts.fs_abs'
+    DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.abstracts.fs_abs'  # type: ignore
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files."""
     DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
@@ -94,11 +93,11 @@ class Settings(BaseSettings):
     DOCUMENT_CACHE_PATH = os.environ.get("DOCUMENT_CACHE_PATH", "tests/data/cache")
     """Path to cache directory"""
 
-    SHOW_EMAIL_SECRET: SecretStr = "not-set-bar"
+    SHOW_EMAIL_SECRET: SecretStr = "not-set-bar"  # type: ignore
     """Used in linking to /show-email."""
-    CLICKTHROUGH_SECRET: SecretStr = "not-set-foo"
+    CLICKTHROUGH_SECRET: SecretStr = "not-set-foo"  # type: ignore
     """Used in linking to /ct."""
-    TRACKBACK_SECRET: SecretStr = "not-set-baz"
+    TRACKBACK_SECRET: SecretStr = "not-set-baz"  # type: ignore
     """Used in linking to trackbacks in /tb pages."""
 
     # Labs settings
@@ -125,7 +124,7 @@ class Settings(BaseSettings):
     CLASSIC_DATABASE_URI: str = DEFAULT_DB
     """If not set, legacy database integrations for auth will not be available."""
 
-    CLASSIC_SESSION_HASH: SecretStr = "foosecret"
+    CLASSIC_SESSION_HASH: SecretStr = "foosecret"  # type: ignore
     SESSION_DURATION: int = 36000
 
     # TODO Remove this: /login is in arxiv-base.arxiv.base.config.URLS

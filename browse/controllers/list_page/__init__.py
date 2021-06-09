@@ -44,7 +44,7 @@ import math
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import status, taxonomy
-from flask import current_app, request, url_for
+from flask import request, url_for
 from werkzeug.exceptions import ServiceUnavailable, BadRequest
 
 from browse.controllers.abs_page import truncate_author_list_size
