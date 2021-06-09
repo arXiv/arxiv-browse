@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from browse.domain import metadata
 from arxiv.util.authors import split_authors
-from browse.services.abstracts.fs_abs import AbsMetaSession
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from tests import path_of_for_test
 
@@ -49,7 +49,7 @@ class TestAuthorLinkCreation(TestCase):
     def test_split_long_author_list(self):
         f1 = path_of_for_test(
             'data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
-        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+        meta: metadata = parse_abs_file(filename=f1)
         alst = split_long_author_list(
             queries_for_authors(str(meta.authors)), 20)
         self.assertIs(type(alst), tuple)
@@ -62,7 +62,7 @@ class TestAuthorLinkCreation(TestCase):
     def test_split_with_collaboration(self):
         f1 = path_of_for_test(
             'data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
-        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+        meta: metadata = parse_abs_file(filename=f1)
 
         split = split_authors(str(meta.authors))
         self.assertListEqual(
@@ -76,7 +76,7 @@ class TestAuthorLinkCreation(TestCase):
         """Test odd author list that shows '0 additional authors' ARXIVNG-2083"""
         f1 = path_of_for_test(
             'data/abs_files/ftp/arxiv/papers/1902/1902.05884.abs')
-        meta: metadata = AbsMetaSession.parse_abs_file(filename=f1)
+        meta: metadata = parse_abs_file(filename=f1)
         alst = split_long_author_list(
             queries_for_authors(str(meta.authors)), 100)
 

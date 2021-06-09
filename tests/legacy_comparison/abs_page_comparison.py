@@ -32,7 +32,7 @@ from html_comparisons import author_similarity, \
 from response_comparisons import compare_status
 from text_comparisons import text_similarity
 
-from browse.services.document.metadata import AbsMetaSession
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 
 
 """ Script to compare abs pages from NG and beta.arxiv.org
@@ -117,7 +117,7 @@ def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
             fname_path = os.path.join(dir_name, fname)
             print(f'looking at {fname_path}')
             if os.stat(fname_path).st_size != 0 and fname_path.endswith('.abs'):
-                aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+                aid = parse_abs_file(filename=fname_path).arxiv_id
                 logging.debug(f'yielding id {aid}')
                 yield aid
 
@@ -132,7 +132,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
                 continue
             if not fname_path.endswith('.abs'):
                 continue
-            aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+            aid = parse_abs_file(filename=fname_path).arxiv_id
             if aid not in excluded:
                 ids.append(aid)
     logging.debug(f'finished getting the ids count:{len(ids)}')

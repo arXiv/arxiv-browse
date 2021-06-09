@@ -11,7 +11,7 @@ from browse.services.database import get_hourly_stats, get_hourly_stats_count, \
     get_monthly_download_stats, get_monthly_submission_stats, \
     get_monthly_submission_count, get_monthly_download_count, \
     get_max_download_stats_dt, get_document_count_by_yymm
-from browse.services.document.config.deleted_papers import DELETED_PAPERS
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]

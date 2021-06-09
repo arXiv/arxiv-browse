@@ -5,7 +5,7 @@ from urllib.parse import urlparse, parse_qs, unquote
 from bs4 import BeautifulSoup
 
 from tests.test_fs_abs_parser import ABS_FILES
-from browse.services.abstracts.fs_abs import AbsMetaSession
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from browse.domain.license import ASSUMED_LICENSE_URI
 
 import os

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from tests.test_fs_abs_parser import ABS_FILES
 
 from arxiv import taxonomy
-from browse.services.abstracts.fs_abs import AbsMetaSession
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from browse.domain.license import ASSUMED_LICENSE_URI
 
 import os
@@ -120,7 +120,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
 
         rv = self.app.get('/abs/0704.0001')
         self.assertEqual(rv.status_code, 200)
@@ -133,7 +133,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_with_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
 
         self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
@@ -165,7 +165,7 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                m = AbsMetaSession.parse_abs_file(filename=fname_path)
+                m = parse_abs_file(filename=fname_path)
                 rv = self.app.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
 

@@ -7,7 +7,7 @@ from browse.domain.metadata import DocMetadata
 from browse.domain.identifier import Identifier
 
 
-class AbstractService(abc.ABC):
+class DocMetadataService(abc.ABC):
     """Class for arXiv document abstract metadata service."""
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:

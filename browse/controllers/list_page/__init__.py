@@ -50,7 +50,7 @@ from werkzeug.exceptions import BadRequest
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from browse.domain.metadata import DocMetadata
-from browse.services.abstracts import get_abs_service
+from browse.services.documents import get_doc_service
 from browse.services.listing import get_listing_service
 from browse.services.listing.base_listing import  NewResponse, NotModifiedResponse, ListingResponse
 from browse.services.search.search_authors import queries_for_authors, \
@@ -225,7 +225,7 @@ def get_listing(subject_or_category: str,
 
     for item in listings:
         idx = idx + 1
-        item['article'] = get_abs_service().get_abs(item['id'])  # type: ignore
+        item['article'] = get_doc_service().get_abs(item['id'])  # type: ignore
         item['list_index'] = idx + skipn  # type: ignore
 
     response_data['listings'] = listings
@@ -309,7 +309,7 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {item['article'].arxiv_id_v: get_abs_service().get_dissemination_formats(item['article'], dl_pref)
+    return {item['article'].arxiv_id_v: get_doc_service().get_dissemination_formats(item['article'], dl_pref)
             for item in items}
 
 

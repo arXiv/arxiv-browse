@@ -4,8 +4,7 @@ from unittest import TestCase, mock
 
 from arxiv import status
 from browse.factory import create_web_app
-from browse.services.abstracts.fs_abs import AbsException
-
+from browse.services.documents.base_documents import AbsException
 
 class TestExceptionHandling(TestCase):
     """HTTPExceptions should be handled with custom templates."""

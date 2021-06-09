@@ -67,6 +67,8 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
         .filter(TrackbackPing.status == 'accepted')
 
 
+# Used in all routes as part of inst banner
+
 @db_handle_error(logger=logger, default_return_val=None)
 def get_institution(ip: str) -> Optional[Mapping[str,str]]:
     """Get institution label from IP address."""
@@ -103,12 +105,14 @@ def get_institution(ip: str) -> Optional[Mapping[str,str]]:
     return h
 
 
+# Only used in tests
 @db_handle_error(logger=logger, default_return_val=[])
 def get_all_trackback_pings() -> List[TrackbackPing]:
     """Get all trackback pings in database."""
     return list(__all_trackbacks_query().all())
 
 
+# Used only on trackback page
 @db_handle_error(logger=logger, default_return_val=[])
 def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
@@ -117,7 +121,7 @@ def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
                 .group_by(TrackbackPing.url)
                 .order_by(TrackbackPing.posted_date.desc()).all())
 
-
+# Used on tb page and abs page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     """Get an individual trackback ping by its id (trackback_id)."""
@@ -125,7 +129,7 @@ def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
         filter(TrackbackPing.trackback_id == trackback_id).first()
     return trackback
 
-
+# Used only on tb page
 @db_handle_error(logger=logger, default_return_val=list())
 def get_recent_trackback_pings(max_trackbacks: int = 25) \
         -> List[Tuple[TrackbackPing, str, str]]:
@@ -158,6 +162,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
     return list(tb_doc_tup)
 
 
+#Used on abs page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
@@ -170,7 +175,7 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     dt = dt.astimezone(tz=tzutc())
     return dt
 
-
+# used on abs page
 @db_handle_error(logger=logger, default_return_val=0)
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
@@ -183,6 +188,7 @@ def count_trackback_pings(paper_id: str) -> int:
     return int(row.num_pings)
 
 
+#Not used, only in tests
 @db_handle_error(logger=logger, default_return_val=0)
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
@@ -191,6 +197,7 @@ def count_all_trackback_pings() -> int:
     return c
 
 
+# Used in abs page
 @db_handle_error(logger=logger, default_return_val=False)
 def has_sciencewise_ping(paper_id_v: str) -> bool:
     """Determine whether versioned document has a ScienceWISE ping."""
@@ -198,7 +205,7 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
         .filter(SciencewisePing.paper_id_v == paper_id_v).count() > 0
     return has_ping
 
-
+# used in abs page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
@@ -206,7 +213,7 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
         Document.paper_id == paper_id).one().url
     return url
 
-
+# used in abs page
 @db_handle_error(logger=logger, default_return_val=[])
 def get_dblp_authors(paper_id: str) -> List[str]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
@@ -217,7 +224,7 @@ def get_dblp_authors(paper_id: str) -> List[str]:
     authors = [a for (a,) in authors_t]
     return authors
 
-
+# Used on home page and stats page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_document_count() -> Optional[int]:
     """Get the number of documents."""
@@ -229,6 +236,7 @@ def get_document_count() -> Optional[int]:
     return int(row.num_documents)
 
 
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=0)
 def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     """Get number of papers for a given year and month."""
@@ -245,6 +253,7 @@ def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     return int(row.num_documents)
 
 
+# Only used on prevnext page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_sequential_id(paper_id: Identifier,
                       context: str = 'all',
@@ -307,6 +316,7 @@ def __all_hourly_stats_query() -> Query:
     return db.session.query(stats_hourly)
 
 
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=(0, 0, 0))
 def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     """Get sum of normal/admin connections and nodes for a given date."""
@@ -329,7 +339,8 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
             num_nodes = r.num_nodes
     return (normal_count, admin_count, num_nodes)
 
-
+# Used on stats page
+# maybe on /today page?
 @db_handle_error(logger=logger, default_return_val=[])
 def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     """Get the hourly stats for a given date."""
@@ -342,14 +353,14 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
                 order_by(asc(stats_hourly.c.hour), stats_hourly.c.node_num).
                 all())
 
-
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_submission_stats() -> List:
     """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(db.session.query(StatsMonthlySubmission).
                 order_by(asc(StatsMonthlySubmission.ym)).all())
 
-
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=(0, 0))
 def get_monthly_submission_count() -> Tuple[int, int]:
     """Get submission totals: number of submissions and number migrated."""
@@ -361,14 +372,14 @@ def get_monthly_submission_count() -> Tuple[int, int]:
     ).first()
     return (row.num_submissions, row.num_migrated)
 
-
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=[])
 def get_monthly_download_stats() -> List:
     """Get all the monthly download stats."""
     return list(db.session.query(StatsMonthlyDownload).
                 order_by(asc(StatsMonthlyDownload.ym)).all())
 
-
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=0)
 def get_monthly_download_count() -> int:
     """Get the sum of monthly downloads for all time."""
@@ -378,7 +389,7 @@ def get_monthly_download_count() -> int:
     total_downloads: int = row.total_downloads if row else 0
     return total_downloads
 
-
+# Used on stats page
 @db_handle_error(logger=logger, default_return_val=None)
 def get_max_download_stats_dt() -> Optional[datetime]:
     """Get the datetime of the most recent download stats."""
