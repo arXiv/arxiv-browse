@@ -45,14 +45,14 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import status, taxonomy
 from flask import request, url_for
-from werkzeug.exceptions import ServiceUnavailable, BadRequest
+from werkzeug.exceptions import BadRequest
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from browse.domain.metadata import DocMetadata
 from browse.services.abstracts import get_abs_service
-from browse.services.listing import ListingService, get_listing_service
-from browse.domain.listing import NewResponse, NotModifiedResponse, ListingResponse
+from browse.services.listing import get_listing_service
+from browse.services.listing.base_listing import  NewResponse, NotModifiedResponse, ListingResponse
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
 
@@ -130,8 +130,6 @@ def get_listing(subject_or_category: str,
         raise BadRequest
 
     listing_service = get_listing_service()
-    if not listing_service:
-        raise ServiceUnavailable
 
     if not skip or not skip.isdigit():
         skipn = 0

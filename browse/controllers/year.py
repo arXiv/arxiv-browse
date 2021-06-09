@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 from flask import url_for
 
 from arxiv import status, taxonomy
-from browse.domain.listing import MonthCount
+from browse.services.listing.base_listing import MonthCount
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import years_operating, stats_by_year
 

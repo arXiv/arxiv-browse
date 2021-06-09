@@ -4,9 +4,9 @@
 
 from typing import List, Optional
 
-from browse.domain.listing import NewResponse, ListingResponse, ListingItem, \
-    ListingCountResponse
-from browse.services.listing import ListingService
+from .base_listing import NewResponse, ListingResponse, ListingItem, \
+    ListingCountResponse, ListingService
+
 import datetime
 
 

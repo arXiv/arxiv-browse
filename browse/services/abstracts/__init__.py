@@ -15,7 +15,7 @@ def get_abs_service() -> AbstractService:
 
 
 def fs_abs(settings_in: Settings, _: Any) -> AbstractService:
+    """Integration function for file system abstract service"""
     from browse.services.abstracts.fs_abs import AbsMetaSession
     return AbsMetaSession(settings_in.DOCUMENT_LATEST_VERSIONS_PATH,
                           settings_in.DOCUMENT_ORIGNAL_VERSIONS_PATH)
-

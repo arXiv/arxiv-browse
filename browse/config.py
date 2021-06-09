@@ -87,6 +87,7 @@ class Settings(BaseSettings):
     BROWSE_STATUS_BANNER_SITE_ID: str = "not-set"
     """Enable/disable status service banner."""
 
+    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fake'  # type: ignore
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.abstracts.fs_abs'  # type: ignore
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files."""

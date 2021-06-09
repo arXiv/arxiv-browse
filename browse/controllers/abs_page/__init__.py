@@ -72,6 +72,7 @@ def get_abs_page(arxiv_id: str) -> Response:
     """
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
+
     try:
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)

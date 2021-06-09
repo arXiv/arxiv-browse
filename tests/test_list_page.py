@@ -434,19 +434,6 @@ class ListPageTest(unittest.TestCase):
         rv = self.client.get('/list/math/2001999999')
         self.assertNotEqual(rv.status_code, 200)
 
-    def test_abs_service(self):
-        service = ListingService()
-        assert_that(calling(service.list_articles_by_year).with_args('a', 1, 1, 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_articles_by_month).with_args('a', 1, 1, 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_new_articles).with_args('a', 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_pastweek_articles).with_args('a', 1, 1),
-                    raises(NotImplementedError))
-
-        assert_that(service.version(), is_not(None))
-
     def test_not_modified_from_listing_service(self):
         with self.app.app_context():
             flservice = get_listing_service()
