@@ -10,8 +10,13 @@ from typing import Optional
 
 from pydantic import BaseSettings, AnyHttpUrl, SecretStr
 
+import logging
+log = logging.getLogger(__name__)
 
-DEFAULT_DB =  "sqlite:///../tests/data/browse.db"
+
+DEFAULT_DB = "sqlite:///../tests/data/browse.db"
+
+
 class Settings(BaseSettings):
     APP_VERSION = "0.3.2.6"
     """The application version """
@@ -39,11 +44,11 @@ class Settings(BaseSettings):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_RECORD_QUERIES = False
 
-    SQLALCHEMY_POOL_SIZE: int = 10
+    SQLALCHEMY_POOL_SIZE: Optional[int] = 10
     """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
     Ignored under sqlite."""
 
-    SQLALCHEMY_MAX_OVERFLOW: int = 0
+    SQLALCHEMY_MAX_OVERFLOW: Optional[int] = 0
     """SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
     Ignored under sqlite."""
 
@@ -281,7 +286,7 @@ class Settings(BaseSettings):
     JSONIFY_MIMETYPE: str =  "application/json"
     """MIME type used for jsonify responses."""
 
-    TEMPLATES_AUTO_RELOAD: bool = None
+    TEMPLATES_AUTO_RELOAD: Optional[bool] = None
     """
     Whether to check for modifications of the template source and reload it
     automatically. By default the value is None which means that Flask checks
@@ -306,7 +311,12 @@ class Settings(BaseSettings):
             }
         }
 
-    def check(self):
+    def check(self) -> None:
+
+        if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
+            self.SQLALCHEMY_MAX_OVERFLOW = None
+            self.SQLALCHEMY_POOL_SIZE = None
+            
         if (os.environ.get("FLASK_ENV", False) == "production"
             and "sqlite" in self.SQLALCHEMY_DATABASE_URI):
             warnings.warn(

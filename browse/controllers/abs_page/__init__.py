@@ -12,7 +12,7 @@ from dateutil import parser
 from dateutil.tz import tzutc
 
 from flask import url_for
-from flask import request
+from flask import request, current_app
 from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
@@ -81,7 +81,8 @@ def get_abs_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
 
-        abs_meta = metadata.get_abs(arxiv_id)
+        metadatax = current_app.abs
+        abs_meta = metadatax.get_abs(arxiv_id)
         not_modified = _check_request_headers(
             abs_meta, response_data, response_headers)
         if not_modified:

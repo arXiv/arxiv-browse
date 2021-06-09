@@ -47,8 +47,9 @@ If all goes well, http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
 
-Configuration parameters (and defaults) are defined in `browse/config.py`.
-Any of these can be overridden on the command line when testing the application.
+Configuration parameters (and defaults) are defined in
+`browse/config.py`.  Any of these can be overridden with environment
+variables when testing the application.
 
 Below are some examples of some application-specific parameters:
 
