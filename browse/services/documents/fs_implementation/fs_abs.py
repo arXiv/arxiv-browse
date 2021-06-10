@@ -19,13 +19,13 @@ from .formats import formats_from_source_file_name, formats_from_source_type
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata sessions."""
     fs_paths: FSDocMetaPaths
-    
+
     def __init__(self,
                  latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize the FS document metadata service."""
         self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
-        
+
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
@@ -74,7 +74,7 @@ class FsDocMetadataService(DocMetadataService):
         return combined_version
 
     # Maybe this should move to formats.py?
-    
+
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
@@ -129,9 +129,7 @@ class FsDocMetadataService(DocMetadataService):
             # user format preference and cache
             version = docmeta.version
             format_code = docmeta.version_history[version - 1].source_type.code
-            cached_ps_file_path = cache.get_cache_file_path(
-                docmeta,
-                'ps')
+            cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
             cache_flag = False
             if cached_ps_file_path \
                     and os.path.getsize(cached_ps_file_path) == 0 \

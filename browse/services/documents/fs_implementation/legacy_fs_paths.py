@@ -36,7 +36,7 @@ class FSDocMetaPaths():
         return os.path.join(parent_path,
                             (f'{identifier.filename}.abs' if not version
                              else f'{identifier.filename}v{version}.abs'))
-    
+
     def get_parent_path(self,
                         identifier: Identifier,
                         version: Optional[int] = None) -> str:
@@ -76,7 +76,7 @@ class FSDocMetaPaths():
                 return possible_path
         return None
 
-    
+
     def get_ancillary_files(self,
                             source_type_code: str,
                             identifier: Identifier,
@@ -94,5 +94,3 @@ class FSDocMetaPaths():
             else:
                 return []
         return []
-
-

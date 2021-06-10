@@ -3,6 +3,7 @@
 The primary entrypoint to this module is :func:`.get_abs_page`, which
 handles GET requests to the abs endpoint.
 """
+# pylint: disable=raise-missing-from
 
 import re
 from typing import Any, Dict, List, Optional, Tuple
@@ -324,7 +325,7 @@ def _check_context(arxiv_identifier: Identifier,
                            id=arxiv_identifier.id,
                            function='prev',
                            context=context if context else None)
-       
+
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
 

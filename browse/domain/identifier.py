@@ -34,13 +34,9 @@ SUBSTITUTIONS: Sub_type = [
 class IdentifierException(Exception):
     """Error class for general arXiv identifier exceptions."""
 
-    pass
-
 
 class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
-
-    pass
 
 
 class Identifier:

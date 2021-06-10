@@ -2,14 +2,16 @@
 
 import os
 import re
-from flask import current_app
 from typing import Any, Dict, Optional, Tuple
+
+from flask import current_app
 from werkzeug.exceptions import InternalServerError
 
-from browse.services.database import get_document_count
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
+
+from browse.services.database import get_document_count
 
 app_config = get_application_config()
 logger = logging.getLogger(__name__)
@@ -27,7 +29,6 @@ def get_home_page() -> Response:
     try:
         response_data['document_count'] = _get_document_count()
     except Exception as ex:
-        logger.warning(f'Could not get abs page data: {ex}')
         raise InternalServerError from ex
 
     response_data['groups'] = taxonomy.definitions.GROUPS
@@ -39,14 +40,12 @@ def get_home_page() -> Response:
 
 def _get_document_count() -> Optional[int]:
 
-    try:
-        # check DB for document count first
+    try: # check DB for document count first
         return get_document_count()  # type: ignore
     except Exception as ex:
-        logger.warning(f'Error getting document count from DB: {ex}')
+        logger.warning('Error getting document count from DB', ex)
 
-    try:
-        # if DB is unavailable, fall back to legacy static file method
+    try: # if DB is unavailable, fall back to legacy static file method
         daily_stats_path = current_app.config['BROWSE_DAILY_STATS_PATH']
         if daily_stats_path and os.path.isfile(daily_stats_path):
             with open(daily_stats_path, mode='r') as statsf:

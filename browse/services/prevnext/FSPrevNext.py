@@ -11,13 +11,13 @@ class FSPrevNext(PrevNextService):
     latest_versions_path: str
     original_versions_path: str
 
-    
+
     def __init__(self,
                  latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize the FS path object."""
         self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
-        
+
     def prevnext(self, arxiv_id: Identifier, context: Optional[str]) -> PrevNextResult:
         """Prev Next using FS.
 
@@ -36,7 +36,7 @@ class FSPrevNext(PrevNextService):
         else:
             return PrevNextResult(usecontroller=True)
 
-    
+
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
         """Get the next identifier in sequence if it exists in the abs FS.
 

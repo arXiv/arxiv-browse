@@ -322,7 +322,6 @@ def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     """Creates author list links in a very similar way to abs page."""
     return split_long_author_list(queries_for_authors(abs_meta.authors.raw),  # type: ignore
                                   truncate_author_list_size)
-    
 
 
 def index_for_types(resp: NewResponse,

@@ -1,4 +1,5 @@
 """Handle requests to display the trackbacks for arXiv articles."""
+# pylint: disable=raise-missing-from
 
 import re
 from typing import Any, Dict, List, Tuple
@@ -80,7 +81,6 @@ def get_tb_page(arxiv_id: str) -> Response:
     except (AbsException, IdentifierException):
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
     except Exception as ex:
-        logger.warning(f'Error getting trackbacks: {ex}')
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers
@@ -133,7 +133,6 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
     except ValueError:
         raise BadRequest
     except Exception as ex:
-        logger.warning(f'Error getting recent trackbacks: {ex}')
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers

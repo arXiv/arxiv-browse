@@ -80,7 +80,7 @@ def formats_from_source_type(source_type: str,
     append_other = False
     logger.debug(f'In formats_from_source_type: source_type is '
                  f'"{source_type}", format_pref is {format_pref} cache_flag is {cache_flag}')
-    
+
     if has_ignore and not has_encrypted_source:
         formats.append('src')
     elif has_ps_only:

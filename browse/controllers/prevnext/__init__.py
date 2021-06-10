@@ -1,15 +1,16 @@
 """Handle requests to support sequential navigation between arXiv IDs."""
 
-from flask import url_for, escape
 from typing import Tuple, Dict, Any
+
+from flask import url_for, escape
 from werkzeug.exceptions import BadRequest
 
-from browse.domain.identifier import Identifier, IdentifierException
-from browse.services.database import get_sequential_id
 from arxiv import status
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
 from arxiv.base import logging
 
+from browse.domain.identifier import Identifier, IdentifierException
+from browse.services.database import get_sequential_id
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 logger = logging.getLogger(__name__)
@@ -58,8 +59,8 @@ def get_prevnext(id: str, function: str, context: str) -> Response:
 
     try:
         arxiv_id = Identifier(id)
-    except IdentifierException:
-        raise BadRequest(escape(f"Invalid article identifier {id}"))
+    except IdentifierException as ex:
+        raise BadRequest(escape(f"Invalid article identifier {id}")) from ex
 
     seq_id = get_sequential_id(paper_id=arxiv_id,
                                is_next=function == 'next',

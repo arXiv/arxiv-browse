@@ -107,7 +107,7 @@ class TestStatsPageControllers(TestCase):
         # test basic response
         mock_get_monthly_download_count.return_value = 1
         mock_get_max_download_stats_dt.return_value = datetime(2019, 3, 1)
-        response_data, code, headers = stats_page.get_monthly_downloads_page()
+        response_data, code, _ = stats_page.get_monthly_downloads_page()
 
         mock_get_monthly_download_count.assert_called_once()
         mock_get_max_download_stats_dt.assert_called_once()
@@ -150,7 +150,7 @@ class TestStatsPageControllers(TestCase):
         # test basic response
         mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_count.return_value = (0, 0)
-        response_data, code, headers = \
+        response_data, code, _ = \
             stats_page.get_monthly_submissions_page()
         mock_get_monthly_submission_count.assert_called_once()
         mock_get_monthly_submission_count.reset_mock()

@@ -1,4 +1,5 @@
 """Import db instance and define utility functions."""
+# pylint disable=no-member
 
 import ipaddress
 from datetime import date, datetime

@@ -4,17 +4,16 @@ from flask import Flask
 from flask_s3 import FlaskS3
 
 from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
+from arxiv.base.config import BASE_SERVER
+from arxiv.base import Base
+
 from browse.config import settings
 from browse.routes import ui
 from browse.services.database import models
 from browse.formating.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
-from arxiv.base.config import BASE_SERVER
-from arxiv.base import Base
-
 s3 = FlaskS3()
-
 
 def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
@@ -24,7 +23,6 @@ def create_web_app() -> Flask:
     app.settings = settings  # facilitates typed access to settings
 
     # TODO Only needed until this route is added to arxiv-base
-    # TODO Remove this, this is in arxiv.base.config.URLS
     if 'URLS' not in app.config:
         app.config['URLS'] = []
     app.config['URLS'].append(

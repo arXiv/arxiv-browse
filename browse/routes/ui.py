@@ -63,7 +63,9 @@ def before_request() -> None:
                         }
                     if response.country and response.country.iso_code:
                         session['country'] = response.country.iso_code
-                    if response.subdivisions and response.subdivisions.most_specific and response.subdivisions.most_specific.iso_code:
+                    if (response.subdivisions
+                        and response.subdivisions.most_specific
+                        and response.subdivisions.most_specific.iso_code):
                         session['subnational'] = response.subdivisions.most_specific.iso_code
                     if response.city and response.city.name:
                         session['city'] = response.city.name

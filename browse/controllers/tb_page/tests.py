@@ -59,7 +59,7 @@ class TestRecentTbPageController(TestCase):
         form_data = MultiDict({
             'views': '25'
         })
-        response_data, code, headers = tb_page.get_recent_tb_page(form_data)
+        response_data, code, _ = tb_page.get_recent_tb_page(form_data)
         self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
         self.assertIn('max_trackbacks', response_data,
                       "Response data should include 'max_trackbacks'")

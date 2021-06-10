@@ -82,7 +82,7 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
     return data, status, {}
 
 
-def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
+def subsumed_msg(_: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
     """Adds information about subsuming categories and archives."""
     sb = CATEGORIES.get(subsumed_by, {"name": "unknown category"})
     sa = ARCHIVES.get(sb.get("in_archive", None), {"name": "unknown archive"})
