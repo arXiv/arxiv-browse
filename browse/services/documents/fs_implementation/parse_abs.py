@@ -180,20 +180,6 @@ def parse_abs_file(filename: str) -> DocMetadata:
     )
 
 
-def _get_parent_path(self, identifier: Identifier,
-                     version: Optional[int] = None) -> str:
-    """Get the absolute parent path of the provided identifier."""
-    parent_path = os.path.join(
-        (self.latest_versions_path if not version
-         else self.original_versions_path),
-        ('arxiv' if not identifier.is_old_id or identifier.archive is None
-         else identifier.archive),
-        'papers',
-        identifier.yymm,
-    )
-    return parent_path
-
-
 def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
         -> Tuple[int, List[VersionEntry], str]:
     """Parse the version entries from the arXiv .abs file."""

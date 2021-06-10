@@ -6,35 +6,26 @@ import dataclasses
 from browse.domain.metadata import DocMetadata
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
-    formats_from_source_file_name, formats_from_source_type, \
-    has_ancillary_files, list_ancillary_files
-from browse.services.documents.fs_implementation import cache
+
 from browse.services.documents.base_documents import DocMetadataService, \
-    AbsDeletedException, AbsException, AbsNotFoundException, \
+    AbsDeletedException, AbsNotFoundException, \
     AbsVersionNotFoundException
 
+from . import cache
+from .legacy_fs_paths import FSDocMetaPaths
 from .parse_abs import parse_abs_file
-
+from .formats import formats_from_source_file_name, formats_from_source_type
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata sessions."""
-
-    def __init__(self, latest_versions_path: str,
+    fs_paths: FSDocMetaPaths
+    
+    def __init__(self,
+                 latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize the document metadata session."""
-        if not os.path.isdir(latest_versions_path):
-            raise AbsException('Path to latest .abs versions '
-                               f'"{latest_versions_path}" does not exist'
-                               )
-        if not os.path.isdir(original_versions_path):
-            raise AbsException('Path to original .abs versions '
-                               f'"{original_versions_path}" does not exist'
-                               )
-
-        self.latest_versions_path = os.path.realpath(latest_versions_path)
-        self.original_versions_path = os.path.realpath(original_versions_path)
-
+        self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
+        
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
@@ -52,7 +43,7 @@ class FsDocMetadataService(DocMetadataService):
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 
-        latest_version = self._get_version(identifier=paper_id)
+        latest_version = self._abs_for_version(identifier=paper_id)
         if not paper_id.has_version \
            or paper_id.version == latest_version.version:
             return dataclasses.replace(latest_version,
@@ -60,8 +51,8 @@ class FsDocMetadataService(DocMetadataService):
                                        is_latest=True)
 
         try:
-            this_version = self._get_version(identifier=paper_id,
-                                             version=paper_id.version)
+            this_version = self._abs_for_version(identifier=paper_id,
+                                                 version=paper_id.version)
         except AbsNotFoundException as e:
             if paper_id.is_old_id:
                 raise
@@ -105,7 +96,7 @@ class FsDocMetadataService(DocMetadataService):
         if not next_id:
             return None
 
-        path = self._get_parent_path(identifier=next_id)
+        path = self.fs_paths.get_parent_path(identifier=next_id)
         file_path = os.path.join(path, f'{next_id.filename}.abs')
         if os.path.isfile(file_path):
             return next_id
@@ -114,7 +105,7 @@ class FsDocMetadataService(DocMetadataService):
         if not next_yymm_id:
             return None
 
-        path = self._get_parent_path(identifier=next_yymm_id)
+        path = self.fs_paths.get_parent_path(identifier=next_yymm_id)
         file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
         if os.path.isfile(file_path):
             return next_yymm_id
@@ -148,7 +139,7 @@ class FsDocMetadataService(DocMetadataService):
            and identifier.month == previous_id.month:
             return previous_id
 
-        path = self._get_parent_path(previous_id)
+        path = self.fs_paths.get_parent_path(previous_id)
         if not os.path.exists(path):
             return None
 
@@ -170,25 +161,9 @@ class FsDocMetadataService(DocMetadataService):
 
         return None
 
-    def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
-        """Get the absolute path of this DocMetadata's source file."""
-        identifier = docmeta.arxiv_identifier
-        version = docmeta.version
-        file_noex = identifier.filename
-        if not docmeta.is_latest:
-            parent_path = self._get_parent_path(identifier, version)
-            file_noex = f'{file_noex}v{version}'
-        else:
-            parent_path = self._get_parent_path(identifier)
 
-        for extension in VALID_SOURCE_EXTENSIONS:
-            possible_path = os.path.join(
-                parent_path,
-                f'{file_noex}{extension[0]}')
-            if os.path.isfile(possible_path):
-                return possible_path
-        return None
-
+    # Maybe this should move to formats.py?
+    
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
@@ -222,7 +197,9 @@ class FsDocMetadataService(DocMetadataService):
         formats: List[str] = []
 
         # first, get possible list of formats based on available source file
-        source_file_path = self._get_source_path(docmeta)
+        source_file_path = self.fs_paths.get_source_path(docmeta.arxiv_identifier,
+                                                         int(docmeta.version),
+                                                         docmeta.is_latest)
         source_file_formats: List[str] = []
         if source_file_path is not None:
             source_file_formats = \
@@ -265,37 +242,19 @@ class FsDocMetadataService(DocMetadataService):
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""
         version = docmeta.version
-        format_code = docmeta.version_history[version - 1].source_type.code
-        if has_ancillary_files(format_code):
-            source_file_path = self._get_source_path(docmeta)
-            if source_file_path is not None:
-                return list_ancillary_files(source_file_path)
-            else:
-                return []
-        return []
+        code = docmeta.version_history[version - 1].source_type.code
+        return self.fs_paths.get_ancillary_files(code,
+                                                 docmeta.arxiv_identifier,
+                                                 docmeta.version)
 
-    def _get_version(self, identifier: Identifier,
-                     version: Optional[int] = None) -> DocMetadata:
-        """Get a specific version of a paper's abstract metadata."""
-        parent_path = self._get_parent_path(identifier=identifier,
-                                            version=version)
-        path = os.path.join(parent_path,
-                            (f'{identifier.filename}.abs' if not version
-                             else f'{identifier.filename}v{version}.abs'))
+    def _abs_for_version(self, identifier: Identifier,
+                         version: Optional[int] = None) -> DocMetadata:
+        """Get a specific version of a paper's abstract metadata.
+
+        if version is None then get the latest version."""        
+        path = self.fs_paths.get_abs_file(identifier, version)
         return parse_abs_file(filename=path)
 
-    def _get_parent_path(self, identifier: Identifier,
-                         version: Optional[int] = None) -> str:
-        """Get the absolute parent path of the provided identifier."""
-        parent_path = os.path.join(
-            (self.latest_versions_path if not version
-             else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id or identifier.archive is None
-             else identifier.archive),
-            'papers',
-            identifier.yymm,
-        )
-        return parent_path
 
 
 def _next_id(identifier: Identifier) -> Optional['Identifier']:
