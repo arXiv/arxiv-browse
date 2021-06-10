@@ -5,7 +5,7 @@ from unittest import TestCase
 from browse.domain import metadata
 from arxiv.util.authors import split_authors
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
-from browse.services.search.search_authors import queries_for_authors, split_long_author_list
+from browse.formating.search_authors import queries_for_authors, split_long_author_list
 from tests import path_of_for_test
 
 

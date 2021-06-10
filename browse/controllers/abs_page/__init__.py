@@ -23,7 +23,7 @@ from browse.controllers.response_headers import abs_expires_header, \
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import queries_for_authors, \
+from browse.formating.search_authors import queries_for_authors, \
     split_long_author_list
 from browse.formating.metatags import meta_tag_metadata
 from browse.services.documents import get_doc_service

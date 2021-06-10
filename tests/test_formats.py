@@ -1,7 +1,7 @@
 """Tests for formats logic."""
 
 from unittest import TestCase
-from browse.services.util.formats import formats_from_source_file_name,\
+from browse.services.documents.fs_implementation.formats import formats_from_source_file_name,\
     formats_from_source_type
 
 

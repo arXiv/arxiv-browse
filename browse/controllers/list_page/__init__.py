@@ -53,7 +53,7 @@ from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from browse.services.listing import get_listing_service
 from browse.services.listing.base_listing import  NewResponse, NotModifiedResponse, ListingResponse
-from browse.services.search.search_authors import queries_for_authors, \
+from browse.formating.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
 
 
@@ -320,8 +320,9 @@ def authors_for_articles(listings: List[Any])->Dict[str, Any]:
 
 def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     """Creates author list links in a very similar way to abs page."""
-    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
+    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),  # type: ignore
                                   truncate_author_list_size)
+    
 
 
 def index_for_types(resp: NewResponse,
