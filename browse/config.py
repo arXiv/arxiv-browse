@@ -18,7 +18,7 @@ DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 
 
 class Settings(BaseSettings):
-    """Class for settings for arxiv-browse web app"""
+    """Class for settings for arxiv-browse web app."""
 
     APP_VERSION = "0.3.2.6"
     """The application version """
@@ -308,7 +308,8 @@ class Settings(BaseSettings):
     """
 
     class Config:
-        """Additional pydantic config of these settings"""
+        """Additional pydantic config of these settings."""
+
         fields = {
             'SQLALCHEMY_DATABASE_URI': {
                 'env': ['BROWSE_SQLALCHEMY_DATABASE_URI']
@@ -319,8 +320,7 @@ class Settings(BaseSettings):
         }
 
     def check(self) -> None:
-        """A check and fix up of a settings object"""
-
+        """A check and fix up of a settings object."""
         if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
             self.SQLALCHEMY_MAX_OVERFLOW = None
             self.SQLALCHEMY_POOL_SIZE = None

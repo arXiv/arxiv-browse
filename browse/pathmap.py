@@ -1,5 +1,5 @@
 # type: ignore
-"""Makes GCP path map string
+"""Makes GCP path map string.
 
 For use with gcloud compute url-maps add-path-matcher
 
@@ -17,7 +17,7 @@ app = create_web_app()
 
 
 def mappingline(rule):
-    """Makes GCP path map string for use with load balancers"""
+    """Makes GCP path map string for use with load balancers."""
     hasParam = '<' in rule.rule
     if hasParam:
         path = rule.rule.split('<')[0] + "*"

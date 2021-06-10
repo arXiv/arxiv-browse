@@ -83,7 +83,7 @@ class FsDocMetadataService(DocMetadataService):
         return combined_version
 
     def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """Get the next identifier in sequence if it exists in the repository.
+        """Get the next identifier in sequence if it exists in the abs FS.
 
         Under certain conditions this is called to generate the "next" link
         in the "browse context" portion of the abs page rendering.
@@ -348,7 +348,10 @@ def _next_id(identifier: Identifier) -> Optional['Identifier']:
 
 
 def _next_yymm_id(identifier: Identifier) -> Optional[Identifier]:
-    """Get the first identifier for the next month."""
+    """Get the first identifier for the next month.
+
+    This does not access any data, it just gets the first ID of the next month.
+    """
     next_yymm_id = None
     if identifier.year is not None and \
             identifier.month is not None:
@@ -378,6 +381,9 @@ def _next_yymm_id(identifier: Identifier) -> Optional[Identifier]:
 
 def _previous_id(identifier: Identifier) -> Optional['Identifier']:
     """Get previous consecutive Identifier relative to provided Identifier.
+
+    This does not access any data, it just gets the previous ID taking into
+    account months, years and format changes.
 
     Parameters
     ----------

@@ -8,7 +8,7 @@ from browse.exceptions import AbsNotFound
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import AbsNotFoundException, \
     AbsVersionNotFoundException, AbsDeletedException
-from browse.services.cite import arxiv_bibtex
+from browse.formating.cite import arxiv_bibtex
 
 
 def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:

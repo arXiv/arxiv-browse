@@ -8,7 +8,7 @@ from unittest import TestCase
 from tests import path_of_for_test
 
 from browse.domain.metadata import DocMetadata
-from browse.services.util.metatags import meta_tag_metadata
+from browse.formating.metatags import meta_tag_metadata
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from app import app
 

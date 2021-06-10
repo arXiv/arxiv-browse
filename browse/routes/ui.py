@@ -45,7 +45,7 @@ def inject_now() -> Dict:
 
 @blueprint.before_request
 def before_request() -> None:
-    """ Get geo data and institutional affiliation from ip address. """
+    """Get geo data and institutional affiliation from ip address."""
     global geoip_reader
     try:
         if geoip_reader:

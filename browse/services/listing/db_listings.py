@@ -1,10 +1,8 @@
-"""arXiv listings backed by a DB"""
+"""arXiv listings backed by a DB."""
 
-from typing import List, Optional
-import datetime
+from typing import Optional
 from browse.services.listing.base_listing import NewResponse, \
-    ListingResponse, ListingItem, \
-    ListingCountResponse, ListingService
+    ListingResponse, ListingCountResponse, ListingService
 
 """
 The following three paragraphs are from an older comment about listings
@@ -35,7 +33,7 @@ class DBListingService(ListingService):
                               skip: int,
                               show: int,
                               if_modified_since: Optional[str] = None) -> ListingResponse:
-        """Get listings by year"""
+        """Get listings by year."""
         raise Exception("not implemented")
 
     def list_articles_by_month(self,

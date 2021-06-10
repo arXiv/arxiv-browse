@@ -1,7 +1,7 @@
 """Tests for bibtex citations."""
 from unittest import TestCase
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
-from browse.services.cite import arxiv_bibtex
+from browse.formating.cite import arxiv_bibtex
 from tests import path_of_for_test
 
 ABS_FILES = path_of_for_test('data/abs_files')

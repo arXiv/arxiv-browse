@@ -7,12 +7,11 @@ from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.config import settings
 from browse.routes import ui
 from browse.services.database import models
-from browse.services.util.email import generate_show_email_hash
+from browse.formating.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
-#from arxiv.users.auth import Auth
 
 s3 = FlaskS3()
 
@@ -21,7 +20,7 @@ def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
     settings.check()
     app = Flask('browse', static_url_path=f'/static/browse/{settings.APP_VERSION}')
-    app.config.from_object(settings)  # facilitates sqlalchemy and other flask plugins
+    app.config.from_object(settings)  # facilitates sqlalchemy and flask plugins
     app.settings = settings  # facilitates typed access to settings
 
     # TODO Only needed until this route is added to arxiv-base
@@ -49,7 +48,7 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['clickthrough_url_for'] = clickthrough_url
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
-                secret=app.settings.SHOW_EMAIL_SECRET.get_secret_value())
+                secret=app.settings.SHOW_EMAIL_SECRET.get_secret_value())  # pylint: disable=E1101
 
     app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
     app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])

@@ -25,7 +25,7 @@ from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
-from browse.services.util.metatags import meta_tag_metadata
+from browse.formating.metatags import meta_tag_metadata
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
@@ -34,7 +34,7 @@ from browse.domain.identifier import Identifier, IdentifierException,\
 from browse.services.database import count_trackback_pings,\
     get_trackback_ping_latest_date, has_sciencewise_ping, \
     get_dblp_listing_path, get_dblp_authors
-from browse.services.util.external_refs_cits import include_inspire_link,\
+from browse.formating.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.documents.config.external_refs_cits import DBLP_BASE_URL,\
     DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
@@ -230,7 +230,8 @@ def _time_header_parse(header: str) -> Optional[datetime]:
 def _get_req_header(header: str) -> Optional[str]:
     """Gets request header, needs to be case insensative for keys.
 
-    HTTP header keys are case insensative. RFC 2616"""
+    HTTP header keys are case insensative. RFC 2616
+    """
     return next((value for key, value in request.headers.items()
                  if key.lower() == header.lower()), None)
 

@@ -1,4 +1,4 @@
-"""Base classes for the abstracts service"""
+"""Base classes for the abstracts service."""
 
 import abc
 from typing import Dict, List, Optional

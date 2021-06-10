@@ -57,6 +57,6 @@ def _get_document_count() -> Optional[int]:
         else:
             raise FileNotFoundError
     except (KeyError, FileNotFoundError):
-        logger.warning(f'Daily stats file not found')
+        logger.warning('Daily stats file not found')
 
     return None

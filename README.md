@@ -2,7 +2,7 @@
 
 ### Running Browse with the Flask development server
 
-You can run the browse app directly. Using pipenv:
+You can run the browse app directly.
 
 ```bash
 python -m venv ./venv

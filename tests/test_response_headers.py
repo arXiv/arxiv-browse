@@ -13,8 +13,6 @@ class TestResponseHeaderUtils(TestCase):
 
     def test_guess_next_update_utc(self) -> None:
         """Test the guess_next_update_utc function."""
-
-        config = get_application_config()
         tz = gettz('US/Eastern')
 
         dt = datetime(year=2018, month=9, day=11,
@@ -102,8 +100,6 @@ class TestResponseHeaderUtils(TestCase):
 
     def test_mime_header_date(self) -> None:
         """Test MIME header date string is correct."""
-
-        config = get_application_config()
         tz = gettz('US/Eastern')
 
         dt = datetime(year=2018, month=9, day=14,
