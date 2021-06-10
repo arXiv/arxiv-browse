@@ -8,7 +8,7 @@ from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES, ARCHIVES_SUBSUMED
 
 from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import years_operating, stats_by_year
-from browse.services.util.response_headers import abs_expires_header
+from browse.controllers.response_headers import abs_expires_header
 
 
 def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:

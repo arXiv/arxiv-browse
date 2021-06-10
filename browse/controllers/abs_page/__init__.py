@@ -18,14 +18,14 @@ from werkzeug.exceptions import InternalServerError
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from browse.controllers import check_supplied_identifier
+from browse.controllers.response_headers import abs_expires_header, \
+    mime_header_date
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
 from browse.exceptions import AbsNotFound
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list
 from browse.services.util.metatags import meta_tag_metadata
-from browse.services.util.response_headers import abs_expires_header, \
-    mime_header_date
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException

@@ -3,7 +3,7 @@ from unittest import TestCase
 from datetime import datetime, timedelta
 from dateutil.tz import tzutc, gettz
 
-from browse.services.util.response_headers import guess_next_update_utc, \
+from browse.controllers.response_headers import guess_next_update_utc, \
     mime_header_date, APPROX_PUBLISH_DURATION
 from arxiv.base.globals import get_application_config
 
