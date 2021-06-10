@@ -477,3 +477,14 @@ class BrowseTest(unittest.TestCase):
         jref_elmt = html.find('td', 'jref')
         self.assertTrue(jref_elmt, 'Should have jref td element')
         self.assertIn('RIMS Kôkyûroku Bessatsu', jref_elmt.text, 'Expecting converted TeX in journal reference field')
+
+    def test_no_prev(self):
+        rv = self.app.get('/abs/math-ph/0509001')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        link = html.find('a', class_='next-url')
+        assert link
+        assert link['href'] == '/abs/math-ph/0509002'
+
+        link = html.find('a', class_='prev-url')
+        assert link is None
+        

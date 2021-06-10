@@ -17,25 +17,31 @@ from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
+
 from browse.controllers import check_supplied_identifier
 from browse.controllers.response_headers import abs_expires_header, \
     mime_header_date
+
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
+from browse.domain.identifier import Identifier, IdentifierException,\
+    IdentifierIsArchiveException
 from browse.exceptions import AbsNotFound
+
 from browse.formating.search_authors import queries_for_authors, \
     split_long_author_list
 from browse.formating.metatags import meta_tag_metadata
+from browse.formating.external_refs_cits import include_inspire_link,\
+    include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
+
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import AbsException,\
     AbsNotFoundException, AbsVersionNotFoundException, AbsDeletedException
-from browse.domain.identifier import Identifier, IdentifierException,\
-    IdentifierIsArchiveException
+from browse.services.prevnext import prevnext_service
+
 from browse.services.database import count_trackback_pings,\
     get_trackback_ping_latest_date, has_sciencewise_ping, \
     get_dblp_listing_path, get_dblp_authors
-from browse.formating.external_refs_cits import include_inspire_link,\
-    include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 from browse.services.documents.config.external_refs_cits import DBLP_BASE_URL,\
     DBLP_BIBTEX_PATH, DBLP_AUTHOR_SEARCH_PATH
 
@@ -299,20 +305,17 @@ def _check_context(arxiv_identifier: Identifier,
 
     next_url = None
     prev_url = None
-    if arxiv_identifier.is_old_id or context == 'arxiv':
-        # Revert to hybrid approach per ARXIVNG-2080
-        next_id = get_doc_service().get_next_id(arxiv_identifier)
-        if next_id:
+    pnres=prevnext_service().prevnext(arxiv_identifier, context)
+    if not pnres.usecontroller:
+        if pnres.next_id:
             next_url = url_for('browse.abstract',
-                               arxiv_id=next_id.id,
+                               arxiv_id=pnres.next_id.id,
                                context='arxiv' if context == 'arxiv' else None)
-        previous_id = get_doc_service().get_previous_id(arxiv_identifier)
-        if previous_id:
+        if pnres.previous_id:
             prev_url = url_for('browse.abstract',
-                               arxiv_id=previous_id.id,
+                               arxiv_id=pnres.previous_id.id,
                                context='arxiv' if context == 'arxiv' else None)
     else:
-        # Use prevnext controller to determine what the previous or next ID is.
         next_url = url_for('browse.previous_next',
                            id=arxiv_identifier.id,
                            function='next',
@@ -321,7 +324,7 @@ def _check_context(arxiv_identifier: Identifier,
                            id=arxiv_identifier.id,
                            function='prev',
                            context=context if context else None)
-
+       
     response_data['browse_context_previous_url'] = prev_url
     response_data['browse_context_next_url'] = next_url
 

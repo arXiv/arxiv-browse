@@ -89,6 +89,8 @@ class Settings(BaseSettings):
 
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fake'  # type: ignore
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore
+    PREV_NEXT_SERVICE: PyObject =         'browse.services.prevnext.fsprevnext'  # type: ignore
+
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files."""
     DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"

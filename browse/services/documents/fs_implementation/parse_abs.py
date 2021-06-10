@@ -2,7 +2,7 @@
 
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 from datetime import datetime
 
 from pytz import timezone
@@ -10,7 +10,7 @@ from dateutil.tz import tzutc, gettz
 from dateutil import parser
 
 from arxiv import taxonomy
-from browse.domain import License
+from browse.domain.license import License
 from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier
