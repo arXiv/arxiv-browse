@@ -2,9 +2,10 @@
 from typing import Any, cast
 
 from browse.config import Settings
-from .base_documents import DocMetadataService
 from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
+from browse.services.documents.db_implementation.db_abs import DbDocMetadataService
 
+from .base_documents import DocMetadataService
 
 def get_doc_service() -> DocMetadataService:
     """Gets the documents service configured for this app context."""
@@ -18,6 +19,12 @@ def get_doc_service() -> DocMetadataService:
 
 
 def fs_docs(settings_in: Settings, _: Any) -> FsDocMetadataService:
-    """Integration function for file system abstract service."""
+    """Factory function for file system abstract service."""
     return FsDocMetadataService(settings_in.DOCUMENT_LATEST_VERSIONS_PATH,
                                 settings_in.DOCUMENT_ORIGNAL_VERSIONS_PATH)
+
+
+def db_docs(sett: Settings, _: Any) -> DbDocMetadataService:
+    """Factory function for DB backed abstract service."""
+    from browse.services.database.models import db
+    return DbDocMetadataService(db)

@@ -126,7 +126,7 @@ def get_monthly_submissions_page() -> Response:
         num_this_month = get_document_count_by_yymm(current_dt.date)
         num_submissions += num_this_month
     except Exception as ex:
-        raise InternalServerError
+        raise InternalServerError from ex
 
     num_migrated = abs(historical_delta)
     response_data['current_dt'] = current_dt

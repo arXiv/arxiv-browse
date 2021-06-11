@@ -4,8 +4,6 @@ import abc
 from typing import Dict, List, Optional
 
 from browse.domain.metadata import DocMetadata
-from browse.domain.identifier import Identifier
-
 
 class DocMetadataService(abc.ABC):
     """Class for arXiv document abstract metadata service."""
@@ -21,46 +19,6 @@ class DocMetadataService(abc.ABC):
         Returns
         -------
         :class:`DocMetadata`
-        """
-
-    def get_next_id(self, identifier: Identifier) -> Optional['Identifier']:
-        """Get the next identifier in sequence if it exists in the repository.
-
-        Under certain conditions this is called to generate the "next" link
-        in the "browse context" portion of the abs page rendering.
-        These conditions are dependent on the identifier and context; it
-        emulates legacy functionality. It is recommended to deprecate
-        this function once the /prevnext route is fixed (or replaced) to
-        handle old identifiers correctly.
-
-        Parameters
-        ----------
-        identifier : :class:`Identifier`
-
-        Returns
-        -------
-        :class:`Identifier`
-            The next identifier in sequence that exists in the repository.
-        """
-
-    def get_previous_id(self, identifier: Identifier) -> Optional[Identifier]:
-        """Get previous identifier in sequence if it exists in repository.
-
-        Under certain conditions this is called to generate the "previous" link
-        in the "browse context" portion of the abs page rendering.
-        These conditions are dependent on the identifier and context; it
-        emulates legacy functionality. It is recommended to deprecate
-        this function once the /prevnext route is fixed (or replaced) to
-        handle old identifiers correctly.
-
-        Parameters
-        ----------
-        identifier : :class:`Identifier`
-
-        Returns
-        -------
-        :class:`Identifier`
-            The previous identifier in sequence that exists in the repository.
         """
 
     def get_dissemination_formats(self,

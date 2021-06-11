@@ -1,4 +1,4 @@
-"""Parse fields from a single arXiv abstract (.abs) file."""
+"""File system backed core metadata service."""
 import os
 from typing import Dict, List, Optional
 import dataclasses
@@ -17,7 +17,7 @@ from .parse_abs import parse_abs_file
 from .formats import formats_from_source_file_name, formats_from_source_type
 
 class FsDocMetadataService(DocMetadataService):
-    """Class for arXiv document metadata sessions."""
+    """Class for arXiv document metadata service."""
     fs_paths: FSDocMetaPaths
 
     def __init__(self,

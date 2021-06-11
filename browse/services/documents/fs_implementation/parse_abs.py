@@ -10,6 +10,7 @@ from dateutil.tz import tzutc, gettz
 from dateutil import parser
 
 from arxiv import taxonomy
+
 from browse.domain.license import License
 from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, SourceType, Submitter, VersionEntry
