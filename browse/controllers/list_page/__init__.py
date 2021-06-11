@@ -42,6 +42,7 @@ import calendar
 import logging
 import math
 from typing import Any, Dict, List, Optional, Tuple, Union
+from datetime import datetime
 
 from arxiv import status, taxonomy
 from flask import request, url_for
@@ -217,7 +218,10 @@ def get_listing(subject_or_category: str,
                 return {}, status.HTTP_304_NOT_MODIFIED, response_headers
             listings = year_resp['listings']
             count = year_resp['count']
-            response_data['pubmonth'] = year_resp['pubdates'][0][0]
+            if year_resp['pubdates'] and year_resp['pubdates'][0]:
+                response_data['pubmonth'] = year_resp['pubdates'][0][0]
+            else:
+                response_data['pubmonth'] = datetime.now() # This is just to make the tempalte happy
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
 

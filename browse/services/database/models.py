@@ -1,5 +1,4 @@
 """arXiv browse database models."""
-
 import re
 import hashlib
 from typing import Optional
@@ -451,7 +450,42 @@ stats_hourly = Table(
     Column('connections', Integer, nullable=False)
 )
 
+class DocumentCategory(db.Model):
+    __tablename__ = 'arXiv_document_category'
 
+    document_id = Column(ForeignKey('arXiv_documents.document_id', ondelete='CASCADE'),
+                         primary_key=True, nullable=False, index=True,
+                         server_default=text("'0'"))
+    category = Column(ForeignKey('arXiv_category_def.category'), primary_key=True,
+                      nullable=False, index=True)
+    is_primary = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    document = relationship('Document')
+
+
+class NextMail(db.Model):
+    """Model for mailings from publish"""
+    __tablename__ = 'arXiv_next_mail'
+    __table_args__ = (
+        Index('arXiv_next_mail_idx_document_id_version', 'document_id', 'version'),
+    )
+    next_mail_id = Column(Integer, primary_key=True)
+    submission_id = Column(Integer, nullable=False)
+    document_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    paper_id = Column(String(20))
+    version = Column(Integer, nullable=False, server_default=text("'1'"))
+    type = Column(String(255), nullable=False, server_default=text("'new'"))
+    extra = Column(String(255))
+    mail_id = Column(String(6))
+    is_written = Column(Integer, nullable=False, server_default=text("'0'"))
+    # document = relationship('Document',
+    #                         primaryjoin='Document.document_id == NextMail.document_id',
+    #                         foreign_keys='Document.document_id')
+
+    # arxiv_metadata = relationship('Metadata',
+    #                         primaryjoin='Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version',
+    #                         foreign_keys='Metadata.paper_id, Metadata.version')
+    
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)

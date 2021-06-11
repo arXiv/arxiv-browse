@@ -1,4 +1,5 @@
-from datetime import datetime
+from pytz import timezone
+from dateutil.tz import tzutc
 
 from arxiv import taxonomy
 
@@ -6,6 +7,8 @@ from browse.domain.metadata import DocMetadata, Submitter, AuthorList, \
     Category, Archive, VersionEntry, Group, Identifier, License
 from browse.services.documents.base_documents import AbsException
 
+# TODO get this from arxiv-base
+ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
 def to_docmeta(dbmd) -> DocMetadata:
     # This is from parse_abs.py
@@ -28,6 +31,14 @@ def to_docmeta(dbmd) -> DocMetadata:
     doc_license: License = \
         License() if not dbmd.license else License(
             recorded_uri=dbmd.license)
+
+    submitted = dbmd.created
+    submitted.replace(tzinfo=ARXIV_BUSINESS_TZ)
+    submitted = submitted.astimezone(tz=tzutc())
+
+    modified = dbmd.updated
+    modified.replace(tzinfo=ARXIV_BUSINESS_TZ)
+    modified = modified.astimezone(tz=tzutc())
     
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
@@ -36,7 +47,7 @@ def to_docmeta(dbmd) -> DocMetadata:
         arxiv_id_v=dbmd.paper_id + 'v' + str(dbmd.version),
         arxiv_identifier = Identifier(dbmd.paper_id),
         title =dbmd.title,        
-        modified=dbmd.updated,
+        modified=modified,
         authors=AuthorList(dbmd.authors),
         submitter=Submitter(name=dbmd.submitter_name, email=dbmd.submitter_email),
         categories=dbmd.abs_categories,        
@@ -60,7 +71,7 @@ def to_docmeta(dbmd) -> DocMetadata:
         version_history=[VersionEntry(version=dbmd.version,
                                       raw='fromdb-no-raw',
                                       size_kilobytes=dbmd.source_size,
-                                      submitted_date=datetime.now(), # TODO 
+                                      submitted_date=submitted,
                                       source_type=dbmd.source_format)],        
         is_definitive=False,
         is_latest=dbmd.is_current

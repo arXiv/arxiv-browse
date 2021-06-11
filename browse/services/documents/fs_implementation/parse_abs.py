@@ -66,7 +66,7 @@ def parse_abs_file(filename: str) -> DocMetadata:
         raise AbsParsingException(
             f'Failed to decode .abs file "{filename}": {e}')
 
-    # TODO: clean up
+    # TODO: get arxiv business timezone from arxiv base
     modified = datetime.fromtimestamp(
         os.path.getmtime(filename), tz=gettz('US/Eastern'))
     modified = modified.astimezone(tz=tzutc())
