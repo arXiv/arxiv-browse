@@ -128,6 +128,8 @@
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...')|tex2utf }}"/>
     <meta name="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
+    <meta name="twitter:image" content="https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png"/>
+    <meta name="twitter:image:alt" content="arXiv logo"/>
     <meta property="og:site_name" content="arXiv.org"/>
     <meta property="og:title" content="{{ abs_meta.title|tex2utf }}"/>
     <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
