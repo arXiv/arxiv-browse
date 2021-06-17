@@ -126,8 +126,8 @@
 {%- macro generate_social_media_tags() -%}
     <meta name="twitter:site" content="@arxiv"/>
     <meta name="twitter:card" content="summary"/>
-    <meta property="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...')|tex2utf }}"/>
-    <meta property="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
+    <meta name="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...')|tex2utf }}"/>
+    <meta name="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
     <meta property="og:site_name" content="arXiv.org"/>
     <meta property="og:title" content="{{ abs_meta.title|tex2utf }}"/>
     <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
