@@ -1,9 +1,11 @@
+# type: ignore
 """Makes GCP path map string
 
 For use with gcloud compute url-maps add-path-matcher
 
 See https://cloud.google.com/load-balancing/docs/url-map
 """
+
 import sys
 
 from browse.factory import create_web_app
