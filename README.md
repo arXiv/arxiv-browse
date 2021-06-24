@@ -24,6 +24,26 @@ By default, the application will use the directory trees in
 document metadata and cache files, respectively. These paths can be
 overridden via environment variables (see `browse/config.py`).
 
+### Test suite
+
+Install the mypy types before running the test suite, 
+
+```bash
+mypy --install-types
+```
+
+Then you need to build the database:
+```bash
+source ./venv/bin/activate
+FLASK_APP=app.py python populate_test_database.py --drop_and_create
+```
+
+Run the main test suite with the following command:
+
+```bash
+pytest
+```
+
 ### Building the test database
 
 A database is needed for many features of browse. Run this and it will create  a test SQLite database in
@@ -72,26 +92,6 @@ arXiv Labs options:
 
 We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
 files via S3. Following the instructions for Flask-S3 should just work.
-
-### Test suite
-
-Install the mypy types before running the test suite, 
-
-```bash
-mypy --install-types
-```
-
-Run the main test suite with the following command:
-
-```bash
-nose2 --with-coverage
-```
-
-or
-
-```bash
-pytest
-```
 
 ### Static checking
 Goal: zero errors/warnings.

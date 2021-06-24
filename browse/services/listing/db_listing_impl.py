@@ -37,23 +37,40 @@ class DBListingService(ListingService):
         """Initialize the DB listing service."""
         self.db=db
 
+
+    def _latest_mail(self) -> str:
+        """Latest mailing day in YYMMDD format from NextMail.mail_id"""
+        #TODO add some sort of caching based on publish time
+        return self.db.session.query(func.max(NextMail.mail_id)).first()[0]
+
+
+    def _query_yymm(self,
+                    archiveOrCategory: str,
+                    year: int,
+                    month: Optional[int]=None) -> Any:
+        if year<0:
+            raise ValueError("year must be positive")
+        if year >= 2000:
+            year = year - 2000
+        elif year > 1900:
+            year = year - 1900
+        mq = f"{month:02}" if month else ""
+        return self._query_base(archiveOrCategory, f"{year:02}{mq}%")
+
+
     def _query_base(self,
                     archiveOrCategory: str,
-                    year: int, month: Optional[int]=None) -> Any:
+                    mail_id: str) -> Any:
         query = NextMail.query
-            
-        # query = query.join(Documents)
-        # query = query.join(DocumentCategory)
-        
-        # #TODO make something that works for archives
-        # query = query.filter(DocumentCategory.category == archiveOrCategory)
+        query = query.join(Document, NextMail.document_id==Document.document_id)
+        query = query.join(DocumentCategory, Document.document_id==DocumentCategory.document_id)        
+        query = query.filter(DocumentCategory.category == archiveOrCategory) # TODO make something that works for archives
+        if '%' in mail_id:
+            return query.filter(NextMail.mail_id.like(mail_id))
+        else:
+            return query.filter(NextMail.mail_id == mail_id)
 
-        # TODO Not filtered by category or archive right now
 
-        mail_id = f"{year:02}{month:02}%" if month else f"{year:02}%"
-        query = query.filter(NextMail.mail_id.like(mail_id))
-        return query
-    
     def list_articles_by_year(self,
                               archiveOrCategory: str,
                               year: int,
@@ -61,11 +78,10 @@ class DBListingService(ListingService):
                               show: int,
                               if_modified_since: Optional[str] = None) -> ListingResponse:
         """Get listings by year."""
-        query = self._query_base(archiveOrCategory,year,None)        
-        query = _add_skipshow(query, skip, show)
-        res = query.all()
-        total_count = self._query_base(archiveOrCategory, year, None).count() # TODO probably very slow
-        return _to_listings(list(res), total_count)
+        query = self._query_yymm(archiveOrCategory, year)
+        res = _add_skipshow(query, skip, show).all()
+        count = self._query_yymm(archiveOrCategory, year).count() # TODO probably very slow
+        return _to_listings(list(res), count)
 
     def list_articles_by_month(self,
                                archiveOrCategory: str,
@@ -75,7 +91,10 @@ class DBListingService(ListingService):
                                show: int,
                                if_modified_since: Optional[str] = None) -> ListingResponse:
         """Get listings for a month."""
-        return _to_listings(self._query_base(archiveOrCategory,skip,show,year,month).all())
+        query = self._query_yymm(archiveOrCategory, year, month)
+        res = _add_skipshow(query, skip, show).all()
+        count = self._query_yymm(archiveOrCategory, year, month).count() # TODO probably very slow
+        return _to_listings(res, count)
 
 
     def list_new_articles(self,
@@ -84,7 +103,11 @@ class DBListingService(ListingService):
                           show: int,
                           if_modified_since: Optional[str] = None) -> NewResponse:
         """Gets listings for the most recent announcement/publish."""
-        raise Exception("not implemented")
+        latest_mail = self._latest_mail()
+        query = self._query_base(archiveOrCategory, latest_mail)
+        res = _add_skipshow(query, skip, show).all()
+        count = self._query_base(archiveOrCategory, latest_mail).count() # TODO probably very slow        
+        return _to_new_listings(res, count)
 
 
     def list_pastweek_articles(self,
@@ -99,7 +122,7 @@ class DBListingService(ListingService):
                        archive: str,
                        year: int) -> ListingCountResponse:
         """Gets monthly listing counts for the year."""
-        #TODO monthly_counts returns fake data        
+        #TODO monthly_counts returns fake data
         counts = [
             {'year': year, 'month': 1, 'new': 1234, 'cross': 234},
             {'year': year, 'month': 2, 'new': 1224, 'cross': 134},
@@ -119,12 +142,27 @@ class DBListingService(ListingService):
                 'cross_count': sum([mm['cross'] for mm in counts])}
 
 
+def _nextmail_to_listing(row):
+    return {"id":row.paper_id,
+            "listingType":row.type,
+            "primary":'hep-ph'} #TODO add real primary
+
+def _to_new_listings(res: Any, count) -> NewResponse:
+    # TODO crosses
+    new=list(map(_nextmail_to_listing, res))
+    return {'listings': new,
+            'announced': datetime.date(2007, 4, 1), # TODO
+            'submitted' : (datetime.date(2007, 3, 30), datetime.date(2007, 4, 1)),
+            'new_count': len(new),
+            'cross_count': 0, # TODO crosses
+            'rep_count': 0, # TODO repcount
+            'expires': 'Wed, 21 Oct 2015 07:28:00 GMT' #TODO
+            }
+
+
 
 def _to_listings(res: Any, total_count) -> ListingResponse:
-    return {'listings':[ {"id":row.paper_id,
-                          "listingType":row.type,
-                          "primary":'hep-ph'} #TODO add real primary
-                         for row in res],  
+    return {'listings': list(map(_nextmail_to_listing, res)),
             'pubdates': _to_pubdates(res),
             'count': total_count,
             'expires': ''}
@@ -134,7 +172,6 @@ def _to_pubdates(res: Any):
     keyf = lambda row: row.mail_id
     next_rows = list(sorted(res, key=keyf))
     for day, grp in groupby(next_rows, keyf):
-        print(f"the day is {day}")
         yy, mm, dd = int(day[0:2]), int(day[2:4]), int(day[4:6])
         if yy > 80: # it's in 1900s
             yyyy = 1900 + yy

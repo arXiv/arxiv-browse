@@ -14,8 +14,15 @@ def to_docmeta(dbmd) -> DocMetadata:
     # This is from parse_abs.py
     arxiv_identifier = Identifier(dbmd.paper_id)
 
+    
+    primary_category=None
+    secondary_categories=[]
     if dbmd.abs_categories:
         category_list = dbmd.abs_categories.split()
+        if category_list and len(category_list) > 1:
+            secondary_categories=[
+                Category(x) for x in category_list[1:]
+                if (category_list and len(category_list) > 1)]
         if category_list[0] in taxonomy.CATEGORIES:
             primary_category = Category(category_list[0])
             primary_archive = \
@@ -36,7 +43,7 @@ def to_docmeta(dbmd) -> DocMetadata:
     submitted.replace(tzinfo=ARXIV_BUSINESS_TZ)
     submitted = submitted.astimezone(tz=tzutc())
 
-    modified = dbmd.updated
+    modified = dbmd.updated or dbmd.created
     modified.replace(tzinfo=ARXIV_BUSINESS_TZ)
     modified = modified.astimezone(tz=tzutc())
     
@@ -54,10 +61,7 @@ def to_docmeta(dbmd) -> DocMetadata:
         primary_category=primary_category,        
         primary_archive=primary_archive,
         primary_group=Group(taxonomy.ARCHIVES[primary_archive.id]['in_group']),
-        secondary_categories=[
-            Category(x) for x in category_list[1:]
-            if (category_list and len(category_list) > 1)
-        ],
+        secondary_categories=secondary_categories,
         journal_ref=dbmd.journal_ref or None,
         report_num=dbmd.report_num or None,
         doi=dbmd.doi or None,

@@ -201,27 +201,22 @@ def get_listing(subject_or_category: str,
             list_type = 'month'
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
-            month_reps = listing_service.list_articles_by_month(
+            resp = listing_service.list_articles_by_month(
                 subject_or_category, list_year, list_month, skipn, shown, if_mod_since)
-            response_headers.update(_expires_headers(month_reps))
-            if _not_modified(month_reps):
-                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
-            listings = month_reps['listings']
-            count = month_reps['count']
-            response_data['pubmonth'] = month_reps['pubdates'][0][0]
         else:
             list_type = 'year'
-            year_resp = listing_service.list_articles_by_year(
+            resp = listing_service.list_articles_by_year(
                 subject_or_category, list_year, skipn, shown, if_mod_since)
-            response_headers.update(_expires_headers(year_resp))
-            if _not_modified(year_resp):
-                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
-            listings = year_resp['listings']
-            count = year_resp['count']
-            if year_resp['pubdates'] and year_resp['pubdates'][0]:
-                response_data['pubmonth'] = year_resp['pubdates'][0][0]
-            else:
-                response_data['pubmonth'] = datetime.now() # This is just to make the tempalte happy
+
+        response_headers.update(_expires_headers(resp))
+        if _not_modified(resp):
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+        listings = resp['listings']
+        count = resp['count']
+        if resp['pubdates'] and resp['pubdates'][0]:
+            response_data['pubmonth'] = resp['pubdates'][0][0]
+        else:
+            response_data['pubmonth'] = datetime.now() # This is just to make the tempalte happy
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
 

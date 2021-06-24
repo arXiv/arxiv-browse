@@ -212,10 +212,30 @@ class User(db.Model):
                              index=True, server_default=text("''"))
     flag_allow_tex_produced = Column(
         Integer, nullable=False, server_default=text("'0'"))
-
+    flag_can_lock = Column(Integer,
+                           nullable=False, server_default=text("'0'"))
     tapir_policy_class = relationship('UserPolicyClass')
 
 
+
+class Nickname(db.Model):
+    __tablename__ = 'tapir_nicknames'
+    __table_args__ = (
+        Index('user_id', 'user_id', 'user_seq', unique=True),
+    )
+  
+    nick_id = Column(Integer, primary_key=True)
+    nickname = Column(String(20), nullable=False, unique=True, server_default=text("''"))
+    user_id = Column(ForeignKey('tapir_users.user_id'), nullable=False, server_default=text("'0'"))
+    user_seq = Column(Integer, nullable=False, server_default=text("'0'"))
+    flag_valid = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    role = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    policy = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    flag_primary = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    user = relationship('User')
+
+    
 class UserPolicyClass(db.Model):
     """Model for the legacy user policy class."""
 
@@ -450,6 +470,23 @@ stats_hourly = Table(
     Column('connections', Integer, nullable=False)
 )
 
+
+class CategoryDef(db.Model):
+    __tablename__ = 'arXiv_category_def'
+    __table_args__ = (
+        ForeignKeyConstraint(['archive', 'subject_class'], ['arXiv_categories.archive', 'arXiv_categories.subject_class']),
+        Index('cat_def_fk', 'archive', 'subject_class')
+    )
+
+    category = Column(String(32), primary_key=True)
+    name = Column(String(255))
+    active = Column(Integer, server_default=text("'1'"))
+    archive = Column(String(16), nullable=False, server_default=text("''"))
+    subject_class = Column(String(16), nullable=False, server_default=text("''"))
+
+    arXiv_categories = relationship('Category')
+
+    
 class DocumentCategory(db.Model):
     __tablename__ = 'arXiv_document_category'
 
@@ -478,13 +515,13 @@ class NextMail(db.Model):
     extra = Column(String(255))
     mail_id = Column(String(6))
     is_written = Column(Integer, nullable=False, server_default=text("'0'"))
-    # document = relationship('Document',
-    #                         primaryjoin='Document.document_id == NextMail.document_id',
-    #                         foreign_keys='Document.document_id')
+    document = relationship('Document',
+                            primaryjoin='Document.document_id == NextMail.document_id',
+                            foreign_keys='Document.document_id')
 
-    # arxiv_metadata = relationship('Metadata',
-    #                         primaryjoin='Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version',
-    #                         foreign_keys='Metadata.paper_id, Metadata.version')
+    arxiv_metadata = relationship('Metadata',
+                                  primaryjoin='and_ (Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version)',
+                                  foreign_keys='Metadata.paper_id, Metadata.version')
     
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
