@@ -20,19 +20,18 @@ DB_FILE= "./pytest.db"
 SQLALCHEMY_DATABASE_URI=f"sqlite:///{DB_FILE}"
 DELETE_DB_FILE_ON_EXIT = True
 
-
+from browse.factory import create_web_app
+    
 @pytest.fixture(scope='session')
 def dbclient():
     """A browse app client with a test DB populated with fresh data."""
-    from browse.config import settings
-    settings.CLASSIC_DATABASE_URI = SQLALCHEMY_DATABASE_URI
     from browse.services.listing import db_listing
-    settings.DOCUMENT_LISTING_SERVICE = db_listing
     import browse.services.documents as documents
-    settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
-    
-    from browse.factory import create_web_app
+
     app = create_web_app()
+    app.config.DOCUMENT_LISTING_SERVICE = db_listing
+    app.config.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
+    app.config.CLASSIC_DATABASE_URI = SQLALCHEMY_DATABASE_URI
     app.testing = True
     app.config['APPLICATION_ROOT'] = ''
     app.app_context().push()
@@ -46,12 +45,9 @@ def dbclient():
 
 @pytest.fixture(scope='session')
 def client_with_fake_listings():
-    from browse.factory import create_web_app
     app = create_web_app()
     from browse.services.listing import fake_listings
-    app.config.DOCUMENT_LISTING_SERVICE = fake_listings
-    
-    app = create_web_app()
+    app.config.DOCUMENT_LISTING_SERVICE = fake_listings    
     app.testing = True
     app.config['APPLICATION_ROOT'] = ''
     return app.test_client()
