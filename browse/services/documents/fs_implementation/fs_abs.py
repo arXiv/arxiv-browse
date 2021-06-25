@@ -14,7 +14,8 @@ from browse.services.documents.base_documents import DocMetadataService, \
 from . import cache
 from .legacy_fs_paths import FSDocMetaPaths
 from .parse_abs import parse_abs_file
-from .formats import formats_from_source_file_name, formats_from_source_type
+from .formats import formats_from_source_file_name
+from ..format_codes import formats_from_source_type
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""

@@ -11,6 +11,7 @@ from browse.services.documents.base_documents import DocMetadataService, \
 
 from browse.services.database.models import Metadata
 
+from ..format_codes import formats_from_source_type
 from .convert import to_docmeta
 
 
@@ -36,6 +37,8 @@ class DbDocMetadataService(DocMetadataService):
         -------
         :class:`DocMetadata`
         """
+
+        # TODO Probably doesn't do docmeta.version_history correctly
         paper_id = Identifier(arxiv_id=arxiv_id)
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
@@ -93,13 +96,7 @@ class DbDocMetadataService(DocMetadataService):
                                   add_sciencewise: bool = False) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
-        Several checks are performed to determine available dissemination
-        formats:
-            1. a check for source files with specific, valid file name
-               extensions (i.e. for a subset of the allowed source file name
-               extensions, the dissemintation formats are predictable)
-            2. if formats cannot be inferred from the source file, inspect the
-               source type in the document metadata.
+        THIS ONLY CHECK THE source type on the doc metadata.
 
         Format names are strings. These include 'src', 'pdf', 'ps', 'html',
         'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
@@ -117,9 +114,24 @@ class DbDocMetadataService(DocMetadataService):
         List[str]
             A list of format strings.
         """
-        # TODO Implement get_dissemination_formats
-        return []
+        # version = docmeta.version
+        # format_code = docmeta.version_history[version - 1].source_type.code
 
+        # # TODO cache flag?
+        # cache_flag = False
+        # # cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
+        # # if cached_ps_file_path \
+        # #    and os.path.getsize(cached_ps_file_path) == 0 \
+        # #    and source_file_path \
+        # #    and os.path.getmtime(source_file_path) \
+        # #    < os.path.getmtime(cached_ps_file_path):
+        # #     cache_flag = True
+
+        # return formats_from_source_type(format_code,
+        #                                 format_pref,
+        #                                 cache_flag,
+        #                                 add_sciencewise)
+        return []
 
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:

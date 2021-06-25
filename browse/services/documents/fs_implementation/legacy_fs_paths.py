@@ -5,7 +5,8 @@ import os
 
 from browse.domain.identifier import Identifier
 
-from .formats import VALID_SOURCE_EXTENSIONS, has_ancillary_files, list_ancillary_files
+from .formats import list_ancillary_files
+from ..format_codes import has_ancillary_files, VALID_SOURCE_EXTENSIONS
 
 class FSDocMetaPaths():
     """Class for paths to files in the legacy arXiv FS."""
