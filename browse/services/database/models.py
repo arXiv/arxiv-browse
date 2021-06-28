@@ -168,6 +168,10 @@ class User(db.Model):
 
     __tablename__ = 'tapir_users'
 
+    # This handles the fact that first_name and last_name are set to utf8 in this table.
+    # It sets the whole table to utf8 but hopefully that isn't a problem.
+    __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
+
     user_id = Column(Integer, primary_key=True)
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)
@@ -454,8 +458,9 @@ class StatsMonthlySubmission(db.Model):
 
     __tablename__ = 'arXiv_stats_monthly_submissions'
 
-    ym = Column(Date, primary_key=True,
-                server_default=text("'0000-00-00'"))
+    ym = Column(Date, primary_key=True
+                #,server_default=text("'0000-00-00'") # does not work in sqlite
+                )
     num_submissions = Column(SmallInteger, nullable=False)
     historical_delta = Column(Integer, nullable=False,
                               server_default=text("'0'"))
@@ -522,7 +527,29 @@ class NextMail(db.Model):
     arxiv_metadata = relationship('Metadata',
                                   primaryjoin='and_ (Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version)',
                                   foreign_keys='Metadata.paper_id, Metadata.version')
-    
+
+
+class AdminLog(db.Model):
+    __tablename__ = 'arXiv_admin_log'
+
+    id = Column(Integer(), primary_key=True)
+    logtime = Column(String(24))
+    created = Column(DateTime, nullable=False,
+                     # Only works on mysql:
+                     #server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+                     )
+    paper_id = Column(String(20), index=True)
+    username = Column(String(20), index=True)
+    host = Column(String(64))
+    program = Column(String(20))
+    command = Column(String(20), index=True)
+    logtext = Column(Text)
+    document_id = Column(Integer())
+    submission_id = Column(Integer(), index=True)
+    notify = Column(Integer(), server_default=text("'0'"))
+
+
+
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)

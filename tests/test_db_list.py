@@ -1,11 +1,9 @@
-
-# There's something wrong with this it because it causes
-# other tests to fail.
-# I think it has to do with the app getting loaded only once
-# and then getting reused during the run of all the tests.
+def test_should_be_db_listings(dbclient):
+    from browse.services.listing import db_listing, get_listing_service
+    assert dbclient and dbclient.application.config['DOCUMENT_LISTING_SERVICE'] == db_listing
+    assert 'db_listing' in str(get_listing_service())
 
 def test_basic_db_lists(dbclient):
     rv = dbclient.get('/list/hep-ph/1102')
     assert rv.status_code == 200
-    assert rv.headers.get('Expires', None)
 

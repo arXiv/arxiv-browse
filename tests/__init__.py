@@ -40,12 +40,27 @@ def path_of_for_test(rel_path: str) -> str:
     """Returns absolute path of rel_path, assuming rel_path is under tests/."""
     return os.path.join(os.path.dirname(__file__), rel_path)
 
+def foreign_key_check(engine, check_on:bool ):
+    if check_on:
+        if 'sqlite' in str(engine.url):
+            engine.execute(text('PRAGMA foreign_keys = ON;'))
+        else:
+            engine.execute(text('SET FOREIGN_KEY_CHECKS = 1;'))
+    else:
+        if 'sqlite' in str(engine.url):
+            engine.execute(text('PRAGMA foreign_keys = OFF;'))
+        else:
+            engine.execute(text('SET FOREIGN_KEY_CHECKS = 0;'))
 
 def populate_test_database(drop_and_create: bool, models):
     """Initialize the browse tables."""
     if drop_and_create:
+        foreign_key_check(models.db.engine, False)
         models.db.drop_all()
+        models.db.session.commit()
+        foreign_key_check(models.db.engine, True)
         models.db.create_all()
+        models.db.session.commit()
 
     # Member institution data
     models.db.session.add(
@@ -65,6 +80,7 @@ def populate_test_database(drop_and_create: bool, models):
 
     models.db.session.commit()
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
+    foreign_key_check(models.db.engine, False)
     execute_sql_files(sql_files, models.db.engine)
 
 
