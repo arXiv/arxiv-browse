@@ -63,7 +63,8 @@
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  {{ base_macros.universalsearch("Search within category","&classification-{{ browse_context }}=y") }}
+  {# TODO: this is a hack to support category-specific searches using advanced search "all fields" search #}
+  {{ base_macros.universalsearch("Search within category", {"terms-0-term": browse_context, "terms-0-field": "all", "terms-0-operator": "AND"}) }}
   <div class="arxiv-prevnext">
     {% if browse_context_previous_url -%}
     <span class="arrow">
