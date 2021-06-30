@@ -125,6 +125,7 @@ private_vars.sh
 legacy_comparison.org
 
 tests/data/browse.db
+browse/pytest.db
 
 *.key
 *.cer

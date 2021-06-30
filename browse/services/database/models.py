@@ -53,7 +53,7 @@ class License(db.Model):
     name = Column(String(255), primary_key=True)
     label = Column(String(255))
     active = Column(Integer, server_default=text("'1'"))
-    note = Column(String(255))
+    note = Column(String(400))
     sequence = Column(Integer)
 
 

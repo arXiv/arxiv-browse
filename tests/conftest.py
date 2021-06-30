@@ -29,23 +29,23 @@ def dbclient():
     import browse.services.documents as documents
 
     app = create_web_app()
+    app.config.update({'SQLALCHEMY_DATABASE_URI': SQLALCHEMY_DATABASE_URI})
+    app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})
+    app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
+
+    app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
+    app.settings.DOCUMENT_LISTING_SERVICE = db_listing
+    app.testing = True
+    app.config['APPLICATION_ROOT'] = ''
+
     with app.app_context() as ctx:
-        app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})
-        app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
-        app.config.update({'BROWSE_SQLALCHEMY_DATABASE_URI': SQLALCHEMY_DATABASE_URI})
-
-        app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
-        app.settings.DOCUMENT_LISTING_SERVICE = db_listing
-        app.testing = True
-        app.config['APPLICATION_ROOT'] = ''
-
         from flask import g
         g.doc_service = documents.db_docs(app.settings, g)
         g.listing_service = db_listing(app.settings, g)
 
-        #from browse.services.database import models
-        #from . import populate_test_database
-        #populate_test_database(True, models)
+        from browse.services.database import models
+        from . import populate_test_database
+        populate_test_database(True, models)
 
         yield app.test_client()
 
