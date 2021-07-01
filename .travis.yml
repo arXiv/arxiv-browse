@@ -11,6 +11,7 @@ script:
   - source ./.venv/bin/activate
   - pip install poetry
   - poetry install
+  - FLASK_APP=app.py python populate_test_database.py --drop_and_create
   - coverage run -m pytest
   # TODO: fix this; not running in Travis: - tests/lint.sh
   - tests/docstyle.sh
