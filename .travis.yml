@@ -10,6 +10,7 @@ script:
   - python -m venv ./.venv
   - source ./.venv/bin/activate
   - pip install poetry
+  - poetry install
   - coverage run -m pytest
   # TODO: fix this; not running in Travis: - tests/lint.sh
   - tests/docstyle.sh
