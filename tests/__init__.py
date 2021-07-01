@@ -78,10 +78,49 @@ def populate_test_database(drop_and_create: bool, models):
     models.db.session.add(models.MemberInstitutionIP(
         id=2, sid=2, start=2130706433, end=2130706433, exclude=0))
 
+    inst_cornell = models.MemberInstitution(
+        id=3,
+        name='Cornell University',
+        label='Cornell University'
+    )
+    models.db.session.add(inst_cornell)
+
+    inst_cornell_ip = models.MemberInstitutionIP(
+        id=3,
+        sid=inst_cornell.id,
+        start=2152988672,  # 128.84.0.0
+        end=2153054207,    # 128.84.255.255
+        exclude=0
+    )
+    models.db.session.add(inst_cornell_ip)
+
+    inst_cornell_ip_exclude = \
+        models.MemberInstitutionIP(
+            id=4,
+            sid=inst_cornell.id,
+            start=2152991233,  # 128.84.10.1
+            end=2152991242,    # 128.84.10.10
+            exclude=1
+        )
+    models.db.session.add(inst_cornell_ip_exclude)
+
+    inst_other = models.MemberInstitution(
+        id=5,
+        name='Other University',
+        label='Other University'
+    )
+    models.db.session.add(inst_other)
+
+    inst_other_ip = models.MemberInstitutionIP(
+        id=5,
+        sid=inst_other.id,
+        start=2152991236,  # 128.84.10.4
+        end=2152991242,    # 128.84.10.10
+        exclude=0
+    )
+    models.db.session.add(inst_other_ip)
+
     models.db.session.commit()
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
     foreign_key_check(models.db.engine, False)
     execute_sql_files(sql_files, models.db.engine)
-
-
-    
