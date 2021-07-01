@@ -50,6 +50,9 @@ coverage = "*"
 coveralls = "*"
 sphinx = "*"
 sphinx-autodoc-typehints = "*"
+pytest-mock = "^3.6.1"
+types-maxminddb = "^0.1.2"
+types-pytz = "^2021.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
