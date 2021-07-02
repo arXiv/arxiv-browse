@@ -43,7 +43,7 @@ def _get_document_count() -> Optional[int]:
     try: # check DB for document count first
         return get_document_count()  # type: ignore
     except Exception as ex:
-        logger.warning('Error getting document count from DB', ex)
+        logger.warning('Error getting document count from DB: %s', ex)
 
     try: # if DB is unavailable, fall back to legacy static file method
         daily_stats_path = current_app.config['BROWSE_DAILY_STATS_PATH']
