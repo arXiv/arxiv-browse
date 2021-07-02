@@ -1,4 +1,4 @@
-"""Shared functions that support determintation of dissemination formats."""
+"""Shared functions that support determination of dissemination formats."""
 import re
 from typing import List, Optional
 
@@ -120,4 +120,3 @@ def has_ancillary_files(source_type: str) -> bool:
     if not source_type:
         return False
     return re.search('A', source_type, re.IGNORECASE) is not None
-
