@@ -34,7 +34,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "arxiv-auth"
-version = "0.4.2rc1"
+version = "0.4.2"
 description = ""
 category = "main"
 optional = false
@@ -1325,7 +1325,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5f7efa26db6da7c1812eb49d8927ccca8216e48eca6953841c0ac91fb2eb81a4"
+content-hash = "37a9a7856166bf92e274d70ffaff9e35c4c6d0116b223b2a47e79f1d1d097b2b"
 
 [metadata.files]
 aiohttp = [
@@ -1351,7 +1351,7 @@ ansi2html = [
     {file = "ansi2html-1.6.0.tar.gz", hash = "sha256:0f124ea7efcf3f24f1f9398e527e688c9ae6eab26b0b84e1299ef7f94d92c596"},
 ]
 arxiv-auth = [
-    {file = "arxiv-auth-0.4.2rc1.tar.gz", hash = "sha256:908fb77fdea32707b58b7fb53ed347df540c154e7ad93dfb0cdfabf79a3eb232"},
+    {file = "arxiv-auth-0.4.2.tar.gz", hash = "sha256:6b75a97a1fc7ac93c11eb26de1fa1160d93464a19cf71263b8e7032a7b68a3cb"},
 ]
 arxiv-base = [
     {file = "arxiv-base-0.17.2.1.tar.gz", hash = "sha256:ea5afc2012ddaa8ae568ff1ca78c82bc0427ce370be10fbb74bc405f85a793e0"},
