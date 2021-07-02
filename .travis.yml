@@ -1,17 +1,18 @@
 language: python
-sudo: required
 cache: pip
 env:
   MIN_PYLINT_SCORE: 8
 os:
   - linux
 python:
-  - "3.6"
+  - "3.8"
 script:
-  - pip install pipenv
-  - pipenv sync --dev
-  - FLASK_APP=app.py pipenv run python populate_test_database.py --drop_and_create
-  - pipenv run nose2 --with-coverage --coverage-config .coveragerc
+  - python -m venv ./.venv
+  - source ./.venv/bin/activate
+  - pip install poetry
+  - poetry install
+  - FLASK_APP=app.py python populate_test_database.py --drop_and_create
+  - coverage run -m pytest
   # TODO: fix this; not running in Travis: - tests/lint.sh
   - tests/docstyle.sh
 after_success:

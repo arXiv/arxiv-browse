@@ -216,7 +216,7 @@ def get_listing(subject_or_category: str,
         if resp['pubdates'] and resp['pubdates'][0]:
             response_data['pubmonth'] = resp['pubdates'][0][0]
         else:
-            response_data['pubmonth'] = datetime.now() # This is just to make the tempalte happy
+            response_data['pubmonth'] = datetime.now() # This is just to make the template happy
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
 

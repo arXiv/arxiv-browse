@@ -87,7 +87,7 @@ class DbDocMetadataService(DocMetadataService):
                    .filter(Metadata.paper_id == identifier.id)
                    .filter(Metadata.is_current == 1)).first()
         if not res:
-            raise AbsNotFoundException()
+            raise AbsNotFoundException(identifier.id)
         return to_docmeta(res)
     
     def get_dissemination_formats(self,

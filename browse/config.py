@@ -123,12 +123,6 @@ class Settings(BaseSettings):
     CLASSIC_COOKIE_NAME: str = "tapir_session"
     CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
 
-    # What is the difference between CLASSIC_DATABASE_URI and BROWSE_SQLALCHEMY_DATABASE_URI?
-    # BROWSE_SQLALCHEMY_DATABASE_URI is the one set in the deploy files.
-    # But I see neither of these used in the text of arxiv-browse
-    CLASSIC_DATABASE_URI: str = DEFAULT_DB
-    """If not set, legacy database integrations for auth will not be available."""
-
     CLASSIC_SESSION_HASH: SecretStr = "foosecret"  # type: ignore
     SESSION_DURATION: int = 36000
 
@@ -312,17 +306,14 @@ class Settings(BaseSettings):
 
         fields = {
             'SQLALCHEMY_DATABASE_URI': {
-                'env': ['BROWSE_SQLALCHEMY_DATABASE_URI']
-            },
-            'CLASSIC_DATABASE_URI': {
-                'env': ["CLASSIC_DATABASE_URI", "BROWSE_SQLALCHEMY_DATABASE_URI"]
+                'env': ['BROWSE_SQLALCHEMY_DATABASE_URI', 'CLASSIC_DATABASE_URI']
             }
         }
 
     def check(self) -> None:
         """A check and fix up of a settings object."""
         if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
-            log.warning("using SQLite DB")
+            log.warning(f"using SQLite DB at {self.SQLALCHEMY_DATABASE_URI}")
             self.SQLALCHEMY_MAX_OVERFLOW = None
             self.SQLALCHEMY_POOL_SIZE = None
 
