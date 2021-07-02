@@ -130,7 +130,7 @@ def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
         filter(TrackbackPing.trackback_id == trackback_id).first()
     return trackback
 
-# Used only on tb page
+# Used only on tb/recent page
 @db_handle_error(logger=logger, default_return_val=list())
 def get_recent_trackback_pings(max_trackbacks: int = 25) \
         -> List[Tuple[TrackbackPing, str, str]]:
