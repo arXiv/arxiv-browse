@@ -10,7 +10,7 @@ from arxiv.base import Base
 from browse.config import settings
 from browse.routes import ui
 from browse.services.database import models
-from browse.formating.email import generate_show_email_hash
+from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
 s3 = FlaskS3()

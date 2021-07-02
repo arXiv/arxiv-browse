@@ -3,7 +3,7 @@ import unittest
 from hypothesis import given
 from hypothesis.strategies import text
 
-from browse.formating.email import generate_show_email_hash
+from browse.formatting.email import generate_show_email_hash
 
 
 class TestEmailHash(unittest.TestCase):

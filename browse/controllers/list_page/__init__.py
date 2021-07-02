@@ -54,7 +54,7 @@ from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from browse.services.listing import get_listing_service
 from browse.services.listing.base_listing import  NewResponse, NotModifiedResponse, ListingResponse
-from browse.formating.search_authors import queries_for_authors, \
+from browse.formatting.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
 
 

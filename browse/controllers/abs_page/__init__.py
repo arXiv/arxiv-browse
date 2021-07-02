@@ -29,10 +29,10 @@ from browse.domain.identifier import Identifier, IdentifierException,\
     IdentifierIsArchiveException
 from browse.exceptions import AbsNotFound
 
-from browse.formating.search_authors import queries_for_authors, \
+from browse.formatting.search_authors import queries_for_authors, \
     split_long_author_list
-from browse.formating.metatags import meta_tag_metadata
-from browse.formating.external_refs_cits import include_inspire_link,\
+from browse.formatting.metatags import meta_tag_metadata
+from browse.formatting.external_refs_cits import include_inspire_link,\
     include_dblp_section, get_computed_dblp_listing_path, get_dblp_bibtex_path
 
 from browse.services.documents import get_doc_service
