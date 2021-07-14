@@ -2,7 +2,7 @@
 from typing import Dict, List, Optional
 from dataclasses import replace
 
-from browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata, VersionEntry
 from browse.domain.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
@@ -88,7 +88,25 @@ class DbDocMetadataService(DocMetadataService):
                    .filter(Metadata.is_current == 1)).first()
         if not res:
             raise AbsNotFoundException(identifier.id)
-        return to_docmeta(res)
+
+        # Gather version history metadata from each document version
+        # entry in database.
+        version_history = list()
+
+        all_versions = (Metadata.query
+               .filter(Metadata.paper_id == identifier.id)
+               )
+
+        for version in all_versions:
+            size_kilobytes = int(version.source_size / 1024 + .5)
+            entry = VersionEntry(version=version.version,
+                                 raw='fromdb-no-raw',
+                                 size_kilobytes=size_kilobytes,
+                                 submitted_date=version.created,
+                                 source_type=version.source_format)
+            version_history.append(entry)
+
+        return to_docmeta(res, version_history)
     
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
