@@ -14,6 +14,7 @@ from browse.services.database.models import Metadata
 from ..format_codes import formats_from_source_type
 from .convert import to_docmeta
 
+from dateutil.tz import tzutc
 
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
@@ -99,10 +100,12 @@ class DbDocMetadataService(DocMetadataService):
 
         for version in all_versions:
             size_kilobytes = int(version.source_size / 1024 + .5)
+            # Set UTC timezone
+            created_tz = version.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=version.version,
                                  raw='fromdb-no-raw',
                                  size_kilobytes=size_kilobytes,
-                                 submitted_date=version.created,
+                                 submitted_date=created_tz,
                                  source_type=version.source_format)
             version_history.append(entry)
 
