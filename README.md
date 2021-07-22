@@ -63,7 +63,7 @@ the test data from `tests/data`.
 
 ```bash
 docker build . -t arxiv/browse:some_tag
-docker run -it 8000:8000 arxiv/browse:some_tag
+docker run -it -p 8000:8000 arxiv/browse:some_tag
 ```
 If all goes well, http://localhost:8000/ will render the home page.
 
