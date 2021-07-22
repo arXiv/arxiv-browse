@@ -1,13 +1,14 @@
-{%- extends "base.html" -%}
+{%- extends "base/base.html" %}
+{% import 'base/macros.html' as base_macros %}
 
-{% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
+{% set pagetitle %}
+  {{list_ctx_name}} {{list_month_name}} {{list_year}}
+{% endset %}
 
-{% block header_h1 %}
-<div class="header-breadcrumbs">
-  <a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt;
-  <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
-  </div>
-{% endblock %}
+{#- build breadcrumb items as link : label pairs, excluding home and current page -#}
+{% set breadcrumb = {
+  url_for('.list_articles', context=list_ctx_id, subcontext='recent') : list_ctx_id,
+} %}
 
 {%- block content %}
 <div id='content-inner'>
@@ -27,7 +28,7 @@
   {{ page_divs() }}
 </div>
 </div>
-{%- endblock %}
+{% endblock content -%}
 
 
 {%- macro page_divs() -%}

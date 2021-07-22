@@ -24,18 +24,21 @@ $(document).ready(function() {
     }
   };
 
-  var pwcEnabled = true;
+  $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+    console.log(textStatus);
+  });
+  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true).prop("checked", true);
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
     if ( labsCookie["last_tab"] ){
-      $("input#"+labsCookie["last_tab"]).click();
+      $("#"+labsCookie["last_tab"]).click();
     }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
-        $("#" + key + ".lab-toggle").toggleClass("enabled", true);
+        $("#" + key + ".form-check-input").toggleClass("enabled", true).prop("checked", true);
         if (key == "bibex-toggle") {
           $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -64,20 +67,14 @@ $(document).ready(function() {
     Cookies.set("arxiv_labs", { sameSite: "strict" });
   }
 
-  if(pwcEnabled){
-    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled",true);
-    $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-      console.log(textStatus);
-    });
-  }
   // record last-clicked tab
-  $("div.labstabs input[name='tabs']").on("click", function() {
+  $("button.lab-tab").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     labsCookie["last_tab"] = $(this).attr("id");
     Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
   });
 
-  $(".lab-toggle").on("click", function() {
+  $(".form-check-input").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     var bibexCookie = Cookies.getJSON("arxiv_bibex") || {};
 

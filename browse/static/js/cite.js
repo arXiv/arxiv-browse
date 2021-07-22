@@ -4,7 +4,7 @@ $(document).ready(function() {
     var cached_provider=null
     var setup=0
     var API_CROSSREF_CITE='https://dx.doi.org/'
-    
+
     function error_check(response) {
         switch (response.status) {
         case 0:
@@ -18,7 +18,7 @@ $(document).ready(function() {
         }
     }
 
-    
+
     var provider_desc={
         arxiv: 'arXiv API',
         doi: 'Crossref Citation Formating Service'
@@ -36,10 +36,10 @@ $(document).ready(function() {
         data = data.replace('}}', '}\n}')
         return data
     }
-    
+
     $('#bib-cite-trigger').click(function(){
         $('#bib-cite-loading').show()
-        
+
         metaid =  document.head.querySelector(`[name="citation_arxiv_id"]`)
         id = metaid ? metaid.content: ''
 
@@ -53,6 +53,8 @@ $(document).ready(function() {
         }
 
         var do_modal=function(result, provider){
+            # TODO: 2021-03-12 (mhl10): in phoenix, probably need to use bootstrap modals here, otherwise this modal won't display
+            # var myModal = new bootstrap.Modal(document.getElementById('bib-cite-modal'), {})
             $('#bib-cite-loading').hide()
             $('#bib-cite-target').val(result)
             $('#bib-cite-source-api').text(provider_desc[provider]).attr('href', provider_url[provider])

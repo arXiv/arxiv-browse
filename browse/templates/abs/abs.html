@@ -1,10 +1,16 @@
-{%- extends "base.html" -%}
+{%- extends "base/base.html" %}
+
 {% from 'abs/author_links.html' import display_authors_with_links %}
+
 {% import 'base/macros.html' as base_macros %}
 
-{% block title %}[{{ requested_id }}] {{ abs_meta.title|tex2utf }}{% endblock %}
+{% set pagetitle %}arXiv:{{ requested_id }}{% endset %}
+{#- build breadcrumb items as link : label pairs, excluding home and current page -#}
+{% set breadcrumb = {
+  url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') : abs_meta.primary_archive.id,
+} %}
 
-{% block head %}
+{% block addl_head %}
   {{ super() -}}
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
@@ -14,41 +20,32 @@
   {#  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/paperwithcode.css') }}" /> #}
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20210513" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20210311-phoenix" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
   {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
   {{- generate_social_media_tags() }}
-{% endblock head %}
-
-{% block body_id %}{% endblock %}
-
-{% block header_h1 %}
-  <div class="header-breadcrumbs is-hidden-mobile"><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</div>
-{% endblock header_h1 %}
+{% endblock addl_head %}
 
 {%- block content %}
-{%- include "abs/trackback_rdf.html" %}
-<div id="abs-outer">
-  {% set download_button %}
-    {{ generate_download_button() }}
-  {% endset %}
+{% set download_button %}
+  {{ generate_download_button('d-md-none arxiv-mobile-download') }}
+{% endset %}
 
-  <div class="leftcolumn">
-    <div class="subheader">
-      <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
-    </div>
+{% block breadcrumbs %}
+{% endblock breadcrumbs %}
 
-    <div class="header-breadcrumbs-mobile">
-      <strong>arXiv:{{ requested_id }}</strong> ({{ abs_meta.primary_archive.id }})
-    </div>
+<div class="row">
+  <div class="col-md">
+
     {% if is_covid_match %}
-    <div class="message-special" style="margin:2em 1em;">
-      <span class="label">COVID-19 e-print</span>
+    <div class="alert alert-primary" role="alert">
+      <h4 class="alert-heading">COVID-19 e-print</h4>
       <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
     </div>
     {% endif -%}
+
     {{
       base_macros.abs(
       abs_meta.arxiv_identifier.id,
@@ -68,29 +65,25 @@
       secondary_categories = abs_meta.get_secondaries(),
       download_button_markup = download_button )
     }}
-    <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
-      {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
-      {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
-      {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
-      <br/>
-      {%- for version_entry in abs_meta.version_history -%}
-      {{ generate_version_entry(version_entry, abs_meta.version) }}
-      {%- endfor -%}
-    </div>
   </div>
-  <!--end leftcolumn-->
-  {% include "abs/extra_services.html" %}
-  {% include "abs/labs_tabs.html" %}
-
-  <div class="endorsers">
-    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |
-    <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
-    <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;"></span>
+  <div class="arxiv-sidebar col-md-5 col-lg-4 col-xl-3 border-start extra-services">
+    {% include "abs/sidebar.html" %}
+    {%- include "abs/trackback_rdf.html" %}
+    <!-- <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a> -->
+    <script type="text/javascript" language="javascript">mathjaxToggle();</script>
   </div>
-  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
-</div>
+</div><!-- /end row -->
 {% endblock content %}
+
+{% block content_extra %}
+<div class="arxiv-labs">
+  {% include "abs/labs_tabs.html" %}
+</div>
+{% endblock content_extra %}
+
+
+
+
 
 {%- macro generate_version_entry(version_entry, this_version) %}
   {%- if version_entry.version == this_version -%}
@@ -142,23 +135,29 @@
   {%- endif -%}
 {%- endmacro -%}
 
-{%- macro version_atag(id, version) -%}
+{%- macro version_atag(arxiv_id, version, primary_category) -%}
   {%- if version -%}
     {%- set vpart = 'v' ~ version -%}
   {%- else -%}
     {%- set vpart = '' -%}
   {% endif %}
-  {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
-    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
-  {%- else -%}
-    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
+  {%- if primary_category in arxiv_id -%}
+    <a href="{{ arxiv_id|canonical_url(version) }}">arXiv:{{ abs_meta.arxiv_id }}{{vpart}}</a>
+    {%- else -%}
+    <a href="{{ arxiv_id|canonical_url(version) }}">arXiv:{{ abs_meta.arxiv_id }}{{vpart}}</a> [{{ abs_meta.primary_category }}]
   {%- endif -%}
 {%- endmacro -%}
 
-{% macro generate_download_button() %}
+{% macro generate_download_button(display) %}
+  {#- to display only on mobile use this display class: d-sm-none -#}
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a class="btn btn-primary {{ display }}" href="{{url_for('.pdf', arxiv_id=requested_id)}}">
+      <svg width="20" height="20" fill="currentColor" role="presentation">
+        <use xlink:href="{{ url_for('base.static', filename='images/icons/custom-icons.svg') }}#pdf-file"/>
+      </svg>
+      Download PDF
+    </a>
   {% else %}
-    <a class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
+    <a class="btn disabled d-sm-none" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
 {% endmacro %}

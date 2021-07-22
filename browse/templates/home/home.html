@@ -1,39 +1,41 @@
-{%- extends "base.html" -%}
-{% block title %}arXiv.org e-Print archive{% endblock %}
-{% block head %}
-  {{ super() -}}
-{% endblock head %}
+{%- extends "base/base.html" %}
 
-{% block login_link %}{% include 'login.html' %}{% endblock %}
-{% block body_id %}id="front"{% endblock %}
+{% set pagetitle %}arXiv Homepage{% endset %}
 
 {%- block content %}
-{#- TODO: display order in taxonomy? -#}
-
-<div class="columns">
-  <div class="column intro-and-news is-half-desktop">
-    <p class="tagline">arXiv is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
+<div class="row">
+  <div class="col">
+    <h1>
+      Welcome
+      {% if request.auth is defined and request.auth.user is defined %}
+        {{ request.auth.user.username }}
+      {% else %}
+        to arXiv
+      {% endif %}
+    </h1>
+    <p>{{ macros.accessible_name() }} is a free distribution service and an open-access archive for {% if document_count -%}{{ "{:,}".format(document_count) }}{%- endif %}
      scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics.
-     Materials on this site are not peer-reviewed by arXiv.
-    </p>
+     Materials on this site are not peer-reviewed by arXiv.</p>
+  </div>
+</div><!-- /end intro -->
 
-    {#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
-    <form name="home-adv-search" class="home-search" action="/multi" method="get" role="search">
-      <label for="search-category">Subject search and browse:</label><br>
-      <select name="group" title="Search in" id="search-category">
-      {%- for group_key, group_details in groups.items() if not group_details.is_test %}
-        <option
-            value ="{{group_key}}"
-            data-url="{{url_for('search_archive', archive=group_key[4:])}}"
-            {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
+{#-  /multi sends to either search, catchup or form interface based on which button is hit. -#}
+<div class="d-flex justify-content-center">
+  <form class="row p-2 g-1 arxiv-home-form">
+    <h2 class="w-100 d-flex justify-content-center"><label for="search-category" class="form-label">Subject search and browse:</label></h2>
+    <div class="input-group">
+      <select name="group" title="Search in" id="search-category" class="form-select">
+        <option value="" selected disabled>Select a category</option>
+        {%- for group_key, group_details in groups.items() if not group_details.is_test %}
+        <option value ="{{group_key}}" data-url="{{url_for('search_archive', archive=group_key[4:])}}">
           {{ group_details.name }}
         </option>
         {%- endfor %}
       </select>
-      <input id="adv-search-btn" type="button" value="Search">
-      <input type="submit" name="/form" value="Form Interface">
-      <input type="submit" name="/catchup" value="Catchup">
-    </form>
+      <input type="submit" id="adv-search-btn" value="Search" class="btn btn-primary">
+      <input type="submit" name="/form" value="Form Interface" class="btn btn-primary">
+      <input type="submit" name="/catchup" value="Catchup" class="btn btn-primary">
+    </div>
     <script type="text/javascript">
      function doAdvSearchBtn(event) {
          sel = document.querySelector('select[name="group"]')
@@ -50,30 +52,32 @@
          document.getElementById('adv-search-btn').onclick=doAdvSearchBtn;
      },false);
     </script>
-    <h4 class="homepage-news-title">News</h4>
-    <!-- special news section -->
-    {%- include "home/news.html" -%}
-    Read about recent news and updates on <a href="https://blog.arxiv.org/" target="_blank">arXiv's blog</a>.
-    (View the former <a href="https://arxiv.org/new/">"what's new" pages</a> here).
-    Read <a href="/help/robots">robots beware</a> before attempting any automated download.
+  </form>
+</div>
+<!-- /end search -->
+
+<div class="card-group arxiv-home-messages arxiv-cards-warm">
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title">News</h3>
+      {%- include "home/news.html" -%}
+      <a href="https://blog.arxiv.org/" class="btn btn-secondary">See All News</a><br>
+      <a href="https://arxiv.org/new/" class="btn btn-outline-secondary btn-tiny">Old 'What's New' Pages</a>
+    </div>
   </div>
-  <!-- special message column -->
-  {%- include "home/special-message.html" -%}
-</div><!-- /end columns -->
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title">COVID-19 Quick Links</h3>
+      <p>See COVID-19 SARS-CoV-2 preprints from:</p>
+      <a href="/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv" class="btn btn-secondary">arXiv</a>
+      <a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv" class="btn btn-secondary">medRxiv and bioRxiv</a>
+      <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
+    </div>
+  </div>
+</div><!-- /end news and messages -->
+<br><br>
 
-{#- TODO: define display order in taxonomy? -#}
 {{- group_section(('grp_physics','grp_math','grp_cs','grp_q-bio','grp_q-fin','grp_stat','grp_eess','grp_econ')) }}
-
-<hr />
-<h2>About arXiv</h2>
-<ul>
-  <li><a href="/about">General information</a></li>
-  <li><a href="/help/submit">How to Submit to arXiv</a></li>
-  <li><a href="/new">News</a></li>
-  <li><a href="/about/give">Membership &amp; Giving</a></li>
-  <li><a href="/about/people">Who We Are</a></li>
-</ul>
-
 {% endblock content -%}
 
 {%- macro group_section(group_keys) -%}
