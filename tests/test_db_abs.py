@@ -25,8 +25,7 @@ def test_basic_db_abs(dbclient):
 
 
 def test_db_abs_history(dbclient):
-    pytest.skip('not yet implemented in db backend')
-
+    
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')

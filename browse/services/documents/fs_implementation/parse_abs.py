@@ -78,7 +78,7 @@ def parse_abs_file(filename: str) -> DocMetadata:
         raise AbsParsingException(
             'Unexpected number of components parsed from .abs.')
 
-    # everything else is in the second main component
+    # extract out prehistory, everything else is in the second main component
     prehistory, misc_fields = re.split(r'\n\n', components[1])
 
     fields: Dict[str, Any] = \
@@ -95,6 +95,7 @@ def parse_abs_file(filename: str) -> DocMetadata:
 
     arxiv_id = id_match.group('arxiv_id')
 
+    # cleanup and create list of prehistory entries
     prehistory = re.sub(r'^.*\n', '', prehistory)
     parsed_version_entries = re.split(r'\n', prehistory)
 
