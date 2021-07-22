@@ -186,7 +186,7 @@ class Settings(BaseSettings):
     session is modified. Non permanent sessions are not affected by this.
     """
 
-    USE_X_SENDFILE: bool = True
+    USE_X_SENDFILE: bool = False
     """enable/disable x-sendfile"""
 
     LOGGER_NAME: str = "browse"
