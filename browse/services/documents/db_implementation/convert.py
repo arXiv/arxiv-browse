@@ -1,6 +1,6 @@
 from pytz import timezone
 from dateutil.tz import tzutc
-
+from typing import List
 from arxiv import taxonomy
 
 from browse.domain.metadata import DocMetadata, Submitter, AuthorList, \
@@ -10,7 +10,7 @@ from browse.services.documents.base_documents import AbsException
 # TODO get this from arxiv-base
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
-def to_docmeta(dbmd) -> DocMetadata:
+def to_docmeta(dbmd, version_history: List[VersionEntry]) -> DocMetadata:
     # This is from parse_abs.py
     arxiv_identifier = Identifier(dbmd.paper_id)
 
@@ -46,7 +46,7 @@ def to_docmeta(dbmd) -> DocMetadata:
     modified = dbmd.updated or dbmd.created
     modified.replace(tzinfo=ARXIV_BUSINESS_TZ)
     modified = modified.astimezone(tz=tzutc())
-    
+
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
         abstract=dbmd.abstract,
@@ -71,12 +71,7 @@ def to_docmeta(dbmd) -> DocMetadata:
         comments=dbmd.comments or None,
         version=dbmd.version,
         license=doc_license,
-        #TODO This is a guess
-        version_history=[VersionEntry(version=dbmd.version,
-                                      raw='fromdb-no-raw',
-                                      size_kilobytes=dbmd.source_size,
-                                      submitted_date=submitted,
-                                      source_type=dbmd.source_format)],        
+        version_history=version_history,
         is_definitive=False,
         is_latest=dbmd.is_current
         )

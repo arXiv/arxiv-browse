@@ -1,0 +1,26 @@
+<div class="card arxiv-submission-history">
+  <div class="card-body">
+    <h4 class="card-title">Submission history</h4>
+    <div class="card-text">
+      <div class="submitter">
+        <h5>Submitter:</h5>
+        <p>{{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}
+        [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}" class="arxiv-view-email-link">view email</a>]
+        </p>
+        <p><a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="arxiv-endorsers-link fst-italic">Which authors of this paper are endorsers?</a>
+        {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
+        {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
+        {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
+        </p>
+      </div>
+      <div class="version">
+        <h5>Version:</h5>
+        <p>
+        {%- for version_entry in abs_meta.version_history -%}
+        {{ generate_version_entry(version_entry, abs_meta.version) }}
+        {%- endfor -%}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -29,10 +29,8 @@ def test_basic_db_abs(dbclient):
     assert "math.NT" in subjects.get_text()
 
 
-def test_db_abs_history(dbclient):
-    pytest.skip("not yet implemented in db backend")
-
-    rt = dbclient.get("/abs/0906.2112")
+def test_db_abs_history(dbclient):   
+    rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
     html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
     history = html.select_one(".submission-history")
@@ -54,13 +52,12 @@ def test_db_abs_comment(dbclient):
     html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
     comments = html.select_one(".comments")
     assert "21 pages" in comments.get_text()
-
-    # TODO: enable this test once version history ticket ARXIVNG-4282 completed
-    # rt = dbclient.get("/abs/0906.2112v2")
-    # assert rt.status_code == 200
-    # html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
-    # comments = html.select_one(".comments")
-    # assert (
-    #     "slightly rewritten the introduction, and added a few comments. Conjecture 6.2 is true as stated. This follows from recent work of K. Yamaki and the author. See references in the present version"
-    #     in comments.get_text()
-    # )
+    
+    rt = dbclient.get("/abs/0906.2112v2")
+    assert rt.status_code == 200
+    html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
+    comments = html.select_one(".comments")
+    assert (
+        "slightly rewritten the introduction, and added a few comments. Conjecture 6.2 is true as stated. This follows from recent work of K. Yamaki and the author. See references in the present version"
+        in comments.get_text()
+    )

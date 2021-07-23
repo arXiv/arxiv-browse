@@ -1,16 +1,4 @@
-{#- Special messages appear in a column to the side of the website intro/news section, each in their own column. Always apply the style "message-special" to the column. You can also apply the style "dark" to override the red styles and add a message with a black background instead. There should preferably be just one, and never more than two. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-
-<div class="message-special column">
-  <span class="label">COVID-19 Quick Links</span>
-  <p>See COVID-19 SARS-CoV-2 preprints from</p>
-  <ul>
-    <li><a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv">arXiv</a></li>
-    <li><a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv">medRxiv and bioRxiv</a></li>
-  </ul>
-  <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
-</div>
-
 <!-- annual giving message -->
 {%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}
 23 Sep 2019: Our giving campaign is this week. <a href="https://blogs.cornell.edu/arxiv/2019/09/19/donate-to-arxiv-4/">Support arXiv with a donation!</a><br/>
