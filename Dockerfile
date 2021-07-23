@@ -31,8 +31,6 @@ RUN echo $git_commit > /git-commit.txt
 
 ENV LC_ALL en_US.utf8
 ENV LANG en_US.utf8
-ENV LOGLEVEL 40
-ENV FLASK_DEBUG 1
 ENV FLASK_APP /opt/arxiv/app.py
 
 EXPOSE 8000
