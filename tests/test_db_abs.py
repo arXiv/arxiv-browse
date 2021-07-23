@@ -29,11 +29,11 @@ def test_basic_db_abs(dbclient):
     assert "math.NT" in subjects.get_text()
 
 
-def test_db_abs_history(dbclient):   
+def test_db_abs_history(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
     html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
-    history = html.select_one(".submission-history")
+    history = html.select_one(".arxiv-submission-history")
     assert history
     assert "Thu, 11 Jun 2009 14:09:14 UTC" in history.get_text()
     assert "Mon, 9 Aug 2010 13:12:58 UTC" in history.get_text()
@@ -52,7 +52,7 @@ def test_db_abs_comment(dbclient):
     html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
     comments = html.select_one(".comments")
     assert "21 pages" in comments.get_text()
-    
+
     rt = dbclient.get("/abs/0906.2112v2")
     assert rt.status_code == 200
     html = BeautifulSoup(rt.data.decode("utf-8"), "html.parser")
