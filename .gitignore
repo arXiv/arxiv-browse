@@ -130,3 +130,5 @@ browse/pytest.db
 *.key
 *.cer
 deploy/env_values.txt
+
+TAG.txt
