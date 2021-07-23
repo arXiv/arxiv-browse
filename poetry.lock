@@ -54,7 +54,7 @@ sqlalchemy = "*"
 
 [[package]]
 name = "arxiv-base"
-version = "0.16.8-120-g7abd627"
+version = "0.16.8-122-g7da747e"
 description = ""
 category = "main"
 optional = false
@@ -74,8 +74,8 @@ uwsgi = "*"
 [package.source]
 type = "git"
 url = "https://github.com/arXiv/arxiv-base.git"
-reference = "ARXIVNG-3824-bootstrap"
-resolved_reference = "7abd627204e939c2f0c823e52efd70c30cbbb241"
+reference = "7da747e"
+resolved_reference = "7da747e69b90d92f49b31e9597dd26a99f297f0f"
 
 [[package]]
 name = "astroid"
@@ -1344,7 +1344,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4b2f89b6392ea0d5da80532a21bf7af89b2b572aa02e9c278b8b1d94f1fc5491"
+content-hash = "062d6551634eb800216b8ab5e969ce18138c14ae70aa133a80358ba095036ac8"
 
 [metadata.files]
 aiohttp = [
