@@ -19,13 +19,13 @@ from dateutil.tz import tzutc
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
 
-    
+
     def __init__(self,
                  db) -> None:
         """Initialize the DB document metadata service."""
         self.db = db
 
-    
+
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
@@ -38,32 +38,55 @@ class DbDocMetadataService(DocMetadataService):
         -------
         :class:`DocMetadata`
         """
-
-        # TODO Probably doesn't do docmeta.version_history correctly
         paper_id = Identifier(arxiv_id=arxiv_id)
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 
-        latest_version = self._abs_for_version(identifier=paper_id)
+        latest_version: DocMetadata = None
+        this_version: DocMetadata = None
+        version_history = list()
+        # Need all versions to build version history
+        all_versions = (Metadata.query
+                        .filter(Metadata.paper_id == paper_id.id)
+                        .order_by(Metadata.version)
+                        )
+        if not all_versions:
+            raise AbsNotFoundException(paper_id.id)
+
+        for version in all_versions:
+            # Build version entry
+            size_kilobytes = int(version.source_size / 1024 + .5)
+            created_tz = version.created.replace(tzinfo=tzutc())
+            entry = VersionEntry(version=version.version,
+                                 raw='fromdb-no-raw',
+                                 size_kilobytes=size_kilobytes,
+                                 submitted_date=created_tz,
+                                 source_type=version.source_format)
+            version_history.append(entry)
+
+            if paper_id.has_version and paper_id.version == version.version:
+                this_version = to_docmeta(version, version_history)
+                if version.is_current == 1:
+                    latest_version = this_version
+            if version.is_current == 1 and not latest_version:
+                latest_version = to_docmeta(version, version_history)
+
         if not paper_id.has_version \
-           or paper_id.version == latest_version.version:
+                or paper_id.version == latest_version.version:
             return replace(latest_version,
+                           version_history=version_history,
                            is_definitive=True,
                            is_latest=True)
-
-        try:
-            this_version = self._abs_for_version(identifier=paper_id,
-                                                 version=paper_id.version)
-        except AbsNotFoundException as e:
+        elif paper_id.has_version and not this_version:
             if paper_id.is_old_id:
-                raise
+                raise AbsNotFoundException
             else:
-                raise AbsVersionNotFoundException(e) from e
+                raise AbsVersionNotFoundException
 
         # Several fields need to reflect the latest version's data
         combined_version: DocMetadata = replace(
             this_version,
-            version_history=latest_version.version_history,
+            version_history=version_history,
             categories=latest_version.categories,
             primary_category=latest_version.primary_category,
             secondary_categories=latest_version.secondary_categories,
@@ -73,44 +96,6 @@ class DbDocMetadataService(DocMetadataService):
             is_latest=False)
         return combined_version
 
-
-    def _abs_for_version(self, identifier: Identifier,
-                         version: Optional[int] = None) -> DocMetadata:
-        """Get a specific version of a paper's abstract metadata.
-
-        if version is None then get the latest version."""
-        if version:
-            res = (Metadata.query
-                   .filter( Metadata.paper_id == identifier.id)
-                   .filter( Metadata.version == identifier.version )).first()                   
-        else:
-            res = (Metadata.query
-                   .filter(Metadata.paper_id == identifier.id)
-                   .filter(Metadata.is_current == 1)).first()
-        if not res:
-            raise AbsNotFoundException(identifier.id)
-
-        # Gather version history metadata from each document version
-        # entry in database.
-        version_history = list()
-
-        all_versions = (Metadata.query
-               .filter(Metadata.paper_id == identifier.id)
-               )
-
-        for version in all_versions:
-            size_kilobytes = int(version.source_size / 1024 + .5)
-            # Set UTC timezone
-            created_tz = version.created.replace(tzinfo=tzutc())
-            entry = VersionEntry(version=version.version,
-                                 raw='fromdb-no-raw',
-                                 size_kilobytes=size_kilobytes,
-                                 submitted_date=created_tz,
-                                 source_type=version.source_format)
-            version_history.append(entry)
-
-        return to_docmeta(res, version_history)
-    
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
