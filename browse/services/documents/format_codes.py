@@ -15,9 +15,20 @@ VALID_SOURCE_EXTENSIONS = [
     ('.html.gz', ['html'])
 ]
 """List of tuples containing the valid source file name extensions and
-their corresponding dissemintation formats.  There are minor
+their corresponding dissemination formats.  There are minor
 performance implications in the ordering when doing filesystem
 lookups, so the ordering here should be preserved."""
+
+VALID_SOURCE_FORMATS = {
+    'docx': ['pdf', 'other'],
+    'html': ['html', 'other'],
+    'pdf': ['pdfonly'],
+    'pdftex': None,
+    'ps': ['pdf', 'ps'],
+    'tex': None,
+    'withdrawn': ['src']
+}
+"""Dict of source format strings and their corresponding dissemination formats."""
 
 def formats_from_source_type(source_type: str,
                              format_pref: Optional[str] = None,

@@ -2,16 +2,16 @@
 from typing import Dict, List, Optional
 from dataclasses import replace
 
-from browse.domain.metadata import DocMetadata, VersionEntry
+from browse.domain.metadata import DocMetadata, VersionEntry, SourceType
 from browse.domain.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 from browse.services.documents.base_documents import DocMetadataService, \
-    AbsDeletedException, AbsNotFoundException , AbsVersionNotFoundException
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException
 
 from browse.services.database.models import Metadata
 
-from ..format_codes import formats_from_source_type
+from ..format_codes import formats_from_source_type, VALID_SOURCE_FORMATS
 from .convert import to_docmeta
 
 from dateutil.tz import tzutc
@@ -61,7 +61,9 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='fromdb-no-raw',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=version.source_format)
+                                 source_type=SourceType(code=version.source_flags,
+                                                        format=version.source_format)
+                                )
             version_history.append(entry)
 
             if paper_id.has_version and paper_id.version == version.version:
@@ -102,10 +104,13 @@ class DbDocMetadataService(DocMetadataService):
                                   add_sciencewise: bool = False) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
-        THIS ONLY CHECK THE source type on the doc metadata.
+        The list is primarily determined from the `source_format` and
+        `source_flags` columns in the database table; these map to
+        `DocMetadata.version_history[].source_type.format` and
+        `DocMetadata.version_history[].source_type.code`, respectively.
 
-        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
-        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
+        Dissemination format names are strings. These include 'src', 'pdf',
+        'ps', 'html', 'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
 
         Parameters
         ----------
@@ -118,25 +123,28 @@ class DbDocMetadataService(DocMetadataService):
         Returns
         -------
         List[str]
-            A list of format strings.
+            A list of dissemination format strings.
         """
-        # version = docmeta.version
-        # format_code = docmeta.version_history[version - 1].source_type.code
+        dissemination_formats: List[str] = []
+        version = int(docmeta.version)
+        format_str = docmeta.version_history[version - 1].source_type.format
+        format_code = docmeta.version_history[version - 1].source_type.code
 
-        # # TODO cache flag?
-        # cache_flag = False
-        # # cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
-        # # if cached_ps_file_path \
-        # #    and os.path.getsize(cached_ps_file_path) == 0 \
-        # #    and source_file_path \
-        # #    and os.path.getmtime(source_file_path) \
-        # #    < os.path.getmtime(cached_ps_file_path):
-        # #     cache_flag = True
+        if format_str in VALID_SOURCE_FORMATS and VALID_SOURCE_FORMATS[format_str]:
+            dissemination_formats.extend(VALID_SOURCE_FORMATS[format_str])
 
-        # return formats_from_source_type(format_code,
-        #                                 format_pref,
-        #                                 cache_flag,
-        #                                 add_sciencewise)
+            if add_sciencewise:
+                if dissemination_formats and dissemination_formats[-1] == 'other':
+                    dissemination_formats.insert(-1, 'sciencewise_pdf')
+                else:
+                    dissemination_formats.append('sciencewise_pdf')
+
+        else:
+            return formats_from_source_type(format_code,
+                                            format_pref,
+                                            False,
+                                            add_sciencewise)
+
         return []
 
     def get_ancillary_files(self, docmeta: DocMetadata) \

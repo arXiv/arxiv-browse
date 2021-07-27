@@ -14,7 +14,6 @@ def to_docmeta(dbmd, version_history: List[VersionEntry]) -> DocMetadata:
     # This is from parse_abs.py
     arxiv_identifier = Identifier(dbmd.paper_id)
 
-    
     primary_category=None
     secondary_categories=[]
     if dbmd.abs_categories:
@@ -50,15 +49,15 @@ def to_docmeta(dbmd, version_history: List[VersionEntry]) -> DocMetadata:
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
         abstract=dbmd.abstract,
-        arxiv_id=dbmd.paper_id,        
+        arxiv_id=dbmd.paper_id,
         arxiv_id_v=dbmd.paper_id + 'v' + str(dbmd.version),
         arxiv_identifier = Identifier(dbmd.paper_id),
-        title =dbmd.title,        
+        title=dbmd.title,
         modified=modified,
         authors=AuthorList(dbmd.authors),
         submitter=Submitter(name=dbmd.submitter_name, email=dbmd.submitter_email),
-        categories=dbmd.abs_categories,        
-        primary_category=primary_category,        
+        categories=dbmd.abs_categories,
+        primary_category=primary_category,
         primary_archive=primary_archive,
         primary_group=Group(taxonomy.ARCHIVES[primary_archive.id]['in_group']),
         secondary_categories=secondary_categories,
@@ -75,4 +74,3 @@ def to_docmeta(dbmd, version_history: List[VersionEntry]) -> DocMetadata:
         is_definitive=False,
         is_latest=dbmd.is_current
         )
-
