@@ -43,7 +43,6 @@
 
     if (data.all_official.length > 0) {
       for (const implementation of data.all_official) {
-        console.log({implementation})
         let icon = icons.github;
         if (implementation.url.includes('gitlab')) icon = icons.gitlab;
         if (implementation.url.includes('bitbucket')) icon = icons.bitbucket;
@@ -157,7 +156,7 @@
     let nameDiv = $('<div class="pwc-data-card-name">');
     let nameA = $('<a class="pwc-data-name" target="_blank">');
     nameA.attr("href", dataObj.url);
-    nameA.append(dataObj.name);
+    nameA.append(document.createTextNode(dataObj.name));
 
     // meta line
     let num_papers = dataObj.num_papers - 1;
