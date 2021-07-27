@@ -25,6 +25,14 @@ class TestFormats(TestCase):
         self.assertListEqual(formats_from_source_type('I'), ['src'])
         self.assertListEqual(formats_from_source_type('IS'),
                              ['pdf', 'ps', 'other'])
+        self.assertListEqual(formats_from_source_type('1S'),
+                             ['pdf', 'ps', 'other'])
+        self.assertListEqual(formats_from_source_type('1'),
+                             ['pdf', 'ps', 'other'])
+        self.assertListEqual(formats_from_source_type(None),
+                             ['pdf', 'ps', 'other'])
+        self.assertListEqual(formats_from_source_type(''),
+                             ['pdf', 'ps', 'other'])
         self.assertListEqual(formats_from_source_type('', cache_flag=True),
                              ['nops', 'other'])
         self.assertListEqual(formats_from_source_type('', cache_flag=False),
