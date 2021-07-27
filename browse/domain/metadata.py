@@ -18,8 +18,8 @@ class SourceType:
     code: str
     """Internal code for the source type."""
 
-    __slots__ = ['code']
-
+    format: Optional[str] = None
+    """Source format."""
 
 @dataclass(frozen=True)
 class Submitter:

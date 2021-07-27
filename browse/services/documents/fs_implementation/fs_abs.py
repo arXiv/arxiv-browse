@@ -161,7 +161,6 @@ class FsDocMetadataService(DocMetadataService):
                          version: Optional[int] = None) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata.
 
-        if version is None then get the latest version."""        
+        if version is None then get the latest version."""
         path = self.fs_paths.get_abs_file(identifier, version)
         return parse_abs_file(filename=path)
-
