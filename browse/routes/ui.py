@@ -389,7 +389,7 @@ def form(arxiv_id: str) -> Response:
     raise InternalServerError(f'Not yet implemented {arxiv_id}')
 
 
-@blueprint.route('archive/', defaults={'archive': None})
+@blueprint.route('archive', defaults={'archive': None})
 @blueprint.route('archive/<archive>', strict_slashes=False)
 def archive(archive: str):  # type: ignore
     """Landing page for an archive."""
