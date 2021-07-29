@@ -7,11 +7,11 @@
 3. ./setupLB.sh
 4. cd .. ; ./deploy/add-browse-paths.sh
 5. ./deploy/build-and-push.sh
-6. ./deploy/update-instance-group.sh $(cat TAG.txt)
+6. cd deploy ; ./update-instance-group.sh $(cat ../TAG.txt)
 
 # To update instence groups on GCP:
 
 0. gcloud config set project arxiv-phoenix
 1. source ./deploy/config.sh
 2. ./deploy/build-and-push.sh
-3. ./deploy/update-instance-group.sh $(cat TAG.txt)
+3. cd deploy ; ./update-instance-group.sh $(cat ../TAG.txt)

@@ -34,7 +34,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "arxiv-auth"
-version = "0.4.3rc1"
+version = "0.4.3rc2"
 description = ""
 category = "main"
 optional = false
@@ -1370,7 +1370,7 @@ ansi2html = [
     {file = "ansi2html-1.6.0.tar.gz", hash = "sha256:0f124ea7efcf3f24f1f9398e527e688c9ae6eab26b0b84e1299ef7f94d92c596"},
 ]
 arxiv-auth = [
-    {file = "arxiv-auth-0.4.3rc1.tar.gz", hash = "sha256:ee281acd1d1811c2f9d43152ea81b1ac7db36f7d45d6a40816c34a5ca1a46e76"},
+    {file = "arxiv-auth-0.4.3rc2.tar.gz", hash = "sha256:69431948475afb522b8c77715cabfdb87589f3f66031f38a660934b733a0772f"},
 ]
 arxiv-base = []
 astroid = [

@@ -124,6 +124,13 @@ class Settings(BaseSettings):
     CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
 
     CLASSIC_SESSION_HASH: SecretStr = "foosecret"  # type: ignore
+    """Needed for arxiv-auth to be able to use legacy"""
+
+    CLASSIC_DATABASE_URI = '1'
+    """Needed for arixv-auth to be able to use legacy.
+
+    Need to be set to non-false if you want to use the legacy auth."""
+
     SESSION_DURATION: int = 36000
 
 
@@ -199,6 +206,9 @@ class Settings(BaseSettings):
     logging in debug mode, 'production' will only log in production and 'never'
     disables it entirely.
     """
+
+    LOGLEVEL = os.environ.get('LOGLEVEL', 20)
+    """Sets log level. Gets picked up by base/logging.py"""
 
     SERVER_NAME: Optional[str] = None
     """
