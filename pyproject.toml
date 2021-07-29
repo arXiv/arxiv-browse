@@ -20,7 +20,7 @@ validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
 # This is the ARXIVNG-4354-phoenix-auth branch
-arxiv-auth = "^0.4.3rc1"
+arxiv-auth = "^0.4.3rc4"
 mypy = "*"
 flask-s3 = "*"
 arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git",branch = "ARXIVNG-3824-bootstrap", develop = true}
