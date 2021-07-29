@@ -138,14 +138,12 @@ class DbDocMetadataService(DocMetadataService):
                     dissemination_formats.insert(-1, 'sciencewise_pdf')
                 else:
                     dissemination_formats.append('sciencewise_pdf')
+            return dissemination_formats
 
-        else:
-            return formats_from_source_type(format_code,
+        return formats_from_source_type(format_code,
                                             format_pref,
                                             False,
                                             add_sciencewise)
-
-        return []
 
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:
