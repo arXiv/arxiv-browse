@@ -1,7 +1,7 @@
 {#- News items appear below the subject search. Generally there should be no more than four items. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
-{%- if rd_int >= 202109120100 and rd_int <= 202110312300 -%}
+{%- if rd_int >= 202108130100 and rd_int <= 202110312300 -%}
 <img src="{{ url_for('static', filename='images/arxiv-30-years.png') }}" alt="arXiv 30th anniversary" style="float:left;display:block;width:120px;margin:0 15px 15px 0;"/>
 <a href="https://blog.arxiv.org/2021/08/13/celebrating-arxivs-30th-anniversary/" target="_blank">Celebrating arXiv's 30th anniversary!</a>.
 <br><br>
