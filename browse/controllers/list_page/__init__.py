@@ -9,10 +9,10 @@ handles GET and POST requests to the list endpoint.
 This should handle requests like:
 /list/$category/YYMM
 /list/$category/YYMM
-/list/category/recent
-/list/category/YYMM?skip=n&show=n
-/list/archive/new|recent|pastweek
-/list/archive/YY
+/list/$category/new|recent|current|pastweek
+/list/$category/YYMM?skip=n&show=n
+/list/$archive/new|recent|current|pastweek
+/list/$archive/YY
 /list/$category/YY
 
 Examples of odd requests to throw out:
@@ -33,7 +33,7 @@ C: show_abstracts only if listing_type='new'
 
 3. Check for not modified.
 
-4. Disply the page
+4. Display the page
 
 Differences from legacy arxiv:
 Doesn't handle the /view path.
