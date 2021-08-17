@@ -14,11 +14,11 @@ def get_listing_service() -> ListingService:
     return cast(ListingService, g.listing_service)
 
 
-def fake(settings: Any, _: Any) -> ListingService:
-    """Factory function for fake listing service."""
-    from .fake_listings import FakeListingFilesService
-    return FakeListingFilesService()
 
+def fs_listing(settings: Any, _: Any) -> ListingService:
+    """Factory function for filesystem-based listing service."""
+    from .fs_listings import FsListingFilesService
+    return FsListingFilesService()
 
 def db_listing(settings: Any, _: Any) -> ListingService:
     """Factory function for DB backed listing service."""
@@ -26,3 +26,8 @@ def db_listing(settings: Any, _: Any) -> ListingService:
     from browse.services.database import models
     #maybe pass in the specific classes for the tables we need?
     return DBListingService(models.db)
+
+def fake(settings: Any, _: Any) -> ListingService:
+    """Factory function for fake listing service."""
+    from .fake_listings import FakeListingFilesService
+    return FakeListingFilesService()
