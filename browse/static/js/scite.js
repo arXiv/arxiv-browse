@@ -23,6 +23,7 @@
                 data-small="false"
                 data-show-labels="true"
                 data-campaign="arxiv"
+                data-tooltip-placement="right"
             >
             </div>
             <script async type="application/javascript" src="https://cdn.scite.ai/badge/scite-badge-latest.min.js"></script>
