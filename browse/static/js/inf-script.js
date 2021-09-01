@@ -22,7 +22,7 @@ var InfluenceFlower = class InfluenceFlower {
       + "with their thickness proportional to the number of <i>references</i> made.</div>"
       + "<div class='flower-text'><span class='text-red'>Red arcs</span> denote "
       + "<i>outgoing</i> influence from the paper to the " + flower_type + "s, "
-      + "with their thickness proportional to the number of <i>citations</i> recieved.</div>"
+      + "with their thickness proportional to the number of <i>citations</i> received.</div>"
     parentDiv.appendChild(infoDiv);
   }
 
