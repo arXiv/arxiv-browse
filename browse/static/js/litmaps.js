@@ -2,8 +2,8 @@
     const arxivId = document.head.querySelector("[name~=citation_arxiv_id][content]").content;
     const litmapsBaseUrl = 'https://api.litmaps.co';
     const litmapsAppUrl = 'https://app.litmaps.co';
-    const litmapsCheckSeed = `${litmapsBaseUrl}/article/arxiv:${arxivId}/seed/`;
-    const litmapsFetchArticle = `${litmapsBaseUrl}/article/arxiv:${arxivId}/`;
+    const litmapsCheckSeed = `${litmapsBaseUrl}/article/arxiv:${encodeURIComponent(arxivId)}/seed/`;
+    const litmapsFetchArticle = `${litmapsBaseUrl}/article/arxiv:${encodeURIComponent(arxivId)}/`;
     const scriptPath = document.getElementById('litmaps-toggle').attributes["data-script-url"].value;
     const scriptDir = scriptPath.substr(0, scriptPath.lastIndexOf('/'));
     const cssTag = `<link rel="stylesheet" type="text/css" href="${scriptDir}/litmaps.css"/>`;
