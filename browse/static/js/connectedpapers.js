@@ -19,13 +19,13 @@
   $output.html(htmlPrefix + loadingHtml);
 
 
-  const REST_ADDR = 'https://rest.migration.connectedpapers.com/';
+  const REST_ADDR = 'https://rest.connectedpapers.com/';
   const CONNECTED_PAPERS_ADDR = 'https://www.connectedpapers.com/';
   const ARXIV_THUMBNAILS_ADDR = CONNECTED_PAPERS_ADDR + 'arxiv_thumbnails/';
   const NUMBER_OF_THUMBNAILS = 18;
   
   const arxivId = window.location.pathname.split('/').reverse()[0];
-  const arxivIdToCPIdUrl = REST_ADDR + '?arxiv=' + arxivId;
+  const arxivIdToCPIdUrl = REST_ADDR + 'id_translator/arxiv/' + arxivId;
   const communicationErrorHtml = '<p>Oops, seems like communication with the Connected Papers server is down.</p>';
   const idNotRecognizedHtml = '<p>Seems like this paper is still not in our database. Please try again in a few' +
                               ' days.</p>';
@@ -48,7 +48,7 @@
       return;
     }
 
-    const versionsFetchUrl = REST_ADDR + '?versions=' + paperId;
+    const versionsFetchUrl = REST_ADDR + 'versions/' + paperId + '/1';
 
     $.get(versionsFetchUrl).done(versionsResponse => {
       if ($output.html() == '') {
@@ -106,14 +106,14 @@
         $output.html(htmlPrefix + buildGraphHtml);
         return;
       }
-      const versionsData = versionsResponse.result_dates;
+      const versionsData = versionsResponse.graph_versions;
       if (versionsData.length == 0) {
         // Graph not yet built ever
         $output.html(htmlPrefix + buildGraphHtml);
         return;
       }
       const mostRecentVersion = versionsData[versionsData.length - 1];
-      if (mostRecentVersion.visual) {
+      if (mostRecentVersion.is_visual) {
         // Graph already built, ready to be shown
         $output.html(htmlPrefix + seeGraphHtml);
         return;
