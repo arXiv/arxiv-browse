@@ -206,16 +206,48 @@ body {
 
 .survey-results p a {
     text-decoration: none;
-    color: #b31b1b;       
+    color: #b31b1b;
 }
 
 .survey-results p a:hover {
     opacity: .7;
-    
+
 }
 
 .survey-results .close-survey-banner {
     position: absolute;
     top: 12px;
     right: 10px;
+}
+
+/********** BPS styles **********/
+.slider-wrapper .copy-donation.bps-banner .banner-smileybones-icon {
+  float: left;
+  margin: 20px 15px;
+  width: 50px;
+}
+.slider-wrapper.bps-banner {
+  background-color: #6b6459;
+  color: #ffffff;
+}
+.slider-wrapper .copy-donation.bps-banner h1 {
+  color: #f9f7f7;
+}
+.slider-wrapper .copy-donation.bps-banner p {
+  color: #ffffff;
+  text-shadow: none;
+}
+.slider-wrapper .copy-donation.bps-banner p a {
+  color: #a5d6fe;
+  text-shadow: 1px 1px #000;
+}
+.slider-wrapper .amount-donation.bps-banner .donate-cta a {
+  background-color: #a5d6fe;
+  margin: 10px 5px;
+}
+.close-slider.bps-banner img {
+  width: 25px;
+}
+.slider-wrapper .copy-donation.bps-banner {
+  border: 0;
 }
