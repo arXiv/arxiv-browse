@@ -227,23 +227,24 @@ body {
   width: 50px;
 }
 .slider-wrapper.bps-banner {
-  background-color: #6b6459;
+  background-color: #ebdddc;
   color: #ffffff;
 }
 .slider-wrapper .copy-donation.bps-banner h1 {
-  color: #f9f7f7;
+  color: #000000;
 }
 .slider-wrapper .copy-donation.bps-banner p {
-  color: #ffffff;
+  color: #000000;
   text-shadow: none;
 }
 .slider-wrapper .copy-donation.bps-banner p a {
-  color: #a5d6fe;
+  color: #1f5e96;
   text-shadow: 1px 1px #000;
 }
 .slider-wrapper .amount-donation.bps-banner .donate-cta a {
-  background-color: #a5d6fe;
+  background-color: #b31b1b;
   margin: 10px 5px;
+  color: #f9f7f7;
 }
 .close-slider.bps-banner img {
   width: 25px;
