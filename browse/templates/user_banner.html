@@ -1,21 +1,22 @@
 {# donation banner #}
-<aside class="slider-wrapper" style="display:none">
-  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation">
-    <h1>Thank you for supporting arXiv</h1>
+<aside class="slider-wrapper bps-banner" style="display:none">
+  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+  <div class="copy-donation bps-banner">
+    <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
+    <h1>Global Survey</h1>
     <p>
-      Thank you to everyone who donated during arXiv's Giving Week, October 25 - 31. <b>It's not too late to give</b>.
-      arXiv is a nonprofit that depends on donations to fund essential operations and new initiatives. We appreciate your support of Open Science. Thank you!
+      In just 3 minutes, help us better understand how you perceive arXiv.
+      <a class="btn-slim" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_a9o63a8zW62EwLk">Take the survey</a>
     </p>
   </div>
-  <div class="amount-donation">
+  <div class="amount-donation bps-banner">
     <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link" href="https://bit.ly/arXivDONATEa"><b>DONATE</b></a>
-        <p>[secure site, no need to create account]</p>
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_a9o63a8zW62EwLk"><b>TAKE SURVEY</b></a>
       </div>
     </div>
   </div>
 </aside>
+
 {%- if 0 -%}
 {# downtime #}
 <aside class="slider-wrapper" style="display:none">
