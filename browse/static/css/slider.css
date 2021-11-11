@@ -227,28 +227,58 @@ body {
   width: 50px;
 }
 .slider-wrapper.bps-banner {
-  background-color: #ebdddc;
+  background-color: #b31b1b;
   color: #ffffff;
 }
+.slider-wrapper .copy-donation.bps-banner {
+  width: 70%;
+}
 .slider-wrapper .copy-donation.bps-banner h1 {
-  color: #000000;
+  color: #f3edbe;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 .slider-wrapper .copy-donation.bps-banner p {
-  color: #000000;
+  color: #f9f7f7;
   text-shadow: none;
+  margin-top:5px;
 }
 .slider-wrapper .copy-donation.bps-banner p a {
-  color: #1f5e96;
-  text-shadow: 1px 1px #000;
+  color: #f5e98e;
+  text-shadow: 1px 1px #831212;
+}
+.slider-wrapper .amount-donation.bps-banner {
+  width: 25%;
 }
 .slider-wrapper .amount-donation.bps-banner .donate-cta a {
   background-color: #b31b1b;
   margin: 10px 5px;
-  color: #f9f7f7;
+  color: #000000;
+}
+.slider-wrapper .amount-donation.bps-banner .donate-cta a:hover {
+  opacity: 1;
 }
 .close-slider.bps-banner img {
   width: 25px;
 }
 .slider-wrapper .copy-donation.bps-banner {
   border: 0;
+}
+.banner-btn-grad {background-image: linear-gradient(to right, #c19720 0%, #f5e98e  51%, #ffed6c  100%)}
+.banner-btn-grad {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: black;
+  box-shadow: 0 0 20px #831212;
+  border-radius: 10px;
+  display: block;
+}
+.banner-btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
 }
