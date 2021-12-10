@@ -106,6 +106,23 @@ class Metadata(db.Model):
     submitter = relationship('User')
 
 
+class DataciteDois(db.Model):
+    """Model for arXiv DataCite DOIs."""
+
+    __tablename__ = 'arXiv_datacite_dois'
+    __table_args__ = (
+        Index('account', 'account', 'paper_id'),
+    )
+
+    doi = Column(String(255), primary_key=True)
+    account = Column(Enum('test', 'prod'))
+    metadata_id = Column(ForeignKey('arXiv_metadata.metadata_id'), nullable=False, index=True)
+    paper_id = Column(String(64), nullable=False, unique=True)
+    created = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated = Column(DateTime, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+    metadata_ = relationship('Metadata')
+
 class MemberInstitution(db.Model):
     """Primary model for arXiv member insitution data."""
 
