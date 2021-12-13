@@ -209,7 +209,6 @@ def _non_critical_abs_data(
     response_data["datacite_doi"] = get_datacite_doi(
         paper_id=abs_meta.arxiv_id, account="test"
     )
-    print(f"RESPONSE DATA: {response_data['datacite_doi']}")
 
 
 def _check_request_headers(
@@ -270,9 +269,11 @@ def _time_header_parse(header: str) -> Optional[datetime]:
 
 
 def _get_req_header(header: str) -> Optional[str]:
-    """Gets request header, needs to be case insensative for keys.
+    """Gets request header.
 
-    HTTP header keys are case insensative. RFC 2616"""
+    Needs to be case insensitive for keys. HTTP header keys are case
+    insensitive per RFC 2616.
+    """
     return next(
         (
             value

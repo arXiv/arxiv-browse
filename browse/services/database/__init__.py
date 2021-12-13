@@ -422,7 +422,7 @@ def get_max_download_stats_dt() -> Optional[datetime]:
 
 
 @db_handle_error(logger=logger, default_return_val=None)
-def get_datacite_doi(paper_id: str, account: str = "prod") -> str:
+def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
     """Get the DataCite DOI for a given paper ID."""
     row = (
         db.session.query(DataciteDois)

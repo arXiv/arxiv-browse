@@ -307,12 +307,7 @@ class TrackbackPing(db.Model):
     @property
     def display_url(self) -> str:
         """Get the URL without the protocol, for display."""
-        return re.sub(
-            r"^[a-z]+:\/\/",
-            "",  # type: ignore
-            self.url.strip(),
-            flags=re.IGNORECASE,
-        )
+        return str(re.sub(r"^[a-z]+:\/\/", "", self.url.strip(), flags=re.IGNORECASE,))
 
     @property
     def has_valid_url(self) -> bool:
