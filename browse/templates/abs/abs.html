@@ -38,7 +38,6 @@
   <div class="leftcolumn">
     <div class="subheader">
       <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
-      <strong>    DATACITE DOI: {{ datacite_doi }}</strong>
     </div>
 
     <div class="header-breadcrumbs-mobile">
@@ -63,12 +62,13 @@
         acm_class = abs_meta.acm_class,
         journal_ref = abs_meta.journal_ref,
         doi = abs_meta.doi,
-        preprint_doi = datacite_doi,
         report_num = abs_meta.report_num,
         version = abs_meta.version,
         submission_history = abs_meta.version_history,
         secondary_categories = abs_meta.get_secondaries(),
-        download_button_markup = download_button )
+        download_button_markup = download_button,
+        preprint_doi = datacite_doi
+      )
     }}
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
@@ -180,14 +180,15 @@
     acm_class = None,
     journal_ref = None,
     doi = None,
-    preprint_doi = None,
     report_num = None,
     version = 1,
     submission_history = [],
     secondary_categories = [],
     include_stylesheet = 1,
     embed_stylesheet = 0,
-    download_button_markup = None) -%}
+    download_button_markup = None
+    preprint_doi = None,
+) -%}
 
 {% if include_stylesheet and not embed_stylesheet %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('base.static', filename='css/abs.css') }}">
@@ -246,13 +247,7 @@
           <td class="tablecell jref">{{ journal_ref|tex2utf }}</td>
         </tr>
         {% endif -%}
-        {%- if preprint_doi or 1 %}
-        <tr>
-          <td class="tablecell label"><abbr title="Preprint Digital Object Identifier">Preprint DOI</abbr>:</td>
-          <td class="tablecell msc_classes"><a href="https://doi.org/{{ preprint_doi }}">https://doi.org/{{ preprint_doi }}</a></td>
-        </tr>
-        {% endif -%}
-        {%- if doi %}
+          {%- if doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
           <td class="tablecell msc_classes">{{ doi|escape|abs_doi_to_urls|safe }}</td>
@@ -262,6 +257,12 @@
         <tr>
           <td class="tablecell label">Report&nbsp;number:</td>
           <td class="tablecell jref">{{ report_num }}</td>
+        </tr>
+        {% endif -%}
+        {%- if preprint_doi %}
+        <tr>
+          <td class="tablecell label"><abbr title="Preprint Digital Object Identifier">Preprint DOI</abbr>:</td>
+          <td class="tablecell msc_classes"><a href="https://doi.org/{{ preprint_doi }}">https://doi.org/{{ preprint_doi }}</a></td>
         </tr>
         {% endif -%}
         <tr>
