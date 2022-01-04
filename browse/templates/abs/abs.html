@@ -67,7 +67,7 @@
         submission_history = abs_meta.version_history,
         secondary_categories = abs_meta.get_secondaries(),
         download_button_markup = download_button,
-        preprint_doi = datacite_doi
+        datacite_doi = datacite_doi
       )
     }}
     <div class="submission-history">
@@ -187,7 +187,7 @@
     include_stylesheet = 1,
     embed_stylesheet = 0,
     download_button_markup = None,
-    preprint_doi = None
+    datacite_doi = None
 ) -%}
 
 {% if include_stylesheet and not embed_stylesheet %}
@@ -247,10 +247,10 @@
           <td class="tablecell jref">{{ journal_ref|tex2utf }}</td>
         </tr>
         {% endif -%}
-          {%- if doi %}
+        {%- if doi %}
         <tr>
           <td class="tablecell label"><abbr title="Digital Object Identifier">DOI</abbr>:</td>
-          <td class="tablecell msc_classes">{{ doi|escape|abs_doi_to_urls|safe }}</td>
+          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }} (published version)</td>
         </tr>
         {% endif -%}
         {%- if report_num %}
@@ -259,15 +259,17 @@
           <td class="tablecell jref">{{ report_num }}</td>
         </tr>
         {% endif -%}
-        {%- if preprint_doi %}
-        <tr>
-          <td class="tablecell label"><abbr title="Preprint Digital Object Identifier">Preprint DOI</abbr>:</td>
-          <td class="tablecell msc_classes"><a href="https://doi.org/{{ preprint_doi }}">https://doi.org/{{ preprint_doi }}</a></td>
-        </tr>
-        {% endif -%}
         <tr>
           <td class="tablecell label">Cite as:</td>
+          {%- if datacite_doi %}
+            <td class="tablecell arxivdoi"><span class="arxivdoi"><a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a><span></td>
+        </tr>
+        <tr>
+          <td class="tablecell label">&nbsp;</td>
           <td class="tablecell arxivid"><span class="arxivid">{{ base_macros.version_atag(arxiv_id, 0, primary_category) }}</span></td>
+          {% else -%}
+          <td class="tablecell arxivid"><span class="arxivid">{{ base_macros.version_atag(arxiv_id, 0, primary_category) }}</span></td>
+          {% endif -%}
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
