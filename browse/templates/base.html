@@ -68,7 +68,7 @@
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
         <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-        {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-black.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
+        {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
         {% block login_link %}{% endblock %}
         {{ base_macros.compactsearch() }}
        {% endblock header %}
@@ -76,7 +76,7 @@
 
       <div class="mobile-header">
         <div class="columns is-mobile">
-          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logomark-small-black.svg') }}" alt="arXiv logo" style="height:60px;" /></a></div>
+          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logomark-small-white.svg') }}" alt="arXiv logo" style="height:60px;" /></a></div>
           <div class="column logo-cornell"><a href="https://www.cornell.edu/">
             <picture>
               <source media="(min-width: 501px)"
