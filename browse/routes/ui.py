@@ -479,7 +479,7 @@ def cookies(set):  # type: ignore
     return render_template("cookies.html", **response), code, headers
 
 
-@blueprint.route("bibtex/<arxiv_id>", methods=["GET"])
+@blueprint.route('bibtex/<path:arxiv_id>', methods=['GET'])
 def bibtex(arxiv_id: str):  # type: ignore
     """Bibtex for a paper."""
     return bibtex_citation(arxiv_id)

@@ -13,70 +13,6 @@
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
-  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
-  <!-- Pendo -->
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
-      v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-          o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-          y=e.createElement(n);y.async=!0;y.src='https://content.analytics.arxiv.org/agent/static/'+apiKey+'/pendo.js';
-          z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-
-          // Call this whenever information about your visitors becomes available
-          // Please use Strings, Numbers, or Bools for value types.
-          pendo.initialize({
-              visitor: {
-                  {% if session.get("institution") %}
-                  institution:     '{{ session.get("institution") }}',
-                  {% endif %}
-
-                  {% if session.get("continent") and session.get("continent").get("code") %}
-                  continent:       '{{ session.get("continent").get("code") }}',
-                  {% endif %}
-
-                  {% if session.get("country") %}
-                  country:         '{{ session.get("country") }}',
-                  {% endif %}
-
-                  {% if session.get("subnational") %}
-                  subnational:     '{{ session.get("state") }}',
-                  {% endif %}
-
-                  {% if session.get("city") %}
-                  city:            '{{ session.get("city") }}',
-                  {% endif %}
-
-                  id:              '{{ session.get("hashed_user_id") if session.get("hashed_user_id") else "VISITOR-UNIQUE-ID" }}'
-                  // email:        // Recommended if using Pendo Feedback, or NPS Email
-                  // full_name:    // Recommended if using Pendo Feedback
-                  // role:         // Optional
-
-                  // You can add any additional visitor level key-values here,
-                  // as long as it's not one of the above reserved names.
-              },
-
-              account: {
-                  {% if session.get("institution") %}
-                  name:            '{{ session.get("institution") }}',
-                  {% endif %}
-
-                  id:              '{{ session.get("institution_id") if session.get("institution_id") else "ACCOUNT-UNIQUE-ID" }}'
-
-                  // name:         // Optional
-                  // is_paying:    // Recommended if using Pendo Feedback
-                  // monthly_value:// Recommended if using Pendo Feedback
-                  // planLevel:    // Optional
-                  // planPrice:    // Optional
-                  // creationDate: // Optional
-
-                  // You can add any additional account level key-values here,
-                  // as long as it's not one of the above reserved names.
-              }
-          });
-  })('d6494389-b427-4103-7c76-03182ecc8e60');
-  </script>
-  {% endif -%}
 
   {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
@@ -87,6 +23,20 @@
 </head>
 
 <body {% block body_id %}{% endblock %} class="with-cu-identity">
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  <!-- Piwik Pro Trial 2021 -->
+  <script type="text/javascript">
+  (function(window, document, dataLayerName, id) {
+  window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script');
+  function stgCreateCookie(a,b,c){var d="";if(c){var e=new Date;e.setTime(e.getTime()+24*c*60*60*1e3),d="; expires="+e.toUTCString()}document.cookie=a+"="+b+d+"; path=/"}
+  var isStgDebug=(window.location.href.match("stg_debug")||document.cookie.match("stg_debug"))&&!window.location.href.match("stg_disable_debug");stgCreateCookie("stg_debug",isStgDebug?1:"",isStgDebug?14:-1);
+  var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName),isStgDebug&&qP.push("stg_debug");var qPString=qP.length>0?("?"+qP.join("&")):"";
+  tags.async=!0,tags.src="//arxivcu.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts);
+  !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]);
+  })(window, document, 'dataLayer', '5cd2af31-892f-43fc-89ba-dbb835c4ec39');
+  </script><noscript><iframe src="//arxivcu.containers.piwik.pro/5cd2af31-892f-43fc-89ba-dbb835c4ec39/noscript.html" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  {% endif -%}
+
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
