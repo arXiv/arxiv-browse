@@ -42,9 +42,10 @@ the test data from `tests/data`.
 Install [Docker](https://docs.docker.com/get-docker/) if you haven't already, then run the following:
 
 ```bash
-docker build . -t arxiv/browse:some_tag
-docker run -it 8000:8000 arxiv/browse:some_tag
+docker build . -t arxiv/browse
+docker run -it --publish 8000:8000 arxiv/browse
 ```
+
 If all goes well, http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
