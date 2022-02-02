@@ -39,6 +39,8 @@ You can also run the browse app in Docker. The following commands will build
 and run browse using defaults for the configuration parameters and will use
 the test data from `tests/data`.
 
+Install [Docker](https://docs.docker.com/get-docker/) if you haven't already, then run the following:
+
 ```bash
 docker build . -t arxiv/browse:some_tag
 docker run -it 8000:8000 arxiv/browse:some_tag
