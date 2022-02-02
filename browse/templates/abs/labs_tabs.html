@@ -102,7 +102,32 @@
 
 
     <input type="radio" name="tabs" id="tabthree">
-    <label for="tabthree">Related Papers</label>
+    <label for="tabthree">Demos</label>
+    <div class="tab">
+      <h1>Demos Associated with this Article</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="replicate-toggle"
+                data-script-url="{{ url_for('static', filename='js/replicate.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-replicate">
+              <span class="slider"></span>
+              <span class="is-sr-only">arXiv Demos Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-replicate">arXiv Demos</span> <em>(<a href="https://labs.arxiv.org/" target="_blank">What is this?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="replicate-output"></div>
+    </div>
+
+
+    <input type="radio" name="tabs" id="tabfour">
+    <label for="tabfour">Related Papers</label>
     <div class="tab">
       <h1>Recommenders and Search Tools</h1>
       <div class="toggle">
@@ -138,8 +163,8 @@
     </div>
 
 
-    <input type="radio" name="tabs" id="tabfour">
-    <label for="tabfour">
+    <input type="radio" name="tabs" id="tabfive">
+    <label for="tabfive">
       About arXivLabs
     </label>
     <div class="tab">
