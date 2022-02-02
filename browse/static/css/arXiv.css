@@ -1012,6 +1012,40 @@ p.tagline {
 
 /*END Papers With Code css*/
 
+/*BEGIN Replicate.com css*/
+
+#replicate-output {
+  padding: 7px;
+}
+
+.replicate-model {
+  padding: 7px;
+  display: block;
+  display: flex;
+}
+
+.replicate-model-image {
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  object-fit: cover;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.replicate-model-details {
+  padding: 10px 15px;
+  vertical-align: top;
+}
+
+.replicate-model-details-heading {
+  margin: 0;
+  padding: 0;
+
+}
+
+/*END Replicate.com css*/
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
