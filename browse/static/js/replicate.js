@@ -33,13 +33,12 @@
       .then(data => render(data))
       .catch(error => console.log(error))
 
-  // Render model data as HTML
-  function render(data) {
-      console.log(data)
-      container.innerHTML = `
-        ${noModelsFound(data)}
-        ${data.models.map(model => renderModel(model))}
-      `
+  // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
+  function render({ models }) {
+      container.innerHTML = window.DOMPurify.sanitize(`
+        ${noModelsFound(models)}
+        ${models.map(model => renderModel(model))}
+      `)
   }
 
   function noModelsFound(data) {
