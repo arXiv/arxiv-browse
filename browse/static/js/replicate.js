@@ -2,7 +2,9 @@
 
 (function() {
   // Get the arXiv paper ID from the URL, e.g. "2103.17249"
-  const arxivPaperId = window.location.pathname.split('/').reverse()[0]
+  // (this can be overridden for testing by passing a override_paper_id query parameter in the URL)
+  const params = new URLSearchParams(document.location.search)
+  const arxivPaperId = params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
   if (!arxivPaperId) return
 
   const replicateHost = "https://replicate.com"
