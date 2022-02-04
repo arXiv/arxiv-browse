@@ -1014,12 +1014,9 @@ p.tagline {
 
 /*BEGIN Replicate CSS*/
 
-#replicate-output {
-  padding: 7px;
-}
-
 .replicate-model {
-  padding: 7px;
+  margin-bottom: 20px;
+  padding: 15px 0;
   display: block;
   display: flex;
 }
@@ -1041,7 +1038,17 @@ p.tagline {
 .replicate-model-details-heading {
   margin: 0;
   padding: 0;
+}
 
+.replicate-model-prediction-count {
+  opacity: 0.5;
+}
+
+.replicate-model-prediction-icon {
+  height:.9rem;
+  width:.9rem;
+  margin-right: 0;
+  margin-top: -.15rem;
 }
 
 /*END Replicate CSS*/
