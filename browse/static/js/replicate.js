@@ -45,7 +45,7 @@
   function noModelsFound(models) {
     if (models.length === 0) {
       return `<p>
-        No demos found for this article. You can <a href="https://replicate.com/docs/arxiv">add one here</a>.
+        No demos found for this article. You can <a href="https://replicate.com/docs/arxiv?utm_source=arxiv">add one here</a>.
       </p>`
     } else {
       return ``
@@ -55,11 +55,11 @@
   function renderModel(model) {
     return `
       <div class="replicate-model">
-        <a href="${model.absolute_url}">
+        <a href="${model.absolute_url}?utm_source=arxiv">
           <img src="${model.cover_image}" class="replicate-model-image" />
         </a>
         <div class="replicate-model-details">
-          <a href="${model.absolute_url}">
+          <a href="${model.absolute_url}?utm_source=arxiv">
             <h3 class="replicate-model-details-heading">${model.username}/${model.name}</h3>
           </a>
           <p>${model.description}</p>
