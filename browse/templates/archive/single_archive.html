@@ -8,9 +8,7 @@
 {% block title %}{{archive.name}}{% endblock %}
 
 {% block header_h1 %}
-<h1>
-<a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> > <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a>
-</h1>
+<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a></h1>
 {% endblock %}
 
 
