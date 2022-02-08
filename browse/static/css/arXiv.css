@@ -232,10 +232,17 @@ em.boxed {
   padding: 10px 0 .2em 10px;
   font-style: normal;
   float: left;
+  display: inline-flex;
+  align-items: center;
 }
 
 #header .header-breadcrumbs a {
   /*font-weight: bold;*/
+}
+
+#header .header-breadcrumbs span {
+  margin-right:5px;
+  margin-left: 5px;
 }
 
 body#front #header h1 {
