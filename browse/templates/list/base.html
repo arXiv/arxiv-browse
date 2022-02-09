@@ -4,7 +4,7 @@
 
 {% block header_h1 %}
 <div class="header-breadcrumbs">
-  <a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt;
+  <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
   <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
   </div>
 {% endblock %}
