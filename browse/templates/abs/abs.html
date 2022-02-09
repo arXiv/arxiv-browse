@@ -251,7 +251,10 @@
         {%- if doi %}
         <tr>
           <td class="tablecell label">
-            <abbr title="Digital Object Identifier">DOI</abbr>:
+            <abbr title="Digital Object Identifier">External DOI</abbr>:
+          </td>
+          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }}
+
             <!-- accessible tooltip example -->
             <div class="button-and-tooltip">
               <button class="more-info" aria-describedby="more-info-desc-1">
@@ -261,11 +264,11 @@
               <!-- tooltip description -->
               <div role="tooltip" id="more-info-desc-1">
                 <span class="left-corner"></span>
-                Description of the DOI type would go here. It can get quite long if it needs to. Or even longer.
+                DOI(s) linking to resources external to arXiv
               </div>
             </div>
           </td>
-          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }}</td>
+
         </tr>
         {% endif -%}
         {%- if report_num %}
@@ -277,7 +280,21 @@
         <tr>
           <td class="tablecell label">Cite as:</td>
           {%- if datacite_doi %}
-            <td class="tablecell arxivdoi"><span class="arxivdoi"><a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a><span></td>
+            <td class="tablecell arxivdoi">
+              <span class="arxivdoi"><a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a><span>
+                <div class="button-and-tooltip">
+                  <button class="more-info" aria-describedby="more-info-desc-1">
+                    <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+                    <span class="visually-hidden">Focus to learn more</span>
+                  </button>
+                  <!-- tooltip description -->
+                  <div role="tooltip" id="more-info-desc-1">
+                    <span class="left-corner"></span>
+                    arXiv-issued DOI via DataCite
+                  </div>
+                </div>
+              </td>
+
         </tr>
         <tr>
           <td class="tablecell label">&nbsp;</td>
