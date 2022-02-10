@@ -28,7 +28,17 @@ $(document).ready(function() {
   };
 
   var pwcEnabled = true;
-  var replicateEnabled = true;
+
+  // infer the current category from the DOM (`cs.AI`, `stat.ML`, etc)
+  const currentCategory = $('.current')?.text()?.toLowerCase();
+
+  // enable Replicate integration for these categories
+  const replicateCategories = [
+    "cs",   // Computer Science
+    "eess", // Electrical Engineering and Systems Science
+    "stat"  // Statistics
+  ]
+  var replicateEnabled = currentCategory && replicateCategories.some(category => currentCategory.startsWith(category));
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
