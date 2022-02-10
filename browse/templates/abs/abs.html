@@ -26,7 +26,9 @@
 {% block body_id %}{% endblock %}
 
 {% block header_h1 %}
-  <div class="header-breadcrumbs is-hidden-mobile"><a href="/">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> &gt; arXiv:{{ requested_id }}</div>
+  <div class="header-breadcrumbs is-hidden-mobile">
+    <a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{ url_for('.list_articles',context=abs_meta.primary_archive.id, subcontext='recent') }}">{{ abs_meta.primary_archive.id }}</a> <span>&gt;</span> arXiv:{{ requested_id }}
+  </div>
 {% endblock header_h1 %}
 
 {%- block content %}
