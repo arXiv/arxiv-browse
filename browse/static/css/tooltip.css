@@ -15,7 +15,8 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  position: absolute;
+  position: relative;
+  top: 3px;
 }
 [role="tooltip"] {
   display: none;
@@ -27,11 +28,6 @@
   border:1px solid black;
   padding:4px 10px;
   border-radius: 5px;
-}
-@media screen and (max-width: 480px) {
-  [role="tooltip"] {
-    width: 150px;
-  }
 }
 button:hover + [role="tooltip"],
 button:focus + [role="tooltip"] {
@@ -47,4 +43,18 @@ button:focus + [role="tooltip"] {
   left: -10px;
   top: 8px;
   position: absolute;
+}
+
+/* tooltip displays to the left on small screens*/
+@media screen and (max-width: 480px) {
+  [role="tooltip"] {
+    width: 250px;
+    left: -273px;
+  }
+  .left-corner {
+    border-right: 5px solid transparent;
+    border-left: 5px solid #000;
+    left: auto;
+    right:-10px;
+  }
 }
