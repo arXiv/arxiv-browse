@@ -100,9 +100,12 @@
       <div id="pwc-data-output"></div>
     </div>
 
-
-    <input type="radio" name="tabs" id="tabthree">
-    <label for="tabthree">Demos</label>
+    <!-- 
+      hide the "Demos" tab by default, and conditionally display it using 
+      JavaScript on pages in specific categories like `cs`, `eess``, and `stat`
+     -->
+    <input type="radio" name="tabs" id="labstabs-demos-input" disabled>
+    <label for="labstabs-demos-input" id="labstabs-demos-label" style="display:none">Demos</label>
     <div class="tab">
       <h1>Demos Associated with this Article</h1>
       <div class="toggle">

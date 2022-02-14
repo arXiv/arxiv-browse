@@ -29,22 +29,27 @@ $(document).ready(function() {
 
   var pwcEnabled = true;
 
-  // infer the current category from the DOM (`cs.AI`, `stat.ML`, etc)
   const currentCategory = $('.current')?.text()?.toLowerCase();
-
-  // enable Replicate integration for these categories
-  const replicateCategories = [
+  const demoCategories = [
     "cs",   // Computer Science
     "eess", // Electrical Engineering and Systems Science
     "stat"  // Statistics
   ]
-  var replicateEnabled = currentCategory && replicateCategories.some(category => currentCategory.startsWith(category));
+
+  const demosEnabled = currentCategory && demoCategories.some(category => currentCategory.startsWith(category));
+
+  if (demosEnabled) {
+    document.getElementById("labstabs-demos-input").removeAttribute("disabled");
+    document.getElementById("labstabs-demos-label").style.display = "block";
+  }
+
+  var replicateEnabled = demosEnabled
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
     if ( labsCookie["last_tab"] ){
-      $("input#"+labsCookie["last_tab"]).click();
+      $(`input#${labsCookie["last_tab"]}:not([disabled])`).click();
     }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
