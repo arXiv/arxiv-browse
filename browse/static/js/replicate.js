@@ -1,6 +1,20 @@
 // Labs integration for displaying machine learning demos from replicate.com
 
 (function() {
+  const container = document.getElementById("replicate-output")
+  const containerAlreadyHasContent = container.innerHTML.trim().length > 0
+
+  // This script is invoked every time the Labs toggle is toggled, even when
+  // it's toggled to disabled. So this check short-circuits the script if the
+  // container already has content.
+  if (containerAlreadyHasContent) {
+    container.innerHTML = ""
+    container.setAttribute("style", "display:none")
+    return
+  } else {
+    container.setAttribute("style", "display:block")
+  }
+
   // Get the arXiv paper ID from the URL, e.g. "2103.17249"
   // (this can be overridden for testing by passing a override_paper_id query parameter in the URL)
   const params = new URLSearchParams(document.location.search)
@@ -9,18 +23,6 @@
 
   const replicateHost = "https://replicate.com"
   const replicateApiUrl = `${replicateHost}/api/v1/models?arxiv_paper_id=${arxivPaperId}`
-  const container = document.getElementById("replicate-output")
-
-  // This script is run whenever the Labs toggle input is clicked, regardless of
-  // whether the toggle is enabled or disabled. If content already exists, 
-  // we know the toggle was just disabled, so remove content and hide container.
-  if (container.innerHTML.trim().length) {
-    container.innerHTML = ""
-    container.setAttribute("style", "display:none")
-    return
-  } else {
-    container.setAttribute("style", "display:block")
-  }
 
   // Search the Replicate API for models that implement this paper
   fetch(replicateApiUrl).then(response => {
