@@ -72,9 +72,9 @@ $(document).ready(function() {
           });
         } else if (key === "replicate-toggle") {
           $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
-            console.log(textStatus, "replicate (on cookie check)");
+            // console.log(textStatus, "replicate (on cookie check)");
           }).fail(function() {
-            console.log("failed to load replicate script (on cookie check)", arguments)
+            console.error("failed to load replicate script (on cookie check)", arguments)
           });
         } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
@@ -104,9 +104,9 @@ $(document).ready(function() {
   if(replicateEnabled){
     $("#replicate-toggle.lab-toggle").toggleClass("enabled",true);
     $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
-      console.log(textStatus, "replicate (on load)");
+      // console.log(textStatus, "replicate (on load)");
     }).fail(function() {
-      console.log("failed to load replicate script (on load)", arguments)
+      console.error("failed to load replicate script (on load)", arguments)
     });;
   }
 
@@ -156,9 +156,9 @@ $(document).ready(function() {
       });
     } else if ($(this).attr("id") == "replicate-toggle") {
       $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
-        console.log(textStatus, "replicate (on lab toggle)");
+        // console.log(textStatus, "replicate (on lab toggle)");
       }).fail(function() {
-        console.log("failed to load replicate script (on lab toggle)", arguments)
+        console.error("failed to load replicate script (on lab toggle)", arguments)
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
