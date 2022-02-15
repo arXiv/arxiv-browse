@@ -1,0 +1,28 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2101.04061
+From: Xintao Wang <user@example.org>
+Date: Mon, 11 Jan 2021 17:54:38 GMT   (5708kb,D)
+
+Title: Towards Real-World Blind Face Restoration with Generative Facial Prior
+Authors: Xintao Wang, Yu Li, Honglun Zhang, Ying Shan
+Categories: cs.CV
+Comments: Technical report, 11 pages, 8 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Blind face restoration usually relies on facial priors, such as facial
+geometry prior or reference prior, to restore realistic and faithful details.
+However, very low-quality inputs cannot offer accurate geometric prior while
+high-quality references are inaccessible, limiting the applicability in
+real-world scenarios. In this work, we propose GFP-GAN that leverages rich and
+diverse priors encapsulated in a pretrained face GAN for blind face
+restoration. This Generative Facial Prior (GFP) is incorporated into the face
+restoration process via novel channel-split spatial feature transform layers,
+which allow our method to achieve a good balance of realness and fidelity.
+Thanks to the powerful generative facial prior and delicate designs, our
+GFP-GAN could jointly restore facial details and enhance colors with just a
+single forward pass, while GAN inversion methods require expensive
+image-specific optimization at inference. Extensive experiments show that our
+method achieves superior performance to prior art on both synthetic and
+real-world datasets.
+\\
