@@ -16,12 +16,12 @@
   border: none;
   box-shadow: none;
   position: relative;
-  top: 3px;
+  padding: 0 0 0 6px;
 }
 [role="tooltip"] {
   display: none;
   position: absolute;
-  top: -8px;
+  top: -6px;
   left: 28px;
   width: 250px;
   background-color: #f7fafc;
@@ -43,6 +43,10 @@ button:focus + [role="tooltip"] {
   left: -10px;
   top: 8px;
   position: absolute;
+}
+td.tablecell.arxivdoi, td.tablecell.doi {
+    display: inline-flex;
+    align-items: center;
 }
 
 /* tooltip displays to the left on small screens*/
