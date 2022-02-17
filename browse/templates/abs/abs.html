@@ -6,6 +6,7 @@
 
 {% block head %}
   {{ super() -}}
+  <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
   {%- endif %}
@@ -52,23 +53,25 @@
     </div>
     {% endif -%}
     {{
-      base_macros.abs(
-      abs_meta.arxiv_identifier.id,
-      abs_meta.title,
-      display_authors_with_links(abs_meta, author_links),
-      abs_meta.abstract,
-      abs_meta.get_datetime_of_version(abs_meta.version),
-      abs_meta.primary_category.id,
-      comments = abs_meta.comments,
-      msc_class = abs_meta.msc_class,
-      acm_class = abs_meta.acm_class,
-      journal_ref = abs_meta.journal_ref,
-      doi = abs_meta.doi,
-      report_num = abs_meta.report_num,
-      version = abs_meta.version,
-      submission_history = abs_meta.version_history,
-      secondary_categories = abs_meta.get_secondaries(),
-      download_button_markup = download_button )
+      abs(
+        abs_meta.arxiv_identifier.id,
+        abs_meta.title,
+        display_authors_with_links(abs_meta, author_links),
+        abs_meta.abstract,
+        abs_meta.get_datetime_of_version(abs_meta.version),
+        abs_meta.primary_category.id,
+        comments = abs_meta.comments,
+        msc_class = abs_meta.msc_class,
+        acm_class = abs_meta.acm_class,
+        journal_ref = abs_meta.journal_ref,
+        doi = abs_meta.doi,
+        report_num = abs_meta.report_num,
+        version = abs_meta.version,
+        submission_history = abs_meta.version_history,
+        secondary_categories = abs_meta.get_secondaries(),
+        download_button_markup = download_button,
+        datacite_doi = datacite_doi
+      )
     }}
     <div class="submission-history">
       <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
@@ -167,3 +170,146 @@
     <a class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
 {% endmacro %}
+
+{% macro abs(
+    arxiv_id,
+    title,
+    authors,
+    abstract,
+    submitted_date,
+    primary_category,
+    comments = None,
+    msc_class = None,
+    acm_class = None,
+    journal_ref = None,
+    doi = None,
+    report_num = None,
+    version = 1,
+    submission_history = [],
+    secondary_categories = [],
+    include_stylesheet = 1,
+    embed_stylesheet = 0,
+    download_button_markup = None,
+    datacite_doi = None
+) -%}
+
+{% if include_stylesheet and not embed_stylesheet %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('base.static', filename='css/abs.css') }}">
+{% endif %}
+{% if embed_stylesheet %}
+  <style>
+  {{ 'css/abs.css'|embed_content }}
+  </style>
+{% endif %}
+<div id="content-inner">
+  <div id="abs">
+    <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
+    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
+    <div class="authors"><span class="descriptor">Authors:</span>{{ authors }}</div>
+
+    {#- optionally include markup for the download button -#}
+    {% if download_button_markup %}
+      {{ download_button_markup }}
+    {% endif %}
+
+    <blockquote class="abstract mathjax">
+      <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+    </blockquote>
+
+    <!--CONTEXT-->
+    <div class="metatable">
+      <table summary="Additional metadata">
+        {%- if comments %}
+        <tr>
+          <td class="tablecell label">Comments:</td>
+          <td class="tablecell comments mathjax">{{ comments|tex2utf|urlize|safe }}</td>
+        </tr>
+        {% endif -%}
+        <tr>
+          <td class="tablecell label">Subjects:</td>
+          <td class="tablecell subjects">
+            <span class="primary-subject">{{ primary_category|get_category_display }}</span>
+            {%- for category in secondary_categories|sort(attribute='id') -%}; {{ category|get_category_display }}{%- endfor -%}
+          </td>
+        </tr>
+        {%- if msc_class %}
+        <tr>
+          <td class="tablecell label"><abbr title="Mathematical Subject Classification">MSC</abbr> classes:</td>
+          <td class="tablecell msc-classes">{{ msc_class }}</td>
+        </tr>
+        {% endif -%}
+        {%- if acm_class %}
+        <tr>
+          <td class="tablecell label"><abbr title="Association of Computing Machinery Classification">ACM</abbr>&nbsp;classes:</td>
+          <td class="tablecell acm-classes">{{ acm_class }}</td>
+        </tr>
+        {% endif -%}
+
+        {%- if report_num %}
+        <tr>
+          <td class="tablecell label">Report&nbsp;number:</td>
+          <td class="tablecell jref">{{ report_num }}</td>
+        </tr>
+        {% endif -%}
+        <tr>
+          <td class="tablecell label">Cite as:</td>
+          <td class="tablecell arxivid"><span class="arxivid">{{ base_macros.version_atag(arxiv_id, 0, primary_category) }}</span></td>
+        </tr>
+        <tr>
+          <td class="tablecell label">&nbsp;</td>
+          <td class="tablecell arxividv">(or <span class="arxivid">
+              {{ base_macros.version_atag(arxiv_id, version, primary_category) }}</span> for this version)
+          </td>
+        </tr>
+        {%- if datacite_doi %}
+        <tr>
+          <td class="tablecell label">&nbsp;</td>
+          <td class="tablecell arxivdoi">
+            <span class="arxivdoi"><a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a><span>
+              <div class="button-and-tooltip">
+                <button class="more-info" aria-describedby="more-info-desc-1">
+                  <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+                  <span class="visually-hidden">Focus to learn more</span>
+                </button>
+                <!-- tooltip description -->
+                <div role="tooltip" id="more-info-desc-1">
+                  <span class="left-corner"></span>
+                  arXiv-issued DOI via DataCite
+                </div>
+              </div>
+            </td>
+        </tr>
+        {%- endif -%}
+        {%- if journal_ref %}
+        <tr>
+          <td class="tablecell label">Journal&nbsp;reference:</td>
+          <td class="tablecell jref">{{ journal_ref|tex2utf }}</td>
+        </tr>
+        {% endif -%}
+        {%- if doi %}
+        <tr>
+          <td class="tablecell label">
+            <abbr title="Digital Object Identifier">Related DOI</abbr>:
+          </td>
+          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }}
+
+            <!-- accessible tooltip example -->
+            <div class="button-and-tooltip">
+              <button class="more-info" aria-describedby="more-info-desc-1">
+                <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+                <span class="visually-hidden">Focus to learn more</span>
+              </button>
+              <!-- tooltip description -->
+              <div role="tooltip" id="more-info-desc-1">
+                <span class="left-corner"></span>
+                DOI(s) linking to related resources
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endif -%}
+      </table>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
