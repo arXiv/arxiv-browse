@@ -207,7 +207,7 @@ def _non_critical_abs_data(
 
     response_data["is_covid_match"] = _is_covid_match(abs_meta)
     response_data["datacite_doi"] = get_datacite_doi(
-        paper_id=abs_meta.arxiv_id, account="test"
+        paper_id=abs_meta.arxiv_id
     )
 
 
