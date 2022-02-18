@@ -39,9 +39,23 @@
   // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
   function render({ models }) {
       container.innerHTML = window.DOMPurify.sanitize(`
+        ${summary(models)}
         ${noModelsFound(models)}
         ${models.map(model => renderModel(model)).join("\n")}
       `)
+  }
+
+  function summary(models) {
+    switch(models.length) {
+      case 0:
+        return ``
+        break
+      case 1:
+        return `<p>@${models[0].username} has implemented an open-source model based on this paper. Run it on Replicate:</p>`
+        break
+      default:
+        return `<p>${new Intl.ListFormat().format(models.map(model => `@${model.username}`))} have implemented open-source models based on this paper. Run them on Replicate:</p>`
+    }
   }
 
   function noModelsFound(models) {
