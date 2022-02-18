@@ -40,7 +40,7 @@
   function render({ models }) {
       container.innerHTML = window.DOMPurify.sanitize(`
         ${noModelsFound(models)}
-        ${models.map(model => renderModel(model))}
+        ${models.map(model => renderModel(model)).join("\n")}
       `)
   }
 
