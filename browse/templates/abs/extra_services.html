@@ -9,7 +9,7 @@
     {%- endif -%}
   {%- endfor -%}
   {%- set first_dt = abs_meta.get_datetime_of_version(version=0) -%}
-  <a  class="abs-button abs-button-small cite-google-scholar" href="https://scholar.google.com/scholar_lookup?title={{ abs_meta.title|urlencode }}{{ author_params.value }}&publication_date={{ first_dt.strftime('%Y/%m/%d') }}&arxiv_id={{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Google Scholar</a>
+  <a  class="abs-button abs-button-small cite-google-scholar" href="https://scholar.google.com/scholar_lookup?arxiv_id={{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Google Scholar</a>
 {%- endmacro -%}
 
 {%- macro generate_ancillary_file_list(anc_file_list=[], cutoff=6) -%}

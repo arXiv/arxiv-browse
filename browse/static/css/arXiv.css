@@ -1019,6 +1019,46 @@ p.tagline {
 
 /*END Papers With Code css*/
 
+/*BEGIN Replicate CSS*/
+
+.replicate-model {
+  padding: 15px 0;
+  display: block;
+  display: flex;
+}
+
+.replicate-model-image {
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  object-fit: cover;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.replicate-model-details {
+  padding: 10px 15px;
+  vertical-align: top;
+}
+
+.replicate-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.replicate-model-prediction-count {
+  opacity: 0.5;
+}
+
+.replicate-model-prediction-icon {
+  height:.9rem;
+  width:.9rem;
+  margin-right: 0;
+  margin-top: -.15rem;
+}
+
+/*END Replicate CSS*/
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
