@@ -100,9 +100,37 @@
       <div id="pwc-data-output"></div>
     </div>
 
+    <!-- 
+      hide the "Demos" tab by default, and conditionally display it using 
+      JavaScript on pages in specific categories like `cs`, `eess``, and `stat`
+     -->
+    <input type="radio" name="tabs" id="labstabs-demos-input" disabled>
+    <label for="labstabs-demos-input" id="labstabs-demos-label" style="display:none">Demos</label>
+    <div class="tab">
+      <h1>Demos</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="replicate-toggle"
+                data-script-url="{{ url_for('static', filename='js/replicate.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-replicate">
+              <span class="slider"></span>
+              <span class="is-sr-only">Replicate Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-replicate">Replicate</span> <em>(<a href="https://replicate.com/docs/arxiv/about" target="_blank">What is Replicate?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="replicate-output"></div>
+    </div>
 
-    <input type="radio" name="tabs" id="tabthree">
-    <label for="tabthree">Related Papers</label>
+
+    <input type="radio" name="tabs" id="tabfour">
+    <label for="tabfour">Related Papers</label>
     <div class="tab">
       <h1>Recommenders and Search Tools</h1>
       <div class="toggle">
@@ -138,8 +166,8 @@
     </div>
 
 
-    <input type="radio" name="tabs" id="tabfour">
-    <label for="tabfour">
+    <input type="radio" name="tabs" id="tabfive">
+    <label for="tabfive">
       About arXivLabs
     </label>
     <div class="tab">
