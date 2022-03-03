@@ -19,6 +19,9 @@
   <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20210728" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
+  {%- if datacite_doi %}
+    <meta name="citation_doi" content="{{ datacite_doi }}"/>
+  {%- endif %}
   {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
   {{- generate_social_media_tags() }}
