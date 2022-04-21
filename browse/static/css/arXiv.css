@@ -548,6 +548,56 @@ footer .sorry-app-links .a11y-main-link {
 #content-inner {
 
 }
+.button-fancy {
+  border-radius: 4px;
+  background: linear-gradient(to right, #e9f2f6, #daecf6) !important;
+  color: #2f2f2f;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 5px 0 8px 15px;
+  transition: all 0.4s;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-block;
+  line-height: 13px;
+  border-width: 1px;
+  border-style: solid;
+  border-top-color: #cae0ec;
+  border-left-color: #cae0ec;
+  border-bottom-color: #f3fbff;
+  border-right-color: #f3fbff;
+  box-shadow: 2px 2px 3px 1px hsl(0, 0%, 80%);
+}
+.button-fancy:hover {
+  border-bottom: 1px solid #f3fbff;
+  color: black;
+}
+.button-fancy span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.4s;
+}
+.button-fancy span:after {
+  content: '\00bb';
+  position: relative;
+  opacity: 0;
+  top: 1px;
+  right: -5px;
+  padding-left: 10px;
+  transition: 0.5s;
+  font-size: 20px;
+  color: #1772a0;
+}
+.button-fancy:hover span {
+  padding-right: 15px;
+}
+.button-fancy:hover span:after {
+  opacity: 1;
+  right: 0;
+}
 
 /****************************************
  * Home styles
