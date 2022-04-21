@@ -274,7 +274,7 @@ BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "
 """Enable/disable web analytics."""
 
 BROWSE_USER_BANNER_ENABLED = bool(
-    int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0"))
+    int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "1"))
 )
 """Enable/disable user banner."""
 try:
