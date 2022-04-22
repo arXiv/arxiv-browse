@@ -1,17 +1,40 @@
+{#- How to use the user_banner
+Everything in this file will be added to the base.html template when the
+following env vars are set:
+
+BROWSE_USER_BANNER_ENABLED=1
+BROWSE_USER_BANNER_START_DATE=2022-01-01
+BROWSE_USER_BANNER_END_DATE=2022-02-01
+
+These can be set in httpd/conf/ng_flask.conf for use on production.
+
+Or they can be set when running flask:
+
+BROWSE_USER_BANNER_ENABLED=1 BROWSE_USER_BANNER_START_DATE="2022-01-01" FLASK_APP=app.py flask run
+
+The banner will be shown from the first second of
+BROWSE_USER_BANNER_START_DATE until the last second of
+BROWSE_USER_BANNER_END_DATE
+
+If BROWSE_USER_BANNER_END_DATE is not set, it will be automatically
+set to one day in the future. This is useful for testing but could
+cause problems in production.
+
+Setting these will also cause an additonal CSS file to be loadded
+that slides the header away.
+
+-#}
 {# donation banner #}
 <aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Global Survey</h1>
-    <p>
-      In just 3 minutes, help us better understand how you perceive arXiv.
-      <a class="btn-slim" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_a9o63a8zW62EwLk">Take the survey</a>
-    </p>
+    <h1>Giving Week!</h1>
+    <p>Show your support for Open Science by <a href="http://bit.ly/arXivDONATEa" target="_blank">donating to arXiv</a> during Giving Week, April 25th-29th.</p>
   </div>
   <div class="amount-donation bps-banner">
     <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_a9o63a8zW62EwLk"><b>TAKE SURVEY</b></a>
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="http://bit.ly/arXivDONATEa"><b>DONATE</b></a>
       </div>
     </div>
   </div>
@@ -19,8 +42,8 @@
 
 {%- if 0 -%}
 {# downtime #}
-<aside class="slider-wrapper" style="display:none">
+<!-- <aside class="slider-wrapper" style="display:none">
   <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
-</aside>
+</aside> -->
 {%- endif -%}
