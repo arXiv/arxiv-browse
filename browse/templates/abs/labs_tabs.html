@@ -160,11 +160,31 @@
             <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
           </div>
         </div>
+        {%- if False and abs_meta.primary_category in ['astro-ph', 'hep-ph', 'hep-th', 'gr-qc'] %}
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input id="iarxiv-toggle"
+                     type="checkbox"
+                     class="lab-toggle"
+                     data-script-url="{{ url_for('static', filename='js/iarxiv.js') }}"
+                     aria-labelledby="label-for-iarxiv">
+              <span class="slider"></span>
+              <span class="is-sr-only">IArxiv recommender toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-iarxiv">IArxiv Recommender</span>
+            <em>(<a href="https://iarxiv.org/about">What is IArxiv?</a>)</em>
+          </div>
+        </div>
+        {% endif -%}
+
       </div>
       <div style="min-height: 15px" id="connectedpapers-output"></div>
       <div id="coreRecommenderOutput"></div>
+      <div id="iarxivOutput"></div>
     </div>
-
 
     <input type="radio" name="tabs" id="tabfive">
     <label for="tabfive">

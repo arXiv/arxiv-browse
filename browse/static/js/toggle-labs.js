@@ -16,6 +16,7 @@ $(document).ready(function() {
     "replicate": $('#replicate-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
+    "iarxiv": $('#iarxiv-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
@@ -65,6 +66,10 @@ $(document).ready(function() {
           });
         } else if (key == "scite-toggle") {
           $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key == "iarxiv-toggle") {
+          $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         } else if (key == "core-recommender-toggle") {
@@ -151,6 +156,10 @@ $(document).ready(function() {
       });
     } else if ($(this).attr("id") == "scite-toggle") {
       $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "iarxiv-toggle") {
+      $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
