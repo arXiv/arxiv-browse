@@ -1109,6 +1109,53 @@ p.tagline {
 
 /*END Replicate CSS*/
 
+/*BEGIN Spaces CSS*/
+
+.spaces-model {
+  padding: 15px 0;
+  display: block;
+  display: flex;
+}
+
+#labstabs .tab a.spaces-card {
+  width: 7rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+}
+
+.spaces-emoji {
+  font-size: 2rem;
+  opacity: 0.6;
+  position: absolute;
+}
+
+.spaces-title {
+  text-align: center;
+  font-size: 0.8rem;
+  color: whitesmoke;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.spaces-model-details {
+  padding: 10px 15px;
+  vertical-align: top;
+}
+
+.spaces-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+/*END Spaces CSS*/
+
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
