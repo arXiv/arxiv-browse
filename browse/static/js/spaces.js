@@ -50,6 +50,9 @@
     const spaces = await response.json();
     let spaces_data = [];
     await Promise.all(spaces.map(async (space) => {
+      if (space.private) {
+        return;
+      }
       const huggingfaceSpaceApi = `${huggingfaceApiHost}/spaces/${space.id}`
       response = await fetch(huggingfaceSpaceApi);
       if (!response.ok) {
