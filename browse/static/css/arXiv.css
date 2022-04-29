@@ -1141,6 +1141,8 @@ p.tagline {
   overflow: hidden;
   white-space: nowrap;
   z-index: 1;
+  max-width: 80%;
+  text-overflow: ellipsis;
 }
 
 .spaces-model-details {
@@ -1151,6 +1153,10 @@ p.tagline {
 .spaces-model-details-heading {
   margin: 0;
   padding: 0;
+}
+
+.spaces-model-sdk {
+  color: gray;
 }
 
 /*END Spaces CSS*/

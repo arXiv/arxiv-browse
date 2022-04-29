@@ -20,7 +20,7 @@ ENV PIPENV_VENV_IN_PROJECT 1
 ADD app.py /opt/arxiv/
 ADD Pipfile /opt/arxiv/
 ADD Pipfile.lock /opt/arxiv/
-RUN pip install -U pip pipenv==2021.5.29
+RUN pip install -U pip pipenv
 RUN pipenv sync
 
 ENV PATH "/opt/arxiv:${PATH}"
