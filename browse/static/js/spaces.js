@@ -1,8 +1,6 @@
 // Labs integration for displaying machine learning demos from huggingface.co/spaces
 
 (function () {
-  console.log("run spaces")
-
   const container = document.getElementById("spaces-output")
   const containerAlreadyHasContent = container.innerHTML.trim().length > 0
 
