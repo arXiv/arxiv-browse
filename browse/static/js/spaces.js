@@ -40,8 +40,8 @@
       return;
     }
     const model_ids = models.map(m => m.id).join(",");
-    const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=${model_ids}`;
-    const response = await fetch(huggingfaceSpacesFromModelsApi);
+    const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}`;
+    response = await fetch(huggingfaceSpacesFromModelsApi);
     if (!response.ok) {
       console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromModelsApi}`)
       render([]);
@@ -51,7 +51,7 @@
     let spaces_data = [];
     await Promise.all(spaces.map(async (space) => {
       const huggingfaceSpaceApi = `${huggingfaceApiHost}/spaces/${space.id}`
-      const response = await fetch(huggingfaceSpaceApi);
+      response = await fetch(huggingfaceSpaceApi);
       if (!response.ok) {
         console.error(`Unable to fetch data from ${huggingfaceSpaceApi}`);
         return;
@@ -80,7 +80,7 @@
         return `<p>@${models[0].author} has implemented an open-source demo based on this paper. Run it on Spaces:</p>`
         break
       default:
-        return `<p>${new Intl.ListFormat().format(models.map(model => `@${model.author}`))} have implemented open-source demos based on this paper. Run them on Spaces:</p>`
+        return `<p>There are ${models.length} open-source demos based on this paper. Run them on Spaces:</p>`
     }
   }
 
