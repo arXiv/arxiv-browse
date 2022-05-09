@@ -61,7 +61,7 @@
   function noModelsFound(models) {
     if (models.length === 0) {
       return `<p>
-        No demos found for this article. You can <a href="https://replicate.com/docs/arxiv?utm_source=arxiv&arxiv_paper_id=${arxivPaperId}">add one here</a>.
+        No Replicate demos found for this article. You can <a href="https://replicate.com/docs/arxiv?utm_source=arxiv&arxiv_paper_id=${arxivPaperId}">add one here</a>.
       </p>`
     } else {
       return ``
