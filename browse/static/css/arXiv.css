@@ -1111,42 +1111,22 @@ p.tagline {
 
 /*BEGIN Spaces CSS*/
 
+.spaces-summary {
+  margin-bottom: 0.5em;
+}
+
 .spaces-model {
   padding: 15px 0;
-  display: block;
   display: flex;
 }
 
-#labstabs .tab a.spaces-card {
-  width: 7rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1rem;
-}
-
-.spaces-emoji {
-  font-size: 2rem;
-  opacity: 0.6;
-  position: absolute;
-}
-
-.spaces-title {
-  text-align: center;
-  font-size: 0.8rem;
-  color: whitesmoke;
-  font-weight: bold;
-  overflow: hidden;
-  white-space: nowrap;
-  z-index: 1;
-  max-width: 80%;
-  text-overflow: ellipsis;
+.spaces-thumbnail {
+  height: 5.5rem;
+  border-radius: 0.5rem;
 }
 
 .spaces-model-details {
-  padding: 10px 15px;
+  padding: 0px 15px;
   vertical-align: top;
 }
 
@@ -1155,9 +1135,34 @@ p.tagline {
   padding: 0;
 }
 
-.spaces-model-sdk {
+.spaces-model-subheader {
   color: gray;
 }
+
+.spaces-load-all-checkbox {
+  display: none;
+}
+
+.spaces-load-all-label {
+  display: inline-block;
+  padding: 0.75em;
+  background-color: #eef5f9;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.spaces-load-all-checkbox:checked + .spaces-load-all-label {
+  display: none;
+}
+
+.spaces-all-demos {
+  display: none;
+}
+
+.spaces-load-all-checkbox:checked + .spaces-load-all-label + .spaces-all-demos {
+  display: block;
+}
+
 
 /*END Spaces CSS*/
 

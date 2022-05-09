@@ -40,28 +40,14 @@
       return;
     }
     const model_ids = models.map(m => m.id).join(",");
-    const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}`;
+    const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}&full=true&sort=likes&direction=-1`;
     response = await fetch(huggingfaceSpacesFromModelsApi);
     if (!response.ok) {
       console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromModelsApi}`)
       render([]);
       return;
     }
-    const spaces = await response.json();
-    let spaces_data = [];
-    await Promise.all(spaces.map(async (space) => {
-      if (space.private) {
-        return;
-      }
-      const huggingfaceSpaceApi = `${huggingfaceApiHost}/spaces/${space.id}`
-      response = await fetch(huggingfaceSpaceApi);
-      if (!response.ok) {
-        console.error(`Unable to fetch data from ${huggingfaceSpaceApi}`);
-        return;
-      }
-      let space_data = await response.json();
-      spaces_data.push(space_data);
-    }));
+    const spaces_data = await response.json();
     render(spaces_data);
   })()
 
@@ -69,79 +55,51 @@
   function render(models) {
     container.innerHTML = window.DOMPurify.sanitize(`
         ${summary(models)}
-        ${noModelsFound(models)}
-        ${models.map(model => renderModel(model)).join("\n")}
+        ${renderModels(models)}
       `)
   }
 
   function summary(models) {
     switch (models.length) {
       case 0:
-        return ``
+        return `<p class="spaces-summary">
+        No Spaces demos found for this article. You can <a href="https://huggingface.co/new-space">add one here</a>.
+        </p>`
         break
       case 1:
-        return `<p>@${models[0].author} has implemented an open-source demo based on this paper. Run it on Spaces:</p>`
+        return `<p class="spaces-summary">@${models[0].author} has implemented an open-source demo based on this paper. Run it on Spaces:</p>`
         break
       default:
-        return `<p>There are ${models.length} open-source demos based on this paper. Run them on Spaces:</p>`
+        return `<p class="spaces-summary">There are ${models.length} open-source demos based on this paper. Run them on Spaces:</p>`
     }
   }
 
-  function noModelsFound(models) {
-    if (models.length === 0) {
-      return `<p>
-        No demos found for this article. You can <a href="https://huggingface.co/new-space">add one here</a>.
-      </p>`
-    } else {
-      return ``
-    }
+  function renderModels(models) {
+    const visibleModels = 10;
+    return models.slice(0, visibleModels).map(m => renderModel(m)).join("\n") + (models.length > visibleModels ? `
+      <input id="spaces-load-all-checkbox" class="spaces-load-all-checkbox" type="checkbox">
+      <label for="spaces-load-all-checkbox" class="spaces-load-all-label">
+          Load all demos
+      </label>
+      <div class="spaces-all-demos">
+        ${models.slice(visibleModels).map(m => renderModel(m)).join("\n")}
+      </div>
+    `: "")
   }
 
   function renderModel(model) {
-    const tailwind_color_map = {
-      slate: "#475569",
-      gray: "#4b5563",
-      zinc: "#52525b",
-      neutral: "#525252",
-      stone: "#57534e",
-      red: "#dc2626",
-      orange: "#ea580c",
-      amber: "#d97706",
-      yellow: "#ca8a04",
-      lime: "#65a30d",
-      green: "#16a34a",
-      emerald: "#059669",
-      teal: "#0d9488",
-      cyan: "#0891b2",
-      sky: "#0284c7",
-      blue: "#2563eb",
-      indigo: "#4f46e5",
-      violet: "#7c3aed",
-      purple: "#9333ea",
-      fuchsia: "#475569",
-      pink: "#c026d3",
-      rose: "#e11d48"
-    };
-    const getColor = (color) => {
-      if (color in tailwind_color_map) {
-        return tailwind_color_map[color];
-      } else {
-        return tailwind_color_map["gray"];
-      }
-    }
+    const huggingfaceSpaceThumbnail = `https://thumbnails.huggingface.co/social-thumbnails/spaces/${model.id}.png`;
     return `
       <div class="spaces-model">
-        <a class="spaces-card" href="${huggingfaceSpacesHost}/${model.id}" 
-          style="background: -webkit-linear-gradient(315deg,${getColor(model.cardData.colorFrom)},${getColor(model.cardData.colorTo)}); background: linear-gradient(315deg,${getColor(model.cardData.colorFrom)},${getColor(model.cardData.colorTo)});"
-        >
-          <span class="spaces-emoji">${model.cardData.emoji}</span>
-          <span class="spaces-title">${model.cardData.title}</span>
+        <a href="${huggingfaceSpacesHost}/${model.id}">
+          <img class="spaces-thumbnail" src=${huggingfaceSpaceThumbnail}>
         </a>
         <div class="spaces-model-details">
           <a href="${huggingfaceSpacesHost}/${model.id}">
             <h3 class="spaces-model-details-heading">${model.id}</h3>
           </a>
-          <p class="spaces-model-sdk">A ${model.cardData.sdk} demo.</p>
+          <p class="spaces-model-title">${model.cardData.title}</p>
+          <p class="spaces-model-subheader">Created ${(new Date(model.lastModified)).toLocaleDateString()} &bull; ${model.sdk}</p>
         </div>
       </div>
     `
