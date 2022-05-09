@@ -124,8 +124,25 @@
             <span id="label-for-replicate">Replicate</span> <em>(<a href="https://replicate.com/docs/arxiv/about" target="_blank">What is Replicate?</a>)</em>
           </div>
         </div>
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="spaces-toggle"
+                data-script-url="{{ url_for('static', filename='js/spaces.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-spaces">
+              <span class="slider"></span>
+              <span class="is-sr-only">Spaces Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-spaces">🤗&nbsp; Spaces</span> <em>(<a href="https://huggingface.co/docs/hub/spaces" target="_blank">What is Spaces?</a>)</em>
+          </div>
+        </div>
+
       </div>
       <div id="replicate-output"></div>
+      <div id="spaces-output"></div>
     </div>
 
 
