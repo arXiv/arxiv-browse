@@ -72,7 +72,20 @@ arXiv Labs options:
 ### Serving static files on S3
 
 We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
-files via S3. Following the instructions for Flask-S3 should just work.
+files via S3.
+
+After looking up the aws keys:
+```bash
+cd arxiv-browse
+git pull
+AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x AWS_REGION=x FLASKS3_BUCKET_NAME=x  pipenv run python upload_static_assets.py
+```
+
+In AWS -> Cloudwatch, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
+and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
+
+It may be help to use a web browser's inspect->network to find the active release version.
+
 
 ### Test suite
 
