@@ -1,7 +1,6 @@
 // Labs integration for displaying machine learning demos from huggingface.co/spaces
 
 (function () {
-    console.log("hello spaces");
     const container = document.getElementById("spaces-output")
     const containerAlreadyHasContent = container.innerHTML.trim().length > 0
   
@@ -92,11 +91,11 @@
       const huggingfaceSpaceThumbnail = `https://thumbnails.huggingface.co/social-thumbnails/spaces/${model.id}.png`;
       return `
         <div class="spaces-model">
-          <a href="${huggingfaceSpacesHost}/${model.id}">
+          <a target="_blank" href="${huggingfaceSpacesHost}/${model.id}">
             <img class="spaces-thumbnail" src=${huggingfaceSpaceThumbnail}>
           </a>
           <div class="spaces-model-details">
-            <a href="${huggingfaceSpacesHost}/${model.id}">
+            <a target="_blank" href="${huggingfaceSpacesHost}/${model.id}">
               <h3 class="spaces-model-details-heading">${model.id}</h3>
             </a>
             <p class="spaces-model-title">${model.cardData.title}</p>
