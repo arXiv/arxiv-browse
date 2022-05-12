@@ -100,9 +100,37 @@
       <div id="pwc-data-output"></div>
     </div>
 
+    <!--
+      hide the "Demos" tab by default, and conditionally display it using
+      JavaScript on pages in specific categories like `cs`, `eess``, and `stat`
+     -->
+    <input type="radio" name="tabs" id="labstabs-demos-input" disabled>
+    <label for="labstabs-demos-input" id="labstabs-demos-label" style="display:none">Demos</label>
+    <div class="tab">
+      <h1>Demos</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="replicate-toggle"
+                data-script-url="{{ url_for('static', filename='js/replicate.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-replicate">
+              <span class="slider"></span>
+              <span class="is-sr-only">Replicate Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-replicate">Replicate</span> <em>(<a href="https://replicate.com/docs/arxiv/about" target="_blank">What is Replicate?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="replicate-output"></div>
+    </div>
 
-    <input type="radio" name="tabs" id="tabthree">
-    <label for="tabthree">Related Papers</label>
+
+    <input type="radio" name="tabs" id="tabfour">
+    <label for="tabfour">Related Papers</label>
     <div class="tab">
       <h1>Recommenders and Search Tools</h1>
       <div class="toggle">
@@ -132,48 +160,30 @@
             <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
           </div>
         </div>
-      </div>
-      <div style="min-height: 15px" id="connectedpapers-output"></div>
-      <div id="coreRecommenderOutput"></div>
-    </div>
-
-
-    <input type="radio" name="tabs" id="tabfour">
-    <label for="tabfour">Influence Flowers</label>
-    <div class="tab">
-      <h1>Influence Flowers of this Article</h1>
-      <div class="toggle">
+        {%- if abs_meta.primary_category and (abs_meta.primary_category in ['hep-ph', 'hep-th', 'gr-qc'] or abs_meta.primary_category.startswith('astro-ph')) %}
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input
-                id="influenceflower-toggle"
-                data-script-url="{{ url_for('static', filename='js/influenceflower.js') }}"
-                type="checkbox" class="lab-toggle" aria-labelledby="label-for-influenceflower">
+              <input id="iarxiv-toggle"
+                     type="checkbox"
+                     class="lab-toggle"
+                     data-script-url="{{ url_for('static', filename='js/iarxiv.js') }}"
+                     aria-labelledby="label-for-iarxiv">
               <span class="slider"></span>
-              <span class="is-sr-only">Link to Influence Flowers</span>
+              <span class="is-sr-only">IArxiv recommender toggle</span>
             </label>
           </div>
           <div class="column lab-name">
-            <span id="label-for-influenceflower">Influence Flowers</span> <em>(<a href="https://influencemap.ml/" target="_blank">What are Influence Flowers?</a>)</em>
+            <span id="label-for-iarxiv">IArxiv Recommender</span>
+            <em>(<a href="https://iarxiv.org/about">What is IArxiv?</a>)</em>
           </div>
         </div>
+        {% endif -%}
+
       </div>
-      <div id="influenceflower-output"></div>
-      <div id="influenceflower-output-graph" style="display:none">
-        <ul class="flower-tabs">
-          <li class="active"><a class="btn tab-btn" onclick="openTab(event, 'tab-author')">Author</a></li>
-          <li><a class="btn tab-btn" onclick="openTab(event, 'tab-venue')">Venue</a></li>
-          <li><a class="btn tab-btn" onclick="openTab(event, 'tab-inst')">Institution</a></li>
-          <li><a class="btn tab-btn" onclick="openTab(event, 'tab-topic')">Topic</a></li>
-        </ul>
-        <div class="flower-tab-content">
-          <div class="tab-flower active" id="tab-author"><svg id="flower-graph-author"></svg></div>
-          <div class="tab-flower" id="tab-venue"><svg id="flower-graph-venue"></svg></div>
-          <div class="tab-flower" id="tab-inst"><svg id="flower-graph-inst"></svg></div>
-          <div class="tab-flower" id="tab-topic"><svg id="flower-graph-topic"></svg></div>
-        </div>
-      </div>
+      <div style="min-height: 15px" id="connectedpapers-output"></div>
+      <div id="coreRecommenderOutput"></div>
+      <div id="iarxivOutput"></div>
     </div>
 
     <input type="radio" name="tabs" id="tabfive">

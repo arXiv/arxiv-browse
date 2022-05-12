@@ -477,3 +477,13 @@ class BrowseTest(unittest.TestCase):
         jref_elmt = html.find('td', 'jref')
         self.assertTrue(jref_elmt, 'Should have jref td element')
         self.assertIn('RIMS Kôkyûroku Bessatsu', jref_elmt.text, 'Expecting converted TeX in journal reference field')
+
+    def test_bibtex(self):
+        for dir_name, _, file_list in os.walk(ABS_FILES):
+            for fname in file_list:
+                fname_path = os.path.join(dir_name, fname)
+                if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
+                    continue
+                dm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                rv = self.app.get(f'/bibtex/{dm.arxiv_id}')
+                self.assertEqual(rv.status_code, 200, f'checking /bibtex for {dm.arxiv_id}')

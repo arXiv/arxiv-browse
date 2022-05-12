@@ -13,8 +13,10 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
+    "replicate": $('#replicate-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
+    "iarxiv": $('#iarxiv-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "bibex": {
@@ -29,11 +31,27 @@ $(document).ready(function() {
 
   var pwcEnabled = true;
 
+  const currentCategory = $('.current')?.text()?.toLowerCase();
+  const demoCategories = [
+    "cs",   // Computer Science
+    "eess", // Electrical Engineering and Systems Science
+    "stat"  // Statistics
+  ]
+
+  const demosEnabled = currentCategory && demoCategories.some(category => currentCategory.startsWith(category));
+
+  if (demosEnabled) {
+    document.getElementById("labstabs-demos-input").removeAttribute("disabled");
+    document.getElementById("labstabs-demos-label").style.display = "block";
+  }
+
+  var replicateEnabled = demosEnabled
+
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
     if ( labsCookie["last_tab"] ){
-      $("input#"+labsCookie["last_tab"]).click();
+      $(`input#${labsCookie["last_tab"]}:not([disabled])`).click();
     }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
@@ -51,6 +69,10 @@ $(document).ready(function() {
           $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+        } else if (key == "iarxiv-toggle") {
+          $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
         } else if (key == "core-recommender-toggle") {
           $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -58,6 +80,12 @@ $(document).ready(function() {
         } else if (key === "paperwithcode-toggle") {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
+          });
+        } else if (key === "replicate-toggle") {
+          $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
+            // console.log(textStatus, "replicate (on cookie check)");
+          }).fail(function() {
+            console.error("failed to load replicate script (on cookie check)", arguments)
           });
         } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
@@ -72,6 +100,9 @@ $(document).ready(function() {
         if (key === "paperwithcode-toggle") {
           pwcEnabled = false;
         }
+        if (key === "replicate-toggle") {
+          replicateEnabled = false;
+        }
       }
     }
   } else {
@@ -84,6 +115,16 @@ $(document).ready(function() {
       console.log(textStatus);
     });
   }
+
+  if(replicateEnabled){
+    $("#replicate-toggle.lab-toggle").toggleClass("enabled",true);
+    $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
+      // console.log(textStatus, "replicate (on load)");
+    }).fail(function() {
+      console.error("failed to load replicate script (on load)", arguments)
+    });;
+  }
+
   // record last-clicked tab
   $("div.labstabs input[name='tabs']").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
@@ -122,11 +163,21 @@ $(document).ready(function() {
       $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
+    } else if ($(this).attr("id") == "iarxiv-toggle") {
+      $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
     } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "replicate-toggle") {
+      $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
+        // console.log(textStatus, "replicate (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load replicate script (on lab toggle)", arguments)
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {

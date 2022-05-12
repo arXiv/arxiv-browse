@@ -39,10 +39,14 @@ You can also run the browse app in Docker. The following commands will build
 and run browse using defaults for the configuration parameters and will use
 the test data from `tests/data`.
 
+Install [Docker](https://docs.docker.com/get-docker/) if you haven't already, then run the following:
+
 ```bash
-docker build . -t arxiv/browse:some_tag
-docker run -it 8000:8000 arxiv/browse:some_tag
+script/start
 ```
+
+This command will build the docker image and run it.
+
 If all goes well, http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
@@ -68,7 +72,20 @@ arXiv Labs options:
 ### Serving static files on S3
 
 We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
-files via S3. Following the instructions for Flask-S3 should just work.
+files via S3.
+
+After looking up the aws keys:
+```bash
+cd arxiv-browse
+git pull
+AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x AWS_REGION=x FLASKS3_BUCKET_NAME=x  pipenv run python upload_static_assets.py
+```
+
+In AWS -> Cloudwatch, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
+and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
+
+It may be help to use a web browser's inspect->network to find the active release version.
+
 
 ### Test suite
 
@@ -113,3 +130,4 @@ Goal: 9/10 or better.
 
 ```bash
 pipenv run pylint browse
+```
