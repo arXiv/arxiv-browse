@@ -232,10 +232,17 @@ em.boxed {
   padding: 10px 0 .2em 10px;
   font-style: normal;
   float: left;
+  display: inline-flex;
+  align-items: center;
 }
 
 #header .header-breadcrumbs a {
   /*font-weight: bold;*/
+}
+
+#header .header-breadcrumbs span {
+  margin-right:5px;
+  margin-left: 5px;
 }
 
 body#front #header h1 {
@@ -540,6 +547,56 @@ footer .sorry-app-links .a11y-main-link {
 }
 #content-inner {
 
+}
+.button-fancy {
+  border-radius: 4px;
+  background: linear-gradient(to right, #e9f2f6, #daecf6) !important;
+  color: #2f2f2f;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 5px 0 8px 15px;
+  transition: all 0.4s;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-block;
+  line-height: 13px;
+  border-width: 1px;
+  border-style: solid;
+  border-top-color: #cae0ec;
+  border-left-color: #cae0ec;
+  border-bottom-color: #f3fbff;
+  border-right-color: #f3fbff;
+  box-shadow: 2px 2px 3px 1px hsl(0, 0%, 80%);
+}
+.button-fancy:hover {
+  border-bottom: 1px solid #f3fbff;
+  color: black;
+}
+.button-fancy span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.4s;
+}
+.button-fancy span:after {
+  content: '\00bb';
+  position: relative;
+  opacity: 0;
+  top: 1px;
+  right: -5px;
+  padding-left: 10px;
+  transition: 0.5s;
+  font-size: 20px;
+  color: #1772a0;
+}
+.button-fancy:hover span {
+  padding-right: 15px;
+}
+.button-fancy:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 /****************************************
@@ -1011,6 +1068,46 @@ p.tagline {
 
 
 /*END Papers With Code css*/
+
+/*BEGIN Replicate CSS*/
+
+.replicate-model {
+  padding: 15px 0;
+  display: block;
+  display: flex;
+}
+
+.replicate-model-image {
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  object-fit: cover;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.replicate-model-details {
+  padding: 10px 15px;
+  vertical-align: top;
+}
+
+.replicate-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.replicate-model-prediction-count {
+  opacity: 0.5;
+}
+
+.replicate-model-prediction-icon {
+  height:.9rem;
+  width:.9rem;
+  margin-right: 0;
+  margin-top: -.15rem;
+}
+
+/*END Replicate CSS*/
 
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */

@@ -4,7 +4,7 @@ $(document).ready(function() {
     var cached_provider=null
     var setup=0
     var API_CROSSREF_CITE='https://dx.doi.org/'
-    
+
     function error_check(response) {
         switch (response.status) {
         case 0:
@@ -18,7 +18,7 @@ $(document).ready(function() {
         }
     }
 
-    
+
     var provider_desc={
         arxiv: 'arXiv API',
         doi: 'Crossref Citation Formating Service'
@@ -36,10 +36,10 @@ $(document).ready(function() {
         data = data.replace('}}', '}\n}')
         return data
     }
-    
+
     $('#bib-cite-trigger').click(function(){
         $('#bib-cite-loading').show()
-        
+
         metaid =  document.head.querySelector(`[name="citation_arxiv_id"]`)
         id = metaid ? metaid.content: ''
 
@@ -63,7 +63,7 @@ $(document).ready(function() {
             do_modal(cached_value, cached_provider)
         }else if(doi){
             $.ajax({url: API_CROSSREF_CITE + doi,
-                headers: {Accept: `text/bibliography; style=bibtex`},
+                headers: {Accept: `application/x-bibtex`},
                 success: function(result){
                     cached_value = format_crossref(result)
                     cached_provider = 'doi'

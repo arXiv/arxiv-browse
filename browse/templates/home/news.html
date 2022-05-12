@@ -7,12 +7,21 @@ Celebrating <a href="https://blog.arxiv.org/2021/08/13/celebrating-arxivs-30th-a
 <br><br>
 {%- endif -%}
 
-{%- if rd_int >= 202010010756 and rd_int <= 202011300100 -%}
-arXiv now processes new submissions and replacements with TeX Live 2020. <a href="https://blogs.cornell.edu/arxiv/2020/09/24/tex-live-2020-release-oct-1-2020/" target="_blank">Learn more</a>.
+<!-- brand perception survey -->
+{%- if rd_int >= 202111150100 and rd_int <= 202111160100 -%}
+<p><strong>Global survey:</strong> In just 3 minutes help us understand how you see arXiv, today.
+<a class="btn-slim" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_a9o63a8zW62EwLk?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}">Take survey</a>
 <br><br>
 {%- endif -%}
 
-<!-- annual giving message -->
-{%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}
-23 Sep 2019: Our giving campaign is this week. <a href="https://blogs.cornell.edu/arxiv/2019/09/19/donate-to-arxiv-4/">Support arXiv with a donation!</a><br/>
+<!-- annual post-giving-week message -->
+{%- if rd_int >= 202111010100 and rd_int <= 202111072359 -%}
+A big thank you for donating to arXiv during International Open Access Week. It's not too late to show your support. <a href="https://bit.ly/arXivDONATEa" target="_blank">Donate to arXiv here</a>.
+<br><br>
+{%- endif -%}
+
+<!-- annual giving-week message -->
+{%- if rd_int >= 202204250100 and rd_int <= 202204292359 -%}
+Show your support for Open Science by <a href="https://blogs.cornell.edu/arxiv/2022/04/22/arxivs-giving-week-starts-april-25-2022/" target="_blank">donating to arXiv</a> during Giving Week, April 25th-29th.
+<br><br>
 {%- endif -%}

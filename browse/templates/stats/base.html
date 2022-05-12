@@ -6,7 +6,7 @@
   <script src="{{ url_for('static', filename='js/d3/3.5.17/d3.min.js') }}" type="text/javascript"></script>
 {% endblock head %}
 
-{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a>  &gt; stats  &gt; server usage</h1>{% endblock %}
+{% block header_h1 %}<h1 class="header-breadcrumbs"><a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> stats  <span>&gt;</span> server usage</h1>{% endblock %}
 
 {% block content_stats %}
 <div class="columns is-mobile stats-header">
