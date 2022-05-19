@@ -15,7 +15,7 @@ ul.flower-tabs{margin-top:25px;list-style-type:none;border-bottom:1px solid #ddd
 .hl-circle{stroke:black;stroke-width:0.5;cursor:pointer;}
 .hl-link{fill:none;}
 .hl-text{font-size:12px}
-.node-ego-text,.node-ego-text>a{font-weight:bold}
+.node-ego-text,.node-ego-text>a{font-weight:bold;fill:#0000EE;}
 .text-blue{color:rgb(107,172,208)}
 .text-red{color:rgb(228,130,104)}
 .flower-text{padding:0.1rem 0}
