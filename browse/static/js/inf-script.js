@@ -141,7 +141,7 @@ var InfluenceFlower = class InfluenceFlower {
 
       var capName = this.capitalizeString(d.id==0, d.gtype, d.name);
       var egoLink = ego_url_base+"&tab="+idx;
-      var influencemap_url_base = "http://influencemap.ml/submit/?id="
+      var influencemap_url_base = "https://influencemap.cmlab.dev/submit/?id="
       if (d.id == 0) {
         text.innerHTML = "<a href='"+egoLink+"' target='_blank'>"+capName+"</a>";
       } else {

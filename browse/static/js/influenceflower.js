@@ -1,7 +1,7 @@
 (function (window, userInput, options) {
     // console.log("Influence flower function call");
     const paperTitle = document.head.querySelector("[name~=citation_title][content]").content;
-    const INF_FLOWER_REST_URL = 'https://influencemap.ml';
+    const INF_FLOWER_REST_URL = 'https://influencemap.cmlab.dev';
     const flowerQuery = `${INF_FLOWER_REST_URL}/query?title=${paperTitle}`;
 
     function loadStylesheet(id, url) {
