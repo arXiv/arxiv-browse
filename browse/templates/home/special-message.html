@@ -1,12 +1,12 @@
 {#- Special messages appear in a column to the side of the website intro/news section, each in their own column. Always apply the style "message-special" to the column. You can also apply the style "dark" to override the red styles and add a message with a black background instead. There should preferably be just one, and never more than two. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
-{%- if rd_int >= 202206210800 and rd_int <= 202207012300 -%}
+{%- if rd_int >= 202206270100 and rd_int <= 202207012300 -%}
 <div class="message-special dark column">
   <span class="label">Accessible arXiv</span>
-  <p>Our goal is for arXiv to be open to all. One of the great challenges is making diverse scientific papers accessible to assistive technology.</p>
-  <p>Are you a researcher who uses a screen reader or other technology to access arXiv, or a professor who helps students do so? We would love to hear from you as we strive to understand the challenges and creative measures scientists employ to access research on arXiv.
-  <a target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_3K3qwdEH5gnzw6q">Sign up here to share your expertise</a></p>
+  <p>arXiv strives to be open, above all. One of the great challenges to that goal is making diverse scientific papers accessible to assistive technology.</p>
+  <p>Are you a researcher who uses a screen reader or other technology to access arXiv, or a professor who helps students do so? We would love to hear from you about the challenges and creative measures you employ to access research on arXiv.
+  <a target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_3K3qwdEH5gnzw6q">Sign up here to share your expertise</a>.</p>
 </div>
 {%- endif -%}
 
