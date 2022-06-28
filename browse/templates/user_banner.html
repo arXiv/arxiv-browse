@@ -24,8 +24,24 @@ Setting these will also cause an additonal CSS file to be loadded
 that slides the header away.
 
 -#}
+{# accessibility CTA banner #}
+<aside class="slider-wrapper bps-banner dark" style="display:none">
+  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+  <div class="copy-donation bps-banner">
+    <h1>Accessible arXiv</h1>
+    <p>Do you navigate arXiv using a screen reader or other assistive technology? Are you a professor who helps students do so? We want to hear from you.
+      Please consider <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_3K3qwdEH5gnzw6q" target="_blank">signing up to share your insights</a> as we work to make arXiv even more open.</p>
+  </div>
+  <div class="amount-donation bps-banner">
+    <div class="wrapper">
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_3K3qwdEH5gnzw6q"><b>Share Insights</b></a>
+      </div>
+    </div>
+  </div>
+</aside>
+
 {# donation banner #}
-<aside class="slider-wrapper bps-banner" style="display:none">
+<!-- <aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
@@ -38,7 +54,7 @@ that slides the header away.
       </div>
     </div>
   </div>
-</aside>
+</aside> -->
 
 {%- if 0 -%}
 {# downtime #}
