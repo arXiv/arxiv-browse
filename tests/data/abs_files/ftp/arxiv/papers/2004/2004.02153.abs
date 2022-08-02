@@ -13,8 +13,13 @@ MSC-class: 35K55 (primary), 35D99, 35Q92, 92C17 (secondary)
 License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
 \\
   We construct global generalized solutions to the chemotaxis system
-\begin{align*} \begin{cases} u_t = \Delta u - \nabla \cdot (u \nabla v) + \lambda(x) u - \mu(x) u^\kappa,
-\\ v_t = \Delta v - v + u \end{cases} \end{align*} in smooth, bounded domains $\Omega \subset \mathbb R^n$, $n \geq
+  \begin{align*}
+  \begin{cases}
+  u_t = \Delta u - \nabla \cdot (u \nabla v) + \lambda(x) u - \mu(x) u^\kappa,
+\\
+  v_t = \Delta v - v + u
+  \end{cases}
+  \end{align*} in smooth, bounded domains $\Omega \subset \mathbb R^n$, $n \geq
 2$, for certain choices of $\lambda, \mu$ and $\kappa$.
 Here, inter alia, the selections $\mu(x) = |x|^\alpha$ with $\alpha < 2$ and
 $\kappa = 2$as well as $\mu \equiv \mu_1 > 0$ and $\kappa >

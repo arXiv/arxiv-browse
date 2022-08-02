@@ -487,3 +487,16 @@ class BrowseTest(unittest.TestCase):
                 dm = AbsMetaSession.parse_abs_file(filename=fname_path)
                 rv = self.app.get(f'/bibtex/{dm.arxiv_id}')
                 self.assertEqual(rv.status_code, 200, f'checking /bibtex for {dm.arxiv_id}')
+
+    def test_2004_02153(self):
+        """Test when more than one \\ begins a line in the .abs file. ARXIVNG-3128"""
+        rv = self.app.get('/abs/2004.02153')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("We construct global generalized solutions to the chemotaxis system",
+                      txt,
+                      "Expect the abstract including the first sentence.")
+        self.assertIn("\\\\ v_t = \\Delta", txt, "Expect the TeX case")
+        self.assertIn("collapse into a persistent Dirac distribution.",
+                      txt,
+                      "Expect the abstract including the last sentence.")
