@@ -2,7 +2,7 @@
 import re
 from typing import Union
 
-from jinja2 import Markup
+from markupsafe import Markup
 import html
 
 

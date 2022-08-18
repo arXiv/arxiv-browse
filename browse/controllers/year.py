@@ -12,7 +12,7 @@ from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import years_operating, stats_by_year
 
 
-def year_page(archive_id: str, year: int) -> Any:
+def year_page(archive_id: str, year: Optional[int]) -> Any:
     """
     Get year page for archive.
 
@@ -21,7 +21,7 @@ def year_page(archive_id: str, year: int) -> Any:
     archive : str
     Must be an arXiv archive identifier.
 
-    year: int
+    year: Optional[int]
     Must be a two or four digit year.
 
     Returns

@@ -321,7 +321,7 @@ class BrowseTest(unittest.TestCase):
         badtag2 = 'href="http://learnrnd.com/news.php?id=Magnetic_3D_Bio_Printing]"'
         self.assertTrue(
             badtag2 not in rv.data.decode('utf-8'),
-            f"link should not include closing square bracket")
+            "link should not include closing square bracket")
 
     @unittest.skip("TODO ARXIVNG-1246, may require refactoring jinja filters")
     def test_arxivng_1246(self):

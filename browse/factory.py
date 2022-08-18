@@ -12,7 +12,7 @@ from browse.filters import entity_to_utf
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
-from arxiv.users.auth import Auth
+from arxiv_auth.auth import Auth
 
 s3 = FlaskS3()
 

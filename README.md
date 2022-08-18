@@ -9,7 +9,6 @@ pipenv install
 FLASK_APP=app.py FLASK_DEBUG=1 pipenv run flask run
 ```
 
-
 This will monitor for any changes to the Python code and restart the server.
 Unfortunately static files and templates are not monitored, so you'll have to
 manually restart to see those changes take effect.
@@ -98,7 +97,7 @@ pipenv install --dev
 Run the main test suite with the following command:
 
 ```bash
-pipenv run nose2 --with-coverage
+pipenv run pytest --with-coverage
 ```
 
 ### Static checking

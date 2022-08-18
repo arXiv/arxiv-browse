@@ -74,7 +74,7 @@ def before_request() -> None:
             ):
                 session["geoip.version"] = geoip_version
                 # https://geoip2.readthedocs.io/en/latest/
-                response = geoip_reader.city(request.remote_addr)
+                response = geoip_reader.city(request.remote_addr) # type: ignore
                 if response:
                     if response.continent:
                         session["continent"] = {
@@ -452,8 +452,16 @@ def archive_with_extra(archive: str, junk: str):  # type: ignore
     return redirect(url_for("browse.archive", archive=archive), code=301)
 
 
-@blueprint.route("year/<archive>", defaults={"year": None})
-@blueprint.route("year/<archive>/", defaults={"year": None}, strict_slashes=False)
+@blueprint.route("year/<archive>")
+@blueprint.route("year/<archive>/")
+def year_default(archive: str):  # type: ignore
+    """Year's stats for an archive."""
+    response, code, headers = year_page(archive, None)
+    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+        return "", code, headers
+    return render_template("year.html", **response), code, headers
+
+
 @blueprint.route("year/<archive>/<int:year>/")
 @blueprint.route("year/<archive>/<int:year>")
 def year(archive: str, year: int):  # type: ignore
@@ -471,9 +479,9 @@ def cookies(set):  # type: ignore
     is_debug = request.args.get("debug", None) is not None
     if request.method == "POST":
         debug = {"debug": "1"} if is_debug else {}
-        resp = redirect(url_for("browse.cookies", **debug))
+        resp = redirect(url_for("browse.cookies", **debug)) # type: ignore
         for ctoset in cookies_to_set(request):
-            resp.set_cookie(**ctoset)  # type: ignore
+            resp.set_cookie(**ctoset)
         return resp
     response, code, headers = get_cookies_page(is_debug)
     return render_template("cookies.html", **response), code, headers

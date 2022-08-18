@@ -1,7 +1,8 @@
 import unittest
 from functools import partial
 
-from jinja2 import escape, Markup, Environment
+from jinja2 import Environment
+from markupsafe import escape, Markup
 
 from flask import appcontext_pushed, url_for
 from app import app

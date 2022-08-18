@@ -75,7 +75,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     debug = {'debug': '1'} if is_debug else {
     }  # want to propogate debug to form URL
     response_data = {
-        'form_url': url_for('browse.cookies', set='set', **debug),
+        'form_url': url_for('browse.cookies', set='set', **debug), # type: ignore
         # Note deep copy
         'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),
         'debug': is_debug,
@@ -98,14 +98,14 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[st
     return configs
 
 
-def cookies_to_set(request: flask.Request) -> List[Dict[str, object]]:
+def cookies_to_set(request: flask.Request) -> List[Dict]:
     """Get cookies from the form and return them as a list of tuples."""
     cts = []
     for (id, value) in request.form.items():
         matching_conf = next(
             (conf for conf in cookies_config if conf['id'] == id), None)
         if matching_conf is not None:
-            ctoset = {'key': matching_conf['name']}
+            ctoset:Dict = {'key': matching_conf['name']}
             cts.append(ctoset)
             if value is None or value == '' or value == 'default':
                 ctoset['max_age'] = 0

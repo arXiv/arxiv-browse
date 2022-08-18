@@ -99,6 +99,6 @@ def get_listing_service() -> ListingService:
         # importing at runtime to avoid cyclic imports that kill python
         import importlib
         fl = importlib.import_module("browse.services.listing.fake_listings")
-        g.listing_service = fl.FakeListingFilesService()  # type: ignore
+        g.listing_service = fl.FakeListingFilesService()
 
     return cast(ListingService, g.listing_service)

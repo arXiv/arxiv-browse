@@ -1,5 +1,5 @@
 """Representations of arXiv document metadata."""
-import collections
+from collections import abc
 from typing import List, Optional, Iterator, Set
 from datetime import datetime
 from dataclasses import dataclass, field
@@ -205,7 +205,7 @@ class DocMetadata:
         """
         if self.private:
             return 1
-        if not isinstance(self.version_history, collections.Iterable):
+        if not isinstance(self.version_history, abc.Iterable):
             raise ValueError(
                 'version_history was not an Iterable for %s' % self.arxiv_id_v)
         return max(map(lambda ve: ve.version, self.version_history))

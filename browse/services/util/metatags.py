@@ -1,9 +1,8 @@
 """Functions to make HTML head metadata tags for DocMetadata."""
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Union, Dict, List
-import pytz
 
 from flask import url_for
 
@@ -99,7 +98,7 @@ def format_affil_author(au: List[str]) -> Dict:
 def _mtag(name: str, content: Union[int, str, datetime]) -> Dict:
     cstr = ""
     if isinstance(content, datetime):
-        cstr = content.astimezone(pytz.UTC).strftime("%Y/%m/%d")
+        cstr = content.astimezone(timezone.utc).strftime("%Y/%m/%d")
     else:
         cstr = f"{content}"
 

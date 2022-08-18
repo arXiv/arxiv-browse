@@ -1,7 +1,8 @@
 """Response header utility functions."""
 from datetime import datetime, timedelta, timezone
 from typing import Tuple, Optional
-from dateutil.tz import tzutc, gettz
+from zoneinfo import ZoneInfo
+from datetime import timezone
 
 
 from arxiv.base.globals import get_application_config
@@ -41,7 +42,7 @@ def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool
     if dt is None:
         dt = datetime.now(timezone.utc)
     config = get_application_config()
-    tz = gettz(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
+    tz = ZoneInfo(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
     dt = dt.astimezone(tz=tz)
 
     possible_publish_dt = dt.replace(hour=20, minute=0, second=0)
@@ -67,7 +68,7 @@ def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool
 
     possible_publish_dt = possible_publish_dt + delta_to_next_publish
 
-    return (possible_publish_dt.astimezone(tz=tzutc()), likely_in_publish)
+    return (possible_publish_dt.astimezone(tz=timezone.utc), likely_in_publish)
 
 
 def abs_expires_header() -> Tuple[str, str]:
@@ -81,4 +82,4 @@ def abs_expires_header() -> Tuple[str, str]:
 
 def mime_header_date(dt: datetime) -> str:
     """Convert a datetime to string in MIME date format (RFC 1123)."""
-    return dt.astimezone(tz=tzutc()).strftime('%a, %d %b %Y %H:%M:%S GMT')
+    return dt.astimezone(tz=timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')

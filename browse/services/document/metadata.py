@@ -4,9 +4,8 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from dateutil import parser
-from pytz import timezone
-from datetime import datetime
-from dateutil.tz import tzutc, gettz
+from zoneinfo import ZoneInfo
+from datetime import datetime, timezone
 import dataclasses
 
 from arxiv import taxonomy
@@ -22,7 +21,7 @@ from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
 from browse.services.document import cache
 
 
-ARXIV_BUSINESS_TZ = timezone('US/Eastern')
+ARXIV_BUSINESS_TZ = ZoneInfo('US/Eastern')
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
@@ -484,8 +483,8 @@ class AbsMetaSession:
 
         # TODO: clean up
         modified = datetime.fromtimestamp(
-            os.path.getmtime(filename), tz=gettz('US/Eastern'))
-        modified = modified.astimezone(tz=tzutc())
+            os.path.getmtime(filename), tz=ARXIV_BUSINESS_TZ)
+        modified = modified.astimezone(tz=timezone.utc)
 
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
@@ -523,6 +522,8 @@ class AbsMetaSession:
         name = from_match.group('name')
         if name is not None:
             name = name.rstrip()
+
+        name = str(name)
         email = from_match.group('email')
 
         # get the version history for this particular version of the document
