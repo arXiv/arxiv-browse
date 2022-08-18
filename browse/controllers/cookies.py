@@ -4,7 +4,6 @@ import copy
 from typing import Any, Dict, List
 
 import flask
-from arxiv import status
 from flask import request, url_for
 
 
@@ -83,7 +82,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     }
     response_headers = {'Expires': '0',
                         'Pragma': 'no-cache'}
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, 200, response_headers
 
 
 def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

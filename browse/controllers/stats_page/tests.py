@@ -2,8 +2,8 @@
 # mypy: ignore-errors
 from datetime import date, datetime
 from unittest import TestCase, mock
+from http import HTTPStatus as status
 
-from arxiv import status
 from werkzeug.exceptions import BadRequest
 
 from browse.controllers import stats_page
@@ -29,7 +29,7 @@ class TestStatsPageControllers(TestCase):
             )
             mock_get_hourly_stats_count.assert_called_once()
             mock_get_hourly_stats_count.reset_mock()
-            self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+            self.assertEqual(code, status.OK)
             for key in ["current_dt", "requested_dt", "normal_count", "admin_count"]:
                 self.assertIn(key, response_data, f"{key} is in response_data")
 
@@ -47,7 +47,7 @@ class TestStatsPageControllers(TestCase):
         response_data, code, headers = stats_page.get_hourly_stats_csv()
         mock_get_hourly_stats.assert_called_once()
         mock_get_hourly_stats.reset_mock()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(headers["Content-Type"], "text/csv")
         self.assertIn("csv", response_data, "csv is in response data")
         self.assertEqual(response_data["csv"], "hour,node1\n")
@@ -78,7 +78,7 @@ class TestStatsPageControllers(TestCase):
             requested_date_str="2019-03-19"
         )
         mock_get_hourly_stats.assert_called_once_with(stats_date=date(2019, 3, 19))
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(response_data["csv"], expected_response)
 
         mock_get_hourly_stats.return_value = [
@@ -111,7 +111,7 @@ class TestStatsPageControllers(TestCase):
         )
 
         response_data, code, headers = stats_page.get_hourly_stats_csv()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(response_data["csv"], expected_response)
 
     @mock.patch("browse.controllers.stats_page.get_max_download_stats_dt")
@@ -129,7 +129,7 @@ class TestStatsPageControllers(TestCase):
 
         mock_get_monthly_download_count.assert_called_once()
         mock_get_max_download_stats_dt.assert_called_once()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertIn("total_downloads", response_data)
         self.assertIn("most_recent_dt", response_data)
 
@@ -141,7 +141,7 @@ class TestStatsPageControllers(TestCase):
         response_data, code, headers = stats_page.get_download_stats_csv()
         mock_get_monthly_download_stats.assert_called_once()
         mock_get_monthly_download_stats.reset_mock()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(headers["Content-Type"], "text/csv")
         self.assertIn("csv", response_data, "csv is in response data")
         self.assertEqual(response_data["csv"], "month,downloads\n")
@@ -153,7 +153,7 @@ class TestStatsPageControllers(TestCase):
         ]
         expected_response = "month,downloads\n" "2017-01,1234567\n" "2017-02,2345678\n"
         response_data, code, headers = stats_page.get_download_stats_csv()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(response_data["csv"], expected_response)
 
     @mock.patch("browse.controllers.stats_page.get_document_count_by_yymm")
@@ -168,7 +168,7 @@ class TestStatsPageControllers(TestCase):
         response_data, code, headers = stats_page.get_monthly_submissions_page()
         mock_get_monthly_submission_count.assert_called_once()
         mock_get_monthly_submission_count.reset_mock()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
 
         for key in [
             "num_migrated",
@@ -188,7 +188,7 @@ class TestStatsPageControllers(TestCase):
         mock_get_monthly_submission_count.return_value = (1123456, -501)
         response_data, code, headers = stats_page.get_monthly_submissions_page()
         mock_get_monthly_submission_count.assert_called_once()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(response_data["num_migrated"], 501)
         self.assertEqual(response_data["num_submissions"], 1123301)
         expected_submissions_adjusted = (
@@ -212,7 +212,7 @@ class TestStatsPageControllers(TestCase):
         mock_get_document_count_by_yymm.return_value = 0
         mock_get_monthly_submission_stats.return_value = list()
         response_data, code, headers = stats_page.get_submission_stats_csv()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(headers["Content-Type"], "text/csv")
         self.assertIn("csv", response_data, "csv is in response data")
         self.assertEqual(response_data["csv"], "month,submissions,historical_delta\n")
@@ -229,5 +229,5 @@ class TestStatsPageControllers(TestCase):
             "2019-03,10101,0\n"
         )
         response_data, code, headers = stats_page.get_submission_stats_csv()
-        self.assertEqual(code, status.HTTP_200_OK, "Response should be OK.")
+        self.assertEqual(code, status.OK)
         self.assertEqual(response_data["csv"], expected_response)

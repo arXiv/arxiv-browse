@@ -16,13 +16,9 @@ CACHE_FORMATS = ['dvi', 'html', 'other', 'pdf', 'ps']
 class DocumentCacheException(Exception):
     """Error class for general arXiv document cache exceptions."""
 
-    pass
-
 
 class DocumentCacheFormatException(Exception):
     """Error class for invalid document catch format exceptions."""
-
-    pass
 
 
 class DocumentCacheSession():

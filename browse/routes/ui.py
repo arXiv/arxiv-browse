@@ -2,10 +2,10 @@
 import re
 from datetime import datetime
 from typing import Any, Callable, Dict, Mapping, Tuple, Union
-
+from http import HTTPStatus as status
 import bcrypt
 import geoip2.database
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
 from flask import (
@@ -35,18 +35,14 @@ from browse.controllers.year import year_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 
-
-# from flask import request # type: ignore    <--  doesn't work for nose
-
-
 logger = logging.getLogger(__name__)
 geoip_reader = None
 
 blueprint = Blueprint("browse", __name__, url_prefix="/")
 
 
-@blueprint.before_app_first_request
-def load_global_data() -> None:
+@blueprint.record_once
+def load_global_data(_) -> None: # type: ignore
     """Load global data."""
     global geoip_reader
     try:
@@ -140,7 +136,7 @@ def apply_response_headers(response: Response) -> Response:
 def home() -> Response:
     """Home page view."""
     response, code, headers = home_page.get_home_page()
-    if code == status.HTTP_200_OK:
+    if code == status.OK:
         return render_template("home/home.html", **response), code, headers  # type: ignore
 
     raise InternalServerError("Unexpected error")
@@ -173,13 +169,13 @@ def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
 
-    if code == status.HTTP_200_OK:
+    if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw_safe, mimetype="text/plain")
         return render_template("abs/abs.html", **response), code, headers
-    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+    elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)
-    elif code == status.HTTP_304_NOT_MODIFIED:
+    elif code == status.NOT_MODIFIED:
         return "", code, headers
 
     raise InternalServerError("Unexpected error")
@@ -195,7 +191,7 @@ def category_taxonomy() -> Any:
     }
     return (
         render_template("category_taxonomy.html", **response),
-        status.HTTP_200_OK,
+        status.OK,
         None,
     )
 
@@ -206,9 +202,9 @@ def tb(arxiv_id: str) -> Response:
     """Get trackbacks associated with an article."""
     response, code, headers = tb_page.get_tb_page(arxiv_id)
 
-    if code == status.HTTP_200_OK:
+    if code == status.OK:
         return render_template("tb/tb.html", **response), code, headers  # type: ignore
-    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+    elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)  # type: ignore
     raise InternalServerError("Unexpected error")
 
@@ -218,7 +214,7 @@ def tb_recent() -> Response:
     """Get the recent trackbacks that have been posted across the site."""
     response, code, headers = tb_page.get_recent_tb_page(request.form)
 
-    if code == status.HTTP_200_OK:
+    if code == status.OK:
         return render_template("tb/recent.html", **response), code, headers  # type: ignore
     raise InternalServerError("Unexpected error")
 
@@ -234,7 +230,7 @@ def tb_recent() -> Response:
 def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     """Get the trackback redirect link."""
     response, code, headers = tb_page.get_tb_redirect(trackback_id, hashed_document_id)
-    if code == status.HTTP_301_MOVED_PERMANENTLY:
+    if code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)  # type: ignore
     raise InternalServerError("Unexpected error")
 
@@ -287,12 +283,12 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
-    if code == status.HTTP_200_OK:
+    if code == status.OK:
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore
-    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+    elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)  # type: ignore
-    elif code == status.HTTP_304_NOT_MODIFIED:
+    elif code == status.NOT_MODIFIED:
         return "", code, headers  # type: ignore
     return response, code, headers  # type: ignore
 
@@ -340,12 +336,12 @@ def stats(command: str) -> Response:
         [response, code, headers] = csv_getters[command]["func"](  # type: ignore
             **csv_getter_params
         )
-        if code == status.HTTP_200_OK:
+        if code == status.OK:
             return response["csv"], code, headers  # type: ignore
     elif command in getters:
         getter_params: Mapping = getters[command]["params"]  # type: ignore
         [response, code, headers] = getters[command]["func"](**getter_params)  # type: ignore
-        if code == status.HTTP_200_OK:
+        if code == status.OK:
             return render_template(f"stats/{command}.html", **response), code, headers  # type: ignore
     else:
         raise NotFound
@@ -433,11 +429,11 @@ def form(arxiv_id: str) -> Response:
 def archive(archive: str):  # type: ignore
     """Landing page for an archive."""
     response, code, headers = archive_page.get_archive(archive)
-    if code == status.HTTP_200_OK or code == status.HTTP_404_NOT_FOUND:
+    if code == status.OK or code == status.NOT_FOUND:
         return render_template(response["template"], **response), code, headers
-    elif code == status.HTTP_301_MOVED_PERMANENTLY:
+    elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)
-    elif code == status.HTTP_304_NOT_MODIFIED:
+    elif code == status.NOT_MODIFIED:
         return "", code, headers
     return response, code, headers
 
@@ -458,7 +454,7 @@ def archive_with_extra(archive: str, junk: str):  # type: ignore
 def year_default(archive: str):  # type: ignore
     """Year's stats for an archive."""
     response, code, headers = year_page(archive, None)
-    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+    if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
     return render_template("year.html", **response), code, headers
 
@@ -468,7 +464,7 @@ def year_default(archive: str):  # type: ignore
 def year(archive: str, year: int):  # type: ignore
     """Year's stats for an archive."""
     response, code, headers = year_page(archive, year)
-    if code == status.HTTP_307_TEMPORARY_REDIRECT:
+    if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
     return render_template("year.html", **response), code, headers
 

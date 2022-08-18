@@ -3,8 +3,8 @@
 # mypy: ignore-errors
 
 from unittest import TestCase, mock
+from http import HTTPStatus as status
 
-from arxiv import status
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
 
@@ -23,7 +23,7 @@ class TestTbPageController(TestCase):
         mock_get_paper_trackback_pings.return_value = list()
         mock_metadata.get_abs.return_value = {}
         response_data, code, _ = tb_page.get_tb_page(arxiv_id='1901.99999')
-        self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
+        self.assertEqual(code, status.OK, 'Response should be OK.')
         for key in ('arxiv_identifier', 'trackback_pings'):
             self.assertIn(key, response_data,
                           f"Response data should include '{key}'")
@@ -61,8 +61,8 @@ class TestRecentTbPageController(TestCase):
         form_data = MultiDict({
             'views': '25'
         })
-        response_data, code, headers = tb_page.get_recent_tb_page(form_data)
-        self.assertEqual(code, status.HTTP_200_OK, 'Response should be OK.')
+        _, code, headers = tb_page.get_recent_tb_page(form_data)
+        self.assertEqual(code, status.OK, 'Response should be OK.')
         self.assertIn('max_trackbacks', response_data,
                       "Response data should include 'max_trackbacks'")
         self.assertEqual(response_data['max_trackbacks'], 25,
@@ -97,7 +97,7 @@ class TestTbRedirect(TestCase):
         mock_trackback_ping.return_value = mtb
         with self.assertRaises(TrackbackNotFound):
             # parameters are OK, but hashed_document_id does not match
-            response_data, code, headers = tb_page.get_tb_redirect(
+            _, code, headers = tb_page.get_tb_redirect(
                 trackback_id='1', hashed_document_id='feedface')
 
         mtb = mock.Mock(

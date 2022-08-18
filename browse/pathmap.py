@@ -17,6 +17,7 @@ app = create_web_app()
 
 
 def mappingline(rule):
+    """For a bluprint rule it makes the LB mapping line."""
     hasParam = '<' in rule.rule
     if hasParam:
         path = rule.rule.split('<')[0] + "*"

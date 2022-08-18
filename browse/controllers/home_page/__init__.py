@@ -3,8 +3,9 @@
 import os
 import re
 from typing import Any, Dict, Optional, Tuple
+from http import HTTPStatus as status
 
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from flask import current_app
@@ -36,7 +37,7 @@ def get_home_page() -> Response:
     response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE
     response_data['categories'] = taxonomy.definitions.CATEGORIES_ACTIVE
 
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, status.OK, response_headers
 
 
 def _get_document_count() -> Optional[int]:

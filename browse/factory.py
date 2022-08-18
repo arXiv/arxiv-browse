@@ -23,12 +23,6 @@ def create_web_app() -> Flask:
     app = Flask('browse', static_url_path=f'/static/browse/{APP_VERSION}')
     app.config.from_pyfile('config.py')
 
-    # TODO Only needed until this route is added to arxiv-base
-    if 'URLS' not in app.config:
-        app.config['URLS'] = []
-    app.config['URLS'].append(
-        ('search_archive', '/search/<archive>', BASE_SERVER))
-
     models.init_app(app)  # type: ignore
     Base(app)
     Auth(app)

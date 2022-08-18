@@ -73,31 +73,31 @@ The latest versions of these papers should always have the "Categories:" line.
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""
 
-    pass
+
 
 
 class AbsNotFoundException(FileNotFoundError):
     """Error class for arXiv .abs file not found exceptions."""
 
-    pass
+
 
 
 class AbsVersionNotFoundException(FileNotFoundError):
     """Error class for arXiv .abs file version not found exceptions."""
 
-    pass
+
 
 
 class AbsParsingException(OSError):
     """Error class for arXiv .abs file parsing exceptions."""
 
-    pass
+
 
 
 class AbsDeletedException(Exception):
     """Error class for arXiv papers that have been deleted."""
 
-    pass
+
 
 
 class AbsMetaSession:
@@ -490,14 +490,8 @@ class AbsMetaSession:
         except FileNotFoundError:
             raise AbsNotFoundException
         except UnicodeDecodeError as e:
-            # TODO: log this
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
-
-        # TODO: clean up
-        modified = datetime.fromtimestamp(
-            os.path.getmtime(filename), tz=ARXIV_BUSINESS_TZ)
-        modified = modified.astimezone(tz=timezone.utc)
 
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
@@ -609,7 +603,7 @@ class AbsMetaSession:
             version=version,
             license=doc_license,
             version_history=version_history,
-            modified=modified
+            modified=_utcmodtime(filename)
             # private=private  # TODO, not implemented
         )
 
@@ -648,8 +642,8 @@ class AbsMetaSession:
             if not date_match:
                 raise AbsParsingException(
                     'Could not extract date components from date line.')
+            sd = date_match.group('date')
             try:
-                sd = date_match.group('date')
                 submitted_date = parser.parse(date_match.group('date'))
             except (ValueError, TypeError):
                 raise AbsParsingException(
@@ -690,6 +684,9 @@ class AbsMetaSession:
                 # we have a line with leading spaces
                 fields_builder[field_name] += re.sub(r'^\s+', ' ', field_line)
         return fields_builder
+
+
+
 
 
 @wraps(AbsMetaSession.get_ancillary_files)
@@ -769,3 +766,11 @@ def alt_component_split(components: List[str]) -> List[str]:
     alt_comp.append(abstract)
     alt_comp.append('')
     return alt_comp
+
+
+
+def _utcmodtime(filename: str) -> datetime:
+    """UTC time from a filename"""
+    return datetime.fromtimestamp(
+        os.path.getmtime(filename), tz=ARXIV_BUSINESS_TZ
+    ).astimezone(tz=timezone.utc)

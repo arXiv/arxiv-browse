@@ -2,9 +2,9 @@
 
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
+from http import HTTPStatus as status
 
 import dateutil.parser
-from arxiv import status
 from arxiv.base import logging
 from werkzeug.exceptions import BadRequest, InternalServerError
 
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 def get_main_stats_page() -> Response:
     """Minimal rendering of the main stats page."""
     response_data: Dict[str, Any] = {}
-    return response_data, status.HTTP_200_OK, {}
+    return response_data, status.OK, {}
 
 
 def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
@@ -57,7 +57,7 @@ def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
     response_data["normal_count"] = normal_count
     response_data["admin_count"] = admin_count
     response_data["num_nodes"] = num_nodes
-    return response_data, status.HTTP_200_OK, {}
+    return response_data, status.OK, {}
 
 
 def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
@@ -96,7 +96,7 @@ def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
         csv_data = csv_data + "\n"
     return (
         {"csv": csv_head + csv_data},
-        status.HTTP_200_OK,
+        status.OK,
         {"Content-Type": "text/csv"},
     )
 
@@ -107,7 +107,7 @@ def get_monthly_downloads_page() -> Response:
     try:
         response_data["total_downloads"] = get_monthly_download_count()
         response_data["most_recent_dt"] = get_max_download_stats_dt()
-        return response_data, status.HTTP_200_OK, {}
+        return response_data, status.OK, {}
     except Exception as ex:
         logger.warning(f"Error getting monthly downloads page data: {ex}")
         raise InternalServerError from ex
@@ -125,11 +125,10 @@ def get_download_stats_csv() -> Response:
         )
         return (
             {"csv": csv_head + csv_data},
-            status.HTTP_200_OK,
+            status.OK,
             {"Content-Type": "text/csv"},
         )
     except Exception as ex:
-        logger.warning(f"Error getting monthly download stats csv: {ex}")
         raise InternalServerError from ex
 
 
@@ -145,8 +144,7 @@ def get_monthly_submissions_page() -> Response:
         num_this_month = get_document_count_by_yymm(current_dt.date)
         num_submissions += num_this_month
     except Exception as ex:
-        logger.warning(f"Error getting monthly submissions stats data: {ex}")
-        raise InternalServerError
+        raise InternalServerError from ex
 
     num_migrated = abs(historical_delta)
     response_data["current_dt"] = current_dt
@@ -160,7 +158,7 @@ def get_monthly_submissions_page() -> Response:
     response_data["num_submissions_adjusted"] = (
         num_submissions - num_deleted + num_migrated
     )
-    return response_data, status.HTTP_200_OK, {}
+    return response_data, status.OK, {}
 
 
 def get_submission_stats_csv() -> Response:
@@ -184,9 +182,8 @@ def get_submission_stats_csv() -> Response:
                 )
         return (
             {"csv": csv_head + csv_data},
-            status.HTTP_200_OK,
+            status.OK,
             {"Content-Type": "text/csv"},
         )
     except Exception as ex:
-        logger.warning(f"Error getting monthly submission stats csv: {ex}")
         raise InternalServerError from ex

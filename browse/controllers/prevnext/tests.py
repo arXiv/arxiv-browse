@@ -39,15 +39,14 @@ class TestPrevNextController(TestCase):
             )  # invalid
 
     @mock.patch("browse.controllers.prevnext.get_sequential_id")
-    @mock.patch("browse.controllers.prevnext.url_for")
-    def test_good_parameters(self, mock_url_for, mock_get_sequential_id) -> None:  # type: ignore
+    def test_good_parameters(self, _, mock_get_sequential_id) -> None:  # type: ignore
         """Test parameters with good values."""
         mock_get_sequential_id.return_value = "1801.00002"
-        _, status, headers = prevnext.get_prevnext("1801.00001", "next", "all")
+        _, status, _ = prevnext.get_prevnext("1801.00001", "next", "all")
         self.assertEqual(status, 301)
 
         mock_get_sequential_id.return_value = "1801.00001"
-        _, status, headers = prevnext.get_prevnext("1801.00002", "prev", "cs.AI")
+        _, status, _ = prevnext.get_prevnext("1801.00002", "prev", "cs.AI")
         self.assertEqual(status, 301)
 
         mock_get_sequential_id.return_value = None

@@ -2,8 +2,8 @@
 
 import re
 from typing import Any, Dict, List, Tuple
+from http import HTTPStatus as status
 
-from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from werkzeug.datastructures import MultiDict
@@ -78,14 +78,14 @@ def get_tb_page(arxiv_id: str) -> Response:
             response_data['author_links'] = \
                 split_long_author_list(queries_for_authors(
                     abs_meta.authors.raw), truncate_author_list_size)
-        response_status = status.HTTP_200_OK
+        response_status = status.OK
 
     except AbsNotFoundException:
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id, 'not_found': True})
-    except (AbsException, IdentifierException):
-        raise TrackbackNotFound(data={'arxiv_id': arxiv_id})
+    except (AbsException, IdentifierException) as ex:
+        raise TrackbackNotFound(data={'arxiv_id': arxiv_id}) from ex
     except Exception as ex:
-        logger.warning(f'Error getting trackbacks: {ex}')
+        logger.warning('Error getting trackbacks for %s', arxiv_id)
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers
@@ -134,11 +134,11 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
         response_data['recent_trackback_pings'] = recent_trackback_pings
         response_data['article_map'] = _get_article_map(recent_trackback_pings)
         response_data['trackback_count_options'] = trackback_count_options
-        response_status = status.HTTP_200_OK
-    except ValueError:
-        raise BadRequest
+        response_status = status.OK
+    except ValueError as ex:
+        raise BadRequest from ex
     except Exception as ex:
-        logger.warning(f'Error getting recent trackbacks: {ex}')
+        logger.warning(f'Error getting recent trackbacks: %s', ex)
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers
@@ -177,10 +177,10 @@ def get_tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
             raise ValueError
         trackback = get_trackback_ping(trackback_id=tb_id)
         if trackback.hashed_document_id == hashed_document_id:
-            response_status = status.HTTP_301_MOVED_PERMANENTLY
+            response_status = status.MOVED_PERMANENTLY
             return {}, response_status, {'Location': trackback.url}
-    except ValueError:
-        raise TrackbackNotFound()
+    except ValueError as ex:
+        raise TrackbackNotFound() from ex
     except Exception as ex:
         raise InternalServerError from ex
 

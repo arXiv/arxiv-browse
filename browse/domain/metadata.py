@@ -186,11 +186,15 @@ class DocMetadata:
             else:
                 return []
 
+
         if self.primary_category:
             options = {
                 self.primary_category.id: True,
                 taxonomy.definitions.CATEGORIES[self.primary_category.id]['in_archive']: True
             }
+        else:
+            options = {}
+
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.definitions.CATEGORIES[category.id]['in_archive']
@@ -208,7 +212,7 @@ class DocMetadata:
             return 1
         if not isinstance(self.version_history, abc.Iterable):
             raise ValueError(
-                'version_history was not an Iterable for %s' % self.arxiv_id_v)
+                f'version_history was not an Iterable for {self.arxiv_id_v}')
         return max(map(lambda ve: ve.version, self.version_history))
 
     def get_datetime_of_version(
@@ -225,8 +229,7 @@ class DocMetadata:
             v for v in self.version_history if v.version == version)
         if len(versions) > 1:
             raise ValueError(
-                '%s version_history had more than one version %i' % (
-                    self.arxiv_id, version))
+                '{self.arxiv_id} version_history had more than one version {version}')
         if not versions:
             return None
         else:

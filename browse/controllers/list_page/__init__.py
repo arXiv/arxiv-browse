@@ -42,8 +42,9 @@ import calendar
 import logging
 import math
 from typing import Any, Dict, List, Optional, Tuple, Union
+from http import HTTPStatus as status
 
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 from flask import current_app, request, url_for
 from werkzeug.exceptions import BadRequest, ServiceUnavailable
 
@@ -106,7 +107,6 @@ def get_listing(subject_or_category: str,
     show
        Number of articles to show
     """
-    # TODO make sure to handle POST too
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
@@ -164,7 +164,7 @@ def get_listing(subject_or_category: str,
             subject_or_category, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(new_resp))
         if _not_modified(new_resp):
-            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+            return {}, status.NOT_MODIFIED, response_headers
         listings = new_resp['listings']
         count = new_resp['new_count'] + \
             new_resp['rep_count'] + new_resp['cross_count']
@@ -180,7 +180,7 @@ def get_listing(subject_or_category: str,
             subject_or_category, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
         if _not_modified(rec_resp):
-            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+            return {}, status.NOT_MODIFIED, response_headers
         listings = rec_resp['listings']
         count = rec_resp['count']
         response_data['pubdates'] = rec_resp['pubdates']
@@ -191,7 +191,7 @@ def get_listing(subject_or_category: str,
             subject_or_category, 1999, 12, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(cur_resp))
         if _not_modified(cur_resp):
-            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+            return {}, status.NOT_MODIFIED, response_headers
         listings = cur_resp['listings']
         count = cur_resp['count']
         response_data['pubmonth'] = cur_resp['pubdates'][0][0]
@@ -213,7 +213,7 @@ def get_listing(subject_or_category: str,
                 subject_or_category, list_year, list_month, skipn, shown, if_mod_since)
             response_headers.update(_expires_headers(month_reps))
             if _not_modified(month_reps):
-                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+                return {}, status.NOT_MODIFIED, response_headers
             listings = month_reps['listings']
             count = month_reps['count']
             response_data['pubmonth'] = month_reps['pubdates'][0][0]
@@ -223,7 +223,7 @@ def get_listing(subject_or_category: str,
                 subject_or_category, list_year, skipn, shown, if_mod_since)
             response_headers.update(_expires_headers(year_resp))
             if _not_modified(year_resp):
-                return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+                return {}, status.NOT_MODIFIED, response_headers
             listings = year_resp['listings']
             count = year_resp['count']
             response_data['pubmonth'] = year_resp['pubdates'][0][0]
@@ -266,7 +266,7 @@ def get_listing(subject_or_category: str,
                            query=query))
     response_data['url_for_author_search'] = author_query
 
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, status.OK, response_headers
 
 
 

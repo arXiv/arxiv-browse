@@ -26,6 +26,8 @@ from browse.domain.listing import (
     NewResponse,
 )
 
+from . import fake_listings
+
 
 class ListingService:
     """Class for arXiv document listings."""
@@ -100,9 +102,6 @@ def get_listing_service() -> ListingService:
     There is probably a better way to do this.
     """
     if 'listing_service' not in g:
-        # importing at runtime to avoid cyclic imports that kill python
-        import importlib
-        fl = importlib.import_module("browse.services.listing.fake_listings")
-        g.listing_service = fl.FakeListingFilesService()
+        g.listing_service = fake_listings.FakeListingFilesService()
 
     return cast(ListingService, g.listing_service)

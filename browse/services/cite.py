@@ -32,7 +32,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
 
 
 def _normalize_whitespace(txt: str) -> str:
-    return " ".join(txt.split()) if str else ""
+    return " ".join(txt.split()) if txt else ""
 
 
 def _fmt_author_list(pauths: List[List[str]]) -> str:

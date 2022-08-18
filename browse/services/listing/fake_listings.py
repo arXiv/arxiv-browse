@@ -11,10 +11,9 @@ from browse.domain.listing import (
     ListingResponse,
     NewResponse,
 )
-from browse.services.listing import ListingService
 
 
-class FakeListingFilesService(ListingService):
+class FakeListingFilesService():
     """Listing service used for development and testing purposes.
 
     This is intended as an example of what the /listing controller
@@ -24,6 +23,11 @@ class FakeListingFilesService(ListingService):
     no attempt to return the correct articles for a date or them correct
     primarys for articles.
     """
+
+    @classmethod
+    def version(cls) -> str:
+        """Version."""
+        return f"0.{__file__}"
 
     def monthly_counts(self, archive: str, year:int) -> ListingCountResponse:
         """Example of monthly_counts."""

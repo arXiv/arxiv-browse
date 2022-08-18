@@ -8,8 +8,9 @@ import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
+from http import HTTPStatus as status
 
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 from arxiv.base import logging
 from dateutil import parser
 from dateutil.tz import tzutc
@@ -106,7 +107,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         abs_meta = metadata.get_abs(arxiv_id)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
-            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+            return {}, status.NOT_MODIFIED, response_headers
 
         response_data["requested_id"] = (
             arxiv_identifier.idv
@@ -133,17 +134,10 @@ def get_abs_page(arxiv_id: str) -> Response:
         )
 
         # Following are less critical and template must display without them
-        # try:
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
-        # except Exception:
-        #    logger.warning("Error getting non-critical abs page data",
-        #                   exc_info=app.debug)
-
-    except AbsNotFoundException:
-        if (
-            arxiv_identifier.is_old_id
-            and arxiv_identifier.archive in taxonomy.definitions.ARCHIVES
-        ):
+    except AbsNotFoundException as ex:
+        if (arxiv_identifier.is_old_id
+            and arxiv_identifier.archive in taxonomy.definitions.ARCHIVES):
             archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive][
                 "name"
             ]
@@ -154,28 +148,28 @@ def get_abs_page(arxiv_id: str) -> Response:
                     "archive_id": arxiv_identifier.archive,
                     "archive_name": archive_name,
                 }
-            )
-        raise AbsNotFound(data={"reason": "not_found", "arxiv_id": arxiv_id})
-    except AbsVersionNotFoundException:
+            ) from ex
+        raise AbsNotFound(data={"reason": "not_found", "arxiv_id": arxiv_id}) from ex
+    except AbsVersionNotFoundException as ex:
         raise AbsNotFound(
             data={
                 "reason": "version_not_found",
                 "arxiv_id": arxiv_identifier.idv,
                 "arxiv_id_latest": arxiv_identifier.id,
             }
-        )
-    except AbsDeletedException as e:
+        ) from ex
+    except AbsDeletedException as ex:
         raise AbsNotFound(
             data={
                 "reason": "deleted",
                 "arxiv_id_latest": arxiv_identifier.id,
-                "message": e,
+                "message": ex,
             }
-        )
-    except IdentifierIsArchiveException as e:
+        ) from ex
+    except IdentifierIsArchiveException as ex:
         raise AbsNotFound(
             data={"reason": "is_archive", "arxiv_id": arxiv_id, "archive_name": e}
-        )
+        ) from ex
     except IdentifierException:
         raise AbsNotFound(data={"arxiv_id": arxiv_id})
     except AbsException as e:
@@ -184,7 +178,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             "help@arxiv.org."
         ) from e
 
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, status.OK, response_headers
 
 
 def _non_critical_abs_data(

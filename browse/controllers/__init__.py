@@ -6,7 +6,7 @@ request handling logic.
 
 from typing import Any, Dict, Optional, Tuple
 
-from arxiv import status
+from http import HTTPStatus as status
 from flask import url_for
 
 from browse.domain.identifier import Identifier
@@ -35,5 +35,5 @@ def check_supplied_identifier(id: Identifier, route: str) -> Optional[Response]:
     arxiv_id = id.idv if id.has_version else id.id
     redirect_url: str = url_for(route, arxiv_id=arxiv_id)
     return {},\
-        status.HTTP_301_MOVED_PERMANENTLY,\
+        status.MOVED_PERMANENTLY,\
         {'Location': redirect_url}

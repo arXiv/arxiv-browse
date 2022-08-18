@@ -36,13 +36,10 @@ SUBSTITUTIONS: Sub_type = [
 class IdentifierException(Exception):
     """Error class for general arXiv identifier exceptions."""
 
-    pass
 
 
 class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
-
-    pass
 
 
 class Identifier:
@@ -100,7 +97,7 @@ class Identifier:
                or (self.num > 9999 and self.year < 2015) \
                or (self.num > 999 and self.is_old_id):
                 raise IdentifierException(
-                    'invalid arXiv identifier {}'.format(self.ids)
+                    f'invalid arXiv identifier {self.ids}'
                 )
         self.has_version: bool = False
         self.idv: str = self.id
@@ -151,9 +148,7 @@ class Identifier:
 
         if match_obj.group('version'):
             self.version = int(match_obj.group('version'))
-        self.filename = '{}{:03d}'.format(
-            match_obj.group('yymm'),
-            int(match_obj.group('num')))
+        self.filename = f'{match_obj.group("yymm")}{int(match_obj.group("num")):03d}'
         self.id = f'{self.archive}/{self.filename}'
 
     def _parse_new_id(self, match_obj: Match[str]) -> None:
@@ -182,13 +177,9 @@ class Identifier:
         # NB: this works only until 2099
         self.year = int(match_obj.group('yy')) + 2000
         if self.year >= 2015:
-            self.id = '{:04d}.{:05d}'.format(
-                int(match_obj.group('yymm')),
-                int(match_obj.group('num')))
+            self.id = f'{int(match_obj.group("yymm")):04d}.{int(match_obj.group("num")):05d}'
         else:
-            self.id = '{:04d}.{:04d}'.format(
-                int(match_obj.group('yymm')),
-                int(match_obj.group('num')))
+            self.id = f'{int(match_obj.group("yymm")):04d}.{int(match_obj.group("num")):04d}'
         self.filename = self.id
 
     def __str__(self) -> str:

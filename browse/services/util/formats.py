@@ -78,9 +78,10 @@ def formats_from_source_type(source_type: str,
     has_docx_or_odf = re.search(r'[XO]', source_type, re.IGNORECASE)
     has_src_pref = format_pref and re.search('src', format_pref)
     append_other = False
-    logger.debug(f'In formats_from_source_type: source_type is '
-                 f'"{source_type}", format_pref is {format_pref} cache_flag is {cache_flag}')
-    
+    logger.debug('In formats_from_source_type: source_type is '
+                 '"%s", format_pref is %s cache_flag is %s',
+                 source_type, format_pref, cache_flag)
+
     if has_ignore and not has_encrypted_source:
         formats.append('src')
     elif has_ps_only:
@@ -146,14 +147,14 @@ def list_ancillary_files(tarball_path: str) -> List[Dict]:
 
     anc_files = []
     try:
-        tf = tarfile.open(tarball_path, mode='r')
-        for member in \
-                (m for m in tf if re.search(r'^anc\/', m.name) and m.isfile()):
-            name = re.sub(r'^anc\/', '', member.name)
-            size_bytes = member.size
-            anc_files.append({'name': name, 'size_bytes': size_bytes})
-    except (ReadError, CompressionError):
-        # TODO: log this?, no probably raise and let caller handle what to do
+        with tarfile.open(tarball_path, mode='r') as tf:
+            for member in \
+                    (m for m in tf if re.search(r'^anc\/', m.name) and m.isfile()):
+                name = re.sub(r'^anc\/', '', member.name)
+                size_bytes = member.size
+                anc_files.append({'name': name, 'size_bytes': size_bytes})
+    except (ReadError, CompressionError) as ex:
+        logger.error("Error while trying to read anc files from %s: %s", tarball_path, ex)
         return []
     if len(anc_files) > 1:
         anc_files = sorted(anc_files, key=itemgetter('name'))

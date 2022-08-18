@@ -26,9 +26,9 @@ class BrowseTest(unittest.TestCase):
         for group_key, group_value in taxonomy.definitions.GROUPS.items():
             if group_key == 'grp_test':
                 continue
-            auths_elmt = html.find('h2', text=group_value['name'])
+            auths_elmt = html.find('h2', string=group_value['name'])
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
-        self.assertFalse(html.find('h2', text='Test'),
+        self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
 
     def test_tb(self):
@@ -47,14 +47,14 @@ class BrowseTest(unittest.TestCase):
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         h2_elmt = html.find('h2', {'class': 'trackback-heading'})
-        h2_txt = h2_elmt.get_text()
+        h2_txt = h2_elmt.text
         self.assertTrue(h2_elmt, 'Should have <h2> element')
         self.assertEqual(h2_txt, 'Trackbacks for 0808.4142')
         tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
         self.assertGreater(len(tb_a_tags), 1,
                            'There should be more than one <a> tag for trackbacks')
         h1_elmt = html.find('div', id='abs')
-        h1_txt = h1_elmt.get_text()
+        h1_txt = h1_elmt.text
         self.assertTrue(h1_elmt, 'Should have <h1 id="abs"> element')
         self.assertRegex(
             h1_txt,
@@ -214,7 +214,7 @@ class BrowseTest(unittest.TestCase):
         self.assertTrue(
             subject_elmt, 'Should have <td class="subjects"> element')
 
-        sub_txt = subject_elmt.get_text()
+        sub_txt = subject_elmt.text
         self.assertRegex(sub_txt, r'nlin\.AO',
                          'should have canonical category of nlin.AO')
         self.assertNotRegex(
@@ -234,12 +234,12 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         div_elmt = html.find('div', class_= 'header-breadcrumbs')
-        div_txt = div_elmt.get_text()
+        div_txt = div_elmt.text
         self.assertRegex(div_txt, r'arXiv:physics\/9707012')
         self.assertNotRegex(div_txt, r'arXiv:physics\/9707012v')
 
         title_elmt = html.find('title')
-        title_txt = title_elmt.get_text()
+        title_txt = title_elmt.text
         self.assertRegex(title_txt, r'physics\/9707012')
         self.assertNotRegex(title_txt, r'arXiv:physics\/9707012v')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
@@ -253,11 +253,11 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         div_elmt = html.find('div', class_='header-breadcrumbs')
-        div_txt = div_elmt.get_text()
+        div_txt = div_elmt.text
         self.assertRegex(div_txt, r'arXiv:physics\/9707012v4')
 
         title_elmt = html.find('title')
-        title_txt = title_elmt.get_text()
+        title_txt = title_elmt.text
         self.assertRegex(title_txt, r'physics\/9707012v4')
 
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v4'})
@@ -415,9 +415,9 @@ class BrowseTest(unittest.TestCase):
                          'TeX psi in abstract should not get converted to UTF8')
         self.assertNotIn('$j(φ,L)$', abs_elmt.text,
                          'TeX psi in abstract should not get converted to UTF8')
-        self.assertIn('The phase difference $\phi$, between the superconducting',
+        self.assertIn('The phase difference $\\phi$, between the superconducting',
                       abs_elmt.text,
-                      "Expecting uncoverted $\phi$ in html abstract.")
+                      "Expecting uncoverted $\\phi$ in html abstract.")
 
     def test_year(self):
         rv = self.app.get('/year/astro-ph/09')

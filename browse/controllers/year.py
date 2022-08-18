@@ -2,8 +2,9 @@
 
 from datetime import date
 from typing import Any, Dict, List, Optional, Tuple
+from http import HTTPStatus as status
 
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 from flask import url_for
 from werkzeug.exceptions import BadRequest
 
@@ -41,7 +42,7 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
 
     if year > thisYear:
         # 307 because year might be valid in the future
-        return {}, status.HTTP_307_TEMPORARY_REDIRECT, {'Location': '/'}
+        return {}, status.TEMPORARY_REDIRECT, {'Location': '/'}
 
     if year < 100:
         if year >= 91:
@@ -74,7 +75,7 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
     }
     response_headers: Dict[str, Any] = {}
 
-    response_status = status.HTTP_200_OK
+    response_status = status.OK
 
     return response_data, response_status, response_headers
 
