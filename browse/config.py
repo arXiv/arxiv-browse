@@ -163,36 +163,6 @@ The URL scheme that should be used for URL generation if no URL scheme is
 available. This defaults to http.
 """
 
-JSON_AS_ASCII = os.environ.get("JSON_AS_ASCII") == ON
-"""
-By default Flask serialize object to ascii-encoded JSON. If this is set to
-False Flask will not encode to ASCII and output strings as-is and return
-unicode strings. jsonify will automatically encode it in utf-8 then for
-transport for instance.
-"""
-
-JSON_SORT_KEYS = os.environ.get("JSON_AS_ASCII") != OFF
-"""
-By default Flask will serialize JSON objects in a way that the keys are
-ordered. This is done in order to ensure that independent of the hash seed of
-the dictionary the return value will be consistent to not trash external HTTP
-caches. You can override the default behavior by changing this variable.
-This is not recommended but might give you a performance improvement on the
-cost of cacheability.
-"""
-
-JSONIFY_PRETTYPRINT_REGULAR = os.environ.get("JSON_AS_ASCII") != OFF
-"""
-If this is set to True (the default) jsonify responses will be pretty printed
-if they are not requested by an XMLHttpRequest object (controlled by the
-X-Requested-With header).
-"""
-
-JSONIFY_MIMETYPE = os.environ.get("JSONIFY_MIMETYPE", "application/json")
-"""
-MIME type used for jsonify responses.
-"""
-
 TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
 """
 Whether to check for modifications of the template source and reload it
