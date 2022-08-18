@@ -1,14 +1,15 @@
 """Representations of arXiv document metadata."""
 from collections import abc
-from typing import List, Optional, Iterator, Set
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Iterator, List, Optional, Set
 
 from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
+
+from browse.domain.category import Category
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-from browse.domain.category import Category
 
 
 @dataclass(frozen=True)

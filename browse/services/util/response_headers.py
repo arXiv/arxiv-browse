@@ -1,9 +1,7 @@
 """Response header utility functions."""
 from datetime import datetime, timedelta, timezone
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 from zoneinfo import ZoneInfo
-from datetime import timezone
-
 
 from arxiv.base.globals import get_application_config
 

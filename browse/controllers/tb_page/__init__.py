@@ -2,23 +2,28 @@
 
 import re
 from typing import Any, Dict, List, Tuple
-from werkzeug.exceptions import InternalServerError, BadRequest
-from werkzeug.datastructures import MultiDict
 
 from arxiv import status
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
-from browse.exceptions import TrackbackNotFound
-from browse.services.database import get_paper_trackback_pings, \
-                                     get_recent_trackback_pings, \
-                                     get_trackback_ping
+from werkzeug.datastructures import MultiDict
+from werkzeug.exceptions import BadRequest, InternalServerError
+
 from browse.controllers import check_supplied_identifier
 from browse.domain.identifier import Identifier, IdentifierException
+from browse.exceptions import TrackbackNotFound
+from browse.services.database import (
+    get_paper_trackback_pings,
+    get_recent_trackback_pings,
+    get_trackback_ping,
+)
 from browse.services.document import metadata
-from browse.services.document.metadata import AbsException, \
-    AbsNotFoundException
-from browse.services.search.search_authors import queries_for_authors, \
-    split_long_author_list
+from browse.services.document.metadata import AbsException, AbsNotFoundException
+from browse.services.search.search_authors import (
+    queries_for_authors,
+    split_long_author_list,
+)
+
 
 app_config = get_application_config()
 logger = logging.getLogger(__name__)

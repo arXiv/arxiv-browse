@@ -2,33 +2,36 @@
 
 import ipaddress
 from datetime import date, datetime
-from dateutil.tz import tzutc, gettz
-from typing import Mapping, List, Optional, Any, Callable, Tuple
-from sqlalchemy import not_, desc, asc
-from sqlalchemy.sql import func
+from logging import Logger
+from typing import Any, Callable, List, Mapping, Optional, Tuple
+
+from arxiv.base import logging
+from arxiv.base.globals import get_application_config
+from dateutil.tz import gettz, tzutc
+from sqlalchemy import asc, desc, not_
+from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.exc import OperationalError, DBAPIError
-from arxiv.base.globals import get_application_config
+from sqlalchemy.sql import func
 
+from browse.domain.identifier import Identifier
 from browse.services.database.models import (
-    db,
-    Document,
-    MemberInstitution,
-    MemberInstitutionIP,
-    TrackbackPing,
-    SciencewisePing,
     DBLP,
     DBLPAuthor,
     DBLPDocumentAuthor,
-    StatsMonthlySubmission,
-    StatsMonthlyDownload,
     DataciteDois,
+    Document,
+    MemberInstitution,
+    MemberInstitutionIP,
+    SciencewisePing,
+    StatsMonthlyDownload,
+    StatsMonthlySubmission,
+    TrackbackPing,
+    db,
+    in_category,
+    stats_hourly,
 )
-from browse.services.database.models import in_category, stats_hourly
-from browse.domain.identifier import Identifier
-from arxiv.base import logging
-from logging import Logger
+
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()

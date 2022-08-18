@@ -4,11 +4,13 @@ Each controller corresponds to a distinct browse feature with its own
 request handling logic.
 """
 
-from flask import url_for
 from typing import Any, Dict, Optional, Tuple
 
 from arxiv import status
+from flask import url_for
+
 from browse.domain.identifier import Identifier
+
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 

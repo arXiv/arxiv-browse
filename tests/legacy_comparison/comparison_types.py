@@ -1,10 +1,10 @@
 """Define comparison types."""
+from dataclasses import dataclass
 from typing import Callable, Optional
 
-from dataclasses import dataclass
-from mypy_extensions import TypedDict
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
+from mypy_extensions import TypedDict
 
 
 @dataclass

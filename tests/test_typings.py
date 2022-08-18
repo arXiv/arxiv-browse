@@ -1,11 +1,12 @@
 """Tests using mypy."""
-import os
 import glob
+import os
 import subprocess
 import unittest
 from subprocess import CalledProcessError
 from typing import Dict, List
 from unittest import TestCase
+
 
 class MyPyTest(TestCase):
     """Class for testing modules with mypy."""

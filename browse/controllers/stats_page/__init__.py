@@ -1,21 +1,22 @@
 """Handle requests to display and return stats about the arXiv service."""
 
-import dateutil.parser
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
-from werkzeug.exceptions import InternalServerError, BadRequest
 
+import dateutil.parser
 from arxiv import status
 from arxiv.base import logging
+from werkzeug.exceptions import BadRequest, InternalServerError
+
 from browse.services.database import (
+    get_document_count_by_yymm,
     get_hourly_stats,
     get_hourly_stats_count,
-    get_monthly_download_stats,
-    get_monthly_submission_stats,
-    get_monthly_submission_count,
-    get_monthly_download_count,
     get_max_download_stats_dt,
-    get_document_count_by_yymm,
+    get_monthly_download_count,
+    get_monthly_download_stats,
+    get_monthly_submission_count,
+    get_monthly_submission_stats,
 )
 from browse.services.document.config.deleted_papers import DELETED_PAPERS
 

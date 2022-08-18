@@ -1,5 +1,5 @@
-import unittest
 import logging
+import unittest
 
 from app import app
 

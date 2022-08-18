@@ -1,6 +1,7 @@
 """Configuration for external reference and citation resources."""
 from datetime import date
 
+
 start_of_time = date(1900, 1, 1)
 INSPIRE_REF_CIT_CATEGORIES = {
     'hep-th': start_of_time,

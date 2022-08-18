@@ -1,13 +1,13 @@
 """Archive landing page."""
 
 import datetime
-from typing import Dict, Any, Tuple, List
+from typing import Any, Dict, List, Tuple
 
 from arxiv import status
-from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES, ARCHIVES_SUBSUMED
+from arxiv.taxonomy.definitions import ARCHIVES, ARCHIVES_SUBSUMED, CATEGORIES
 
 from browse.controllers.archive_page.by_month_form import ByMonthForm
-from browse.controllers.years_operating import years_operating, stats_by_year
+from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.services.util.response_headers import abs_expires_header
 
 

@@ -2,11 +2,15 @@
 
 from unittest import TestCase
 
-from browse.domain import metadata
 from arxiv.util.authors import split_authors
-from browse.services.document.metadata import AbsMetaSession
-from browse.services.search.search_authors import queries_for_authors, split_long_author_list
 from tests import path_of_for_test
+
+from browse.domain import metadata
+from browse.services.document.metadata import AbsMetaSession
+from browse.services.search.search_authors import (
+    queries_for_authors,
+    split_long_author_list,
+)
 
 
 class TestAuthorLinkCreation(TestCase):

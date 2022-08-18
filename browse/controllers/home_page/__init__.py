@@ -2,14 +2,16 @@
 
 import os
 import re
-from flask import current_app
 from typing import Any, Dict, Optional, Tuple
-from werkzeug.exceptions import InternalServerError
 
-from browse.services.database import get_document_count
 from arxiv import status, taxonomy
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
+from flask import current_app
+from werkzeug.exceptions import InternalServerError
+
+from browse.services.database import get_document_count
+
 
 app_config = get_application_config()
 logger = logging.getLogger(__name__)

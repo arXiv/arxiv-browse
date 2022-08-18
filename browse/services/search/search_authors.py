@@ -2,8 +2,8 @@
 import re
 from typing import List, Tuple, Union
 
+from arxiv.util.authors import PREFIX_MATCH, split_authors
 from arxiv.util.tex2utf import tex2utf
-from arxiv.util.authors import split_authors, PREFIX_MATCH
 
 
 AuthorList = List[Union[str, Tuple[str, str]]]

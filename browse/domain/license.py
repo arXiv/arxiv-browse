@@ -1,6 +1,6 @@
 """Representations of the license on a document metadata."""
-from typing import Optional
 from dataclasses import dataclass, field
+from typing import Optional
 
 from arxiv.license import ASSUMED_LICENSE_URI, LICENSES
 

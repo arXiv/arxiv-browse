@@ -1,18 +1,17 @@
-import unittest
+import os
 import re
-from hamcrest import *
+import unittest
 from unittest.mock import MagicMock
 
 from bs4 import BeautifulSoup
-
+from hamcrest import *
 from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
-from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.listing.fake_listings import FakeListingFilesService
-from browse.services.listing import ListingService, get_listing_service
-import os
 
 from app import app
+from browse.domain.license import ASSUMED_LICENSE_URI
+from browse.services.document.metadata import AbsMetaSession
+from browse.services.listing import ListingService, get_listing_service
+from browse.services.listing.fake_listings import FakeListingFilesService
 
 
 class ListPageTest(unittest.TestCase):

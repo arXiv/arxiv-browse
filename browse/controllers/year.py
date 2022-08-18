@@ -3,13 +3,13 @@
 from datetime import date
 from typing import Any, Dict, List, Optional, Tuple
 
-from werkzeug.exceptions import BadRequest
-from flask import url_for
-
 from arxiv import status, taxonomy
-from browse.domain.listing import MonthCount
+from flask import url_for
+from werkzeug.exceptions import BadRequest
+
 from browse.controllers.list_page import get_listing_service
-from browse.controllers.years_operating import years_operating, stats_by_year
+from browse.controllers.years_operating import stats_by_year, years_operating
+from browse.domain.listing import MonthCount
 
 
 def year_page(archive_id: str, year: Optional[int]) -> Any:

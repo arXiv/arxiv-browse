@@ -1,7 +1,7 @@
 """Year link functions."""
 
-from typing import Dict, Any, Tuple, List, no_type_check
 from datetime import date
+from typing import Any, Dict, List, Tuple, no_type_check
 
 from flask import url_for
 

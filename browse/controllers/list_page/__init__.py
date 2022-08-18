@@ -45,16 +45,23 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import status, taxonomy
 from flask import current_app, request, url_for
-from werkzeug.exceptions import ServiceUnavailable, BadRequest
+from werkzeug.exceptions import BadRequest, ServiceUnavailable
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
+from browse.domain.listing import (
+    ListingResponse,
+    NewResponse,
+    NotModifiedResponse,
+)
 from browse.domain.metadata import DocMetadata
 from browse.services.document import metadata
 from browse.services.listing import ListingService, get_listing_service
-from browse.domain.listing import NewResponse, NotModifiedResponse, ListingResponse
-from browse.services.search.search_authors import queries_for_authors, \
-    split_long_author_list, AuthorList
+from browse.services.search.search_authors import (
+    AuthorList,
+    queries_for_authors,
+    split_long_author_list,
+)
 
 
 logger = logging.getLogger(__name__)

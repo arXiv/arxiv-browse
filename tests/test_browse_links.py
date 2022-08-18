@@ -1,16 +1,13 @@
+import os
 import unittest
-
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import parse_qs, unquote, urlparse
 
 from bs4 import BeautifulSoup
-
 from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
-from browse.domain.license import ASSUMED_LICENSE_URI
-
-import os
 
 from app import app
+from browse.domain.license import ASSUMED_LICENSE_URI
+from browse.services.document.metadata import AbsMetaSession
 
 
 class BrowseLinksTest(unittest.TestCase):

@@ -1,11 +1,12 @@
 """arXiv browse database models."""
 
-import re
 import hashlib
-from typing import Optional
-from validators import url as is_valid_url
+import re
 from datetime import datetime
-from dateutil.tz import tzutc, gettz
+from typing import Optional
+
+from arxiv.base.globals import get_application_config
+from dateutil.tz import gettz, tzutc
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import (
     BigInteger,
@@ -20,12 +21,13 @@ from sqlalchemy import (
     SmallInteger,
     String,
     Table,
-    text,
     Text,
+    text,
 )
 from sqlalchemy.orm import relationship
+from validators import url as is_valid_url
 from werkzeug.local import LocalProxy
-from arxiv.base.globals import get_application_config
+
 
 db: SQLAlchemy = SQLAlchemy()
 

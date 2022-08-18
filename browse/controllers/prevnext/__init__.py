@@ -1,14 +1,15 @@
 """Handle requests to support sequential navigation between arXiv IDs."""
 
-from flask import url_for, escape
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Tuple
+
+from arxiv import status
+from arxiv.base import logging
+from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
+from flask import escape, url_for
 from werkzeug.exceptions import BadRequest
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id
-from arxiv import status
-from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
-from arxiv.base import logging
 
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]

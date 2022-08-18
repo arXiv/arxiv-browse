@@ -2,12 +2,11 @@
 
 import unittest
 from datetime import timedelta
+
 from dateutil import parser
 
-
-from browse.services.util.response_headers import mime_header_date
-
 from app import app
+from browse.services.util.response_headers import mime_header_date
 
 
 class ModifiedTest(unittest.TestCase):

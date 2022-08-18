@@ -1,12 +1,19 @@
 """Tests for arXiv abstract (.abs) parser."""
 import os
-from unittest import TestCase
 from datetime import datetime
+from unittest import TestCase
+
 from dateutil.tz import tzutc
-from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-    VersionEntry
-from browse.services.document.metadata import AbsMetaSession
 from tests import path_of_for_test
+
+from browse.domain.metadata import (
+    DocMetadata,
+    SourceType,
+    Submitter,
+    VersionEntry,
+)
+from browse.services.document.metadata import AbsMetaSession
+
 
 ABS_FILES = path_of_for_test('data/abs_files')
 

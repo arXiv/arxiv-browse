@@ -5,8 +5,10 @@ Docstrings are from the `Flask configuration documentation
 """
 import os
 import warnings
-import dateutil.parser
 from datetime import datetime, timedelta
+
+import dateutil.parser
+
 
 APP_VERSION = "0.3.4"
 

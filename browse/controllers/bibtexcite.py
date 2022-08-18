@@ -1,14 +1,17 @@
 """Gets bibtex citation for the paper."""
 from typing import Callable
-from flask import make_response, Response
 
+from flask import Response, make_response
 from werkzeug.exceptions import InternalServerError
 
 from browse.exceptions import AbsNotFound
-from browse.services.document import metadata
-from browse.services.document.metadata import AbsNotFoundException, \
-    AbsVersionNotFoundException, AbsDeletedException
 from browse.services.cite import arxiv_bibtex
+from browse.services.document import metadata
+from browse.services.document.metadata import (
+    AbsDeletedException,
+    AbsNotFoundException,
+    AbsVersionNotFoundException,
+)
 
 
 def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:

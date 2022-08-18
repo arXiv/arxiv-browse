@@ -3,11 +3,13 @@
 # mypy: ignore-errors
 
 from unittest import TestCase, mock
+
+from arxiv import status
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
-from arxiv import status
-from browse.exceptions import TrackbackNotFound
+
 from browse.controllers import tb_page
+from browse.exceptions import TrackbackNotFound
 
 
 class TestTbPageController(TestCase):

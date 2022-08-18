@@ -5,59 +5,62 @@ handles GET requests to the abs endpoint.
 """
 
 import re
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
-from datetime import datetime
-from dateutil import parser
-from dateutil.tz import tzutc
-
-from flask import url_for
-from flask import request
-from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
 from arxiv.base import logging
+from dateutil import parser
+from dateutil.tz import tzutc
+from flask import request, url_for
+from werkzeug.exceptions import InternalServerError
+
 from browse.controllers import check_supplied_identifier
-from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
-from browse.exceptions import AbsNotFound
-from browse.services.search.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
-from browse.services.util.metatags import meta_tag_metadata
-from browse.services.util.response_headers import abs_expires_header, mime_header_date
-from browse.services.document import metadata
-from browse.services.document.metadata import (
-    AbsException,
-    AbsNotFoundException,
-    AbsVersionNotFoundException,
-    AbsDeletedException,
-)
 from browse.domain.identifier import (
     Identifier,
     IdentifierException,
     IdentifierIsArchiveException,
 )
+from browse.domain.metadata import DocMetadata
+from browse.exceptions import AbsNotFound
 from browse.services.database import (
     count_trackback_pings,
+    get_datacite_doi,
+    get_dblp_authors,
+    get_dblp_listing_path,
     get_trackback_ping_latest_date,
     has_sciencewise_ping,
-    get_dblp_listing_path,
-    get_dblp_authors,
-    get_datacite_doi,
 )
-from browse.services.util.external_refs_cits import (
-    include_inspire_link,
-    include_dblp_section,
-    get_computed_dblp_listing_path,
-    get_dblp_bibtex_path,
-)
+from browse.services.document import metadata
 from browse.services.document.config.external_refs_cits import (
+    DBLP_AUTHOR_SEARCH_PATH,
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
-    DBLP_AUTHOR_SEARCH_PATH,
 )
+from browse.services.document.metadata import (
+    AbsDeletedException,
+    AbsException,
+    AbsNotFoundException,
+    AbsVersionNotFoundException,
+)
+from browse.services.search.search_authors import (
+    queries_for_authors,
+    split_long_author_list,
+)
+from browse.services.util.external_refs_cits import (
+    get_computed_dblp_listing_path,
+    get_dblp_bibtex_path,
+    include_dblp_section,
+    include_inspire_link,
+)
+from browse.services.util.metatags import meta_tag_metadata
+from browse.services.util.response_headers import (
+    abs_expires_header,
+    mime_header_date,
+)
+
 
 logger = logging.getLogger(__name__)
 

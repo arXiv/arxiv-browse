@@ -1,9 +1,9 @@
 """Browse jinja filters."""
+import html
 import re
 from typing import Union
 
 from markupsafe import Markup
-import html
 
 
 JinjaFilterInput = Union[Markup, str]

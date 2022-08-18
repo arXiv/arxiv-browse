@@ -3,7 +3,9 @@
 # mypy: ignore-errors
 
 from unittest import TestCase, mock
+
 from werkzeug.exceptions import BadRequest
+
 from browse.controllers import prevnext
 
 

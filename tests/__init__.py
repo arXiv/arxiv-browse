@@ -1,7 +1,7 @@
 """Test utility functions."""
+import os
 from typing import List, Optional
 
-import os
 from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
 

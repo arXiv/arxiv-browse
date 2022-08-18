@@ -1,18 +1,19 @@
 """Application factory for browse service components."""
 from functools import partial
+
+from arxiv.base import Base
+from arxiv.base.config import BASE_SERVER
+from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
+from arxiv_auth.auth import Auth
 from flask import Flask
 from flask_s3 import FlaskS3
 
-from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.config import APP_VERSION
+from browse.filters import entity_to_utf
 from browse.routes import ui
 from browse.services.database import models
 from browse.services.util.email import generate_show_email_hash
-from browse.filters import entity_to_utf
 
-from arxiv.base.config import BASE_SERVER
-from arxiv.base import Base
-from arxiv_auth.auth import Auth
 
 s3 = FlaskS3()
 

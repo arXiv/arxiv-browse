@@ -1,13 +1,13 @@
 """Functions that support determintation of dissemination formats."""
+import logging
 import os
 import re
+import tarfile
 from operator import itemgetter
+from tarfile import CompressionError, ReadError
 from typing import Dict, List, Optional
 
-import tarfile
-from tarfile import ReadError, CompressionError
 
-import logging
 logger = logging.getLogger(__name__)
 
 # List of tuples containing the valid source file name extensions and their

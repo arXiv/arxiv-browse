@@ -1,5 +1,5 @@
 """Includes function for comparing responses."""
-from comparison_types import res_arg_dict, BadResult
+from comparison_types import BadResult, res_arg_dict
 
 
 def compare_status(res_arg: res_arg_dict) -> BadResult:

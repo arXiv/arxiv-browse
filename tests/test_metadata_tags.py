@@ -5,12 +5,14 @@ import json
 import os
 import pprint
 from unittest import TestCase
+
 from tests import path_of_for_test
 
-from browse.domain.metadata import DocMetadata
-from browse.services.util.metatags import meta_tag_metadata
-from browse.services.document.metadata import AbsMetaSession
 from app import app
+from browse.domain.metadata import DocMetadata
+from browse.services.document.metadata import AbsMetaSession
+from browse.services.util.metatags import meta_tag_metadata
+
 
 CLASSIC_RESULTS_FILE = path_of_for_test('data/classic_scholar_metadata_tags.json')
 ABS_FILES = path_of_for_test('data/abs_files')

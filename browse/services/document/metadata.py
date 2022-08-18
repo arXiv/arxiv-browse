@@ -1,24 +1,37 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
+import dataclasses
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
-from functools import wraps
-from dateutil import parser
-from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
-import dataclasses
+from functools import wraps
+from typing import Any, Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
+from dateutil import parser
+
 from browse.domain import License
-from browse.domain.metadata import Archive, AuthorList, Category, \
-    DocMetadata, Group, SourceType, Submitter, VersionEntry
 from browse.domain.identifier import Identifier, IdentifierException
-from browse.services.document.config.deleted_papers import DELETED_PAPERS
-from browse.services.util.formats import VALID_SOURCE_EXTENSIONS, \
-    formats_from_source_file_name, formats_from_source_type, \
-    has_ancillary_files, list_ancillary_files
+from browse.domain.metadata import (
+    Archive,
+    AuthorList,
+    Category,
+    DocMetadata,
+    Group,
+    SourceType,
+    Submitter,
+    VersionEntry,
+)
 from browse.services.document import cache
+from browse.services.document.config.deleted_papers import DELETED_PAPERS
+from browse.services.util.formats import (
+    VALID_SOURCE_EXTENSIONS,
+    formats_from_source_file_name,
+    formats_from_source_type,
+    has_ancillary_files,
+    list_ancillary_files,
+)
 
 
 ARXIV_BUSINESS_TZ = ZoneInfo('US/Eastern')

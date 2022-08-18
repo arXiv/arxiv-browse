@@ -1,9 +1,11 @@
-from hamcrest import *
 import unittest
 
+from hamcrest import *
 from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
+
 from browse.domain.category import Category
+from browse.services.document.metadata import AbsMetaSession
+
 
 class CategoriesTest(unittest.TestCase):
 

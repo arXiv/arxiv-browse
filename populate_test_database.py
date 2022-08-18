@@ -1,11 +1,13 @@
 """Helper script to initialize the browse database and add a few rows."""
 
+import glob
+from typing import List
+
 import click
+from tests import execute_sql_files
+
 from browse.factory import create_web_app
 from browse.services.database import models
-import glob
-from tests import execute_sql_files
-from typing import List
 
 
 app = create_web_app()

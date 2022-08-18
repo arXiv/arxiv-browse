@@ -1,9 +1,11 @@
 """test cookies"""
 import unittest
 
+from app import app
+
+
 #from bs4 import BeautifulSoup
 
-from app import app
 
 
 class CookiesPageTest(unittest.TestCase):

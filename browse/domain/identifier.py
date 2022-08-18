@@ -2,8 +2,10 @@
 import json
 import re
 from re import RegexFlag
-from typing import Match, Optional, Union, Tuple, Callable, List
+from typing import Callable, List, Match, Optional, Tuple, Union
+
 from arxiv import taxonomy
+
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(

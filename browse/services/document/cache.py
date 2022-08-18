@@ -5,6 +5,7 @@ from functools import wraps
 from typing import Optional
 
 from arxiv.base.globals import get_application_config, get_application_global
+
 from browse.domain.metadata import DocMetadata
 
 

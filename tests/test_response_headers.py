@@ -1,11 +1,15 @@
 """Test utility functions for generating response headers."""
-from unittest import TestCase
 from datetime import datetime, timedelta
-from dateutil.tz import tzutc, gettz
+from unittest import TestCase
 
-from browse.services.util.response_headers import guess_next_update_utc, \
-    mime_header_date, APPROX_PUBLISH_DURATION
 from arxiv.base.globals import get_application_config
+from dateutil.tz import gettz, tzutc
+
+from browse.services.util.response_headers import (
+    APPROX_PUBLISH_DURATION,
+    guess_next_update_utc,
+    mime_header_date,
+)
 
 
 class TestResponseHeaderUtils(TestCase):

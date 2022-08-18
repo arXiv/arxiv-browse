@@ -1,8 +1,9 @@
 """Paginiation links for listing pages."""
 
 
-from typing import Any, Dict, List, Union
 import math
+from typing import Any, Dict, List, Union
+
 from flask import url_for
 
 

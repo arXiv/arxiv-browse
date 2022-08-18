@@ -3,6 +3,7 @@ import os
 
 from browse.factory import create_web_app
 
+
 # We need someplace to keep the flask app around between requests.
 # Double underscores excludes this from * imports.
 __flask_app__ = None

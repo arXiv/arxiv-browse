@@ -1,12 +1,12 @@
 """Handle requests to set cookies."""
 
-from typing import Any, Dict, List
 import copy
+from typing import Any, Dict, List
 
 import flask
-from flask import url_for, request
-
 from arxiv import status
+from flask import request, url_for
+
 
 # Taken from legacy /users/e-prints/httpd/bin/Databases/mirrors
 mirrors = [

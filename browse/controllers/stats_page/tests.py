@@ -1,10 +1,11 @@
 """Tests for stats page controllers, :mod:`browse.controllers.stats_page`."""
 # mypy: ignore-errors
-from unittest import TestCase, mock
 from datetime import date, datetime
-from werkzeug.exceptions import BadRequest
+from unittest import TestCase, mock
 
 from arxiv import status
+from werkzeug.exceptions import BadRequest
+
 from browse.controllers import stats_page
 
 

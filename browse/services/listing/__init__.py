@@ -16,11 +16,15 @@ granularity for when a paper was announced. In the future there might
 be better date granularity for new papers.
 """
 
-from typing import cast, Optional, Any
+from typing import Any, Optional, cast
 
 from flask import g
 
-from browse.domain.listing import NewResponse, ListingResponse, ListingCountResponse
+from browse.domain.listing import (
+    ListingCountResponse,
+    ListingResponse,
+    NewResponse,
+)
 
 
 class ListingService:

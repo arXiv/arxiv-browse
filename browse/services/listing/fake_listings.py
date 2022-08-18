@@ -2,12 +2,16 @@
 
 # pylint: skip-file
 
+import datetime
 from typing import List, Optional
 
-from browse.domain.listing import NewResponse, ListingResponse, ListingItem, \
-    ListingCountResponse
+from browse.domain.listing import (
+    ListingCountResponse,
+    ListingItem,
+    ListingResponse,
+    NewResponse,
+)
 from browse.services.listing import ListingService
-import datetime
 
 
 class FakeListingFilesService(ListingService):
