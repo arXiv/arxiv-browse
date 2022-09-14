@@ -38,7 +38,6 @@
   <div class="accordion-body">
     {%- for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
     <div class="{% if not (loop.first and loop.last) %}physics {% endif %} columns ">
-      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
       {%- set archive_name = archives[archive_key].name -%}
       {%- if not (loop.first and loop.last) -%}
       <div class="column is-one-fifth">

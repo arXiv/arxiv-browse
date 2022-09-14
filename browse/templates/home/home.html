@@ -54,8 +54,8 @@
     <!-- special news section -->
     {%- include "home/news.html" -%}
     Read about recent news and updates on <a href="https://blog.arxiv.org/" target="_blank">arXiv's blog</a>.
-    (View the former <a href="https://arxiv.org/new/">"what's new" pages</a> here).
-    Read <a href="/help/robots">robots beware</a> before attempting any automated download.
+    (View the former <a href="{{url_for('new')}}">"what's new" pages</a> here).
+    Read <a href="{{url_for('help_robots')}}">robots beware</a> before attempting any automated download.
   </div>
   <!-- special message column -->
   {%- include "home/special-message.html" -%}
@@ -67,11 +67,11 @@
 <hr />
 <h2>About arXiv</h2>
 <ul>
-  <li><a href="/about">General information</a></li>
-  <li><a href="/help/submit">How to Submit to arXiv</a></li>
-  <li><a href="/new">News</a></li>
-  <li><a href="/about/give">Membership &amp; Giving</a></li>
-  <li><a href="/about/people">Who We Are</a></li>
+  <li><a href="{{- url_for('about') -}}">General information</a></li>
+  <li><a href="{{- url_for('help_submit') -}}">How to Submit to arXiv</a></li>
+  <li><a href="{{- url_for('new') -}}">News</a></li>
+  <li><a href="{{- url_for('about_give') -}}">Membership &amp; Giving</a></li>
+  <li><a href="{{- url_for('about_people') -}}">Who We Are</a></li>
 </ul>
 
 {% endblock content -%}
@@ -82,17 +82,17 @@
   <ul>
     {% for archive_key, archive_details in archives.items()|sort(attribute='1.name') if archives[archive_key].in_group == group_key  %}
       {%- set archive_search_url = url_for('search_archive', archive=archive_key) -%}
-      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else 'https://arxiv.org/corr' -%}
+      {%- set archive_url = url_for('browse.archive', archive=archive_key) if archive_key != 'cs' else url_for('corr') -%}
       {%- set archive_name = archives[archive_key].name if archive_key != 'cs' else 'Computing Research Repository' -%}
 
     {#- TODO: url_for /list, /catchup -#}
     <li>
       <a href="{{ archive_url }}" id="main-{{ archive_key }}" aria-labelledby="main-{{ archive_key }}">{{ archive_name }}</a>
       (<strong id="{{ archive_key }}">{{ archive_key if archive_key != 'cs' else 'CoRR' }}</strong> <a id="new-{{ archive_key }}" aria-labelledby="new-{{ archive_key }} {{ archive_key }}" href="/list/{{ archive_key }}/new">new</a>, <a id="recent-{{ archive_key }}" aria-labelledby="recent-{{ archive_key }} {{ archive_key }}" href="/list/{{ archive_key }}/recent">recent</a>, <a id="search-{{ archive_key }}" aria-labelledby="search-{{ archive_key }} {{ archive_key }}" href="{{ archive_search_url }}">search</a>{% if 0 %}, <a href="/catchup?archive={{ archive_key }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
-      {%- if group_key == 'grp_physics' and archive_key not in categories  -%}<br/>includes:
-      {%- elif archive_key == 'cs' -%}<br/>includes (see <a href="https://arxiv.org/corr/subjectclasses" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
-      {%- elif archive_key in ('eess', 'econ') -%}<br/>includes (see <a href="/help/{{ archive_key }}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
-      {%- elif group_key != 'grp_physics' -%}<br/>includes (see <a href="/new/{{ archive_key }}.html" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
+      {%- if group_key == 'grp_physics' and archive_key not in categories  -%}
+      <br/>includes:
+      {%- elif group_key != 'grp_physics' -%}
+      <br/>includes (see <a href="{{url_for('desc_' ~ archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
       {%- endif -%}
       {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
       {% if not (loop.first and loop.last and group_key == 'grp_physics') %}<a href="/list/{{ category_key }}/recent" id="{{ category_key }}" aria-labelledby="main-{{ archive_key }} {{ category_key }}">{{ categories[category_key].name }}</a>{% if not loop.last %}; {% endif %}{% endif %}
