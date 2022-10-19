@@ -100,8 +100,8 @@
       <div id="pwc-data-output"></div>
     </div>
 
-    <!-- 
-      hide the "Demos" tab by default, and conditionally display it using 
+    <!--
+      hide the "Demos" tab by default, and conditionally display it using
       JavaScript on pages in specific categories like `cs`, `eess``, and `stat`
      -->
     <input type="radio" name="tabs" id="labstabs-demos-input" disabled>
@@ -184,6 +184,30 @@
       <div style="min-height: 15px" id="connectedpapers-output"></div>
       <div id="coreRecommenderOutput"></div>
       <div id="iarxivOutput"></div>
+    </div>
+
+    <input type="radio" name="tabs" id="labstabs-sciencecast-input">
+    <label for="labstabs-sciencecast-input" id="labstabs-sciencecast-label">Casts</label>
+    <div class="tab">
+      <h1>Casts</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="sciencecast-toggle"
+                data-script-url="{{ url_for('static', filename='js/sciencecast.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-sciencecast">
+              <span class="slider"></span>
+              <span class="is-sr-only">ScienceCast Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/pages/about" target="_blank">What is ScienceCast?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="sciencecast-output"></div>
     </div>
 
     <input type="radio" name="tabs" id="tabfive">
