@@ -982,6 +982,27 @@ p.tagline {
   margin-bottom: 15px;
 }
 
+/* Added by CatalyzeX */
+
+#catalyzex-output {
+  padding: 7px;
+  margin-bottom: 10px;
+}
+
+#catalyzex-output .cx-icon {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  top: 5px;
+  margin-left: 3px;
+  margin-right: 6px;
+}
+
+ #catalyzex-output svg#cx-logo {
+  top: 7px;
+  margin-left: 6px;
+  margin-right: 3px;
+}
 
 /* Papers with Code **Datasets** specific section */
 
