@@ -965,6 +965,15 @@ p.tagline {
     margin-right: 6px;
 }
 
+#pwc-output .cx-icon {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  top: 5px;
+  margin-left: 3px;
+  margin-right: 6px;
+}
+
 #pwc-output .pwc-icon-primary {
     top: 6px;
     margin-left: 3px;
