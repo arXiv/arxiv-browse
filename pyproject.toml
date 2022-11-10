@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "dissemination"
+version = "0.1.0"
+description = "App to serve PDFs and other article formsts."
+authors = ["Brian D. Caruso <bdc34@cornell.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^2.2.2"
+google-cloud-storage = "^2.5.0"
+google-cloud-logging = "^3.2.5"
+opentelemetry-api = "^1.13.0"
+opentelemetry-sdk = "^1.13.0"
+opentelemetry-exporter-gcp-trace = "^1.3.0"
+opentelemetry-propagator-gcp = "^1.3.0"
+opentelemetry-instrumentation-requests = "^0.34b0"
+opentelemetry-instrumentation-flask = "^0.34b0"
+
+#Want to get the arxiv-base that is for py 3.10 
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "5592d714", extras = []}
+
+gunicorn = "^20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry>=1.2.2"]
+build-backend = "poetry.core.masonry.api"
