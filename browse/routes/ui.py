@@ -111,19 +111,6 @@ def before_request() -> None:
     except Exception as ex:
         logger.debug("problem creating hashed_user_id: %s", ex)
 
-    try:
-        # Institution: store first institution found in a cookie.
-        #   Users who visit multiple institutions keep first until session expires.
-        #   Multiple device/browsers have separate pendo sessions
-        if "institution" not in session or "institution_id" not in session:
-            inst_hash = get_institution(request.remote_addr)
-            if inst_hash != None and inst_hash.get("id") != None:
-                session["institution_id"] = inst_hash.get("id")
-                session["institution"] = inst_hash.get("label")
-    except Exception as ex:
-        logger.debug("problem looking up institution: %s", ex)
-
-
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
     """Apply response headers to all responses."""
@@ -198,6 +185,16 @@ def category_taxonomy() -> Any:
         None,
     )
 
+@blueprint.route("institutional_banner", methods=["GET"])
+def institutional_banner() -> Any:
+    try:
+        result = get_institution(request.remote_addr)
+        if result:
+            return (result, status.HTTP_200_OK)
+        else:
+            return ("", status.HTTP_200_OK)
+    except Exception as ex:
+        return ("", status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @blueprint.route("tb/", defaults={"arxiv_id": ""}, methods=["GET"])
 @blueprint.route("tb/<path:arxiv_id>", methods=["GET"])

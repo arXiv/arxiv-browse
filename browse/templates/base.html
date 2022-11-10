@@ -60,7 +60,7 @@
         <!-- /end timeboxed column -->
 
         <div class="column" id="support-ack">
-          <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+          <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
         </div>
       </div>
 
@@ -184,6 +184,51 @@
       </div>
     </footer>
   </div>
+
+  <script type="text/javascript">
+
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    getMemberInstitutionName();
+    async function getMemberInstitutionName() {
+      label = getCookie("member");
+      if (! label) {
+        let result = await fetch("/institutional_banner");
+        if (result && result.ok) {
+          let j = await result.json();
+          label = j["label"];
+          setCookie("member", label, 30);
+        }
+      }
+      if (label) {
+        d = document.getElementById('support-ack-url');
+        s = 'We gratefully acknowledge support from<br/>the Simons Foundation and ';
+        d.innerHTML = s + label + ".";
+      }
+    }
+  </script>
+
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
   {%- endif %}
