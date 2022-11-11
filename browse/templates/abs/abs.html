@@ -6,7 +6,7 @@
 
 {% block head %}
   {{ super() -}}
-  <link rel="canonical" href="{{ url_for('abs_by_id', paper_id=abs_meta.arxiv_id) }}"/>
+  <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
