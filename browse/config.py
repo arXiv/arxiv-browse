@@ -368,8 +368,10 @@ CLASSIC_DATABASE_URI = os.environ.get(
 CLASSIC_SESSION_HASH = os.environ.get("CLASSIC_SESSION_HASH", "foosecret")
 SESSION_DURATION = os.environ.get("SESSION_DURATION", "36000")
 
+BASE_SERVER = os.environ.get("BASE_SERVER", "arxiv.org")
 URLS = [
-    ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
-    # This is a temporary workaround for ARXIVNG-2063
+    ("abs", "/abs/<arxiv:paper_id>v<string:version>", BASE_SERVER),
+    ("abs_by_id", "/abs/<arxiv:paper_id>", BASE_SERVER),
+    ("ui.login", "/login", BASE_SERVER), # workaround for ARXIVNG-2063
 ]
 """External URLs."""
