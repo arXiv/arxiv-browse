@@ -98,11 +98,7 @@ def status():
     # TODO Check we can read from the bucket
     return {"status": "good"}
 
-@app.route("/list")
-def list_objs():
-    blobs = list(gs_client.list_blobs(bucket, max_results=100))
-    return (f"{blob.name}\n" for blob in blobs)
-    
+
 @app.route("/pdf/<string:arxiv_id>")
 def serve_pdf(arxiv_id: str):
     """Want to handle the following patterns:
@@ -153,7 +149,7 @@ def serve_pdf(arxiv_id: str):
 
         resp = make_response(stream())
 
-    # TODO arxiv.org etag is very different do we need to fix is using the gs value fine?
+    # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
     resp.headers.set('ETag', blob.etag)
     
     resp.headers.set('Content-Type', 'application/pdf')
