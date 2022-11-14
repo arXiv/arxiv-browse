@@ -46,7 +46,7 @@ GS_KEY_PREFIX = '/ps_cache'
 FS_PREFIX= '/cache/ps_cache/'
 
 ENSURE_UA = 'periodic-rebuild'
-ENSURE_HOSTS = [ 'web4.arxiv.org', 'web5.arxiv.org', 'web6.arxiv.org', 'web7.arxiv.org', 'web8.arxiv.org', 'web9.arxiv.org', ]
+ENSURE_HOSTS = [ 'web2.arxiv.org', 'web3.arxiv.org', 'web4.arxiv.org', 'web5.arxiv.org', 'web6.arxiv.org', 'web7.arxiv.org', 'web8.arxiv.org', 'web9.arxiv.org', ]
 ENSURE_CERT_VERIFY=False
 
 THREADS = 16
@@ -85,6 +85,8 @@ def pdf_src_path(arxiv_id, a_type):
     elif a_type == 'prev':
         prev_v = int(arxiv_id.version) - 1
         return Path(f"/data/orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{prev_v}.pdf")
+    else:
+        return Path('/bogus/path')
 
 def arxiv_pdf_url(host, arxiv_id):
     return f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
@@ -115,12 +117,15 @@ def ensure_pdf(session, host, arxiv_id, a_type):
     """    
     if is_src_pdf(arxiv_id):
         if a_type == 'new':
+            logger.info(f"{arxiv_id.filename} is PDF src and new")
             return [pdf_src_path(arxiv_id, a_type)]
         else:
+            logger.info(f"{arxiv_id.filename} is PDF src and rep")
             # need to replace the file in /ftp and add a version to /orig
             return [pdf_src_path(arxiv_id, 'new'), pdf_src_path(arxiv_id, 'prev')]
     else:
-        return [ensure_file_url_exists(session, host, pdf_cache_path(arxiv_id, a_type), arxiv_pdf_url(host, arxiv_id))]
+        logger.info(f"{arxiv_id.filename} is not PDF src")
+        return [ensure_file_url_exists(session, host, pdf_cache_path(arxiv_id), arxiv_pdf_url(host, arxiv_id))]
 
 
 def ensure_file_url_exists(session, host, pdf_file, url):
@@ -128,13 +133,13 @@ def ensure_file_url_exists(session, host, pdf_file, url):
     if not pdf_file.exists():
         start = perf_counter()
         headers = { 'User-Agent': ENSURE_UA }
-        url=arxiv_pdf_url(host, arxiv_id)
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
-        logger.info(f"ensure_file_url_exists: needed to build {str(pdf_cache)} {int((perf_counter()-start)*1000)} ms {url} status_code {resp.status_code}")
+        logger.info(f"ensure_file_url_exists: built {str(pdf_file)} {int((perf_counter()-start)*1000)} ms {url} status_code {resp.status_code}")
+        sleep(5)
     else:
-        logger.info(f"ensure_file_url_exists: {str(pdf)} already exists")
-    return pdf
+        logger.info(f"ensure_file_url_exists: {str(pdf_file)} already exists")
+    return pdf_file
 
 
 def upload_pdf(gs_client, pdf):
