@@ -97,9 +97,9 @@ def pdf_path_to_bucket_key(pdf):
     and other types of files under these directories. Bucket key should
     not start with a /"""
     if str(pdf).startswith('/cache/'):
-        return str(pdf).replace('/cache/','/')
+        return str(pdf).replace('/cache/','')
     elif str(pdf).startswith('/data/'):
-        return str(pdf).replace('/data/','/')
+        return str(pdf).replace('/data/','')
 
 def is_src_pdf(arxiv_id):
     return pdf_src_path(arxiv_id, 'new').exists() or pdf_src_path(arxiv_id, 'rep').exists() or pdf_src_path(arxiv_id, 'pref').exists()
