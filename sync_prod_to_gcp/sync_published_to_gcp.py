@@ -51,12 +51,17 @@ ENSURE_CERT_VERIFY=False
 
 THREADS = 16
 
+PDF_WAIT_MAX_SEC = 60 * 8
+"""Maximum seconds to wait for a PDF to be created"""
+
 new_r = re.compile(r"^.* new submission\n.* paper_id: (.*)$", re.MULTILINE)
 rep_r = re.compile(r"^.* replacement for (.*)\n.*\n.* old version: (\d*)\n.* new version: (\d*)", re.MULTILINE)
 # TODO handle wdr
 
 todo_q = Queue()
 uploaded_q = Queue() # number of files uploaded
+summary_q = Queue()
+
 global done
 global run
 
@@ -70,12 +75,14 @@ def handler_stop_signals(signum, frame):
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
-def pdf_cache_path(arxiv_id):
+def pdf_cache_path(arxiv_id) -> Path:
+    """Gets the PDF file in the ps_cache. Returns Path object."""
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     format = 'pdf'
     return Path(f"{FS_PREFIX}/{archive}/{format}/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
 
-def pdf_src_path(arxiv_id, a_type):
+def pdf_src_path(arxiv_id, a_type) -> Path:
+    """Gets the source file"""
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     format = 'pdf'
     if a_type == 'new':
@@ -88,11 +95,11 @@ def pdf_src_path(arxiv_id, a_type):
     else:
         return Path('/bogus/path')
 
-def arxiv_pdf_url(host, arxiv_id):
+def arxiv_pdf_url(host, arxiv_id) -> str:
     return f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
 
 
-def pdf_path_to_bucket_key(pdf):
+def pdf_path_to_bucket_key(pdf) -> str:
     """Handels both source and cache files. Should handle pdfs, abs, txt
     and other types of files under these directories. Bucket key should
     not start with a /"""
@@ -101,8 +108,12 @@ def pdf_path_to_bucket_key(pdf):
     elif str(pdf).startswith('/data/'):
         return str(pdf).replace('/data/','')
 
-def is_src_pdf(arxiv_id):
+def is_src_pdf(arxiv_id) -> bool:
     return pdf_src_path(arxiv_id, 'new').exists() or pdf_src_path(arxiv_id, 'rep').exists() or pdf_src_path(arxiv_id, 'pref').exists()
+
+def pack_src_pdf(src_pdf:Path):
+    """Back a bare src_path like a result from ensure_file_url_exists"""
+    return (src_pdf, None, None, 0)
 
 def ensure_pdf(session, host, arxiv_id, a_type):
     """Ensures PDF exits for arxiv_id.  
@@ -113,16 +124,16 @@ def ensure_pdf(session, host, arxiv_id, a_type):
     TODO Not sure if it is possible to have a paper that was a TeX source on version N but then is
     PDF Source on version N+1.
 
-    Returns a list of Paths that should be synced to GCP.
+    Returns a list of tuples with Paths that should be synced to GCP.
     """    
     if is_src_pdf(arxiv_id):
         if a_type == 'new':
             logger.info(f"{arxiv_id.filename} is PDF src and new")
-            return [pdf_src_path(arxiv_id, a_type)]
+            return [pack_src_pdf(pdf_src_path(arxiv_id, a_type))]
         else:
             logger.info(f"{arxiv_id.filename} is PDF src and rep")
             # need to replace the file in /ftp and add a version to /orig
-            return [pdf_src_path(arxiv_id, 'new'), pdf_src_path(arxiv_id, 'prev')]
+            return [pack_src_pdf(pdf_src_path(arxiv_id, 'new')), pack_src_pdf(pdf_src_path(arxiv_id, 'prev'))]
     else:
         logger.info(f"{arxiv_id.filename} is not PDF src")
         return [ensure_file_url_exists(session, host, pdf_cache_path(arxiv_id), arxiv_pdf_url(host, arxiv_id))]
@@ -130,31 +141,47 @@ def ensure_pdf(session, host, arxiv_id, a_type):
 
 def ensure_file_url_exists(session, host, pdf_file, url):
     """General purpose ensure exits for a `url` that should produce a `pdf_file`."""
+    start = perf_counter()
     if not pdf_file.exists():
         start = perf_counter()
         headers = { 'User-Agent': ENSURE_UA }
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
-        logger.info(f"ensure_file_url_exists: built {str(pdf_file)} {int((perf_counter()-start)*1000)} ms {url} status_code {resp.status_code}")
-        sleep(5)
+        if resp.status_code != 200:
+            return (pdf_file, url, "failed: bad GET status {resp.status_code}", int(perf_counter()-start))
+        start_wait = perf_counter()
+        while not pdf_file.exists() and perf_counter() - start_wait < PDF_WAIT_MAX_SEC:
+            sleep(0.2)
+        if pdf_file.exists():
+            logger.info(f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {int((perf_counter()-start)*1000)} ms")
+            return (pdf_file, url, None, int(perf_counter()-start))
+        else:
+            logger.error(f"ensure_file_url_exists: Could not create {pdf_file}. Requested {url} {int((perf_counter()-start)*1000)} ms")
+            return (pdf_file, url, "failed: no pdf after waiting", int(perf_counter()-start))
     else:
         logger.info(f"ensure_file_url_exists: {str(pdf_file)} already exists")
-    return pdf_file
+        return (pdf_file, url, None, int(perf_counter()-start))
 
 
 def upload_pdf(gs_client, pdf):
     """Uploads pdf to GS_BUCKET"""
-    bucket = gs_client.bucket(GS_BUCKET)
-    key = pdf_path_to_bucket_key(pdf)
-    blob = bucket.get_blob(key)
-    if blob is None or blob.size != pdf.stat().st_size:
-        with open(pdf, 'rb') as fh:
-            bucket.blob(key).upload_from_file(fh, content_type='application/pdf')
-        uploaded_q.put(pdf.stat().st_size)
-        logger.info(f"upload: completed upload of {pdf} to gs://{GS_BUCKET}/{key} of size {pdf.stat().st_size}")
-    else:
-        logger.info(f"upload: Not uploading {pdf}, gs://{GS_BUCKET}/{key} already on gs")
-
+    start = perf_counter()
+    try:
+        bucket = gs_client.bucket(GS_BUCKET)
+        key = pdf_path_to_bucket_key(pdf)
+        blob = bucket.get_blob(key)
+        if blob is None or blob.size != pdf.stat().st_size:
+            with open(pdf, 'rb') as fh:
+                bucket.blob(key).upload_from_file(fh, content_type='application/pdf')
+                uploaded_q.put(pdf.stat().st_size)
+                logger.info(f"upload: completed upload of {pdf} to gs://{GS_BUCKET}/{key} of size {pdf.stat().st_size}")
+            return (pdf, "uploaded", int(perf_counter()-start))
+        else:
+            logger.info(f"upload: Not uploading {pdf}, gs://{GS_BUCKET}/{key} already on gs")
+            return (pdf, "already_on_gs", int(perf_counter()-start))
+    except Exception:
+        logger.exception()
+        return (pdf, "failed", int(perf_counter()-start))
     
 def sync_to_gcp(todo_q, host):
     tl_data=threading.local()
@@ -166,12 +193,14 @@ def sync_to_gcp(todo_q, host):
             start = perf_counter()
             a_type, a_id, _, v_new = todo_q.get(block=False)
             arxiv_id = Identifier(f"{a_id}v{v_new}")
+
             pdf_paths = ensure_pdf(tl_data.session, host, arxiv_id, a_type)
 
-            if pdf_paths:
-                [upload_pdf(tl_data.gs_client, pdf) for pdf in pdf_paths if pdf is not None]
-            else:
-                logger.error("No PDF found for {a_id}v{v_new}")
+            for pdf_file, url, ensure_err, ensure_ms in pdf_paths:
+                up_msg, up_ms = (None, None)
+                if not ensure_err:
+                    pdf_file, up_msg, up_ms = upload_pdf(tl_data.gs_client, pdf_file)
+                summary_q.put( (pdf_file, url, ensure_err, ensure_ms, up_msg, up_ms))
 
             todo_q.task_done()
             logger.debug(f"Total time for {a_id}v{v_new} {int((perf_counter()-start)*1000)}ms")
@@ -209,6 +238,13 @@ if __name__ == "__main__":
     done=True
     run=False
     [th.join() for th in threads]
+
+    logger.info("------------------------------ summary ------------------------------")
+    logger.info("| pdf_file | url | ensure_err | ensure_ms | upload_msg | upload_ms|")
+    logger.info("|-----------------------------------------------------------------|")
+    for pdf_file, url, ensure_err, ensure_ms, up_msg, up_ms in sorted(list(summary_q.queue)):
+        logger.info(f"{pdf_file}|{url}|{ensure_err}|{ensure_ms}|{up_msg}|{up_ms}")
+    logger.info("---------------------------- end summary -----------------------------")
 
     logger.info(f"Done at {datetime.now().isoformat()}")
     logger.info(f"Overall time: {(perf_counter()-overall_start):.2f} for {overall_size} submissions of type new or rep, {uploaded_q.qsize()} uploads.")
