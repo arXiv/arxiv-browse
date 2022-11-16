@@ -1143,30 +1143,15 @@ p.tagline {
   color: gray;
 }
 
-.spaces-load-all-checkbox {
-  display: none;
-}
-
-.spaces-load-all-label {
-  display: inline-block;
+.spaces-load-all-link {
+  cursor: pointer;
   padding: 0.75em;
   background-color: #eef5f9;
-  cursor: pointer;
+  border: none;
   border-radius: 0.5rem;
+  margin: 0.5em 0;
+  display: inline-block;
 }
-
-.spaces-load-all-checkbox:checked + .spaces-load-all-label {
-  display: none;
-}
-
-.spaces-all-demos {
-  display: none;
-}
-
-.spaces-load-all-checkbox:checked + .spaces-load-all-label + .spaces-all-demos {
-  display: block;
-}
-
 
 /*END Spaces CSS*/
 

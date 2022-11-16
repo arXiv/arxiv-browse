@@ -41,6 +41,7 @@
       }
       const model_ids = models.map(m => m.id).join(",");
       const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}&full=true&sort=likes&direction=-1`;
+      const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?models=or:${model_ids}`;
       response = await fetch(huggingfaceSpacesFromModelsApi);
       if (!response.ok) {
         console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromModelsApi}`)
@@ -48,14 +49,14 @@
         return;
       }
       const spaces_data = await response.json();
-      render(spaces_data);
+      render(spaces_data, huggingfaceSpacesFromModelsLink);
     })()
   
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-    function render(models) {
+    function render(models, spaces_link) {
       container.innerHTML = window.DOMPurify.sanitize(`
           ${summary(models)}
-          ${renderModels(models)}
+          ${renderModels(models, spaces_link)}
         `)
     }
   
@@ -74,16 +75,14 @@
       }
     }
   
-    function renderModels(models) {
-      const visibleModels = 10;
+    function renderModels(models, spaces_link) {
+      const visibleModels = 5;
       return models.slice(0, visibleModels).map(m => renderModel(m)).join("\n") + (models.length > visibleModels ? `
-        <input id="spaces-load-all-checkbox" class="spaces-load-all-checkbox" type="checkbox">
-        <label for="spaces-load-all-checkbox" class="spaces-load-all-label">
-            Load all demos
-        </label>
-        <div class="spaces-all-demos">
-          ${models.slice(visibleModels).map(m => renderModel(m)).join("\n")}
-        </div>
+        <a href="${spaces_link}" target="_blank">
+          <button class="spaces-load-all-link">
+            View all demos
+          </button>
+        </a>
       `: "")
     }
   
