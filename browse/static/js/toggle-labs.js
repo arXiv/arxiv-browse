@@ -31,23 +31,6 @@ $(document).ready(function() {
 
   var pwcEnabled = true;
 
-  const currentCategory = $('.current')?.text()?.toLowerCase();
-  const demoCategories = [
-    "cs",   // Computer Science
-    "eess", // Electrical Engineering and Systems Science
-    "stat"  // Statistics
-  ]
-
-  const demosEnabled = currentCategory && demoCategories.some(category => currentCategory.startsWith(category));
-
-  if (demosEnabled) {
-    document.getElementById("labstabs-demos-input").removeAttribute("disabled");
-    document.getElementById("labstabs-demos-label").style.display = "block";
-  }
-
-  var replicateEnabled = demosEnabled
-  var spacesEnabled = demosEnabled
-
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
@@ -99,45 +82,10 @@ $(document).ready(function() {
             console.log(textStatus);
           });
         }
-      } else if (labsCookie[key] && labsCookie[key] == "disabled"){
-        if (key === "paperwithcode-toggle") {
-          pwcEnabled = false;
-        }
-        if (key === "replicate-toggle") {
-          replicateEnabled = false;
-        }
-        if (key === "spaces-toggle") {
-          spacesEnabled = false;
-        }
       }
     }
   } else {
     Cookies.set("arxiv_labs", { sameSite: "strict" });
-  }
-
-  if(pwcEnabled){
-    $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled",true);
-    $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-      console.log(textStatus);
-    });
-  }
-
-  if(replicateEnabled){
-    $("#replicate-toggle.lab-toggle").toggleClass("enabled",true);
-    $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
-      // console.log(textStatus, "replicate (on load)");
-    }).fail(function() {
-      console.error("failed to load replicate script (on load)", arguments)
-    });;
-  }
-
-  if(spacesEnabled){
-    $("#spaces-toggle.lab-toggle").toggleClass("enabled",true);
-    $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
-      console.log(textStatus);
-    }).fail(function() {
-      console.error("failed to load spaces script (on load)", arguments)
-    });;
   }
 
   // record last-clicked tab

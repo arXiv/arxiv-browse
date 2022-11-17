@@ -6,7 +6,7 @@ You can run the browse app directly. Using pipenv:
 
 ```bash
 pipenv install
-FLASK_APP=app.py FLASK_DEBUG=1 pipenv run flask run
+pipenv run python main.py
 ```
 
 
