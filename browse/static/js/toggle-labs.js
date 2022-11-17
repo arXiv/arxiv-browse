@@ -14,6 +14,7 @@ $(document).ready(function() {
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
     "replicate": $('#replicate-toggle').data('script-url'),
+    "spaces": $('#spaces-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
     "iarxiv": $('#iarxiv-toggle').data('script-url'),
@@ -46,6 +47,7 @@ $(document).ready(function() {
   }
 
   var replicateEnabled = demosEnabled
+  var spacesEnabled = demosEnabled
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
@@ -87,6 +89,12 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load replicate script (on cookie check)", arguments)
           });
+        } else if (key === "spaces-toggle") {
+          $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load spaces script (on cookie check)", arguments)
+          });
         } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -104,6 +112,9 @@ $(document).ready(function() {
         }
         if (key === "replicate-toggle") {
           replicateEnabled = false;
+        }
+        if (key === "spaces-toggle") {
+          spacesEnabled = false;
         }
       }
     }
@@ -124,6 +135,15 @@ $(document).ready(function() {
       // console.log(textStatus, "replicate (on load)");
     }).fail(function() {
       console.error("failed to load replicate script (on load)", arguments)
+    });;
+  }
+
+  if(spacesEnabled){
+    $("#spaces-toggle.lab-toggle").toggleClass("enabled",true);
+    $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
+      console.log(textStatus);
+    }).fail(function() {
+      console.error("failed to load spaces script (on load)", arguments)
     });;
   }
 
@@ -180,6 +200,12 @@ $(document).ready(function() {
         // console.log(textStatus, "replicate (on lab toggle)");
       }).fail(function() {
         console.error("failed to load replicate script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "spaces-toggle") {
+      $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
+        // console.log(textStatus, "spaces (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load spaces script (on lab toggle)", arguments)
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {

@@ -25,7 +25,7 @@ that slides the header away.
 
 -#}
 {# accessibility CTA banner #}
-<aside class="slider-wrapper bps-banner dark" style="display:none">
+<!-- <aside class="slider-wrapper bps-banner dark" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <h1>Accessible arXiv</h1>
@@ -38,23 +38,23 @@ that slides the header away.
       </div>
     </div>
   </div>
-</aside>
+</aside> -->
 
 {# donation banner #}
-<!-- <aside class="slider-wrapper bps-banner" style="display:none">
+<aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Giving Week!</h1>
-    <p>Show your support for Open Science by <a href="http://bit.ly/arXivDONATEa" target="_blank">donating to arXiv</a> during Giving Week, April 25th-29th.</p>
+    <h1>Global Survey</h1>
+    <p>In just 3 minutes help us understand <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}" target="_blank">how you see arXiv</a>.</p>
   </div>
   <div class="amount-donation bps-banner">
     <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="http://bit.ly/arXivDONATEa"><b>DONATE</b></a>
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}"><b>TAKE SURVEY</b></a>
       </div>
     </div>
   </div>
-</aside> -->
+</aside>
 
 {%- if 0 -%}
 {# downtime #}
