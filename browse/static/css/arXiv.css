@@ -1113,6 +1113,49 @@ p.tagline {
 
 /*END Replicate CSS*/
 
+/*BEGIN Spaces CSS*/
+
+.spaces-summary {
+  margin-bottom: 0.5em;
+}
+
+.spaces-model {
+  padding: 15px 0;
+  display: flex;
+}
+
+.spaces-thumbnail {
+  height: 5.5rem;
+  border-radius: 0.5rem;
+}
+
+.spaces-model-details {
+  padding: 0px 15px;
+  vertical-align: top;
+}
+
+.spaces-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.spaces-model-subheader {
+  color: gray;
+}
+
+.spaces-load-all-link {
+  cursor: pointer;
+  padding: 0.75em;
+  background-color: #eef5f9;
+  border: none;
+  border-radius: 0.5rem;
+  margin: 0.5em 0;
+  display: inline-block;
+}
+
+/*END Spaces CSS*/
+
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
