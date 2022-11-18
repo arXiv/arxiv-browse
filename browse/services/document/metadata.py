@@ -477,13 +477,11 @@ class AbsMetaSession:
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
         abs_file = to_anypath(filename)
-        if not abs_file.is_file():
-            raise AbsNotFoundException
         try:
             with abs_file.open(mode='r', encoding='latin-1') as absf:
                 raw = absf.read()
         except FileNotFoundError:
-            raise AbsNotFoundException
+            raise AbsNotFoundException(f"File not found {abs_file}")
         except UnicodeDecodeError as e:
             raise AbsParsingException(
                 f'Failed to decode .abs file "{filename}": {e}')
@@ -618,7 +616,7 @@ class AbsMetaSession:
                  else self.original_versions_path)/
                 ('arxiv' if not identifier.is_old_id or identifier.archive is None
                  else identifier.archive)/
-            'papers'/
+                'papers'/
                 identifier.yymm
                 )
 

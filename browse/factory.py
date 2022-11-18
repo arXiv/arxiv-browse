@@ -1,6 +1,9 @@
 """Application factory for browse service components."""
 from functools import partial
 
+import logging
+from flask.logging import default_handler
+
 from arxiv.base import Base
 from arxiv.base.config import BASE_SERVER
 from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
@@ -20,6 +23,10 @@ s3 = FlaskS3()
 
 def create_web_app() -> Flask:
     """Initialize an instance of the browse web application."""
+
+    root = logging.getLogger()
+    root.addHandler(default_handler)
+
     app = Flask('browse', static_url_path=f'/static/browse/{APP_VERSION}')
     app.config.from_pyfile('config.py')
 
