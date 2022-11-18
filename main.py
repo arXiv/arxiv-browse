@@ -102,31 +102,32 @@ def serve_pdf(arxiv_id: str):
 
     gs://arxiv-production-data/ps_cache/acc-phys/pdf/9502/9502001v1.pdf
 
+    Does a 400 if the ID is malformed or lacks a version.
+
+    Does a 404 if the key for the ID does not exist on the bucket.
     """
     try:
         id = Identifier(arxiv_id)
         id.has_version or abort(400, description="version is required")
     except IdentifierException as ex:
-        abort(404, description=ex)
+        abort(400, description=ex)
         
     key = gs_key_for_id(id, 'pdf')
     logger.debug(f"looking for key {key}")
 
-    with tracer.start_as_current_span("gs_get_blob"):
-        blob = bucket.get_blob(key, chunk_size=chunk_size)
-        if not blob: abort(404)
+    blob = bucket.get_blob(key, chunk_size=chunk_size)
+    if not blob: abort(404)
 
     if request.method == 'GET':
         def stream():
-            with tracer.start_as_current_span("steream_from_gs"):
-                with blob.open('rb') as gsf:
-                    done = False
-                    while (not done and gsf.readable() and not gsf.closed):
-                        bytes = gsf.read(chunk_size)
-                        if bytes:
-                            yield bytes
-                        else:
-                            done = True
+            with blob.open('rb') as gsf:
+                done = False
+                while (not done and gsf.readable() and not gsf.closed):
+                    bytes = gsf.read(chunk_size)
+                    if bytes:
+                        yield bytes
+                    else:
+                        done = True
 
         resp = make_response(stream())
     else:
