@@ -25,6 +25,13 @@ geoip2 = "*"
 bcrypt = "*"
 werkzeug = "*"
 cloudpathlib = {extras = ["gs"], version = "*"}
+google-cloud-logging = "*"
+opentelemetry-api = "*"
+opentelemetry-sdk = "*"
+opentelemetry-exporter-gcp-trace = "*"
+opentelemetry-propagator-gcp = "*"
+opentelemetry-instrumentation-requests = "*"
+opentelemetry-instrumentation-flask = "*"
 
 [dev-packages]
 pycodestyle = "*"

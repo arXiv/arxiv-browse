@@ -149,7 +149,7 @@ def list_ancillary_files(tarball_path: APath) -> List[Dict]:
 
     anc_files = []
     try:
-        with tarball_path.open( mode='r') as fh:
+        with tarball_path.open( mode='rb') as fh:
             with tarfile.open(fileobj=fh, mode='r') as tf:
                 for member in \
                         (m for m in tf if re.search(r'^anc\/', m.name) and m.isfile()):

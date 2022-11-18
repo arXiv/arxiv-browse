@@ -367,7 +367,7 @@ class AbsMetaSession:
                 short_id = Identifier(
                     arxiv_id=f'{previous_id.archive}/{max_id.stem}')
             else:
-                short_id = Identifier(arxiv_id=max_id)
+                short_id = Identifier(arxiv_id=f"{max_id.stem}")
             return short_id
         except IdentifierException:
             return None
@@ -449,7 +449,7 @@ class AbsMetaSession:
                 and cached_ps_file_path.stat().st_size == 0 \
                 and source_file_path \
                 and source_file_path.stat().st_mtime < \
-                cached_ps_file_path.stat().st_mtime)
+                cached_ps_file_path.stat().st_mtime) #type: ignore
 
             source_type_formats = formats_from_source_type(format_code,
                                                            format_pref,
@@ -607,7 +607,7 @@ class AbsMetaSession:
                                             version=version)
         path = parent_path.joinpath(f'{identifier.filename}.abs' if not version
                                     else f'{identifier.filename}v{version}.abs')
-        return self.parse_abs_file(filename=path)
+        return self.parse_abs_file(filename=str(path))
 
     def _get_parent_path(self, identifier: Identifier,
                          version: Optional[int] = None) -> APath:

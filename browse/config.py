@@ -345,3 +345,9 @@ URLS = [
     # This is a temporary workaround for ARXIVNG-2063
 ]
 """External URLs."""
+
+
+if os.environ.get("PROD_BUCKET", 0):
+    DOCUMENT_LATEST_VERSIONS_PATH="gs://arxiv-production-data/ftp"
+    DOCUMENT_ORIGNAL_VERSIONS_PATH="gs://arxiv-production-data/orig"
+    DOCUMENT_CACHE_PATH="gs://arxiv-production-data/ps_cache"
