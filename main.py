@@ -27,10 +27,10 @@ logger = logging.getLogger(__file__)
 
 
 #################### config ####################
-bucket_name = os.environ.get('BUCKET','arxiv-production-ps-cache')
+bucket_name = os.environ.get('BUCKET','arxiv-production-data')
 """Name of the GS bucket. Must not have the gs:// prefix"""
 
-path_prefix = os.environ.get('PATH_PREFIX', 'cache_ps_cache')
+path_prefix = os.environ.get('PATH_PREFIX', 'ps_cache')
 
 chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
