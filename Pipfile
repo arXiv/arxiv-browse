@@ -24,6 +24,7 @@ arxiv-base = ">=1.0.0a3"
 geoip2 = "*"
 bcrypt = "*"
 werkzeug = "*"
+cloudpathlib = {extras = ["gs"], version = "*"}
 
 [dev-packages]
 pycodestyle = "*"

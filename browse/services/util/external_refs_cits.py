@@ -80,6 +80,8 @@ def get_computed_dblp_listing_path(docmeta: DocMetadata) -> Optional[str]:
     """Get the DBLP listing path based on the metadata."""
     identifier = docmeta.arxiv_identifier
     orig_publish_date = get_orig_publish_date(identifier)
+    if not orig_publish_date:
+        return None
     if orig_publish_date >= DBLP_START_DATE and identifier.id is not None:
         if identifier.is_old_id:
             dblp_id = f'abs-cs-{identifier.filename}'

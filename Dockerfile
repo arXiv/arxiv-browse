@@ -3,42 +3,48 @@
 # Defines the runtime for the arXiv browse service, which provides the main
 # UIs for browse.
 
-FROM arxiv/base:0.16.7
+FROM python:3.10.8-buster
 ARG git_commit
+
+ENV PIPENV_VERBOSITY=-1
+ENV LC_ALL en_US.utf8
+ENV LANG en_US.utf8
+ENV LOGLEVEL 40
+#ENV FLASK_DEBUG 1
 
 WORKDIR /opt/arxiv
 
 # remove conflicting mariadb-libs from arxiv/base
-RUN yum remove -y mariadb-libs
+#RUN yum remove -y mariadb-libs
 
 # install MySQL
-RUN yum install -y which mysql mysql-devel
-RUN pip install uwsgi
+RUN apt-get -y install default-libmysqlclient-dev
+#RUN yum install -y which mysql mysql-devel
+#RUN pip install uwsgi
 
-# add python application and configuration
-ENV PIPENV_VENV_IN_PROJECT 1
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install -U pip pipenv
+RUN pip install "gunicorn==20.1.0"
+
 ADD app.py /opt/arxiv/
 ADD Pipfile /opt/arxiv/
 ADD Pipfile.lock /opt/arxiv/
-RUN pip install -U pip pipenv
 RUN pipenv sync
 
 ENV PATH "/opt/arxiv:${PATH}"
 
 ADD browse /opt/arxiv/browse
 ADD tests /opt/arxiv/tests
-ADD wsgi.py uwsgi.ini /opt/arxiv/
-ADD bin/start_browse.sh /opt/arxiv/
+ADD wsgi.py /opt/arxiv/
 
-RUN chmod +x /opt/arxiv/start_browse.sh
 RUN echo $git_commit > /git-commit.txt
 
-ENV LC_ALL en_US.utf8
-ENV LANG en_US.utf8
-ENV LOGLEVEL 40
-ENV FLASK_DEBUG 1
-ENV FLASK_APP /opt/arxiv/app.py
+#ENV FLASK_APP /opt/arxiv/app.py
 
 EXPOSE 8000
 ENTRYPOINT ["pipenv", "run"]
-CMD ["uwsgi", "--ini", "/opt/arxiv/uwsgi.ini"]
+#CMD ["uwsgi", "--ini", "/opt/arxiv/uwsgi.ini"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 wsgi:application

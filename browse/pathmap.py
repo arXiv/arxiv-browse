@@ -1,5 +1,5 @@
 # type: ignore
-"""Makes GCP path map string
+"""Makes GCP path map string for use with a load balancer of all the flask app's routes
 
 For use with gcloud compute url-maps add-path-matcher
 

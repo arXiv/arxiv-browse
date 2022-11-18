@@ -1,16 +1,19 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 import dataclasses
-import os
+
 import re
 from datetime import datetime, timezone
 from functools import wraps
 from typing import Any, Dict, List, Optional, Tuple
 from zoneinfo import ZoneInfo
 
+from cloudpathlib.anypath import to_anypath
+
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config, get_application_global
 from dateutil import parser
 
+from browse.services import APath
 from browse.domain import License
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.metadata import (
@@ -106,17 +109,15 @@ class AbsMetaSession:
     def __init__(self, latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize the document metadata session."""
-        if not os.path.isdir(latest_versions_path):
-            raise AbsException('Path to latest .abs versions '
-                               f'"{latest_versions_path}" does not exist'
-                               )
-        if not os.path.isdir(original_versions_path):
-            raise AbsException('Path to original .abs versions '
-                               f'"{original_versions_path}" does not exist'
-                               )
+        self.latest_versions_path: APath = to_anypath(latest_versions_path).resolve()
+        self.original_versions_path: APath = to_anypath(original_versions_path).resolve()
 
-        self.latest_versions_path = os.path.realpath(latest_versions_path)
-        self.original_versions_path = os.path.realpath(original_versions_path)
+        if not self.latest_versions_path.is_dir():
+            raise AbsException('Path to latest .abs versions '
+                               f'"{latest_versions_path}" does not exist or is not a directory')
+        if not self.original_versions_path.is_dir():
+            raise AbsException('Path to original .abs versions '
+                               f'"{original_versions_path}" does not exist or is not a directory')
 
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
@@ -264,18 +265,16 @@ class AbsMetaSession:
         if not next_id:
             return None
 
-        path = self._get_parent_path(identifier=next_id)
-        file_path = os.path.join(path, f'{next_id.filename}.abs')
-        if os.path.isfile(file_path):
+        file_path = self._get_parent_path(identifier=next_id).joinpath(f'{next_id.filename}.abs')
+        if file_path.is_file():
             return next_id
 
         next_yymm_id = self._next_yymm_id(identifier)
         if not next_yymm_id:
             return None
 
-        path = self._get_parent_path(identifier=next_yymm_id)
-        file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
-        if os.path.isfile(file_path):
+        path = self._get_parent_path(identifier=next_yymm_id).joinpath(f'{next_yymm_id.filename}.abs')
+        if path.is_file():
             return next_yymm_id
 
         return None
@@ -355,29 +354,26 @@ class AbsMetaSession:
            and identifier.month == previous_id.month:
             return previous_id
 
-        path = self._get_parent_path(previous_id)
-        if not os.path.exists(path):
+        yymm_dir = self._get_parent_path(previous_id)
+        if not yymm_dir.exists():
             return None
 
-        for _, _, file_list in os.walk(path):
-            abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
-            if not abs_files:
-                return None
-            max_id = max(abs_files)
-            try:
-                if previous_id.is_old_id:
-                    short_id = Identifier(
-                        arxiv_id=f'{previous_id.archive}/{max_id}')
-                else:
-                    short_id = Identifier(arxiv_id=max_id)
-                return short_id
+        abs_files = yymm_dir.glob('*.abs')
+        if not abs_files:
+            return None
+        max_id = max(abs_files)
+        try:
+            if previous_id.is_old_id:
+                short_id = Identifier(
+                    arxiv_id=f'{previous_id.archive}/{max_id.stem}')
+            else:
+                short_id = Identifier(arxiv_id=max_id)
+            return short_id
+        except IdentifierException:
+            return None
 
-            except IdentifierException:
-                return None
 
-        return None
-
-    def _get_source_path(self, docmeta: DocMetadata) -> Optional[str]:
+    def _get_source_path(self, docmeta: DocMetadata) -> Optional[APath]:
         """Get the absolute path of this DocMetadata's source file."""
         identifier = docmeta.arxiv_identifier
         version = docmeta.version
@@ -389,10 +385,8 @@ class AbsMetaSession:
             parent_path = self._get_parent_path(identifier)
 
         for extension in VALID_SOURCE_EXTENSIONS:
-            possible_path = os.path.join(
-                parent_path,
-                f'{file_noex}{extension[0]}')
-            if os.path.isfile(possible_path):
+            possible_path = parent_path.joinpath(f'{file_noex}{extension[0]}')
+            if possible_path.is_file():
                 return possible_path
         return None
 
@@ -448,16 +442,14 @@ class AbsMetaSession:
             # user format preference and cache
             version = docmeta.version
             format_code = docmeta.version_history[version - 1].source_type.code
-            cached_ps_file_path = cache.get_cache_file_path(
-                docmeta,
-                'ps')
+            cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
             cache_flag = False
-            if cached_ps_file_path \
-                    and os.path.getsize(cached_ps_file_path) == 0 \
-                    and source_file_path \
-                    and os.path.getmtime(source_file_path) \
-                    < os.path.getmtime(cached_ps_file_path):
-                cache_flag = True
+
+            cache_flag = bool(cached_ps_file_path \
+                and cached_ps_file_path.stat().st_size == 0 \
+                and source_file_path \
+                and source_file_path.stat().st_mtime < \
+                cached_ps_file_path.stat().st_mtime)
 
             source_type_formats = formats_from_source_type(format_code,
                                                            format_pref,
@@ -484,8 +476,11 @@ class AbsMetaSession:
     @staticmethod
     def parse_abs_file(filename: str) -> DocMetadata:
         """Parse arXiv .abs file."""
+        abs_file = to_anypath(filename)
+        if not abs_file.is_file():
+            raise AbsNotFoundException
         try:
-            with open(filename, mode='r', encoding='latin-1') as absf:
+            with abs_file.open(mode='r', encoding='latin-1') as absf:
                 raw = absf.read()
         except FileNotFoundError:
             raise AbsNotFoundException
@@ -603,7 +598,7 @@ class AbsMetaSession:
             version=version,
             license=doc_license,
             version_history=version_history,
-            modified=_utcmodtime(filename)
+            modified= datetime.fromtimestamp(abs_file.stat().st_mtime, tz=timezone.utc)
             # private=private  # TODO, not implemented
         )
 
@@ -612,23 +607,20 @@ class AbsMetaSession:
         """Get a specific version of a paper's abstract metadata."""
         parent_path = self._get_parent_path(identifier=identifier,
                                             version=version)
-        path = os.path.join(parent_path,
-                            (f'{identifier.filename}.abs' if not version
-                             else f'{identifier.filename}v{version}.abs'))
+        path = parent_path.joinpath(f'{identifier.filename}.abs' if not version
+                                    else f'{identifier.filename}v{version}.abs')
         return self.parse_abs_file(filename=path)
 
     def _get_parent_path(self, identifier: Identifier,
-                         version: Optional[int] = None) -> str:
+                         version: Optional[int] = None) -> APath:
         """Get the absolute parent path of the provided identifier."""
-        parent_path = os.path.join(
-            (self.latest_versions_path if not version
-             else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id or identifier.archive is None
-             else identifier.archive),
-            'papers',
-            identifier.yymm,
-        )
-        return parent_path
+        return ((self.latest_versions_path if not version
+                 else self.original_versions_path)/
+                ('arxiv' if not identifier.is_old_id or identifier.archive is None
+                 else identifier.archive)/
+            'papers'/
+                identifier.yymm
+                )
 
     @staticmethod
     def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
@@ -766,11 +758,3 @@ def alt_component_split(components: List[str]) -> List[str]:
     alt_comp.append(abstract)
     alt_comp.append('')
     return alt_comp
-
-
-
-def _utcmodtime(filename: str) -> datetime:
-    """UTC time from a filename"""
-    return datetime.fromtimestamp(
-        os.path.getmtime(filename), tz=ARXIV_BUSINESS_TZ
-    ).astimezone(tz=timezone.utc)
