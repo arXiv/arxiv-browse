@@ -13,6 +13,7 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
+    "catalyzex": $('#paperwithcode-toggle').data('cx-script-url') + "?20210727",
     "replicate": $('#replicate-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
@@ -80,6 +81,9 @@ $(document).ready(function() {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+          $.cachedScript(scripts["catalyzex"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
         } else if (key === "replicate-toggle") {
           $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
             // console.log(textStatus, "replicate (on cookie check)");
@@ -107,6 +111,9 @@ $(document).ready(function() {
   if(pwcEnabled){
     $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled",true);
     $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+      console.log(textStatus);
+    });
+    $.cachedScript(scripts["catalyzex"]).done(function(script, textStatus) {
       console.log(textStatus);
     });
   }
@@ -166,6 +173,9 @@ $(document).ready(function() {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+      $.cachedScript(scripts["catalyzex"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     } else if ($(this).attr("id") == "replicate-toggle") {

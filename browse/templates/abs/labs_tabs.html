@@ -86,6 +86,7 @@
               <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
+                data-cx-script-url="{{ url_for('static', filename='js/catalyzex.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
               <span class="slider"></span>
               <span class="is-sr-only">arXiv Links to Code Toggle</span>
@@ -96,6 +97,7 @@
           </div>
         </div>
       </div>
+      <div id='catalyzex-output'></div>
       <div id="pwc-output"></div>
       <div id="pwc-data-output"></div>
     </div>

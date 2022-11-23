@@ -965,15 +965,6 @@ p.tagline {
     margin-right: 6px;
 }
 
-#pwc-output .cx-icon {
-  width: 23px;
-  height: 23px;
-  position: relative;
-  top: 5px;
-  margin-left: 3px;
-  margin-right: 6px;
-}
-
 #pwc-output .pwc-icon-primary {
     top: 6px;
     margin-left: 3px;
@@ -998,6 +989,23 @@ p.tagline {
     padding: 7px;
     margin-bottom: 10px;
     margin-top: 20px;
+}
+
+#catalyzex-output {
+  padding: 7px;
+ }
+
+#catalyzex-output .cx-icon {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  top: 5px;
+  margin-left: 3px;
+  margin-right: 6px;
+}
+#catalyzex-output .submit-catalyzex-code{
+  padding-left: .3rem;
+  margin-top: 0;
 }
 
 #labstabs #pwc-data-output > p.pwc-provided {
