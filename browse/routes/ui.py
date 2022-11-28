@@ -192,7 +192,7 @@ def institutional_banner() -> Any:
         if result:
             return (result, status.HTTP_200_OK)
         else:
-            return ("", status.HTTP_200_OK)
+            return ("{}", status.HTTP_200_OK)
     except Exception as ex:
         return ("", status.HTTP_500_INTERNAL_SERVER_ERROR)
 

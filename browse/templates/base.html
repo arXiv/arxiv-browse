@@ -187,44 +187,55 @@
 
   <script type="text/javascript">
 
-    function setCookie(cname, cvalue, exdays) {
-      const d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-      let name = cname + "=";
-      let decodedCookie = decodeURIComponent(document.cookie);
-      let ca = decodedCookie.split(';');
-      for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    }
-
     getMemberInstitutionName();
     async function getMemberInstitutionName() {
-      label = getCookie("member");
-      if (! label) {
-        let result = await fetch("/institutional_banner");
-        if (result && result.ok) {
-          let j = await result.json();
-          label = j["label"];
-          setCookie("member", label, 30);
+      label = localStorage.getItem("member_label");
+      expires = localStorage.getItem("member_expires");
+
+      expired = true;
+      if (expires) {
+        expires = new Date(expires);
+        now = new Date();
+        if (now < expires) {
+          expired = false;
         }
       }
+
+      if (expired) {
+        localStorage.removeItem("member_label");
+        localStorage.removeItem("member_expires");
+
+        lookup_failed = false
+        label = localStorage.getItem("member_label");
+        if (! label) {
+          let result = await fetch("/institutional_banner");
+          if (result && result.ok) {
+              let j = await result.json();
+              label = j["label"];
+              if (label) {
+                localStorage.setItem("member_label", label);
+              }
+          } else {
+            lookup_failed = true
+          }
+        }
+
+        expires_ms = 30*24*60*60*1000;
+        if (lookup_failed) {
+          expires_ms = 4*60*60*1000; // try sooner if db issue.
+        }
+        const new_expires = new Date();
+        new_expires.setTime(new_expires.getTime() + expires_ms);
+        localStorage.setItem("member_expires", new_expires);
+      }
+
       if (label) {
-        d = document.getElementById('support-ack-url');
-        s = 'We gratefully acknowledge support from<br/>the Simons Foundation and ';
-        d.innerHTML = s + label + ".";
+        s = 'We gratefully acknowledge support from<br/>';
+        s += 'the Simons Foundation and ' + label + ".";
+        support_elem = document.getElementById('support-ack-url');
+        if (support_elem) {
+          support_elem.innerHTML = s;
+        }
       }
     }
   </script>
