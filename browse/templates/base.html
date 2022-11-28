@@ -222,7 +222,7 @@
 
         expires_ms = 30*24*60*60*1000;
         if (lookup_failed) {
-          expires_ms = 4*60*60*1000; // try sooner if db issue.
+          expires_ms = 1*60*60*1000; // try sooner if db issue.
         }
         const new_expires = new Date();
         new_expires.setTime(new_expires.getTime() + expires_ms);
