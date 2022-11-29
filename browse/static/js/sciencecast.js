@@ -52,15 +52,14 @@
      function summary(casts) {
        switch (casts.length) {
          case 0:
-           return `<p class="sciencecast-summary">
-           No casts found for this paper. You can <a href="https://sciencecast.org">add one here</a>.
-           </p>`
+           return `<h3 class="sciencecast-summary">No ScienceCasts found for this paper</h3>
+           <p> You can <a href="https://sciencecast.org">add one here</a>.</p>`
            break
          case 1:
-           return `<p class="sciencecast-summary">There is a cast related to this paper:</p>`
+           return `<h3 class="sciencecast-summary">Related ScienceCast</h3>`
            break
          default:
-           return `<p class="sciencecast-summary">There are ${casts.length} casts related to this paper:</p>`
+           return `<p class="sciencecast-summary">Related ScienceCasts (${casts.length})</p>`
        }
      }
 
