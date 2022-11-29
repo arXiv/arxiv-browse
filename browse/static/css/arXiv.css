@@ -1113,6 +1113,19 @@ p.tagline {
 
 /*END Replicate CSS*/
 
+/*BEGIN ScienceCast CSS*/
+
+.sciencecast-cast {
+  margin-bottom: 2rem;
+}
+
+.sciencecast-thumbnail {
+  border-radius: 0.5rem;
+  border: solid 1px #eee;
+}
+
+/*END ScienceCast CSS*/
+
 /*BEGIN Spaces CSS*/
 
 .spaces-summary {
@@ -1154,7 +1167,6 @@ p.tagline {
 }
 
 /*END Spaces CSS*/
-
 
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */

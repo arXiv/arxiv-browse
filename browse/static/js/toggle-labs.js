@@ -19,6 +19,7 @@ $(document).ready(function() {
     "scite": $('#scite-toggle').data('script-url'),
     "iarxiv": $('#iarxiv-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
+    "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
       "container": "#bib-main"
@@ -98,6 +99,12 @@ $(document).ready(function() {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+        } else if (key === "sciencecast-toggle") {
+           $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
+             console.log(textStatus);
+           }).fail(function() {
+             console.error("failed to load sciencecast script (on cookie check)", arguments)
+           });
         }
       } else if (labsCookie[key] && labsCookie[key] == "disabled"){
         if (key === "paperwithcode-toggle") {
@@ -204,6 +211,12 @@ $(document).ready(function() {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
+    } else if ($(this).attr("id") == "sciencecast-toggle") {
+       $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
+         console.log(textStatus, "sciencecast (on lab toggle)");
+       }).fail(function() {
+         console.error("failed to load sciencecast script (on lab toggle)", arguments)
+       });
     }
 
     // TODO: clean this up
