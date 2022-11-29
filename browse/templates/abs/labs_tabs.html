@@ -92,7 +92,7 @@
             </label>
           </div>
           <div class="column lab-name">
-            <span id="label-for-pwc">arXiv Links to Code &amp; Data</span> <em>(<a href="https://labs.arxiv.org/" target="_blank">What is Links to Code &amp; Data?</a>)</em>
+            <span id="label-for-pwc">arXiv Links to Code &amp; Data</span> <em>(<a href="https://paperswithcode.com/" target="_blank">What is Links to Code &amp; Data?</a>)</em>
           </div>
         </div>
       </div>
@@ -104,8 +104,8 @@
       hide the "Demos" tab by default, and conditionally display it using
       JavaScript on pages in specific categories like `cs`, `eess``, and `stat`
      -->
-    <input type="radio" name="tabs" id="labstabs-demos-input" disabled>
-    <label for="labstabs-demos-input" id="labstabs-demos-label" style="display:none">Demos</label>
+    <input type="radio" name="tabs" id="labstabs-demos-input">
+    <label for="labstabs-demos-input" id="labstabs-demos-label">Demos</label>
     <div class="tab">
       <h1>Demos</h1>
       <div class="toggle">
@@ -174,7 +174,7 @@
             </label>
           </div>
           <div class="column lab-name">
-            <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://labs.arxiv.org/">What is CORE?</a>)</em>
+            <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://core.ac.uk/services/recommender">What is CORE?</a>)</em>
           </div>
         </div>
         {%- if abs_meta.primary_category and (abs_meta.primary_category in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.startswith('astro-ph') or abs_meta.primary_category.startswith('cond-mat')) %}
