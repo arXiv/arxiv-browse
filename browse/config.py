@@ -271,7 +271,7 @@ BROWSE_SITE_HOST = os.environ.get("BROWSE_SITE_HOST", None)
 """This is similar to, but decoupled from SERVER_NAME."""
 
 BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
-"""Enable/disable web analytics."""
+"""Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
 BROWSE_USER_BANNER_ENABLED = bool(
     int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0"))
