@@ -1,8 +1,9 @@
-"""Uplaods new and rep entries from a publish log.
+"""Uplaods from CIT SFS to Google Storage based on a publish log.
 
-ex
-
-    python sync_to_arxiv_produciton.py /data/new/logs/publish_221101.log
+ex.
+```sh
+python sync_to_arxiv_produciton.py /data/new/logs/publish_221101.log
+```
 
 The PUBLISHLOG fiels can be found on the legacy FS at
 /data/new/logs/publish_YYMMDD.log
@@ -16,12 +17,18 @@ request the `arxiv_id` via HTTP from the arxiv.org site and wait until
 the `/data/ps_cache` file exists.
 
 Once that returns the PDF will be uploaded to the GS bucket.
+
+# Alternative
+
+This uses the SFS but there is a technique to get the files in a
+manner similar to the mirrors. If we did this we could copy the
+publish file to GS and then kick off a CloudRun job to do the sync.
 """
 
 # pylint: disable=locally-disabled, line-too-long, logging-fstring-interpolation, global-statement
 
 import sys
-
+import argparse
 import re
 import threading
 from threading import Thread
@@ -30,6 +37,8 @@ import requests
 from time import sleep, perf_counter
 from datetime import datetime
 import signal
+import json
+from typing import List, Tuple
 
 from pathlib import Path
 
@@ -40,37 +49,35 @@ overall_start = perf_counter()
 from google.cloud import storage
 
 import logging
-logging.basicConfig(level=logging.INFO, format='%(message)s (%(threadName)s)')
+logging.basicConfig(level=logging.WARNING, format='%(message)s (%(threadName)s)')
 logger = logging.getLogger(__file__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 GS_BUCKET= 'arxiv-production-data'
 GS_KEY_PREFIX = '/ps_cache'
 
-FS_PREFIX= '/cache/ps_cache/'
+PS_CACHE_PREFIX= '/cache/ps_cache/'
+FTP_PREFIX = '/data/ftp/'
+ORIG_PREIFX = '/data/orig/'
 
 ENSURE_UA = 'periodic-rebuild'
 
 ENSURE_HOSTS = [
-    ('web2.arxiv.org', 6),
-    ('web3.arxiv.org', 6),
-    ('web4.arxiv.org', 6),
-    ('web5.arxiv.org', 2),
-    ('web6.arxiv.org', 2),
-    ('web7.arxiv.org', 2),
-    ('web8.arxiv.org', 2),
-    ('web9.arxiv.org', 2),
+    ('web2.arxiv.org', 40),
+    ('web3.arxiv.org', 40),
+    ('web4.arxiv.org', 40),
+    ('web5.arxiv.org', 4),
+    ('web6.arxiv.org', 4),
+    ('web7.arxiv.org', 4),
+    ('web8.arxiv.org', 4),
+    ('web9.arxiv.org', 4),
 ]
 """Tuples of form HOST, THREADS_FOR_HOST"""
 
 ENSURE_CERT_VERIFY=False
 
-PDF_WAIT_MAX_SEC = 60 * 8
-"""Maximum seconds to wait for a PDF to be created"""
-
-new_r = re.compile(r"^.* new submission\n.* paper_id: (.*)$", re.MULTILINE)
-rep_r = re.compile(r"^.* replacement for (.*)\n.*\n.* old version: (\d*)\n.* new version: (\d*)", re.MULTILINE)
-# TODO handle wdr
+PDF_WAIT_SEC = 60 * 8
+"""Maximum msec to wait for a PDF to be created"""
 
 todo_q: Queue = Queue()
 uploaded_q: Queue = Queue() # number of files uploaded
@@ -90,30 +97,124 @@ signal.signal(signal.SIGTERM, handler_stop_signals)
 def ms_since(start:float) -> int:
     return int((perf_counter() - start) * 1000)
 
-def pdf_cache_path(arxiv_id) -> Path:
-    """Gets the PDF file in the ps_cache. Returns Path object."""
-    archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-    return Path(f"{FS_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
+def make_todos(filename) -> List[dict]:
+    """Reades `filename` and figures out what work needs to be done for the sync.
+    This only uses data from the publish file.
 
-def pdf_src_path(arxiv_id, a_type) -> Path:
-    """Gets the source file"""
-    archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-    if a_type == 'new':
-        return Path(f"/data/ftp/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.pdf")
-    elif a_type == 'rep':
-        return Path(f"/data/orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-    elif a_type == 'prev':
-        prev_v = int(arxiv_id.version) - 1
-        return Path(f"/data/orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{prev_v}.pdf")
-    else:
-        return Path('/bogus/path')
+    It returns a list work to do as dicts like:
 
-def arxiv_pdf_url(host, arxiv_id) -> str:
-    """Gets the URL that would be used to request the pdf for the arxiv_id"""
-    return f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
+        {'submission_id': 1234, 'paper_id': 2202.00234, 'type': 'new',
+         'actions': [('upload', '/some/dir/2202.00234.abs'),
+                     ('upload', '/cache/xyz/2202.00234.pdf')]
+    """
+
+    # These regexs are more file focusec, they should do both legacy ids and modern ids
+    new_r = re.compile(r"^.* new submission\n.* paper_id: (.*)$", re.MULTILINE)
+    abs_r = re.compile(r"^.* absfile: (.*)$", re.MULTILINE)
+    src_pdf_r = re.compile(r"^.* Document source: (.*.pdf)$", re.MULTILINE)
+    src_html_r = re.compile(r"^.* Document source: (.*.html.gz)$", re.MULTILINE)
+    src_tex_r = re.compile(r"^.* Document source: (.*.gz)$", re.MULTILINE)
+
+    rep_r = re.compile(r"^.* replacement for (.*)\n.*\n.* old version: (\d*)\n.* new version: (\d*)", re.MULTILINE)
+    wdr_r = re.compile(r"^.* withdrawal of (.*)\n.*\n.* old version: (\d*)\n.* new version: (\d*)", re.MULTILINE)
+    cross_r = re.compile(r"^.* cross for (.*)$")
+    cross_r = re.compile(r" cross for (.*)")
+    jref_r = re.compile(r" journal ref for (.*)")
+    test_r = re.compile(r" Test Submission\. Skipping\.")
+
+    todo = []
+
+    def upload_abs_acts(rawid):
+        """Makes upload actions for abs when only an id is available, ex cross or jref"""
+        arxiv_id = Identifier(rawid)
+        archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
+        return [ ('upload', f"{FTP_PREFIX}/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.abs")]
+
+    def upload_abs_src_acts(arxiv_id, txt):
+        """Makes upload actions for abs and source"""
+        absm = abs_r.search(txt)
+        pdfm = src_pdf_r.search(txt)
+        texm = src_tex_r.search(txt)
+        htmlm = src_html_r.search(txt)
+
+        actions:List[Tuple[str,str]] = []
+        if absm:
+             actions = [('upload', absm.group(1))]
+
+        if pdfm:
+            actions.append(('upload', pdfm.group(1)))
+        elif htmlm: #must be before tex due to pattern overlap
+            actions.append(('upload', htmlm.group(1)))
+        elif texm:
+            actions.append(('upload', texm.group(1)))
+            actions.append(('build+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
+        else:
+            logger.error("Could not determin source for submission {arxiv_id}")
+
+        return actions
+
+    def rep_version_acts(txt):
+        """Makes actions for replacement.
+
+        Don't try to move on the GCP, just sync to GCP so it is idempotent."""
+        move_r = re.compile(r"^.* Moved (.*) => (.*)$", re.MULTILINE)
+        return [('upload', m.group(2)) for m in move_r.finditer(txt)]
 
 
-def pdf_path_to_bucket_key(pdf) -> str:
+    sub_start_r = re.compile(r".* submission (\d*)$")
+    sub_end_r = re.compile(r".*------------------------$")
+    subs, in_sub, txt, sm =[], False, '', None
+    with open(filename) as fh:
+        for line in fh.readlines():
+            if in_sub:
+                if sm is not None and sub_end_r.match(line):
+                    subs.append((sm.group(1), txt))
+                    txt, sm, in_sub = '', None, False
+                else:
+                    txt = txt + line
+            else:
+                sm = sub_start_r.match(line)
+                if sm:
+                    in_sub=True
+
+    for subid, txt in subs:
+        m = test_r.search(txt)
+        if m:
+             continue
+        m = new_r.search(txt)
+        if m:
+            arxiv_id = Identifier(f"{m.group(1)}v1")
+            todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'new',
+                        'actions': upload_abs_src_acts(arxiv_id, txt)})
+            continue
+        m = rep_r.search(txt)
+        if m:
+            arxiv_id = Identifier(f"{m.group(1)}v{m.group(3)}")
+            todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'rep',
+                        'actions': rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)})
+            continue
+        m = wdr_r.search(txt)
+        if m:
+            arxiv_id = Identifier(f"{m.group(1)}v{m.group(3)}")
+            todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'wdr',
+                        'actions': rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)})
+            continue
+        m = cross_r.search(txt)
+        if m:
+            todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'cross',
+                        'actions': upload_abs_acts(m.group(1))})
+            continue
+        m = jref_r.search(txt)
+        if m:
+            todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'jref',
+                        'actions': upload_abs_acts(m.group(1))})
+            continue
+
+    return todo
+
+
+
+def path_to_bucket_key(pdf) -> str:
     """Handels both source and cache files. Should handle pdfs, abs, txt
     and other types of files under these directories. Bucket key should
     not start with a /"""
@@ -124,137 +225,144 @@ def pdf_path_to_bucket_key(pdf) -> str:
     else:
         raise ValueError(f"Cannot convert PDF path {pdf} to a GS key")
 
-def is_src_pdf(arxiv_id) -> bool:
-    return pdf_src_path(arxiv_id, 'new').exists() \
-        or pdf_src_path(arxiv_id, 'rep').exists() \
-        or pdf_src_path(arxiv_id, 'pref').exists()
 
-def pack_src_pdf(src_pdf:Path):
-    """Back a bare src_path like a result from ensure_file_url_exists"""
-    return (src_pdf, None, None, 0)
-
-def ensure_pdf(session, host, arxiv_id, a_type):
+def ensure_pdf(session, host, arxiv_id):
     """Ensures PDF exits for arxiv_id.
 
-    Check both for source pdf and on the ps_cache.  If it does not
-    exist, request it and wait for the PDF to be built.
+    Check on the ps_cache.  If it does not exist, request it and wait
+    for the PDF to be built.
 
     TODO Not sure if it is possible to have a paper that was a TeX
     source on version N but then is PDF Source on version N+1.
 
-    Returns a list of tuples with Paths that should be synced to GCP.
+    Returns tuple with pdf_file, url, msec
 
+    arxiv_id must have a version.
+
+    This does not check if the arxiv_id is PDF source.
     """
-    if is_src_pdf(arxiv_id):
-        if a_type == 'new':
-            logger.info(f"{arxiv_id.filename} is PDF src and new")
-            return [pack_src_pdf(pdf_src_path(arxiv_id, a_type))]
-        else:
-            logger.info(f"{arxiv_id.filename} is PDF src and rep")
-            # need to replace the file in /ftp and add a version to /orig
-            return [pack_src_pdf(pdf_src_path(arxiv_id, 'new')),
-                    pack_src_pdf(pdf_src_path(arxiv_id, 'prev'))]
-    else:
-        logger.info(f"{arxiv_id.filename} is not PDF src")
-        return [ensure_file_url_exists(session, pdf_cache_path(arxiv_id), arxiv_pdf_url(host, arxiv_id))]
+    def pdf_cache_path(arxiv_id) -> Path:
+        """Gets the PDF file in the ps_cache. Returns Path object."""
+        archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
+        return Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
 
+    def arxiv_pdf_url(host, arxiv_id) -> str:
+        """Gets the URL that would be used to request the pdf for the arxiv_id"""
+        return f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
 
-def ensure_file_url_exists(session, pdf_file, url):
-    """General purpose ensure exits for a `url` that should produce a `pdf_file`."""
+    pdf_file, url = pdf_cache_path(arxiv_id), arxiv_pdf_url(host, arxiv_id)
+
     start = perf_counter()
+
     if not pdf_file.exists():
         start = perf_counter()
         headers = { 'User-Agent': ENSURE_UA }
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
         if resp.status_code != 200:
-            return (pdf_file, url, "failed: bad GET status {resp.status_code}", ms_since(start))
+            raise(Exception("ensure_pdf: GET status {resp.status_code}"))
         start_wait = perf_counter()
-        while not pdf_file.exists() and perf_counter() - start_wait < PDF_WAIT_MAX_SEC:
+        while not pdf_file.exists() and perf_counter() - start_wait < PDF_WAIT_SEC:
             sleep(0.2)
         if pdf_file.exists():
-            logger.info(f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
+            logger.debug(f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
             return (pdf_file, url, None, ms_since(start))
         else:
-            logger.error(f"ensure_file_url_exists: Could not create {pdf_file}. Requested {url} {ms_since(start)} ms")
-            return (pdf_file, url, "failed: no pdf after waiting", ms_since(start))
+            raise(Exception("ensure_pdf: Could not create {pdf_file}. Requested {url} {ms_since(start)} ms"))
     else:
-        logger.info(f"ensure_file_url_exists: {str(pdf_file)} already exists")
-        return (pdf_file, url, None, ms_since(start))
+        logger.debug(f"ensure_file_url_exists: {str(pdf_file)} already exists")
+        return (pdf_file, url, "already exists", ms_since(start))
 
 
-def upload_pdf(gs_client, pdf):
-    """Uploads pdf to GS_BUCKET"""
-    start = perf_counter()
-    try:
-        bucket = gs_client.bucket(GS_BUCKET)
-        key = pdf_path_to_bucket_key(pdf)
-        blob = bucket.get_blob(key)
-        if blob is None or blob.size != pdf.stat().st_size:
-            with open(pdf, 'rb') as fh:
-                bucket.blob(key).upload_from_file(fh, content_type='application/pdf')
-                uploaded_q.put(pdf.stat().st_size)
-                logger.info(f"upload: completed upload of {pdf} to gs://{GS_BUCKET}/{key} of size {pdf.stat().st_size}")
-            return (pdf, "uploaded", ms_since(start))
+def upload_pdf(gs_client, ensure_tuple):
+    """Uploads a PDF from ps_cache to GS_BUCKET"""
+    return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
+
+
+def upload(gs_client, localpath, key):
+    """Upload a file to GS_BUCKET"""
+
+    def mime_from_fname(filepath):
+        if filepath.suffix == '.pdf':
+            return 'application/pdf'
+        if filepath.suffix == '.gz':
+            return 'application/gzip'
+        if filepath.suffix == '.abs':
+            return 'text/plain'
         else:
-            logger.info(f"upload: Not uploading {pdf}, gs://{GS_BUCKET}/{key} already on gs")
-            return (pdf, "already_on_gs", ms_since(start))
-    except Exception:
-        logger.exception()
-        return (pdf, "failed", ms_since(start))
+            return ''
+
+    start = perf_counter()
+
+    bucket = gs_client.bucket(GS_BUCKET)
+    blob = bucket.get_blob(key)
+    if blob is None or blob.size != localpath.stat().st_size:
+        with open(localpath, 'rb') as fh:
+            bucket.blob(key).upload_from_file(fh, content_type=mime_from_fname(localpath))
+            logger.debug(f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
+        return ("upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size)
+    else:
+        logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        return ("upload", localpath, key, "already_on_gs", ms_since(start), 0)
+
+
 
 def sync_to_gcp(todo_q, host):
-    """Target for theads
-
-    Gets off of the todo queue, ensures the PDF exists and uploads the PDF.
-    """
+    """Target for theads that gets jobs off of the todo queue and does job actions."""
     tl_data=threading.local()
-    tl_data.session = requests.Session() # cannot share Session across threads
-    tl_data.gs_client = storage.Client()
+    tl_data.session,tl_data.gs_client = requests.Session(), storage.Client()
 
     while RUN:
         start = perf_counter()
         try:
-            a_type, a_id, _, v_new = todo_q.get(block=False)
-        except Empty:
+            job = todo_q.get(block=False)
+            if not job:
+                logger.error("todo_q.get() returned {job}")
+                continue
+            if not job.get('paper_id',None):
+                logger.error("todo_q.get() job lacked paper_id, skipping")
+                continue
+        except Empty:  # queue is empty and thread is done
             break
 
-        if not a_id or not v_new:
-            logger.error("todo_q.get() did not return a arxiv id and version")
-            continue
+        for action, item in job['actions']:
+            try:
+                res = ()
+                if action == 'build+upload':
+                    res = upload_pdf(tl_data.gs_client, ensure_pdf(tl_data.session, host, Identifier(item)))
+                if action == 'upload':
+                    res = upload(tl_data.gs_client, item, path_to_bucket_key(item))
 
-        try:
-            arxiv_id = Identifier(f"{a_id}v{v_new}")
-            pdf_paths = ensure_pdf(tl_data.session, host, arxiv_id, a_type)
-
-            for pdf_file, url, ensure_err, ensure_ms in pdf_paths:
-                up_msg, up_ms = (None, None)
-                if not ensure_err:
-                    pdf_file, up_msg, up_ms = upload_pdf(tl_data.gs_client, pdf_file)
-                summary_q.put( (pdf_file, url, ensure_err, ensure_ms, up_msg, up_ms))
-
-            todo_q.task_done()
-            logger.debug(f"Total time for {a_id}v{v_new} {ms_since(start)}ms")
-        except Exception:
-            logger.exception(f"Problem during {a_id}v{v_new}")
+                summary_q.put((job['paper_id'], ms_since(start)) + res)
+            except Exception as ex:
+                logger.exception(f"Problem during {job['paper_id']} {action} {item}")
+                summary_q.put((job['paper_id'], ms_since(start), "failed", str(ex)))
+        todo_q.task_done()
 
 
 # #################### MAIN #################### #
-
 if __name__ == "__main__":
-    if not len(sys.argv) > 1:
-        print(sys.modules[__name__].__doc__)
-        sys.exit(1)
+    ad = argparse.ArgumentParser(epilog=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ad.add_argument('-v', help='verbse', action='store_true')
+    ad.add_argument('-d', help="Dry run no action", action='store_true')
+    ad.add_argument('filename')
+    args = ad.parse_args()
 
-    _test_auth_client= storage.Client() # will fail if no auth setup
+    if not args.d:
+        storage.Client() # will fail if no auth setup
+    if args.v:
+        logger.setLevel(logging.INFO)
+
     logger.info(f"Starting at {datetime.now().isoformat()}")
 
-    with open(sys.argv[1]) as fh:
-        log = fh.read()
-        for idx, m in enumerate(new_r.finditer(log)):
-            todo_q.put( ('new', m.group(1), None, 1))
-        for m in rep_r.finditer(log):
-            todo_q.put( ('rep', m.group(1), m.group(2), m.group(3)))
+    [todo_q.put(item) for item in make_todos(args.filename)]
+
+    if args.d:
+        todo =  list(todo_q.queue)
+        print(json.dumps(todo, indent=2))
+        print(f"{len(todo)} submissions (some may be test submissions)")
+        logger.info("Dry run no changes made")
+        sys.exit(1)
 
     overall_size = todo_q.qsize()
 
@@ -271,16 +379,9 @@ if __name__ == "__main__":
     RUN=False
     [th.join() for th in threads]
 
-    logger.info("------------------------------ summary ------------------------------")
-    logger.info("| pdf_file | url | ensure_err | ensure_ms | upload_msg | upload_ms|")
-    logger.info("|-----------------------------------------------------------------|")
-    for pdf_file, url, ensure_err, ensure_ms, up_msg, up_ms in sorted(list(summary_q.queue)):
-        logger.info(f"{pdf_file}|{url}|{ensure_err}|{ensure_ms}|{up_msg}|{up_ms}")
-    logger.info("---------------------------- end summary -----------------------------")
+    logger.info("paper_id, total_ms, action, src, dest, msg, action_ms, action_bytes, pdf_file, pdf_url, pdf_msg, pdf_ms")
+    for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):
+        logger.info(','.join(map(str, row)))
 
     logger.info(f"Done at {datetime.now().isoformat()}")
-    logger.info(f"Overall time: {(perf_counter()-overall_start):.2f} sec for {overall_size} submissions of type new or rep, {uploaded_q.qsize()} uploads.")
-    if overall_size < uploaded_q.qsize():
-        logger.info("Uploaded count maybe higher than submission count due to replacements needing to upload both to /ftp and /orig for papers with PDF source.")
-    if overall_size > uploaded_q.qsize():
-        logger.info("Uploaded count maybe lower than submission count due to files already synced to GCP.")
+    logger.info(f"Overall time: {(perf_counter()-overall_start):.2f} sec for {overall_size} submissions")
