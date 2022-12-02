@@ -76,8 +76,8 @@ ENSURE_HOSTS = [
 
 ENSURE_CERT_VERIFY=False
 
-PDF_WAIT_SEC = 60 * 8
-"""Maximum msec to wait for a PDF to be created"""
+PDF_WAIT_SEC = 60 * 2
+"""Maximum sec to wait for a PDF to be created"""
 
 todo_q: Queue = Queue()
 uploaded_q: Queue = Queue() # number of files uploaded
@@ -196,8 +196,10 @@ def make_todos(filename) -> List[dict]:
         m = wdr_r.search(txt)
         if m:
             arxiv_id = Identifier(f"{m.group(1)}v{m.group(3)}")
+            # withdrawls don't need the pdf synced since they should lack source
+            actions = list(filter(lambda tt: tt[0] != 'build+upload', rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)))
             todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'wdr',
-                        'actions': rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)})
+                        'actions': actions})
             continue
         m = cross_r.search(txt)
         if m:
@@ -257,13 +259,17 @@ def ensure_pdf(session, host, arxiv_id):
     if not pdf_file.exists():
         start = perf_counter()
         headers = { 'User-Agent': ENSURE_UA }
+        logger.debug("Getting %s", url)
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
         if resp.status_code != 200:
             raise(Exception("ensure_pdf: GET status {resp.status_code}"))
         start_wait = perf_counter()
-        while not pdf_file.exists() and perf_counter() - start_wait < PDF_WAIT_SEC:
-            sleep(0.2)
+        while not pdf_file.exists():
+            if perf_counter() - start_wait > PDF_WAIT_SEC:
+                raise(Exception("No PDF, waited longer than {PDF_WAIT_SEC} sec"))
+            else:
+                sleep(0.2)
         if pdf_file.exists():
             logger.debug(f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
             return (pdf_file, url, None, ms_since(start))
@@ -325,13 +331,14 @@ def sync_to_gcp(todo_q, host):
         except Empty:  # queue is empty and thread is done
             break
 
+        logger.debug("doing %s", job['paper_id'])
         for action, item in job['actions']:
             try:
                 res = ()
                 if action == 'build+upload':
                     res = upload_pdf(tl_data.gs_client, ensure_pdf(tl_data.session, host, Identifier(item)))
                 if action == 'upload':
-                    res = upload(tl_data.gs_client, item, path_to_bucket_key(item))
+                    res = upload(tl_data.gs_client, Path(item), path_to_bucket_key(item))
 
                 summary_q.put((job['paper_id'], ms_since(start)) + res)
             except Exception as ex:
@@ -364,7 +371,9 @@ if __name__ == "__main__":
         logger.info("Dry run no changes made")
         sys.exit(1)
 
+    logger.debug("made todo_q, getting size")
     overall_size = todo_q.qsize()
+    logger.debug('Made %d todos', overall_size)
 
     threads = []
     for host, n_th in ENSURE_HOSTS:
@@ -372,16 +381,21 @@ if __name__ == "__main__":
         threads.extend(ths)
         [t.start() for t in ths]
 
+    logger.debug("started %d threads", len(threads))
+
     while RUN and not todo_q.empty():
         sleep(0.2)
 
+    logger.debug("todo_q is now empty")
+
     DONE=True
     RUN=False
+    logger.debug("wating to join threads")
     [th.join() for th in threads]
+    logger.debug("Threads done joining")
 
-    logger.info("paper_id, total_ms, action, src, dest, msg, action_ms, action_bytes, pdf_file, pdf_url, pdf_msg, pdf_ms")
     for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):
-        logger.info(','.join(map(str, row)))
+        print(','.join(map(str, row)))
 
-    logger.info(f"Done at {datetime.now().isoformat()}")
-    logger.info(f"Overall time: {(perf_counter()-overall_start):.2f} sec for {overall_size} submissions")
+    print(f"Done at {datetime.now().isoformat()}")
+    print(f"Overall time: {(perf_counter()-overall_start):.2f} sec for {overall_size} submissions")
