@@ -656,6 +656,10 @@ footer .sorry-app-links .a11y-main-link {
     width: 88%;
   }
 }
+/* special header banner, dark override */
+.slider-wrapper.bps-banner.dark {
+  background-color: black;
+}
 
 /****************************************
  * Stats pages (/stats)
@@ -1108,6 +1112,61 @@ p.tagline {
 }
 
 /*END Replicate CSS*/
+
+/*BEGIN ScienceCast CSS*/
+
+.sciencecast-cast {
+  margin-bottom: 2rem;
+}
+
+.sciencecast-thumbnail {
+  border-radius: 0.5rem;
+  border: solid 1px #eee;
+}
+
+/*END ScienceCast CSS*/
+
+/*BEGIN Spaces CSS*/
+
+.spaces-summary {
+  margin-bottom: 0.5em;
+}
+
+.spaces-model {
+  padding: 15px 0;
+  display: flex;
+}
+
+.spaces-thumbnail {
+  height: 5.5rem;
+  border-radius: 0.5rem;
+}
+
+.spaces-model-details {
+  padding: 0px 15px;
+  vertical-align: top;
+}
+
+.spaces-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.spaces-model-subheader {
+  color: gray;
+}
+
+.spaces-load-all-link {
+  cursor: pointer;
+  padding: 0.75em;
+  background-color: #eef5f9;
+  border: none;
+  border-radius: 0.5rem;
+  margin: 0.5em 0;
+  display: inline-block;
+}
+
+/*END Spaces CSS*/
 
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */

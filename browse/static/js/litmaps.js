@@ -1,7 +1,7 @@
 (function () {
     const arxivId = document.head.querySelector("[name~=citation_arxiv_id][content]").content;
-    const litmapsBaseUrl = 'https://api.litmaps.co';
-    const litmapsAppUrl = 'https://app.litmaps.co';
+    const litmapsBaseUrl = 'https://api.litmaps.com';
+    const litmapsAppUrl = 'https://app.litmaps.com';
     const litmapsCheckSeed = `${litmapsBaseUrl}/article/arxiv:${encodeURIComponent(arxivId)}/seed/`;
     const litmapsFetchArticle = `${litmapsBaseUrl}/article/arxiv:${encodeURIComponent(arxivId)}/`;
     const scriptPath = document.getElementById('litmaps-toggle').attributes["data-script-url"].value;

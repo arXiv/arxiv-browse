@@ -490,6 +490,8 @@ class AbsMetaSession:
         # there are two main components to an .abs file that contain data,
         # but the split must always return four components
         components = RE_ABS_COMPONENTS.split(raw)
+        if len(components) > 4:
+            components = alt_component_split(components)
         if not len(components) == 4:
             raise AbsParsingException(
                 'Unexpected number of components parsed from .abs.')
@@ -728,3 +730,28 @@ def current_session() -> AbsMetaSession:
         g.abs_meta = get_session()
     assert isinstance(g.abs_meta, AbsMetaSession)
     return g.abs_meta
+
+
+def alt_component_split(components: List[str]) -> List[str]:
+    r"""Alternative split to accomidate extra \\ in the abstract.
+        ex of abstract portion:
+        u_t = \Delta u
+        \\
+        v_t = \Delta v
+        ARXIVNG-3128"""
+    if len(components) <= 4:
+        raise AbsParsingException(
+            'Unexpected number of components parsed from .abs.')
+    alt_comp = []
+    abstract = ""
+    for idx, itm in enumerate(components):
+        if idx < 2:
+            alt_comp.append(itm)
+        if idx == 2:
+            abstract += itm
+        if idx > 2 and itm:
+            abstract += r" \\ " + itm  # Add back in \\ stripped by split
+
+    alt_comp.append(abstract)
+    alt_comp.append('')
+    return alt_comp
