@@ -53,10 +53,8 @@ root.addHandler(default_handler)
 problems = []
 if chunk_size % (1024 *256):
     problems.append('CHUNK_SIZE must be a multiple of 256kb.')
-
 if path_prefix.startswith('/'):
     problems.append(f'PATH_PREFIX should not start with a slash, using keys not gs:// URLs, prefix was {path_prefix}')
-    
 if not bucket_name:
     problems.append('Must set BUCKET.')
     if bucket_name.startswith('gs://'):
@@ -64,7 +62,6 @@ if not bucket_name:
     if not gs_client.bucket(bucket_name).exists():        
         problems.append('BUCKET {BUCKET} does not exist or cannot read.')
         problems.append('Using service account {gs_client.get_service_account_email()}.')
-
 if problems:
     [logger.error(prob) for prob in problems]
     exit(1)
@@ -85,7 +82,15 @@ def status():
     return {"status": "good"}
 
 
+@app.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@app.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+def serve_legacy_id_pdf(category: str, arxiv_id: str):
+    """Serve PDFs for legacy IDs"""
+    return serve_pdf( f"{category}/{arxiv_id}")
+
+
 @app.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@app.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def serve_pdf(arxiv_id: str):
     """Want to handle the following patterns:
 
@@ -107,6 +112,10 @@ def serve_pdf(arxiv_id: str):
     Does a 404 if the key for the ID does not exist on the bucket.
     """
     try:
+        if len(arxiv_id) > 40:
+            abort(400)
+        if arxiv_id.startswith('arxiv/'):
+            abort(400, description="do not prefix with arxiv/ for non-legacy ids")
         id = Identifier(arxiv_id)
         id.has_version or abort(400, description="version is required")
     except IdentifierException as ex:
