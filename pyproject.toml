@@ -20,7 +20,6 @@ opentelemetry-instrumentation-flask = "^0.34b0"
 #Want to get the arxiv-base that is for py 3.10 
 arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "5592d714", extras = []}
 
-gunicorn = "^20.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"

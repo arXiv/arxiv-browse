@@ -11,6 +11,7 @@ ENV YOUR_ENV=${YOUR_ENV} \
   PIP_DEFAULT_TIMEOUT=100 \
   POETRY_VERSION=1.2.2
 
+RUN pip install "gunicorn==20.1.0"
 RUN pip install "poetry==$POETRY_VERSION"
 
 ENV APP_HOME /app
