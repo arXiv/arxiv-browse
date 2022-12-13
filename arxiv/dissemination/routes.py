@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from email.utils import format_datetime
 import logging
 
@@ -5,14 +7,18 @@ from flask import abort, make_response, request, Blueprint, current_app
 
 from arxiv.identifier import IdentifierException, Identifier
 
+from cloudpathlib.anypath import to_anypath
+
 logger = logging.getLogger(__file__)
 
 blueprint = Blueprint('routes',__name__)
 
 @blueprint.route("/status")
 def status():
-    # TODO Check we can read from the bucket
-    return {"status": "good"}
+    if current_app.config['storage'].exists():
+        return {"status": "good"}
+    else:
+        abort(500, "could not read from storage")
 
 
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -21,11 +27,6 @@ def serve_legacy_id_pdf(category: str, arxiv_id: str):
     """Serve PDFs for legacy IDs"""
     return serve_pdf( f"{category}/{arxiv_id}")
 
-
-
-def gs_key_for_id(id: Identifier, format: str) -> str:
-    archive = id.archive if id.is_old_id else 'arxiv'
-    return f"{current_app.config['path_prefix']}/{archive}/{format}/{id.yymm}/{id.filename}v{id.version}.pdf"
 
 
 @blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -62,19 +63,18 @@ def serve_pdf(arxiv_id: str):
     except IdentifierException as ex:
         abort(400, description=ex)
 
-    key = gs_key_for_id(id, 'pdf')
-    logger.debug(f"looking for key {key}")
-
-    bucket = current_app.config['bucket']
-    blob = bucket.get_blob(key, chunk_size=chunk_size)
-    if not blob: abort(404)
+    format = 'pdf'
+    archive = id.archive if id.is_old_id else 'arxiv'
+    item = to_anypath(f"{current_app.config['storage_prefix']}/{archive}/{format}/{id.yymm}/{id.filename}v{id.version}.pdf")
+    logger.debug(f"looking for key {item}")
+    if not item.exists() : abort(404)
 
     if request.method == 'GET':
         def stream():
-            with blob.open('rb') as gsf:
+            with item.open('rb') as fh:
                 done = False
-                while (not done and gsf.readable() and not gsf.closed):
-                    bytes = gsf.read(chunk_size)
+                while (not done and fh.readable() and not fh.closed):
+                    bytes = fh.read(chunk_size)
                     if bytes:
                         yield bytes
                     else:
@@ -84,21 +84,12 @@ def serve_pdf(arxiv_id: str):
     else:
         resp = make_response('')
 
-    # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
-    resp.headers.set('ETag', blob.etag)
-
-    resp.headers.set('Content-Type', 'application/pdf')
-    resp.headers.set('Last-Modified', format_datetime(blob.updated))
-    resp.headers.set('Content-Length', blob.size)
     resp.headers.set('Access-Control-Allow-Origin', '*')
-
-    if blob.content_encoding:
-        resp.headers.set('Content-Encoding', blob.content_encoding)
-    if blob.content_disposition:
-        resp.headers.set('Content-Disposition', blob.content_disposition)
-    if blob.cache_control:
-        resp.headers.set('Cache-Control', blob.cache_control)
-    if blob.content_language:
-        resp.headers.set('Content-Language', blob.content_language)
+    resp.headers.set('Content-Type', 'application/pdf')
+    stat = item.stat()
+    resp.headers.set('Last-Modified', format_datetime(datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)))
+    resp.headers.set('Content-Length', stat.st_size)
+    if hasattr(item, 'etag'): # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
+        resp.headers.set('ETag', item.etag)
 
     return resp
