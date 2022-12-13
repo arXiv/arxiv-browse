@@ -23,6 +23,10 @@
 </head>
 
 <body {% block body_id %}{% endblock %} class="with-cu-identity">
+
+  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
+  {% endif -%}
+
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
   {%- include "user_banner.html" -%}
   {% endif -%}
@@ -46,7 +50,7 @@
         <!-- /end timeboxed column -->
 
         <div class="column" id="support-ack">
-          <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+          <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
         </div>
       </div>
 
@@ -170,6 +174,9 @@
       </div>
     </footer>
   </div>
+
+  <script src="{{ url_for('base.static', filename='js/member_acknowledgement.js') }}"></script>
+
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
   {%- endif %}

@@ -9,7 +9,6 @@ pipenv install
 pipenv run python main.py
 ```
 
-
 This will monitor for any changes to the Python code and restart the server.
 Unfortunately static files and templates are not monitored, so you'll have to
 manually restart to see those changes take effect.
@@ -21,6 +20,12 @@ By default, the application will use the directory trees in
 `tests/data/abs_files` and `tests/data/cache` and when looking for the
 document metadata and cache files, respectively. These paths can be
 overridden via environment variables (see `browse/config.py`).
+
+### Pipfile Edits for Development
+```
+arxiv-base = { editable = true, path = "../arxiv-base" }
+arxiv-base = {editable = true, git = "https://github.com/arXiv/arxiv-base.git", ref = "ARXIVNG-3824-bootstrap"}
+```
 
 ### Rebuilding the test database
 

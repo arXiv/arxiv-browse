@@ -47,11 +47,12 @@ blueprint = Blueprint("browse", __name__, url_prefix="/")
 @blueprint.before_app_first_request
 def load_global_data() -> None:
     """Load global data."""
-    global geoip_reader
-    try:
-        geoip_reader = geoip2.database.Reader("data/GeoLite2-City.mmdb")
-    except Exception as ex:
-        logger.error("problem loading geoip database: %s", ex)
+    if current_app.config["BROWSE_ANALYTICS_ENABLED"]:
+        global geoip_reader
+        try:
+            geoip_reader = geoip2.database.Reader("data/GeoLite2-City.mmdb")
+        except Exception as ex:
+            logger.error("problem loading geoip database: %s", ex)
 
 
 @blueprint.context_processor
@@ -63,66 +64,54 @@ def inject_now() -> Dict:
 @blueprint.before_request
 def before_request() -> None:
     """ Get geo data and institutional affiliation from ip address. """
-    global geoip_reader
-    try:
-        if geoip_reader:
-            # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
-            geoip_version = "1"
-            if (
-                "geoip.version" not in session
-                or session["geoip.version"] != geoip_version
-            ):
-                session["geoip.version"] = geoip_version
-                # https://geoip2.readthedocs.io/en/latest/
-                response = geoip_reader.city(request.remote_addr)
-                if response:
-                    if response.continent:
-                        session["continent"] = {
-                            "code": response.continent.code,
-                            "name": response.continent.names["en"],
-                        }
-                    if response.country and response.country.iso_code:
-                        session["country"] = response.country.iso_code
-                    if (
-                        response.subdivisions
-                        and response.subdivisions.most_specific
-                        and response.subdivisions.most_specific.iso_code
-                    ):
-                        session[
-                            "subnational"
-                        ] = response.subdivisions.most_specific.iso_code
-                    if response.city and response.city.name:
-                        session["city"] = response.city.name
-    # except AddressNotFoundError as ex:
-    #    logger.debug('problem getting match on IP: %s', ex)
-    except ValueError as ex:
-        logger.debug("problem with IP address format: %s", ex)
-    except Exception as ex:
-        logger.debug("problem using geoip: %s", ex)
+    if current_app.config["BROWSE_ANALYTICS_ENABLED"]:
+        global geoip_reader
+        try:
+            if geoip_reader:
+                # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
+                geoip_version = "1"
+                if (
+                    "geoip.version" not in session
+                    or session["geoip.version"] != geoip_version
+                ):
+                    session["geoip.version"] = geoip_version
+                    # https://geoip2.readthedocs.io/en/latest/
+                    response = geoip_reader.city(request.remote_addr)
+                    if response:
+                        if response.continent:
+                            session["continent"] = {
+                                "code": response.continent.code,
+                                "name": response.continent.names["en"],
+                            }
+                        if response.country and response.country.iso_code:
+                            session["country"] = response.country.iso_code
+                        if (
+                            response.subdivisions
+                            and response.subdivisions.most_specific
+                            and response.subdivisions.most_specific.iso_code
+                        ):
+                            session[
+                                "subnational"
+                            ] = response.subdivisions.most_specific.iso_code
+                        if response.city and response.city.name:
+                            session["city"] = response.city.name
+        # except AddressNotFoundError as ex:
+        #    logger.debug('problem getting match on IP: %s', ex)
+        except ValueError as ex:
+            logger.debug("problem with IP address format: %s", ex)
+        except Exception as ex:
+            logger.debug("problem using geoip: %s", ex)
 
-    try:
-        if "hashed_user_id" not in session:
-            if hasattr(request, "auth") and hasattr(request.auth, "user"):  # type: ignore
-                user_id = str(request.auth.user.user_id).encode("utf-8")  # type: ignore
-                salt = bcrypt.gensalt()
-                tmp = bcrypt.hashpw(user_id, salt)
-                hashed_user_id = str(tmp, "utf-8")
-                session["hashed_user_id"] = hashed_user_id
-    except Exception as ex:
-        logger.debug("problem creating hashed_user_id: %s", ex)
-
-    try:
-        # Institution: store first institution found in a cookie.
-        #   Users who visit multiple institutions keep first until session expires.
-        #   Multiple device/browsers have separate pendo sessions
-        if "institution" not in session or "institution_id" not in session:
-            inst_hash = get_institution(request.remote_addr)
-            if inst_hash != None and inst_hash.get("id") != None:
-                session["institution_id"] = inst_hash.get("id")
-                session["institution"] = inst_hash.get("label")
-    except Exception as ex:
-        logger.debug("problem looking up institution: %s", ex)
-
+        try:
+            if "hashed_user_id" not in session:
+                if hasattr(request, "auth") and hasattr(request.auth, "user"):  # type: ignore
+                    user_id = str(request.auth.user.user_id).encode("utf-8")  # type: ignore
+                    salt = bcrypt.gensalt()
+                    tmp = bcrypt.hashpw(user_id, salt)
+                    hashed_user_id = str(tmp, "utf-8")
+                    session["hashed_user_id"] = hashed_user_id
+        except Exception as ex:
+            logger.debug("problem creating hashed_user_id: %s", ex)
 
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
@@ -198,6 +187,16 @@ def category_taxonomy() -> Any:
         None,
     )
 
+@blueprint.route("institutional_banner", methods=["GET"])
+def institutional_banner() -> Any:
+    try:
+        result = get_institution(request.remote_addr)
+        if result:
+            return (result, status.HTTP_200_OK)
+        else:
+            return ("{}", status.HTTP_200_OK)
+    except Exception as ex:
+        return ("", status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @blueprint.route("tb/", defaults={"arxiv_id": ""}, methods=["GET"])
 @blueprint.route("tb/<path:arxiv_id>", methods=["GET"])
