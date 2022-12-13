@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 dataclasses = "*"
 python-dateutil = "*"
-Flask-API = "*"
+Flask-API = "==2.0"
 Flask-SQLAlchemy = "==2.4.4"  # ARXIVNG-3649
 MarkupSafe = "*"
 SQLAlchemy = "==1.3.20" # ARXIVNG-3649
@@ -14,7 +14,7 @@ pytz = "*"
 mysqlclient = "==1.4.1"
 "mmh3" = "*"
 aiohttp = "==3.6.2"
-flask = ">=1.0.2"
+flask = "==1.1.4"
 validators = "*"
 mypy-extensions = "*"
 flask-wtf = "*"
