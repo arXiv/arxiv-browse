@@ -126,6 +126,23 @@ python-versions = ">=3.7"
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
+name = "cloudpathlib"
+version = "0.10.0"
+description = "pathlib-style classes for cloud storage services"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+google-cloud-storage = {version = "*", optional = true, markers = "extra == \"gs\""}
+
+[package.extras]
+all = ["azure-storage-blob (>=12)", "boto3", "google-cloud-storage"]
+azure = ["azure-storage-blob (>=12)"]
+gs = ["google-cloud-storage"]
+s3 = ["boto3"]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -879,7 +896,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "930e37877174717d611c02dddfa632e511de4f7952c1afd51febeaf76965f465"
+content-hash = "0a3bc0bfe340f2dcc7bf4afb7459d23f1e29f58df9408f8e1168eaa5b7808e5c"
 
 [metadata.files]
 arxiv-base = []
@@ -914,6 +931,10 @@ charset-normalizer = [
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
+]
+cloudpathlib = [
+    {file = "cloudpathlib-0.10.0-py3-none-any.whl", hash = "sha256:e1c735f08da68c02d4889e54a389a2330ffa9388cc5e1ff6fc56b5e4730778bf"},
+    {file = "cloudpathlib-0.10.0.tar.gz", hash = "sha256:f18577832c95e47511bfc937caa2a014c1531f04e26359039095ed09f1e5ad4e"},
 ]
 colorama = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
