@@ -27,6 +27,10 @@
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
   {% endif -%}
 
+  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
+  {%- include "user_banner.html" -%}
+  {% endif -%}
+
   <div class="flex-wrap-footer">
     <header>
       <a href="#content" class="is-sr-only">Skip to main content</a>
