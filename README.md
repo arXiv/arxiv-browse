@@ -35,5 +35,5 @@ storage bucket.
 Test were simplified to use fixtures for a test db. Running the tests
 is just:
 
-    pytest
+    pytest --cov=arxiv_dissemination
 
