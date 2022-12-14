@@ -1,7 +1,7 @@
 
 steps:
-  - name: python
-    entrypoint: bash
+  - name: 'python:3.10-slim'
+    entrypoint: '/bin/bash'
     args:
       - "-c"
       - |
@@ -9,5 +9,6 @@ steps:
         poetry install
         export TRACE=0
         pytest --cov=arxiv_dissemination
+
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/dissemination:$SHORT_SHA', '.' ]
