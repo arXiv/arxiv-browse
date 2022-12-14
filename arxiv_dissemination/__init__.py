@@ -4,6 +4,7 @@ import os
 from flask import Flask
 
 from .routes import blueprint
+from .trace import setup_trace
 
 from cloudpathlib.anypath import to_anypath
 
@@ -26,10 +27,10 @@ Should not end with a /.
 chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
 
-trace = bool(os.environ.get('TRACE', '1') == '1')
+trace = bool(os.environ.get('TRACE', '0') == '1')
 """To activate Google logging and trace.
 
-On by default,anything other than 1 deactivates.
+Off by default, set to 1 to activate.
 """
 #################### App ####################
 
@@ -57,26 +58,4 @@ app.register_blueprint(blueprint)
 
 ############### trace and logging setup ###############
 if trace:
-    logger.warning(f"Setting google cloud trace and logging")
-    from opentelemetry import trace
-    from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
-    from opentelemetry.instrumentation.flask import FlaskInstrumentor
-    from opentelemetry.propagate import set_global_textmap
-    from opentelemetry.propagators.cloud_trace_propagator import (
-        CloudTraceFormatPropagator,
-    )
-    from opentelemetry.sdk.trace import TracerProvider
-    from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-    # https://cloud.google.com/trace/docs/setup/python-ot#initialize_flask
-    set_global_textmap(CloudTraceFormatPropagator())
-    tracer_provider = TracerProvider()
-    cloud_trace_exporter = CloudTraceSpanExporter()
-    tracer_provider.add_span_processor(
-        BatchSpanProcessor(cloud_trace_exporter)
-    )
-    trace.set_tracer_provider(tracer_provider)
-    tracer = trace.get_tracer(__name__)
-    FlaskInstrumentor().instrument_app(app)
-else:
-    logger.warning("No setup of google cloud trace and logging")
+    setup_trace(__name__,app)
