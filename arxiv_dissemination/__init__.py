@@ -1,5 +1,4 @@
 """Dissemination flask application"""
-
 import os
 
 from flask import Flask
@@ -10,6 +9,8 @@ from cloudpathlib.anypath import to_anypath
 
 import logging
 logger = logging.getLogger(__file__)
+
+"""Type for Path that is either a cloud or local path."""
 
 #################### config ####################
 storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data/ps_cache')
@@ -31,6 +32,7 @@ trace = bool(os.environ.get('TRACE', '1') == '1')
 On by default,anything other than 1 deactivates.
 """
 #################### App ####################
+
 from flask.logging import default_handler
 root = logging.getLogger()
 root.addHandler(default_handler)
@@ -55,7 +57,7 @@ app.register_blueprint(blueprint)
 
 ############### trace and logging setup ###############
 if trace:
-    logger.warn(f"Setting google cloud trace and logging")
+    logger.warning(f"Setting google cloud trace and logging")
     from opentelemetry import trace
     from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
     from opentelemetry.instrumentation.flask import FlaskInstrumentor
@@ -77,4 +79,4 @@ if trace:
     tracer = trace.get_tracer(__name__)
     FlaskInstrumentor().instrument_app(app)
 else:
-    logger.warn("No setup of google cloud trace and logging")
+    logger.warning("No setup of google cloud trace and logging")
