@@ -7,7 +7,7 @@ steps:
       - |
         pip install poetry
         poetry install
-        poetry run pytest --cov=arxiv_dissemination
+        TRACE=0 poetry run pytest --cov=arxiv_dissemination
 
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/dissemination:$SHORT_SHA', '.' ]
