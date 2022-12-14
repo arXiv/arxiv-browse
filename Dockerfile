@@ -26,4 +26,4 @@ COPY . ./
 RUN echo $git_commit > ./git-commit.txt
 
 EXPOSE $PORT
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 arxiv_dissemination:app

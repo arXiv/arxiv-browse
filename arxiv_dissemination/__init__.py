@@ -13,7 +13,7 @@ logger = logging.getLogger(__file__)
 """Type for Path that is either a cloud or local path."""
 
 #################### config ####################
-storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data/ps_cache')
+storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data')
 """Storage prefix to use. Ex gs://arxiv-production-data/ps_cache
 
 Use something like /cache/ps_cache for a file system.
