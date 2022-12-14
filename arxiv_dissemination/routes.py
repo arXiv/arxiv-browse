@@ -7,7 +7,7 @@ from flask import abort, make_response, request, Blueprint, current_app
 
 from arxiv.identifier import IdentifierException, Identifier
 
-from cloudpathlib.anypath import to_anypath
+from .path_for_id import path_for_id
 
 logger = logging.getLogger(__file__)
 
@@ -25,6 +25,7 @@ def status():
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def serve_legacy_id_pdf(category: str, arxiv_id: str):
     """Serve PDFs for legacy IDs"""
+    logger.debug("in serve_legacy_id_pdf")
     return serve_pdf( f"{category}/{arxiv_id}")
 
 
@@ -51,6 +52,7 @@ def serve_pdf(arxiv_id: str):
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
+    logger.debug("in serve_pdf")
     chunk_size = current_app.config['chunk_size']
 
     try:
@@ -59,15 +61,12 @@ def serve_pdf(arxiv_id: str):
         if arxiv_id.startswith('arxiv/'):
             abort(400, description="do not prefix with arxiv/ for non-legacy ids")
         id = Identifier(arxiv_id)
-        id.has_version or abort(400, description="version is required")
+        item = path_for_id(current_app.config['storage_prefix'], 'pdf', id)
+        logging.debug(f"looking for key {item}")
     except IdentifierException as ex:
         abort(400, description=ex)
 
-    format = 'pdf'
-    archive = id.archive if id.is_old_id else 'arxiv'
-    item = to_anypath(f"{current_app.config['storage_prefix']}/{archive}/{format}/{id.yymm}/{id.filename}v{id.version}.pdf")
-    logger.debug(f"looking for key {item}")
-    if not item.exists() : abort(404)
+    if not item: abort(404)
 
     if request.method == 'GET':
         def stream():
@@ -81,7 +80,7 @@ def serve_pdf(arxiv_id: str):
                         done = True
 
         resp = make_response(stream())
-    else:
+    else: # HEAD request method
         resp = make_response('')
 
     resp.headers.set('Access-Control-Allow-Origin', '*')
