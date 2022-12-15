@@ -1,10 +1,12 @@
 cd /opt_arxiv/e-prints/dissemination/sync_prod_to_gcp/
 
 # if running between 8pm and midnight
-DATE=`date +%y%m%d --date='12:00 tomorrow'`
-PUBLISHLOG=/data/new/logs/publish_$DATE.log
+DATE=$1 || $(date +%y%m%d --date='12:00 tomorrow')
+
+PUBLISHLOG=/data/new/logs/publish_${DATE}.log
 if [ ! -e $PUBLISHLOG ]
 then
+    echo "No publish log at $PUBLISHLOG, no sync attempted."
     echo "No publish log at $PUBLISHLOG, no sync attempted." > err.txt
     /bin/gsutil -q -h "Content-Type:text/plain" cp err.txt gs://legacy_support/sync_published/$DATE.err ;
     rm err.txt
@@ -12,6 +14,7 @@ then
 fi
 
 . venv/bin/activate
+export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
 python sync_published_to_gcp.py /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
 deactivate
 
@@ -25,7 +28,7 @@ then
 	echo "Could not save report to GS! leaving on disk"
     fi
 else
-    echo "Report was zero size" >> sync_published_$DATE.err
+    echo "sync_published_to_gcp upload report was zero size" >> sync_published_$DATE.err
 fi
 
 if [ -s sync_published_$DATE.err ]
