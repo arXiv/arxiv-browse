@@ -33,7 +33,7 @@ Should not end with a /.
 chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
 
-trace = False # bool(os.environ.get('TRACE', '0') == '1')
+trace = bool(os.environ.get('TRACE', '0') == '1')
 """To activate Google logging and trace.
 
 Off by default, set to 1 to activate.
