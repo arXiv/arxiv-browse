@@ -33,3 +33,37 @@ def app_local_fs():
 @pytest.fixture
 def client(app_local_fs):
     return app_local_fs.test_client()
+
+
+# #################### Integration test marker ####################
+"""
+Setup to mark integration tests.
+
+https://docs.pytest.org/en/latest/example/simple.html
+Mark integration tests like this:
+
+@pytest.mark.integration
+def test_something():
+  ...
+"""
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--runintegration", action="store_true", default=False,
+        help="run arxiv dissemination integration tests"
+    )
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "integration: mark tests as integration tests")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--runintegration"):
+        # --runintegration given in cli: do not skip integration tests
+        return
+    skip_integration = pytest.mark.skip(reason="need --runintegration option to run")
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(skip_integration)
+
