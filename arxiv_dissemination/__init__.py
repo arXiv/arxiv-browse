@@ -11,21 +11,13 @@ from cloudpathlib.anypath import to_anypath
 import logging
 logging.basicConfig(level=logging.INFO)
 
-from flask.logging import default_handler
-root = logging.getLogger()
-root.addHandler(default_handler)
-
-logger = logging.getLogger(__file__)
-
-"""Type for Path that is either a cloud or local path."""
-
 #################### config ####################
 storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data')
 """Storage prefix to use. Ex gs://arxiv-production-data/ps_cache
 
 Use something like /cache/ps_cache for a file system.
 
-Use something like ./testing/ps_cahe for testing data.
+Use something like ./testing/data for testing data.
 
 Should not end with a /.
 """
@@ -33,10 +25,10 @@ Should not end with a /.
 chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
 
-trace = bool(os.environ.get('TRACE', '0') == '1')
+trace = bool(os.environ.get('TRACE', '1') == '1')
 """To activate Google logging and trace.
 
-Off by default, set to 1 to activate.
+On by default, set to 0 to deactivate.
 """
 
 #################### App ####################
