@@ -46,9 +46,9 @@ problems = []
 if chunk_size % (1024 *256):
     problems.append('CHUNK_SIZE must be a multiple of 256kb.')
 if storage_prefix.endswith('/'):
-    problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {path_prefix}')
+    problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {storage_prefix}')
 if not to_anypath(storage_prefix).exists():
-        problems.append('BUCKET {STORAGE_PREFIX} does not exist or cannot read.')
+        problems.append('The {STORAGE_PREFIX} does not exist or cannot read.')
 if problems:
     [app.logger.error(prob) for prob in problems]
     exit(1)
