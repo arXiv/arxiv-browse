@@ -5,7 +5,7 @@ steps:
   - name: 'gcr.io/$PROJECT_ID/dissemination:$SHORT_SHA'
     script: |
         #!/usr/bin/env bash
-        $GUNICORN &
+        TRACE=0 $GUNICORN &
         sleep 10
         pytest --runintegration
         exit_code=$?
