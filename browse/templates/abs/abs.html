@@ -7,6 +7,7 @@
 {% block head %}
   {{ super() -}}
   <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
+  {{- generate_social_media_tags() }}
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
@@ -24,7 +25,6 @@
   {%- if datacite_doi %}
   <meta name="citation_doi" content="{{ datacite_doi }}"/>
   {%- endif %}
-  {{- generate_social_media_tags() }}
 {% endblock head %}
 
 {% block body_id %}{% endblock %}
@@ -127,7 +127,7 @@
 {%- macro generate_scholar_tags() -%}
 {%- if meta_tags %}
     {%- for tag in meta_tags %}
-  <meta name="{{tag.name}}" content="{{tag.content}}"/>
+<meta name="{{tag.name}}" content="{{tag.content}}" />
     {%- endfor -%}
 {%- endif -%}
 {%- endmacro -%}
