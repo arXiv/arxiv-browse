@@ -82,6 +82,8 @@ def serve_pdf(arxiv_id: str):
                         size=stat.st_size).make_response()
     resp.headers['Access-Control-Allow-Origin']='*'
     resp.headers['Content-Type'] = 'application/pdf'
+    resp.headers['Transfer-Encoding'] = 'chunked'
+
     if id.has_version:
         resp.headers['Cache-Control'] = _cc_versioned()
     else:
