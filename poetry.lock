@@ -216,6 +216,17 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-rangerequest"
+version = "0.0.2"
+description = "Range Requests for Flask"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Flask = ">=2"
+
+[[package]]
 name = "flask-s3"
 version = "0.3.3"
 description = "Seamlessly serve the static files of your Flask app from Amazon S3"
@@ -925,7 +936,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "8fd846d9146dd1731af244636d4c105a540ffda7c268686df66cad82ccbf0543"
+content-hash = "5e226b3b91c15afe8a92eb3cbecd1f4c48a1b756a13b902c3b98e1200d9cdc49"
 
 [metadata.files]
 arxiv-base = []
@@ -1036,6 +1047,10 @@ exceptiongroup = [
 flask = [
     {file = "Flask-2.2.2-py3-none-any.whl", hash = "sha256:b9c46cc36662a7949f34b52d8ec7bb59c0d74ba08ba6cb9ce9adc1d8676d9526"},
     {file = "Flask-2.2.2.tar.gz", hash = "sha256:642c450d19c4ad482f96729bd2a8f6d32554aa1e231f4f6b4e7e5264b16cca2b"},
+]
+flask-rangerequest = [
+    {file = "Flask-RangeRequest-0.0.2.tar.gz", hash = "sha256:c27507dcda610c9bf94c9ffd4408afcfae33cd86baa073988a951428a8972b40"},
+    {file = "Flask_RangeRequest-0.0.2-py3-none-any.whl", hash = "sha256:90e0c3d26a494a083b6c87e0b16f2ed21d90719d0c51441ed27cfa922c08db81"},
 ]
 flask-s3 = [
     {file = "Flask-S3-0.3.3.tar.gz", hash = "sha256:1d49061d4b78759df763358a901f4ed32bb43f672c9f8e1ec7226793f6ae0fd2"},

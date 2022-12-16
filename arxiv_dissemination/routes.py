@@ -1,10 +1,12 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from email.utils import format_datetime
 import logging
 
 from opentelemetry import trace
-from flask import abort, make_response, request, Blueprint, current_app, Response, stream_with_context
+from flask import abort, Blueprint, current_app
+
+from flask_rangerequest import RangeRequest
 
 from arxiv.identifier import IdentifierException, Identifier
 
@@ -54,8 +56,6 @@ def serve_pdf(arxiv_id: str):
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
-    chunk_size = current_app.config['chunk_size']
-
     try:
         if len(arxiv_id) > 40:
             abort(400)
@@ -69,33 +69,52 @@ def serve_pdf(arxiv_id: str):
 
     if not item: abort(404)
 
-    headers = {}
-    headers['Access-Control-Allow-Origin']='*'
-    headers['Content-Type'] = 'application/pdf'
+    # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
+    if hasattr(item, 'etag'):
+        etag = item.etag
+    else:
+        etag = 'bogus-due-to-non-gs-fs'
+
     stat = item.stat()
-    headers['Last-Modified'] = format_datetime(datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc))
-    headers['Transfer-Encoding'] = 'chunked'
+    resp = RangeRequest(item.open('rb'),
+                        etag=etag,
+                        last_modified = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+                        size=stat.st_size).make_response()
+    resp.headers['Access-Control-Allow-Origin']='*'
+    resp.headers['Content-Type'] = 'application/pdf'
+    if id.has_version:
+        resp.headers['Cache-Control'] = _cc_versioned()
+    else:
+        resp.headers['Expires'] = format_datetime(_next_publish())
+    return resp
 
-    if hasattr(item, 'etag'): # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
-        headers['ETag'] = item.etag
+
+def _cc_versioned():
+    """Versioned pdfs should not change so let's put a time a bit in the future."""
+    return 'max-age=604800' # 7 days
 
 
-    if request.method == 'GET':
-        def stream():
-            with tracer.start_as_current_span("stream") as g_trace:
-                try:
-                    with item.open('rb') as fh:
-                        done = False
-                        while (not done and fh.readable() and not fh.closed):
-                            bytes = fh.read(chunk_size)
-                            if bytes:
-                                yield bytes
-                            else:
-                                done = True
-                except Exception as ex:
-                    g_trace.record_exception(ex)
-                    logger.exception(ex)
+def _next_publish(now=None):
+    """This guesses the next publish but knows nothing about holidays.
 
-        return Response(stream_with_context(stream()), 200, headers)
-    else: # HEAD request method
-        return '', headers
+    This is a conservative approch. If this is used for Expires
+    headers should never cache when the contents were updated due to publish. It will
+    cache less then optimal when there is a holiday and nothing could
+    have been updated.
+    """
+    if now == None:
+        now = datetime.now()
+
+    if now.weekday() in [0,1,2,3,6]:
+        if now.hour > 20 and now.hour < 21:
+            #It's around publish time, PDF might change, really short
+            return now.replace(minute=now.minute + 5)
+        elif now.hour > 21:
+            return _next_publish((now + timedelta(days=1)).replace(hour=12))
+        else:
+            return now.replace(hour=20)
+
+    if now.weekday() == 4:
+        return (now + timedelta(days=2)).replace(hour=20)
+    if now.weekday() == 5:
+        return (now + timedelta(days=2)).replace(hour=20)
