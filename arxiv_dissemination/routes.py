@@ -82,7 +82,11 @@ def serve_pdf(arxiv_id: str):
                         size=stat.st_size).make_response()
     resp.headers['Access-Control-Allow-Origin']='*'
     resp.headers['Content-Type'] = 'application/pdf'
-    resp.headers['Transfer-Encoding'] = 'chunked'
+
+    if resp.status_code == 200:
+        # To do Large PDFs on Cloud Run both chunked and no content-length are needed
+        resp.headers['Transfer-Encoding'] = 'chunked'
+        resp.headers.pop('Content-Length')
 
     if id.has_version:
         resp.headers['Cache-Control'] = _cc_versioned()
