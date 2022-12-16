@@ -1,7 +1,11 @@
 cd /opt_arxiv/e-prints/dissemination/sync_prod_to_gcp/
 
 # if running between 8pm and midnight
-DATE=$1 || $(date +%y%m%d --date='12:00 tomorrow')
+DATE=`date +%y%m%d --date='12:00 tomorrow'`
+if [ ! -z $1 ]
+then
+    DATE=$1
+fi
 
 PUBLISHLOG=/data/new/logs/publish_${DATE}.log
 if [ ! -e $PUBLISHLOG ]

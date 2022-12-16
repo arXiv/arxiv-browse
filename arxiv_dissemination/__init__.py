@@ -22,7 +22,7 @@ Use something like ./testing/data for testing data.
 Should not end with a /.
 """
 
-chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
+chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256 * 4))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
 
 trace = bool(os.environ.get('TRACE', '1') == '1')
@@ -33,6 +33,18 @@ On by default, set to 0 to deactivate.
 
 #################### App ####################
 app = Flask(__name__)
+app.config.update(
+    storage_prefix=storage_prefix,
+    chunk_size=chunk_size,
+    )
+app.register_blueprint(blueprint)
+
+############### trace and logging setup ###############
+if trace:
+    setup_trace(__name__,app)
+
+app.logger.info(f"trace is {trace}")
+app.logger.info(f"storage_prefix is {storage_prefix}")
 
 problems = []
 if chunk_size % (1024 *256):
@@ -44,17 +56,3 @@ if not to_anypath(storage_prefix).exists():
 if problems:
     [app.logger.error(prob) for prob in problems]
     exit(1)
-
-app.logger.info(f"trace is {trace}")
-app.logger.info(f"storage_prefix is {storage_prefix}")
-
-app.config.update(
-    storage_prefix=storage_prefix,
-    chunk_size=chunk_size,
-    )
-
-app.register_blueprint(blueprint)
-
-############### trace and logging setup ###############
-if trace:
-    setup_trace(__name__,app)

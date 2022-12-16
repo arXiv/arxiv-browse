@@ -41,9 +41,19 @@ docker run \
 ```
 
 # To run tests
-Test were simplified to use fixtures for a test db. Running the tests
-is just:
-
+To run the unit tests:
 ```
 pytest --cov=arxiv_dissemination
+```
+
+To run integration tests against localhost:8080:
+```
+# first start docker as described in 'Run locally in docker'
+# then run
+pytest --runintegration
+```
+
+To run integration tests against downloads.arxiv.org:
+```
+HOST=https://download.arxiv.org pytest --runintegration
 ```
