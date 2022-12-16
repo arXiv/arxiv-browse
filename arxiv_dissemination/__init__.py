@@ -22,9 +22,6 @@ Use something like ./testing/data for testing data.
 Should not end with a /.
 """
 
-chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256 * 4))
-"""chunk size from GS. Bytes. Must be mutiples of 256k"""
-
 trace = bool(os.environ.get('TRACE', '1') == '1')
 """To activate Google logging and trace.
 
@@ -35,8 +32,7 @@ On by default, set to 0 to deactivate.
 app = Flask(__name__)
 app.config.update(
     storage_prefix=storage_prefix,
-    chunk_size=chunk_size,
-    )
+)
 app.register_blueprint(blueprint)
 
 ############### trace and logging setup ###############
@@ -47,8 +43,6 @@ app.logger.info(f"trace is {trace}")
 app.logger.info(f"storage_prefix is {storage_prefix}")
 
 problems = []
-if chunk_size % (1024 *256):
-    problems.append('CHUNK_SIZE must be a multiple of 256kb.')
 if storage_prefix.endswith('/'):
     problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {storage_prefix}')
 if not to_anypath(storage_prefix).exists():
