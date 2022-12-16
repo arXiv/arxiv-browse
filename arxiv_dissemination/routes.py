@@ -74,7 +74,6 @@ def serve_pdf(arxiv_id: str):
     headers['Content-Type'] = 'application/pdf'
     stat = item.stat()
     headers['Last-Modified'] = format_datetime(datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc))
-    headers['Content-Length'] = stat.st_size
     headers['Transfer-Encoding'] = 'chunked'
 
     if hasattr(item, 'etag'): # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
