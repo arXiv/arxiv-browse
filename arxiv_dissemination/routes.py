@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 import logging
 
-from flask import abort, make_response, request, Blueprint, current_app
+from flask import abort, make_response, request, Blueprint, current_app, Response, stream_with_context
 
 from arxiv.identifier import IdentifierException, Identifier
 
@@ -25,7 +25,6 @@ def status():
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def serve_legacy_id_pdf(category: str, arxiv_id: str):
     """Serve PDFs for legacy IDs"""
-    logger.debug("in serve_legacy_id_pdf")
     return serve_pdf( f"{category}/{arxiv_id}")
 
 
@@ -52,7 +51,6 @@ def serve_pdf(arxiv_id: str):
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
-    logger.debug("in serve_pdf")
     chunk_size = current_app.config['chunk_size']
 
     try:
@@ -68,6 +66,18 @@ def serve_pdf(arxiv_id: str):
 
     if not item: abort(404)
 
+    headers = {}
+    headers['Access-Control-Allow-Origin']='*'
+    headers['Content-Type'] = 'application/pdf'
+    stat = item.stat()
+    headers['Last-Modified'] = format_datetime(datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc))
+    headers['Content-Length'] = stat.st_size
+    headers['Transfer-Encoding'] = 'chunked'
+
+    if hasattr(item, 'etag'): # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
+        headers['ETag'] = item.etag
+
+
     if request.method == 'GET':
         def stream():
             with item.open('rb') as fh:
@@ -79,16 +89,6 @@ def serve_pdf(arxiv_id: str):
                     else:
                         done = True
 
-        resp = make_response(stream())
+        return Response(stream_with_context(stream()), 200, headers)
     else: # HEAD request method
-        resp = make_response('')
-
-    resp.headers.set('Access-Control-Allow-Origin', '*')
-    resp.headers.set('Content-Type', 'application/pdf')
-    stat = item.stat()
-    resp.headers.set('Last-Modified', format_datetime(datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)))
-    resp.headers.set('Content-Length', stat.st_size)
-    if hasattr(item, 'etag'): # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
-        resp.headers.set('ETag', item.etag)
-
-    return resp
+        return '', headers

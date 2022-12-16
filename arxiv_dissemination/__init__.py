@@ -22,7 +22,7 @@ Use something like ./testing/data for testing data.
 Should not end with a /.
 """
 
-chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256))
+chunk_size = int(os.environ.get('CHUNK_SIZE', 1024 * 256 * 4))
 """chunk size from GS. Bytes. Must be mutiples of 256k"""
 
 trace = bool(os.environ.get('TRACE', '1') == '1')

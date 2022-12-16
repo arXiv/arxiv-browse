@@ -186,7 +186,7 @@ def test_big_pdf(host):
     resp = requests.head(f"{host}/pdf/2209.08742v2")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2209.08742v2")
+    resp = requests.get(f"{host}/pdf/2209.08742v2", stream=True)
     assert resp.status_code == 200
 
 @pytest.mark.integration
