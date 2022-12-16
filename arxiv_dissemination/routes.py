@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 import logging
 
+from opentelemetry import trace
 from flask import abort, make_response, request, Blueprint, current_app
 
 from arxiv.identifier import IdentifierException, Identifier
@@ -12,6 +13,8 @@ from .path_for_id import path_for_id
 logger = logging.getLogger(__file__)
 
 blueprint = Blueprint('routes',__name__)
+
+tracer = trace.get_tracer(__name__)
 
 @blueprint.route("/status")
 def status():
@@ -70,14 +73,19 @@ def serve_pdf(arxiv_id: str):
 
     if request.method == 'GET':
         def stream():
-            with item.open('rb') as fh:
-                done = False
-                while (not done and fh.readable() and not fh.closed):
-                    bytes = fh.read(chunk_size)
-                    if bytes:
-                        yield bytes
-                    else:
-                        done = True
+            with tracer.start_as_current_span("stream") as g_trace:
+                try:
+                    with item.open('rb') as fh:
+                        done = False
+                        while (not done and fh.readable() and not fh.closed):
+                            bytes = fh.read(chunk_size)
+                            if bytes:
+                                yield bytes
+                            else:
+                                done = True
+                except Exception as ex:
+                    g_trace.record_exception(ex)
+                    logger.exception(ex)
 
         resp = make_response(stream())
     else: # HEAD request method
