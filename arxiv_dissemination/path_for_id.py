@@ -28,7 +28,7 @@ def path_for_id(storage_prefix: str, format:FORMATS, arxiv_id:Identifier) -> Opt
             return current_pdf
 
         pdf = cached_current_pdf(storage_prefix, format, arxiv_id)
-        if pdf.exists():
+        if pdf and pdf.exists():
             return pdf
         else:
             logger.debug("no file found for %s, tried %s", arxiv_id.idv, [str(current_pdf)])
@@ -96,12 +96,18 @@ def _path_to_version(path):
     else:
         return 0
     
-def cached_current_pdf(storage_prefix: str, format: FORMATS, arxiv_id:Identifier) -> APath:
+def cached_current_pdf(storage_prefix: str, format: FORMATS, arxiv_id:Identifier) -> Optional[APath]:
     """Current pdf from ps_cache.
 
     If the current pdf is not in `ftp/` then we are dealing with a TeX submission and
     have to find the highest numbered pdf in ps_cache.
+
+    Note, contrary to the name of this function, the return value of
+    this function is not cached.
     """
     dir = _ps_cache_part(storage_prefix, format, arxiv_id)
     pdf_versions = to_anypath(f"{dir}").glob(f"{arxiv_id.filename}*")
-    return max(pdf_versions, key=_path_to_version)    
+    if pdf_versions:
+        return max(pdf_versions, key=_path_to_version)
+    else:
+        return None
