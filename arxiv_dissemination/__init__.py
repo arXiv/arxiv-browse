@@ -48,21 +48,24 @@ if trace:
 app.logger.info(f"trace is {trace}")
 app.logger.info(f"storage_prefix is {storage_prefix}")
 
+problems = []
 if not storage_prefix.startswith("gs://"):
     app.logger.warning(f"Using local files as object store at {storage_prefix}, Use this in testing only.")
+    if not Path(storage_prefix).exists():
+        problems.append(f"Directory {storage_prefix} does not exist.")
     setattr(app, 'get_obj_for_key', partial(to_obj_local, storage_prefix))
 else:
     gs_client = storage.Client()
     bname= storage_prefix.replace('gs://','')
     bucket = gs_client.bucket(bname)
+    if not bucket.exists():
+        problems.append(f"GS bucket {bucket} does not exist.")
     setattr(app, 'get_obj_for_key', partial(to_obj_gs, bucket))
 
 
-problems = []
+
 if storage_prefix.endswith('/'):
     problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {storage_prefix}')
-if not app.get_obj_for_key('').exists():
-    problems.append(f'{storage_prefix} does not exist')
 if problems:
     [app.logger.error(prob) for prob in problems]
     exit(1)
