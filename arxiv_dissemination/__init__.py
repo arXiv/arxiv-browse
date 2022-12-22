@@ -1,25 +1,31 @@
 """Dissemination flask application"""
 import os
 
+from pathlib import Path
+from functools import partial
+
+from google.cloud import storage
+
 from flask import Flask
 
 from .routes import blueprint
 from .trace import setup_trace
 
-from cloudpathlib.anypath import to_anypath
+from .object_stores import to_obj_gs, to_obj_local
 
 import logging
 logging.basicConfig(level=logging.INFO)
 
+
 #################### config ####################
 storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data')
-"""Storage prefix to use. Ex gs://arxiv-production-data/ps_cache
+"""Storage prefix to use. Ex gs://arxiv-production-data
 
-Use something like /cache/ps_cache for a file system.
+If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have
+any key parts.
 
-Use something like ./testing/data for testing data.
-
-Should not end with a /.
+Use something like `/cache` for a file system. Use something like
+`./testing/data` for testing data. Should not end with a /
 """
 
 trace = bool(os.environ.get('TRACE', '1') == '1')
@@ -42,11 +48,21 @@ if trace:
 app.logger.info(f"trace is {trace}")
 app.logger.info(f"storage_prefix is {storage_prefix}")
 
+if not storage_prefix.startswith("gs://"):
+    app.logger.warning(f"Using local files as object store at {storage_prefix}, Use this in testing only.")
+    setattr(app, 'get_obj_for_key', partial(to_obj_local, storage_prefix))
+else:
+    gs_client = storage.Client()
+    bname= storage_prefix.replace('gs://','')
+    bucket = gs_client.bucket(bname)
+    setattr(app, 'get_obj_for_key', partial(to_obj_gs, bucket))
+
+
 problems = []
 if storage_prefix.endswith('/'):
     problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {storage_prefix}')
-if not to_anypath(storage_prefix).exists():
-        problems.append('The {STORAGE_PREFIX} does not exist or cannot read.')
+if not app.get_obj_for_key('').exists():
+    problems.append(f'{storage_prefix} does not exist')
 if problems:
     [app.logger.error(prob) for prob in problems]
     exit(1)
