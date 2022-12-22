@@ -32,16 +32,19 @@ class FileObj(ABC):
         """Opens the object similar to the normal Python `open()`"""
         pass
 
+    @property
     @abstractmethod
     def etag(self) -> str:
         """Gets the etag for the storage object"""
         pass
 
+    @property
     @abstractmethod
     def size(self) -> int:
         """Size in bytes"""
         pass
 
+    @property
     @abstractmethod
     def updated(self) -> datetime:
         """Datetime object of last modified"""
@@ -68,12 +71,15 @@ class LocalFileObj(FileObj):
     def open(self, *args, **kwargs) -> IO:
         return self.item.open(*args, **kwargs)
 
+    @property
     def etag(self) -> str:
         return "FAKE_ETAG"
 
+    @property
     def size(self) -> int:
         return self.item.stat().st_size
 
+    @property
     def updated(self) -> datetime:
         return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
 
@@ -98,12 +104,15 @@ class FileDoesNotExist(FileObj):
     def open(self, *args, **kwargs) -> IO:
         raise Exception("File does not exist")
 
+    @property
     def etag(self) -> str:
         raise Exception("File does not exist")
 
+    @property
     def size(self) -> int:
         raise Exception("File does not exist")
 
+    @property
     def updated(self) -> datetime:
         raise Exception("File does not exist")
 
@@ -117,7 +126,7 @@ def to_obj_gs(bucket: Bucket, key:str) -> FileObj:
     """Gets the blob fom google-cloud-storage"""
     blob = bucket.get_blob(key)
     if not blob:
-        return FileDoesNotExist(key)
+        return FileDoesNotExist(bucket.name + key)
     else:
         return blob
 

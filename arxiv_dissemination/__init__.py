@@ -24,8 +24,8 @@ storage_prefix = os.environ.get('STORAGE_PREFIX','gs://arxiv-production-data')
 If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have
 any key parts.
 
-Use something like `/cache` for a file system. Use something like
-`./testing/data` for testing data. Should not end with a /
+Use something like `/cache/` for a file system. Use something like
+`./testing/data/` for testing data. Must end with a /
 """
 
 trace = bool(os.environ.get('TRACE', '1') == '1')
@@ -53,19 +53,19 @@ if not storage_prefix.startswith("gs://"):
     app.logger.warning(f"Using local files as object store at {storage_prefix}, Use this in testing only.")
     if not Path(storage_prefix).exists():
         problems.append(f"Directory {storage_prefix} does not exist.")
+    if not storage_prefix.endswith('/'):
+        problems.append(f'If using a local FS, STORAGE_PREFIX must end with a slash, was {storage_prefix}')
     setattr(app, 'get_obj_for_key', partial(to_obj_local, storage_prefix))
 else:
     gs_client = storage.Client()
     bname= storage_prefix.replace('gs://','')
+    if '/' in bname:
+        problems.append(f"GS bucket should not have a key part, was {bname}")
     bucket = gs_client.bucket(bname)
     if not bucket.exists():
         problems.append(f"GS bucket {bucket} does not exist.")
     setattr(app, 'get_obj_for_key', partial(to_obj_gs, bucket))
 
-
-
-if storage_prefix.endswith('/'):
-    problems.append(f'STORAGE_PREFIX should not end with a slash, prefix was {storage_prefix}')
 if problems:
     [app.logger.error(prob) for prob in problems]
     exit(1)

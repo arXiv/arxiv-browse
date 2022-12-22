@@ -72,9 +72,9 @@ def serve_pdf(arxiv_id: str):
             return
 
     resp = RangeRequest(item.open('rb'),
-                        etag=item.etag(),
-                        last_modified = item.updated(),
-                        size=item.size()).make_response()
+                        etag=item.etag,
+                        last_modified = item.updated,
+                        size=item.size).make_response()
 
     resp.headers['Access-Control-Allow-Origin']='*'
     resp.headers['Content-Type'] = 'application/pdf'

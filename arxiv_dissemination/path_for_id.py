@@ -51,7 +51,7 @@ def path_for_id(format:FORMATS, arxiv_id:Identifier) -> Optional[FileObj]:
 
 def _ps_cache_part(format: FORMATS, arxiv_id: Identifier) -> str:
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
-    return f"/ps_cache/{archive}/{format}/{arxiv_id.yymm}"
+    return f"ps_cache/{archive}/{format}/{arxiv_id.yymm}"
     
 def ps_cache_pdf_path(format:FORMATS, arxiv_id: Identifier)  -> FileObj:
     """Returns the path for a PDF from the ps_cache for a version.
@@ -74,7 +74,7 @@ def current_pdf_path(arxiv_id: Identifier) -> FileObj:
     # TODO Need to add check such that a v23 doesn't return
     # current version on a paper with only 3 versions.
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
-    return current_app.get_obj_for_key(f"/ftp/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.pdf")
+    return current_app.get_obj_for_key(f"ftp/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.pdf")
 
 
 def previous_pdf_path(arxiv_id: Identifier) -> FileObj:
@@ -82,7 +82,7 @@ def previous_pdf_path(arxiv_id: Identifier) -> FileObj:
 
     This will return the proper path if it exists or not."""
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
-    return current_app.get_obj_for_key(f"/orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
+    return current_app.get_obj_for_key(f"orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
 
 
 v_regex = re.compile(r'.*v(\d+)')

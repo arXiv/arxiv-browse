@@ -24,7 +24,7 @@ if not any([path==cwd for path in sys.path]):
 def app_local_fs():
     """Pytest fixture to get a dissemination app pointed at `tests/data`"""
     os.environ['TRACE']='0'
-    os.environ['STORAGE_PREFIX'] = './tests/data'
+    os.environ['STORAGE_PREFIX'] = './tests/data/'
     from arxiv_dissemination import app
     return app
 
