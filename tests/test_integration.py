@@ -207,3 +207,34 @@ def test_500(host):
     assert resp.status_code == 200
     resp = requests.get(f"{host}/pdf/2212.07280v1")
     assert resp.status_code == 200
+
+
+@pytest.mark.integration
+def test_timedout(host):
+    """These pdfs returned timedout during a test in 2022-12"""
+    resp = requests.head(f"{host}/pdf/2212.07879")
+    assert resp.status_code == 200
+    resp = requests.get(f"{host}/pdf/2212.07439")
+    assert resp.status_code == 200
+
+
+@pytest.mark.integration
+def test_404(host):
+    """These returned 404s durna a test in 2022-12"""
+    resp = requests.get(f"{host}/pdf/1304.1682v1.pdf")
+    assert resp.status_code == 200
+    resp = requests.get(f"{host}/pdf/1308.0729v1.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/1302.1106v1.pdf")
+    assert resp.status_code == 200
+
+
+@pytest.mark.integration
+def test_wdr(host):
+    """These are some verisons that are withdrawls."""
+    resp = requests.get(f"{host}/pdf/0911.3270v3.pdf")
+    assert resp.status_code == 404
+
+    resp = requests.get(f"{host}/pdf/2212.03351v2.pdf")
+    assert resp.status_code == 404

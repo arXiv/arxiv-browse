@@ -20,10 +20,9 @@ tracer = trace.get_tracer(__name__)
 
 @blueprint.route("/pdf/status")
 def status():
-    if current_app.config['storage'].exists():
-        return {"status": "good"}
-    else:
-        abort(500, "could not read from storage")
+    #TODO check that can read from storage
+    return {"status": "good"}
+
 
 
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
