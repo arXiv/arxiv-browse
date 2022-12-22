@@ -40,15 +40,6 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
-        <!-- timeboxed column -->
-        {%- if rd_int > 202010190000 and rd_int < 202010240000 -%}
-        <div class="column message-header message-yellow">
-          <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Giving Week:</strong> arXiv depends on donations to support essential operations and new initiatives. <a href="https://securelb.imodules.com/s/1717/alumni/event.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1?source=web">Donate today</a>!</p>
-        </div>
-        {%- endif -%}
-        <!-- /end timeboxed column -->
-
         <div class="column" id="support-ack">
           <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
         </div>
