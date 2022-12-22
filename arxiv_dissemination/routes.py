@@ -18,7 +18,7 @@ blueprint = Blueprint('routes',__name__)
 
 tracer = trace.get_tracer(__name__)
 
-@blueprint.route("/status")
+@blueprint.route("/pdf/status")
 def status():
     if current_app.config['storage'].exists():
         return {"status": "good"}
@@ -62,24 +62,20 @@ def serve_pdf(arxiv_id: str):
         if arxiv_id.startswith('arxiv/'):
             abort(400, description="do not prefix with arxiv/ for non-legacy ids")
         id = Identifier(arxiv_id)
-        item = path_for_id(current_app.config['storage_prefix'], 'pdf', id)
+        item = path_for_id('pdf', id)
         logging.debug(f"looking for key {item}")
     except IdentifierException as ex:
         abort(400, description=ex)
 
-    if not item: abort(404)
+    if not item or not item.exists():
+            abort(404)
+            return
 
-    # TODO arxiv.org etag is very different do we need to fix or is using the gs value fine?
-    if hasattr(item, 'etag'):
-        etag = item.etag
-    else:
-        etag = 'bogus-due-to-non-gs-fs'
-
-    stat = item.stat()
     resp = RangeRequest(item.open('rb'),
-                        etag=etag,
-                        last_modified = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
-                        size=stat.st_size).make_response()
+                        etag=item.etag,
+                        last_modified = item.updated,
+                        size=item.size).make_response()
+
     resp.headers['Access-Control-Allow-Origin']='*'
     resp.headers['Content-Type'] = 'application/pdf'
 
