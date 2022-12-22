@@ -28,7 +28,7 @@ RUN echo $git_commit > ./git-commit.txt
 
 EXPOSE 8080
 
-# Why is this command ini an env var and not just run in CMD?
+# Why is this command in an env var and not just run in CMD?
 # So it can be used to start the server during an integration test.
 # See tests/integration_test.sh
 ENV GUNICORN gunicorn --bind :8080 \

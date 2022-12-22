@@ -18,7 +18,7 @@ blueprint = Blueprint('routes',__name__)
 
 tracer = trace.get_tracer(__name__)
 
-@blueprint.route("/status")
+@blueprint.route("/pdf/status")
 def status():
     if current_app.config['storage'].exists():
         return {"status": "good"}
