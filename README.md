@@ -23,11 +23,11 @@ python main.py
 
 ```
 
-export GOOGLE_APPLICATION_CREDENTIALS=~/Downloads/{your_cred_file}
-export GIT_V=$(git rev-parse --short HEAD)
 
+export GIT_V=$(git rev-parse --short HEAD)
 docker build . --build-arg git_commit=${GIT_V} -t arxiv/dissemination:$GIT_V
 
+export GOOGLE_APPLICATION_CREDENTIALS=~/Downloads/{your_cred_file}
 docker run \
     -p 8080:8080 \
     -e TRACE=0 \
