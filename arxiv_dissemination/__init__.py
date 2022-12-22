@@ -11,7 +11,7 @@ from flask import Flask
 from .routes import blueprint
 from .trace import setup_trace
 
-from .object_stores import to_obj_gs, to_obj_local
+from .object_stores import to_obj_gs, to_obj_local, local_list, gs_list
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -56,6 +56,7 @@ if not storage_prefix.startswith("gs://"):
     if not storage_prefix.endswith('/'):
         problems.append(f'If using a local FS, STORAGE_PREFIX must end with a slash, was {storage_prefix}')
     setattr(app, 'get_obj_for_key', partial(to_obj_local, storage_prefix))
+    setattr(app, 'list_blobs', partial(local_list, storage_prefix))
 else:
     gs_client = storage.Client()
     bname= storage_prefix.replace('gs://','')
@@ -65,6 +66,7 @@ else:
     if not bucket.exists():
         problems.append(f"GS bucket {bucket} does not exist.")
     setattr(app, 'get_obj_for_key', partial(to_obj_gs, bucket))
+    setattr(app, 'list_blobs', partial(gs_list, bucket))
 
 if problems:
     [app.logger.error(prob) for prob in problems]

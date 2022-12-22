@@ -1,6 +1,7 @@
 """Thin wrappers around the object stores."""
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import IO, Iterable
 from datetime import datetime, timezone
 from pathlib import Path
@@ -49,15 +50,16 @@ class FileObj(ABC):
     def updated(self) -> datetime:
         """Datetime object of last modified"""
 
-    @abstractmethod
-    def glob(self, pattern) -> Iterable["FileObj"]:
-        """Glob on this path with pattern"""
-
 
 FileObj.register(Blob)
 
 
 class LocalFileObj(FileObj):
+    """File object backed by local files.
+
+    The goal here is to have LocalFileObj mimic `Blob` in the
+    methods and properties that are used.
+    """
     def __init__(self, item: Path):
         self.item = item
 
@@ -82,9 +84,6 @@ class LocalFileObj(FileObj):
     @property
     def updated(self) -> datetime:
         return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
-
-    def glob(self, patt):
-        return (LocalFileObj(item) for item in self.item.glob(patt))
 
 
 
@@ -116,25 +115,45 @@ class FileDoesNotExist(FileObj):
     def updated(self) -> datetime:
         raise Exception("File does not exist")
 
-    def glob(self, _):
-        raise Exist("Files not exist")
-
     def __repr__(self):
         return f"FileDoesNotExist({self.item})"
 
+
 def to_obj_gs(bucket: Bucket, key:str) -> FileObj:
-    """Gets the blob fom google-cloud-storage"""
+    """Gets the `Blob` fom google-cloud-storage"""
     blob = bucket.get_blob(key)
     if not blob:
-        return FileDoesNotExist(bucket.name + key)
+        return FileDoesNotExist("gs://" + bucket.name + key)
     else:
         return blob
 
 
 def to_obj_local(prefix: str, key:str) -> FileObj:
-    """Gets a Path from local file system"""
+    """Gets a `LocalFileObj` from local file system"""
     item = Path(prefix + key)
     if not item or not item.exists():
         return FileDoesNotExist(prefix + key)
     else:
         return LocalFileObj(Path(item))
+
+
+def local_list(dir: str, prefix:str) -> Iterator[FileObj]:
+    """Gets a listing similar to what would be returned by `Client.list_blobs()`
+
+    `dir` should end with a /
+
+    `prefix` should be just a path to a file name. Example:
+    'ps_cache/arxiv/pdf/1212/1212.12345' or
+    'ftp/cs/papers/0012/0012007'.
+    """
+    parent, file = Path(dir+prefix).parent, Path(dir+prefix).name
+    return (LocalFileObj(item) for item in Path(parent).glob(f"{file}*"))
+
+def gs_list(bucket: Bucket, prefix: str) -> Iterator[FileObj]:
+    """Gets listing of keys with prefix.
+
+    `prefix` should be just a path to a file name. Example:
+    'ps_cache/arxiv/pdf/1212/1212.12345' or
+    'ftp/cs/papers/0012/0012007'.
+    """
+    return bucket.client.list_blobs(bucket, prefix=prefix)
