@@ -162,13 +162,13 @@ def make_todos(filename) -> List[dict]:
 
 
     sub_start_r = re.compile(r".* submission (\d*)$")
-    sub_end_r = re.compile(r".*------------------------$")
+    sub_end_r = re.compile(r".*Finished processing submission ")
     subs, in_sub, txt, sm =[], False, '', None
     with open(filename) as fh:
         for line in fh.readlines():
             if in_sub:
                 if sm is not None and sub_end_r.match(line):
-                    subs.append((sm.group(1), txt))
+                    subs.append((sm.group(1), txt + line))
                     txt, sm, in_sub = '', None, False
                 else:
                     txt = txt + line
