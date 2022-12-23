@@ -217,10 +217,10 @@ def test_timedout(host):
     resp = requests.get(f"{host}/pdf/2212.07439")
     assert resp.status_code == 200
 
-
+@pytest.mark.xfail(reason="sync problem, does not exist on bucket yet")
 @pytest.mark.integration
 def test_404(host):
-    """These returned 404s durna a test in 2022-12"""
+    """These returned 404s during a test in 2022-12"""
     resp = requests.get(f"{host}/pdf/1304.1682v1.pdf")
     assert resp.status_code == 200
     resp = requests.get(f"{host}/pdf/1308.0729v1.pdf")
@@ -230,11 +230,87 @@ def test_404(host):
     assert resp.status_code == 200
 
 
+@pytest.mark.xfail(reason="not yet fixed, But these URLs should never be shown to users by the arxiv system")
 @pytest.mark.integration
 def test_wdr(host):
     """These are some verisons that are withdrawls."""
+
+    resp = requests.get(f"{host}/pdf/0911.3270v2.pdf")
+    assert resp.status_code == 200 # this version is wdr and in the legacy sytem does a 200 with a message like "paper not available"
+
     resp = requests.get(f"{host}/pdf/0911.3270v3.pdf")
-    assert resp.status_code == 404
+    assert resp.status_code == 404 # this version does not exist. The legacy system does something similar to v2
+
+    resp = requests.get(f"{host}/pdf/2212.03351v1.pdf")
+    assert resp.status_code == 200
 
     resp = requests.get(f"{host}/pdf/2212.03351v2.pdf")
+    assert resp.status_code == 404
+
+
+@pytest.mark.integration
+def test_does_not_exist_without_version(host):
+    """These are papers that don't exist. They were throwing `Max()
+    arg is an empty sequence`"""
+    resp = requests.get(f"{host}/pdf/0712.9999")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0011999.pdf")
+    assert resp.status_code == 404
+
+
+@pytest.mark.integration
+def test_does_not_exist_with_version(host):
+    """These are papers that don't exist."""
+    resp = requests.get(f"{host}/pdf/0712.9999v1")
+    assert resp.status_code == 404
+
+    resp = requests.get(f"{host}/pdf/0712.9999v23")
+    assert resp.status_code == 404
+
+    resp = requests.get(f"{host}/pdf/0712.9999v1.pdf")
+    assert resp.status_code == 404
+
+    resp = requests.get(f"{host}/pdf/0712.9999v23.pdf")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0011999v1")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0011999v3")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0011999v1.pdf")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0011999v3.pdf")
+    assert resp.status_code == 404
+
+
+@pytest.mark.xfail(reason="not yet fixed, see TODO in arxiv_dissemination.path_for_id.current_pdf_path()")
+@pytest.mark.integration
+def test_does_not_exist_pdf_only(host):
+    """These are articles that exist but versions that don't exist for some pdf only submissions"""
+    resp = requests.head(f"{host}/pdf/2101.04792v99.pdf")
+    assert resp.status_code == 404
+    resp = requests.head(f"{host}/pdf/2101.04792v99")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/cs/0212040v99.pdf")
+    assert resp.status_code == 404
+    resp = requests.head(f"{host}/pdf/cs/0212040v99")
+    assert resp.status_code == 404
+
+
+@pytest.mark.integration
+def test_does_not_exist_ps_cache(host):
+    """These are articles that exist but versions that don't exist for some tex submissions"""
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v9.pdf")
+    assert resp.status_code == 404
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v9")
+    assert resp.status_code == 404
+
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v99.pdf")
+    assert resp.status_code == 404
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v99")
     assert resp.status_code == 404

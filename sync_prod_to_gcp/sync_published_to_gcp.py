@@ -63,20 +63,20 @@ ORIG_PREIFX = '/data/orig/'
 ENSURE_UA = 'periodic-rebuild'
 
 ENSURE_HOSTS = [
-    ('web2.arxiv.org', 40),
-    ('web3.arxiv.org', 40),
-    ('web4.arxiv.org', 40),
-    ('web5.arxiv.org', 4),
-    ('web6.arxiv.org', 4),
-    ('web7.arxiv.org', 4),
-    ('web8.arxiv.org', 4),
-    ('web9.arxiv.org', 4),
+    #('web2.arxiv.org', 40),
+    #('web3.arxiv.org', 40),
+    #('web4.arxiv.org', 40),
+    ('web5.arxiv.org', 8),
+    ('web6.arxiv.org', 8),
+    ('web7.arxiv.org', 8),
+    ('web8.arxiv.org', 8),
+    ('web9.arxiv.org', 8),
 ]
 """Tuples of form HOST, THREADS_FOR_HOST"""
 
 ENSURE_CERT_VERIFY=False
 
-PDF_WAIT_SEC = 60 * 2
+PDF_WAIT_SEC = 60 * 3
 """Maximum sec to wait for a PDF to be created"""
 
 todo_q: Queue = Queue()
@@ -162,13 +162,13 @@ def make_todos(filename) -> List[dict]:
 
 
     sub_start_r = re.compile(r".* submission (\d*)$")
-    sub_end_r = re.compile(r".*------------------------$")
+    sub_end_r = re.compile(r".*Finished processing submission ")
     subs, in_sub, txt, sm =[], False, '', None
     with open(filename) as fh:
         for line in fh.readlines():
             if in_sub:
                 if sm is not None and sub_end_r.match(line):
-                    subs.append((sm.group(1), txt))
+                    subs.append((sm.group(1), txt + line))
                     txt, sm, in_sub = '', None, False
                 else:
                     txt = txt + line
@@ -263,18 +263,18 @@ def ensure_pdf(session, host, arxiv_id):
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
         if resp.status_code != 200:
-            raise(Exception("ensure_pdf: GET status {resp.status_code}"))
+            raise(Exception(f"ensure_pdf: GET status {resp.status_code} {url}"))
         start_wait = perf_counter()
         while not pdf_file.exists():
             if perf_counter() - start_wait > PDF_WAIT_SEC:
-                raise(Exception("No PDF, waited longer than {PDF_WAIT_SEC} sec"))
+                raise(Exception(f"No PDF, waited longer than {PDF_WAIT_SEC} sec {url}"))
             else:
                 sleep(0.2)
         if pdf_file.exists():
             logger.debug(f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
             return (pdf_file, url, None, ms_since(start))
         else:
-            raise(Exception("ensure_pdf: Could not create {pdf_file}. Requested {url} {ms_since(start)} ms"))
+            raise(Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
     else:
         logger.debug(f"ensure_file_url_exists: {str(pdf_file)} already exists")
         return (pdf_file, url, "already exists", ms_since(start))

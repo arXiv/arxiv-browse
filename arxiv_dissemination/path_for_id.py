@@ -103,7 +103,7 @@ def cached_current_pdf(format: FORMATS, arxiv_id:Identifier) -> Optional[FileObj
     Note, contrary to the name of this function, the return value of
     this function is not cached.
     """
-    pdf_versions = current_app.list_blobs(f"{_ps_cache_part(format, arxiv_id)}/{arxiv_id.filename}")
+    pdf_versions = list(current_app.list_blobs(f"{_ps_cache_part(format, arxiv_id)}/{arxiv_id.filename}"))
     if pdf_versions:
         return max(pdf_versions, key=_path_to_version)
     else:

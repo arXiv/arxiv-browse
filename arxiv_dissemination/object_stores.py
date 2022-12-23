@@ -123,7 +123,7 @@ def to_obj_gs(bucket: Bucket, key:str) -> FileObj:
     """Gets the `Blob` fom google-cloud-storage"""
     blob = bucket.get_blob(key)
     if not blob:
-        return FileDoesNotExist("gs://" + bucket.name + key)
+        return FileDoesNotExist("gs://" + bucket.name + '/' + key)
     else:
         return blob
 
