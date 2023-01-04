@@ -37,12 +37,21 @@
     {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
     {%- for format in format_list if not (format == 'src' and not current) %}
   <li>
+    <div id="download-button-info" style="visibility:hidden;">
+      {{% if abs_meta.authors|length > 1 %}}
+      Download a PDF of the paper titled {{abs_meta.title}}, by {{abs_meta.authors[0]}} and {{abs_meta.authors|length - 1}} other authors
+      {{% elif abs_meta.authors|length == 1 %}}
+      Download a PDF of the paper titled {{abs_meta.title}}, by {{abs_meta.authors[0]}}
+      {{% else %}}
+      Download a PDF of the paper titled {{abs_meta.title}}
+      {{% endif %}}
+    </div>
     {%- if format == 'src' -%}
     <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">Source</a>
     {%- elif format.startswith('ps') -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
     {%- elif format == 'dvi' -%}
     <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
