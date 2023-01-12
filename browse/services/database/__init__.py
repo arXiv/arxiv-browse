@@ -76,7 +76,6 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
         .filter(TrackbackPing.status == "accepted")
     )
 
-
 @db_handle_error(logger=logger, default_return_val=None)
 def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     """Get institution label from IP address."""
@@ -105,9 +104,8 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
         h = {
             "id": institution_row.id,
             "label": institution_row.label,
+            "ip" : ip,
         }
-        assert isinstance(h.get("label"), str)
-
     return h
 
 

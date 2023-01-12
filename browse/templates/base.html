@@ -23,18 +23,8 @@
 </head>
 
 <body {% block body_id %}{% endblock %} class="with-cu-identity">
+
   {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
-  <!-- Piwik Pro Trial 2021 -->
-  <script type="text/javascript">
-  (function(window, document, dataLayerName, id) {
-  window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script');
-  function stgCreateCookie(a,b,c){var d="";if(c){var e=new Date;e.setTime(e.getTime()+24*c*60*60*1e3),d="; expires="+e.toUTCString()}document.cookie=a+"="+b+d+"; path=/"}
-  var isStgDebug=(window.location.href.match("stg_debug")||document.cookie.match("stg_debug"))&&!window.location.href.match("stg_disable_debug");stgCreateCookie("stg_debug",isStgDebug?1:"",isStgDebug?14:-1);
-  var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName),isStgDebug&&qP.push("stg_debug");var qPString=qP.length>0?("?"+qP.join("&")):"";
-  tags.async=!0,tags.src="//arxivcu.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts);
-  !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]);
-  })(window, document, 'dataLayer', '5cd2af31-892f-43fc-89ba-dbb835c4ec39');
-  </script><noscript><iframe src="//arxivcu.containers.piwik.pro/5cd2af31-892f-43fc-89ba-dbb835c4ec39/noscript.html" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   {% endif -%}
 
   {% if config['BROWSE_USER_BANNER_ENABLED'] %}
@@ -50,17 +40,8 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
-        <!-- timeboxed column -->
-        {%- if rd_int > 202010190000 and rd_int < 202010240000 -%}
-        <div class="column message-header message-yellow">
-          <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Giving Week:</strong> arXiv depends on donations to support essential operations and new initiatives. <a href="https://securelb.imodules.com/s/1717/alumni/event.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1?source=web">Donate today</a>!</p>
-        </div>
-        {%- endif -%}
-        <!-- /end timeboxed column -->
-
         <div class="column" id="support-ack">
-          <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+          <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
         </div>
       </div>
 
@@ -184,6 +165,9 @@
       </div>
     </footer>
   </div>
+
+  <script src="{{ url_for('base.static', filename='js/member_acknowledgement.js') }}"></script>
+
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
   {%- endif %}
