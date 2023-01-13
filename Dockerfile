@@ -30,9 +30,9 @@ EXPOSE 8080
 
 # Why is this command in an env var and not just run in CMD?
 # So it can be used to start the server during an integration test.
-# See tests/integration_test.sh
+# See cicd/cloudbuild-master-pr.yaml for how it is used
 ENV GUNICORN gunicorn --bind :8080 \
     --workers 1 --threads 8 --timeout 0 \
-     arxiv_dissemination:app
+     "arxiv_dissemination.app:factory()"
 
 CMD exec $GUNICORN
