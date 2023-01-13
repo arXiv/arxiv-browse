@@ -1,0 +1,8 @@
+{% extends "base/base.html" %}
+
+{%- block title -%}No PDF for {{arxiv_id}}{%- endblock -%}
+
+{%- block content -%}
+<h1>PDF unavailable for {{ arxiv_id }}</h1>
+<p>The author has provided no source to generate a PDF and no PDF.</p>
+{%- endblock -%}

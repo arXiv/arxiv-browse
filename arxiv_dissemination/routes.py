@@ -4,15 +4,16 @@ from email.utils import format_datetime
 import logging
 
 from opentelemetry import trace
-from flask import abort, Blueprint, current_app
+from flask import abort, Blueprint, current_app, render_template, redirect, url_for
 
 from flask_rangerequest import RangeRequest
 
 from arxiv.identifier import IdentifierException, Identifier
 
-from .path_for_id import path_for_id
+from arxiv_dissemination.services.next_published import next_publish
 
 logger = logging.getLogger(__file__)
+logger.setLevel(logging.INFO)
 
 blueprint = Blueprint('routes',__name__)
 
@@ -24,8 +25,18 @@ def status():
     return {"status": "good"}
 
 
-
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def redirect_legacy_id_pdf(category: str, arxiv_id: str):
+    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
+    return redirect(url_for('routes.serve_legacy_id_pdf', category=category, arxiv_id=arxiv_id), 301)
+
+
+@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def redirect_pdf(arxiv_id: str):
+    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
+    return redirect(url_for('routes.serve_pdf', arxiv_id=arxiv_id), 301)
+
+
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def serve_legacy_id_pdf(category: str, arxiv_id: str):
     """Serve PDFs for legacy IDs"""
@@ -61,14 +72,19 @@ def serve_pdf(arxiv_id: str):
         if arxiv_id.startswith('arxiv/'):
             abort(400, description="do not prefix with arxiv/ for non-legacy ids")
         id = Identifier(arxiv_id)
-        item = path_for_id('pdf', id)
-        logging.debug(f"looking for key {item}")
     except IdentifierException as ex:
-        abort(400, description=ex)
+        return bad_id(arxiv_id, str(ex))
 
-    if not item or not item.exists():
-            abort(404)
-            return
+    item = current_app.article_store.dissemination_for_id('pdf', id)
+    logger. debug(f"dissemination_for_id({id.idv}) was {item}")
+    if not item or item=="VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
+        return not_found(arxiv_id)
+    elif item in ["WITHDRAWN", "NO_SOURCE"] :
+        return withdrawn(arxiv_id)
+    elif item == "UNAVAIABLE": # TODO Render a html page similar to what legacy does
+        return unavaiable(arxiv_id)
+    elif not item or not item.exists():
+        return not_found(arxiv_id)
 
     resp = RangeRequest(item.open('rb'),
                         etag=item.etag,
@@ -86,36 +102,25 @@ def serve_pdf(arxiv_id: str):
     if id.has_version:
         resp.headers['Cache-Control'] = _cc_versioned()
     else:
-        resp.headers['Expires'] = format_datetime(_next_publish())
+        resp.headers['Expires'] = format_datetime(next_publish())
     return resp
 
 
 def _cc_versioned():
-    """Versioned pdfs should not change so let's put a time a bit in the future."""
+    """Versioned pdfs should not change so let's put a time a bit in the future.
+    Non versioned could change during the next publish."""
     return 'max-age=604800' # 7 days
 
+def withdrawn(arxiv_id: str):
+    headers = {'Cache-Cache': 'max-age=31536000'} # one year, max allowed by RFC 2616
+    return render_template("pdf/withdrawn.html", arxiv_id=arxiv_id), 200, headers
 
-def _next_publish(now=None):
-    """This guesses the next publish but knows nothing about holidays.
+def unavaiable(arxiv_id: str):
+    return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 500, {}
 
-    This is a conservative approch. If this is used for Expires
-    headers should never cache when the contents were updated due to publish. It will
-    cache less then optimal when there is a holiday and nothing could
-    have been updated.
-    """
-    if now == None:
-        now = datetime.now()
+def not_found(arxiv_id: str):
+    headers = {'Expires': format_datetime(next_publish())}
+    return render_template("pdf/not_found.html", arxiv_id=arxiv_id), 404, headers
 
-    if now.weekday() in [0,1,2,3,6]:
-        if now.hour > 20 and now.hour < 21:
-            #It's around publish time, PDF might change, really short
-            return now.replace(minute=now.minute + 5)
-        elif now.hour > 21:
-            return _next_publish((now + timedelta(days=1)).replace(hour=12))
-        else:
-            return now.replace(hour=20)
-
-    if now.weekday() == 4:
-        return (now + timedelta(days=2)).replace(hour=20)
-    if now.weekday() == 5:
-        return (now + timedelta(days=2)).replace(hour=20)
+def bad_id( arxiv_id: str, err_msg: str):
+    return render_template("pdf/bad_id.html", err_msg=err_msg, arxiv_id=arxiv_id), 404, {}

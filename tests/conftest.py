@@ -21,12 +21,17 @@ if not any([path==cwd for path in sys.path]):
     sys.path.append(str(cwd))
 
 @pytest.fixture
-def app_local_fs():
+def storage_prefix():
+    return './tests/data/'
+
+@pytest.fixture
+def app_local_fs(storage_prefix):
     """Pytest fixture to get a dissemination app pointed at `tests/data`"""
+    if not os.environ.get('STORAGE_PREFIX', None):
+        os.environ['STORAGE_PREFIX'] = storage_prefix
     os.environ['TRACE']='0'
-    os.environ['STORAGE_PREFIX'] = './tests/data/'
     from arxiv_dissemination import app
-    return app
+    return app.factory()
 
 @pytest.fixture
 def client(app_local_fs):
