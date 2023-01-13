@@ -10,6 +10,11 @@ from .object_store import ObjectStore, FileObj, FileDoesNotExist
 class LocalObjectStore(ObjectStore):
     """ObjectStore that uses local FS and Path"""
     def __init__(self, prefix:str):
+        if not prefix:
+            raise ValueError("Must have a prefix")
+        if not prefix.endswith('/'):
+            raise ValueError("prefix must end with /")
+
         self.prefix = prefix
 
     def to_obj(self,  key:str) -> FileObj:
@@ -32,6 +37,9 @@ class LocalObjectStore(ObjectStore):
         """
         parent, file = Path(self.prefix+key).parent, Path(self.prefix+key).name
         return (LocalFileObj(item) for item in Path(parent).glob(f"{file}*"))
+
+    def __repr__(self):
+        return self.__str__()
 
     def __str__(self):
         return f"<LocalObjectStore {self.prefix}>"
@@ -67,6 +75,9 @@ class LocalFileObj(FileObj):
     @property
     def updated(self) -> datetime:
         return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
+
+    def __repr__(self):
+        return self.__str__()
 
     def __str__(self):
         return f"<LocalFileObj Path={self.item}>"

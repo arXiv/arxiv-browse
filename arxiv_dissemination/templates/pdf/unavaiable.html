@@ -5,7 +5,6 @@ exists, but there is no PDF. This is an error condition that should
 not happen but needs to be covered. #}
 
 {%- block content -%}
-<h1>No PDF for '{{arxiv_id}}'</h1>
-<p>The identifier you have specified '{{arxiv_id}}' appears to be invalid.</p>
-<p>Please inform help@arxiv.org if you believe that the identifier should correspond to a valid paper in arXiv.</p>
+<h1>PDF unavailable</h1>
+<p>Our automated source to PDF conversion system has failed to produce PDF for the paper {{arxiv_id}}.</p>
 {%- endblock -%}

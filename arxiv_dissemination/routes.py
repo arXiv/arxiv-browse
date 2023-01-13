@@ -4,7 +4,7 @@ from email.utils import format_datetime
 import logging
 
 from opentelemetry import trace
-from flask import abort, Blueprint, current_app, render_template
+from flask import abort, Blueprint, current_app, render_template, redirect, url_for
 
 from flask_rangerequest import RangeRequest
 
@@ -13,6 +13,7 @@ from arxiv.identifier import IdentifierException, Identifier
 from arxiv_dissemination.services.next_published import next_publish
 
 logger = logging.getLogger(__file__)
+logger.setLevel(logging.INFO)
 
 blueprint = Blueprint('routes',__name__)
 
@@ -24,8 +25,18 @@ def status():
     return {"status": "good"}
 
 
-
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def redirect_legacy_id_pdf(category: str, arxiv_id: str):
+    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
+    return redirect(url_for('routes.serve_legacy_id_pdf', category=category, arxiv_id=arxiv_id), 301)
+
+
+@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def redirect_pdf(arxiv_id: str):
+    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
+    return redirect(url_for('routes.serve_pdf', arxiv_id=arxiv_id), 301)
+
+
 @blueprint.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def serve_legacy_id_pdf(category: str, arxiv_id: str):
     """Serve PDFs for legacy IDs"""
@@ -65,9 +76,10 @@ def serve_pdf(arxiv_id: str):
         return bad_id(arxiv_id, str(ex))
 
     item = current_app.article_store.dissemination_for_id('pdf', id)
+    logger. debug(f"dissemination_for_id({id.idv}) was {item}")
     if not item or item=="VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
-    elif item == "WITHDRAWN":
+    elif item in ["WITHDRAWN", "NO_SOURCE"] :
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE": # TODO Render a html page similar to what legacy does
         return unavaiable(arxiv_id)
@@ -100,19 +112,15 @@ def _cc_versioned():
     return 'max-age=604800' # 7 days
 
 def withdrawn(arxiv_id: str):
-    headers = {}
+    headers = {'Cache-Cache': 'max-age=31536000'} # one year, max allowed by RFC 2616
     return render_template("pdf/withdrawn.html", arxiv_id=arxiv_id), 200, headers
 
-
 def unavaiable(arxiv_id: str):
-    # TODO Render a html page similar to what legacy does
-    headers = {}
-    return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 200, headers
+    return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 500, {}
 
 def not_found(arxiv_id: str):
-    headers = {}
+    headers = {'Expires': format_datetime(next_publish())}
     return render_template("pdf/not_found.html", arxiv_id=arxiv_id), 404, headers
 
 def bad_id( arxiv_id: str, err_msg: str):
-    headers = {}
-    return render_template("pdf/bad_id.html", err_msg=err_msg, arxiv_id=arxiv_id), 404, headers
+    return render_template("pdf/bad_id.html", err_msg=err_msg, arxiv_id=arxiv_id), 404, {}
