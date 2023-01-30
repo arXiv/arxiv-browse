@@ -38,6 +38,12 @@ class LocalObjectStore(ObjectStore):
         parent, file = Path(self.prefix+key).parent, Path(self.prefix+key).name
         return (LocalFileObj(item) for item in Path(parent).glob(f"{file}*"))
 
+    def status(self):
+        if Path(self.prefix).exists():
+            return ("GOOD","")
+        else:
+            return ("BAD", "Local storage path doesn't exist")
+
     def __repr__(self):
         return self.__str__()
 

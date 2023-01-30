@@ -18,7 +18,7 @@ opentelemetry-instrumentation-requests = "^0.34b0"
 opentelemetry-instrumentation-flask = "^0.34b0"
 
 #Want to get the arxiv-base that is for py 3.10 
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "5592d714", extras = []}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "ed3feece", extras = []}
 flask-rangerequest = "^0.0.2"
 
 

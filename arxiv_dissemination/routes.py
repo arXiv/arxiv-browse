@@ -2,6 +2,7 @@ from datetime import datetime, timezone, timedelta
 
 from email.utils import format_datetime
 import logging
+from arxiv_dissemination.services.article_store import CannotBuildPdf, Deleted
 
 from opentelemetry import trace
 from flask import abort, Blueprint, current_app, render_template, redirect, url_for
@@ -81,8 +82,12 @@ def serve_pdf(arxiv_id: str):
         return not_found(arxiv_id)
     elif item in ["WITHDRAWN", "NO_SOURCE"] :
         return withdrawn(arxiv_id)
-    elif item == "UNAVAIABLE": # TODO Render a html page similar to what legacy does
-        return unavaiable(arxiv_id)
+    elif item == "UNAVAIABLE":
+        return unavailable(arxiv_id)
+    elif isinstance(item, Deleted):
+        return bad_id(arxiv_id, item.msg)
+    elif isinstance(item, CannotBuildPdf):
+        return cannot_build_pdf(arxiv_id, item.msg)
     elif not item or not item.exists():
         return not_found(arxiv_id)
 
@@ -115,7 +120,7 @@ def withdrawn(arxiv_id: str):
     headers = {'Cache-Cache': 'max-age=31536000'} # one year, max allowed by RFC 2616
     return render_template("pdf/withdrawn.html", arxiv_id=arxiv_id), 200, headers
 
-def unavaiable(arxiv_id: str):
+def unavailable(arxiv_id: str):
     return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 500, {}
 
 def not_found(arxiv_id: str):
@@ -124,3 +129,6 @@ def not_found(arxiv_id: str):
 
 def bad_id( arxiv_id: str, err_msg: str):
     return render_template("pdf/bad_id.html", err_msg=err_msg, arxiv_id=arxiv_id), 404, {}
+
+def cannot_build_pdf(arxiv_id: str, msg: str):
+    return render_template("pdf/cannot_build_pdf.html", err_msg=msg,  arxiv_id=arxiv_id), 404, {}
