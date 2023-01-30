@@ -332,7 +332,6 @@ def test_withdrawn(host):
         integration_test_of_withdrawn(arxiv_id)
 
 
-@pytest.mark.xfail(reason="not yet implemented")
 @pytest.mark.integration
 def test_html_src(host):
     """Submissions with HTML source"""
@@ -343,7 +342,36 @@ def test_html_src(host):
     html_src = 'astro-ph/0306581v1.pdf'
 
 
-@pytest.mark.xfail(reason="sync problem, does not exist on bucket yet")
+
+@pytest.mark.integration
+def test_reasons(host):
+    """Paper in reasons"""
+    msg = "submitter supplied incomplete or corrupted files"
+    resp = requests.get(f"{host}/pdf/1808.02949v1.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+
+    resp = requests.get(f"{host}/pdf/1310.4962.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+    resp = requests.get(f"{host}/pdf/1310.4962v1.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+    resp = requests.get(f"{host}/pdf/1310.4962v2.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    assert resp.status_code == 404
+    assert msg in resp.text
+
+
 @pytest.mark.integration
 def test_404(host):
     """These returned 404s during a test in 2022-12"""
@@ -354,3 +382,40 @@ def test_404(host):
 
     resp = requests.get(f"{host}/pdf/1302.1106v1.pdf")
     assert resp.status_code == 200
+
+
+
+@pytest.mark.integration
+def test_deleted(host):
+    """Paper is deleted"""
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174.pdf")
+    assert resp.status_code == 404
+    assert "this identifier erroneously skipped during software upgrade" in resp.text
+
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174v1.pdf")
+    assert resp.status_code == 404
+    assert "this identifier erroneously skipped during software upgrade" in resp.text
+
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174v3.pdf")
+    assert resp.status_code == 404
+    assert "this identifier erroneously skipped during software upgrade" in resp.text
+
+    # resp = requests.get(f"{host}/pdf/1310.4962.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text
+    # resp = requests.get(f"{host}/pdf/1310.4962v1.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text
+    # resp = requests.get(f"{host}/pdf/1310.4962v2.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text
+
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
+    # assert resp.status_code == 404
+    # assert msg in resp.text

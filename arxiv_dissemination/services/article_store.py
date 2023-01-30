@@ -33,6 +33,7 @@ Conditions = Union[Literal["WITHDRAWN", # Where the version is a WDR
                            "VERSION_NOT_FOUND", # Where the article exists but the version does not
                            "NO_SOURCE", # Article and version exists but no source exists
                            "UNAVAIABLE", # Where the PDF unexpectedly does not exist
+                           "NOT_PDF", # format that doens't serve a pdf
                            ],
                    Deleted,
                    CannotBuildPdf]
@@ -54,6 +55,9 @@ VALID_SOURCE_EXTENSIONS = [
 
 src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
 
+cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
+"""Regex for use aginst source_type for formats that cannot serve a PDF,
+these are HTML, ODF and DOCX"""
 
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
@@ -116,7 +120,7 @@ class ArticleStore():
             
         
     def current_version(self, arxiv_id:Identifier) -> Optional[int]:
-        """Gets the version number of the latest versoin of `arxiv_id`
+        """Gets the version number of the latest version of `arxiv_id`
 
         Returns None if there is no article witht this ID."""
         orgprefix =f"{abs_path_orig_parent(arxiv_id)}/{arxiv_id.filename}"
@@ -161,23 +165,26 @@ class ArticleStore():
 
         if not arxiv_id.has_version:
             return self.dissemination_for_id_current(format, arxiv_id)
-
-        res =  self.reasons(arxiv_id.id, format)
-        if res:
-            return CannotBuildPdf(res)
         
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
-        
+        res = self.reasons(arxiv_id.idv, format)
+        if res:
+            return CannotBuildPdf(res)
+
+        # try from the ps_cache with the version number
         ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
+        # try from the /orig with version number for a pdf only paper
         non_current_pdf=self.objstore.to_obj(previous_pdf_path(arxiv_id))
         if non_current_pdf.exists():
             return non_current_pdf
 
+        # Last option is that is a pdf only and the version requested is the current version
+        # so it's stored in /ftp not /orig
         cur_version = self.current_version(arxiv_id)
         if not cur_version:
             return "ARTICLE_NOT_FOUND"
@@ -187,11 +194,14 @@ class ArticleStore():
         current_pdf = self.objstore.to_obj(current_pdf_path(arxiv_id))
         if current_pdf.exists():
             return current_pdf
-
-        if self.is_withdrawn(arxiv_id):
+        
+        src_type = self._source_type(arxiv_id)
+        if re.search('I', src_type, re.IGNORECASE):
             return "WITHDRAWN"
         if not self._source_exists(arxiv_id):
-            return "WITHDRAWN"
+            return "NO_SOURCE"
+        if re.search(cannot_gen_pdf_regex, src_type):
+            return "NOT_PDF"
 
         logger.debug("no file found for %s, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(non_current_pdf), str(current_pdf)])
@@ -208,7 +218,6 @@ class ArticleStore():
 
         version = self.current_version(arxiv_id)
         if not version:
-            logger.debug("No current version found for article %s", arxiv_id.id)
             return "ARTICLE_NOT_FOUND"
         
         ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id, version))
@@ -223,11 +232,14 @@ class ArticleStore():
         if abs == "ARTICLE_NOT_FOUND" or abs == "VERSION_NOT_FOUND":
             return abs
 
-        if self.is_withdrawn(arxiv_id):
+        src_type = self._source_type(arxiv_id)
+        if re.search('I', src_type, re.IGNORECASE):
             return "WITHDRAWN"
         if not self._source_exists(arxiv_id):
             return "NO_SOURCE"
-
+        if re.search(cannot_gen_pdf_regex, src_type):
+            return "NOT_PDF"
+        
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(current_pdf)])
         return "UNAVAIABLE"
