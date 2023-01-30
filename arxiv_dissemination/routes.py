@@ -84,6 +84,8 @@ def serve_pdf(arxiv_id: str):
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE":
         return unavailable(arxiv_id)
+    elif item == "NOT_PDF":
+        return not_pdf(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
@@ -122,6 +124,9 @@ def withdrawn(arxiv_id: str):
 
 def unavailable(arxiv_id: str):
     return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 500, {}
+
+def not_pdf(arxiv_id: str):
+    return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 404, {}
 
 def not_found(arxiv_id: str):
     headers = {'Expires': format_datetime(next_publish())}
