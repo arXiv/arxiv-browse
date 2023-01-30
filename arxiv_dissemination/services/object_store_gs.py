@@ -38,3 +38,10 @@ class GsObjectStore(ObjectStore):
         'ftp/cs/papers/0012/0012007'.
         """
         return self.bucket.client.list_blobs(self.bucket, prefix=prefix)
+
+    def status(self):
+        """Gets if bucket can be read."""
+        if self.bucket.exists:
+            return ("GOOD",'')
+        else:
+            return ("BAD",'bucket does not exist or API down')

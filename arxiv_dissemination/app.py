@@ -14,6 +14,8 @@ logging.basicConfig(level=logging.INFO)
 from google.cloud import storage
 
 from arxiv.base import Base
+from arxiv.legacy.papers.dissemination.reasons import reasons
+from arxiv.legacy.papers.deleted import is_deleted
 
 from arxiv_dissemination.services.object_store_gs import GsObjectStore
 from arxiv_dissemination.services.object_store_local import LocalObjectStore
@@ -71,7 +73,10 @@ def factory():
         setattr(app, 'object_store', GsObjectStore(bucket))
 
 
-    setattr(app, 'article_store', ArticleStore(app.object_store))
+    setattr(app, 'article_store', ArticleStore(app.object_store, reasons, is_deleted))
+    stat, msg = app.article_store.status()
+    if stat != 'GOOD':
+        problems.append(f"article_store status {stat} due to {msg}")
 
     if problems:
         [app.logger.error(prob) for prob in problems]

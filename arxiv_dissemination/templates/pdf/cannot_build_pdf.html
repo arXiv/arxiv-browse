@@ -1,0 +1,24 @@
+{% extends "base/base.html" %}
+
+{%- block content -%}
+<h1>PDF unavailable ...</h1>
+
+<p>Our <b>automated</b> source to PDF conversion system
+  has <b>failed</b> to produce PDF for the paper:
+  <a href="/abs/{{arxiv_id}}">{{arxiv_id}}</a>.</p>
+
+<p>The submitter supplied incomplete or corrupted files to arXiv and
+  we cannot easily amend these. This failure is permanent unless the
+  author replaces. The reason for failure is recorded as:<br />
+  <b>{{msg}}</b></p>
+
+<p>Return to the<a href="/abs/{{arxiv_id}}">abstract</a> for an
+  alternative link to the
+  <a href="/e-print/{{arxiv_id}}">source</a>, or to find an
+  email address to contact the author.</p>
+
+<p>For help regarding the automated source to PDF system, please
+  contact <a href="mailto:help@arxiv.org">help@arxiv.org</a>,
+  remembering to specify the problematic archive and paper number.</p>
+
+{%- endblock -%}

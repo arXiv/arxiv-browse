@@ -1,10 +1,8 @@
 """ABC of the object store service."""
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterator
-from typing import IO, Iterable
-from datetime import datetime, timezone
-from pathlib import Path
+from typing import IO, Iterable, Tuple, Literal
+from datetime import datetime
 
 
 class FileObj(ABC):
@@ -70,6 +68,16 @@ class ObjectStore(ABC):
         """
         pass
 
+    @abstractmethod
+    def status() -> Tuple[Literal["GOOD","BAD"], str]:
+        """Indicates the health of the service.
+
+        Returns a tuple of either ("GOOD",'') or ("BAD","Some human readable message")
+
+        The human readable message might be displayed publicly so do
+        not put sensitive information in it.
+        """
+        pass
 
 class FileDoesNotExist(FileObj):
     """Represents a file that does not exist"""

@@ -2,33 +2,45 @@
 
 These are focused on using the GS bucket abs and source files."""
 
+from collections.abc import Callable
 import re
 from typing import Union, Literal, Optional, Tuple, List
 
 from dateutil import parser
 
 from arxiv.identifier import Identifier
-
+from arxiv.legacy.papers.dissemination.reasons import FORMATS
 
 from arxiv_dissemination.services.object_store import FileObj, ObjectStore
 
 from .key_patterns import abs_path_current_parent, abs_path_orig_parent, ps_cache_pdf_path, current_pdf_path, previous_pdf_path, abs_path_orig, abs_path_current, Formats
 
+
 import logging
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.DEBUG)
 
+class Deleted():
+    def __init__(self, msg: str):
+        self.msg = msg
 
-Conditions = Literal["WITHDRAWN", # Where the version is a WDR
-                     "ARTICLE_NOT_FOUND", # Where there is no article
-                     "VERSION_NOT_FOUND", # Where the article exists but the version does not
-                     "NO_SOURCE", # Article and version exists but no source exists
-                     "UNAVAIABLE", # Where the PDF unexpectedly does not exist
-                     ]
+class CannotBuildPdf():
+    def __init__(self, msg: str):
+        self.msg = msg
+        
+Conditions = Union[Literal["WITHDRAWN", # Where the version is a WDR
+                           "ARTICLE_NOT_FOUND", # Where there is no article
+                           "VERSION_NOT_FOUND", # Where the article exists but the version does not
+                           "NO_SOURCE", # Article and version exists but no source exists
+                           "UNAVAIABLE", # Where the PDF unexpectedly does not exist
+                           ],
+                   Deleted,
+                   CannotBuildPdf]
 
-AbsConditions = Literal["ARTICLE_NOT_FOUND",
-                        "VERSION_NOT_FOUND",
-                        "NO_ID"]
+AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
+                              "VERSION_NOT_FOUND",
+                              "NO_ID"],
+                      Deleted]
 
 # From arxiv/browse/services/util/formats.py
 VALID_SOURCE_EXTENSIONS = [
@@ -57,9 +69,52 @@ def _path_to_version(path: FileObj):
         return 0
 
 class ArticleStore():
-    def __init__(self, objstore: ObjectStore):
+    def __init__(self,
+                 objstore: ObjectStore,
+                 reasons: Callable[[str, FORMATS], Optional[str]],
+                 is_deleted: Callable[[str], Optional[str]]
+                 ):
         self.objstore: ObjectStore = objstore
+        self.reasons = reasons
+        self.is_deleted = is_deleted
 
+
+    def status(self) -> Tuple[Literal["GOOD","BAD"], str]:
+        """Indicates the health of the service.
+
+        Returns a tuple of either ("GOOD",'') or ("BAD","Some human readable message")
+
+        The human readable message might be displayed publicly so do
+        not put sensitive information in it.
+        """
+        stats = []
+        osstat,osmsg = self.objstore.status()
+        stats.append((type(self.objstore), osstat, osmsg))
+
+        rstat,rmsg = 'BAD',''
+        try:
+            self.reasons('bogusid','pdf')
+            rstat = 'GOOD'
+        except Exception as ex:
+            rstat, rmsg = 'BAD', str(ex)
+        stats.append(('pdf_reasons', rstat, rmsg))
+        
+        dstat,dmsg = 'BAD',''
+        try:
+            self.is_deleted('2202.00001')
+            dstat = 'GOOD'
+        except Exception:
+            dstat = 'BAD'
+        stats.append(('is_deleted', dstat, dmsg))
+        
+        if all([stat[1]=='GOOD' for stat in stats]):
+            return ('GOOD','')
+
+        msgs = [f"{styp} was bad due to \"{msg}\"" for styp,stat,msg in stats if stat != 'GOOD']
+        return ('BAD', ' and '.join(msgs))
+        
+            
+        
     def current_version(self, arxiv_id:Identifier) -> Optional[int]:
         """Gets the version number of the latest versoin of `arxiv_id`
 
@@ -107,6 +162,14 @@ class ArticleStore():
         if not arxiv_id.has_version:
             return self.dissemination_for_id_current(format, arxiv_id)
 
+        res =  self.reasons(arxiv_id.id, format)
+        if res:
+            return CannotBuildPdf(res)
+        
+        deleted = self.is_deleted(arxiv_id.id)
+        if deleted:
+            return Deleted(deleted)
+        
         ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
@@ -136,6 +199,13 @@ class ArticleStore():
 
     def dissemination_for_id_current(self, format: Formats, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
         """Gets PDF FileObj for most current version for `Identifier`."""
+        res =  self.reasons(arxiv_id.idv, format)
+        if res:
+            return CannotBuildPdf(res)        
+        deleted = self.is_deleted(arxiv_id.id)
+        if deleted:
+            return Deleted(deleted)
+
         version = self.current_version(arxiv_id)
         if not version:
             logger.debug("No current version found for article %s", arxiv_id.id)
@@ -150,7 +220,7 @@ class ArticleStore():
             return current_pdf
 
         abs = self.abs_for_id(arxiv_id)
-        if abs in ["ARTICLE_NOT_FOUND", "VERSION_NOT_FOUND"]:
+        if abs == "ARTICLE_NOT_FOUND" or abs == "VERSION_NOT_FOUND":
             return abs
 
         if self.is_withdrawn(arxiv_id):
