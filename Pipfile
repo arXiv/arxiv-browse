@@ -13,7 +13,7 @@ SQLAlchemy = "==1.3.20" # ARXIVNG-3649
 pytz = "*"
 mysqlclient = "==1.4.1"
 "mmh3" = "*"
-aiohttp = "==3.6.2"
+aiohttp = "==3.7.4"
 flask = "==1.1.4"
 validators = "*"
 mypy-extensions = "*"
