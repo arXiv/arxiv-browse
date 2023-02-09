@@ -20,6 +20,7 @@ $(document).ready(function() {
     "scite": $('#scite-toggle').data('script-url'),
     "iarxiv": $('#iarxiv-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
+    "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
@@ -81,6 +82,10 @@ $(document).ready(function() {
           });
         } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "influenceflower-toggle") {
+          $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         } else if (key === "sciencecast-toggle") {
@@ -164,6 +169,10 @@ $(document).ready(function() {
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "influenceflower-toggle") {
+      $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
     } else if ($(this).attr("id") == "sciencecast-toggle") {

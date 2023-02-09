@@ -111,6 +111,7 @@
           </div>
         </div>
 
+
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -183,6 +184,20 @@
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
+                <input id="influenceflower-toggle"
+                data-script-url="{{ url_for('static', filename='js/influenceflower.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-influenceflower">
+                <span class="slider"></span>
+                <span class="is-sr-only">Link to Influence Flowers</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+              <span id="label-for-influenceflower">Influence Flowers</span> <em>(<a href="https://influencemap.cmlab.dev/" target="_blank">What are Influence Flowers?</a>)</em>
+            </div>
+          </div>
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
                 <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
                        data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
                        aria-labelledby="label-for-connected-papers" >
@@ -225,6 +240,21 @@
             </div>
           </div>
           {% endif -%}
+        </div>
+        <div id="influenceflower-output"></div>
+        <div id="influenceflower-output-graph" style="display:none">
+          <ul class="flower-tabs">
+            <li class="active"><a class="btn tab-btn" onclick="openTab(event, 'tab-author')">Author</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-venue')">Venue</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-inst')">Institution</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-topic')">Topic</a></li>
+          </ul>
+          <div class="flower-tab-content">
+            <div class="tab-flower active" id="tab-author"><svg id="flower-graph-author"></svg></div>
+            <div class="tab-flower" id="tab-venue"><svg id="flower-graph-venue"></svg></div>
+            <div class="tab-flower" id="tab-inst"><svg id="flower-graph-inst"></svg></div>
+            <div class="tab-flower" id="tab-topic"><svg id="flower-graph-topic"></svg></div>
+          </div>
         </div>
         <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div id="coreRecommenderOutput"></div>
