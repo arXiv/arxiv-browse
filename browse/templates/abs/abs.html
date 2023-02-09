@@ -174,10 +174,20 @@
 {%- endmacro -%}
 
 {% macro generate_download_button() %}
+  {% set author_list = abs_meta.authors.raw.split(',') %}
+  <div id="download-button-info" hidden>
+    {%- if author_list|length > 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    {%- elif author_list|length == 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    {%- else -%}
+    Download a PDF of the paper titled {{abs_meta.title}}
+    {%- endif -%}
+  </div>
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a aria-describedby="download-button-info" class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
   {% else %}
-    <a class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
+    <a aria-describedby="download-button-info" class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
 {% endmacro %}
 
