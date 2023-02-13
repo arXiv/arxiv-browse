@@ -12,12 +12,13 @@ var InfluenceFlower = class InfluenceFlower {
     this.start_order = "ratio";
   }
 
-  drawInfoBox(flower_type, svg_id) {
+  drawInfoBox(flower_type, svg_id, summary) {
     var parentDiv = document.getElementById(svg_id).parentElement;
     if (parentDiv.getElementsByClassName("flower-infobox").length > 0) return;
     var infoDiv = document.createElement("div");
     infoDiv.setAttribute("class", "flower-infobox");
-    infoDiv.innerHTML = "<div class='flower-text'><span class='text-blue'>Blue arcs</span> denote "
+    infoDiv.innerHTML = "<div class='flower-text' style='padding-bottom:12px'>"+summary+"</div>"
+      + "<div class='flower-text'><span class='text-blue'>Blue arcs</span> denote "
       + "<i>incoming</i> influence from the " + flower_type + "s to the paper, "
       + "with their thickness proportional to the number of <i>references</i> made.</div>"
       + "<div class='flower-text'><span class='text-red'>Red arcs</span> denote "
@@ -26,7 +27,7 @@ var InfluenceFlower = class InfluenceFlower {
     parentDiv.appendChild(infoDiv);
   }
 
-  drawFlower(svg_id, flower_type, data, idx, ego_url_base) {
+  drawFlower(svg_id, flower_type, data, idx, ego_url_base, summary) {
     this.svg = [];
     this.node_out = {};
     this.text_out = [];
@@ -48,7 +49,7 @@ var InfluenceFlower = class InfluenceFlower {
     this.svg[idx] = document.getElementById(svg_id);
     this.svg[idx].setAttribute("width", this.width);
     this.svg[idx].setAttribute("height", this.height);
-    this.drawInfoBox(flower_type, svg_id);
+    this.drawInfoBox(flower_type, svg_id, summary);
 
     // Ordering
     var ordering = this.reorder(this.start_petals, this.start_order, data);
@@ -367,12 +368,13 @@ function drawInfluenceFlowers(data) {
   var padding_w = 10;
   var flowers = new InfluenceFlower(container_w-padding_w, 400);
   var ego_url_base = data.url_base;
+  var flower_stats = data.summary;
   var author_data = data.author[0];
   var conf_data = data.conf[0];
   var inst_data = data.inst[0];
   var fos_data = data.fos[0];
-  flowers.drawFlower("flower-graph-author", "author", author_data, 0, ego_url_base);
-  flowers.drawFlower("flower-graph-venue", "venue", conf_data, 1, ego_url_base);
-  flowers.drawFlower("flower-graph-inst", "institution", inst_data, 2, ego_url_base);
-  flowers.drawFlower("flower-graph-topic", "research field", fos_data, 3, ego_url_base);
+  flowers.drawFlower("flower-graph-author", "author", author_data, 0, ego_url_base, flower_stats);
+  flowers.drawFlower("flower-graph-venue", "venue", conf_data, 1, ego_url_base, flower_stats);
+  flowers.drawFlower("flower-graph-inst", "institution", inst_data, 2, ego_url_base, flower_stats);
+  flowers.drawFlower("flower-graph-topic", "research field", fos_data, 3, ego_url_base, flower_stats);
 }
