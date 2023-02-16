@@ -203,6 +203,18 @@ If neither of those is set and TESTING is the string 'yes', then a
 SQLITE test DB is used.
 """
 
+if (os.environ.get("DB_NAME",False) and
+    os.environ.get("DB_PASSWORD",False) and
+    os.environ.get("DB_USER",False) and
+    os.environ.get("DB_INSTANCE_UNIX_SOCKET",False)):
+    db_user = os.environ["DB_USER"]  # e.g. 'my-database-user'
+    db_pass = os.environ["DB_PASS"]  # e.g. 'my-database-password'
+    db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
+    unix_socket_path = os.environ["INSTANCE_UNIX_SOCKET"]  # e.g. '/cloudsql/project:region:instance'
+    SQLALCHEMY_DATABASE_URI=f"mysql://{db_user}:{db_pass}@/{db_name}?unix_socket={unix_socket_path}"
+    if os.environ("BROWSE_SQLALCHEMY_DATABASE_URI",False):
+        warnings.warn("Overridiing BROWSE_SQLALCHEMY_DATABASE_URI with DB_INSTANCE_UNIX_SOCKET")
+
 if (
     os.environ.get("FLASK_ENV", False) == "production"
     and "sqlite" in SQLALCHEMY_DATABASE_URI
@@ -332,7 +344,7 @@ CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
 CLASSIC_TRACKING_COOKIE = os.environ.get("CLASSIC_TRACKING_COOKIE", "browser")
 CLASSIC_DATABASE_URI = os.environ.get(
     "CLASSIC_DATABASE_URI",
-    os.environ.get("BROWSE_SQLALCHEMY_DATABASE_URI", default=None),
+    os.environ.get("BROWSE_SQLALCHEMY_DATABASE_URI", default=SQLALCHEMY_DATABASE_URI),
 )
 """If not set, legacy database integrations for auth will not be available."""
 
