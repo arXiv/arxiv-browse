@@ -1,4 +1,5 @@
 # type: ignore
+
 """Makes GCP path map string for use with a load balancer of all the flask app's routes
 
 For use with gcloud compute url-maps add-path-matcher
@@ -17,7 +18,7 @@ app = create_web_app()
 
 
 def mappingline(rule):
-    """For a bluprint rule it makes the LB mapping line."""
+    """For a bluprint rule it makes the LB mapping line for use with GCP path map."""
     hasParam = '<' in rule.rule
     if hasParam:
         path = rule.rule.split('<')[0] + "*"

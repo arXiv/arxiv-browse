@@ -39,9 +39,9 @@ class TrackbackNotFound(HTTPException):
 
     def __init__(self, description: Optional[str] = None,
                  response: Optional[Response] = None,
-                 data: dict = {}) -> None:
+                 data: Optional[dict] = None) -> None:
         """Override default to support data dict."""
-        self.data = data
+        self.data = data or {}
         super(TrackbackNotFound, self).__init__(description, response)
 
 

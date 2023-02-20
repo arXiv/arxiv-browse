@@ -1,64 +1,53 @@
 """Tests exception handling in :mod:`arxiv.base.exceptions`."""
+import pytest
 
-from unittest import TestCase, mock
 
 from http import HTTPStatus as status
+from browse.services.documents.base_documents import AbsException
 
-from browse.factory import create_web_app
-from browse.services.document.metadata import AbsException
+@pytest.fixture()
+def no_werkzeug_log():
+    """Disable logging to avoid messy output during testing"""
+    import logging
+    wlog = logging.getLogger('werkzeug')
+    wlog.disabled = True
 
 
-class TestExceptionHandling(TestCase):
-    """HTTPExceptions should be handled with custom templates."""
+def test_404(client_with_fake_listings, no_werkzeug_log):
+    """A 404 response should be returned."""
+    client = client_with_fake_listings
+    for path in ('/foo', '/abs', '/abs/'):
+        response = client.get(path)
+        assert response.status_code == status.NOT_FOUND
+        assert 'text/html' in  response.content_type
 
-    def setUp(self):
-        """Initialize an app and install :class:`.Base`."""
+def test_404_unknown_version(client_with_fake_listings, no_werkzeug_log):
+    response = client_with_fake_listings.get('/abs/1307.0001v999')
+    assert response.status_code == status.NOT_FOUND
 
-        """Disable logging to avoid messy output during testing"""
-        import logging
-        wlog = logging.getLogger('werkzeug')
-        wlog.disabled = True
+def test_404_oldstyle_nonexistant(client_with_fake_listings, no_werkzeug_log):
+    """should get 404 for valid old paper ID with nonexistent paper number affix"""
+    response = client_with_fake_listings.get('/abs/alg-geom/07059999')
+    assert response.status_code == status.NOT_FOUND
 
-        self.app = create_web_app()
-        self.app.testing = True
-        self.app.config['APPLICATION_ROOT'] = ''
-        self.client = self.app.test_client()
+def test_404_deleted_paper(client_with_fake_listings, no_werkzeug_log):
+    'should get 404 for known deleted paper'
+    response = client_with_fake_listings.get('/abs/astro-ph/0110242')
+    assert response.status_code == status.NOT_FOUND
 
-    def test_404(self):
-        """A 404 response should be returned."""
-        for path in ('/foo', '/abs', '/abs/'):
-            response = self.client.get(path)
-            self.assertEqual(response.status_code,
-                             status.NOT_FOUND,
-                             f'should get 404 for {path}')
-            self.assertIn('text/html', response.content_type)
+def test_404_bad_id(client_with_fake_listings, no_werkzeug_log):
+    response = client_with_fake_listings.get('/abs/foo-bar/11223344')
+    assert response.status_code == status.NOT_FOUND
 
-        response = self.client.get('/abs/1307.0001v999')
-        self.assertEqual(response.status_code, status.NOT_FOUND,
-                         f'should get 404 for known paper ID with '
-                         'nonexistent version')
-        response = self.client.get('/abs/alg-geom/07059999')
-        self.assertEqual(response.status_code, status.NOT_FOUND,
-                         f'should get 404 for valid old paper ID '
-                         'with nonexistent paper number affix')
-        response = self.client.get('/abs/astro-ph/0110242')
-        self.assertEqual(response.status_code, status.NOT_FOUND,
-                         f'should get 404 for known deleted paper')
-        response = self.client.get('/abs/foo-bar/11223344')
-        self.assertEqual(response.status_code, status.NOT_FOUND,
-                         f'should get 404 for bad paper ID')
+def test_500(client_with_fake_listings, mocke,no_werkzeug_log r):
+    """A 500 response should be returned."""
+    abs = mocker.patch('browse.controllers.abs_page.get_abs_page')
+    abs.side_effect = AbsException
 
-    @mock.patch('browse.controllers.abs_page.get_abs_page')
-    def test_500(self, mock_abs):
-        """A 500 response should be returned."""
-        # Raise a general exception from the get_abs_page controller.
-        mock_abs.side_effect = AbsException
+    """Disable logging to avoid messy output during testing"""
+    client_with_fake_listings.application.logger.disabled = True
 
-        """Disable logging to avoid messy output during testing"""
-        self.app.logger.disabled = True
-
-        with self.assertRaises(AbsException):
-            response = self.client.get('/abs/1234.5678')
-            self.assertEqual(response.status_code,
-                             status.INTERNAL_SERVER_ERROR)
-            self.assertIn('text/html', response.content_type)
+    with pytest.raises(AbsException):
+        response = client_with_fake_listings.get('/abs/1234.5678')
+        assert response.status_code == status.INTERNAL_SERVER_ERROR
+        assert 'text/html' in response.content_type

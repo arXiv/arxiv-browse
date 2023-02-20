@@ -37,7 +37,6 @@ class IdentifierException(Exception):
     """Error class for general arXiv identifier exceptions."""
 
 
-
 class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
 

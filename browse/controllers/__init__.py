@@ -3,7 +3,6 @@
 Each controller corresponds to a distinct browse feature with its own
 request handling logic.
 """
-
 from typing import Any, Dict, Optional, Tuple
 
 from http import HTTPStatus as status

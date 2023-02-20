@@ -2,10 +2,12 @@
 from datetime import datetime, timedelta
 from unittest import TestCase
 
+from browse.controllers.response_headers import guess_next_update_utc, \
+    mime_header_date, APPROX_PUBLISH_DURATION
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
 
-from browse.services.util.response_headers import (
+from browse.controllers.response_headers import (
     APPROX_PUBLISH_DURATION,
     guess_next_update_utc,
     mime_header_date,
@@ -17,8 +19,6 @@ class TestResponseHeaderUtils(TestCase):
 
     def test_guess_next_update_utc(self) -> None:
         """Test the guess_next_update_utc function."""
-
-        config = get_application_config()
         tz = gettz('US/Eastern')
 
         dt = datetime(year=2018, month=9, day=11,
@@ -106,8 +106,6 @@ class TestResponseHeaderUtils(TestCase):
 
     def test_mime_header_date(self) -> None:
         """Test MIME header date string is correct."""
-
-        config = get_application_config()
         tz = gettz('US/Eastern')
 
         dt = datetime(year=2018, month=9, day=14,

@@ -14,7 +14,7 @@ from arxiv.base.globals import get_application_config, get_application_global
 from dateutil import parser
 
 from browse.services import APath
-from browse.domain import License
+from browse.domain.license import License
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.metadata import (
     Archive,
@@ -26,9 +26,9 @@ from browse.domain.metadata import (
     Submitter,
     VersionEntry,
 )
-from browse.services.document import cache
-from browse.services.document.config.deleted_papers import DELETED_PAPERS
-from browse.services.util.formats import (
+from browse.services.documents.fs_implementation import cache
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+from browse.services.documents.format_codes import (
     VALID_SOURCE_EXTENSIONS,
     formats_from_source_file_name,
     formats_from_source_type,
@@ -449,7 +449,7 @@ class AbsMetaSession:
                 and cached_ps_file_path.stat().st_size == 0 \
                 and source_file_path \
                 and source_file_path.stat().st_mtime < \
-                cached_ps_file_path.stat().st_mtime) #type: ignore
+                cached_ps_file_path.stat().st_mtime)
 
             source_type_formats = formats_from_source_type(format_code,
                                                            format_pref,
@@ -539,7 +539,7 @@ class AbsMetaSession:
 
         # named (key-value) fields
         if not all(rf in fields for rf in REQUIRED_FIELDS):
-            raise AbsParsingException(f'missing required field(s)')
+            raise AbsParsingException('missing required field(s)')
 
         # some transformations
         category_list: List[str] = []

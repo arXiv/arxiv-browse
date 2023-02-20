@@ -5,15 +5,11 @@
 import datetime
 from typing import List, Optional
 
-from browse.domain.listing import (
-    ListingCountResponse,
-    ListingItem,
-    ListingResponse,
-    NewResponse,
-)
+from .base_listing import NewResponse, ListingResponse, ListingItem, \
+    ListingCountResponse, ListingService
 
 
-class FakeListingFilesService():
+class FakeListingFilesService(ListingService):
     """Listing service used for development and testing purposes.
 
     This is intended as an example of what the /listing controller
@@ -61,11 +57,8 @@ class FakeListingFilesService():
             '0704.0276', '0704.0991', '0704.0740', '0704.0473', '0704.0083', '0704.0278', '0704.0006',
             '0704.0735', '0704.0753', '0704.0324', '0704.0600', '0704.0737', '0704.0387', '0704.0659',
             '0704.0432', '0704.0408', '0704.0895', '0704.0088', '0704.0719', '0704.0124', '0704.0508']
-
         items2 = [{'id': id, 'listingType': 'new', 'primary': 'cs.DB'}
                   for id in listings]
-        new_count = len(items2)
-
         items3 = [
             {'id': '0704.0145', 'listingType': 'cross', 'primary': 'cs.DL'},
             {'id': '0704.0075', 'listingType': 'cross', 'primary': 'cs.GT'},
@@ -82,7 +75,6 @@ class FakeListingFilesService():
             {'id': '0704.0209', 'listingType': 'cross', 'primary': 'cs.GT'},
             {'id': '0704.0916', 'listingType': 'cross', 'primary': 'cs.DL'},
         ]
-
         items4 = [
             {'id': '0704.0091', 'listingType': 'rep'}, {
                 'id': '0704.0054', 'listingType': 'rep'},
@@ -93,7 +85,6 @@ class FakeListingFilesService():
             {'id': '0704.0257', 'listingType': 'rep'}, {'id': '0704.0481', 'listingType': 'rep'}]
 
         lstgs: List[ListingItem] = items2 + items3 + items4  # type: ignore
-
         return {'listings': lstgs[skip:skip + show],
                 'announced': datetime.date(2007, 4, 1),
                 'submitted': (datetime.date(2007, 3, 30), datetime.date(2007, 4, 1)),

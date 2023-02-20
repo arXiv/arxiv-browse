@@ -1,9 +1,12 @@
-"""Return types for listing service."""
+"""Abstract base class for listing service."""
+
+from abc import ABC, abstractmethod
 
 from datetime import date
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from mypy_extensions import TypedDict
+
 
 
 ListingItem = TypedDict('ListingItem',
@@ -123,3 +126,68 @@ cross_count is the count of cross articles for the year.
 
 rep_count is the count of replaced articles for the year.
 """
+
+
+class ListingService(ABC):
+    """Abstract Base Class for arXiv document listings."""
+
+    @abstractmethod
+    def list_articles_by_year(self,
+                              archiveOrCategory: str,
+                              year: int,
+                              skip: int,
+                              show: int,
+                              if_modified_since: Optional[str] = None) -> ListingResponse:
+        """Get listing items for a whole year.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+
+    @abstractmethod
+    def list_articles_by_month(self,
+                               archiveOrCategory: str,
+                               year: int,
+                               month: int,
+                               skip: int,
+                               show: int,
+                               if_modified_since: Optional[str] = None) -> ListingResponse:
+        """Get listings for a month.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+
+    @abstractmethod
+    def list_new_articles(self,
+                          archiveOrCategory: str,
+                          skip: int,
+                          show: int,
+                          if_modified_since: Optional[str] = None) -> NewResponse:
+        """Gets listings for the most recent announcement/publish.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+
+    @abstractmethod
+    def list_pastweek_articles(self,
+                               archiveOrCategory: str,
+                               skip: int,
+                               show: int,
+                               if_modified_since: Optional[str] = None) -> ListingResponse:
+        """Gets listings for the 5 most recent announcement/publish.
+
+        if_modified_since is the if_modified_since header value passed by the web client
+        It should be in RFC 1123 format.
+        """
+
+    @abstractmethod
+    def monthly_counts(self,
+                       archive: str,
+                       year: int) -> ListingCountResponse:
+        """Gets monthly listing counts for the year."""
+
+
+"""Return types for listing service."""
+

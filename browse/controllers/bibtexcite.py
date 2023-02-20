@@ -5,13 +5,10 @@ from flask import Response, make_response
 from werkzeug.exceptions import InternalServerError
 
 from browse.exceptions import AbsNotFound
-from browse.services.cite import arxiv_bibtex
-from browse.services.document import metadata
-from browse.services.document.metadata import (
-    AbsDeletedException,
-    AbsNotFoundException,
-    AbsVersionNotFoundException,
-)
+from browse.services.documents import get_doc_service
+from browse.services.documents.base_documents import AbsNotFoundException, \
+    AbsVersionNotFoundException, AbsDeletedException
+from browse.formating.cite import arxiv_bibtex
 
 
 def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
@@ -45,7 +42,7 @@ def bibtex_citation(arxiv_id: str) -> Response:
     Flask response
 
     """
-    abs_meta = metadata.get_abs(arxiv_id)
+    abs_meta = get_doc_service().get_abs(arxiv_id)
     bibtex = arxiv_bibtex(abs_meta)
     response = make_response(bibtex, 200)
     response.mimetype = 'text/plain'

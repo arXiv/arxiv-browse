@@ -4,6 +4,9 @@ from datetime import datetime
 from unittest import TestCase
 
 from dateutil.tz import tzutc
+from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
+    VersionEntry
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from tests import path_of_for_test
 
 from browse.domain.metadata import (
@@ -35,7 +38,7 @@ class TestAbsParser(TestCase):
                 if not fname_path.endswith('.abs'):
                     continue
                 num_files_tested += 1
-                dm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                dm = parse_abs_file(filename=fname_path)
                 self.assertIsInstance(dm, DocMetadata)
                 self.assertNotEqual(dm.license, None)
                 self.assertNotEqual(dm.license.effective_uri, None,
@@ -52,7 +55,7 @@ class TestAbsParser(TestCase):
     def test_individual_files(self):
         """Test individual .abs files."""
         f1 = ABS_FILES + '/orig/arxiv/papers/0906/0906.5132v3.abs'
-        ams = AbsMetaSession.parse_abs_file(filename=f1)
+        ams = parse_abs_file(filename=f1)
 
         self.assertIsInstance(ams, DocMetadata)
         self.assertEqual(ams.arxiv_id, '0906.5132', 'arxiv_id')
@@ -132,7 +135,7 @@ ferromagnet superconducting domains is discussed.
     def test_subsumed_category(self):
         """Test individual .abs files."""
         f1 = ABS_FILES + '/ftp/adap-org/papers/9303/9303001.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
         self.assertIsInstance(m, DocMetadata)
         self.assertEqual('adap-org/9303001', m.arxiv_id, 'arxiv_id')
 
@@ -143,7 +146,7 @@ ferromagnet superconducting domains is discussed.
     def test_psi_in_abs(self):
         """Test text in abs ARXIVNG-1612"""
         f1 = ABS_FILES + '/ftp/arxiv/papers/1901/1901.05426.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
         self.assertIsInstance(m, DocMetadata)
         self.assertNotIn('$φ$', m.abstract,
                          'TeX psi in abstract should not get converted to UTF8')

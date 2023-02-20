@@ -3,10 +3,11 @@
 from typing import Any, Dict, Tuple
 from http import HTTPStatus as status
 
+from flask import url_for, escape
+from werkzeug.exceptions import BadRequest
+
 from arxiv.base import logging
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
-from flask import escape, url_for
-from werkzeug.exceptions import BadRequest
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id

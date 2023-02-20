@@ -10,17 +10,11 @@ ENV PIPENV_VERBOSITY=-1
 ENV LC_ALL en_US.utf8
 ENV LANG en_US.utf8
 ENV LOGLEVEL 40
-#ENV FLASK_DEBUG 1
 
 WORKDIR /opt/arxiv
 
-# remove conflicting mariadb-libs from arxiv/base
-#RUN yum remove -y mariadb-libs
-
 # install MySQL
 RUN apt-get -y install default-libmysqlclient-dev
-#RUN yum install -y which mysql mysql-devel
-#RUN pip install uwsgi
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
@@ -32,7 +26,7 @@ RUN pip install "gunicorn==20.1.0"
 ADD app.py /opt/arxiv/
 ADD Pipfile /opt/arxiv/
 ADD Pipfile.lock /opt/arxiv/
-RUN pipenv sync
+RUN pipenv install --deploy
 
 ENV PATH "/opt/arxiv:${PATH}"
 
@@ -42,9 +36,5 @@ ADD wsgi.py /opt/arxiv/
 
 RUN echo $git_commit > /git-commit.txt
 
-#ENV FLASK_APP /opt/arxiv/app.py
-
-EXPOSE 8000
-ENTRYPOINT ["pipenv", "run"]
-#CMD ["uwsgi", "--ini", "/opt/arxiv/uwsgi.ini"]
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 wsgi:application
+EXPOSE 8080
+CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 wsgi:application

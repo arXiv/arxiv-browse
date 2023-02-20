@@ -8,10 +8,10 @@ from unittest import TestCase
 
 from tests import path_of_for_test
 
-from app import app
 from browse.domain.metadata import DocMetadata
-from browse.services.document.metadata import AbsMetaSession
-from browse.services.util.metatags import meta_tag_metadata
+from browse.formating.metatags import meta_tag_metadata
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
+from app import app
 
 
 CLASSIC_RESULTS_FILE = path_of_for_test('data/classic_scholar_metadata_tags.json')
@@ -54,7 +54,7 @@ class TestAgainstClassicResults(TestCase):
                     continue
                 if not fname_path.endswith('.abs'):
                     continue
-                mm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                mm = parse_abs_file(filename=fname_path)
                 if mm.arxiv_id_v in bad_data:
                     continue
                 num_files_tested = num_files_tested + 1

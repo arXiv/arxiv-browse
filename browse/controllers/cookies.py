@@ -50,8 +50,6 @@ cookies_config = [
 ]
 
 
-# TODO implement debug parameter
-
 def get_cookies_page(is_debug: bool) -> Any:
     """
     Render the cookies page.
@@ -92,15 +90,15 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[st
         request_value = cookies.get(cc['name'], None)
         matching_opt = next((opt for opt in cc['options']
                              if opt[0] == request_value), None)
-        if(matching_opt is not None):
+        if matching_opt is not None:
             matching_opt[2] = 1
     return configs
 
 
-def cookies_to_set(request: flask.Request) -> List[Dict]:
+def cookies_to_set(req: flask.Request) -> List[Dict[str, object]]:
     """Get cookies from the form and return them as a list of tuples."""
     cts = []
-    for (id, value) in request.form.items():
+    for (id, value) in req.form.items():
         matching_conf = next(
             (conf for conf in cookies_config if conf['id'] == id), None)
         if matching_conf is not None:

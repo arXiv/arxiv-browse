@@ -6,7 +6,7 @@ from datetime import timedelta
 from dateutil import parser
 
 from app import app
-from browse.services.util.response_headers import mime_header_date
+from browse.controllers.response_headers import mime_header_date
 
 
 class ModifiedTest(unittest.TestCase):

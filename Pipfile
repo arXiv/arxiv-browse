@@ -4,14 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-dataclasses = "*"
 python-dateutil = "*"
 Flask-SQLAlchemy = "~=2.4"
 MarkupSafe = "*"
 SQLAlchemy = "~=1.4"
-pytz = "*"
 mysqlclient = ">=2.1"
-"mmh3" = "*"
 flask = "~=2.2"
 validators = "*"
 mypy-extensions = "*"
@@ -26,12 +23,6 @@ bcrypt = "*"
 werkzeug = "*"
 cloudpathlib = {extras = ["gs"], version = "*"}
 google-cloud-logging = "*"
-opentelemetry-api = "*"
-opentelemetry-sdk = "*"
-opentelemetry-exporter-gcp-trace = "*"
-opentelemetry-propagator-gcp = "*"
-opentelemetry-instrumentation-requests = "*"
-opentelemetry-instrumentation-flask = "*"
 
 [dev-packages]
 pycodestyle = "*"
@@ -41,13 +32,11 @@ pytest = "*"
 pytest-html = "*"
 hypothesis = "*"
 "beautifulsoup4" = "*"
-pyhamcrest = "*"
 pytest-easyread = "*"
 coverage = "*"
-sphinx = "*"
-sphinx-autodoc-typehints = "*"
 types-python-dateutil = "*"
 pytest-cov = "*"
+pytest-mock = "*"
 
 [requires]
 python_version = "3.10"

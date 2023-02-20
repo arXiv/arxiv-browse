@@ -1,4 +1,5 @@
 """Handle requests to display the trackbacks for arXiv articles."""
+# pylint: disable=raise-missing-from
 
 import re
 from typing import Any, Dict, List, Tuple
@@ -17,13 +18,12 @@ from browse.services.database import (
     get_recent_trackback_pings,
     get_trackback_ping,
 )
-from browse.services.document import metadata
-from browse.services.document.metadata import AbsException, AbsNotFoundException
-from browse.services.search.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
 
+from browse.services.documents import get_doc_service
+from browse.services.documents.base_documents import AbsException, \
+    AbsNotFoundException
+from browse.formating.search_authors import queries_for_authors, \
+    split_long_author_list
 
 app_config = get_application_config()
 logger = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ def get_tb_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
         response_data['arxiv_identifier'] = arxiv_identifier
-        abs_meta = metadata.get_abs(arxiv_identifier.id)
+        abs_meta = get_doc_service().get_abs(arxiv_identifier.id)
         if abs_meta:
             response_data['abs_meta'] = abs_meta
         trackback_pings = get_paper_trackback_pings(arxiv_identifier.id)
@@ -85,7 +85,6 @@ def get_tb_page(arxiv_id: str) -> Response:
     except (AbsException, IdentifierException) as ex:
         raise TrackbackNotFound(data={'arxiv_id': arxiv_id}) from ex
     except Exception as ex:
-        logger.warning('Error getting trackbacks for %s', arxiv_id)
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers
@@ -138,7 +137,6 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
     except ValueError as ex:
         raise BadRequest from ex
     except Exception as ex:
-        logger.warning(f'Error getting recent trackbacks: %s', ex)
         raise InternalServerError from ex
 
     return response_data, response_status, response_headers

@@ -1,5 +1,5 @@
 -- SET FOREIGN_KEY_CHECKS = 0;
-PRAGMA foreign_keys = OFF; -- for newer versions of sqlite3
+-- PRAGMA foreign_keys = OFF; -- for newer versions of sqlite3
 
 INSERT INTO `arXiv_documents` VALUES (504934,'0808.4142','Observation of the doubly strange b baryon Omega_b-','D0 Collaboration: V. Abazov, et al','T#xUIo1|@b4r1hbzzg72',1,1228752458,'',NULL);
 

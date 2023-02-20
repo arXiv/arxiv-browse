@@ -20,7 +20,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
     pc = docm.primary_category if docm.primary_category else "unknown"
 
     return (
-        "@misc{" + txt_id(docm, pauths, year) + ",\n"
+        "@misc{" + _txt_id(docm, pauths, year) + ",\n"
         "      title={" + title + "}, \n"
         "      author={" + auths + "},\n"
         "      year={" + year + "},\n"
@@ -45,12 +45,12 @@ def _fmt_author_list(pauths: List[List[str]]) -> str:
     return " and ".join(authors)
 
 
-def chars_only(data: str) -> str:
+def _chars_only(data: str) -> str:
     """Just alphanum from data."""
     return "".join([cc for cc in data if cc.isalnum()])
 
 
-def txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
+def _txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
     """Create an id for the bibtex entry ex abadi2016tensorflow."""
     try:
         auth = auths[0][0]
@@ -65,7 +65,7 @@ def txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
         title_word = "unknown"
 
     txt_year = year if year else "unknown"
-    return chars_only(f"{auth}{txt_year}{title_word}").lower()
+    return _chars_only(f"{auth}{txt_year}{title_word}").lower()
 
 
 STOPWORDS = frozenset(

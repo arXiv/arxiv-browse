@@ -57,7 +57,7 @@ from browse.services.util.external_refs_cits import (
     include_inspire_link,
 )
 from browse.services.util.metatags import meta_tag_metadata
-from browse.services.util.response_headers import (
+from browse.controllers.response_headers import (
     abs_expires_header,
     mime_header_date,
 )
@@ -168,15 +168,15 @@ def get_abs_page(arxiv_id: str) -> Response:
         ) from ex
     except IdentifierIsArchiveException as ex:
         raise AbsNotFound(
-            data={"reason": "is_archive", "arxiv_id": arxiv_id, "archive_name": e}
+            data={"reason": "is_archive", "arxiv_id": arxiv_id, "archive_name": ex}
         ) from ex
     except IdentifierException:
         raise AbsNotFound(data={"arxiv_id": arxiv_id})
-    except AbsException as e:
+    except AbsException as ex:
         raise InternalServerError(
             "There was a problem. If this problem persists, please contact "
             "help@arxiv.org."
-        ) from e
+        ) from ex
 
     return response_data, status.OK, response_headers
 

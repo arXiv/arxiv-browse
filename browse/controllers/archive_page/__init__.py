@@ -8,7 +8,7 @@ from arxiv.taxonomy.definitions import ARCHIVES, ARCHIVES_SUBSUMED, CATEGORIES
 
 from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import stats_by_year, years_operating
-from browse.services.util.response_headers import abs_expires_header
+from browse.controllers.response_headers import abs_expires_header
 
 
 def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
@@ -80,6 +80,14 @@ def archive_index(archive_id: str, status_in: int) -> Tuple[Dict[str, Any], int,
 
     data["template"] = "archive/archive_list_all.html"
     return data, status_in, {}
+
+
+def subsumed_msg(_: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
+    """Adds information about subsuming categories and archives."""
+    sb = CATEGORIES.get(subsumed_by, {"name": "unknown category"})
+    sa = ARCHIVES.get(sb.get("in_archive", None), {"name": "unknown archive"})
+
+    return {"subsumed_by_cat": sb, "subsumed_by_arch": sa}
 
 
 def category_list(archive_id: str) -> List[Dict[str, str]]:

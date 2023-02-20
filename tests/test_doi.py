@@ -3,7 +3,6 @@ import unittest
 from urllib.parse import parse_qs, unquote, urlparse
 
 from bs4 import BeautifulSoup
-from tests.test_abs_parser import ABS_FILES
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI

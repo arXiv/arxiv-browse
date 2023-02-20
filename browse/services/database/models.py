@@ -71,7 +71,7 @@ class License(db.Model):
     name = Column(String(255), primary_key=True)
     label = Column(String(255))
     active = Column(Integer, server_default=text("'1'"))
-    note = Column(String(255))
+    note = Column(String(400))
     sequence = Column(Integer)
 
 
@@ -206,6 +206,10 @@ class User(db.Model):
 
     __tablename__ = "tapir_users"
 
+    # This handles the fact that first_name and last_name are set to utf8 in this table.
+    # It sets the whole table to utf8 but hopefully that isn't a problem.
+    __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
+
     user_id = Column(Integer, primary_key=True)
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)
@@ -249,12 +253,31 @@ class User(db.Model):
         String(255), nullable=False, index=True, server_default=text("''")
     )
     flag_allow_tex_produced = Column(
-        Integer, nullable=False, server_default=text("'0'")
+        Integer, nullable=False, server_default=text("'0'"))
+    flag_can_lock = Column(Integer,
+                           nullable=False, server_default=text("'0'"))
+    tapir_policy_class = relationship('UserPolicyClass')
+
+
+
+class Nickname(db.Model):
+    __tablename__ = 'tapir_nicknames'
+    __table_args__ = (
+        Index('user_id', 'user_id', 'user_seq', unique=True),
     )
+  
+    nick_id = Column(Integer, primary_key=True)
+    nickname = Column(String(20), nullable=False, unique=True, server_default=text("''"))
+    user_id = Column(ForeignKey('tapir_users.user_id'), nullable=False, server_default=text("'0'"))
+    user_seq = Column(Integer, nullable=False, server_default=text("'0'"))
+    flag_valid = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    role = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    policy = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    flag_primary = Column(Integer, nullable=False, server_default=text("'0'"))
 
-    tapir_policy_class = relationship("UserPolicyClass")
+    user = relationship('User')
 
-
+    
 class UserPolicyClass(db.Model):
     """Model for the legacy user policy class."""
 
@@ -495,7 +518,9 @@ class StatsMonthlySubmission(db.Model):
 
     __tablename__ = "arXiv_stats_monthly_submissions"
 
-    ym = Column(Date, primary_key=True, server_default=text("'0000-00-00'"))
+    ym = Column(Date, primary_key=True
+                #,server_default=text("'0000-00-00'") # does not work in sqlite
+                )
     num_submissions = Column(SmallInteger, nullable=False)
     historical_delta = Column(Integer, nullable=False, server_default=text("'0'"))
 
@@ -509,6 +534,80 @@ stats_hourly = Table(
     Column("access_type", String(1), nullable=False, index=True),
     Column("connections", Integer, nullable=False),
 )
+
+
+class CategoryDef(db.Model):
+    __tablename__ = 'arXiv_category_def'
+    __table_args__ = (
+        ForeignKeyConstraint(['archive', 'subject_class'], ['arXiv_categories.archive', 'arXiv_categories.subject_class']),
+        Index('cat_def_fk', 'archive', 'subject_class')
+    )
+
+    category = Column(String(32), primary_key=True)
+    name = Column(String(255))
+    active = Column(Integer, server_default=text("'1'"))
+    archive = Column(String(16), nullable=False, server_default=text("''"))
+    subject_class = Column(String(16), nullable=False, server_default=text("''"))
+
+    arXiv_categories = relationship('Category')
+
+    
+class DocumentCategory(db.Model):
+    __tablename__ = 'arXiv_document_category'
+
+    document_id = Column(ForeignKey('arXiv_documents.document_id', ondelete='CASCADE'),
+                         primary_key=True, nullable=False, index=True,
+                         server_default=text("'0'"))
+    category = Column(ForeignKey('arXiv_category_def.category'), primary_key=True,
+                      nullable=False, index=True)
+    is_primary = Column(Integer, nullable=False, server_default=text("'0'"))
+
+    document = relationship('Document')
+
+
+class NextMail(db.Model):
+    """Model for mailings from publish"""
+    __tablename__ = 'arXiv_next_mail'
+    __table_args__ = (
+        Index('arXiv_next_mail_idx_document_id_version', 'document_id', 'version'),
+    )
+    next_mail_id = Column(Integer, primary_key=True)
+    submission_id = Column(Integer, nullable=False)
+    document_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    paper_id = Column(String(20))
+    version = Column(Integer, nullable=False, server_default=text("'1'"))
+    type = Column(String(255), nullable=False, server_default=text("'new'"))
+    extra = Column(String(255))
+    mail_id = Column(String(6))
+    is_written = Column(Integer, nullable=False, server_default=text("'0'"))
+    document = relationship('Document',
+                            primaryjoin='Document.document_id == NextMail.document_id',
+                            foreign_keys='Document.document_id')
+
+    arxiv_metadata = relationship('Metadata',
+                                  primaryjoin='and_ (Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version)',
+                                  foreign_keys='Metadata.paper_id, Metadata.version')
+
+
+class AdminLog(db.Model):
+    __tablename__ = 'arXiv_admin_log'
+
+    id = Column(Integer(), primary_key=True)
+    logtime = Column(String(24))
+    created = Column(DateTime, nullable=False,
+                     # Only works on mysql:
+                     #server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+                     )
+    paper_id = Column(String(20), index=True)
+    username = Column(String(20), index=True)
+    host = Column(String(64))
+    program = Column(String(20))
+    command = Column(String(20), index=True)
+    logtext = Column(Text)
+    document_id = Column(Integer())
+    submission_id = Column(Integer(), index=True)
+    notify = Column(Integer(), server_default=text("'0'"))
+
 
 
 def init_app(app: Optional[LocalProxy]) -> None:

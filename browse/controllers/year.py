@@ -10,7 +10,7 @@ from werkzeug.exceptions import BadRequest
 
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
-from browse.domain.listing import MonthCount
+from browse.services.listing.base_listing import MonthCount
 
 
 def year_page(archive_id: str, year: Optional[int]) -> Any:

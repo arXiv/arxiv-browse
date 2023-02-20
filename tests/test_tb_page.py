@@ -8,6 +8,7 @@ from http import HTTPStatus as status
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest
 
+from app import app
 from browse.controllers import tb_page
 from browse.exceptions import TrackbackNotFound
 
@@ -15,21 +16,23 @@ from browse.exceptions import TrackbackNotFound
 class TestTbPageController(TestCase):
     """Tests for :func:`.get_tb_page`."""
 
-    @mock.patch('browse.controllers.tb_page.metadata')
+    def setUp(self):
+        app.testing = True
+        app.config['APPLICATION_ROOT'] = ''
+        self.app = app
+        self.client = app.test_client()
+
     @mock.patch('browse.controllers.tb_page.get_paper_trackback_pings')
     # type: ignore
-    def test_good_id_with_trackbacks(self, mock_get_paper_trackback_pings, mock_metadata) -> None:
+    def test_good_id_with_trackbacks(self, mock_get_paper_trackback_pings) -> None:
         """Test requests with good arXiv identifiers known to the corpus."""
-        mock_get_paper_trackback_pings.return_value = list()
-        mock_metadata.get_abs.return_value = {}
-        response_data, code, _ = tb_page.get_tb_page(arxiv_id='1901.99999')
-        self.assertEqual(code, status.OK, 'Response should be OK.')
-        for key in ('arxiv_identifier', 'trackback_pings'):
-            self.assertIn(key, response_data,
-                          f"Response data should include '{key}'")
-        for key in ('abs_meta', 'author_links'):
-            self.assertNotIn(key, response_data,
-                             f"Response data should not include '{key}'")
+        with self.app.app_context():
+            mock_get_paper_trackback_pings.return_value = list()
+            response_data, code, _ = tb_page.get_tb_page(arxiv_id='1901.05426')
+            self.assertEqual(code, status.OK, 'Response should be OK.')
+            for key in ('arxiv_identifier', 'trackback_pings'):
+                self.assertIn(key, response_data,
+                              f"Response data should include '{key}'")
 
     def test_bad_or_unknown_id(self) -> None:
         """Test requests with bad arXiv identifiers."""

@@ -3,7 +3,8 @@
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code
-extension-pkg-whitelist=
+extension-pkg-whitelist=pydantic
+# Re pydantic see https://github.com/samuelcolvin/pydantic/issues/1961#issuecomment-759522422
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
@@ -55,7 +56,16 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 disable=invalid-name,
-        import-error,
+        print-statement,
+        parameter-unpacking,
+        unpacking-in-except,
+        old-raise-syntax,
+        backtick,
+        long-suffix,
+        old-ne-operator,
+        old-octal-literal,
+        import-star-module-level,
+        non-ascii-bytes-literal,
         parse-error,
         raw-checker-failed,
         bad-inline-option,
@@ -74,7 +84,8 @@ disable=invalid-name,
         redefined-builtin,
         broad-except,
         pointless-string-statement,
-        no-else-return
+        no-else-return,
+        no-else-raise
         
 
 # Enable the message, report, category or checker with the given id(s). You can

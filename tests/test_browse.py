@@ -1,25 +1,23 @@
 import os
 import unittest
+import pytest
 
 from arxiv import taxonomy
 from bs4 import BeautifulSoup
-from tests.test_abs_parser import ABS_FILES
+from tests.test_fs_abs_parser import ABS_FILES
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI
 from browse.services.document.metadata import AbsMetaSession
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 
 
+@pytest.mark.usefixtures("unittest_add_fake")
 class BrowseTest(unittest.TestCase):
-
-    def setUp(self):
-        app.testing = True
-        app.config['APPLICATION_ROOT'] = ''
-        self.app = app.test_client()
 
     def test_home(self):
         """Test the home page."""
-        rv = self.app.get('/')
+        rv = self.client.get('/')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -33,16 +31,16 @@ class BrowseTest(unittest.TestCase):
 
     def test_tb(self):
         """Test the /tb/<arxiv_id> page."""
-        rv = self.app.get('/tb/1901.99999')
+        rv = self.client.get('/tb/1901.99999')
         self.assertEqual(rv.status_code, 404)
 
-        rv = self.app.get('/tb/')
+        rv = self.client.get('/tb/')
         self.assertEqual(rv.status_code, 404)
 
-        rv = self.app.get('/tb/foo')
+        rv = self.client.get('/tb/foo')
         self.assertEqual(rv.status_code, 404)
 
-        rv = self.app.get('/tb/0808.4142')
+        rv = self.client.get('/tb/0808.4142')
         self.assertEqual(rv.status_code, 200)
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
@@ -63,19 +61,19 @@ class BrowseTest(unittest.TestCase):
 
     def test_tb_recent(self):
         """Test the /tb/recent page."""
-        rv = self.app.get('/tb/recent')
+        rv = self.client.get('/tb/recent')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.post('/tb/recent', data=dict(views='50'))
+        rv = self.client.post('/tb/recent', data=dict(views='50'))
         self.assertEqual(rv.status_code, 200, 'POST with integer OK')
 
-        rv = self.app.post('/tb/recent', data=dict(views='bar'))
+        rv = self.client.post('/tb/recent', data=dict(views='bar'))
         self.assertEqual(rv.status_code, 400, 'POST with non-integer not OK')
 
-        rv = self.app.get('/tb/recent/foo')
+        rv = self.client.get('/tb/recent/foo')
         self.assertEqual(rv.status_code, 404)
 
-        rv = self.app.post('/tb/recent', data=dict(views='1'))
+        rv = self.client.post('/tb/recent', data=dict(views='1'))
         self.assertEqual(rv.status_code, 200, 'POST with views==1 OK')
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         tb_a_tags = html.find_all('a', 'mathjax', rel='external nofollow')
@@ -84,9 +82,9 @@ class BrowseTest(unittest.TestCase):
 
     def test_stats_today(self):
         """Test the /stats/today page."""
-        rv = self.app.get('/stats/today')
+        rv = self.client.get('/stats/today')
         self.assertEqual(rv.status_code, 200)
-        rv = self.app.get('/stats/today?date=20190102')
+        rv = self.client.get('/stats/today?date=20190102')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -97,7 +95,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_stats_monthly_downloads(self):
         """Test the /stats/monthly_downloads page."""
-        rv = self.app.get('/stats/monthly_downloads')
+        rv = self.client.get('/stats/monthly_downloads')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -107,7 +105,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_stats_monthly_submissions(self):
         """Test the /stats/monthly_submissions page."""
-        rv = self.app.get('/stats/monthly_submissions')
+        rv = self.client.get('/stats/monthly_submissions')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -118,9 +116,9 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
 
-        rv = self.app.get('/abs/0704.0001')
+        rv = self.client.get('/abs/0704.0001')
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(m.license.recorded_uri, None,
                          '0704.0001 should have no license in abs')
@@ -131,7 +129,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_with_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
-        m = AbsMetaSession.parse_abs_file(filename=f1)
+        m = parse_abs_file(filename=f1)
 
         self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
@@ -141,7 +139,7 @@ class BrowseTest(unittest.TestCase):
             m.license.recorded_uri,
             'http://arxiv.org/licenses/assumed-1991-2003/')
 
-        rv = self.app.get('/abs/0704.0600')
+        rv = self.client.get('/abs/0704.0600')
         self.assertEqual(rv.status_code, 200)
 
         self.assertRegex(
@@ -149,11 +147,11 @@ class BrowseTest(unittest.TestCase):
             'should be displayed with its license')
 
     def test_missing_paper(self):
-        rv = self.app.get('/abs/1805.0001')
+        rv = self.client.get('/abs/1805.0001')
         self.assertEqual(rv.status_code, 301)
 
     def test_abs_with_truncated_author_list(self):
-        rv = self.app.get('/abs/1411.4413')
+        rv = self.client.get('/abs/1411.4413')
         assert b'additional authors not shown' in rv.data, \
             'abs/1411.4413 should have a truncate author list'
 
@@ -163,41 +161,41 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                m = AbsMetaSession.parse_abs_file(filename=fname_path)
-                rv = self.app.get(f'/abs/{m.arxiv_id}')
+                m = parse_abs_file(filename=fname_path)
+                rv = self.client.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
 
     def test_legacy_id_params(self):
         """Test legacy parameters that support specifying arXiv identifer."""
-        rv = self.app.get('/abs?id=0704.0600')
+        rv = self.client.get('/abs?id=0704.0600')
         self.assertEqual(rv.status_code, 200, 'id param with new ID')
 
-        rv = self.app.get('/abs?id=adap-org/9303002')
+        rv = self.client.get('/abs?id=adap-org/9303002')
         self.assertEqual(rv.status_code, 200, 'id param with old ID')
 
-        rv = self.app.get('/abs?adap-org/9303002')
+        rv = self.client.get('/abs?adap-org/9303002')
         self.assertEqual(rv.status_code, 200, 'singleton case for old IDs')
 
-        rv = self.app.get('/abs?archive=adap-org&papernum=9303002')
+        rv = self.client.get('/abs?archive=adap-org&papernum=9303002')
         self.assertEqual(rv.status_code, 200, 'archive and papernum params')
 
-        rv = self.app.get('/abs/adap-org?papernum=9303002')
+        rv = self.client.get('/abs/adap-org?papernum=9303002')
         self.assertEqual(rv.status_code, 200,
                          'archive in path with papernum param')
 
-        rv = self.app.get('/abs/adap-org?9303002')
+        rv = self.client.get('/abs/adap-org?9303002')
         self.assertEqual(rv.status_code, 200,
                          'archive in path with paper number as singleton')
 
     def test_fmt_param(self):
         """Test fmt request parameter."""
-        rv = self.app.get('/abs/adap-org/9303001?fmt=txt')
+        rv = self.client.get('/abs/adap-org/9303001?fmt=txt')
         self.assertEqual(rv.status_code, 200,
                          'get abs with fmt=txt')
         self.assertEqual(rv.mimetype, 'text/plain',
                          'check mimetype is text/plain')
 
-        rv = self.app.get('/abs/adap-org/9303001?fmt=foo')
+        rv = self.client.get('/abs/adap-org/9303001?fmt=foo')
         # Should this be 400 instead?
         self.assertEqual(rv.status_code, 200,
                          'get abs with fmt=foo')
@@ -206,7 +204,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_subsumed_archives(self):
         """Test correct category display of subsumed archives."""
-        rv = self.app.get('/abs/adap-org/9303002')
+        rv = self.client.get('/abs/adap-org/9303002')
         self.assertEqual(rv.status_code, 200)
 
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
@@ -230,7 +228,7 @@ class BrowseTest(unittest.TestCase):
         """Test that requested version is reflected in display fields."""
         # We expect the requested version to appear in the breadcrum header,
         # header title and download links
-        rv = self.app.get('/abs/physics/9707012')
+        rv = self.client.get('/abs/physics/9707012')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         div_elmt = html.find('div', class_= 'header-breadcrumbs')
@@ -249,7 +247,7 @@ class BrowseTest(unittest.TestCase):
         self.assertIsNone(
             pdf_dl_elmt, 'pdf download link with version affix does not exist')
 
-        rv = self.app.get('/abs/physics/9707012v4')
+        rv = self.client.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         div_elmt = html.find('div', class_='header-breadcrumbs')
@@ -269,14 +267,14 @@ class BrowseTest(unittest.TestCase):
 
     def test_hep_th_9809096(self):
         """Test for malformed html fix in hep-th/9809096 (ARXIVNG-1227)."""
-        rv = self.app.get('/abs/hep-th/9809096')
+        rv = self.client.get('/abs/hep-th/9809096')
         self.assertEqual(rv.status_code, 200)
         self.assertTrue("<d<4</h1>" not in rv.data.decode('utf-8'),
                         "Odd malformed HTML in /abs/hep-th/9809096")
 
     def test_1501_9999(self):
         """Test encoding and linking issues in 1501.99999."""
-        rv = self.app.get('/abs/1501.99999')
+        rv = self.client.get('/abs/1501.99999')
         self.assertEqual(rv.status_code, 200)
         self.assertTrue(
             "Luí" in rv.data.decode('utf-8'),
@@ -306,7 +304,7 @@ class BrowseTest(unittest.TestCase):
     def test_160408245(self):
         """Test linking in 1604.08245."""
         id = '1604.08245'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200, f'status 200 for {id}')
 
         badtag =\
@@ -325,7 +323,7 @@ class BrowseTest(unittest.TestCase):
     def test_arxivng_1246(self):
         """Test urlize fix for comments in 1604.08245v1 (ARXIVNG-1246)."""
         id = '1604.08245'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
 
         goodtag = '<a href="http://www.tandfonline.com/doi/abs/10.1080/15980316.2013.860928?journalCode=tjid20">'
@@ -336,7 +334,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_authors_and_arxivId_in_title(self):
         id = '1501.99999'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         title_elmt = html.find('h1', 'title')
@@ -359,7 +357,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_long_author_colab(self):
         id = '1501.05201'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -382,7 +380,7 @@ class BrowseTest(unittest.TestCase):
     @unittest.skip("In current implementation, conflicts with comma test below.")
     def test_space_in_author_list(self):
         id = '1210.8438'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
@@ -394,7 +392,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_comma_in_author_list(self):
         id = '0704.0155'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         auths_elmt = html.find('div', 'authors')
@@ -406,7 +404,7 @@ class BrowseTest(unittest.TestCase):
         # see https://arxiv-org.atlassian.net/browse/ARXIVNG-1612
         # "phi being displayed as varphi in abstract on /abs page"
         # phi being displayed incorrectly in abstract on /abs page
-        rv = self.app.get('/abs/1901.05426')
+        rv = self.client.get('/abs/1901.05426')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         abs_elmt = html.find('blockquote', 'abstract')
@@ -420,61 +418,62 @@ class BrowseTest(unittest.TestCase):
                       "Expecting uncoverted $\\phi$ in html abstract.")
 
     def test_year(self):
-        rv = self.app.get('/year/astro-ph/09')
+        rv = self.client.get('/year/astro-ph/09')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/year/astro-ph/')
+        rv = self.client.get('/year/astro-ph/')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/year/astro-ph')
+        rv = self.client.get('/year/astro-ph')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/year/astro-ph/09/')
+        rv = self.client.get('/year/astro-ph/09/')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.get('/year')
+        rv = self.client.get('/year')
         self.assertEqual(rv.status_code, 404)
 
-        rv = self.app.get('/year/astro-ph/9999')
+        rv = self.client.get('/year/astro-ph/9999')
         self.assertEqual(rv.status_code, 307,
                          'Future year should cause temporary redirect')
 
-        rv = self.app.get('/year/fakearchive/01')
+        rv = self.client.get('/year/fakearchive/01')
         self.assertNotEqual(rv.status_code, 200)
         self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
-        rv = self.app.get('/year/002/0000')
+        rv = self.client.get('/year/002/0000')
         self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
-        rv = self.app.get('/year/astro-py/9223372036854775808')
+        rv = self.client.get('/year/astro-py/9223372036854775808')
         self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
     def test_secondary_order(self):
-        rv = self.app.get('/abs/0906.3421')
+        rv = self.client.get('/abs/0906.3421')
         self.assertIn(
             'Statistical Mechanics (cond-mat.stat-mech); Mathematical Physics (math-ph)',
             rv.data.decode('utf-8'),
             'Secondary categories should be orderd by category id ARXIVNG-2066')
 
     def test_covid_message(self):
-        rv = self.app.get('/abs/physics/9707012')
+        rv = self.client.get('/abs/physics/9707012')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         self.assertIsNone(html.find('div', class_='message-special'))
         covid_papers = ['2004.05256', '2004.08990', '2004.09471']
         for id in covid_papers:
-            rv = self.app.get(f'/abs/{id}')
+            rv = self.client.get(f'/abs/{id}')
             self.assertEqual(rv.status_code, 200)
             html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
             self.assertIsNotNone(html.find('div', class_='message-special'))
 
     def test_tex2utf_in_jref(self):
-        rv = self.app.get('/abs/2006.02835')
+        rv = self.client.get('/abs/2006.02835')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         jref_elmt = html.find('td', 'jref')
         self.assertTrue(jref_elmt, 'Should have jref td element')
         self.assertIn('RIMS Kôkyûroku Bessatsu', jref_elmt.text, 'Expecting converted TeX in journal reference field')
+
 
     def test_bibtex(self):
         for dir_name, _, file_list in os.walk(ABS_FILES):
@@ -483,12 +482,12 @@ class BrowseTest(unittest.TestCase):
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
                 dm = AbsMetaSession.parse_abs_file(filename=fname_path)
-                rv = self.app.get(f'/bibtex/{dm.arxiv_id}')
+                rv = self.client.get(f'/bibtex/{dm.arxiv_id}')
                 self.assertEqual(rv.status_code, 200, f'checking /bibtex for {dm.arxiv_id}')
 
     def test_2004_02153(self):
         """Test when more than one \\ begins a line in the .abs file. ARXIVNG-3128"""
-        rv = self.app.get('/abs/2004.02153')
+        rv = self.client.get('/abs/2004.02153')
         self.assertEqual(rv.status_code, 200)
         txt = rv.data.decode('utf-8')
         self.assertIn("We construct global generalized solutions to the chemotaxis system",
@@ -498,3 +497,13 @@ class BrowseTest(unittest.TestCase):
         self.assertIn("collapse into a persistent Dirac distribution.",
                       txt,
                       "Expect the abstract including the last sentence.")
+
+    def test_no_prev(self):
+        rv = self.client.get('/abs/math-ph/0509001')
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        link = html.find('a', class_='next-url')
+        assert link
+        assert link['href'] == '/abs/math-ph/0509002'
+
+        link = html.find('a', class_='prev-url')
+        assert link is None

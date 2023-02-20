@@ -1,22 +1,16 @@
 """Tests for external reference and citation configuration and utilities."""
-from datetime import date
 from unittest import TestCase, mock
 
-from arxiv.taxonomy import ARCHIVES, CATEGORIES
-
 from browse.domain.identifier import Identifier
-from browse.domain.metadata import Archive, Category
-from browse.services.document.config.external_refs_cits import (
-    DBLP_ARCHIVES,
-    INSPIRE_REF_CIT_CATEGORIES,
-)
-from browse.services.util.external_refs_cits import (
-    get_computed_dblp_listing_path,
-    get_dblp_bibtex_path,
-    include_dblp_section,
-    include_inspire_link,
-)
+from browse.services.documents.config.external_refs_cits \
+    import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
+from browse.formating.external_refs_cits import include_inspire_link,\
+    get_dblp_bibtex_path, include_dblp_section, get_computed_dblp_listing_path
 
+from browse.domain.category import Category
+from browse.domain.metadata import Archive
+
+from arxiv.taxonomy import CATEGORIES, ARCHIVES
 
 class TestExternalReferencesCitations(TestCase):
     """Tests for external reference and citation config and utilities."""

@@ -59,7 +59,7 @@ def inject_now() -> Dict:
 
 @blueprint.before_request
 def before_request() -> None:
-    """ Get geo data and institutional affiliation from ip address. """
+    """Get geo data and institutional affiliation from ip address."""
     global geoip_reader
     try:
         if geoip_reader:
@@ -79,15 +79,11 @@ def before_request() -> None:
                             "name": response.continent.names["en"],
                         }
                     if response.country and response.country.iso_code:
-                        session["country"] = response.country.iso_code
-                    if (
-                        response.subdivisions
+                        session['country'] = response.country.iso_code
+                    if (response.subdivisions
                         and response.subdivisions.most_specific
-                        and response.subdivisions.most_specific.iso_code
-                    ):
-                        session[
-                            "subnational"
-                        ] = response.subdivisions.most_specific.iso_code
+                        and response.subdivisions.most_specific.iso_code):
+                        session['subnational'] = response.subdivisions.most_specific.iso_code
                     if response.city and response.city.name:
                         session["city"] = response.city.name
     # except AddressNotFoundError as ex:
@@ -255,13 +251,11 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route("ct")
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
-    if "url" in request.args and "v" in request.args:
-        if is_hash_valid(
-            current_app.config["CLICKTHROUGH_SECRET"],
-            request.args.get("url"),
-            request.args.get("v"),
-        ):
-            return redirect(request.args.get("url"))  # type: ignore
+    if 'url' in request.args and 'v' in request.args:
+        if is_hash_valid(current_app.settings.CLICKTHROUGH_SECRET.get_secret_value(),
+                         request.args.get('url'),
+                         request.args.get('v')):
+            return redirect(request.args.get('url'))  # type: ignore
         else:
             raise BadRequest("Bad click-through redirect")
 
