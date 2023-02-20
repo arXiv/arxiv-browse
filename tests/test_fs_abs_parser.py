@@ -15,7 +15,6 @@ from browse.domain.metadata import (
     Submitter,
     VersionEntry,
 )
-from browse.services.document.metadata import AbsMetaSession
 
 
 ABS_FILES = path_of_for_test('data/abs_files')

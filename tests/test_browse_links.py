@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.document.metadata import AbsMetaSession
 
 
 class BrowseLinksTest(unittest.TestCase):

@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.document.metadata import AbsMetaSession
 
 
 @unittest.skip('We will move this test and any required test data to arxiv-base in the near future')

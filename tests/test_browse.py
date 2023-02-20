@@ -8,7 +8,6 @@ from tests.test_fs_abs_parser import ABS_FILES
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.document.metadata import AbsMetaSession
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 
 
@@ -481,7 +480,7 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                dm = AbsMetaSession.parse_abs_file(filename=fname_path)
+                dm = parse_abs_file(filename=fname_path)
                 rv = self.client.get(f'/bibtex/{dm.arxiv_id}')
                 self.assertEqual(rv.status_code, 200, f'checking /bibtex for {dm.arxiv_id}')
 

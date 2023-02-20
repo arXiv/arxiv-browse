@@ -9,7 +9,6 @@ from browse.formating.search_authors import queries_for_authors, split_long_auth
 from tests import path_of_for_test
 
 from browse.domain import metadata
-from browse.services.document.metadata import AbsMetaSession
 from browse.formating.search_authors import (
     queries_for_authors,
     split_long_author_list,

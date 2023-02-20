@@ -34,6 +34,7 @@ from browse.controllers.cookies import cookies_to_set, get_cookies_page
 from browse.controllers.year import year_page
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
+from browse.config import settings
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -252,7 +253,7 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args:
-        if is_hash_valid(current_app.settings.CLICKTHROUGH_SECRET.get_secret_value(),
+        if is_hash_valid(settings.CLICKTHROUGH_SECRET.get_secret_value(),
                          request.args.get('url'),
                          request.args.get('v')):
             return redirect(request.args.get('url'))  # type: ignore
@@ -472,7 +473,7 @@ def cookies(set):  # type: ignore
         debug = {"debug": "1"} if is_debug else {}
         resp = redirect(url_for("browse.cookies", **debug)) # type: ignore
         for ctoset in cookies_to_set(request):
-            resp.set_cookie(**ctoset)
+            resp.set_cookie(**ctoset) # type: ignore
         return resp
     response, code, headers = get_cookies_page(is_debug)
     return render_template("cookies.html", **response), code, headers

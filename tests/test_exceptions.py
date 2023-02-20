@@ -39,7 +39,7 @@ def test_404_bad_id(client_with_fake_listings, no_werkzeug_log):
     response = client_with_fake_listings.get('/abs/foo-bar/11223344')
     assert response.status_code == status.NOT_FOUND
 
-def test_500(client_with_fake_listings, mocke,no_werkzeug_log r):
+def test_500(client_with_fake_listings, mocker ,no_werkzeug_log):
     """A 500 response should be returned."""
     abs = mocker.patch('browse.controllers.abs_page.get_abs_page')
     abs.side_effect = AbsException

@@ -34,33 +34,32 @@ from browse.services.database import (
     get_trackback_ping_latest_date,
     has_sciencewise_ping,
 )
-from browse.services.document import metadata
-from browse.services.document.config.external_refs_cits import (
+from browse.services.documents import get_doc_service
+from browse.services.prevnext import prevnext_service
+from browse.formating.external_refs_cits import (
     DBLP_AUTHOR_SEARCH_PATH,
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
-)
-from browse.services.document.metadata import (
-    AbsDeletedException,
-    AbsException,
-    AbsNotFoundException,
-    AbsVersionNotFoundException,
-)
-from browse.services.search.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
-from browse.services.util.external_refs_cits import (
     get_computed_dblp_listing_path,
     get_dblp_bibtex_path,
     include_dblp_section,
     include_inspire_link,
 )
-from browse.services.util.metatags import meta_tag_metadata
+from browse.services.documents.base_documents import (
+    AbsDeletedException,
+    AbsException,
+    AbsNotFoundException,
+    AbsVersionNotFoundException,
+)
+from browse.formating.search_authors import (
+    queries_for_authors,
+    split_long_author_list,
+)
 from browse.controllers.response_headers import (
     abs_expires_header,
-    mime_header_date,
+    mime_header_date
 )
+from browse.formating.metatags import meta_tag_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -104,7 +103,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
 
-        abs_meta = metadata.get_abs(arxiv_id)
+        abs_meta = get_doc_service().get_abs(arxiv_id)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
             return {}, status.NOT_MODIFIED, response_headers
@@ -129,7 +128,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
-        response_data["formats"] = metadata.get_dissemination_formats(
+        response_data["formats"] = get_doc_service().get_dissemination_formats(
             abs_meta, download_format_pref, add_sciencewise_ping
         )
 
@@ -197,7 +196,7 @@ def _non_critical_abs_data(
     response_data["include_inspire_link"] = include_inspire_link(abs_meta)
 
     # Ancillary files
-    response_data["ancillary_files"] = metadata.get_ancillary_files(abs_meta)
+    response_data["ancillary_files"] = get_doc_service().get_ancillary_files(abs_meta)
 
     # Browse context
     _check_context(arxiv_identifier, abs_meta.primary_category, response_data)
@@ -344,26 +343,24 @@ def _check_context(
 
     response_data["browse_context"] = context
 
+    prevnext = prevnext_service().prevnext(arxiv_identifier, context)
     next_url = None
     prev_url = None
     if arxiv_identifier.is_old_id or context == "arxiv":
         # Revert to hybrid approach per ARXIVNG-2080
-        next_id = metadata.get_next_id(arxiv_identifier)
-        if next_id:
+        if prevnext.next_id:
             next_url = url_for(
                 "browse.abstract",
-                arxiv_id=next_id.id,
+                arxiv_id=prevnext.next_id.id,
                 context="arxiv" if context == "arxiv" else None,
             )
-        previous_id = metadata.get_previous_id(arxiv_identifier)
-        if previous_id:
+        if prevnext.previous_id:
             prev_url = url_for(
                 "browse.abstract",
-                arxiv_id=previous_id.id,
+                arxiv_id=prevnext.previous_id.id,
                 context="arxiv" if context == "arxiv" else None,
             )
-    else:
-        # Use prevnext controller to determine what the previous or next ID is.
+    else:  # Use prevnext controller to determine what the previous or next ID is.
         next_url = url_for(
             "browse.previous_next",
             id=arxiv_identifier.id,
@@ -376,7 +373,6 @@ def _check_context(
             function="prev",
             context=context if context else None,
         )
-
     response_data["browse_context_previous_url"] = prev_url
     response_data["browse_context_next_url"] = next_url
 
