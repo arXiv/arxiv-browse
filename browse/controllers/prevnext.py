@@ -51,7 +51,7 @@ def get_prevnext(id: str, function: str, context: str) -> Response:
     if id is None or not id:
         raise BadRequest('Missing article identifier')
     if function not in ['prev', 'next']:
-        raise BadRequest('Missing or invalid function request')
+        raise BadRequest('Missing or invalid function request, should be prev or next')
     if context is None or not context:
         raise BadRequest('Missing context')
     if not (context in CATEGORIES_ACTIVE

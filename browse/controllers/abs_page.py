@@ -310,7 +310,7 @@ def _check_context(
     primary_category: Optional[Category],
     response_data: Dict[str, Any],
 ) -> None:
-    """Check context in request parameters and update response accordingly.
+    """Adds prev URL, next URLs and context to response.
 
     Parameters
     ----------
@@ -320,6 +320,7 @@ def _check_context(
     Returns
     -------
     Dict of values to add to response_data
+
     """
     # Set up the context
     context = None
