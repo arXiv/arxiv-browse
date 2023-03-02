@@ -23,7 +23,7 @@ history in the legacy DB.
 The legacy listing files are used only for the IDs of the papers
 announced. The rest of the metadata is not kept updated. An example of
 this causing a problem is if an article published on 2018-01-01, then
-crossed on 2018-01-02, then replaced with a differnt title on
+crossed on 2018-01-02, then replaced with a different title on
 2018-01-03. The cross on 2018-01-02 in the listing file will have the
 old title.
 

@@ -14,10 +14,14 @@ from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 
+# This gives the error on import
+# RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
+#from arxiv.users.auth import Auth
+
 from browse.config import settings
 from browse.routes import ui
 from browse.services.database import models
-from browse.formating.email import generate_show_email_hash
+from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
 s3 = FlaskS3()
@@ -35,6 +39,7 @@ def create_web_app() -> Flask:
 
     models.init_app(app)  # type: ignore
     Base(app)
+    #Auth(app)
     app.register_blueprint(ui.blueprint)
     s3.init_app(app)
 

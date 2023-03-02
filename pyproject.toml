@@ -5,6 +5,8 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
+python = "^3.10"
+
 Flask-SQLAlchemy = "~=2.4"  
 MarkupSafe = "*"
 SQLAlchemy = "~=1.4" 
@@ -20,7 +22,6 @@ google-cloud-logging = "*"
 mypy-extensions = "*"
 mysqlclient = ">=2.1"
 pydantic = "*"
-python = "^3.10"
 python-dateutil = "*"
 validators = "*"
 

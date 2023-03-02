@@ -4,7 +4,6 @@ Each controller corresponds to a distinct browse feature with its own
 request handling logic.
 """
 from typing import Any, Dict, Optional, Tuple
-from dateutil.tz import gettz
 from zoneinfo import ZoneInfo
 
 from http import HTTPStatus as status

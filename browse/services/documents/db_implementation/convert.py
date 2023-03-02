@@ -1,4 +1,5 @@
 from zoneinfo import ZoneInfo
+from typing import List
 
 from arxiv import taxonomy
 
@@ -8,7 +9,7 @@ from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import AbsException
 
 
-def to_docmeta(dbmd: Metadata, business_tz: ZoneInfo) -> DocMetadata:
+def to_docmeta(dbmd: Metadata, version_history: List[VersionEntry], business_tz: ZoneInfo) -> DocMetadata:
     """Convert a Metadata object from the DB to a DocMetadata object
 
     The business_tz is the timezone used with the datas in the DB. These are
@@ -49,9 +50,10 @@ def to_docmeta(dbmd: Metadata, business_tz: ZoneInfo) -> DocMetadata:
     submitted = submitted.astimezone(utc)
 
     modified = dbmd.updated or dbmd.created
+
     modified.replace(tzinfo=business_tz)
     modified = modified.astimezone(utc)
-    
+
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
         abstract=dbmd.abstract,
@@ -76,12 +78,7 @@ def to_docmeta(dbmd: Metadata, business_tz: ZoneInfo) -> DocMetadata:
         comments=dbmd.comments or None,
         version=dbmd.version,
         license=doc_license,
-        #TODO This is a guess
-        version_history=[VersionEntry(version=dbmd.version,
-                                      raw='fromdb-no-raw',
-                                      size_kilobytes=dbmd.source_size,
-                                      submitted_date=submitted,
-                                      source_type=dbmd.source_format)],        
+        version_history=version_history,
         is_definitive=False,
         is_latest=dbmd.is_current
         )

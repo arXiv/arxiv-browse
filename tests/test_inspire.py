@@ -2,7 +2,7 @@ from datetime import date
 
 from tests.test_fs_abs_parser import ABS_FILES
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
-from browse.formating.external_refs_cits import include_inspire_link, \
+from browse.formatting.external_refs_cits import include_inspire_link, \
     get_orig_publish_date
 
 

@@ -3,6 +3,7 @@
 The primary entrypoint to this module is :func:`.get_abs_page`, which
 handles GET requests to the abs endpoint.
 """
+# pylint: disable=raise-missing-from
 
 import re
 from datetime import datetime
@@ -36,7 +37,7 @@ from browse.services.database import (
 )
 from browse.services.documents import get_doc_service
 from browse.services.prevnext import prevnext_service
-from browse.formating.external_refs_cits import (
+from browse.formatting.external_refs_cits import (
     DBLP_AUTHOR_SEARCH_PATH,
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -51,7 +52,7 @@ from browse.services.documents.base_documents import (
     AbsNotFoundException,
     AbsVersionNotFoundException,
 )
-from browse.formating.search_authors import (
+from browse.formatting.search_authors import (
     queries_for_authors,
     split_long_author_list,
 )
@@ -59,7 +60,7 @@ from browse.controllers.response_headers import (
     abs_expires_header,
     mime_header_date
 )
-from browse.formating.metatags import meta_tag_metadata
+from browse.formatting.metatags import meta_tag_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -214,11 +215,9 @@ def _check_request_headers(
     last_mod_dt: datetime = docmeta.modified
 
     # Latest trackback ping time depends on the database
-    if (
-        "trackback_ping_latest" in response_data
-        and isinstance(response_data["trackback_ping_latest"], datetime)
-        and response_data["trackback_ping_latest"] > last_mod_dt
-    ):
+    if 'trackback_ping_latest' in response_data \
+       and isinstance(response_data['trackback_ping_latest'], datetime) \
+       and response_data['trackback_ping_latest'] > last_mod_dt:
         # If there is a more recent trackback ping, use that datetime
         last_mod_dt = response_data["trackback_ping_latest"]
 
@@ -265,19 +264,12 @@ def _time_header_parse(header: str) -> Optional[datetime]:
 
 
 def _get_req_header(header: str) -> Optional[str]:
-    """Gets request header.
+    """Gets request header, needs to be case insensative for keys.
 
-    Needs to be case insensitive for keys. HTTP header keys are case
-    insensitive per RFC 2616.
+    HTTP header keys are case insensitive. RFC 2616
     """
-    return next(
-        (
-            value
-            for key, value in request.headers.items()
-            if key.lower() == header.lower()
-        ),
-        None,
-    )
+    return next((value for key, value in request.headers.items()
+                 if key.lower() == header.lower()), None)
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
@@ -320,7 +312,6 @@ def _check_context(
     Returns
     -------
     Dict of values to add to response_data
-
     """
     # Set up the context
     context = None

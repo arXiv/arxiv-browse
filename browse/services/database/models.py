@@ -210,6 +210,10 @@ class User(db.Model):
     # It sets the whole table to utf8 but hopefully that isn't a problem.
     __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
 
+    # This handles the fact that first_name and last_name are set to utf8 in this table.
+    # It sets the whole table to utf8 but hopefully that isn't a problem.
+    __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
+
     user_id = Column(Integer, primary_key=True)
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)

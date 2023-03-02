@@ -1,4 +1,7 @@
-"""Functions that support determintation of dissemination formats."""
+"""Shared functions that support determination of dissemination formats."""
+import re
+from typing import List, Optional
+
 import logging
 import os
 import re

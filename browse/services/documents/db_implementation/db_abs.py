@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 import sqlalchemy
 
-from browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata, VersionEntry
 from browse.domain.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
@@ -17,6 +17,7 @@ from browse.services.database.models import Metadata
 from ..format_codes import formats_from_source_type
 from .convert import to_docmeta
 
+from dateutil.tz import tzutc
 
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
@@ -96,8 +97,29 @@ class DbDocMetadataService(DocMetadataService):
                    .filter(Metadata.is_current == 1)).first()
         if not res:
             raise AbsNotFoundException(identifier.id)
-        return to_docmeta(res, self.business_tz)
-    
+
+        # Gather version history metadata from each document version
+        # entry in database.
+        version_history = list()
+
+        all_versions = (Metadata.query
+               .filter(Metadata.paper_id == identifier.id)
+               )
+
+        for ver in all_versions:
+            size_kilobytes = int(ver.source_size / 1024 + .5)
+            # Set UTC timezone
+            created_tz = ver.created.replace(tzinfo=tzutc())
+            entry = VersionEntry(version=ver.version,
+                                 raw='fromdb-no-raw',
+                                 size_kilobytes=size_kilobytes,
+                                 submitted_date=created_tz,
+                                 source_type=ver.source_format)
+            version_history.append(entry)
+
+        return to_docmeta(res, version_history, self.business_tz)
+
+
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,

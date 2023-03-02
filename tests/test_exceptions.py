@@ -1,8 +1,7 @@
 """Tests exception handling in :mod:`arxiv.base.exceptions`."""
 import pytest
-
-
 from http import HTTPStatus as status
+
 from browse.services.documents.base_documents import AbsException
 
 @pytest.fixture()

@@ -1,4 +1,4 @@
-"""Functions that support determintation of dissemination formats."""
+"""Functions that support determination of dissemination formats."""
 import os
 import re
 from operator import itemgetter
