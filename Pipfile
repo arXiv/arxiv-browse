@@ -25,18 +25,18 @@ cloudpathlib = {extras = ["gs"], version = "*"}
 google-cloud-logging = "*"
 
 [dev-packages]
+"beautifulsoup4" = "*"
+coverage = "*"
+hypothesis = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 pylint = "*"
 pytest = "*"
-pytest-html = "*"
-hypothesis = "*"
-"beautifulsoup4" = "*"
-pytest-easyread = "*"
-coverage = "*"
-types-python-dateutil = "*"
 pytest-cov = "*"
+pytest-easyread = "*"
+pytest-html = "*"
 pytest-mock = "*"
+types-python-dateutil = "*"
 
 [requires]
 python_version = "3.10"
