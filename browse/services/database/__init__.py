@@ -36,7 +36,7 @@ from browse.services.database.models import (
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
-tz = gettz(app_config.get("ARXIV_BUSINESS_TZ", "US/Eastern"))
+tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 
 def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
@@ -186,7 +186,7 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     ).filter(Document.paper_id == paper_id).filter(
         TrackbackPing.status == "accepted"
     ).scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=gettz("US/Eastern"))
+    dt = datetime.fromtimestamp(timestamp, tz=tz)
     dt = dt.astimezone(tz=tzutc())
     return dt
 

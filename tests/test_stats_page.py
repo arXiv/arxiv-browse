@@ -1,6 +1,7 @@
 """Tests for stats page controllers, :mod:`browse.controllers.stats_page`."""
 # mypy: ignore-errors
 from datetime import date, datetime
+from dateutil.tz import tzutc
 from unittest import TestCase, mock
 from http import HTTPStatus as status
 
@@ -17,14 +18,15 @@ class TestStatsPageControllers(TestCase):
         """Tests for :func:`.get_hourly_stats_page`."""
         # test bad requested_date_str
         with self.assertRaises(BadRequest):
-            stats_page.get_hourly_stats_page(requested_date_str="foo")
+            stats_page.get_hourly_stats_page(tzutc, requested_date_str="foo")
         with self.assertRaises(BadRequest):
-            stats_page.get_hourly_stats_page(requested_date_str="201901")
+            stats_page.get_hourly_stats_page(tzutc, requested_date_str="201901")
 
         # test response for good or no date option
         mock_get_hourly_stats_count.return_value = (0, 0, 0)
         for date_str in ["2019", "2019-01-01", "20180202", None]:
             response_data, code, _ = stats_page.get_hourly_stats_page(
+                tzutc,
                 requested_date_str=date_str
             )
             mock_get_hourly_stats_count.assert_called_once()

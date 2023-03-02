@@ -1,12 +1,18 @@
 """Paths to files in the legacy arXiv FS."""
 
-from typing import Optional, List, Dict
-import os
+from typing import Optional, List, Dict, Union
+
+from pathlib import Path
+
+from cloudpathlib import CloudPath
+from cloudpathlib.anypath import to_anypath
 
 from browse.domain.identifier import Identifier
 
 from .formats import list_ancillary_files
 from ..format_codes import has_ancillary_files, VALID_SOURCE_EXTENSIONS
+
+UPath = Union[CloudPath, Path]
 
 class FSDocMetaPaths():
     """Class for paths to files in the legacy arXiv FS."""
@@ -15,15 +21,21 @@ class FSDocMetaPaths():
                  latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize"""
-        if not os.path.isdir(latest_versions_path):
+        self.latest_versions_path = to_anypath(latest_versions_path).resolve()
+        if not self.latest_versions_path or not self.latest_versions_path.exists():
             raise ValueError('Path to latest .abs versions '
-                               f'"{latest_versions_path}" does not exist')
-        if not os.path.isdir(original_versions_path):
+                            f'{latest_versions_path} does not exist')
+        if not self.latest_versions_path.is_dir():
+            raise ValueError('Path to latest .abs versions'
+                             f' {latest_versions_path} is not a directory')
+
+        self.original_versions_path = to_anypath(original_versions_path).resolve()
+        if not self.original_versions_path or not self.original_versions_path.exists():
             raise ValueError('Path to original .abs versions '
                                f'"{original_versions_path}" does not exist')
-
-        self.latest_versions_path = os.path.realpath(latest_versions_path)
-        self.original_versions_path = os.path.realpath(original_versions_path)
+        if not self.original_versions_path.is_dir():
+            raise ValueError('Path to original .abs versions '
+                               f'"{original_versions_path}" is not a directory')
 
 
     def get_abs_file(self,
@@ -32,11 +44,24 @@ class FSDocMetaPaths():
         """Gets the absolute path to the .abs file.
 
         Ex. for 1408.0391 v2 -> /data/orig/arxiv/papers/1408/1408.0391v2.abs"""
-        parent_path = self.get_parent_path(identifier=identifier,
-                                           version=version)
-        return os.path.join(parent_path,
-                            (f'{identifier.filename}.abs' if not version
-                             else f'{identifier.filename}v{version}.abs'))
+        parent_path = self._get_parent_path(identifier=identifier, version=version)
+        return str(parent_path.joinpath((f'{identifier.filename}.abs' if not version
+                                         else f'{identifier.filename}v{version}.abs')))
+
+    def _get_parent_path(self,
+                         identifier: Identifier,
+                         version: Optional[int] = None) -> UPath:
+        """Get the Path for FS absolute parent path of the provided identifier.
+
+        ex For 1408.0391 v2 -> /data/orig/arxiv/papers/1408/"""
+        # TODO Check if this is correct in the case of vN is the latest version for the item
+        # ex. say 1408.0391 has versions 1 through 5. The abs for v5 is in /data/ftp/arxiv/papers/1408
+        ver_path =self.latest_versions_path if not version else self.original_versions_path
+
+        return ver_path.joinpath(('arxiv' if not identifier.is_old_id or identifier.archive is None
+                                  else identifier.archive),
+                                 'papers',
+                                 identifier.yymm)
 
     def get_parent_path(self,
                         identifier: Identifier,
@@ -44,15 +69,7 @@ class FSDocMetaPaths():
         """Get the FS absolute parent path of the provided identifier.
 
         ex For 1408.0391 v2 -> /data/orig/arxiv/papers/1408/"""
-        parent_path = os.path.join(
-            (self.latest_versions_path if not version
-             else self.original_versions_path),
-            ('arxiv' if not identifier.is_old_id or identifier.archive is None
-             else identifier.archive),
-            'papers',
-            identifier.yymm,
-        )
-        return parent_path
+        return str(self._get_parent_path(identifier, version))
 
     def get_source_path(self,
                          identifier: Identifier,
@@ -61,20 +78,20 @@ class FSDocMetaPaths():
                          ) -> Optional[str]:
         """Get the absolute path of this DocMetadata's source.
 
+        Returns the first file found that seems like a source file in _parent_path.
+
         Ex. for 1408.0391 v2 -> /data/orig/arxiv/papers/1408/1408.0391v2.tar.gz"""
         file_noex = identifier.filename
         if not is_latest:
-            parent_path = self.get_parent_path(identifier, version)
+            parent_path = self._get_parent_path(identifier, version)
             file_noex = f'{file_noex}v{version}'
         else:
-            parent_path = self.get_parent_path(identifier)
+            parent_path = self._get_parent_path(identifier)
 
         for extension in VALID_SOURCE_EXTENSIONS:
-            possible_path = os.path.join(
-                parent_path,
-                f'{file_noex}{extension[0]}')
-            if os.path.isfile(possible_path):
-                return possible_path
+            possible_path = parent_path.joinpath(f'{file_noex}{extension[0]}')
+            if possible_path.is_file():
+                return str(possible_path)
         return None
 
 

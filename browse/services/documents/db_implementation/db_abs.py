@@ -1,6 +1,7 @@
 """Legacy DB backed core metadata service."""
 from typing import Dict, List, Optional
 from dataclasses import replace
+from zoneinfo import ZoneInfo
 
 import sqlalchemy
 
@@ -22,9 +23,14 @@ class DbDocMetadataService(DocMetadataService):
 
     
     def __init__(self,
-                 db: sqlalchemy.engine.base.Engine) -> None:
+                 db: sqlalchemy.engine.base.Engine,
+                 business_tz:str) -> None:
         """Initialize the DB document metadata service."""
         self.db = db
+        zz =  ZoneInfo(business_tz)
+        if zz is None:
+            raise ValueError("Must pass a valid timzone")
+        self.business_tz = zz
 
     
     def get_abs(self, arxiv_id: str) -> DocMetadata:
@@ -90,7 +96,7 @@ class DbDocMetadataService(DocMetadataService):
                    .filter(Metadata.is_current == 1)).first()
         if not res:
             raise AbsNotFoundException(identifier.id)
-        return to_docmeta(res)
+        return to_docmeta(res, self.business_tz)
     
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,

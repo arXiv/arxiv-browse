@@ -1,9 +1,7 @@
 """Response header utility functions."""
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Tuple
 from zoneinfo import ZoneInfo
-
-from arxiv.base.globals import get_application_config
+from typing import Optional, Tuple
 
 
 APPROX_PUBLISH_DURATION = timedelta(hours=1, minutes=30)
@@ -11,7 +9,7 @@ PUBLISH_ISO_WEEKDAYS = [1, 2, 3, 4, 7]
 """Days of the week publish happens: Sunday-Thursday."""
 
 
-def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool]:
+def guess_next_update_utc(arxiv_business_tz: ZoneInfo, dt: Optional[datetime] = None) -> Tuple[datetime, bool]:
     """Make a sensible guess at earliest possible datetime of next update.
 
     Guess is based on provided datetime.
@@ -24,6 +22,8 @@ def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool
 
     Parameters
     ----------
+    arxiv_business_tz : ZoneInfo
+        Timezone of the arxiv business offices.
     dt : datetime
         The datetime to use as the basis for comparison to guess the
         "next update" datetime.
@@ -38,10 +38,8 @@ def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool
 
     """
     if dt is None:
-        dt = datetime.now(timezone.utc)
-    config = get_application_config()
-    tz = ZoneInfo(config.get('ARXIV_BUSINESS_TZ', 'US/Eastern'))
-    dt = dt.astimezone(tz=tz)
+        dt = datetime.now()
+    dt = dt.astimezone(arxiv_business_tz)
 
     possible_publish_dt = dt.replace(hour=20, minute=0, second=0)
 
@@ -69,9 +67,9 @@ def guess_next_update_utc(dt: Optional[datetime] = None) -> Tuple[datetime, bool
     return (possible_publish_dt.astimezone(tz=timezone.utc), likely_in_publish)
 
 
-def abs_expires_header() -> Tuple[str, str]:
+def abs_expires_header(arxiv_business_tz: ZoneInfo) -> Tuple[str, str]:
     """Get the expires header key and value that should be used by abs."""
-    (next_update_dt, likely_in_publish) = guess_next_update_utc()
+    (next_update_dt, likely_in_publish) = guess_next_update_utc(arxiv_business_tz)
     if likely_in_publish:
         return ('Expires', '-1')
     else:

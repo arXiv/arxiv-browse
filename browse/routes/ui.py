@@ -295,6 +295,18 @@ def main() -> Response:
     return render_template("stats/main.html", **response), code, headers  # type: ignore
 
 
+
+@blueprint.route("stats/today", methods=["GET"])
+def stats_today() -> Response:
+    """Display statistics about today or a day."""
+    if request.args and "date" in request.args:
+        date = str(request.args["date"])
+    else:
+        date = None
+    [response, code, headers] = stats_page.get_hourly_stats_page(current_app.config["ARXIV_BUSINESS_TZ"], date)
+    return render_template("stats/today.html", **response), code, headers  # type: ignore
+
+
 @blueprint.route("stats/<string:command>", methods=["GET"])
 def stats(command: str) -> Response:
     """Display various statistics about the service."""
@@ -303,7 +315,6 @@ def stats(command: str) -> Response:
         params["requested_date_str"] = str(request.args["date"])
 
     getters: Mapping[str, Mapping[str, Union[Callable, Union[Dict, Mapping]]]] = {
-        "today": {"func": stats_page.get_hourly_stats_page, "params": params},
         "monthly_submissions": {
             "func": stats_page.get_monthly_submissions_page,
             "params": {},

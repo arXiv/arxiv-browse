@@ -1,5 +1,6 @@
 from typing import Optional
-import os
+
+from cloudpathlib.anypath import to_anypath
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.documents.fs_implementation.legacy_fs_paths import FSDocMetaPaths
@@ -60,18 +61,14 @@ class FSPrevNext(PrevNextService):
         if not next_id:
             return None
 
-        path = self.fs_paths.get_parent_path(identifier=next_id)
-        file_path = os.path.join(path, f'{next_id.filename}.abs')
-        if os.path.isfile(file_path):
+        if self.fs_paths.get_abs_file(next_id):
             return next_id
 
         next_yymm_id = _next_yymm_id(identifier)
         if not next_yymm_id:
             return None
 
-        path = self.fs_paths.get_parent_path(identifier=next_yymm_id)
-        file_path = os.path.join(path, f'{next_yymm_id.filename}.abs')
-        if os.path.isfile(file_path):
+        if next_yymm_id and self.fs_paths.get_abs_file(next_yymm_id):
             return next_yymm_id
 
         return None
@@ -103,25 +100,23 @@ class FSPrevNext(PrevNextService):
            and identifier.month == previous_id.month:
             return previous_id
 
-        path = self.fs_paths.get_parent_path(previous_id)
-        if not os.path.exists(path):
+        path = to_anypath(self.fs_paths.get_parent_path(previous_id))
+        if not path.is_dir():
             return None
 
-        for _, _, file_list in os.walk(path):
-            abs_files = [f[:-4] for f in file_list if f.endswith('.abs')]
-            if not abs_files:
-                return None
-            max_id = max(abs_files)
-            try:
-                if previous_id.is_old_id:
-                    short_id = Identifier(
-                        arxiv_id=f'{previous_id.archive}/{max_id}')
-                else:
-                    short_id = Identifier(arxiv_id=max_id)
-                return short_id
+        max_id = max(path.glob("*.abs"))  # TODO slow with a large directory of abs files
+        if not max_id:
+            return None
 
-            except IdentifierException:
-                return None
+        try:
+            if previous_id.is_old_id:
+                short_id = Identifier(
+                    arxiv_id=f'{previous_id.archive}/{max_id.stem}')
+            else:
+                short_id = Identifier(arxiv_id=max_id.stem)
+            return short_id
+        except IdentifierException:
+            return None
 
         return None
 

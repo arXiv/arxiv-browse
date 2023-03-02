@@ -6,6 +6,7 @@ from http import HTTPStatus as status
 
 from arxiv.taxonomy.definitions import ARCHIVES, ARCHIVES_SUBSUMED, CATEGORIES
 
+from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
@@ -107,7 +108,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
 
 def _write_expires_header(response_headers: Dict[str, Any]) -> None:
     """Writes an expires header for the response."""
-    response_headers["Expires"] = abs_expires_header()[1]
+    response_headers["Expires"] = abs_expires_header(biz_tz())[1]
 
 
 DAYS = ["{:0>2d}".format(i) for i in range(1, 32)]

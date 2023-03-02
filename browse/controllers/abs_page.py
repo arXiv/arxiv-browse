@@ -14,10 +14,10 @@ from arxiv import taxonomy
 from arxiv.base import logging
 from dateutil import parser
 from dateutil.tz import tzutc
-from flask import request, url_for
+from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
-from browse.controllers import check_supplied_identifier
+from browse.controllers import check_supplied_identifier, biz_tz
 from browse.domain.category import Category
 from browse.domain.identifier import (
     Identifier,
@@ -227,7 +227,7 @@ def _check_request_headers(
 
     resp_headers["Last-Modified"] = last_mod_mime
     resp_headers["ETag"] = etag
-    resp_headers["Expires"] = abs_expires_header()[1]
+    resp_headers["Expires"] = abs_expires_header(biz_tz())
 
     not_modified = _not_modified(
         last_mod_dt,

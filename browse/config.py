@@ -302,6 +302,21 @@ class Settings(BaseSettings):
     to be loaded.
     """
 
+    ARXIV_BUSINESS_TZ: str = 'US/Eastern'
+    """
+    Timezone of the arxiv business offices.
+    """
+
+    FS_TZ: str = "US/Eastern"
+    """
+    Timezone of the filesystems used for abs, src and other files.
+
+    This should be stirng that can be used with `dateutil.tz.gettz`.
+
+    If this is at a cloud provider is likley to be UTC. On Cornell VM's it is
+    US/Eastern.
+    """
+
     class Config:
         """Additional pydantic config of these settings."""
 

@@ -32,13 +32,14 @@ def get_main_stats_page() -> Response:
     return response_data, status.OK, {}
 
 
-def get_hourly_stats_page(requested_date_str: Optional[str] = None) -> Response:
+def get_hourly_stats_page(business_tz: str, requested_date_str: Optional[str] = None) -> Response:
     """Get data for the /stats/today page."""
     response_data: Dict[str, Any] = {}
     current_dt = datetime.now()
     requested_dt = current_dt - timedelta(hours=1)
     response_data["current_dt"] = current_dt
     response_data["requested_dt"] = requested_dt
+    response_data["business_tz"] = business_tz
 
     if requested_date_str:
         try:

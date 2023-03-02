@@ -6,8 +6,9 @@ from typing import Any, Dict, List, Tuple
 from datetime import datetime
 
 from zoneinfo import ZoneInfo
-from dateutil.tz import tzutc, gettz
 from dateutil import parser
+
+from cloudpathlib.anypath import to_anypath
 
 from arxiv import taxonomy
 
@@ -17,8 +18,11 @@ from browse.domain.metadata import Archive, AuthorList, Category, \
 from browse.domain.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
+from browse.config import settings
 
-ARXIV_BUSINESS_TZ = ZoneInfo('US/Eastern')
+ARXIV_BUSINESS_TZ = ZoneInfo(settings.ARXIV_BUSINESS_TZ)
+FS_TZ = ZoneInfo(settings.FS_TZ)
+
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
@@ -56,20 +60,19 @@ The latest versions of these papers should always have the "Categories:" line.
 
 def parse_abs_file(filename: str) -> DocMetadata:
     """Parse an arXiv .abs file."""
+
+    absfile = to_anypath(filename)
+
     try:
-        with open(filename, mode='r', encoding='latin-1') as absf:
+        with absfile.open(mode='r', encoding='latin-1') as absf:
             raw = absf.read()
     except FileNotFoundError:
         raise AbsNotFoundException
     except UnicodeDecodeError as e:
-        # TODO: log this
-        raise AbsParsingException(
-            f'Failed to decode .abs file "{filename}": {e}')
+        raise AbsParsingException(f'Failed to decode .abs file "{filename}": {e}')
 
-    # TODO: get arxiv business timezone from arxiv base
-    modified = datetime.fromtimestamp(
-        os.path.getmtime(filename), tz=gettz('US/Eastern'))
-    modified = modified.astimezone(tz=tzutc())
+    modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=FS_TZ)
+    modified = modified.astimezone(ZoneInfo("UTC"))
 
     # there are two main components to an .abs file that contain data,
     # but the split must always return four components

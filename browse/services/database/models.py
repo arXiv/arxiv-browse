@@ -32,7 +32,7 @@ from werkzeug.local import LocalProxy
 db: SQLAlchemy = SQLAlchemy()
 
 app_config = get_application_config()
-tz = gettz(app_config.get("ARXIV_BUSINESS_TZ", "US/Eastern"))
+tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 tb_secret = app_config.get("TRACKBACK_SECRET", "baz")
 metadata = db.metadata
 

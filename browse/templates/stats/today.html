@@ -8,7 +8,7 @@
     <p>arXiv Web Server Usage from
       {{ requested_dt.strftime('%A, %B %-d, %Y') }}
       (<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> site only)
-      Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} US/Eastern</p>
+      Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} {{business_tz}}</p>
   </div>
   <div id="chart_content">
     <div class="chart_text">
@@ -22,7 +22,7 @@
     {% include "stats/today_js.html" %}
   </div>
   <div class="chart_text chart_notes">
-    <p>Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} US/Eastern</p>
+    <p>Current local time is {{ current_dt.strftime('%A, %B, %-d, %Y %H:%M:%S') }} {{business_tz}}}</p>
   </div>
 {% endblock content_stats %}
 

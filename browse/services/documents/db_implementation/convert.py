@@ -1,5 +1,4 @@
 from zoneinfo import ZoneInfo
-from dateutil.tz import tzutc
 
 from arxiv import taxonomy
 
@@ -8,10 +7,14 @@ from browse.domain.metadata import DocMetadata, Submitter, AuthorList, \
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import AbsException
 
-# TODO get this from arxiv-base
-ARXIV_BUSINESS_TZ = ZoneInfo('US/Eastern')
 
-def to_docmeta(dbmd: Metadata) -> DocMetadata:
+def to_docmeta(dbmd: Metadata, business_tz: ZoneInfo) -> DocMetadata:
+    """Convert a Metadata object from the DB to a DocMetadata object
+
+    The business_tz is the timezone used with the datas in the DB. These are
+    usually US/Eastern.
+
+    """
     # This is from parse_abs.py
     arxiv_identifier = Identifier(dbmd.paper_id)
 
@@ -40,13 +43,14 @@ def to_docmeta(dbmd: Metadata) -> DocMetadata:
         License() if not dbmd.license else License(
             recorded_uri=dbmd.license)
 
+    utc = ZoneInfo("UTC")
     submitted = dbmd.created
-    submitted.replace(tzinfo=ARXIV_BUSINESS_TZ)
-    submitted = submitted.astimezone(tz=tzutc())
+    submitted.replace(tzinfo=business_tz)
+    submitted = submitted.astimezone(utc)
 
     modified = dbmd.updated or dbmd.created
-    modified.replace(tzinfo=ARXIV_BUSINESS_TZ)
-    modified = modified.astimezone(tz=tzutc())
+    modified.replace(tzinfo=business_tz)
+    modified = modified.astimezone(utc)
     
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
