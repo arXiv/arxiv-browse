@@ -5,8 +5,9 @@
 import datetime
 from typing import List, Optional
 
+from . import ListingService
 from .base_listing import NewResponse, ListingResponse, ListingItem, \
-    ListingCountResponse, ListingService
+    ListingCountResponse
 
 
 class FakeListingFilesService(ListingService):

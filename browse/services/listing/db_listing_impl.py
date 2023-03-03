@@ -7,9 +7,9 @@ from sqlalchemy import func, text
 
 from arxiv.taxonomy import ARCHIVES
 
+from browse.services.listing import ListingService
 from browse.services.listing.base_listing import NewResponse, \
-    ListingResponse, ListingCountResponse, ListingService, \
-    ListingItem
+    ListingResponse, ListingCountResponse, ListingItem
 from browse.services.database.models import Document,\
     DocumentCategory, NextMail, db
 """

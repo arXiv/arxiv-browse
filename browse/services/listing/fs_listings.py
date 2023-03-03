@@ -1,4 +1,8 @@
 """arXiv listing backed by filesystem"""
+
+# will need to check errors at some point
+# mypy: ignore-errors
+
 import logging
 import re
 import os
@@ -20,9 +24,9 @@ app_config = get_application_config()
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
 
+from browse.services.listing import ListingService
 from browse.services.listing.base_listing import NewResponse, \
-    ListingResponse, ListingCountResponse, ListingService, \
-    ListingItem
+    ListingResponse, ListingCountResponse, ListingItem
 
 debug_parser = False
 

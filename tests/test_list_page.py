@@ -7,8 +7,7 @@ from browse.services.listing import get_listing_service
 
 from app import app
 from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.listing import ListingService, get_listing_service
-from browse.services.listing.fake_listings import FakeListingFilesService
+from browse.services.listing import get_listing_service
 
 
 def test_basic_lists(client_with_fake_listings):
