@@ -31,14 +31,12 @@
 
 
 {%- macro page_divs() -%}
-<div class='paging'>[ total of {{count}} entries
- {{ pages() }}
-  ]
+<div class='paging'>Total of {{count}} entries {{ pages() }}
 </div>
-<div class='morefewer'>[ showing {{shown}} entries per page:
+<div class='morefewer'>Showing {{shown}} entries per page:
   {{ show_link('fewer',mf_fewer) }} |
   {{ show_link('more', mf_more)  }} |
-  {{ show_link('all',  mf_all)   }} ]
+  {{ show_link('all',  mf_all)   }}
 </div>
 {%- endmacro -%}
 
@@ -72,7 +70,7 @@
 
         {% if article.comments %}
           <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
-            {{article.comments|arxiv_urlize}}
+            {{article.comments|tex2utf|urlize|safe}}
           </div>
         {% endif %}
 
