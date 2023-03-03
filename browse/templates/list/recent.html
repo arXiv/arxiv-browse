@@ -14,11 +14,3 @@
   {% endfor %}
 </ul>
 {% endblock %}
-
-
-{% macro listdate() %}
-  {% if announced %}
-    <div class="list-dateline">Submissions announced {{ announced.strftime('%A, %-d %B %Y') }}
-    </div>
-  {% endif %}
-{% endmacro %}
