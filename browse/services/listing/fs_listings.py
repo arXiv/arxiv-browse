@@ -7,10 +7,8 @@ stores.
 
 import logging
 import re
-from datetime import date, datetime, timedelta
-from time import mktime
+from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
-from wsgiref.handlers import format_date_time
 from zoneinfo import ZoneInfo
 
 from arxiv import taxonomy
@@ -18,7 +16,8 @@ from arxiv.base.globals import get_application_config
 from browse.services import APath
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
-                                     MonthCount, NotModifiedResponse)
+                                     MonthCount, NotModifiedResponse,
+                                     gen_expires)
 from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
 
@@ -29,20 +28,6 @@ logger.level = logging.DEBUG
 
 FS_TZ = ZoneInfo(get_application_config()["ARXIV_BUSINESS_TZ"])
 """Time used on the FS with the listing files."""
-
-
-def gen_expires() -> str:
-    """Generate expires in RFC 1123 format.
-
-       What is optimal value for the expires value? Next publish?
-       RFC 1123 format ex 'Wed, 21 Oct 2015 07:28:00 GMT'
-    """
-    now = datetime.now()
-    future = timedelta(days=1)
-    expire = now + future
-    stamp = mktime(expire.timetuple())
-    expires = format_date_time(stamp)
-    return expires
 
 
 class FsListingFilesService(ListingService):
@@ -179,7 +164,7 @@ class FsListingFilesService(ListingService):
         if if_modified_since: # Check if-modified-since for months of interest
             if all([not self._modified_since(if_modified_since, lf)
                     for _,_, lf in yymmfiles]):
-                return NotModifiedResponse(True, self._gen_expires())
+                return NotModifiedResponse(True, gen_expires())
 
         # Collect updates for each month
         all_listings: List[ListingItem] = []
@@ -190,7 +175,7 @@ class FsListingFilesService(ListingService):
                 raise Exception("Missing monthly listing file {listingFile}")
 
             response = get_updates_from_list_file(year, month, listingFile, listingType, archiveOrCategory)
-            if listingType == 'new' or isinstance(response, NotModifiedResponse) or isinstance(response, ListingNew):
+            if not isinstance(response, Listing):
                 return response
             
             all_listings.extend(response.listings)            
@@ -203,7 +188,7 @@ class FsListingFilesService(ListingService):
         return Listing(listings=all_listings[skip:skip + show], # Adjust for skip/show
                        pubdates=all_pubdates,
                        count=len(all_listings),
-                       expires= self._gen_expires())
+                       expires= gen_expires())
 
 
     

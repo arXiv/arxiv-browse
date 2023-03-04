@@ -117,9 +117,9 @@ def get_listing(subject_or_category: str,
             time_period = time_period + request.args.get('month')  # type: ignore
 
     if (not subject_or_category or
-            not (time_period and
-                 (time_period.isdigit() or
-                  time_period in ['new', 'current', 'pastweek', 'recent']))):
+        not (time_period and
+             (time_period.isdigit() or
+              time_period in ['new', 'current', 'pastweek', 'recent']))):
         raise BadRequest
 
     if subject_or_category in taxonomy.CATEGORIES:
@@ -157,10 +157,11 @@ def get_listing(subject_or_category: str,
 
     if time_period == 'new':
         list_type = 'new'
-        new_resp = listing_service.list_new_articles(
-            subject_or_category, skipn, shown, if_mod_since)
+        new_resp: Union[ListingNew, NotModifiedResponse] =\
+            listing_service.list_new_articles(subject_or_category, skipn,
+                                              shown, if_mod_since)
         response_headers.update(_expires_headers(new_resp))
-        if _not_modified(new_resp):
+        if isinstance(new_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
         listings = new_resp.listings
         count = new_resp.new_count + \
@@ -176,7 +177,7 @@ def get_listing(subject_or_category: str,
         rec_resp = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
-        if _not_modified(rec_resp):
+        if isinstance(rec_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
         listings = rec_resp.listings
         count = rec_resp.count
@@ -187,7 +188,7 @@ def get_listing(subject_or_category: str,
         cur_resp = listing_service.list_articles_by_month(
             subject_or_category, 1999, 12, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(cur_resp))
-        if _not_modified(cur_resp):
+        if isinstance(cur_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
         listings = cur_resp.listings
         count = cur_resp.count
@@ -214,7 +215,7 @@ def get_listing(subject_or_category: str,
                 subject_or_category, list_year, skipn, shown, if_mod_since)
 
         response_headers.update(_expires_headers(resp))
-        if _not_modified(resp):
+        if isinstance(resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
         listings = resp.listings
         count = resp.count
@@ -229,8 +230,8 @@ def get_listing(subject_or_category: str,
 
     for item in listings:
         idx = idx + 1
-        setattr(item, 'article', get_doc_service().get_abs(item.id))  # type: ignore
-        setattr(item, 'list_index', idx + skipn)  # type: ignore
+        setattr(item, 'article', get_doc_service().get_abs(item.id))
+        setattr(item, 'list_index', idx + skipn)
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)

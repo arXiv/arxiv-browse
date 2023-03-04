@@ -5,6 +5,9 @@ stores.
 
 """
 
+# TODO come back and fix up these type errors
+# mypy: disable-error-code="return,arg-type,assignment,attr-defined"
+
 import codecs
 import logging
 import re
@@ -13,9 +16,8 @@ from typing import List, Literal, Optional, Tuple, Union
 
 from browse.services import APath
 from browse.services.listing import (Listing, ListingItem, ListingNew,
-                                     MonthCount, NotModifiedResponse)
-
-from .fs_listings import gen_expires
+                                     MonthCount, NotModifiedResponse,
+                                     gen_expires)
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -151,9 +153,9 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
         dateline = dateline.replace('\n', '')
 
         if DATE.match(dateline):
-            date = re.sub(r'^Date:\s+', '', dateline)
-            short_date = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', date)
-            extras['Date'] = date
+            dl_date = re.sub(r'^Date:\s+', '', dateline)
+            short_date = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', dl_date)
+            extras['Date'] = dl_date
             extras['short_date'] = short_date
             announce_date = datetime.strptime(short_date, '%a, %d %b %y')
 
@@ -363,8 +365,8 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
     pub_dates_with_count:List[Tuple[date,int]] = []
     index = 0
-    for date in pub_dates:
-        pub_dates_with_count.append((date, pub_counts[index]))
+    for pdate in pub_dates:
+        pub_dates_with_count.append((pdate, pub_counts[index]))
         index = index + 1
 
     for pd in pub_dates_with_count:

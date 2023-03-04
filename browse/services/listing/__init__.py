@@ -1,12 +1,11 @@
 """Serves lists of articles for categories and time periods."""
 
 from abc import ABC, abstractmethod
-from typing import cast, Any
-
 from dataclasses import dataclass
-
-from datetime import date
-from typing import Optional, List, Tuple, Literal, Union
+from datetime import date, datetime, timedelta
+from time import mktime
+from typing import Any, List, Literal, Optional, Tuple, Union, cast
+from wsgiref.handlers import format_date_time
 
 
 def get_listing_service() -> "ListingService":
@@ -31,8 +30,9 @@ def fs_listing(settings: Any, _: Any) -> "ListingService":
 
 def db_listing(settings: Any, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
-    from .db_listing_impl import DBListingService
     from browse.services.database import models
+
+    from .db_listing_impl import DBListingService
 
     # maybe pass in the specific classes for the tables we need?
     return DBListingService(models.db)
@@ -212,7 +212,7 @@ class ListingService(ABC):
         skip: int,
         show: int,
         if_modified_since: Optional[str] = None,
-    ) -> Listing:
+    ) -> Union[Listing, NotModifiedResponse]:
         """Get listings for a month.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -226,7 +226,7 @@ class ListingService(ABC):
         skip: int,
         show: int,
         if_modified_since: Optional[str] = None,
-    ) -> ListingNew:
+    ) -> Union[ListingNew, NotModifiedResponse]:
         """Gets listings for the most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -250,3 +250,19 @@ class ListingService(ABC):
     @abstractmethod
     def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
         """Gets monthly listing counts for the year."""
+
+
+
+
+def gen_expires() -> str:
+    """Generate expires in RFC 1123 format.
+
+       What is optimal value for the expires value? Next publish?
+       RFC 1123 format ex 'Wed, 21 Oct 2015 07:28:00 GMT'
+    """
+    now = datetime.now()
+    future = timedelta(days=1)
+    expire = now + future
+    stamp = mktime(expire.timetuple())
+    expires = format_date_time(stamp)
+    return expires
