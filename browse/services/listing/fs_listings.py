@@ -84,8 +84,8 @@ class FsListingFilesService(ListingService):
 
         return (0, '')
 
-    def _get_updates_from_list_file(self, listingFilePath: APath,
-                                    listingType: str, listingFilter: str='')-> Union[Listing, ListingNew, Dict]:
+    def _get_updates_from_list_file(self, year:int, month: int, listingFilePath: APath,
+                                    listingType: str, listingFilter: str='') -> Union[Listing, ListingNew, NotModifiedResponse, MonthCount]:
         """Read the paperids that have been updated from a listings file.
 
         There are three forms of listing file: new, pastweek, and monthly.
@@ -387,12 +387,9 @@ class FsListingFilesService(ListingService):
 
         if format == 'monthly_counts':
             # We need the new and cross counts for the monthly count summary
-            return MonthCount(pubdates=pub_dates_with_count,
-                    new=len(new_items),
-                    cross=len(cross_items),
-                    expires=self._gen_expires(),
-                    listings=new_items + cross_items + rep_items, # debugging
-                    )
+            return MonthCount(
+                year=year, month=month, new=len(new_items), cross=len(cross_items),
+                expires=self._gen_expires(), listings=new_items + cross_items + rep_items)
         elif listingType == 'new':
             return ListingNew(listings= new_items + cross_items + rep_items,
                               announced= announce_date,
@@ -431,7 +428,6 @@ class FsListingFilesService(ListingService):
         not check if the file exists."""
         categorySuffix = ''
         archive = ''
-
         if archiveOrCategory in taxonomy.ARCHIVES:
             # Create listing file path with archive as <archive>/new
             archive = archiveOrCategory
@@ -447,8 +443,16 @@ class FsListingFilesService(ListingService):
 
         listingRoot = f'{self.listing_files_root}/{archive}/listings/'
         if listingType == 'month':
-            yymm = "%02d%02d" % (year, month)
-            listingFilePath = f'{listingRoot}{yymm}'
+            if len(str(year)) >= 4:
+                if year < 2090:
+                    yy = str(year)[2:]
+                    listingFilePath = f'{listingRoot}{yy}{month:02d}'
+                else:
+                    listingFilePath = f'{listingRoot}{year}{month:02d}'
+            elif len(str(year)) <= 2:
+                listingFilePath = f'{listingRoot}{year:02d}{month:02d}'
+            else:
+                raise ValueError("Bad year value {year}")
         else:
             listingFilePath = f'{listingRoot}{listingType}{categorySuffix}'
 
@@ -500,7 +504,7 @@ class FsListingFilesService(ListingService):
                                  skip: int,
                                  show: int,
                                  if_modified_since: Optional[str] = None,
-                                 listingType: Literal['new','month'] = 'month') -> Listing:
+                                 listingType: Literal['new','month'] = 'month') -> Union[Listing, ListingNew, NotModifiedResponse]:
         """Gets listing for a list of `months`.
 
         This gets the listings for all the months in `months`. It works fine for
@@ -525,7 +529,7 @@ class FsListingFilesService(ListingService):
             be empty.
         months : List[Tuple[int,int,APath]]
             The months to get the listings for. Tuple of (yy, mm, APath_to_listing_file)
-            where both yy and mm are `int`.
+            where both yy and mm are `int`. If yy or mm are 0 the result may lack pubdates.
         # tuple of (yy,mm) skip : int
         show : int
             The quantity of listings that need to be shown.
@@ -566,16 +570,16 @@ class FsListingFilesService(ListingService):
                 # This is fine if new month and no announce has happened yet.
                 raise Exception("Missing monthly listing file {listingFile}")
 
-            response = self._get_updates_from_list_file(listingFile, listingType, archiveOrCategory)
-            if listingType == 'new':
+            response = self._get_updates_from_list_file(year, month, listingFile, listingType, archiveOrCategory)
+            if listingType == 'new' or isinstance(response, NotModifiedResponse) or isinstance(response, ListingNew):
                 return response
             
             all_listings.extend(response.listings)            
             if response.pubdates:
                 all_pubdates.extend(response.pubdates)
-            else:
-                pub_date = date(year, month, 1).strftime('%a, %d %b %Y')
-                all_pubdates.append((pub_date, len(response.listings)))
+            # else:
+            #     pub_date = date(year, month, 1).strftime('%a, %d %b %Y')
+            #     all_pubdates.append((pub_date, len(response.listings)))
 
         return Listing(listings=all_listings[skip:skip + show], # Adjust for skip/show
                        pubdates=all_pubdates,
@@ -668,15 +672,11 @@ class FsListingFilesService(ListingService):
         """Gets monthly listing counts for the year."""
         monthly_counts: List[MonthCount] = []
         new_cnt, cross_cnt = 0, 0
-
-        currentYear = str(datetime.now().year)[2:]
-        end_month = 12
-        if currentYear == str(year):
-            end_month = datetime.now().month  # limit range to available months
+        currentYear, currentMonth, end_month = self._current_y_m_em(year)
 
         for month in range(1, end_month + 1):
-            listingFile = to_anypath(self._generate_listing_path(
-                'month', archive, year, month))
+            listingFile = to_anypath(
+                self._generate_listing_path('month', archive, year, month))
             if not listingFile.is_file():
                 if currentYear == str(year):
                     # This may be possible if new month and no announce has happened
@@ -688,12 +688,11 @@ class FsListingFilesService(ListingService):
                 else:
                     raise Exception(f"Missing monthly listing file at {listingFile}")
 
-            response = self._get_updates_from_list_file(listingFile, 'monthly_counts')
-            monthly_counts.append(MonthCount(year=year, month= month,
-                                             new=response['new_count'],
-                                             cross=response['cross_count']))
-            new_cnt += response['new_count']
-            cross_cnt += response['cross_count']
+            response = self._get_updates_from_list_file(year, month, listingFile, 'monthly_counts')
+            if isinstance(response, MonthCount):
+                monthly_counts.append(response)
+                new_cnt += response.new
+                cross_cnt += response.cross
 
         return ListingCountResponse(month_counts=monthly_counts,
                                     new_count=new_cnt,

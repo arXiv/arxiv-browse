@@ -164,7 +164,7 @@ class MonthCount:
     new: int
     cross: int
     expires: str
-    listing: List[ListingItem]
+    listings: List[ListingItem]
 
 
 @dataclass
