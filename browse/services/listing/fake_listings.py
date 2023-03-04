@@ -5,9 +5,7 @@
 import datetime
 from typing import List, Optional
 
-from . import ListingService
-from .base_listing import NewResponse, ListingResponse, ListingItem, \
-    ListingCountResponse
+from . import ListingService, ListingNew, ListingItem, ListingCountResponse
 
 
 class FakeListingFilesService(ListingService):
@@ -50,7 +48,7 @@ class FakeListingFilesService(ListingService):
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> NewResponse:
+                          if_modified_since: Optional[str] = None) -> ListingNew:
         """Example of list_new_articles."""
         listings = [
             '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
@@ -99,7 +97,7 @@ class FakeListingFilesService(ListingService):
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> ListingResponse:
+                               if_modified_since: Optional[str] = None) -> Listing:
         """Example of list_pastweek_articles."""
         listings = [
             '0704.0526', '0704.0988', '0704.0182', '0704.0310', '0704.0616', '0704.0732', '0704.0042',
@@ -129,7 +127,7 @@ class FakeListingFilesService(ListingService):
                               year: int,
                               skip: int,
                               show: int,
-                              if_modified_since: Optional[str] = None) -> ListingResponse:
+                              if_modified_since: Optional[str] = None) -> Listing:
         """Example of list_articles_by_year."""
         return self.list_articles_by_month(archiveOrCategory, year, 1, skip, show, if_modified_since)
 

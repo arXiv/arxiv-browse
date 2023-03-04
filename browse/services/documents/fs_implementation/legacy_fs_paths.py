@@ -12,7 +12,8 @@ from browse.domain.identifier import Identifier
 from .formats import list_ancillary_files
 from ..format_codes import has_ancillary_files, VALID_SOURCE_EXTENSIONS
 
-UPath = Union[CloudPath, Path]
+from browse.services import APath
+
 
 class FSDocMetaPaths():
     """Class for paths to files in the legacy arXiv FS."""
@@ -50,7 +51,7 @@ class FSDocMetaPaths():
 
     def _get_parent_path(self,
                          identifier: Identifier,
-                         version: Optional[int] = None) -> UPath:
+                         version: Optional[int] = None) -> APath:
         """Get the Path for FS absolute parent path of the provided identifier.
 
         ex For 1408.0391 v2 -> /data/orig/arxiv/papers/1408/"""
