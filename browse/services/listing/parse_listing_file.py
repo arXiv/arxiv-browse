@@ -71,8 +71,10 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 
     return (0, '')
 
+ParsingMode = Literal['new', 'month', 'monthly_counts', 'year', 'pastweek']
+
 def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
-                               listingType: str, listingFilter: str='') -> Union[Listing, ListingNew, NotModifiedResponse, MonthCount]:
+                               parsingMode: ParsingMode, listingFilter: str='') -> Union[Listing, ListingNew, NotModifiedResponse, MonthCount]:
     """Read the paperids that have been updated from a listings file.
 
     There are three forms of listing file: new, pastweek, and monthly.
@@ -114,7 +116,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
     #    - Identify type: new, cross
     #
     format = ''
-    if listingType == 'monthly_counts':
+    if parsingMode == 'monthly_counts':
         format = 'monthly_counts'
         listingType = 'month'
 
@@ -139,7 +141,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
     lines = codecs.decode(data, encoding='utf-8',errors='ignore').split("\n")
 
-    if listingType == 'new':
+    if parsingMode == 'new':
         # Process selected information from header
         #   Expect these lines:
         #       Date: (date)
@@ -182,7 +184,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
             line = lines.pop(0)
 
-    elif listingType == 'pastweek' or listingType == 'month':
+    elif parsingMode == 'pastweek' or parsingMode == 'month':
         # Skip forward to first \\,
         #   which brings us to first publish date for pastweek
         # \\
@@ -230,6 +232,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
         is_cross = 0
 
         while (len(lines) and not re.match(r'^\\', line)):
+            # #################### START ACCUMULTING LINES HERE ####################
 
             # Read article identifier and determine whether a cross
             #   Paper: quant-ph/9901070
@@ -259,18 +262,18 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                 # so we infer from Paper line. For pastweek we infer
                 # both new and cross from Paper line as the file switches
                 # back and forth.
-                if listingType == 'pastweek':
+                if parsingMode == 'pastweek':
                     if is_cross:
                         type = 'cross'
                     else:
                         type = 'new'
-                elif listingType != 'new' and is_cross:
+                elif parsingMode != 'new' and is_cross:
                     type = 'cross'
 
             elif replaced:
                 nb = line
 
-            elif listingType == 'pastweek' and pastweek:
+            elif parsingMode == 'pastweek' and pastweek:
                 pub_date = pastweek.group(1)
                 pub_date = datetime.strptime(pub_date, '%a, %d %b %Y')
                 # Put together current updates and crosses
@@ -353,7 +356,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
     # Combine the new and cross updates for pastweek
     #   if there are crosses, add them to updates.
-    if listingType == 'pastweek':
+    if parsingMode == 'pastweek':
         if len(cross_items):
             new_items = new_items + cross_items
 
@@ -377,7 +380,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
         return MonthCount(
             year=year, month=month, new=len(new_items), cross=len(cross_items),
             expires=gen_expires(), listings=new_items + cross_items + rep_items)
-    elif listingType == 'new':
+    elif parsingMode == 'new':
         return ListingNew(listings= new_items + cross_items + rep_items,
                           announced= announce_date,
                           submitted= (submit_start_date, submit_end_date),
@@ -385,8 +388,8 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                           cross_count= len(cross_items),
                           rep_count= len(rep_items),
                           expires= gen_expires())
-    elif listingType == 'pastweek' or listingType == 'month' \
-            or listingType == 'year':
+    elif parsingMode == 'pastweek' or parsingMode == 'month' \
+            or parsingMode == 'year':
         #{'listings': List[ListingItem],
         # 'pubdates': List[Tuple[date, int]],
         # 'count': int,
@@ -394,7 +397,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
         # There are no pubdates for month, so we will create one and add count
         # to be consistent with API
-        if listingType == 'month':
+        if parsingMode == 'month':
             date = re.search(r'(?P<date>\d{4})$', str(listingFilePath))
             if date:
                 yymm_string = date.group('date')

@@ -4,8 +4,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from time import mktime
-from typing import Any, List, Literal, Optional, Tuple, Union, cast
+from typing import Any, List, Literal, Optional, Protocol, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
+
+from browse.domain.identifier import Identifier
+from browse.domain.metadata import Archive
 
 
 def get_listing_service() -> "ListingService":
@@ -45,7 +48,20 @@ def fake(settings: Any, _: Any) -> "ListingService":
     return FakeListingFilesService()
 
 
-ListingTypes = Literal["new", "cross", "rep"]
+AnnounceTypes = Literal["new", "cross", "rep"]
+"""The types that announces can be in the listings."""
+
+
+class ListingArticle(Protocol):
+    arxiv_identifier: Identifier
+    title: str
+    abstract: str
+    comments: str
+    journal_ref: str
+    arxiv_id: str
+    arxiv_id_v: str
+    primary_archive: Archive
+
 
 
 class ListingItem:
@@ -60,10 +76,11 @@ class ListingItem:
     primary is the primary category of the article.
     """
 
-    def __init__(self, id: str, listingType: ListingTypes, primary: str):
+    def __init__(self, id: str, listingType: AnnounceTypes, primary: str):
         self.id = id
         self.listingType = listingType
         self.primary = primary
+        self.article: Listing
 
     def __repr__(self) -> str:
         return f"<ListingItem {self.id} {self.listingType}>"

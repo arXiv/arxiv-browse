@@ -15,45 +15,49 @@ means that the fixture will be re-run for each test function.
 
 """
 import pytest
-
+from pathlib import Path
 from browse.factory import create_web_app
+
+from tests import path_of_for_test
+
 
 @pytest.fixture(scope='session')
 def loaded_db():
     """Loads the testing db"""
-    app = create_web_app() 
+    app = create_web_app()
     with app.app_context():
         from browse.services.database import models
+
         from . import populate_test_database
         populate_test_database(True, models)
-   
-    
+
+
 
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
     """App setup with DB backends."""
-    from browse.services.listing import db_listing
     import browse.services.documents as documents
+    from browse.services.listing import db_listing
 
     app = create_web_app()
     app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})
     app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
     app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
     app.settings.DOCUMENT_LISTING_SERVICE = db_listing
-    
+
     app.testing = True
     app.config['APPLICATION_ROOT'] = ''
 
     with app.app_context():
-        from browse.services.listing import db_listing
         import browse.services.documents as documents
+        from browse.services.listing import db_listing
         from flask import g
         g.doc_service = documents.db_docs(app.settings, g)
         g.listing_service = db_listing(app.settings, g)
 
     return app
 
-    
+
 @pytest.fixture(scope='function')
 def app_with_fake(loaded_db):
     """A browser client with fake listings and FS abs documents"""
@@ -61,8 +65,8 @@ def app_with_fake(loaded_db):
     # This depends on loaded_db becasue the services.database needs the DB
     # to be loaded eventhough listings and abs are done via fake and FS.
     app = create_web_app()
-    import browse.services.listing as listing
     import browse.services.documents as documents
+    import browse.services.listing as listing
 
     app.config.update({'DOCUMENT_LISTING_SERVICE': listing.fake})
     app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.fs_docs})
@@ -72,7 +76,7 @@ def app_with_fake(loaded_db):
 
     app.testing = True
     app.config['APPLICATION_ROOT'] = ''
-    
+
     with app.app_context():
         from flask import g
         g.doc_service = documents.fs_docs(app.settings, g)
@@ -108,13 +112,18 @@ def unittest_add_fake(request, client_with_fake_listings):
 
     To use this add @pytest.mark.usefixtures("unittest_add_fake") to the UnitTest TestCase class."""
     request.cls.client = client_with_fake_listings
-    
+
+
+@pytest.fixture()
+def abs_path() -> Path:
+    """`Path` to the test abs files."""
+    return Path(path_of_for_test('data/abs_files'))
 
 
 #NOT A FIXTURE
 def _app_with_db():
-    from browse.services.listing import db_listing
     import browse.services.documents as documents
+    from browse.services.listing import db_listing
 
     app = create_web_app()
     app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})

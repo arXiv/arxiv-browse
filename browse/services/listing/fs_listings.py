@@ -21,13 +21,16 @@ from browse.services.listing import (Listing, ListingCountResponse,
 from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
 
-from .parse_listing_file import get_updates_from_list_file
+from .parse_listing_file import get_updates_from_list_file, ParsingMode
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
 
 FS_TZ = ZoneInfo(get_application_config()["ARXIV_BUSINESS_TZ"])
 """Time used on the FS with the listing files."""
+
+ListingFileType = Literal["new", "pastweek", "month"]
+"""These are the listing file types."""
 
 
 class FsListingFilesService(ListingService):
@@ -38,7 +41,7 @@ class FsListingFilesService(ListingService):
 
 
 
-    def _generate_listing_path(self, listingType: str, archiveOrCategory: str,
+    def _generate_listing_path(self, fileMode: ListingFileType, archiveOrCategory: str,
                                year: int, month: int) -> APath:
         """Create `Path` to a listing file.
 
@@ -60,7 +63,7 @@ class FsListingFilesService(ListingService):
             raise BadRequest(f"Archive or category doesn't exist: {archiveOrCategory}")
 
         listingRoot = f'{self.listing_files_root}/{archive}/listings/'
-        if listingType == 'month':
+        if fileMode == 'month':
             if len(str(year)) >= 4:
                 if year < 2090:
                     yy = str(year)[2:]
@@ -72,7 +75,7 @@ class FsListingFilesService(ListingService):
             else:
                 raise ValueError("Bad year value {year}")
         else:
-            listingFilePath = f'{listingRoot}{listingType}{categorySuffix}'
+            listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 
         return to_anypath(listingFilePath)
 
@@ -108,7 +111,7 @@ class FsListingFilesService(ListingService):
                                  skip: int,
                                  show: int,
                                  if_modified_since: Optional[str] = None,
-                                 listingType: Literal['new','month'] = 'month') -> Union[Listing, ListingNew, MonthCount, NotModifiedResponse]:
+                                 mode: ParsingMode = 'month') -> Union[Listing, ListingNew, MonthCount, NotModifiedResponse]:
         """Gets listing for a list of `months`.
 
         This gets the listings for all the months in `months`. It works fine for
@@ -139,10 +142,11 @@ class FsListingFilesService(ListingService):
             The quantity of listings that need to be shown.
         if_modified_since : Optional[str]
             RFC 1123 format date of an if_modified_since header.
-        listingType: Literal['new','month']       
-            Which type if listing is requested. 'month' works with a yymmfiles
+        mode: ParsingMode        
+            Which type if listing is requested. One of ['new', 'month',
+            'monthly_counts', 'year', 'pastweek']'month' works with a yymmfiles
             list greater than length 1. 'new' works only with a list of length 1.
-        
+
         Returns
         -------
         Listing
@@ -156,7 +160,7 @@ class FsListingFilesService(ListingService):
             have been created yet if there has not yet been an announcement.
 
         """
-        if listingType == 'new' and len(yymmfiles) > 1:
+        if mode == 'new' and len(yymmfiles) > 1:
             raise ValueError("when listing type  is 'new' yymmfiles must be size 1")
 
         currentYear, currentMonth, end_month = self._current_y_m_em(max([yy for yy,_,_ in yymmfiles]))
@@ -174,7 +178,7 @@ class FsListingFilesService(ListingService):
                 # This is fine if new month and no announce has happened yet.
                 raise Exception("Missing monthly listing file {listingFile}")
 
-            response = get_updates_from_list_file(year, month, listingFile, listingType, archiveOrCategory)
+            response = get_updates_from_list_file(year, month, listingFile, mode, archiveOrCategory)
             if not isinstance(response, Listing):
                 return response
             
@@ -269,7 +273,7 @@ class FsListingFilesService(ListingService):
         archiveOrCategory value is an archive or category listing.
         """
         yymmfiles= [(0,0, self._generate_listing_path('pastweek', archiveOrCategory, 0, 0))]
-        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since) #type: ignore
+        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since, 'pastweek') #type: ignore
 
     
     def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
