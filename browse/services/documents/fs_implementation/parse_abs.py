@@ -66,16 +66,19 @@ def parse_abs_file(filename: str) -> DocMetadata:
     try:
         with absfile.open(mode='r', encoding='latin-1') as absf:
             raw = absf.read()
+            modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=FS_TZ)
+            modified = modified.astimezone(ZoneInfo("UTC"))
+            return parse_abs(raw, modified)
     except FileNotFoundError:
         raise AbsNotFoundException
     except UnicodeDecodeError as e:
         raise AbsParsingException(f'Failed to decode .abs file "{filename}": {e}')
 
-    modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=FS_TZ)
-    modified = modified.astimezone(ZoneInfo("UTC"))
 
+def parse_abs(raw: str, modified:datetime) -> DocMetadata:
     # there are two main components to an .abs file that contain data,
     # but the split must always return four components
+
     components = RE_ABS_COMPONENTS.split(raw)
     if len(components) > 4:
             components = alt_component_split(components)
@@ -99,30 +102,27 @@ def parse_abs_file(filename: str) -> DocMetadata:
 
     # cleanup and create list of prehistory entries
     prehistory = re.sub(r'^.*\n', '', prehistory)
-    parsed_version_entries = re.split(r'\n', prehistory)
+    parsed_version_entries = [line for line in re.split(r'\n', prehistory)
+                              if line.startswith("Date")]
 
     # submitter data
-    from_match = RE_FROM_FIELD.match(parsed_version_entries.pop(0))
-    if not from_match:
-        raise AbsParsingException('Could not extract submitter data.')
-    name = from_match.group('name')
-    if name is not None:
-        name = name.rstrip()
-    else:
+    from_match = RE_FROM_FIELD.match(prehistory)
+    if not from_match or not from_match.group('name'):
         name = 'unknown'
-    email = from_match.group('email')
+        email = 'email-not-provided'
+    else:
+        name = from_match.group('name').rstrip()
+        email = from_match.group('email')
 
     # get the version history for this particular version of the document
-    if not len(parsed_version_entries) >= 1:
+    if parsed_version_entries:
+        (version, version_history, arxiv_id_v) \
+            = _parse_version_entries(arxiv_id=arxiv_id,
+                                     version_entry_list=parsed_version_entries)
+        arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+    else:
         raise AbsParsingException('At least one version entry expected.')
 
-    (version, version_history, arxiv_id_v) \
-        = _parse_version_entries(arxiv_id=arxiv_id,
-                                 version_entry_list=parsed_version_entries)
-
-    arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-
-    # named (key-value) fields
     if not all(rf in fields for rf in REQUIRED_FIELDS):
         raise AbsParsingException('missing required field(s)')
 
