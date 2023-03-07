@@ -268,3 +268,6 @@ class DocMetadata:
         else:
             url = canonical_url(self.arxiv_identifier.idv)
         return url
+
+    def __repr__(self) -> str:
+        return f"DocMetadata({self.arxiv_id_v or self.arxiv_id})"
