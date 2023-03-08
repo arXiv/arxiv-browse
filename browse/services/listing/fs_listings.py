@@ -16,14 +16,14 @@ from arxiv.base.globals import get_application_config
 from browse.services import APath
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
-                                     MonthCount, NotModifiedResponse,
+                                     MonthCount, NotModifiedResponse, ListingPastweek,
                                      gen_expires)
 from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
 
 from .parse_listing_file import get_updates_from_list_file, ParsingMode
 from .parse_new_listing_file import parse_new_listing_file
-
+from .parse_listing_pastweek import parse_recent_listing_file
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -258,18 +258,18 @@ class FsListingFilesService(ListingService):
         the archiveOrCategory value is an archive or category listing.
         """
         file= self._generate_listing_path('new', archiveOrCategory, 0, 0)
-        return parse_new_listing_file(file)
-
-        # TODO handle skip show
-        # TODO handle if-modified-since
-        #return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since, 'new') #type: ignore
-
+        if if_modified_since and self._modified_since(if_modified_since, file):
+            return NotModifiedResponse(True, gen_expires())
+        else:
+            rv =  parse_new_listing_file(file)
+            rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
+            return rv
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> Listing:
+                               if_modified_since: Optional[str] = None) -> Union[ListingPastweek, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -278,8 +278,13 @@ class FsListingFilesService(ListingService):
         The 'pastweek' listing maps to a single file. The filename depends on whether the
         archiveOrCategory value is an archive or category listing.
         """
-        yymmfiles= [(0,0, self._generate_listing_path('pastweek', archiveOrCategory, 0, 0))]
-        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since, 'pastweek') #type: ignore
+        file = self._generate_listing_path('pastweek', archiveOrCategory, 0, 0)
+        if if_modified_since and self._modified_since(if_modified_since, file):
+            return NotModifiedResponse(True, gen_expires())
+        else:
+            rv = parse_recent_listing_file(file)
+            rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
+            return rv
 
     
     def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:

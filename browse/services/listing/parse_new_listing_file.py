@@ -19,7 +19,7 @@ from browse.services import APath
 from browse.services.documents.fs_implementation.parse_abs import (
     parse_abs, parse_abs_top)
 from browse.services.listing import (ListingItem, ListingNew,
-                                     NotModifiedResponse, gen_expires)
+                                     gen_expires)
 
 DATE     = re.compile(r'^Date:\s+')
 SUBJECT  = re.compile(r'^Subject:\s+')
@@ -62,7 +62,7 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 
 
 def parse_new_listing_file(listingFilePath: APath, listingFilter: str='')\
-                           -> Union[ListingNew, NotModifiedResponse]:
+                           -> Union[ListingNew]:
     """Parses a new or new.{CATEGORY} listing file.
 
     An archive with sub categories will have a combined new listing for the time

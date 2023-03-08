@@ -148,6 +148,18 @@ class ListingNew:
 
 
 @dataclass
+class ListingPastweek:
+    """
+    A listing for the pastweek of articles.
+
+    """
+    listings: List[ListingItem]
+    pubdates: List[Tuple[str, int]]
+    count: int
+    expires: str
+
+
+@dataclass
 class NotModifiedResponse:
     """
     Listing response that indicates that the listing has not been modified since
@@ -260,7 +272,7 @@ class ListingService(ABC):
         skip: int,
         show: int,
         if_modified_since: Optional[str] = None,
-    ) -> Listing:
+    ) -> ListingPastweek:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client

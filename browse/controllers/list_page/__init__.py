@@ -8,13 +8,12 @@ handles GET and POST requests to the list endpoint.
 
 This should handle requests like:
 /list/$category/YYMM
-/list/$category/YYMM
 /list/$category/new|recent|current|pastweek
-/list/$category/YYMM?skip=n&show=n
 /list/$archive/new|recent|current|pastweek
 /list/$archive/YY
 /list/$category/YY
 
+And all of the above with ?skip=n&show=n
 Examples of odd requests to throw out:
 /list/?400
 /list/cs/14?skip=%25CRAZYSTUFF
@@ -41,9 +40,10 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from datetime import datetime
+from datetime import datetime, date
 from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
+from functools import reduce
 
 from arxiv import taxonomy
 from browse.controllers.abs_page import truncate_author_list_size
@@ -53,7 +53,7 @@ from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
-                                     get_listing_service)
+                                     ListingPastweek, get_listing_service)
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
@@ -166,6 +166,7 @@ def get_listing(subject_or_category: str,
         response_data.update(sub_sections_for_types(new_resp, skipn, shown))
 
     elif time_period in ['pastweek', 'recent']:
+        # A bit different due to returning days not listings
         list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown, if_mod_since)
@@ -176,18 +177,7 @@ def get_listing(subject_or_category: str,
         count = rec_resp.count
         response_data['pubdates'] = rec_resp.pubdates
 
-    elif time_period == 'current':
-        list_type = 'current'
-        cur_resp = listing_service.list_articles_by_month(
-            subject_or_category, 1999, 12, skipn, shown, if_mod_since)
-        response_headers.update(_expires_headers(cur_resp))
-        if isinstance(cur_resp, NotModifiedResponse):
-            return {}, status.NOT_MODIFIED, response_headers
-        listings = cur_resp.listings
-        count = cur_resp.count
-        response_data['pubmonth'] = cur_resp.pubdates[0][0]
-
-    else:  # YYMM or YYYYMM?
+    else:  # current or YYMM or YYYYMM
         yandm = year_month(time_period)
         if yandm is None:
             raise BadRequest
@@ -264,6 +254,10 @@ def get_listing(subject_or_category: str,
 
 def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
     """Gets the year and month from the time_period parameter."""
+    if tp == "current":
+        day = date.today()
+        return day.year, day.month
+
     if not tp or len(tp) > 6 or len(tp) < 2:
         return None
 
@@ -447,9 +441,11 @@ def _not_modified(response: Union[Listing, ListingNew, NotModifiedResponse]) -> 
 
 
 def _expires_headers(listing_resp:
-                     Union[Listing, ListingNew, NotModifiedResponse]) \
+                     Union[Listing, ListingNew, ListingPastweek, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
         return {'Expires': str(listing_resp.expires)}
     else:
         return {}
+
+
