@@ -30,6 +30,11 @@ RE_FROM_FIELD = re.compile(
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
     r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+
+RE_REP_COMPONENTS = re.compile(
+    r'^replaced with revised version\s*(?P<date>.*?)'
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+
 RE_FIELD_COMPONENTS = re.compile(
     r'^(?P<field>[-a-z\)\(]+\s*):\s*(?P<value>.*)', re.IGNORECASE)
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
@@ -48,7 +53,7 @@ REQUIRED_FIELDS = ['title', 'authors', 'abstract']
 """
 Required parsed fields with normalized field names.
 
-Note the absense of 'categories' as a required field. A subset of version-
+Note the absence of 'categories' as a required field. A subset of version-
 affixed .abs files with the old identifiers predate the introduction of
 categories and therefore do not have a "Categories:" line; only the (higher-
 level) archive and group can be be inferred, and this must be done via the
@@ -62,35 +67,53 @@ def parse_abs_file(filename: str) -> DocMetadata:
     """Parse an arXiv .abs file."""
 
     absfile = to_anypath(filename)
-
     try:
         with absfile.open(mode='r', encoding='latin-1') as absf:
             raw = absf.read()
             modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=FS_TZ)
             modified = modified.astimezone(ZoneInfo("UTC"))
             return parse_abs(raw, modified)
+
     except FileNotFoundError:
         raise AbsNotFoundException
     except UnicodeDecodeError as e:
         raise AbsParsingException(f'Failed to decode .abs file "{filename}": {e}')
 
 
-def parse_abs(raw: str, modified:datetime) -> DocMetadata:
-    # there are two main components to an .abs file that contain data,
-    # but the split must always return four components
 
+def parse_abs(raw: str, modified:datetime) -> DocMetadata:
+    """Parse an abs with fields and an abstract."""
+
+    # There are two main components to an .abs file that contain data,
+    # but the split is expected to return four components.
     components = RE_ABS_COMPONENTS.split(raw)
     if len(components) > 4:
             components = alt_component_split(components)
 
-    # extract out prehistory, everything else is in the second main component
-    prehistory, misc_fields = re.split(r'\n\n', components[1])
+    abstract = components[2]
+    abs = parse_abs_top(components[1], modified, abstract)
+    missing = [rf for rf in REQUIRED_FIELDS if not hasattr(abs, rf) or not getattr(abs, rf)]
+    if missing:
+        raise AbsParsingException(f"missing required field(s) {','.join(missing)}")
+    return abs
+
+
+
+
+def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
+    """Parse just the fields part of the abs.
+
+    The top section is the field section of the abs data before the abstract.
+
+    An abstract may be passed in so it is added to the DocMetadata when constructed. The
+    abstract cannot be added later since the DocMetadata class is frozen.
+
+    `raw` is expected to not have surrounding `\\` delimiters.
+    """
+    prehistory, misc_fields = re.split(r'\n\n', raw)
 
     fields: Dict[str, Any] = \
         _parse_metadata_fields(key_value_block=misc_fields)
-
-    # abstract is the first main component
-    fields['abstract'] = components[2]
 
     id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
@@ -103,7 +126,7 @@ def parse_abs(raw: str, modified:datetime) -> DocMetadata:
     # cleanup and create list of prehistory entries
     prehistory = re.sub(r'^.*\n', '', prehistory)
     parsed_version_entries = [line for line in re.split(r'\n', prehistory)
-                              if line.startswith("Date")]
+                              if line.startswith("Date") or line.startswith("replaced with revised")]
 
     # submitter data
     from_match = RE_FROM_FIELD.match(prehistory)
@@ -123,9 +146,6 @@ def parse_abs(raw: str, modified:datetime) -> DocMetadata:
     else:
         raise AbsParsingException('At least one version entry expected.')
 
-    if not all(rf in fields for rf in REQUIRED_FIELDS):
-        raise AbsParsingException('missing required field(s)')
-
     # some transformations
     category_list: List[str] = []
     primary_category = None
@@ -139,6 +159,8 @@ def parse_abs(raw: str, modified:datetime) -> DocMetadata:
                     taxonomy.CATEGORIES[primary_category.id]['in_archive'])
         elif arxiv_identifier.is_old_id:
             primary_archive = Archive(arxiv_identifier.archive)
+        else:
+            raise AbsException(f"Invalid caregory {category_list[0]}")
     elif arxiv_identifier.is_old_id:
         primary_archive = Archive(arxiv_identifier.archive)
     else:
@@ -155,7 +177,7 @@ def parse_abs(raw: str, modified:datetime) -> DocMetadata:
         arxiv_id_v=arxiv_id_v,
         arxiv_identifier=Identifier(arxiv_id=arxiv_id),
         title=fields['title'],
-        abstract=fields['abstract'],
+        abstract=abstract,
         authors=AuthorList(fields['authors']),
         submitter=Submitter(name=name, email=email),
         categories=fields['categories'] if 'categories' in fields else None,
@@ -186,6 +208,8 @@ def parse_abs(raw: str, modified:datetime) -> DocMetadata:
     )
 
 
+
+
 def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
         -> Tuple[int, List[VersionEntry], str]:
     """Parse the version entries from the arXiv .abs file."""
@@ -193,7 +217,7 @@ def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
     version_entries = list()
     for parsed_version_entry in version_entry_list:
         version_count += 1
-        date_match = RE_DATE_COMPONENTS.match(parsed_version_entry)
+        date_match = RE_DATE_COMPONENTS.match(parsed_version_entry) or RE_REP_COMPONENTS.match(parsed_version_entry)
         if not date_match:
             raise AbsParsingException(
                 'Could not extract date components from date line.')
