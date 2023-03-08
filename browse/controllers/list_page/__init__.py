@@ -230,8 +230,10 @@ def get_listing(subject_or_category: str,
 
     for item in listings:
         idx = idx + 1
-        setattr(item, 'article', get_doc_service().get_abs(item.id))
         setattr(item, 'list_index', idx + skipn)
+        if not hasattr(item, 'article') or item.article is None:
+            setattr(item, 'article', get_doc_service().get_abs(item.id))
+
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
