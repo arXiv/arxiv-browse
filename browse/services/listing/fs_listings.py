@@ -22,6 +22,8 @@ from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
 
 from .parse_listing_file import get_updates_from_list_file, ParsingMode
+from .parse_new_listing_file import parse_new_listing_file
+
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -246,7 +248,7 @@ class FsListingFilesService(ListingService):
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> ListingNew:
+                          if_modified_since: Optional[str] = None) -> Union[ListingNew, NotModifiedResponse]:
         """Gets listings for the most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -255,8 +257,12 @@ class FsListingFilesService(ListingService):
         The 'new' listing maps to a single file. The filename depends on whether
         the archiveOrCategory value is an archive or category listing.
         """
-        yymmfiles= [(0,0, self._generate_listing_path('new', archiveOrCategory, 0, 0))]
-        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since, 'new') #type: ignore
+        file= self._generate_listing_path('new', archiveOrCategory, 0, 0)
+        return parse_new_listing_file(file)
+
+        # TODO handle skip show
+        # TODO handle if-modified-since
+        #return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since, 'new') #type: ignore
 
 
     def list_pastweek_articles(self,

@@ -41,28 +41,21 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from typing import Any, Dict, List, Optional, Tuple, Union
-from http import HTTPStatus as status
 from datetime import datetime
+from http import HTTPStatus as status
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import taxonomy
-from flask import request, url_for
-from werkzeug.exceptions import BadRequest
-
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
-from browse.services.listing import (
-    Listing,
-    ListingNew,
-    NotModifiedResponse,
-)
 from browse.domain.metadata import DocMetadata
-
+from browse.formatting.search_authors import (AuthorList, queries_for_authors,
+                                              split_long_author_list)
 from browse.services.documents import get_doc_service
-from browse.services.listing import get_listing_service
-from browse.formatting.search_authors import queries_for_authors, \
-    split_long_author_list, AuthorList
-
+from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
+                                     get_listing_service)
+from flask import request, url_for
+from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
 

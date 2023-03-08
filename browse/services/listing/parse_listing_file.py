@@ -1,23 +1,30 @@
-"""arXiv listing backed by files.
+"""Listing service for arXiv backed by legacy listing files.
 
 Due to use of CloudPathLib these can be either local files or cloud object
 stores.
 
+There are three formats:
+new: with more fields and abstracts, crosses and replacements.
+month: with a From: field and no abstract, crosses at the bottom, no replacements
+pastweek: with a month like format
+
+The main difference between month and pastweek is the header is a little
+different. But it looks like skipping to the first 'dash line followed by \\' would
+work for both.
 """
 
 # TODO come back and fix up these type errors
 # mypy: disable-error-code="return,arg-type,assignment,attr-defined"
-
 import codecs
 import logging
 import re
 from datetime import date, datetime
-from typing import List, Literal, Optional, Tuple, Union
+from typing import Iterator, List, Literal, Optional, Tuple, Union, Generator
 
 from browse.services import APath
 from browse.services.listing import (Listing, ListingItem, ListingNew,
                                      MonthCount, NotModifiedResponse,
-                                     gen_expires)
+                                     gen_expires, AnnounceTypes)
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -74,7 +81,9 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 ParsingMode = Literal['new', 'month', 'monthly_counts', 'year', 'pastweek']
 
 def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
-                               parsingMode: ParsingMode, listingFilter: str='') -> Union[Listing, ListingNew, NotModifiedResponse, MonthCount]:
+                               parsingMode: ParsingMode, listingFilter: str='')\
+                               -> Union[Listing, ListingNew, NotModifiedResponse,
+                                        MonthCount]:
     """Read the paperids that have been updated from a listings file.
 
     There are three forms of listing file: new, pastweek, and monthly.

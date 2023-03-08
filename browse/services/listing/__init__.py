@@ -8,7 +8,7 @@ from typing import Any, List, Literal, Optional, Protocol, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
 
 from browse.domain.identifier import Identifier
-from browse.domain.metadata import Archive
+from browse.domain.metadata import Archive, DocMetadata
 
 
 def get_listing_service() -> "ListingService":
@@ -76,11 +76,14 @@ class ListingItem:
     primary is the primary category of the article.
     """
 
-    def __init__(self, id: str, listingType: AnnounceTypes, primary: str):
+    def __init__(self, id: str,
+                 listingType: AnnounceTypes,
+                 primary: str,
+                 article: Optional[DocMetadata] = None):
         self.id = id
         self.listingType = listingType
         self.primary = primary
-        self.article: Listing
+        self.article = article
 
     def __repr__(self) -> str:
         return f"<ListingItem {self.id} {self.listingType}>"

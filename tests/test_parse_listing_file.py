@@ -31,7 +31,9 @@ def test_parse_new(abs_path):
     assert parsed.expires
     assert parsed.new_count
     assert parsed.announced
-
+    assert parsed.listings[0].article
+    assert parsed.listings[0].article.title
+    assert parsed.listings[0].article.abstract
 
 def test_parse_pastweek(abs_path):
     for file in (abs_path/ASTRO_LISTS).glob("pastweek.*"):
