@@ -1,0 +1,25 @@
+div#flower-container{height:450px}
+div#influenceflower-output{padding:0px 5px}
+ul.flower-tabs{margin-top:25px;list-style-type:none;border-bottom:1px solid #ddd;height:25px;padding:0;}
+.flower-tabs>li{float:left;margin-bottom:-1px}
+.flower-tabs>li>a{margin-right:2px;line-height:1.42857143;border:1px solid transparent;border-radius:4px 4px 0 0}
+.flower-tabs>li>a.tab-btn{cursor:pointer;background-color:#f4f4f4;padding:8px 12px;border-radius:5px 5px 0 0;color:#000;border:1px solid #ddd;text-align:center;width:140px;font-size:12px;margin:0;text-decoration: none;}
+.flower-tabs>li>a:focus,
+.flower-tabs>li>a:hover,
+.flower-tabs>li>a.tab-btn:hover{background-color:#eef5f9;}
+.flower-tabs>li.active>a,
+.flower-tabs>li.active>a:focus,
+.flower-tabs>li.active>a:hover{font-weight:600;background-color:#fff;border-bottom-color:#fff}
+.tab-flower{display:none}
+.tab-flower.active{display:block}
+.hl-circle{stroke:black;stroke-width:0.5;cursor:pointer;}
+.hl-link{fill:none;}
+.hl-text{font-size:12px}
+.node-ego-text,.node-ego-text>a{font-weight:bold;fill:#0000EE;}
+.text-blue{color:rgb(107,172,208)}
+.text-red{color:rgb(228,130,104)}
+.flower-text{padding:0.1rem 0}
+.flower-infobox{position:absolute;background-color:white;width:330px;right:1rem;display:inline-block;margin-top:-8px;margin-left:-300px;border:1px solid #ddd;border-radius:5px;padding:6px 8px;font-size:12px}
+@media only screen and (max-width: 1400px) {
+  .flower-infobox {position:relative;width:100%;margin-top:12px;margin-left:0;text-align:center;border:none;}
+}

@@ -15,10 +15,12 @@ $(document).ready(function() {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
     "replicate": $('#replicate-toggle').data('script-url'),
     "spaces": $('#spaces-toggle').data('script-url'),
+    "dagshub": $('#dagshub-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
     "iarxiv": $('#iarxiv-toggle').data('script-url'),
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
+    "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
@@ -82,13 +84,23 @@ $(document).ready(function() {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+        } else if (key === "influenceflower-toggle") {
+          $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
         } else if (key === "sciencecast-toggle") {
            $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
              console.log(textStatus);
            }).fail(function() {
              console.error("failed to load sciencecast script (on cookie check)", arguments)
            });
-        }
+        } else if (key === "dagshub-toggle") {
+          $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
+            console.log("DagsHub load: ", textStatus);
+          }).fail(function() {
+            console.error("failed to load DagsHub script (on cookie check)", arguments)
+          });
+       }
       }
     }
   } else {
@@ -159,13 +171,24 @@ $(document).ready(function() {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
+    } else if ($(this).attr("id") == "influenceflower-toggle") {
+      $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
     } else if ($(this).attr("id") == "sciencecast-toggle") {
        $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
          console.log(textStatus, "sciencecast (on lab toggle)");
        }).fail(function() {
          console.error("failed to load sciencecast script (on lab toggle)", arguments)
        });
-    }
+    } else if ($(this).attr("id") == "dagshub-toggle") {
+      $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
+        console.log(textStatus, "dagshub (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load dagshub script (on lab toggle)", arguments)
+      });
+   }
+  
 
     // TODO: clean this up
     if (cookie_val == 'disabled') {

@@ -84,6 +84,21 @@
           <div class="column lab-switch">
             <label class="switch">
               <input
+                id="dagshub-toggle"
+                data-script-url="{{ url_for('static', filename='js/dagshub.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-dagshub">
+              <span class="slider"></span>
+              <span class="is-sr-only">DagsHub Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-dagshub">DagsHub</span> <em>(<a href="https://dagshub.com/" target="_blank">What is DagsHub?</a>)</em>
+          </div>
+        </div>
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
@@ -95,6 +110,7 @@
             <span id="label-for-pwc">Papers with Code</span> <em>(<a href="https://paperswithcode.com/" target="_blank">What is Papers with Code?</a>)</em>
           </div>
         </div>
+
 
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
@@ -108,11 +124,12 @@
             </label>
           </div>
           <div class="column lab-name">
-            <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/pages/about" target="_blank">What is ScienceCast?</a>)</em>
+            <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/welcome" target="_blank">What is ScienceCast?</a>)</em>
           </div>
         </div>
 
       </div>
+      <div id="dagshub-output" style="display:none"></div>
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
@@ -167,6 +184,20 @@
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
+                <input id="influenceflower-toggle"
+                data-script-url="{{ url_for('static', filename='js/influenceflower.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-influenceflower">
+                <span class="slider"></span>
+                <span class="is-sr-only">Link to Influence Flowers</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+              <span id="label-for-influenceflower">Influence Flowers</span> <em>(<a href="https://influencemap.cmlab.dev/" target="_blank">What are Influence Flowers?</a>)</em>
+            </div>
+          </div>
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
                 <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
                        data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
                        aria-labelledby="label-for-connected-papers" >
@@ -209,6 +240,21 @@
             </div>
           </div>
           {% endif -%}
+        </div>
+        <div id="influenceflower-output"></div>
+        <div id="influenceflower-output-graph" style="display:none">
+          <ul class="flower-tabs">
+            <li class="active"><a class="btn tab-btn" onclick="openTab(event, 'tab-author')">Author</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-venue')">Venue</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-inst')">Institution</a></li>
+            <li><a class="btn tab-btn" onclick="openTab(event, 'tab-topic')">Topic</a></li>
+          </ul>
+          <div class="flower-tab-content">
+            <div class="tab-flower active" id="tab-author"><svg id="flower-graph-author"></svg></div>
+            <div class="tab-flower" id="tab-venue"><svg id="flower-graph-venue"></svg></div>
+            <div class="tab-flower" id="tab-inst"><svg id="flower-graph-inst"></svg></div>
+            <div class="tab-flower" id="tab-topic"><svg id="flower-graph-topic"></svg></div>
+          </div>
         </div>
         <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div id="coreRecommenderOutput"></div>
