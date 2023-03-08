@@ -15,22 +15,19 @@ work for both.
 
 # TODO come back and fix up these type errors
 # mypy: disable-error-code="return,arg-type,assignment,attr-defined"
+
 import codecs
 import logging
 import re
 from datetime import date, datetime
-from typing import Iterator, List, Literal, Optional, Tuple, Union, Generator
+from typing import List, Literal, Optional, Tuple, Union
 
+from browse.domain.metadata import DocMetadata
 from browse.services import APath
+from browse.services.documents.fs_implementation.parse_abs import parse_abs_top
 from browse.services.listing import (Listing, ListingItem, ListingNew,
                                      MonthCount, NotModifiedResponse,
-                                     gen_expires, AnnounceTypes)
-
-logger = logging.getLogger(__name__)
-logger.level = logging.DEBUG
-
-
-debug_parser = False
+                                     gen_expires)
 
 DATE     = re.compile(r'^Date:\s+')
 SUBJECT  = re.compile(r'^Subject:\s+')
@@ -106,24 +103,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
       Ideas is that the code will be able to handle old format and then
       work with just a list of paperids later.
-
-      Does not read the metadata from the listings file.
     """
-
-    # pastweek and
-    #
-    #    Skip forward to first publish date
-    #
-    # month
-    #
-    #    Skip forward to first \\
-    #
-    # Process entries.
-    #     Identify type change -> replacements
-    #
-    #    - Read articleid
-    #    - Identify type: new, cross
-    #
     format = ''
     if parsingMode == 'monthly_counts':
         format = 'monthly_counts'
@@ -149,51 +129,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
         data = fh.read()
 
     lines = codecs.decode(data, encoding='utf-8',errors='ignore').split("\n")
-
-    if parsingMode == 'new':
-        # Process selected information from header
-        #   Expect these lines:
-        #       Date: (date)
-        #       Subject: (subject)
-        #       ...
-        #       received from
-
-        # First line is always the date.
-        # Date: Tue, 20 Jul 21 00:51:12 GMT
-        dateline = lines.pop(0)
-        dateline = dateline.replace('\n', '')
-
-        if DATE.match(dateline):
-            dl_date = re.sub(r'^Date:\s+', '', dateline)
-            short_date = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', dl_date)
-            extras['Date'] = dl_date
-            extras['short_date'] = short_date
-            announce_date = datetime.strptime(short_date, '%a, %d %b %y')
-
-        # Subject: cs daily 346 new + 55 crosses received
-        line = lines.pop(0)
-        if SUBJECT.match(line):
-            subject = line
-            extras['Subject'] = subject
-
-        # received from  Fri 16 Jul 21 18:00:00 GMT  to  Mon 19 Jul 21 18:00:00 GMT
-        # Skip forward to first \\
-        line = lines.pop(0)
-        while (not re.match(r'^\\', line)):
-            received = RECEIVED.match(line)
-            if received:
-                date_from_to = str(received.group('date_range'))
-                date_short_from_to = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', date_from_to)
-                extras['date_from_to'] = date_from_to
-                extras['date_short_from_to'] = date_short_from_to
-                res = re.match(r'(.*)\s+to\s+(.*)$', date_short_from_to)
-                if res:
-                    submit_start_date = datetime.strptime(res.group(1), '%a %d %b %y ')
-                    submit_end_date = datetime.strptime(res.group(2), '%a %d %b %y')
-
-            line = lines.pop(0)
-
-    elif parsingMode == 'pastweek' or parsingMode == 'month':
+    if parsingMode == 'pastweek' or parsingMode == 'month':
         # Skip forward to first \\,
         #   which brings us to first publish date for pastweek
         # \\
@@ -207,10 +143,10 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
     else:
         pass
 
+    # 'line' has the '\\' before the first item
     # Now cycle through and process update entries in file
     type = 'new'
 
-    lasttype = ''
     line = lines.pop(0)
     line = line.replace('\n', '')
     while (line):
@@ -227,110 +163,32 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
             if type == 'end':
                 break
 
-        # Read up to the next \\
+        # consume any \\
         while (len(lines) and re.match(r'^\\', line)):
             if len(lines):
                 line = lines.pop(0)
 
         # Now process all fields up to the next \\
-        id = None
-        nb = None
-        primary_category = None
-        secondary_categories = None
-
-        is_cross = 0
-
+        listing_lines: List[str] = [line]
+        # Since the non-new listings don't have abstracts we don't have the
+        # problem of // being in the abstract so we can just use the // delimiters.
         while (len(lines) and not re.match(r'^\\', line)):
-            # #################### START ACCUMULTING LINES HERE ####################
+            line = lines.pop(0)
+            listing_lines.append(line)
 
-            # Read article identifier and determine whether a cross
-            #   Paper: quant-ph/9901070
-            #   Paper (*cross-listing*): quant-ph/9901070
-            #   arXiv:quant-ph/9901070 (*cross-listing*)
-            #
-            paper = PAPER_FORM.match(line)
-            arxiv = ARXIV_FORM.match(line)
-
-            # Replaced
-            replaced = REPLACED_FORM.match(line)
-            # Pastweek handling
-            pastweek = PASTWEEK_DATE.match(line)
-            # Category (primary/secondary)
-            primary_match = PRIMARY_CATEGORY.match(line)
-
-            if arxiv or paper:
-                if paper:
-                    is_cross = bool(paper.group(2))
-                    id = paper.group(3)
-                elif arxiv:
-                    is_cross = bool(arxiv.group(2))
-                    id = arxiv.group(1)
-
-                # Notes from original module:
-                # For month listings, there is no rule for start or crosses
-                # so we infer from Paper line. For pastweek we infer
-                # both new and cross from Paper line as the file switches
-                # back and forth.
-                if parsingMode == 'pastweek':
-                    if is_cross:
-                        type = 'cross'
-                    else:
-                        type = 'new'
-                elif parsingMode != 'new' and is_cross:
-                    type = 'cross'
-
-            elif replaced:
-                nb = line
-
-            elif parsingMode == 'pastweek' and pastweek:
-                pub_date = pastweek.group(1)
-                pub_date = datetime.strptime(pub_date, '%a, %d %b %Y')
-                # Put together current updates and crosses
-                count = len(cross_items)
-                # Merge and clear crosses
-                new_items = new_items + cross_items
-
-                if pub_dates:
-                    # We already have processed a pub date
-                    # store update count for pub date we are
-                    # finishing
-                    pub_count = len(new_items) - pub_count_previous
-                    pub_counts.append(pub_count)
-                    pub_count_previous = len(new_items)
-                    pub_dates.append(pub_date)
-                else:
-                    pub_dates.append(pub_date)
-
-                cross_items = []
-                # anchors
-
-            elif primary_match:
-                primary_category = primary_match.group(1)
-                secondaries = SECONDARY_CATEGORIES.search(line)
-                if secondaries:
-                    secondary_categories = secondaries.group(2)
-
-                if debug_parser:
-                    print(f"Categories: Primary: {primary_category}  Secondaries: {secondary_categories}")
-
-            if len(lines):
-                line = lines.pop(0)
-                line = line.replace('\n', '')
-            else:
-                break
-            # End inner while
-
-        # Outer while
+        doc = _parse_doc(listing_lines)
+        primary_category = doc.primary_category.id
+        secondary_categories = ' '.join([sc.id for sc in doc.secondary_categories])
 
         # If we have id, register the update
         #   apply filtering (if we are dealing with monthly listing)
-        if id:
+        if doc:
             filter = f'^{listingFilter}'
             if not listingFilter or (re.match(filter, primary_category)
                                      and type == 'new' ):
                 # push update
-                lasttype = type
-                item = ListingItem(id=id, listingType=type, primary=primary_category)
+                item = ListingItem(id=doc.arxiv_id, listingType=type,
+                                   primary=primary_category, article=doc)
                 if type == 'new':
                     new_items.append(item)
                 elif type == 'cross':
@@ -339,13 +197,12 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                     rep_items.append(item)
 
             elif listingFilter and re.search(listingFilter, secondary_categories):
-                item = ListingItem(id=id, listingType=type, primary=primary_category)
+                item = ListingItem(id=id, listingType=type, primary=primary_category,
+                                   article=doc)
                 cross_items.append(item)
 
-        # From original parser
         #  Now complete the reading of this entry by reading everything up to the
-        #  next rule. If this is a 'new' listing then we will read past the
-        #  abstract and discard.
+        #  next rule.
         (rule, new_type) = _is_rule(line, type)
         if new_type:
             type = new_type
@@ -417,3 +274,12 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                        pubdates=pub_dates_with_count,
                        count=len(new_items + cross_items),
                        expires=gen_expires())
+
+
+
+def _parse_doc(listing_lines: List[str]) -> DocMetadata:
+    """Parses the lines from a listing file to a DocMetadata"""
+    return parse_abs_top("\n".join(listing_lines),
+                         #TODO bogus time but don't think it is used in listing page.
+                         datetime.now(),
+                         '')
