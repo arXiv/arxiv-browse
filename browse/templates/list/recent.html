@@ -7,7 +7,7 @@
   {%- set skipfordate = pdate[1] -%}
   <li>
     <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
-      {{ pdate[0] }}
+      {{ pdate[0].strftime('%A, %-d %B %Y') }}
     </a>
   </li>
   {%- endfor -%}
