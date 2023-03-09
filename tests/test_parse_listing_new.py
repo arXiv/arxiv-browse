@@ -13,6 +13,9 @@ def test_parse_new(abs_path):
     assert parsed.expires
     assert parsed.new_count
     assert parsed.announced
-    assert parsed.listings[0].article
-    assert parsed.listings[0].article.title
-    assert parsed.listings[0].article.abstract
+    for item in parsed.listings:
+        assert item and item.article
+        assert item.listingType
+        assert item.article.title
+        if item.listingType in ['cross','new']:
+            assert item.article.abstract

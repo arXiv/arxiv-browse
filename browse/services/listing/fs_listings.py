@@ -23,7 +23,7 @@ from werkzeug.exceptions import BadRequest
 
 from .parse_listing_file import get_updates_from_list_file, ParsingMode
 from .parse_new_listing_file import parse_new_listing_file
-from .parse_listing_pastweek import parse_recent_listing_file
+from .parse_listing_pastweek import parse_listing_pastweek
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -282,7 +282,7 @@ class FsListingFilesService(ListingService):
         if if_modified_since and self._modified_since(if_modified_since, file):
             return NotModifiedResponse(True, gen_expires())
         else:
-            rv = parse_recent_listing_file(file)
+            rv = parse_listing_pastweek(file)
             rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
             return rv
 
