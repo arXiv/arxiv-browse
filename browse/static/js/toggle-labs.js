@@ -104,14 +104,14 @@ $(document).ready(function() {
       }
     }
   } else {
-    Cookies.set("arxiv_labs", { sameSite: "strict" });
+    Cookies.set("arxiv_labs", { sameSite: "strict", expires: 365 });
   }
 
   // record last-clicked tab
   $("div.labstabs input[name='tabs']").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     labsCookie["last_tab"] = $(this).attr("id");
-    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict", expires: 365 });
   });
 
   $(".lab-toggle").on("click", function() {
@@ -127,11 +127,11 @@ $(document).ready(function() {
       bibex_val = true;
     }
     labsCookie[$(this).attr("id")] = cookie_val;
-    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict", expires: 365 });
 
     if ($(this).attr("id") == "bibex-toggle") {
       bibexCookie[bibex_key] = bibex_val;
-      Cookies.set("arxiv_bibex", bibexCookie);
+      Cookies.set("arxiv_bibex", bibexCookie, { expires: 365 });
       if (bibex_val) {
         $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
           console.log(textStatus);
