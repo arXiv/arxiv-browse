@@ -1,28 +1,26 @@
 """Legacy DB backed core metadata service."""
-from typing import Dict, List, Optional
 from dataclasses import replace
+from typing import Dict, List, Optional
 from zoneinfo import ZoneInfo
 
 import sqlalchemy
-
-from browse.domain.metadata import DocMetadata, VersionEntry
 from browse.domain.identifier import Identifier
-from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-
-from browse.services.documents.base_documents import DocMetadataService, \
-    AbsDeletedException, AbsNotFoundException , AbsVersionNotFoundException
-
+from browse.domain.metadata import DocMetadata, SourceType, VersionEntry
 from browse.services.database.models import Metadata
+from browse.services.documents.base_documents import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
+    DocMetadataService)
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+from dateutil.tz import tzutc
 
 from ..format_codes import formats_from_source_type
 from .convert import to_docmeta
 
-from dateutil.tz import tzutc
 
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
 
-    
+
     def __init__(self,
                  db: sqlalchemy.engine.base.Engine,
                  business_tz:str) -> None:
@@ -33,7 +31,7 @@ class DbDocMetadataService(DocMetadataService):
             raise ValueError("Must pass a valid timzone")
         self.business_tz = zz
 
-    
+
     def get_abs(self, arxiv_id: str) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
@@ -90,7 +88,7 @@ class DbDocMetadataService(DocMetadataService):
         if version:
             res = (Metadata.query
                    .filter( Metadata.paper_id == identifier.id)
-                   .filter( Metadata.version == identifier.version )).first()                   
+                   .filter( Metadata.version == identifier.version )).first()
         else:
             res = (Metadata.query
                    .filter(Metadata.paper_id == identifier.id)
@@ -114,7 +112,7 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='fromdb-no-raw',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=ver.source_format)
+                                 source_type=SourceType(ver.source_format))
             version_history.append(entry)
 
         return to_docmeta(res, version_history, self.business_tz)
@@ -126,7 +124,7 @@ class DbDocMetadataService(DocMetadataService):
                                   add_sciencewise: bool = False) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
-        THIS ONLY CHECK THE source type on the doc metadata.
+        THIS ONLY CHECKS THE source type on the doc metadata.
 
         Format names are strings. These include 'src', 'pdf', 'ps', 'html',
         'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
@@ -138,30 +136,21 @@ class DbDocMetadataService(DocMetadataService):
             The format preference string.
         add_sciencewise : bool
             Specify whether to include 'sciencewise_pdf' format in list.
+        quick: bool
+            Ignored
 
         Returns
         -------
         List[str]
             A list of format strings.
         """
-        # version = docmeta.version
-        # format_code = docmeta.version_history[version - 1].source_type.code
+        version = docmeta.version
+        format = docmeta.version_history[version - 1].source_type.code
+        return formats_from_source_type(format,
+                                        format_pref,
+                                        False,
+                                        add_sciencewise)
 
-        # # TODO cache flag?
-        # cache_flag = False
-        # # cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
-        # # if cached_ps_file_path \
-        # #    and os.path.getsize(cached_ps_file_path) == 0 \
-        # #    and source_file_path \
-        # #    and os.path.getmtime(source_file_path) \
-        # #    < os.path.getmtime(cached_ps_file_path):
-        # #     cache_flag = True
-
-        # return formats_from_source_type(format_code,
-        #                                 format_pref,
-        #                                 cache_flag,
-        #                                 add_sciencewise)
-        return []
 
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:

@@ -79,7 +79,8 @@ class FsDocMetadataService(DocMetadataService):
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False) -> List[str]:
+                                  add_sciencewise: bool = False,
+                                  quick=False) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
         Several checks are performed to determine available dissemination
@@ -100,12 +101,27 @@ class FsDocMetadataService(DocMetadataService):
             The format preference string.
         add_sciencewise : bool
             Specify whether to include 'sciencewise_pdf' format in list.
+        quick: bool
+            If True just check the download formats via the source types in the `DocMetadata`
 
         Returns
         -------
         List[str]
             A list of format strings.
         """
+        if quick:
+            # TODO Can we just use the source_type.code?
+            # There have been two ways the downloads are figured out.  One
+            # is a function of the source_type.code on the DocMetadata, the
+            # other a function of the source file names for the document.  While
+            # working on listing the source file names technique has been slow.
+            version = docmeta.version
+            format_code = docmeta.version_history[version - 1].source_type.code
+            return formats_from_source_type(format_code,
+                                            format_pref,
+                                            False,
+                                            add_sciencewise)
+
         formats: List[str] = []
 
         # first, get possible list of formats based on available source file

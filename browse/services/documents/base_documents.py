@@ -26,7 +26,8 @@ class DocMetadataService(abc.ABC):
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False) -> List[str]:
+                                  add_sciencewise: bool = False,
+                                  quick: bool = False) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
         Several checks are performed to determine available dissemination
@@ -47,6 +48,8 @@ class DocMetadataService(abc.ABC):
             The format preference string.
         add_sciencewise : bool
             Specify whether to include 'sciencewise_pdf' format in list.
+        quick: bool
+            If True just check the download formats via the source types in the `DocMetadata`
 
         Returns
         -------

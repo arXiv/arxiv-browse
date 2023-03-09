@@ -304,7 +304,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
     return {item.article.arxiv_id_v: get_doc_service().get_dissemination_formats(
-        item.article, dl_pref)
+        item.article, dl_pref, add_sciencewise=False, quick=True)
             for item in items}
 
 
