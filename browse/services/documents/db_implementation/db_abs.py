@@ -121,7 +121,8 @@ class DbDocMetadataService(DocMetadataService):
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False) -> List[str]:
+                                  add_sciencewise: bool = False
+                                  ) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
         THIS ONLY CHECKS THE source type on the doc metadata.
@@ -136,8 +137,6 @@ class DbDocMetadataService(DocMetadataService):
             The format preference string.
         add_sciencewise : bool
             Specify whether to include 'sciencewise_pdf' format in list.
-        quick: bool
-            Ignored
 
         Returns
         -------
