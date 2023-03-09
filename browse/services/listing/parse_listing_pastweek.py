@@ -26,9 +26,7 @@ from dataclasses import dataclass
 from browse.domain.metadata import DocMetadata
 from browse.services import APath
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_top
-from browse.services.listing import (ListingItem,
-                                     ListingPastweek, NotModifiedResponse,
-                                     gen_expires)
+from browse.services.listing import (ListingItem, Listing, gen_expires)
 
 
 
@@ -40,7 +38,7 @@ class PastweekDay:
 
 
 def parse_listing_pastweek(listingFilePath: APath)\
-        -> Union[ListingPastweek]:
+        -> Listing:
     """Read the paperids that have been updated from a listings file.
 
     pastweek contains updates for the last five publish days.
@@ -98,7 +96,8 @@ def parse_listing_pastweek(listingFilePath: APath)\
             doc, type = _parse_doc(listing_lines)
             if doc:
                 item = ListingItem(id=doc.arxiv_id, listingType=type,
-                                   primary=doc.primary_category.id, article=doc)
+                                   primary=doc.primary_category.id, # type: ignore
+                                   article=doc)
                 day.items.append(item)
 
         #  Now complete the reading of this entry by reading everything up to the
@@ -119,10 +118,10 @@ def parse_listing_pastweek(listingFilePath: APath)\
             break
 
     listings = [item for day in days for item in day.items]
-    return ListingPastweek(listings=listings,
-                           count=len(listings),
-                           pubdates=_recent_skip_for_days(days),
-                           expires=gen_expires())
+    return Listing(listings=listings,
+                   count=len(listings),
+                   pubdates=_recent_skip_for_days(days),
+                   expires=gen_expires())
 
 
 
@@ -173,8 +172,8 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 
     return (0, '')
 
-def _recent_skip_for_days(days:List[PastweekDay]) -> List[Tuple[str,int]]:
+def _recent_skip_for_days(days:List[PastweekDay]) -> List[Tuple[datetime,int]]:
     """For each day make the number of items to skip to get to that day."""
     counts = [len(day.items) for day in days[:-1]]
     counts.insert(0,0) # skip zero for first entry
-    return [(day.datestr, count) for day, count in  zip(days, counts)]
+    return [(datetime.strptime(day.datestr, '%a, %d %b %Y'), count) for day, count in  zip(days, counts)]

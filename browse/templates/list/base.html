@@ -53,12 +53,12 @@
 
   {% for item in items %}
   {% set article = item['article'] %}
-  {% set ids = article.arxiv_identifier.ids %}
+  {% set ids = article.arxiv_id %}
   {% set listing_index = item['list_index'] %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
-        arXiv:{{ article.arxiv_identifier.ids }}
+        arXiv:{{ article.arxiv_id }}
       </a>
       {{ type_info( item ) }}
       {{ dl_links( article ) }}

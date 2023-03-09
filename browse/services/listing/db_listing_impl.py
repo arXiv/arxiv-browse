@@ -1,14 +1,15 @@
 """arXiv listings backed by a DB."""
 import datetime
 from itertools import groupby
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 from arxiv.taxonomy import ARCHIVES
 from browse.services.database.models import (Document, DocumentCategory,
                                              NextMail, db)
 from browse.services.listing import (Listing, ListingCountResponse,
-                                     ListingItem, ListingNew, ListingService,
-                                     MonthCount, gen_expires)
+                                     ListingItem, ListingNew,
+                                     ListingService, MonthCount,
+                                     NotModifiedResponse, gen_expires)
 from sqlalchemy import func, text
 
 """
@@ -139,7 +140,8 @@ class DBListingService(ListingService):
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> Listing:
+                               if_modified_since: Optional[str] = None)\
+                               -> Union[Listing, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish."""
         query = self._query_base(archiveOrCategory)
         query = query.order_by(NextMail.mail_id.desc()).limit(5)

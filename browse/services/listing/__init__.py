@@ -4,11 +4,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from time import mktime
-from typing import Any, List, Literal, Optional, Protocol, Tuple, Union, cast
+from typing import Any, List, Literal, Optional, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
 
-from browse.domain.identifier import Identifier
-from browse.domain.metadata import Archive, DocMetadata
+from browse.domain.metadata import DocMetadata
 
 
 def get_listing_service() -> "ListingService":
@@ -52,17 +51,6 @@ AnnounceTypes = Literal["new", "cross", "rep"]
 """The types that announces can be in the listings."""
 
 
-class ListingArticle(Protocol):
-    arxiv_identifier: Identifier
-    title: str
-    abstract: str
-    comments: str
-    journal_ref: str
-    arxiv_id: str
-    arxiv_id_v: str
-    primary_archive: Archive
-
-
 
 class ListingItem:
     """A single item for a listing.
@@ -96,7 +84,8 @@ class Listing:
     listings is the list of items for the time period.
 
     pubdates are the dates of publications. The int is the number of items
-    published on the associated date.
+    published on the associated date. This may be empty if pubdates are not
+    relevant.
 
     count is the count of all the items in the listing for the query.
 
@@ -109,6 +98,7 @@ class Listing:
     Why not just do listing: List[Tuple[date,List[ListingItem]}} ?
     Because pastweek needs to support counts for the days and needs to be
     able to support skip/show.
+
     """
 
     listings: List[ListingItem]
@@ -144,18 +134,6 @@ class ListingNew:
     rep_count: int
     announced: date
     submitted: Tuple[date, date]
-    expires: str
-
-
-@dataclass
-class ListingPastweek:
-    """
-    A listing for the pastweek of articles.
-
-    """
-    listings: List[ListingItem]
-    pubdates: List[Tuple[str, int]]
-    count: int
     expires: str
 
 
@@ -272,7 +250,7 @@ class ListingService(ABC):
         skip: int,
         show: int,
         if_modified_since: Optional[str] = None,
-    ) -> ListingPastweek:
+    ) -> Union[Listing, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client

@@ -40,20 +40,23 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from datetime import datetime, date
+from datetime import date, datetime
 from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
-from functools import reduce
 
 from arxiv import taxonomy
+from arxiv.taxonomy.definitions import CATEGORIES
+
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from browse.domain.metadata import DocMetadata
 from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
+from browse.services.documents.format_codes import formats_from_source_type
+
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
-                                     ListingPastweek, get_listing_service)
+                                     get_listing_service)
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
@@ -241,10 +244,21 @@ def get_listing(subject_or_category: str,
     response_data.update(more_fewer(shown, count, shown >= count))
 
     def author_query(article: DocMetadata, query: str)->str:
-        return str(url_for('search_archive',
+        try:
+            if article.primary_archive:
+                archive = article.primary_archive.id
+            else:
+                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+            return str(url_for('search_archive',
                            searchtype='author',
-                           archive=article.primary_archive.id,
+                           archive=archive,
                            query=query))
+        except (AttributeError, KeyError):
+            return str(url_for('search_archive',
+                               searchtype='author',
+                               archive=archive,
+                               query=query))
+
     response_data['url_for_author_search'] = author_query
 
     return response_data, status.OK, response_headers
@@ -299,12 +313,17 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
     return rd
 
+def _src_code(article: Union[DocMetadata])->str:
+    vhs = [vh for vh in article.version_history if vh.version == article.version]
+    if vhs:
+        return vhs[0].source_type.code
+    else:
+        return ''
 
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {item.article.arxiv_id_v: get_doc_service().get_dissemination_formats(
-        item.article, dl_pref, add_sciencewise=False, quick=True)
+    return {item.article.arxiv_id_v: formats_from_source_type(_src_code(item.article), dl_pref)
             for item in items}
 
 
@@ -316,7 +335,8 @@ def authors_for_articles(listings: List[Any])->Dict[str, Any]:
 
 def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     """Creates author list links in a very similar way to abs page."""
-    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
+    raw = abs_meta.authors.raw
+    return split_long_author_list(queries_for_authors(raw),
                                   truncate_author_list_size)
 
 
@@ -441,11 +461,9 @@ def _not_modified(response: Union[Listing, ListingNew, NotModifiedResponse]) -> 
 
 
 def _expires_headers(listing_resp:
-                     Union[Listing, ListingNew, ListingPastweek, NotModifiedResponse]) \
+                     Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
         return {'Expires': str(listing_resp.expires)}
     else:
         return {}
-
-

@@ -15,17 +15,15 @@ work for both.
 
 # TODO come back and fix up these type errors
 # mypy: disable-error-code="return,arg-type,assignment,attr-defined"
-
 import codecs
-import logging
 import re
 from datetime import date, datetime
-from typing import List, Literal, Optional, Tuple, Union
+from typing import List, Literal, Tuple, Union
 
-from browse.domain.metadata import DocMetadata
+from browse.domain.category import Category
+from browse.domain.metadata import DocMetadata, SourceType, VersionEntry, AuthorList
 from browse.services import APath
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_top
-from browse.services.listing import (Listing, ListingItem, ListingNew,
+from browse.services.listing import (Listing, ListingItem,
                                      MonthCount, NotModifiedResponse,
                                      gen_expires)
 
@@ -40,7 +38,8 @@ RULES_END        = re.compile(r'^%%%---%%%---')
 
 PAPER_FORM = re.compile(r'^(Paper)(\s*\(\*cross-listing\*\))?:\s?(\S+)')
 ARXIV_FORM = re.compile(r'^arXiv:(\S+)(\s*\(\*cross-listing\*\))?')
-REPLACED_FORM = re.compile(r'^(replaced with revised version)|^((figures|part) added)', re.IGNORECASE)
+REPLACED_FORM = re.compile(r'^(replaced with revised version)|^((figures|part) added)',
+                           re.IGNORECASE)
 PASTWEEK_DATE = re.compile(r'/\*\s+(.*)\s+\*/')
 PRIMARY_CATEGORY = re.compile(r'^Categories:\s+(\S+)')
 SECONDARY_CATEGORIES = re.compile(r'\s+([^\s]+)\s*(.*)$')
@@ -75,12 +74,12 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 
     return (0, '')
 
-ParsingMode = Literal['new', 'month', 'monthly_counts', 'year', 'pastweek']
+ParsingMode = Literal['month', 'monthly_counts', 'year']
+
 
 def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                                parsingMode: ParsingMode, listingFilter: str='')\
-                               -> Union[Listing, ListingNew, NotModifiedResponse,
-                                        MonthCount]:
+                               -> Union[Listing, NotModifiedResponse, MonthCount]:
     """Read the paperids that have been updated from a listings file.
 
     There are three forms of listing file: new, pastweek, and monthly.
@@ -103,47 +102,36 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
       Ideas is that the code will be able to handle old format and then
       work with just a list of paperids later.
+
+      Does not read the metadata from the listings file.
     """
-    format = ''
-    if parsingMode == 'monthly_counts':
-        format = 'monthly_counts'
-        listingType = 'month'
-
-    extras = {}
-
     new_items:List[ListingItem] = []
     cross_items:List[ListingItem] = []
     rep_items:List[ListingItem] = []
 
-    # new
-    announce_date: Optional[date] = None
-    submit_start_date: Optional[date] = None
-    submit_end_date: Optional[date] = None
-
+    # TODO I think pubdates are only used by pastweek, check if this is true,
+    # and alter the API so month listings don't return them.
     # pastweek
     pub_dates:List[date] = []
     pub_counts:List[int] = []
-    pub_count_previous = 0
 
     with listingFilePath.open('rb') as fh:
         data = fh.read()
 
     lines = codecs.decode(data, encoding='utf-8',errors='ignore').split("\n")
-    if parsingMode == 'pastweek' or parsingMode == 'month':
-        # Skip forward to first \\,
-        #   which brings us to first publish date for pastweek
-        # \\
-        # /*Tue, 20 Jul 2021 */
-        #\\
-        #   or first update entry for monthly listing
-        line = lines.pop(0)
-        while (line and not re.match(r'^\\', line)):
-            line = lines.pop(0)
-            line = line.replace('\n', '')
-    else:
-        pass
 
-    # 'line' has the '\\' before the first item
+
+    # Skip forward to first \\,
+    #   which brings us to first publish date for pastweek
+    # \\
+    # /*Tue, 20 Jul 2021 */
+    #\\
+    #   or first update entry for monthly listing
+    line = lines.pop(0)
+    while (len(lines) and not re.match(r'^\\', line)):
+        line = lines.pop(0)
+        line = line.replace('\n', '')
+
     # Now cycle through and process update entries in file
     type = 'new'
 
@@ -163,46 +151,50 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
             if type == 'end':
                 break
 
-        # consume any \\
+        # Read up to the next \\
         while (len(lines) and re.match(r'^\\', line)):
             if len(lines):
                 line = lines.pop(0)
 
         # Now process all fields up to the next \\
-        listing_lines: List[str] = [line]
-        # Since the non-new listings don't have abstracts we don't have the
-        # problem of // being in the abstract so we can just use the // delimiters.
+        item_lines=[]
         while (len(lines) and not re.match(r'^\\', line)):
-            line = lines.pop(0)
-            listing_lines.append(line)
+            item_lines.append(line)
+            if len(lines):
+                line = lines.pop(0)
+                line = line.replace('\n', '')
+            else:
+                break
 
-        doc = _parse_doc(listing_lines)
-        primary_category = doc.primary_category.id
-        secondary_categories = ' '.join([sc.id for sc in doc.secondary_categories])
+        article, neworcross = _parse_item(item_lines)
 
         # If we have id, register the update
         #   apply filtering (if we are dealing with monthly listing)
-        if doc:
-            filter = f'^{listingFilter}'
-            if not listingFilter or (re.match(filter, primary_category)
-                                     and type == 'new' ):
+        if article:
+            primary = article.primary_category.id if article.primary_category else ''
+            if not listingFilter or (re.match(f'^{listingFilter}', primary)
+                                     and neworcross == 'new' ):
                 # push update
-                item = ListingItem(id=doc.arxiv_id, listingType=type,
-                                   primary=primary_category, article=doc)
-                if type == 'new':
+                item = ListingItem(id=article.arxiv_id, listingType=neworcross,
+                                   primary=primary, article=article)
+                if neworcross == 'new':
                     new_items.append(item)
-                elif type == 'cross':
+                elif neworcross == 'cross':
                     cross_items.append(item)
-                elif type =='rep':
+                elif neworcross =='rep':
                     rep_items.append(item)
 
-            elif listingFilter and re.search(listingFilter, secondary_categories):
-                item = ListingItem(id=id, listingType=type, primary=primary_category,
-                                   article=doc)
-                cross_items.append(item)
+            elif listingFilter:
+                secondaries = ' '.join(article.categories.split()[1:])  # type: ignore
+                if re.search(listingFilter, secondaries):
+                    item = ListingItem(id=article.arxiv_id, listingType=neworcross,
+                                       primary=primary, article=article)
+                    cross_items.append(item)
 
+        # From original parser
         #  Now complete the reading of this entry by reading everything up to the
-        #  next rule.
+        #  next rule. If this is a 'new' listing then we will read past the
+        #  abstract and discard.
         (rule, new_type) = _is_rule(line, type)
         if new_type:
             type = new_type
@@ -220,16 +212,6 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
         else:
             break
 
-    # Combine the new and cross updates for pastweek
-    #   if there are crosses, add them to updates.
-    if parsingMode == 'pastweek':
-        if len(cross_items):
-            new_items = new_items + cross_items
-
-        # Complete the last count for pastweek
-        pub_count = len(new_items) - pub_count_previous
-        pub_counts.append(pub_count)
-
     count = len(new_items)
 
     pub_dates_with_count:List[Tuple[date,int]] = []
@@ -241,26 +223,12 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
     for pd in pub_dates_with_count:
         (date, count) = pd
 
-    if format == 'monthly_counts':
+    if parsingMode == 'monthly_counts':
         # We need the new and cross counts for the monthly count summary
         return MonthCount(
             year=year, month=month, new=len(new_items), cross=len(cross_items),
             expires=gen_expires(), listings=new_items + cross_items + rep_items)
-    elif parsingMode == 'new':
-        return ListingNew(listings= new_items + cross_items + rep_items,
-                          announced= announce_date,
-                          submitted= (submit_start_date, submit_end_date),
-                          new_count= len(new_items),
-                          cross_count= len(cross_items),
-                          rep_count= len(rep_items),
-                          expires= gen_expires())
-    elif parsingMode == 'pastweek' or parsingMode == 'month' \
-            or parsingMode == 'year':
-        #{'listings': List[ListingItem],
-        # 'pubdates': List[Tuple[date, int]],
-        # 'count': int,
-        # 'expires': str}
-
+    else:
         # There are no pubdates for month, so we will create one and add count
         # to be consistent with API
         if parsingMode == 'month':
@@ -277,9 +245,107 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
 
 
 
-def _parse_doc(listing_lines: List[str]) -> DocMetadata:
-    """Parses the lines from a listing file to a DocMetadata"""
-    return parse_abs_top("\n".join(listing_lines),
-                         #TODO bogus time but don't think it is used in listing page.
-                         datetime.now(),
-                         '')
+RE_FROM_FIELD = re.compile(
+    r'(?P<from>From:\s*)(?P<name>[^<]+)?\s+(<(?P<email>.*)>)?')
+RE_DATE_COMPONENTS = re.compile(
+    r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+
+RE_REP_COMPONENTS = re.compile(
+    r'^replaced with revised version\s*(?P<date>.*?)'
+    r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+
+RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
+    r'(Paper:\s+|Paper \(\*cross-listing\*\):|arXiv:)(?P<arxiv_id>\S+)')
+
+RE_FIELDS=re.compile(r"^(?P<field_name>\S*):\s+(?P<value>.*?)(?=\n\S)", re.S|re.M)
+RE_CROSS = re.compile(r"\(\*cross-listing\*\)")
+
+def _parse_item(item_lines: List[str]) -> Tuple[DocMetadata, str]:
+    """EX
+    arXiv:2301.01082
+    From: Sumanta Kumar Sahoo  <example@example.com>
+    Date: Tue, 3 Jan 2023 13:17:28 GMT   (6183kb,AD)
+
+Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
+    update on variable targets in both ecliptic hemispheres -- contamination
+    analysis and new sdB pulsators
+    Authors: S. K. Sahoo (1 and 2), A. S. Baran (2, 3 and 4), H.L. Worters (5), P.
+    N\'emeth (2, 6 and 7) and D. Kilkenny (8) ((1) Nicolaus Copernicus
+    Astronomical Centre of the Polish Academy of Sciences Poland, (2) ARDASTELLA
+    Research Group Poland, (3) Astronomical Observatory of University of Warsaw
+    Poland, (4) Missouri State University USA, (5) South African Astronomical
+    Observatory South Africa, (6) Astronomical Institute of the Czech Academy of
+    Sciences Czech Republic, (7) Astroserver.org Hungary, (8) University of the
+    Western Cape South Africa)
+    Categories: astro-ph.SR
+    Journal-ref: Monthly Notices of the Royal Astronomical Society, Volume 519,
+    Issue 2, February 2023, Pages 2486-2499
+    DOI: 10.1093/mnras/stac3676
+    License: http://creativecommons.org/licenses/by/4.0/
+    """
+    neworcross='new'    
+    raw = "\n".join(item_lines)
+    prehistory, misc_fields = re.split(r'\n\n', raw)
+    
+    idm = re.search(RE_ARXIV_ID_FROM_PREHISTORY, prehistory)
+    if idm:
+        id = idm.group('arxiv_id')
+    else:
+        id = 'unknown-id'
+
+    crossm = re.search(RE_CROSS, prehistory)
+    if crossm:
+        neworcross='cross'
+
+    datem = re.search(RE_DATE_COMPONENTS, raw)
+    if datem:
+        ver = datem.group('version')
+        kb = datem.group('size_kilobytes')
+        source_type = datem.group('source_type')
+    else:
+        ver,kb,source_type=1,0,''
+
+    
+    fieldms = re.finditer(RE_FIELDS, misc_fields)
+    if fieldms:
+        fields = {fieldm.group('field_name'): fieldm.group('value').replace('\n  ', ' ')
+                  for fieldm in fieldms}
+    else:
+        fields = {}
+
+    if fields.get('Categories',None):
+        raw_cats =fields.get('Categories','')
+        cats = raw_cats.split()
+        primary_category = cats[0]
+        secondary_categories = cats[1:]
+    else:
+        raw_cats=''
+        primary_category = ''
+        secondary_categories = []
+
+    lai = DocMetadata(
+        arxiv_id=id,
+        arxiv_id_v=f"{id}v{ver}",
+        title=fields.get('Title',''),
+        authors=AuthorList(fields.get('Authors','')),
+        abstract='',
+        categories=raw_cats,
+        primary_category= Category(primary_category),
+        secondary_categories=[Category(sc) for sc in secondary_categories],
+        comments=fields.get('Comments',''),
+        journal_ref=fields.get('Journal-ref',''),
+        version = ver,
+        version_history = [VersionEntry(version=ver, raw='', submitted_date=None,
+                                        size_kilobytes=kb,
+                                        source_type=SourceType(source_type))],
+        raw_safe = '',
+        submitter=None,
+        arxiv_identifier=None,
+        primary_archive = None,
+        primary_group = None,
+        modified = None,        
+    )
+
+    
+    return lai, neworcross

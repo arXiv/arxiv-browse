@@ -5,10 +5,8 @@
 import datetime
 from typing import List, Optional
 
-from browse.services.listing import MonthCount
-
 from . import (Listing, ListingCountResponse, ListingItem, ListingNew,
-               ListingService)
+               ListingService, MonthCount)
 
 
 class FakeListingFilesService(ListingService):

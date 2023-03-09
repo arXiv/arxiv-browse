@@ -16,7 +16,7 @@ from arxiv.base.globals import get_application_config
 from browse.services import APath
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
-                                     MonthCount, NotModifiedResponse, ListingPastweek,
+                                     MonthCount, NotModifiedResponse,
                                      gen_expires)
 from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
@@ -269,7 +269,8 @@ class FsListingFilesService(ListingService):
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> Union[ListingPastweek, NotModifiedResponse]:
+                               if_modified_since: Optional[str] = None)\
+                               -> Union[Listing, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
