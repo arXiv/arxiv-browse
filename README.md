@@ -5,6 +5,8 @@
 You can run the browse app directly.
 
 ```bash
+python --version
+# 3.10.x
 python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry
@@ -41,7 +43,7 @@ To rebuild the test database, run the following script:
 
 ```bash
 source ./venv/bin/activate
-FLASK_APP=app.py python script/populate_test_database.py --drop_and_create
+FLASK_APP=app.py python populate_test_database.py --drop_and_create
 ```
 
 ### Running Browse in Docker
