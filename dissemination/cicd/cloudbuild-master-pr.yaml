@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/dissemination:$SHORT_SHA', '.' ]
+
+  - name: 'gcr.io/$PROJECT_ID/dissemination:$SHORT_SHA'
+    script: |
+        #!/usr/bin/env bash
+        TRACE=0 $GUNICORN &
+        sleep 10
+        pytest --runintegration
+        exit_code=$?
+        kill %1
+        exit "$exit_code"
+
+

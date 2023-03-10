@@ -1,0 +1,31 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cs/0212040
+From: Peter Turney <example@example.com>
+Date: Thu, 12 Dec 2002 19:11:11 GMT   (24kb)
+
+Title: Data Engineering for the Analysis of Semiconductor Manufacturing Data
+Authors: Peter D. Turney (National Research Council of Canada)
+Categories: cs.LG cs.CE cs.CV
+Comments: 10 pages
+Report-no: NRC-39163
+ACM-class: I.2.6; I.5.2; I.5.4; J.2
+Journal-ref: Proceedings of the IJCAI-95 Workshop on Data Engineering for
+  Inductive Learning, Montreal, Quebec, (1995), 50-59
+\\
+  We have analyzed manufacturing data from several different semiconductor
+manufacturing plants, using decision tree induction software called Q-YIELD.
+The software generates rules for predicting when a given product should be
+rejected. The rules are intended to help the process engineers improve the
+yield of the product, by helping them to discover the causes of rejection.
+Experience with Q-YIELD has taught us the importance of data engineering --
+preprocessing the data to enable or facilitate decision tree induction. This
+paper discusses some of the data engineering problems we have encountered with
+semiconductor manufacturing data. The paper deals with two broad classes of
+problems: engineering the features in a feature vector representation and
+engineering the definition of the target concept (the classes). Manufacturing
+process data present special problems for feature engineering, since the data
+have multiple levels of granularity (detail, resolution). Engineering the
+target concept is important, due to our focus on understanding the past, as
+opposed to the more common focus in machine learning on predicting the future.
+\\
