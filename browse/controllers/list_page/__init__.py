@@ -8,13 +8,12 @@ handles GET and POST requests to the list endpoint.
 
 This should handle requests like:
 /list/$category/YYMM
-/list/$category/YYMM
 /list/$category/new|recent|current|pastweek
-/list/$category/YYMM?skip=n&show=n
 /list/$archive/new|recent|current|pastweek
 /list/$archive/YY
 /list/$category/YY
 
+And all of the above with ?skip=n&show=n
 Examples of odd requests to throw out:
 /list/?400
 /list/cs/14?skip=%25CRAZYSTUFF
@@ -41,29 +40,25 @@ Doesn't handle the /view path.
 import calendar
 import logging
 import math
-from typing import Any, Dict, List, Optional, Tuple, Union
+from datetime import date, datetime
 from http import HTTPStatus as status
-from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from arxiv import taxonomy
-from flask import request, url_for
-from werkzeug.exceptions import BadRequest
+from arxiv.taxonomy.definitions import CATEGORIES
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
-from browse.services.listing.base_listing import (
-    ListingResponse,
-    NewResponse,
-    NotModifiedResponse,
-)
 from browse.domain.metadata import DocMetadata
-
+from browse.formatting.search_authors import (AuthorList, queries_for_authors,
+                                              split_long_author_list)
 from browse.services.documents import get_doc_service
-from browse.services.listing import get_listing_service
-from browse.services.listing.base_listing import  NewResponse, NotModifiedResponse, ListingResponse
-from browse.formatting.search_authors import queries_for_authors, \
-    split_long_author_list, AuthorList
+from browse.services.documents.format_codes import formats_from_source_type
 
+from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
+                                     get_listing_service)
+from flask import request, url_for
+from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
 
@@ -118,9 +113,9 @@ def get_listing(subject_or_category: str,
             time_period = time_period + request.args.get('month')  # type: ignore
 
     if (not subject_or_category or
-            not (time_period and
-                 (time_period.isdigit() or
-                  time_period in ['new', 'current', 'pastweek', 'recent']))):
+        not (time_period and
+             (time_period.isdigit() or
+              time_period in ['new', 'current', 'pastweek', 'recent']))):
         raise BadRequest
 
     if subject_or_category in taxonomy.CATEGORIES:
@@ -158,43 +153,34 @@ def get_listing(subject_or_category: str,
 
     if time_period == 'new':
         list_type = 'new'
-        new_resp = listing_service.list_new_articles(
-            subject_or_category, skipn, shown, if_mod_since)
+        new_resp: Union[ListingNew, NotModifiedResponse] =\
+            listing_service.list_new_articles(subject_or_category, skipn,
+                                              shown, if_mod_since)
         response_headers.update(_expires_headers(new_resp))
-        if _not_modified(new_resp):
+        if isinstance(new_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
-        listings = new_resp['listings']
-        count = new_resp['new_count'] + \
-            new_resp['rep_count'] + new_resp['cross_count']
-        response_data['announced'] = new_resp['announced']
-        response_data['submitted'] = new_resp['submitted']
+        listings = new_resp.listings
+        count = new_resp.new_count + \
+            new_resp.rep_count + new_resp.cross_count
+        response_data['announced'] = new_resp.announced
+        response_data['submitted'] = new_resp.submitted
         response_data.update(
             index_for_types(new_resp, subject_or_category, time_period, skipn, shown))
         response_data.update(sub_sections_for_types(new_resp, skipn, shown))
 
     elif time_period in ['pastweek', 'recent']:
+        # A bit different due to returning days not listings
         list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
             subject_or_category, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
-        if _not_modified(rec_resp):
+        if isinstance(rec_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
-        listings = rec_resp['listings']
-        count = rec_resp['count']
-        response_data['pubdates'] = rec_resp['pubdates']
+        listings = rec_resp.listings
+        count = rec_resp.count
+        response_data['pubdates'] = rec_resp.pubdates
 
-    elif time_period == 'current':
-        list_type = 'current'
-        cur_resp = listing_service.list_articles_by_month(
-            subject_or_category, 1999, 12, skipn, shown, if_mod_since)
-        response_headers.update(_expires_headers(cur_resp))
-        if _not_modified(cur_resp):
-            return {}, status.NOT_MODIFIED, response_headers
-        listings = cur_resp['listings']
-        count = cur_resp['count']
-        response_data['pubmonth'] = cur_resp['pubdates'][0][0]
-
-    else:  # YYMM or YYYYMM?
+    else:  # current or YYMM or YYYYMM
         yandm = year_month(time_period)
         if yandm is None:
             raise BadRequest
@@ -215,14 +201,14 @@ def get_listing(subject_or_category: str,
                 subject_or_category, list_year, skipn, shown, if_mod_since)
 
         response_headers.update(_expires_headers(resp))
-        if _not_modified(resp):
+        if isinstance(resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
-        listings = resp['listings']
-        count = resp['count']
-        if resp['pubdates'] and resp['pubdates'][0]:
-            response_data['pubmonth'] = resp['pubdates'][0][0]
+        listings = resp.listings
+        count = resp.count
+        if resp.pubdates and resp.pubdates[0]:
+            response_data['pubmonth'] = resp.pubdates[0][0]
         else:
-            response_data['pubmonth'] = datetime.now() # This is just to make the template happy
+            response_data['pubmonth'] = datetime.now() # just to make the template happy
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
 
@@ -230,8 +216,10 @@ def get_listing(subject_or_category: str,
 
     for item in listings:
         idx = idx + 1
-        item['article'] = get_doc_service().get_abs(item['id'])  # type: ignore
-        item['list_index'] = idx + skipn  # type: ignore
+        setattr(item, 'list_index', idx + skipn)
+        if not hasattr(item, 'article') or item.article is None:
+            setattr(item, 'article', get_doc_service().get_abs(item.id))
+
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
@@ -256,10 +244,21 @@ def get_listing(subject_or_category: str,
     response_data.update(more_fewer(shown, count, shown >= count))
 
     def author_query(article: DocMetadata, query: str)->str:
-        return str(url_for('search_archive',
+        try:
+            if article.primary_archive:
+                archive = article.primary_archive.id
+            else:
+                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+            return str(url_for('search_archive',
                            searchtype='author',
-                           archive=article.primary_archive.id,
+                           archive=archive,
                            query=query))
+        except (AttributeError, KeyError):
+            return str(url_for('search_archive',
+                               searchtype='author',
+                               archive=archive,
+                               query=query))
+
     response_data['url_for_author_search'] = author_query
 
     return response_data, status.OK, response_headers
@@ -269,6 +268,10 @@ def get_listing(subject_or_category: str,
 
 def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
     """Gets the year and month from the time_period parameter."""
+    if tp == "current":
+        day = date.today()
+        return day.year, day.month
+
     if not tp or len(tp) > 6 or len(tp) < 2:
         return None
 
@@ -310,33 +313,41 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
     return rd
 
+def _src_code(article: Union[DocMetadata])->str:
+    vhs = [vh for vh in article.version_history if vh.version == article.version]
+    if vhs:
+        return vhs[0].source_type.code
+    else:
+        return ''
 
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {item['article'].arxiv_id_v: get_doc_service().get_dissemination_formats(item['article'], dl_pref)
+    return {item.article.arxiv_id_v: formats_from_source_type(_src_code(item.article), dl_pref)
             for item in items}
 
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to author links."""
-    return {item['article'].arxiv_id_v: author_links(item['article']) for item in listings}
+    return {item.article.arxiv_id_v: author_links(item.article)
+            for item in listings}
 
 
 def author_links(abs_meta: DocMetadata) -> Tuple[AuthorList, AuthorList, int]:
     """Creates author list links in a very similar way to abs page."""
-    return split_long_author_list(queries_for_authors(abs_meta.authors.raw),
+    raw = abs_meta.authors.raw
+    return split_long_author_list(queries_for_authors(raw),
                                   truncate_author_list_size)
 
 
-def index_for_types(resp: NewResponse,
+def index_for_types(resp: ListingNew,
                     context: str, subcontext: str,
                     skipn: int, shown: int) ->Dict[str, Any]:
-    """Creates index for types of new papers in a NewResponse."""
+    """Creates index for types of new papers in a ListingNew."""
     ift = []
-    new_count = resp['new_count']
-    cross_count = resp['cross_count']
-    rep_count = resp['rep_count']
+    new_count = resp.new_count
+    cross_count = resp.cross_count
+    rep_count = resp.rep_count
 
     if new_count > 0:
         if skipn != 0:
@@ -377,18 +388,18 @@ def index_for_types(resp: NewResponse,
 
 
 def sub_sections_for_types(
-        resp: NewResponse,
+        resp: ListingNew,
         skipn: int, shown: int) -> Dict[str, Any]:
     """Creates data used in section headings on /list/ARCHIVE/new."""
     secs = []
-    new_count = resp['new_count']
-    cross_count = resp['cross_count']
-    rep_count = resp['rep_count']
+    new_count = resp.new_count
+    cross_count = resp.cross_count
+    rep_count = resp.rep_count
 
-    news = [item for item in resp['listings'] if item['listingType'] == 'new']
-    crosses = [item for item in resp['listings']
-               if item['listingType'] == 'cross']
-    reps = [item for item in resp['listings'] if item['listingType'] == 'rep']
+    news = [item for item in resp.listings if item.listingType == 'new']
+    crosses = [item for item in resp.listings
+               if item.listingType == 'cross']
+    reps = [item for item in resp.listings if item.listingType == 'rep']
 
     cross_start = new_count+1
     rep_start = new_count + cross_count + 1
@@ -424,8 +435,10 @@ def sub_sections_for_types(
         })
 
     for sec in secs:
-        typ = {'new': 'New', 'cross': 'Cross', 'rep': 'Replacement'}[sec['type']] # type: ignore
-        date = resp['announced'].strftime('%A, %-d %B %Y')
+        typ = {'new': 'New',
+               'cross': 'Cross',
+               'rep': 'Replacement'}[sec['type']] # type: ignore
+        date = resp.announced.strftime('%A, %-d %B %Y')
 
         showing = 'showing '
         if sec['continued']:
@@ -437,20 +450,20 @@ def sub_sections_for_types(
 
         n = len(sec['items'])  # type: ignore
         tot = sec['total']
-        sec['heading'] = f'{typ} submissions for {date} ({showing}{n} of {tot} entries )'
+        sec['heading'] = f'{typ} submissions for {date} '\
+            f'({showing}{n} of {tot} entries )'
 
     return {'sub_sections_for_types': secs}
 
 
-def _not_modified(response: Union[ListingResponse, NewResponse, NotModifiedResponse]) -> bool:
-    return bool ( response and 'not_modified' in response)
-#    return bool(response and response.get('not_modified', False))
+def _not_modified(response: Union[Listing, ListingNew, NotModifiedResponse]) -> bool:
+    return bool(response and isinstance(response, NotModifiedResponse))
 
 
 def _expires_headers(listing_resp:
-                     Union[ListingResponse, NewResponse, NotModifiedResponse]) \
+                     Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
-    if listing_resp and listing_resp.get('expires', False):
-        return {'Expires': str(listing_resp['expires'])}
+    if listing_resp and listing_resp.expires:
+        return {'Expires': str(listing_resp.expires)}
     else:
         return {}

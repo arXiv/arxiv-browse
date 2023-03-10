@@ -26,7 +26,8 @@ class DocMetadataService(abc.ABC):
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False) -> List[str]:
+                                  add_sciencewise: bool = False
+                                  ) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
         Several checks are performed to determine available dissemination

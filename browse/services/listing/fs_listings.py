@@ -1,46 +1,39 @@
-"""arXiv listing backed by filesystem"""
+"""arXiv listing backed by files.
+
+Due to use of CloudPathLib these can be either local files or cloud object
+stores.
+
+"""
+
 import logging
 import re
-import os
-import codecs
+from datetime import date, datetime
+from typing import List, Literal, Optional, Tuple, Union
+from zoneinfo import ZoneInfo
 
-from werkzeug.exceptions import BadRequest
-from wsgiref.handlers import format_date_time
-from datetime import datetime, date, timedelta
-from time import mktime
-
-from typing import Optional, Tuple, Dict
 from arxiv import taxonomy
-
-from cloudpathlib.anypath import to_anypath
-
 from arxiv.base.globals import get_application_config
-app_config = get_application_config()
+from browse.services import APath
+from browse.services.listing import (Listing, ListingCountResponse,
+                                     ListingItem, ListingNew, ListingService,
+                                     MonthCount, NotModifiedResponse,
+                                     gen_expires)
+from cloudpathlib.anypath import to_anypath
+from werkzeug.exceptions import BadRequest
+
+from .parse_listing_file import get_updates_from_list_file, ParsingMode
+from .parse_new_listing_file import parse_new_listing_file
+from .parse_listing_pastweek import parse_listing_pastweek
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
 
-from browse.services.listing.base_listing import NewResponse, \
-    ListingResponse, ListingCountResponse, ListingService, \
-    ListingItem
+FS_TZ = ZoneInfo(get_application_config()["ARXIV_BUSINESS_TZ"])
+"""Time used on the FS with the listing files."""
 
-debug_parser = False
+ListingFileType = Literal["new", "pastweek", "month"]
+"""These are the listing file types."""
 
-DATE     = re.compile(r'^Date:\s+')
-SUBJECT  = re.compile(r'^Subject:\s+')
-RECEIVED = re.compile(r'^\s*received from\s+(?P<date_range>.*)')
-
-RULES_NORMAL     = re.compile(r'^------------')
-RULES_CROSSES    = re.compile(r'^%-%-%-%-%-%-')
-RULES_REPLACESES = re.compile(r'^%%--%%--%%--')
-RULES_END        = re.compile(r'^%%%---%%%---')
-
-PAPER_FORM = re.compile(r'^(Paper)(\s*\(\*cross-listing\*\))?:\s?(\S+)')
-ARXIV_FORM = re.compile(r'^arXiv:(\S+)(\s*\(\*cross-listing\*\))?')
-REPLACED_FORM = re.compile(r'^(replaced with revised version)|^((figures|part) added)', re.IGNORECASE)
-PASTWEEK_DATE = re.compile(r'/\*\s+(.*)\s+\*/')
-PRIMARY_CATEGORY = re.compile(r'^Categories:\s+(\S+)')
-SECONDARY_CATEGORIES = re.compile(r'\s+([^\s]+)\s*(.*)$')
 
 class FsListingFilesService(ListingService):
     """arXiv document listings via Filesystem."""
@@ -48,387 +41,16 @@ class FsListingFilesService(ListingService):
     def __init__(self, document_listing_path: str):
         self.listing_files_root = document_listing_path
 
-    def _is_rule(self, line: str, type: str) -> Tuple[int, str]:
-        """Scan listing file for special rules markup.
 
-        Returns whether line is a rule and the item type, [is_rule, type]
 
-        Change types to follow
-        Comments copied from original Perl module.
+    def _generate_listing_path(self, fileMode: ListingFileType, archiveOrCategory: str,
+                               year: int, month: int) -> APath:
+        """Create `Path` to a listing file.
 
-            True if the input value is a 'rule', false otherwise.
-
-            $$typeref is set to the rule type if not a plain old
-             rule. Rule types are either a plain old rule
-               -----------------
-             or a special 'rule' denoting change of type for updates
-               %-%-%-%-%-%-  => start of crosses
-               %%--%%--%%--  => start of replaces and then replaced crosses
-               %%%---%%%---  => end
-        """
-        if RULES_NORMAL.match(line):
-            return (1, '')
-        elif RULES_CROSSES.match(line):
-            return (1, 'cross')
-        elif RULES_REPLACESES.match(line):
-            return (1, 'rep')
-        elif RULES_END.match(line):
-            return (1, 'end')
-
-        return (0, '')
-
-    def _get_updates_from_list_file(self, listingFilePath: str,
-                                    listingType: str, listingFilter: str)-> Dict:
-        """Read the paperids that have been updated from a listings file.
-
-        There are three forms of listing file: new, pastweek, and monthly.
-        The new listing contains the updates for the latest publish, pastweek
-        contains updates for the last five publish days, and month contains
-        the accumulated updates for the entire month (to date).
-
-        The new, pastweek, and current month listings are dynamic and
-        are updated after each publish. The monthly listing file is the only
-        permanent record of older announcements. The current month's listing
-        will be updated during the month it is active.
-
-        An archive with sub categories will have a combined new and pastweek
-        listing for the time period in addition to a new/pastweek listing
-        file each category. new, new.CL, new.DF, etc.
-
-        Listing file markup is used to identify new and cross submissions.
-
-        Comments from original code:
-
-          Ideas is that the code will be able to handle old format and then
-          work with just a list of paperids later.
-
-          Does not read the metadata from the listings file.
-        """
-
-        # pastweek and
-        #
-        #    Skip forward to first publish date
-        #
-        # month
-        #
-        #    Skip forward to first \\
-        #
-        # Process entries.
-        #     Identify type change -> replacements
-        #
-        #    - Read articleid
-        #    - Identify type: new, cross
-        #
-        format = ''
-        if listingType == 'monthly_counts':
-            format = 'monthly_counts'
-            listingType = 'month'
-
-        extras = {}
-
-        new_items:Dict = []
-        cross_items:Dict = []
-        rep_items:Dict = []
-
-        # new
-        announce_date = ''
-        submit_start_date = ''
-        submit_end_date = ''
-
-        # pastweek
-        pub_dates:Dict = []
-        pub_counts:int = []
-        pub_count_previous = 0
-
-        with to_anypath(listingFilePath).open('rb') as fh:
-            data = fh.read()
-
-        lines = codecs.decode(data, encoding='utf-8',errors='ignore').split("\n")
-
-        if listingType == 'new':
-            # Process selected information from header
-            #   Expect these lines:
-            #       Date: (date)
-            #       Subject: (subject)
-            #       ...
-            #       received from
-
-            # First line is always the date.
-            # Date: Tue, 20 Jul 21 00:51:12 GMT
-            dateline = lines.pop(0)
-            dateline = dateline.replace('\n', '')
-
-            if DATE.match(dateline):
-                date = re.sub(r'^Date:\s+', '', dateline)
-                short_date = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', date)
-                extras['Date'] = date
-                extras['short_date'] = short_date
-                announce_date = short_date
-                announce_date = datetime.strptime(announce_date, '%a, %d %b %y')
-
-            # Subject: cs daily 346 new + 55 crosses received
-            line = lines.pop(0)
-            if SUBJECT.match(line):
-                subject = line
-                extras['Subject'] = subject
-
-            # received from  Fri 16 Jul 21 18:00:00 GMT  to  Mon 19 Jul 21 18:00:00 GMT
-            # Skip forward to first \\
-            line = lines.pop(0)
-            while (not re.match(r'^\\', line)):
-                received = RECEIVED.match(line)
-                if received:
-                    date_from_to = str(received.group('date_range'))
-                    date_short_from_to = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', date_from_to)
-                    extras['date_from_to'] = date_from_to
-                    extras['date_short_from_to'] = date_short_from_to
-                    res = re.match(r'(.*)\s+to\s+(.*)$', date_short_from_to)
-                    if res:
-                        submit_start_date = res.group(1)
-                        submit_start_date = datetime.strptime(submit_start_date, '%a %d %b %y ')
-                        submit_end_date = res.group(2)
-                        submit_end_date = datetime.strptime(submit_end_date, '%a %d %b %y')
-
-                line = lines.pop(0)
-
-        elif listingType == 'pastweek' or listingType == 'month':
-            # Skip forward to first \\,
-            #   which brings us to first publish date for pastweek
-            # \\
-            # /*Tue, 20 Jul 2021 */
-            #\\
-            #   or first update entry for monthly listing
-            line = lines.pop(0)
-            while (line and not re.match(r'^\\', line)):
-                line = lines.pop(0)
-                line = line.replace('\n', '')
-        else:
-            pass
-
-        # Now cycle through and process update entries in file
-        type = 'new'
-
-        lasttype = ''
-        line = lines.pop(0)
-        line = line.replace('\n', '')
-        while (line):
-            # check for special markup
-            (is_rule, type_change) = self._is_rule(line, type)
-            while (is_rule):
-                if is_rule and type_change:
-                    type = type_change
-                if len(lines):
-                    line = lines.pop(0)
-                else:
-                    break
-                (is_rule, type_change) = self._is_rule(line, type)
-                if type == 'end':
-                    break
-
-            # Read up to the next \\
-            while (len(lines) and re.match(r'^\\', line)):
-                if len(lines):
-                    line = lines.pop(0)
-
-            # Now process all fields up to the next \\
-            id = None
-            nb = None
-            primary_category = None
-            secondary_categories = None
-            is_preamble = 1
-            is_cross = 0
-
-            while (len(lines) and not re.match(r'^\\', line)):
-
-                # Read article identifier and determine whether a cross
-                #   Paper: quant-ph/9901070
-                #   Paper (*cross-listing*): quant-ph/9901070
-                #   arXiv:quant-ph/9901070 (*cross-listing*)
-                #
-                paper = PAPER_FORM.match(line)
-                arxiv = ARXIV_FORM.match(line)
-
-                # Replaced
-                replaced = REPLACED_FORM.match(line)
-                # Pastweek handling
-                pastweek = PASTWEEK_DATE.match(line)
-                # Category (primary/secondary)
-                primary_match = PRIMARY_CATEGORY.match(line)
-
-                if arxiv or paper:
-                    if paper:
-                        is_cross = paper.group(2)
-                        id = paper.group(3)
-                    elif arxiv:
-                        is_cross = arxiv.group(2)
-                        id = arxiv.group(1)
-
-                    # Notes from original module:
-                    # For month listings, there is no rule for start or crosses
-                    # so we infer from Paper line. For pastweek we infer
-                    # both new and cross from Paper line as the file switches
-                    # back and forth.
-                    if listingType == 'pastweek':
-                        if is_cross:
-                            type = 'cross'
-                        else:
-                            type = 'new'
-                    elif listingType != 'new' and is_cross:
-                        type = 'cross'
-
-                elif replaced:
-                    nb = line
-
-                elif listingType == 'pastweek' and pastweek:
-                    pub_date = pastweek.group(1)
-                    pub_date = datetime.strptime(pub_date, '%a, %d %b %Y')
-                    # Put together current updates and crosses
-                    count = len(cross_items)
-                    # Merge and clear crosses
-                    new_items = new_items + cross_items
-
-                    if pub_dates:
-                        # We already have processed a pub date
-                        # store update count for pub date we are
-                        # finishing
-                        pub_count = len(new_items) - pub_count_previous
-                        pub_counts.append(pub_count)
-                        pub_count_previous = len(new_items)
-                        pub_dates.append(pub_date)
-                    else:
-                        pub_dates.append(pub_date)
-
-                    cross_items = []
-                    # anchors
-
-                elif primary_match:
-                    primary_category = primary_match.group(1)
-                    secondaries = SECONDARY_CATEGORIES.search(line)
-                    if secondaries:
-                        secondary_categories = secondaries.group(2)
-
-                    if debug_parser:
-                        print(f"Categories: Primary: {primary_category}  Secondaries: {secondary_categories}")
-
-                if len(lines):
-                    line = lines.pop(0)
-                    line = line.replace('\n', '')
-                else:
-                    break
-                # End inner while
-
-            # Outer while
-
-            # If we have id, register the update
-            #   apply filtering (if we are dealing with monthly listing)
-            if id:
-                filter = f'^{listingFilter}'
-                if not listingFilter or (re.match(filter, primary_category)
-                                         and type == 'new' ):
-                    # push update
-
-                    lasttype = type
-
-                    item = {'id': id, 'listingType': type, 'primary': primary_category}
-                    if type == 'new':
-                        new_items.append(item)
-                    elif type == 'cross':
-                        cross_items.append(item)
-                    elif type =='rep':
-                        rep_items.append(item)
-
-                elif listingFilter and re.search(listingFilter, secondary_categories):
-                    item = {'id': id, 'listingType': type, 'primary': primary_category}
-                    cross_items.append(item)
-
-            # From original parser
-            #  Now complete the reading of this entry by reading everything up to the
-            #  next rule. If this is a 'new' listing then we will read past the
-            #  abstract and discard.
-            (rule, new_type) = self._is_rule(line, type)
-            if new_type:
-                type = new_type
-            while len(lines) and not rule:
-                line = lines.pop(0)
-                line = line.replace('\n', '')
-                (rule, new_type) = self._is_rule(line, type)
-                if new_type:
-                    type = new_type
-
-            # Read the next line for while loop
-            if len(lines):
-                line = lines.pop(0)
-                line = line.replace('\n', '')
-            else:
-                break
-
-        # Combine the new and cross updates for pastweek
-        #   if there are crosses, add them to updates.
-        if listingType == 'pastweek':
-            if len(cross_items):
-                new_items = new_items + cross_items
-
-            # Complete the last count for pastweek
-            pub_count = len(new_items) - pub_count_previous
-            pub_counts.append(pub_count)
-
-        count = len(new_items)
-
-        pub_dates_with_count = []
-        index = 0
-        for date in pub_dates:
-            pub_dates_with_count.append((date, pub_counts[index]))
-            index = index + 1
-
-        for pd in pub_dates_with_count:
-            (date, count) = pd
-
-        if format == 'monthly_counts':
-            # We need the new and cross counts for the monthly count summary
-            return {'pubdates': pub_dates_with_count,
-                    'new_count': len(new_items),
-                    'cross_count': len(cross_items),
-                    'expires': self._gen_expires(),
-                    'listings': new_items + cross_items + rep_items, # debugging
-                    }
-        elif listingType == 'new':
-            return {'listings': new_items + cross_items + rep_items,
-                    'announced': announce_date,
-                    'submitted': (submit_start_date, submit_end_date),
-                    'new_count': len(new_items),
-                    'cross_count': len(cross_items),
-                    'rep_count': len(rep_items),
-                    'expires': self._gen_expires()
-                    }
-        elif listingType == 'pastweek' or listingType == 'month' \
-                or listingType == 'year':
-            #{'listings': List[ListingItem],
-            # 'pubdates': List[Tuple[date, int]],
-            # 'count': int,
-            # 'expires': str}
-
-            # There are no pubdates for month, so we will create one and add count
-            # to be consistent with API
-            if listingType == 'month':
-                date = re.search(r'(?P<date>\d{4})$', listingFilePath)
-                if date:
-                    yymm_string = date.group('date')
-                    pub_date = datetime.strptime(yymm_string, '%y%m')
-                    pub_dates_with_count.append((pub_date, len(new_items + cross_items)))
-
-            updates = new_items + cross_items
-            return {'listings': updates,
-                    'pubdates': pub_dates_with_count,
-                    'count': len(new_items + cross_items),
-                    'expires': self._gen_expires()
-                    }
-
-    def _generate_listing_path(self, listingType: str, archiveOrCategory: str,
-                               year: int, month: int) -> str:
-        """Create path to listing file"""
+        This just formats the string file name and returns a `Path`. It does
+        not check if the file exists."""
         categorySuffix = ''
         archive = ''
-
         if archiveOrCategory in taxonomy.ARCHIVES:
             # Create listing file path with archive as <archive>/new
             archive = archiveOrCategory
@@ -443,57 +65,150 @@ class FsListingFilesService(ListingService):
             raise BadRequest(f"Archive or category doesn't exist: {archiveOrCategory}")
 
         listingRoot = f'{self.listing_files_root}/{archive}/listings/'
-        if listingType == 'month':
-            yymm = "%02d%02d" % (year, month)
-            listingFilePath = f'{listingRoot}{yymm}'
+        if fileMode == 'month':
+            if len(str(year)) >= 4:
+                if year < 2090:
+                    yy = str(year)[2:]
+                    listingFilePath = f'{listingRoot}{yy}{month:02d}'
+                else:
+                    listingFilePath = f'{listingRoot}{year}{month:02d}'
+            elif len(str(year)) <= 2:
+                listingFilePath = f'{listingRoot}{year:02d}{month:02d}'
+            else:
+                raise ValueError("Bad year value {year}")
         else:
-            listingFilePath = f'{listingRoot}{listingType}{categorySuffix}'
+            listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 
-        # Check listing file
-        # if not os.path.exists(listingFilePath):
-        #     raise BadRequest("Archive or category listing file doesn't exist:"
-        #                      f"{listingFilePath}")
+        return to_anypath(listingFilePath)
 
-        return listingFilePath
 
-    def _get_mtime(self, listingFilePath: str) -> str:
+    def _get_mtime(self, listingFilePath: APath) -> datetime:
         """Get the modify time fot specified file."""
-        modTime = os.path.getmtime(listingFilePath)
-        modTime = datetime.fromtimestamp(modTime)
-        return modTime
+        return datetime.fromtimestamp(listingFilePath.stat().st_mtime, tz=FS_TZ)
 
-    def _gen_expires(self) -> str:
-        """Generate expires.
 
-           What is optimal value for the expires value? Next publish?
 
-            # RFC 1123 format
-            # 'Wed, 21 Oct 2015 07:28:00 GMT'
-        """
-        now = datetime.now()
-        future = timedelta(days=1)
-        expire = now + future
-        stamp = mktime(expire.timetuple())
-        expires = format_date_time(stamp)
-        return expires
-
-    def _check_if_modified_since(self, if_modified_since: str, listingFilePath: str) -> bool:
-        """Indicate whether data has been modified since specified date."""
-        parsed = datetime.strptime(if_modified_since, '%a, %d %b %Y %H:%M:%S GMT')
-        modTime = self._get_mtime(listingFilePath)
-        if modTime > parsed:
-            # continue and return modified data
-            return True
-        else:
-            # not modified relative to specified date
+    def _current_y_m_em(self, year:int) -> Tuple[str,int,int]:
+        """Gets `(currentYear, currentMonth, end_month)`"""
+        # If current year, limit range to available months
+        currentYear = str(datetime.now().year)[2:]
+        currentMonth = datetime.now().month
+        end_month = 12
+        if currentYear == str(year):
+            end_month = currentMonth
+        return (currentYear, currentMonth, end_month)
+    
+    def _modified_since(self, if_modified_since: str, listingFile: APath) -> bool:
+        """Returns whether data has been modified since `if_modified_since`."""
+        if not listingFile.is_file():
             return False
+        parsed = datetime.strptime(if_modified_since, '%a, %d %b %Y %H:%M:%S GMT')
+        modTime = self._get_mtime(listingFile)
+        return modTime > parsed
 
+
+    def _list_articles_by_period(self,
+                                 archiveOrCategory: str,
+                                 yymmfiles: List[Tuple[int,int, APath]],
+                                 skip: int,
+                                 show: int,
+                                 if_modified_since: Optional[str] = None,
+                                 mode: ParsingMode = 'month')\
+                                 -> Union[Listing, MonthCount, NotModifiedResponse]:
+        """Gets listing for a list of `months`.
+
+        This gets the listings for all the months in `months`. It works fine for
+        getting just one month. Creating an archive listing for the year involves
+        combining the listing files for all available months for the specified
+        year.
+
+        A category listing requires filtering these monthly listing files by the
+        category.
+
+        `if_modified_since` is the if_modified_since header value passed by the
+        web client It should be in RFC 1123 format. This will return
+        NotModifiedResponse if `if_modified_since` is not empty and any of the
+        files related to `months` have been modified since then.
+
+        Existing production year list links use two digit year.
+
+        Parameters
+        ----------
+        archiveOrCategory : str
+            A valid arxiv archive or category to get the listing for. Must not
+            be empty.
+        months : List[Tuple[int,int,APath]]
+            The months to get the listings for. Tuple of (yy, mm, APath_to_listing_file)
+            where both yy and mm are `int`. If yy or mm are 0 the
+            result may lack pubdates.
+        # tuple of (yy,mm) skip : int
+        show : int
+            The quantity of listings that need to be shown.
+        if_modified_since : Optional[str]
+            RFC 1123 format date of an if_modified_since header.
+        mode: ParsingMode        
+            Which type if listing is requested. One of ['new', 'month',
+            'monthly_counts', 'year', 'pastweek']'month' works with a yymmfiles
+            list greater than length 1. 'new' works only with a list of length 1.
+
+        Returns
+        -------
+        Listing
+            Combined listing response for all `months`
+
+        Raises
+        ------
+        Exception
+            If any listing file is missing. The only acceptable mising listing
+            file is the one for the current year and month. That might not
+            have been created yet if there has not yet been an announcement.
+
+        """
+        if mode == 'new' and len(yymmfiles) > 1:
+            raise ValueError("when listing type  is 'new' yymmfiles must be size 1")
+
+        currentYear, currentMonth, end_month = self._current_y_m_em(
+            max([yy for yy,_,_ in yymmfiles]))
+        
+        if if_modified_since: # Check if-modified-since for months of interest
+            if all([not self._modified_since(if_modified_since, lf)
+                    for _,_, lf in yymmfiles]):
+                return NotModifiedResponse(True, gen_expires())
+
+        # Collect updates for each month
+        all_listings: List[ListingItem] = []
+        all_pubdates: List[Tuple[date,int]] = []
+        for year, month, listingFile in yymmfiles:
+            if not listingFile.is_file() and currentYear != str(year)\
+               and currentMonth != str(month):
+                # This is fine if new month and no announce has happened yet.
+                raise Exception("Missing monthly listing file {listingFile}")
+
+            response = get_updates_from_list_file(year, month, listingFile,
+                                                  mode, archiveOrCategory)
+            if not isinstance(response, Listing):
+                return response
+            
+            all_listings.extend(response.listings)            
+            if response.pubdates:
+                all_pubdates.extend(response.pubdates)
+            # else:
+            #     pub_date = date(year, month, 1).strftime('%a, %d %b %Y')
+            #     all_pubdates.append((pub_date, len(response.listings)))
+
+        return Listing(listings=all_listings[skip:skip + show], # Adjust for skip/show
+                       pubdates=all_pubdates,
+                       count=len(all_listings),
+                       expires= gen_expires())
+
+
+    
     def list_articles_by_year(self,
                               archiveOrCategory: str,
                               year: int,
                               skip: int,
                               show: int,
-                              if_modified_since: Optional[str] = None) -> ListingResponse:
+                              if_modified_since: Optional[str] = None) -> Listing:
         """Get listing items for a whole year.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -506,89 +221,15 @@ class FsListingFilesService(ListingService):
 
         Existing production year list links use two digit year.
         """
-        listingType = 'month'
-        listingFilePath = ''
-        listingFilter = archiveOrCategory
+        _, _, end_month = self._current_y_m_em(year)
+        months = [(year, month) for month in range(1, end_month + 1)]
+        yymmfiles = [
+            (year, month, self._generate_listing_path('month', archiveOrCategory,
+                                                      year, month))
+            for year, month in months]
+        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
+                                             show, if_modified_since) # type: ignore
 
-        all_listings = []
-        all_pubdates = []
-        monthly_count = 0
-
-        # If current year, limit range to available months
-        currentYear = datetime.now().year
-        match = re.match(r'\d\d(?P<yy>\d\d)$', str(currentYear))
-        currentYear = match.group('yy')
-        currentMonth = datetime.now().month
-
-        end_month = 12
-        if currentYear == str(year):
-            end_month = currentMonth
-
-        # Check if-modified-since for months we will be processing.
-        if if_modified_since:
-            updates = 0
-
-            for month in range(1, end_month + 1):
-                listingFilePath = self._generate_listing_path(listingType,
-                                                              archiveOrCategory, year, month)
-                if not os.path.exists(listingFilePath):
-                    continue
-                if self._check_if_modified_since(if_modified_since, listingFilePath):
-                    updates = 1
-
-            if updates != 1:
-                expires = self._gen_expires()
-                return {'not_modified': True, 'expires': expires}
-
-        # Collect updates for each month
-        for month in range(1, end_month + 1):
-            yymm = "%02d%02d" % (year, month)
-
-            # Create pubdate for each month. Classic code does not generate
-            # pubdates and classic UI does not delimit updates by month.
-            pub_date = date(year, month, 1).strftime('%a, %d %b %Y')
-
-            listingFilePath = self._generate_listing_path(listingType,
-                                                          archiveOrCategory, year, month)
-            # Make sure listing file exists
-            if not os.path.exists(listingFilePath):
-                if currentYear == str(year):
-                    # This may be possible if new month and no announce has happened
-                    # yet. Ignore it until we come up with logic to check whether
-                    # announce has happened.
-                    print("Skipping current month")
-                    continue
-                else:
-                    raise Exception("Missing monthly listing file {year}{month}")
-
-            # Parse listing file
-            response = self._get_updates_from_list_file(listingFilePath, listingType, listingFilter)
-
-            # These are monthly listings
-            #   {'listings': List[ListingItem],
-            #   'pubdates': List[Tuple[date, int]],
-            #   'count': int,
-            #   'expires': str}
-
-            for item in response['listings']:
-                all_listings.append(item)
-            if response['pubdates']:
-                for pub_date in response['pubdates']:
-                    all_pubdates.append(pub_date)
-            else:
-                all_pubdates.append((pub_date, len(response['listings'])))
-            monthly_count = monthly_count + response['count']
-
-        total_count = len(all_listings)
-
-        # Adjust listing according to skip and show
-        all_listings = all_listings[skip:skip + show]
-
-        return {'listings': all_listings,
-                'pubdates': all_pubdates,
-                'count': total_count,
-                'expires': self._gen_expires()
-                }
 
     def list_articles_by_month(self,
                                archiveOrCategory: str,
@@ -596,7 +237,7 @@ class FsListingFilesService(ListingService):
                                month: int,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> ListingResponse:
+                               if_modified_since: Optional[str] = None) -> Listing:
         """Get listings for a month.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -606,34 +247,18 @@ class FsListingFilesService(ListingService):
         listing for categories is more work since all updates are
         included in the same montly listing file.
         """
-        listingType = 'month'
-        listingFilePath = ''
-        listingFilter = archiveOrCategory
-
-        listingFilePath = self._generate_listing_path(listingType,
-                                                      archiveOrCategory, year, month)
-
-        # Check if-modified-since
-        if if_modified_since:
-            # Return if file has not been updated
-            if not self._check_if_modified_since(if_modified_since, listingFilePath):
-                # return not modified instead of data
-                expires = self._gen_expires()
-                return {'not_modified': True, 'expires': expires}
-
-        response = self._get_updates_from_list_file(listingFilePath, listingType, listingFilter)
-
-        # Adjust listing according to skip and show
-        response['listings'] = response['listings'][skip:skip + show]
-
-        return response
+        yymmfiles= [(year,month, self._generate_listing_path('month', archiveOrCategory,
+                                                             year, month))]
+        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
+                                             show, if_modified_since) # type: ignore
 
 
     def list_new_articles(self,
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> NewResponse:
+                          if_modified_since: Optional[str] = None)\
+                          -> Union[ListingNew, NotModifiedResponse]:
         """Gets listings for the most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -642,150 +267,109 @@ class FsListingFilesService(ListingService):
         The 'new' listing maps to a single file. The filename depends on whether
         the archiveOrCategory value is an archive or category listing.
         """
-        listingType = 'new'
-        listingFilePath = ''
-        listingFilter = archiveOrCategory
-
-        listingFilePath = self._generate_listing_path(listingType, archiveOrCategory, 0, 0)
-
-        # Check if-modified-since
-        if if_modified_since:
-            # Return if file has not been updated
-            if not self._check_if_modified_since(if_modified_since, listingFilePath):
-                # return not modified instead of data
-                expires = self._gen_expires()
-                return {'not_modified': True, 'expires': expires}
-
-        response = self._get_updates_from_list_file(listingFilePath, listingType, listingFilter)
-
-        # Adjust listing according to skip and show
-        response['listings'] = response['listings'][skip:skip + show]
-
-        return response
-
+        file= self._generate_listing_path('new', archiveOrCategory, 0, 0)
+        if if_modified_since and self._modified_since(if_modified_since, file):
+            return NotModifiedResponse(True, gen_expires())
+        else:
+            rv =  parse_new_listing_file(file)
+            rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
+            return rv
 
     def list_pastweek_articles(self,
                                archiveOrCategory: str,
                                skip: int,
                                show: int,
-                               if_modified_since: Optional[str] = None) -> ListingResponse:
+                               if_modified_since: Optional[str] = None)\
+                               -> Union[Listing, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
         It should be in RFC 1123 format.
 
-        The 'pastweek' listing maps to a single file. The filename depends on whether the
-        archiveOrCategory value is an archive or category listing.
+        The 'pastweek' listing maps to a single file. The filename depends on whether
+        the archiveOrCategory value is an archive or category listing.
         """
-        listingType = 'pastweek'
-        listingFilePath = ''
-        listingFilter = ''
+        file = self._generate_listing_path('pastweek', archiveOrCategory, 0, 0)
+        if if_modified_since and self._modified_since(if_modified_since, file):
+            return NotModifiedResponse(True, gen_expires())
+        else:
+            rv = parse_listing_pastweek(file)
+            rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
+            return rv
 
-        listingFilePath = self._generate_listing_path(listingType, archiveOrCategory, 0, 0)
-
-        # Check if-modified-since
-        if if_modified_since:
-            # Return if file has not been updated
-            if not self._check_if_modified_since(if_modified_since, listingFilePath):
-                # return not modified instead of data
-                expires = self._gen_expires()
-                return {'not_modified': True, 'expires': expires}
-
-        response = self._get_updates_from_list_file(listingFilePath, listingType, listingFilter)
-
-        # Adjust listing according to skip and show
-        response['listings'] = response['listings'][skip:skip + show]
-
-        return response
-
-    def monthly_counts(self,
-                       archive: str,
-                       year: int) -> ListingCountResponse:
+    
+    def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
         """Gets monthly listing counts for the year."""
-        listingType = 'monthly_counts'
-        listingFilePath = ''
-        listingFilter = ''
+        monthly_counts: List[MonthCount] = []
+        new_cnt, cross_cnt = 0, 0
+        currentYear, currentMonth, end_month = self._current_y_m_em(year)
 
-        all_listings = []
-        all_pubdates = []
-        monthly_count = 0
-
-        monthly_counts = []
-
-        # If current year, limit range to available months
-        currentYear = datetime.now().year
-        match = re.match(r'\d\d(?P<yy>\d\d)$', str(currentYear))
-        currentYear = match.group('yy')
-        currentMonth = datetime.now().month
-
-        end_month = 12
-        if currentYear == str(year):
-            end_month = currentMonth
-
-        # Collect updates for each month
+        files = []
         for month in range(1, end_month + 1):
-            yymm = "%02d%02d" % (year, month)
-            print(f'Process month listing: {yymm}')
+            file = to_anypath(
+                self._generate_listing_path('month', archive, year, month))
+            files.append( (month, file, file.is_file()) )
 
-            # Create pubdate for each month. Classic code does not generate
-            # pubdates and classic UI does not delimit updates by month.
-            pub_date = date(year, month, 1).strftime('%a, %d %b %Y')
+        _check_contiguous(year, files)
 
-            listingFilePath = self._generate_listing_path('month',
-                                                          archive, year, month)
-            # Make sure listing file exists
-            if not os.path.exists(listingFilePath):
-                if currentYear == str(year):
-                    # This may be possible if new month and no announce has happened
-                    # yet. Ignore it until we come up with logic to check whether
-                    # announce has happened.
-                    print("Skipping current month")
-                    logger.debug("Listing file not found for current month. "
-                                 "List file path is %s", listingFilePath)
-                    continue
-                else:
-                    raise Exception("Missing monthly listing file {year}{month}")
+        for month, file, exists in files:
+            if not exists:
+                continue
+            response = get_updates_from_list_file(year, month, file, 'monthly_counts'
+                                                  # archive TODO Does this need archive?
+                                                  )
+            if isinstance(response, MonthCount):
+                monthly_counts.append(response)
+                new_cnt += response.new
+                cross_cnt += response.cross
 
 
-            # Parse listing file
-            response = self._get_updates_from_list_file(listingFilePath, listingType, listingFilter)
+        return ListingCountResponse(month_counts=monthly_counts,
+                                    new_count=new_cnt,
+                                    cross_count= cross_cnt)
 
-            # These are monthly listings
-            # {'listings': List[ListingItem],
-            # 'pubdates': List[Tuple[date, int]],
-            # 'count': int,
-            # 'expires': str}
 
-            #{'pubdates': pub_dates_with_count,
-            # 'new_count': len(new_items),
-            # 'cross_count': len(cross_items),
-            # 'expires': self._gen_expires()
-            # }
-            for item in response['listings']:
-                all_listings.append(item)
-            if response['pubdates']:
-                for pub_date in response['pubdates']:
-                    all_pubdates.append(pub_date)
-            else:
-                # Generate pub_dates for monthly
-                all_pubdates.append((pub_date, response['new_count'] + response['cross_count']))
-            monthly_counts.append({'year': year, 'month': month, 'new':
-                                   response['new_count'], 'cross': response['cross_count']})
+def _check_contiguous(year: int, files: List[Tuple[int, APath, bool]]) -> None:
+    """For a year, check that month listing files are a contiguous block.
 
-        #return {'listings': all_listings,
-        #        'pubdates': all_pubdates,
-        #        'count': len(all_listings),
-        #        'expires': expires  # ???
-        #        }
-        new_cnt = 0
-        cross_cnt = 0
-        for i in monthly_counts:
-            new_cnt += i['new']
-        for i in monthly_counts:
-            cross_cnt += i['cross']
+    Raises an exception of not.
 
-        return {'month_counts': monthly_counts,
-                'new_count': new_cnt,
-                'cross_count': cross_cnt,
-                'listings': all_listings,
-                }
+    For a list of month files that make up a year's worth, we want to check that
+    no files seem to be missing. But there are severl cases where an nonexistant
+    month file would be expected.
+
+    Could have:
+    1: year is current year and only have Jan through current month
+    2: archive started on a month other than Jan so only have start month to Dec
+    3: archive ended on a month other than Dec so only have Jan through end month
+    4: archive existed under a year, didn't start on Jan and didn't end in Dec
+
+    Months should be a contiguous block.
+    """
+
+    # Look for contiguous block by comparing the month to the next month to see
+    # if it went from off to on or on to off.  We add a 0-th month that is off
+    # and a 13th month that is off so we expect always only one off-to-on and
+    # one on-to-off. Anything else is rejected.
+
+    from_state = [(0,None,False)] + files
+    to_state = files + [(13,None,False)]
+    data = zip(from_state, to_state)
+    transitions = []
+    for (from_mm, _, from_exists),(to_mm,_,to_exists) in data:
+        if not from_exists and to_exists:
+            transitions.append("on")
+        elif from_exists and not to_exists:
+            transitions.append("off")
+        else:
+            transitions.append("no_change")
+
+    if [dy for dy in transitions if dy != "no_change"] == ["on", "off"]:
+        return  # all good
+
+    # TODO Better exceptions
+    if all(["no_change"==dy for dy in transitions]):
+        raise Exception(f"No data for year {year}")
+    else:
+        msg=" ".join([f"{mm}:{int(exists)}" for mm,_,exists in files])
+        raise Exception(f"Missing listing month files for year {year}: {msg}")

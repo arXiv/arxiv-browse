@@ -1,0 +1,621 @@
+Date: Fri,  3 Mar 23 01:36:02 GMT
+Subject: astro-ph.SR daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: physics@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+Solar and Stellar Astrophysics
+ received from  Wed  1 Mar 23 19:00:00 GMT  to  Thu  2 Mar 23 19:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00787
+Date: Wed, 1 Mar 2023 19:20:51 GMT   (1419kb,D)
+
+Title: A flash of polarized optical light points to an aspherical "cow"
+Authors: J.R. Maund, P.A. Hoeflich, I.A. Steele, Y. Yang, K. Wiersema, S.
+  Kobayashi, N. Jordana-Mitjans, C. Mundell, A. Gomboc, C. Guidorzi and R. J.
+  Smith
+Categories: astro-ph.SR astro-ph.HE
+Comments: MNRAS Accepted, 10 pages, 8 figures
+\\
+  The astronomical transient AT2018cow is the closest example of the new class
+of luminous, fast blue optical transients (FBOTs). Liverpool Telescope RINGO3
+observations of AT2018cow are reported here, which constitute the earliest
+polarimetric observations of an FBOT. At 5.7 days post-explosion, the optical
+emission of AT2018cow exhibited a chromatic polarization spike that reached ~7%
+at red wavelengths. This is the highest intrinsic polarization recorded for a
+non-relativistic explosive transient, and is observed in multiple bands and at
+multiple epochs over the first night of observations, before rapidly declining.
+The apparent wavelength dependence of the polarization may arise through
+depolarization or dilution of the polarized flux, due to conditions in
+AT~2018cow at early times. A second ``bump" in the polarization is observed at
+blue wavelengths at ~12 days. Such a high polarization requires an extremely
+aspherical geometry that is only apparent for a brief period (<1 day), such as
+shock breakout through an optically thick disk. For a disk-like configuration,
+the ratio of the thickness to radial extent must be ~10%.
+\\ ( https://arxiv.org/abs/2303.00787 ,  1419kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00843
+Date: Wed, 1 Mar 2023 22:21:25 GMT   (13694kb,D)
+
+Title: New Observations of Solar Wind 1/f Turbulence Spectrum from Parker Solar
+  Probe
+Authors: Zesen Huang, Nikos Sioulas, Chen Shi, Marco Velli, Trevor Bowen,
+  Nooshin Davis, B. D. G. Chandran, Ning Kang, Xiaofei Shi, Jia Huang, Stuart
+  D. Bale, J. C. Kasper, Davin E. Larson, Roberto Livi, P. L. Whittlesey, Ali
+  Rahmati, Kristoff Paulson, M. Stevens, A. W. Case, Thierry Dudok de Wit,
+  David M. Malaspina, J.W. Bonnell, Keith Goetz, Peter R. Harvey, Robert J.
+  MacDowall
+Categories: astro-ph.SR physics.flu-dyn physics.geo-ph physics.plasm-ph physics.space-ph
+Comments: Submitted to ApJL
+\\
+  The trace magnetic power spectrum in the solar wind is known to be
+characterized by a double power law at scales much larger than the proton
+gyro-radius, with flatter spectral exponents close to -1 found at the lower
+frequencies below an inertial range with indices closer to $[-1.5,-1.6]$. The
+origin of the $1/f$ range is still under debate. In this study, we selected 109
+magnetically incompressible solar wind intervals ($\delta |\boldsymbol
+B|/|\boldsymbol B| \ll 1$) from Parker Solar Probe encounters 1 to 13 which
+display such double power laws, with the aim of understanding the statistics
+and radial evolution of the low frequency power spectral exponents from
+Alfv\'en point up to 0.3 AU. New observations from closer to the sun show that
+in the low frequency range solar wind turbulence can display spectra much
+shallower than $1/f$, evolving asymptotically to $1/f$ as advection time
+increases, indicating a dynamic origin for the $1/f$ range formation. We
+discuss the implications of this result on the Matteini et al. (2018)
+conjecture for the $1/f$ origin as well as example spectra displaying a triple
+power law consistent with the model proposed by Chandran et al. (2018),
+supporting the dynamic role of parametric decay in the young solar wind. Our
+results provide new constraints on the origin of the $1/f$ spectrum and further
+show the possibility of the coexistence of multiple formation mechanisms.
+\\ ( https://arxiv.org/abs/2303.00843 ,  13694kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01033
+Date: Thu, 2 Mar 2023 07:43:30 GMT   (1508kb,D)
+
+Title: Diving into the magnetosphere of the Of?p star HD108
+Authors: Gregor Rauw, Ya\"el Naz\'e, Asif ud-Doula, Coralie Neiner
+Categories: astro-ph.SR astro-ph.HE
+Comments: Accepted for publication in MNRAS
+\\
+  We analyse optical and X-ray spectroscopy of the Of?p star HD108, known for
+its strong dipolar magnetic field and its optical line profile variability with
+a timescale of $54 \pm 3$ yrs, interpreted as the stellar rotation period.
+Optical emission lines have now recovered from their minimum emission state
+reached in 2007 - 2008. The variations of the equivalent width of the H$\alpha$
+emission provide constraints on the inclination of the rotation axis ($i$) and
+the obliquity of the magnetic axis ($\beta$). The best agreement between model
+and observations is found for ($i$, $\beta$) pairs with $i + \beta \simeq
+85^{\circ}$ and $i \in [30^{\circ},55^{\circ}]$. The Balmer emission lines
+display stochastic variability at the $\sim 5$ % level on timescales of a few
+days. TESS photometry unveils transient modulations on similar timescales in
+addition to prominent red noise variations. A Chandra X-ray observation of
+December 2021, when the star was at a higher emission level, indicates a slight
+increase of the flux and a spectral hardening compared to the August 2002
+XMM-Newton observation, taken near minimum emission state. Magnetohydrodynamic
+simulations are used to compute synthetic X-ray spectra. With our current best
+estimate of the $\dot{M}_{B=0}$ mass-loss rate, the simulated X-ray luminosity
+and spectral energy distribution agree very well with the observations.
+Finally, the radial velocities vary on a period of 8.5 years with a
+peak-to-peak amplitude of 10 - 11 km s$^{-1}$, suggesting orbital motion with
+an unseen companion of at least 4 M$_{\odot}$.
+\\ ( https://arxiv.org/abs/2303.01033 ,  1508kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01100
+Date: Thu, 2 Mar 2023 09:32:38 GMT   (102kb,D)
+
+Title: Representation of s-process abundances for comparison to data from bulk
+  meteorites
+Authors: Maria Lugaro, Mattias Ek, M\'aria Pet\H{o}, Marco Pignatari, Georgy V.
+  Makhatadze, Isaac J. Onyett, Maria Sch\"onb\"achler
+Categories: astro-ph.SR astro-ph.EP physics.geo-ph
+Comments: Accepted for publication in the EPJA Special Issue on: 'From reactors
+  to stars' in honor of Franz K\"appeler
+\\
+  Analysis of bulk meteorite compositions has revealed small isotopic
+variations due to the presence of material (e.g., stardust) that preserved the
+signature of nuclear reactions occurring in specific stellar sites. The
+interpretation of such anomalies provides evidence for the environment of the
+birth of the Sun, its accretion process, the evolution of the solar
+proto-planetary disk, and the formation of the planets. A crucial element of
+such interpretation is the comparison of the observed anomalies to predictions
+from models of stellar nucleosynthesis. To date, however, this comparison has
+been limited to a handful of model predictions. This is mostly because the
+calculated stellar abundances need to be transformed into a specific
+representation, which nuclear astrophysicists and stellar nucleosynthesis
+researchers are not familiar with. Here, we show in detail that this
+representation is needed to account for mass fractionation effects in meteorite
+data that can be generated both in nature and during instrumental analysis. We
+explain the required internal normalisation to a selected isotopic ratio,
+describe the motivations behind such representation more widely, and provide
+the tools to perform the calculations. Then, we present some examples
+considering two elements produced by the $slow$ neutron-capture ($s$) process:
+Sr and Mo. We show which specific representations for the Sr isotopic
+composition calculated by $s$-process models better disentangle the
+nucleosynthetic signatures from stars of different metallicity. For Mo, the
+comparison between data and models is improved due to a recent re-analysis of
+the $^{95}$Mo neutron-capture cross section.
+\\ ( https://arxiv.org/abs/2303.01100 ,  102kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01154
+Date: Thu, 2 Mar 2023 10:57:32 GMT   (748kb,D)
+
+Title: No evidence for absence of solar dynamo synchronization
+Authors: F. Stefani, J. Beer, T. Weier
+Categories: astro-ph.SR astro-ph.EP
+Comments: 8 pages, 7 figures
+\\
+  Context: The old question of whether the solar dynamo is synchronized by the
+tidal forces of the orbiting planets has recently received renewed interest,
+both from the viewpoint of historical data analysis and in terms of theoretical
+and numerical modelling. Aims: We aim to contribute to the solution of this
+longstanding puzzle by analyzing cosmogenic radionuclide data from the last
+millennium. Methods: We reconsider a recent time-series of $^{14}$C-inferred
+sunspot data and compare the resulting cycle minima and maxima with the
+corresponding conventional series down to 1610 A.D., enhanced by Schove's data
+before that time. Results: We find that, despite recent claims to the contrary,
+the $^{14}$C-inferred sunspot data are well compatible with a synchronized
+solar dynamo, exhibiting a relatively phase-stable period of 11.07 years, which
+points to a synchronizing role of the spring tides of the Venus-Earth-Jupiter
+system.
+\\ ( https://arxiv.org/abs/2303.01154 ,  748kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01209
+Date: Thu, 2 Mar 2023 12:49:52 GMT   (11408kb,D)
+
+Title: Surface Flux Transport
+Authors: Anthony R. Yeates, Mark C.M. Cheung, Jie Jiang, Kristof Petrovay,
+  Yi-Ming Wang
+Categories: astro-ph.SR
+Comments: 35 pages, 11 figures, submitted to Space Science Reviews
+\\
+  We review the surface flux transport model for the evolution of magnetic flux
+patterns on the Sun's surface. Our underlying motivation is to understand the
+model's prediction of the polar field (or axial dipole) strength at the end of
+the solar cycle. The main focus is on the "classical" model: namely, steady
+axisymmetric profiles for differential rotation and meridional flow, and
+uniform supergranular diffusion. Nevertheless, the review concentrates on
+recent advances, notably in understanding the roles of transport parameters and
+- in particular - the source term. We also discuss the physical justification
+for the surface flux transport model, along with efforts to incorporate radial
+diffusion, and conclude by summarizing the main directions where researchers
+have moved beyond the classical model.
+\\ ( https://arxiv.org/abs/2303.01209 ,  11408kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01321
+Date: Thu, 2 Mar 2023 14:51:42 GMT   (1357kb,D)
+
+Title: Statistical analysis of the total magnetic flux decay rate in solar
+  active regions
+Authors: Andrei A. Plotnikov, Valentina I. Abramenko, Alexander S. Kutsenko
+Categories: astro-ph.SR
+\\
+  We used line-of-sight magnetograms acquired by the Helioseismic and Magnetic
+Imager on board the Solar Dynamics Observatory to derive the decay rate of
+total unsigned magnetic flux for 910 ephemeral and active regions (ARs)
+observed between 2010 and 2017. We found that: i) most of the ARs obey the
+power law dependence between the peak magnetic flux and the magnetic flux decay
+rate, $DR$, so that $DR\sim \Phi^{0.70}$; ii) larger ARs lose smaller fraction
+of their magnetic flux per unit of time than the smaller ARs; iii) there exists
+a cluster of ARs exhibiting significantly lower decay rate than it would follow
+from the power law and all of them are unipolar sunspots with total fluxes in
+the narrow range of $(2 - 8) \times 10^{21}$ Mx; iv) a comparison with our
+previous results shows that the emergence rate is always higher than the decay
+rate. The emergence rate follows a power law with a shallower slope than the
+slope of the decay-rate power law. The results allowed us to suggest that not
+only the maximum total magnetic flux determines the character of the decaying
+regime of the AR, some of the ARs end up as a slowly decaying unipolar sunspot;
+there should be certain physical mechanisms to stabilize such a sunspot.
+\\ ( https://arxiv.org/abs/2303.01321 ,  1357kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01367
+Date: Thu, 2 Mar 2023 15:53:34 GMT   (3430kb,D)
+
+Title: Abundance analysis of a nitrogen-rich extreme-helium hot subdwarf from
+  the SALT survey
+Authors: L. J. A. Scott. and C. S. Jeffery and D. Farren and C. Tap and M.
+  Dorsch
+Categories: astro-ph.SR
+Comments: 10 pages, 5 figures, 5 tables, accepted for publication in MNRAS
+\\
+  We have performed a detailed spectral analysis of the helium-rich hot
+subdwarf EC 20187-4939 using data obtained in the SALT survey of helium-rich
+hot subdwarfs. We have measured its effective temperature, surface gravity and
+chemical abundances from the spectrum. Its radius has also been determined by
+fitting the spectral energy distribution using photometric data, from which a
+mass of 0.44 Msun has been inferred using the measurement of surface gravity.
+This star is particularly abundant in helium and nitrogen, whilst being both
+carbon and oxygen-weak. The surface abundances and mass have been found to be
+consistent with a helium white dwarf merger product. The abundance effects of
+alpha captures on nitrogen during the merger process and possible connections
+between EC 20187-4939 and other carbon-weak related objects are discussed.
+\\ ( https://arxiv.org/abs/2303.01367 ,  3430kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01374
+Date: Thu, 2 Mar 2023 16:00:16 GMT   (921kb,D)
+
+Title: Raising the observed metallicity floor with a 3D non-LTE analysis of
+  SDSS J102915.14+172927.9
+Authors: C. Lagae, A. M. Amarsi, L. F. Rodr\'iguez D\'iaz, K. Lind, T.
+  Nordlander, T. T. Hansen, A. Heger
+Categories: astro-ph.SR astro-ph.GA
+Comments: 14 pages, 9 figures, Accepted for publication in Astronomy &
+  Astrophysics
+\\
+  Context: The first stars produced the first heavy elements and set the stage
+for the formation of the first galaxies. Accurate chemical abundances of ultra
+metal-poor stars ([Fe/H]<-4) can be used to infer properties of the first
+stars, and thus the formation mechanism for low-mass second generation stars in
+the early universe. Spectroscopic studies have shown that most second
+generation stars are carbon-enhanced with one notable exception SDSS
+J102915.14+172927.9. Aims: We reanalyse the composition of SDSS
+J102915.14+172927.9. Methods: We developed a tailored 3D model atmosphere for
+SDSS J102915.14+172927.9 with the Stagger-code, making use of an improved
+surface gravity estimate based on the Gaia DR3 parallax. This model was used as
+input in the radiative transfer code Balder to compute 3D non-LTE synthetic
+spectra. These spectra were then used to infer abundances for Mg, Si, Ca, Fe
+and Ni, and upper limits on Li, Na and Al. 3D LTE synthetic spectra were
+computed with Scate to infer the abundance of Ti and upper limits on C and N.
+Results: In contrast to earlier works based on 1D non-LTE corrections to 3D LTE
+results, we are able to achieve ionisation balance for Ca I and Ca II when
+employing our consistent 3D non-LTE treatment. Moreover, the elemental
+abundances are systematically higher than those found in earlier works. In
+particular, [Fe/H] increases by 0.57 dex, and the upper limits of C and N
+increase by 0.90 dex and 1.82 dex, respectively. Conclusions: We find that
+Population III progenitors with masses 10-20 M_sun exploding with energy
+E<=3*10^{51} erg can reproduce our 3D non-LTE abundance pattern. Contrary to
+previous work, we obtain higher upper limits on the carbon abundance that are
+``marginally consistent'' with star formation through atomic line cooling, and
+as such, prevent strong conclusions about the formation mechanism of this low
+mass star.
+\\ ( https://arxiv.org/abs/2303.01374 ,  921kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00768 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:00:03 GMT   (5650kb,D)
+
+Title: A major asymmetric ice trap in a planet-forming disk IV. Nitric oxide
+  gas and a lack of CN tracing sublimating ices and a C/O ratio $< 1$
+Authors: M. Leemker, A. S. Booth, E. F. van Dishoeck, N. van der Marel, B.
+  Tabone, N. F. W. Ligterink, N. G. C. Brunken, M. R. Hogerheijde
+Categories: astro-ph.EP astro-ph.SR
+Comments: Accepted for publication in Astronomy and Astrophysics
+\\
+  [Abridged] Most well-resolved disks observed with ALMA show signs of dust
+traps. These dust traps set the chemical composition of the planet forming
+material in these disks, as the dust grains with their icy mantles are trapped
+at specific radii and could deplete the gas and dust of volatiles at smaller
+radii. In this work we analyse the first detection of nitric oxide (NO) in a
+protoplanetary disk. We aim to constrain the nitrogen chemistry and the
+gas-phase C/O ratio in the highly asymmetric dust trap in the Oph-IRS 48 disk.
+We use ALMA observations of NO, CN, C$_2$H, and related molecules and model the
+effect of the dust trap on the physical and chemical structure using the
+thermochemical code DALI. Furthermore, we explore how ice sublimation
+contributes to the observed emission lines. NO is only observed at the location
+of the dust trap but CN and C$_2$H are not detected in the Oph-IRS 48 disk.
+This results in an CN/NO column density ratio of $< 0.05$ and thus a low C/O
+ratio at the location of the dust trap. The main gas-phase formation pathways
+to NO through OH and NH in the fiducial model predict NO emission that is an
+order of magnitude lower than is observed. The gaseous NO column density can be
+increased by factors ranging from 2.8 to 10 when the H$_2$O and NH$_3$ gas
+abundances are significantly boosted by ice sublimation. However, these models
+are inconsistent with the upper limits on the H$_2$O and OH column densities
+derived from observations. We propose that the NO emission in the Oph-IRS 48
+disk is closely related to the nitrogen containing ices sublimating in the dust
+trap. The non-detection of CN constrains the C/O ratio both inside and outside
+the dust trap to be $< 1$ if all nitrogen initially starts as N$_2$ and $\leq
+0.6$, consistent with the Solar value, if (part of) the nitrogen initially
+starts as N or NH$_3$.
+\\ ( https://arxiv.org/abs/2303.00768 ,  5650kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01106 (*cross-listing*)
+Date: Thu, 2 Mar 2023 09:39:10 GMT   (9367kb,D)
+
+Title: Transverse Oscillations of the M87 Jet Revealed by KaVA Observations
+Authors: Hyunwook Ro, Kunwoo Yi, Yuzhu Cui, Motoki Kino, Kazuhiro Hada,
+  Tomohisa Kawashima, Yosuke Mizuno, Bong Won Sohn, Fumie Tazaki
+Categories: astro-ph.HE astro-ph.SR
+Comments: 14 pages, 6 figures. Contribution to the Galaxies Special Issue
+  "Challenges in Understanding Black Hole Powered Jets with VLBI"
+Journal-ref: Galaxies 2023, 11(1), 33
+DOI: 10.3390/galaxies11010033
+\\
+  Recent VLBI monitoring has found transverse motions of the M87 jet. However,
+due to the limited cadence of previous observations, details of the transverse
+motion have not been fully revealed yet. We have regularly monitored the M87
+jet at KVN and VERA Array (KaVA) 22 GHz from December 2013 to June 2016. The
+average time interval of the observation is ~ 0.1 year, which is suitable for
+tracking short-term structural changes. From these observations, the M87 jet is
+well represented by double ridge lines in the region 2 - 12 mas from the core.
+We found that the ridge lines exhibit transverse oscillations in all observed
+regions with an average period of $0.94\pm0.12$ years. When the sinusoidal fit
+is performed, we found that the amplitude of this oscillation is an order of
+$\sim0.1$ mas, and the oscillations in the northern and southern limbs are
+almost in phase. Considering the amplitude, it does not originate from Earth's
+parallax. We propose possible scenarios of the transverse oscillation, such as
+the propagation of jet instabilities or magneto-hydrodynamic (MHD) waves or
+perturbed mass injection around magnetically dominated accretion flows.
+\\ ( https://arxiv.org/abs/2303.01106 ,  9367kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01174 (*cross-listing*)
+Date: Thu, 2 Mar 2023 11:37:30 GMT   (2059kb,D)
+
+Title: Astronomical puzzle Cyg X-3 is a hidden Galactic ultraluminous X-ray
+  source
+Authors: Alexandra Veledina, Fabio Muleri, Juri Poutanen, Jakub Podgorn\'y,
+  Michal Dov\v{c}iak, Fiamma Capitanio, Eugene Churazov, Alessandra De Rosa,
+  Alessandro Di Marco, Sofia Forsblom, Philip Kaaret, Henric Krawczynski, Fabio
+  La Monaca, Vladislav Loktev, Alexander A. Lutovinov, Sergey V. Molkov,
+  Alexander A. Mushtukov, Ajay Ratheesh, Nicole Rodriguez Cavero, James F.
+  Steiner, Rashid A. Sunyaev, Sergey S. Tsygankov, Andrzej A. Zdziarski,
+  Stefano Bianchi, Joe S. Bright, Nikolaj Bursov, Enrico Costa, Elise Egron,
+  Javier A. Garcia, David A. Green, Mark Gurwell, Adam Ingram, Jari J. E.
+  Kajava, Ruta Kale, Alex Kraus, Denys Malyshev, Fr\'ed\'eric Marin, Giorgio
+  Matt, Michael McCollough, Ilia A. Mereminskiy, Nikolaj Nizhelsky, Giovanni
+  Piano, Maura Pilia, Carlotta Pittori, Ramprasad Rao, Simona Righini, et al.
+  (84 additional authors not shown)
+Categories: astro-ph.HE astro-ph.SR
+Comments: 52 pages, 18 figures, 4 tables
+\\
+  How black holes consume and eject matter has been the subject of intense
+studies for more than 60 years. The luminosity of these systems are often
+compared to the Eddington limit, the border at which the spherical accretion is
+inhibited by the radiation pressure of photons it produces. The discovery of
+ultraluminous X-ray sources (ULXs) showed that accretion can proceed even when
+the apparent luminosity exceeds the Eddington limit (Kaaret et al. 2017). High
+apparent luminosity might be produced by the beaming of the incident radiation
+by a thick collimated outflow or by a truly super-Eddington accretion flow.
+However, possibilities to study these outflows in detail are limited, as ULXs
+are typically found in distant galaxies. Using the Imaging X-ray Polarimetry
+Explorer (IXPE, Weisskopf et al. 2022), we made the first measurement of X-ray
+polarization in Galactic X-ray binary Cyg X-3. The detection of high,
+$\approx$25\%, nearly energy-independent linear polarization, orthogonal to the
+direction of the radio ejections, unambiguously indicates the primary source is
+obscured and the observer on Earth only sees reflected and scattered light.
+Modelling shows there is an optically thick envelope with a narrow funnel
+around the primary X-ray source in the system. We derive an upper limit on the
+opening angle of the funnel that implies a lower limit on the beamed luminosity
+exceeding the Eddington value. We show that Cyg X-3 is viewed as a ULX to an
+extragalactic observer located along the axis of the funnel. Our findings
+reveal this unique persistent source as an ideal laboratory for the study of
+the inner workings of ULX central engines.
+\\ ( https://arxiv.org/abs/2303.01174 ,  2059kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01322 (*cross-listing*)
+Date: Thu, 2 Mar 2023 14:53:15 GMT   (9750kb,D)
+
+Title: Electron inertia effects in 3D hybrid-kinetic collisionless plasma
+  turbulence
+Authors: Patricio A. Mu\~noz, Meisam Farzalipour Tabriz, Markus Rampp, J\"org
+  B\"uchner
+Categories: physics.plasm-ph astro-ph.SR physics.space-ph
+Comments: 23 pages, 9 figures, submitted
+\\
+  One of the fundamental open questions in space and astrophysical plasmas is
+the nature of turbulence at the smallest, electron scales. This problem is
+closely related to the presence of coherent structures such as current sheets,
+that were shown to be formed out of this turbulence. The properties of
+turbulence and associated current sheets have been investigated with a large
+variety of plasma models. However, the effects of the electron inertia on those
+processes have not been properly analyzed so far, especially in a
+three-dimensional (3D) geometry. We investigate this problem by carrying out 3D
+hybrid-kinetic Particle-in-Cell (PIC) simulations of decaying turbulence with
+our CHIEF code. The main distinguishing feature of this code is an
+implementation of the electron inertia without approximations. We find that the
+electron inertia plays a critical role in regulating and limiting the largest
+values of current density in both real and wavenumber Fourier space, in
+particular near and, unexpectedly, even above electron scales. In addition, a
+comparison of current sheets formed in 2D vs 3D turbulence reveal that the
+latter tend to have smaller values of current density, in particular near
+electron scales. The electron inertia is thus of fundamental importance to
+accurately describe the nature of plasma turbulence and current-sheet
+properties near electron scales.
+\\ ( https://arxiv.org/abs/2303.01322 ,  9750kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01382 (*cross-listing*)
+Date: Thu, 2 Mar 2023 16:06:51 GMT   (990kb,D)
+
+Title: Expected polarization properties of non-magnetized CCOs
+Authors: Valery F. Suleimanov, Juri Poutanen, Victor Doroshenko, and Klaus
+  Werner
+Categories: astro-ph.HE astro-ph.SR
+Comments: 10 pages, 16 figures. accepted to be published by A&A
+\\
+  Central Compact Objects (CCOs) are neutron stars found close to the centers
+of some supernova remnants. Some of them are presumably covered by carbon
+envelopes. Their unpulsed thermal X-ray emission can originate either from the
+entire surface covered by a carbon atmosphere or a non-uniformly emitting
+hydrogen atmosphere as an alternative. However, the latter scenario appears
+unlikely given the available upper limits on the amplitude of pulsations. Here
+we explore a possibility to further discriminate between the two scenarios
+using X-ray polarimetric observations. We compute the polarization degree (PD)
+for non-magnetized pure carbon and pure hydrogen atmospheres with effective
+temperatures between 1 and 6 MK and find that it can reach up to 25% and 40%
+for hydrogen and carbon atmospheres, respectively, in the photon energy band
+1-10 keV. However, given the available constraints on possible inhomogeneities
+of the temperature distribution deduced from modeling of the X-ray spectrum of
+the CCO in HESS J1731-347, the integrated PD appears to be very low both for
+carbon (<0.25%) and hydrogen (a few %) compositions in the energy band of 2-8
+keV covered by the recently launched Imaging X-ray Polarimetry Explorer. We
+conclude, therefore, that polarization from CCOs is not expected to be
+detectable by current facilities, but future detection would strongly support
+non-uniform hydrogen composition models.
+\\ ( https://arxiv.org/abs/2303.01382 ,  990kb)
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2209.05283
+replaced with revised version Thu, 2 Mar 2023 12:12:22 GMT   (1658kb,D)
+
+Title: A UV census of the environments of stripped-envelope supernovae
+Authors: Ning-Chen Sun, Justyn R. Maund and Paul A. Crowther
+Categories: astro-ph.SR astro-ph.GA astro-ph.HE
+Comments: 15 pages, 9 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2209.05283 ,  1658kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.04273
+replaced with revised version Wed, 1 Mar 2023 21:19:49 GMT   (4312kb,D)
+
+Title: Heat transport and convective velocities in compositionally-driven
+  convection in neutron star and white dwarf interiors
+Authors: J. R. Fuentes, A. Cumming, M. Castro-Tapia, and E. H. Anders
+Categories: astro-ph.SR astro-ph.EP astro-ph.HE physics.flu-dyn
+Comments: New version with changes suggested by referee (ApJ)
+\\ ( https://arxiv.org/abs/2301.04273 ,  4312kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13632
+replaced with revised version Thu, 2 Mar 2023 15:12:18 GMT   (573kb,D)
+
+Title: An overview of HMI off-disk flare observations
+Authors: Dennis Fremstad, Juan Camilo Guevara G\'omez, Hugh Hudson, Juan Carlos
+  Mart\'inez Oliveros
+Categories: astro-ph.SR astro-ph.IM
+Comments: 6 pages, 6 figures, 2 tables, Accepted for publication in A&A
+\\ ( https://arxiv.org/abs/2302.13632 ,  573kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2203.08478
+replaced with revised version Thu, 2 Mar 2023 09:41:12 GMT   (1034kb,D)
+
+Title: A binary origin for the first isolated stellar-mass black hole detected
+  with astrometric microlensing
+Authors: Alejandro Vigna-G\'omez and Enrico Ramirez-Ruiz
+Categories: astro-ph.GA astro-ph.HE astro-ph.SR
+Comments: 13 pages, 8 figures, 1 table. Accepted for publication in ApJL
+\\ ( https://arxiv.org/abs/2203.08478 ,  1034kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2205.05709
+replaced with revised version Thu, 2 Mar 2023 15:38:45 GMT   (3066kb,D)
+
+Title: Another Shipment of Six Short-Period Giant Planets from TESS
+Authors: Joseph E. Rodriguez, Samuel N. Quinn, Andrew Vanderburg, George Zhou,
+  Jason D. Eastman, Erica Thygesen, Bryson Cale, David R. Ciardi, Phillip A.
+  Reed, Ryan J. Oelkers, Karen A. Collins, Allyson Bieryla, David W. Latham, B.
+  Scott Gaudi, Coel Hellier, Kirill Sokolovsky, Jack Schulte, Gregor Srdoc,
+  John Kielkopf, Ferran Grau Horta, Bob Massey, Phil Evans, Denise C. Stephens,
+  Kim K. McLeod, Nikita Chazov, Vadim Krushinsky, Mourad Ghachoui, Boris
+  Safonov, Cayla M. Dedrick, Dennis Conti, Didier Laloum, Steven Giacalone,
+  Carl Ziegler, Pere Guerra Serra, Ramon Naves Nogues, Felipe Murgas, Edward J.
+  Michaels, George R. Ricker, Roland K. Vanderspek, Joshua N. Winn, Jon M.
+  Jenkins, Brett Addison, Owen Alfaro, D. R. Anderson, Elias Ayad, Timothy
+  Bedding, Alexandr A. Belinsky, Zouhair Benkhaldoun, Perry Berlind, et al. (72
+  additional authors not shown)
+Categories: astro-ph.EP astro-ph.SR
+Comments: 20 Pages, 6 Figures, 8 Tables, Accepted by MNRAS
+\\ ( https://arxiv.org/abs/2205.05709 ,  3066kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2207.05189
+replaced with revised version Thu, 2 Mar 2023 18:44:36 GMT   (12275kb,D)
+
+Title: Kinetic Turbulence in Collisionless High-Beta Plasmas
+Authors: Lev Arzamasskiy (1), Matthew W. Kunz (2,3), Jonathan Squire (4), Eliot
+  Quataert (2), Alexander A. Schekochihin (5) ((1) IAS, (2) Princeton, (3)
+  PPPL, (4) Otago, (5) Oxford)
+Categories: astro-ph.HE astro-ph.SR physics.plasm-ph
+Comments: 34 pages, 19 figures, accepted to PRX
+\\ ( https://arxiv.org/abs/2207.05189 ,  12275kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.07186
+replaced with revised version Wed, 1 Mar 2023 22:03:19 GMT   (2359kb,D)
+
+Title: ABYSS I: Targeting strategy for APOGEE & BOSS young star survey in
+  SDSS-V
+Authors: Marina Kounkel, Eleonora Zari, Kevin Covey, Andrew Tkachenko, Carlos
+  Rom\'an Z\'u\~niga, Keivan Stassun, Amelia M. Stutz, Guy Stringfellow,
+  Alexandre Roman-Lopes, Jes\'us Hern\'andez, Karla Pe\~na Ram\'irez, Amelia
+  Bayo, Jinyoung Serena Kim, Lyra Cao, Scott J. Wolk, Juna Kollmeier, Ricardo
+  L\'opez-Valdivia, B\'arbara Rojas-Ayala
+Categories: astro-ph.GA astro-ph.SR
+Comments: 18 pages, 12 pages. Accepted to ApJS. Part of SDSS DR18
+\\ ( https://arxiv.org/abs/2301.07186 ,  2359kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.11412
+replaced with revised version Thu, 2 Mar 2023 11:02:35 GMT   (5110kb,D)
+
+Title: Accretion of sub-stellar companions as the origin of chemical abundance
+  inhomogeneities in globular clusters
+Authors: Andrew J. Winter and Cathie J. Clarke
+Categories: astro-ph.GA astro-ph.EP astro-ph.SR
+Comments: 29 pages, 20 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2301.11412 ,  5110kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.01352
+replaced with revised version Thu, 2 Mar 2023 14:21:59 GMT   (3718kb,D)
+
+Title: A new dynamical modeling of the WASP-47 system with CHEOPS observations
+Authors: V. Nascimbeni, L. Borsato, T. Zingales, G. Piotto, I. Pagano, M. Beck,
+  C. Broeg, D. Ehrenreich, S. Hoyer, F. Z. Majidi, V. Granata, S. G. Sousa, T.
+  G. Wilson, V. Van Grootel, A. Bonfanti, S. Salmon, A. J. Mustill, L. Delrez,
+  Y. Alibert, R. Alonso, G. Anglada, T. B\'arczy, D. Barrado, S. C. C. Barros,
+  W. Baumjohann, T. Beck, W. Benz, M. Bergomi, N. Billot, X. Bonfils, A.
+  Brandeker, J. Cabrera, S. Charnoz, A. Collier Cameron, Sz. Csizmadia, P. E.
+  Cubillos, M. B. Davies, M. Deleuil, A. Deline, O. D. S. Demangeon, B.-O.
+  Demory, A. Erikson, A. Fortier, L. Fossati, M. Fridlund, D. Gandolfi, M.
+  Gillon, M. G\"udel, K. G. Isaak, L. L. Kiss, J. Laskar, A. Lecavelier des
+  Etangs, M. Lendl, C. Lovis, R. Luque, D. Magrin, P. F. L. Maxted, C.
+  Mordasini, G. Olofsson, R. Ottensamer, E. Pall\'e, G. Peter, D. Piazza, et
+  al. (20 additional authors not shown)
+Categories: astro-ph.EP astro-ph.SR
+Comments: 17 pages, 8 figures, 10 tables, A&A in press. Typos corrected
+\\ ( https://arxiv.org/abs/2302.01352 ,  3718kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12841
+replaced with revised version Thu, 2 Mar 2023 17:53:58 GMT   (1295kb,D)
+
+Title: Resolved imaging of an extrasolar radiation belt around an ultracool
+  dwarf
+Authors: Melodie M. Kao, Amy J. Mioduszewski, Jackie Villadsen and Evgenya L.
+  Shkolnik
+Categories: astro-ph.EP astro-ph.SR
+Comments: Fixed a reference mix-up and clarified in abstract that this
+  manuscript is currently under review
+\\ ( https://arxiv.org/abs/2302.12841 ,  1295kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00011
+replaced with revised version Thu, 2 Mar 2023 08:21:51 GMT   (133kb,D)
+
+Title: Planetary line-to-accretion luminosity scaling relations: Extrapolating
+  to higher-order hydrogen lines
+Authors: Gabriel-Dominique Marleau and Yuhiko Aoyama
+Categories: astro-ph.EP astro-ph.SR
+Comments: 3 pages, 1 four-panel figure. Published on December 9th, 2022. v1:
+  updated links to published papers, added thanks. Fits of scaling relations
+  available in Tomas Stolker's "species" toolkit
+  (https://species.readthedocs.io). v2: corrected the accidental shuffle of the
+  author names (!)
+Journal-ref: RNAAS (2022) 6, 262
+DOI: 10.3847/2515-5172/acaa34
+\\ ( https://arxiv.org/abs/2303.00011 ,  133kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---
+For subscribe options to combined physics archives,
+e-mail To: physics@arxiv.org, Subject: subscribe
+-----------------------------------------------------------------------------
+For help on viewing and making submissions, see http://arxiv.org/help/

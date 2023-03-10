@@ -2,17 +2,13 @@
 from functools import partial
 
 import logging
+
 from flask.logging import default_handler
 
 from arxiv.base import Base
 from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
-from arxiv_auth.auth import Auth
 from flask import Flask
 from flask_s3 import FlaskS3
-
-from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
-from arxiv.base.config import BASE_SERVER
-from arxiv.base import Base
 
 # This gives the error on import
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
