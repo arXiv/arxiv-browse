@@ -4,6 +4,10 @@ from typing import Dict, List, Optional
 from zoneinfo import ZoneInfo
 
 import sqlalchemy
+from sqlalchemy.exc import DBAPIError, OperationalError
+from sqlalchemy.orm import Query
+from sqlalchemy.orm.exc import NoResultFound
+
 from browse.domain.identifier import Identifier
 from browse.domain.metadata import DocMetadata, SourceType, VersionEntry
 from browse.services.database.models import Metadata
@@ -155,4 +159,17 @@ class DbDocMetadataService(DocMetadataService):
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""
         # TODO implement get_ancillary_files
+        return []
+
+
+    def service_status(self)->List[str]:
+        try:
+            Metadata.query.limit(1).first()
+        except NoResultFound:
+            return ["DbDocMetadataService: No Metadata rows found in db"]
+        except (OperationalError, DBAPIError) as ex:
+            return [f"DbDocMetadataService: Error executing test query count on Metadata: {ex}"]
+        except Exception as ex:
+            return [f"DbDocMetadataService: Problem with DB: {ex}"]
+
         return []

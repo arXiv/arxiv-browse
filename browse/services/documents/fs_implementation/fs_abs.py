@@ -6,6 +6,7 @@ import dataclasses
 from browse.domain.metadata import DocMetadata
 from browse.domain.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+from browse.services import fs_check
 
 from browse.services.documents.base_documents import DocMetadataService, \
     AbsDeletedException, AbsNotFoundException, \
@@ -173,3 +174,9 @@ class FsDocMetadataService(DocMetadataService):
         path = self.fs_paths.get_abs_file(identifier, version)
         return parse_abs_file(filename=path)
 
+
+
+    def service_status(self)->List[str]:
+        probs = fs_check(self.fs_paths.latest_versions_path)
+        probs.extend(fs_check(self.fs_paths.original_versions_path))
+        return ["FsDocMetadataService: {prob}" for prob in probs]

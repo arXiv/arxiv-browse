@@ -2,6 +2,7 @@ from typing import Optional
 import abc
 from dataclasses import dataclass
 
+from browse.services import HasStatus
 from browse.domain.identifier import Identifier
 
 @dataclass
@@ -24,7 +25,7 @@ class PrevNextResult:
     """If True, use the prevnext controller, don't use direct URLs to papers."""
 
 
-class PrevNextService(abc.ABC):
+class PrevNextService(abc.ABC, HasStatus):
     """Abstract PrevNext service."""
 
     @abc.abstractmethod

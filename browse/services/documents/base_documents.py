@@ -4,8 +4,9 @@ import abc
 from typing import Dict, List, Optional
 
 from browse.domain.metadata import DocMetadata
+from browse.services import HasStatus
 
-class DocMetadataService(abc.ABC):
+class DocMetadataService(abc.ABC, HasStatus):
     """Class for arXiv document abstract metadata service."""
 
     @abc.abstractmethod

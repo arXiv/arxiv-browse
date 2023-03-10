@@ -8,6 +8,7 @@ from typing import Any, List, Literal, Optional, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
 
 from browse.domain.metadata import DocMetadata
+from browse.services import HasStatus
 
 
 def get_listing_service() -> "ListingService":
@@ -195,7 +196,7 @@ class ListingCountResponse:
     cross_count: int
 
 
-class ListingService(ABC):
+class ListingService(ABC, HasStatus):
     """Abstract Base Class for arXiv document listings."""
 
     @abstractmethod

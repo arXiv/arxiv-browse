@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config
-from browse.services import APath
+from browse.services import APath, fs_check
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
                                      MonthCount, NotModifiedResponse,
@@ -327,6 +327,11 @@ class FsListingFilesService(ListingService):
         return ListingCountResponse(month_counts=monthly_counts,
                                     new_count=new_cnt,
                                     cross_count= cross_cnt)
+
+
+    def service_status(self)->List[str]:
+        probs = fs_check(to_anypath(self.listing_files_root))
+        return ["FsListingFilesService: {prob}" for prob in probs]
 
 
 def _check_contiguous(year: int, files: List[Tuple[int, APath, bool]]) -> None:

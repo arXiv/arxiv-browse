@@ -171,6 +171,11 @@ GROUP BY month
                                     sum([mx.cross for mx in counts]))
 
 
+
+    def service_status(self)->List[str]:
+        # TODO
+        return []
+
 def _nextmail_to_listing(row: Any) -> ListingItem:
     return ListingItem(id=row.paper_id, listingType=row.type,
                        primary='hep-ph')  # TODO add real primary

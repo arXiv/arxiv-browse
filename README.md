@@ -26,18 +26,6 @@ overridden via environment variables (see `browse/config.py`).
 
 ### Test suite
 
-Install the mypy types before running the test suite, 
-
-```bash
-mypy --install-types
-```
-
-Then you need to build the database:
-```bash
-source ./venv/bin/activate
-FLASK_APP=app.py python populate_test_database.py --drop_and_create
-```
-
 Run the main test suite with the following command:
 
 ```bash
@@ -53,7 +41,7 @@ To rebuild the test database, run the following script:
 
 ```bash
 source ./venv/bin/activate
-FLASK_APP=app.py python populate_test_database.py --drop_and_create
+FLASK_APP=app.py python script/populate_test_database.py --drop_and_create
 ```
 
 ### Running Browse in Docker

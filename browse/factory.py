@@ -17,6 +17,7 @@ from flask_s3 import FlaskS3
 from browse.config import settings
 from browse.routes import ui
 from browse.services.database import models
+from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
@@ -57,5 +58,12 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
     app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
+
+    @app.before_first_request
+    def check_services()->None:
+        problems = service_statuses()
+        if problems:
+            app.logger.error("Problems with services!!!!!")
+            [app.logger.error(prob) for prob in problems]
 
     return app

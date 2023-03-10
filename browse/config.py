@@ -4,6 +4,7 @@ Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.
 """
 import os
+from secrets import token_hex
 import warnings
 
 from datetime import date, datetime, timedelta
@@ -89,25 +90,69 @@ class Settings(BaseSettings):
     BROWSE_STATUS_BANNER_SITE_ID: str = "not-set"
     """Enable/disable status service banner."""
 
-    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fake'  # type: ignore
+    ############################## Services ##############################
+    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
+    """What implementation to use for the listing service.
+
+    Accepted values are
+    - `browse.services.listing.fs_listing`: Listing from legacy listing files. Needs to
+      have DOCUMENT_LISTING_PATH set.
+    - `browse.services.listing.db_listing`: Listing from DB. Slow and lacks data for
+       before 2010.
+    - `browse.services.listing.fake`: A totally fake set of listings for testing.
+    """
+
+    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp'
+    """Path to get listing files from.
+
+    This can start with gs:// to use Google Storage.
+    Ex gs://arxiv-production-data//ftp."""
+
+
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore
-    PREV_NEXT_SERVICE: PyObject =         'browse.services.prevnext.fsprevnext'  # type: ignore
-    DOCUMENT_LISTING_PATH: str = '/data/ftp'
+    """Implementation to use for abstracts.
+
+    Accepted values are:
+    - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
+       produciton since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
+       DOCUMENT_ORIGNAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
+    - `browose.services.documents.db_docs`: DocMetadata using the database.
+    """
 
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
-    """Paths to .abs and source files."""
+    """Paths to .abs and source files.
+
+        This can start with gs:// to use Google Storage."""
     DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
-    """Paths to .abs and source files."""
+    """Paths to .abs and source files.
+
+        This can start with gs:// to use Google Storage.
+    """
     DOCUMENT_CACHE_PATH = os.environ.get(
         "DOCUMENT_CACHE_PATH", "tests/data/cache")
     """Path to cache directory"""
 
-    SHOW_EMAIL_SECRET: SecretStr = "not-set-bar"  # type: ignore
-    """Used in linking to /show-email."""
-    CLICKTHROUGH_SECRET: SecretStr = "not-set-foo"  # type: ignore
-    """Used in linking to /ct."""
-    TRACKBACK_SECRET: SecretStr = "not-set-baz"  # type: ignore
-    """Used in linking to trackbacks in /tb pages."""
+    PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
+    """Implementation of the prev/next service used for those features on the abs page.
+
+    Currently the only value is `browse.services.prevnext.fsprevnext` This uses
+       DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
+    """
+
+    ######################### End of Services ###########################
+
+    SHOW_EMAIL_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to /show-email.
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
+    CLICKTHROUGH_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to /ct.
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
+    TRACKBACK_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to trackbacks in /tb pages
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
 
     # Labs settings
     LABS_ENABLED: bool = True
@@ -117,7 +162,7 @@ class Settings(BaseSettings):
     LABS_CORE_RECOMMENDER_ENABLED: bool = False
     """CORE Recommender enabled/disabled."""
 
-    # Auth settings
+    # Auth settings These set settings of the arxiv-auth package.
     AUTH_SESSION_COOKIE_NAME: str = "ARXIVNG_SESSION_ID"
     AUTH_SESSION_COOKIE_DOMAIN: str = ".arxiv.org"
     AUTH_SESSION_COOKIE_SECURE: bool = True
@@ -126,7 +171,7 @@ class Settings(BaseSettings):
     CLASSIC_COOKIE_NAME: str = "tapir_session"
     CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
 
-    CLASSIC_SESSION_HASH: SecretStr = "foosecret"  # type: ignore
+    CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
 
     URLS = [
@@ -134,6 +179,22 @@ class Settings(BaseSettings):
         # This is a temporary workaround for ARXIVNG-2063
     ]
     """External URLs."""
+
+
+    ARXIV_BUSINESS_TZ: str = 'US/Eastern'
+    """
+    Timezone of the arxiv business offices.
+    """
+
+    FS_TZ: str = "US/Eastern"
+    """
+    Timezone of the filesystems used for abs, src and other files.
+
+    This should be stirng that can be used with `zoneinfo.ZoneInfo`.
+
+    If this is at a cloud provider is likley to be "UTC". On Cornell VM's it is
+    "US/Eastern".
+    """
 
     """XXXXXXXXXXXXXXX Some flask specific configs XXXXXXXXXXXX"""
 
@@ -303,21 +364,6 @@ class Settings(BaseSettings):
     to be loaded.
     """
 
-    ARXIV_BUSINESS_TZ: str = 'US/Eastern'
-    """
-    Timezone of the arxiv business offices.
-    """
-
-    FS_TZ: str = "US/Eastern"
-    """
-    Timezone of the filesystems used for abs, src and other files.
-
-    This should be stirng that can be used with `dateutil.tz.gettz`.
-
-    If this is at a cloud provider is likley to be UTC. On Cornell VM's it is
-    US/Eastern.
-    """
-
     class Config:
         """Additional pydantic config of these settings."""
 
@@ -349,5 +395,15 @@ class Settings(BaseSettings):
                 log.warning(
                     "BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_END_DATE")
 
+        if self.DOCUMENT_ORIGNAL_VERSIONS_PATH.startswith("gs://") and \
+           self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
+           self.FS_TZ = "UTC"
+           log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
+                       "and DOCUMENT_ORIGNAL_VERSIONS_PATH are Google Storage")
 
+        if self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH:
+            log.warning("Unexpected: latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
+                        "but listings at {self.DOCUMENT_LISTING_PATH}")
+
+        
 settings = Settings()

@@ -1,14 +1,22 @@
-from typing import Optional
+"""PrevNext service to get paper IDs as if from a sequence."""
+
+from typing import Optional, List
 
 from cloudpathlib.anypath import to_anypath
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.documents.fs_implementation.legacy_fs_paths import FSDocMetaPaths
 
+from browse.services import fs_check
+
 from .prevnext_base import PrevNextService, PrevNextResult
 
 
 class FSPrevNext(PrevNextService):
+    """File based `PrevNextService`.
+
+    This can handle both local files and Google Storage.
+    """
     latest_versions_path: str
     original_versions_path: str
 
@@ -16,7 +24,20 @@ class FSPrevNext(PrevNextService):
     def __init__(self,
                  latest_versions_path: str,
                  original_versions_path: str) -> None:
-        """Initialize the FS path object."""
+        """File based prev next service.
+
+        Parameters
+        ----------
+        latest_versions_path : str
+            Path to the latest version abs files. Ex. `/data/ftp` This can start
+            with gs:// to use Google Storage. Ex
+            `gs://arxiv-production-data/ftp`
+        original_versions_path : str
+            Path to the older versions of abs files. Ex `/data/orig` This can
+            start with gs:// to use Google
+            Storage. Ex. `gs://arxiv-production-data/orig`
+        """
+
         self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
 
     def prevnext(self, arxiv_id: Identifier, context: Optional[str]) -> PrevNextResult:
@@ -119,6 +140,14 @@ class FSPrevNext(PrevNextService):
             return None
 
         return None
+
+    def service_status(self)->List[str]:
+        probs = fs_check(self.fs_paths.latest_versions_path)
+        probs.extend(fs_check(self.fs_paths.original_versions_path))
+        return ["FSPrevNext: {prob}" for prob in probs]
+
+
+
 
 
 def _next_id(identifier: Identifier) -> Optional['Identifier']:

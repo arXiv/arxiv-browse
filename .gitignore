@@ -130,3 +130,8 @@ browse/pytest.db
 *.key
 *.cer
 deploy/env_values.txt
+
+#emacs dir local
+.dir-locals.el
+#pyright local config
+pyrightconfig.json

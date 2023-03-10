@@ -454,3 +454,16 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
         .first()
     )
     return row.doi if row else None
+
+
+def service_status()->List[str]:
+    try:
+        db.session.query(Document.document_id).limit(1).first()
+    except NoResultFound:
+        return ["service.database: No documents found in db"]
+    except (OperationalError, DBAPIError) as ex:
+        return [f"service.database: Error executing test query count on documents: {ex}"]
+    except Exception as ex:
+        return [f"service.database: Problem with DB: {ex}"]
+
+    return []

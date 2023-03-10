@@ -234,6 +234,10 @@ class FakeListingFilesService(ListingService):
         )
 
 
+    def service_status(self)->List[str]:
+        return []
+
+
 k_listings = [
     "0704.0526",
     "0704.0988",
