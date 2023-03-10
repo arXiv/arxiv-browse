@@ -113,7 +113,8 @@ class FsListingFilesService(ListingService):
                                  skip: int,
                                  show: int,
                                  if_modified_since: Optional[str] = None,
-                                 mode: ParsingMode = 'month') -> Union[Listing, ListingNew, MonthCount, NotModifiedResponse]:
+                                 mode: ParsingMode = 'month')\
+                                 -> Union[Listing, MonthCount, NotModifiedResponse]:
         """Gets listing for a list of `months`.
 
         This gets the listings for all the months in `months`. It works fine for
@@ -138,7 +139,8 @@ class FsListingFilesService(ListingService):
             be empty.
         months : List[Tuple[int,int,APath]]
             The months to get the listings for. Tuple of (yy, mm, APath_to_listing_file)
-            where both yy and mm are `int`. If yy or mm are 0 the result may lack pubdates.
+            where both yy and mm are `int`. If yy or mm are 0 the
+            result may lack pubdates.
         # tuple of (yy,mm) skip : int
         show : int
             The quantity of listings that need to be shown.
@@ -165,7 +167,8 @@ class FsListingFilesService(ListingService):
         if mode == 'new' and len(yymmfiles) > 1:
             raise ValueError("when listing type  is 'new' yymmfiles must be size 1")
 
-        currentYear, currentMonth, end_month = self._current_y_m_em(max([yy for yy,_,_ in yymmfiles]))
+        currentYear, currentMonth, end_month = self._current_y_m_em(
+            max([yy for yy,_,_ in yymmfiles]))
         
         if if_modified_since: # Check if-modified-since for months of interest
             if all([not self._modified_since(if_modified_since, lf)
@@ -176,11 +179,13 @@ class FsListingFilesService(ListingService):
         all_listings: List[ListingItem] = []
         all_pubdates: List[Tuple[date,int]] = []
         for year, month, listingFile in yymmfiles:
-            if not listingFile.is_file() and currentYear != str(year) and currentMonth != str(month):
+            if not listingFile.is_file() and currentYear != str(year)\
+               and currentMonth != str(month):
                 # This is fine if new month and no announce has happened yet.
                 raise Exception("Missing monthly listing file {listingFile}")
 
-            response = get_updates_from_list_file(year, month, listingFile, mode, archiveOrCategory)
+            response = get_updates_from_list_file(year, month, listingFile,
+                                                  mode, archiveOrCategory)
             if not isinstance(response, Listing):
                 return response
             
@@ -219,9 +224,11 @@ class FsListingFilesService(ListingService):
         _, _, end_month = self._current_y_m_em(year)
         months = [(year, month) for month in range(1, end_month + 1)]
         yymmfiles = [
-            (year, month, self._generate_listing_path('month', archiveOrCategory, year, month))
+            (year, month, self._generate_listing_path('month', archiveOrCategory,
+                                                      year, month))
             for year, month in months]
-        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since) # type: ignore
+        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
+                                             show, if_modified_since) # type: ignore
 
 
     def list_articles_by_month(self,
@@ -240,15 +247,18 @@ class FsListingFilesService(ListingService):
         listing for categories is more work since all updates are
         included in the same montly listing file.
         """
-        yymmfiles= [(year,month, self._generate_listing_path('month', archiveOrCategory, year, month))]
-        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip, show, if_modified_since) # type: ignore
+        yymmfiles= [(year,month, self._generate_listing_path('month', archiveOrCategory,
+                                                             year, month))]
+        return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
+                                             show, if_modified_since) # type: ignore
 
 
     def list_new_articles(self,
                           archiveOrCategory: str,
                           skip: int,
                           show: int,
-                          if_modified_since: Optional[str] = None) -> Union[ListingNew, NotModifiedResponse]:
+                          if_modified_since: Optional[str] = None)\
+                          -> Union[ListingNew, NotModifiedResponse]:
         """Gets listings for the most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client
@@ -276,8 +286,8 @@ class FsListingFilesService(ListingService):
         if_modified_since is the if_modified_since header value passed by the web client
         It should be in RFC 1123 format.
 
-        The 'pastweek' listing maps to a single file. The filename depends on whether the
-        archiveOrCategory value is an archive or category listing.
+        The 'pastweek' listing maps to a single file. The filename depends on whether
+        the archiveOrCategory value is an archive or category listing.
         """
         file = self._generate_listing_path('pastweek', archiveOrCategory, 0, 0)
         if if_modified_since and self._modified_since(if_modified_since, file):
@@ -294,21 +304,18 @@ class FsListingFilesService(ListingService):
         new_cnt, cross_cnt = 0, 0
         currentYear, currentMonth, end_month = self._current_y_m_em(year)
 
+        files = []
         for month in range(1, end_month + 1):
-            listingFile = to_anypath(
+            file = to_anypath(
                 self._generate_listing_path('month', archive, year, month))
-            if not listingFile.is_file():
-                if currentYear == str(year):
-                    # This may be possible if new month and no announce has happened
-                    # yet. Ignore it until we come up with logic to check whether
-                    # announce has happened.
-                    logger.debug("Listing file not found for current month. "
-                                 "List file path is %s", listingFile)
-                    continue
-                else:
-                    raise Exception(f"Missing monthly listing file at {listingFile}")
+            files.append( (month, file, file.is_file()) )
 
-            response = get_updates_from_list_file(year, month, listingFile, 'monthly_counts'
+        _check_contiguous(year, files)
+
+        for month, file, exists in files:
+            if not exists:
+                continue
+            response = get_updates_from_list_file(year, month, file, 'monthly_counts'
                                                   # archive TODO Does this need archive?
                                                   )
             if isinstance(response, MonthCount):
@@ -316,6 +323,53 @@ class FsListingFilesService(ListingService):
                 new_cnt += response.new
                 cross_cnt += response.cross
 
+
         return ListingCountResponse(month_counts=monthly_counts,
                                     new_count=new_cnt,
                                     cross_count= cross_cnt)
+
+
+def _check_contiguous(year: int, files: List[Tuple[int, APath, bool]]) -> None:
+    """For a year, check that month listing files are a contiguous block.
+
+    Raises an exception of not.
+
+    For a list of month files that make up a year's worth, we want to check that
+    no files seem to be missing. But there are severl cases where an nonexistant
+    month file would be expected.
+
+    Could have:
+    1: year is current year and only have Jan through current month
+    2: archive started on a month other than Jan so only have start month to Dec
+    3: archive ended on a month other than Dec so only have Jan through end month
+    4: archive existed under a year, didn't start on Jan and didn't end in Dec
+
+    Months should be a contiguous block.
+    """
+
+    # Look for contiguous block by comparing the month to the next month to see
+    # if it went from off to on or on to off.  We add a 0-th month that is off
+    # and a 13th month that is off so we expect always only one off-to-on and
+    # one on-to-off. Anything else is rejected.
+
+    from_state = [(0,None,False)] + files
+    to_state = files + [(13,None,False)]
+    data = zip(from_state, to_state)
+    transitions = []
+    for (from_mm, _, from_exists),(to_mm,_,to_exists) in data:
+        if not from_exists and to_exists:
+            transitions.append("on")
+        elif from_exists and not to_exists:
+            transitions.append("off")
+        else:
+            transitions.append("no_change")
+
+    if [dy for dy in transitions if dy != "no_change"] == ["on", "off"]:
+        return  # all good
+
+    # TODO Better exceptions
+    if all(["no_change"==dy for dy in transitions]):
+        raise Exception(f"No data for year {year}")
+    else:
+        msg=" ".join([f"{mm}:{int(exists)}" for mm,_,exists in files])
+        raise Exception(f"Missing listing month files for year {year}: {msg}")

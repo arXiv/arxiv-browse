@@ -80,9 +80,36 @@ def app_with_fake(loaded_db):
     with app.app_context():
         from flask import g
         g.doc_service = documents.fs_docs(app.settings, g)
-        g.listing_service = listing.fake(app.settings, g)
+        g.listing_service = listing.fs_listing(app.settings, g)
+        yield app
 
-    return app
+
+@pytest.fixture(scope='function')
+def app_with_test_fs(loaded_db):
+    """A browser client with FS abs documents and listings"""
+
+    # This depends on loaded_db becasue the services.database needs the DB
+    # to be loaded eventhough listings and abs are done via FS.
+
+    import browse.services.documents as documents
+    import browse.services.listing as listing
+    from browse.config import settings
+
+    settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
+    settings.DOCUMENT_LISTING_SERVICE = listing.fs_listing
+    settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp"
+    settings.DOCUMENT_LATEST_VERSIONS_PATH = "tests/data/abs_files/ftp"
+    settings.DOCUMENT_ORIGNAL_VERSIONS_PATH = "tests/data/abs_files/orig"
+
+    app = create_web_app()
+    app.testing = True
+    app.config['APPLICATION_ROOT'] = ''
+
+    with app.app_context():
+        from flask import g
+        g.doc_service = documents.fs_docs(app.settings, g)
+        g.listing_service = listing.fs_listing(app.settings, g)
+        yield app
 
 @pytest.fixture(scope='function')
 def dbclient(app_with_db):
@@ -97,6 +124,13 @@ def dbclient(app_with_db):
 def client_with_fake_listings(app_with_fake):
     with app_with_fake.app_context():
         yield app_with_fake.test_client() # yield so the tests already have the app_context
+
+
+@pytest.fixture(scope='function')
+def client_with_test_fs(app_with_test_fs):
+    with app_with_test_fs.app_context():
+        yield app_with_test_fs.test_client() # yield so the tests already have the app_context
+
 
 @pytest.fixture()
 def unittest_add_db(request, dbclient):
