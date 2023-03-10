@@ -79,7 +79,8 @@ class FsDocMetadataService(DocMetadataService):
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False) -> List[str]:
+                                  add_sciencewise: bool = False
+                                  ) -> List[str]:
         """Get a list of formats that can be disseminated for this DocMetadata.
 
         Several checks are performed to determine available dissemination
@@ -106,6 +107,13 @@ class FsDocMetadataService(DocMetadataService):
         List[str]
             A list of format strings.
         """
+
+        # TODO Can we just use the source_type.code?
+        # There have been two ways the downloads are figured out.  One
+        # is a function of the source_type.code on the DocMetadata, the
+        # other a function of the source file names for the document.  While
+        # working on listing the source file names technique has been slow.
+
         formats: List[str] = []
 
         # first, get possible list of formats based on available source file

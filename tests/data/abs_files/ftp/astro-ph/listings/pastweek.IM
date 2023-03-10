@@ -1,0 +1,766 @@
+------------------------------------------------------------------------------
+\\
+/* Fri, 3 Mar 2023 */
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01431
+Date: Thu, 2 Mar 2023 17:41:11 GMT   (1079kb)
+
+Title: Roll Angle Adjustment Dims Starlink Satellites
+Authors: Anthony Mallama and Jay Respler
+Categories: astro-ph.IM
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01356
+Date: Thu, 2 Mar 2023 15:37:08 GMT   (8322kb,D)
+
+Title: An Implementation of a Channelizer based on a Goertzel Filter Bank for
+  the Read-Out of Cryogenic Sensors
+Authors: L. P. Ferreyro, M. Garc\'ia Redondo, M. R. Hampel, A. Almela, A.
+  Fuster, J. Salum, J. M. Geria, J. Bonaparte, J. Bonilla-Neira, N. M\"uller,
+  N. Karcher, O. Sander, M. Platino, A. Etchegoyen
+Categories: astro-ph.IM eess.SP
+Comments: 17 pages, 18 figures, paper submitted for review for the Journal of
+  Instrumentation (JINST)
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01027
+Date: Thu, 2 Mar 2023 07:34:52 GMT   (1643kb,D)
+
+Title: Improving the X-ray energy resolution of a scientific CMOS detector by
+  pixel-level gain correction
+Authors: Qinyu Wu, Zhixing Ling, Xinyang Wang, Chen Zhang, Weimin Yuan,
+  Shuang-Nan Zhang
+Categories: astro-ph.IM hep-ex physics.ins-det
+Comments: accepted by PASP
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01006
+Date: Thu, 2 Mar 2023 06:47:13 GMT   (3744kb,D)
+
+Title: Ground test results of the micro-vibration interference for the x-ray
+  microcalorimeter onboard XRISM
+Authors: Takashi Hasebe (1), Ryuta Imamura (2), Masahiro Tsujimoto (3),
+  Hisamitsu Awaki (2), Meng P. Chiao (4), Ryuichi Fujimoto (5), Leslie S. Hartz
+  (4), Caroline A. Kilbourne (4), Gary A. Sneiderman (4), Yoh Takei (3), Susumu
+  Yasuda (6) (on behalf of the XRISM Resolve team, (1) Kavli IPMU, (2) Ehime
+  U., (3) JAXA ISAS, (4) NASA GSFC, (5) Kanazawa U., (6) JAXA)
+Categories: astro-ph.IM
+Comments: Journal of Astronomical Telescopes, Instruments, and Systems, Vol. 9,
+  Issue 1, 014003 (March 2023)
+DOI: 10.1117/1.JATIS.9.1.014003
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01004
+Date: Thu, 2 Mar 2023 06:46:46 GMT   (2138kb)
+
+Title: Mechanical cryocooler noise observed in the ground testing of the
+  Resolve X-ray microcalorimeter onboard XRISM
+Authors: R. Imamura (1), H. Awaki (1), M. Tsujimoto (2), S. Yamada (3), F. S.
+  Porter (4), C. A. Kilbourne (4), R. L. Kelley (4), Y. Takei (2) (on behalf of
+  the XRISM Resolve team, (1) Ehime U., (2) JAXA ISAS, (3) Rikkyo U., (4) NASA
+  GSFC)
+Categories: astro-ph.IM
+Comments: J Low Temp Phys (2023)
+DOI: 10.1007/s10909-022-02935-1
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00985
+Date: Thu, 2 Mar 2023 05:33:38 GMT   (3777kb,D)
+
+Title: Ground test results of the electromagnetic interference for the x-ray
+  microcalorimeter onboard XRISM
+Authors: Miki Kurihara (1 and 2), Masahiro Tsujimoto (2), Megan E. Eckart (3),
+  Caroline A. Kilbourne (4), Frederick T. Matsuda (2), Brian McLaughlin (4),
+  Shugo Oguri (2), Frederick S. Porter (4), Yoh Takei (5, on behalf of the
+  XRISM Resolve team) and Yoichi Kochibe (6) ((1) University of Tokyo, (2) JAXA
+  ISAS, (3) LLNL, (4) NASA GSFC, (5) JAXA, (6) Fujitsu Limited)
+Categories: astro-ph.IM
+Comments: JATIS in press
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00931
+Date: Thu, 2 Mar 2023 03:08:26 GMT   (17758kb)
+
+Title: A Model-Independent Determination of Red Noise in Pulsar Timing Arrivals
+Authors: Reinabelle Reyes and Christopher C. Bernido
+Categories: astro-ph.IM stat.ME
+Comments: 15 pages, 6 figures. Submitted to Frontiers in Astronomy and Space
+  Sciences
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01048 (*cross-listing*)
+Date: Thu, 2 Mar 2023 08:02:59 GMT   (676kb,D)
+
+Title: Super-Resolved Image of M87 Observed with East Asian VLBI Network
+Authors: Fumie Tazaki, Yuzhu Cui, Kazuhiro Hada, Motoki Kino, Ilje Cho,
+  Guang-Yao Zhao, Kazunori Akiyama, Yosuke Mizuno, Hyunwook Ro, Mareki Honma,
+  Ru-Sen Lu, Zhi-Qiang Shen, Lang Cui, and Yoshinori Yonekura
+Categories: astro-ph.HE astro-ph.IM
+Comments: 9 pages, 5 figures, published in Galaxies
+Journal-ref: Galaxies 2023, 11(2), 39
+DOI: 10.3390/galaxies11020039
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00812 (*cross-listing*)
+Date: Wed, 1 Mar 2023 20:28:17 GMT   (603kb,D)
+
+Title: One EURO for Uranus: the Elliptical Uranian Relativity Orbiter mission
+Authors: Lorenzo Iorio, Athul P. Girija, Daniele Durante
+Categories: gr-qc astro-ph.EP astro-ph.IM physics.space-ph
+Comments: LaTex2e, 38 pages, 7 figures, no tables
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00769 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:00:06 GMT   (32463kb,D)
+
+Title: Searching for galaxy-scale strong-lenses in galaxy clusters with deep
+  networks -- I: methodology and network performance
+Authors: G. Angora, P. Rosati, M. Meneghetti, M. Brescia, A. Mercurio, C.
+  Grillo, P. Bergamini, A. Acebron, G. Caminha, M. Nonino, L. Tortorelli, L.
+  Bazzanini, E. Vanzella
+Categories: astro-ph.CO astro-ph.IM
+Comments: 17 pages, 13 figures, submitted to A&A
+\\
+------------------------------------------------------------------------------
+\\
+/* Thu, 2 Mar 2023 */
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00698
+Date: Wed, 1 Mar 2023 17:46:22 GMT   (7489kb,D)
+
+Title: Cross calibration of gamma-ray detectors (GRD) of GECAM-C
+Authors: Yan-Qiu Zhang, Shao-Lin Xiong, Rui Qiao, Dong-Ya Guo, Wen-Xi Peng,
+  Xin-Qiao Li, Wang-Chen Xue, Chao Zheng, Jia-Cong Liu, Wen-Jun Tan, Chen-Wei
+  Wang, Peng Zhang, Ping Wang, Ce Cai, Shuo Xiao, Yue Huang, Pei-Yi Feng,
+  Xiao-Bo Li, Li-Ming Song, Qi-Bin Yi, Yi Zhao, Zhi-Wei Guo, Jian-Jian He,
+  Chao-Yang Li, Ya-Qing Liu, Ke Gong, Yan-Qi Du, Xiao-Jing Liu, Sheng-Lun Xie,
+  Guo-Ying Zhao, Xiao-Yun Zhao, Xiao-Lu Zhang, Zhen Zhang, Shi-Jie Zheng, Jin
+  Wang, Xiang-Yang Wen, Zheng-Hua An, Da-Li Zhang, Min Gao, Xi-Lei Sun,
+  Xiao-Hua Liang, Sheng Yang, Jin-Zhou Wang, Gang Chen, Fan Zhang
+Categories: astro-ph.IM astro-ph.HE
+Comments: preliminary version, will be updated soon
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00687
+Date: Wed, 1 Mar 2023 17:33:16 GMT   (4230kb,D)
+
+Title: Ground calibration of Gamma-Ray Detectors of GECAM-C
+Authors: Chao Zheng, Zheng-Hua An, Wen-Xi Peng, Da-Li Zhang, Shao-Lin Xiong,
+  Rui. Qiao, Yan-Qiu Zhang, Wang-Chen Xue, Jia-Cong Liu, Pei-Yi Feng, Ce. Cai,
+  Min Gao, Ke Gong, Dong-Ya Guo, Dong-Jie Hou, Gang Li, Xin-Qiao Li, Yan-Guo
+  Li, Mao-Shun Li, Xiao-Hua Liang, Ya-Qing Liu, Xiao-Jing Liu, Li-Ming Song,
+  Xi-Lei Sun, Wen-Jun Tan, Chen-Wei Wang, Hui Wang, Jin-Zhou Wang, Xiang-Yang
+  Wen, Shuo Xiao, Yan-Bing Xu, Sheng Yang, Qi-Bing Yi, Fan Zhang, Peng Zhang,
+  Zhen Zhang, Yi Zhao, Xing Zhou
+Categories: astro-ph.IM physics.ins-det
+Comments: preliminary version, will be updated soon
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00656
+Date: Wed, 1 Mar 2023 16:56:50 GMT   (12927kb,D)
+
+Title: Noise reduction on single-shot images using an autoencoder
+Authors: Oliver. J. Bartlett, David. M. Benoit, Kevin. A. Pimbblet, Brooke
+  Simmons, Laura Hunt
+Categories: astro-ph.IM astro-ph.GA
+Comments: 13 pages, 6 figures, 6 tables, Accepted for publication in MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00537
+Date: Wed, 1 Mar 2023 14:25:30 GMT   (2596kb)
+
+Title: The performance of SiPM-based gamma-ray detector (GRD) of GECAM-C
+Authors: Dali Zhang, Chao Zheng, Jiacong Liu, Zhenghua An, Chenwei Wang,
+  Xiangyang Wen, Xinqiao Li, Xilei Sun, Ke Gong, Yaqing Liu, Xiaojing Liu,
+  Sheng Yang, Wenxi Peng, Rui Qiao, Dongya Guo, Peiyi Feng, Yanqiu Zhang,
+  Wangchen Xue, Wenjun Tan, Ce Cai, Shuo Xiao, Qibin Yi, Yanbing Xu, Min Gao,
+  Jinzhou Wang, Dongjie Hou, Yue Huang, Xiaoyun Zhao, Xiang Ma, Ping Wang, Jin
+  Wang, Xiaobo Li, Peng Zhang, Zhen Zhang, Yanguo Li, Hui Wang, Xiaohua Liang,
+  Yuxi Wang, Bing Li, Jianying Ye, Shijie Zheng, Liming Song, Fan Zhang, Gang
+  Chen, Shaolin Xiong
+Categories: astro-ph.IM physics.ins-det
+Comments: 18 pages, 16 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00518
+Date: Wed, 1 Mar 2023 13:49:08 GMT   (1325kb,D)
+
+Title: Detector bandwidth and polarisation switching rates: spectrophotometric
+  observations of the Sun by the Birmingham Solar Oscillations Network (BiSON)
+Authors: S. J. Hale, W. J. Chaplin, G. R. Davies, Y. P. Elsworth, R. Howe
+Categories: astro-ph.IM astro-ph.SR
+Comments: 6 pages, 9 figures, 1 table. Accepted by RAS Techniques and
+  Instruments: 2023 March 1
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00453
+Date: Wed, 1 Mar 2023 12:22:43 GMT   (2520kb,D)
+
+Title: Advances in Optical / Infrared Interferometry
+Authors: Frank Eisenhauer, John D. Monnier and Oliver Pfuhl
+Categories: astro-ph.IM astro-ph.GA astro-ph.SR
+Comments: 50 pages, 14 figures, to be published in Annual Review of Astronomy
+  and Astrophysics
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00412
+Date: Wed, 1 Mar 2023 11:08:55 GMT   (580kb,D)
+
+Title: Validating Monte Carlo simulations for an analysis chain in H.E.S.S
+Authors: Fabian Leuschner (1), Johannes Sch\"afer (2), Simon Steinmassl (3),
+  Tim Lukas Holch (4), Konrad Bernl\"ohr (3), Stefan Funk (2), Jim Hinton (3),
+  Stefan Ohm (4), Gerd P\"uhlhofer (1) ((1) Institut f\"ur Astronomie und
+  Astrophysik T\"ubingen, Eberhard Karls Universit\"at T\"ubingen (IAAT), (2)
+  Erlangen Centre for Astroparticle Physics, Friedrich-Alexander-Universit\"at
+  Erlangen-N\"urnberg (ECAP), (3) Max-Planck-Institut f\"ur Kernphysik (MPIK),
+  (4) Deutsches Elektronen-Synchrotron (DESY))
+Categories: astro-ph.IM astro-ph.HE
+Comments: 8 pages, 4 figures, 1 table. Accepted as Proceeding of the 7th
+  Heidelberg International Symposium on High-Energy Gamma-Ray Astronomy
+  (Gamma2022)
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00339
+Date: Wed, 1 Mar 2023 09:06:27 GMT   (540kb)
+
+Title: In-orbit Performance of ME onboard Insight-HXMT in the first 5 years
+Authors: Ying Tan (1), Xuelei Cao (1), Weichun Jiang (1), Xiaobo Li (1), Bin
+  Meng (1), Wanchang Zhang (1), Sheng Yang (1), Tao Luo (1), Yudong Gu (1),
+  Liang Sun (1), Xiaojing Liu (1), Yuanyuan Du (1), Jiawei Yang (1), Yanjun Xu
+  (1), Jinyuan Liao (1), Yupeng Xu (1), Fangjun Lu (1), Liming Song (1) and
+  Shuangnan Zhang (1)
+Categories: astro-ph.IM
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00153
+Date: Wed, 1 Mar 2023 00:55:44 GMT   (4023kb,D)
+
+Title: SHIMM: A Versatile Seeing Monitor for Astronomy
+Authors: Saavidra Perera, Richard W. Wilson, Tim Butterley, James Osborn, Ollie
+  J. D. Farley, Douglas J. Laidlaw
+Categories: astro-ph.IM
+Comments: Published in MNRAS
+Journal-ref: MNRAS, Volume 520, 2023, Pages 5475-5486
+DOI: 10.1093/mnras/stad339
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00670 (*cross-listing*)
+Date: Wed, 1 Mar 2023 17:07:20 GMT   (4343kb)
+
+Title: Lunar impact flash results and space surveillance activities at Kryoneri
+  Observatory
+Authors: Alexios Liakos, Alceste Z. Bonanos, Emmanouil Xilouris, Detlef
+  Koschny, Panayotis Boumis, Ioannis Bellas-Velidis, Richard Moissl,
+  Athanassios Maroussis, Spyros Basilakos, Charalambos Kontoes
+Categories: astro-ph.EP astro-ph.IM
+Comments: 14 pages, 19 figures. Proceedings of the 2nd NEO and Debris Detection
+  Conference, Darmstadt, Germany, 24-26 January 2023
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00508 (*cross-listing*)
+Date: Tue, 28 Feb 2023 04:42:29 GMT   (2444kb,D)
+
+Title: Probing cosmic history with merging compact binaries
+Authors: Jeff Riley and Ilya Mandel
+Categories: astro-ph.SR astro-ph.CO astro-ph.GA astro-ph.HE astro-ph.IM gr-qc
+Comments: 16 pages, 3 tables, 8 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00467 (*cross-listing*)
+Date: Wed, 1 Mar 2023 12:49:11 GMT   (613kb)
+
+Title: Gaia colour-magnitude diagrams of young open clusters: Identification in
+  the UBC catalogue and a comparison of manual and automated analysis
+Authors: Ignacio Negueruela (Alicante), Abel de Burgos (IAC)
+Categories: astro-ph.SR astro-ph.IM
+Comments: Accepted for publication in A&A
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00370 (*cross-listing*)
+Date: Wed, 1 Mar 2023 09:51:18 GMT   (16432kb,D)
+
+Title: Application of Deep Learning Methods for Distinguishing Gamma-Ray Bursts
+  from Fermi/GBM TTE Data
+Authors: Peng Zhang, Bing Li, RenZhou Gui, Shaolin Xiong, Ze-Cheng Zou,
+  Xianggao Wang, Xiaobo Li, Ce Cai, Yi Zhao, Yanqiu Zhang, Wangchen Xue, Chao
+  Zheng, Hongyu Zhao
+Categories: astro-ph.HE astro-ph.IM
+Comments: 42 pages,12 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00366 (*cross-listing*)
+Date: Wed, 1 Mar 2023 09:48:29 GMT   (3685kb,D)
+
+Title: Harnessing the Hubble Space Telescope Archives: A Catalogue of 21,926
+  Interacting Galaxies
+Authors: David O'Ryan, Bruno Mer\'in, Brooke D. Simmons, Ant\'onia Vojtekov\'a,
+  Anna Anku, Mike Walmsley, Izzy L. Garland, Tobias G\'eron, William Keel,
+  Sandor Kruk, Chris J. Lintott, Kameswara Bharadwaj Mantha, Karen L. Masters,
+  Jan Reerink, Rebecca J. Smethurst, Matthew R. Thorne
+Categories: astro-ph.GA astro-ph.IM
+Comments: 29 pages, 17 figures, 4 tables, accepted for publication in ApJ
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00009 (*cross-listing*)
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (20066kb,D)
+
+Title: JWST-TST Proper Motions: I. High-Precision NIRISS Calibration and Large
+  Magellanic Cloud Kinematics
+Authors: M. Libralato, A. Bellini, R. P. van der Marel, J. Anderson, S. T.
+  Sohn, L. L. Watkins, L. Alderson, N. Allen, M. Clampin, A. Glidden, J. Goyal,
+  J. Huang, J. Kammerer, N. K. Lewis, Z. Lin, D. Long, D. Louie, R. J.
+  MacDonald, M. Mountain, M. Pe\~na-Guerrero, M. D. Perrin, I. Rebollido, E.
+  Rickman, S. Seager, K. B. Stevenson, J. A. Valenti, D. Valentine, H. R.
+  Wakeford
+Categories: astro-ph.GA astro-ph.IM astro-ph.SR
+Comments: 28 pages, 25 figures, 2 tables. Submitted to ApJ. The effective
+  point-spread-function models and geometric-distortion solutions are already
+  available at the links provided in the manuscript. A preliminary version of
+  the code to use them will be released after the paper is accepted for
+  publication
+DOI: 10.17909/hv07-tg13
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00006 (*cross-listing*)
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (2351kb,D)
+
+Title: Self-Consistent Spin, Tidal and Dynamical Equations of Motion in the
+  REBOUNDx Framework
+Authors: Tiger Lu, Hanno Rein, Daniel Tamayo, Sam Hadden, Rosemary Mardling,
+  Sarah C. Millholland, Gregory Laughlin
+Categories: astro-ph.EP astro-ph.IM physics.comp-ph
+Comments: Accepted to ApJ. 15 pages, 6 figures
+\\
+------------------------------------------------------------------------------
+\\
+/* Wed, 1 Mar 2023 */
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14832
+Date: Tue, 28 Feb 2023 18:29:08 GMT   (3054kb)
+
+Title: Planetary Exploration Horizon 2061 Report Chapter 5: Enabling
+  technologies for planetary exploration
+Authors: Manuel Grande (1), Linli Guo (2), Michel Blanc (3), Advenit Makaya
+  (4), Sami Asmar (5), David Atkinson (5), Anne Bourdon (6), Pascal Chabert
+  (6), Steve Chien (5), John Day (5), Alberto G. Fairen (7), Anthony Freeman
+  (5), Antonio Genova (8), Alain Herique (9), Wlodek Kofman (9), Joseph Lazio
+  (5), Olivier Mousis (10), Gian Gabriele Ori (11 and 12), Victor Parro (7),
+  Robert Preston (5), Jose A Rodriguez-Manfredi (7), Veerle Sterken (13), Keith
+  Stephenson (4), Joshua Vander Hook (5), Hunter Waite (14), Sonia Zine (9)
+Categories: astro-ph.IM astro-ph.EP physics.geo-ph
+Comments: 100 pages, 23 figures, Horizon 2061 is a science-driven, foresight
+  exercise, for future scientific investigations
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14575
+Date: Tue, 28 Feb 2023 13:54:49 GMT   (2814kb)
+
+Title: Measuring Data Loss resulting from Radio Frequency Interference
+Authors: Willem A. Baan, Axel Jessner and Jaap Steenge
+Categories: astro-ph.IM
+Comments: 13 pages, 5 figures
+Journal-ref: Journal of Astronomical Instrumentation, Vol. 08, No. 01, 1940007
+  (2019)
+DOI: 10.1142/S225117171940007
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14544
+Date: Tue, 28 Feb 2023 13:09:34 GMT   (4451kb,D)
+
+Title: Wide-gap CdTe Strip Detectors for High-Resolution Imaging in Hard X-rays
+Authors: Shunsaku Nagasawa, Minami Takahiro, Shin Watanabe, Tadayuki Takahashi
+Categories: astro-ph.IM astro-ph.SR hep-ex physics.ins-det
+Comments: 10 pages, 8 figures, 2 tables. Accepted for publication in NIMA
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14459
+Date: Tue, 28 Feb 2023 10:07:23 GMT   (5463kb,D)
+
+Title: Five-year in-orbit background of Insight-HXMT
+Authors: Jin-Yuan Liao, Shu Zhang, Juan Zhang, Gang Li, Zhi Chang, Yu-Peng
+  Chen, Ming-Yu Ge, Jing Jin, Xue-Feng Lu, Yuan You, Xue-Lei Cao, Yong Chen,
+  Yue Huang, Wei-Chun Jiang, Xiao-Bo Li, Xu-Fang Li, Zheng-Wei Li, Cong-Zhan
+  Liu, Ying Tan, Yan-Ji Yang, Yi-Fei Zhang, Hai-Sheng Zhao, Fang-Jun Lu,
+  Yu-Peng Xu, Jin-Lu Qu, Li-Ming Song and Shuang-Nan Zhang
+Categories: astro-ph.IM
+Comments: 22 pages, 25 figures, accepted for publication in RDTM
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14375
+Date: Tue, 28 Feb 2023 07:58:48 GMT   (1486kb)
+
+Title: The ESO's Extremely Large Telescope Working Groups
+Authors: Paolo Padovani (ESO), Michele Cirasuolo (ESO), Remco van der Burg,
+  Faustine Cantalloube, Elizabeth George, Markus Kasper, Kieran Leschinski,
+  Carlos Martins, Julien Milli, Sabine M\"ohler, Mark Neeser, Benoit Neichel,
+  Angel Otarola, Rub\'en S\'anchez-Janssen, Benoit Serra, Alain Smette, Elena
+  Valenti, Christophe Verinaud, Jo\"el Vernet, Olivier Absil, Guido Agapito,
+  Morten Andersen, Carmelo Arcidiacono, Matej Arko, Pierre Baudoz, Olivier
+  Beltramo-Martin, Enrico Biancalani, Thomas Bierwirth, Leonard Burtscher,
+  Giulia Carl\`a, Julio A. Castro-Almaz\'an, Anne-Laure Cheffot, Lodovico
+  Coccato, Carlos Correia, Romain Fetick, Giuliana Fiorentino, Thierry Fusco,
+  Bego\~na Garc\'ia-Lorenzo, Nicola Gentile Fusillo, Oscar Gonzalez, Andrea
+  Grazian, Marco Gullieuszik, Olivier Hainaut, Valentin Ivanov, Melanie
+  Kaasinen, Darshan Kaddad, Tomasz Kami\'nski, Wolfgang Kausch, Florian Kerber,
+  Stefan Kimeswenger, Rosita Kokotanekova, Arseniy Kuznetsov, Alexis Lau, Miska
+  Le Louarn, Fr\'ed\'eric Lemmel, Jochen Liske, Gaspare Lo Curto, David
+  Lucsanyi, Lars Lundin, Stefan Noll, Sylvain Oberti, James Osborn, Elena
+  Masciadri, Dinko Milakovi\'c, Michael T. Murphy, Fernando Pedichini, Miguel
+  Pereira Santaella, Roberto Piazzesi, Javier Piqueras L\'opez, C\'edric
+  Plantet, Thibaut Prod'homme, Norbert Przybilla, Mathieu Puech, Derryck T.
+  Reid, Ansgar Reiners, Rutger Rijnenberg, Myriam Rodrigues, Fabio Rossi,
+  Laurence Routledge, Hans Smit, Mathias Tecza, Niranjan Thatte, Roy van
+  Boekel, Aprajita Verma, Arthur Vigan
+Categories: astro-ph.IM
+Comments: 8 pages, 4 figures
+Journal-ref: The Messenger, vol. 189, (December 2022) p. 23-30
+DOI: 10.18727/0722-6691/5286
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14149
+Date: Mon, 27 Feb 2023 21:14:06 GMT   (12894kb,D)
+
+Title: Scalable precision wide-field imaging in radio interferometry: II. AIRI
+  validated on ASKAP data
+Authors: Amanda G. Wilber, Arwa Dabbech, Matthieu Terris, Adrian Jackson and
+  Yves Wiaux
+Categories: astro-ph.IM
+Comments: Submitted to MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14148
+Date: Mon, 27 Feb 2023 21:13:38 GMT   (41716kb,D)
+
+Title: Scalable precision wide-field imaging in radio interferometry: I. uSARA
+  validated on ASKAP data
+Authors: Amanda G. Wilber, Arwa Dabbech, Adrian Jackson and Yves Wiaux
+Categories: astro-ph.IM
+Comments: Submitted to MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14799 (*cross-listing*)
+Date: Tue, 28 Feb 2023 17:49:54 GMT   (814kb,D)
+
+Title: The GRETOBAPE gas-phase reaction network: the importance of being
+  exothermic
+Authors: Lorenzo Tinacci, Sim\'on Ferrada-Chamorro, Cecilia Ceccarelli, Stefano
+  Pantaleone, Daniela Ascenzi, Andrea Maranzana, Nadia Balucani, Piero Ugliengo
+Categories: astro-ph.GA astro-ph.IM astro-ph.SR
+Comments: ApJS submitted
+\\
+------------------------------------------------------------------------------
+\\
+/* Tue, 28 Feb 2023 */
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13903
+Date: Mon, 27 Feb 2023 15:46:31 GMT   (2751kb,D)
+
+Title: The Athena++ Adaptive Mesh Refinement Framework: Multigrid Solvers for
+  Self-Gravity
+Authors: Kengo Tomida and James M. Stone
+Categories: astro-ph.IM
+Comments: 28 pages, 13 figures, submitted to AAS Journals
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13819
+Date: Thu, 23 Feb 2023 22:38:57 GMT   (320kb,D)
+
+Title: Performance analysis of sequential carrier- and code-tracking receivers
+  in the context of high-precision space-borne metrology systems
+Authors: Philipp Euringer, Gerald Hechenblaikner, Francis Soualle, Walter
+  Fichter
+Categories: astro-ph.IM gr-qc physics.ins-det
+Comments: 8 pages, 5 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13691
+Date: Mon, 27 Feb 2023 11:51:40 GMT   (505kb)
+
+Title: Accelerating and scaling mentoring strategies to build infrastructure
+  that supports underrepresented groups in STEM
+Authors: 2030STEM Collaboration (1), Jennifer D. Adams (2), David Asai (3),
+  Ruth Cohen (1), Alonso Delgado (4), Stephanie Danette Preston (5), Jacqueline
+  K. Faherty (1,6), Mand\"e, Holford (1,6,7), Erich Jarvis (8), Marisela
+  Martinez-Cola (9), Alfred, Mays (10), Louis J. Muglia (10,11,12), Veeshan
+  Narinesingh (13), Caprice Phillips (4), Christine, Pfund (14), Patricia,
+  Silveyra (15) ((1) 2030STEM Inc, New York, New York, USA (2) University of
+  Calgary, Calgary, Alberta, CAN (3) Center for the Advancement of Science
+  Leadership and Culture, Howard Hughes Medical Institute, Chevy Chase,
+  Maryland, USA (4) The Ohio State University, Columbus, Ohio, USA (5) The
+  Pennsylvania State University, State College, Pennsylvania, USA (6) American
+  Museum of Natural History New York, NY, USA (7) Hunter College New York, NY,
+  USA (8) The Rockefeller University, New York, New York, USA (9) Morehouse
+  College, Atlanta, Georgia, USA (10) Burroughs Wellcome Fund, Apex, North
+  Carolina, USA (11) Department of Pediatrics University of Cincinnati College
+  of Medicine, Cincinnati, Ohio, USA (12) Division of Human Genetics,
+  Cincinnati Children's Hospital Medical Center, Cincinnati, Ohio, USA (13)
+  NOAA Geophysical Fluid Dynamics Laboratory, Program in Atmospheric and
+  Oceanic Sciences, Princeton University, Princeton, New Jersey, USA (14)
+  Wisconsin Center for Education Research, University of Wisconsin Madison,
+  Madison, Wisconsin, USA (15) Department of Environmental and Occupational
+  Health, Indiana University Bloomington School of Public Health, Bloomington,
+  Indiana, USA)
+Categories: astro-ph.IM physics.ed-ph
+Comments: 15 pages 1 figure. The second in a series of four papers from the
+  2030STEM collaboration
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13615
+Date: Mon, 27 Feb 2023 09:25:01 GMT   (210kb,D)
+
+Title: Establishing the MAGIC data legacy: adopting standardised data formats
+  and open-source analysis tools
+Authors: Cosimo Nigro
+Categories: astro-ph.IM
+Comments: To be included in the Proceedings of 7th Heidelberg International
+  Symposium on High-Energy Gamma-Ray Astronomy (Gamma2022)
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13603
+Date: Mon, 27 Feb 2023 09:10:11 GMT   (659kb,D)
+
+Title: The Online Observation Quality System Software Architecture for the
+  ASTRI Mini-Array Project
+Authors: N. Parmiggiani, A. Bulgarelli, L. Baroncelli, A. Addis, V. Fioretti,
+  A. Di Piano, M. Capalbi, O. Catalano, V. Conforti, M. Fiori, F. Gianotti, S.
+  Iovenitti, F. Lucarelli, M. C. Maccarone, T. Mineo, S. Lombardi, V. Pastore,
+  F. Russo, P. Sangiorgi, S. Scuderi, G. Tosti, M. Trifoglio, L. Zampieri and
+  the ASTRI Project
+Categories: astro-ph.IM
+Comments: 12 pages, 7 Figures. arXiv admin note: text overlap with
+  arXiv:2108.04515
+Journal-ref: Proceedings Volume 12189, Software and Cyberinfrastructure for
+  Astronomy VII; 121892H (2022)
+DOI: 10.1117/12.2629278
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13419
+Date: Sun, 26 Feb 2023 22:15:50 GMT   (1058kb,D)
+
+Title: The RTApipe framework for the gamma-ray real-time analysis software
+  development
+Authors: N. Parmiggiani, A. Bulgarelli, D. Beneventano, V. Fioretti, A. Di
+  Piano, L. Baroncelli, A. Addis, M. Tavani, C. Pittori and I. Oya
+Categories: astro-ph.IM
+Comments: 13 pages, 5 figures. Published on Astronomy and Computing
+Journal-ref: Astronomy and Computing, Volume 39, 2022, 100570
+DOI: 10.1016/j.ascom.2022.100570
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13306
+Date: Sun, 26 Feb 2023 12:32:54 GMT   (2027kb,D)
+
+Title: Paradigmatic examples for testing models of optical light polarization
+  by spheroidal dust
+Authors: C. Peest, R. Siebenmorgen, F. Heymann, T. Vannieuwenhuyse, M. Baes
+Categories: astro-ph.IM astro-ph.GA
+Comments: A&A accepted by Editor
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13854 (*cross-listing*)
+Date: Fri, 24 Feb 2023 04:28:46 GMT   (627kb,D)
+
+Title: A Deep Neural Network Based Reverse Radio Spectrogram Search Algorithm
+Authors: Peter Xiangyuan Ma, Steve Croft, Andrew P. V. Siemion
+Categories: eess.SP astro-ph.IM cs.LG cs.SD eess.AS
+Comments: 8 pages, 8 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13632 (*cross-listing*)
+Date: Mon, 27 Feb 2023 09:58:13 GMT   (573kb,D)
+
+Title: An overview of HMI off-disk flare observations
+Authors: Dennis Fremstad, Juan Camilo Guevara G\'omez, Hugh Hudson, Juan Carlos
+  Mart\'inez Oliveros
+Categories: astro-ph.SR astro-ph.IM
+Comments: 6 pages, 6 figures, 2 tables, Accepted for publication in A&A
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13363 (*cross-listing*)
+Date: Sun, 26 Feb 2023 17:41:47 GMT   (3107kb,D)
+
+Title: The GMRT High Resolution Southern Sky Survey for pulsars and transients
+  -- V: Localisation of two millisecond pulsars
+Authors: Shyam Sunder, Jayanta Roy, Sanjay Kudale, Bhaswati Bhattacharyya,
+  Arpit K. Behera, and Shubham Singh
+Categories: astro-ph.HE astro-ph.IM
+Comments: Accepted in Astrophysical Journal (APJ) on 26Feb2023
+Report-no: AAS43101R1
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12992 (*cross-listing*)
+Date: Sat, 25 Feb 2023 05:20:58 GMT   (5834kb)
+
+Title: Early Star Charts of the Dutch East India Company
+Authors: Richard de Grijs (Macquarie University, Sydney, Australia)
+Categories: physics.hist-ph astro-ph.IM
+Comments: To be published in Essays on Astronomical History and Heritage: A
+  Tribute to Wayne Orchiston on his 80th Birthday, eds Steven Gullberg and
+  Peter Robertson, Springer (2023)
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12850 (*cross-listing*)
+Date: Fri, 24 Feb 2023 19:00:06 GMT   (4476kb,D)
+
+Title: Synthetic radio images of structured GRB and kilonova afterglows
+Authors: Vsevolod Nedora, Tim Dietrich, Masaru Shibata
+Categories: astro-ph.HE astro-ph.IM gr-qc
+\\
+------------------------------------------------------------------------------
+\\
+/* Mon, 27 Feb 2023 */
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12727
+Date: Fri, 24 Feb 2023 16:24:19 GMT   (44659kb,D)
+
+Title: GEAR-RT: Towards Exa-Scale Moment Based Radiative Transfer For
+  Cosmological Simulations Using Task-Based Parallelism And Dynamic Sub-Cycling
+  with SWIFT
+Authors: Mladen Ivkovic
+Categories: astro-ph.IM
+Comments: PhD Thesis
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12566
+Date: Fri, 24 Feb 2023 10:33:28 GMT   (2587kb,D)
+
+Title: Observing M Dwarfs UV and optical flares from a CubeSat and their
+  implications for exoplanets habitability
+Authors: Julien Poyatos, Octavi Fors, Jos\'e Maria G\'omez Cama
+Categories: astro-ph.IM astro-ph.EP astro-ph.SR
+Comments: 10 pages, 5 figures. Manuscript presented at the 73rd International
+  Astronautical Congress, IAC 2022, Paris, France, 18 - 22 September 2022
+Journal-ref: IAC-2022, B4, IP, 33, x70034
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12406
+Date: Fri, 24 Feb 2023 02:10:38 GMT   (389kb,D)
+
+Title: Searching for ER and/or NR-like dark matter signals with the especially
+  low background liquid helium TPCs
+Authors: Junhui Liao, Yuanning Gao, Zhuo Liang, Zebang Ouyang, Zhaohua Peng,
+  Xiuliang Zhao, Lei Zhang, Lifeng Zhang, Jian Zheng, Jiangfeng Zhou
+Categories: astro-ph.IM hep-ex hep-ph
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12607 (*cross-listing*)
+Date: Fri, 24 Feb 2023 12:48:15 GMT   (905kb,D)
+
+Title: Modification of the Shower Database of the IAU Meteor Data Center
+Authors: M. Hajdukova, R. Rudawska, T. J. Jopek, M. Koseki, G. Kokhirova, L.
+  Neslusan
+Categories: astro-ph.EP astro-ph.IM
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12582 (*cross-listing*)
+Date: Fri, 24 Feb 2023 11:41:12 GMT   (1317kb,D)
+
+Title: Non-parametric analysis of the Hubble Diagram with Neural Networks
+Authors: Lorenzo Giambagli, Duccio Fanelli, Guido Risaliti, Matilde Signorini
+Categories: astro-ph.CO astro-ph.IM cond-mat.dis-nn
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12516 (*cross-listing*)
+Date: Fri, 24 Feb 2023 09:01:51 GMT   (2281kb,D)
+
+Title: Angular power spectra of anisotropic stochastic gravitational wave
+  background: developing statistical methods and analyzing data from
+  ground-based detectors
+Authors: Deepali Agarwal, Jishnu Suresh, Sanjit Mitra, Anirban Ain
+Categories: gr-qc astro-ph.IM
+Comments: 14 Pages, 5 figures, 1 table
+Report-no: LIGO-P2300030
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12378 (*cross-listing*)
+Date: Fri, 24 Feb 2023 00:49:43 GMT   (9571kb,D)
+
+Title: Cosmic Microwave Background Recovery: A Graph-Based Bayesian
+  Convolutional Network Approach
+Authors: Jadie Adams, Steven Lu, Krzysztof M. Gorski, Graca Rocha, Kiri L.
+  Wagstaff
+Categories: cs.LG astro-ph.CO astro-ph.IM
+Comments: Published at the Thirty-fifth Annual Conference on Innovative
+  Applications of Artificial Intelligence (IAAI-23). 7 pages, 6 figures
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12353 (*cross-listing*)
+Date: Thu, 23 Feb 2023 22:18:20 GMT   (4380kb)
+
+Title: Autonomous Restructuring of Asteroids into Rotating Space Stations
+Authors: David W. Jensen
+Categories: physics.pop-ph astro-ph.IM cs.RO
+Comments: 65 pages, 53 figures, 25 tables
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12340 (*cross-listing*)
+Date: Thu, 23 Feb 2023 21:19:14 GMT   (643kb,D)
+
+Title: Revealing magnetic field structure at the surfaces of protoplanetary
+  disks via near-infrared circular polarization
+Authors: Ilse de Langen and Ryo Tazaki
+Categories: astro-ph.EP astro-ph.IM
+Comments: 6 pages, 6 figures; Published in A&A
+Journal-ref: A&A, Volume 670, February 2023, A168
+DOI: 10.1051/0004-6361/202244830
+\\

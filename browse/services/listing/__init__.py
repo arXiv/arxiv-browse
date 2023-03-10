@@ -7,6 +7,8 @@ from time import mktime
 from typing import Any, List, Literal, Optional, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
 
+from browse.domain.metadata import DocMetadata
+
 
 def get_listing_service() -> "ListingService":
     """Get the listing service configured for the app context."""
@@ -45,7 +47,9 @@ def fake(settings: Any, _: Any) -> "ListingService":
     return FakeListingFilesService()
 
 
-ListingTypes = Literal["new", "cross", "rep"]
+AnnounceTypes = Literal["new", "cross", "rep"]
+"""The types that announces can be in the listings."""
+
 
 
 class ListingItem:
@@ -60,10 +64,14 @@ class ListingItem:
     primary is the primary category of the article.
     """
 
-    def __init__(self, id: str, listingType: ListingTypes, primary: str):
+    def __init__(self, id: str,
+                 listingType: AnnounceTypes,
+                 primary: str,
+                 article: Optional[DocMetadata] = None):
         self.id = id
         self.listingType = listingType
         self.primary = primary
+        self.article = article
 
     def __repr__(self) -> str:
         return f"<ListingItem {self.id} {self.listingType}>"
@@ -76,7 +84,8 @@ class Listing:
     listings is the list of items for the time period.
 
     pubdates are the dates of publications. The int is the number of items
-    published on the associated date.
+    published on the associated date. This may be empty if pubdates are not
+    relevant.
 
     count is the count of all the items in the listing for the query.
 
@@ -89,6 +98,7 @@ class Listing:
     Why not just do listing: List[Tuple[date,List[ListingItem]}} ?
     Because pastweek needs to support counts for the days and needs to be
     able to support skip/show.
+
     """
 
     listings: List[ListingItem]
@@ -240,7 +250,7 @@ class ListingService(ABC):
         skip: int,
         show: int,
         if_modified_since: Optional[str] = None,
-    ) -> Listing:
+    ) -> Union[Listing, NotModifiedResponse]:
         """Gets listings for the 5 most recent announcement/publish.
 
         if_modified_since is the if_modified_since header value passed by the web client

@@ -1,3 +1,4 @@
+import pytest
 import re
 from unittest.mock import MagicMock
 
@@ -494,3 +495,139 @@ def test_list_called_from_archive(client_with_fake_listings):
 
     rv = client.get("/list/?archive=hep-ph&year=08&month=all&submit=Go")
     assert rv.status_code == 200
+
+
+
+def test_astro_ph_months(client_with_test_fs, abs_path):
+    client = client_with_test_fs
+    files = list( (abs_path / "ftp/astro-ph/listings").glob("./[0-9]*") )
+    for file in files:
+        rv = client.get(f"/list/astro-ph/{file.stem}")
+        rv.status_code == 200
+
+
+def test_astro_ph_years(client_with_test_fs, abs_path):
+    client = client_with_test_fs
+    years=['99', '98', '97', '96','95','94','93','07']
+    for yy in sorted(years):
+        rv = client.get(f"/year/astro-ph/{yy}")
+        rv.status_code == 200
+
+    # start year with only partal data
+    rv = client.get("/year/astro-ph/92")
+    rv.status_code == 200
+
+    # 2023 only has start of the year and simulates a archive that stopped midyear
+    rv = client.get("/year/astro-ph/23")
+    rv.status_code == 200
+
+
+def test_missing_files_year(client_with_test_fs, abs_path):
+    client = client_with_test_fs
+    with pytest.raises(Exception) as ex:
+        rv = client.get(f"/year/astro-ph/17")
+
+
+def test_astro_ph_ep_recent(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.EP/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "Earth and Planetary Astrophysics" in text
+    assert "Authors and titles for recent submissions" in text
+
+    assert "arXiv:2303.01496" in text
+    assert "arXiv:2303.01458" in text
+    assert "arXiv:2303.01358" in text
+    assert "arXiv:2303.01337" in text
+    assert "arXiv:2303.00867" in text
+    assert "arXiv:2303.00768" in text
+    assert "arXiv:2303.01154" in text
+    assert "arXiv:2303.01138" in text
+    assert "arXiv:2303.01100" in text
+    assert "arXiv:2303.00812" in text
+    assert "arXiv:2303.00670" in text
+    assert "arXiv:2303.00659" in text
+    assert "arXiv:2303.00624" in text
+    assert "arXiv:2303.00540" in text
+    assert "arXiv:2303.00397" in text
+    assert "arXiv:2303.00221" in text
+    assert "arXiv:2303.00084" in text
+    assert "arXiv:2303.00062" in text
+    assert "arXiv:2303.00012" in text
+    assert "arXiv:2303.00011" in text
+    assert "arXiv:2303.00006" in text
+    assert "arXiv:2303.00718" in text
+    assert "arXiv:2303.00063" in text
+    assert "arXiv:2302.14847" in text
+    assert "arXiv:2302.14425" in text
+
+    rv = client.get("/list/astro-ph.EP/recent?skip=25&show=25")
+    text = rv.text
+    assert "arXiv:2302.14100" in text
+    assert "arXiv:2302.14832" in text
+    assert "arXiv:2302.14636" in text
+    assert "arXiv:2302.14054" in text
+    assert "arXiv:2302.13969" in text
+    assert "arXiv:2302.13620" in text
+    assert "arXiv:2302.13544" in text
+    assert "arXiv:2302.13370" in text
+    assert "arXiv:2302.13303" in text
+    assert "arXiv:2302.13226" in text
+    assert "arXiv:2302.12841" in text
+    assert "arXiv:2302.13354" in text
+    assert "arXiv:2302.12778" in text
+    assert "arXiv:2302.12753" in text
+    assert "arXiv:2302.12722" in text
+    assert "arXiv:2302.12607" in text
+    assert "arXiv:2302.12556" in text
+    assert "arXiv:2302.12518" in text
+    assert "arXiv:2302.12457" in text
+    assert "arXiv:2302.12376" in text
+    assert "arXiv:2302.12340" in text
+    assert "arXiv:2302.12824" in text
+    assert "arXiv:2302.12723" in text
+    assert "arXiv:2302.12566" in text
+
+    assert "49 entries" in text
+
+def test_astro_ph_recent(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "showing first 25 of 320 entries" in text
+
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.CO/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "63 entries" in text
+
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.GA/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "101 entries" in text
+
+    rv = client.get(f"/list/astro-ph.HE/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "85 entries" in text
+
+    rv = client.get(f"/list/astro-ph.IM/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "55 entries" in text
+
+    rv = client.get(f"/list/astro-ph.SR/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "67 entries" in text

@@ -1,0 +1,4481 @@
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Papers received as of Sat 31 May 97 00:00:12 GMT.
+(To retrieve abstracts without full papers, use e.g.    get 9706001.abs )
+ get 3 2.abs 9601001  , e.g., returns multiple papers.
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706001
+From:  <example@example.com>
+Date: Sun, 1 Jun 1997 15:09:51 GMT   (96kb)
+
+Title: Spectral Properties of Accretion Disks Around Black Holes II --
+  Sub-Keplerian Flows With and Without Shocks
+Authors: Sandip K. Chakrabarti
+Categories: astro-ph gr-qc
+Comments: 15 Latex pages plus 12 figures. Macros included. Astrophysical
+  Journal (In press)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706002
+From:  <example@example.com>
+Date: Mon, 2 Jun 1997 08:45:32 GMT   (87kb)
+
+Title: Bondi Flows on Compact Objects Revisited
+Authors: Sandip K. Chakrabarti and Soumitri A. Sahu
+Categories: astro-ph gr-qc
+Comments: 7 Latex pages including figures. Macros included. Astronomy and
+  Astrophysics (in press)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706003
+From: O. Silchenko  <example@example.com>
+Date: Mon, 2 Jun 1997 10:48:44 GMT   (108kb)
+
+Title: Decoupled Nuclei and Nuclear Polar Rings in Regular Spiral Galaxies. NGC
+  2841
+Authors: O. K. Sil'chenko (Sternberg Astronomical Institute, Moscow, Russia),
+  V. V. Vlasyuk and A. N. Burenkov (Special Astrophysical Observatory, Nizhnij
+  Arkhyz, Russia)
+Categories: astro-ph
+Comments: 10 pages, LATEX l-aa.sty, 11 Postscript figures. Accepted to the
+  Astronomy and Astrophysics Main Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706004
+From: C. Popescu  <example@example.com>
+Date: Mon, 2 Jun 1997 12:03:17 GMT   (286kb)
+
+Title: Results of a search for emission-line galaxies towards nearby voids. The
+  spatial distribution
+Authors: Cristina C. Popescu, Ulrich Hopp, Hans Els\"asser
+Categories: astro-ph
+Comments: 15 pages, LATEX file
+Report-no: mpia-1997-13
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706005
+From: Martin Lopez Corredoira  <example@example.com>
+Date: Mon, 2 Jun 1997 14:51:24 GMT   (41kb)
+
+Title: Force equation of the large-scale structure of the Universe
+Authors: Martin Lopez Corredoira (Instituto de Astrofisica de Canarias)
+Categories: astro-ph
+Comments: 10 pages, Latex, 3 Postscript figures, accepted in A&A
+Journal-ref: Astron.Astrophys. 326 (1997) 433
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706006
+From: Christian Henkel  <example@example.com>
+Date: Mon, 2 Jun 1997 13:04:36 GMT   (120kb)
+
+Title: Four New Dense Molecular Cores in the Taurus Molecular Cloud (TMC):
+  Ammonia and Cyanodiacetylene Observations
+Authors: C. Codella, R. Welser, C. Henkel, P.J. Benson, and P.C. Myers
+Categories: astro-ph
+Comments: 10 pages, Latex file, 7 Postscript Figures, l-aa.sty and psfig.sty
+  included. Accepted to Astronomy and Astrophysics
+Report-no: MPIfR Preprint 698
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706007
+From: Koichi Iwamoto  <example@example.com>
+Date: Mon, 2 Jun 1997 13:32:02 GMT   (130kb)
+Date (revised): Fri, 6 Jun 1997 11:38:25 GMT 
+
+Title: Type Ia Supernovae: Their Origin and Possible Applications in Cosmology
+Authors: Ken'ichi Nomoto, Koichi Iwamoto, Nobuhiro Kishimoto (Department of
+  Astronomy, University of Tokyo)
+Categories: astro-ph
+Comments: 7 page LaTeX, 5 PostScript figures, to appear in Science, Vol. 276
+  (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706008
+From: Arvind Parmar  <example@example.com>
+Date: Mon, 2 Jun 1997 13:50:04 GMT   (15kb)
+
+Title: A BeppoSAX observation of the super-soft source CAL87
+Authors: A. N. Parmar (1), P. Kahabka (2), H. W. Hartmann (3), J. Heise (3), D.
+  D. E. Martin (1), M. Bavdaz (1) and T. Mineo (4) ((1) ESA/ESTEC, (2) Univ. of
+  Amsterdam, (3) SRON, (4) IFCAI)
+Categories: astro-ph
+Comments: 4 pages. Accepted for publication in A&A (Letters)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706009
+From: Arvind Parmar  <example@example.com>
+Date: Mon, 2 Jun 1997 14:18:23 GMT   (21kb)
+
+Title: Low-energy line emission from Cygnus X-2 observed with the BeppoSAX LECS
+Authors: E. Kuulkers (1 and 2), A. N. Parmar (1), A. Owens (1), T. Oosterbroek
+  (1), U. Lammers (1) ((1) ESA/ESTEC, (2) Univ. of Oxford)
+Categories: astro-ph
+Comments: 4 pages. Accepted for publication in A&A (Letters)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706010
+From: Igor Moskalenko  <example@example.com>
+Date: Mon, 2 Jun 1997 14:24:58 GMT   (154kb)
+Date (revised): Fri, 5 Sep 1997 15:07:29 GMT
+
+Title: Numerical models for cosmic ray propagation and gamma ray production
+Authors: A. W. Strong, I. V. Moskalenko, V. Schoenfelder (MPE)
+Categories: astro-ph
+Comments: 4 pages including 12 figures, latex2e, epsfig.sty, wrapfig.sty,
+  times.sty, mathptm.sty. Proc. 25th International Cosmic Ray Conference
+  (Durban, South Africa), 1997, v. 4, p. 257-260. Details can be found at
+  http://www.gamma.mpe-garching.mpg.de/~aws/aws.html N.B. An error in Fig.6 (a
+  scale of the axis Intensity) is now corrected
+Journal-ref: Proc. 25th ICRC (Durban), 1997, v.4, p.257-260
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706011
+From: Greg Taylor  <example@example.com>
+Date: Mon, 2 Jun 1997 15:12:05 GMT   (86kb)
+
+Title: Bi-Directional Relativistic Jets of the Radio Galaxy 1946+708:
+  Constraints on the Hubble Constant
+Authors: G. B. Taylor and R. C. Vermeulen
+Categories: astro-ph
+Comments: in press at ApJ Letters, 12 page LaTex document includes 5 postscript
+  figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706012
+From: Davor Palle  <example@example.com>
+Date: Mon, 2 Jun 1997 15:19:22 GMT   (6kb)
+
+Title: On certain relationships between cosmological observables in the
+  Einstein-Cartan gravity
+Authors: D. Palle (Rugjer Boskovic Institute, Zagreb, Croatia)
+Categories: astro-ph gr-qc hep-ph
+Comments: 7 pages, LaTeX style
+Journal-ref: Nuovo Cim. B111 (1996) 671
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706013
+From: Richard Battye  <example@example.com>
+Date: Mon, 2 Jun 1997 16:44:24 GMT   (50kb)
+
+Title: Gravitational Waves From Cosmic Strings
+Authors: R.A. Battye (Imperial), R.R. Caldwell (UPenn) and E.P.S. Shellard
+  (DAMTP)
+Categories: astro-ph
+Comments: to appear in Topological Defects in Cosmology, Ed. F.Melchiorri and
+  M.Signore, 21 pages, also available at http://euclid.tp.ph.ic.ac.uk
+Report-no: IMPERIAL/TP/95-96/30
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706014
+From: Richard Battye  <example@example.com>
+Date: Mon, 2 Jun 1997 16:59:07 GMT   (122kb)
+
+Title: Recent Perspectives on Axion Cosmology
+Authors: R.A. Battye (Imperial) and E.P.S. Shellard (DAMTP)
+Categories: astro-ph
+Comments: to appear in Dark Matter 96, Heidelberg, Ed H.V. Klapdor-
+  Kleingrothaus and Y. Ramachers, 26 pages, also available at
+  http://euclid.tp.ph.ic.ac.uk
+Report-no: IMPERIAL/TP/95-96/31
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706015
+From: Richard Battye  <example@example.com>
+Date: Mon, 2 Jun 1997 17:00:03 GMT   (18kb)
+
+Title: Physics of Photon Diffusion for Active Sources
+Authors: R.A. Battye (Imperial)
+Categories: astro-ph
+Comments: to appear in proceedings of the 18th Texas Symposium on Relativistic
+  Astrophysics, Chicago 1996, Ed A.Olinto, J.Friemann and D.Schramm, 3 pages,
+  also available at http://euclid.tp.ph.ic.ac.uk
+Report-no: IMPERIAL/TP/95-96/32
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706016
+From: Claudia S. Rola  <example@example.com>
+Date: Mon, 2 Jun 1997 20:18:51 GMT   (84kb)
+
+Title: New diagnostic methods for emission-line galaxies in deep surveys
+Authors: Claudia S. Rola, Elena Terlevich and Roberto J. Terlevich
+Categories: astro-ph
+Comments: 10 pages, 6 figures, to be published in MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706017
+From: Dimitrios Psaltis  <example@example.com>
+Date: Tue, 3 Jun 1997 00:58:21 GMT   (24kb)
+
+Title: Compton Scattering by Static and Moving Media I. The Transfer Equation
+  and Its Moments
+Authors: Dimitrios Psaltis, Frederick K. Lamb (Univ. of Illinois at
+  Urbana-Champaign)
+Categories: astro-ph
+Comments: 31 pages, accepted for publication in The Astrophysical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706018
+From: Xiaohui Fan  <example@example.com>
+Date: Tue, 3 Jun 1997 02:55:24 GMT   (38kb)
+
+Title: Constraining Omega with Cluster Evolution
+Authors: Neta A. Bahcall, Xiaohui Fan and Renyue Cen (Princeton University
+  Observatory)
+Categories: astro-ph
+Comments: 14 pages, 3 Postscript figures, ApJ Letters, accepted
+Journal-ref: Astrophys.J. 485 (1997) L53
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706019
+From: German Hermann  <example@example.com>
+Date: Tue, 3 Jun 1997 10:01:19 GMT   (56kb)
+Date (revised): Mon, 8 Sep 1997 13:50:01 GMT
+
+Title: Measurement of the flux, spectrum, and variability of TeV gamma-rays
+  from Mkn 501 during a state of high activity
+Authors: HEGRA-Collaboration: F. Aharonian et al
+Categories: astro-ph
+Comments: 4 Pages, 4 figures, Latex, uses l-aa.sty; revised version with minor
+  corrections; Accepted for publication in A&A (Letters)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706020
+From: Perivolaropoulos Leandros  <example@example.com>
+Date: Tue, 3 Jun 1997 08:44:40 GMT   (15kb)
+
+Title: A New Statistic for the Detection of Long Strings in Microwave
+  Background Maps
+Authors: Leandros Perivolaropoulos (University of Crete)
+Categories: astro-ph hep-ph
+Comments: 8 pages including 2 embedded postscript figures, use latex, see also
+  http://www.edu.physics.uch.gr/~leandros Talk presented at the Particle
+  Physics and the Early Universe Conference at the University of Cambridge,
+  7-11 April 1997
+Report-no: Crete-97/16
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706021
+From: Arvind Parmar  <example@example.com>
+Date: Tue, 3 Jun 1997 08:04:29 GMT   (22kb)
+
+Title: The complex X-ray spectrum of the low-mass X-ray binary 4U 1626-67
+Authors: A. Owens (1), T. Oosterbroek (1) and A. N. Parmar (1) ((1) ESA/ESTEC)
+Categories: astro-ph
+Comments: 4 Latex pages. Accepted for publication in A&A (Letters)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706022
+From: Paola Andreani  <example@example.com>
+Date: Tue, 3 Jun 1997 09:59:20 GMT   (88kb)
+
+Title: Millimetric Properties of IRAS Galaxies (III): Luminosity Functions and
+  Contributions to the Sub-Mm Sky Background
+Authors: A. Franceschini (Univ. of Padova, Italy), P. Andreani (Univ. of
+  Padova, Italy) and L. Danese (SISSA, Trieste, Italy)
+Categories: astro-ph
+Comments: 8 Latex pages, macros, tables and 7 ps figures included, submitted to
+  MNRAS in august 1996
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706023
+From: Roberto Saglia  <example@example.com>
+Date: Tue, 3 Jun 1997 11:43:47 GMT   (336kb)
+
+Title: The z=2.72 galaxy cB58: a gravitational fold arc lensed by the cluster
+  MS 1512+36
+Authors: S. Seitz, R.P. Saglia, R. Bender, U. Hopp, P. Belloni, B. Ziegler
+Categories: astro-ph
+Comments: 20 pages, Latex File+mn.sty, 16 Postscript figures, plus additional
+  V-R color picture in gif format. Submitted to MNRAS
+Report-no: MPA-1025
+Journal-ref: Mon.Not.Roy.Astron.Soc. 298 (1998) 945-965
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706024
+From: Koichi Iwamoto  <example@example.com>
+Date: Tue, 3 Jun 1997 11:56:05 GMT   (37kb)
+
+Title: Nucleosynthesis in Type II Supernovae
+Authors: K. Nomoto(1), M. Hashimoto(2), T. Tsujimoto(3), F.-K. Thielemann(4),
+  N. Kishimoto(1), Y. Kubo(1) ((1)Department of Astronomy, University of Tokyo,
+  (2)Department of Physics, Kyushu University, (3)National Astronomical
+  Observatory, (4)Institut f\"ur Theoretische Physik, Universit\"at Basel)
+Categories: astro-ph
+Comments: 1 Page Latex source, 10 PostScript figures, to appear in Nuclear
+  Physics A, Vol. A616 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706025
+From: Naohito Nakasato  <example@example.com>
+Date: Tue, 3 Jun 1997 13:08:03 GMT   (68kb)
+
+Title: Nucleosynthesis in Type Ia Supernovae
+Authors: K. Nomoto(1), K. Iwamoto(1), N. Nakasato(1), F.-K. Thielemann(2), F.
+  Brachwitz(2), T. Tsujimoto(3), Y. Kubo(1), N. Kishimoto(1) ((1)Department of
+  Astronomy, University of Tokyo, (2)Institut f\"ur Theoretische Physik,
+  Universit\"at Basel, (3)National Astronomical Observatory)
+Categories: astro-ph
+Comments: 10 page LaTeX, 7 PostScript figures, to appear in Nuclear Physics A,
+  Vol. A621 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706026
+From: P. N. Bhat  <example@example.com>
+Date: Tue, 3 Jun 1997 14:12:21 GMT   (28kb)
+
+Title: The role of fluctuations in atmospheric Cerenkov technique
+Authors: P. N. Bhat
+Categories: astro-ph
+Comments: 4 pages, latex, 2 figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706027
+From: P. N. Bhat  <example@example.com>
+Date: Tue, 3 Jun 1997 14:11:52 GMT   (10kb)
+
+Title: Pachmarhi Array of Cerenkov Telescopes
+Authors: P. N. Bhat, P. R. Vishwanath, B. S. Acharya and M. R. Krishnaswamy
+Categories: astro-ph
+Comments: 4 pages, Latex, no figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706028
+From: Brian Yanny  <example@example.com>
+Date: Tue, 3 Jun 1997 16:31:38 GMT   (557kb)
+Date (revised): Thu, 26 Jun 1997 16:01:28 GMT
+
+Title: Imaging of the Host Galaxies of Three X-Ray Selected BL Lacertae Objects
+Authors: Buell T. Jannuzi, Brian Yanny, Chris Impey
+Categories: astro-ph
+Comments: Latex, 5 postscript figures, 4 jpeg figures, To appear in The
+  Astrophysical Journal Nov 20, 1997
+Journal-ref: Astrophys.J. 491 (1997) 146
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706029
+From: Kristof Petrovay  <example@example.com>
+Date: Tue, 3 Jun 1997 17:38:58 GMT   (108kb)
+Date (revised): Tue, 29 Dec 1998 17:16:00 GMT
+
+Title: Making Sense of Sunspot Decay I: Parabolic Decay Law and
+  Gnevyshev-Waldmeier Relation
+Authors: K. Petrovay and L. van Driel-Gesztelyi
+Categories: astro-ph
+Comments: 19 pages, 5 figures
+Journal-ref: Solar Physics176, 249-266 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706030
+From: Ermanno Borra  <example@example.com>
+Date: Tue, 3 Jun 1997 19:15:57 GMT   (606kb)
+
+Title: Optical Tests of a 2.5-m diameter Liquid Mirror: Behavior under External
+  Perturbations and Scattered Light Measurements
+Authors: Luc Girard and Ermanno F. Borra
+Categories: astro-ph
+Comments: To appear in Applied Optics. Postscript, 14 double spaced pages, 5
+  tables 13 figures
+Report-no: EFB101
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706031
+From: Chris Fryer  <example@example.com>
+Date: Tue, 3 Jun 1997 21:03:17 GMT   (301kb)
+
+Title: Double Neutron Star Systems and Natal Neutron Star Kicks
+Authors: Chris Fryer (UC Santa Cruz) & Vassiliki Kalogera (Univ. of Illinois at
+  Urbana-Champaign)
+Categories: astro-ph
+Comments: 25 pages, 6 figs (9 parts), 4 tables, AASTeX, Accepted in ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706032
+From: David Messinger  <example@example.com>
+Date: Tue, 3 Jun 1997 21:10:47 GMT   (60kb)
+
+Title: Interstellar Polarization in the Taurus Dark Clouds, Wavelength
+  Dependent Position Angles and Cloud Structure Near TMC-1
+Authors: D. W. Messinger, D. C. B. Whittet, W. G. Roberge (Dept. of Physics,
+  Applied Physics, and Astronomy, Rensselaer Polytechnic Institute)
+Categories: astro-ph
+Comments: 17 pages including 6 figures, LaTeX, to appear in the Astrophysical
+  Journal, vol 487
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706033
+From: P. N. Bhat  <example@example.com>
+Date: Wed, 4 Jun 1997 05:01:16 GMT   (198kb)
+
+Title: Pachmarhi Array of Cerenkov Telescopes
+Authors: P. N. Bhat
+Categories: astro-ph
+Comments: 14 pages, latex, 8 figures; A TIFR Golden Jubilee talk. To appear in:
+  ``Perspectives in High Energy Astronomy & Astrophysics'' proceedings of an
+  international Colloquium to commemorate the Golden Jubilee year of TIFR
+Report-no: TIFR/HECR/97-1
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706034
+From: Nakamura Takahiro  <example@example.com>
+Date: Wed, 4 Jun 1997 10:43:32 GMT   (60kb)
+Date (revised): Tue, 26 Aug 1997 11:00:16 GMT
+
+Title: Cosmological redshift distortion: deceleration, bias and density
+  parameters from future redshift surveys of galaxies
+Authors: Takahiro T. Nakamura, Takahiko Matsubara and Yasushi Suto (Tokyo
+  Univ.)
+Categories: astro-ph
+Comments: 9 pages, 5 figs, aastex, ApJ in press, replaced version includes
+  minor corrections
+Report-no: UTAP-262/97, RESCEU-21/97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706035
+From: Laurent Cambresy  <example@example.com>
+Date: Wed, 4 Jun 1997 14:24:19 GMT   (187kb)
+
+Title: Extinction map of the Chamaeleon I molecular cloud with DENIS star
+  counts
+Authors: L. Cambresy, N. Epchtein, E. Copet, B. de Batz, S. Kimeswenger, T. Le
+  Bertre, D. Rouan, D. Typhene
+Categories: astro-ph
+Comments: 4 pages, accepted for publication in Astronomy & Astrophysics Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706036
+From: Kneib Jean-Paul  <example@example.com>
+Date: Wed, 4 Jun 1997 14:31:58 GMT   (455kb)
+Date (revised): Thu, 14 Aug 1997 08:46:23 GMT
+
+Title: Modelling the Cloverleaf: Contribution of a Galaxy Cluster at z~1.7
+Authors: J.-P. Kneib, D. Alloin, Y. Mellier, S. Guilloteau, R. Barvainis, R.
+  Antonucci
+Categories: astro-ph
+Comments: 12 pages, 4 figures, A&A in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706037
+From: Valerie de-Lapparent  <example@example.com>
+Date: Wed, 4 Jun 1997 10:41:52 GMT   (236kb)
+Date (revised): Wed, 11 Jun 1997 12:02:52 GMT
+
+Title: The ESO-Sculptor Faint Galaxy Redshift Survey: The Photometric Sample
+Authors: S. Arnouts (Inst. Astr. Paris), V. de Lapparent (Inst. Astr. Paris),
+  G. Mathez (Obs. Midi-Pyr. Toulouse), A. Mazure (Lab. Astron. Spat.), Y.
+  Mellier (Inst. Astr. Paris), E. Bertin (Inst. Astr. Paris, ESO), A.
+  Kruszewski (Warsaw Univ. Obs.)
+Categories: astro-ph
+Comments: LATEX, 18 Postscript figures, 20 pages. To appear July 1997. Modified
+  version of article. Abstract corrected for missing line
+Journal-ref: Astro. & Astroph. Suppl. 124 (1997) 1-21
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706038
+From:  <example@example.com>
+Date: Wed, 4 Jun 1997 17:05:52 GMT   (6kb)
+
+Title: Metallicity gradients as detectors of matter distribution in elliptical
+  galaxies
+Authors: A. Martinelli (Istituto Astronomico di Roma, Italy)
+Categories: astro-ph
+Comments: 4 pages, uses l-aa.sty
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706039
+From: Bradley M. Peterson  <example@example.com>
+Date: Wed, 4 Jun 1997 16:10:56 GMT   (137kb)
+
+Title: Reverberation Mapping and the Physics of Active Galactic Nuclei
+Authors: Hagai Netzer (Wise Observatory) and Bradley M. Peterson (Ohio State
+  University)
+Categories: astro-ph
+Comments: Review article to appear in Astronomical Time Series, Proceedings of
+  the Wise Observatory 25th Ann. Symposium. 24 pages including 7 figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706040
+From:  <example@example.com>
+Date: Wed, 4 Jun 1997 16:43:43 GMT   (12kb)
+
+Title: Protein folding and cosmology
+Authors: P.F. Gonzalez-Diaz (IMAFF, CSIC) and C.L. Siguenza (CEU)
+Categories: astro-ph
+Comments: 12 pages, LaTex
+Report-no: IMAFF-RCA-97-05
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706041
+From: Caleb Scharf  <example@example.com>
+Date: Wed, 4 Jun 1997 17:23:35 GMT   (29kb)
+
+Title: The Galaxy Cluster Luminosity-Temperature Relationship and Iron
+  Abundances - A Measure of Formation History ?
+Authors: C. A. Scharf (GSFC/Umd) and R. F. Mushotzky (GSFC)
+Categories: astro-ph
+Comments: 13 pages Latex, 2 figures, postscript. Accepted for publication in
+  ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706042
+From: Eugene Chiang  <example@example.com>
+Date: Wed, 4 Jun 1997 18:44:58 GMT   (132kb)
+Date (revised): Fri, 2 Jan 1998 17:13:51 GMT
+
+Title: Spectral Energy Distributions of T Tauri Stars With Passive
+  Circumstellar Disks
+Authors: E. I. Chiang and P. Goldreich (California Institute of Technology)
+Categories: astro-ph
+Comments: 29 LaTeX pages w/ 10 eps. figures, aaspp4.sty, final version with few
+  minor stylistic alterations and 1 content change (section 4.1.1 on GM Aur and
+  non-zero inclination)
+Journal-ref: ApJ, v490, 368
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706043
+From: Ken Gayley  <example@example.com>
+Date: Wed, 4 Jun 1997 18:30:01 GMT   (356kb)
+
+Title: One- vs. Two-Shock Heliosphere: Constraining Models with GHRS LyA
+  Spectra toward alpha Cen
+Authors: K.G. Gayley, G.P. Zank, H.L. Pauls, P.C. Frisch, and D.E. Welty
+Categories: astro-ph
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706044
+From:  <example@example.com>
+Date: Wed, 4 Jun 1997 15:58:37 GMT   (12kb)
+Date (revised): Fri, 18 Jul 1997 16:03:25 GMT
+
+Title: Primordial torsion fields as an explanation of the anisotropy in
+  cosmological electromagnetic propagation
+Authors: Antonio Dobado and Antonio L. Maroto
+Categories: astro-ph gr-qc hep-ph
+Comments: 8 pages, LaTeX, one figure, enlarged version with minor corrections
+Journal-ref: Mod.Phys.Lett. A12 (1997) 3003-3007
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706045
+From: Udi Cohen  <example@example.com>
+Date: Wed, 4 Jun 1997 20:08:00 GMT   (13kb)
+
+Title: The Implications of Direct Red-Shift Measurement of $\gamma$-ray Bursts
+Authors: Ehud Cohen, Tsvi Piran
+Categories: astro-ph
+Comments: 12 Latex pages plus one postscript figure
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706046
+From: Scott Tremaine  <example@example.com>
+Date: Wed, 4 Jun 1997 20:11:07 GMT   (355kb)
+
+Title: A map for eccentric orbits in triaxial potentials
+Authors: J. Touma (1), S. Tremaine (2) ((1) University of Texas, (2) CITA,
+  University of Toronto)
+Categories: astro-ph
+Comments: 29 pages, 9 figures, Latex, submitted to MNRAS
+Report-no: CITA-97-17
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706047
+From: Bludman  <example@example.com>
+Date: Wed, 4 Jun 1997 21:33:01 GMT   (88kb)
+Date (revised): Wed, 15 Oct 1997 21:36:20 GMT
+
+Title: Baryonic Mass Fraction in Rich Clusters and the Total Mass Density in
+  the Cosmos
+Authors: S.A. Bludman
+Categories: astro-ph
+Comments: 19 pages, LaTex, ApJ re-submitted (update of observations)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706048
+From: Deepto Chakrabarty  <example@example.com>
+Date: Thu, 5 Jun 1997 02:46:14 GMT   (233kb)
+
+Title: The Symbiotic Neutron Star Binary GX 1+4/V2116 Ophiuchi
+Authors: Deepto Chakrabarty (MIT), Paul Roche (Sussex)
+Categories: astro-ph
+Comments: 46 pages including 7 PS figures. Accepted for publication in ApJ
+Journal-ref: ApJ 489 (1997) 254
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706049
+From: Deepto Chakrabarty  <example@example.com>
+Date: Thu, 5 Jun 1997 02:56:59 GMT   (63kb)
+
+Title: High-Speed Optical Photometry of the Ultracompact X-ray Binary 4U 1626-67
+Authors: Deepto Chakrabarty (MIT)
+Categories: astro-ph
+Comments: 26 pages including 6 PS figures. Submitted to ApJ
+Journal-ref: ApJ 492 (1998) 342
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706050
+From: Julia Pryadko  <example@example.com>
+Date: Thu, 5 Jun 1997 06:43:43 GMT   (28kb)
+
+Title: Stochastic Acceleration of Low Energy Electrons in Plasmas with Finite
+  Temperature
+Authors: Julia Pryadko, Vahe Petrosian
+Categories: astro-ph
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706051
+From: Yutaka Fujita  <example@example.com>
+Date: Thu, 5 Jun 1997 07:08:33 GMT   (93kb)
+
+Title: Evolution of Multiphase Hot Interstellar Medium in Elliptical Galaxies
+Authors: Yutaka Fujita (Tokyo Metro. Univ.), Junji Fukumoto (Cray K.K.), and
+  Katsuya Okoshi (Osaka Univ.)
+Categories: astro-ph
+Comments: 21 pages (AASTeX), 14 figures, accepted for publication in The
+  Astrophysical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706052
+From: Frederic Courbin  <example@example.com>
+Date: Thu, 5 Jun 1997 12:54:45 GMT   (201kb)
+
+Title: The LMC transition star R84 and the core of the LH 39 OB association
+Authors: M. Heydari-Malayeri (1), F. Courbin (2), G. Rauw (2), O. Esslinger
+  (3), P. Magain (2). ((1) Observatoire de Paris, (2) Astrop. Inst., Liege,
+  Belgium, (3) University of Wales, College of Cardiff)
+Categories: astro-ph
+Comments: 14 pages, LaTex file + postscript figures, Accepted for publication
+  in AA main journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706053
+From: Postnov K. A.  <example@example.com>
+Date: Thu, 5 Jun 1997 14:14:18 GMT   (26kb)
+
+Title: Astrophysical Sources of Stochastic Gravitational Radiation in the
+  Universe
+Authors: K.A.Postnov
+Categories: astro-ph
+Comments: 8 pages with 1 eps figures, plain LaTeX + epsf.sty, To appear in
+  Proceedings of the 9th International Baksan School "Particles and Cosmology"
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706054
+From: Konrad Kuijken  <example@example.com>
+Date: Thu, 5 Jun 1997 16:13:11 GMT   (66kb)
+
+Title: The Maximum Optical Depth Towards Bulge Stars From Axisymmetric Models
+  of the Milky Way
+Authors: Konrad Kuijken
+Categories: astro-ph
+Comments: Latex, 6 pages, 4 figures, uses aas2pp4 and epsf style files.
+  Accepted for publication in ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706055
+From: Paolo Saracco  <example@example.com>
+Date: Thu, 5 Jun 1997 16:17:32 GMT   (108kb)
+
+Title: The ESO K'-band Galaxy Survey - Galaxy Counts
+Authors: P. Saracco, A. Iovino, B. Garilli, D. Maccagni, G. Chincarini
+Categories: astro-ph
+Comments: 23 pages, Latex, 11 PostScript figures. To be published in The
+  Astronomical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706056
+From:  <example@example.com>
+Date: Thu, 5 Jun 1997 16:45:43 GMT   (27kb)
+
+Title: Finite size effects and the mixed quark-hadron phase in neutron stars
+Authors: Michael B. Christiansen and Norman K. Glendenning (University of
+  Aarhus, Denmark and Lawrence Berkeley National Laboratory, California)
+Categories: astro-ph nucl-th
+Comments: 8 pages, 5 figures, Revtex. (May 13, submitted to PRC)
+Report-no: LBL-40284
+Journal-ref: Phys.Rev. C56 (1997) 2858-2864
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706057
+From: Eric Gotthelf  <example@example.com>
+Date: Thu, 5 Jun 1997 21:52:39 GMT   (112kb)
+
+Title: Kes 73: A Young Supernova Remnant with an X-ray Bright, Radio-quiet
+  Central Source
+Authors: E. V. Gotthelf (NASA/GSFC), G. Vasisht (Caltech)
+Categories: astro-ph
+Comments: 14 pages with 9 eps figures, LATEX, aastex, psfig. To appear in the
+  Astrophysical Journal Letters
+Journal-ref: ApJ 486, L133 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706058
+From: Gautam Vasisht  <example@example.com>
+Date: Fri, 6 Jun 1997 04:50:22 GMT   (51kb)
+
+Title: The Discovery of an Anomalous X-ray Pulsar in the Supernova Remnant Kes
+  73
+Authors: G. Vasisht (Caltech), E. V. Gotthelf (GSFC)
+Categories: astro-ph
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706059
+From: Alan Heavens  <example@example.com>
+Date: Fri, 6 Jun 1997 08:18:25 GMT   (39kb)
+Date (revised): Mon, 16 Jun 1997 11:14:12 GMT 
+
+Title: Large-scale bias in the Universe: bispectrum method
+Authors: S. Matarrese, L. Verde, A. Heavens (Universities of Padova and
+  Edinburgh)
+Categories: astro-ph
+Comments: 12 pages, latex, 7 postscript figures included. Accepted by MNRAS.
+  (Minor numerical typesetting errors corrected: results unchanged)
+Journal-ref: Mon.Not.Roy.Astron.Soc. 290 (1997) 651-662
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706060
+From: Mario Vietri  <example@example.com>
+Date: Fri, 6 Jun 1997 11:36:16 GMT   (30kb)
+
+Title: The afterglow of gamma ray bursts II: the cases of GRB 970228 and GRB
+  970508
+Authors: Mario Vietri
+Categories: astro-ph
+Comments: 9 pages + 2 figures, AASTEX/LateX needed, submitted to Astrophysical
+  Journal Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706061
+From: Armen Atoyan  <example@example.com>
+Date: Fri, 6 Jun 1997 12:35:37 GMT   (37kb)
+
+Title: Study of the synchrotron and inverse Compton radiations of relativistic
+  jets in GRS 1915+105
+Authors: A. M. Atoyan, F. A. Aharonian
+Categories: astro-ph
+Comments: 6 pages, 2 figures; talk presented in the Workshop: Cracow_97
+  "Relativistic jets in AGNs", Cracow 27-30 May 1997; to appear in the
+  Proceedings of the Workshop
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706062
+From: J. Christensen-Dalsgaard  <example@example.com>
+Date: Fri, 6 Jun 1997 15:37:32 GMT   (138kb)
+
+Title: The phase function for stellar acoustic oscillations - IV. Solar-like
+  stars
+Authors: F. Perez Hernandez (Instituto de Astrofisica de Canarias, Tenerife,
+  Spain), J. Christensen-Dalsgaard (Teoretisk Astrofysik Center, Danmarks
+  Grundforskningsfond, and Institut for Fysik og Astronomi, Aarhus Universitet,
+  Denmark)
+Categories: astro-ph
+Comments: 10 pages, 10 figures. Submitted to Mon. Not. R. astr. Soc
+Journal-ref: Mon.Not.Roy.Astron.Soc. 295 (1998) 344-352
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706063
+From: Pawan Kumar  <example@example.com>
+Date: Fri, 6 Jun 1997 15:59:05 GMT   (14kb)
+
+Title: Gas accretion in a clumpy disk with application to AGNs
+Authors: Pawan Kumar (IAS, Princeton)
+Categories: astro-ph
+Comments: 11 pages, TeX. Submitted to ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706064
+From:  <example@example.com>
+Date: Fri, 6 Jun 1997 09:23:02 GMT   (27kb)
+
+Title: Cherenkov radio pulses from EeV neutrino interactions: the LPM effect
+Authors: J. Alvarez-Mu\~niz and E. Zas
+Categories: astro-ph
+Comments: 15 pages, 2 tables, 3 postscript figures
+Report-no: US-FT/17-97
+Journal-ref: Phys.Lett. B411 (1997) 218-224
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706065
+From: Marco Feroci  <example@example.com>
+Date: Fri, 6 Jun 1997 17:04:36 GMT   (52kb)
+
+Title: Discovery of the X-Ray Afterglow of the Gamma-Ray Burst of February 28
+  1997
+Authors: E. Costa, F. Frontera, J. Heise, M. Feroci, J. in 't Zand, F. Fiore,
+  M.N. Cinti, D. Dal Fiume, L. Nicastro, M. Orlandini, E. Palazzi, M.
+  Rapisarda, G. Zavattini, R. Jager, A. Parmar, A.Owens, S.Molendi, G.
+  Cusumano, M.C. Maccarone, S. Giarrusso, A. Coletta, L.A. Antonelli, P.
+  Giommi, J.M. Muller, L. Piro, and R.C. Butler
+Categories: astro-ph
+Comments: 10 pages, LaTeX, 3 postscript figures; Nature, issue of 19 June 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706066
+From:  <example@example.com>
+Date: Fri, 6 Jun 1997 18:51:59 GMT   (173kb)
+
+Title: Crystalline Structure in the Confined-Deconfined Mixed Phase: Neutron
+  Stars
+Authors: Norman K. Glendenning (1) and S. Pei (2) ((1) Lawrence Berkeley
+  National Laboratory, California, (2) Beijing Normal University)
+Categories: astro-ph
+Comments: 12 pages, 4 figures, Latex
+Report-no: LBL-37566
+Journal-ref: Heavy Ion Phys. 1 (1995) 323-333
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706067
+From: Dale Frail  <example@example.com>
+Date: Fri, 6 Jun 1997 22:16:39 GMT   (414kb)
+
+Title: Polarization Observations of 1720 MHz OH Masers toward the Three
+  Supernova Remnants W28, W44, and IC443
+Authors: M. J Claussen, D. A. Frail, W. M. Goss and R. A. Gaume
+Categories: astro-ph
+Comments: ApJ Let (accepted). Hardcopies available from dfrail@nrao.edu
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706068
+From: David W. Hogg  <example@example.com>
+Date: Sat, 7 Jun 1997 00:03:01 GMT   (36kb)
+
+Title: What is the redshift of gamma-ray burst 970508?
+Authors: Nahum Arav & David W. Hogg (Caltech)
+Categories: astro-ph
+Comments: 6 pages, including 2 figures, submitted to ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706069
+From: Mike Turner  <example@example.com>
+Date: Sat, 7 Jun 1997 14:52:28 GMT   (177kb)
+
+Title: Big-bang Nucleosynthesis Enters the Precision Era
+Authors: David N. Schramm and Michael S. Turner (Chicago/Fermilab)
+Categories: astro-ph hep-ph
+Comments: 19 pages Latex; 8 eps figures; submitted to Rev Mod Phys (Colloquia)
+Report-no: FERMILAB--Pub--97/186-A
+Journal-ref: Rev.Mod.Phys. 70 (1998) 303-318
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706070
+From: Marco Salvati  <example@example.com>
+Date: Sat, 7 Jun 1997 17:52:41 GMT   (13kb)
+
+Title: X-ray detections of weak Seyfert2's with BeppoSAX
+Authors: M. Salvati, L. Bassani, R. Della Ceca, R. Maiolino, G. Matt, G.
+  Zamorani
+Categories: astro-ph
+Comments: 4 pages, 2 figures, in press in Astronomy and Astrophysics
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706071
+From: Magnus Selhammar  <example@example.com>
+Date: Sat, 7 Jun 1997 19:38:02 GMT   (520kb,P)
+
+Title: The Use of Non-Spherical Kernels in Smooth Particle Hydrodynamics
+Authors: Magnus Selhammar
+Categories: astro-ph
+Comments: 12 pages excluding figures. Postscript files only. There is no
+  TeX-source. The postscript file of the text to figure 1 is corrupt and not
+  included. e-mail magnus@astro.uu.se
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706072
+From: Wendy L. Freedman  <example@example.com>
+Date: Sat, 7 Jun 1997 23:08:23 GMT   (102kb)
+
+Title: Measuring Cosmological Parameters
+Authors: Wendy L. Freedman
+Categories: astro-ph
+Comments: Conference Proceedings based on Invited Review at the 18th Texas
+  Symposium, held in Chicago, December 1996. To be published by World
+  Scientific, eds. A. Olinto, J. Friemann and D. Schramm; 32 pages, 4 figures,
+  1 table
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706073
+From: Ka Chun Yu  <example@example.com>
+Date: Sun, 8 Jun 1997 03:22:05 GMT   (263kb)
+
+Title: Shock Excited H_2 Flows in OMC-2 and OMC-3
+Authors: Ka Chun Yu, John Bally, and David Devine (CASA, University of
+  Colorado, Boulder)
+Categories: astro-ph
+Comments: 9 pages, 6 figures, AAS style file required
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706074
+From: Ivan E. Panchenko  <example@example.com>
+Date: Sun, 8 Jun 1997 11:14:14 GMT   (4kb)
+
+Title: The radioastronomical "Time Machine" effect and the solution of gamma
+  ray bursts mystery
+Authors: Galina V. Lipunova, Vladimir M. Lipunov, Ivan E. Panchenko
+Categories: astro-ph
+Comments: 4 pages latex
+Journal-ref: New Astron. 2 (1997) 555-558
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706075
+From: Peter Kahabka  <example@example.com>
+Date: Mon, 9 Jun 1997 12:11:35 GMT   (278kb)
+
+Title: X-Ray Binary Systems in the Small Magellanic Cloud
+Authors: P. Kahabka (Amsterdam), W. Pietsch (M.P.E.)
+Categories: astro-ph
+Comments: 22 pages, Latex
+Journal-ref: Astron. Astrophys. 312, 919-936(1996)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706076
+From: Zharykov S. V.  <example@example.com>
+Date: Sun, 8 Jun 1997 20:19:47 GMT   (526kb)
+Date (revised): Wed, 11 Jun 1997 09:52:03 GMT
+Date (revised): Wed, 24 Sep 1997 06:57:30 GMT
+
+Title: BVRI observations of PSR B0656+14 with the 6-meter telescope
+Authors: V. G. Kurt (1), V. V. Sokolov (2), S. V. Zharikov (2), G. G. Pavlov
+  (3) and B.V. Komberg (1) ((1) Astro Space Center of the Russian Academy of
+  Sciences, Moscow;Russia (2) Special Astrophysical Observatory of RAS,
+  Karachai-Cherkessia, Nizhnij Arkhyz, Russia; (3) The Pennsylvania State
+  University, Dept. of Astronomy & Astrophysics, University Park, PA)
+Categories: astro-ph
+Comments: 11 pages, 8 Postscript figures, Latex, l-aa.sty and psfig.sty
+  included, submitted to Astronomy and Astrophysics
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706077
+From: Charley Lineweaver  <example@example.com>
+Date: Sun, 8 Jun 1997 22:16:35 GMT   (134kb)
+Date (revised): Wed, 25 Feb 1998 06:40:38 GMT
+
+Title: What Can Cosmic Microwave Background Observations Already Say About
+  Cosmological Parameters in Open and Critical-Density Cold Dark Matter Models?
+Authors: Charles H. Lineweaver (UNSW, Sydney & Strasbourg) and Domingos Barbosa
+  (Sussex & Strasbourg)
+Categories: astro-ph
+Comments: 18 pages with 7 figures, conforms to accepted version in press:
+  Astrophysical Journal, 496, (April 1, 1998). Three of the figures have been
+  modified, references updated, typos corrected. This version includes a table
+  of current CMB measurements
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706078
+From: Re'em Sari  <example@example.com>
+Date: Mon, 9 Jun 1997 01:58:37 GMT   (11kb)
+
+Title: Hydrodynamics of GRB After-Glow
+Authors: Re'em Sari (Hebrew University, Jerusalem and IAS, Princeton)
+Categories: astro-ph
+Comments: 15 pages, LaTeX
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706079
+From: Masahiro Teshima  <example@example.com>
+Date: Mon, 9 Jun 1997 02:28:13 GMT   (219kb)
+
+Title: The Detection of TeV Gamma Rays from Crab using the Telescope Array
+  Prototype
+Authors: S.Aiso, M.Chikawa, Y.Hayashi, N.Hayashida, K.Hibino, H.Hirasawa,
+  K.Honda, N.Hotta, N.Inoue, F.Ishikawa, N.Ito, S.Kabe, F.Kajino, T.Kashiwagi,
+  S.Kawakami, Y.Kawasaki, N.Kawasumi, H.Kitamura, K.Kuramochi, K.Kurata,
+  E.Kusano, H.Lafoux, E.C.Loh, Y.Matsubara, T.Matsuyama, Y.Mizumoto,
+  K.Mizutani, M.Nagano, D.Nishikawa, J.Nishimura, M.Nishizawa, T.Ouchi,
+  H.Ohoka, M.Ohnishi, To.Saito, N.Sakaki, M.Sakata, K.Sakumoto, M.Sasaki,
+  M.Sasano, H.Shimodaira, A.Shiomi, P.Sokolsky, T.Sugiyama, T.Takahashi,
+  S.Taylor, M.Teshima, I.Tsushima, Y.Uchihori, T.Yamamoto, Y.Yamamoto,
+  S.Yoshida, H.Yoshii, and T.Yuda
+Categories: astro-ph
+Comments: 4 pages, 5 figures, contribution to 25th ICRC Durban
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706080
+From: Adam Burrows  <example@example.com>
+Date: Mon, 9 Jun 1997 05:24:09 GMT   (260kb)
+
+Title: Advances in the Theory of Extrasolar Giant Planets and Brown Dwarfs
+Authors: A. Burrows, D. Sudarsky, C. Sharp, M. Marley, W.B. Hubbard, J.I.
+  Lunine, T. Guillot, D. Saumon, and R. Freedman
+Categories: astro-ph
+Comments: 19 pages total, LaTeX, 9 figures, to be published in the proceedings
+  of the workshop "Brown Dwarfs and Extrasolar Planets," held in Tenerife,
+  Spain, March 17 - 21, 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706081
+From: Renee Kraan Korteweg  <example@example.com>
+Date: Mon, 9 Jun 1997 11:11:34 GMT   (173kb)
+
+Title: An HI line search for optically identified dwarf galaxy candidates in
+  the M81 group
+Authors: W. van Driel (Nancay Obs., Obs. de Paris-Meudon), R.C. Kraan-Korteweg
+  (DAEC, Obs. de Paris-Meudon), B. Binggeli (Astron. Institut Basel) and W.K.
+  Huchtmeier (MPI fuer Radioastronomie, Bonn)
+Categories: astro-ph
+Comments: Accepted for publication in A&ASS. 12 pages, LaTex, 2 encapsulated
+  postscript figures, requires l-aa.sty and epsf.sty. Fig. 1 not avalaible in
+  el. form
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706082
+From: Michiel R. Hogerheijde  <example@example.com>
+Date: Mon, 9 Jun 1997 14:26:58 GMT   (485kb)
+
+Title: Tracing the envelopes around embedded low-mass young stellar objects
+  with HCO+ and millimeter-continuum observations
+Authors: Michiel R. Hogerheijde (1), Ewine F. van Dishoeck (1), Geoffrey A.
+  Blake (2) and Huib Jan van Langevelde(3) ((1) Sterrewacht Leiden, The
+  Netherlands, (2) California Institute of Technology, (3) JIVE, The
+  Netherlands)
+Categories: astro-ph
+Comments: 45 pages, 10 figures, ApJ/AASLaTeX. To be published in The
+  Astrophysical Journal
+Report-no: STW 382-97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706083
+From: Alvio Renzini  <example@example.com>
+Date: Mon, 9 Jun 1997 16:30:33 GMT   (53kb)
+
+Title: Iron as a tracer in galaxy clusters and groups
+Authors: Alvio Renzini
+Categories: astro-ph
+Comments: AASTex Latex, 29 pages, 6 figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706084
+From: Jeremy Goodman  <example@example.com>
+Date: Mon, 9 Jun 1997 18:26:07 GMT   (11kb)
+
+Title: Radio scintillation of gamma-ray-burst afterglows
+Authors: Jeremy Goodman (Princeton University Observatory)
+Categories: astro-ph
+Comments: 11 pages, LaTeX2e, requires elsart.cls. Submitted to New Astronomy
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706085
+From: James Wells  <example@example.com>
+Date: Mon, 9 Jun 1997 22:29:53 GMT   (33kb)
+
+Title: Multi-GeV photons from electron-dark matter scattering near Active
+  Galactic Nuclei
+Authors: Elliott D. Bloom and James D. Wells (SLAC)
+Categories: astro-ph
+Comments: 15 pages, LaTeX
+Report-no: SLAC-PUB-7451
+Journal-ref: Phys.Rev. D57 (1998) 1299-1302
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706086
+From: Norbert Wex  <example@example.com>
+Date: Tue, 10 Jun 1997 02:31:43 GMT   (145kb)
+Date (revised): Thu, 12 Feb 1998 20:36:16 GMT
+
+Title: A timing formula for main-sequence star binary pulsars
+Authors: N. Wex
+Categories: astro-ph
+Comments: 12 pages (LaTeX), 20 Postscript figures; replaced by accepted version
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706087
+From: Avery Meiksin  <example@example.com>
+Date: Tue, 10 Jun 1997 04:22:46 GMT   (443kb)
+
+Title: Physical Properties of the Lyman Alpha Forest in a Cold Dark Matter
+  Cosmology
+Authors: Yu Zhang (NCSA), Avery Meiksin (U. of Chicago), Peter Anninos (NCSA)
+  and Michael L. Norman (NCSA)
+Categories: astro-ph
+Comments: AAS LaTex, 35 pp, 19 figures (17 embedded), 2 GIF figures, and one
+  GIF Plate. Accepted to ApJ. A complete .ps version is available at
+  http://zeus.ncsa.uiuc.edu:8080/LyA/minivoid.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706088
+From: Akihiko Tomita  <example@example.com>
+Date: Tue, 10 Jun 1997 03:37:59 GMT   (99kb)
+Date (revised): Fri, 15 Aug 1997 06:42:47 GMT
+
+Title: Characteristics of Kiso Ultra-Violet Excess Galaxies
+Authors: Akihiko Tomita, Tsutomu T. Takeuchi, Tadashi Usui, Mamoru Saito
+Categories: astro-ph
+Comments: Revised version of astro-ph/9706088, accepted manuscript for AJ;
+  uuencoded gzip'ed tar'ed file containing 25 files; a manuscript (aasms4), 7
+  tables (aj_pt4), 17 PS figures; To be appeared in The Astronomical Journal,
+  Vol. 114, No. 5 (1997 November issue)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706089
+From: Mathews  <example@example.com>
+Date: Tue, 10 Jun 1997 06:56:41 GMT   (61kb)
+
+Title: Self-Generated Magnetic Fields in Galactic Cooling Flows
+Authors: William G. Mathews (Lick Observatory, Santa Cruz CA) and Fabrizio
+  Brighenti (Dipartimento di Astronomia, Universita di Bologna)
+Categories: astro-ph
+Comments: 21 pages in AASTEX LaTeX with 2 figures; accepted by Astrophysical
+  Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706090
+From:  <example@example.com>
+Date: Tue, 10 Jun 1997 08:56:33 GMT   (116kb)
+
+Title: Star Cluster Ecology II: Binary evolution with single-star encounters
+Authors: Simon F. Portegies Zwart (1 and 2), Piet Hut (3), Stephen L. W.
+  McMillan (4), Frank Verbunt (2) ((1) Amsterdam NL, (2) Utrecht NL, (3)
+  Princeton IAS, (4) Drexel University USA)
+Categories: astro-ph
+Comments: 16 pages including 11 figures, Latex
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706091
+From: Scilla  <example@example.com>
+Date: Tue, 10 Jun 1997 11:16:48 GMT   (56kb)
+
+Title: The effect of diffusion on the Red Giant luminosity function 'bump'
+Authors: S. Cassisi, S. Degl'Innocenti, M. Salaris
+Categories: astro-ph
+Comments: TeX, 6 pages, uses mnrass.sty (included), 2 postscript figures, in
+  publication on MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706092
+From: Andreas Burkert  <example@example.com>
+Date: Tue, 10 Jun 1997 10:28:53 GMT   (542kb)
+
+Title: Protostellar fragmentation in a power-law density distribution
+Authors: A. Burkert, M. Bate and P. Bodenheimer
+Categories: astro-ph
+Comments: 12 pages, TeX-file, plus 5 figures added as postscript files. MNRAS,
+  in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706093
+From: Renee Kraan Korteweg  <example@example.com>
+Date: Tue, 10 Jun 1997 14:51:57 GMT   (384kb)
+
+Title: DENIS Galaxies in the Zone of Avoidance
+Authors: A. Schroeder (1), R.C. Kraan-Korteweg (2), G.A. Mamon (3), and S.
+  Ruphy (4) ((1) Institute of Astronomy, NCU, Taiwan, (2) DAEC, Obs.
+  Paris-Meudon, (3) IAP, Paris, (4) DESPA, Obs. Paris-Meudon)
+Categories: astro-ph
+Comments: Contributed talk, XXXIInd Moriond Meeting (les Arcs, France, March
+  1997) on "Extragalactic Astronomy in the Infrared". 6 pages, LateX, format
+  file plus 5 ps-figures included. Fig 1 & 3 also available as better resolved
+  gif-files
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706094
+From:  <example@example.com>
+Date: Tue, 10 Jun 1997 15:08:27 GMT   (13kb)
+
+Title: Millimeter-wave Signature of Strange Matter Stars
+Authors: John J. Broderick, Eugene T. Herrin, Timothy P. Krisher, David L.
+  Morgan, Doris C. Rosenbaum, Marc Sher and Vigdor L. Teplitz
+Categories: astro-ph hep-ph
+Comments: 13 pages, Latex, one figure
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706095
+From: Bruno Guiderdoni  <example@example.com>
+Date: Tue, 10 Jun 1997 14:49:03 GMT   (46kb)
+Date (revised): Thu, 30 Oct 1997 15:00:53 GMT
+
+Title: The optically-dark side of galaxy formation
+Authors: B. Guiderdoni (IAP), F.R. Bouchet (IAP), J.L. Puget (IAS), G. Lagache
+  (IAS) & E. Hivon (TAC)
+Categories: astro-ph
+Comments: 13 pages, Latex, 3 postscript figures, last revised version on
+  September, the 25th, accepted for publication in Nature
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706096
+From: Patricia Whitelock  <example@example.com>
+Date: Tue, 10 Jun 1997 15:58:37 GMT   (46kb)
+
+Title: The Luminosities and Diameters of Mira Variables from Hipparcos
+  Parallaxes
+Authors: P. A. Whitelock (South African Astronomical Observatory), F. van
+  Leeuwen (Royal Greenwich Observatory), M. W. Feast (University Cape Town)
+Categories: astro-ph
+Comments: 5 Pages, 2 postscript figures, Latex using venice97.sty, To appear in
+  Proceedings of the "Hipparcos Venice'97 Symposium", ESA SP-402
+Report-no: PDOC 1351
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706097
+From: Patricia Whitelock  <example@example.com>
+Date: Tue, 10 Jun 1997 16:29:47 GMT   (117kb)
+
+Title: Hipparcos Parallaxes and Proper Motions of Cepheids and their
+  Implications
+Authors: M. W. Feast (University Cape Town) and P. A. Whitelock (South African
+  Astronomical Observatory)
+Categories: astro-ph
+Comments: 5 Pages, 2 postscript figures, Latex using venice97.sty, To appear in
+  Proceedings of the "Hipparcos Venice'97 Symposium", ESA SP-402
+Report-no: SAAO-PDOC 1352
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706098
+From: Ermanno Borra  <example@example.com>
+Date: Tue, 10 Jun 1997 17:55:38 GMT   (184kb)
+
+Title: Liquid Mirror Telescopes: A Review
+Authors: E. F. Borra
+Categories: astro-ph
+Comments: 12 pages, Postscript (from Microsoft Word). To appear in the
+  Proceedings of a workshop on Science with Liquid Mirror Telescopes, M.
+  Ferrari ed
+Report-no: EFB102
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706099
+From: Adrian Melott  <example@example.com>
+Date: Tue, 10 Jun 1997 20:50:19 GMT   (398kb)
+Date (revised): Wed, 11 Jun 1997 15:40:59 GMT
+Date (revised): Wed, 5 Nov 1997 23:20:27 GMT
+
+Title: Fundamental Discreteness Limitations of Cosmological N-Body Clustering
+  Simulations
+Authors: Randall J. Splinter (University of Kentucky), Adrian L. Melott and
+  Sergei F. Shandarin (University of Kansas), and Yasushi Suto (University of
+  Tokyo)
+Categories: astro-ph
+Comments: Revised version to be published in Astrophysical Journal. One figure
+  changed; expanded discussion, more information on code parameters. Latex, 44
+  pages, including 19 figures. Higher resolution versions of Figures 10-15
+  available at: ftp://kusmos.phsx.ukans.edu/preprints/nbody
+Journal-ref: Astrophys.J. 497 (1998) 38-61
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706100
+From: Eric C. Ford  <example@example.com>
+Date: Tue, 10 Jun 1997 21:22:03 GMT   (24kb)
+
+Title: Energy Spectra and High Frequency Oscillations in 4U 0614+091
+Authors: Eric C. Ford, Philip Kaaret, Kaiyou Chen, Marco Tavani (Columbia),
+  Didier Barret (CESR), Peter Bloser, Jonathan Grindlay (Harvard), B. Alan
+  Harmon, William S. Paciesas, S. Nan Zhang (MSFC)
+Categories: astro-ph
+Comments: 9 pages, 3 figures, submitted to ApJL, for more information on this
+  and other QPO papers see http://www.astro.columbia.edu/~eric/qpos.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706101
+From: Wolung Lee  <example@example.com>
+Date: Tue, 10 Jun 1997 23:32:37 GMT   (51kb)
+
+Title: Density Perturbations of Thermal Origin During Inflation
+Authors: Wolung Lee and Li-Zhi Fang
+Categories: astro-ph
+Comments: 21 pages, 7 postscript figures, using revtex
+Journal-ref: Int.J.Mod.Phys. D6 (1997) 305-322
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706102
+From: Sally Laurent-Muehleisen  <example@example.com>
+Date: Tue, 10 Jun 1997 23:48:37 GMT   (14kb)
+Date (revised): Wed, 11 Jun 1997 00:09:30 GMT
+
+Title: The Rosat - Green Bank Sample of Intermediate BL Lac Objects
+Authors: S. A. Laurent-Muehleisen, R. I. Kollgaard, E. D. Feigelson
+Categories: astro-ph
+Comments: 2 pages, 1 figure, Contributed Paper to IAU 164: Radio Emission from
+  Galactic and Extragalactic Compact Sources
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706103
+From: Takashi Murayama  <example@example.com>
+Date: Wed, 11 Jun 1997 03:37:53 GMT   (46kb)
+
+Title: The Epoch of Major Star Formation in High-z Quasar Hosts
+Authors: Yoshiaki Taniguchi, Nobuo Arimoto, Takashi Murayama, Aaron S. Evans,
+  David B. Sanders, Kimiaki Kawara
+Categories: astro-ph
+Comments: 7 Latex (lamuphys.sty) pages including 2 PostScript figures. To
+  appear in the Proceedings of Quasar Hosts held at Tenerife, Spain (September
+  24-27, 1996)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706104
+From: J. P. Beaulieu  <example@example.com>
+Date: Wed, 11 Jun 1997 10:04:48 GMT   (51kb)
+
+Title: EROS Variable Stars : Discovery of Beat Cepheids in the Small Magellanic
+  Cloud and the effect of metallicity on pulsation
+Authors: J. P. Beaulieu, M. Krockenberger, D. D. Sasselov, C. Renault, R.
+  Ferlet, A. Vidal-Madjar, E. Maurice, L. Pr\'evot, E. Aubourg, P. Bareyre, S.
+  Brehin, C. Coutures, N. Delabrouille, J. de Kat, M. Gros, B. Laurent, M.
+  Lachi\`eze-Rey, E. Lesquoy, C. Magneville, A. Milsztajn, L. Moscoso, F.
+  Queinnec, J. Rich, M. Spiro, L. Vigroux, S. Zylberajch, R. Ansari, F.
+  Cavalier, M. Moniez, C. Gry. (The EROS Collaboration)
+Categories: astro-ph
+Comments: 4 pages, Latex file with 4 .ps figures. accepted for publication in A
+  A Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706105
+From: J. P. Beaulieu  <example@example.com>
+Date: Wed, 11 Jun 1997 10:12:58 GMT   (79kb)
+
+Title: Differential Studies of Cepheids in the Magellanic Clouds
+Authors: J.P. Beaulieu (Kapteyn Institute, Groningen), D.D. Sasselov (Harvard
+  CfA, Cambridge)
+Categories: astro-ph
+Comments: 5 pages, Latex file with 3 .ps figures. IAU 189, fundamental stellar
+  properties : the interaction between observation and theory, Sydney, January
+  1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706106
+From: http://www. phys. uniroma1. it/DOCS/PIL/pil. html  <example@example.com>
+Date: Wed, 11 Jun 1997 13:06:42 GMT   (34kb)
+
+Title: Galaxy number counts and Fractal correlations
+Authors: M. Montuori, F. Sylos Labini, A. Gabrielli, A. Amici and L. Pietronero
+Categories: astro-ph
+Comments: Latex file 7 pages and 3 Postscipt figures. Accepted for publication
+  in Europhysics Letters. This paper is also available at
+  http://www.phys.uniroma1.it/DOCS/PIL/pil.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706107
+From: Mark Voit  <example@example.com>
+Date: Wed, 11 Jun 1997 15:08:32 GMT   (204kb)
+
+Title: A Deep Look at the Emission-Line Nebula in Abell 2597
+Authors: G. M. Voit and M. Donahue (STScI)
+Categories: astro-ph
+Comments: 33 Latex pages, including 16 Postscript figures, to appear in 1997
+  September 1 Astrophysical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706108
+From: Ermanno Borra  <example@example.com>
+Date: Wed, 11 Jun 1997 14:36:36 GMT   (77kb)
+
+Title: Astronomical Research with liquid mirror telescopes
+Authors: E. F. Borra
+Categories: astro-ph
+Comments: 11 pages, Postscript to appear in the Proceedings of a workshop on
+  Science with Liquid Mirror Telescopes, M. Ferrari ed
+Report-no: EFB103
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706109
+From: Francois Legrand  <example@example.com>
+Date: Wed, 11 Jun 1997 14:58:57 GMT   (52kb)
+
+Title: Evidences for an expanding shell in the Blue Compact Dwarf Galaxy Haro 2
+Authors: F. Legrand, D. Kunth, J.M. Mas-Hesse, and J. Lequeux
+Categories: astro-ph
+Comments: 8 pages, 5 postscript figures. To be published in Astronomy &
+  Astrophysics
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706110
+From: James Stevens  <example@example.com>
+Date: Wed, 11 Jun 1997 15:19:15 GMT   (102kb)
+
+Title: Multiwavelength observations of the Be/X-ray binary 4U1145-619
+Authors: James B. Stevens, Pablo Reig, Malcolm J. Coe, David H. Buckely, Juan
+  Fabregat, Iain A. Steele
+Categories: astro-ph
+Comments: 8 pages postscript. Accepted by MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706111
+From: Kevin Krisciunas  <example@example.com>
+Date: Wed, 11 Jun 1997 22:57:17 GMT   (56kb)
+
+Title: Optical Night-Sky Brightness at Mauna Kea over the Course of a Complete
+  Sunspot Cycle
+Authors: K. Krisciunas
+Categories: astro-ph
+Comments: 27 pages AAS-style (v 4.0) Latex, 5 figures, to be published in
+  Publications of the Astronomical Society of the Pacific
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706112
+From: Rohan Mahadevan  <example@example.com>
+Date: Wed, 11 Jun 1997 20:15:11 GMT   (144kb)
+Date (revised): Mon, 25 Aug 1997 15:39:17 GMT
+
+Title: Advection-Dominated Accretion Model of Sagittarius A*: Evidence for a
+  Black Hole at the Galactic Center
+Authors: Ramesh Narayan, Rohan Mahadevan, Jonathan E. Grindlay, Robert G.
+  Popham and Charles Gammie (Harvard-Smithsonian Center for Astrophysics)
+Categories: astro-ph
+Comments: 41 pages (Latex) including 6 Figures and 2 Tables. Final Revised
+  Version changes to text, tables and figures. ApJ, 492, in press
+Journal-ref: Astrophys.J. 492 (1998) 554-568
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706113
+From: Ted von Hippel  <example@example.com>
+Date: Wed, 11 Jun 1997 20:51:37 GMT   (55kb)
+
+Title: Stellar Populations and the White Dwarf Mass Function: Connections To
+  Supernova Ia Luminosities
+Authors: Ted von Hippel (University of Wisconsin), G. D. Bothun (University of
+  Oregon), and R. A. Schommer (CTIO)
+Categories: astro-ph
+Comments: 20 pages, latex + 7 postscript figures, to be published in AJ,
+  September 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706114
+From: Gary Steigman  <example@example.com>
+Date: Wed, 11 Jun 1997 20:57:30 GMT   (162kb)
+Date (revised): Thu, 11 Dec 1997 19:42:05 GMT
+
+Title: Is High Primordial Deuterium Consistent With Galactic Evolution?
+Authors: Monica Tosi, Gary Steigman, Francesca Matteucci and Cristina Chiappini
+Categories: astro-ph
+Comments: ApJ accepted; revised to the version which will appear in the ApJ.
+  More discussion but conclusions unchanged. 25 pages, 1 table, 7 postscript
+  figures
+Report-no: OSU-TA-7/97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706115
+From: Ray Carlberg  <example@example.com>
+Date: Thu, 12 Jun 1997 03:29:44 GMT   (19kb)
+
+Title: Omega baryon via Oort's Method
+Authors: R. G. Carlberg, S. L. Morris, H. K. C. Yee, E. Ellingson, R. Abraham,
+  H. Lin, D. Schade, P. Gravel, C. J. Pritchet, T. Smecker-Hane, F. D. A.
+  Hartwick, J. E. Hesser, J. B. Hutchings, J. B. Oke
+Categories: astro-ph
+Comments: Submitted to ApJLetts. Also available at
+  http://manaslu.astro.utoronto.ca/~carlberg/cnoc/omb/gas.ps.gz
+Report-no: CNOCxvi
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706116
+From: Nicolas Cardiel  <example@example.com>
+Date: Thu, 12 Jun 1997 07:48:19 GMT   (79kb)
+
+Title: Reliable random error estimation in the measurement of line-strength
+  indices
+Authors: N. Cardiel, J. Gorgas, J. Cenarro and J. J. Gonzalez
+Categories: astro-ph
+Comments: 9 pages, LaTeX file + 5 PostScript figures, psfig.sty and laa-s.sty
+  required, to be published in Astronomy & Astrophysics Supplement Series
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706117
+From: Henning Seemann  <example@example.com>
+Date: Thu, 12 Jun 1997 09:19:27 GMT   (63kb)
+
+Title: Unstable waves in winds of magnetic massive stars
+Authors: Henning Seemann, Peter L. Biermann (Max-Planck-Institut f\"ur
+  Radioastronomie, Bonn)
+Categories: astro-ph
+Comments: 8 pages LaTeX with times, epsfig, and l-aa macros, including 9
+  bitmaped postscript figures
+Report-no: MPIfR-717
+Journal-ref: Astron.Astrophys. 327 (1997) 273-280
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706118
+From: Hermann Brunner  <example@example.com>
+Date: Thu, 12 Jun 1997 15:42:07 GMT   (83kb)
+
+Title: UV to X-ray Spectra of Radio-Quiet Quasars. Comparison With Accretion
+  Disk Models
+Authors: H. Brunner (1), C. Mueller (2), P. Friedrich (1), T. Doerrer (2), R.
+  Staubert (2), H. Riffert (2) ((1) Astrophysikalisches Institut Potsdam,
+  Germany (2) Institut fuer Astronomie und Astrophysik Tuebingen, Germany)
+Categories: astro-ph
+Comments: Accepted for publication in Astron. Astrophys. Main Journal, 13
+  pages, Latex, 9 Postscript figures, Springer A&A style file L-AA version 3
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706119
+From: Rosalba Perna  <example@example.com>
+Date: Thu, 12 Jun 1997 15:23:40 GMT   (37kb)
+
+Title: Probing the Mass Fraction of MACHOs in Extragalactic Halos
+Authors: Rosalba Perna and Abraham Loeb (Harvard University)
+Categories: astro-ph
+Comments: 12 pages, 2 figures, submitted to ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706120
+From: Yong Zhong Qian  <example@example.com>
+Date: Thu, 12 Jun 1997 15:12:04 GMT   (330kb)
+
+Title: Diverse Supernova Sources for the r-Process
+Authors: Y.-Z. Qian, P. Vogel, and G. J. Wasserburg (Caltech)
+Categories: astro-ph nucl-th
+Comments: 23 pages, AAS LATEX, 8 Postscript figures
+Journal-ref: Astrophys.J. 494 (1998) 285
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706121
+From: Daniela Calzetti  <example@example.com>
+Date: Thu, 12 Jun 1997 16:43:54 GMT   (43kb)
+
+Title: UV Opacity in Nearby Galaxies and Application to Distant Galaxies
+Authors: Daniela Calzetti (Space Telescope Science Institute)
+Categories: astro-ph
+Comments: 10 pages, Latex, 2 encapsulated Postscript figures, aipproc.sty
+  macro, to appear in the Proceedings of the Conference `The Ultraviolet
+  Universe at Low and High Redshift' (College Park, MD, May 2-4, 1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706122
+From: Falk Herwig  <example@example.com>
+Date: Thu, 12 Jun 1997 17:50:37 GMT   (16kb)
+
+Title: Stellar evolution of low and intermediate-mass stars. IV.
+  Hydrodynamically-based overshoot and nucleosynthesis in AGB stars
+Authors: F. Herwig, T. Bl\"ocker, D. Sch\"onberner, M. El Eid
+Categories: astro-ph
+Comments: 4 pages, 4 ps-figures, latex and l-aa.sty, Letter to Astronomy &
+  Astrophysics, in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706123
+From:  <example@example.com>
+Date: Thu, 12 Jun 1997 18:57:56 GMT   (50kb)
+
+Title: A search for correlations of TeV gamma-rays with ultra-high energy
+  cosmic rays
+Authors: C. W. Akerlof (3), S. Biller (4), P. Boyle (2), J. Buckley (1), D. A.
+  Carter-Lewis (5), M. Catanese (5), M. F. Cawley (6), V. Connaughton (1,10),
+  D. J. Fegan (2), J. Finley (7), J. Gaidos (7), A. M. Hillas (4), F. Krennrich
+  (5), R. C. Lamb (5), R. Lessard (2), J. McEnery (2), G. Mohanty (5), N. A.
+  Porter (2), J. Quinn (2), A. Rodgers (4), H. J. Rose (4), F. Samuelson (5),
+  M. S. Schubnell (3), G. Sembroski (7), R. Srinivasan (7), T. C. Weekes (1),
+  and J. Zweerink (5). ((1) CfA - Whipple Observatory, (2) University College
+  Dublin, (3) University of Michigan, (4) University of Leeds, (5) Iowa State
+  University, (6) St. Patrick's College, (7) Purdue University, (10) NASA
+  Marshall Space Flight Center)
+Categories: astro-ph
+Comments: 18 pages, 4 figures, Latex with AAS macros, submitted to ApJ
+Journal-ref: Astrophys.J. 586 (2003) 1232-1237
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706124
+From: Tomasz Plewa  <example@example.com>
+Date: Thu, 12 Jun 1997 22:58:46 GMT   (347kb)
+Date (revised): Mon, 23 Jun 1997 13:23:10 GMT
+
+Title: Bending relativistic jets in AGNs
+Authors: T. Plewa (Copernicus Astronomical Center), J.Ma. Marti (Univ.
+  Valencia), E. Mueller (MPA), M. Rozyczka (Warsaw University, and Nicolaus
+  Copernicus Center) and M. Sikora (Copernicus Astronomical Center)
+Categories: astro-ph
+Comments: 6 pages, tex, uses lecproc.cmm, 3 figures (included); also available
+  at http://www.camk.edu.pl/~tomek/papers/rjet_s.uu (reduced resolution) or
+  http://www.camk.edu.pl/~tomek/papers/rjet_l.uu (full resolution); mpeg movies
+  available at http://www.camk.edu.pl/~tomek/RJET/index.html#Bend . To appear
+  in Proceedings of "Relativistic jets in AGNs", Cracow, 27-30 May 1997.
+  Revised version: slightly modified text, corrected parameter set of model A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706125
+From: Julie E. McEnery  <example@example.com>
+Date: Fri, 13 Jun 1997 00:28:04 GMT   (27kb)
+
+Title: Tev Observations of the Variability and Spectrum of Markarian 421
+Authors: J.E. McEnery, I.H. Bond, P.J. Boyle, S.M. Bradbury, A.C. Breslin, J.H.
+  Buckley, A.M. Burdett, J. Bussons~Gordo, D.A. Carter-Lewis, M. Catanese, M.F.
+  Cawley, D.J . Fegan, J.P. Finley, J. Gaidos, A. Hall, A.M. Hillas, F.
+  Krennrich, R.C. Lamb, R.W. Lessard, C. Masterson, G. Mohanty, P. Moriarty, J.
+  Quinn, A.J. Rodgers, H.J . Rose, F.W. Samuelson, G.H. Sembroski, R.
+  Srinivasan, T.C. Weekes, J. Zweerink
+Categories: astro-ph
+Comments: 4 pages, 4 figures, to appear in proceedings of 25 ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706126
+From: Borge Nodland  <example@example.com>
+Date: Fri, 13 Jun 1997 04:23:49 GMT   (6kb)
+Date (revised): Mon, 16 Jun 1997 20:18:45 GMT
+
+Title: Response to Leahy's Comment on the Data's Indication of Cosmological
+  Birefringence
+Authors: Borge Nodland and John P. Ralston
+Categories: astro-ph hep-ph
+Comments: 3 pages, ReVTeX. Submitted to Physical Review Letters. More
+  information is available at
+  http://www.cc.rochester.edu/college/rtc/Borge/aniso.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706127
+From: Pedro M. Rodriguez Pascual  <example@example.com>
+Date: Fri, 13 Jun 1997 11:59:51 GMT   (64kb)
+
+Title: The broad line region of narrow-line Seyfert 1 galaxies
+Authors: Pedro M. Rodriguez-Pascual, J. Miguel Mas-Hesse and Maria Santos-Lleo
+Categories: astro-ph
+Comments: Accepted for publication in Astron. Astrophys. Main Journal, 10
+  pages, LaTeX with epsf and l-aa macros, including 2 postscript figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706128
+From: Lawrence M. Krauss  <example@example.com>
+Date: Fri, 13 Jun 1997 09:34:28 GMT   (121kb)
+Date (revised): Tue, 17 Jun 1997 12:07:29 GMT
+Date (revised): Mon, 4 Aug 1997 19:23:51 GMT 
+
+Title: The Age Of Globular Clusters In Light Of Hipparcos: Resolving the Age
+  Problem?
+Authors: Brian Chaboyer (Arizona), P. Demarque (Yale), Peter J. Kernan (Case
+  Western Reserve), Lawrence M. Krauss (Case Western Reserve and CERN)
+Categories: astro-ph
+Comments: 41 pages, including 10 eps figs, uses aaspp4.sty and flushrt.sty,
+  submitted to Ap.J., revised to incorporate FULL Hipparcos catalogue data
+Report-no: CWRU-P4-97, CERN-TH/97-121
+Journal-ref: Astrophys.J. 494 (1998) 96
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706129
+From: Priya  <example@example.com>
+Date: Fri, 13 Jun 1997 09:54:25 GMT   (578kb)
+Date (revised): Mon, 1 Jun 1998 22:17:36 GMT
+
+Title: The Mass/Light Ratio of Early-Type Galaxies: Constraints from
+  Gravitational Lensing in the Rich Cluster AC114
+Authors: Priyamvada Natarajan (IoA, Cambridge), Jean-Paul Kneib (Observatoire
+  Midi-Pyrenees, Toulouse), Ian Smail (Durham) and Richard S. Ellis (IoA,
+  Cambridge)
+Categories: astro-ph
+Comments: LaTeX file, 3 figures + 1 Table, 11 pages, ApJ in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706130
+From: Paul P. van der Werf  <example@example.com>
+Date: Fri, 13 Jun 1997 12:19:17 GMT   (285kb)
+
+Title: Star formation at high redshift as traced by near-infrared Halpha
+  surveys
+Authors: Paul P. van der Werf
+Categories: astro-ph
+Comments: Invited review, to appear in "Extragalactic Astronomy in the
+  Infrared", eds. G.A. Mamon, Trinh Xuan Thuan, and J. Tran Thanh Van, Editions
+  Frontieres, Gif-sur-Yvette. LaTeX2e, 10 pages, 3 postscript figures included.
+  See also http://www.strw.leidenuniv.nl/~pvdwerf
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706131
+From: Julie E. McEnery  <example@example.com>
+Date: Fri, 13 Jun 1997 14:57:47 GMT   (73kb)
+
+Title: Constraints on Cosmic-Ray Origin Theories from TeV Gamma-Ray
+  Observations
+Authors: R.W.Lessard, P.J.Boyle, S.M. Bradbury, J.H.Buckley, A.C.Burdett,
+  J.Bussons Gordo, D.A.Carter-Lewis, M.Catanese, M.F.Cawley, D.J.Fegan,
+  J.P.Finley, J.A.Gaidos, A.M.Hillas, F.Krennrich, R.C.Lamb, C.Masterson,
+  J.E.McEnery, G.Mohanty, J.Quinn, A.J.Rodgers, H.J.Rose, F.W.Samuelson,
+  G.H.Sembroski, R.Srinivasan, T.C.Weekes, and J.Zweerink
+Categories: astro-ph
+Comments: 4 pages, 2 figures, to appear in proceedings of 25 ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706132
+From: Julie E. McEnery  <example@example.com>
+Date: Fri, 13 Jun 1997 15:14:50 GMT   (15kb)
+
+Title: Search for TeV Counterparts in Gamma-Ray Bursts
+Authors: P.J.Boyle, J.H.Buckley, A.M. Burdett, J.Bussons Gordo,
+  D.A.Carter-Lewis, M.Catanese, M.F.Cawley, V.Connaughton, D.J.Fegan,
+  J.P.Finley, J.A.Gaidos, K.Harris, A.M.Hillas, R.C.Lamb, F.Krennrich,
+  R.W.Lessard, C.Masterson, J.E.McEnery, G.Mohanty, N.A.Porter, J.Quinn,
+  A.J.Rodgers, H.J.Rose, F.W.Samuelson, G.H.Sembroski, R.Srinivasan,
+  T.C.Weekes, J.Zweerink
+Categories: astro-ph
+Comments: 4 pages, 3 figures, to appear in proceedings of the 25th ICRC
+  (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706133
+From: Astrid Orr  <example@example.com>
+Date: Fri, 13 Jun 1997 17:37:12 GMT   (93kb)
+Date (revised): Tue, 1 Jul 1997 08:48:58 GMT
+
+Title: Soft X-ray observations of the complex warm absorber in MCG-6-30-15 with
+  BeppoSAX
+Authors: Astrid Orr (1), S. Molendi (2), F. Fiore (3), P. Grandi (4), A.N.
+  Parmar (1), and Alan Owens (1) ((1) ESA/Estec (2) I.F.C.T.R. C.N.R., (3)
+  Beppo Sax SDC, (4) I.A.S. C.N.R.)
+Categories: astro-ph
+Comments: 4 pages. Accepted for publication in A&A (Letters). Minor LaTeX
+  change for figure orientation
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706134
+From: Xingming Chen  <example@example.com>
+Date: Fri, 13 Jun 1997 16:48:47 GMT   (91kb)
+
+Title: Rapid Bursts From GRS 1915+105 with RXTE
+Authors: Ronald E. Taam, Xingming Chen, and Jean H. Swank
+Categories: astro-ph
+Comments: ApJLett in press
+Report-no: astro-97-00
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706135
+From: Erik Kuulkers  <example@example.com>
+Date: Fri, 13 Jun 1997 19:02:34 GMT   (93kb)
+
+Title: Complex outburst behaviour from the black-hole candidate 4U 1630-47
+Authors: E. Kuulkers, A.N. Parmar, S. Kitamoto, L.R. Cominsky, and R.K. Sood
+Categories: astro-ph
+Comments: 30 pages including 9 figures accepted for publication in MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706136
+From: Julie E. McEnery  <example@example.com>
+Date: Fri, 13 Jun 1997 20:55:51 GMT   (17kb)
+
+Title: First Results from a Search for TeV Emission from BL Lacs
+Authors: M. Catanese, P.J. Boyle, J.H. Buckley, A.M. Burdett, J. Bussons Gordo,
+  D.A. Carter-Lewis, M.F. Cawley, D.J. Fegan, J.P. Finley, J.A. Gaidos, A.M.
+  Hillas, F. Krennrich, R.C. Lamb, R.W. Lessard, C. Masterson, J.E. McEnery, G.
+  Mohanty, J. Quinn, A.J. Rodgers, H.J. Rose, F.W. Samuelson, G.H. Sembroski,
+  R. Srinivasan, T.C. Weekes, and J. Zweerink
+Categories: astro-ph
+Comments: 4 pages, 2 figures, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706137
+From: Adam Burrows  <example@example.com>
+Date: Sat, 14 Jun 1997 23:31:50 GMT   (84kb)
+
+Title: New Insights into Core-Collapse Supernova Theory
+Authors: A. Burrows
+Categories: astro-ph
+Comments: 13 pages, LaTex, 5 figures, to be published in the proceedings of the
+  5'th CTIO/ESO/LCO Workshop ``SN1987A: Ten Years Later,'' eds. M.M. Phillips &
+  N.B. Suntzeff, held in La Serena, Chile, February 24--28, 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706138
+From: Brad Gibson  <example@example.com>
+Date: Sun, 15 Jun 1997 06:30:22 GMT   (38kb)
+
+Title: Supernovae Types Ia/II and Intracluster Medium Enrichment
+Authors: Brad K. Gibson (MSSSO), Mike Loewenstein (GSFC), Richard F. Mushotzky
+  (GSFC)
+Categories: astro-ph
+Comments: 6 pages (incl 1 PostScript figure), LaTeX, also available at
+  http://msowww.anu.edu.au/~gibson/publications.html, MNRAS, in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706139
+From: Dr. Noah Brosch  <example@example.com>
+Date: Sun, 15 Jun 1997 07:59:35 GMT   (13kb)
+
+Title: Gazing into the MgF_2 ball: UV astronomy for the 3rd millenium
+Authors: N. Brosch (1) ((1) The Wise Observatory and the School of Physics and
+  Astronomy, Tel Aviv University)
+Categories: astro-ph
+Comments: 10 pages, LaTeX, uses AIP style To appear in "The UV Universe at Low
+  and High Redshifts: Probing the Progress of Galaxy Evolution"
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706140
+From: Hagai Netzer  <example@example.com>
+Date: Sun, 15 Jun 1997 12:09:04 GMT   (17kb)
+
+Title: Ultraviolet Lines and Gas Composition in NGC 1068
+Authors: Hagai Netzer (School of Physics and Astronomy and the Wise
+  Observatory, Tel Aviv University)
+Categories: astro-ph
+Comments: 10 pages, latex plus one figure To appear in Astrophysics and Space
+  Science
+Journal-ref: Astrophys.Space Sci. 248 (1997) 127-134
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706141
+From: Tsvi Piran  <example@example.com>
+Date: Sun, 15 Jun 1997 14:09:05 GMT   (26kb)
+Date (revised): Mon, 21 Jul 1997 05:38:29 GMT
+
+Title: Persistent Counterparts to GRBS
+Authors: J. I. Katz an d Tsvi Piran
+Categories: astro-ph
+Comments: 18 pages, latex, aas macros, one figure and two tables. Also
+  available at ftp://shemesh.fiz.huji.ac.il or http://shemesh.fiz.huji.ac.il
+  Revised version includes a discussion of the pre-maximum visible intensity.
+  Accepted for publicaiton in Ap. J
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706142
+From: Julie E. McEnery  <example@example.com>
+Date: Sun, 15 Jun 1997 19:46:20 GMT   (27kb)
+
+Title: TeV Observations of the Variability and Spectrum of Markarian 501
+Authors: J. Quinn, I.H. Bond, P.J. Boyle, J.H. Buckley, S.M. Bradbury, A.C.
+  Breslin, A.M. Burdett, J. Bussons Gordo, D.A. Carter-Lewis, M.Catanese, M.F.
+  Cawley, D.J. Fegan, J.P. Finley, J.A. Gaidos, A. Hall, A.M. Hillas, F.
+  Krennrich, R.C. Lamb, R.W. Lessard, C. Masterson, J.E.McEnery, G. Mohanty, P.
+  Moriarty, A.J. Rodgers, H.J. Rose, F.W. Samuelson, G.H. Sembroski, R.
+  Srinivasan, T.C. Weeke, and J. Zweerink
+Categories: astro-ph
+Comments: 4 pages, 2 figures, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706143
+From: Julie E. McEnery  <example@example.com>
+Date: Sun, 15 Jun 1997 20:03:32 GMT   (31kb)
+
+Title: VERITAS: Very LArge Energetic Radiation Imaging Telescope Array System
+Authors: T.C.Weekes, C.Akerlof, S.Biller, A.C.Breslin, J.H.Buckley,
+  D.A.Carter-Lewis, M.Catanese, M.F.Cawley, B.Dingus, G.G.Fazio, D.J.Fegan,
+  J.Finley, G.Fishman, J.Gaidos, G.H.Gillanders, P.Gorham, J.E.Grindlay,
+  A.M.Hillas, J.Huchra, P.Kaaret, M.Kertzman, D.Kieda, F.Krennrich, R.C.Lamb,
+  M.J.Lang, A.P.Marscher, S.Matz, T.McKay, D.Muller, R.Ong, W.Purcell, J.Rose,
+  G.Sembroski, F.D.Seward, P.Slane, S.Swordy, T.Tumer, M.Ulmer, M.Urban, and
+  B.J.Wilkes
+Categories: astro-ph
+Comments: 4 pages, 2 figures, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706144
+From: Julie E. McEnery  <example@example.com>
+Date: Sun, 15 Jun 1997 20:18:33 GMT   (33kb)
+
+Title: Very High Energy Observations of PSR B1951+32
+Authors: R.Srinivasan, P.J.Boyle, J.H.Buckley, A.M.Burdett, J.Bussons Gordo,
+  D.A.Carter-Lewis, M.F.Cawley, M.Catanese, E. Colombo, D.J.Fegan, J.P.Finley,
+  J.A.Gaidos, A.M.Hillas, R.C.Lamb, F.Krennrich, R.W.Lessard, C.Masterson,
+  J.E.McEnery, G.Mohanty, P. Moriarty, J.Quinn, A.J.Rodgers, H.J.Rose,
+  F.W.Samuelson, G.H.Sembroski, T.C.Weekes, and J.Zweerink
+Categories: astro-ph
+Comments: 4 pages, 2 figures, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706145
+From: Julie E. McEnery  <example@example.com>
+Date: Sun, 15 Jun 1997 20:41:57 GMT   (28kb)
+
+Title: Spectrum of TeV Gamma-Rays from the Crab Nebula
+Authors: D.A.Carter-Lewis, S.Biller, P.J.Boyle, J.H.Buckley, A.Burdett,
+  J.Bussons Gordo, M.A.Catanese, M.F.Cawley, D.J.Fegan, J.P.Finley, J.A.Gaidos,
+  A.M.Hillas, F.Krennrich, R.C.Lamb, R.W.Lessard, C.Masterson, J.E.McEnery,
+  G.Mohanty, J.Quinn, A.J.Rodgers, H.J.Rose, F.W.Samuelson, G.H.Sembroski,
+  R.Srinivasan, T.C.Weekes, M.West, J.A.Zweerink
+Categories: astro-ph
+Comments: 4 pages, 3 figures, to appear in proceedings of the 25th ICRC
+  (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706146
+From: Tim Bedding  <example@example.com>
+Date: Sun, 15 Jun 1997 23:26:22 GMT   (56kb)
+
+Title: Stellar populations from adaptive optics observations: four test cases
+Authors: T. R. Bedding, D. Minniti, F. Courbin and B. Sams
+Categories: astro-ph
+Comments: 5 pages, latex with figures, accepted by A&A (Main Journal)
+Report-no: CAD-201
+Journal-ref: Astron.Astrophys. 326 (1997) 936-940
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706147
+From: Wayne Hu  <example@example.com>
+Date: Mon, 16 Jun 1997 01:22:07 GMT   (557kb)
+
+Title: A CMB Polarization Primer
+Authors: Wayne Hu (IAS, Princeton) Martin White (U. Chicago)
+Categories: astro-ph
+Comments: 21pg. LaTex aas2pp4, 15 eps figs, 4 animated-gifs. Full HTML version
+  available at http://www.sns.ias.edu/~whu/polar/polar.html
+Report-no: IASSNS-AST/97
+Journal-ref: New Astron. 2 (1997) 323
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706148
+From: A. Y. Potekhin  <example@example.com>
+Date: Mon, 16 Jun 1997 08:37:05 GMT   (118kb)
+Date (revised): Thu, 21 Aug 1997 11:53:22 GMT 
+
+Title: Internal temperatures and cooling of neutron stars with accreted
+  envelopes
+Authors: A.Y.Potekhin (1,2), G. Chabrier (2), D.G. Yakovlev (1) ((1) Ioffe
+  Phys.-Tech. Institute, (2) CRAL, ENS-Lyon)
+Categories: astro-ph
+Comments: 15 pages, 9 figures, LaTeX using l-aa.sty and epsf.sty (included).
+  Misprints in Appendix A corrected
+Journal-ref: Astron. Astrophys. 323 (1997) 415
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706149
+From: Achim Weiss  <example@example.com>
+Date: Mon, 16 Jun 1997 11:43:13 GMT   (92kb)
+
+Title: The age of the most nearby star
+Authors: Achim Weiss and Helmut Schlattl (MPA Garching, Germany)
+Categories: astro-ph
+Comments: 10 pages; submitted to Astron. Astrophys
+Report-no: MPA 1027
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706150
+From: Luigi Guzzo  <example@example.com>
+Date: Mon, 16 Jun 1997 11:42:46 GMT   (395kb)
+
+Title: Redshift-Space Distortions and the Real-Space Clustering of Different
+  Galaxy Types
+Authors: Luigi Guzzo (1,2), Michael A. Strauss (2), Karl B. Fisher (3,4),
+  Riccardo Giovanelli (5) and Martha P. Haynes (5) ((1) Brera Obs., (2)
+  Princeton Univ., (3) IAS Princeton, (4) Univ. of Texas, (5) Cornell Univ.)
+Categories: astro-ph
+Comments: 17 LaTeX pages including 3 tables, plus 11 PS figures. Uses AASTeX
+  macro package (aaspp4.sty) and epsf.sty. To appear on ApJ, 489, Nov 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706151
+From: Martin Pohl  <example@example.com>
+Date: Mon, 16 Jun 1997 10:57:13 GMT   (16kb)
+
+Title: The pulsar contribution to the diffuse galactic gamma-ray emission
+Authors: Martin Pohl
+Categories: astro-ph
+Comments: 5 pages, Proceedings of the 4th Compton Symposium
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706152
+From: Martin Pohl  <example@example.com>
+Date: Mon, 16 Jun 1997 11:10:46 GMT   (84kb)
+
+Title: Maximum-Entropy analysis of EGRET data
+Authors: Martin Pohl
+Categories: astro-ph
+Comments: 5 pages, Proceedings of the 4th Compton Symposium
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706153
+From: Daniela Bettoni  <example@example.com>
+Date: Mon, 16 Jun 1997 14:16:21 GMT   (43kb)
+
+Title: The visible environment of polar ring galaxies
+Authors: Chiara Brocca, Daniela Bettoni and Giuseppe Galletta
+Categories: astro-ph
+Comments: Accepted for publication in Astron. Astrophys. Main Journal, 9 pages
+  including 3 postscript figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706154
+From: Nicolas Renaud  <example@example.com>
+Date: Mon, 16 Jun 1997 16:01:22 GMT   (39kb)
+
+Title: The terminal bulk Lorentz factor of relativistic electron-positron jet
+Authors: N. Renaud and G. Henri (Laboratoire d'Astrophysique, Observatoire de
+  Grenoble, France)
+Categories: astro-ph
+Comments: 4 pages, Tex, uses lecproc.cmm and psfig.tex, 2 figures(included), To
+  appear in Proceedings of "Relativistic jets in AGNs", Cracow, 27-30 May 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706155
+From: Sabrina de Grandi  <example@example.com>
+Date: Mon, 16 Jun 1997 15:08:23 GMT   (193kb)
+
+Title: The Steepness Ratio Technique: A New Method to analyze ROSAT All-Sky
+  Survey Extended Sources
+Authors: S. De Grandi, S. Molendi, H. B\"ohringer, G. Chincarini and W. Voges
+Categories: astro-ph
+Comments: 22 pages, 18 figures, LaTeX file, uses aaspp4.sty. Accepted for
+  publication in Astrophysical Journal, Vol. 486, Sept 10, 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706156
+From: Remi Cabanac  <example@example.com>
+Date: Mon, 16 Jun 1997 16:03:25 GMT   (484kb)
+
+Title: Science with Liquid Mirror Telescopes: Season 1996 of NASA Orbital
+  Debris Observatory
+Authors: Remi A. Cabanac
+Categories: astro-ph
+Comments: gzipped postscript 6 pages, 5 figures. Also available at
+  ftp://wood.phy.ulaval.ca/pub/marseille97/marseille97.proc.ps.z to appear in
+  the Proceedings of a workshop on Science with Liquid Mirror Telescopes, M.
+  Ferrari ed
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706157
+From: B. Glenn Piner  <example@example.com>
+Date: Mon, 16 Jun 1997 16:20:12 GMT   (27kb)
+
+Title: A Slower Superluminal Velocity for the Quasar 1156+295
+Authors: B. Glenn Piner (1, 2, and 3), Kerry A. Kingham (1) ((1) U.S. Naval
+  Observatory, (2) University of Maryland, Astronomy Dept., (3) NASA/GSFC)
+Categories: astro-ph
+Comments: 8 pages, 2 figures, accepted to ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706158
+From:  <example@example.com>
+Date: Mon, 16 Jun 1997 17:38:22 GMT   (85kb)
+
+Title: Spectral Components in the Optical Emission of the Seyfert Galaxy NGC
+  5548 and the Comparison of Intrinsic Nuclear Spectra with Accreting Corona
+  Model
+Authors: J. Kuraszkiewicz, Z. Loska, B. Czerny (Copernicus Astronomical Center,
+  Warsaw)
+Categories: astro-ph
+Comments: To appear in Acta Astron
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706159
+From: Hume Feldman  <example@example.com>
+Date: Mon, 16 Jun 1997 16:48:33 GMT   (21kb)
+Date (revised): Tue, 16 Dec 1997 20:40:23 GMT
+
+Title: A New Approach to Probing Large Scale Power with Peculiar Velocities
+Authors: Hume A. Feldman and Richard Watkins
+Categories: astro-ph
+Comments: 15 pages, 3 figures, Some revisions and different figure. Accepted
+  for publication at ApJ letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706160
+From: Chen Yong  <example@example.com>
+Date: Mon, 16 Jun 1997 17:14:47 GMT   (46kb)
+Date (revised): Thu, 26 Jun 1997 12:58:11 GMT
+
+Title: Evidence for Gamma-ray Bursts Originating Within 11 Mpc
+Authors: Y. Chen, M. Wu, L. M. Song
+Categories: astro-ph
+Comments: 5 pages, 5 figures, 3 tables, Accepted for publication in Astronomy
+  and Astrophysics, Main Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706161
+From: Betty Friedrich  <example@example.com>
+Date: Mon, 16 Jun 1997 22:58:10 GMT   (480kb)
+
+Title: Self-Organized Large-Scale Coherence in Simulations of Galactic Star
+  Formation
+Authors: David Chappell and John Scalo (University of Texas)
+Categories: astro-ph
+Comments: 29 pages, Latex, 8 figs, 1 table. Submitted to Astrophysical Journal
+Report-no: 381
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706162
+From: David Chernoff  <example@example.com>
+Date: Mon, 16 Jun 1997 20:10:27 GMT   (143kb)
+
+Title: Neutron Star Population Dynamics.I: Millisecond Pulsars
+Authors: J. M. Cordes and David F. Chernoff (Cornell University)
+Categories: astro-ph
+Comments: 53 pages, 12 Postscript figures, LaTeX/AASTeX (aasp4), to appear Ap.
+  J. 482, 1997 June 20
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706163
+From: Alex Lazarian  <example@example.com>
+Date: Mon, 16 Jun 1997 20:10:31 GMT   (121kb)
+
+Title: On the efficiency of grain alignment in dark clouds
+Authors: A. Lazarian, Alyssa A.Goodman, and Philip C. Myers
+Categories: astro-ph
+Comments: 24 pages, 2 figures, accepted to ApJ
+Report-no: POP 718
+Journal-ref: Astrophys.J. 490 (1997) 273
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706164
+From: Kim McLeod  <example@example.com>
+Date: Mon, 16 Jun 1997 20:36:04 GMT   (118kb)
+
+Title: Obscuration in the Host Galaxies of Soft X-ray Selected Seyferts
+Authors: Robert Simcoe (SAO, Princeton), K. K. McLeod (SAO), Jonathan Schachter
+  (SAO), Martin Elvis (SAO)
+Categories: astro-ph
+Comments: 14 pages including 2 tables and 3 eps figures, aas2pp4.sty, to appear
+  in ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706165
+From: Tereasa Brainerd  <example@example.com>
+Date: Mon, 16 Jun 1997 18:43:08 GMT   (456kb)
+
+Title: High-Resolution Simulations of Cluster Formation
+Authors: Tereasa G. Brainerd (Boston Univ.), David M. Goldberg (Princeton
+  Univ.) and Jens Verner Villumsen (Max-Planck-Institut fur Astrophysik)
+Categories: astro-ph
+Comments: 28 pages, 8 figures, plain TeX
+Report-no: BU97-TGB-01
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706166
+From: Boud Roukema  <example@example.com>
+Date: Mon, 16 Jun 1997 20:15:06 GMT   (132kb)
+
+Title: Constraining Cosmological Topology via Highly Luminous X-ray Clusters
+Authors: Boudewijn F. Roukema (National Astronomical Observatory of Japan,
+  Mitaka) and Alastair C. Edge (Institute of Astronomy, Cambridge, UK)
+Categories: astro-ph gr-qc
+Comments: 8 pages, LaTeX, requires mn.sty, 3 figures, submitted to MNRAS
+Journal-ref: Mon.Not.Roy.Astron.Soc. 292 (1997) 105
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706167
+From:  <example@example.com>
+Date: Mon, 16 Jun 1997 20:28:12 GMT   (140kb)
+
+Title: Quasi-stationary States of Dust Flows Under Poynting-Robertson Drag: New
+  Analytical and Numerical Solutions
+Authors: N.N. Gor'kavyi (1), L.M. Ozernoy (2,3), J.C. Mather (3), and T.
+  Taidakova (1) ((1) Crimean Astrophysical Observatory, Ukraine, (2) George
+  Mason U., (3) GSFC/NASA)
+Categories: astro-ph
+Comments: Accepted for publication in ApJ, v. 488, Oct. 10, 1997; 22 pages,
+  Latex, 12 Postscript figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706168
+From: Andy Layden  <example@example.com>
+Date: Mon, 16 Jun 1997 21:05:26 GMT   (578kb)
+
+Title: The Globular Cluster M54 and the Star Formation History of the
+  Sagittarius Dwarf Galaxy
+Authors: Andrew C. Layden (U of Michigan), Ata Sarajedini (KPNO)
+Categories: astro-ph
+Comments: 11 pages, AASTeX, 3 postscript figures, accepted for publication in
+  ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706169
+From: Tomislav Kundic  <example@example.com>
+Date: Tue, 17 Jun 1997 00:23:00 GMT   (298kb)
+
+Title: The External Shear Acting on Gravitational Lens B 1422+231
+Authors: Tomislav Kundic, David W. Hogg, Roger D. Blandford, Judith G. Cohen
+  (Caltech), Lori M. Lubin (OCIW) and James E. Larkin (Univ. of Chicago)
+Categories: astro-ph
+Comments: 16 pages including 3 tables, 2 eps figures and 2 jpeg images.
+  Submitted to the Astronomical Journal
+Report-no: GRP-476
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706170
+From: David Syer  <example@example.com>
+Date: Tue, 17 Jun 1997 12:31:57 GMT   (70kb)
+Date (revised): Sat, 5 Jul 1997 07:31:52 GMT
+
+Title: Density cusps: restrictions on non-axisymmetric models
+Authors: D. Syer (MPA) and HongSheng Zhao (Leiden)
+Categories: astro-ph
+Comments: Corrected some minor typos in equations. 8 pages, tex, with figures,
+  submitted to MNRAS, also at http://www.mpa-garching.mpg.de/~syer/papers
+Report-no: s-9702
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706171
+From: Bram Boroson  <example@example.com>
+Date: Tue, 17 Jun 1997 14:21:41 GMT   (135kb)
+
+Title: Simultaneous HST/ASCA Observations of LMC X-4: X-ray Ionization Effects
+  on a Stellar Wind
+Authors: S. D. Vrtilek (Center for Astrophysics), B. Boroson (Center for
+  Astrophysics), F. H. Cheng (Villanova University), R. McCray (JILA) and F.
+  Nagase (ISAS)
+Categories: astro-ph
+Comments: 21 pages, including 5 figures, submitted to the Astrophysical
+  Journal, uses aaspp4.sty, psfig
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706172
+From: Maurice van Putten  <example@example.com>
+Date: Tue, 17 Jun 1997 15:10:20 GMT   (92kb)
+
+Title: Formation, Evolution, and the Structure of Fronts Produced By Unsteady
+  Injection of Highly Magnetized, Relativistic Flows
+Authors: Amir Levinson (Tel Aviv), Maurice H. P. M. van Putten (MIT)
+Categories: astro-ph
+Comments: 10 pages, LaTex, one figure (ps), to appear in ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706173
+From: George Hau  <example@example.com>
+Date: Tue, 17 Jun 1997 18:35:21 GMT   (362kb)
+
+Title: A New Galaxy in the Local Group: the Antlia Dwarf Galaxy
+Authors: Alan B. Whiting, Mike J. Irwin, George K. T. Hau
+Categories: astro-ph
+Comments: AJ in press, 15 pages, 7 figures, figure 2 in b/w for space saving,
+  full postscript version available at
+  http://www.ast.cam.ac.uk/~gkth/antlia-pp.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706174
+From: Joshua Bloom  <example@example.com>
+Date: Tue, 17 Jun 1997 16:26:15 GMT   (24kb)
+
+Title: Using STIS to find Gamma-Ray Burst Redshifts
+Authors: Joshua S. Bloom, Steinn Sigurdsson, Ralph A. M. J. Wijers, Omar
+  Almaini, Nial R. Tanvir, and Rachel A. Johnson (Institute of Astronomy,
+  Cambridge)
+Categories: astro-ph
+Comments: 4 pages of LaTeX and 3 figures. Submitted to MNRAS. Also available at
+  ftp://ftp.ast.cam.ac.uk/pub/jsbloom/stis_redshift.uu
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706175
+From: Matthias Steinmetz  <example@example.com>
+Date: Tue, 17 Jun 1997 16:39:53 GMT   (180kb)
+
+Title: Energy Input and Mass Redistribution by Supernovae in the Interstellar
+  Medium
+Authors: Katsuyo Thornton (Chicago), Michael Gaudlitz (MPA), Hans-Thomas Janka
+  (MPA) and Matthias Steinmetz (MPA and Steward Observatory)
+Categories: astro-ph
+Comments: 42 pages, 15 figures included. submitted to ApJ. Also available at
+  http://saguaro.as.arizona.edu/~matthias/preprints.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706176
+From: Paolo Padoan  <example@example.com>
+Date: Tue, 17 Jun 1997 18:38:52 GMT   (163kb)
+
+Title: Supersonic motions in dark clouds are not Alfven waves
+Authors: Paolo Padoan (1) and AAke Nordlund (1 and 2) ((1) Theoretical
+  Astrophysics Center and (2) Astronomical Observatory Copenhagen -- Denmark)
+Categories: astro-ph
+Comments: 24 pages, 8 figures included, submitted to ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706177
+From: Paolo Padoan  <example@example.com>
+Date: Tue, 17 Jun 1997 18:44:48 GMT   (337kb)
+Date (revised): Thu, 19 Jun 1997 20:01:41 GMT 
+
+Title: A Theoretical Calibration of ^{13}CO LTE Column Density in Molecular
+  Clouds
+Authors: Paolo Padoan (1), Mika Juvela (2), John Bally (3 and 4) and AAke
+  Nordlund (1 and 5) ((1) Theoretical Astrophysics Center, Copenhagen --
+  Denmark (2) Helsinki University Observatory -- Finland (3) Department of
+  Astrophysics, Planetary, and Atmospheric Sciences, Boulder -- Colorado (4)
+  Center for Astrophysics and Space Astronomy, Boulder -- Colorado (5)
+  Astronomical Observatory, Copenhagen -- Denmark)
+Categories: astro-ph
+Comments: 24 pages, 8 figures included, submitted to ApJ (the author list and
+  abstract in the previous submission were incorrect)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706178
+From: Julie E. McEnery  <example@example.com>
+Date: Tue, 17 Jun 1997 20:48:50 GMT   (382kb)
+
+Title: A Search for TeV Emission from Unidentified Sources in the Galactic
+  Plane
+Authors: J.H. Buckley, P.J. Boyle, S.M. Bradbury, A.M. Burdett, J. Bussons
+  Gordo, D.A. Carter-Lewis, M. Catanese, M.F. Cawley, D.J. Fegan, J.P. Finley,
+  J.A. Gaidos, A.M. Hillas, F. Krennrich, R.C. Lamb, R.W. Lessard, C.
+  Masterson, J.E. McEnery, G. Mohanty, J. Quinn, A.J. Rodgers, H.J. Rose, A.C.
+  Rovero, F.W. Samuelson, G.H. Sembroski, R. Srinivasan, T.C. Weekes, and J.
+  Zweerink
+Categories: astro-ph
+Comments: 4 pages, 1 figure, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706179
+From: Gerhardt Meurer  <example@example.com>
+Date: Tue, 17 Jun 1997 23:09:53 GMT   (33kb)
+
+Title: The Starburst Intensity Limit And Its Ultraviolet Implications
+Authors: Gerhardt R. Meurer
+Categories: astro-ph
+Comments: 5 pages Latex (aipproc.sty,epsfig.sty), 3 encapsulated postscript
+  figures, to be published in the conference proceedings of "The Ultraviolet
+  Universe at Low and High Redshift"
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706180
+From: Arkadiusz Olech  <example@example.com>
+Date: Tue, 17 Jun 1997 23:14:07 GMT   (195kb)
+
+Title: V485 Centauri: the Shortest Period SU UMa Star
+Authors: Arkadiusz Olech (Warsaw University Observatory)
+Categories: astro-ph
+Comments: accepted for publication in Acta Astronomica, Vol. 47, p. 281, 12
+  pages with 8 figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706181
+From: Elcio Abdalla  <example@example.com>
+Date: Tue, 17 Jun 1997 23:19:31 GMT   (17kb)
+Date (revised): Mon, 6 Oct 1997 19:50:07 GMT
+Date (revised): Fri, 13 Nov 1998 15:01:01 GMT
+
+Title: Scale-invariant Perturbation of the Friedmann Universe
+Authors: E. Abdalla and Roya Mohayaee
+Categories: astro-ph gr-qc hep-th
+Comments: extended version with new diagrams and discussions
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706182
+From: Patrick McGraw  <example@example.com>
+Date: Tue, 17 Jun 1997 23:39:37 GMT   (510kb)
+Date (revised): Wed, 18 Jun 1997 01:29:32 GMT 
+Date (revised): Thu, 24 Jul 1997 19:08:11 GMT 
+
+Title: Evolution of a Non-Abelian Cosmic String Network
+Authors: Patrick N. McGraw
+Categories: astro-ph hep-ph hep-th
+Comments: 89 pages, Tex, figures included, phyzzx macros included. Revised
+  version: minor changes in wording and layout; some errors corrected in Table
+  2; references added. Animations now available at
+  http://physics.unc.edu/~mcgraw/stringmovies.html
+Journal-ref: Phys.Rev. D57 (1998) 3317-3339
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706183
+From: Paul Eskridge  <example@example.com>
+Date: Tue, 17 Jun 1997 23:53:57 GMT   (73kb)
+
+Title: The Nature of the X-Ray Point Source in the Bar of NGC 6822
+Authors: Paul B. Eskridge (1), and Raymond E. White, III (1) ((1) University of
+  Alabama)
+Categories: astro-ph
+Comments: 17 pages, 4 PostScript figures, uses AASTeX style files, Accepted for
+  publication in The Astronomical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706184
+From: Matthias Bartelmann  <example@example.com>
+Date: Wed, 18 Jun 1997 05:52:34 GMT   (58kb)
+
+Title: Resolving the line-of-sight structure of galaxy clusters by combining
+  X-ray and lensing data
+Authors: Matthias Bartelmann (MPA) and Tsafrir S. Kolatt (UCSC)
+Categories: astro-ph
+Comments: submitted to MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706185
+From: Peter Schneider  <example@example.com>
+Date: Wed, 18 Jun 1997 06:34:25 GMT   (15kb)
+
+Title: The cosmological lens equation and the equivalent single-plane
+  gravitational lens
+Authors: Peter Schneider (MPA Garching)
+Categories: astro-ph
+Comments: TeX, 11 pages, submitted to MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706186
+From: Gerrit Jan Savonije  <example@example.com>
+Date: Wed, 18 Jun 1997 12:52:11 GMT   (131kb)
+
+Title: Non-adiabatic tidal forcing of a massive, uniformly rotating star II:
+  The low frequency, inertial regime
+Authors: G.J. Savonije and J.C. Papaloizou
+Categories: astro-ph
+Comments: 21 pages, 12 Postscript figures, accepted by MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706187
+From: Gerrit Jan Savonije  <example@example.com>
+Date: Wed, 18 Jun 1997 11:13:42 GMT   (15kb)
+
+Title: Non-adiabatic tidal forcing of a massive, uniformly rotating star III:
+  Asymptotic treatment for low frequencies in the inertial regime
+Authors: J.C. Papaloizou and G.J. Savonije
+Categories: astro-ph
+Comments: 11 pages, 2 figures, accepted by MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706188
+From: Tim Oosterbroek  <example@example.com>
+Date: Wed, 18 Jun 1997 12:40:59 GMT   (84kb)
+
+Title: The BeppoSAX LECS X-ray spectrum of Hercules X-1
+Authors: T. Oosterbroek, A. N. Parmar, D. D. E. Martin, U. Lammers (ESA/ESTEC)
+Categories: astro-ph
+Comments: 5 pages, LaTeX. Accepted for publication in A&A. Uses A&A style file
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706189
+From: Hagai Netzer  <example@example.com>
+Date: Wed, 18 Jun 1997 14:42:48 GMT   (49kb)
+
+Title: X-ray Lines and Gas Composition in NGC 1068
+Authors: Hagai Netzer (School of Physics and Astronomy, Tel Aviv University),
+  J. Turner (LHEA, Nasa/Goddard Space Flight Center)
+Categories: astro-ph
+Comments: 16 pages, 2 figures. Latex with encapsulated postscript
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706190
+From: Giovanni Fossati  <example@example.com>
+Date: Wed, 18 Jun 1997 18:07:45 GMT   (13kb)
+
+Title: Average Spectral Energy Distributions of Blazars from Radio to
+  Gamma-Rays
+Authors: G. Fossati(1), A. Celotti(1), G. Ghisellini(2), L. Maraschi(2) ((1)
+  International School for Advanced Studies, SISSA/ISAS, Italy (2) Osservatorio
+  Astronomico di Brera/Merate, Italy)
+Categories: astro-ph
+Comments: 4 pages, TeX, uses lecproc.cmm and psfig.tex, 1 figure (included), To
+  appear in Proceedings of workshop "Relativistic jets in AGNs", Cracow, 27-30
+  May 1997 Also available at this URL
+  http://www.sissa.it/~fossati/pub_list.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706191
+From: Stefano Benetti  <example@example.com>
+Date: Wed, 18 Jun 1997 15:33:22 GMT   (200kb)
+
+Title: Supernova 1994aj: a probe for pre-supernova evolution and mass loss from
+  the progenitor
+Authors: S. Benetti, E. Cappellaro, I.J. Danziger, M. Turatto, F. Patat, and M.
+  Della Valle
+Categories: astro-ph
+Comments: 9 pages (Latex file) including 4 tables, 8 eps figures. To appear in
+  MNRAS. Also available at http://athena.pd.astro.it/~supern/preprints.html
+Journal-ref: Mon.Not.Roy.Astron.Soc. 294 (1998) 448
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706192
+From: Naoya Hata  <example@example.com>
+Date: Wed, 18 Jun 1997 18:31:38 GMT   (26kb)
+
+Title: Metal Abundance in the Solar Interior
+Authors: M. Fukugita and N. Hata
+Categories: astro-ph
+Comments: 7 pages including 4 postscript figures, uses AAS LaTex v4.0, entire
+  ps file and html file with embedded figures available at
+  http://www.sns.ias.edu/~hata/papers/metal/
+Report-no: IASSNS-AST 97/38
+Journal-ref: Astrophys.J. 499 (1998) 513-516
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706193
+From: Ben Dorman  <example@example.com>
+Date: Wed, 18 Jun 1997 19:39:22 GMT   (40kb)
+
+Title: Constraining the Abundances and Ages of Early-type Galaxies
+Authors: Ben Dorman (U.Virginia & NASA/GSFC) and Robert W. O'Connell (U.
+  Virginia)
+Categories: astro-ph
+Comments: 6 pages LaTeX 2.09 incl 3 postscript figures. Uses aipproc.sty,
+  available also from http://www.astro.virginia.edu/~bd4r/ to appear in the
+  conference proceedings of The Ultraviolet Universe at Low and High Redshift
+  eds. W. H. Waller, M. N. Fanelli, and A. C. Danks (New York:AIP)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706194
+From: James Schombert  <example@example.com>
+Date: Wed, 18 Jun 1997 19:58:06 GMT   (48kb)
+
+Title: The Butcher-Oemler Effect in Abell 2317
+Authors: Karl D. Rakos (Univ. of Vienna), Andrew P. Odell (Northern Arizona
+  University) and James M. Schombert (University of Oregon)
+Categories: astro-ph
+Comments: 23 pages including 1 table and 6 figures, AASTeX v4.0. Accepted by
+  Ap.J. Data, referee report and response are avaliable from
+  http://zebu.uoregon.edu/~js
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706195
+From: Jochen Greiner  <example@example.com>
+Date: Wed, 18 Jun 1997 20:07:59 GMT   (37kb)
+
+Title: RXTE Observations of GRS 1915+105
+Authors: J. Greiner (AIP), E. Morgan, R. Remillard (MIT)
+Categories: astro-ph
+Comments: 5 pages LATEX + 1 ps-figure, aipproc style file; Proc. of 4th Compton
+  Symp., Williamsburg, April 1997; AIP Conf. Proc., eds. C.D. Dermer & J.D.
+  Kurfess
+Report-no: AIP-JG-2
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706196
+From:  <example@example.com>
+Date: Wed, 18 Jun 1997 21:21:02 GMT   (18kb)
+
+Title: Colliding Winds in the Stellar Core at the Galactic Center: Some
+  Implications
+Authors: Leonid M. Ozernoy (1,2), Reinhard Genzel (3), Vladimir V. Usov (4)
+  ((1) George Mason U., (2) GSFC/NASA, (3) Max-Planck-Institut f\"ur
+  Extraterrestrische Physik, (4) Weizmann Inst.)
+Categories: astro-ph
+Comments: To appear in Mon. Not. R.A.S.; 16 pages, TeX
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706197
+From: Antonio Aparicio  <example@example.com>
+Date: Thu, 19 Jun 1997 03:51:38 GMT   (509kb)
+
+Title: The nature of the new Local Group Galaxy Antlia
+Authors: A. Aparicio (IAC, Spain; presently at Carnegie Observatories,
+  Pasadena) J. J. Dalcanton (Carnegie Observatories, Pasadena) C. Gallart
+  (Carnegie Observatories, Pasadena) D. Martinez-Delgado (IAC, Spain)
+Categories: astro-ph
+Comments: AJ in press 23 pages; 6 figures; 3 tables
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706198
+From: Max Tegmark  <example@example.com>
+Date: Thu, 19 Jun 1997 04:00:30 GMT   (47kb)
+Date (revised): Fri, 20 Jun 1997 03:56:17 GMT 
+Date (revised): Tue, 16 Dec 1997 04:18:21 GMT
+
+Title: Measuring cosmological parameters with galaxy surveys
+Authors: Max Tegmark (IAS)
+Categories: astro-ph
+Comments: Minor changes in published version. 6 pages with 2 figs included.
+  Color figure and links at http://www.sns.ias.edu/~max/galfisher.html (faster
+  from the US), from http://www.mpa-garching.mpg.de/~max/galfisher.html (faster
+  from Europe) or from max@ias.edu
+Journal-ref: Phys.Rev.Lett. 79 (1997) 3806-3809
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706199
+From: John Tonry  <example@example.com>
+Date: Thu, 19 Jun 1997 05:46:38 GMT   (168kb)
+Date (revised): Mon, 23 Jun 1997 18:53:13 GMT
+
+Title: Redshifts of the Gravitational Lenses B1422+231 and PG1115+080
+Authors: John L. Tonry (Institute for Astronomy)
+Categories: astro-ph
+Comments: 11 pages, AASTeX Latex, including 3 Postscript figures, submitted to
+  Astronomical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706200
+From:  <example@example.com>
+Date: Thu, 19 Jun 1997 08:00:27 GMT   (25kb)
+
+Title: Hot Atmospheres Around Accreting Neutron Stars: A Possible Source For
+  Hard X--ray Emission
+Authors: S. Zane, R. Turolla and A. Treves
+Categories: astro-ph
+Comments: 17 pages plus 3 postscript figures, to be published in ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706201
+From: Martin Haehnelt  <example@example.com>
+Date: Thu, 19 Jun 1997 15:33:36 GMT   (178kb)
+
+Title: Damped Lyman alpha absorbers at high redshift -- large disks or galactic
+  building blocks?
+Authors: Martin G. Haehnelt (MPA-Garching), Matthias Steinmetz (Steward,
+  MPA-Garching) and Michael Rauch (Caltech)
+Categories: astro-ph
+Comments: 24 pages, LaTeX , 10 postscript figures included; submitted to ApJ.
+  The paper can also be retrieved at http://www.mpa-garching/~haehnelt
+Report-no: MPA-1029
+Journal-ref: Astrophys.J. 495 (1998) 647
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706202
+From: Reynier Peletier  <example@example.com>
+Date: Thu, 19 Jun 1997 08:57:45 GMT   (258kb)
+
+Title: Stellar Distributions and NIR Colours of Normal Galaxies
+Authors: R.F. Peletier, R. de Grijs (Kapteyn Lab, Groningen, the Netherlands)
+Categories: astro-ph
+Comments: Invited review, to appear in "Extragalactic Astronomy in the
+  Infrared", eds. G.A. Mamon, Trinh Xuan Thuan, and J. Tran Thanh Van, Editions
+  Frontieres, Gif-sur-Yvette. LaTeX2e, 10 pages, 6 postscript figures and
+  moriond.sty included. See also
+  ftp://kapteyn.astro.rug.nl/peletier/lesarcs.ps.gz
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706203
+From: Stephane Paltani  <example@example.com>
+Date: Thu, 19 Jun 1997 13:08:10 GMT   (147kb)
+
+Title: Very rapid optical variability of PKS 2155-304
+Authors: S.Paltani (CESR, Toulouse; ISDC Geneva), T.J.-L.Courvoisier (ISDC,
+  Geneva), A.Blecha (Geneva Observatory), P.Bratschi (ISDC, Geneva)
+Categories: astro-ph
+Comments: 12 pages, 8 figures; requires psfig.sty and A&A style file
+  (included). Accepted for publication in A&A main journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706204
+From: Yuri Aikawa  <example@example.com>
+Date: Thu, 19 Jun 1997 13:37:41 GMT   (85kb)
+
+Title: Evolution of Molecular Abundance in Protoplanetary Disks
+Authors: Y. Aikawa, T. Umebayashi, T. Nakano, and S.M. Miyama
+Categories: astro-ph
+Comments: 7 pages latex file (using aas2pp4.sty), 3 figures (ps file), to
+  appear in the Astrophysical Journal Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706205
+From: Tom Brown  <example@example.com>
+Date: Thu, 19 Jun 1997 19:20:25 GMT   (67kb)
+
+Title: Hot Evolved Stars in the Centers of M 31 and M 32
+Authors: T. M. Brown (NASA/GSFC), H. C. Ferguson (STScI), S. A. Stanford
+  (IGPP/LLNL), J.-M. Deharveng (MarsLab), and A. F. Davidsen (JHU)
+Categories: astro-ph
+Comments: 5 pages, Latex, 2 figures. Uses aipproc.sty and aipproc.cls. To
+  appear in the conference proceedings of "The UV Universe at Low and High
+  Redshift: Probing the Progress of Galaxy Evolution," eds. W. H. Waller, M. N.
+  Fanelli, and A. C. Danks (New York:AIP)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706206
+From: Dennis Zaritsky  <example@example.com>
+Date: Thu, 19 Jun 1997 19:25:33 GMT   (377kb)
+
+Title: A Digital Photometric Survey of the Magellanic Clouds: First Results
+  From One Million Stars
+Authors: Dennis Zaritsky (UCSC), Jason Harris (UCSC), and Ian Thompson (OCIW)
+Categories: astro-ph
+Comments: Accepted for publication in AJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706207
+From: B. M. Lewis  <example@example.com>
+Date: Thu, 19 Jun 1997 20:02:32 GMT   (158kb)
+Date (revised): Fri, 20 Jun 1997 15:37:43 GMT
+
+Title: A renewed search for water maser emission from Mira variables
+Authors: B. M. Lewis (Arecibo Observatory)
+Categories: astro-ph
+Comments: submitted to Astronomical J., 18 pages, 3 figs, 2 tables
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706208
+From: Francesco Miniati  <example@example.com>
+Date: Thu, 19 Jun 1997 23:19:30 GMT   (304kb)
+Date (revised): Wed, 11 Mar 1998 19:40:32 GMT
+
+Title: Hydrodynamics of Cloud Collisions in 2D: The Fate of Clouds in a
+  Multi-phase Medium
+Authors: Francesco Miniati (1 and 2), T. W. Jones (1), Andrea Ferrara (3),
+  Dongsu Ryu (4 and 5) ((1) University of Minnesota, (2) Universita' di
+  Firenze, (3) Arcetri, (4) Chungnam National University, (5) University of
+  Washington)
+Categories: astro-ph
+Comments: Revised version, published in The Astrophysical Journal; 26 pages
+  Latex + 9 figures, mpeg animations available at
+  http://www.msi.umn.edu/Projects/twj/Cloud-Collision.html
+Journal-ref: Apj, December 1997, 491, 216
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706209
+From: Leonid Ksenofontov  <example@example.com>
+Date: Thu, 19 Jun 1997 23:31:11 GMT   (15kb)
+Date (revised): Fri, 20 Jun 1997 00:40:27 GMT
+
+Title: Spectrum and Chemical Composition of CRs Accelerated in SNRs
+Authors: E.G. Berezhko, G.F. Krymsky, V.K. Yelshin and L.T. Ksenofontov
+  (Institute of Cosmophysical Research and Aeronomy, Yakutsk, Russia)
+Categories: astro-ph
+Comments: 4 pages, 1 fugure, to appear in proceedings of 25th ICRC (Durban)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706210
+From: Joss Bland-Hawthorn  <example@example.com>
+Date: Fri, 20 Jun 1997 01:54:47 GMT   (407kb)
+Date (revised): Fri, 19 Sep 1997 01:33:01 GMT
+
+Title: Where do the disks of spiral galaxies end?
+Authors: J. Bland-Hawthorn (AAO), K.C. Freeman (MSSSO), P.J. Quinn (ESO)
+Categories: astro-ph
+Comments: 21 pages; Latex; 1 Table; 10 encapsulated postscript figures.
+  Astrophysical Journal, vol. 489, 1997 (Nov. 20 issue). Missing table,
+  references, and eqn. (7) now fixed
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706211
+From: Joss Bland-Hawthorn  <example@example.com>
+Date: Fri, 20 Jun 1997 02:16:04 GMT   (323kb)
+
+Title: Strict Limits on the Ionizing Luminosity in NGC 1068 from Jet-axis
+  Molecular Clouds
+Authors: J. Bland-Hawthorn, S.L. Lumsden, G.M. Voit, G.N. Cecil & J.C. Weisheit
+Categories: astro-ph
+Comments: 13 pages; Latex; 7 encapsulated postscript figures. In the
+  Proceedings of the NGC 1068 Workshop, Ap. & S.S., in press, eds. J.F.
+  Gallimore and L.J. Tacconi. (See also the workshop web site at
+  http://hethp.mpe-garching.mpg.de/~ngc1068/Proceedings)
+Journal-ref: Astrophys.Space Sci. 248 (1997) 177-190
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706212
+From: Ennio Poretti  <example@example.com>
+Date: Fri, 20 Jun 1997 08:22:48 GMT   (606kb)
+
+Title: Discovery and analysis of Gamma Doradus type pulsations in the Cloud and
+  the effect of metallicity on pulsation
+Authors: E. Poretti, C. Koen, P. Martinez, F. Breuer, D. de Alwis, H. Haupt
+Categories: astro-ph
+Comments: 10 pages, Latex file with 5 .ps figures. submitted for publication to
+  MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706213
+From: Maurice Gabriel  <example@example.com>
+Date: Fri, 20 Jun 1997 12:00:45 GMT   (133kb)
+
+Title: Influence of heavy element and rotationally induced diffusions on the
+  solar models
+Authors: M. Gabriel
+Categories: astro-ph
+Comments: 9 pages
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706214
+From: Thomas Buchert  <example@example.com>
+Date: Fri, 20 Jun 1997 13:11:23 GMT   (29kb)
+
+Title: Averaging Inhomogeneous Cosmologies -- a Dialogue
+Authors: Thomas Buchert
+Categories: astro-ph gr-qc
+Comments: LaTeX 12 pages, two figures, uses paspconf.sty, psfig.sty. To appear
+  in Proceedings 2nd SFB Workshop on Astro-particle physics, Ringberg 1996
+Journal-ref: SFB375/P002 R.Bender, T.Buchert, P.Schneider, F.v.Feilitzsch (eds)
+  71-82 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706215
+From: Durrer Ruth  <example@example.com>
+Date: Fri, 20 Jun 1997 14:56:01 GMT   (80kb)
+Date (revised): Wed, 12 Nov 1997 17:19:14 GMT
+
+Title: Cosmic Microwave Background Anisotropies from Scaling Seeds: Fit to
+  Observational Data
+Authors: R. Durrer, M. Kunz, C. Lineweaver and M. Sakellariadou
+Categories: astro-ph
+Comments: LaTeX file 4 pages, 4 postscript figs. revised version, to appear in
+  PRL
+Journal-ref: Phys.Rev.Lett. 79 (1997) 5198-5201
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706216
+From: Gabriele Ghisellini  <example@example.com>
+Date: Fri, 20 Jun 1997 16:41:57 GMT   (57kb)
+
+Title: Unification of all Blazars
+Authors: Gabriele Ghisellini (Osservatorio di Brera, Merate, Italy)
+Categories: astro-ph
+Comments: 8 pages, TeX, 3 figures (included). Uses lecproc.cmm (included) and
+  espf.sty. To appear in Proceedings of workshop "Relativistic jets in AGNs",
+  Cracow, 27-30 May 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706217
+From:  <example@example.com>
+Date: Fri, 20 Jun 1997 16:10:15 GMT   (34kb)
+
+Title: The Relation Between Fourier Coefficients and RR Lyrae Magnitudes
+Authors: Ann Berit Saust (Princeton University Observatory)
+Categories: astro-ph
+Comments: 8 pages, LaTex, uses PSFIG to include 6 PostScript figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706218
+From: Walter Dehnen  <example@example.com>
+Date: Fri, 20 Jun 1997 18:07:25 GMT   (440kb)
+
+Title: Kinematics and mass modelling of NGC 1068
+Authors: W. Dehnen, J. Bland-Hawthorn, A. Quirrenbach, G. Cecil
+Categories: astro-ph
+Comments: 10 pages, LaTeX, uses crckapb.sty, 10 postscript figures, to appear
+  in Proceedings of the NGC 1068 Workshop, eds. Gallimore and Tacconi, Ap&SS in
+  press; g'zipped ps file (with higher resolution) at
+  http://hethp.mpe-garching.mpg.de/~ngc1068/Proceedings/
+Report-no: OUTP-97-5A
+Journal-ref: Astrophys.Space Sci. 248 (1997) 33-42
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706219
+From: Nick Gnedin  <example@example.com>
+Date: Fri, 20 Jun 1997 20:37:34 GMT   (171kb)
+
+Title: Probing the Universe with the Lyman-alpha Forest: I. Hydrodynamics of
+  the Low Density IGM
+Authors: Nickolay Y. Gnedin and Lam Hui
+Categories: astro-ph
+Comments: Submitted to MNRAS
+Journal-ref: Mon.Not.Roy.Astron.Soc. 296 (1998) 44-55
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706220
+From: Roger W. Romani  <example@example.com>
+Date: Fri, 20 Jun 1997 22:10:05 GMT   (192kb)
+
+Title: X-ray Emission from the Guitar Nebula
+Authors: Roger W. Romani, James M. Cordes and I.-A. Yadigaroglu
+Categories: astro-ph
+Comments: 5 pages, 2 figures. LaTeX w/ aas2pp4, aassize. To appear in ApJL, Aug
+  1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706221
+From: Jim Braatz  <example@example.com>
+Date: Fri, 20 Jun 1997 23:51:58 GMT   (132kb)
+
+Title: A Survey for H$_2$O Megamasers in Active Galactic Nuclei -- II. A
+  Comparison of Detected and Undetected Galaxies
+Authors: J.A. Braatz, A.S. Wilson and C. Henkel
+Categories: astro-ph
+Comments: 19 pages, 35 figures, 3 of the tables are contained in separate LaTeX
+  files: Table 1-a, 1-b, and 3. Also, figure captions are contained in a
+  separate file which must be compiled with plain TeX, not LaTeX
+Journal-ref: ApJS, June 97 issue
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706222
+From: Michael Eracleous  <example@example.com>
+Date: Fri, 20 Jun 1997 23:53:54 GMT   (85kb)
+Date (revised): Sat, 21 Jun 1997 01:49:24 GMT
+
+Title: Rejection of the Binary Broad-Line Region Interpretation of
+  Double-Peaked Emission Lines in Three Active Galactic Nuclei
+Authors: M. Eracleous, J. P. Halpern, A. M. Gilbert, J. A. Newman, A. V.
+  Filippenko (U.C. Berkeley)
+Categories: astro-ph
+Comments: To appear in the Astrophysical Journal. 17 pages, TeX, with
+  postscript figures includedes
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706223
+From: Marie Treyer  <example@example.com>
+Date: Sat, 21 Jun 1997 11:13:54 GMT   (33kb)
+Date (revised): Fri, 27 Jun 1997 17:24:31 GMT 
+
+Title: An Ultraviolet Redshift Survey: A New Estimate of the Local Star
+  Formation Rate
+Authors: M.A. Treyer, R.S. Ellis, B. Milliard, J. Donas
+Categories: astro-ph
+Comments: 5 pages, 2 Postscript figures, uses aipproc.sty. To appear in the
+  proceedings of the conference: "The Ultraviolet Universe at Low and High
+  Redshift: Probing the Progress of Galaxy Evolution" (May 1997), AIP press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706224
+From: Tripp  <example@example.com>
+Date: Sat, 21 Jun 1997 19:40:03 GMT   (46kb)
+
+Title: High Signal-to-Noise GHRS Observations of H 1821+643: O VI Associated
+  with a Group of Galaxies at z = 0.226 and Complex Lyman $\alpha$ Absorption
+  Profiles at Low Redshift
+Authors: T. M. Tripp (U. Wisconsin and Princeton), L. Lu (Caltech), and B. D.
+  Savage (U. Wisconsin)
+Categories: astro-ph
+Comments: 4 pages, to appear in The Scientific Impact of the Goddard High
+  Resolution Spectrograph, Astronomical Society of the Pacific Conference
+  Series (in press)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706225
+From: Kailash Sahu  <example@example.com>
+Date: Sun, 22 Jun 1997 23:15:06 GMT   (421kb)
+Date (revised): Sat, 30 Aug 1997 21:38:21 GMT
+
+Title: Observations of GRB 970228 and GRB 970508, and the Neutron-Star Merger
+  Model
+Authors: Kailash C. Sahu (STScI), Mario Livio (STScI), Larry Petro (STScI),
+  Howard E. Bond (STScI), F. Duccio Macchetto (STScI), Titus J. Galama (U.
+  Amsterdam), Paul J. Groot (U. Amsterdam), Jan van Paradijs (U. Amsterdam & U.
+  Alabama), Chryssa Kouveliotou (NASA/MSFC)
+Categories: astro-ph
+Comments: (6 figures). Accepted for publication in Astrophysical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706226
+From: Mats Carlsson  <example@example.com>
+Date: Mon, 23 Jun 1997 08:40:46 GMT   (215kb)
+
+Title: SUMER Observations Confirm the Dynamic Nature of the Quiet Solar Outer
+  Atmosphere: The Inter-network Chromosphere
+Authors: Mats Carlsson, Philip G. Judge and Klaus Wilhelm
+Categories: astro-ph
+Comments: 8 pages, 3 figs, AASTeX, Accepted for publication in APJ letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706227
+From:  <example@example.com>
+Date: Mon, 23 Jun 1997 10:05:53 GMT   (20kb)
+
+Title: The End of the Age Problem, And The Case For A Cosmological Constant
+  Revisited
+Authors: Lawrence M. Krauss (CERN and Case Western Reserve University)
+Categories: astro-ph gr-qc hep-ph
+Comments: 15 pages, Latex, including 2 eps figs, submitted to Science
+Report-no: CWRU-P6-97, CERN-TH-97/122
+Journal-ref: Astrophys.J. 501 (1998) 461-466
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706228
+From: Nilgun Kiziloglu  <example@example.com>
+Date: Mon, 23 Jun 1997 10:17:21 GMT   (78kb)
+
+Title: Solar Models: Influence of Equation of State and Opacity
+Authors: M. Yildiz, N.Kiziloglu (Department of Astronomy and Space Sciences,
+  Ege University, Izmir, Turkey; Physics Department, METU, Ankara, Turkey)
+Categories: astro-ph
+Comments: 9 pages in PostScript including 4 figures, accepted for publication
+  in Astronomy and Astrophysics, available at
+  http://astroa.physics.metu.edu.tr/preprints.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706229
+From: Takahiro Tanaka  <example@example.com>
+Date: Mon, 23 Jun 1997 04:05:46 GMT   (31kb)
+
+Title: Canonical Quantization of Cosmological Perturbations in the One Bubble
+  Open Universe
+Authors: Jaume Garriga, Xavier Montes, Misao Sasaki and Takahiro Tanaka
+Categories: astro-ph gr-qc
+Comments: 23 pages revtex file, submitted to Nucl. Phys. B
+Report-no: UAB-FT-418, OU-TAP 63
+Journal-ref: Nucl.Phys. B513 (1998) 343-374
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706230
+From: Roelof Bottema  <example@example.com>
+Date: Mon, 23 Jun 1997 12:25:09 GMT   (162kb)
+
+Title: The maximum rotation of a galactic disc
+Authors: Roelof Bottema
+Categories: astro-ph
+Comments: Latex, 10 pages, 7 Postscript figures, uses l-aa.sty
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706231
+From: Markus Boettcher  <example@example.com>
+Date: Mon, 23 Jun 1997 13:06:24 GMT   (17kb)
+
+Title: Spectral modeling of gamma-ray blazars
+Authors: M. Boettcher (Rice University, Houston, TX), H. Mause, R. Schlickeiser
+  (MPIfR Bonn)
+Categories: astro-ph
+Comments: 5 pages; uses epsf.sty, rotate.sty, aipproc.sty; To appear in Proc.
+  of the 4th Compton Symposium
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706232
+From: Bohdan Paczynski  <example@example.com>
+Date: Mon, 23 Jun 1997 18:50:22 GMT   (11kb)
+
+Title: Gamma-Ray Bursts as Hypernovae
+Authors: Bohdan Paczy\'nski
+Categories: astro-ph
+Comments: 12 pages, latex, uses aaspp4.sty, no figures, submitted to ApJ
+  Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706233
+From: Jean Quashnock  <example@example.com>
+Date: Mon, 23 Jun 1997 20:22:29 GMT   (64kb)
+Date (revised): Fri, 12 Dec 1997 00:05:28 GMT
+Date (revised): Mon, 30 Mar 1998 19:36:44 GMT
+
+Title: The Form and Evolution of the Clustering of QSO Heavy-Element
+  Absorption-Line Systems
+Authors: Jean M. Quashnock (1) and Daniel E. Vanden Berk (2) ((1) University of
+  Chicago, Dept. of Astronomy and Astrophysics, (2) University of Texas,
+  McDonald Observatory)
+Categories: astro-ph
+Comments: 26 pages (LaTex, uses aaspp4.sty), with 8 encapsulated PostScript
+  figures. Includes an augmented discussion of the close relationship between
+  strong absorbers, clusters, and ``Lyman break'' galaxies. To appear in The
+  Astrophysical Journal, vol. 500, June 10, 1998
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706234
+From: Mark S. Marley  <example@example.com>
+Date: Mon, 23 Jun 1997 20:02:44 GMT   (49kb)
+
+Title: Atmospheres of Giant Planets from Neptune to Gliese 229B
+Authors: Mark S. Marley
+Categories: astro-ph
+Comments: 12 pages, 4 figures, PASP LaTeX, to be published in the proceedings
+  of the workshop "Brown Dwarfs and Extrasolar Planets," held in Tenerife,
+  Spain March 17-21, 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706235
+From: Henry A. Kobulnicky  <example@example.com>
+Date: Mon, 23 Jun 1997 21:14:46 GMT   (582kb)
+
+Title: Chemical Enrichment from Massive Stars in Starbursts II: NGC 1569
+Authors: Henry A. Kobulnicky and Evan D. Skillman
+Categories: astro-ph
+Comments: 43 pages including figures; uses aaspp and psfig; 5 tables use
+  apjpt4; Accepted (11 June 1997) for publication in the Astrophysical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706236
+From:  <example@example.com>
+Date: Mon, 23 Jun 1997 22:16:31 GMT   (374kb)
+Date (revised): Tue, 24 Jun 1997 02:36:59 GMT
+
+Title: Internal Constitution of Neutron and Strange Stars
+Authors: Norman K. Glendenning (Lawrence Berkeley National Laboratory,
+  California)
+Categories: astro-ph
+Comments: 34 pages, 30 figures embedded, Latex with crckapb.sty. (October 1996,
+  to appear in Proceedings ``The Many Faces of Neutron Stars'' Alpar et. al.
+  eds. (Kluwer Academic Publishers, Dortrecht)
+Report-no: LBL-39638
+Journal-ref: in ``The Many Faces of Neutron Stars'', Eds. Buccheri, van
+  Paradjis and Alpar, Kluwer Academic Publishers, Dordrect/Boston/London,
+  (1998) p 15
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706237
+From: Andreon Stefano  <example@example.com>
+Date: Tue, 24 Jun 1997 07:18:30 GMT   (133kb)
+
+Title: An optical and near-IR survey of nearby clusters of galaxies
+Authors: S. Andreon (1), J. Annis (2), J.-C. Cuillandre (3), E. Davoust (4), J.
+  P. Gardner(5), Y. Mellier (6), J.-M. Miralles (4), R. Pello (4), P. Poulain
+  (4) ((1) Oss. di Capodimonte, (2) Fermi Lab., (3) CFHT corp., (4) Obs. Midi
+  Pyr\'en\'ees, (5) NASA-GSFC, (6) IAP)
+Categories: astro-ph
+Comments: To appear in the proceeding of the Moriond conference "Extragalactic
+  Astronomy in the Infrared" (March 1997), 6 pages, uses moriond.sty
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706238
+From: Andreon Stefano  <example@example.com>
+Date: Tue, 24 Jun 1997 07:19:14 GMT   (300kb)
+
+Title: The CRONA (Caltech-Roma-Napoli) project
+Authors: S. Andreon (1), S. Zaggia (1), R. de Carvalho (2), S. Djorgovski (3),
+  G. Longo (1), I. Musella (1), R. Scaramella (4) ((1) Oss. di Capodimonte, (2)
+  Obs. de Rio de Janeiro, (3) Palomar Obs., (4) Oss. di Roma)
+Categories: astro-ph
+Comments: To appear in the proceeding of the Moriond conference "Extragalactic
+  Astronomy in the Infrared" (March 1997), 6 pages, uses moriond.sty
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706239
+From: Sabine Schindler  <example@example.com>
+Date: Tue, 24 Jun 1997 08:06:41 GMT   (175kb)
+
+Title: X-ray analysis of Abell 2634 and its central galaxy 3C465
+Authors: Sabine Schindler, M. Almudena Prieto
+Categories: astro-ph
+Comments: 11 pages, including 11 figures, accepted for publication in A&A
+Report-no: MPE preprint 417
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706240
+From: Sabine Schindler  <example@example.com>
+Date: Tue, 24 Jun 1997 08:54:21 GMT   (263kb)
+
+Title: X-ray observations of distant lensing clusters
+Authors: Sabine Schindler
+Categories: astro-ph
+Comments: 8 pages, including 4 figures, for proceedings of ASCA/ROSAT workshop
+  on clusters of galaxies, Hakone, Japan, March 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706241
+From: Roberto Cid  <example@example.com>
+Date: Tue, 24 Jun 1997 22:38:20 GMT   (241kb)
+
+Title: Patterns and Coincidences in the Light Curves of Active Galaxies
+Authors: R. Cid Fernandes (1), R. Terlevich (2), I. Aretxaga (2) ((1) Depto. de
+  Fisica - UFSC, Florianopolis, Brazil, (2) Royal Greenwich Observatory,
+  Cambridge, UK)
+Categories: astro-ph
+Comments: 8 pages, uuencoded, gzip'ed, tar-file [Patterns.tar.gz.uu, 340Kb]
+  Uses mn.sty, epsf.sty Also available at http://www.if.ufrgs.br/~cid MNRAS,
+  accepted (March/1997)
+Report-no: 2
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706242
+From: Roger Fux  <example@example.com>
+Date: Tue, 24 Jun 1997 12:07:01 GMT   (345kb)
+
+Title: 3D self-consistent N-body barred models of the Milky Way: I. Stellar
+  dynamics
+Authors: R. Fux
+Categories: astro-ph
+Comments: 22 pages, LaTeX, 17 figures (2 in gif format). A&A, in press. A
+  postscript version including all figures is available at
+  http://obswww.unige.ch/Preprints/cgi-bin/Preprintshtml.cgi?#DYNAMIC
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706243
+From: Karl Mannheim  <example@example.com>
+Date: Tue, 24 Jun 1997 11:10:38 GMT   (25kb)
+
+Title: A Multi-frequency campaign on the gamma-ray loud blazar W Comae
+Authors: M. Maisack, K. Mannheim, R.D. Geckeler, M. Hillas,S. Katajainen, F.
+  Marshall, D. Petry, C. v. Montigny, G. Paubert, J. Rose, A. Sillanpaeae, L.O.
+  Takalo, H. Teraesranta
+Categories: astro-ph
+Comments: 6 pages, Latex using crckapb.sty, to appear in the proceedings of the
+  conference on Blazars, Black Holes, and Jets, Girona, Spain, 9-12 September
+  1996, eds. M. Kidger and J.A. de Diego, Astrophysics and Space Science Series
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706244
+From: Rob Fender  <example@example.com>
+Date: Tue, 24 Jun 1997 11:28:34 GMT   (59kb)
+
+Title: GRS 1915+105 : Flares, QPOs and other events at 15 GHz
+Authors: G. G. Pooley (MRAO Cambridge) and R. P. Fender (Sussex)
+Categories: astro-ph
+Comments: 2 pages. To be published in Proc. IAU164 : Radio emission from
+  Galactic and Extragalactic Compact Sources (Socorro, 1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706245
+From: Heino Falcke  <example@example.com>
+Date: Tue, 24 Jun 1997 12:05:26 GMT   (14kb)
+
+Title: Sgr A* and Company - Multiwavelength observations of Sgr A* and VLA
+  search of ``Sgr A*'s'' in LINERs
+Authors: Heino Falcke (U. Maryland/MPIfR Bonn), W.M. Goss (NRAO), L.C. Ho
+  (CfA), H. Matsuo (NRO), P. Teuben (U. Maryland), A.S. Wilson (U. Maryland),
+  J.-H. Zhao (CfA), R. Zylka (ITA Heidelberg)
+Categories: astro-ph
+Comments: Talk presented at the IAU Coll. 164, A. Zensus, G. Taylor, & J.
+  Wrobel (eds.), PASP Conf. Proc., Latex, paspconf.sty, 2 pages, preprint also
+  available at http://www.astro.umd.edu/~hfalcke/publications.html#iauc164
+Report-no: hfa/eprint/No.20
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706246
+From: Alessandro Marconi  <example@example.com>
+Date: Tue, 24 Jun 1997 14:14:50 GMT   (62kb)
+
+Title: Is there really a super-massive black hole in M87?
+Authors: A. Marconi (STScI), D.J. Axon (STScI), F.D. Macchetto (STScI), A.
+  Capetti (SISSA), W.B. Sparks (STScI), P. Crane (ESO)
+Categories: astro-ph
+Comments: 5 pages, Latex + 3 Postscript figures, to be published in MNRAS pink
+  pages
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706247
+From: Andrew Ulmer  <example@example.com>
+Date: Tue, 24 Jun 1997 21:52:44 GMT   (34kb)
+
+Title: Flares from the Tidal Disruption of Stars by Massive Black Holes
+Authors: Andrew Ulmer (Princeton University Observatory)
+Categories: astro-ph
+Comments: 21 pages with 4 figures, AAS Latex, ApJ Submitted
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706248
+From: Sandip Kumar Chakraborty  <example@example.com>
+Date: Wed, 25 Jun 1997 13:16:51 GMT   (367kb)
+
+Title: Smoothed Particle Hydrodynamic Simulations of Viscous Accretion Discs
+  Around Black Holes
+Authors: Giuseppe Lanzafame, D. Molteni and S.K. Chakrabarti
+Categories: astro-ph
+Comments: MNRAS style 6 pages of output, macros included. MNRAS (submitted)
+Report-no: SNBNCBS no. SNB/ASTRO/3-97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706249
+From: Ferrara Andrea  <example@example.com>
+Date: Wed, 25 Jun 1997 09:44:36 GMT   (65kb)
+
+Title: Dust in Hot Environments: Giant Dusty Galactic Halos
+Authors: Andrea Ferrara
+Categories: astro-ph
+Comments: 10 pages, LaTeX (lamuphys.sty), 3 figures, IAU166, The Local Bubble
+  and Beyond, Highlight Talk
+Report-no: OAA-12
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706250
+From: Neil G. Turok  <example@example.com>
+Date: Wed, 25 Jun 1997 17:23:30 GMT   (117kb)
+Date (revised): Tue, 1 Jul 1997 10:32:48 GMT
+
+Title: The Scalar, Vector and Tensor Contributions to CMB anisotropies from
+  Cosmic Defects
+Authors: Neil Turok, Ue-Li Pen and Uros Seljak
+Categories: astro-ph
+Comments: 13 pages, compressed and uuencoded RevTex file and postscript
+  figures. Minor typographical changes
+Journal-ref: Phys.Rev. D58 (1998) 023506
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706251
+From: David Chernoff  <example@example.com>
+Date: Wed, 25 Jun 1997 13:08:15 GMT   (100kb)
+
+Title: Molecule Formation In and On Grains.I: Physical Regimes
+Authors: Amir Levinson, David F. Chernoff and Edwin E. Salpeter
+Categories: astro-ph
+Comments: 28 pages, 7 postscript figures, uses revtex
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706252
+From: Alessandro Marconi  <example@example.com>
+Date: Wed, 25 Jun 1997 15:13:59 GMT   (555kb)
+
+Title: The supermassive black hole of M87 and the kinematics of its associated
+  gaseous disk
+Authors: F. Macchetto(STScI), A. Marconi(STScI), D.J. Axon(STScI), A.
+  Capetti(SISSA), W. Sparks (STScI), P. Crane (ESO)
+Categories: astro-ph
+Comments: 43 pages, 5 Tables and 19 Postscript figures (included), requires
+  AASTeX style files, in press on the Astrophysical Journal
+Journal-ref: Astrophys.J. 489 (1997) 579
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706253
+From: Amanda C. Baker  <example@example.com>
+Date: Wed, 25 Jun 1997 15:12:19 GMT   (54kb)
+
+Title: The Fate of Ultra-luminous Mergers
+Authors: A. C. Baker (Service d'Astrophysique, Saclay, France) and D. L.
+  Clements (Institut d'Astrophysique Spatiale, Orsay, France)
+Categories: astro-ph
+Comments: To appear in the proceedings of the 1997 Moriond meeting on
+  Extragalactic Astronomy in the Infrared. 6 pages, 1 figure, 1 author image
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706254
+From: Gabriele Ghisellini  <example@example.com>
+Date: Wed, 25 Jun 1997 17:27:58 GMT   (124kb)
+
+Title: Optical-IUE observations of the gamma-ray loud BL Lacertae object S5
+  0716+714: data and interpretation
+Authors: G. Ghisellini (Brera Obs.), M. Villata, C.M. Raiteri, S. Bosio, G. De
+  Francesco, G. Latini (Torino Obs), M. Maesano, E. Massaro, F. Montagni, R.
+  Nesci (Roma Univ.), G. Tosti, M. Fiorucci (Perugia Univ.), E. Pian (STScI),
+  L. Maraschi (Brera Obs.) A. Treves (Como Univ.), A. Comastri, M. Mignoli
+  (Bologna Obs.)
+Categories: astro-ph
+Comments: 13 pages, LateX, 10 figures (included). Uses l-aa.sty and epsf.sty.
+  To appear in A&A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706255
+From: Andrew Connolly  <example@example.com>
+Date: Wed, 25 Jun 1997 16:53:56 GMT   (39kb)
+
+Title: The Evolution of the Global Star Formation History as Measured from the
+  Hubble Deep Field
+Authors: A.J. Connolly, A.S. Szalay, Mark Dickinson, M.U. SubbaRao and R.J.
+  Brunner (JHU)
+Categories: astro-ph
+Comments: Latex format, 10 pages, 3 postscript figures. Accepted for
+  publication in Ap J Letters
+Journal-ref: Astrophys.J. 486 (1997) L11
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706256
+From: A. B. Balantekin  <example@example.com>
+Date: Wed, 25 Jun 1997 19:03:48 GMT   (58kb)
+
+Title: Selected Topics in Neutrino Astrophysics
+Authors: A.B. Balantekin
+Categories: astro-ph hep-ph nucl-th
+Comments: 27 pages with 6 Figures. Invited talk to be published in the
+  Proceedings of the Jorge Andre Swieca Summer School, Campos de Jordao, Sao
+  Paulo, January 26 - February 7, 1997. This paper is also available at
+  http://nucth.physics.wisc.edu/preprints/
+Report-no: MAD-NT-97-02
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706257
+From: Soker Noam  <example@example.com>
+Date: Tue, 24 Jun 1997 21:06:00 GMT   (13kb)
+
+Title: The Number of Planets Around Stars
+Authors: Noam Soker (Univ. of Haifa)
+Categories: astro-ph
+Comments: 11 pages, To be presented in the 10th Cool Stars Workshop, uses
+  paspconf.sty
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706258
+From: Tom Loredo  <example@example.com>
+Date: Wed, 25 Jun 1997 21:16:26 GMT   (36kb)
+
+Title: Bayesian Analysis of the Polarization of Distant Radio Sources: Limits
+  on Cosmological Birefringence
+Authors: Thomas J. Loredo, Eanna E. Flanagan, and Ira M. Wasserman (Department
+  of Astronomy, Cornell University)
+Categories: astro-ph physics.data-an
+Comments: 8 pages, 3 figures; submitted to Phys. Rev. D
+Subj-class: Astrophysics; Data Analysis, Statistics and Probability
+Journal-ref: Phys.Rev. D56 (1997) 7507-7512
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706259
+From: Dany Page  <example@example.com>
+Date: Thu, 26 Jun 1997 16:30:27 GMT   (37kb)
+
+Title: Thermal Evolution of Isolated Neutron Stars
+Authors: Dany Page (Instituto de Astronomia, UNAM)
+Categories: astro-ph
+Comments: 12+1 pages, LaTeX (with crckapb macro) To be published in the
+  proceedings of the NATO ASI `The Many Faces of Neutron Stars' (Kluwer), Eds
+  A. Alpar, R. Buccheri & J. van Paradijs. Extensive data files are available
+  at http://www.astroscu.unam.mx/neutrones/NS-Cooler/NS-Cooler.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706260
+From: Y. Divakara Mayya  <example@example.com>
+Date: Thu, 26 Jun 1997 06:30:29 GMT   (295kb)
+
+Title: Spatial distribution of far infrared emission in spiral galaxies I.
+  Relation with radio continuum emission
+Authors: Y.D. Mayya (INAOE, Mexico) and T.N. Rengarajan (TIFR, India)
+Categories: astro-ph
+Comments: Uses aas2pp4.sty and epsfig.sty, 21 pages. Figure 1 is spread over 22
+  pages and is available at http://www.inaoep.mx/~ydm/preprint.html To appear
+  in Astronomical Journal, September 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706261
+From: Y. Divakara Mayya  <example@example.com>
+Date: Thu, 26 Jun 1997 06:34:23 GMT   (492kb)
+
+Title: Spatial distribution of Far infrared emission in spiral galaxies II.
+  Heating sources and gas-to-dust ratio
+Authors: Y.D. Mayya (INAOE, Mexico) and T.N. Rengarajan (TIFR, India)
+Categories: astro-ph
+Comments: Uses aas2pp4.sty and epsfig.sty, 27 pages. To appear in Astronomical
+  Journal, September 1997
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706262
+From: Tom Abel  <example@example.com>
+Date: Thu, 26 Jun 1997 07:23:50 GMT   (52kb)
+
+Title: First Structure Formation: II. Cosmic String + Hot Dark Matter Models
+Authors: Tom Abel, Albert Stebbins, Peter Anninos, and Michael L. Norman
+Categories: astro-ph
+Comments: 6 pages, 2 figures, submitted to ApJ. See also
+  http://lca.ncsa.uiuc.edu/~tom/Strings/ which gives additional information,
+  visualizations, and movies
+Journal-ref: Astrophys.J. 508 (1998) 530-534
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706263
+From: Rafal Moderski  <example@example.com>
+Date: Thu, 26 Jun 1997 09:29:08 GMT   (42kb)
+Date (revised): Wed, 20 Aug 1997 11:01:04 GMT
+Date (revised): Thu, 21 Aug 1997 06:57:29 GMT
+
+Title: On Black Hole Spins and Dichotomy of Quasars
+Authors: Rafal Moderski, Marek Sikora and Jean-Pierre Lasota
+Categories: astro-ph
+Comments: TeX, 7 pages, 2 Postscript figures included, using macro lecproc.sty
+  (also included). To appear in the Proceedings of the Conference "Relativistic
+  Jets in Astrophysics" Cracow'97; completely changed version
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706264
+From: Ari Laor  <example@example.com>
+Date: Thu, 26 Jun 1997 11:58:33 GMT   (286kb)
+
+Title: The UV Properties of the Narrow Line Quasar I Zwicky 1
+Authors: Ari Laor (Technion), Buell T. Jannuzi, Richard F. Green, and Todd A.
+  Boroson (NOAO)
+Categories: astro-ph
+Comments: 28 pages, 1 table and 7 figures included. Uses aas2pp4.sty. Scheduled
+  for the Astrophysical Journal November 10, 1997 issue, Vol. 489
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706265
+From: Robert O'Connell  <example@example.com>
+Date: Thu, 26 Jun 1997 15:43:25 GMT   (240kb)
+
+Title: The Ultraviolet Morphology of Galaxies
+Authors: Robert W. O'Connell (Univ. of Virginia)
+Categories: astro-ph
+Comments: 10 pages; tar.gz file includes LaTeX text file, 6 low-resolution
+  PostScript figures, and 3 style files. For *.ps.gz file with full res
+  figures, see http://www.astro.virginia.edu/~rwo/ Paper to be published in
+  "The Ultraviolet Universe at Low and High Redshift" ed. W. H. Waller (AIP
+  Press) 1997
+Report-no: UVUniv697
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706266
+From: Avi Loeb  <example@example.com>
+Date: Thu, 26 Jun 1997 17:03:51 GMT   (39kb)
+
+Title: Do the Electrons and Ions in X-ray Clusters Share the Same Temperature?
+Authors: David Fox and Abraham Loeb (Harvard University)
+Categories: astro-ph
+Comments: 18 pages, 3 figures, submitted to ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706267
+From: Scott C. Chapman  <example@example.com>
+Date: Thu, 26 Jun 1997 23:00:39 GMT   (337kb)
+
+Title: First results from the UBC etch-alignment mosaic CCD
+Authors: S.C.Chapman, G.S.Burley, G.A.H.Walker
+Categories: astro-ph
+Comments: 11 pages, 6 figs, 3 tables To appear in SPIE Photonics West97 -
+  Electronic Imaging
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706268
+From: B. Scott Gaudi  <example@example.com>
+Date: Thu, 26 Jun 1997 18:57:32 GMT   (70kb)
+
+Title: Planetary Microlensing Perturbations: True Planets or Binary Sources?
+Authors: B. Scott Gaudi
+Categories: astro-ph
+Comments: 21 pages, 4 embedded figures, TeX, uses phyzzx
+Report-no: OSU-TA-15/97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706269
+From: David Crampton  <example@example.com>
+Date: Thu, 26 Jun 1997 21:17:42 GMT   (183kb)
+
+Title: The SMC Supersoft X-ray Binary 1E 0035.4-7230 (SMC 13)
+Authors: David Crampton, J.B. Hutchings, A.P. Cowley, P.C. Schmidtke
+Categories: astro-ph
+Comments: uuencoded compressed file with 15 pages + 1 table and 6 postscript
+  figures. Accepted by Ap J. Also available at
+  http://www.hia.nrc.ca/eprints.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706270
+From: Neil Trentham  <example@example.com>
+Date: Thu, 26 Jun 1997 21:21:21 GMT   (185kb)
+
+Title: Dwarf galaxies in four rich clusters with 0.02 < z < 0.14
+Authors: Neil Trentham (University of Hawaii)
+Categories: astro-ph
+Comments: 16 pages, 7 fig, 4 tab, MNRAS in press Fig 1 (big) available from
+  author
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706271
+From: Ola Tornkvist  <example@example.com>
+Date: Thu, 26 Jun 1997 22:52:10 GMT   (27kb)
+Date (revised): Wed, 2 Jul 1997 16:02:09 GMT
+
+Title: CP Violating Solitons in the Early Universe
+Authors: Ola Tornkvist, Antonio Riotto (Fermilab)
+Categories: astro-ph hep-ph
+Comments: Talk given by Ola Tornkvist, to appear in the proceedings of
+  Fundamental Physics at the Birth of the Universe, II, in Rome, Italy, 19-24
+  May 1997. Revtex, 7 pages, 1 postscript figure, uses epsf.tex, aps.sty,
+  prl.sty, preprint.sty. Preprint number corrected
+Report-no: FERMILAB-Conf-97/179-A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706272
+From: Fred Ringwald  <example@example.com>
+Date: Fri, 27 Jun 1997 03:01:51 GMT   (30kb)
+
+Title: PG 1002+506: a Be Star Apparently at Z Greater Than +10 kpc
+Authors: F. A. Ringwald (Penn State), W. R. J. Rolleston (Queen's Univ.
+  Belfast), R. A. Saffer (Villanova), and J. R. Thorstensen (Dartmouth)
+Categories: astro-ph
+Comments: 7 pages, LaTeX including 1 table and 2 PostScript figures, requires
+  AAS style files and rotate; ApJ, accepted
+Journal-ref: Bull.Am.Astron.Soc. 29 (1997) 1384
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706273
+From: Fred Ringwald  <example@example.com>
+Date: Fri, 27 Jun 1997 03:46:21 GMT   (43kb)
+
+Title: The Status of Nova Orionis 1667
+Authors: F. A. Ringwald (Penn State) and T. Naylor (Keele)
+Categories: astro-ph
+Comments: 4 pages, LaTeX, including 2 Encapsulated PostScript figures, requires
+  l-aa.sty and epsf; A&A, accepted
+Journal-ref: Astron.Astrophys. 326 (1997) 629
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706274
+From: Combes  <example@example.com>
+Date: Fri, 27 Jun 1997 05:03:44 GMT   (29kb)
+
+Title: Detection of water at z = 0.685 towards B0218+357
+Authors: F. Combes and T. Wiklind
+Categories: astro-ph
+Comments: 4 pages, 3 figures, accepted in ApJ Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706275
+From: Combes  <example@example.com>
+Date: Fri, 27 Jun 1997 05:41:54 GMT   (124kb)
+
+Title: Vertical equilibrium of molecular gas in galaxies
+Authors: F. Combes and J-F. Becquaert (Paris Observatory)
+Categories: astro-ph
+Comments: 12 pages, 12 figures, accepted in A&A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706276
+From: Mathews  <example@example.com>
+Date: Fri, 27 Jun 1997 06:57:24 GMT   (191kb)
+
+Title: Evolution of Interstellar Gas in Rapidly Rotating Elliptical Galaxies:
+  Formation of Disks
+Authors: Fabrizio Brighenti (Lick Observatory, Santa Cruz CA and Dipartimento
+  di Astronomia, Universita di Bologna, Bologna) and William G. Mathews (Lick
+  Observatory, Santa Cruz CA)
+Categories: astro-ph
+Comments: 19 pages in AASTEX LaTeX plus ten figures; accepted by Astrophysical
+  Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706277
+From: Phil Crane  <example@example.com>
+Date: Fri, 27 Jun 1997 10:03:35 GMT   (275kb)
+
+Title: An Anomalous UV Extension in NGC6251
+Authors: P. Crane and J. Vernet (European Southern Observatory)
+Categories: astro-ph
+Comments: 14 pages AAStex format + 4 figures; accepted for publication in ApJ
+  Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706278
+From: Narciso Benitez  <example@example.com>
+Date: Fri, 27 Jun 1997 10:14:06 GMT   (55kb)
+
+Title: Weak lensing correlations in open and flat universes
+Authors: J. L. Sanz, E. Martinez-Gonzalez and N. Benitez (IFCA (CSIC-UC))
+Categories: astro-ph
+Comments: 7 pages, 7 figures, mn.sty, accepted in MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706279
+From: Jane Dennett-Thorpe  <example@example.com>
+Date: Fri, 27 Jun 1997 11:04:21 GMT   (169kb)
+Date (revised): Mon, 30 Jun 1997 18:10:07 GMT
+
+Title: Asymmetry of jets, lobe length and spectral index in quasars
+Authors: J. Dennett-Thorpe, A.H. Bridle, P.A.G. Scheuer, R.A. Laing, J.P. Leahy
+Categories: astro-ph
+Comments: to be published in MNRAS. 12 pages, uses mn.sty. Replacement corrects
+  for error in postscript (fig. 1)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706280
+From: Yoshinori Tutui  <example@example.com>
+Date: Fri, 27 Jun 1997 17:09:20 GMT   (30kb)
+Date (revised): Sat, 28 Jun 1997 06:08:55 GMT 
+
+Title: Effects of Galaxy Interaction on the Tully-Fisher Relation: CO vs HI
+  Linewidths
+Authors: Yoshinori Tutui, Yoshiaki Sofue (Institute of Astronomy, University of
+  Tokyo)
+Categories: astro-ph
+Comments: To appear in A&A, LaTeX, 5 pages and 3 figures
+Report-no: Univ.of Tokyo Astro.Preprint No.97-13
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706281
+From:  <example@example.com>
+Date: Fri, 27 Jun 1997 11:56:33 GMT   (30kb)
+Date (revised): Tue, 19 Aug 1997 06:54:33 GMT
+
+Title: Cooling flows and quasars: different aspects of the same phenomenon? I.
+  Concepts
+Authors: L. Ciotti (Osservatorio Astronomico di Bologna) and J.P. Ostriker
+  (Princeton University Observatory)
+Categories: astro-ph
+Comments: 10 pages, ApJ LaTeX, plus 5 .eps figures and TeX-macro aasms4.sty -
+  revised version - in press on ApJ Letters
+Report-no: BAP 07-1997-19-OAB
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706282
+From: Alan Kogut  <example@example.com>
+Date: Fri, 27 Jun 1997 15:53:51 GMT   (85kb)
+
+Title: Spatial Correlation Between H-Alpha Emission and Infrared Cirrus
+Authors: A. Kogut (HSTX/GSFC)
+Categories: astro-ph
+Comments: LaTeX with 5 PostScript figures, 11 pages total. Accepted for
+  publication in The Astronomical Journal, September 1997 issue
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706283
+From: Igor Moskalenko  <example@example.com>
+Date: Fri, 27 Jun 1997 13:55:33 GMT   (121kb)
+
+Title: Observational constraints on annihilation sites in 1E 1740.7-2942 and
+  Nova Muscae
+Authors: I. V. Moskalenko (MPE), E. Jourdain (CESR)
+Categories: astro-ph
+Comments: 5 pages including 2 figures, latex, aipproc.sty, aipproc.cls,
+  epsfig.sty. To be published in Proc. of 4th Compton Symp., 1997 (27-30 April,
+  Williamsburg, Virginia)
+Journal-ref: AIP Conf. Proc. 410, Fourth Compton Symposium, ed. C.D.Dermer,
+  M.S.Strickman, & J.D.Kurfess (NY: AIP), p.881-885 (1997)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706284
+From: Sukyoung Yi  <example@example.com>
+Date: Fri, 27 Jun 1997 15:23:17 GMT   (19kb)
+
+Title: The Impact of the UV Upturn on the Color Evolution of E Galaxies
+Authors: Sukyoung Yi (NASA/Goddard Space Flight Center)
+Categories: astro-ph
+Comments: LaTeX, 5p text plus 2 eps figuress Paper to be published in "The
+  Ultraviolet Universe at Low and High Redshift" ed. W. H. Waller (AIP Press)
+  1997. PS file also available at http://shemesh.gsfc.nasa.gov/
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706285
+From: Ilaria Musella  <example@example.com>
+Date: Fri, 27 Jun 1997 16:34:30 GMT   (434kb)
+
+Title: On the Cepheid variables of nearby galaxies III. NGC 3109
+Authors: Ilaria Musella, Giampaolo Piotto, Massimo Capaccioli
+Categories: astro-ph
+Comments: 35 pages, aaspp4.sty, accepted for pubblication on Astron. J
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706286
+From: Nick Gnedin  <example@example.com>
+Date: Fri, 27 Jun 1997 18:00:01 GMT   (98kb)
+Date (revised): Thu, 29 Jan 1998 00:31:30 GMT
+
+Title: Probing the universe with the Lyman-alpha forest: II. The column density
+  distribution
+Authors: Nickolay Y. Gnedin
+Categories: astro-ph
+Comments: Revised version; submitted to MNRAS
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706287
+From: Carlos Jose Amaro Parente Martins  <example@example.com>
+Date: Fri, 27 Jun 1997 15:56:00 GMT   (13kb)
+
+Title: Galactic Magnetic Fields from Superconducting Strings
+Authors: C.J.A.P.Martins, E.P.S.Shellard (DAMTP, U. Cambridge)
+Categories: astro-ph
+Comments: 7 pages (latex), 2 .eps files, submitted to Phys.Rev.D
+Report-no: DAMTP R-97/29
+Journal-ref: Phys.Rev. D57 (1998) 5276-5279
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706288
+From: John C. L. Wang  <example@example.com>
+Date: Sat, 28 Jun 1997 22:34:26 GMT   (25kb)
+
+Title: Evidence for magnetic field decay in RX J0720.4-3125
+Authors: John C. L. Wang (University of Maryland)
+Categories: astro-ph
+Comments: 19 pages, 1 figure, Latex; accepted for publication in The
+  Astrophysical Journal Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706289
+From: Zong-Hong Zhu  <example@example.com>
+Date: Sun, 29 Jun 1997 00:55:38 GMT   (14kb)
+
+Title: Quasar-galaxy associations from gravitational lensing: revisited
+Authors: Zong-Hong Zhu, Xiang-Ping Wu and Li-Zhi Fang
+Categories: astro-ph
+Comments: 21 pages, uses aastex, ApJ in press
+Journal-ref: Astrophys.J. 490 (1997) 31
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706290
+From: Karsten Jedamzik  <example@example.com>
+Date: Mon, 30 Jun 1997 17:34:54 GMT   (35kb)
+
+Title: Damped Lyman Alpha Systems at High Redshift and Models of Protogalactic
+  Disks
+Authors: Karsten Jedamzik (MPA-Garching) and Jason X. Prochaska (UCSD)
+Categories: astro-ph
+Comments: 17 pages, 3 encapsulated figures, uses LaTeX2e. Submitted to MNRAS
+  Also available at http://nately.ucsd.edu/~xavier/DLA/thy.html
+Journal-ref: MNRAS 296 (1998) 430
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706291
+From: Lee Armus  <example@example.com>
+Date: Sun, 29 Jun 1997 20:50:49 GMT   (82kb)
+
+Title: CO (J=3-2) Emission in the Radio Galaxy 53W002 at z=2.394
+Authors: N.Z. Scoville (Caltech), M.S. Yun (NRAO), R.A. Windhorst (Arizona
+  State University) W.C. Keel (University of Alabama) and L. Armus (Caltech)
+Categories: astro-ph
+Comments: plain LaTex with 4 postscript figures. Accepted, Ap.J. Letters
+Journal-ref: ApJ,485,L21
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706292
+From: Piotr A. Popowski  <example@example.com>
+Date: Mon, 30 Jun 1997 20:26:14 GMT   (28kb)
+
+Title: The Zero Point of Extinction Toward Baade's Window From RR Lyrae Stars
+Authors: C. Alcock, R.A. Allsman, D. R. Alves, T.S. Axelrod, A.C. Becker, D.P.
+  Bennett, K.H. Cook, K.C. Freeman, K. Griest, A. Gould, J.A. Guern, M.J.
+  Lehner, S.L. Marshall, D. Minniti, B.A. Peterson, P. Popowski, M.R. Pratt,
+  P.J. Quinn, A.W. Rodgers, C.W. Stubbs, W. Sutherland, T. Vandehei, and D.L.
+  Welch
+Categories: astro-ph
+Comments: Submitted to ApJ, 18 pages including figures
+Report-no: OSU-TA-16/97
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706293
+From: Patricia Whitelock  <example@example.com>
+Date: Mon, 30 Jun 1997 08:38:55 GMT   (269kb)
+
+Title: Galactic Kinematics of Cepheids from Hipparcos Proper Motions
+Authors: Michael Feast (University Cape Town) and Patricia Whitelock (South
+  African Astronomical Observatory)
+Categories: astro-ph
+Comments: MNRAS in press, 9 Pages, 6 postscript figures, LaTeX using mn.sty, 8
+  LaTeX tables separate from main paper
+Report-no: SAAO-PDOC 1357
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706294
+From: Thomas Rauscher  <example@example.com>
+Date: Mon, 30 Jun 1997 10:21:17 GMT   (155kb)
+
+Title: Nuclear Level Density and the Determination of Thermonuclear Rates for
+  Astrophysics
+Authors: T. Rauscher, F.-K. Thielemann, K.-L. Kratz
+Categories: astro-ph nucl-th
+Comments: REVTeX paper + 7 B/W figures + 2 color figures; PRC, in press. Also
+  available at http://quasar.physik.unibas.ch/preps.html
+Report-no: RAU9706026
+Journal-ref: Phys.Rev. C56 (1997) 1613-1625
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706295
+From: http://www. phys. uniroma1. it/DOCS/PIL/pil. html  <example@example.com>
+Date: Mon, 30 Jun 1997 12:32:27 GMT   (25kb)
+
+Title: Angular correlations of galaxy distribution
+Authors: M. Montuori and F. Sylos-Labini
+Categories: astro-ph
+Comments: 16 pages, latex, 3 postscript figures. Accepted for publication in
+  Astrophysical Journal Letters. This paper is also available at
+  http://www.phys.uniroma1.it/DOCS/PIL/pil.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706296
+From: Matthias Steinmetz  <example@example.com>
+Date: Mon, 30 Jun 1997 11:11:38 GMT   (46kb)
+
+Title: Probing the thermal history of the Intergalactic Medium with Lyman-alpha
+  absorption lines
+Authors: Martin G. Haehnelt (MPA) and Matthias Steinmetz (Steward Observatory)
+Categories: astro-ph
+Comments: 4 pages, 3 figures included. submitted to MNRAS. Also available at
+  http://www.mpa-garching.mpg.de/~haehnelt or at
+  http://saguaro.as.arizona.edu/~matthias/preprints.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706297
+From: Roberto Scaramella  <example@example.com>
+Date: Mon, 30 Jun 1997 11:07:24 GMT   (299kb)
+
+Title: GOHSS: a Fibre-fed Multiobject NIR Spectrograph for the Italian Galileo
+  Telescope
+Authors: R.Scaramella (1), E.Cascone (2), F.Cortecchia (2), R.S.Ellis (3),
+  D.Lorenzetti(1), D.Mancini (2), I. Parry (3), F. Piche' (3), F. Vitali (1)
+  ((1) Osservatorio di Roma, Italy; (2) Osservatorio di Capodimonte, Italy; (3)
+  Institute of Astronomy, Cambridge, England.)
+Categories: astro-ph
+Comments: To appear in the proceeding of the Moriond conference "Extragalactic
+  Astronomy in the Infrared" (March 1997); 6 postscript pages
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706298
+From: Gerald Quinlan  <example@example.com>
+Date: Mon, 30 Jun 1997 14:04:59 GMT   (169kb)
+
+Title: The dynamical evolution of massive black hole binaries - II.
+  Self-consistent N-body integrations
+Authors: Gerald D. Quinlan and Lars Hernquist
+Categories: astro-ph
+Comments: includes 7 postscript figs, uses psfig.sty (not included); send
+  correspondence to lars@ucolick.org
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706299
+From: Guillermo A. Silva  <example@example.com>
+Date: Mon, 30 Jun 1997 14:07:16 GMT   (6kb)
+
+Title: Cosmic Rays from Decaying Vortons
+Authors: Luis Masperi and Guillermo Silva
+Categories: astro-ph
+Comments: 8 pages, Latex, no figures
+Journal-ref: Astropart.Phys. 8 (1998) 173-177
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706300
+From: Elena Pian  <example@example.com>
+Date: Mon, 30 Jun 1997 14:36:36 GMT   (177kb)
+
+Title: Multiwavelength Monitoring of the BL Lacertae Object PKS 2155-304 in May
+  1994. II. The IUE Campaign
+Authors: Elena Pian, C. Megan Urry, Aldo Treves, Laura Maraschi, Steve Penton,
+  J. Michael Shull, Joseph E. Pesce, Paola Grandi, Tsuneo Kii, Ron I.
+  Kollgaard, Greg Madejski, Herman Marshall, Willem Wamsteker, Annalisa
+  Celotti, Thierry J.-L. Courvoisier, Renato Falomo, Henner H. Fink, Ian M.
+  George, Gabriele Ghisellini
+Categories: astro-ph
+Comments: 45 pages, Latex, 11 PostScript figures, to appear in The
+  Astrophysical Journal
+Report-no: STScI Prep. Ser. No. 1102
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706301
+From: Gregory Shields  <example@example.com>
+Date: Mon, 30 Jun 1997 15:11:41 GMT   (7kb)
+
+Title: Novae and BAL QSOs: The Aluminum Test
+Authors: Gregory A. Shields (University of Texas at Austin)
+Categories: astro-ph
+Comments: 6 pages LaTeX using paspconf.sty. To appear in Mass Ejection from
+  Active Galactic Nuclei, N. Arav, I. Shlosman, and R. J. Weymann (Eds.), ASP
+  Conf. Series, 1997, in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706302
+From: Jaime D. Perea Duarte  <example@example.com>
+Date: Mon, 30 Jun 1997 16:06:59 GMT   (46kb)
+
+Title: Non-linear Dependence of L(B) on L(FIR) and M(H2) among Spiral Galaxies
+  and Effects of Tidal Interaction
+Authors: J. Perea, A. del Olmo, L. Verdes-Montenegro (Instituto de Astrofisica
+  de Andalucia, CSIC) and M. S. Yun (National Radio Astronomy Observatory)
+Categories: astro-ph
+Comments: 19 pages and 5 figures, requires AAS style files, ApJ, accepted
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9706303
+From: Markus Kissler-Patig  <example@example.com>
+Date: Mon, 30 Jun 1997 17:42:17 GMT   (186kb)
+
+Title: Halo and Bulge/Disk globular clusters in the S0 galaxy NGC 1380
+Authors: Markus Kissler-Patig, Tom Richtler, Jesper Storm, Massimo Della Valle
+Categories: astro-ph
+Comments: 10 pages (incl. 10 ps figures) in A&A style, accepted for publication
+  in Astronomy and Astrophysics, a non-dithered version of Fig.1 can be found
+  at http://www.ucolick.org/~mkissler
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706014
+From: Tomohiro Harada  <example@example.com>
+Date: Thu, 5 Jun 1997 08:50:34 GMT   (30kb)
+Date (revised): Fri, 6 Jun 1997 02:34:48 GMT
+Date (revised): Wed, 23 Jul 1997 10:53:31 GMT
+
+Title: Stability Analysis of Spherically Symmetric Star in Scalar-Tensor
+  Theories of Gravity
+Authors: Tomohiro Harada
+Categories: gr-qc astro-ph
+Comments: 17 pages, including 6 eps figures. Accepted for publication in
+  Progress of Theoretical Physics. Grammatical errors corrected
+Report-no: KUNS-1439
+Journal-ref: Prog.Theor.Phys. 98 (1997) 359-379
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706017
+From: David I. Santiago  <example@example.com>
+Date: Thu, 5 Jun 1997 22:33:48 GMT   (50kb)
+
+Title: Nucleosynthesis Constraints on Scalar-Tensor Theories of Gravity
+Authors: D. I. Santiago, D. Kalligas, and R. V. Wagoner
+Categories: gr-qc astro-ph
+Comments: 15 pages, 2 figures, ReVTeX 3.1, submitted to Phys. Rev. D15
+Journal-ref: Phys.Rev. D56 (1997) 7627-7637
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706024
+From: David Langlois  <example@example.com>
+Date: Tue, 10 Jun 1997 21:27:36 GMT   (31kb)
+
+Title: Cosmological CMBR dipole in open universes ?
+Authors: David Langlois
+Categories: gr-qc astro-ph
+Comments: 26 pages, Latex, 6 figures, to appear in Phys. Rev. D
+Report-no: 97009, Observatoire de Paris
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706036
+From: Ruth Lazkoz Saez  <example@example.com>
+Date: Fri, 13 Jun 1997 14:22:15 GMT   (35kb)
+Date (revised): Wed, 15 Oct 1997 13:58:48 GMT
+
+Title: Disks in Expanding FRW Universes
+Authors: A. Feinstein, J. Ib\'a\~nez, R. Lazkoz
+Categories: gr-qc astro-ph
+Comments: Revised version to appear in ApJ, Latex, 17 pages, 10 figures, uses
+  aaspp4 and epsf style files
+Report-no: EHU-FT/9706
+Journal-ref: Astrophys.J. 495 (1998) 131
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706037
+From:  <example@example.com>
+Date: Fri, 13 Jun 1997 16:13:43 GMT   (72kb)
+
+Title: Birth of the Universe in string cosmology
+Authors: M. Gasperini
+Categories: gr-qc astro-ph hep-th
+Comments: 17 pages, LATEX, seven figures included using EPSF, based on a talk
+  given at the "Fourth Paris Cosmology Colloquium" (Observatoire de Paris, June
+  1997). To appear in the Proceedings (ed. by H. J. De Vega and N. Sanchez). An
+  updated collection of papers on the pre-big bang scenario is available at
+  http://www.to.infn.it/teorici/gasperini
+Report-no: DFTT-35/97
+Journal-ref: Fourth Paris Cosmology Colloquium, eds. H.J. De Vega and N.Sanchez
+  (World Scientific, Singapore, 1998), p. 85
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706045
+From: Eanna Flanagan  <example@example.com>
+Date: Mon, 16 Jun 1997 14:10:09 GMT   (43kb)
+Date (revised): Tue, 14 Jul 1998 01:17:31 GMT
+
+Title: General-relativistic coupling between orbital motion and internal
+  degrees of freedom for inspiraling binary neutron stars
+Authors: Eanna E. Flanagan
+Categories: gr-qc astro-ph
+Comments: 22 pages, 2 figures. Replaced 13 July: proof corrected, result
+  unchanged
+Journal-ref: Phys.Rev. D58 (1998) 124030
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706050
+From: Uwe Guenther  <example@example.com>
+Date: Mon, 16 Jun 1997 22:07:36 GMT   (21kb)
+Date (revised): Fri, 12 Sep 1997 09:39:41 GMT
+
+Title: Gravitational excitons from extra dimensions
+Authors: U. Guenther, A. Zhuk
+Categories: gr-qc astro-ph hep-th
+Comments: Revised version --- 12 references added, Introduction enlarged, 20
+  pages, LaTeX, to appear in Phys.Rev.D56 (15.11.97)
+Journal-ref: Phys.Rev. D56 (1997) 6391-6402
+DOI: 10.1103/PhysRevD.56.6391
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706057
+From: Kip Thorne  <example@example.com>
+Date: Wed, 18 Jun 1997 18:45:07 GMT   (23kb)
+Date (revised): Sun, 9 Aug 1998 17:04:54 GMT
+
+Title: Tidal Stabilization of Rigidly Rotating, Fully Relativistic Neutron
+  Stars
+Authors: Kip S. Thorne (Theoretical Astrophysics, California Institute of
+  Technology)
+Categories: gr-qc astro-ph
+Comments: Revtex, 10 pages, 2 figures; accepted for publication in Physical
+  Review D. Revisions: Appendix rewritten to clarify how, in Newtonian
+  gravitation theory, ambiguity in localization of energy makes interaction
+  energy ambiguous but leaves work done on star by tidal gravity unambiguous.
+  New footnote 1 and Refs. [11] and [19]
+Report-no: Caltech GRP-477
+Journal-ref: Phys.Rev. D58 (1998) 124031
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706073
+From: Sharon Morsink  <example@example.com>
+Date: Mon, 23 Jun 1997 23:35:38 GMT   (13kb)
+Date (revised): Sun, 19 Oct 1997 23:08:29 GMT
+Date (revised): Thu, 11 Jun 1998 14:21:00 GMT
+
+Title: Axial instability of rotating relativistic stars
+Authors: John L. Friedman, Sharon M. Morsink
+Categories: gr-qc astro-ph
+Comments: Latex, 18 pages. Equations 84 and 85 are corrected. Discussion of
+  timescales is corrected and updated
+Journal-ref: Astrophys.J. 502 (1998) 714-720
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9706075
+From: Nils Andersson  <example@example.com>
+Date: Tue, 24 Jun 1997 13:52:12 GMT   (14kb)
+
+Title: A new class of unstable modes of rotating relativistic stars
+Authors: Nils Andersson
+Categories: gr-qc astro-ph
+Comments: 14 pages, latex
+Journal-ref: Astrophys.J. 502 (1998) 708-713
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706226
+From: Perivolaropoulos Leandros  <example@example.com>
+Date: Tue, 3 Jun 1997 11:30:15 GMT   (300kb)
+
+Title: Domain Walls and Vortices with Non-Symmetric Core
+Authors: Minos Axenides (N.C.S.R. Democritos) and Leandros Perivolaropoulos
+  (University of Crete)
+Categories: hep-ph astro-ph
+Comments: 11 pages including 7 embedded postscript figures, use latex with
+  ppeuc.sty (included). see also http://www.edu.physics.uch.gr/~leandros Talk
+  presented at the Particle Physics and the Early Universe Conference at the
+  University of Cambridge, 7-11 April 1997
+Report-no: Crete-97/16
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706228
+From: Lisi Eligio  <example@example.com>
+Date: Tue, 3 Jun 1997 14:19:19 GMT   (30kb)
+
+Title: Fourier analysis of real-time, high-statistics solar neutrino
+  observations
+Authors: G.L. Fogli, E. Lisi, D. Montanino (Bari U. & INFN, Bari)
+Categories: hep-ph astro-ph
+Comments: 10 pages (RevTeX) + 1 figure (postscript); requires epsfig.sty
+Report-no: BARI-TH/276-97
+Journal-ref: Phys.Rev. D56 (1997) 4374-4377
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706232
+From: Piero Ullio  <example@example.com>
+Date: Tue, 3 Jun 1997 16:57:48 GMT   (59kb)
+Date (revised): Thu, 12 Jun 1997 16:35:29 GMT
+
+Title: Full One-loop Calculation of Neutralino Annihilation into Two Photons
+Authors: L. Bergstrom and P. Ullio
+Categories: hep-ph astro-ph
+Comments: 21 pages, LaTeX, uses epsfig, 6 figures included. Pure higgsino limit
+  corrected. Conclusions unchanged
+Journal-ref: Nucl.Phys. B504 (1997) 27-44
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706239
+From: Plamen Krastev  <example@example.com>
+Date: Wed, 4 Jun 1997 00:19:02 GMT   (268kb)
+Date (revised): Tue, 16 Sep 1997 00:30:25 GMT 
+
+Title: Does the Sun Appear Brighter at Night in Neutrinos?
+Authors: J.N. Bahcall and P.I. Krastev
+Categories: hep-ph astro-ph nucl-th
+Comments: 49 pages, 16 figures, uses REVTEX, Seven exportable viewgraphs based
+  upon paper are available at this http URL, where the table of solar
+  zenith-angle distributions can also be found
+Report-no: IASSNS-AST 97/31
+Journal-ref: Phys.Rev. C56 (1997) 2839-2857
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706242
+From: Ray Volkas  <example@example.com>
+Date: Wed, 4 Jun 1997 06:33:23 GMT   (38kb)
+
+Title: How neutrino oscillations can induce an effective neutrino number of
+  less than 3 during Big Bang Nucleosynthesis
+Authors: R. Foot and R. R. Volkas
+Categories: hep-ph astro-ph
+Comments: 22 pages, LaTeX, 2 figures
+Report-no: UM-P-97/31
+Journal-ref: Phys.Rev. D56 (1997) 6653-6664; Erratum-ibid. D59 (1999) 029901
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706385
+From: N. D. Vlachos  <example@example.com>
+Date: Tue, 17 Jun 1997 13:48:55 GMT   (55kb)
+
+Title: Supersymmetric Inflation, Baryogenesis and \nu_{\mu} - \nu_{\tau}
+  Oscillations
+Authors: G. Lazarides, Q. Shafi and N. D. Vlachos
+Categories: hep-ph astro-ph
+Comments: 10 pages RevTeX 3 eps figures. email: vlachos@physics.auth.gr
+Report-no: BA-97-11 THES-TP 97/04
+Journal-ref: Phys.Lett. B427 (1998) 53-58
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706391
+From: Rachel Jeannerot  <example@example.com>
+Date: Tue, 17 Jun 1997 18:36:00 GMT   (20kb)
+
+Title: Inflation in Supersymmetric Unified Theories
+Authors: R. Jeannerot (Sussex University)
+Categories: hep-ph astro-ph
+Comments: 22 pages, uses Revtex
+Report-no: SUSX-TH-97-009
+Journal-ref: Phys.Rev. D56 (1997) 6205-6216
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706408
+From: Antonio Riotto  <example@example.com>
+Date: Wed, 18 Jun 1997 15:38:02 GMT   (11kb)
+
+Title: Minimalism in Inflation Model Building
+Authors: Gia Dvali and Antonio Riotto
+Categories: hep-ph astro-ph
+Comments: 13 pages, LaTeX file
+Report-no: FERMILAB-Pub-97/125-A and CERN-TH/97-130
+Journal-ref: Phys.Lett. B417 (1998) 20-26
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9706538
+From: Zvi Bern  <example@example.com>
+Date: Mon, 30 Jun 1997 19:47:40 GMT   (117kb)
+
+Title: Neutralino Annihilation into Two Photons
+Authors: Z. Bern, P. Gondolo, M. Perelstein
+Categories: hep-ph astro-ph
+Comments: Latex, 12 pages
+Report-no: UCLA/97/TEP/11, MPI-PhT/97-36
+Journal-ref: Phys.Lett. B411 (1997) 86-96
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9706201
+From: Massimo Giovannini  <example@example.com>
+Date: Fri, 27 Jun 1997 17:25:44 GMT   (33kb)
+
+Title: Cosmic microwave background polarization, Faraday rotation and
+  stochastic gravity-waves backgrounds
+Authors: Massimo Giovannini (Departement of Applied Mathematics and Theoretical
+  Physics, Cambridge)
+Categories: hep-th astro-ph gr-qc hep-ph
+Comments: 24 A4 pages in Latex style plus two figures combined into an eps
+  file, accepted for publication in Physical Review D
+Report-no: DAMTP-97-6
+Journal-ref: Phys.Rev. D56 (1997) 3198-3206
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): nucl-th/9706057
+From:  <example@example.com>
+Date: Tue, 24 Jun 1997 02:57:16 GMT   (394kb)
+
+Title: Kaons in dense matter, kaon production in heavy-ion collisions, and kaon
+  condensation in neutron stars
+Authors: G.Q. Li, C.-H. Lee, and G.E. Brown
+Categories: nucl-th astro-ph nucl-ex
+Comments: ReVTeX, 77 pages, including 54 postscript figures
+Report-no: SUNYSB-NTG-97023
+Journal-ref: Nucl.Phys. A625 (1997) 372-434
+\\
