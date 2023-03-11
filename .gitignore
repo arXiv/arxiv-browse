@@ -129,3 +129,5 @@ tests/data/browse.db
 *.key
 *.cer
 deploy/env_values.txt
+
+.htaccess
