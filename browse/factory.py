@@ -15,7 +15,7 @@ from flask_s3 import FlaskS3
 #from arxiv.users.auth import Auth
 
 from browse.config import settings
-from browse.routes import ui
+from browse.routes import ui, dissemination
 from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
@@ -38,6 +38,7 @@ def create_web_app() -> Flask:
     Base(app)
     #Auth(app)
     app.register_blueprint(ui.blueprint)
+    app.register_blueprint(dissemination.blueprint)
     s3.init_app(app)
 
     if not app.jinja_env.globals:
@@ -67,3 +68,31 @@ def create_web_app() -> Flask:
             [app.logger.error(prob) for prob in problems]
 
     return app
+
+
+
+"""Setup GCP trace and logging."""
+
+def setup_trace(name, app):
+    """Setup GCP trace and logging."""
+    from opentelemetry import trace
+    from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+    from opentelemetry.instrumentation.flask import FlaskInstrumentor
+    from opentelemetry.propagate import set_global_textmap
+    from opentelemetry.propagators.cloud_trace_propagator import (
+        CloudTraceFormatPropagator,
+    )
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+    # https://cloud.google.com/trace/docs/setup/python-ot#initialize_flask
+    set_global_textmap(CloudTraceFormatPropagator())
+    tracer_provider = TracerProvider()
+    cloud_trace_exporter = CloudTraceSpanExporter()
+    tracer_provider.add_span_processor(
+        BatchSpanProcessor(cloud_trace_exporter)
+    )
+    trace.set_tracer_provider(tracer_provider)
+    tracer = trace.get_tracer(name)
+    FlaskInstrumentor().instrument_app(app)
+    return tracer

@@ -128,8 +128,8 @@ class Settings(BaseSettings):
 
         This can start with gs:// to use Google Storage.
     """
-    DOCUMENT_CACHE_PATH = os.environ.get(
-        "DOCUMENT_CACHE_PATH", "tests/data/cache")
+
+    DOCUMENT_CACHE_PATH =  "tests/data/cache"
     """Path to cache directory"""
 
     PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
@@ -137,6 +137,17 @@ class Settings(BaseSettings):
 
     Currently the only value is `browse.services.prevnext.fsprevnext` This uses
        DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
+    """
+
+
+    DISSEMINATION_STORAGE_PREFIX = "tests/data/"
+    """Storage prefix to use. Ex gs://arxiv-production-data
+
+    If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have
+    any key parts. ex 'gs://arxiv-production-data'
+
+    Use something like `/cache/` for a file system. Use something like
+    `./testing/data/` for testing data. Must end with a /
     """
 
     ######################### End of Services ###########################
@@ -404,6 +415,8 @@ class Settings(BaseSettings):
         if self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH:
             log.warning("Unexpected: latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
                         "but listings at {self.DOCUMENT_LISTING_PATH}")
+
+
 
         
 settings = Settings()

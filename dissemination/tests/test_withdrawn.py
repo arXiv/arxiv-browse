@@ -1,8 +1,8 @@
 
 from arxiv.identifier import Identifier
 
-from arxiv_dissemination.services.object_store_local import LocalObjectStore
-from arxiv_dissemination.services.article_store import ArticleStore
+from browse.services.dissemination.object_store_local import LocalObjectStore
+from browse.services.dissemination.article_store import ArticleStore
 
 def test_is_not_withdrawn(storage_prefix):
     """Tests some cases where the articles are not withdrawn"""
