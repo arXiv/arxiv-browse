@@ -1,4 +1,5 @@
 {%- import 'base/macros.html' as base_macros -%}
+{%- import 'user_banner.html' as user_banner -%}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -19,24 +20,12 @@
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
-
-  {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-  {% endif -%}
+  {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
 
 <body {% block body_id %}{% endblock %} class="with-cu-identity">
-
-  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
-  {% endif -%}
-
-  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
-  {%- include "user_banner.html" -%}
-  {% endif -%}
-
+  {{ user_banner.content(request_datetime) }}
   <div class="flex-wrap-footer">
     <header>
       <a href="#content" class="is-sr-only">Skip to main content</a>
