@@ -373,3 +373,6 @@ URLS = [
     # This is a temporary workaround for ARXIVNG-2063
 ]
 """External URLs."""
+
+TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
+"""Enable template auto reload in flask"""
