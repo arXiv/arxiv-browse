@@ -17,6 +17,7 @@ means that the fixture will be re-run for each test function.
 import pytest
 from pathlib import Path
 from browse.factory import create_web_app
+import os
 
 from tests import path_of_for_test
 
@@ -95,6 +96,7 @@ def app_with_test_fs(loaded_db):
     import browse.services.listing as listing
     from browse.config import settings
 
+    settings.DISSEMINATION_STORAGE_PREFIX = './tests/data/'
     settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
     settings.DOCUMENT_LISTING_SERVICE = listing.fs_listing
     settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp"
@@ -168,3 +170,37 @@ def _app_with_db():
     app.testing = True
     app.config['APPLICATION_ROOT'] = ''
     return app
+
+
+
+# #################### Integration test marker ####################
+"""
+Setup to mark integration tests.
+
+https://docs.pytest.org/en/latest/example/simple.html
+Mark integration tests like this:
+
+@pytest.mark.integration
+def test_something():
+  ...
+"""
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--runintegration", action="store_true", default=False,
+        help="run arxiv dissemination integration tests"
+    )
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "integration: mark tests as integration tests")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--runintegration"):
+        # --runintegration given in cli: do not skip integration tests
+        return
+    skip_integration = pytest.mark.skip(reason="need --runintegration option to run")
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(skip_integration)

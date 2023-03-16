@@ -12,6 +12,7 @@ from flask_rangerequest import RangeRequest
 from arxiv.identifier import IdentifierException, Identifier
 
 from browse.services.dissemination.next_published import next_publish
+from browse.services.dissemination import get_article_store
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -76,7 +77,7 @@ def serve_pdf(arxiv_id: str):
     except IdentifierException as ex:
         return bad_id(arxiv_id, str(ex))
 
-    item = current_app.article_store.dissemination_for_id('pdf', id)
+    item = get_article_store().dissemination_for_id('pdf', id)
     logger. debug(f"dissemination_for_id({id.idv}) was {item}")
     if not item or item=="VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
