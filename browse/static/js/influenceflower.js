@@ -46,9 +46,9 @@
 
       $.get(flowerQuery).done(function (response) {
         if (response['status'] === 'Success') {
-          output.innerHTML = '<p>Influence flowers are visualisations for citation influences '
-            + 'among academic entities, including papers, authors, institutions, and research topics, '
-            + 'computed using the Microsoft Academic Graph.</p>';
+          output.innerHTML = '<p>Influence flowers are visualizations for citation influences '
+            + 'among academic entities, including papers, authors, institutions, and research topics. '
+            + 'See <a href="https://influencemap.cmlab.dev/" target="_blank">here</a> for more detail.</p>';
           output_graph.style.display='block';
           flowerData = response;
           drawInfluenceFlowers(response);
