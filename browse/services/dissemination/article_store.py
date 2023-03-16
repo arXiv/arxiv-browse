@@ -11,6 +11,8 @@ from dateutil import parser
 from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+
 from .object_store import FileObj, ObjectStore
 
 from .key_patterns import abs_path_current_parent, abs_path_orig_parent, ps_cache_pdf_path, current_pdf_path, previous_pdf_path, abs_path_orig, abs_path_current, Formats
@@ -27,7 +29,7 @@ class Deleted():
 class CannotBuildPdf():
     def __init__(self, msg: str):
         self.msg = msg
-        
+
 Conditions = Union[Literal["WITHDRAWN", # Where the version is a WDR
                            "ARTICLE_NOT_FOUND", # Where there is no article
                            "VERSION_NOT_FOUND", # Where the article exists but the version does not
@@ -72,11 +74,24 @@ def _path_to_version(path: FileObj):
     else:
         return 0
 
+def _is_deleted(id: str) -> Optional[str]:
+    """Checks if an id is for a deleted paper.
+
+    Expects a ID without a version such as quant-ph/0411165 or 0901.4014 or 1203.23434.
+    """
+    if not id:
+        return None
+    else:
+        return DELETED_PAPERS.get(id, None)
+
+def _reasons(str, FORMATS) -> Optional[str]:
+    pass
+
 class ArticleStore():
     def __init__(self,
                  objstore: ObjectStore,
-                 reasons: Callable[[str, FORMATS], Optional[str]],
-                 is_deleted: Callable[[str], Optional[str]]
+                 reasons: Callable[[str, FORMATS], Optional[str]] = _reasons,
+                 is_deleted: Callable[[str], Optional[str]] = _is_deleted
                  ):
         self.objstore: ObjectStore = objstore
         self.reasons = reasons
@@ -102,7 +117,7 @@ class ArticleStore():
         except Exception as ex:
             rstat, rmsg = 'BAD', str(ex)
         stats.append(('pdf_reasons', rstat, rmsg))
-        
+
         dstat,dmsg = 'BAD',''
         try:
             self.is_deleted('2202.00001')
@@ -110,15 +125,15 @@ class ArticleStore():
         except Exception:
             dstat = 'BAD'
         stats.append(('is_deleted', dstat, dmsg))
-        
+
         if all([stat[1]=='GOOD' for stat in stats]):
             return ('GOOD','')
 
         msgs = [f"{styp} was bad due to \"{msg}\"" for styp,stat,msg in stats if stat != 'GOOD']
         return ('BAD', ' and '.join(msgs))
-        
-            
-        
+
+
+
     def current_version(self, arxiv_id:Identifier) -> Optional[int]:
         """Gets the version number of the latest version of `arxiv_id`
 
@@ -165,7 +180,7 @@ class ArticleStore():
 
         if not arxiv_id.has_version:
             return self.dissemination_for_id_current(format, arxiv_id)
-        
+
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
@@ -194,7 +209,7 @@ class ArticleStore():
         current_pdf = self.objstore.to_obj(current_pdf_path(arxiv_id))
         if current_pdf.exists():
             return current_pdf
-        
+
         src_type = self._source_type(arxiv_id)
         if re.search('I', src_type, re.IGNORECASE):
             return "WITHDRAWN"
@@ -211,7 +226,7 @@ class ArticleStore():
         """Gets PDF FileObj for most current version for `Identifier`."""
         res =  self.reasons(arxiv_id.idv, format)
         if res:
-            return CannotBuildPdf(res)        
+            return CannotBuildPdf(res)
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
@@ -219,7 +234,7 @@ class ArticleStore():
         version = self.current_version(arxiv_id)
         if not version:
             return "ARTICLE_NOT_FOUND"
-        
+
         ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id, version))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
@@ -239,7 +254,7 @@ class ArticleStore():
             return "NO_SOURCE"
         if re.search(cannot_gen_pdf_regex, src_type):
             return "NOT_PDF"
-        
+
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(current_pdf)])
         return "UNAVAIABLE"

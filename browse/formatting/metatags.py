@@ -74,12 +74,10 @@ def meta_tag_metadata(metadata: DocMetadata, truncate: bool = False) -> List:
     cod = metadata.get_datetime_of_version(metadata.version)
     if cod:
         meta_tags.append(_mtag("citation_online_date", cod))
-    meta_tags.append(
-        _mtag(
-            "citation_pdf_url",
-            url_for("browse.pdf", arxiv_id=metadata.arxiv_id, _external=True),
-        )
-    )
+
+    pdfurl=url_for("dissemination.pdf", arxiv_id=metadata.arxiv_id, _external=True)
+    meta_tags.append(_mtag("citation_pdf_url",pdfurl))
+
     meta_tags.append(_mtag("citation_arxiv_id", str(metadata.arxiv_id)))
     meta_tags.append(_mtag("citation_abstract", str(metadata.abstract)))
     return meta_tags

@@ -42,7 +42,7 @@
     {%- elif format.startswith('ps') -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
     {%- elif format == 'dvi' -%}
     <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}

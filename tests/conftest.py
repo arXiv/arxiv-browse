@@ -85,6 +85,11 @@ def app_with_fake(loaded_db):
         yield app
 
 
+@pytest.fixture
+def storage_prefix():
+    return './tests/data/abs_files/'
+
+
 @pytest.fixture(scope='function')
 def app_with_test_fs(loaded_db):
     """A browser client with FS abs documents and listings"""
@@ -96,7 +101,7 @@ def app_with_test_fs(loaded_db):
     import browse.services.listing as listing
     from browse.config import settings
 
-    settings.DISSEMINATION_STORAGE_PREFIX = './tests/data/'
+    settings.DISSEMINATION_STORAGE_PREFIX = './tests/data/abs_files/'
     settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
     settings.DOCUMENT_LISTING_SERVICE = listing.fs_listing
     settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp"

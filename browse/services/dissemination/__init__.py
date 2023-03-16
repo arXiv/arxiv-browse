@@ -4,9 +4,6 @@ TODO Merge these with the DocMetadataService
 """
 from google.cloud import storage
 
-from arxiv.legacy.papers.dissemination.reasons import reasons
-from arxiv.legacy.papers.deleted import is_deleted
-
 from browse.config import settings
 
 from .article_store import ArticleStore
@@ -25,7 +22,7 @@ def get_article_store() -> "ArticleStore":
     """Gets the `ArticleStore` service used by dissemination."""
     global _article_store
     if _article_store == None:
-        _article_store = ArticleStore(_get_object_store(), reasons, is_deleted)
+        _article_store = ArticleStore(_get_object_store())
 
     return _article_store
 

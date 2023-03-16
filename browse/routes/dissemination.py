@@ -1,11 +1,9 @@
-from datetime import datetime, timezone, timedelta
-
 from email.utils import format_datetime
 import logging
 from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
 
 from opentelemetry import trace
-from flask import abort, Blueprint, current_app, render_template, redirect, url_for
+from flask import abort, Blueprint, render_template, redirect, url_for
 
 from flask_rangerequest import RangeRequest
 
@@ -27,28 +25,17 @@ def status():
     return {"status": "good"}
 
 
-@blueprint.route("/pdf/<string:category>/<string:arxiv_id>", methods=['GET', 'HEAD'])
-def redirect_legacy_id_pdf(category: str, arxiv_id: str):
-    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
-    return redirect(url_for('routes.serve_legacy_id_pdf', category=category, arxiv_id=arxiv_id), 301)
-
-
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
-def redirect_pdf(arxiv_id: str):
-    """Redirect urls that don't end with .pdf so they download to a filename recognized as a PDF."""
-    return redirect(url_for('routes.serve_pdf', arxiv_id=arxiv_id), 301)
+def redirect_pdf(arxiv_id: str, archive=None):
+    """Redirect urls without .pdf so they download a filename recognized as a PDF."""
+    arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
+    return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
 
 
-@blueprint.route("/pdf/<string:category>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-def serve_legacy_id_pdf(category: str, arxiv_id: str):
-    """Serve PDFs for legacy IDs"""
-    return serve_pdf( f"{category}/{arxiv_id}")
-
-
-
-@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 @blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-def serve_pdf(arxiv_id: str):
+def pdf(arxiv_id: str, archive=None):
     """Want to handle the following patterns:
 
         /pdf/{archive}/{id}v{v}
@@ -68,6 +55,7 @@ def serve_pdf(arxiv_id: str):
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
+    arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
     try:
         if len(arxiv_id) > 40:
             abort(400)

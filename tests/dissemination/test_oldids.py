@@ -33,6 +33,8 @@ def test_pdf_only_v1_and_2_tex_v3(client_with_test_fs):
 
     resp = client_with_test_fs.get("/pdf/cs/0012007v3.pdf")
     assert "0012007v3" in resp.text
+    assert "0012007v3.pdf.pdf"  not in resp.text
+
 
     resp = client_with_test_fs.get("/pdf/cs/0012007.pdf")
     assert "0012007v3" in resp.text

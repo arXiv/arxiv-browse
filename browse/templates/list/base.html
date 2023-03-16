@@ -138,7 +138,7 @@
 {%- macro dl_links( article ) -%}
   {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
-  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
+  [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
   {%- if 'ps' in downloads -%}
     , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
   {%- endif -%}

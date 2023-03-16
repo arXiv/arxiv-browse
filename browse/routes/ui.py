@@ -360,12 +360,6 @@ def format(arxiv_id: str) -> Response:
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
 
 
-@blueprint.route("pdf/<arxiv_id>")
-def pdf(arxiv_id: str) -> Response:
-    """Get PDF for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
 @blueprint.route("div/<arxiv_id>")
 def div(arxiv_id: str) -> Response:
     """Get div for article."""
