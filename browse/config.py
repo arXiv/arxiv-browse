@@ -273,39 +273,6 @@ BROWSE_SITE_HOST = os.environ.get("BROWSE_SITE_HOST", None)
 BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
 """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
-BROWSE_USER_BANNER_ENABLED = bool(
-    int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0"))
-)
-"""Enable/disable user banner."""
-try:
-    if os.environ.get("BROWSE_USER_BANNER_START_DATE", None):
-        BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
-            os.environ.get("BROWSE_USER_BANNER_START_DATE", "nodate")
-        ).replace(hour=0, minute=0, second=0)
-    else:
-        raise ValueError
-except Exception:
-    if BROWSE_USER_BANNER_ENABLED:
-        warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
-    BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
-
-try:
-    if os.environ.get("BROWSE_USER_BANNER_END_DATE", None):
-        BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
-            os.environ.get("BROWSE_USER_BANNER_END_DATE", "noate")
-        ).replace(hour=23, minute=59, second=59)
-    else:
-        raise ValueError
-except Exception:
-    if BROWSE_USER_BANNER_ENABLED:
-        warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
-    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
-
-BROWSE_STATUS_BANNER_ENABLED = bool(
-    int(os.environ.get("BROWSE_STATUS_BANNER_ENABLED", "0"))
-)
-"""Enable/disable status service banner."""
-
 BROWSE_STATUS_BANNER_SCRIPT_URL = os.environ.get(
     "BROWSE_STATUS_BANNER_SCRIPT_URL",
     "https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js",
@@ -373,3 +340,6 @@ URLS = [
     # This is a temporary workaround for ARXIVNG-2063
 ]
 """External URLs."""
+
+TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
+"""Enable template auto reload in flask"""
