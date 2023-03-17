@@ -1,24 +1,28 @@
 {#- How to use the user_banner
 
-The content and script macro will be added to the base.html. In those macros are
-responsable for all checks of the start and end times.
+The content() and script() macro get added to the base.html.
 
-The banner will be shown from the first second of BANNER_START until the last
-second of BANNER_END
+The content() elements will be added at the starty of the <body> above the
+header in base.html.
 
-Setting these will also cause an additonal CSS file to be loadded that slides
-the header away.
+The script() elements will be added to the <head> in the base.html. This has
+additonal CSS and JS files for the banner slide in and out effects.
 
-This no longer uses env vars set in httpd/conf/ng_flask.conf on production.
--#}
+In those macros are responsable for all checks of the start and end times. Make
+sure to use the same date conditionals in the user_banner.content() macro and
+the user_banner.script() macro.
+
+This no longer uses env vars set in browse.config or httpd/conf/ng_flask.conf on
+production. -#}
 
 {# Set these variables to a string of YYYYMMMDD of the start and end date #}
 {% set BANNER_START = '20230316' %}
 {% set BANNER_END = '20230324' %}
 
-{# accessibility CTA banner #}
+
 {%- macro content(request_datetime) -%}
 {%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+{# accessibility CTA banner #}
 <aside class="slider-wrapper bps-banner dark" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
@@ -35,8 +39,18 @@ This no longer uses env vars set in httpd/conf/ng_flask.conf on production.
 {%- endif -%}
 {%- endmacro -%}
 
+
+{%- macro script(request_datetime) -%}
+{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
+  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
+{%- endif -%}
+{%- endmacro -%}
+
+{#################### disabled example banners ####################}
 {# donation banner #}
-<!--<aside class="slider-wrapper bps-banner" style="display:none">
+{#<aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
@@ -49,20 +63,10 @@ This no longer uses env vars set in httpd/conf/ng_flask.conf on production.
       </div>
     </div>
   </div>
-</aside>-->
-
+</aside>#}
 
 {# downtime #}
-<!--<aside class="slider-wrapper" style="display:none">
+{#<aside class="slider-wrapper" style="display:none">
   <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
-</aside>
--->
-
-{%- macro script(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-{%- endif -%}
-{%- endmacro -%}
+</aside>#}
