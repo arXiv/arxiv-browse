@@ -5,6 +5,11 @@
 You can run the browse app directly. Using pipenv:
 
 ```bash
+python --version
+3.6.15
+python -m venv venv
+venv/bin/activate
+pip install pipenv==2022.4.8
 pipenv install
 pipenv run python main.py
 ```

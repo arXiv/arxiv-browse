@@ -82,9 +82,14 @@ var InfluenceFlower = class InfluenceFlower {
     var link_g = document.createElement("g");
     var text_g = document.createElement("g");
 
+    var egoLink = ego_url_base+"&tab="+idx;
+
     // flower graph nodes
     for (var i = 0; i < nodes.length; i++) {
       var d = nodes[i];
+      var outerNode = document.createElement('a');
+      outerNode.setAttribute("href", egoLink);
+      outerNode.setAttribute("target", '_blank');
       var node = document.createElement('circle');
       node.setAttribute("id", d.id);
       node.setAttribute("name", d.name);
@@ -115,7 +120,8 @@ var InfluenceFlower = class InfluenceFlower {
       // node.setAttribute('onmouseout', 'highlight_off()');
 
       this.node_out[i] = node;
-      node_g.appendChild(node);
+      outerNode.appendChild(node)
+      node_g.appendChild(outerNode);
     }
 
     // flower graph node text
@@ -141,7 +147,6 @@ var InfluenceFlower = class InfluenceFlower {
       text.setAttribute("node_size", d.size);
 
       var capName = this.capitalizeString(d.id==0, d.gtype, d.name);
-      var egoLink = ego_url_base+"&tab="+idx;
       var influencemap_url_base = "https://influencemap.cmlab.dev/submit/?id="
       if (d.id == 0) {
         text.innerHTML = "<a href='"+egoLink+"' target='_blank'>"+capName+"</a>";
