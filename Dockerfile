@@ -46,4 +46,13 @@ ADD wsgi.py /app/
 RUN echo $git_commit > /git-commit.txt
 
 EXPOSE 8080
-CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 "browse.factory:create_web_app()"
+
+# Why is this command in an env var and not just run in CMD?  So it can be used
+# to start a docker instance during an integration test. See
+# cicd/cloudbuild-master-pr.yaml for how it is used
+
+ENV GUNICORN gunicorn --bind :8080 \
+    --workers 1 --threads 8 --timeout 0 \
+     "browse.factory:create_web_app()"
+
+CMD exec $GUNICORN
