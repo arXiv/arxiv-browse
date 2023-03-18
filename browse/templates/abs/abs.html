@@ -6,6 +6,8 @@
 
 {% block head %}
   {{ super() -}}
+  <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
+  {{- generate_social_media_tags() }}
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
   <link rel="stylesheet" media="screen" type="text/css" href="https://static.arxiv.org/js/bibex-dev/bibex.css?20200709"/>
@@ -16,15 +18,10 @@
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20210728" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20221129" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
-  {%- include "feedback_collector_js.html" -%}
   {{- generate_scholar_tags() }}
-  {%- if datacite_doi %}
-  <meta name="citation_doi" content="{{ datacite_doi }}"/>
-  {%- endif %}
-  {{- generate_social_media_tags() }}
 {% endblock head %}
 
 {% block body_id %}{% endblock %}
@@ -127,22 +124,28 @@
 {%- macro generate_scholar_tags() -%}
 {%- if meta_tags %}
     {%- for tag in meta_tags %}
-  <meta name="{{tag.name}}" content="{{tag.content}}"/>
+<meta name="{{tag.name}}" content="{{tag.content}}" />
     {%- endfor -%}
 {%- endif -%}
 {%- endmacro -%}
 
 {%- macro generate_social_media_tags() -%}
-    <meta name="twitter:site" content="@arxiv"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...')|tex2utf }}"/>
-    <meta name="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
-    <meta name="twitter:image" content="https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png"/>
-    <meta name="twitter:image:alt" content="arXiv logo"/>
-    <meta property="og:site_name" content="arXiv.org"/>
-    <meta property="og:title" content="{{ abs_meta.title|tex2utf }}"/>
-    <meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}"/>
-    <meta property="og:description" content="{{ abs_meta.abstract|trim|tex2utf }}"/>
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="arXiv.org" />
+<meta property="og:title" content="{{ abs_meta.title|tex2utf }}" />
+<meta property="og:url" content="{{ canonical_url(abs_meta.arxiv_id, abs_meta.version) }}" />
+<meta property="og:image" content="{{ url_for('static', filename='images/arxiv-logo-fb.png') }}" />
+<meta property="og:image:secure_url" content="{{ url_for('static', filename='images/arxiv-logo-fb.png') }}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="700" />
+<meta property="og:image:alt" content="arXiv logo"/>
+<meta property="og:description" content="{{ abs_meta.abstract|trim|tex2utf }}"/>
+<meta name="twitter:site" content="@arxiv"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="{{ abs_meta.title|tex2utf|truncate(70, False, '...')|tex2utf }}"/>
+<meta name="twitter:description" content="{{ abs_meta.abstract|trim|truncate(200, False, '...')|tex2utf }}"/>
+<meta name="twitter:image" content="https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png"/>
+<meta name="twitter:image:alt" content="arXiv logo"/>
 {%- endmacro -%}
 
 {%- macro category_line() -%}
@@ -168,10 +171,20 @@
 {%- endmacro -%}
 
 {% macro generate_download_button() %}
+  {% set author_list = abs_meta.authors.raw.split(',') %}
+  <div id="download-button-info" hidden>
+    {%- if author_list|length > 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    {%- elif author_list|length == 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    {%- else -%}
+    Download a PDF of the paper titled {{abs_meta.title}}
+    {%- endif -%}
+  </div>
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
     <a class="mobile-submission-download" href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}">Download PDF</a>
   {% else %}
-    <a class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
+    <a aria-describedby="download-button-info" class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
 {% endmacro %}
 

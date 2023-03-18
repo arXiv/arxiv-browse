@@ -73,22 +73,8 @@ class Settings(BaseSettings):
     BROWSE_SITE_HOST: Optional[str]
     """This is similar to, but decoupled from SERVER_NAME."""
 
-    BROWSE_ANALYTICS_ENABLED: bool = False
-    """Enable/disable web analytics."""
-
-    BROWSE_USER_BANNER_ENABLED: bool = False
-    """Enable/disable user banner."""
-    BROWSE_USER_BANNER_START_DATE: Optional[date]
-    """Use a format like YYYY-MM-DD"""
-    BROWSE_USER_BANNER_END_DATE: Optional[date]
-    """Use a format like YYYY-MM-DD, banner is up till end of day."""
-
-    BROWSE_STATUS_BANNER_ENABLED: bool = False
-    """Enable/disable status service banner."""
-    BROWSE_STATUS_BANNER_SCRIPT_URL: AnyHttpUrl = \
-        "https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js"  # type: ignore
-    BROWSE_STATUS_BANNER_SITE_ID: str = "not-set"
-    """Enable/disable status service banner."""
+    BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
+    """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
     ############################## Services ##############################
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
@@ -219,6 +205,9 @@ class Settings(BaseSettings):
     propagated rather than handled by the the app’s error
     handlers. Extensions may also change their behavior to facilitate
     easier testing. You should enable this in your own tests."""
+
+    TEMPLATES_AUTO_RELOAD: bool = False
+    """Enable template auto reload in flask"""
 
     SECRET_KEY: str = "qwert2345"
 
@@ -397,15 +386,6 @@ class Settings(BaseSettings):
                 "Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment"
             )
 
-        if self.BROWSE_USER_BANNER_ENABLED:
-            if not self.BROWSE_USER_BANNER_START_DATE:
-                log.warning(
-                    "BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_START_DATE")
-
-            if not self.BROWSE_USER_BANNER_END_DATE:
-                log.warning(
-                    "BROWSE_USER_BANNER_ENABLED is set but there is no valid BROWSE_USER_BANNER_END_DATE")
-
         if self.DOCUMENT_ORIGNAL_VERSIONS_PATH.startswith("gs://") and \
            self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
            self.FS_TZ = "UTC"
@@ -418,5 +398,4 @@ class Settings(BaseSettings):
 
 
 
-        
 settings = Settings()

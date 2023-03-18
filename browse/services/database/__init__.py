@@ -80,11 +80,8 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
         .filter(TrackbackPing.status == "accepted")
     )
 
-
-# Used in all routes as part of inst banner
-
 @db_handle_error(db_logger=logger, default_return_val=None)
-def get_institution(ip: str) -> Optional[Mapping[str,str]]:
+def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
 
@@ -111,9 +108,8 @@ def get_institution(ip: str) -> Optional[Mapping[str,str]]:
         h = {
             "id": institution_row.id,
             "label": institution_row.label,
+            "ip" : ip,
         }
-        assert isinstance(h.get("label"), str)
-
     return h
 
 

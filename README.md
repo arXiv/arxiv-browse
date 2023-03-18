@@ -87,11 +87,13 @@ arXiv Labs options:
 We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
 files via S3.
 
-After looking up the aws keys:
+After looking up the AWS keys and region and bucket:
 ```bash
 cd arxiv-browse
 git pull
-AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x AWS_REGION=x FLASKS3_BUCKET_NAME=x  pipenv run python upload_static_assets.py
+AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x \
+ AWS_REGION=us-east-1 FLASKS3_BUCKET_NAME=arxiv-web-static1 \
+ pipenv run python upload_static_assets.py
 ```
 
 In AWS -> Cloudwatch, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
