@@ -41,7 +41,7 @@
     {%- endif -%}
   </div>
   {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
-  {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
+  {%- if format_list|length == 0 or ( format_list|length == 1 and format_list[0] == 'src' ) -%}
   <li>Unavailable</li>
   {% else %}
     {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
