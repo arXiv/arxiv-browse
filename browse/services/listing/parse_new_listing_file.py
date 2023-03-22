@@ -162,6 +162,8 @@ def _split_items(data: str) -> List[str]:
     if data.startswith(NORMAL):
         data = data[len(NORMAL):] # srtip NORMAL off if found
 
+    if not data:
+        return []
     return data.split(NORMAL)
 
 def _to_item(data: str, ltype: Literal['new', 'cross', 'rep']) -> ListingItem:
