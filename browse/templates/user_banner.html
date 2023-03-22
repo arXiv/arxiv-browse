@@ -21,7 +21,27 @@ production. -#}
 
 
 {%- macro content(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}#}
+<aside class="slider-wrapper bps-banner dark" >
+  <div class="copy-donation bps-banner">
+    <h1>BETA DEMO FOR ARXIV</h1>
+    <p>This is a beta server for arxiv to demo.</p>
+    <p><a href="https://console.cloud.google.com/run/detail/us-central1/arxiv-browse/metrics?project=arxiv-production">metrics and logs</a></p>
+  </div>
+</aside>
+{#{%- endif -%}#}
+{%- endmacro -%}
+
+
+{%- macro script(request_datetime) -%}
+{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}#}
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
+{#{%- endif -%}#}
+{%- endmacro -%}
+
+{#################### disabled example banners ####################}
+
+{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
 {# accessibility CTA banner #}
 <aside class="slider-wrapper bps-banner dark" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
@@ -35,20 +55,9 @@ production. -#}
       </div>
     </div>
   </div>
-</aside>
-{%- endif -%}
-{%- endmacro -%}
+</aside>#}
+{#{%- endif -%}#}
 
-
-{%- macro script(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-{%- endif -%}
-{%- endmacro -%}
-
-{#################### disabled example banners ####################}
 {# donation banner #}
 {#<aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
