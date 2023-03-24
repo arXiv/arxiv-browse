@@ -220,6 +220,9 @@
 {% endif %}
 <div id="content-inner">
   <div id="abs">
+      {% if formats|length == 1 and formats[0] == 'src' %}
+          <span class="error">This paper has been withdrawn.</span>
+      {% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>{{ authors }}</div>
@@ -230,11 +233,7 @@
     {% endif %}
 
     <blockquote class="abstract mathjax">
-        {% if formats|length == 1 and formats[0] == 'src' %}
-            <div>THIS PAPER HAS BEEN WITHDRAWN</div>
-        {%- else -%}
             <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
-        {% endif %}
     </blockquote>
 
     <!--CONTEXT-->
