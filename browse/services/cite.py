@@ -8,7 +8,7 @@ from arxiv.util.authors import parse_author_affil_utf
 
 
 def arxiv_bibtex(docm: DocMetadata) -> str:
-    """Returns bibtex citation for the paper."""
+    """Returns BibTeX citation for the paper."""
     published = docm.get_datetime_of_version(None)
     year = str(published.year) if published else "unknown"
 
@@ -50,7 +50,7 @@ def chars_only(data: str) -> str:
 
 
 def txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
-    """Create an id for the bibtex entry ex abadi2016tensorflow."""
+    """Create an id for the BibTeX entry ex abadi2016tensorflow."""
     try:
         auth = auths[0][0]
     except Exception:
