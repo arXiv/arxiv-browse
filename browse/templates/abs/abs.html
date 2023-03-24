@@ -230,7 +230,11 @@
     {% endif %}
 
     <blockquote class="abstract mathjax">
-      <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+        {% if formats|length == 1 and formats[0] == 'src' %}
+            <div>THIS PAPER HAS BEEN WITHDRAWN</div>
+        {%- else -%}
+            <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+        {% endif %}
     </blockquote>
 
     <!--CONTEXT-->
