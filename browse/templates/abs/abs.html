@@ -220,7 +220,8 @@
 {% endif %}
 <div id="content-inner">
   <div id="abs">
-      {% if formats|length == 1 and formats[0] == 'src' %}
+      {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
+      {% if higher_version_withdrawn %}
           <span class="error">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
       {% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
