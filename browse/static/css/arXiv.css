@@ -58,6 +58,10 @@ em {
   font-style: normal;
 }
 
+em :-webkit-any-link{
+    color: #c00;
+}
+
 /* Used to display localtime in bright highlight */
 em.boxed {
   color: #000;
