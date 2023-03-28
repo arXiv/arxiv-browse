@@ -1,4 +1,4 @@
-"""Tests for bibtex citations."""
+"""Tests for BibTeX citations."""
 from unittest import TestCase
 from browse.services.document.metadata import AbsMetaSession
 from browse.services.cite import arxiv_bibtex

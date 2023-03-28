@@ -1,4 +1,4 @@
-"""Gets bibtex citation for the paper."""
+"""Gets BibTeX citation for the paper."""
 from typing import Callable
 from flask import make_response, Response
 
@@ -30,7 +30,7 @@ def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
 
 @_handle_failure
 def bibtex_citation(arxiv_id: str) -> Response:
-    """Get citation for the paper in bibtex format.
+    """Get citation for the paper in BibTeX format.
 
     Parameters
     ----------
