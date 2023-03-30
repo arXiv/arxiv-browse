@@ -268,10 +268,7 @@ def clickthrough() -> Response:
 
 
 @blueprint.route(
-    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"]
-)
-@blueprint.route(
-    "list/", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"]
+    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"], strict_slashes=False
 )
 @blueprint.route("list/<context>/<subcontext>", methods=["GET", "POST"])
 def list_articles(context: str, subcontext: str) -> Response:
