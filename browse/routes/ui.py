@@ -54,7 +54,7 @@ def load_global_data(_) -> None: # type: ignore
             logger.error("problem loading geoip database: %s", ex)
 
 
-@blueprint.context_processor
+@blueprint.app_context_processor
 def inject_now() -> Dict:
     """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
