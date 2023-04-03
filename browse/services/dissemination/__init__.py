@@ -1,13 +1,10 @@
-"""Dissemination service
-
-TODO Merge these with the DocMetadataService
-"""
-from google.cloud import storage
+"""Service to get PDF and other disseminations of an item."""
+from typing import Literal
 
 from browse.config import settings
+from google.cloud import storage
 
 from .article_store import ArticleStore
-
 from .object_store import ObjectStore
 from .object_store_gs import GsObjectStore
 from .object_store_local import LocalObjectStore

@@ -1,3 +1,4 @@
+"""Routes for PDF, source and other downloads."""
 from email.utils import format_datetime
 import logging
 from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
@@ -11,6 +12,7 @@ from arxiv.identifier import IdentifierException, Identifier
 
 from browse.services.dissemination.next_published import next_publish
 from browse.services.dissemination import get_article_store
+from browse.services.dissemination import formats
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -65,7 +67,7 @@ def pdf(arxiv_id: str, archive=None):
     except IdentifierException as ex:
         return bad_id(arxiv_id, str(ex))
 
-    item = get_article_store().dissemination_for_id('pdf', id)
+    item = get_article_store().dissemination_for_id(formats.pdf, id)
     logger. debug(f"dissemination_for_id({id.idv}) was {item}")
     if not item or item=="VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)

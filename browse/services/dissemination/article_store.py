@@ -15,7 +15,9 @@ from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 from .object_store import FileObj, ObjectStore
 
-from .key_patterns import abs_path_current_parent, abs_path_orig_parent, ps_cache_pdf_path, current_pdf_path, previous_pdf_path, abs_path_orig, abs_path_current, Formats
+from .key_patterns import abs_path_current_parent, abs_path_orig_parent, ps_cache_pdf_path, current_pdf_path, previous_pdf_path, abs_path_orig, abs_path_current
+
+from .formats import Format
 
 
 import logging
@@ -55,6 +57,7 @@ VALID_SOURCE_EXTENSIONS = [
     '.html.gz',
 ]
 
+
 src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
 
 cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
@@ -84,13 +87,13 @@ def _is_deleted(id: str) -> Optional[str]:
     else:
         return DELETED_PAPERS.get(id, None)
 
-def _reasons(str, FORMATS) -> Optional[str]:
+def _unset_reasons(str, FORMATS) -> Optional[str]:
     pass
 
 class ArticleStore():
     def __init__(self,
                  objstore: ObjectStore,
-                 reasons: Callable[[str, FORMATS], Optional[str]] = _reasons,
+                 reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted
                  ):
         self.objstore: ObjectStore = objstore
@@ -173,9 +176,9 @@ class ArticleStore():
             return "VERSION_NOT_FOUND" # ambitious? what if the article doens't exist?
 
 
-    def dissemination_for_id(self, format: Formats, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
+    def dissemination_for_id(self, format: Format, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
         """Gets FileObj for an `Identifier` with or without a version."""
-        if format != "pdf":
+        if format.name != "pdf":
             raise Exception("Only PDF is currently supported")
 
         if not arxiv_id.has_version:
@@ -184,12 +187,12 @@ class ArticleStore():
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
-        res = self.reasons(arxiv_id.idv, format)
+        res = self.reasons(arxiv_id.idv, format.name)
         if res:
             return CannotBuildPdf(res)
 
         # try from the ps_cache with the version number
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id))
+        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format.name, arxiv_id))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
@@ -222,9 +225,9 @@ class ArticleStore():
                      [str(ps_cache_pdf), str(non_current_pdf), str(current_pdf)])
         return "UNAVAIABLE"
 
-    def dissemination_for_id_current(self, format: Formats, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
+    def dissemination_for_id_current(self, format: Format, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
         """Gets PDF FileObj for most current version for `Identifier`."""
-        res =  self.reasons(arxiv_id.idv, format)
+        res =  self.reasons(arxiv_id.idv, format.name)
         if res:
             return CannotBuildPdf(res)
         deleted = self.is_deleted(arxiv_id.id)
@@ -235,7 +238,7 @@ class ArticleStore():
         if not version:
             return "ARTICLE_NOT_FOUND"
 
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format, arxiv_id, version))
+        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format.name, arxiv_id, version))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
