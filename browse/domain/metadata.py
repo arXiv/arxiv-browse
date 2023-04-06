@@ -1,4 +1,5 @@
 """Representations of arXiv document metadata."""
+import re
 from collections import abc
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -35,6 +36,10 @@ class Submitter:
     __slots__ = ['name', 'email']
 
 
+cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
+"""Regex for use aginst source_type for formats that cannot serve a PDF,
+these are HTML, ODF and DOCX"""
+
 @dataclass(frozen=True)
 class VersionEntry:
     """Represents a single arXiv article version history entry."""
@@ -53,6 +58,14 @@ class VersionEntry:
     source_type: SourceType = field(default_factory=SourceType)  # type: ignore
     """Source file type."""
 
+    @property
+    def is_withdrawn(self) -> bool:
+        return 'I' in self.raw
+
+    @property
+    def cannot_pdf(self) -> bool:
+        """Is the version incapable of returning a PDF?"""
+        return bool(re.search(cannot_gen_pdf_regex, self.raw))
 
 @dataclass(frozen=True)
 class AuthorList:
@@ -214,6 +227,23 @@ class DocMetadata:
             raise ValueError(
                 f'version_history was not an Iterable for {self.arxiv_id_v}')
         return max(map(lambda ve: ve.version, self.version_history))
+
+
+    def get_version(self, version:int) -> Optional[VersionEntry]:
+        """Gets `VersionEntry` for `version`.
+
+        Returns None if version does not exist."""
+        if version < 1:
+            raise ValueError("Version must be > 1")
+        versions = list(
+            v for v in self.version_history if v.version == version)
+        if len(versions) > 1:
+            raise ValueError(
+                '{self.arxiv_id} version_history had more than one version {version}')
+        if not versions:
+            return None
+        else:
+            return versions[0]
 
     def get_datetime_of_version(
             self, version: Optional[int]) -> Optional[datetime]:
