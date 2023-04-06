@@ -1,6 +1,5 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 
-import os
 import re
 from typing import Any, Dict, List, Tuple
 from datetime import datetime
@@ -14,7 +13,8 @@ from arxiv import taxonomy
 
 from browse.domain.license import License
 from browse.domain.metadata import Archive, AuthorList, Category, \
-    DocMetadata, Group, SourceType, Submitter, VersionEntry
+    DocMetadata, Group, Submitter
+from browse.domain.version import VersionEntry, SourceType
 from browse.domain.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException

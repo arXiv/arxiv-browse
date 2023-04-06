@@ -8,8 +8,8 @@ from datetime import datetime
 class FileObj(ABC):
     """FileObj is a subset of the methods on GS `Blob`.
 
-    The intent here is to facilitate testing by having a thin wrapper around Path
-    to allow local files for testing.
+    The intent here is to facilitate testing by having a thin wrapper around
+    Path to allow local files for testing.
 
     If a new method from `Blob` is needed for use in these packages,
     add the `abstractmethod` to `FileObj` then implement a local
@@ -30,7 +30,7 @@ class FileObj(ABC):
         pass
 
     @abstractmethod
-    def open(self,  *args, **kwargs) -> IO:
+    def open(self,  *args, **kwargs) -> IO:  # type: ignore
         """Opens the object similar to the normal Python `open()`"""
         pass
 
@@ -62,22 +62,25 @@ class ObjectStore(ABC):
 
     @abstractmethod
     def list(self, dir: str) -> Iterable[FileObj]:
-        """Gets a listing similar to what would be returned by `Client.list_blobs()`
+        """Gets a listing similar to returned by `Client.list_blobs()`
 
         `dir` should end with a /
         """
         pass
 
     @abstractmethod
-    def status() -> Tuple[Literal["GOOD","BAD"], str]:
+    def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Indicates the health of the service.
 
-        Returns a tuple of either ("GOOD",'') or ("BAD","Some human readable message")
+        Returns a tuple of either ("GOOD",'') or ("BAD","Some human readable
+        message")
 
         The human readable message might be displayed publicly so do
         not put sensitive information in it.
+
         """
         pass
+
 
 class FileDoesNotExist(FileObj):
     """Represents a file that does not exist"""
@@ -86,13 +89,13 @@ class FileDoesNotExist(FileObj):
         self.item = item
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.item
 
-    def exists(self):
+    def exists(self) -> bool:
         return False
 
-    def open(self, *args, **kwargs) -> IO:
+    def open(self, *args, **kwargs) -> IO:  # type: ignore
         raise Exception("File does not exist")
 
     @property
@@ -107,5 +110,5 @@ class FileDoesNotExist(FileObj):
     def updated(self) -> datetime:
         raise Exception("File does not exist")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"FileDoesNotExist({self.item})"

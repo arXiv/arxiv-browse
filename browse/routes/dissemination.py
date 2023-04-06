@@ -21,15 +21,10 @@ blueprint = Blueprint('dissemination', __name__)
 
 tracer = trace.get_tracer(__name__)
 
-@blueprint.route("/pdf/status")
-def status():
-    #TODO check that can read from storage
-    return {"status": "good"}
-
 
 @blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
-def redirect_pdf(arxiv_id: str, archive=None):
+def redirect_pdf(arxiv_id: str, archive=None):  # type: ignore
     """Redirect urls without .pdf so they download a filename recognized as a PDF."""
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
     return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
@@ -37,7 +32,7 @@ def redirect_pdf(arxiv_id: str, archive=None):
 
 @blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 @blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-def pdf(arxiv_id: str, archive=None):
+def pdf(arxiv_id: str, archive=None):  # type: ignore
     """Want to handle the following patterns:
 
         /pdf/{archive}/{id}v{v}
@@ -81,13 +76,14 @@ def pdf(arxiv_id: str, archive=None):
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
-    elif not item or not item.exists():
+    elif not item or not item.exists(): #  type: ignore
         return not_found(arxiv_id)
 
-    resp = RangeRequest(item.open('rb'),
-                        etag=item.etag,
-                        last_modified = item.updated,
-                        size=item.size).make_response()
+    file: FileObj = item #  type: ignore
+    resp = RangeRequest(file.open('rb'),
+                        etag=file.etag,
+                        last_modified = file.updated,
+                        size=file.size).make_response()
 
     resp.headers['Access-Control-Allow-Origin']='*'
     resp.headers['Content-Type'] = 'application/pdf'
@@ -104,27 +100,27 @@ def pdf(arxiv_id: str, archive=None):
     return resp
 
 
-def _cc_versioned():
+def _cc_versioned():  # type: ignore
     """Versioned pdfs should not change so let's put a time a bit in the future.
     Non versioned could change during the next publish."""
     return 'max-age=604800' # 7 days
 
-def withdrawn(arxiv_id: str):
+def withdrawn(arxiv_id: str):  # type: ignore
     headers = {'Cache-Cache': 'max-age=31536000'} # one year, max allowed by RFC 2616
     return render_template("pdf/withdrawn.html", arxiv_id=arxiv_id), 200, headers
 
-def unavailable(arxiv_id: str):
+def unavailable(arxiv_id: str):  # type: ignore
     return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 500, {}
 
-def not_pdf(arxiv_id: str):
+def not_pdf(arxiv_id: str):  # type: ignore
     return render_template("pdf/unavaiable.html", arxiv_id=arxiv_id), 404, {}
 
-def not_found(arxiv_id: str):
+def not_found(arxiv_id: str):  # type: ignore
     headers = {'Expires': format_datetime(next_publish())}
     return render_template("pdf/not_found.html", arxiv_id=arxiv_id), 404, headers
 
-def bad_id( arxiv_id: str, err_msg: str):
+def bad_id( arxiv_id: str, err_msg: str):  # type: ignore
     return render_template("pdf/bad_id.html", err_msg=err_msg, arxiv_id=arxiv_id), 404, {}
 
-def cannot_build_pdf(arxiv_id: str, msg: str):
+def cannot_build_pdf(arxiv_id: str, msg: str):  # type: ignore
     return render_template("pdf/cannot_build_pdf.html", err_msg=msg,  arxiv_id=arxiv_id), 404, {}

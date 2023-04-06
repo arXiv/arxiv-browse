@@ -1,11 +1,11 @@
 """ObjectStore that uses local FS and Path"""
 
-from typing import IO, Iterator
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import IO, Iterator, Literal, Tuple
 
+from .object_store import FileDoesNotExist, FileObj, ObjectStore
 
-from .object_store import ObjectStore, FileObj, FileDoesNotExist
 
 class LocalObjectStore(ObjectStore):
     """ObjectStore that uses local FS and Path"""
@@ -38,16 +38,16 @@ class LocalObjectStore(ObjectStore):
         parent, file = Path(self.prefix+key).parent, Path(self.prefix+key).name
         return (LocalFileObj(item) for item in Path(parent).glob(f"{file}*"))
 
-    def status(self):
+    def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         if Path(self.prefix).exists():
-            return ("GOOD","")
+            return ("GOOD", "")
         else:
             return ("BAD", "Local storage path doesn't exist")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<LocalObjectStore {self.prefix}>"
 
 
@@ -67,8 +67,8 @@ class LocalFileObj(FileObj):
     def exists(self) -> bool:
         return self.item.exists()
 
-    def open(self, *args, **kwargs) -> IO:
-        return self.item.open(*args, **kwargs)
+    def open(self, *args, **kwargs) -> IO:  # type: ignore
+        return self.item.open(*args, **kwargs) # type: ignore
 
     @property
     def etag(self) -> str:
@@ -82,8 +82,8 @@ class LocalFileObj(FileObj):
     def updated(self) -> datetime:
         return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<LocalFileObj Path={self.item}>"

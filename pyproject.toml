@@ -34,6 +34,7 @@ mysqlclient = ">=2.1"
 pydantic = "*"
 python-dateutil = "*"
 validators = "*"
+types-python-dateutil = "^2.8.19.12"
 
 [tool.poetry.dev-dependencies]
 beautifulsoup4 = "*"

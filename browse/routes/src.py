@@ -43,7 +43,7 @@ def _id_check(arxiv_id: Optional[str], archive:Optional[str]) -> Optional[Identi
 
 @blueprint.route("/src/<string:arxiv_id>")
 @blueprint.route("/src/<string:archive>/<int:arxiv_id>")
-def src(arxiv_id:str, archive:Optional[str]=None):
+def src(arxiv_id:str, archive:Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a tar.gz.
 
      /src/id - tar.gz of whole source package
@@ -69,8 +69,7 @@ def src(arxiv_id:str, archive:Optional[str]=None):
     # TODO need test data for src_format has_ancillary_files (A)
     # TODO need test data for src_format has_pilot_data (B)
 
-
-    return render_template("debug.html", data= aid), 200, {}
+    return render_template("debug.html", data= mdata), 200, {}
 
     # result = get_doc_se
     # result = get_article_store().get_source(aid)
@@ -79,14 +78,14 @@ def src(arxiv_id:str, archive:Optional[str]=None):
 
 @blueprint.route("/src/<string:arxiv_id>/anc", strict_slashes=False)
 @blueprint.route("/src/<string:archive>/<int:old_id>/anc", strict_slashes=False)
-def anc_listing(arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):
+def anc_listing(arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):  # type: ignore
     """Show html page of ancillary files for arxiv_id."""
     pass     # TODO
 
 
 @blueprint.route("/src/<string:arxiv_id>/<string:file>")
 @blueprint.route("/src/<string:archive>/<int:old_id>/<string:file>")
-def anc(file: str, arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):
+def anc(file: str, arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):  # type: ignore
     """Serves ancillary files.
 
     Returns just the specified file within the source package. Has
@@ -97,6 +96,6 @@ def anc(file: str, arxiv_id: Optional[str]=None, old_id:Optional[str]=None, arch
 
 @blueprint.route("/e-print/<string:arxiv_id>")
 @blueprint.route("/e-print/<string:archive>/<int:old_id>")
-def e_prints(arxiv_id: Identifier):
+def e_prints(arxiv_id: Identifier):  # type: ignore
     """Serves source package in form that we store it (.tar.gz, .pdf, etc.)"""
     pass     # TODO

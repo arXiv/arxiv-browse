@@ -1,25 +1,26 @@
 """Service to get PDF and other disseminations of an item."""
-from typing import Literal
-
 from browse.config import settings
 from google.cloud import storage
 
+from browse.services.documents import get_doc_service
 from .article_store import ArticleStore
 from .object_store import ObjectStore
 from .object_store_gs import GsObjectStore
 from .object_store_local import LocalObjectStore
 
-_article_store:ArticleStore = None
-#This works because it is thread safe and not bound to the app context.
+_article_store:ArticleStore = None  # type: ignore
+# This works because it is thread safe and not bound to the app context.
 
-_object_store: ObjectStore = None
-#This works because it is thread safe and not bound to the app context.
+_object_store: ObjectStore = None  # type: ignore
+# This works because it is thread safe and not bound to the app context.
 
 def get_article_store() -> "ArticleStore":
     """Gets the `ArticleStore` service used by dissemination."""
     global _article_store
     if _article_store == None:
-        _article_store = ArticleStore(_get_object_store())
+        _article_store = ArticleStore(
+            get_doc_service(),
+            _get_object_store())
 
     return _article_store
 

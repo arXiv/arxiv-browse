@@ -9,6 +9,6 @@ class ItemSource():
 
     #TODO Make this a context manager that can be opened?
 
-    @property
-    def format(self)-> FileFormat:
-        pass
+    # @property
+    # def format(self)-> FileFormat:
+    #     pass

@@ -21,7 +21,8 @@ from datetime import date, datetime
 from typing import List, Literal, Tuple, Union
 
 from browse.domain.category import Category
-from browse.domain.metadata import DocMetadata, SourceType, VersionEntry, AuthorList
+from browse.domain.metadata import DocMetadata, AuthorList
+from browse.domain.version import VersionEntry, SourceType
 from browse.services import APath
 from browse.services.listing import (Listing, ListingItem,
                                      MonthCount, NotModifiedResponse,

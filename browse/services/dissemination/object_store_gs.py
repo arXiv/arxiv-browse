@@ -1,26 +1,24 @@
 """ObjectStore that uses Google GS buckets"""
 
 
-from typing import Iterator
-
-from collections.abc import Iterator
+from typing import Iterator, Literal, Tuple
 
 from google.cloud.storage.blob import Blob
 from google.cloud.storage.bucket import Bucket
 
-from .object_store import ObjectStore, FileObj, FileDoesNotExist
+from .object_store import FileDoesNotExist, FileObj, ObjectStore
 
 # This causes the `Blob` class to be considered a subclass of `FileObj`
 FileObj.register(Blob)
 
 
 class GsObjectStore(ObjectStore):
-    def __init__(self, bucket:Bucket):
+    def __init__(self, bucket: Bucket):
         if not bucket:
             raise ValueError("Must set a bucket")
         self.bucket = bucket
 
-    def to_obj(self, key:str) -> FileObj:
+    def to_obj(self, key: str) -> FileObj:
         """Gets the `Blob` fom google-cloud-storage.
 
         Returns `FileDoesNotExist` if there is no object at the key."""
@@ -28,7 +26,7 @@ class GsObjectStore(ObjectStore):
         if not blob:
             return FileDoesNotExist("gs://" + self.bucket.name + '/' + key)
         else:
-            return blob
+            return blob  # type: ignore
 
     def list(self, prefix: str) -> Iterator[FileObj]:
         """Gets listing of keys with prefix.
@@ -37,11 +35,11 @@ class GsObjectStore(ObjectStore):
         'ps_cache/arxiv/pdf/1212/1212.12345' or
         'ftp/cs/papers/0012/0012007'.
         """
-        return self.bucket.client.list_blobs(self.bucket, prefix=prefix)
+        return self.bucket.client.list_blobs(self.bucket, prefix=prefix)  # type: ignore
 
-    def status(self):
+    def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Gets if bucket can be read."""
         if self.bucket.exists:
-            return ("GOOD",'')
+            return ("GOOD", '')
         else:
-            return ("BAD",'bucket does not exist or API down')
+            return ("BAD", 'bucket does not exist or API down')

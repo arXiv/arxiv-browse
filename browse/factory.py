@@ -75,7 +75,7 @@ def create_web_app() -> Flask:
 
 """Setup GCP trace and logging."""
 
-def setup_trace(name, app):
+def setup_trace(name: str, app: Flask): # type: ignore
     """Setup GCP trace and logging."""
     from opentelemetry import trace
     from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter

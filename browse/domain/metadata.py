@@ -11,16 +11,7 @@ from arxiv.base.urls import canonical_url
 from browse.domain.category import Category
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-
-
-@dataclass(frozen=True)
-class SourceType:
-    """Represents arXiv article source file type."""
-
-    code: str
-    """Internal code for the source type."""
-
-    __slots__ = ['code']
+from browse.domain.version import VersionEntry
 
 
 @dataclass(frozen=True)
@@ -35,37 +26,6 @@ class Submitter:
 
     __slots__ = ['name', 'email']
 
-
-cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
-"""Regex for use aginst source_type for formats that cannot serve a PDF,
-these are HTML, ODF and DOCX"""
-
-@dataclass(frozen=True)
-class VersionEntry:
-    """Represents a single arXiv article version history entry."""
-
-    version: int
-
-    raw: str
-    """Raw history entry, e.g. as parsed from .abs file."""
-
-    submitted_date: datetime
-    """Date for the entry."""
-
-    size_kilobytes: int = 0
-    """Size of the article source, in kilobytes."""
-
-    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
-    """Source file type."""
-
-    @property
-    def is_withdrawn(self) -> bool:
-        return 'I' in self.raw
-
-    @property
-    def cannot_pdf(self) -> bool:
-        """Is the version incapable of returning a PDF?"""
-        return bool(re.search(cannot_gen_pdf_regex, self.raw))
 
 @dataclass(frozen=True)
 class AuthorList:

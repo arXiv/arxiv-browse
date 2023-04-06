@@ -206,8 +206,14 @@ class Settings(BaseSettings):
     handlers. Extensions may also change their behavior to facilitate
     easier testing. You should enable this in your own tests."""
 
-    TEMPLATES_AUTO_RELOAD: bool = False
-    """Enable template auto reload in flask"""
+    TEMPLATES_AUTO_RELOAD: Optional[bool] = None
+    """Enable template auto reload in flask.
+
+    Whether to check for modifications of the template source and reload it
+    automatically. By default the value is None which means that Flask checks
+    original file only in debug mode.
+    """
+
 
     SECRET_KEY: str = "qwert2345"
 
@@ -348,13 +354,6 @@ class Settings(BaseSettings):
 
     JSONIFY_MIMETYPE: str = "application/json"
     """MIME type used for jsonify responses."""
-
-    TEMPLATES_AUTO_RELOAD: Optional[bool] = None
-    """
-    Whether to check for modifications of the template source and reload it
-    automatically. By default the value is None which means that Flask checks
-    original file only in debug mode.
-    """
 
     EXPLAIN_TEMPLATE_LOADING: bool = False
     """
