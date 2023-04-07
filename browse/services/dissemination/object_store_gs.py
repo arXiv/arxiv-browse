@@ -6,7 +6,8 @@ from typing import Iterator, Literal, Tuple
 from google.cloud.storage.blob import Blob
 from google.cloud.storage.bucket import Bucket
 
-from .object_store import FileDoesNotExist, FileObj, ObjectStore
+from .object_store import ObjectStore
+from .fileobj import FileDoesNotExist, FileObj
 
 # This causes the `Blob` class to be considered a subclass of `FileObj`
 FileObj.register(Blob)

@@ -10,7 +10,9 @@ from typing import Dict, List, Literal, Optional, Tuple, Union
 from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 from browse.domain.metadata import DocMetadata, VersionEntry
-from browse.services.documents.base_documents import DocMetadataService
+from browse.services.documents.base_documents import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
+    DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 from . import formats
@@ -18,7 +20,8 @@ from .key_patterns import (abs_path_current, abs_path_current_parent,
                            abs_path_orig, abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
-from .object_store import FileObj, ObjectStore
+from .object_store import ObjectStore
+from .fileobj import FileObj
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.DEBUG)
@@ -132,7 +135,6 @@ class ArticleStore():
         except Exception as ex:
             stats.append(('pdf_reasons', 'BAD', str(ex)))
 
-        dstat, dmsg = 'BAD', ''
         try:
             self.is_deleted('2202.00001')
             stats.append(('is_deleted', 'GOOD', ''))
@@ -146,67 +148,43 @@ class ArticleStore():
                 if stat != 'GOOD']
         return ('BAD', ' and '.join(msgs))
 
+    def dissemination(self,
+                      format: formats.Format,
+                      arxiv_id: Identifier,
+                      docmeta: Optional[DocMetadata] = None) \
+            -> Union[Conditions, FileObj]:
+        """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
-    def current_version(self, arxiv_id:Identifier) -> Optional[int]:
-        """Gets the version number of the latest version of `arxiv_id`
+        If `doc` is not passed it will be looked up.
 
-        Returns None if there is no article witht this ID."""
-        orgprefix =f"{abs_path_orig_parent(arxiv_id)}/{arxiv_id.filename}"
-        abs_versions = list(self.objstore.list(orgprefix))
-        if abs_versions:
-            return max(map(_path_to_version, abs_versions)) + 1
-
-        currprefix=abs_path_current(arxiv_id)
-        if self.objstore.to_obj(currprefix).exists():
-            return 1
-        else:
-            logger.debug("No current_version, since no objects found in "
-                         f"{self.objstore} at {orgprefix} and {currprefix}")
-            return None  # article does not exist
-
-    def abs_for_id(self, arxiv_id: Identifier, version:int=0, current:int=0, any:bool=False
-                   ) -> Union[FileObj, AbsConditions]:
-        first_version = (version != 0 and version == 1) or arxiv_id.version == 1
-        if current or not arxiv_id.has_version or first_version:
-            abs = self.objstore.to_obj(abs_path_current(arxiv_id))
-            if abs.exists():
-                return abs
-            else:
-                return "ARTICLE_NOT_FOUND" # should always be a current abs file
-
-        version = version or arxiv_id.version
-        abs = self.objstore.to_obj(abs_path_orig(arxiv_id, version=version))
-        if abs.exists():
-            return abs
-
-        # All that is left is if a version is desired and that version is the one in ftp.
-        # The version in ftp is one higher than the highest version in orig.
-        abs = self.objstore.to_obj(abs_path_orig(arxiv_id, version=arxiv_id.version-1))
-        if abs.exists():
-            return abs
-        else:
-            return "VERSION_NOT_FOUND" # ambitious? what if the article doens't exist?
-
-
-    def _dissemination(self, format: formats.Format, arxiv_id: Identifier, doc: DocMetadata) -> Union[Conditions, FileObj]:
+        If the `FileObj` is not available for the `arxiv_id` a `Conditions` will
+        be returned.
+        """
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
-        if format.name not in ["pdf", "e-print", "targz"]:
-            raise ValueError("Format not supported")
+        if format not in self.format_handlers:
+            raise ValueError(f"Format {format.name} not in format handlers")
 
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
 
-        doc = self.metadataservice.get_abs(arxiv_id.id)
-        if not doc:
+        try:
+            if docmeta is None:
+                docmeta = self.metadataservice.get_abs(arxiv_id.id)
+        # Not excpeting AbsParsingException or AbsException since that is bad
+        # data that we want to know about and fix.
+        except AbsNotFoundException:
             return "ARTICLE_NOT_FOUND"
+        except AbsVersionNotFoundException:
+            return "VERSION_NOT_FOUND"
+        except AbsDeletedException:
+            return Deleted('')
 
         if arxiv_id.has_version:
-            version = doc.get_version(arxiv_id.version)
+            version = docmeta.get_version(arxiv_id.version)
         else:
-            version = doc.get_version(doc.highest_version())
-
+            version = docmeta.get_version(docmeta.highest_version())
         if not version:
             return "VERSION_NOT_FOUND"
 
@@ -214,33 +192,20 @@ class ArticleStore():
             return "WITHDRAWN"
 
         handler_fn = self.format_handlers[format]
-        fileobj = handler_fn(format, arxiv_id, doc, version)
+        fileobj = handler_fn(format, arxiv_id, docmeta, version)
         if not fileobj:
             return "UNAVAIABLE"
         else:
             return fileobj
 
-    def dissemination_for_id(self, format: formats.Format, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
-        """Gets FileObj for an `Identifier` with or without a version."""
-        # TODO This could be merged with _dissemination?
-        doc = self.metadataservice.get_abs(arxiv_id.id)
-        return self._dissemination(format, arxiv_id, doc)
+    def _source_exists(self, arxiv_id: Identifier, doc: DocMetadata) -> bool:
+        """Does the source exist for this `arxiv_id` and `doc`?"""
+        if not arxiv_id.has_version or arxiv_id.version == doc.highest_version():
+            parent = abs_path_current_parent(arxiv_id)
+        else:
+            parent = abs_path_orig_parent(arxiv_id)
 
-    def dissemination_for_id_current(self, format: formats.Format, arxiv_id: Identifier) -> Union[Conditions, FileObj]:
-        """Gets PDF FileObj for most current version for `Identifier`."""
-        # TODO This could be merged with _dissemination?
-        doc = self.metadataservice.get_abs(arxiv_id.id)
-        return self._dissemination(format, arxiv_id, doc)
-
-    def _source_exists(self, arxiv_id: Identifier) -> bool:
-        res = self._versioned_or_current(arxiv_id)
-        if not res:
-            return False  # does source exist or not for a non found paper?
-        vnum, is_current = res
-
-        parent = abs_path_current_parent(arxiv_id) if is_current else abs_path_orig_parent(arxiv_id)
         pattern = parent + '/' + arxiv_id.filename
-
         items = list(self.objstore.list(pattern))
         if len(items) > 1000:
             logger.warning("list of matches to is_withdrawn was %d, unexpectedly large", len(items))
@@ -248,16 +213,6 @@ class ArticleStore():
 
         # does any obj key match with any extension?
         return any(map(lambda item: src_regex.match(item.name), items))
-
-    def _versioned_or_current(self, arxiv_id: Identifier) -> Optional[Tuple[int, bool]]:
-        current_ver = self.current_version(arxiv_id)
-        if not current_ver:
-            return None
-        elif arxiv_id.has_version:
-            current = arxiv_id.version == current_ver
-            return (arxiv_id.version, current)
-        else:
-            return (current_ver, True)
 
     def _src_orig(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
@@ -289,7 +244,7 @@ class ArticleStore():
             if pdf_file.exists():
                 return pdf_file
 
-        if not self._source_exists(arxiv_id):
+        if not self._source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
 
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,

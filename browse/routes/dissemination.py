@@ -1,18 +1,17 @@
 """Routes for PDF, source and other downloads."""
-from email.utils import format_datetime
 import logging
+from email.utils import format_datetime
+
+from arxiv.identifier import Identifier, IdentifierException
+from browse.services.dissemination import formats, get_article_store
 from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
-
-from opentelemetry import trace
-from flask import abort, Blueprint, render_template, redirect, url_for
-
-from flask_rangerequest import RangeRequest
-
-from arxiv.identifier import IdentifierException, Identifier
-
+from browse.services.dissemination.fileobj import FileObj
 from browse.services.dissemination.next_published import next_publish
-from browse.services.dissemination import get_article_store
-from browse.services.dissemination import formats
+from flask import Blueprint, abort, redirect, render_template, url_for
+from flask_rangerequest import RangeRequest
+from opentelemetry import trace
+
+
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -62,11 +61,11 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     except IdentifierException as ex:
         return bad_id(arxiv_id, str(ex))
 
-    item = get_article_store().dissemination_for_id(formats.pdf, id)
+    item = get_article_store().dissemination(formats.pdf, id)
     logger. debug(f"dissemination_for_id({id.idv}) was {item}")
-    if not item or item=="VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
+    if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
-    elif item in ["WITHDRAWN", "NO_SOURCE"] :
+    elif item in ["WITHDRAWN", "NO_SOURCE"]:
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE":
         return unavailable(arxiv_id)
@@ -76,16 +75,16 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
-    elif not item or not item.exists(): #  type: ignore
+    elif not item or not item.exists():  # type: ignore
         return not_found(arxiv_id)
 
-    file: FileObj = item #  type: ignore
+    file: FileObj = item  # type: ignore
     resp = RangeRequest(file.open('rb'),
                         etag=file.etag,
-                        last_modified = file.updated,
+                        last_modified=file.updated,
                         size=file.size).make_response()
 
-    resp.headers['Access-Control-Allow-Origin']='*'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers['Content-Type'] = 'application/pdf'
 
     if resp.status_code == 200:
