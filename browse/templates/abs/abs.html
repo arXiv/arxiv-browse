@@ -99,12 +99,15 @@
 {% endblock content %}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
-    {%- if higher_version_withdrawn -%}
+
+    {%- if version_entry in withdrawn_versions-%}
         <em>{{ generate_version_link(version_entry, this_version) }}</em>
+        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB) (withdrawn){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
     {% else %}
         {{ generate_version_link(version_entry, this_version) }}
+        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
     {% endif %}
-    {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
+
 {%- endmacro -%}
 
 {%- macro generate_version_link(version_entry, this_version) %}
@@ -230,8 +233,10 @@
 <div id="content-inner">
   <div id="abs">
       {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
-      {% if higher_version_withdrawn %}
+      {% if abs_meta.version_history[abs_meta.version - 1] in withdrawn_versions %}
           <span class="error">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
+      {% elif higher_version_withdrawn %}
+          <span class="error">A newer version of this paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
       {% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
