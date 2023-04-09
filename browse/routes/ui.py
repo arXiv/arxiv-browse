@@ -63,7 +63,7 @@ def inject_now() -> Dict:
 
 @blueprint.before_request
 def before_request() -> None:
-    """ Get geo data and institutional affiliation from ip address. """
+    """Get geo data and institutional affiliation from ip address."""
     if current_app.config["BROWSE_ANALYTICS_ENABLED"]:
         global geoip_reader
         try:

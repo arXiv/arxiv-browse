@@ -99,12 +99,12 @@
 {% endblock content %}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
-
+    {{ generate_version_link(version_entry, this_version) }}
     {%- if version_entry in withdrawn_versions-%}
-        <em>{{ generate_version_link(version_entry, this_version) }}</em>
-        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB) (withdrawn){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
+{#        <em>{{ generate_version_link(version_entry, this_version) }}</em>#}
+        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB) <em>(withdrawn)</em>{#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
     {% else %}
-        {{ generate_version_link(version_entry, this_version) }}
+{#        {{ generate_version_link(version_entry, this_version) }}#}
         {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
     {% endif %}
 

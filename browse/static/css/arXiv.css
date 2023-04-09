@@ -54,7 +54,7 @@ img {
 /* Following command not used by abs samples, but present in arXiv.css*/
 em {
   color: #c00;
-  font-weight: bold;
+  /*font-weight: bold;*/
   font-style: normal;
 }
 
