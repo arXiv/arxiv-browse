@@ -14,12 +14,21 @@ class FileFormat():
         self.content_type = content_type
 
 
+targz = FileFormat("targz", "x-gzip", "application/x-eprint-tar")
+psgz = FileFormat("psgz", "x-gzip", "application/postscript")
+dvigz = FileFormat("psgz", "x-gzip", "application/x-dvi")
+htmlgz = FileFormat("htmlgz", "x-gzip", "text/html")
+pdf = FileFormat("pdf", None, "application/pdf")
+gz = FileFormat("gz", "x-gzip", "application/x-eprint")
+docx = FileFormat("docx", "TODO", "TODO")
+odt = FileFormat("odt", "TODO", "TODO")
+
 fromats = {
-    "targz":FileFormat("targz", "x-gzip", "application/x-eprint-tar"),
-    "psgz":FileFormat("psgz", "x-gzip", "application/postscript"),
-    "htmlgz":FileFormat("htmlgz", "x-gzip", "text/html"),
-    "pdf":FileFormat("pdf", None, "application/pdf"),
-    "gz":FileFormat("gz", "x-gzip", "application/x-eprint"),
-    "docx":FileFormat("docx", "TODO", "TODO"),
-    "odt":FileFormat("odt", "TODO", "TODO"),
+    "targz":targz,
+    "psgz":psgz,
+    "htmlgz":htmlgz,
+    "pdf":pdf,
+    "gz":gz,
+    "docx":docx,
+    "odt":odt,
     }

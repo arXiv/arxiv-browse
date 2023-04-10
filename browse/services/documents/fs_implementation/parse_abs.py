@@ -207,9 +207,6 @@ def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
         # private=private  # TODO, not implemented
     )
 
-
-
-
 def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
         -> Tuple[int, List[VersionEntry], str]:
     """Parse the version entries from the arXiv .abs file."""

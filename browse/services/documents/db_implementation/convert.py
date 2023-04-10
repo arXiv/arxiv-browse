@@ -1,15 +1,17 @@
-from zoneinfo import ZoneInfo
 from typing import List
+from zoneinfo import ZoneInfo
 
 from arxiv import taxonomy
-
-from browse.domain.metadata import DocMetadata, Submitter, AuthorList, \
-    Category, Archive, VersionEntry, Group, Identifier, License
+from browse.domain.metadata import (Archive, AuthorList, Category, DocMetadata,
+                                    Group, Identifier, License, Submitter,
+                                    VersionEntry)
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import AbsException
 
 
-def to_docmeta(dbmd: Metadata, version_history: List[VersionEntry], business_tz: ZoneInfo) -> DocMetadata:
+def to_docmeta(dbmd: Metadata,
+               version_history: List[VersionEntry],
+               business_tz: ZoneInfo) -> DocMetadata:
     """Convert a Metadata object from the DB to a DocMetadata object
 
     The business_tz is the timezone used with the datas in the DB. These are
@@ -19,13 +21,12 @@ def to_docmeta(dbmd: Metadata, version_history: List[VersionEntry], business_tz:
     # This is from parse_abs.py
     arxiv_identifier = Identifier(dbmd.paper_id)
 
-    
-    primary_category=None
-    secondary_categories=[]
+    primary_category = None
+    secondary_categories = []
     if dbmd.abs_categories:
         category_list = dbmd.abs_categories.split()
         if category_list and len(category_list) > 1:
-            secondary_categories=[
+            secondary_categories = [
                 Category(x) for x in category_list[1:]
                 if (category_list and len(category_list) > 1)]
         if category_list[0] in taxonomy.CATEGORIES:
@@ -57,15 +58,16 @@ def to_docmeta(dbmd: Metadata, version_history: List[VersionEntry], business_tz:
     return DocMetadata(
         raw_safe='-no-raw-since-sourced-from-db-',
         abstract=dbmd.abstract,
-        arxiv_id=dbmd.paper_id,        
+        arxiv_id=dbmd.paper_id,
         arxiv_id_v=dbmd.paper_id + 'v' + str(dbmd.version),
         arxiv_identifier = Identifier(dbmd.paper_id),
-        title =dbmd.title,        
+        title = dbmd.title,
         modified=modified,
         authors=AuthorList(dbmd.authors),
-        submitter=Submitter(name=dbmd.submitter_name, email=dbmd.submitter_email),
-        categories=dbmd.abs_categories,        
-        primary_category=primary_category,        
+        submitter=Submitter(name=dbmd.submitter_name,
+                            email=dbmd.submitter_email),
+        categories=dbmd.abs_categories,
+        primary_category=primary_category,
         primary_archive=primary_archive,
         primary_group=Group(taxonomy.ARCHIVES[primary_archive.id]['in_group']),
         secondary_categories=secondary_categories,
@@ -82,4 +84,3 @@ def to_docmeta(dbmd: Metadata, version_history: List[VersionEntry], business_tz:
         is_definitive=False,
         is_latest=dbmd.is_current
         )
-

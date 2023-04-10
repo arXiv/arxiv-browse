@@ -24,7 +24,6 @@ from .object_store import ObjectStore
 from .fileobj import FileObj
 
 logger = logging.getLogger(__file__)
-logger.setLevel(logging.DEBUG)
 
 
 class Deleted():
@@ -61,7 +60,6 @@ FHANDLER = Callable[[formats.Format, Identifier, DocMetadata, VersionEntry],
 """Type format handler should return."""
 
 
-src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
 
 cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
 """Regex for use aginst source_type for formats that cannot serve a PDF,
@@ -157,8 +155,8 @@ class ArticleStore():
 
         If `doc` is not passed it will be looked up.
 
-        If the `FileObj` is not available for the `arxiv_id` a `Conditions` will
-        be returned.
+        If the `FileObj` is not available for the `arxiv_id` a `Conditions`
+        will be returned.
         """
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
@@ -215,6 +213,7 @@ class ArticleStore():
         return any(map(lambda item: src_regex.match(item.name), items))
 
     def _src_orig(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+
         raise Exception("Not implemented")
 
     def _src_targz(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
