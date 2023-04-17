@@ -62,11 +62,13 @@ class SourceStore():
         return item
 
     def get_src_format(self,
-                       arxiv_id: Identifier,
-                       docmeta: DocMetadata) -> Optional[FileFormat]:
-        src_file = self.get_src(arxiv_id, docmeta)
+                       docmeta: DocMetadata,
+                       src_file: Optional[FileObj] = None) -> FileFormat:
+        if src_file is None:
+            src_file = self.get_src(docmeta.arxiv_identifier, docmeta)
         if src_file is None or src_file.name is None:
-            return None
+            raise ValueError(f"Must have  src_file and it must have a name for {docmeta.arxiv_identifier}")
+
         if src_file.name.endswith(".ps.gz"):
             return psgz
         if src_file.name.endswith(".pdf"):
@@ -78,13 +80,14 @@ class SourceStore():
 
         # Otherwise look at the special info in the metadata
         # for help
-        if not arxiv_id.has_version:
+        if not docmeta.arxiv_identifier.has_version:
             vent = docmeta.get_version(docmeta.highest_version())
         else:
-            vent = docmeta.get_version(arxiv_id.version)
+            vent = docmeta.get_version(docmeta.arxiv_identifier.version)
 
         if not vent:
-            return None
+            raise Exception(f"No version entry for {docmeta.arxiv_identifier}")
+
         srctype = vent.source_type
 
         if srctype.ps_only:
@@ -92,7 +95,7 @@ class SourceStore():
         elif srctype.html:
             return htmlgz
         elif srctype.pdflatex:
-            raise Exception("Not implemented")
+            raise Exception("Not pdflatex format yet implemented")
             #  return pdftex
         elif srctype.docx:
             return docx

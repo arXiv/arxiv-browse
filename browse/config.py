@@ -126,7 +126,7 @@ class Settings(BaseSettings):
     """
 
 
-    DISSEMINATION_STORAGE_PREFIX = "tests/data/"
+    DISSEMINATION_STORAGE_PREFIX = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data
 
     If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have

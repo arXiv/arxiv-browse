@@ -1,13 +1,19 @@
 """Routes for /src /e-prints and ancillary."""
 import logging
 from typing import Optional
+from email.utils import format_datetime
+
+from flask import Blueprint, abort, render_template
+from flask_rangerequest import RangeRequest
+
+from opentelemetry import trace
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import (
     AbsNotFoundException, AbsVersionNotFoundException)
-from flask import Blueprint, abort, render_template
-from opentelemetry import trace
+from browse.services.dissemination import get_source_store
+from browse.services.dissemination.next_published import next_publish
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -44,13 +50,15 @@ def _id_check(arxiv_id: Optional[str], archive: Optional[str]) -> Optional[Ident
 def src(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a tar.gz.
 
-     /src/id - tar.gz of whole source package
+    /src/id - tar.gz of whole source package
 
     /src/id/file - Returns just the specified file within the source package. Has
     meaning only for .tar.gz packages and will most frequently be used to access
     ancillary files such as /src/anc/some_file
     """
-    mdata = _id_check(arxiv_id, archive)
+    doc = _id_check(arxiv_id, archive)
+    if not doc:
+        abort(404)
 
     # TODO need test data for src_format pdf
     # 2101.04792 v1-4
@@ -67,11 +75,31 @@ def src(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     # TODO need test data for src_format has_ancillary_files (A)
     # TODO need test data for src_format has_pilot_data (B)
 
-    return render_template("debug.html", data= mdata), 200, {}
+    # TODO need to do /src/id/file
 
-    # result = get_doc_se
-    # result = get_article_store().get_source(aid)
-    #if result == "
+    file = get_source_store().get_src(doc.arxiv_identifier, doc)
+    if not file:
+        abort(404)
+    format = get_source_store().get_src_format(doc, file)
+
+    resp = RangeRequest(file.open('rb'),
+                        etag=file.etag,
+                        last_modified=file.updated,
+                        size=file.size).make_response()
+
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Content-Type'] = format.content_type
+
+    if resp.status_code == 200:
+        # To do Large PDFs on Cloud Run both chunked and no content-length are needed
+        resp.headers['Transfer-Encoding'] = 'chunked'
+        resp.headers.pop('Content-Length')
+
+    if doc.arxiv_identifier.has_version:
+        resp.headers['Cache-Control'] = _cc_versioned()
+    else:
+        resp.headers['Expires'] = format_datetime(next_publish())
+    return resp
 
 
 @blueprint.route("/src/<string:arxiv_id>/anc", strict_slashes=False)
@@ -97,3 +125,9 @@ def anc(file: str, arxiv_id: Optional[str]=None, old_id:Optional[str]=None, arch
 def e_prints(arxiv_id: Identifier):  # type: ignore
     """Serves source package in form that we store it (.tar.gz, .pdf, etc.)"""
     pass     # TODO
+
+
+def _cc_versioned():  # type: ignore
+    """Versioned pdfs should not change so let's put a time a bit in the future.
+    Non versioned could change during the next publish."""
+    return 'max-age=604800' # 7 days
