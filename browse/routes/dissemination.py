@@ -3,7 +3,8 @@ import logging
 from email.utils import format_datetime
 
 from arxiv.identifier import Identifier, IdentifierException
-from browse.services.dissemination import formats, get_article_store
+from browse.domain import fileformat
+from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
 from browse.services.dissemination.fileobj import FileObj
 from browse.services.dissemination.next_published import next_publish
@@ -61,7 +62,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     except IdentifierException as ex:
         return bad_id(arxiv_id, str(ex))
 
-    item = get_article_store().dissemination(formats.pdf, id)
+    item = get_article_store().dissemination(fileformat.pdf, id)
     logger. debug(f"dissemination_for_id({id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)

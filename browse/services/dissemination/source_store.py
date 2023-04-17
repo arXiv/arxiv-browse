@@ -6,11 +6,12 @@ from typing import Optional
 
 from arxiv.identifier import Identifier
 from browse.domain.metadata import DocMetadata
-from browse.domain.version import VersionEntry
+from browse.domain.fileformat import pdf, htmlgz, psgz, dvigz, FileFormat
 
 from .fileobj import FileObj
 from .key_patterns import abs_path_current_parent, abs_path_orig_parent
 from .object_store import ObjectStore
+
 
 logger = logging.getLogger(__file__)
 
@@ -55,45 +56,44 @@ class SourceStore():
                     None)  # does any obj key match with any extension?
         return item
 
-
     def get_src_format(self,
                        arxiv_id: Identifier,
-                       docmeta: DocMetadata):
+                       docmeta: DocMetadata) -> Optional[FileFormat]:
         src_file = self.get_src(arxiv_id, docmeta)
-        if  src_file is None:
+        if  src_file is None or src_file.name is None:
             return None
-        if src_file.endswith("/\.ps\.gz$/"):
+        if src_file.name.endswith("/\.ps\.gz$/"):
             return psgz
-        if src_file.endwith("/\.pdf/"):
+        if src_file.name.endswith("/\.pdf/"):
             return pdf
-        if src_file.endwith("/\.html\.gz/"):
+        if src_file.name.endswith("/\.html\.gz/"):
             return htmlgz
-        if src_file.endwith("/\.dvi\.gz/"):
+        if src_file.name.endswith("/\.dvi\.gz/"):
             return dvigz
 
         # Otherwise look at the special info in the metadata
         # for help
 
-    } elsif ($special =~ /P/i) {
-      $type='ps';
-    } elsif ($special =~ /H/i) {
-      $type='html';
-    } elsif ($special =~ /D/i) {
-      $type='pdftex';
-    } elsif ($special =~ /X/i) {
-      $type='docx';
-    } elsif ($special =~ /O/i) {
-      $type='odf';
-    } elsif ($special =~ /F/i) {
-      $type='pdf';
-    } else {
-      $type='tex'
-    }
-  }
-  return($type);
-}
+            # } elsif ($special =~ /P/i) {
+          #     $type='ps';
+          #   } elsif ($special =~ /H/i) {
+          #     $type='html';
+          #   } elsif ($special =~ /D/i) {
+          #     $type='pdftex';
+          #   } elsif ($special =~ /X/i) {
+          #     $type='docx';
+          #   } elsif ($special =~ /O/i) {
+          #     $type='odf';
+          #   } elsif ($special =~ /F/i) {
+          #     $type='pdf';
+          #   } else {
+          #     $type='tex'
+          #   }
+          # }
+          # return($type);
+          #}
 
-        pass
+        return None
 
     # def src_includes_ancillary(self):
     #     pass

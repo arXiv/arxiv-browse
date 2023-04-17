@@ -10,14 +10,15 @@ from typing import Dict, List, Literal, Optional, Tuple, Union
 from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 from browse.domain.metadata import DocMetadata, VersionEntry
+from browse.domain import fileformat
+
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
-from . import formats
-from .key_patterns import (abs_path_current, abs_path_current_parent,
-                           abs_path_orig, abs_path_orig_parent,
+from .key_patterns import (abs_path_current_parent,
+                           abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
 from .object_store import ObjectStore
@@ -55,10 +56,9 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
 
 FormatHandlerReturn = Union[Conditions, FileObj]
 
-FHANDLER = Callable[[formats.Format, Identifier, DocMetadata, VersionEntry],
+FHANDLER = Callable[[fileformat.FileFormat, Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
 """Type format handler should return."""
-
 
 
 cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
@@ -71,6 +71,7 @@ RE_DATE_COMPONENTS = re.compile(
 
 v_regex = re.compile(r'.*v(\d+)')
 
+_src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
 
 def _path_to_version(path: FileObj) -> int:
     mtch = v_regex.search(path.name)
@@ -91,7 +92,7 @@ def _is_deleted(id: str) -> Optional[str]:
         return DELETED_PAPERS.get(id, None)
 
 
-def _unset_reasons(str:str, fmt:FORMATS) -> Optional[str]:
+def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
 
@@ -107,10 +108,10 @@ class ArticleStore():
         self.reasons = reasons
         self.is_deleted = is_deleted
 
-        self.format_handlers: Dict[formats.Format, FHANDLER] ={
+        self.format_handlers: Dict[fileformat.FileFormat, FHANDLER] = {
             #            formats.src_orig: self._src_orig,
             #            formats.src_targz: self._src_targz,
-            formats.pdf: self._pdf,
+            fileformat.pdf: self._pdf,
             #            formats.ps: self._ps,
             #            formats.htmlgz: self._htmlgz,
         }
@@ -147,7 +148,7 @@ class ArticleStore():
         return ('BAD', ' and '.join(msgs))
 
     def dissemination(self,
-                      format: formats.Format,
+                      format: fileformat.FileFormat,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
             -> Union[Conditions, FileObj]:
@@ -161,7 +162,7 @@ class ArticleStore():
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
         if format not in self.format_handlers:
-            raise ValueError(f"Format {format.name} not in format handlers")
+            raise ValueError(f"Format {format.id} not in format handlers")
 
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
@@ -210,25 +211,27 @@ class ArticleStore():
             return True  # strange but don't get into handling a huge list
 
         # does any obj key match with any extension?
-        return any(map(lambda item: src_regex.match(item.name), items))
+        return any(map(lambda item: _src_regex.match(item.name), items))
 
-    def _src_orig(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _src_orig(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
 
         raise Exception("Not implemented")
 
-    def _src_targz(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _src_targz(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
 
-    def _pdf(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+    def _pdf(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
         if version.source_type.cannot_pdf:
             return "NOT_PDF"
+        if format.id != 'pdf':
+            return "NOT_PDF"
 
-        res = self.reasons(arxiv_id.idv, format.name)
+        res = self.reasons(arxiv_id.idv, format.id)
         if res:
             return CannotBuildPdf(res)
 
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format.name, arxiv_id, version.version))  # type: ignore
+        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format.id, arxiv_id, version.version))  # type: ignore
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
@@ -250,8 +253,8 @@ class ArticleStore():
                      [str(ps_cache_pdf), str(pdf_file)])
         return "UNAVAIABLE"
 
-    def _ps(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _ps(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
 
-    def _htmlgz(self, format: formats.Format, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _htmlgz(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
