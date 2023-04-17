@@ -75,7 +75,7 @@ class SourceType:
         return 'O' in self.code
 
     @property
-    def PDF_only(self)->bool:
+    def pdf_only(self)->bool:
         """
         PDF only submission with .tar.gz package. (likely because of anc files)
         """

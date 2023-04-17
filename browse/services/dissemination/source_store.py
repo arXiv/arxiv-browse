@@ -1,21 +1,27 @@
 """Service to get source for an article."""
 
+import html
 import logging
 import re
 from typing import Optional
 
 from arxiv.identifier import Identifier
+from browse.domain.fileformat import FileFormat, dvigz, htmlgz, \
+    pdf, psgz, ps, docx, odf, targz
 from browse.domain.metadata import DocMetadata
-from browse.domain.fileformat import pdf, htmlgz, psgz, dvigz, FileFormat
 
 from .fileobj import FileObj
 from .key_patterns import abs_path_current_parent, abs_path_orig_parent
 from .object_store import ObjectStore
 
-
 logger = logging.getLogger(__file__)
 
 src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
+
+MAX_ITEMS_IN_PATTERN_MATCH = 1000
+"""This uses pattern matching on all the keys in an itmes directory. If
+the number if items is very large the was probably a problem"""
+
 
 class SourceStore():
     """Service for source related files."""
@@ -45,12 +51,11 @@ class SourceStore():
 
         pattern = parent + '/' + arxiv_id.filename
         items = list(self.objstore.list(pattern))
-        if len(items) > 1000:
-            # This seems like it must be a mistake if the quantity is this large
-            raise Exception(f"Very large number of src matches for {pattern}")
-        if len(items) > 300:
-            logger.warning("Unexpectedly large Number of src matches %d",
-                           len(items))
+        if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:
+            raise Exception(f"Too many src matches for {pattern}")
+        if len(items) > .8 * MAX_ITEMS_IN_PATTERN_MATCH:
+            logger.warning("Unexpectedly large src matches %d, max is %d",
+                           len(items), MAX_ITEMS_IN_PATTERN_MATCH)
 
         item = next((item for item in items if src_regex.match(item.name)),
                     None)  # does any obj key match with any extension?
@@ -60,40 +65,43 @@ class SourceStore():
                        arxiv_id: Identifier,
                        docmeta: DocMetadata) -> Optional[FileFormat]:
         src_file = self.get_src(arxiv_id, docmeta)
-        if  src_file is None or src_file.name is None:
+        if src_file is None or src_file.name is None:
             return None
-        if src_file.name.endswith("/\.ps\.gz$/"):
+        if src_file.name.endswith(".ps.gz"):
             return psgz
-        if src_file.name.endswith("/\.pdf/"):
+        if src_file.name.endswith(".pdf"):
             return pdf
-        if src_file.name.endswith("/\.html\.gz/"):
+        if src_file.name.endswith(".html.gz"):
             return htmlgz
-        if src_file.name.endswith("/\.dvi\.gz/"):
+        if src_file.name.endswith(".dvi.gz"):
             return dvigz
 
         # Otherwise look at the special info in the metadata
         # for help
+        if not arxiv_id.has_version:
+            vent = docmeta.get_version(docmeta.highest_version())
+        else:
+            vent = docmeta.get_version(arxiv_id.version)
 
-            # } elsif ($special =~ /P/i) {
-          #     $type='ps';
-          #   } elsif ($special =~ /H/i) {
-          #     $type='html';
-          #   } elsif ($special =~ /D/i) {
-          #     $type='pdftex';
-          #   } elsif ($special =~ /X/i) {
-          #     $type='docx';
-          #   } elsif ($special =~ /O/i) {
-          #     $type='odf';
-          #   } elsif ($special =~ /F/i) {
-          #     $type='pdf';
-          #   } else {
-          #     $type='tex'
-          #   }
-          # }
-          # return($type);
-          #}
+        if not vent:
+            return None
+        srctype = vent.source_type
 
-        return None
+        if srctype.ps_only:
+            return ps
+        elif srctype.html:
+            return htmlgz
+        elif srctype.pdflatex:
+            raise Exception("Not implemented")
+            #  return pdftex
+        elif srctype.docx:
+            return docx
+        elif srctype.odf:
+            return odf
+        elif srctype.pdf_only:
+            return pdf
+        else:
+            return targz  # this is tex in a tgz file
 
     # def src_includes_ancillary(self):
     #     pass
