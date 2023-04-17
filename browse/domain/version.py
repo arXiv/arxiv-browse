@@ -89,6 +89,13 @@ class SourceType:
         """
         return self.html or self.odf or self.docx
 
+    @property
+    def is_single_file(self) -> bool:
+        """
+        Is the source for this version a single file?
+        """
+        return '1' in self.code
+
 
 @dataclass(frozen=True)
 class VersionEntry:

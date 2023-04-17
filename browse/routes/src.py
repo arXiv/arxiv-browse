@@ -17,8 +17,9 @@ blueprint = Blueprint('src', __name__)
 tracer = trace.get_tracer(__name__)
 
 
-def _id_check(arxiv_id: Optional[str], archive:Optional[str]) -> Optional[Identifier]:
-    """Checks that the id is valid and that it exists in the metadata as an paper."""
+def _id_check(arxiv_id: Optional[str], archive: Optional[str]) -> Optional[Identifier]:
+    """Checks that the id is valid and that it exists in the metadata as an
+    paper."""
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
     try:
         if arxiv_id is None or len(arxiv_id) > 40:
@@ -28,22 +29,19 @@ def _id_check(arxiv_id: Optional[str], archive:Optional[str]) -> Optional[Identi
         if arxiv_id.startswith('arxiv/'):
             abort(400, description="do not prefix with arxiv/ for non-legacy ids")
         aid = Identifier(f"{archive}/{arxiv_id}" if archive else arxiv_id)
-    except IdentifierException as ex:
+    except IdentifierException:
         abort(400)
 
     try:
-        # TODO Don't double parse the ID
         metadata = get_doc_service().get_abs(aid.id)
         return metadata
     except (AbsNotFoundException, AbsVersionNotFoundException):
         abort(404)
-    abort(500) # not sure, should not get here
-
 
 
 @blueprint.route("/src/<string:arxiv_id>")
 @blueprint.route("/src/<string:archive>/<int:arxiv_id>")
-def src(arxiv_id:str, archive:Optional[str]=None):  # type: ignore
+def src(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a tar.gz.
 
      /src/id - tar.gz of whole source package

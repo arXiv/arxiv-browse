@@ -53,7 +53,7 @@ class SourceStore():
         items = list(self.objstore.list(pattern))
         if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:
             raise Exception(f"Too many src matches for {pattern}")
-        if len(items) > .8 * MAX_ITEMS_IN_PATTERN_MATCH:
+        if len(items) > .9 * MAX_ITEMS_IN_PATTERN_MATCH:
             logger.warning("Unexpectedly large src matches %d, max is %d",
                            len(items), MAX_ITEMS_IN_PATTERN_MATCH)
 
