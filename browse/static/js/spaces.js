@@ -1,6 +1,7 @@
 // Labs integration for displaying machine learning demos from huggingface.co/spaces
 
 (function () {
+    console.log("Getting Spaces")
     const container = document.getElementById("spaces-output")
     const containerAlreadyHasContent = container.innerHTML.trim().length > 0
   
@@ -18,38 +19,45 @@
     // Get the arXiv paper ID from the URL, e.g. "2103.17249"
     // (this can be overridden for testing by passing a override_paper_id query parameter in the URL)
     const params = new URLSearchParams(document.location.search)
-    const arxivPaperId = params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
+    const arxivPaperId = "1810.04805" ///params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
     if (!arxivPaperId) return
   
     const huggingfaceApiHost = "https://huggingface.co/api";
     const huggingfaceSpacesHost = "https://huggingface.co/spaces";
-    const huggingfaceModelsFromPaperApi = `${huggingfaceApiHost}/models?filter=arxiv:${arxivPaperId}`;
+    const huggingfaceSpacesFromPaperApi = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
   
-    // Search the HF Spaces API for models that implement this paper
+    // Search the HF Spaces API for demos that cite this paper
   
     (async () => {
-      let response = await fetch(huggingfaceModelsFromPaperApi);
+      let response = await fetch(huggingfaceSpacesFromPaperApi);
       if (!response.ok) {
-        console.error(`Unable to fetch model data from ${huggingfaceModelsFromPaperApi}`)
+        console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromPaperApi}`)
         render([]);
         return;
       }
-      let models = await response.json();
-      if (models.length === 0) {
+      
+      let paper_data = await response.json();
+      if (! paper_data.hasOwnProperty("spaces")) {
+        console.error(`Paper has no spaces associated`)
         render([]);
         return;
       }
+      
+      let spaces_data = await paper_data.spaces;
+      if (spaces_data.length === 0) {
+        render([]);
+        return;
+      }
+      // To remove after https://github.com/huggingface/moon-landing/pull/6108 
+      let new_data = spaces_data.sort(function(a, b){
+          return b.likes - a.likes;
+      });
+
+      let models = await paper_data.models;
       const model_ids = models.map(m => m.id).join(",");
-      const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}&full=true&sort=likes&direction=-1`;
-      const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?models=or:${model_ids}`;
-      response = await fetch(huggingfaceSpacesFromModelsApi);
-      if (!response.ok) {
-        console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromModelsApi}`)
-        render([]);
-        return;
-      }
-      const spaces_data = await response.json();
-      render(spaces_data, huggingfaceSpacesFromModelsLink);
+      const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?sort=likes&models=or:${model_ids}`;
+
+      render(new_data, huggingfaceSpacesFromModelsLink);
     })()
   
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
