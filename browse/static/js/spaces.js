@@ -53,6 +53,7 @@
           return b.likes - a.likes;
       });
 
+      /// TODO: Update this to use Spaces filter rather than by linked model
       let models = await paper_data.models;
       const model_ids = models.map(m => m.id).join(",");
       const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?sort=likes&models=or:${model_ids}`;
