@@ -1,7 +1,6 @@
 // Labs integration for displaying machine learning demos from huggingface.co/spaces
 
 (function () {
-    console.log("Getting Spaces")
     const container = document.getElementById("spaces-output")
     const containerAlreadyHasContent = container.innerHTML.trim().length > 0
   
@@ -49,7 +48,7 @@
         return;
       }
       // To remove after https://github.com/huggingface/moon-landing/pull/6108 
-      let new_data = spaces_data.sort(function(a, b){
+      spaces_data.sort(function(a, b){
           return b.likes - a.likes;
       });
 
@@ -58,7 +57,7 @@
       const model_ids = models.map(m => m.id).join(",");
       const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?sort=likes&models=or:${model_ids}`;
 
-      render(new_data, huggingfaceSpacesFromModelsLink);
+      render(spaces_data, huggingfaceSpacesFromModelsLink);
     })()
   
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
