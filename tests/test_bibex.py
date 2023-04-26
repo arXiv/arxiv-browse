@@ -47,7 +47,7 @@ class BibexTest(TestCase):
         rv = self.app.get(f"/bibtex/None")
         self.assertEqual(rv.status_code, 400)
 
-    def test_bab_bibtex(self):
+    def test_bad_bibtex(self):
         rv = self.app.get(f"/bibtex/0906.3421v9999")
         self.assertEqual(rv.status_code, 404)
 
