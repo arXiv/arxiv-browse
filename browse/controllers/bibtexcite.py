@@ -8,6 +8,17 @@ from browse.exceptions import AbsNotFound
 from browse.services.document import metadata
 from browse.services.document.metadata import AbsNotFoundException, \
     AbsVersionNotFoundException, AbsDeletedException
+
+from browse.services.document.metadata import (
+    AbsException,
+    AbsNotFoundException,
+    AbsVersionNotFoundException,
+    AbsDeletedException,
+)
+from browse.domain.identifier import (
+    IdentifierException,
+    IdentifierIsArchiveException)
+
 from browse.services.cite import arxiv_bibtex
 
 
@@ -17,13 +28,17 @@ def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
         try:
             return func(arxiv_id)
         except AbsNotFoundException:
-            raise AbsNotFound(data={'reason': 'not_found'})
+            return make_response("{'reason': 'not_found'}", 404)
         except AbsVersionNotFoundException:
-            raise AbsNotFound(data={'reason': 'version_not_found'})
-        except AbsDeletedException as e:
-            raise AbsNotFound(data={'reason': 'deleted', 'message': e})
-        except Exception as ee:
-            raise InternalServerError() from ee
+            return make_response("{'reason': 'version_not_found'}", 404)
+        except AbsDeletedException:
+            return make_response("{'reason': 'deleted'}", 404)
+        except (IdentifierIsArchiveException, IdentifierException):
+            return make_response("{'reason': 'bad_id'}", 400)
+        except AbsException:
+            return make_response("", 400)
+        # For all others let it fail and we'll notice the error in the logs.
+        # Rethrowing as InternalServerError hides the error from the logs.
 
     return wrapper
 
