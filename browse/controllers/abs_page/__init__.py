@@ -136,7 +136,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             formats = formats_from_source_type(abs_meta.version_history[i].source_type.code)
             if len(formats) == 1 and formats[0] == "src":
                 response_data["withdrawn_versions"].append(abs_meta.version_history[i])
-                if i != abs_meta.version - 1:
+                if i > abs_meta.version - 1:
                     response_data["higher_version_withdrawn"] = True
 
 
