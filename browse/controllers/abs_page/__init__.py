@@ -26,6 +26,7 @@ from browse.services.search.search_authors import (
     split_long_author_list,
 )
 from browse.services.util.metatags import meta_tag_metadata
+from browse.services.util.formats import formats_from_source_type
 from browse.services.util.response_headers import abs_expires_header, mime_header_date
 from browse.services.document import metadata
 from browse.services.document.metadata import (
@@ -128,6 +129,16 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["formats"] = metadata.get_dissemination_formats(
             abs_meta, download_format_pref, add_sciencewise_ping
         )
+
+        response_data["withdrawn_versions"] = []
+        response_data["higher_version_withdrawn"] = False
+        for i in range(0, abs_meta.highest_version()):
+            formats = formats_from_source_type(abs_meta.version_history[i].source_type.code)
+            if len(formats) == 1 and formats[0] == "src":
+                response_data["withdrawn_versions"].append(abs_meta.version_history[i])
+                if i > abs_meta.version - 1:
+                    response_data["higher_version_withdrawn"] = True
+
 
         # Following are less critical and template must display without them
         # try:
