@@ -48,6 +48,7 @@ coverage = "*"
 coveralls = "*"
 sphinx = "*"
 sphinx-autodoc-typehints = "*"
+isort = "==4.3.0"
 
 [requires]
 python_version = "3.6"

@@ -546,7 +546,6 @@ footer .sorry-app-links .a11y-main-link {
   font-size: 90%;
 }
 #content-inner {
-
 }
 .button-fancy {
   border-radius: 4px;
@@ -1491,6 +1490,18 @@ div#long-author-list {
 #abs .arxividv {}
 
 #abs .jref {}
+
+#abs .error {
+    border: 2px solid #B31B1B;
+    background: #efefef;
+    padding: 3px;
+    margin: 20px 10px 10px 20px;
+    font-weight: bold;
+    /*min-height: 20px;*/
+    line-height: 150%;
+    font-size: 110%;
+    display: inline-block;
+}
 
 #abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;

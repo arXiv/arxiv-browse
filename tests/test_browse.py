@@ -500,3 +500,15 @@ class BrowseTest(unittest.TestCase):
         self.assertIn("collapse into a persistent Dirac distribution.",
                       txt,
                       "Expect the abstract including the last sentence.")
+
+    def test_withdrawn_msg(self):
+        """Test that a withdrawn abs gets a withdrawn warning"""
+        rv = self.app.get('/abs/0704.0615')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn", txt, "Expect a withdrawn message.")
+
+        rv = self.app.get('/abs/0704.0615v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn", txt, "Expect a withdrawn message.")
