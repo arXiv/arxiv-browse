@@ -1,21 +1,24 @@
 """Service to get PDF and other disseminations of an item."""
+from typing import Optional
+
 from browse.config import settings
+from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
+                                      pdf, ps, psgz, targz)
+from browse.domain.metadata import DocMetadata
+from browse.services.documents import get_doc_service
 from google.cloud import storage
 
-from browse.services.documents import get_doc_service
 from .article_store import ArticleStore
+from .fileobj import FileObj
 from .object_store import ObjectStore
 from .object_store_gs import GsObjectStore
 from .object_store_local import LocalObjectStore
-from .source_store import SourceStore
 
 _article_store: ArticleStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
 
 _object_store: ObjectStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
-
-_source_store: SourceStore = None  # type: ignore
 
 
 def get_article_store() -> "ArticleStore":
@@ -29,17 +32,6 @@ def get_article_store() -> "ArticleStore":
             _get_object_store())
 
     return _article_store
-
-
-def get_source_store() -> "SourceStore":
-    """Gets the `SourceStore` service.
-
-    This returns the source of an article."""
-    global _source_store
-    if _source_store is None:
-        _source_store = SourceStore(_get_object_store())
-
-    return _source_store
 
 
 def _get_object_store() -> ObjectStore:

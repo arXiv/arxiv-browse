@@ -1,12 +1,10 @@
 """FileObj for representing a file."""
 
 from abc import ABC, abstractmethod
-from typing import IO, Iterable, Tuple, Literal
-from datetime import datetime
-
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import IO, Iterator, Literal, Tuple
+from typing import IO
+
 
 class FileObj(ABC):
     """FileObj is a subset of the methods on GS `Blob`.

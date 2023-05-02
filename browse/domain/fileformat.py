@@ -13,6 +13,10 @@ class FileFormat():
         self.content_encoding = content_encoding
         self.content_type = content_type
 
+    def __repr__(self) -> str:
+        return self.id
+
+
 
 targz = FileFormat("targz", "x-gzip", "application/x-eprint-tar")
 psgz = FileFormat("psgz", "x-gzip", "application/postscript")

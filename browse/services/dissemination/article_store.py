@@ -9,20 +9,18 @@ from typing import Dict, List, Literal, Optional, Tuple, Union
 
 from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
-from browse.domain.metadata import DocMetadata, VersionEntry
 from browse.domain import fileformat
-
+from browse.domain.metadata import DocMetadata, VersionEntry
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
-from .key_patterns import (abs_path_current_parent,
-                           abs_path_orig_parent,
+from .fileobj import FileObj
+from .key_patterns import (abs_path_current_parent, abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
 from .object_store import ObjectStore
-from .fileobj import FileObj
 
 logger = logging.getLogger(__file__)
 
@@ -56,7 +54,7 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
 
 FormatHandlerReturn = Union[Conditions, FileObj]
 
-FHANDLER = Callable[[fileformat.FileFormat, Identifier, DocMetadata, VersionEntry],
+FHANDLER = Callable[[Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
 """Type format handler should return."""
 
@@ -72,6 +70,11 @@ RE_DATE_COMPONENTS = re.compile(
 v_regex = re.compile(r'.*v(\d+)')
 
 _src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
+
+
+MAX_ITEMS_IN_PATTERN_MATCH = 1000
+"""This uses pattern matching on all the keys in an itmes directory. If
+the number if items is very large the was probably a problem"""
 
 def _path_to_version(path: FileObj) -> int:
     mtch = v_regex.search(path.name)
@@ -96,6 +99,11 @@ def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
 
+Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
+"""Possible formats to request from the `ArticleStore`.
+
+The format `e-print` is a reqeust to get the articles source in its original format."""
+
 class ArticleStore():
     def __init__(self,
                  metaservice: DocMetadataService,
@@ -108,10 +116,11 @@ class ArticleStore():
         self.reasons = reasons
         self.is_deleted = is_deleted
 
-        self.format_handlers: Dict[fileformat.FileFormat, FHANDLER] = {
+        self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
             #            formats.src_orig: self._src_orig,
             #            formats.src_targz: self._src_targz,
             fileformat.pdf: self._pdf,
+            "e-print": self._e_print,
             #            formats.ps: self._ps,
             #            formats.htmlgz: self._htmlgz,
         }
@@ -148,21 +157,25 @@ class ArticleStore():
         return ('BAD', ' and '.join(msgs))
 
     def dissemination(self,
-                      format: fileformat.FileFormat,
+                      format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, FileObj]:
+            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
-        If `doc` is not passed it will be looked up.
+        If `docmeta` is not passed it will be looked up. When the `docmeta` is
+        not passed this method will check for the existance of the article and
+        version. If they are not found a `Condition` will be returned,
+        `AbsVersionNotFoundException` and `AbsNotFoundException` will not be
+        thrown.
 
-        If the `FileObj` is not available for the `arxiv_id` a `Conditions`
-        will be returned.
+        If the `FileObj` is not available for the `arxiv_id` a `Conditions` of
+        `UNAVAIABLE` will be returned.
         """
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
-        if format not in self.format_handlers:
-            raise ValueError(f"Format {format.id} not in format handlers")
+        if format != "e-prints" and format not in self.format_handlers:
+            raise ValueError(f"Format {format} not in format handlers")
 
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
@@ -191,9 +204,11 @@ class ArticleStore():
             return "WITHDRAWN"
 
         handler_fn = self.format_handlers[format]
-        fileobj = handler_fn(format, arxiv_id, docmeta, version)
+        fileobj = handler_fn(arxiv_id, docmeta, version)
         if not fileobj:
             return "UNAVAIABLE"
+        if isinstance(fileobj, FileObj):
+            return (fileobj, get_src_format(docmeta, fileobj))
         else:
             return fileobj
 
@@ -220,18 +235,16 @@ class ArticleStore():
     def _src_targz(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
 
-    def _pdf(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+    def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
         if version.source_type.cannot_pdf:
             return "NOT_PDF"
-        if format.id != 'pdf':
-            return "NOT_PDF"
 
-        res = self.reasons(arxiv_id.idv, format.id)
+        res = self.reasons(arxiv_id.idv, 'pdf')
         if res:
             return CannotBuildPdf(res)
 
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(format.id, arxiv_id, version.version))  # type: ignore
+        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path('pdf', arxiv_id, version.version))  # type: ignore
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
@@ -253,8 +266,81 @@ class ArticleStore():
                      [str(ps_cache_pdf), str(pdf_file)])
         return "UNAVAIABLE"
 
-    def _ps(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
 
-    def _htmlgz(self, format: fileformat.FileFormat, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
+    def _htmlgz(self, arxiv_id: Identifier, docmeta: DocMetadata) -> FormatHandlerReturn:
         raise Exception("Not implemented")
+
+
+    def _e_print(self,
+                 arxiv_id: Identifier,
+                 docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+        """Gets the src as submitted for the arxiv_id.
+
+        Lists through possible extensions to find source file.
+
+        Returns `FileObj` if found, `None` if not."""
+        if not arxiv_id.has_version \
+           or arxiv_id.version == docmeta.highest_version():
+            parent = abs_path_current_parent(arxiv_id)
+        else:
+            parent = abs_path_orig_parent(arxiv_id)
+
+        pattern = parent + '/' + arxiv_id.filename
+        items = list(self.objstore.list(pattern))
+        if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:
+            raise Exception(f"Too many src matches for {pattern}")
+        if len(items) > .9 * MAX_ITEMS_IN_PATTERN_MATCH:
+            logger.warning("Unexpectedly large src matches %d, max is %d",
+                           len(items), MAX_ITEMS_IN_PATTERN_MATCH)
+
+        item = next((item for item in items if _src_regex.match(item.name)),
+                    None)  # does any obj key match with any extension?
+        if item:
+            return item
+        else:
+            return "NO_SOURCE"
+
+
+def get_src_format(docmeta: DocMetadata,
+                   src_file: Optional[FileObj] = None) -> fileformat.FileFormat:
+    if src_file is None or src_file.name is None:
+        raise ValueError(f"Must have  src_file and it must have a name for {docmeta.arxiv_identifier}")
+
+    if src_file.name.endswith(".ps.gz"):
+        return fileformat.psgz
+    if src_file.name.endswith(".pdf"):
+        return fileformat.pdf
+    if src_file.name.endswith(".html.gz"):
+        return fileformat.htmlgz
+    if src_file.name.endswith(".dvi.gz"):
+        return fileformat.dvigz
+
+    # Otherwise look at the special info in the metadata
+    # for help
+    if not docmeta.arxiv_identifier.has_version:
+        vent = docmeta.get_version(docmeta.highest_version())
+    else:
+        vent = docmeta.get_version(docmeta.arxiv_identifier.version)
+
+    if not vent:
+        raise Exception(f"No version entry for {docmeta.arxiv_identifier}")
+
+    srctype = vent.source_type
+
+    if srctype.ps_only:
+        return fileformat.ps
+    elif srctype.html:
+        return fileformat.htmlgz
+    elif srctype.pdflatex:
+        raise Exception("Not pdflatex format yet implemented")
+        #  return fileformat.pdftex
+    elif srctype.docx:
+        return fileformat.docx
+    elif srctype.odf:
+        return fileformat.odf
+    elif srctype.pdf_only:
+        return fileformat.pdf
+    else:
+        return fileformat.targz  # this is tex in a tgz file
