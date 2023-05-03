@@ -244,7 +244,7 @@ class ArticleStore():
         if res:
             return CannotBuildPdf(res)
 
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path('pdf', arxiv_id, version.version))  # type: ignore
+        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path('pdf', arxiv_id, version.version))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 

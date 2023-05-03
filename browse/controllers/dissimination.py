@@ -1,22 +1,18 @@
 """Controller for PDF, source and other downloads."""
 import logging
 from email.utils import format_datetime
-from typing import Optional, Callable
-import io
-import gzip
-import tarfile
-
-from flask import Blueprint, abort, render_template, Response, make_response
-from flask_rangerequest import RangeRequest
+from typing import Callable, Optional
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
-from browse.domain.metadata import DocMetadata
 from browse.services.dissemination import get_article_store
-from browse.services.dissemination.article_store import CannotBuildPdf, Deleted, Acceptable_Format_Requests
+from browse.services.dissemination.article_store import (
+    Acceptable_Format_Requests, CannotBuildPdf, Deleted)
 from browse.services.dissemination.fileobj import FileObj
 from browse.services.dissemination.next_published import next_publish
-
+from browse.stream.tarstream import tar_stream_gen
+from flask import Blueprint, Response, abort, make_response, render_template
+from flask_rangerequest import RangeRequest
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -70,10 +66,7 @@ def src_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> Resp
     else:
         filename = "fakefilename.txt"
         def tgen():  # type: ignore
-            with tarfile.open(mode='w|') as tar:
-                yield from tar.header()
-                yield from tar.add(file, arcname=filename)
-                yield from tar.footer()
+            tsg = tar_stream_gen([])
 
     return make_response(tgen(), {
         "Content-Encoding": "x-gzip",

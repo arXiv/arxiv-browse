@@ -1,5 +1,6 @@
 """FileObj for representing a file."""
 
+import io
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
@@ -121,3 +122,39 @@ class LocalFileObj(FileObj):
 
     def __str__(self) -> str:
         return f"<LocalFileObj Path={self.item}>"
+
+
+class MockStringFileObj(FileObj):
+    """File object backed by a utf-8 `str`."""
+
+    def __init__(self, name: str, data: str):
+        self._name = name
+        self._data = bytes(data, 'utf-8')
+        self._size = len(self._data)
+    @property
+    def name(self) -> str:
+        return self._name
+
+    def exists(self) -> bool:
+        return True
+
+    def open(self, *args, **kwargs) -> IO:  # type: ignore
+        return io.BytesIO(self._data)
+
+    @property
+    def etag(self) -> str:
+        return "FAKE_ETAG"
+
+    @property
+    def size(self) -> int:
+        return self._size
+
+    @property
+    def updated(self) -> datetime:
+        return datetime.fromtimestamp(0, tz=timezone.utc)
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return f"<MockFileObj name={self.name}>"
