@@ -48,7 +48,7 @@ tracer = trace.get_tracer(__name__)
 #         abort(404)
 
 
-@blueprint.route("/src/<string:arxiv_id>")
+@blueprint.route("/src/<string:arxiv_id_str>")
 @blueprint.route("/src/<string:archive>/<string:arxiv_id_str>")
 def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a tar.gz.

@@ -1,10 +1,13 @@
 """FileObj for representing a file."""
 
+import gzip
 import io
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import IO
+from contextlib import contextmanager
+
 
 
 class FileObj(ABC):
@@ -28,7 +31,9 @@ class FileObj(ABC):
 
     @abstractmethod
     def exists(self) -> bool:
-        """Does the storage obj exist?"""
+        """Does the storage obj exist?
+
+        This is not a property due to it not being a propery on GS `Blob`."""
         pass
 
     @abstractmethod
@@ -92,6 +97,7 @@ class LocalFileObj(FileObj):
     The goal here is to have LocalFileObj mimic `Blob` in the
     methods and properties that are used.
     """
+
     def __init__(self, item: Path):
         self.item = item
 
@@ -103,7 +109,7 @@ class LocalFileObj(FileObj):
         return self.item.exists()
 
     def open(self, *args, **kwargs) -> IO:  # type: ignore
-        return self.item.open(*args, **kwargs) # type: ignore
+        return self.item.open(*args, **kwargs)  # type: ignore
 
     @property
     def etag(self) -> str:
@@ -115,7 +121,8 @@ class LocalFileObj(FileObj):
 
     @property
     def updated(self) -> datetime:
-        return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
+        return datetime.fromtimestamp(self.item.stat().st_mtime,
+                                      tz=timezone.utc)
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -131,6 +138,7 @@ class MockStringFileObj(FileObj):
         self._name = name
         self._data = bytes(data, 'utf-8')
         self._size = len(self._data)
+
     @property
     def name(self) -> str:
         return self._name
@@ -158,3 +166,58 @@ class MockStringFileObj(FileObj):
 
     def __str__(self) -> str:
         return f"<MockFileObj name={self.name}>"
+
+
+
+class UngzippedFileObj(FileObj):
+    """File object backed by different file object and unzipped."""
+
+    def __init__(self, gzipped_file: FileObj):
+        self._fileobj = gzipped_file
+        self._size = -1
+
+    @property
+    def name(self) -> str:
+        if self._fileobj.name.endswith(".gz"):
+            return self._fileobj.name[:-3]
+        elif self._fileobj.name.endswith(".gzip"):
+            return self._fileobj.name[:-5]
+        else:
+            return self._fileobj.name
+
+    def exists(self) -> bool:
+        return self._fileobj.exists()
+
+    @contextmanager
+    def open(self, *args, **kwargs) -> IO:  # type: ignore
+        with self._fileobj.open(mode="rb") as zipped:
+            yield gzip.GzipFile(filename="", mode="rb", fileobj=zipped)
+
+
+    @property
+    def etag(self) -> str:
+        return self._fileobj.etag
+
+    @property
+    def size(self) -> int:
+        if self._size >= 0:
+            return self._size
+        else:
+            # Seems gzip files will have the size as the last 4 bytes of the
+            # file.  That won't record file sizes larger than 4Gb and there may
+            # be other quirks.  So for now we get it by reading and unzipping
+            # the whole file.
+            with self.open(mode="rb") as unzipped_fh:
+                size = unzipped_fh.seek(0, io.SEEK_END)
+                self._size = size
+                return self._size
+
+    @property
+    def updated(self) -> datetime:
+        return self._fileobj.updated
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return f"<GunzipFileObj fileobj={self._fileobj}>"

@@ -1,14 +1,15 @@
 """Controller for PDF, source and other downloads."""
+import io
 import logging
 from email.utils import format_datetime
-from typing import Callable, Optional
+from typing import Callable, Iterator, Optional
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
-from browse.services.dissemination.fileobj import FileObj
+from browse.services.dissemination.fileobj import FileObj, UngzippedFileObj
 from browse.services.dissemination.next_published import next_publish
 from browse.stream.tarstream import tar_stream_gen
 from flask import Blueprint, Response, abort, make_response, render_template
@@ -61,17 +62,15 @@ def src_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> Resp
         return default_resp_fn(format, file, arxiv_id)
 
     if file.name.endswith(".gz"):
-        def tgen():  # type: ignore
-            raise Exception("Not yet implemented")
+        outstream = tar_stream_gen([UngzippedFileObj(file)])
     else:
-        filename = "fakefilename.txt"
-        def tgen():  # type: ignore
-            tsg = tar_stream_gen([])
+        outstream = tar_stream_gen([file])
 
-    return make_response(tgen(), {
+    filename = f"{arxiv_id.filename}.tar.gz"
+    return make_response(outstream, {
         "Content-Encoding": "x-gzip",
         "Content-Type": "application/x-eprint-tar",
-        "Content-Disposition": "attachment; filename=\"{filename}\"",
+        "Content-Disposition": f"attachment; filename=\"{filename}\"",
     })
 
 
@@ -91,8 +90,8 @@ Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier], Response]
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
-
+    return get_dissimination_resp("e-print", arxiv_id_str, archive, src_resp_fn
+)
 
 def get_e_print_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:

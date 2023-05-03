@@ -47,7 +47,7 @@ You should see the Greek word 'kosme':       "κόσμε"                      
     tarinfo.mtime = 0
     tarinfo.size = fileobj.size
 
-    tarstream = tar_stream_gen([(tarinfo, fileobj)])
+    tarstream = tar_stream_gen([fileobj])
 
     data_tar = b""
     count = 0
