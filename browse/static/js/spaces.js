@@ -18,7 +18,7 @@
     // Get the arXiv paper ID from the URL, e.g. "2103.17249"
     // (this can be overridden for testing by passing a override_paper_id query parameter in the URL)
     const params = new URLSearchParams(document.location.search)
-    const arxivPaperId = "1810.04805" ///params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
+    const arxivPaperId = params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
     if (!arxivPaperId) return
   
     const huggingfaceApiHost = "https://huggingface.co/api";
@@ -26,7 +26,6 @@
     const huggingfaceSpacesFromPaperApi = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
   
     // Search the HF Spaces API for demos that cite this paper
-  
     (async () => {
       let response = await fetch(huggingfaceSpacesFromPaperApi);
       if (!response.ok) {
@@ -36,7 +35,7 @@
       }
       
       let paper_data = await response.json();
-      if (! paper_data.hasOwnProperty("spaces")) {
+      if (!paper_data.hasOwnProperty("spaces")) {
         console.error(`Paper has no spaces associated`)
         render([]);
         return;
@@ -47,24 +46,15 @@
         render([]);
         return;
       }
-      // To remove after https://github.com/huggingface/moon-landing/pull/6108 
-      spaces_data.sort(function(a, b){
-          return b.likes - a.likes;
-      });
 
-      /// TODO: Update this to use Spaces filter rather than by linked model
-      let models = await paper_data.models;
-      const model_ids = models.map(m => m.id).join(",");
-      const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?sort=likes&models=or:${model_ids}`;
-
-      render(spaces_data, huggingfaceSpacesFromModelsLink);
+      render(spaces_data);
     })()
   
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-    function render(models, spaces_link) {
+    function render(models) {
       container.innerHTML = window.DOMPurify.sanitize(`
           ${summary(models)}
-          ${renderModels(models, spaces_link)}
+          ${renderModels(models)}
         `)
     }
   
@@ -83,7 +73,10 @@
       }
     }
   
-    function renderModels(models, spaces_link) {
+    function renderModels(models) {
+      const space_ids = models.map(m => m.id).join(",");
+      const spaces_link = `${huggingfaceSpacesHost}/?sort=likes&id=or:${space_ids}`;
+    
       const visibleModels = 5;
       return models.slice(0, visibleModels).map(m => renderModel(m)).join("\n") + (models.length > visibleModels ? `
         <a href="${spaces_link}" target="_blank">
