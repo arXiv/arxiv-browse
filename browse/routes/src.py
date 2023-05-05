@@ -1,4 +1,4 @@
-"""Routes for /src /e-prints and ancillary."""
+"""Routes for serving the source of articles. /src /e-prints and ancillary."""
 import logging
 from typing import Optional
 from email.utils import format_datetime
@@ -21,31 +21,6 @@ logger.setLevel(logging.INFO)
 blueprint = Blueprint('src', __name__)
 
 tracer = trace.get_tracer(__name__)
-
-
-# def _id_check(arxiv_id: Optional[str], archive: Optional[str]) -> Optional[Identifier]:
-#     """Checks that the id is valid and that it exists in the metadata as an
-#     paper."""
-#     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
-#     try:
-#         if arxiv_id is None or len(arxiv_id) > 40:
-#             abort(400)
-#         if archive and len(archive) > 20:
-#             abort(400)
-#         if arxiv_id.startswith('arxiv/'):
-#             abort(400, description="do not prefix with arxiv/ for non-legacy ids")
-#         aid = Identifier(f"{archive}/{arxiv_id}" if archive else arxiv_id)
-#     except IdentifierException:
-#         abort(400)
-
-#     try:
-#         metadata = get_doc_service().get_abs(aid.id)
-#         if not metadata:
-#             return abort(404)
-#         else:
-#             return metadata
-#     except (AbsNotFoundException, AbsVersionNotFoundException):
-#         abort(404)
 
 
 @blueprint.route("/src/<string:arxiv_id_str>")

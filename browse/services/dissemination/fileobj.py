@@ -9,7 +9,6 @@ from typing import IO
 from contextlib import contextmanager
 
 
-
 class FileObj(ABC):
     """FileObj is a subset of the methods on GS `Blob`.
 
@@ -168,7 +167,6 @@ class MockStringFileObj(FileObj):
         return f"<MockFileObj name={self.name}>"
 
 
-
 class UngzippedFileObj(FileObj):
     """File object backed by different file object and unzipped."""
 
@@ -192,7 +190,6 @@ class UngzippedFileObj(FileObj):
     def open(self, *args, **kwargs) -> IO:  # type: ignore
         with self._fileobj.open(mode="rb") as zipped:
             yield gzip.GzipFile(filename="", mode="rb", fileobj=zipped)
-
 
     @property
     def etag(self) -> str:

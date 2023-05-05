@@ -160,7 +160,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat]]:
+            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -208,7 +208,7 @@ class ArticleStore():
         if not fileobj:
             return "UNAVAIABLE"
         if isinstance(fileobj, FileObj):
-            return (fileobj, get_src_format(docmeta, fileobj))
+            return (fileobj, get_src_format(docmeta, fileobj), docmeta, version)
         else:
             return fileobj
 

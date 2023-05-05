@@ -1,11 +1,13 @@
 """Controller for PDF, source and other downloads."""
-import io
 import logging
 from email.utils import format_datetime
-from typing import Callable, Iterator, Optional
+from typing import Callable, Optional
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
+from browse.domain.version import VersionEntry
+from browse.domain.metadata import DocMetadata
+
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
@@ -21,7 +23,11 @@ logger.setLevel(logging.INFO)
 blueprint = Blueprint('dissemination', __name__)
 
 
-def default_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> Response:
+def default_resp_fn(format: FileFormat,
+                    file: FileObj,
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry) -> Response:
     """Creates a response with approprate headers for the `file`.
 
     Parameters
@@ -45,7 +51,7 @@ def default_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> 
         resp.headers['Content-Type'] = format.content_type
 
     if resp.status_code == 200:
-        # To do Large PDFs on Cloud Run both chunked and no content-length are needed
+        # For large files on CloudRun chunked and no content-length needed
         resp.headers['Transfer-Encoding'] = 'chunked'
         resp.headers.pop('Content-Length')
 
@@ -56,46 +62,44 @@ def default_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> 
     return resp
 
 
-def src_resp_fn(format: FileFormat, file: FileObj, arxiv_id: Identifier) -> Response:
+def src_resp_fn(format: FileFormat,
+                file: FileObj,
+                arxiv_id: Identifier,
+                docmeta: DocMetadata,
+                version: VersionEntry) -> Response:
     """Prepares a response where the payload will be a tar.gz of the source."""
     if file.name.endswith(".tar.gz"):  # Nothing extra to do, already .tar.gz
-        return default_resp_fn(format, file, arxiv_id)
+        return default_resp_fn(format, file, arxiv_id, docmeta, version)
 
     if file.name.endswith(".gz"):
         outstream = tar_stream_gen([UngzippedFileObj(file)])
     else:
         outstream = tar_stream_gen([file])
 
-    filename = f"{arxiv_id.filename}.tar.gz"
+    archive = f"{arxiv_id.archive}-" if arxiv_id.is_old_id else ""
+    filename = f"arXiv-{archive}{arxiv_id.filename}v{version.version}.tar"
+
     return make_response(outstream, {
-        "Content-Encoding": "x-gzip",
+        "Content-Encoding": "x-gzip",  # tar_stream_gen() gzips
         "Content-Type": "application/x-eprint-tar",
         "Content-Disposition": f"attachment; filename=\"{filename}\"",
     })
 
 
+Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata, VersionEntry],
+                       Response]
 
-    #     #     with gzip.open(file) as stream_in:
-
-    # out_stream = io.BytesIO()
-    # with tarfile.open(fileobj=out_stream, mode='w|gz') as out_stream:
-    #     # if file.name.endswith(".gz"):
-    #     #     with gzip.open(file) as stream_in:
-
-    #     else:
-    #         with open(file, 'rb'):
-
-
-Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier], Response]
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str, archive, src_resp_fn
-)
+    return get_dissimination_resp("e-print", arxiv_id_str,
+                                  archive, src_resp_fn)
+
 
 def get_e_print_resp(arxiv_id_str: str,
-                 archive: Optional[str] = None) -> Response:
+                     archive: Optional[str] = None) -> Response:
     return get_dissimination_resp("e-print", arxiv_id_str, archive)
+
 
 def get_dissimination_resp(format: Acceptable_Format_Requests,
                            arxiv_id_str: str,
@@ -111,7 +115,7 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
         if len(arxiv_id_str) > 40:
             abort(400)
         if arxiv_id_str.startswith('arxiv/'):
-            abort(400, description="do not prefix with arxiv/ for non-legacy ids")
+            abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
@@ -131,28 +135,36 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     elif isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
 
-    file, item_format = item
+    file, item_format, docmeta, version = item
     if not file.exists():
         return not_found(arxiv_id)
-    return resp_fn(item_format, file, arxiv_id)
+    return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
 
 def _cc_versioned() -> str:
     """Versioned pdfs should not change so let's put a time a bit in the future.
-    Non versioned could change during the next publish."""
+
+    Non versioned could change during the next publish.
+
+    This could cause a version to stay in a CDN on a delete. That might require
+    manual cache invalidation.
+
+    """
     return 'max-age=604800'  # 7 days
 
 
 def withdrawn(arxiv_id: str) -> Response:
-    # one year, max allowed by RFC 2616
-    headers = {'Cache-Cache': 'max-age=31536000'}
+    """Sets expire to one year, max allowed by RFC 2616"""
+    headers = {'Cache-Control': 'max-age=31536000'}
     return make_response(render_template("pdf/withdrawn.html",
                                          arxiv_id=arxiv_id),
                          200, headers)
 
+
 def unavailable(arxiv_id: str) -> Response:
     return make_response(render_template("pdf/unavaiable.html",
                                          arxiv_id=arxiv_id), 500, {})
+
 
 def not_pdf(arxiv_id: str) -> Response:
     return make_response(render_template("pdf/unavaiable.html",

@@ -42,7 +42,9 @@ def tar_stream_gen(files: List[FileObj],
                    to_tarinfo: Callable[[FileObj], tarfile.TarInfo] = _to_tarinfo)\
         -> Iterator[bytes]:
     """Returns an `iterator[bytes]` over the bytes of a .tar made up of the
-    items in `file_list`."""
+    items in `file_list`.
+
+    This will be gzipped."""
     buffer = _FileStream()
     tar = tarfile.TarFile.open('no_file_name',
                                mode='w|gz',
