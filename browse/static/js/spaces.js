@@ -64,20 +64,20 @@
           return `<p class="spaces-summary">
           No Spaces demos found for this article. You can <a href="https://huggingface.co/new-space">add one here</a>.
           </p>`
-          break
         case 1:
           return `<p class="spaces-summary">@${models[0].author} has implemented an open-source demo based on this paper. Run it on Spaces:</p>`
-          break
         default:
           return `<p class="spaces-summary">There are ${models.length} open-source demos based on this paper. Run them on Spaces:</p>`
       }
     }
   
     function renderModels(models) {
-      const space_ids = models.map(m => m.id).join(",");
+      const visibleModels = 5;
+      const urlSpaces = 75;
+
+      const space_ids = models.slice(0, urlSpaces).map(m => m.id).join(",");
       const spaces_link = `${huggingfaceSpacesHost}/?sort=likes&id=or:${space_ids}`;
     
-      const visibleModels = 5;
       return models.slice(0, visibleModels).map(m => renderModel(m)).join("\n") + (models.length > visibleModels ? `
         <a href="${spaces_link}" target="_blank">
           <button class="spaces-load-all-link">
