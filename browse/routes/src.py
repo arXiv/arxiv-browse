@@ -74,20 +74,21 @@ def e_print(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
 
 
 @blueprint.route("/src/<string:arxiv_id>/anc", strict_slashes=False)
-@blueprint.route("/src/<string:archive>/<int:old_id>/anc", strict_slashes=False)
-def anc_listing(arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):  # type: ignore
+@blueprint.route("/src/<string:archive>/<int:arxiv_id>/anc", strict_slashes=False)
+def anc_listing(arxiv_id: str, archive:str='arxiv'):  # type: ignore
     """Show html page of ancillary files for arxiv_id."""
-    # ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
+    # ex https://arxiv.org/src/1911.08265v1/anc
     pass     # TODO
 
 
-@blueprint.route("/src/<string:arxiv_id>/<string:file>")
-@blueprint.route("/src/<string:archive>/<int:old_id>/<string:file>")
-def anc(file: str, arxiv_id: Optional[str]=None, old_id:Optional[str]=None, archive:str='arxiv'):  # type: ignore
+@blueprint.route("/src/<string:arxiv_id>/<path:anc_path>")
+@blueprint.route("/src/<string:archive>/<int:arxiv_id>/<path:anc_path>")
+def anc(arxiv_id: str, anc_path: str, archive:Optional[str]=None):  # type: ignore
     """Serves ancillary files.
 
     Returns just the specified file within the source package. Has
     meaning only for .tar.gz packages and will most frequently be used to access
     ancillary files such as /src/anc/some_file
     """
+    # ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
     pass     # TODO
