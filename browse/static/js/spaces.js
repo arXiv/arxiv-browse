@@ -73,7 +73,7 @@
   
     function renderModels(models) {
       const visibleModels = 5;
-      const urlSpaces = 75;
+      const urlSpaces = 100;
 
       const space_ids = models.slice(0, urlSpaces).map(m => m.id).join(",");
       const spaces_link = `${huggingfaceSpacesHost}/?sort=likes&id=or:${space_ids}`;
