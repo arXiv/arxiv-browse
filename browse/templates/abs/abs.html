@@ -41,7 +41,7 @@
 
   <div class="leftcolumn">
     <div class="subheader">
-      <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
+      <p>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</p>
     </div>
 
     <div class="header-breadcrumbs-mobile">
@@ -117,7 +117,7 @@
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
-  [Submitted on {{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}
+  [Submitted on <time datetime="{{ abs_meta.version_history[0].submitted_date.strftime('%Y-%m-%d') }}">{{ abs_meta.version_history[0].submitted_date.strftime('%-d %b %Y') }}</time>
   {%- if abs_meta.version == 1 and abs_meta.version < abs_meta.version_history[-1].version %} (this version){%- endif -%}
   {%- if abs_meta.version != 1 %} (<a href="{{ url_for('.abstract', arxiv_id='{}v1'.format(abs_meta.arxiv_id)) }}">v1</a>){%- endif %}
   {%- if abs_meta.version > 1 and abs_meta.version < abs_meta.version_history[-1].version -%}
@@ -174,7 +174,7 @@
     {%- set vpart = '' -%}
   {% endif %}
   {%- if abs_meta.primary_category.id in abs_meta.arxiv_id -%}
-    <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a>
+    <a href="{{ canonical_url(id,version) }}" class="u-uid u-url">arXiv:{{id}}{{vpart}}</a>
   {%- else -%}
     <a href="{{ canonical_url(id,version) }}">arXiv:{{id}}{{vpart}}</a> [{{abs_meta.primary_category.id}}]
   {%- endif -%}
@@ -229,7 +229,7 @@
   </style>
 {% endif %}
 <div id="content-inner">
-  <div id="abs">
+  <div id="abs" class="h-entry">
       {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
       {% if abs_meta.version_history[abs_meta.version - 1] in withdrawn_versions %}
           <span class="error">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
@@ -237,7 +237,7 @@
           <span class="error">A newer version of this paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
       {% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
-    <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
+    <h1 class="title mathjax p-name"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>{{ authors }}</div>
 
     {#- optionally include markup for the download button -#}
@@ -245,7 +245,7 @@
       {{ download_button_markup }}
     {% endif %}
 
-    <blockquote class="abstract mathjax">
+    <blockquote class="abstract mathjax p-summary e-content">
             <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
     </blockquote>
 
