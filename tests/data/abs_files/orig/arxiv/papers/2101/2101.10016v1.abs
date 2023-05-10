@@ -1,0 +1,41 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2101.10016
+From: Claudia Pinzari <ex@example.com>
+Date: Mon, 25 Jan 2021 11:32:05 GMT   (171kb)
+
+Title: Weak quasi-Hopf algebras, C*-tensor categories and conformal field
+  theory, and on an approach to Kazhdan-Lusztig-Finkelberg theorem
+Authors: Sebastiano Carpi, Sergio Ciamprone, Marco V. Giannone, and Claudia
+  Pinzari
+Categories: math.QA hep-th math-ph math.MP math.OA
+Comments: 143 pages, preliminary uncompleted version. Comments are welcome
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+  We discuss tensor categories motivated by CFT, their unitarizability and
+applications to various models including the affine VOAs. We discuss
+classification of type A Verlinde fusion categories.
+  We propose an approach to Kazhdan-Lusztig-Finkelberg theorem. This theorem
+gives a ribbon equivalence between the fusion category associated to a
+  quantum group at a certain root of unity and that associated to a
+corresponding affine vertex operator algebra at a suitable positive integer
+level. We develop ideas by Wenzl.
+  Our results rely on the notion of weak-quasi-Hopf algebra of
+  Drinfeld-Mack-Schomerus. We were also guided by Drinfeld original proof, by
+  Bakalov and Kirillov and Neshveyev and Tuset work for a generic parameter.
+  Wenzl described a fusion tensor product in quantum group fusion categories,
+and related it to the unitary structure. Given two irreducible objects, the
+inner product of the fusion tensor product is induced by the braiding of
+U_q(g), with q a suitable root of 1. Moreover, the paper suggests a suitable
+untwisting procedure to make the unitary structure trivial. Then it also
+describes a continuous path that intuitively connects objects of the quantum
+group fusion category to representations of the simple Lie group defining the
+affine Lie algebra. We study this procedure.
+  One of our main results is the construction of a Hopf algebra in a weak sense
+associated to quantum group fusion category and of a twist of it giving a wqh
+structure on the Zhu algebra and a unitary modular fusion category structure on
+the representation category of the affine Lie algebra.
+  We conjecture that this modular fusion category structure is equivalent to
+that obtained via the tensor product theory of VOAs by Huang and Lepowsky. A
+proof of our conjecture leads to a proof of FKL theorem.
+\\

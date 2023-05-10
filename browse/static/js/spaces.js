@@ -23,40 +23,38 @@
   
     const huggingfaceApiHost = "https://huggingface.co/api";
     const huggingfaceSpacesHost = "https://huggingface.co/spaces";
-    const huggingfaceModelsFromPaperApi = `${huggingfaceApiHost}/models?filter=arxiv:${arxivPaperId}`;
+    const huggingfaceSpacesFromPaperApi = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
   
-    // Search the HF Spaces API for models that implement this paper
-  
+    // Search the HF Spaces API for demos that cite this paper
     (async () => {
-      let response = await fetch(huggingfaceModelsFromPaperApi);
+      let response = await fetch(huggingfaceSpacesFromPaperApi);
       if (!response.ok) {
-        console.error(`Unable to fetch model data from ${huggingfaceModelsFromPaperApi}`)
+        console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromPaperApi}`)
         render([]);
         return;
       }
-      let models = await response.json();
-      if (models.length === 0) {
+      
+      let paper_data = await response.json();
+      if (!paper_data.hasOwnProperty("spaces")) {
+        console.error(`Paper has no spaces associated`)
         render([]);
         return;
       }
-      const model_ids = models.map(m => m.id).join(",");
-      const huggingfaceSpacesFromModelsApi = `${huggingfaceApiHost}/spaces?models=or:${model_ids}&full=true&sort=likes&direction=-1`;
-      const huggingfaceSpacesFromModelsLink = `${huggingfaceSpacesHost}/?models=or:${model_ids}`;
-      response = await fetch(huggingfaceSpacesFromModelsApi);
-      if (!response.ok) {
-        console.error(`Unable to fetch spaces data from ${huggingfaceSpacesFromModelsApi}`)
+      
+      let spaces_data = await paper_data.spaces;
+      if (spaces_data.length === 0) {
         render([]);
         return;
       }
-      const spaces_data = await response.json();
-      render(spaces_data, huggingfaceSpacesFromModelsLink);
+
+      render(spaces_data);
     })()
   
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-    function render(models, spaces_link) {
+    function render(models) {
       container.innerHTML = window.DOMPurify.sanitize(`
           ${summary(models)}
-          ${renderModels(models, spaces_link)}
+          ${renderModels(models)}
         `)
     }
   
@@ -66,17 +64,20 @@
           return `<p class="spaces-summary">
           No Spaces demos found for this article. You can <a href="https://huggingface.co/new-space">add one here</a>.
           </p>`
-          break
         case 1:
           return `<p class="spaces-summary">@${models[0].author} has implemented an open-source demo based on this paper. Run it on Spaces:</p>`
-          break
         default:
           return `<p class="spaces-summary">There are ${models.length} open-source demos based on this paper. Run them on Spaces:</p>`
       }
     }
   
-    function renderModels(models, spaces_link) {
+    function renderModels(models) {
       const visibleModels = 5;
+      const urlSpaces = 100;
+
+      const space_ids = models.slice(0, urlSpaces).map(m => m.id).join(",");
+      const spaces_link = `${huggingfaceSpacesHost}/?sort=likes&id=or:${space_ids}`;
+    
       return models.slice(0, visibleModels).map(m => renderModel(m)).join("\n") + (models.length > visibleModels ? `
         <a href="${spaces_link}" target="_blank">
           <button class="spaces-load-all-link">

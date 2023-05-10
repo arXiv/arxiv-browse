@@ -132,12 +132,13 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
-        for i in range(0, abs_meta.highest_version()):
-            formats = formats_from_source_type(abs_meta.version_history[i].source_type.code)
+        for ver_index in range(0, abs_meta.highest_version()):
+            formats = formats_from_source_type(abs_meta.version_history[ver_index].source_type.code)
             if len(formats) == 1 and formats[0] == "src":
-                response_data["withdrawn_versions"].append(abs_meta.version_history[i])
-                if i > abs_meta.version - 1:
+                response_data["withdrawn_versions"].append(abs_meta.version_history[ver_index])
+                if not response_data["higher_version_withdrawn"] and ver_index > abs_meta.version - 1:
                     response_data["higher_version_withdrawn"] = True
+                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier, ver_index+1)
 
 
         # Following are less critical and template must display without them
@@ -448,3 +449,12 @@ def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dic
         "listing_url": urljoin(DBLP_BASE_URL, listing_path),
         "author_list": author_list,
     }
+
+
+def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> str:
+    """Gets the submitter of the version."""
+    try:
+        abs_meta = metadata.get_abs(arxiv_id.id + f"v{ver}")
+        return abs_meta.submitter.name
+    except:
+        return "unknown"
