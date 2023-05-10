@@ -512,3 +512,61 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
         txt = rv.data.decode('utf-8')
         self.assertIn("A newer version of this paper has been withdrawn", txt, "Expect a withdrawn message.")
+
+
+    def test_withdrawn_by_admin(self):
+        """Test that a withdrawn abs gets a withdrawn warning from admin"""
+        rv = self.app.get('/abs/2101.10016')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message.")
+
+        rv = self.app.get('/abs/2101.10016v8')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message.")
+
+
+        rv = self.app.get('/abs/2101.10016v7')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v6')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v5')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v4')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v3')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v2')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+
+        rv = self.app.get('/abs/2101.10016v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
