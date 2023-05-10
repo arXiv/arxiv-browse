@@ -232,9 +232,9 @@
   <div id="abs">
       {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
       {% if abs_meta.version_history[abs_meta.version - 1] in withdrawn_versions %}
-          <span class="error">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
+          <span class="error" style="border: 2px solid grey">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
       {% elif higher_version_withdrawn %}
-          <span class="error">A newer version of this paper has been withdrawn by {{ higher_version_withdrawn_submitter|tex2utf }}</span>
+          <span class="error" style="border: 2px solid grey">A newer version of this paper has been withdrawn by {{ higher_version_withdrawn_submitter|tex2utf }}</span>
       {% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
