@@ -24,6 +24,7 @@ from browse.services.document import cache
 
 ARXIV_BUSINESS_TZ = timezone('US/Eastern')
 
+RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
     r'(?P<from>From:\s*)(?P<name>[^<]+)?\s+(<(?P<email>.*)>)?')
 RE_DATE_COMPONENTS = re.compile(
@@ -498,11 +499,11 @@ class AbsMetaSession:
         # everything else is in the second main component
         prehistory, misc_fields = re.split(r'\n\n', components[1])
 
-        prehistory, misc_fields = re.split(r'\n\n', metadata_fields)
         fields: Dict[str, Any] = \
             AbsMetaSession._parse_metadata_fields(key_value_block=misc_fields)
 
-        fields['abstract'] = abstract
+        # abstract is the first main component
+        fields['abstract'] = components[2]
 
         id_match = RE_ARXIV_ID_FROM_PREHISTORY.match(prehistory)
 
@@ -754,4 +755,3 @@ def alt_component_split(components: List[str]) -> List[str]:
     alt_comp.append(abstract)
     alt_comp.append('')
     return alt_comp
-  
