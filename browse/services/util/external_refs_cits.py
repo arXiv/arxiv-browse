@@ -58,7 +58,7 @@ def include_dblp_section(docmeta: DocMetadata) -> bool:
 
 
 def get_dblp_bibtex_path(url: str) -> Optional[str]:
-    """Get the end of the DBLP bibtex URL path based on the listing path."""
+    """Get the end of the DBLP BibTeX URL path based on the listing path."""
     try:
         (response_type, dblp_id) = url.split('#')
         type_match = re.search(r'(\/journals\/|conf\/[^/]+)', response_type)

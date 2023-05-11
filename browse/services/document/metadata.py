@@ -3,10 +3,10 @@ import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
-from dateutil import parser
-from pytz import timezone
 from datetime import datetime
+from dateutil import parser
 from dateutil.tz import tzutc, gettz
+from pytz import timezone
 import dataclasses
 
 from arxiv import taxonomy
@@ -486,7 +486,17 @@ class AbsMetaSession:
             os.path.getmtime(filename), tz=gettz('US/Eastern'))
         modified = modified.astimezone(tz=tzutc())
 
-        (metadata_fields, abstract) = _split_abs(raw)
+        # there are two main components to an .abs file that contain data,
+        # but the split must always return four components
+        components = RE_ABS_COMPONENTS.split(raw)
+        if len(components) > 4:
+            components = alt_component_split(components)
+        if not len(components) == 4:
+            raise AbsParsingException(
+                'Unexpected number of components parsed from .abs.')
+
+        # everything else is in the second main component
+        prehistory, misc_fields = re.split(r'\n\n', components[1])
 
         prehistory, misc_fields = re.split(r'\n\n', metadata_fields)
         fields: Dict[str, Any] = \
@@ -721,47 +731,27 @@ def current_session() -> AbsMetaSession:
     return g.abs_meta
 
 
-def _split_abs(raw: str) -> List[str]:
-    """Split the .abs text into the first components.
+def alt_component_split(components: List[str]) -> List[str]:
+    r"""Alternative split to accomidate extra \\ in the abstract.
+        ex of abstract portion:
+        u_t = \Delta u
+        \\
+        v_t = \Delta v
+        ARXIVNG-3128"""
+    if len(components) <= 4:
+        raise AbsParsingException(
+            'Unexpected number of components parsed from .abs.')
+    alt_comp = []
+    abstract = ""
+    for idx, itm in enumerate(components):
+        if idx < 2:
+            alt_comp.append(itm)
+        if idx == 2:
+            abstract += itm
+        if idx > 2 and itm:
+            abstract += r" \\ " + itm  # Add back in \\ stripped by split
 
-    First is most of the metadata and the second component, the abstract field.
-    """
-    tmp_metadata: List[str] = []
-    tmp_abs: List[str] = []
-    metadata: Optional[str] = None
-    abs: Optional[str] = None
-    for idx, line in enumerate(raw.split("\n")):
-        if idx == 0 and '--' not in line:   # first line is just dashes
-            raise AbsParsingException(
-                'expected first line to be all dashes')
-
-        if idx == 1 and line != r'\\':
-            raise AbsParsingException(r"expected \\ on line 2")
-
-        if idx > 1 and metadata is None:  # gather metadata
-            if line == r'\\':
-                metadata = "\n".join(tmp_metadata)
-            else:
-                tmp_metadata.append(line)
-
-        if idx > 2 and metadata is not None:  # gather abstract
-            tmp_abs.append(line)
-
-    if tmp_abs[0].strip() == r'\\':  #strip leading \\
-        del(tmp_abs[0])
-
-    if tmp_abs[-1].strip() == '':  #strip trailing \n
-        del(tmp_abs[-1])
-
-    if tmp_abs[-1].strip() == r'\\':  #strip trailing \\
-        del(tmp_abs[-1])
-
-    abs = "\n".join(tmp_abs) + "\n"
-
-    if not abs:
-        raise AbsParsingException("lacks abstract")
-
-    if not metadata:
-        raise AbsParsingException("lacks metadata fields")
-
-    return [metadata, abs]
+    alt_comp.append(abstract)
+    alt_comp.append('')
+    return alt_comp
+  

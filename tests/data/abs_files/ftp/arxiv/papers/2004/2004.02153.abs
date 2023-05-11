@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2004.02153
+From: Mario Fuest <fuestm@math.upb.de>
+Date: Sun, 5 Apr 2020 10:46:18 GMT   (21kb)
+
+Title: When do Keller-Segel systems with heterogeneous logistic sources admit
+  generalized solutions?
+Authors: Jianlu Yan and Mario Fuest
+Categories: math.AP
+Comments: 16 pages
+MSC-class: 35K55 (primary), 35D99, 35Q92, 92C17 (secondary)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  We construct global generalized solutions to the chemotaxis system
+  \begin{align*}
+  \begin{cases}
+  u_t = \Delta u - \nabla \cdot (u \nabla v) + \lambda(x) u - \mu(x) u^\kappa,
+\\
+  v_t = \Delta v - v + u
+  \end{cases}
+  \end{align*} in smooth, bounded domains $\Omega \subset \mathbb R^n$, $n \geq
+2$, for certain choices of $\lambda, \mu$ and $\kappa$.
+Here, inter alia, the selections $\mu(x) = |x|^\alpha$ with $\alpha < 2$ and
+$\kappa = 2$as well as $\mu \equiv \mu_1 > 0$ and $\kappa >
+\min\{\frac{2n-2}{n}, \frac{2n+4}{n+4}\}$ are admissible (in both cases for any
+sufficiently smooth $\lambda$).
+While the former case appears to be novel in general, in the two- and
+three-dimensional setting, the latter improves on a recent result by Winkler
+(Adv. Nonlinear Anal. 9 (2019), no. 1, 526-566), where the condition $\kappa >
+\frac{2n+4}{n+4}$ has been imposed. In particular, for $n = 2$, our result
+shows that taking any $\kappa > 1$ suffices to exclude the possibility of
+collapse into a persistent Dirac distribution.
+\\

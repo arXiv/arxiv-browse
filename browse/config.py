@@ -8,7 +8,7 @@ import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
 
-APP_VERSION = "0.3.2.6"
+APP_VERSION = "0.3.4"
 
 """The application version """
 
@@ -110,6 +110,10 @@ the name and port number of the server. Required for subdomain support (e.g.:
 this to "localhost" does not help. Setting a SERVER_NAME also by default
 enables URL generation without a request context but with an application
 context.
+
+If this is set and the Host header of a request does not match the SERVER_NAME,
+then Flask will respond with a 404. Test with
+curl http://127.0.0.1:5000/ -sv -H "Host: subdomain.arxiv.org"
 """
 
 APPLICATION_ROOT = os.environ.get("APPLICATION_ROOT", None)
@@ -267,40 +271,7 @@ BROWSE_SITE_HOST = os.environ.get("BROWSE_SITE_HOST", None)
 """This is similar to, but decoupled from SERVER_NAME."""
 
 BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
-"""Enable/disable web analytics."""
-
-BROWSE_USER_BANNER_ENABLED = bool(
-    int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0"))
-)
-"""Enable/disable user banner."""
-try:
-    if os.environ.get("BROWSE_USER_BANNER_START_DATE", None):
-        BROWSE_USER_BANNER_START_DATE = dateutil.parser.parse(
-            os.environ.get("BROWSE_USER_BANNER_START_DATE", "nodate")
-        ).replace(hour=0, minute=0, second=0)
-    else:
-        raise ValueError
-except Exception:
-    if BROWSE_USER_BANNER_ENABLED:
-        warnings.warn("Bad value for BROWSE_USER_BANNER_START_DATE")
-    BROWSE_USER_BANNER_START_DATE = datetime.now() - timedelta(days=1)
-
-try:
-    if os.environ.get("BROWSE_USER_BANNER_END_DATE", None):
-        BROWSE_USER_BANNER_END_DATE = dateutil.parser.parse(
-            os.environ.get("BROWSE_USER_BANNER_END_DATE", "noate")
-        ).replace(hour=23, minute=59, second=59)
-    else:
-        raise ValueError
-except Exception:
-    if BROWSE_USER_BANNER_ENABLED:
-        warnings.warn("Bad value for BROWSE_USER_BANNER_END_DATE")
-    BROWSE_USER_BANNER_END_DATE = datetime.now() + timedelta(days=1)
-
-BROWSE_STATUS_BANNER_ENABLED = bool(
-    int(os.environ.get("BROWSE_STATUS_BANNER_ENABLED", "0"))
-)
-"""Enable/disable status service banner."""
+"""Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
 BROWSE_STATUS_BANNER_SCRIPT_URL = os.environ.get(
     "BROWSE_STATUS_BANNER_SCRIPT_URL",
@@ -369,3 +340,6 @@ URLS = [
     # This is a temporary workaround for ARXIVNG-2063
 ]
 """External URLs."""
+
+TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
+"""Enable template auto reload in flask"""

@@ -1,4 +1,5 @@
 {%- import 'base/macros.html' as base_macros -%}
+{%- import 'user_banner.html' as user_banner -%}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -8,89 +9,23 @@
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" type="image/x-icon" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20200727" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/icons/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/icons/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/icons/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='images/icons/site.webmanifest') }}">
+  <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20221117" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
-  {%- if config['BROWSE_ANALYTICS_ENABLED'] %}
-  <!-- Pendo -->
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
-      v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-          o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-          y=e.createElement(n);y.async=!0;y.src='https://content.analytics.arxiv.org/agent/static/'+apiKey+'/pendo.js';
-          z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-
-          // Call this whenever information about your visitors becomes available
-          // Please use Strings, Numbers, or Bools for value types.
-          pendo.initialize({
-              visitor: {
-                  {% if session.get("institution") %}
-                  institution:     '{{ session.get("institution") }}',
-                  {% endif %}
-
-                  {% if session.get("continent") and session.get("continent").get("code") %}
-                  continent:       '{{ session.get("continent").get("code") }}',
-                  {% endif %}
-
-                  {% if session.get("country") %}
-                  country:         '{{ session.get("country") }}',
-                  {% endif %}
-
-                  {% if session.get("subnational") %}
-                  subnational:     '{{ session.get("state") }}',
-                  {% endif %}
-
-                  {% if session.get("city") %}
-                  city:            '{{ session.get("city") }}',
-                  {% endif %}
-
-                  id:              '{{ session.get("hashed_user_id") if session.get("hashed_user_id") else "VISITOR-UNIQUE-ID" }}'
-                  // email:        // Recommended if using Pendo Feedback, or NPS Email
-                  // full_name:    // Recommended if using Pendo Feedback
-                  // role:         // Optional
-
-                  // You can add any additional visitor level key-values here,
-                  // as long as it's not one of the above reserved names.
-              },
-
-              account: {
-                  {% if session.get("institution") %}
-                  name:            '{{ session.get("institution") }}',
-                  {% endif %}
-
-                  id:              '{{ session.get("institution_id") if session.get("institution_id") else "ACCOUNT-UNIQUE-ID" }}'
-
-                  // name:         // Optional
-                  // is_paying:    // Recommended if using Pendo Feedback
-                  // monthly_value:// Recommended if using Pendo Feedback
-                  // planLevel:    // Optional
-                  // planPrice:    // Optional
-                  // creationDate: // Optional
-
-                  // You can add any additional account level key-values here,
-                  // as long as it's not one of the above reserved names.
-              }
-          });
-  })('d6494389-b427-4103-7c76-03182ecc8e60');
-  </script>
-  {% endif -%}
-
-  {% if config['BROWSE_USER_BANNER_ENABLED'] and (config['BROWSE_USER_BANNER_START_DATE'] < request_datetime) and (config['BROWSE_USER_BANNER_END_DATE'] > request_datetime) %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-  {% endif -%}
+  {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
 
 <body {% block body_id %}{% endblock %} class="with-cu-identity">
-  {% if config['BROWSE_USER_BANNER_ENABLED'] %}
-  {%- include "user_banner.html" -%}
-  {% endif -%}
-
+  {{ user_banner.content(request_datetime) }}
   <div class="flex-wrap-footer">
     <header>
       <a href="#content" class="is-sr-only">Skip to main content</a>
@@ -100,17 +35,8 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
-        <!-- timeboxed column -->
-        {%- if rd_int > 202010190000 and rd_int < 202010240000 -%}
-        <div class="column message-header message-yellow">
-          <img role="presentation" class="message-main-icon" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-          <p><strong>Giving Week:</strong> arXiv depends on donations to support essential operations and new initiatives. <a href="https://securelb.imodules.com/s/1717/alumni/event.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1?source=web">Donate today</a>!</p>
-        </div>
-        {%- endif -%}
-        <!-- /end timeboxed column -->
-
         <div class="column" id="support-ack">
-          <a href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and {{ session['institution'] if ('institution' in session and session['institution'] != None) else 'member institutions' }}.</a>
+          <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
         </div>
       </div>
 
@@ -118,7 +44,7 @@
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
         <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
-        {% block header_h1 %}<h1>{{ config['BROWSE_SITE_LABEL'] or 'arXiv.org' }}</h1>{% endblock header_h1%}
+        {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
         {% block login_link %}{% endblock %}
         {{ base_macros.compactsearch() }}
        {% endblock header %}
@@ -126,7 +52,7 @@
 
       <div class="mobile-header">
         <div class="columns is-mobile">
-          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo.png') }}" alt="arXiv" /></a></div>
+          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logomark-small-white.svg') }}" alt="arXiv logo" style="height:60px;" /></a></div>
           <div class="column logo-cornell"><a href="https://www.cornell.edu/">
             <picture>
               <source media="(min-width: 501px)"
@@ -234,6 +160,9 @@
       </div>
     </footer>
   </div>
+
+  <script src="{{ url_for('base.static', filename='js/member_acknowledgement.js') }}"></script>
+
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
   {%- endif %}

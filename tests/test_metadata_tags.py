@@ -17,7 +17,7 @@ ABS_FILES = path_of_for_test('data/abs_files')
 
 
 class TestAgainstClassicResults(TestCase):
-    """Test google scholar metadata created from abs files against classic exresults. """
+    """Test google scholar metadata created from abs files against classic results. """
 
     def setUp(self):
             app.testing = True
@@ -78,18 +78,18 @@ class TestAgainstClassicResults(TestCase):
                 if ng != classic:
                     classic_without_doi = set(
                         filter(lambda v: not v.startswith('citation_doi'), classic))
-                    ng_without_doi = set(
-                        filter(lambda v: not v.startswith('citation_doi'), ng))
-                    self.assertSetEqual(ng_without_doi, classic_without_doi,
+                    ng_without_doi_abstract = set(
+                        filter(lambda v: not (v.startswith('citation_doi') or v.startswith('citation_abstract')), ng))
+                    self.assertSetEqual(ng_without_doi_abstract, classic_without_doi,
                                         '''
-                                        
+
 For {} NG tags (first result) not same as Classic tags(second results)
-Test Num {} 
+Test Num {}
 DOI are ignored.
-                                        
+
 classic/expected: {}
-                                        
-                                                                              
+
+
 ng/actual: {}
 
 test authors: {}

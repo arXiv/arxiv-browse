@@ -232,10 +232,17 @@ em.boxed {
   padding: 10px 0 .2em 10px;
   font-style: normal;
   float: left;
+  display: inline-flex;
+  align-items: center;
 }
 
 #header .header-breadcrumbs a {
   /*font-weight: bold;*/
+}
+
+#header .header-breadcrumbs span {
+  margin-right:5px;
+  margin-left: 5px;
 }
 
 body#front #header h1 {
@@ -539,7 +546,56 @@ footer .sorry-app-links .a11y-main-link {
   font-size: 90%;
 }
 #content-inner {
-
+}
+.button-fancy {
+  border-radius: 4px;
+  background: linear-gradient(to right, #e9f2f6, #daecf6) !important;
+  color: #2f2f2f;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 5px 0 8px 15px;
+  transition: all 0.4s;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-block;
+  line-height: 13px;
+  border-width: 1px;
+  border-style: solid;
+  border-top-color: #cae0ec;
+  border-left-color: #cae0ec;
+  border-bottom-color: #f3fbff;
+  border-right-color: #f3fbff;
+  box-shadow: 2px 2px 3px 1px hsl(0, 0%, 80%);
+}
+.button-fancy:hover {
+  border-bottom: 1px solid #f3fbff;
+  color: black;
+}
+.button-fancy span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.4s;
+}
+.button-fancy span:after {
+  content: '\00bb';
+  position: relative;
+  opacity: 0;
+  top: 1px;
+  right: -5px;
+  padding-left: 10px;
+  transition: 0.5s;
+  font-size: 20px;
+  color: #1772a0;
+}
+.button-fancy:hover span {
+  padding-right: 15px;
+}
+.button-fancy:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 /****************************************
@@ -598,6 +654,10 @@ footer .sorry-app-links .a11y-main-link {
   .message-special {
     width: 88%;
   }
+}
+/* special header banner, dark override */
+.slider-wrapper.bps-banner.dark {
+  background-color: black;
 }
 
 /****************************************
@@ -827,6 +887,65 @@ p.tagline {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/*added by Scite*/
+.bib-modal {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,20);
+    background-color: rgba(0,0,0,0.4);
+}
+.bib-modal-content {
+    position: absolute;
+    float: left;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+.bib-modal-content .bib-citation-content {
+  width: 100%;
+  min-height: 200px;
+}
+.bib-modal-title h2 {
+    margin-top: 0px;
+    margin-bottom: 0.3em;
+    display: inline-block;
+}
+
+.bib-modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.bib-modal-close:hover,
+.bib-modal-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal h4 {
+    margin-top: 0.3em;
+    margin-bottom: 0em;
+}
+.modal textarea {
+    border-width: 2px;
+}
+/*END Scite css*/
+
+
+
 /*added by Papers With Code*/
 #pwc-output {
     padding: 7px;
@@ -836,23 +955,218 @@ p.tagline {
 #pwc-output > h3 {
     margin-top: 25px;
 }
-
-.pwc-icon {
+#pwc-output .pwc-icon {
     width: 23px;
     height: 23px;
     position: relative;
     top: 5px;
-    margin-right: 5px;
+    margin-left: 3px;
+    margin-right: 6px;
 }
 
-.pwc-icon-primary {
+#pwc-output .pwc-icon-primary {
     top: 6px;
+    margin-left: 3px;
 }
 
-.pwc-avatar-box {
+#pwc-output .pwc-avatar-box {
     display: inline-block;
 }
+
+#pwc-output h3.pwc-community-nocode {
+  margin-bottom: 8px;
+}
+
+#pwc-output h3.pwc-community-code {
+  margin-bottom: 15px;
+}
+
+
+/* Papers with Code **Datasets** specific section */
+
+#pwc-data-output {
+    padding: 7px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+#labstabs #pwc-data-output > p.pwc-provided {
+  color: #666;
+  font-size: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+#labstabs #pwc-data-output > p.pwc-provided > a {
+  color: #666;
+}
+
+#labstabs #pwc-data-output .pwc-icon-primary {
+  width: 14px;
+  height: 14px;
+  top: 3px;
+}
+
+#pwc-data-output > h3 {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+#pwc-data-output > .pwc-data-card {
+  margin-top: 20px;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-name {
+  font-size: 0.95rem;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-image {
+  display: inline-block;
+  vertical-align:top;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  width: 34px;
+  height: 30px;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-image img {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin: 0.25rem;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin: 0.25rem;
+  text-align: center;
+  opacity: 0.3;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder span {
+  position: relative;
+  top: 4px;
+  text-align: center;
+  color: #fff;
+  font-size: 13px;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-name {
+  display: inline-block;
+  vertical-align:top;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-introduced {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-meta {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #666;
+}
+
+
 /*END Papers With Code css*/
+
+/*BEGIN Replicate CSS*/
+
+.replicate-model {
+  padding: 15px 0;
+  display: block;
+  display: flex;
+}
+
+.replicate-model-image {
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  object-fit: cover;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.replicate-model-details {
+  padding: 10px 15px;
+  vertical-align: top;
+}
+
+.replicate-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.replicate-model-prediction-count {
+  opacity: 0.5;
+}
+
+.replicate-model-prediction-icon {
+  height:.9rem;
+  width:.9rem;
+  margin-right: 0;
+  margin-top: -.15rem;
+}
+
+/*END Replicate CSS*/
+
+/*BEGIN ScienceCast CSS*/
+
+.sciencecast-cast {
+  margin-bottom: 2rem;
+}
+
+.sciencecast-thumbnail {
+  border-radius: 0.5rem;
+  border: solid 1px #eee;
+}
+
+/*END ScienceCast CSS*/
+
+/*BEGIN Spaces CSS*/
+
+.spaces-summary {
+  margin-bottom: 0.5em;
+}
+
+.spaces-model {
+  padding: 15px 0;
+  display: flex;
+}
+
+.spaces-thumbnail {
+  height: 5.5rem;
+  border-radius: 0.5rem;
+}
+
+.spaces-model-details {
+  padding: 0px 15px;
+  vertical-align: top;
+}
+
+.spaces-model-details-heading {
+  margin: 0;
+  padding: 0;
+}
+
+.spaces-model-subheader {
+  color: gray;
+}
+
+.spaces-load-all-link {
+  cursor: pointer;
+  padding: 0.75em;
+  background-color: #eef5f9;
+  border: none;
+  border-radius: 0.5rem;
+  margin: 0.5em 0;
+  display: inline-block;
+}
+
+/*END Spaces CSS*/
+
 /*LABS in TABS on ABS*/
 /*CSS-only, responsive tabbed display */
 #labstabs {
@@ -1176,6 +1490,18 @@ div#long-author-list {
 #abs .arxividv {}
 
 #abs .jref {}
+
+#abs .error {
+    border: 2px solid #B31B1B;
+    background: #efefef;
+    padding: 3px;
+    margin: 20px 10px 10px 20px;
+    font-weight: bold;
+    /*min-height: 20px;*/
+    line-height: 150%;
+    font-size: 110%;
+    display: inline-block;
+}
 
 #abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;

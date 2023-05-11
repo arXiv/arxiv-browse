@@ -12,9 +12,18 @@ $(document).ready(function() {
   };
 
   var scripts = {
-    "paperwithcode": $('#paperwithcode-toggle').data('script-url'),
+    "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
+    "replicate": $('#replicate-toggle').data('script-url'),
+    "spaces": $('#spaces-toggle').data('script-url'),
+    "dagshub": $('#dagshub-toggle').data('script-url'),
+    "litmaps": $('#litmaps-toggle').data('script-url'),
+    "scite": $('#scite-toggle').data('script-url'),
+    "iarxiv": $('#iarxiv-toggle').data('script-url'),
+    "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
+    "influenceflower": $('#influenceflower-toggle').data('script-url'),
+    "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "bibex": {
-      "url": "https://static.arxiv.org/js/bibex-dev-tabs/bibex.js?20200709",
+      "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
       "container": "#bib-main"
     },
     "core-recommender": {
@@ -23,15 +32,14 @@ $(document).ready(function() {
     }
   };
 
-  $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
-    console.log(textStatus);
-  });
-  $("#paperwithcode-toggle.lab-toggle").toggleClass("enabled", true);
-
+  var pwcEnabled = true;
 
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
+    if ( labsCookie["last_tab"] ){
+      $(`input#${labsCookie["last_tab"]}:not([disabled])`).click();
+    }
     for (var key in labsCookie) {
       if (labsCookie[key] && labsCookie[key] == "enabled") {
         has_enabled = true;
@@ -40,8 +48,19 @@ $(document).ready(function() {
           $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
-        }
-        else if (key == "core-recommender-toggle") {
+        } else if (key == "litmaps-toggle") {
+          $.cachedScript(scripts["litmaps"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key == "scite-toggle") {
+          $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key == "iarxiv-toggle") {
+          $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key == "core-recommender-toggle") {
           $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
@@ -49,12 +68,51 @@ $(document).ready(function() {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
-        }
+        } else if (key === "replicate-toggle") {
+          $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
+            // console.log(textStatus, "replicate (on cookie check)");
+          }).fail(function() {
+            console.error("failed to load replicate script (on cookie check)", arguments)
+          });
+        } else if (key === "spaces-toggle") {
+          $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load spaces script (on cookie check)", arguments)
+          });
+        } else if (key === "connectedpapers-toggle") {
+          $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "influenceflower-toggle") {
+          $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key === "sciencecast-toggle") {
+           $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
+             console.log(textStatus);
+           }).fail(function() {
+             console.error("failed to load sciencecast script (on cookie check)", arguments)
+           });
+        } else if (key === "dagshub-toggle") {
+          $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
+            console.log("DagsHub load: ", textStatus);
+          }).fail(function() {
+            console.error("failed to load DagsHub script (on cookie check)", arguments)
+          });
+       }
       }
     }
   } else {
-    Cookies.set("arxiv_labs", { sameSite: "strict" });
+    Cookies.set("arxiv_labs", { sameSite: "strict", expires: 365 });
   }
+
+  // record last-clicked tab
+  $("div.labstabs input[name='tabs']").on("click", function() {
+    var labsCookie = Cookies.getJSON("arxiv_labs") || {};
+    labsCookie["last_tab"] = $(this).attr("id");
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict", expires: 365 });
+  });
 
   $(".lab-toggle").on("click", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
@@ -69,23 +127,68 @@ $(document).ready(function() {
       bibex_val = true;
     }
     labsCookie[$(this).attr("id")] = cookie_val;
-    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict" });
+    Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict", expires: 365 });
 
     if ($(this).attr("id") == "bibex-toggle") {
       bibexCookie[bibex_key] = bibex_val;
-      Cookies.set("arxiv_bibex", bibexCookie);
+      Cookies.set("arxiv_bibex", bibexCookie, { expires: 365 });
       if (bibex_val) {
         $.cachedScript(scripts["bibex"]["url"]).done(function(script, textStatus) {
           console.log(textStatus);
         });
       }
-    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled") ) {
+    } else if ($(this).attr("id") == "litmaps-toggle") {
+      $.cachedScript(scripts["litmaps"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "scite-toggle") {
+      $.cachedScript(scripts["scite"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "iarxiv-toggle") {
+      $.cachedScript(scripts["iarxiv"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
-    }
+    } else if ($(this).attr("id") == "replicate-toggle") {
+      $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
+        // console.log(textStatus, "replicate (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load replicate script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "spaces-toggle") {
+      $.cachedScript(scripts["spaces"]).done(function(script, textStatus) {
+        // console.log(textStatus, "spaces (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load spaces script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "connectedpapers-toggle") {
+      $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "influenceflower-toggle") {
+      $.cachedScript(scripts["influenceflower"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
+    } else if ($(this).attr("id") == "sciencecast-toggle") {
+       $.cachedScript(scripts["sciencecast"]).done(function(script, textStatus) {
+         console.log(textStatus, "sciencecast (on lab toggle)");
+       }).fail(function() {
+         console.error("failed to load sciencecast script (on lab toggle)", arguments)
+       });
+    } else if ($(this).attr("id") == "dagshub-toggle") {
+      $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
+        console.log(textStatus, "dagshub (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load dagshub script (on lab toggle)", arguments)
+      });
+   }
+  
 
     // TODO: clean this up
     if (cookie_val == 'disabled') {

@@ -1,15 +1,25 @@
 {#- Special messages appear in a column to the side of the website intro/news section, each in their own column. Always apply the style "message-special" to the column. You can also apply the style "dark" to override the red styles and add a message with a black background instead. There should preferably be just one, and never more than two. -#}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
-<div class="message-special column">
-  <span class="label">COVID-19 Quick Links</span>
-  <p>See COVID-19 SARS-CoV-2 preprints from</p>
-  <ul>
-    <li><a href="https://arxiv.org/covid19search" title="COVID-19 SARS-CoV-2 preprints from arXiv">arXiv</a></li>
-    <li><a target="_blank" href="https://connect.biorxiv.org/relate/content/181" title="COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv">medRxiv and bioRxiv</a></li>
-  </ul>
-  <p><em>Important:</em> e-prints posted on arXiv are not peer-reviewed by arXiv; they should not be relied upon without context to guide clinical practice or health-related behavior and should not be reported in news media as established information without consulting multiple experts in the field.</p>
+{%- if rd_int >= 202303200100 and rd_int <= 202304180100 -%}
+<div class="message-special dark column">
+  <span class="label">arXiv Forum</span>
+  <h2>How do we make accessible research papers a reality?</h2>
+  <p>If research isn't accessible, can we truly call it "open" science?</p>
+  <p>On Monday April 17, arXiv is hosting a forum on <a href="https://info.arxiv.org/about/accessibility_forum.html">how we can make accessible research papers a reality</a>.
+  We each have a role to play. Together, we can chart a path towards truly accessible research papers.</p>
+  <p><a href="https://info.arxiv.org/about/accessibility_forum.html">Learn More</a></p>
 </div>
+{%- endif -%}
+
+{%- if rd_int >= 202304180101 and rd_int <= 202305180100 -%}
+<div class="message-special dark column">
+  <span class="label">arXiv Forum</span>
+  <h2>How do we make accessible research papers a reality?</h2>
+  <p>On April 17 arXiv hosted a forum on the accessibility of research papers. <a href="https://accessibility2023.arxiv.org/">Visit our forum website</a> for session recordings, notes, discussion boards, and how to get involved in making accessible research papers a reality.</p>
+  <p><a href="https://accessibility2023.arxiv.org/">Learn More</a> If research isn't accessible, is it really "open" science?</p>
+</div>
+{%- endif -%}
 
 <!-- annual giving message -->
 {%- if rd_int >= 2019092300 and rd_int <= 2019092700 -%}

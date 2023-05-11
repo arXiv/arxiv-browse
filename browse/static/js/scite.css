@@ -1,0 +1,19 @@
+.scite-no-doi {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 300px;
+}
+.scite-tally-logo {
+    width: 100px;
+}
+.scite-no-doi-header {
+    margin-bottom: 0;
+}
+.scite-no-doi-explainer {
+    font-family: sans-serif;
+    color: #1D1E20;
+    font-weight: 500;
+    font-size: 12px;
+}

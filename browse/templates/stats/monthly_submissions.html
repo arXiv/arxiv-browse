@@ -1,7 +1,7 @@
 {%- extends "stats/base.html" -%}
 {% set pagename = 'Monthly Submissions' %}
 {% block title %}Monthly Submissions{% endblock %}
-{% block header_h1 %}<h1><a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a>  &gt; stats &gt; monthly submission rates</h1>{% endblock %}
+{% block header_h1 %}<h1 class="header-breadcrumbs"><a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> stats <span>&gt;</span> monthly submission rates</h1>{% endblock %}
 
 {% block content_stats %}
   {{ super() }}
@@ -17,7 +17,7 @@
   </div>
   <div class="chart_text chart_notes">
     <p>The total number of submissions excludes {{ "{:,}".format(num_migrated) }} articles that were migrated to arXiv rather than being submitted directly,
-    and includes {{ "{:,}".format(num_deleted) }} articles that have been deleted. The total number of articles available is <strong>{{ "{:,}".format(num_submissions_adjusted) }}</strong></p>
+    and {{ "{:,}".format(num_deleted) }} articles that have been deleted. The total number of articles available is <strong>{{ "{:,}".format(num_submissions_adjusted) }}</strong></p>
   </div>
 {% endblock content_stats %}
 
