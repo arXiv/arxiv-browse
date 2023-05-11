@@ -14,7 +14,7 @@ from arxiv.identifier import Identifier
 
 from google.cloud import storage
 
-from arxiv_dissemination.services import key_patterns
+from browse.services.dissemination import key_patterns
 
 
 def get_article_for_test(bucket, save_base_dir: str, arxiv_id: Identifier):
@@ -69,7 +69,7 @@ def sanitize_abs_file(abs_file:Path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=sys.modules[__name__].__doc__,)
     parser.add_argument('id', type=str, help="id of article to get")
-    parser.add_argument('save_base_dir', type=Path)
+    parser.add_argument('save_base_dir', type=Path, help="directory to save data in ex ./tests/abs_files/data")
     parser.add_argument('bucket', type=str)
     args = parser.parse_args()
 
