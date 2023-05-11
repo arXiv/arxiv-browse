@@ -230,8 +230,7 @@
 {% endif %}
 <div id="content-inner">
   <div id="abs">
-      {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
-      {% if abs_meta.version_history[abs_meta.version - 1] in withdrawn_versions %}
+      {% if withdrawn %}
           <span class="error" style="border: 2px solid grey">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}</span>
       {% elif higher_version_withdrawn %}
           <span class="error" style="border: 2px solid grey">A newer version of this paper has been withdrawn by {{ higher_version_withdrawn_submitter|tex2utf }}</span>
@@ -255,7 +254,7 @@
         {%- if comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ comments|tex2utf|urlize|safe }}</td>
+          <td class="tablecell comments mathjax">{%- if withdrawn -%}<em style="color: unset">{%- endif -%}{{ comments|tex2utf|urlize|safe }}{%- if withdrawn -%}</em>{%- endif -%}</td>
         </tr>
         {% endif -%}
         <tr>
