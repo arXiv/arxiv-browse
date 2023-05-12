@@ -140,13 +140,9 @@ def get_abs_page(arxiv_id: str) -> Response:
                     response_data["higher_version_withdrawn"] = True
                     response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier, ver_index+1)
 
+        response_data["withdrawn"] = abs_meta.version_history[abs_meta.version - 1] in response_data["withdrawn_versions"]
 
-        # Following are less critical and template must display without them
-        # try:
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
-        # except Exception:
-        #    logger.warning("Error getting non-critical abs page data",
-        #                   exc_info=app.debug)
 
     except AbsNotFoundException:
         if (
