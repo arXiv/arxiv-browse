@@ -590,7 +590,7 @@ class BrowseTest(unittest.TestCase):
 
 
     def test_withdrawn_then_new_version(self):
-        """Tess where v2 is withdrawn but then there is a non-withdrawn v3."""
+        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
         rv = self.app.get('/abs/astro-ph/9709175')
         self.assertEqual(rv.status_code, 200)
         txt = rv.data.decode('utf-8')
