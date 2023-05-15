@@ -587,3 +587,35 @@ class BrowseTest(unittest.TestCase):
                       "Expect an admin withdrawn message on earlier verison.")
         self.assertIn('href="/pdf/2101.10016', txt,
                          "Should have link to pdf")
+
+
+    def test_withdrawn_then_new_version(self):
+        """Tess where v2 is withdrawn but then there is a non-withdrawn v3."""
+        rv = self.app.get('/abs/astro-ph/9709175')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertNotIn("This paper has been withdrawn", txt,
+                      "Do not expect a withdrawn message in latest version.")
+
+        rv = self.app.get('/abs/astro-ph/9709175v3')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertNotIn("This paper has been withdrawn", txt,
+                      "Do not expect a withdrawn message in v3.")
+
+
+        rv = self.app.get('/abs/astro-ph/9709175v2')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn", txt,
+                      "Expect a withdrawn message in v2.")
+
+
+        rv = self.app.get('/abs/astro-ph/9709175v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("paper has been withdrawn", txt,
+                      "Expect a withdrawn message in v1 since v2 is withdrawn.")
+
+        self.assertIn("Older arxiv papers may lack submitter name", txt,
+                      "Expect a message about lack of submitter name on old paper")
