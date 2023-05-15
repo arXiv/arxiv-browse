@@ -54,7 +54,7 @@ def load_global_data(_) -> None: # type: ignore
             logger.error("problem loading geoip database: %s", ex)
 
 
-@blueprint.context_processor
+@blueprint.app_context_processor
 def inject_now() -> Dict:
     """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
@@ -75,7 +75,7 @@ def before_request() -> None:
                 ):
                     session["geoip.version"] = geoip_version
                     # https://geoip2.readthedocs.io/en/latest/
-                    response = geoip_reader.city(request.remote_addr)
+                    response = geoip_reader.city(request.remote_addr or '')
                     if response:
                         if response.continent:
                             session["continent"] = {
@@ -103,8 +103,8 @@ def before_request() -> None:
 
         try:
             if "hashed_user_id" not in session:
-                if hasattr(request, "auth") and hasattr(request.auth, "user"):  # type: ignore
-                    user_id = str(request.auth.user.user_id).encode("utf-8")  # type: ignore
+                if hasattr(request, "auth") and hasattr(request.auth, "user"):
+                    user_id = str(request.auth.user.user_id).encode("utf-8")
                     salt = bcrypt.gensalt()
                     tmp = bcrypt.hashpw(user_id, salt)
                     hashed_user_id = str(tmp, "utf-8")
@@ -191,11 +191,11 @@ def institutional_banner() -> Any:
     try:
         result = get_institution(request.remote_addr)
         if result:
-            return (result, status.HTTP_200_OK)
+            return (result, status.OK)
         else:
-            return ("{}", status.HTTP_200_OK)
+            return ("{}", status.OK)
     except Exception as ex:
-        return ("", status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return ("", status.INTERNAL_SERVER_ERROR)
 
 @blueprint.route("tb/", defaults={"arxiv_id": ""}, methods=["GET"])
 @blueprint.route("tb/<path:arxiv_id>", methods=["GET"])
@@ -268,10 +268,7 @@ def clickthrough() -> Response:
 
 
 @blueprint.route(
-    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"]
-)
-@blueprint.route(
-    "list/", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"]
+    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"], strict_slashes=False
 )
 @blueprint.route("list/<context>/<subcontext>", methods=["GET", "POST"])
 def list_articles(context: str, subcontext: str) -> Response:

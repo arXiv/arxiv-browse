@@ -4,18 +4,11 @@ from datetime import datetime
 from unittest import TestCase
 
 from dateutil.tz import tzutc
-from browse.domain.metadata import DocMetadata, Submitter, SourceType, \
-    VersionEntry
+from browse.domain.metadata import DocMetadata, Submitter
+from browse.domain.version import VersionEntry, SourceType
+
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from tests import path_of_for_test
-
-from browse.domain.metadata import (
-    DocMetadata,
-    SourceType,
-    Submitter,
-    VersionEntry,
-)
-
 
 ABS_FILES = path_of_for_test('data/abs_files')
 

@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1809.00949
+From: Idris Jeelani <user@example.com>
+Date: Mon, 20 Aug 2018 18:15:53 GMT   (561kb)
+
+Title: Automating Analysis of Construction Workers Viewing Patterns for
+  Personalized Safety Training and Management
+Authors: Idris Jeelani, Kevin Han and Alex Albert
+Categories: cs.HC cs.AI
+Comments: ISARC 2018 Submission
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Unrecognized hazards increase the likelihood of workplace fatalities and
+injuries substantially. However, recent research has demonstrated that a large
+proportion of hazards remain unrecognized in dynamic construction environments.
+Recent studies have suggested a strong correlation between viewing patterns of
+workers and their hazard recognition performance. Hence, it is important to
+study and analyze the viewing patterns of workers to gain a better
+understanding of their hazard recognition performance. The objective of this
+exploratory research is to explore hazard recognition as a visual search
+process to identifying various visual search factors that affect the process of
+hazard recognition. Further, the study also proposes a framework to develop a
+vision based tool capable of recording and analyzing viewing patterns of
+construction workers and generate feedback for personalized training and
+proactive safety management.
+\\

@@ -75,7 +75,7 @@ class FsListingFilesService(ListingService):
             elif len(str(year)) <= 2:
                 listingFilePath = f'{listingRoot}{year:02d}{month:02d}'
             else:
-                raise ValueError("Bad year value {year}")
+                raise BadRequest("Bad year value {year}")
         else:
             listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 
@@ -165,7 +165,7 @@ class FsListingFilesService(ListingService):
 
         """
         if mode == 'new' and len(yymmfiles) > 1:
-            raise ValueError("when listing type  is 'new' yymmfiles must be size 1")
+            raise ValueError("When listing type  is 'new' yymmfiles must be size 1")
 
         currentYear, currentMonth, end_month = self._current_y_m_em(
             max([yy for yy,_,_ in yymmfiles]))
@@ -182,7 +182,7 @@ class FsListingFilesService(ListingService):
             if not listingFile.is_file() and currentYear != str(year)\
                and currentMonth != str(month):
                 # This is fine if new month and no announce has happened yet.
-                raise Exception("Missing monthly listing file {listingFile}")
+                raise Exception(f"Missing monthly listing file {listingFile}")
 
             response = get_updates_from_list_file(year, month, listingFile,
                                                   mode, archiveOrCategory)
@@ -223,10 +223,12 @@ class FsListingFilesService(ListingService):
         """
         _, _, end_month = self._current_y_m_em(year)
         months = [(year, month) for month in range(1, end_month + 1)]
-        yymmfiles = [
+        possible = (
             (year, month, self._generate_listing_path('month', archiveOrCategory,
                                                       year, month))
-            for year, month in months]
+            for year, month in months)
+        yymmfiles = [(year, month, apath) for (year, month, apath) in possible
+                     if apath.is_file()]
         return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
                                              show, if_modified_since) # type: ignore
 

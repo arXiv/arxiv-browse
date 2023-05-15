@@ -1,7 +1,6 @@
 """Key to PDF, abs and src for a given ID"""
 
-import re
-from typing import Union, Literal, Optional
+from typing import Literal
 
 from arxiv.identifier import Identifier
 
@@ -12,7 +11,8 @@ def _ps_cache_part(format: Formats, arxiv_id: Identifier) -> str:
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
     return f"ps_cache/{archive}/{format}/{arxiv_id.yymm}"
 
-def ps_cache_pdf_path(format:Formats, arxiv_id: Identifier, version=0)  -> str:
+
+def ps_cache_pdf_path(format:Formats, arxiv_id: Identifier, version: int=0)  -> str:
     """Returns the path for a PDF from the ps_cache for a version.
 
     For PDFs in ps_cache, all of the versions are in the same directory so
@@ -49,7 +49,7 @@ def abs_path_orig_parent(arxiv_id: Identifier) -> str:
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
     return f"orig/{archive}/papers/{arxiv_id.yymm}"
 
-def abs_path_orig(arxiv_id: Identifier, version=0) -> str:
+def abs_path_orig(arxiv_id: Identifier, version:int=0) -> str:
     """Returns the path to the abstract in orig.
 
     If version is passed, that will be used instead of the version on arxiv_id."""

@@ -18,9 +18,11 @@ def test_oldids_in_ps_cache(client_with_test_fs):
 
 def test_oldids_pdf_only(client_with_test_fs):
     resp = client_with_test_fs.get("/pdf/cs/0212040v1.pdf")
+    assert resp.status_code == 200
     assert "0212040v1" in resp.text
 
     resp = client_with_test_fs.get("/pdf/cs/0212040.pdf")
+    assert resp.status_code == 200
     assert "0212040v1" in resp.text
 
 

@@ -9,7 +9,8 @@ from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 
 from browse.domain.identifier import Identifier
-from browse.domain.metadata import DocMetadata, SourceType, VersionEntry
+from browse.domain.metadata import DocMetadata
+from browse.domain.version import SourceType, VersionEntry
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,

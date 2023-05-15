@@ -1,4 +1,5 @@
 """Representations of arXiv document metadata."""
+import re
 from collections import abc
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -10,16 +11,7 @@ from arxiv.base.urls import canonical_url
 from browse.domain.category import Category
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-
-
-@dataclass(frozen=True)
-class SourceType:
-    """Represents arXiv article source file type."""
-
-    code: str
-    """Internal code for the source type."""
-
-    __slots__ = ['code']
+from browse.domain.version import VersionEntry
 
 
 @dataclass(frozen=True)
@@ -33,25 +25,6 @@ class Submitter:
     """Email address."""
 
     __slots__ = ['name', 'email']
-
-
-@dataclass(frozen=True)
-class VersionEntry:
-    """Represents a single arXiv article version history entry."""
-
-    version: int
-
-    raw: str
-    """Raw history entry, e.g. as parsed from .abs file."""
-
-    submitted_date: datetime
-    """Date for the entry."""
-
-    size_kilobytes: int = 0
-    """Size of the article source, in kilobytes."""
-
-    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
-    """Source file type."""
 
 
 @dataclass(frozen=True)
@@ -214,6 +187,23 @@ class DocMetadata:
             raise ValueError(
                 f'version_history was not an Iterable for {self.arxiv_id_v}')
         return max(map(lambda ve: ve.version, self.version_history))
+
+
+    def get_version(self, version:int) -> Optional[VersionEntry]:
+        """Gets `VersionEntry` for `version`.
+
+        Returns None if version does not exist."""
+        if version < 1:
+            raise ValueError("Version must be > 1")
+        versions = list(
+            v for v in self.version_history if v.version == version)
+        if len(versions) > 1:
+            raise ValueError(
+                '{self.arxiv_id} version_history had more than one version {version}')
+        if not versions:
+            return None
+        else:
+            return versions[0]
 
     def get_datetime_of_version(
             self, version: Optional[int]) -> Optional[datetime]:

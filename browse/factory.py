@@ -16,6 +16,7 @@ from flask_s3 import FlaskS3
 
 from browse.config import settings
 from browse.routes import ui, dissemination
+from browse.routes import ui, dissemination, src
 from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
@@ -39,6 +40,7 @@ def create_web_app() -> Flask:
     #Auth(app)
     app.register_blueprint(ui.blueprint)
     app.register_blueprint(dissemination.blueprint)
+    app.register_blueprint(src.blueprint)
     s3.init_app(app)
 
     if not app.jinja_env.globals:
@@ -73,7 +75,7 @@ def create_web_app() -> Flask:
 
 """Setup GCP trace and logging."""
 
-def setup_trace(name, app):
+def setup_trace(name: str, app: Flask): # type: ignore
     """Setup GCP trace and logging."""
     from opentelemetry import trace
     from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter

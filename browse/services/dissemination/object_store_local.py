@@ -1,11 +1,11 @@
 """ObjectStore that uses local FS and Path"""
 
-from typing import IO, Iterator
-from datetime import datetime, timezone
 from pathlib import Path
+from typing import Iterator, Literal, Tuple
 
+from .fileobj import FileDoesNotExist, FileObj, LocalFileObj
+from .object_store import ObjectStore
 
-from .object_store import ObjectStore, FileObj, FileDoesNotExist
 
 class LocalObjectStore(ObjectStore):
     """ObjectStore that uses local FS and Path"""
@@ -38,52 +38,14 @@ class LocalObjectStore(ObjectStore):
         parent, file = Path(self.prefix+key).parent, Path(self.prefix+key).name
         return (LocalFileObj(item) for item in Path(parent).glob(f"{file}*"))
 
-    def status(self):
+    def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         if Path(self.prefix).exists():
-            return ("GOOD","")
+            return ("GOOD", "")
         else:
             return ("BAD", "Local storage path doesn't exist")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<LocalObjectStore {self.prefix}>"
-
-
-class LocalFileObj(FileObj):
-    """File object backed by local files.
-
-    The goal here is to have LocalFileObj mimic `Blob` in the
-    methods and properties that are used.
-    """
-    def __init__(self, item: Path):
-        self.item = item
-
-    @property
-    def name(self) -> str:
-        return self.item.name
-
-    def exists(self) -> bool:
-        return self.item.exists()
-
-    def open(self, *args, **kwargs) -> IO:
-        return self.item.open(*args, **kwargs)
-
-    @property
-    def etag(self) -> str:
-        return "FAKE_ETAG"
-
-    @property
-    def size(self) -> int:
-        return self.item.stat().st_size
-
-    @property
-    def updated(self) -> datetime:
-        return datetime.fromtimestamp(self.item.stat().st_mtime, tz=timezone.utc)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __str__(self):
-        return f"<LocalFileObj Path={self.item}>"
