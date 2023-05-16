@@ -10,9 +10,8 @@ from browse.domain.fileformat import FileFormat, dvigz, htmlgz, \
     pdf, psgz, ps, docx, odf, targz
 from browse.domain.metadata import DocMetadata
 
-from .fileobj import FileObj
+from browse.services.object_store import FileObj, ObjectStore
 from .key_patterns import abs_path_current_parent, abs_path_orig_parent
-from .object_store import ObjectStore
 
 logger = logging.getLogger(__file__)
 

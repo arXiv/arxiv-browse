@@ -88,11 +88,13 @@ class Settings(BaseSettings):
     - `browse.services.listing.fake`: A totally fake set of listings for testing.
     """
 
-    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp'
+    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp/'
     """Path to get listing files from.
 
+    Must end with '/'
+
     This can start with gs:// to use Google Storage.
-    Ex gs://arxiv-production-data//ftp."""
+    Ex `gs://arxiv-production-data/ftp/`"""
 
 
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore

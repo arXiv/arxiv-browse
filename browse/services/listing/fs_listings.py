@@ -1,6 +1,6 @@
 """arXiv listing backed by files.
 
-Due to use of CloudPathLib these can be either local files or cloud object
+Due to use of CloudPathLib these can be either local Filesystem or cloud object
 stores.
 
 """
@@ -11,15 +11,20 @@ from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
 from zoneinfo import ZoneInfo
 
+from google.cloud import storage
+
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config
-from browse.services import APath, fs_check
+from browse.services import fs_check
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
                                      MonthCount, NotModifiedResponse,
                                      gen_expires)
-from cloudpathlib.anypath import to_anypath
 from werkzeug.exceptions import BadRequest
+
+from browse.services.object_store import ObjectStore, FileObj
+from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.object_store_local import LocalObjectStore
 
 from .parse_listing_file import get_updates_from_list_file, ParsingMode
 from .parse_new_listing_file import parse_new_listing_file
@@ -40,11 +45,14 @@ class FsListingFilesService(ListingService):
 
     def __init__(self, document_listing_path: str):
         self.listing_files_root = document_listing_path
-
-
+        self._obj_store:ObjectStore = LocalObjectStore('./')  # type: ignore
+        if document_listing_path.startswith("gs://"):
+            gs_bucket = document_listing_path.replace("gs://","").split("/")[0]
+            client = storage.Client() 
+            self._obj_store = GsObjectStore(client.bucket(gs_bucket))  # type: ignore
 
     def _generate_listing_path(self, fileMode: ListingFileType, archiveOrCategory: str,
-                               year: int, month: int) -> APath:
+                               year: int, month: int) -> FileObj:
         """Create `Path` to a listing file.
 
         This just formats the string file name and returns a `Path`. It does
@@ -79,14 +87,11 @@ class FsListingFilesService(ListingService):
         else:
             listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 
-        return to_anypath(listingFilePath)
+        return self._obj_store.to_obj(listingFilePath)
 
-
-    def _get_mtime(self, listingFilePath: APath) -> datetime:
+    def _get_mtime(self, listingFilePath: FileObj) -> datetime:
         """Get the modify time fot specified file."""
-        return datetime.fromtimestamp(listingFilePath.stat().st_mtime, tz=FS_TZ)
-
-
+        return listingFilePath.updated
 
     def _current_y_m_em(self, year:int) -> Tuple[str,int,int]:
         """Gets `(currentYear, currentMonth, end_month)`"""
@@ -98,18 +103,16 @@ class FsListingFilesService(ListingService):
             end_month = currentMonth
         return (currentYear, currentMonth, end_month)
     
-    def _modified_since(self, if_modified_since: str, listingFile: APath) -> bool:
+    def _modified_since(self, if_modified_since: str, listingFile: FileObj) -> bool:
         """Returns whether data has been modified since `if_modified_since`."""
-        if not listingFile.is_file():
-            return False
-        parsed = datetime.strptime(if_modified_since, '%a, %d %b %Y %H:%M:%S GMT')
         modTime = self._get_mtime(listingFile)
+        parsed = datetime.strptime(if_modified_since, '%a, %d %b %Y %H:%M:%S GMT')
         return modTime > parsed
 
 
     def _list_articles_by_period(self,
                                  archiveOrCategory: str,
-                                 yymmfiles: List[Tuple[int,int, APath]],
+                                 yymmfiles: List[Tuple[int,int, FileObj]],
                                  skip: int,
                                  show: int,
                                  if_modified_since: Optional[str] = None,
@@ -179,7 +182,7 @@ class FsListingFilesService(ListingService):
         all_listings: List[ListingItem] = []
         all_pubdates: List[Tuple[date,int]] = []
         for year, month, listingFile in yymmfiles:
-            if not listingFile.is_file() and currentYear != str(year)\
+            if not listingFile.exists() and currentYear != str(year)\
                and currentMonth != str(month):
                 # This is fine if new month and no announce has happened yet.
                 raise Exception(f"Missing monthly listing file {listingFile}")
@@ -228,7 +231,7 @@ class FsListingFilesService(ListingService):
                                                       year, month))
             for year, month in months)
         yymmfiles = [(year, month, apath) for (year, month, apath) in possible
-                     if apath.is_file()]
+                     if apath.exists()]
         return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
                                              show, if_modified_since) # type: ignore
 
@@ -308,9 +311,8 @@ class FsListingFilesService(ListingService):
 
         files = []
         for month in range(1, end_month + 1):
-            file = to_anypath(
-                self._generate_listing_path('month', archive, year, month))
-            files.append( (month, file, file.is_file()) )
+            file = self._generate_listing_path('month', archive, year, month)
+            files.append( (month, file, file.exists()) )
 
         _check_contiguous(year, files)
 
@@ -332,14 +334,14 @@ class FsListingFilesService(ListingService):
 
 
     def service_status(self)->List[str]:
-        probs = fs_check(to_anypath(self.listing_files_root))
+        probs = fs_check(self._obj_store.to_obj(self.listing_files_root))
         return ["FsListingFilesService: {prob}" for prob in probs]
 
 
-def _check_contiguous(year: int, files: List[Tuple[int, APath, bool]]) -> None:
+def _check_contiguous(year: int, files: List[Tuple[int, FileObj, bool]]) -> None:
     """For a year, check that month listing files are a contiguous block.
 
-    Raises an exception of not.
+    Raises an exception if not.
 
     For a list of month files that make up a year's worth, we want to check that
     no files seem to be missing. But there are severl cases where an nonexistant

@@ -20,6 +20,7 @@ from browse.services.documents.fs_implementation.parse_abs import (
     parse_abs, parse_abs_top)
 from browse.services.listing import (ListingItem, ListingNew,
                                      gen_expires)
+from browse.services.object_store import FileObj
 
 DATE     = re.compile(r'^Date:\s+')
 SUBJECT  = re.compile(r'^Subject:\s+')
@@ -61,7 +62,7 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
     return (0, '')
 
 
-def parse_new_listing_file(listingFilePath: APath, listingFilter: str='')\
+def parse_new_listing_file(listingFilePath: Union[APath, FileObj], listingFilter: str='')\
                            -> Union[ListingNew]:
     """Parses a new or new.{CATEGORY} listing file.
 
