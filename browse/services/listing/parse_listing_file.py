@@ -24,7 +24,6 @@ from browse.domain.category import Category
 from browse.domain.metadata import DocMetadata, AuthorList
 from browse.domain.version import VersionEntry, SourceType
 from browse.services import APath
-from browse.services.object_store import FileObj
 from browse.services.listing import (Listing, ListingItem,
                                      MonthCount, NotModifiedResponse,
                                      gen_expires)
@@ -79,7 +78,7 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
 ParsingMode = Literal['month', 'monthly_counts', 'year']
 
 
-def get_updates_from_list_file(year:int, month: int, listingFilePath: Union[APath, FileObj],
+def get_updates_from_list_file(year:int, month: int, listingFilePath: APath,
                                parsingMode: ParsingMode, listingFilter: str='')\
                                -> Union[Listing, NotModifiedResponse, MonthCount]:
     """Read the paperids that have been updated from a listings file.

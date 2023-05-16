@@ -3,11 +3,10 @@ from browse.config import settings
 from google.cloud import storage
 
 from browse.services.documents import get_doc_service
-from browse.services.object_store import ObjectStore
-from browse.services.object_store.object_store_gs import GsObjectStore
-from browse.services.object_store.object_store_local import LocalObjectStore
-
 from .article_store import ArticleStore
+from .object_store import ObjectStore
+from .object_store_gs import GsObjectStore
+from .object_store_local import LocalObjectStore
 from .source_store import SourceStore
 
 _article_store: ArticleStore = None  # type: ignore
@@ -16,7 +15,7 @@ _article_store: ArticleStore = None  # type: ignore
 _object_store: ObjectStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
 
-_source_store: SourceStore = None  # type: ignoer
+_source_store: SourceStore = None  # type: ignore
 
 
 def get_article_store() -> "ArticleStore":

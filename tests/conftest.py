@@ -104,7 +104,7 @@ def app_with_test_fs(loaded_db):
     settings.DISSEMINATION_STORAGE_PREFIX = './tests/data/abs_files/'
     settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
     settings.DOCUMENT_LISTING_SERVICE = listing.fs_listing
-    settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp/"
+    settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp"
     settings.DOCUMENT_LATEST_VERSIONS_PATH = "tests/data/abs_files/ftp"
     settings.DOCUMENT_ORIGNAL_VERSIONS_PATH = "tests/data/abs_files/orig"
 

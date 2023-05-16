@@ -21,7 +21,8 @@ from .key_patterns import (abs_path_current_parent,
                            abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
-from browse.services.object_store import ObjectStore, FileObj
+from .object_store import ObjectStore
+from .fileobj import FileObj
 
 logger = logging.getLogger(__file__)
 
