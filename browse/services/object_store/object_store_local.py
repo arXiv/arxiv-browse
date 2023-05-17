@@ -13,7 +13,7 @@ class LocalObjectStore(ObjectStore):
         if not prefix:
             raise ValueError("Must have a prefix")
         if not prefix.endswith('/'):
-            raise ValueError("prefix must end with /")
+            prefix = prefix + "/"
 
         self.prefix = prefix
 

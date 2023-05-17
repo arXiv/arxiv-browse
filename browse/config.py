@@ -92,7 +92,7 @@ class Settings(BaseSettings):
     """Path to get listing files from.
 
     This can start with gs:// to use Google Storage.
-    Ex gs://arxiv-production-data//ftp."""
+    Ex gs://arxiv-production-data/ftp."""
 
 
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore

@@ -1,8 +1,6 @@
 """arXiv listing backed by files.
 
-Due to use of CloudPathLib these can be either local files or cloud object
-stores.
-
+Can be either local file or GCP storage.
 """
 
 import logging
@@ -11,19 +9,22 @@ from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
 from zoneinfo import ZoneInfo
 
+from google.cloud import storage
+
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config
-from browse.services import APath, fs_check
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew, ListingService,
                                      MonthCount, NotModifiedResponse,
                                      gen_expires)
-from cloudpathlib.anypath import to_anypath
+from browse.services.object_store import FileObj, ObjectStore
+from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.object_store_local import LocalObjectStore
 from werkzeug.exceptions import BadRequest
 
-from .parse_listing_file import get_updates_from_list_file, ParsingMode
-from .parse_new_listing_file import parse_new_listing_file
+from .parse_listing_file import ParsingMode, get_updates_from_list_file
 from .parse_listing_pastweek import parse_listing_pastweek
+from .parse_new_listing_file import parse_new_listing_file
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -36,15 +37,28 @@ ListingFileType = Literal["new", "pastweek", "month"]
 
 
 class FsListingFilesService(ListingService):
-    """arXiv document listings via Filesystem."""
+    """arXiv document listings via Filesystem.
+
+    The source of the files can be either the local file system
+    or a GCP storage bucket.
+    """
 
     def __init__(self, document_listing_path: str):
-        self.listing_files_root = document_listing_path
-
-
+        self.obj_store: ObjectStore = LocalObjectStore(document_listing_path)
+        self.listing_files_root = "./"
+        
+        if document_listing_path.startswith("gs://"):
+            parts = document_listing_path.replace("gs://","").split("/")
+            gs_client = storage.Client()
+            bucket = gs_client.bucket(parts[0])
+            self.obj_store = GsObjectStore(bucket)
+            path = "/".join(parts[1:]) if len(parts)>0 else ""
+            if path.endswith("/"):
+                path = path[:-1]
+            self.listing_files_root = path
 
     def _generate_listing_path(self, fileMode: ListingFileType, archiveOrCategory: str,
-                               year: int, month: int) -> APath:
+                               year: int, month: int) -> FileObj:
         """Create `Path` to a listing file.
 
         This just formats the string file name and returns a `Path`. It does
@@ -79,13 +93,7 @@ class FsListingFilesService(ListingService):
         else:
             listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 
-        return to_anypath(listingFilePath)
-
-
-    def _get_mtime(self, listingFilePath: APath) -> datetime:
-        """Get the modify time fot specified file."""
-        return datetime.fromtimestamp(listingFilePath.stat().st_mtime, tz=FS_TZ)
-
+        return self.obj_store.to_obj(listingFilePath)
 
 
     def _current_y_m_em(self, year:int) -> Tuple[str,int,int]:
@@ -97,19 +105,18 @@ class FsListingFilesService(ListingService):
         if currentYear == str(year):
             end_month = currentMonth
         return (currentYear, currentMonth, end_month)
-    
-    def _modified_since(self, if_modified_since: str, listingFile: APath) -> bool:
+
+    def _modified_since(self, if_modified_since: str, listingFile: FileObj) -> bool:
         """Returns whether data has been modified since `if_modified_since`."""
-        if not listingFile.is_file():
+        if not listingFile.exists():
             return False
         parsed = datetime.strptime(if_modified_since, '%a, %d %b %Y %H:%M:%S GMT')
-        modTime = self._get_mtime(listingFile)
+        modTime = listingFile.updated
         return modTime > parsed
-
 
     def _list_articles_by_period(self,
                                  archiveOrCategory: str,
-                                 yymmfiles: List[Tuple[int,int, APath]],
+                                 yymmfiles: List[Tuple[int,int, FileObj]],
                                  skip: int,
                                  show: int,
                                  if_modified_since: Optional[str] = None,
@@ -137,8 +144,8 @@ class FsListingFilesService(ListingService):
         archiveOrCategory : str
             A valid arxiv archive or category to get the listing for. Must not
             be empty.
-        months : List[Tuple[int,int,APath]]
-            The months to get the listings for. Tuple of (yy, mm, APath_to_listing_file)
+        months : List[Tuple[int,int,FileObj]]
+            The months to get the listings for. Tuple of (yy, mm, FileObj_to_listing_file)
             where both yy and mm are `int`. If yy or mm are 0 the
             result may lack pubdates.
         # tuple of (yy,mm) skip : int
@@ -179,7 +186,7 @@ class FsListingFilesService(ListingService):
         all_listings: List[ListingItem] = []
         all_pubdates: List[Tuple[date,int]] = []
         for year, month, listingFile in yymmfiles:
-            if not listingFile.is_file() and currentYear != str(year)\
+            if not listingFile.exists() and currentYear != str(year)\
                and currentMonth != str(month):
                 # This is fine if new month and no announce has happened yet.
                 raise Exception(f"Missing monthly listing file {listingFile}")
@@ -227,8 +234,8 @@ class FsListingFilesService(ListingService):
             (year, month, self._generate_listing_path('month', archiveOrCategory,
                                                       year, month))
             for year, month in months)
-        yymmfiles = [(year, month, apath) for (year, month, apath) in possible
-                     if apath.is_file()]
+        yymmfiles = [(year, month, fobj) for (year, month, fobj) in possible
+                     if fobj.exists()]
         return self._list_articles_by_period(archiveOrCategory, yymmfiles, skip,
                                              show, if_modified_since) # type: ignore
 
@@ -299,7 +306,6 @@ class FsListingFilesService(ListingService):
             rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
             return rv
 
-    
     def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
         """Gets monthly listing counts for the year."""
         monthly_counts: List[MonthCount] = []
@@ -308,9 +314,8 @@ class FsListingFilesService(ListingService):
 
         files = []
         for month in range(1, end_month + 1):
-            file = to_anypath(
-                self._generate_listing_path('month', archive, year, month))
-            files.append( (month, file, file.is_file()) )
+            file = self._generate_listing_path('month', archive, year, month)
+            files.append((month, file, file.exists()))
 
         for month, file, exists in files:
             if not exists:
@@ -323,12 +328,16 @@ class FsListingFilesService(ListingService):
                 new_cnt += response.new
                 cross_cnt += response.cross
 
-
         return ListingCountResponse(month_counts=monthly_counts,
                                     new_count=new_cnt,
                                     cross_count= cross_cnt)
 
-
     def service_status(self)->List[str]:
-        probs = fs_check(to_anypath(self.listing_files_root))
-        return ["FsListingFilesService: {prob}" for prob in probs]
+        try:
+            fobj = self.obj_store.to_obj(self.listing_files_root)
+            if not fobj.exists():
+                return ["listing_files_root does not exist"]
+            else:
+                return []
+        except Exception as ex:
+            return [f"Could not access listing_files_root due to {ex}"]
