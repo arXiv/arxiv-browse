@@ -1,8 +1,8 @@
 
 from arxiv.identifier import Identifier
 
-from arxiv_dissemination.services.object_store_local import LocalObjectStore
-from arxiv_dissemination.services.article_store import ArticleStore
+from browse.services.object_store.object_store_local import LocalObjectStore
+from browse.services.dissemination.article_store import ArticleStore
 
 def test_iswithdrawn():
     store = ArticleStore(LocalObjectStore('./tests/data'))

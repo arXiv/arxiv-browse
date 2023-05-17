@@ -2,15 +2,18 @@
 import logging
 from email.utils import format_datetime
 
-from arxiv.identifier import Identifier, IdentifierException
-from browse.domain import fileformat
-from browse.services.dissemination import get_article_store
-from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
-from browse.services.dissemination.fileobj import FileObj
-from browse.services.dissemination.next_published import next_publish
 from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_rangerequest import RangeRequest
 from opentelemetry import trace
+
+from arxiv.identifier import Identifier, IdentifierException
+from browse.domain import fileformat
+
+from browse.services.object_store.fileobj import FileObj
+
+from browse.services.dissemination import get_article_store
+from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
+from browse.services.dissemination.next_published import next_publish
 
 
 
@@ -66,7 +69,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     logger. debug(f"dissemination_for_id({id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
-    elif item in ["WITHDRAWN", "NO_SOURCE"]:
+    elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE":
         return unavailable(arxiv_id)
@@ -79,7 +82,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     elif not item or not item.exists():  # type: ignore
         return not_found(arxiv_id)
 
-    file: FileObj = item  # type: ignore
+    file: FileObj = item
     resp = RangeRequest(file.open('rb'),
                         etag=file.etag,
                         last_modified=file.updated,

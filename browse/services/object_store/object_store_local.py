@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Iterator, Literal, Tuple
 
 from .fileobj import FileDoesNotExist, FileObj, LocalFileObj
-from .object_store import ObjectStore
+from . import ObjectStore
 
 
 class LocalObjectStore(ObjectStore):
