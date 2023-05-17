@@ -312,8 +312,6 @@ class FsListingFilesService(ListingService):
                 self._generate_listing_path('month', archive, year, month))
             files.append( (month, file, file.is_file()) )
 
-        _check_contiguous(year, files)
-
         for month, file, exists in files:
             if not exists:
                 continue
@@ -334,49 +332,3 @@ class FsListingFilesService(ListingService):
     def service_status(self)->List[str]:
         probs = fs_check(to_anypath(self.listing_files_root))
         return ["FsListingFilesService: {prob}" for prob in probs]
-
-
-def _check_contiguous(year: int, files: List[Tuple[int, APath, bool]]) -> None:
-    """For a year, check that month listing files are a contiguous block.
-
-    Raises an exception of not.
-
-    For a list of month files that make up a year's worth, we want to check that
-    no files seem to be missing. But there are severl cases where an nonexistant
-    month file would be expected.
-
-    Could have:
-    1: year is current year and only have Jan through current month
-    2: archive started on a month other than Jan so only have start month to Dec
-    3: archive ended on a month other than Dec so only have Jan through end month
-    4: archive existed under a year, didn't start on Jan and didn't end in Dec
-
-    Months should be a contiguous block.
-    """
-
-    # Look for contiguous block by comparing the month to the next month to see
-    # if it went from off to on or on to off.  We add a 0-th month that is off
-    # and a 13th month that is off so we expect always only one off-to-on and
-    # one on-to-off. Anything else is rejected.
-
-    from_state = [(0,None,False)] + files
-    to_state = files + [(13,None,False)]
-    data = zip(from_state, to_state)
-    transitions = []
-    for (from_mm, _, from_exists),(to_mm,_,to_exists) in data:
-        if not from_exists and to_exists:
-            transitions.append("on")
-        elif from_exists and not to_exists:
-            transitions.append("off")
-        else:
-            transitions.append("no_change")
-
-    if [dy for dy in transitions if dy != "no_change"] == ["on", "off"]:
-        return  # all good
-
-    # TODO Better exceptions
-    if all(["no_change"==dy for dy in transitions]):
-        raise Exception(f"No data for year {year}")
-    else:
-        msg=" ".join([f"{mm}:{int(exists)}" for mm,_,exists in files])
-        raise Exception(f"Missing listing month files for year {year}: {msg}")

@@ -522,12 +522,6 @@ def test_astro_ph_years(client_with_test_fs, abs_path):
     rv.status_code == 200
 
 
-def test_missing_files_year(client_with_test_fs, abs_path):
-    client = client_with_test_fs
-    with pytest.raises(Exception) as ex:
-        rv = client.get(f"/year/astro-ph/17")
-
-
 def test_astro_ph_ep_recent(client_with_test_fs):
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.EP/recent")
