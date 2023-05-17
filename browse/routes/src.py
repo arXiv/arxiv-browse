@@ -13,7 +13,7 @@ from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import (
     AbsNotFoundException, AbsVersionNotFoundException)
 from browse.services.dissemination import get_source_store
-from browse.services.dissemination.next_published import next_publish
+from browse.services.next_published import next_publish
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)

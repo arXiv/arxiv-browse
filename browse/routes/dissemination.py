@@ -13,7 +13,7 @@ from browse.services.object_store.fileobj import FileObj
 
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import CannotBuildPdf, Deleted
-from browse.services.dissemination.next_published import next_publish
+from browse.services.next_published import next_publish
 
 
 

@@ -17,7 +17,7 @@ from browse.services.documents.base_documents import (
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
-from .key_patterns import (abs_path_current_parent,
+from browse.services.key_patterns import (abs_path_current_parent,
                            abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
