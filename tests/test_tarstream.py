@@ -3,7 +3,7 @@ import io
 import tarfile
 from typing import List
 
-from browse.services.dissemination.fileobj import MockStringFileObj
+from browse.services.object_store.fileobj import MockStringFileObj
 from browse.stream.tarstream import tar_stream_gen
 
 

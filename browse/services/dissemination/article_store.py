@@ -16,11 +16,12 @@ from browse.services.documents.base_documents import (
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
-from .fileobj import FileObj
-from .key_patterns import (abs_path_current_parent, abs_path_orig_parent,
+from browse.services.key_patterns import (abs_path_current_parent,
+                           abs_path_orig_parent,
                            current_pdf_path, previous_pdf_path,
                            ps_cache_pdf_path)
-from .object_store import ObjectStore
+from browse.services.object_store import ObjectStore
+from browse.services.object_store.fileobj import FileObj
 
 logger = logging.getLogger(__file__)
 

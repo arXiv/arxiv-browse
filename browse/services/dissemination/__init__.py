@@ -8,11 +8,13 @@ from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from google.cloud import storage
 
+from browse.services.documents import get_doc_service
+from browse.services.object_store import ObjectStore
+from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.object_store_local import LocalObjectStore
+
 from .article_store import ArticleStore
-from .fileobj import FileObj
-from .object_store import ObjectStore
-from .object_store_gs import GsObjectStore
-from .object_store_local import LocalObjectStore
+from .source_store import SourceStore
 
 _article_store: ArticleStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.

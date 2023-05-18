@@ -1,4 +1,4 @@
-"""ABC of the object store service."""
+"""The object store service to access local or cloud files."""
 
 from abc import ABC, abstractmethod
 from typing import Iterable, Literal, Tuple

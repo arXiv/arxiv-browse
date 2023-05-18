@@ -15,7 +15,7 @@ import re
 from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
 
-from browse.services import APath
+from browse.services.object_store import FileObj
 from browse.services.documents.fs_implementation.parse_abs import (
     parse_abs, parse_abs_top)
 from browse.services.listing import (ListingItem, ListingNew,
@@ -61,7 +61,7 @@ def _is_rule(line: str, type: str) -> Tuple[int, Literal['','cross','rep','end']
     return (0, '')
 
 
-def parse_new_listing_file(listingFilePath: APath, listingFilter: str='')\
+def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
                            -> Union[ListingNew]:
     """Parses a new or new.{CATEGORY} listing file.
 

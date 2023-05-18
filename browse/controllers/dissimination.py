@@ -10,11 +10,13 @@ from browse.domain.fileformat import FileFormat
 from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
 
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj
+
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
-from browse.services.dissemination.fileobj import FileObj, UngzippedFileObj
-from browse.services.dissemination.next_published import next_publish
+from browse.services.next_published import next_publish
+
 from browse.stream.tarstream import tar_stream_gen
 from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest

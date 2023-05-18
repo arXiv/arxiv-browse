@@ -24,7 +24,7 @@ from typing import List, Literal, Tuple, Union
 from dataclasses import dataclass
 
 from browse.domain.metadata import DocMetadata
-from browse.services import APath
+from browse.services.object_store import FileObj
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_top
 from browse.services.listing import (ListingItem, Listing, gen_expires)
 
@@ -37,7 +37,7 @@ class PastweekDay:
     items: List[ListingItem]
 
 
-def parse_listing_pastweek(listingFilePath: APath)\
+def parse_listing_pastweek(listingFilePath: FileObj)\
         -> Listing:
     """Read the paperids that have been updated from a listings file.
 
