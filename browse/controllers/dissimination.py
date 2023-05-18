@@ -1,7 +1,9 @@
 """Controller for PDF, source and other downloads."""
+
 import logging
 from email.utils import format_datetime
 from typing import Callable, Optional
+from datetime import timezone
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -14,13 +16,15 @@ from browse.services.dissemination.article_store import (
 from browse.services.dissemination.fileobj import FileObj, UngzippedFileObj
 from browse.services.dissemination.next_published import next_publish
 from browse.stream.tarstream import tar_stream_gen
-from flask import Blueprint, Response, abort, make_response, render_template
+from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
-blueprint = Blueprint('dissemination', __name__)
+
+Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata, VersionEntry],
+                       Response]
 
 
 def default_resp_fn(format: FileFormat,
@@ -42,7 +46,7 @@ def default_resp_fn(format: FileFormat,
 
     # Have to do Range Requests to get GCP CDN to accept larger objects.
     resp: Response = RangeRequest(file.open('rb'),
-                                  etag=file.etag,
+                                  etag=_last_modified(file),
                                   last_modified=file.updated,
                                   size=file.size).make_response()
 
@@ -52,13 +56,12 @@ def default_resp_fn(format: FileFormat,
 
     if resp.status_code == 200:
         # For large files on CloudRun chunked and no content-length needed
-        resp.headers['Transfer-Encoding'] = 'chunked'
+        # TODO revisit this, in some cases it doesn't work maybe when
+        # combined with gzip encoding?
+        #resp.headers['Transfer-Encoding'] = 'chunked'
         resp.headers.pop('Content-Length')
 
-    if arxiv_id.has_version:
-        resp.headers['Cache-Control'] = _cc_versioned()
-    else:
-        resp.headers['Expires'] = format_datetime(next_publish())
+    _add_time_headers(resp, file, arxiv_id)
     return resp
 
 
@@ -67,33 +70,41 @@ def src_resp_fn(format: FileFormat,
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry) -> Response:
-    """Prepares a response where the payload will be a tar.gz of the source."""
-    if file.name.endswith(".tar.gz"):  # Nothing extra to do, already .tar.gz
-        return default_resp_fn(format, file, arxiv_id, docmeta, version)
+    """Prepares a response where the payload will be a tar of the source.
 
-    if file.name.endswith(".gz"):
-        outstream = tar_stream_gen([UngzippedFileObj(file)])
-    else:
-        outstream = tar_stream_gen([file])
+    No matter what the actual format of the source, this will try to return a
+    .tar.  If the source is a .pdf then that will be tarred. If the source is a
+    gzipped PS file, that will be ungzipped and then tarred.
+
+    This will also uses gzipped transfer encoding. But the client will unencode
+    the bytestream and the file will be saved as .tar.
+    """
+    if file.name.endswith(".tar.gz"):  # Nothing extra to do, already .tar.gz
+        outstream = file
+    elif file.name.endswith(".gz"):  # need to unzip the single file gz and then tar
+        outstream = tar_stream_gen([UngzippedFileObj(file)])  # type: ignore
+    else:  # tar single flie like .pdf
+        outstream = tar_stream_gen([file])   # type: ignore
 
     archive = f"{arxiv_id.archive}-" if arxiv_id.is_old_id else ""
     filename = f"arXiv-{archive}{arxiv_id.filename}v{version.version}.tar"
 
-    return make_response(outstream, {
-        "Content-Encoding": "x-gzip",  # tar_stream_gen() gzips
-        "Content-Type": "application/x-eprint-tar",
-        "Content-Disposition": f"attachment; filename=\"{filename}\"",
-    })
+    resp = make_response(outstream, 200)
+    resp.headers["Content-Encoding"] = "x-gzip"  # tar_stream_gen() gzips
+    resp.headers["Content-Type"] = "application/x-eprint-tar"
+    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
 
+    _add_time_headers(resp, file, arxiv_id)
+    resp.headers["ETag"] = _last_modified(file)
 
-Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata, VersionEntry],
-                       Response]
+    return resp
 
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str,
-                                  archive, src_resp_fn)
+    return get_dissimination_resp("e-print",
+                                  arxiv_id_str, archive,
+                                  src_resp_fn)
 
 
 def get_e_print_resp(arxiv_id_str: str,
@@ -138,6 +149,7 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     file, item_format, docmeta, version = item
     if not file.exists():
         return not_found(arxiv_id)
+
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
 
@@ -187,3 +199,16 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
     return make_response(render_template("pdf/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
+
+
+def _add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
+    resp.headers["Last-Modified"] = _last_modified(file)
+    if arxiv_id.has_version:
+        resp.headers['Cache-Control'] = _cc_versioned()
+    else:
+        resp.headers['Expires'] = format_datetime(next_publish())
+
+
+def _last_modified(fileobj: FileObj) -> str:
+    return format_datetime(fileobj.updated.astimezone(timezone.utc),
+                           usegmt=True)

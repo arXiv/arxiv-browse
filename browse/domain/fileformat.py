@@ -23,6 +23,7 @@ psgz = FileFormat("psgz", "x-gzip", "application/postscript")
 dvigz = FileFormat("psgz", "x-gzip", "application/x-dvi")
 htmlgz = FileFormat("htmlgz", "x-gzip", "text/html")
 pdf = FileFormat("pdf", None, "application/pdf")
+pdftex = FileFormat("pdftex", "x-gzip", "application/x-eprint-tar")
 ps = FileFormat("ps", None, "application/postscript")
 gz = FileFormat("gz", "x-gzip", "application/x-eprint")
 docx = FileFormat("docx", "TODO", "TODO")
@@ -33,6 +34,7 @@ fromats = {
     "psgz":psgz,
     "htmlgz":htmlgz,
     "pdf":pdf,
+    "pdftex":pdftex,
     "gz":gz,
     "docx":docx,
     "odf":odf,

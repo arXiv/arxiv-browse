@@ -355,43 +355,6 @@ def stats(command: str) -> Response:
     raise InternalServerError("Unexpected error")
 
 
-@blueprint.route("format/<arxiv_id>")
-def format(arxiv_id: str) -> Response:
-    """Get formats article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
-@blueprint.route("div/<arxiv_id>")
-def div(arxiv_id: str) -> Response:
-    """Get div for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
-@blueprint.route("e-print/<arxiv_id>")
-def eprint(arxiv_id: str) -> Response:
-    """Get e-print (source) for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
-@blueprint.route("html/<arxiv_id>")
-def html(arxiv_id: str) -> Response:
-    """Get html for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
-@blueprint.route("ps/<arxiv_id>")
-def ps(arxiv_id: str) -> Response:
-    """Get ps for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-
-@blueprint.route("src/<arxiv_id>/anc", defaults={"file_name": None})
-@blueprint.route("src/<arxiv_id>/anc/<path:file_name>")
-def src(arxiv_id: str, file_name: str) -> Response:
-    """Get src for article."""
-    raise InternalServerError(f"Not Yet Implemented {arxiv_id} {file_name}")
-
-
 @blueprint.route("show-email/<path:show_email_hash>/<path:arxiv_id>")
 def show_email(show_email_hash: str, arxiv_id: str) -> Response:
     """Show the email for the submitter for an article."""

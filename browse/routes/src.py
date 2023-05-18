@@ -3,7 +3,7 @@ import logging
 from typing import Optional
 from email.utils import format_datetime
 
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, abort, render_template, Response
 from flask_rangerequest import RangeRequest
 
 from opentelemetry import trace

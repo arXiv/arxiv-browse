@@ -390,10 +390,15 @@ class Settings(BaseSettings):
            self.FS_TZ = "UTC"
            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
                        "and DOCUMENT_ORIGNAL_VERSIONS_PATH are Google Storage")
+           if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
+               log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
+           else:
+               log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
 
         if self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH:
-            log.warning("Unexpected: latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
-                        "but listings at {self.DOCUMENT_LISTING_PATH}")
+            log.warning(f"Unexpected: latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
+                        f"but listings at {self.DOCUMENT_LISTING_PATH}")
+
 
 
 

@@ -334,8 +334,7 @@ def get_src_format(docmeta: DocMetadata,
     elif srctype.html:
         return fileformat.htmlgz
     elif srctype.pdflatex:
-        raise Exception("Not pdflatex format yet implemented")
-        #  return fileformat.pdftex
+        return fileformat.pdftex
     elif srctype.docx:
         return fileformat.docx
     elif srctype.odf:

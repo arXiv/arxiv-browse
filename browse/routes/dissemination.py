@@ -1,9 +1,9 @@
 """Routes for PDF, source and other downloads."""
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for, Response
 
 from browse.domain import fileformat
 from browse.controllers.dissimination import get_dissimination_resp
-
+from werkzeug.exceptions import InternalServerError
 
 blueprint = Blueprint('dissemination', __name__)
 
@@ -39,3 +39,27 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     Does a 404 if the key for the ID does not exist on the bucket.
     """
     return get_dissimination_resp(fileformat.pdf, arxiv_id, archive)
+
+
+@blueprint.route("/format/<arxiv_id>")
+def format(arxiv_id: str) -> Response:
+    """Get formats article."""
+    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+
+
+@blueprint.route("/div/<arxiv_id>")
+def div(arxiv_id: str) -> Response:
+    """Get div for article."""
+    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+
+
+@blueprint.route("/html/<arxiv_id>")
+def html(arxiv_id: str) -> Response:
+    """Get html for article."""
+    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+
+
+@blueprint.route("/ps/<arxiv_id>")
+def ps(arxiv_id: str) -> Response:
+    """Get ps for article."""
+    raise InternalServerError(f"Not yet implemented {arxiv_id}")
