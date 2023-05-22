@@ -71,7 +71,7 @@
         </div>
 
         {% if article.comments %}
-          <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
+          <div class='list-comments mathjax'><span class='descriptor'>Comments:</span>
             {{article.comments|arxiv_urlize}}
           </div>
         {% endif %}
@@ -141,6 +141,10 @@
   {%- endif -%}
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
+  {%- endif -%}
+  {%- if 'latexml' in downloads -%}
+    , <a href="https://services.dev.arxiv.org/conversion/download?arxiv_id={{id}}" title="Other formats" id="latexml-{{id}}" 
+         aria-labelledby="latexml-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
   ]
 {%- endmacro -%}
