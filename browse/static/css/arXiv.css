@@ -655,6 +655,28 @@ footer .sorry-app-links .a11y-main-link {
     width: 88%;
   }
 }
+.banner-minimal {
+  width: 300px;
+  border: 2px solid #b31b1b;;
+  border-radius: 8px;
+  font-size: 1.4em;
+  text-align: center;
+  padding: .5em 1em;
+  background-color: #000000;
+  color: #fb595a;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.banner-minimal strong {
+  font-size: 1.3em;
+  margin-bottom: 3px;
+  margin-right: 8px;
+}
+.banner-minimal a {
+  color: #f9f7f7;
+  text-decoration: underline;
+}
 /* special header banner, dark override */
 .slider-wrapper.bps-banner.dark {
   background-color: black;
