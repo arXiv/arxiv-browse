@@ -56,6 +56,8 @@ from browse.domain.listing import NewResponse, NotModifiedResponse, ListingRespo
 from browse.services.search.search_authors import queries_for_authors, \
     split_long_author_list, AuthorList
 
+import re
+
 
 logger = logging.getLogger(__name__)
 
@@ -313,9 +315,12 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
     dl_pref = request.cookies.get('xxx-ps-defaults')
     out = {}
     for item in items:
+        source_type = item['article'].version_history[item['article'].version - 1].source_type.code
+        has_pdflatex = re.search('D', source_type, re.IGNORECASE)
+        has_pdf_only = re.search('F', source_type, re.IGNORECASE)
         out[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
         # If latex source, add latexml dissemination option
-        if item['article'].version_history[item['article'].version - 1].source_type.code == 'D': 
+        if has_pdflatex or has_pdf_only: 
             out[item['article'].arxiv_id_v].append('latexml')
     return out
 
