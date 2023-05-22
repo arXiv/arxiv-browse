@@ -47,8 +47,7 @@ RUN echo $git_commit > /git-commit.txt
 
 EXPOSE 8080
 
-RUN addgroup -g 1000 -S e-prints \
-    && adduser -u 1001 -S e-prints -G e-prints
+RUN useradd e-prints
 USER e-prints
 
 # Why is this command in an env var and not just run in CMD?  So it can be used
