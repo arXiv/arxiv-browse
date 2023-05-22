@@ -142,10 +142,10 @@
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
   {%- endif -%}
-  {%- if 'latexml' in downloads -%}
+  <!-- {%- if 'latexml' in downloads -%} -->
     , <a href="https://services.dev.arxiv.org/conversion/download?arxiv_id={{id}}" title="Other formats" id="latexml-{{id}}" 
          aria-labelledby="latexml-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
-  {%- endif -%}
+  <!-- {%- endif -%} -->
   ]
 {%- endmacro -%}
 
