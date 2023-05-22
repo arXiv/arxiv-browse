@@ -320,7 +320,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
         has_pdf_only = re.search('F', source_type, re.IGNORECASE)
         out[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
         # If latex source, add latexml dissemination option
-        if has_pdflatex or has_pdf_only: 
+        if True: #has_pdflatex or has_pdf_only: 
             out[item['article'].arxiv_id_v].append('latexml')
     return out
 
