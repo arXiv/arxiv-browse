@@ -24,39 +24,6 @@ class DocMetadataService(abc.ABC, HasStatus):
         """
 
     @abc.abstractmethod
-    def get_dissemination_formats(self,
-                                  docmeta: DocMetadata,
-                                  format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False
-                                  ) -> List[str]:
-        """Get a list of formats that can be disseminated for this DocMetadata.
-
-        Several checks are performed to determine available dissemination
-        formats:
-            1. a check for source files with specific, valid file name
-               extensions (i.e. for a subset of the allowed source file name
-               extensions, the dissemintation formats are predictable)
-            2. if formats cannot be inferred from the source file, inspect the
-               source type in the document metadata.
-
-        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
-        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
-
-        Parameters
-        ----------
-        docmeta : :class:`DocMetadata`
-        format_pref : str
-            The format preference string.
-        add_sciencewise : bool
-            Specify whether to include 'sciencewise_pdf' format in list.
-
-        Returns
-        -------
-        List[str]
-            A list of format strings.
-        """
-
-    @abc.abstractmethod
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""

@@ -104,9 +104,7 @@ def src_resp_fn(format: FileFormat,
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print",
-                                  arxiv_id_str, archive,
-                                  src_resp_fn)
+    return get_dissimination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
 
 
 def get_e_print_resp(arxiv_id_str: str,

@@ -36,6 +36,7 @@ from browse.services.database import (
     has_sciencewise_ping,
 )
 from browse.services.documents import get_doc_service
+from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
     DBLP_AUTHOR_SEARCH_PATH,
@@ -129,7 +130,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
-        response_data["formats"] = get_doc_service().get_dissemination_formats(
+        response_data["formats"] = get_article_store().get_dissemination_formats(
             abs_meta, download_format_pref, add_sciencewise_ping
         )
 

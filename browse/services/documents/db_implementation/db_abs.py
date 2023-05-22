@@ -122,46 +122,11 @@ class DbDocMetadataService(DocMetadataService):
 
         return to_docmeta(res, version_history, self.business_tz)
 
-
-    def get_dissemination_formats(self,
-                                  docmeta: DocMetadata,
-                                  format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False
-                                  ) -> List[str]:
-        """Get a list of formats that can be disseminated for this DocMetadata.
-
-        THIS ONLY CHECKS THE source type on the doc metadata.
-
-        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
-        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
-
-        Parameters
-        ----------
-        docmeta : :class:`DocMetadata`
-        format_pref : str
-            The format preference string.
-        add_sciencewise : bool
-            Specify whether to include 'sciencewise_pdf' format in list.
-
-        Returns
-        -------
-        List[str]
-            A list of format strings.
-        """
-        version = docmeta.version
-        format = docmeta.version_history[version - 1].source_type.code
-        return formats_from_source_type(format,
-                                        format_pref,
-                                        False,
-                                        add_sciencewise)
-
-
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:
         """Get list of ancillary file names and sizes."""
         # TODO implement get_ancillary_files
         return []
-
 
     def service_status(self)->List[str]:
         try:

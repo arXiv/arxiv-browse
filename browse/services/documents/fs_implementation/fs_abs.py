@@ -15,7 +15,6 @@ from browse.services.documents.base_documents import DocMetadataService, \
 from . import cache
 from .legacy_fs_paths import FSDocMetaPaths
 from .parse_abs import parse_abs_file
-from .formats import formats_from_source_file_name
 from ..format_codes import formats_from_source_type
 
 class FsDocMetadataService(DocMetadataService):
@@ -74,88 +73,6 @@ class FsDocMetadataService(DocMetadataService):
             is_latest=False)
 
         return combined_version
-
-    # Maybe this should move to formats.py?
-
-    def get_dissemination_formats(self,
-                                  docmeta: DocMetadata,
-                                  format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False
-                                  ) -> List[str]:
-        """Get a list of formats that can be disseminated for this DocMetadata.
-
-        Several checks are performed to determine available dissemination
-        formats:
-            1. a check for source files with specific, valid file name
-               extensions (i.e. for a subset of the allowed source file name
-               extensions, the dissemintation formats are predictable)
-            2. if formats cannot be inferred from the source file, inspect the
-               source type in the document metadata.
-
-        Format names are strings. These include 'src', 'pdf', 'ps', 'html',
-        'pdfonly', 'other', 'dvi', 'ps(400)', 'ps(600)', 'nops'.
-
-        Parameters
-        ----------
-        docmeta : :class:`DocMetadata`
-        format_pref : str
-            The format preference string.
-        add_sciencewise : bool
-            Specify whether to include 'sciencewise_pdf' format in list.
-
-        Returns
-        -------
-        List[str]
-            A list of format strings.
-        """
-
-        # TODO Can we just use the source_type.code?
-        # There have been two ways the downloads are figured out.  One
-        # is a function of the source_type.code on the DocMetadata, the
-        # other a function of the source file names for the document.  While
-        # working on listing the source file names technique has been slow.
-
-        formats: List[str] = []
-
-        # first, get possible list of formats based on available source file
-        source_file_path = self.fs_paths.get_source_path(docmeta.arxiv_identifier,
-                                                         int(docmeta.version),
-                                                         docmeta.is_latest)
-        source_file_formats: List[str] = []
-        if source_file_path is not None:
-            source_file_formats = \
-                formats_from_source_file_name(source_file_path)
-        if source_file_formats:
-            formats.extend(source_file_formats)
-
-            if add_sciencewise:
-                if formats and formats[-1] == 'other':
-                    formats.insert(-1, 'sciencewise_pdf')
-                else:
-                    formats.append('sciencewise_pdf')
-
-        else:
-            # check source type from metadata, with consideration of
-            # user format preference and cache
-            version = docmeta.version
-            format_code = docmeta.version_history[version - 1].source_type.code
-            cached_ps_file_path = cache.get_cache_file_path(docmeta, 'ps')
-            cache_flag = False
-            if cached_ps_file_path \
-                    and os.path.getsize(cached_ps_file_path) == 0 \
-                    and source_file_path \
-                    and os.path.getmtime(source_file_path) \
-                    < os.path.getmtime(cached_ps_file_path):
-                cache_flag = True
-
-            source_type_formats = formats_from_source_type(format_code,
-                                                           format_pref,
-                                                           cache_flag,
-                                                           add_sciencewise)
-            if source_type_formats:
-                formats.extend(source_type_formats)
-
-        return formats
 
     def get_ancillary_files(self, docmeta: DocMetadata) \
             -> List[Dict]:

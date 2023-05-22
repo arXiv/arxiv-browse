@@ -30,7 +30,7 @@ performance implications in the ordering when doing filesystem
 lookups, so the ordering here should be preserved."""
 
 
-def formats_from_source_file_name(source_file_path: APath) -> List[str]:
+def formats_from_source_file_name(source_file_path: str) -> List[str]:
     """Get list of formats based on source file name."""
     if not source_file_path:
         return []

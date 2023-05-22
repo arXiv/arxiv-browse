@@ -7,7 +7,7 @@ from typing import Optional
 
 from arxiv.identifier import Identifier
 from browse.domain.fileformat import FileFormat, dvigz, htmlgz, \
-    pdf, psgz, ps, docx, odf, targz
+    pdf, psgz, ps, docx, odf, targz, pdftex
 from browse.domain.metadata import DocMetadata
 
 from browse.services.object_store.fileobj import FileObj
@@ -25,7 +25,17 @@ the number if items is very large the was probably a problem"""
 
 
 class SourceStore():
-    """Service for source related files."""
+    """Service for source related files.
+
+    Example
+    -------
+
+        sstore = SourceStore(LocalObjectStore("/data/"))
+        aid = '2012.12345v1'
+        src = sstore.get_src(Identifier(aid))
+        print(f"Length of source for {aid} is {src.size} bytes")
+
+    """
 
     def __init__(self, objstore: ObjectStore):
         self.objstore = objstore
@@ -96,8 +106,7 @@ class SourceStore():
         elif srctype.html:
             return htmlgz
         elif srctype.pdflatex:
-            raise Exception("Not pdflatex format yet implemented")
-            #  return pdftex
+            return pdftex
         elif srctype.docx:
             return docx
         elif srctype.odf:

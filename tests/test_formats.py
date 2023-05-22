@@ -2,8 +2,7 @@
 
 from unittest import TestCase
 
-from browse.services.documents.format_codes import formats_from_source_type
-from browse.services.documents.fs_implementation.formats import formats_from_source_file_name
+from browse.services.documents.format_codes import formats_from_source_type, formats_from_source_file_name
 
 
 class TestFormats(TestCase):

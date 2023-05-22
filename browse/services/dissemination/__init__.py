@@ -14,7 +14,6 @@ from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.object_store_local import LocalObjectStore
 
 from .article_store import ArticleStore
-from .source_store import SourceStore
 
 _article_store: ArticleStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.

@@ -14,15 +14,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def formats_from_source_file_name(source_file_path: str) -> List[str]:
-    """Get list of formats based on source file name."""
-    if not source_file_path:
-        return []
-    for extension in VALID_SOURCE_EXTENSIONS:
-        if str(source_file_path).endswith(extension[0]) \
-                and isinstance(extension[1], list):
-            return extension[1]
-    return []
 
 
 def list_ancillary_files(tarball_path: str) -> List[Dict]:
