@@ -4,6 +4,8 @@
 # UIs for browse.
 
 FROM python:3.10.8-buster
+RUN apt-get update && apt-get -y upgrade
+
 ARG git_commit
 
 
