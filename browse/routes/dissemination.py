@@ -1,5 +1,5 @@
 """Routes for PDF, source and other downloads."""
-from flask import Blueprint, redirect, url_for, Response
+from flask import Blueprint, redirect, url_for, Response, render_template
 from flask_rangerequest import RangeRequest
 from werkzeug.exceptions import InternalServerError
 
@@ -47,7 +47,15 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 @blueprint.route("/format/<arxiv_id>")
 def format(arxiv_id: str) -> Response:
     """Get formats article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+
+    #TODO parse arxiv_id
+
+    data = {"arxiv_id": arxiv_id,
+            "arxiv_idv": arxiv_id
+            }
+
+    return render_template("format.html", **data), 200, {}  # type: ignore
+
 
 
 @blueprint.route("/div/<arxiv_id>")
