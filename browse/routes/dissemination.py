@@ -65,11 +65,9 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
 
     download_format_pref = request.cookies.get("xxx-ps-defaults")
     add_sciencewise_ping = False
-    data["formats"] = get_article_store().get_dissemination_formats(
-        abs_meta, download_format_pref,  add_sciencewise_ping
-    )
-    for fmt in ['src','pdf','ps','html','pdfonly','other','dvi','ps(400)','ps(600)','nops']:
-        data[fmt] = fmt in data["formats"]
+    data["formats"] = get_article_store().get_all_paper_formats(abs_meta)
+    for fmt in data["formats"]:
+        data[fmt] = True
 
     # The formats from get_dissemination_formats don't do exactly what is needed
     # for the format.html tempalte.

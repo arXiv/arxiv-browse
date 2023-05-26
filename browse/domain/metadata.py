@@ -63,7 +63,7 @@ class DocMetadata:
     """arXiv paper identifier string with version affix, e.g. 1810.12345v2."""
 
     arxiv_identifier: Identifier
-    """arXiv Identifier for this paper. Does not include version data."""
+    """arXiv Identifier for this paper."""
 
     title: str
     abstract: str
@@ -189,10 +189,16 @@ class DocMetadata:
         return max(map(lambda ve: ve.version, self.version_history))
 
 
-    def get_version(self, version:int) -> Optional[VersionEntry]:
+    def get_version(self, version:Optional[int] = None) -> Optional[VersionEntry]:
         """Gets `VersionEntry` for `version`.
 
         Returns None if version does not exist."""
+        if version is None:
+            if self.arxiv_identifier.has_version:
+                version = self.arxiv_identifier.version
+            else:
+                version = self.highest_version()
+
         if version < 1:
             raise ValueError("Version must be > 1")
         versions = list(

@@ -75,6 +75,7 @@ class SourceStore():
     def get_src_format(self,
                        docmeta: DocMetadata,
                        src_file: Optional[FileObj] = None) -> FileFormat:
+        """Gets article's source format as a `FileFormat`."""
         if src_file is None:
             src_file = self.get_src(docmeta.arxiv_identifier, docmeta)
         if src_file is None or src_file.name is None:

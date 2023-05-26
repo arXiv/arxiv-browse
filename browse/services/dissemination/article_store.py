@@ -299,6 +299,35 @@ class ArticleStore():
 
         return formats
 
+    def get_all_paper_formats(self, docmeta: DocMetadata) -> List[str]:
+        """Returns the list of all formats that the given paper can
+        be disseminated in. Takes sources format and knows what
+        transformations can be applied.
+
+        Does not include sub-formats (like types of ps) and does
+        not pay attention to user preference settings.
+        """
+        src_fmt = self.sourcestore.get_src_format(docmeta)
+        formats: List[str] = []
+        if (src_fmt == 'ps'):
+            formats.extend([src_fmt.id, 'pdf'])
+        elif (src_fmt == 'pdf' or src_fmt == 'html'):
+            formats.append(src_fmt.id)
+        elif (src_fmt == 'dvi'):
+            formats.extend([src_fmt.id, 'tex-ps', 'pdf'])
+        elif (src_fmt == 'tex'):
+            formats.extend(['dvi', 'tex-ps', 'pdf'])
+        elif (src_fmt == 'pdftex'):
+            formats.append('pdf')
+        elif (src_fmt == 'docx' or src_fmt == 'odf'):
+            formats.extend(['pdf', src_fmt.id])
+
+        ver = docmeta.get_version()
+        if ver and ver.is_withdrawn:
+            formats.append('src')
+
+        return formats
+
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
         if version.source_type.cannot_pdf:

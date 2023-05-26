@@ -29,7 +29,7 @@ gz = FileFormat("gz", "x-gzip", "application/x-eprint")
 docx = FileFormat("docx", "TODO", "TODO")
 odf = FileFormat("odf", "TODO", "TODO")
 
-fromats = {
+formats = {
     "targz":targz,
     "psgz":psgz,
     "htmlgz":htmlgz,
