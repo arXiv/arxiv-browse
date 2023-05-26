@@ -310,19 +310,13 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     return rd
 
 
+def latexml_status_for_article ()
+
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    out = {}
-    for item in items:
-        source_type = item['article'].version_history[item['article'].version - 1].source_type.code
-        has_pdflatex = re.search('D', source_type, re.IGNORECASE)
-        has_pdf_only = re.search('F', source_type, re.IGNORECASE)
-        out[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
-        # If latex source, add latexml dissemination option
-        if True: #has_pdflatex or has_pdf_only: 
-            out[item['article'].arxiv_id_v].append('latexml')
-    return out
+    return {item['article'].arxiv_id_v: metadata.get_dissemination_formats(item['article'], dl_pref)
+            for item in items}
 
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
