@@ -385,7 +385,7 @@ class DBLaTeXMLDocuments(db.Model):
     __bind__ = 'latexml'
     __tablename__ = 'arXiv_latexml_doc'
 
-    document_id = Column(Integer, primary_key=True)
+    paper_id = Column(String(20), primary_key=True)
     version = Column(Integer, primary_key=True)
     # conversion_status codes: 
     #   - 0 = in progress
