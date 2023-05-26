@@ -310,8 +310,6 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     return rd
 
 
-def latexml_status_for_article ()
-
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')

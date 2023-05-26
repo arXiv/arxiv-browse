@@ -24,6 +24,7 @@ from browse.services.database.models import (
     StatsMonthlySubmission,
     StatsMonthlyDownload,
     DataciteDois,
+    DBLaTeXMLDocuments
 )
 from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
@@ -429,3 +430,14 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
         .first()
     )
     return row.doi if row else None
+
+@db_handle_error(logger=logger, default_return_val=None) #TODO: Change Default Value
+def get_latexml_status_for_document (document_id: int, version: int = 1) -> Optional[int]:
+    """Get latexml conversion status for a given document_id and version"""
+    row = (
+        db.session.query(DBLaTeXMLDocuments)
+        .filter(DBLaTeXMLDocuments.document_id == document_id)
+        .filter(DBLaTeXMLDocuments.version == version)
+        .first()
+    )
+    return row.conversion_status if row else None

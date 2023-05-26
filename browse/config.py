@@ -231,6 +231,10 @@ If neither of those is set and TESTING is the string 'yes', then a
 SQLITE test DB is used.
 """
 
+SQLALCHEMY_BINDS = {
+    "latexml": os.environ.get('LATEXML_DB_URI')
+}
+
 if (
     os.environ.get("FLASK_ENV", False) == "production"
     and "sqlite" in SQLALCHEMY_DATABASE_URI

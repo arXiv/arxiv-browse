@@ -381,6 +381,23 @@ class DBLPDocumentAuthor(db.Model):
     document = relationship("Document")
 
 
+class DBLaTeXMLDocuments(db.Model):
+    __bind__ = 'latexml'
+    __tablename__ = 'arXiv_latexml_doc'
+
+    document_id = Column(Integer, primary_key=True)
+    version = Column(Integer, primary_key=True)
+    # conversion_status codes: 
+    #   - 0 = in progress
+    #   - 1 = success
+    #   - 2 = failure
+    conversion_status = Column(Integer, nullable=False)
+    latexml_version = Column(String(40), nullable=False)
+    tex_checksum = Column(String)
+    conversion_start_time = Column(Integer)
+    conversion_end_time = Column(Integer)
+
+
 class Category(db.Model):
     """Model for category in taxonomy."""
 
@@ -512,3 +529,5 @@ stats_hourly = Table(
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)
+
+
