@@ -1,11 +1,15 @@
 """Routes for PDF, source and other downloads."""
-from flask import Blueprint, redirect, url_for, Response, render_template
-from flask_rangerequest import RangeRequest
+from typing import Optional
+from flask import Blueprint, redirect, url_for, Response, render_template, request
 from werkzeug.exceptions import InternalServerError
 
-from arxiv.identifier import Identifier, IdentifierException
+from browse.services.documents import get_doc_service
+from browse.services.dissemination import get_article_store
+
+from arxiv.identifier import Identifier
 from browse.domain import fileformat
 from browse.controllers.dissimination import get_dissimination_resp
+from browse.controllers import check_supplied_identifier
 
 
 blueprint = Blueprint('dissemination', __name__)
@@ -44,18 +48,36 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     return get_dissimination_resp(fileformat.pdf, arxiv_id, archive)
 
 
-@blueprint.route("/format/<arxiv_id>")
-def format(arxiv_id: str) -> Response:
+@blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/format/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     """Get formats article."""
+    arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
+    arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+    redirect = check_supplied_identifier(arxiv_identifier, "dissemination.format")
+    if redirect:
+        return redirect  # type: ignore
 
-    #TODO parse arxiv_id
+    abs_meta = get_doc_service().get_abs(arxiv_id)
+    data = {"arxiv_id": arxiv_identifier.id,
+            "arxiv_idv": arxiv_identifier.idv,
+            "abs_meta": abs_meta}
 
-    data = {"arxiv_id": arxiv_id,
-            "arxiv_idv": arxiv_id
-            }
+    download_format_pref = request.cookies.get("xxx-ps-defaults")
+    add_sciencewise_ping = False
+    data["formats"] = get_article_store().get_dissemination_formats(
+        abs_meta, download_format_pref,  add_sciencewise_ping
+    )
+    for fmt in ['src','pdf','ps','html','pdfonly','other','dvi','ps(400)','ps(600)','nops']:
+        data[fmt] = fmt in data["formats"]
+
+    # The formats from get_dissemination_formats don't do exactly what is needed
+    # for the format.html tempalte.
+    # TODO what about source?
+    # TODO how to disginguish the different ps?
+    # TODO DOCX doesn't seem like the url_for in the tempalte will work correctly with the .docx?
 
     return render_template("format.html", **data), 200, {}  # type: ignore
-
 
 
 @blueprint.route("/div/<arxiv_id>")

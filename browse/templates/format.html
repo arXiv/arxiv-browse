@@ -8,6 +8,123 @@
 {% endblock %}
 
 {% block content %}
-<h1>Format selector for {{arxiv_idv}}</h1>
-<h1> TODO </h1>
+<h1>Format selector for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}">{{arxiv_idv}}</a></h1>
+<p><b>debug</b> formats {{formats}}</p>
+<p><b>Set cookies</b>: if your browser supports cookies you can <a href="{{url_for('browse.cookies')}}">configure your default format</a>.</p>
+
+<dl>
+
+{% if pdf %}
+<dt><b>PDF</b></dt>
+<dd>
+<form action="{{url_for('dissemination.pdf', arxiv_id=arxiv_idv)}}" method="get">
+Now includes fonts, see our <a href="/help/pdf">PDF help</a>.
+<input type="submit" value="Download PDF" />
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if ps %}
+<dt><b>PostScript using Bitmapped Fonts</b></dt>
+
+<dd><b>Select resolution:</b>
+
+<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
+Use <select name="dpi">
+  <option selected="selected">600</option>
+  <option>300</option>
+</select>
+
+<input type="hidden" name="font" value="bitmapped" />
+dpi Bitmapped Fonts:
+<input type="submit" value="Download PostScript" />
+</form>
+
+Note: a resolution other than the default 600dpi will
+occasionally require new fonts to be created.  This can take a while
+<br /><br />
+</dd>
+
+<dt><b>PostScript using Type I Fonts</b></dt>
+<dd>
+<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
+Now includes fonts, see our <a href="/help/pstypeI.html">Type I help</a>.
+<input type="hidden" name="fname" value="cm" /><!-- remove this when only cm used -->
+<input type="hidden" name="font" value="TypeI" />
+<input type="submit" value="Download PostScript" />
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if ps %}
+<dt><b>Author supplied PostScript</b></dt>
+<dd>
+<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}})" method="get">
+Delivered via an additional HTML page if there are multiple files,
+otherwise as a <b>gzipped PostScript</b> (.ps.gz) file.
+<input type="submit" value="Download PostScript" />
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if dvi %}
+<dt><b>DVI</b></dt>
+<dd>
+<form action="{{url_for('dissemination.dvi', arxiv_id=arxiv_idv)}}" method="get">
+Delivered as a <b>gzipped DVI</b> (.dvi.gz) file or as a <b>gzipped tar</b>
+(.tar.gz) file if there are figures to include.
+<input type="submit" value="Download DVI" />
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if html %}
+<dt><b>HTML</b></dt>
+<dd>
+<form action="{{url_for('dissemination.html', arxiv_id=arxiv_idv)}}" method="get">
+<input type="submit" value="Download HTML" />
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if docx %}
+<dt><b>DOCX</b></dt>
+<dd>
+<form action="/e-print/$id_str.docx" method="get">
+<input type="submit" value="Download DOCX" /><br />
+Requires Word 2007 or earlier versions of Word with
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=941B3470-3AE9-4AEE-8F43-C6BB74CD1466&displaylang=en">Microsoft
+Office Compatibility Pack for Word, Excel, and PowerPoint 2007 File Formats</a>
+to view/edit.
+</form>
+<br />
+</dd>
+{% endif %}
+
+{% if src %}
+<dt><b>Source</b></dt>
+<dd>
+Delivered as a <b>gzipped tar</b> (.tar.gz) file if there are multiple files,
+otherwise as a <b>PDF</b> file, or a <b>gzipped TeX, DVI, PostScript or HTML</b>
+(.gz, .dvi.gz, .ps.gz or .html.gz) file depending on submission format.
+[ <a href="{{url_for('src.src', arxiv_id=arxiv_idv)}}">Download source</a> ]
+<br />
+</dd>
+{% endif %}
+
+</dl>
+
+<p><b>Note:</b> Many of the formats above are served gzipped
+(<code>Content-Encoding: x-gzip</code>). Your browser may silently uncompress
+after downloading so the files you see saved may appear uncompressed.</p>
+
+<p>Please report any problems to <a href="/help/contact">arXiv admins</a>, being
+certain to state the paper identifier, explicit options you've selected and that
+you're using $THIS_SITE.</p>
+
 {% endblock %}
