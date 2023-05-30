@@ -232,8 +232,10 @@ If neither of those is set and TESTING is the string 'yes', then a
 SQLITE test DB is used.
 """
 
+""" THIS IS FOR DEV ONLY!!! """
 SQLALCHEMY_BINDS = {
-    "latexml": os.environ.get('LATEXML_DB_URI') or get_secret('arxiv-development', 'latexml_db_uri', '8')
+    # "latexml": os.environ.get('LATEXML_DB_URI') or get_secret('arxiv-development', 'latexml_db_uri', '8')
+    "latexml": get_secret('arxiv-development', 'latexml_db_uri', '8')
 }
 
 if (
