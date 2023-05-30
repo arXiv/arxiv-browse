@@ -5,16 +5,16 @@
 
 <p>Our <b>automated</b> source to PDF conversion system
   has <b>failed</b> to produce PDF for the paper:
-  <a href="/abs/{{arxiv_id}}">{{arxiv_id}}</a>.</p>
+  <a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.ids)}}">{{arxiv_id.ids}}</a>.</p>
 
 <p>The submitter supplied incomplete or corrupted files to arXiv and
   we cannot easily amend these. This failure is permanent unless the
   author replaces. The reason for failure is recorded as:<br />
   <b>{{msg}}</b></p>
 
-<p>Return to the<a href="/abs/{{arxiv_id}}">abstract</a> for an
+<p>Return to the<a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.ids)}}">abstract</a> for an
   alternative link to the
-  <a href="/e-print/{{arxiv_id}}">source</a>, or to find an
+  <a href="{{url_for('src.e_print', arxiv_id=arxiv_id.ids)}}">source</a>, or to find an
   email address to contact the author.</p>
 
 <p>For help regarding the automated source to PDF system, please

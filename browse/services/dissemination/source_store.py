@@ -7,7 +7,7 @@ from typing import Optional
 
 from arxiv.identifier import Identifier
 from browse.domain.fileformat import FileFormat, dvigz, htmlgz, \
-    pdf, psgz, ps, docx, odf, targz, pdftex
+    pdf, psgz, ps, docx, odf, targz, pdftex, tex
 from browse.domain.metadata import DocMetadata
 
 from browse.services.object_store.fileobj import FileObj
@@ -115,7 +115,7 @@ class SourceStore():
         elif srctype.pdf_only:
             return pdf
         else:
-            return targz  # this is tex in a tgz file
+            return tex  # Default is tex in a tgz file
 
     # def src_includes_ancillary(self):
     #     pass

@@ -19,6 +19,7 @@ class FileFormat():
 
 
 targz = FileFormat("targz", "x-gzip", "application/x-eprint-tar")
+tex = FileFormat("tex", "x-gzip",  "application/x-eprint-tar")
 psgz = FileFormat("psgz", "x-gzip", "application/postscript")
 dvigz = FileFormat("psgz", "x-gzip", "application/x-dvi")
 htmlgz = FileFormat("htmlgz", "x-gzip", "text/html")
@@ -30,12 +31,13 @@ docx = FileFormat("docx", "TODO", "TODO")
 odf = FileFormat("odf", "TODO", "TODO")
 
 formats = {
-    "targz":targz,
-    "psgz":psgz,
-    "htmlgz":htmlgz,
-    "pdf":pdf,
-    "pdftex":pdftex,
-    "gz":gz,
-    "docx":docx,
-    "odf":odf,
+    "targz": targz,
+    "tex": tex,
+    "psgz": psgz,
+    "htmlgz": htmlgz,
+    "pdf": pdf,
+    "pdftex": pdftex,
+    "gz": gz,
+    "docx": docx,
+    "odf": odf,
     }

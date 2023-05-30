@@ -307,23 +307,23 @@ class ArticleStore():
         Does not include sub-formats (like types of ps) and does
         not pay attention to user preference settings.
         """
-        src_fmt = self.sourcestore.get_src_format(docmeta)
+        src_fmt: str = self.sourcestore.get_src_format(docmeta).id
         formats: List[str] = []
         if (src_fmt == 'ps'):
-            formats.extend([src_fmt.id, 'pdf'])
+            formats.extend([src_fmt, 'pdf'])
         elif (src_fmt == 'pdf' or src_fmt == 'html'):
-            formats.append(src_fmt.id)
+            formats.append(src_fmt)
         elif (src_fmt == 'dvi'):
-            formats.extend([src_fmt.id, 'tex-ps', 'pdf'])
+            formats.extend([src_fmt, 'tex-ps', 'pdf'])
         elif (src_fmt == 'tex'):
             formats.extend(['dvi', 'tex-ps', 'pdf'])
         elif (src_fmt == 'pdftex'):
             formats.append('pdf')
         elif (src_fmt == 'docx' or src_fmt == 'odf'):
-            formats.extend(['pdf', src_fmt.id])
+            formats.extend(['pdf', src_fmt])
 
         ver = docmeta.get_version()
-        if ver and ver.is_withdrawn:
+        if ver and not ver.is_withdrawn:
             formats.append('src')
 
         return formats
