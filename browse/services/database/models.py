@@ -382,7 +382,7 @@ class DBLPDocumentAuthor(db.Model):
 
 
 class DBLaTeXMLDocuments(db.Model):
-    __bind__key__ = 'latexml'
+    __bind_key__ = 'latexml'
     __tablename__ = 'arXiv_latexml_doc'
 
     paper_id = Column(String(20), primary_key=True)
