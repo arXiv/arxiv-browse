@@ -234,9 +234,7 @@ SQLITE test DB is used.
 
 """ THIS IS FOR DEV ONLY!!! """
 SQLALCHEMY_BINDS = {
-    # "latexml": os.environ.get('LATEXML_DB_URI') or get_secret('arxiv-development', 'latexml_db_uri', '8')
-    # "latexml": get_secret('arxiv-development', 'latexml_db_uri', '8')
-    "latexml": "postgresql+pg8000://localhost/latemxl.db"
+    "latexml": os.environ.get('LATEXML_DB_URI') or get_secret('arxiv-development', 'latexml_db_uri', '8')
 }
 
 if (
