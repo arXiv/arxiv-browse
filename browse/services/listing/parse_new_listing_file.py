@@ -176,10 +176,15 @@ def _to_item(data: str, ltype: Literal['new', 'cross', 'rep']) -> ListingItem:
                             '')
         return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc)  # type: ignore
     else:
+        data = _strip_extra(data)
         doc = parse_abs(data,
                         #TODO bogus time but don't think it is used in listing page.
                         datetime.now())
         return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc) # type: ignore
 
 
+_stripex_re = re.compile(r"\\\\ \( https.*kb.*\)")
 
+def _strip_extra(data: str) -> str:
+    """Srips the extra "(https://arxiv.org/abs/1234.12345,  234332kb)" """
+    return _stripex_re.sub('', data)

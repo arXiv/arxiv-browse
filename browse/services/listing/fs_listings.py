@@ -89,7 +89,7 @@ class FsListingFilesService(ListingService):
             elif len(str(year)) <= 2:
                 listingFilePath = f'{listingRoot}{year:02d}{month:02d}'
             else:
-                raise BadRequest("Bad year value {year}")
+                raise BadRequest(f"Bad year value: year: {year} month: {month:02d}")
         else:
             listingFilePath = f'{listingRoot}{fileMode}{categorySuffix}'
 

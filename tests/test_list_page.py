@@ -625,3 +625,16 @@ def test_astro_ph_recent(client_with_test_fs):
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "67 entries" in text
+
+
+def test_abs_in_new_listing(client_with_test_fs):
+    """/list/new should have the abstracts"""
+    client = client_with_test_fs
+    rv = client.get("/list/astro-ph/new")
+    rv.status_code == 200
+    text = rv.text
+    assert "We present a search for gas-containing dwarf galaxies" in text
+    assert "is likely at play." in text
+    # Test that cruft at end of abstract is not displayed
+    assert "https://arxiv.org/abs/2303.00763" not in text
+    assert "3197kb" not in text
