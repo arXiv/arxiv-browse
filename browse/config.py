@@ -7,7 +7,6 @@ import os
 import warnings
 import dateutil.parser
 from datetime import datetime, timedelta
-from util import get_secret
 
 APP_VERSION = "0.3.4"
 
@@ -234,7 +233,7 @@ SQLITE test DB is used.
 
 """ THIS IS FOR DEV ONLY!!! """
 SQLALCHEMY_BINDS = {
-    "latexml": os.environ.get('LATEXML_DB_URI') or get_secret('arxiv-development', 'latexml_db_uri', '8')
+    "latexml": os.environ.get('LATEXML_DB_URI')
 }
 
 if (
