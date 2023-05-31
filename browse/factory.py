@@ -43,6 +43,8 @@ def create_web_app() -> Flask:
     app.register_blueprint(src.blueprint)
     s3.init_app(app)
 
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
     if not app.jinja_env.globals:
         app.jinja_env.globals = {}
 
