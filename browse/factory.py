@@ -14,10 +14,15 @@ from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 from arxiv.users.auth import Auth
 
-s3 = FlaskS3()
+import logging
+import os
 
+s3 = FlaskS3()
+logger = logging.getLogger(__name__)
 
 def create_web_app() -> Flask:
+
+    logger.debug("LATEXML_DB_URI: " + os.environ.get('LATEXML_DB_URI'))
     """Initialize an instance of the browse web application."""
     app = Flask('browse', static_url_path=f'/static/browse/{APP_VERSION}')
     app.config.from_pyfile('config.py')
