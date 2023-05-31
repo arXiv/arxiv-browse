@@ -49,7 +49,6 @@ coverage = "*"
 coveralls = "*"
 sphinx = "*"
 sphinx-autodoc-typehints = "*"
-pg8000 = "*"
 
 [requires]
 python_version = "3.6"
