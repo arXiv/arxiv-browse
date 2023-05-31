@@ -14,15 +14,12 @@ from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 from arxiv.users.auth import Auth
 
-import logging
 import os
 
 s3 = FlaskS3()
-logger = logging.getLogger(__name__)
 
 def create_web_app() -> Flask:
 
-    logger.debug("LATEXML_DB_URI: " + os.environ.get('LATEXML_DB_URI'))
     """Initialize an instance of the browse web application."""
     app = Flask('browse', static_url_path=f'/static/browse/{APP_VERSION}')
     app.config.from_pyfile('config.py')
@@ -57,5 +54,8 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
     app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
+        
+    app.logger.debug("LATEXML_DB_URI: " + os.environ.get('LATEXML_DB_URI'))
+
 
     return app
