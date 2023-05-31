@@ -78,7 +78,8 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     return render_template("format.html", **data), 200, {}  # type: ignore
 
 
-@blueprint.route("/dvi/<arxiv_id>")
+@blueprint.route("/dvi/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/dvi/<string:arxiv_id>", methods=['GET', 'HEAD'])
 def dvi(arxiv_id: str) -> Response:
     """Get DVI for article."""
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
