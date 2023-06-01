@@ -436,14 +436,7 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
     row = (
-        scoped_session(
-            db.create_session(
-                options={
-                    'bind': db.get_engine(bind='latexml')
-                }
-            )
-        )
-        .query(DBLaTeXMLDocuments)
+        db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.version == version)
         .first()
