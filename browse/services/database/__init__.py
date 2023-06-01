@@ -441,7 +441,7 @@ def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optiona
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
     )
-    logger.warning('ROW CONVERSION STATUS FOR ' + paper_id + ': ' + str(row.conversion_status))
     if row:
+        logger.warning('ROW CONVERSION STATUS FOR ' + paper_id + ': ' + str(row.conversion_status))
         return row.conversion_status
     return None
