@@ -438,7 +438,7 @@ def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optiona
     row = (
         db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
-        .filter(DBLaTeXMLDocuments.version == version)
+        .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
     )
     logger.debug('ROW CONVERSION STATUS FOR ' + paper_id + ': ' + str(row.conversion_status))
