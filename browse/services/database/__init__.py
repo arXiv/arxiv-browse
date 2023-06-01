@@ -5,6 +5,7 @@ from datetime import date, datetime
 from dateutil.tz import tzutc, gettz
 from typing import Mapping, List, Optional, Any, Callable, Tuple
 from sqlalchemy import not_, desc, asc
+from sqlalchemy.orm import scoped_session
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
@@ -435,10 +436,12 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
     row = (
-        db.create_session(
-            options={
-                'bind': db.get_engine(bind='latexml')
-            }
+        scoped_session(
+            db.create_session(
+                options={
+                    'bind': db.get_engine(bind='latexml')
+                }
+            )
         )
         .query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
