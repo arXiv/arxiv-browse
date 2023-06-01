@@ -71,9 +71,11 @@
     {%- endif -%}
   </li>
     {%- endfor -%}
-    {%- if latexml_url -%}
-    <a href="{{latexml_url}}" class="abs-button" id="latexml-download-link">HTML</a>
-    {%- endif -%}
+    <!-- {%- if latexml_url -%} -->
+    <li>
+      <a href="{{latexml_url}}" class="abs-button" id="latexml-download-link">HTML</a>
+    </li>
+    <!-- {%- endif -%} -->
   {%- endif -%}
 </ul>
 {%- endmacro -%}
