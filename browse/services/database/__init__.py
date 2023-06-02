@@ -303,7 +303,7 @@ def get_sequential_id(
 
     query = query.filter(
         (Document.paper_id.like(like_id) | Document.paper_id.like(next_q))
-    )wsgi.
+    )
 
     if is_next:
         query = query.filter(Document.paper_id > paper_id.id).order_by(
@@ -435,7 +435,7 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 @db_handle_error(logger=logger, default_return_val=None) #TODO: Change Default Value
 def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
-    logger.warning(f'EXECUTING get_latexml_status_for_document ON {paper_id}v{version}')
+    logger.warning(f'EXECUTING get_latexml_status_for_document ON {paper_id}v')
     row = (
         db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
