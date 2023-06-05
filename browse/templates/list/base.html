@@ -140,8 +140,7 @@
     , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
   {%- endif -%}
   {%- if 'html' in downloads -%}
-    , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="html-{{id}}" 
-         aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
+    , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>

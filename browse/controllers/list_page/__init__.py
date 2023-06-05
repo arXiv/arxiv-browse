@@ -319,6 +319,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
         dls[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
         latexml_url = get_latexml_url(item['article'].identifier)
         if latexml_url is not None:
+            logger.warning('ADDED HTML FOR ' + str(item['article'].arxiv_id_v))
             dls[item['article'].arxiv_id_v].append('html')
     return dls
 
