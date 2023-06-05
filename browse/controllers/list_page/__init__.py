@@ -235,6 +235,7 @@ def get_listing(subject_or_category: str,
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
+    logger.warning('Running dl_for_articles')
     response_data['downloads'] = dl_for_articles(listings)
 
     response_data.update({
