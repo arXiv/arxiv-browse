@@ -441,7 +441,7 @@ def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dic
     }
 
 def _get_latexml_url (identifier: Identifier) -> Optional[str]:
-    LATEXML_URI_BASE = "https://services.dev.arxiv.org/conversion/download?arxiv_id="
+    LATEXML_URI_BASE = "https://services.dev.arxiv.org/conversion/download/paper?arxiv_id="
     if identifier.has_version:
         status = get_latexml_status_for_document(identifier.id, identifier.version)
     else:
