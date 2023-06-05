@@ -54,6 +54,7 @@ from browse.services.util.external_refs_cits import (
     get_computed_dblp_listing_path,
     get_dblp_bibtex_path,
 )
+from browse.services.util.latexml import get_latexml_url
 from browse.services.document.config.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -122,7 +123,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             archive=abs_meta.primary_archive.id,
             query=author_query,
         )
-        response_data['latexml_url'] = _get_latexml_url(arxiv_identifier)
+        response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
 
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
@@ -439,11 +440,3 @@ def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dic
         "listing_url": urljoin(DBLP_BASE_URL, listing_path),
         "author_list": author_list,
     }
-
-def _get_latexml_url (identifier: Identifier) -> Optional[str]:
-    LATEXML_URI_BASE = "https://services.dev.arxiv.org/conversion/download/paper?arxiv_id="
-    if identifier.has_version:
-        status = get_latexml_status_for_document(identifier.id, identifier.version)
-    else:
-        status = get_latexml_status_for_document(identifier.id)
-    return (LATEXML_URI_BASE + identifier.idv) if status == 1 else None
