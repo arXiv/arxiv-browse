@@ -142,6 +142,7 @@
   {%- if 'html' in downloads -%}
     , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
+    , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="sanity-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">sanity</a>
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
   {%- endif -%}
