@@ -6,7 +6,6 @@
 <div class="header-breadcrumbs">
   <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
   <a href="{{url_for('.list_articles', context=list_ctx_id, subcontext='recent')}}">{{list_ctx_id}}</a>
-  <div>ADDING ANOTHER SANITY CHECK</div>
   </div>
 {% endblock %}
 
@@ -61,7 +60,6 @@
       </a>
       {{ type_info( item ) }}
       {{ dl_links( article ) }}
-      <a name='sanityy'>Sanity Check!</a>
     </dt>
     <dd>
       <div class='meta'>
@@ -144,7 +142,7 @@
   {%- if 'html' in downloads -%}
     , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
-    , <a href="https://services.dev.arxiv.org/conversion/download/paper?arxiv_id={{id}}" title="View HTML" id="sanity-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">sanity</a>
+  , <a id="sanity">Sanity</a>
   {%- if 'other' in downloads -%}
     , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
   {%- endif -%}

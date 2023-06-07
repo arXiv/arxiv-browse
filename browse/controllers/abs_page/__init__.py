@@ -124,6 +124,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             query=author_query,
         )
         response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
+        logger.warning(f'LATEXML_URL: {response_data["latexml_url"]}')
 
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")

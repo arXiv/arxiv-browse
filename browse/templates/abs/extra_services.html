@@ -58,7 +58,7 @@
     {%- elif format == 'html' -%}
     <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
-    <a href="{{url_for('.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other formats</a>
+    <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
     {%- elif format == 'nops' -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
     {%- elif format == 'sciencewise_pdf' -%}
@@ -72,9 +72,10 @@
   </li>
     {%- endfor -%}
     {%- if latexml_url -%}
-    <li>
-      <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML</a>
-    </li>
+  <li>
+    <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML</a>
+    <a href="" class=“beta-link”>(Beta)</a>
+  </li>
     {%- endif -%}
   {%- endif -%}
 </ul>
