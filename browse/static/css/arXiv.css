@@ -655,6 +655,31 @@ footer .sorry-app-links .a11y-main-link {
     width: 88%;
   }
 }
+.banner-minimal {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.banner-minimal a {
+  -webkit-box-shadow: 0px 3px 6px 0px #000000);
+  -moz-box-shadow: 0px 3px 6px 0px #000000;
+  box-shadow: 0px 3px 6px 0px #000000;
+  display: inline-block;
+  padding: .25em 1em;
+  border-radius: .3em;
+  font-size: 2em;
+  background-color: #1c1a17;
+  border: 2px solid #6b6459;;
+  color: #fb595a;
+  text-decoration: none;
+  transition: all .5s ease-in-out;
+}
+.banner-minimal a:hover {
+  background-color: #;
+  border-color: #dbc6c6;
+  color: #f9f7f7;
+}
 /* special header banner, dark override */
 .slider-wrapper.bps-banner.dark {
   background-color: black;
