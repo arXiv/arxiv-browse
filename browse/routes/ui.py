@@ -113,6 +113,7 @@ def before_request() -> None:
         except Exception as ex:
             logger.debug("problem creating hashed_user_id: %s", ex)
 
+
 @blueprint.after_request
 def apply_response_headers(response: Response) -> Response:
     """Apply response headers to all responses."""
