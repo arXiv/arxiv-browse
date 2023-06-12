@@ -12,11 +12,11 @@ from dateutil import parser
 from dateutil.tz import tzutc
 
 from flask import url_for
-from flask import request
+from flask import request, current_app
 from werkzeug.exceptions import InternalServerError
 
 from arxiv import status, taxonomy
-from arxiv.base import logging
+# from arxiv.base import logging
 from browse.controllers import check_supplied_identifier
 from browse.domain.metadata import DocMetadata
 from browse.domain.category import Category
@@ -60,6 +60,7 @@ from browse.services.document.config.external_refs_cits import (
     DBLP_BIBTEX_PATH,
     DBLP_AUTHOR_SEARCH_PATH,
 )
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +126,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         )
         response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
         logger.warning(f'LATEXML_URL: {response_data["latexml_url"]}')
-
+        logger.warning(f'LATEXMLDB_URI: {current_app.config["SQLALCHEMY_BINDS"]["latexml"]}')
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)

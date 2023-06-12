@@ -234,7 +234,7 @@ SQLITE test DB is used.
 """ THIS IS FOR DEV ONLY!!! """
 SQLALCHEMY_BINDS = {
     "latexml": os.environ.get('LATEXML_DB_URI') or \
-        ('sqlite://' if TESTING or DEBUG else None)
+        ('sqlite:///../tests/data/latexmldb.db' if TESTING or DEBUG else None)
 }
 
 if (

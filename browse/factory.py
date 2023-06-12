@@ -7,12 +7,14 @@ from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from browse.config import APP_VERSION
 from browse.routes import ui
 from browse.services.database import models
+from browse.services.database.populate_test_latexmldb import populate_test_latexmldb
 from browse.services.util.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
 from arxiv.base.config import BASE_SERVER
 from arxiv.base import Base
 from arxiv.users.auth import Auth
+
 
 import os
 
@@ -31,6 +33,10 @@ def create_web_app() -> Flask:
         ('search_archive', '/search/<archive>', BASE_SERVER))
 
     models.init_app(app)  # type: ignore
+    if app.config.get('DEBUG'):
+        with app.app_context():
+            populate_test_latexmldb()
+
     Base(app)
     Auth(app)
     app.register_blueprint(ui.blueprint)

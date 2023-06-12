@@ -26,7 +26,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
 from arxiv.base.globals import get_application_config
-from .populate_test_latexmldb import populate_test_latexmldb
 
 db: SQLAlchemy = SQLAlchemy()
 
@@ -530,7 +529,4 @@ stats_hourly = Table(
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
     db.init_app(app)
-    if app.config.get('DEBUG'):
-        populate_test_latexmldb(db)
-
 

@@ -235,7 +235,7 @@ def get_listing(subject_or_category: str,
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
-    logger.warning('Running dl_for_articles')
+    logger.debug('Running dl_for_articles')
     response_data['downloads'] = dl_for_articles(listings)
 
     response_data.update({
@@ -320,7 +320,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
         dls[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
         latexml_url = get_latexml_url(item['article'].arxiv_identifier)
         if latexml_url is not None:
-            logger.warning('ADDED HTML FOR ' + str(item['article'].arxiv_id_v))
+            logger.debug('ADDED HTML FOR ' + str(item['article'].arxiv_id_v))
             dls[item['article'].arxiv_id_v].append('html')
     return dls
 
