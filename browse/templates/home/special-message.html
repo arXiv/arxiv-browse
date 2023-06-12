@@ -1,20 +1,21 @@
 {#- Special messages appear in a column to the side of the website intro/news section,
   each in their own column. Always apply the style "message-special" to the column.
   You can also apply the style "dark" to override the red styles and add a message with a black background instead.
-  There should preferably be just one, and never more than two. -#}
+  There should can be just one, never more than two. -#}
+
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
 <div class="message-special dark column">
   <span class="label">arXiv News</span>
   <h2>TeX Live 2023 Upgrade</h2>
-  <p>Beginning on Monday May 22, 2023 all new submissions and replacements will process under TeX Live 2023.</p>
-  <p><a href="https://blog.arxiv.org/2023/05/12/tex-live-2023-upgrade-to-occur-may-22nd-2023/">Learn More</a></p>
+  <p>Beginning on Monday May 22, 2023 all new submissions and replacements will process under TeX Live 2023. <a href="https://blog.arxiv.org/2023/05/12/tex-live-2023-upgrade-to-occur-may-22nd-2023/">Learn More</a></p>
+  <p><a href="https://blog.arxiv.org/">All News</a></p>
 </div>
 
 {%- if rd_int >= 202305010100 and rd_int <= 202308010100 -%}
 <div class="message-special column">
   <span class="label">arXiv is hiring!</span>
-  <p>We are looking for a community engagement manager.</p>
-  <p><a href="https://cornell.wd1.myworkdayjobs.com/en-US/CornellCareerPage/?q=arxiv">View open roles</a></p>
+  <p>We are looking for a community engagement manager, several software developers, and a project manager.</p>
+  <p><a href="https://info.arxiv.org/hiring/">View open roles</a></p>
 </div>
 {%- endif -%}
