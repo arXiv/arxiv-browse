@@ -82,16 +82,19 @@ def src_resp_fn(format: FileFormat,
     the bytestream and the file will be saved as .tar.
     """
     if file.name.endswith(".tar.gz"):  # Nothing extra to do, already .tar.gz
-        outstream = file
+        resp = RangeRequest(file.open('rb'), etag=_last_modified(file),
+                           last_modified=file.updated, size=file.size).make_response()
     elif file.name.endswith(".gz"):  # need to unzip the single file gz and then tar
-        outstream = tar_stream_gen([UngzippedFileObj(file)])  # type: ignore
+        outstream = tar_stream_gen([UngzippedFileObj(file)])
+        resp = make_response(outstream, 200)
     else:  # tar single flie like .pdf
-        outstream = tar_stream_gen([file])   # type: ignore
+        outstream = tar_stream_gen([file])
+        resp = make_response(outstream, 200)
 
     archive = f"{arxiv_id.archive}-" if arxiv_id.is_old_id else ""
     filename = f"arXiv-{archive}{arxiv_id.filename}v{version.version}.tar"
 
-    resp = make_response(outstream, 200)
+
     resp.headers["Content-Encoding"] = "x-gzip"  # tar_stream_gen() gzips
     resp.headers["Content-Type"] = "application/x-eprint-tar"
     resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
@@ -99,7 +102,7 @@ def src_resp_fn(format: FileFormat,
     _add_time_headers(resp, file, arxiv_id)
     resp.headers["ETag"] = _last_modified(file)
 
-    return resp
+    return resp  # type: ignore
 
 
 def get_src_resp(arxiv_id_str: str,

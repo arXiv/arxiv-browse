@@ -18,7 +18,7 @@
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
 </ul><div id="long-anc-list"><ul>
     {% endif %}
-  <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id_v,file_name=anc_file['name'])}}" class="anc-file-name">{{ anc_file['name'] }}</a></li>
+  <li><a href="{{url_for('src.anc',arxiv_id=abs_meta.arxiv_id_v,file_path=anc_file['name'])}}" class="anc-file-name">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
     {%- set num_files_not_shown = anc_file_list|length - cutoff + 1 -%}
@@ -202,7 +202,7 @@
 {%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
-    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="{{url_for('src.anc_listing', arxiv_id=abs_meta.arxiv_id_v)}}">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}

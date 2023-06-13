@@ -3,6 +3,7 @@ import logging
 from typing import Optional
 from email.utils import format_datetime
 
+from werkzeug.exceptions import InternalServerError
 from flask import Blueprint, abort, render_template, Response
 from flask_rangerequest import RangeRequest
 
@@ -73,17 +74,17 @@ def e_print(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     return get_dissimination_resp("e-print", arxiv_id, archive)
 
 
-@blueprint.route("/src/<string:arxiv_id>/anc", strict_slashes=False)
-@blueprint.route("/src/<string:archive>/<int:arxiv_id>/anc", strict_slashes=False)
+@blueprint.route("/anc/<string:arxiv_id>", strict_slashes=False)
+@blueprint.route("/anc/<string:archive>/<int:arxiv_id>", strict_slashes=False)
 def anc_listing(arxiv_id: str, archive:str='arxiv'):  # type: ignore
     """Show html page of ancillary files for arxiv_id."""
     # ex https://arxiv.org/src/1911.08265v1/anc
-    pass     # TODO
+    raise InternalServerError(f"Not yet implemented")
 
 
-@blueprint.route("/src/<string:arxiv_id>/<path:anc_path>")
-@blueprint.route("/src/<string:archive>/<int:arxiv_id>/<path:anc_path>")
-def anc(arxiv_id: str, anc_path: str, archive:Optional[str]=None):  # type: ignore
+@blueprint.route("/anc/<string:arxiv_id>/<path:file_path>")
+@blueprint.route("/anc/<string:archive>/<int:arxiv_id>/<path:file_path>")
+def anc(arxiv_id: str, file_path: str, archive:Optional[str]=None):  # type: ignore
     """Serves ancillary files.
 
     Returns just the specified file within the source package. Has
@@ -91,4 +92,4 @@ def anc(arxiv_id: str, anc_path: str, archive:Optional[str]=None):  # type: igno
     ancillary files such as /src/anc/some_file
     """
     # ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
-    pass     # TODO
+    raise InternalServerError(f"Not yet implemented")
