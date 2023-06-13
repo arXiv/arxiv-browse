@@ -638,3 +638,11 @@ def test_abs_in_new_listing(client_with_test_fs):
     # Test that cruft at end of abstract is not displayed
     assert "https://arxiv.org/abs/2303.00763" not in text
     assert "3197kb" not in text
+
+
+def test_math_ph_9701(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get("/list/math-ph/199701")
+    rv.status_code == 200
+    text = rv.text
+    assert "On Exact Solutions" in text

@@ -69,8 +69,9 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
 
     download_format_pref = request.cookies.get("xxx-ps-defaults")
     add_sciencewise_ping = False
-    data["formats"] = get_article_store().get_all_paper_formats(abs_meta)
-    for fmt in data["formats"]:
+    formats = get_article_store().get_all_paper_formats(abs_meta)
+    data["formats"] = formats
+    for fmt in formats:
         data[fmt] = True
 
     # The formats from get_dissemination_formats don't do exactly what is needed

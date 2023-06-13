@@ -256,7 +256,7 @@ def get_listing(subject_or_category: str,
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
                                searchtype='author',
-                               archive=archive,
+                               archive=list_ctx_in_archive,
                                query=query))
 
     response_data['url_for_author_search'] = author_query
