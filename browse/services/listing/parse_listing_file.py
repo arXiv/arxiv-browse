@@ -257,7 +257,7 @@ RE_REP_COMPONENTS = re.compile(
     r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
 
 RE_ARXIV_ID_FROM_PREHISTORY = re.compile(
-    r'(Paper:\s+|Paper \(\*cross-listing\*\):|arXiv:)(?P<arxiv_id>\S+)')
+    r'(Paper:\s+|Paper \(\*cross-listing\*\):\s+|arXiv:)(?P<arxiv_id>\S+)')
 
 RE_FIELDS=re.compile(r"^(?P<field_name>\S*):\s+(?P<value>.*?)(?=\n\S)", re.S|re.M)
 RE_CROSS = re.compile(r"\(\*cross-listing\*\)")
@@ -285,10 +285,10 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
     DOI: 10.1093/mnras/stac3676
     License: http://creativecommons.org/licenses/by/4.0/
     """
-    neworcross='new'    
+    neworcross='new'
     raw = "\n".join(item_lines)
     prehistory, misc_fields = re.split(r'\n\n', raw)
-    
+
     idm = re.search(RE_ARXIV_ID_FROM_PREHISTORY, prehistory)
     if idm:
         id = idm.group('arxiv_id')

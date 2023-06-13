@@ -646,3 +646,4 @@ def test_math_ph_9701(client_with_test_fs):
     rv.status_code == 200
     text = rv.text
     assert "On Exact Solutions" in text
+    assert "unknown-id" not in text
