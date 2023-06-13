@@ -1,12 +1,12 @@
 """Routes for PDF, source and other downloads."""
 from typing import Optional
 from flask import Blueprint, redirect, url_for, Response, render_template, request
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
 
-from arxiv.identifier import Identifier
+from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
 from browse.controllers.dissimination import get_dissimination_resp
 from browse.controllers import check_supplied_identifier
@@ -53,7 +53,11 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     """Get formats article."""
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
-    arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+    try:
+        arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+    except IdentifierException:
+        raise BadRequest("Bad paper identifier")
+
     redirect = check_supplied_identifier(arxiv_identifier, "dissemination.format")
     if redirect:
         return redirect  # type: ignore
