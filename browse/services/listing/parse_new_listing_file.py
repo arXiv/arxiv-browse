@@ -118,12 +118,12 @@ def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
             submit_start_date = datetime.strptime(res.group(1), '%a %d %b %y ')
             submit_end_date = datetime.strptime(res.group(2), '%a %d %b %y')
 
-
-    # advance to "------" rule just before first listing
-    while( not (lines[0].startswith('-------') and lines[1] == r'\\')):
-        lines.pop(0)
-
-    lines.pop(0) # pop off the '-----' rule
+    # advance to "\\" just before first listing
+    rules_to_pop = 5
+    while( rules_to_pop ):
+        line = lines.pop(0)
+        if line.startswith('--------'):
+            rules_to_pop = rules_to_pop - 1
 
     # Lines how has the new listings, then a rule, the cross listings, then a
     # rule, the rep listings then a rule and then some unused tail matter.  line
@@ -156,6 +156,23 @@ def _split_sections(data:str) -> Tuple[str,str,str,str]:
     cross_lines, other_linesB = other_linesA.split(REP)
     rep_lines, end = other_linesB.split(END)
     return new_lines, cross_lines, rep_lines, end
+
+    # parts = data.split(CROSS)
+    # if len(parts) == 1:
+    #     return parts[0], "", "", ""
+    # else:
+    #     new_lines, other_linesA = parts
+    # parts = other_linesA.split(REP)
+    # if len(parts) == 1:
+    #     return new_lines, parts[0], "", ""
+    # else:
+    #     cross_lines, other_linesB = parts
+    # parts = other_linesB.split(END)
+    # if len(parts) == 1:
+    #     return new_lines, cross_lines, parts[0], ""
+    # else:
+    #     rep_lines, end = parts
+    #     return new_lines, cross_lines, rep_lines, end
 
 
 def _split_items(data: str) -> List[str]:
