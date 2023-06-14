@@ -237,6 +237,7 @@ def get_listing(subject_or_category: str,
     response_data['author_links'] = authors_for_articles(listings)
     logger.debug('Running dl_for_articles')
     response_data['downloads'] = dl_for_articles(listings)
+    response_data['latexml'] = latexml_links_for_articles(listings)
 
     response_data.update({
         'context': subject_or_category,
@@ -315,15 +316,13 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    dls = {}
-    for item in items:
-        dls[item['article'].arxiv_id_v] = metadata.get_dissemination_formats(item['article'], dl_pref)
-        latexml_url = get_latexml_url(item['article'].arxiv_identifier)
-        if latexml_url is not None:
-            logger.debug('ADDED HTML FOR ' + str(item['article'].arxiv_id_v))
-            dls[item['article'].arxiv_id_v].append('html')
-    return dls
+    return {item['article'].arxiv_id_v: metadata.get_dissemination_formats(item['article'], dl_pref)
+            for item in items}
 
+def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+    """Returns a Dict of article id to latexml links"""
+    return {item['article'].arxiv_id_v: get_latexml_url(item['article'].identifier)
+                for item in listings}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to author links."""

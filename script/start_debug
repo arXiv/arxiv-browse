@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e # stop execution if a command or pipeline has an error
-set -x # print statements as they're being executed
-
-docker build . -t arxiv/browse
-docker run -it -e DEBUG=yes --publish 8080:8080 arxiv/browse

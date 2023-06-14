@@ -435,14 +435,10 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 @db_handle_error(logger=logger, default_return_val=None) #TODO: Change Default Value
 def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
-    logger.debug(f'EXECUTING get_latexml_status_for_document ON {paper_id}v')
     row = (
         db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
     )
-    if row:
-        logger.debug('ROW CONVERSION STATUS FOR ' + paper_id + ': ' + str(row.conversion_status))
-        return row.conversion_status
-    return None
+    return row.conversion_status if row else None

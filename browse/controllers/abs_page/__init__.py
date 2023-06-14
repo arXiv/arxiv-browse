@@ -125,8 +125,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             query=author_query,
         )
         response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
-        logger.warning(f'LATEXML_URL: {response_data["latexml_url"]}')
-        logger.warning(f'LATEXMLDB_URI: {current_app.config["SQLALCHEMY_BINDS"]["latexml"]}')
+        
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
