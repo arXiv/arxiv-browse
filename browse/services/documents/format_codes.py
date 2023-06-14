@@ -84,9 +84,6 @@ def formats_from_source_type(source_type: str,
     has_docx_or_odf = re.search(r'[XO]', source_type, re.IGNORECASE)
     has_src_pref = format_pref and re.search('src', format_pref)
     append_other = False
-    logger.debug('In formats_from_source_type: source_type is '
-                 '"%s", format_pref is %s cache_flag is %s',
-                 source_type, format_pref, cache_flag)
 
     if has_ignore and not has_encrypted_source:
         formats.append('src')
