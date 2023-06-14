@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "ed3feece", extras = []}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "6db6e9fc", extras = []}
 
 Flask-SQLAlchemy = "~=2.4"  
 MarkupSafe = "*"

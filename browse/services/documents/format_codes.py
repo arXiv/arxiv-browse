@@ -3,15 +3,12 @@ import re
 from typing import List, Optional
 
 import logging
-import os
-import re
 import tarfile
 from operator import itemgetter
 from tarfile import CompressionError, ReadError
-from typing import Dict, List, Optional
+from typing import Dict
 
 from browse.services import APath
-#from cloudpathlib import AnyPath
 
 logger = logging.getLogger(__name__)
 
