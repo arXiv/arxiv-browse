@@ -1,0 +1,486 @@
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Papers received as of Sat 29 Nov 97 01:00:19 GMT.
+(To retrieve abstracts without full papers, use e.g.    get 9712001.abs )
+ get 3 2.abs 9601001  , e.g., returns multiple papers.
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): cond-mat/9712129
+From: Pierluigi Contucci <someone@example.com>
+Date: Thu, 11 Dec 1997 20:47:36 GMT   (14kb)
+Date (revised v2): Sat, 30 May 1998 21:45:24 GMT   (16kb)
+Date (revised v3): Mon, 8 Jun 1998 16:33:09 GMT   (16kb)
+
+Title: On the Stability of the Quenched State in Mean Field Spin Glass Models
+Authors: M. Aizenman (Princeton University), P. Contucci (Princeton University)
+Categories: cond-mat.stat-mech cond-mat.dis-nn math-ph math.MP
+Comments: 17 pages, LaTex, Revised June 5, 1998
+Subj-class: Statistical Mechanics; Disordered Systems and Neural Networks;
+  Mathematical Physics
+Journal-ref: J. Stat. Phys. v. 92, 765 (1998).
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): cond-mat/9712138
+From: Elaine D. Remillard <someone@example.com>
+Date: Fri, 12 Dec 1997 16:34:55 GMT   (10kb)
+Date (revised v2): Tue, 24 Mar 1998 16:10:18 GMT   (10kb)
+
+Title: Ground State Energy of the Low Density Bose Gas
+Authors: Elliott H. Lieb and Jakob Yngvason
+Categories: cond-mat.soft cond-mat.stat-mech math-ph math.MP
+Comments: 4 pages, Revtex, reference 12 changed
+Subj-class: Soft Condensed Matter; Statistical Mechanics; Mathematical Physics
+Journal-ref: Phys. Rev. Lett. 80 (1998) 2504-2507
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): dg-ga/9712004
+From: Arthur G. Sergheyev <someone@example.com>
+Date: Thu, 4 Dec 1997 18:04:22 GMT   (8kb)
+
+Title: Generalized Symmetries of Partial Differential Equations and Quasiexact
+  Solvability
+Authors: Arthur G. Sergheyev (Institute of Mathematics of NAS of Ukraine, Kiev)
+Categories: dg-ga math-ph math.DG math.MP nlin.SI solv-int
+Comments: 10 pages, Latex, no figures
+Subj-class: Differential Geometry; Mathematical Physics; Exactly Solvable and
+  Integrable Systems
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): dg-ga/9712019
+From: Peter Heinzner <someone@example.com>
+Date: Sun, 28 Dec 1997 03:55:01 GMT   (15kb)
+
+Title: The minimum principle from a Hamiltonian point of view
+Authors: Peter Heinzner
+Categories: dg-ga math-ph math.DG math.MP
+Comments: 15 pages, plain tex file
+Subj-class: Differential Geometry; Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): funct-an/9712004
+From: Fritz Gesztesy <someone@example.com>
+Date: Thu, 11 Dec 1997 20:34:01 GMT   (65kb)
+
+Title: On Matrix-Valued Herglotz Functions
+Authors: Fritz Gesztesy and Eduard Tsekanovskii
+Categories: funct-an math-ph math.FA math.MP
+Comments: LaTeX
+Subj-class: Functional Analysis; Mathematical Physics
+MSC-class: 30D50, 30E20, 47A10 (primary) 47A45 (secondary)
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9712012
+From: Frank Antonsen <someone@example.com>
+Date: Tue, 2 Dec 1997 13:42:17 GMT   (21kb)
+Date (revised v2): Wed, 2 Sep 1998 13:41:28 GMT   (22kb)
+
+Title: Deformation Quantisation of Gravity
+Authors: Frank Antonsen
+Categories: gr-qc hep-th math-ph math.MP
+Comments: uses LaTeX2e. Errors corrected, discussion extended
+Subj-class: General Relativity and Quantum Cosmology; Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9712085
+From: Beatriz Gato <someone@example.com>
+Date: Mon, 8 Dec 1997 23:49:35 GMT   (18kb)
+Date (revised v2): Mon, 13 Dec 1999 18:45:34 GMT   (19kb)
+
+Title: Transmutations between Singular and Subsingular Vectors of the N=2
+  Superconformal Algebras
+Authors: Matthias Doerrzapf and Beatriz Gato-Rivera
+Categories: hep-th alg-geom funct-an math-ph math.MP q-alg
+Comments: 21 pages, Latex. Minor improvements. Very similar to the version
+  published in Nucl. Phys. B
+Report-no: HUTP-97/A055, IMAFF-FM-97/04, Nucl. Phys. B 557 [PM] (1999) 517
+Subj-class: High Energy Physics - Theory; Mathematical Physics
+Journal-ref: Nucl.Phys. B557 (1999) 517-534
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9712107
+From: Matthias Doerrzapf <someone@example.com>
+Date: Wed, 10 Dec 1997 22:26:13 GMT   (35kb)
+Date (revised v2): Thu, 20 May 1999 18:26:27 GMT   (35kb)
+
+Title: The definition of Neveu-Schwarz superconformal fields and uncharged
+  superconformal transformations
+Authors: Matthias Doerrzapf
+Categories: hep-th math-ph math.MP
+Comments: Latex, 29 pages, no figures, several minor changes and references
+  added
+Report-no: HUTP-97/A054
+Subj-class: High Energy Physics - Theory; Mathematical Physics
+Journal-ref: Rev.Math.Phys. 11 (1999) 137-169
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9712113
+From: K. Scharnhorst <someone@example.com>
+Date: Thu, 11 Dec 1997 10:11:59 GMT   (17kb)
+Date (revised v2): Tue, 24 Nov 1998 14:46:32 GMT   (18kb)
+
+Title: A special irreducible matrix representation of the real Clifford algebra
+  C(3,1)
+Authors: K. Scharnhorst (Humboldt University Berlin)
+Categories: hep-th math-ph math.MP
+Comments: 23 pages LaTeX, to appear in the J. Math. Phys. (v2: appendix B on
+  Pauli matrices and references are added, minor other changes)
+Report-no: HUB-EP-97/83
+Subj-class: High Energy Physics - Theory; Mathematical Physics
+Journal-ref: J.Math.Phys. 40 (1999) 3616-3631
+DOI: 10.1063/1.532912
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9712154
+From: Francois Gieres <someone@example.com>
+Date: Tue, 16 Dec 1997 14:58:42 GMT   (128kb)
+
+Title: About Symmetries in Physics
+Authors: Francois Gieres
+Categories: hep-th hep-ph math-ph math.MP nucl-th
+Comments: Latex, 42 pages, 4 figures
+Report-no: LYCEN 9754
+Subj-class: High Energy Physics - Theory; Mathematical Physics
+Journal-ref: in "Symmetries in Physics", Proceedings of the fifth "Seminaire
+  Rhodanien de Physique", Dolomieu 1997, F. Gieres, M. Kibler, C. Lucchesi and
+  O. Piguet, eds. (Editions Frontieres, 1998)
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): math.MP/9712278
+From: <someone@example.com>
+Date: Fri, 12 Dec 1997 00:00:00 GMT   (20kb)
+
+Title: Vortex Dynamics for the Ginzburg-Landau-Schr\"odinger Equation
+Authors: James Ellis Colliander, Robert L. Jerrard
+Categories: math.MP math-ph
+Report-no: MSRI 1997-108
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712001
+From: Stefan Boettcher <someone@example.com>
+Date: Sat, 29 Nov 1997 04:37:49 GMT   (30kb)
+Date (revised v2): Tue, 5 May 1998 21:50:03 GMT   (28kb)
+Date (revised v3): Wed, 6 May 1998 02:33:12 GMT   (28kb)
+
+Title: Real Spectra in Non-Hermitian Hamiltonians Having PT Symmetry
+Authors: Carl M. Bender (Washington University, St. Louis) and Stefan Boettcher
+  (CNLS, Los Alamos, and CTSPS, Clark Atlanta University)
+Categories: physics cond-mat hep-th math-ph math.MP quant-ph
+Comments: 5 pages, RevTex, 3 figures as epsf, as to appear in PRL
+Subj-class: Mathematical Physics
+Journal-ref: Phys.Rev.Lett. 80 (1998) 5243-5246
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712002
+From: Folkert Muller-Hoissen <someone@example.com>
+Date: Mon, 1 Dec 1997 15:37:09 GMT   (12kb)
+Date (revised v2): Tue, 2 Dec 1997 12:43:46 GMT   (12kb)
+
+Title: Deformations of classical geometries and integrable systems
+Authors: A. Dimakis and F. Muller-Hoissen
+Categories: physics gr-qc hep-th math-ph math.MP math.QA nlin.SI q-alg solv-int
+Comments: 14 pages, LaTeX
+Report-no: GOET-TP 100/97
+Subj-class: Mathematical Physics; Quantum Algebra; Exactly Solvable and
+  Integrable Systems
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712004
+From: Folkert Muller-Hoissen <someone@example.com>
+Date: Mon, 1 Dec 1997 16:06:08 GMT   (17kb)
+
+Title: Some aspects of noncommutative geometry and physics
+Authors: A. Dimakis and F. Muller-Hoissen
+Categories: physics gr-qc hep-th math-ph math.MP math.QA nlin.SI q-alg solv-int
+Comments: 16 pages, LaTeX, uses amssymb
+Report-no: GOET-TP 99/97
+Subj-class: Mathematical Physics; Quantum Algebra; Exactly Solvable and
+  Integrable Systems
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712006
+From: Vittot Michel <someone@example.com>
+Date: Mon, 1 Dec 1997 19:09:25 GMT   (39kb)
+
+Title: Perturbation of an eigenvalue from a dense point spectrum: a general
+  Floquet Hamiltonian
+Authors: P. Duclos, P. Stovicek, M. Vittot
+Categories: physics chao-dyn funct-an math-ph math.FA math.MP nlin.CD quant-ph
+Comments: AmsTex, 45 pages
+Report-no: CPT-97/P.3559
+Subj-class: Mathematical Physics; Functional Analysis; Chaotic Dynamics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712010
+From: Marius-Ioan Piso <someone@example.com>
+Date: Thu, 4 Dec 1997 16:58:17 GMT   (2kb)
+
+Title: Surface Action for a Point Particle
+Authors: Marius I. Piso, Nicholas Ionescu-Pallas
+Categories: physics math-ph math.MP
+Comments: 3 pages
+Report-no: GRL971201
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712011
+From: Nikolay Karelin <someone@example.com>
+Date: Thu, 4 Dec 1997 17:48:20 GMT   (9kb)
+
+Title: Average Number of Coherent Modes for Pulse Random Fields
+Authors: Alexander M. Lazaruk, Nikolay V. Karelin (Institute of Physics,
+  Belarus Academy of Sciences, Minsk, Belarus)
+Categories: physics.optics math-ph math.MP
+Comments: LaTeX, 10 pages, no figures; to be published in Proc. SPIE; E-mail:
+  lazaruk@ifanbel.bas-net.by
+Subj-class: Optics; Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712016
+From: Randall Guedes Teixeira <someone@example.com>
+Date: Wed, 10 Dec 1997 12:24:33 GMT   (16kb)
+
+Title: Hamilton-Jacobi approach to Berezinian singular systems
+Authors: B. M. Pimentel, R. G. Teixeira (Sao Paulo, IFT) and J. L. Tomazelli
+  (Sao Paulo U., Guaratingueta)
+Categories: physics hep-th math-ph math.MP
+Comments: LaTex, 30 pages, no figures
+Report-no: IFT-P.002/98
+Subj-class: Mathematical Physics
+Journal-ref: Annals Phys. 267 (1998) 75-96
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712019
+From: Roy Maartens <someone@example.com>
+Date: Thu, 11 Dec 1997 09:29:24 GMT   (7kb)
+
+Title: Symmetries of particle motion
+Authors: Roy Maartens and David Taylor
+Categories: physics gr-qc math-ph math.MP
+Comments: 6 pages Latex. Contribution in 'Modern Group Analysis VI:
+  Developments in Theory, Computation and Applications', ed. N Ibragimov and F
+  Mahomed (New Age International Publishers, 1997)
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712026
+From: Luciene Pontes Freitas <someone@example.com>
+Date: Tue, 16 Dec 1997 14:57:39 GMT   (48kb)
+
+Title: Continuous Iteration of Dynamical Maps
+Authors: R. Aldrovandi and L. P. Freitas (Sao Paulo, IFT)
+Categories: physics math-ph math.MP
+Comments: 24 pages, ps file
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712027
+From: Armen Nersessian <someone@example.com>
+Date: Tue, 16 Dec 1997 15:34:17 GMT   (10kb)
+
+Title: Anyons, Monopole and Coulomb Problem
+Authors: A.Nersessian, V.M.Ter-Antonyan
+Categories: physics math-ph math.MP quant-ph
+Comments: 10 pages, to be published in Russian J. Nucl. Phys
+Subj-class: Mathematical Physics
+Journal-ref: Phys.Atom.Nucl. 61 (1998) 1756-1761; Yad.Fiz. 61 (1998) 1868-1872
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712032
+From: <someone@example.com>
+Date: Wed, 17 Dec 1997 10:46:16 GMT   (10kb)
+
+Title: A New Young Diagrammatic Method For Kronecker Products of O(n) and Sp(2m)
+Authors: Feng pan, Shihai Dong, J. P. Draayer
+Categories: physics math-ph math.MP
+Comments: Latex, 11 pages, no figures
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712033
+From: Luciene Pontes Freitas <someone@example.com>
+Date: Wed, 17 Dec 1997 12:07:47 GMT   (92kb)
+
+Title: Closed Expressions for Lie Algebra Invariants and Finite Transformations
+Authors: R. Aldrovandi, A. L. Barbosa and L. P. Freitas (Sao Paulo, IFT)
+Categories: physics hep-th math-ph math.MP
+Comments: 34 pages, ps file, no figures
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712034
+From: <someone@example.com>
+Date: Wed, 17 Dec 1997 14:05:19 GMT   (11kb)
+
+Title: An Alternative Basis for the Wigner-Racah Algebra of the Group SU(2)
+Authors: M. Kibler and M. Daoud
+Categories: physics cond-mat.stat-mech math-ph math.MP math.QA q-alg quant-ph
+Comments: 12 pages, Latex file. Submitted for publication to Turkish Journal of
+  Physics
+Subj-class: Mathematical Physics; Statistical Mechanics; Quantum Algebra
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712036
+From: Katja Lindenberg <someone@example.com>
+Date: Wed, 17 Dec 1997 21:41:57 GMT   (40kb)
+
+Title: Properties of resonant activation phenomena
+Authors: Marian Boguna, Josep M. Porra, Jaume Masoliver, and Katja Lindenberg
+Categories: physics.chem-ph math-ph math.MP physics.class-ph
+Comments: 33 pages of text, 9 figures
+Subj-class: Chemical Physics; Classical Physics; Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712037
+From: P.T.  Leung <someone@example.com>
+Date: Thu, 18 Dec 1997 06:08:44 GMT   (30kb)
+
+Title: Logarithmic perturbation theory for quasinormal modes
+Authors: P.T. Leung, Y.T. Liu, W.M. Suen, C.Y. Tam and K. Young
+Categories: physics math-ph math.MP
+Comments: 24 pages, 4 Postscript figures, uses ioplppt.sty and epsfig.sty
+Report-no: CUHK-PHY-97-033
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712045
+From: Zbigniew Jaskolski <someone@example.com>
+Date: Tue, 23 Dec 1997 13:26:53 GMT   (50kb)
+
+Title: Smooth coalgebras
+Authors: Z. Jaskolski
+Categories: physics hep-th math-ph math.MP
+Comments: LaTeX, 60 pages
+Report-no: ITPUWr 917/97
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712046
+From: Bogdan Morariu <someone@example.com>
+Date: Wed, 24 Dec 1997 00:07:13 GMT   (10kb)
+
+Title: Quantum Algebra of the Particle Moving on the q-Deformed Mass-Hyperboloid
+Authors: Bogdan Morariu
+Categories: physics hep-th math-ph math.MP math.QA q-alg
+Comments: 12 pages, LaTeX, no figures
+Report-no: LBNL-41209
+Subj-class: Mathematical Physics; Quantum Algebra
+Journal-ref: Int.J.Mod.Phys. A15 (2000) 3277-3286
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712048
+From: Hagen Kleinert <someone@example.com>
+Date: Fri, 26 Dec 1997 06:03:09 GMT   (8kb)
+
+Title: Functional determinants via Wronski construction of Green functions
+Authors: H. Kleinert and A. Chervyakov
+Categories: physics math-ph math.MP
+Comments: Author Information under
+  http://www.physik.fu-berlin.de/~kleinert/institution.html . Paper also at
+  http://www.physik.fu-berlin.de/~kleinert/kleiner_re260/preprint.html
+Subj-class: Mathematical Physics
+Journal-ref: J. Math. Phys. 40, 6044 (1999)
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712052
+From: <someone@example.com>
+Date: Tue, 30 Dec 1997 09:51:40 GMT   (36kb)
+
+Title: Double Complexes and Cohomological Hierarchy in a Space of Weakly
+  Invariant Lagrangians of Mechanics
+Authors: O.M. Khudaverdian, D.A. Sahakyan (JINR, Dubna, Russia)
+Categories: physics dg-ga hep-th math-ph math.DG math.MP
+Comments: 33 pages, Plain TeX
+Subj-class: Mathematical Physics; Differential Geometry
+Journal-ref: Acta Appl.Math. 56 (1999) 181-215
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): physics/9712054
+From: Calin Iuliu Lazaroiu <someone@example.com>
+Date: Tue, 30 Dec 1997 15:51:37 GMT   (30kb)
+
+Title: On degree zero semistable bundles over an elliptic curve
+Authors: C. I. Lazaroiu
+Categories: physics hep-th math-ph math.MP
+Comments: 29 pages, no figures
+Report-no: CU-TP-871
+Subj-class: Mathematical Physics
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): q-alg/9712037
+From: Daniel Arnaudon <someone@example.com>
+Date: Fri, 12 Dec 1997 15:29:13 GMT   (13kb)
+
+Title: Universal Solutions of Quantum Dynamical Yang-Baxter Equations
+Authors: D. Arnaudon, E. Buffenoir, E. Ragoucy and Ph. Roche
+Categories: q-alg hep-th math-ph math.MP math.QA
+Comments: 12 pages, LaTeX2e with packages vmargin, wasysym, amsmath, amssymb
+Report-no: CERN-TH-97/363, ENSLAPP-A-664/97
+Subj-class: Quantum Algebra; Mathematical Physics
+MSC-class: 81R50; 17B37
+Journal-ref: Lett.Math.Phys. 44 (1998) 201-214
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): quant-ph/9712014
+From: <someone@example.com>
+Date: Fri, 5 Dec 1997 15:28:10 GMT   (11kb)
+
+Title: On a Generalized Oscillator: Invariance Algebra and Interbasis
+  Expansions
+Authors: Y.M. Hakobyan, M. Kibler, G.S. Pogosyan and A.N. Sissakian
+Categories: quant-ph math-ph math.MP physics.atm-clus physics.atom-ph
+  physics.chem-ph
+Comments: 13 pages, Latex file. Submitted for publication to Yadernaya Fizika
+Subj-class: Quantum Physics; Mathematical Physics; Atomic and Molecular
+  Clusters; Atomic Physics; Chemical Physics
+Journal-ref: Phys.Atom.Nucl. 61 (1998) 1782-1788; Yad.Fiz. 61 (1998) 1893-1899
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): quant-ph/9712058
+From: Igor Kanatczikow <someone@example.com>
+Date: Wed, 31 Dec 1997 19:30:26 GMT   (12kb)
+
+Title: Towards the Born-Weyl Quantization of Fields
+Authors: Igor V. Kanatchikov
+Categories: quant-ph gr-qc hep-th math-ph math.MP
+Comments: 12pp, LaTeX2e. Talk at "Quantum Structures-96", Berlin, Aug. 1996. To
+  appear in Int. J. Theor. Phys. (1998), January
+Subj-class: Quantum Physics; Mathematical Physics
+Journal-ref: Int.J.Theor.Phys. 37 (1998) 333-342
+\\

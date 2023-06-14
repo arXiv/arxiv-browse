@@ -466,3 +466,5 @@ def help_redirect(help_path: str="") -> Response:
         return make_response("", 301, {"Location": url_for("help")})
     if SAFE_HELP.fullmatch(help_path):
         return make_response("", 301, {"Location": url_for("help") + '/' + help_path})
+
+    raise BadRequest()
