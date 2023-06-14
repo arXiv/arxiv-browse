@@ -4,7 +4,7 @@ import re
 from functools import wraps
 from typing import Optional
 
-from cloudpathlib.anypath import to_anypath
+from browse.services.anypath import to_anypath
 
 from arxiv.base.globals import get_application_config, get_application_global
 

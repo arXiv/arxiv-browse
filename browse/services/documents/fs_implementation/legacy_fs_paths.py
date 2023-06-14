@@ -5,7 +5,7 @@ from typing import Optional, List, Dict, Union
 from pathlib import Path
 
 from cloudpathlib import CloudPath
-from cloudpathlib.anypath import to_anypath
+from browse.services.anypath import to_anypath
 
 from browse.domain.identifier import Identifier
 

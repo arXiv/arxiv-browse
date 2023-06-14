@@ -2,7 +2,7 @@
 
 from typing import Optional, List
 
-from cloudpathlib.anypath import to_anypath
+from browse.services.anypath import to_anypath
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.documents.fs_implementation.legacy_fs_paths import FSDocMetaPaths

@@ -7,7 +7,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from dateutil import parser
 
-from cloudpathlib.anypath import to_anypath
+from browse.services.anypath import to_anypath
 
 from arxiv import taxonomy
 

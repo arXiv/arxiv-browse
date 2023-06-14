@@ -6,7 +6,7 @@ from typing import Dict, List
 
 import tarfile
 from tarfile import ReadError, CompressionError
-from cloudpathlib.anypath import to_anypath
+from browse.services.anypath import to_anypath
 
 from ..format_codes import VALID_SOURCE_EXTENSIONS
 
