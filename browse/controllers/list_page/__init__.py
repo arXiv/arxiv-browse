@@ -321,7 +321,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
 
 def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
-    return {item['article'].arxiv_id_v: get_latexml_url(item['article'].identifier)
+    return {item['article'].arxiv_id_v: get_latexml_url(item['article'].arxiv_identifier)
                 for item in listings}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
