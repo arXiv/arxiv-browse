@@ -177,17 +177,19 @@ em.boxed {
   font-weight: normal;
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   color: #fff;
-  width: 380px;
 }
-
-#support-ack a {
+#support-ack-url {
+  max-width: 400px;
+  float:right;
+  display: block;
+}
+#support-ack-url a {
   color: #fff;
-  text-decoration: none;
   border: none;
+  text-decoration: underline;
 }
-
-#support-ack a:hover {
-  background: #444;
+#support-ack-url a:hover {
+  color: #1e8bc3;
 }
 
 /*
@@ -2711,6 +2713,9 @@ body#front.with-cu-identity #header #search {
   flex-grow: 1;
   flex-shrink: 1;
   padding: 0.75rem;
+}
+#cu-identity .banner-minimal {
+  text-align: center;
 }
 .columns.is-mobile > .column.is-full {
   flex: none;
