@@ -46,6 +46,9 @@
   {% else %}
     {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
     {%- for format in format_list if not (format == 'src' and not current) %}
+    {%- if format.startswith('pdf') -%}
+  <li><a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a></li>
+    {%- endif -%}
     {%- if latexml_url -%}
   <li>
     <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML</a>
@@ -57,8 +60,6 @@
     <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">Source</a>
     {%- elif format.startswith('ps') -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format.startswith('pdf') -%}
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
     {%- elif format == 'dvi' -%}
     <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
