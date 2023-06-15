@@ -189,8 +189,7 @@ em.boxed {
   text-decoration: underline;
 }
 #support-ack-url a:hover {
-  background: #444;
-  color: yellow;
+  color: #1e8bc3;
 }
 
 /*
