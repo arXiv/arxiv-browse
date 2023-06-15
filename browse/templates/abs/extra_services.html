@@ -61,13 +61,6 @@
     <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
     {%- elif format == 'nops' -%}
     <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
-    {%- elif format == 'sciencewise_pdf' -%}
-    {#- TODO: consider this format for deprecation -#}
-    {#- TODO: create clickthrough link from sciencewise link -#}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">Tagged PDF</a>
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">
-      <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
-    </a>
     {%- endif -%}
   </li>
     {%- endfor -%}
