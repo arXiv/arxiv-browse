@@ -33,7 +33,7 @@ RUN pip install -U pip "poetry==$POETRY_VERSION"
 
 COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+    poetry install --no-interaction --no-ansi --without=dev
 
 RUN pip install "gunicorn==20.1.0"
 
