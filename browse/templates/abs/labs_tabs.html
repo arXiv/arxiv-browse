@@ -83,6 +83,22 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
+              <input        
+                id="catalyzex-toggle"
+                data-script-url="{{ url_for('static', filename='js/catalyzex.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-cx">
+              <span class="slider"></span>
+              <span class="is-sr-only">Links to Code Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-cx">CatalyzeX Code Finder for Papers</span> <em>(<a href="https://www.catalyzex.com" target="_blank">What is CatalyzeX?</a>)</em>
+          </div>
+        </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
               <input
                 id="dagshub-toggle"
                 data-script-url="{{ url_for('static', filename='js/dagshub.js') }}"
@@ -95,6 +111,7 @@
             <span id="label-for-dagshub">DagsHub</span> <em>(<a href="https://dagshub.com/" target="_blank">What is DagsHub?</a>)</em>
           </div>
         </div>
+  
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -129,6 +146,7 @@
         </div>
 
       </div>
+      <div id="catalyzex-output" style="display:none"></div>
       <div id="dagshub-output" style="display:none"></div>
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
