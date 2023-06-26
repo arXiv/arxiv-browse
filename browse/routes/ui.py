@@ -31,6 +31,7 @@ from browse.controllers import (
     prevnext,
     tb_page,
     stats_page,
+    openurl_page
 )
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
@@ -482,3 +483,12 @@ def cookies(set):  # type: ignore
 def bibtex(arxiv_id: str):  # type: ignore
     """BibTeX for a paper."""
     return bibtex_citation(arxiv_id)
+
+@blueprint.route('openurl-cookie', methods=['GET', 'POST'])
+def openurl_cookie ():
+    if request.method == 'POST':
+        resp = redirect(url_for('browse.openurl_cookie'))
+        resp.set_cookie(**openurl_page.make_openurl_cookie())
+        return resp
+    response, code, headers = openurl_page.get_openurl_page()
+    return render_template('openurl_cookies.html', **response), code, headers
