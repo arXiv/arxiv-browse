@@ -468,3 +468,9 @@ def help_redirect(help_path: str="") -> Response:
         return make_response("", 301, {"Location": url_for("help") + '/' + help_path})
 
     raise BadRequest()
+
+@blueprint.route("robots.txt")
+def robots_txt() -> Response:
+    """Robots.txt endpoint."""
+    #This is intended for browse.arxiv.org before this code is at arxiv.org
+    return make_response("User-agent: * \nDisallow: /", 200)
