@@ -1,7 +1,7 @@
 """Parses pastweek listing files.
 
-Due to use of CloudPathLib these can be either local files or cloud object
-stores.
+Due to use of `browse.services.object_store` these can be either local files or
+cloud object stores.
 
 pastweek is with a month like format with
 

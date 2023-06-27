@@ -1,18 +1,13 @@
 """Paths to files in the legacy arXiv FS."""
 
-from typing import Optional, List, Dict, Union
+from typing import Optional, List, Dict
 
-from pathlib import Path
-
-from cloudpathlib import CloudPath
-from browse.services.anypath import to_anypath
+from browse.services.anypath import to_anypath, APath
 
 from browse.domain.identifier import Identifier
 
 from .formats import list_ancillary_files
 from ..format_codes import has_ancillary_files, VALID_SOURCE_EXTENSIONS
-
-from browse.services import APath
 
 
 class FSDocMetaPaths():

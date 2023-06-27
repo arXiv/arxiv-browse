@@ -1,7 +1,7 @@
 """Listing service for arXiv backed by legacy listing files.
 
-Due to use of CloudPathLib these can be either local files or cloud object
-stores.
+Due to use of `browse.services.object_store` these can be either local files or
+cloud object stores.
 
 There are three formats:
 new: with more fields and abstracts, crosses and replacements.

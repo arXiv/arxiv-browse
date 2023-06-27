@@ -8,7 +8,7 @@ from operator import itemgetter
 from tarfile import CompressionError, ReadError
 from typing import Dict
 
-from browse.services import APath
+from browse.services.anypath import APath
 
 logger = logging.getLogger(__name__)
 

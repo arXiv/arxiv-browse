@@ -1,7 +1,7 @@
 """Parse listing files of type new.
 
-Due to use of CloudPathLib these can be either local files or cloud object
-stores.
+Due to use of `browse.services.object_store` these can be either local files or
+cloud object stores.
 
 The New format basically has abs files as listing items. They lack the "From:" line
 that is found in abs files.

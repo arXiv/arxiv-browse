@@ -1,14 +1,15 @@
 """function to open eihter local files or storage bucket files"""
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 from contextvars import ContextVar
-
-from browse.services import APath
 
 from cloudpathlib import CloudPath
 from cloudpathlib.gs import GSClient
 
 from google.cloud.storage import Client as StorageClient
+
+APath = Union[Path, CloudPath]
+"""Type to use with anypath.to_anypath"""
 
 
 def to_anypath(item: Union[str, Path]) -> APath:
@@ -30,6 +31,21 @@ def to_anypath(item: Union[str, Path]) -> APath:
         raise ValueError("s3 and az are not supported")
     else:
         return Path(item)
+
+
+def fs_check(path:APath, expect_dir:bool=True) -> List[str]:
+    """Checks for a file system for use in `HasStatus.service_status()`"""
+    try:
+        if expect_dir:
+            if not path.is_dir():
+                return [f"{path} does not appear to be a directory"]
+        else:
+            if not path.is_file():
+                return [f"{path} does not appear to be a file"]
+    except Exception as ex:
+        return [f"Could not access due to {ex}"]
+
+    return []
 
 
 _global_gs_client: StorageClient = None

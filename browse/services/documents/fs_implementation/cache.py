@@ -9,7 +9,7 @@ from browse.services.anypath import to_anypath
 from arxiv.base.globals import get_application_config, get_application_global
 
 from browse.domain.metadata import DocMetadata
-from browse.services import APath
+from browse.services.anypath import APath
 
 # Formats that currently reside in the cache filesystem
 CACHE_FORMATS = ['dvi', 'html', 'other', 'pdf', 'ps']

@@ -6,7 +6,7 @@ import dataclasses
 from browse.domain.metadata import DocMetadata
 from browse.domain.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from browse.services import fs_check
+from browse.services.anypath import fs_check
 
 from browse.services.documents.base_documents import DocMetadataService, \
     AbsDeletedException, AbsNotFoundException, \
