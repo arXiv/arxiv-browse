@@ -19,7 +19,8 @@ ENV PYTHONFAULTHANDLER=1 \
     TRACE=1 \
     LC_ALL=en_US.utf8 \
     LANG=en_US.utf8 \
-    APP_HOME=/app
+    APP_HOME=/app \
+    PORT=8080
 
 WORKDIR /app
 
@@ -56,7 +57,7 @@ USER e-prints
 # to start a docker instance during an integration test. See
 # cicd/cloudbuild-master-pr.yaml for how it is used
 
-ENV GUNICORN gunicorn --bind :8080 \
+ENV GUNICORN gunicorn --bind :$PORT \
     --workers 1 --threads 8 --timeout 0 \
      "browse.factory:create_web_app()"
 
