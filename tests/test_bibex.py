@@ -34,3 +34,28 @@ class BibexTest(TestCase):
             txt,
             "citation meta tag must have jref DOI",
         )
+
+    def test_good_bibtex(self):
+        rv = self.app.get(f"/bibtex/0906.3421")
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.get(f"/bibtex/0906.3421v1")
+        self.assertEqual(rv.status_code, 200)
+
+    def test_bibex_none(self):
+        """Don't do a 500 for /bibex/None ARXIVCE-339."""
+        rv = self.app.get(f"/bibtex/None")
+        self.assertEqual(rv.status_code, 400)
+
+    def test_bad_bibtex(self):
+        rv = self.app.get(f"/bibtex/0906.3421v9999")
+        self.assertEqual(rv.status_code, 404)
+
+        rv = self.app.get(f"/bibtex/cs")
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self.app.get(f"/bibtex/0906.3ab1")
+        self.assertEqual(rv.status_code, 400)
+
+        rv = self.app.get(f"/bibtex/0913.1234")
+        self.assertEqual(rv.status_code, 400)

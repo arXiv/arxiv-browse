@@ -49,7 +49,7 @@ class TestExternalReferencesCitations(TestCase):
             self.assertIn(archive, ARCHIVES)
 
     def test_get_dblp_listing_path(self):
-        """Tests for DBLP bibtex path generation."""
+        """Tests for DBLP BibTeX path generation."""
         listing_url = 'db/journals/corr/corr0002.html#nlin-AO-0002040'
         self.assertEqual(get_dblp_bibtex_path(listing_url),
                          'journals/corr/nlin-AO-0002040')

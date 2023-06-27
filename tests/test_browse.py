@@ -505,3 +505,122 @@ class BrowseTest(unittest.TestCase):
 
         link = html.find('a', class_='prev-url')
         assert link is None
+
+    def test_withdrawn_msg(self):
+        """Test that a withdrawn abs gets a withdrawn warning"""
+        rv = self.client.get('/abs/0704.0615')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn", txt, "Expect a withdrawn message.")
+
+        rv = self.client.get('/abs/0704.0615v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn", txt, "Expect a withdrawn message.")
+
+
+    def test_withdrawn_by_admin(self):
+        """Test that a withdrawn abs gets a withdrawn warning from admin"""
+        rv = self.client.get('/abs/2101.10016')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message.")
+
+        self.assertNotIn('href="/e-print/2101.10016"', txt,
+                         "Should not have link to source since it is useless, src is empty")
+
+        rv = self.client.get('/abs/2101.10016v8')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message.")
+
+
+        rv = self.client.get('/abs/2101.10016v7')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v6')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v5')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v4')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v3')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v2')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+        rv = self.client.get('/abs/2101.10016v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("A newer version of this paper has been withdrawn by arXiv Admin", txt,
+                      "Expect an admin withdrawn message on earlier verison.")
+        self.assertIn('href="/pdf/2101.10016', txt,
+                         "Should have link to pdf")
+
+
+    def test_withdrawn_then_new_version(self):
+        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
+        rv = self.client.get('/abs/astro-ph/9709175')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertNotIn("This paper has been withdrawn", txt,
+                      "Do not expect a withdrawn message in latest version.")
+
+        rv = self.client.get('/abs/astro-ph/9709175v3')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertNotIn("This paper has been withdrawn", txt,
+                      "Do not expect a withdrawn message in v3.")
+
+
+        rv = self.client.get('/abs/astro-ph/9709175v2')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("This paper has been withdrawn", txt,
+                      "Expect a withdrawn message in v2.")
+
+
+        rv = self.client.get('/abs/astro-ph/9709175v1')
+        self.assertEqual(rv.status_code, 200)
+        txt = rv.data.decode('utf-8')
+        self.assertIn("paper has been withdrawn", txt,
+                      "Expect a withdrawn message in v1 since v2 is withdrawn.")
+
+        self.assertIn("Older arxiv papers may lack submitter name", txt,
+                      "Expect a message about lack of submitter name on old paper")

@@ -18,7 +18,7 @@
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20221129" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20230622" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
   {{- generate_scholar_tags() }}
@@ -81,7 +81,7 @@
       {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
       <br/>
       {%- for version_entry in abs_meta.version_history -%}
-      {{ generate_version_entry(version_entry, abs_meta.version) }}
+            {{ generate_version_entry(version_entry, abs_meta.version) }}
       {%- endfor -%}
     </div>
   </div>
@@ -99,11 +99,21 @@
 {% endblock content %}
 
 {%- macro generate_version_entry(version_entry, this_version) %}
-  {%- if version_entry.version == this_version -%}
-  <strong>[v{{ version_entry.version }}]</strong>
-{% else %}
-  <strong><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></strong>
-  {% endif %}{{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB){#- ({{(version_entry.size_kilobytes*1000)|filesizeformat}}) -#}<br/>
+    {{ generate_version_link(version_entry, this_version) }}
+    {%- if version_entry in withdrawn_versions-%}
+        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB) <em>(withdrawn)</em><br/>
+    {% else %}
+        {{ version_entry.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z') }} ({{ "{:,}".format(version_entry.size_kilobytes) }} KB)<br/>
+    {% endif %}
+
+{%- endmacro -%}
+
+{%- macro generate_version_link(version_entry, this_version) %}
+    {%- if version_entry.version == this_version -%}
+        <strong>[v{{ version_entry.version }}]</strong>
+    {% else %}
+        <strong><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></strong>
+    {% endif %}
 {%- endmacro -%}
 
 {%- macro generate_dateline() -%}
@@ -188,6 +198,38 @@
   {% endif %}
 {% endmacro %}
 
+{%- macro withdrawn_msg() -%}
+    {% if higher_version_withdrawn and higher_version_withdrawn_submitter != None %}
+    <span class="error" style="border: 2px solid grey">A newer version of this paper has been withdrawn by {{ higher_version_withdrawn_submitter|tex2utf }}</span>
+    {% elif higher_version_withdrawn and higher_version_withdrawn_submitter == None %}
+    <span class="error" style="border: 2px solid grey">A newer version of this paper has been withdrawn    <div class="button-and-tooltip">
+      <button class="more-info" aria-describedby="more-info-desc-1">
+        <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+        <span class="visually-hidden">Focus to learn more</span>
+      </button>
+      <!-- tooltip description -->
+      <div role="tooltip" id="more-info-desc-1">
+        <span class="left-corner"></span>
+        Older arxiv papers may lack submitter name
+      </div>
+    </div></span>
+    {% elif abs_meta.submitter.name != None %}
+    <span class="error" style="border: 2px solid grey">This paper has been withdrawn by {{ abs_meta.submitter.name|tex2utf }}</span>
+    {% elif abs_meta.submitter.name == None %}
+    <span class="error" style="border: 2px solid grey">This paper has been withdrawn     <div class="button-and-tooltip">
+      <button class="more-info" aria-describedby="more-info-desc-1">
+        <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+        <span class="visually-hidden">Focus to learn more</span>
+      </button>
+      <!-- tooltip description -->
+      <div role="tooltip" id="more-info-desc-1">
+        <span class="left-corner"></span>
+        Older arxiv papers may lack submitter name
+      </div>
+    </div></span>
+    {% endif %}
+{% endmacro %}
+
 {% macro abs(
     arxiv_id,
     title,
@@ -220,6 +262,7 @@
 {% endif %}
 <div id="content-inner">
   <div id="abs">
+    {% if withdrawn or higher_version_withdrawn %}{{ withdrawn_msg() }}{% endif %}
     <div class="dateline">{{ base_macros.abs_date_line(arxiv_id, submitted_date, version, submission_history) }}</div>
     <h1 class="title mathjax"><span class="descriptor">Title:</span>{{ title|tex2utf|arxiv_id_urlize|safe }}</h1>
     <div class="authors"><span class="descriptor">Authors:</span>{{ authors }}</div>
@@ -230,7 +273,7 @@
     {% endif %}
 
     <blockquote class="abstract mathjax">
-      <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+            <span class="descriptor">Abstract:</span>{{ abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
     </blockquote>
 
     <!--CONTEXT-->
@@ -239,7 +282,7 @@
         {%- if comments %}
         <tr>
           <td class="tablecell label">Comments:</td>
-          <td class="tablecell comments mathjax">{{ comments|tex2utf|urlize|safe }}</td>
+          <td class="tablecell comments mathjax">{%- if withdrawn -%}<em style="color: unset">{%- endif -%}{{ comments|tex2utf|urlize|safe }}{%- if withdrawn -%}</em>{%- endif -%}</td>
         </tr>
         {% endif -%}
         <tr>

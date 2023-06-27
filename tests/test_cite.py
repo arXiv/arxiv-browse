@@ -1,4 +1,4 @@
-"""Tests for bibtex citations."""
+"""Tests for BibTeX citations."""
 from unittest import TestCase
 
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file

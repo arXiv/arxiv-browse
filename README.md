@@ -96,7 +96,7 @@ AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x \
  pipenv run python upload_static_assets.py
 ```
 
-In AWS -> Cloudwatch, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
+In AWS -> CloudFront, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
 and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
 
 It may be help to use a web browser's inspect->network to find the active release version.

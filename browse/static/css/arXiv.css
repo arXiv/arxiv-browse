@@ -177,17 +177,19 @@ em.boxed {
   font-weight: normal;
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   color: #fff;
-  width: 380px;
 }
-
-#support-ack a {
+#support-ack-url {
+  max-width: 400px;
+  float:right;
+  display: block;
+}
+#support-ack-url a {
   color: #fff;
-  text-decoration: none;
   border: none;
+  text-decoration: underline;
 }
-
-#support-ack a:hover {
-  background: #444;
+#support-ack-url a:hover {
+  color: #1e8bc3;
 }
 
 /*
@@ -546,7 +548,6 @@ footer .sorry-app-links .a11y-main-link {
   font-size: 90%;
 }
 #content-inner {
-
 }
 .button-fancy {
   border-radius: 4px;
@@ -655,6 +656,31 @@ footer .sorry-app-links .a11y-main-link {
   .message-special {
     width: 88%;
   }
+}
+.banner-minimal {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.banner-minimal a {
+  -webkit-box-shadow: 0px 3px 6px 0px #000000);
+  -moz-box-shadow: 0px 3px 6px 0px #000000;
+  box-shadow: 0px 3px 6px 0px #000000;
+  display: inline-block;
+  padding: .25em 1em;
+  border-radius: .3em;
+  font-size: 2em;
+  background-color: #1c1a17;
+  border: 2px solid #6b6459;;
+  color: #fb595a;
+  text-decoration: none;
+  transition: all .5s ease-in-out;
+}
+.banner-minimal a:hover {
+  background-color: #;
+  border-color: #dbc6c6;
+  color: #f9f7f7;
 }
 /* special header banner, dark override */
 .slider-wrapper.bps-banner.dark {
@@ -982,6 +1008,27 @@ p.tagline {
   margin-bottom: 15px;
 }
 
+/* Added by CatalyzeX */
+
+#catalyzex-output {
+  padding: 7px;
+  margin-bottom: 10px;
+}
+
+#catalyzex-output .cx-icon {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  top: 5px;
+  margin-left: 3px;
+  margin-right: 6px;
+}
+
+ #catalyzex-output svg#cx-logo {
+  top: 7px;
+  margin-left: 6px;
+  margin-right: 3px;
+}
 
 /* Papers with Code **Datasets** specific section */
 
@@ -1491,6 +1538,18 @@ div#long-author-list {
 #abs .arxividv {}
 
 #abs .jref {}
+
+#abs .error {
+    border: 2px solid #B31B1B;
+    background: #efefef;
+    padding: 3px;
+    margin: 20px 10px 10px 20px;
+    font-weight: bold;
+    /*min-height: 20px;*/
+    line-height: 150%;
+    font-size: 110%;
+    display: inline-block;
+}
 
 #abs-outer .submission-history {
   margin: 1.5em 0 1.5em 20px;
@@ -2654,6 +2713,9 @@ body#front.with-cu-identity #header #search {
   flex-grow: 1;
   flex-shrink: 1;
   padding: 0.75rem;
+}
+#cu-identity .banner-minimal {
+  text-align: center;
 }
 .columns.is-mobile > .column.is-full {
   flex: none;

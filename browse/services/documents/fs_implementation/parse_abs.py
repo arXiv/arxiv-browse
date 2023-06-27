@@ -131,7 +131,7 @@ def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
     # submitter data
     from_match = RE_FROM_FIELD.match(prehistory)
     if not from_match or not from_match.group('name'):
-        name = 'unknown'
+        name = ''
         email = 'email-not-provided'
     else:
         name = from_match.group('name').rstrip()

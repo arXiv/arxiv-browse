@@ -1,0 +1,210 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2103.11058
+From: Thomas Hadavizadeh <tom.hadavizadeh@cern.ch>
+Date: Sat, 20 Mar 2021 00:07:29 GMT   (1119kb,D)
+
+Title: Search for $CP$ violation in $D_{(s)}^{+}\rightarrow h^{+}\pi^{0}$ and
+  $D_{(s)}^{+}\rightarrow h^{+}\eta$ decays
+Authors: LHCb collaboration: R. Aaij, C. Abell\'an Beteta, T. Ackernley, B.
+  Adeva, M. Adinolfi, H. Afsharnia, C.A. Aidala, S. Aiola, Z. Ajaltouni, S.
+  Akar, J. Albrecht, F. Alessio, M. Alexander, A. Alfonso Albero, Z. Aliouche,
+  G. Alkhazov, P. Alvarez Cartelle, S. Amato, Y. Amhis, L. An, L. Anderlini, A.
+  Andreianov, M. Andreotti, F. Archilli, A. Artamonov, M. Artuso, K. Arzymatov,
+  E. Aslanides, M. Atzeni, B. Audurier, S. Bachmann, M. Bachmayer, J.J. Back,
+  P. Baladron Rodriguez, V. Balagura, W. Baldini, J. Baptista Leite, R.J.
+  Barlow, S. Barsuk, W. Barter, M. Bartolini, F. Baryshnikov, J.M. Basels, G.
+  Bassi, B. Batsukh, A. Battig, A. Bay, M. Becker, F. Bedeschi, I. Bediaga, A.
+  Beiter, V. Belavin, S. Belin, V. Bellee, K. Belous, I. Belov, I. Belyaev, G.
+  Bencivenni, E. Ben-Haim, A. Berezhnoy, F. Bernard, R. Bernet, D. Berninghoff,
+  H.C. Bernstein, C. Bertella, A. Bertolin, C. Betancourt, F. Betti, Ia.
+  Bezshyiko, S. Bhasin, J. Bhom, L. Bian, M.S. Bieker, S. Bifani, P. Billoir,
+  M. Birch, F.C.R. Bishop, A. Bitadze, A. Bizzeti, M. Bj{\o}rn, M.P. Blago, T.
+  Blake, F. Blanc, S. Blusk, D. Bobulska, J.A. Boelhauve, O. Boente Garcia, T.
+  Boettcher, A. Boldyrev, A. Bondar, N. Bondar, S. Borghi, M. Borisyak, M.
+  Borsato, J.T. Borsuk, S.A. Bouchiba, T.J.V. Bowcock, A. Boyer, C. Bozzi, M.J.
+  Bradley, S. Braun, A. Brea Rodriguez, M. Brodski, J. Brodzicka, A. Brossa
+  Gonzalo, D. Brundu, A. Buonaura, C. Burr, A. Bursche, A. Butkevich, J.S.
+  Butter, J. Buytaert, W. Byczynski, S. Cadeddu, H. Cai, R. Calabrese, L.
+  Calefice, L. Calero Diaz, S. Cali, R. Calladine, M. Calvi, M. Calvo Gomez, P.
+  Camargo Magalhaes, A. Camboni, P. Campana, A.F. Campoverde Quezada, S.
+  Capelli, L. Capriotti, A. Carbone, G. Carboni, R. Cardinale, A. Cardini, I.
+  Carli, P. Carniti, L. Carus, K. Carvalho Akiba, A. Casais Vidal, G. Casse, M.
+  Cattaneo, G. Cavallero, S. Celani, J. Cerasoli, A.J. Chadwick, M.G. Chapman,
+  M. Charles, Ph. Charpentier, G. Chatzikonstantinidis, C.A. Chavez Barajas, M.
+  Chefdeville, C. Chen, S. Chen, A. Chernov, V. Chobanova, S. Cholak, M.
+  Chrzaszcz, A. Chubykin, V. Chulikov, P. Ciambrone, M.F. Cicala, X. Cid Vidal,
+  G. Ciezarek, P.E.L. Clarke, M. Clemencic, H.V. Cliff, J. Closier, J.L.
+  Cobbledick, V. Coco, J.A.B. Coelho, J. Cogan, E. Cogneras, L. Cojocariu, P.
+  Collins, T. Colombo, L. Congedo, A. Contu, N. Cooke, G. Coombs, G. Corti,
+  C.M. Costa Sobral, B. Couturier, D.C. Craik, J. Crkovsk\'a, M. Cruz Torres,
+  R. Currie, C.L. Da Silva, S. Dadabaev, E. Dall'Occo, J. Dalseno, C.
+  D'Ambrosio, A. Danilina, P. d'Argent, A. Davis, O. De Aguiar Francisco, K. De
+  Bruyn, S. De Capua, M. De Cian, J.M. De Miranda, L. De Paula, M. De Serio, D.
+  De Simone, P. De Simone, J.A. de Vries, C.T. Dean, D. Decamp, L. Del Buono,
+  B. Delaney, H.-P. Dembinski, A. Dendek, V. Denysenko, D. Derkach, O.
+  Deschamps, F. Desse, F. Dettori, B. Dey, A. Di Cicco, P. Di Nezza, S.
+  Didenko, L. Dieste Maronas, H. Dijkstra, V. Dobishuk, A.M. Donohoe, F.
+  Dordei, A.C. dos Reis, L. Douglas, A. Dovbnya, A.G. Downes, K. Dreimanis,
+  M.W. Dudek, L. Dufour, V. Duk, P. Durante, J.M. Durham, D. Dutta, A. Dziurda,
+  A. Dzyuba, S. Easo, U. Egede, V. Egorychev, S. Eidelman, S. Eisenhardt, S.
+  Ek-In, L. Eklund, S. Ely, A. Ene, E. Epple, S. Escher, J. Eschle, S. Esen, T.
+  Evans, A. Falabella, J. Fan, Y. Fan, B. Fang, S. Farry, D. Fazzini, M. F\'eo,
+  A. Fernandez Prieto, J.M. Fernandez-tenllado Arribas, A.D. Fernez, F.
+  Ferrari, L. Ferreira Lopes, F. Ferreira Rodrigues, S. Ferreres Sole, M.
+  Ferrillo, M. Ferro-Luzzi, S. Filippov, R.A. Fini, M. Fiorini, M. Firlej, K.M.
+  Fischer, D. Fitzgerald, C. Fitzpatrick, T. Fiutowski, A. Fkiaras, F. Fleuret,
+  M. Fontana, F. Fontanelli, R. Forty, V. Franco Lima, M. Franco Sevilla, M.
+  Frank, E. Franzoso, G. Frau, C. Frei, D.A. Friday, J. Fu, Q. Fuehring, W.
+  Funk, E. Gabriel, T. Gaintseva, A. Gallas Torreira, D. Galli, S. Gambetta, Y.
+  Gan, M. Gandelman, P. Gandini, Y. Gao, M. Garau, L.M. Garcia Martin, P.
+  Garcia Moreno, J. Garc\'ia Pardi\~nas, B. Garcia Plana, F.A. Garcia Rosales,
+  L. Garrido, C. Gaspar, R.E. Geertsema, D. Gerick, L.L. Gerken, E. Gersabeck,
+  M. Gersabeck, T. Gershon, D. Gerstel, Ph. Ghez, V. Gibson, H.K. Giemza, M.
+  Giovannetti, A. Giovent\`u, P. Gironella Gironell, L. Giubega, C. Giugliano,
+  K. Gizdov, E.L. Gkougkousis, V.V. Gligorov, C. G\"obel, E. Golobardes, D.
+  Golubkov, A. Golutvin, A. Gomes, S. Gomez Fernandez, F. Goncalves Abrantes,
+  M. Goncerz, G. Gong, P. Gorbounov, I.V. Gorelov, C. Gotti, E. Govorkova, J.P.
+  Grabowski, T. Grammatico, L.A. Granado Cardoso, E. Graug\'es, E. Graverini,
+  G. Graziani, A. Grecu, L.M. Greeven, P. Griffith, L. Grillo, S. Gromov, B.R.
+  Gruberg Cazon, C. Gu, M. Guarise, P. A. G\"unther, E. Gushchin, A. Guth, Y.
+  Guz, T. Gys, T. Hadavizadeh, G. Haefeli, C. Haen, J. Haimberger, T.
+  Halewood-leagas, P.M. Hamilton, J.P. Hammerich, Q. Han, X. Han, T.H. Hancock,
+  S. Hansmann-Menzemer, N. Harnew, T. Harrison, C. Hasse, M. Hatch, J. He, M.
+  Hecker, K. Heijhoff, K. Heinicke, A.M. Hennequin, K. Hennessy, L. Henry, J.
+  Heuel, A. Hicheur, D. Hill, M. Hilton, S.E. Hollitt, J. Hu, J. Hu, W. Hu, X.
+  Hu, W. Huang, X. Huang, W. Hulsbergen, R.J. Hunter, M. Hushchyn, D.
+  Hutchcroft, D. Hynds, P. Ibis, M. Idzik, D. Ilin, P. Ilten, A. Inglessi, A.
+  Ishteev, K. Ivshin, R. Jacobsson, S. Jakobsen, E. Jans, B.K. Jashal, A.
+  Jawahery, V. Jevtic, M. Jezabek, F. Jiang, M. John, D. Johnson, C.R. Jones,
+  T.P. Jones, B. Jost, N. Jurik, S. Kandybei, Y. Kang, M. Karacson, M. Karpov,
+  F. Keizer, M. Kenzie, T. Ketel, B. Khanji, A. Kharisova, S. Kholodenko, T.
+  Kirn, V.S. Kirsebom, O. Kitouni, S. Klaver, K. Klimaszewski, S. Koliiev, A.
+  Kondybayeva, A. Konoplyannikov, P. Kopciewicz, R. Kopecna, P. Koppenburg, M.
+  Korolev, I. Kostiuk, O. Kot, S. Kotriakhova, P. Kravchenko, L. Kravchuk, R.D.
+  Krawczyk, M. Kreps, F. Kress, S. Kretzschmar, P. Krokovny, W. Krupa, W.
+  Krzemien, W. Kucewicz, M. Kucharczyk, V. Kudryavtsev, H.S. Kuindersma, G.J.
+  Kunde, T. Kvaratskheliya, D. Lacarrere, G. Lafferty, A. Lai, A. Lampis, D.
+  Lancierini, J.J. Lane, R. Lane, G. Lanfranchi, C. Langenbruch, J. Langer, O.
+  Lantwin, T. Latham, F. Lazzari, R. Le Gac, S.H. Lee, R. Lef\`evre, A. Leflat,
+  S. Legotin, O. Leroy, T. Lesiak, B. Leverington, H. Li, L. Li, P. Li, S. Li,
+  Y. Li, Y. Li, Z. Li, X. Liang, T. Lin, R. Lindner, V. Lisovskyi, R. Litvinov,
+  G. Liu, H. Liu, S. Liu, A. Loi, J. Lomba Castro, I. Longstaff, J.H. Lopes,
+  G.H. Lovell, Y. Lu, D. Lucchesi, S. Luchuk, M. Lucio Martinez, V. Lukashenko,
+  Y. Luo, A. Lupato, E. Luppi, O. Lupton, A. Lusiani, X. Lyu, L. Ma, R. Ma, S.
+  Maccolini, F. Machefert, F. Maciuc, V. Macko, P. Mackowiak, S.
+  Maddrell-Mander, O. Madejczyk, L.R. Madhan Mohan, O. Maev, A. Maevskiy, D.
+  Maisuzenko, M.W. Majewski, J.J. Malczewski, S. Malde, B. Malecki, A. Malinin,
+  T. Maltsev, H. Malygina, G. Manca, G. Mancinelli, D. Manuzzi, D. Marangotto,
+  J. Maratas, J.F. Marchand, U. Marconi, S. Mariani, C. Marin Benito, M.
+  Marinangeli, J. Marks, A.M. Marshall, P.J. Marshall, G. Martellotti, L.
+  Martinazzoli, M. Martinelli, D. Martinez Santos, F. Martinez Vidal, A.
+  Massafferri, M. Materok, R. Matev, A. Mathad, Z. Mathe, V. Matiunin, C.
+  Matteuzzi, K.R. Mattioli, A. Mauri, E. Maurice, J. Mauricio, M. Mazurek, M.
+  McCann, L. Mcconnell, T.H. Mcgrath, A. McNab, R. McNulty, J.V. Mead, B.
+  Meadows, G. Meier, N. Meinert, D. Melnychuk, S. Meloni, M. Merk, A. Merli, L.
+  Meyer Garcia, M. Mikhasenko, D.A. Milanes, E. Millard, M. Milovanovic, M.-N.
+  Minard, A. Minotti, L. Minzoni, S.E. Mitchell, B. Mitreska, D.S. Mitzel, A.
+  M\"odden, R.A. Mohammed, R.D. Moise, T. Momb\"acher, I.A. Monroy, S. Monteil,
+  M. Morandin, G. Morello, M.J. Morello, J. Moron, A.B. Morris, A.G. Morris, R.
+  Mountain, H. Mu, F. Muheim, M. Mulder, D. M\"uller, K. M\"uller, C.H. Murphy,
+  D. Murray, P. Muzzetto, P. Naik, T. Nakada, R. Nandakumar, T. Nanut, I.
+  Nasteva, M. Needham, I. Neri, N. Neri, S. Neubert, N. Neufeld, R. Newcombe,
+  T.D. Nguyen, C. Nguyen-Mau, E.M. Niel, S. Nieswand, N. Nikitin, N.S. Nolte,
+  C. Normand, C. Nunez, A. Oblakowska-Mucha, V. Obraztsov, D.P. O'Hanlon, R.
+  Oldeman, M.E. Olivares, C.J.G. Onderwater, A. Ossowska, J.M. Otalora
+  Goicochea, T. Ovsiannikova, P. Owen, A. Oyanguren, B. Pagare, P.R. Pais, T.
+  Pajero, A. Palano, M. Palutan, Y. Pan, G. Panshin, A. Papanestis, M.
+  Pappagallo, L.L. Pappalardo, C. Pappenheimer, W. Parker, C. Parkes, C.J.
+  Parkinson, B. Passalacqua, G. Passaleva, A. Pastore, M. Patel, C. Patrignani,
+  C.J. Pawley, A. Pearce, A. Pellegrino, M. Pepe Altarelli, S. Perazzini, D.
+  Pereima, P. Perret, M. Petric, K. Petridis, A. Petrolini, A. Petrov, S.
+  Petrucci, M. Petruzzo, T.T.H. Pham, A. Philippov, L. Pica, M. Piccini, B.
+  Pietrzyk, G. Pietrzyk, M. Pili, D. Pinci, F. Pisani, Resmi P.K, V. Placinta,
+  J. Plews, M. Plo Casasus, F. Polci, M. Poli Lener, M. Poliakova, A.
+  Poluektov, N. Polukhina, I. Polyakov, E. Polycarpo, G.J. Pomery, S. Ponce, D.
+  Popov, S. Popov, S. Poslavskii, K. Prasanth, L. Promberger, C. Prouve, V.
+  Pugatch, H. Pullen, G. Punzi, H. Qi, W. Qian, J. Qin, N. Qin, R. Quagliani,
+  B. Quintana, N.V. Raab, R.I. Rabadan Trejo, B. Rachwal, J.H. Rademacker, M.
+  Rama, M. Ramos Pernas, M.S. Rangel, F. Ratnikov, G. Raven, M. Reboud, F.
+  Redi, F. Reiss, C. Remon Alepuz, Z. Ren, V. Renaudin, R. Ribatti, S.
+  Ricciardi, K. Rinnert, P. Robbe, G. Robertson, A.B. Rodrigues, E. Rodrigues,
+  J.A. Rodriguez Lopez, A. Rollings, P. Roloff, V. Romanovskiy, M. Romero
+  Lamas, A. Romero Vidal, J.D. Roth, M. Rotondo, L. Roy, M.S. Rudolph, T. Ruf,
+  J. Ruiz Vidal, A. Ryzhikov, J. Ryzka, J.J. Saborido Silva, N. Sagidova, N.
+  Sahoo, B. Saitta, M. Salomoni, D. Sanchez Gonzalo, C. Sanchez Gras, R.
+  Santacesaria, C. Santamarina Rios, M. Santimaria, E. Santovetti, D. Saranin,
+  G. Sarpis, M. Sarpis, A. Sarti, C. Satriano, A. Satta, M. Saur, D. Savrina,
+  H. Sazak, L.G. Scantlebury Smead, A. Scarabotto, S. Schael, M. Schiller, H.
+  Schindler, M. Schmelling, B. Schmidt, O. Schneider, A. Schopper, M.
+  Schubiger, S. Schulte, M.H. Schune, R. Schwemmer, B. Sciascia, S. Sellam, A.
+  Semennikov, M. Senghi Soares, A. Sergi, N. Serra, L. Sestini, A. Seuthe, P.
+  Seyfert, Y. Shang, D.M. Shangase, M. Shapkin, I. Shchemerov, L. Shchutska, T.
+  Shears, L. Shekhtman, Z. Shen, V. Shevchenko, E.B. Shields, E. Shmanin, J.D.
+  Shupperd, B.G. Siddi, R. Silva Coutinho, G. Simi, S. Simone, N. Skidmore, T.
+  Skwarnicki, M.W. Slater, I. Slazyk, J.C. Smallwood, J.G. Smeaton, A.
+  Smetkina, E. Smith, M. Smith, A. Snoch, M. Soares, L. Soares Lavra, M.D.
+  Sokoloff, F.J.P. Soler, A. Solovev, I. Solovyev, F.L. Souza De Almeida, B.
+  Souza De Paula, B. Spaan, E. Spadaro Norella, P. Spradlin, F. Stagni, M.
+  Stahl, S. Stahl, P. Stefko, O. Steinkamp, O. Stenyakin, H. Stevens, S. Stone,
+  M.E. Stramaglia, M. Straticiuc, D. Strekalina, F. Suljik, J. Sun, L. Sun, Y.
+  Sun, P. Svihra, P.N. Swallow, K. Swientek, A. Szabelski, T. Szumlak, M.
+  Szymanski, S. Taneja, A. Terentev, F. Teubert, E. Thomas, K.A. Thomson, V.
+  Tisserand, S. T'Jampens, M. Tobin, L. Tomassetti, D. Torres Machado, D.Y.
+  Tou, M.T. Tran, E. Trifonova, C. Trippl, G. Tuci, A. Tully, N. Tuning, A.
+  Ukleja, D.J. Unverzagt, E. Ursov, A. Usachov, A. Ustyuzhanin, U. Uwer, A.
+  Vagner, V. Vagnoni, A. Valassi, G. Valenti, N. Valls Canudas, M. van
+  Beuzekom, M. Van Dijk, E. van Herwijnen, C.B. Van Hulse, M. van Veghel, R.
+  Vazquez Gomez, P. Vazquez Regueiro, C. V\'azquez Sierra, S. Vecchi, J.J.
+  Velthuis, M. Veltri, A. Venkateswaran, M. Veronesi, M. Vesterinen, D. Vieira,
+  M. Vieites Diaz, H. Viemann, X. Vilasis-Cardona, E. Vilella Figueras, A.
+  Villa, P. Vincent, D. Vom Bruch, A. Vorobyev, V. Vorobyev, N. Voropaev, K.
+  Vos, R. Waldi, J. Walsh, C. Wang, J. Wang, J. Wang, J. Wang, J. Wang, M.
+  Wang, R. Wang, Y. Wang, Z. Wang, Z. Wang, H.M. Wark, N.K. Watson, S.G. Weber,
+  D. Websdale, C. Weisser, B.D.C. Westhenry, D.J. White, M. Whitehead, D.
+  Wiedner, G. Wilkinson, M. Wilkinson, I. Williams, M. Williams, M.R.J.
+  Williams, F.F. Wilson, W. Wislicki, M. Witek, L. Witola, G. Wormser, S.A.
+  Wotton, H. Wu, K. Wyllie, Z. Xiang, D. Xiao, Y. Xie, A. Xu, J. Xu, L. Xu, M.
+  Xu, Q. Xu, Z. Xu, Z. Xu, D. Yang, S. Yang, Y. Yang, Z. Yang, Z. Yang, Y. Yao,
+  L.E. Yeomans, H. Yin, J. Yu, X. Yuan, O. Yushchenko, E. Zaffaroni, M.
+  Zavertyaev, M. Zdybal, O. Zenaiev, M. Zeng, D. Zhang, L. Zhang, S. Zhang, Y.
+  Zhang, Y. Zhang, A. Zharkova, A. Zhelezov, Y. Zheng, X. Zhou, Y. Zhou, X.
+  Zhu, Z. Zhu, V. Zhukov, J.B. Zonneveld, Q. Zou, S. Zucchelli, D. Zuliani, G.
+  Zunica
+Categories: hep-ex
+Comments: All figures and tables, along with any supplementary material and
+  additional information, are available at
+  https://cern.ch/lhcbproject/Publications/p/LHCb-PAPER-2021-001.html (LHCb
+  public pages)
+Report-no: LHCb-PAPER-2021-001, CERN-EP-2021-036
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+  Searches for $CP$ violation in the two-body decays $D_{(s)}^{+}\rightarrow
+h^{+}\pi^{0}$ and $D_{(s)}^{+} \rightarrow h^{+}\eta$ (where $h^{+}$ denotes a
+$\pi^{+}$ or $K^{+}$ meson) are performed using $pp$ collision data collected
+by the LHCb experiment corresponding to either 9 fb$^{-1}$ or 6 fb$^{-1}$ of
+integrated luminosity. The $\pi^{0}$ and $\eta$ mesons are reconstructed using
+the $e^{+}e^{-}\gamma$ final state, which can proceed as three-body decays
+$\pi^{0}\rightarrow e^{+}e^{-}\gamma$ and $\eta \rightarrow e^{+}e^{-}\gamma$,
+or via the two-body decays $\pi^{0}\rightarrow \gamma\gamma$ and
+$\eta\rightarrow\gamma\gamma$ followed by a photon conversion. The measurements
+are made relative to the control modes $D_{(s)}^{+}\rightarrow K_{S}^{0} h^{+}$
+to cancel the production and detection asymmetries. The $CP$ asymmetries are
+measured to be \begin{align}
+  \mathcal{A}_{CP}(D^{+}\rightarrow \pi^{+}\pi^{0}) &= (-1.3 \pm 0.9 \pm 0.6
+)\%, \\
+  \mathcal{A}_{CP}(D^{+}\rightarrow K^{+}\pi^{0}) &= (-3.2 \pm 4.7 \pm 2.1 )\%,
+\\
+  \mathcal{A}_{CP}(D^{+}\rightarrow \pi^{+}\eta) &= (-0.2 \pm 0.8 \pm 0.4 )\%,
+\\
+  \mathcal{A}_{CP}(D^{+}\rightarrow K^{+}\eta) &= (-6 \pm 10 \pm 4 )\%, \\
+  \mathcal{A}_{CP}(D_{s}^{+}\rightarrow K^{+}\pi^{0}) &= (-0.8 \pm 3.9 \pm 1.2
+)\%, \\
+  \mathcal{A}_{CP}(D_{s}^{+}\rightarrow \pi^{+}\eta) &= (0.8 \pm 0.7 \pm 0.5
+)\%, \\
+  \mathcal{A}_{CP}(D_{s}^{+}\rightarrow K^{+}\eta) &= (0.9 \pm 3.7 \pm 1.1 )\%,
+\end{align} where the first uncertainties are statistical and the second
+systematic. These results are consistent with no $CP$ violation and mostly
+constitute the most precise measurements of $\mathcal{A}_{CP}$ in these decay
+modes to date.
+\\

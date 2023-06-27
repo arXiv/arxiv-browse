@@ -16,7 +16,7 @@
   <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20221117" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20230622" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
@@ -34,9 +34,14 @@
         <div class="column" id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
-
+        {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
+        {%- if rd_int >= 202305010100 and rd_int <= 202308010100 -%}
+        <div class="column banner-minimal">
+            <a href="https://info.arxiv.org/hiring/">We are hiring</a></p>
+        </div>
+        {%- endif -%}
         <div class="column" id="support-ack">
-          <a id="support-ack-url" href="{{ url_for('acknowledgment') }}">We gratefully acknowledge support from<br/>the Simons Foundation and member institutions.</a>
+          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors. <a href="https://info.arxiv.org/about/donate.html">Donate</a></span>
         </div>
       </div>
 

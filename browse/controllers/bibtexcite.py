@@ -1,14 +1,13 @@
-"""Gets bibtex citation for the paper."""
+"""Gets BibTeX citation for the paper."""
 from typing import Callable
 
-from flask import Response, make_response
-from werkzeug.exceptions import InternalServerError
-
-from browse.exceptions import AbsNotFound
-from browse.services.documents import get_doc_service
-from browse.services.documents.base_documents import AbsNotFoundException, \
-    AbsVersionNotFoundException, AbsDeletedException
+from browse.domain.identifier import IdentifierIsArchiveException, IdentifierException
 from browse.formatting.cite import arxiv_bibtex
+from browse.services.documents import get_doc_service
+from browse.services.documents.base_documents import (
+    AbsDeletedException, AbsException, AbsNotFoundException,
+    AbsVersionNotFoundException)
+from flask import Response, make_response
 
 
 def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
@@ -17,20 +16,24 @@ def _handle_failure(func: Callable[[str],Response]) -> Callable[[str],Response]:
         try:
             return func(arxiv_id)
         except AbsNotFoundException:
-            raise AbsNotFound(data={'reason': 'not_found'})
+            return make_response("{'reason': 'not_found'}", 404)
         except AbsVersionNotFoundException:
-            raise AbsNotFound(data={'reason': 'version_not_found'})
-        except AbsDeletedException as e:
-            raise AbsNotFound(data={'reason': 'deleted', 'message': e})
-        except Exception as ee:
-            raise InternalServerError() from ee
+            return make_response("{'reason': 'version_not_found'}", 404)
+        except AbsDeletedException:
+            return make_response("{'reason': 'deleted'}", 404)
+        except (IdentifierIsArchiveException, IdentifierException):
+            return make_response("{'reason': 'bad_id'}", 400)
+        except AbsException:
+            return make_response("", 400)
+        # For all others let it fail and we'll notice the error in the logs.
+        # Rethrowing as InternalServerError hides the error from the logs.
 
     return wrapper
 
 
 @_handle_failure
 def bibtex_citation(arxiv_id: str) -> Response:
-    """Get citation for the paper in bibtex format.
+    """Get citation for the paper in BibTeX format.
 
     Parameters
     ----------

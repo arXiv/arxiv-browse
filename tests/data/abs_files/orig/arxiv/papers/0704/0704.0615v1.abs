@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+\\
+arXiv:0704.0615
+From: Trevor Bruen TB <author@example.com>
+Date: Wed, 4 Apr 2007 17:36:18 GMT   (56kb,D)
+
+Title: A fresh look at maximum parsimony
+Authors: Trevor Bruen, David Bryant
+Categories: q-bio.PE
+\\
+  This paper presents a new description of the maximum parsimony criterion. In
+particular, this paper demonstrates a new mathematical equivalence between
+Fitch parsimony as well as selection of certain types of consensus trees. The
+link between parsimony and consensus is intended to contribute to the
+discussion on parsimony as well as consensus and total evidence. A link between
+parsimony and consensus trees has already been established by the MRP (matrix
+representation with parsimony) method of Baum and Ragan
+\citep{Baum1992,Ragan1992}. Here, however, a link arises in the other
+direction: whereas Baum and Ragan use parsimony to solve a problem in consensus
+trees, in this paper parsimony itself is shown to be a consensus method. Unless
+otherwise indicated, the term {\em parsimony} denotes Fitch parsimony.
+\\

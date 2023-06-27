@@ -12,7 +12,10 @@ from browse.services.anypath import APath
 
 logger = logging.getLogger(__name__)
 
-
+# List of tuples containing the valid source file name extensions and their
+# corresponding dissemination formats.
+# There are minor performance implications in the ordering when doing
+# filesystem lookups, so the ordering here should be preserved.
 VALID_SOURCE_EXTENSIONS = [
     ('.tar.gz', None),
     ('.pdf', ['pdfonly']),

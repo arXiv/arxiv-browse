@@ -36,6 +36,8 @@ from browse.services.database import (
     has_sciencewise_ping,
 )
 from browse.services.documents import get_doc_service
+from browse.services.documents.format_codes import formats_from_source_type
+
 from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
@@ -134,8 +136,20 @@ def get_abs_page(arxiv_id: str) -> Response:
             abs_meta, download_format_pref, add_sciencewise_ping
         )
 
-        # Following are less critical and template must display without them
+        response_data["withdrawn_versions"] = []
+        response_data["higher_version_withdrawn"] = False
+        for ver_index in range(0, abs_meta.highest_version()):
+            formats = formats_from_source_type(abs_meta.version_history[ver_index].source_type.code)
+            if len(formats) == 1 and formats[0] == "src":
+                response_data["withdrawn_versions"].append(abs_meta.version_history[ver_index])
+                if not response_data["higher_version_withdrawn"] and ver_index > abs_meta.version - 1:
+                    response_data["higher_version_withdrawn"] = True
+                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier, ver_index+1)
+
+        response_data["withdrawn"] = abs_meta.version_history[abs_meta.version - 1] in response_data["withdrawn_versions"]
+
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
+
     except AbsNotFoundException as ex:
         if (arxiv_identifier.is_old_id
             and arxiv_identifier.archive in taxonomy.definitions.ARCHIVES):
@@ -423,3 +437,12 @@ def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dic
         "listing_url": urljoin(DBLP_BASE_URL, listing_path),
         "author_list": author_list,
     }
+
+
+def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str]:
+    """Gets the submitter of the version."""
+    try:
+        abs_meta = get_doc_service().get_abs(f"{arxiv_id.id}v{ver}")
+        return abs_meta.submitter.name or None
+    except:
+        return None
