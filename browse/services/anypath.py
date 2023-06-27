@@ -15,10 +15,25 @@ APath = Union[Path, CloudPath]
 def to_anypath(item: Union[str, Path]) -> APath:
     """A thread safe `to_anypath()`
 
-    Cloudpath lib makes no attempt to be thread safe.
+    This function uses a separate cloudpathlib client for each thread. And
+    also sets cloudpathlib's caching to remove the cached file right after the
+    `open()` is closed.
 
-    This function attempts to use a seperate cloudpathlib client for each Flask
-    thread.
+    Rational:
+
+    GCP CloudRun uses a RAM FS so everything written to disk ends up using
+    memory.
+
+    cloudpathlib is not thread safe if a single `Client` is used across multiple
+    threads. As of 2023-06 when it writes and deletes from its cache there is no
+    code to check for race conditions. Ex `Client.clear_cache()`.
+
+    Flask apps run multi threaded.
+
+    So we have two problems:
+
+    1. a shared cloudpathlib obj is not thread safe and we must use threads
+    2. we'll fill up memory with cloudpathlib's default caching
     """
     if isinstance(item, CloudPath) or isinstance(item, Path):
         return item
@@ -83,6 +98,9 @@ def _gscloudpath_client() -> GSClient:
     if thread_local_client:
         return thread_local_client
 
-    tlgsc = GSClient(storage_client=_gs_client())
+    # Each GSClient will use a thread safe `tempdir.TemporaryDirectory`
+    # close_file casues the cache to be cleared on file close
+    tlgsc = GSClient(storage_client=_gs_client(),
+                     file_cache_mode="close_file")
     _tlocal_gscloudpath.set(tlgsc)
     return tlgsc
