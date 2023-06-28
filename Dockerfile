@@ -47,7 +47,7 @@ ADD wsgi.py /app/
 
 RUN echo $git_commit > /git-commit.txt
 
-EXPOSE $PORT
+EXPOSE 8080
 
 RUN useradd e-prints
 USER e-prints
@@ -56,7 +56,7 @@ USER e-prints
 # to start a docker instance during an integration test. See
 # cicd/cloudbuild-master-pr.yaml for how it is used
 
-ENV GUNICORN gunicorn --bind :$PORT \
+ENV GUNICORN gunicorn --bind :8080 \
     --workers 1 --threads 8 --timeout 0 \
      "browse.factory:create_web_app()"
 
