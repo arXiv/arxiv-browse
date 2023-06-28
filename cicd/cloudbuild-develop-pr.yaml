@@ -1,5 +1,8 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/arxiv-browse:latest || exit 0']
+  - name: 'gcr.io/cloud-builders/docker'
     args: [ 
               'build', 
               '-t', 
@@ -8,6 +11,27 @@ steps:
               'gcr.io/$PROJECT_ID/arxiv-browse:latest',
               '.'
           ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - >-
+        gcr.io/$PROJECT_ID/arxiv-browse:latest
+    id: Push
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=gcr.io/$PROJECT_ID/arxiv-browse:latest
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
 images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest']
 
 
