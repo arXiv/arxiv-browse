@@ -5,7 +5,7 @@ steps:
               '-t', 
               'gcr.io/$PROJECT_ID/arxiv-browse:latest', 
               '--cache-from',
-              'gcr.io/$PROJECT_ID/arxiv-browse:latest'
+              'gcr.io/$PROJECT_ID/arxiv-browse:latest',
               '.'
           ]
 images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest']
