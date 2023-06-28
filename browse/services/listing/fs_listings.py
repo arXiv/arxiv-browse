@@ -336,8 +336,8 @@ class FsListingFilesService(ListingService):
         try:
             fobj = self.obj_store.to_obj(self.listing_files_root)
             if not fobj.exists():
-                return ["listing_files_root does not exist"]
+                return [f"listing_files_root '{self.listing_files_root}' does not exist"]
             else:
                 return []
         except Exception as ex:
-            return [f"Could not access listing_files_root due to {ex}"]
+            return [f"Could not access listing_files_root '{self.listing_files_root}' due to {ex}"]
