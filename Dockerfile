@@ -20,7 +20,6 @@ ENV PYTHONFAULTHANDLER=1 \
     LC_ALL=en_US.utf8 \
     LANG=en_US.utf8 \
     APP_HOME=/app \
-    PORT=8080
 
 WORKDIR /app
 
@@ -48,7 +47,7 @@ ADD wsgi.py /app/
 
 RUN echo $git_commit > /git-commit.txt
 
-EXPOSE 8080
+EXPOSE $PORT
 
 RUN useradd e-prints
 USER e-prints
