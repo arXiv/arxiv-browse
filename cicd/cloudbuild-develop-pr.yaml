@@ -1,8 +1,14 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/browse:$SHORT_SHA', '.' ]
+    args: [ 
+              'build', 
+              '-t', 
+              'gcr.io/$PROJECT_ID/arxiv-browse:latest', 
+              '--cache-from',
+              'gcr.io/$PROJECT_ID/arxiv-browse:latest'
+              '.'
+          ]
+images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest']
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'run','gcr.io/$PROJECT_ID/browse:$SHORT_SHA', 'pytest' ]
 
 
