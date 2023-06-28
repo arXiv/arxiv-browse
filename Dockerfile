@@ -19,7 +19,7 @@ ENV PYTHONFAULTHANDLER=1 \
     TRACE=1 \
     LC_ALL=en_US.utf8 \
     LANG=en_US.utf8 \
-    APP_HOME=/app \
+    APP_HOME=/app
 
 WORKDIR /app
 
