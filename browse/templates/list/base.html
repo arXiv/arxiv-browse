@@ -58,9 +58,9 @@
   {% endif %}
 
   {% for item in items %}
-  {% set article = item['article'] %}
+  {% set article = item.article %}
   {% set ids = article.arxiv_id %}
-  {% set listing_index = item['list_index'] %}
+  {% set listing_index = item.list_index %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
@@ -149,7 +149,7 @@
   {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
   {% set latexml_link = latexml[ article.arxiv_id_v ] %}
-  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
+  [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
   {%- if 'ps' in downloads -%}
     , <a href="{{url_for('dissemination.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
   {%- endif -%}

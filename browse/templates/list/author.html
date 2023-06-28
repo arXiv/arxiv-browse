@@ -4,23 +4,24 @@
 
 {% block content %}
 <div id='content-inner'>
+    <div id='dlpage'>
+        <h1>{{ title }}</h1>
 
-    <h1>{{ title }}</h1>
-
-    {%- if orcid is not None -%}
-    <p>
-        See also <a href="/help/orcid">ORCID</a> 
-        {{ orcid_logo() }} <a href="{{ orcid }}">{{ orcid }}</a>.
-    </p>
-    {%- endif -%}
-    {{ item_list ( abstracts, '' ) }}
-    {{ footer_text() }}
+        {%- if orcid -%}
+        <p>
+            See also <a href="/help/orcid">ORCID</a> 
+            {{ orcid_logo() }} <a href="{{ orcid }}">{{ orcid }}</a>.
+        </p>
+        {%- endif -%}
+        {{ item_list ( abstracts, '' ) }}
+        {{ footer_text() }}
+    </div>
 </div>
 {%- endblock -%}
 
 {% macro orcid_logo() %}
 <a href="http://orcid.org">
-    <img src="/icons/orcid_16x16.png" alt="ORCID logo" 
+    <img src="{{ url_for('static', filename='images/icons/orcid_16x16.png') }}" alt="ORCID logo" 
         style="position:relative;bottom:-3px"/>
 </a> 
 {% endmacro %}

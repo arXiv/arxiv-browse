@@ -37,7 +37,7 @@ from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
-from browse.controllers.author import get_a_page
+from browse.controllers.list_page.author import get_a_page
 
 logger = logging.getLogger(__name__)
 geoip_reader = None

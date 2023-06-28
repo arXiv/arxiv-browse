@@ -56,6 +56,8 @@ ENV FLASK_DEBUG 1
 ENV FLASK_APP /opt/arxiv/app.py
 
 RUN useradd e-prints
+RUN chown e-prints:e-prints /app/tests/data/
+RUN chmod 775 /app/tests/data/
 USER e-prints
 
 # Why is this command in an env var and not just run in CMD?  So it can be used

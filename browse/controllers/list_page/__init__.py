@@ -43,6 +43,7 @@ import math
 from datetime import date, datetime
 from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
+import re
 
 from arxiv import taxonomy
 from arxiv.taxonomy.definitions import CATEGORIES
@@ -54,11 +55,11 @@ from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_type
-from browse.services.util.latexml import get_latexml_url
-
-import re
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service)
+
+from browse.formatting.latexml import get_latexml_url
+
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
@@ -317,7 +318,7 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
     return rd
 
-def _src_code(article: Union[DocMetadata])->str:
+def _src_code(article: DocMetadata)->str:
     vhs = [vh for vh in article.version_history if vh.version == article.version]
     if vhs:
         return vhs[0].source_type.code
@@ -332,7 +333,7 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
 
 def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
-    return {item['article'].arxiv_id_v: get_latexml_url(item['article'].arxiv_identifier)
+    return {item.article.arxiv_id_v: get_latexml_url(item.article)
                 for item in listings}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:

@@ -39,7 +39,7 @@ from browse.services.database.models import (
 )
 from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
-from browse.domain.listing import ListingItem
+from browse.services.listing import ListingItem
 from arxiv.base import logging
 from logging import Logger
 
@@ -473,7 +473,7 @@ def service_status()->List[str]:
 
     return []
 
-@db_handle_error(logger=logger, default_return_val=None) #TODO: Change Default Value
+@db_handle_error(db_logger=logger, default_return_val=None) #TODO: Change Default Value
 def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
     row = (
@@ -484,7 +484,7 @@ def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optiona
     )
     return row.conversion_status if row else None
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_author_id (author_id: str) -> Optional[int]:
     row = (
         db.session.query(AuthorIds)
@@ -493,7 +493,7 @@ def get_user_id_by_author_id (author_id: str) -> Optional[int]:
     )
     return row.user_id if row else None
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_orcid (orcid: str) -> Optional[int]:
     row = (
         db.session.query(OrcidIds)
@@ -502,7 +502,7 @@ def get_user_id_by_orcid (orcid: str) -> Optional[int]:
     )
     return row.user_id if row else None
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_display_name (user_id: int) -> Optional[str]:
     row = (
         db.session.query(User)
@@ -522,7 +522,7 @@ def get_user_display_name (user_id: int) -> Optional[str]:
     else:
         return f'{first} {last}'
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_orcid_by_user_id (user_id: int) -> Optional[str]:
     row = (
         db.session.query(OrcidIds)
@@ -531,7 +531,7 @@ def get_orcid_by_user_id (user_id: int) -> Optional[str]:
     )
     return row.orcid if row else None
 
-@db_handle_error(logger=logger, default_return_val=[])
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_articles_for_author (user_id: int) -> List[ListingItem]:
     rows = (
         db.session.query(Document, paper_owners)
@@ -543,5 +543,4 @@ def get_articles_for_author (user_id: int) -> List[ListingItem]:
         .order_by(Document.dated.desc())
         .all()
     )
-    return [{'id': row[0].paper_id, 'listingType': '', 
-             'primary': row[0].primary_subject_class} for row in rows]
+    return [ListingItem(row[0].paper_id, '', row[0].primary_subject_class) for row in rows]

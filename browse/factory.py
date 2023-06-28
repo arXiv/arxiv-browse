@@ -18,6 +18,7 @@ from browse.config import settings
 from browse.routes import ui, dissemination
 from browse.routes import ui, dissemination, src
 from browse.services.database import models
+from browse.services.database.populate_test_latexmldb import populate_test_latexmldb
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
@@ -40,9 +41,10 @@ def create_web_app() -> Flask:
     setattr(app, 'settings', settings)  # facilitates typed access to settings
 
     models.init_app(app)  # type: ignore
-    if app.config.get('DEBUG'):
-        with app.app_context():
-            populate_test_latexmldb()
+    # root.warning(f"DEBUG: {app.config.get('DEBUG')}")
+    # if app.config.get('DEBUG'):
+    #     with app.app_context():
+    #         populate_test_latexmldb()
 
     Base(app)
     #Auth(app)

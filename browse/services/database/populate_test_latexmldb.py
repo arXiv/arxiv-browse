@@ -1,5 +1,4 @@
 from typing import Optional
-from flask_sqlalchemy import SQLAlchemy
 from browse.services.database.models import db, DBLaTeXMLDocuments
 from arxiv.base import logging
 
@@ -16,7 +15,7 @@ doc1 = {
 }
 
 doc2 = {
-    'paper_id': '2306.00022',
+    'paper_id': '2303.00763',
     'document_version': 1,
     'conversion_status': 1,
     'latexml_version': 'test_latexml_version',
@@ -56,7 +55,7 @@ def _insert_latexml_doc (
 
 def populate_test_latexmldb ():
     logger.warning('CREATING LATEXML TABLES')
-    db.create_all(bind='latexml')
+    db.create_all('latexml')
     _insert_latexml_doc(**doc1)
     _insert_latexml_doc(**doc2)
     _insert_latexml_doc(**doc3)

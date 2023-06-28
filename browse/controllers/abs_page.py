@@ -44,27 +44,16 @@ from browse.services.documents.format_codes import formats_from_source_type
 from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
-    DBLP_AUTHOR_SEARCH_PATH,
-    get_dblp_listing_path,
-    get_dblp_authors,
-    get_datacite_doi,
-    get_latexml_status_for_document
-)
-from browse.services.util.external_refs_cits import (
-    include_inspire_link,
-    include_dblp_section,
-    get_computed_dblp_listing_path,
-    get_dblp_bibtex_path,
-)
-from browse.services.util.latexml import get_latexml_url
-from browse.services.document.config.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
+    DBLP_AUTHOR_SEARCH_PATH,
+    include_inspire_link,
+    include_dblp_section,
     get_computed_dblp_listing_path,
     get_dblp_bibtex_path,
-    include_dblp_section,
-    include_inspire_link,
 )
+from browse.formatting.latexml import get_latexml_url
+
 from browse.services.documents.base_documents import (
     AbsDeletedException,
     AbsException,
@@ -127,7 +116,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         abs_meta = get_doc_service().get_abs(arxiv_id)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
-            return {}, status.NOT_MODIFIED, response_headers
+            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
 
         response_data["requested_id"] = (
             arxiv_identifier.idv
@@ -145,7 +134,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             archive=abs_meta.primary_archive.id,
             query=author_query,
         )
-        response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
+        response_data['latexml_url'] = get_latexml_url(abs_meta)
         
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
@@ -153,6 +142,8 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["formats"] = get_article_store().get_dissemination_formats(
             abs_meta, download_format_pref, add_sciencewise_ping
         )
+        if response_data['latexml_url'] is not None:
+            response_data['formats'].append('latexml')
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
@@ -211,7 +202,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             "help@arxiv.org."
         ) from ex
 
-    return response_data, status.OK, response_headers
+    return response_data, status.HTTP_200_OK, response_headers
 
 
 def _non_critical_abs_data(

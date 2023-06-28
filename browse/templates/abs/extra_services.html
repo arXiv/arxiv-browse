@@ -30,48 +30,45 @@
 
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
+  <div id="download-button-info" hidden>
+    {% set author_list = abs_meta.authors.raw.split(',') %}
+    {%- if author_list|length > 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    {%- elif author_list|length == 1 -%}
+    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    {%- else -%}
+    Download a PDF of the paper titled {{abs_meta.title}}
+    {%- endif -%}
+  </div>
+
   {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
   {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
   <li>Unavailable</li>
   {%- elif withdrawn -%}
   <li>Withdrawn</li>
   {% else %}
-    {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
-    {%- for format in format_list if not (format == 'src' and not current) %}
-    {%- if format.startswith('pdf') -%}
-  <li><a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
-    {%- endif -%}
-    {%- if latexml_url -%}
+    {%- for format in format_list %}
+      {%- if format.startswith('pdf') -%}
+  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
+      {%- endif -%}
+      {%- if format == 'latexml' -%}
   <li>
     <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (beta)</a>
   </li>
-    {%- endif -%}
-  <li>
-    {%- if format == 'src' -%}
-    <div id="download-button-info" hidden>
-      {% set author_list = abs_meta.authors.raw.split(',') %}
-      {%- if author_list|length > 1 -%}
-      Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
-      {%- elif author_list|length == 1 -%}
-      Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
-      {%- else -%}
-      Download a PDF of the paper titled {{abs_meta.title}}
       {%- endif -%}
-    </div>
-    <a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
-    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a>
-    {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format == 'dvi' -%}
-    <a href="{{url_for('dissemination.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
-    {%- elif format == 'html' -%}
-    <a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
-    {%- elif format == 'other' -%}
-    <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
-    {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
-    {%- endif -%}
-  </li>
+      {#{%- if format == 'src' and current-%}
+    <li><a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>#}
+      {%- if format.startswith('ps') -%}
+  <li><a href="{{url_for('dissemination.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a></li>
+      {%- elif format == 'dvi' -%}
+  <li><a href="{{url_for('dissemination.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a></li>
+      {%- elif format == 'html' -%}
+  <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
+      {%- elif format == 'other' -%}
+  <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">TeX Source</a></li>
+      {%- elif format == 'nops' -%}
+  <li><a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a></li>
+      {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 </ul>
@@ -158,7 +155,6 @@
 {#- TODO: check whether anything but the ancillary files section uses this -#}
 {%- if ancillary_files %}
     <script type="text/javascript">
-    <!--
      function toggleList(whichLayer,toggleThis)
      {
         var elem, vis;
@@ -183,7 +179,6 @@
           document.getElementById('toggle').title = "Show complete list";
         }
      }
-     //-->
     </script>
 {% endif %}
     <div class="full-text">
@@ -192,15 +187,10 @@
       <h2>Access Paper:</h2>
       {{ generate_download_links(format_list=formats) }}
       <div class="abs-license">
-<<<<<<< HEAD
         {%- if withdrawn -%}
         <div hidden>No license for this version due to withdrawn</div>
         {%- elif abs_meta.license.icon_uri_path -%}
         <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
-=======
-        {%- if abs_meta.license.icon_uri_path -%}
-        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/> License</a>
->>>>>>> authorid
         {%- else -%}
         (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>)
         {%- endif -%}
