@@ -398,11 +398,12 @@ class Settings(BaseSettings):
            else:
                log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
 
-        if self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH:
-            log.warning(f"Unexpected: latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
+        if ("fs_docs" in str(type(self.DOCUMENT_ABSTRACT_SERVICE)) and
+            "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
+            self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
+            log.warning(f"Unexpected: using FS listings and abs sevice but FS don't match. "
+                        "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
                         f"but listings at {self.DOCUMENT_LISTING_PATH}")
-
-
 
 
 settings = Settings()
