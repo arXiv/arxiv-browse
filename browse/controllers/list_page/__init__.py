@@ -54,7 +54,9 @@ from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_type
+from browse.services.util.latexml import get_latexml_url
 
+import re
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service)
 from flask import request, url_for
@@ -223,7 +225,9 @@ def get_listing(subject_or_category: str,
 
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
+    logger.debug('Running dl_for_articles')
     response_data['downloads'] = dl_for_articles(listings)
+    response_data['latexml'] = latexml_links_for_articles(listings)
 
     response_data.update({
         'context': subject_or_category,
@@ -326,6 +330,10 @@ def dl_for_articles(items: List[Any])->Dict[str, Any]:
     return {item.article.arxiv_id_v: formats_from_source_type(_src_code(item.article), dl_pref)
             for item in items}
 
+def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+    """Returns a Dict of article id to latexml links"""
+    return {item['article'].arxiv_id_v: get_latexml_url(item['article'].arxiv_identifier)
+                for item in listings}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to author links."""

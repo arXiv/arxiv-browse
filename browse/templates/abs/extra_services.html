@@ -38,13 +38,16 @@
   {% else %}
     {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
     {%- for format in format_list if not (format == 'src' and not current) %}
+    {%- if format.startswith('pdf') -%}
+  <li><a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
+    {%- endif -%}
+    {%- if latexml_url -%}
+  <li>
+    <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (beta)</a>
+  </li>
+    {%- endif -%}
   <li>
     {%- if format == 'src' -%}
-    <a href="{{url_for('src.e_print', arxiv_id=requested_id)}}" class="abs-button download-eprint">Source</a>
-    {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('dissemination.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format.startswith('pdf') -%}
-        <a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
     <div id="download-button-info" hidden>
       {% set author_list = abs_meta.authors.raw.split(',') %}
       {%- if author_list|length > 1 -%}
@@ -56,21 +59,17 @@
       {%- endif -%}
     </div>
     <a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
+    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a>
+    {%- elif format.startswith('ps') -%}
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
     {%- elif format == 'dvi' -%}
     <a href="{{url_for('dissemination.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
     {%- elif format == 'html' -%}
     <a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
     {%- elif format == 'other' -%}
-    <a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other formats</a>
+    <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
     {%- elif format == 'nops' -%}
-    <a href="{{url_for('dissemination.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
-    {%- elif format == 'sciencewise_pdf' -%}
-    {#- TODO: consider this format for deprecation -#}
-    {#- TODO: create clickthrough link from sciencewise link -#}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">Tagged PDF</a>
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">
-      <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
-    </a>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
     {%- endif -%}
   </li>
     {%- endfor -%}
@@ -190,15 +189,20 @@
     <div class="full-text">
       <a name="other"></a>
       <span class="descriptor">Full-text links:</span>
-      <h2>Download:</h2>
+      <h2>Access Paper:</h2>
       {{ generate_download_links(format_list=formats) }}
       <div class="abs-license">
+<<<<<<< HEAD
         {%- if withdrawn -%}
         <div hidden>No license for this version due to withdrawn</div>
         {%- elif abs_meta.license.icon_uri_path -%}
         <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
+=======
+        {%- if abs_meta.license.icon_uri_path -%}
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/> License</a>
+>>>>>>> authorid
         {%- else -%}
-        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">license</a>)
+        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>)
         {%- endif -%}
       </div>
     </div>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <title>OpenURL settings for arXiv.org</title>
+    </head>
+    <body style="background-color: white;">
+        <h1>OpenURL settings for arXiv.org</h1>
+        
+        <p>
+        This page allows you to enable or disable 
+        OpenURL links on arXiv abstract pages. An OpenURL icon supplied
+        by the linking service you select will appear after to the 
+        paper identifier. These links are enabled by setting a cookie
+        which is stored on your machine and sent back to arXiv with 
+        each web request. For more details see our 
+        <a href="https://arxiv.org/help/openurl">OpenURL help page</a>.
+        </p>
+        
+        <p>Your current  <b>user-OpenURL</b>  cookie settings are:</p>
+        <ul>
+            <li>OpenURL linking service URL =  <b>{{ baseURL }}</b></li> 
+            <li>OpenURL link icon =  <b>{{ icon }}</b> </li> 
+            <li>Open link in new window =  <b>{{ newWindow }}</b></li> 
+            <li>OpenURL version =  <b>{{ version }}</b></li>
+        </ul>
+        
+        <p>
+        You may check the effect of the current settings by visiting 
+        an <a href="/abs/hep-th/9901001">abstract page</a>. You may need
+        to reload the page for new settings to take effect (to overwrite
+        any version in your browser's cache).
+        </p>
+        <form method="post" action="/openurl-cookie">
+            <p>You may alter the settings here:</p>
+            <ul>
+                <li>OpenURL linking service URL  <input type="text" name="baseURL" size="40" maxlength="100"></li> 
+                <li>OpenURL link icon  <input type="text" name="icon" size="40" maxlength="100"></li> 
+                <li>Open link in new window  <label><input type="radio" name="newWindow" value="yes">yes</label> <label><input type="radio" name="newWindow" value="no" checked="checked">no</label></li> 
+                <li>OpenURL version  <label><input type="radio" name="version" value="both" checked="checked">both</label> <label><input type="radio" name="version" value="0.1">0.1</label> <label><input type="radio" name="version" value="1.0">1.0</label> (select 'both' unless you have good reason not to)</li>
+            </ul>
+            <input type="submit" name="Action" value="Set cookie with values above">
+            {% if cookieExists %}
+            <input type="submit" name="Action" value="Delete cookie">
+            {% endif %}
+            <div>
+                <input type="hidden" name=".cgifields" value="newWindow">
+                <input type="hidden" name=".cgifields" value="version">
+            </div>
+        </form>
+        
+        <h3>Technical details</h3>
+        <p>
+        The OpenURL 
+        cookie name is <b>user-OpenURL</b>. Cookies 
+        created by this script will be associated with the path <b>{{ path }}</b> 
+        on this server and are set to expire in {{ expiry }} years 
+        (+{{ expiry }}y). Unless otherwise specified, the URL for the OpenURL 
+        link icon is created by appending <b>/sfx.gif</b> to the linking service 
+        URL (as specified for OpenURL v0.1). This cookie manipulation script 
+        is based on the one developed for
+        <a href="http://sfx1.exlibris-usa.com/openurl/openurl.html">OpenURL v0.1</a>
+        and extended for use with 
+        <a href="http://library.caltech.edu/openurl/">OpenURL v1.0</a>.
+        </p>
+        <address><a href="mailto:help@arxiv.org">help@arxiv.org</a></address>
+    </body>
+</html>

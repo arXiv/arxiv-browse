@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
-
+TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 
 class Settings(BaseSettings):
     """Class for settings for arxiv-browse web app."""
@@ -43,6 +43,9 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI is checked. If that is not set, the
     default, the SQLITE test DB is used.
     """
+
+    """ For a the database tracking html conversion metadata """
+    SQLALCHEMY_BINDS = { "latexml": os.environ.get('LATEXML_DB_URI') or TESTING_LATEXML_DB }
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False

@@ -22,9 +22,13 @@ from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
+
+import os
+
 s3 = FlaskS3()
 
 def create_web_app() -> Flask:
+
     """Initialize an instance of the browse web application."""
 
     root = logging.getLogger()
@@ -36,6 +40,10 @@ def create_web_app() -> Flask:
     setattr(app, 'settings', settings)  # facilitates typed access to settings
 
     models.init_app(app)  # type: ignore
+    if app.config.get('DEBUG'):
+        with app.app_context():
+            populate_test_latexmldb()
+
     Base(app)
     #Auth(app)
     app.register_blueprint(ui.blueprint)

@@ -19,6 +19,9 @@ from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
 from browse.controllers import check_supplied_identifier, biz_tz
+
+from arxiv import status, taxonomy
+# from arxiv.base import logging
 from browse.domain.category import Category
 from browse.domain.identifier import (
     Identifier,
@@ -42,6 +45,19 @@ from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
     DBLP_AUTHOR_SEARCH_PATH,
+    get_dblp_listing_path,
+    get_dblp_authors,
+    get_datacite_doi,
+    get_latexml_status_for_document
+)
+from browse.services.util.external_refs_cits import (
+    include_inspire_link,
+    include_dblp_section,
+    get_computed_dblp_listing_path,
+    get_dblp_bibtex_path,
+)
+from browse.services.util.latexml import get_latexml_url
+from browse.services.document.config.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
     get_computed_dblp_listing_path,
@@ -65,6 +81,7 @@ from browse.controllers.response_headers import (
 )
 from browse.formatting.metatags import meta_tag_metadata
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +145,8 @@ def get_abs_page(arxiv_id: str) -> Response:
             archive=abs_meta.primary_archive.id,
             query=author_query,
         )
-
+        response_data['latexml_url'] = get_latexml_url(arxiv_identifier)
+        
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)

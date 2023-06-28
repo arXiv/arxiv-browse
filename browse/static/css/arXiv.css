@@ -1713,6 +1713,10 @@ div#long-author-list {
     padding: .25em 1em;
     margin: .75em .5em 0 0;
   }
+  .beta-link {
+    font-size:x-small;
+    color:#b31b1b;
+  }
   .abs-button-grey {
     border: 1px solid #666666;
     color: #666666 !important;
@@ -2757,7 +2761,7 @@ body#front.with-cu-identity #header #search {
   flex: none;
   width: 80%;
 }
-.columns. .column.is-full {
+.columns .column.is-full {
   flex: none;
   width: 100%;
 }

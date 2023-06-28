@@ -49,6 +49,11 @@ ADD wsgi.py /app/
 RUN echo $git_commit > /git-commit.txt
 
 EXPOSE 8080
+ENV LC_ALL en_US.utf8
+ENV LANG en_US.utf8
+ENV LOGLEVEL 40
+ENV FLASK_DEBUG 1
+ENV FLASK_APP /opt/arxiv/app.py
 
 RUN useradd e-prints
 USER e-prints
