@@ -1,0 +1,44 @@
+{% extends "list/base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div id='content-inner'>
+
+    <h1>{{ title }}</h1>
+
+    {%- if orcid is not None -%}
+    <p>
+        See also <a href="/help/orcid">ORCID</a> 
+        {{ orcid_logo() }} <a href="{{ orcid }}">{{ orcid }}</a>.
+    </p>
+    {%- endif -%}
+    {{ item_list ( abstracts, '' ) }}
+    {{ footer_text() }}
+</div>
+{%- endblock -%}
+
+{% macro orcid_logo() %}
+<a href="http://orcid.org">
+    <img src="/icons/orcid_16x16.png" alt="ORCID logo" 
+        style="position:relative;bottom:-3px"/>
+</a> 
+{% endmacro %}
+
+{% macro footer_text() %}
+<p>
+    The web address for this page and the arXiv author id for 
+    {{ display_name }} is <a href="{{ auri }}">{{ auri }}</a>.  There is also
+    an <a href="http://en.wikipedia.org/wiki/Atom_(standard)">Atom</a>
+    feed available from <a href="{{ auri }}.atom2">{{ auri }}.atom2</a>
+    (authors combined, best for most current feed readers), and 
+    <a href="{{ auri }}.atom">{{ auri }}.atom</a> (authors in separate
+    atom:author elements).
+</p>
+    
+<p>
+    See <a href="/help/author_identifiers">author identifier help</a>
+    for more information about arXiv author identifiers, please 
+    <a href="/help/contact">report</a> any problems.
+</p>
+{% endmacro %}

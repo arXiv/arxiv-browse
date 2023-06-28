@@ -38,6 +38,7 @@ ENV LANG en_US.utf8
 ENV LOGLEVEL 40
 ENV FLASK_DEBUG 1
 ENV FLASK_APP /opt/arxiv/app.py
+# ENV DEBUG yes
 
 EXPOSE 8000
 ENTRYPOINT ["pipenv", "run"]

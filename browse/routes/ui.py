@@ -31,13 +31,14 @@ from browse.controllers import (
     prevnext,
     tb_page,
     stats_page,
-    openurl_page
 )
+from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
 from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
+from browse.controllers.author import get_a_page
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -488,7 +489,16 @@ def bibtex(arxiv_id: str):  # type: ignore
 def openurl_cookie ():
     if request.method == 'POST':
         resp = redirect(url_for('browse.openurl_cookie'))
-        resp.set_cookie(**openurl_page.make_openurl_cookie())
+        resp.set_cookie(**make_openurl_cookie())
         return resp
-    response, code, headers = openurl_page.get_openurl_page()
+    response, code, headers = get_openurl_page()
     return render_template('openurl_cookies.html', **response), code, headers
+
+@blueprint.route('a/<id>.<any("html", "json", "atom", "atom2"):ext>', methods=['GET'])
+@blueprint.route('a/<id>', defaults={'ext': None}, methods=['GET'])
+def a (id: str, ext: str):
+    if ext is None and '.' in id:
+        raise BadRequest
+    response, code, headers = get_a_page(id, ext)
+    return render_template('list/author.html', **response), code, headers
+    

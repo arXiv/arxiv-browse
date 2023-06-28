@@ -22,6 +22,11 @@ from sqlalchemy import (
     Table,
     text,
     Text,
+    TIMESTAMP
+)
+from sqlalchemy.dialects.mysql import (
+    TINYINT,
+    INTEGER
 )
 from sqlalchemy.orm import relationship
 from werkzeug.local import LocalProxy
@@ -473,6 +478,24 @@ class EndorsementDomain(db.Model):
     endorse_email = Column(Enum("y", "n"), nullable=False, server_default=text("'y'"))
     papers_to_endorse = Column(SmallInteger, nullable=False, server_default=text("'4'"))
 
+class AuthorIds(db.Model):
+    __tablename__ = 'arXiv_author_ids'
+
+    user_id = Column(ForeignKey('tapir_users.user_id'), primary_key=True)
+    author_id = Column(String(50), nullable=False, index=True)
+    updated = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship('User', uselist=False)
+
+class OrcidIds(db.Model):
+    __tablename__ = 'arXiv_orcid_ids'
+
+    user_id = Column(ForeignKey('tapir_users.user_id'), primary_key=True)
+    orcid = Column(String(19), nullable=False, index=True)
+    authenticated = Column(TINYINT(1), nullable=False, server_default=text("'0'"))
+    updated = Column(TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship('User', uselist=False)
 
 in_category = Table(
     "arXiv_in_category",
@@ -523,6 +546,22 @@ stats_hourly = Table(
     Column("node_num", Integer, nullable=False, index=True),
     Column("access_type", String(1), nullable=False, index=True),
     Column("connections", Integer, nullable=False),
+)
+
+paper_owners = Table(
+    'arXiv_paper_owners', 
+    metadata,
+    Column('document_id', ForeignKey('arXiv_documents.document_id'), nullable=False, server_default=text("'0'")),
+    Column('user_id', ForeignKey('tapir_users.user_id'), nullable=False, index=True, server_default=text("'0'")),
+    Column('date', INTEGER(10), nullable=False, server_default=text("'0'")),
+    Column('added_by', ForeignKey('tapir_users.user_id'), nullable=False, index=True, server_default=text("'0'")),
+    Column('remote_addr', String(16), nullable=False, server_default=text("''")),
+    Column('remote_host', String(255), nullable=False, server_default=text("''")),
+    Column('tracking_cookie', String(32), nullable=False, server_default=text("''")),
+    Column('valid', INTEGER(1), nullable=False, server_default=text("'0'")),
+    Column('flag_author', INTEGER(1), nullable=False, server_default=text("'0'")),
+    Column('flag_auto', INTEGER(1), nullable=False, server_default=text("'1'")),
+    Index('document_id', 'document_id', 'user_id', unique=True)
 )
 
 

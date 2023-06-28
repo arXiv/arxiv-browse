@@ -25,10 +25,15 @@ from browse.services.database.models import (
     StatsMonthlySubmission,
     StatsMonthlyDownload,
     DataciteDois,
-    DBLaTeXMLDocuments
+    DBLaTeXMLDocuments,
+    OrcidIds,
+    AuthorIds,
+    User,
+    paper_owners
 )
 from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
+from browse.domain.listing import ListingItem
 from arxiv.base import logging
 from logging import Logger
 
@@ -442,3 +447,65 @@ def get_latexml_status_for_document (paper_id: str, version: int = 1) -> Optiona
         .first()
     )
     return row.conversion_status if row else None
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_user_id_by_author_id (author_id: str) -> Optional[int]:
+    row = (
+        db.session.query(AuthorIds)
+        .filter(AuthorIds.author_id == author_id)
+        .first()
+    )
+    return row.user_id if row else None
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_user_id_by_orcid (orcid: str) -> Optional[int]:
+    row = (
+        db.session.query(OrcidIds)
+        .filter(OrcidIds.orcid == orcid)
+        .first()
+    )
+    return row.user_id if row else None
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_user_display_name (user_id: int) -> Optional[str]:
+    row = (
+        db.session.query(User)
+        .filter(User.user_id == user_id)
+        .first()
+    )
+    if row is None:
+        return None
+    
+    # Can they even be None?
+    first = row.first_name
+    last = row.last_name
+    if first is None: 
+        return last
+    elif last is None:
+        return first
+    else:
+        return f'{first} {last}'
+
+@db_handle_error(logger=logger, default_return_val=None)
+def get_orcid_by_user_id (user_id: int) -> Optional[str]:
+    row = (
+        db.session.query(OrcidIds)
+        .filter(OrcidIds.user_id == user_id)
+        .first()
+    )
+    return row.orcid if row else None
+
+@db_handle_error(logger=logger, default_return_val=[])
+def get_articles_for_author (user_id: int) -> List[ListingItem]:
+    rows = (
+        db.session.query(Document, paper_owners)
+        .filter(Document.document_id == paper_owners.c.document_id)
+        .filter(paper_owners.c.user_id == user_id)
+        .filter(paper_owners.c.flag_author == 1)
+        .filter(paper_owners.c.valid == 1)
+        .filter(Document.paper_id.notlike('test%'))
+        .order_by(Document.dated.desc())
+        .all()
+    )
+    return [{'id': row[0].paper_id, 'listingType': '', 
+             'primary': row[0].primary_subject_class} for row in rows]
