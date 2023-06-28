@@ -142,7 +142,7 @@ def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
         (version, version_history, arxiv_id_v) \
             = _parse_version_entries(arxiv_id=arxiv_id,
                                      version_entry_list=parsed_version_entries)
-        arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+        arxiv_identifier = Identifier(arxiv_id=arxiv_id_v)
     else:
         raise AbsParsingException('At least one version entry expected.')
 
