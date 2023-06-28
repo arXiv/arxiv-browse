@@ -175,7 +175,7 @@ def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
         raw_safe=raw_safe,
         arxiv_id=arxiv_id,
         arxiv_id_v=arxiv_id_v,
-        arxiv_identifier=Identifier(arxiv_id=arxiv_id),
+        arxiv_identifier=arxiv_identifier,
         title=fields['title'],
         abstract=abstract,
         authors=AuthorList(fields['authors']),
