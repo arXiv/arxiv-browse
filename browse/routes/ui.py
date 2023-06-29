@@ -496,6 +496,6 @@ def a (id: str, ext: str):
         return Response(author.get_atom2(id), mimetype='text/xml')
     if ext == 'json':
         return author.get_json(id)
-    response, code, headers = author.get_html_page(id, ext)
+    response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
     
