@@ -4,19 +4,19 @@ steps:
     args: ['-c', 'docker pull gcr.io/$PROJECT_ID/arxiv-browse:latest || echo "need a :latest because we use it for cache-from" && exit 0']
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - build,
-      - '--cache-from',
-      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest',
-      - '-t',
-      - 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA',
-      - '-t',
-      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest',
+      - 'build'
+      - '--cache-from'
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest'
       - '.'
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - push,
-      - '--all-tags',
-      - 'gcr.io/$PROJECT_ID/arxiv-browse',
+      - push
+      - '--all-tags'
+      - 'gcr.io/$PROJECT_ID/arxiv-browse'
     id: Push
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
