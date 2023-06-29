@@ -37,7 +37,7 @@ from browse.exceptions import AbsNotFound
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
-from browse.controllers.list_page.author import get_a_page
+from browse.controllers.list_page import author
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -490,6 +490,12 @@ def openurl_cookie ():
 def a (id: str, ext: str):
     if ext is None and '.' in id:
         raise BadRequest
-    response, code, headers = get_a_page(id, ext)
+    if ext == 'atom':
+        return Response(author.get_atom(id), mimetype='text/xml')
+    if ext == 'atom2':
+        return Response(author.get_atom2(id), mimetype='text/xml')
+    if ext == 'json':
+        return author.get_json(id)
+    response, code, headers = author.get_html_page(id, ext)
     return render_template('list/author.html', **response), code, headers
     
