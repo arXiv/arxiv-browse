@@ -107,9 +107,7 @@ def _author_name (author_line: List[str]) -> str:
 def _author_affils (author_line: List[str]) -> Optional[List[str]]:
     return author_line[3:] if len(author_line) > 3 else None
 
-def _add_atom_feed_entry (paper_id: str, feed: Element, atom2: bool = False):
-    metadata = DocMetadata(paper_id)
-    
+def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False):    
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.arxiv_id_v
     SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version())
