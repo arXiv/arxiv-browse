@@ -74,15 +74,6 @@ class FsDocMetadataService(DocMetadataService):
 
         return combined_version
 
-    def get_ancillary_files(self, docmeta: DocMetadata) \
-            -> List[Dict]:
-        """Get list of ancillary file names and sizes."""
-        version = docmeta.version
-        code = docmeta.version_history[version - 1].source_type.code
-        return self.fs_paths.get_ancillary_files(code,
-                                                 docmeta.arxiv_identifier,
-                                                 docmeta.version)
-
     def _abs_for_version(self, identifier: Identifier,
                          version: Optional[int] = None) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata.

@@ -28,7 +28,7 @@ from browse.services.object_store import ObjectStore
 from browse.services.object_store.fileobj import FileObj
 
 from .source_store import SourceStore
-
+from .ancillary_files import list_ancillary_files
 
 logger = logging.getLogger(__file__)
 
@@ -174,7 +174,8 @@ class ArticleStore():
     def dissemination(self,
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
-                      docmeta: Optional[DocMetadata] = None) \
+                      docmeta: Optional[DocMetadata] = None,
+                      path: Optional[str] = None) \
             -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
@@ -187,6 +188,8 @@ class ArticleStore():
         If the `FileObj` is not available for the `arxiv_id` a `Conditions` will
         be returned. The intent of using `Conditions` instead of raising
         exceptions is that they can be type checked.
+
+        `path` is additional data for html and anc requests.
         """
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
@@ -327,6 +330,21 @@ class ArticleStore():
             formats.append('src')
 
         return formats
+
+    def get_ancillary_files(self, docmeta: DocMetadata) -> List[Dict]:
+        """Get list of ancillary file names and sizes.
+
+        Parameters
+        ----------
+        docmeta : DocMetadata
+            DocMetadata to get the ancillary files for.
+
+        Returns
+        -------
+        List[Dict]
+            List of Dict where each dict is a file name and size.
+        """
+        return self.sourcestore.get_ancillary_files(docmeta)
 
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""

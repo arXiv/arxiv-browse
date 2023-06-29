@@ -23,11 +23,6 @@ class DocMetadataService(abc.ABC, HasStatus):
         :class:`DocMetadata`
         """
 
-    @abc.abstractmethod
-    def get_ancillary_files(self, docmeta: DocMetadata) \
-            -> List[Dict]:
-        """Get list of ancillary file names and sizes."""
-
 
 class AbsException(Exception):
     """Error class for general arXiv .abs exceptions."""

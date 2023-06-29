@@ -9,6 +9,7 @@ import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
+
 from http import HTTPStatus as status
 
 from arxiv import taxonomy
@@ -135,7 +136,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             query=author_query,
         )
         response_data['latexml_url'] = get_latexml_url(abs_meta)
-        
+
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
         add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
@@ -221,7 +222,7 @@ def _non_critical_abs_data(
     response_data["include_inspire_link"] = include_inspire_link(abs_meta)
 
     # Ancillary files
-    response_data["ancillary_files"] = get_doc_service().get_ancillary_files(abs_meta)
+    response_data["ancillary_files"] = get_article_store().get_ancillary_files(abs_meta)
 
     # Browse context
     _check_context(arxiv_identifier, abs_meta.primary_category, response_data)

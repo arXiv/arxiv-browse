@@ -89,22 +89,3 @@ class FSDocMetaPaths():
             if possible_path.is_file():
                 return str(possible_path)
         return None
-
-
-    def get_ancillary_files(self,
-                            source_type_code: str,
-                            identifier: Identifier,
-                            version: Optional[int],
-                            is_latest: Optional[bool]= True,
-                            ) -> List[Dict]:
-        """Get list of ancillary file names and sizes.
-
-        source_type_code: value ofdocmeta.source_type.code
-        """
-        if has_ancillary_files(source_type_code):
-            source_file_path = self.get_source_path(identifier,version,is_latest)
-            if source_file_path is not None:
-                return list_ancillary_files(source_file_path)
-            else:
-                return []
-        return []

@@ -1,20 +1,13 @@
 """Routes for serving the source of articles. /src /e-prints and ancillary."""
 import logging
 from typing import Optional
-from email.utils import format_datetime
 
-from werkzeug.exceptions import InternalServerError
-from flask import Blueprint, abort, render_template, Response
-from flask_rangerequest import RangeRequest
-
-from opentelemetry import trace
-
-from arxiv.identifier import Identifier, IdentifierException
+from browse.controllers.dissimination import (get_dissimination_resp,
+                                              get_src_resp)
+from browse.services.dissemination import get_article_store
 from browse.services.documents import get_doc_service
-from browse.services.documents.base_documents import (
-    AbsNotFoundException, AbsVersionNotFoundException)
-from browse.controllers.dissimination import get_dissimination_resp, get_src_resp
-
+from flask import Blueprint, render_template
+from opentelemetry import trace
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -24,7 +17,32 @@ blueprint = Blueprint('src', __name__)
 tracer = trace.get_tracer(__name__)
 
 
-@blueprint.route("/src/<string:arxiv_id_str>")
+@blueprint.route("/src/<path:arxiv_id>/anc")
+def anc_listing(arxiv_id: str):  #type: ignore
+    """Serves listing of ancillary files for a paper."""
+    data: dict = {}
+    docmeta = get_doc_service().get_abs(arxiv_id)
+    data['abs_meta'] = docmeta
+    data['arxiv_id'] = docmeta.arxiv_identifier
+    data['anc_file_list'] = get_article_store().get_ancillary_files(docmeta)
+    return render_template("src/listing.html", **data), 200, {}
+
+
+@blueprint.route("/src/<path:arxiv_id>/<path:file_path>")
+def anc(arxiv_id: str, file_path:str):  # type: ignore
+    """Serves ancillary files or show html page of ancillary files
+
+    Returns just the specified file within the source package. Has
+    meaning only for .tar.gz packages and will most frequently be used to access
+    ancillary files such as /src/anc/some_file
+
+    ex https://arxiv.org/src/1911.08265v1/anc
+    ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
+    """
+    pass
+
+
+@blueprint.route("/src/<path:arxiv_id_str>")
 @blueprint.route("/src/<string:archive>/<string:arxiv_id_str>")
 def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a tar.gz.
@@ -72,24 +90,3 @@ def e_print(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a original format submitted and
     form that we store it (.tar.gz, .pdf, etc.)."""
     return get_dissimination_resp("e-print", arxiv_id, archive)
-
-
-@blueprint.route("/anc/<string:arxiv_id>", strict_slashes=False)
-@blueprint.route("/anc/<string:archive>/<int:arxiv_id>", strict_slashes=False)
-def anc_listing(arxiv_id: str, archive:str='arxiv'):  # type: ignore
-    """Show html page of ancillary files for arxiv_id."""
-    # ex https://arxiv.org/src/1911.08265v1/anc
-    raise InternalServerError(f"Not yet implemented")
-
-
-@blueprint.route("/anc/<string:arxiv_id>/<path:file_path>")
-@blueprint.route("/anc/<string:archive>/<int:arxiv_id>/<path:file_path>")
-def anc(arxiv_id: str, file_path: str, archive:Optional[str]=None):  # type: ignore
-    """Serves ancillary files.
-
-    Returns just the specified file within the source package. Has
-    meaning only for .tar.gz packages and will most frequently be used to access
-    ancillary files such as /src/anc/some_file
-    """
-    # ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
-    raise InternalServerError(f"Not yet implemented")
