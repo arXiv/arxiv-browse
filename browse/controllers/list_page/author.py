@@ -119,7 +119,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         author = SubElement(entry, 'author')
         SubElement(author, 'name').text = names
     else:
-        for author_line in parse_author_affil(metadata.authors):
+        for author_line in parse_author_affil(metadata.authors.raw):
             author = SubElement(entry, 'author')
             SubElement(author, 'name').text = _author_name(author_line)
             affils = _author_affils(author_line)
