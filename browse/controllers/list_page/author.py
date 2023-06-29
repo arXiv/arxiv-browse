@@ -110,7 +110,7 @@ def _author_affils (author_line: List[str]) -> Optional[List[str]]:
 def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False):    
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.arxiv_id_v
-    SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version())
+    SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version))
     SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1))
     SubElement(entry, 'title').text = metadata.title
     SubElement(entry, 'summary').text = metadata.abstract
