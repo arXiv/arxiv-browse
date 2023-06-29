@@ -45,7 +45,7 @@ def get_atom2 (id: str) -> str:
 def get_json (id: str) -> Dict:
     return xmltodict.parse(get_atom(id))
 
-def get_html_page (id: str) -> Tuple[Dict[str: Any], int, Dict[str, str]]:
+def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
     if user_id is None:
         raise BadRequest (f'Author {id} not found')
@@ -88,7 +88,7 @@ def get_html_page (id: str) -> Tuple[Dict[str: Any], int, Dict[str, str]]:
     
     response_data['url_for_author_search'] = author_query
 
-    return response_data, 200, {}
+    return response_data, 200, dict()
 
 def _get_user_id (raw_id: str) -> Tuple[Optional[int], bool]:
     id = unquote(raw_id) # Check if flask does this automatically
