@@ -1,21 +1,22 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/arxiv-browse:latest || exit 0']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 
-              'build', 
-              '-t', 
-              'gcr.io/$PROJECT_ID/arxiv-browse:latest', 
-              '--cache-from',
-              'gcr.io/$PROJECT_ID/arxiv-browse:latest',
-              '.'
-          ]
+    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/arxiv-browse:latest || echo "need a :latest because we use it for cache-from" && exit 0']
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - push
-      - >-
-        gcr.io/$PROJECT_ID/arxiv-browse:latest
+      - build,
+      - '--cache-from',
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest',
+      - '-t',
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA',
+      - '-t',
+      - 'gcr.io/$PROJECT_ID/arxiv-browse:latest',
+      - '.'
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push,
+      - '--all-tags',
+      - 'gcr.io/$PROJECT_ID/arxiv-browse',
     id: Push
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
@@ -25,14 +26,14 @@ steps:
       - $_SERVICE_NAME
       - '--platform=managed'
       - >-
-        --image=gcr.io/$PROJECT_ID/arxiv-browse:latest
+        --image=gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA
       - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+        --labels=commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
     id: Deploy
     entrypoint: gcloud
-images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest']
+images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest', 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA']
 
 
 
