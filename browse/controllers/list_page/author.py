@@ -1,12 +1,19 @@
 from typing import Optional, Dict, Any, Tuple, List
 from urllib.parse import unquote
 import re
+from datetime import datetime, time
+from lxml.etree import Element, SubElement, tostring
+import json
+import xmltodict
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
+
 from browse.domain.metadata import DocMetadata
 
-from browse.services.listing import ListingItem
+from arxiv.util.authors import parse_author_affil
+from arxiv.taxonomy import Category
+
 from ...services.database import (
     get_user_id_by_author_id, 
     get_user_id_by_orcid,
@@ -19,27 +26,25 @@ from browse.services.documents import get_doc_service
 from browse.controllers.list_page import (
     dl_for_articles, 
     latexml_links_for_articles,
-    authors_for_articles
+    authors_for_articles,
 )
-
 
 
 ORCID_URI_PREFIX = 'https://orcid.org'
 ORCID_RE = re.compile(r'^(\d{4}\-\d{4}\-\d{4}-\d{3}[\dX])$')
 
-def _get_user_id (raw_id: str) -> Tuple[Optional[int], bool]:
-    id = unquote(raw_id) # Check if flask does this automatically
-    if ORCID_RE.match(id):
-        return get_user_id_by_orcid(id), True
-    return get_user_id_by_author_id(id), False
+ARXIV_SCHEMA_URI = 'http://arxiv.org/schemas/atom'
 
-def _get_orcid_uri (user_id: int) -> Optional[str]:
-    orcid = get_orcid_by_user_id(user_id)
-    if orcid is not None:
-        return f'{ORCID_URI_PREFIX}/{orcid}'
-    return None
+def get_atom (id: str) -> str:
+    return _get_atom_feed(id, False)
 
-def get_a_page (id: str, ext: str):
+def get_atom2 (id: str) -> str:
+    return _get_atom_feed(id, True)
+
+def get_json (id: str) -> Dict:
+    return xmltodict.parse(get_atom(id))
+
+def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
     if user_id is None:
         raise BadRequest (f'Author {id} not found')
@@ -82,4 +87,110 @@ def get_a_page (id: str, ext: str):
     
     response_data['url_for_author_search'] = author_query
 
-    return response_data, 200, {}
+    return response_data, 200, dict()
+
+def _get_user_id (raw_id: str) -> Tuple[Optional[int], bool]:
+    id = unquote(raw_id) # Check if flask does this automatically
+    if ORCID_RE.match(id):
+        return get_user_id_by_orcid(id), True
+    return get_user_id_by_author_id(id), False
+
+def _get_orcid_uri (user_id: int) -> Optional[str]:
+    orcid = get_orcid_by_user_id(user_id)
+    if orcid is not None:
+        return f'{ORCID_URI_PREFIX}/{orcid}'
+    return None
+
+def _author_name (author_line: List[str]) -> str:
+    return f'{author_line[1]} {author_line[0]} {author_line[2]}'.strip()
+
+def _author_affils (author_line: List[str]) -> Optional[List[str]]:
+    return author_line[3:] if len(author_line) > 3 else None
+
+def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False):    
+    entry = SubElement(feed, 'entry')
+    SubElement(entry, 'id').text = metadata.arxiv_id_v
+    SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version))
+    SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1))
+    SubElement(entry, 'title').text = metadata.title
+    SubElement(entry, 'summary').text = metadata.abstract
+    if atom2:
+        names = ', '.join(map(_author_name, parse_author_affil(metadata.authors)))
+        author = SubElement(entry, 'author')
+        SubElement(author, 'name').text = names
+    else:
+        for author_line in parse_author_affil(metadata.authors.raw):
+            author = SubElement(entry, 'author')
+            SubElement(author, 'name').text = _author_name(author_line)
+            affils = _author_affils(author_line)
+            if affils:
+                for affil in affils:
+                    SubElement(author, 'arxiv:affiliation', attrib={
+                        'xmlns:arxiv': ARXIV_SCHEMA_URI
+                    }).text = affil
+    if metadata.comments:
+        SubElement(entry, 'arxiv:comment', attrib={
+            'xmlns:arxiv': ARXIV_SCHEMA_URI
+        }).text = metadata.comments
+    if metadata.journal_ref:
+        SubElement(entry, 'arxiv:journal_ref', attrib={
+            'xmlns:arxiv': ARXIV_SCHEMA_URI
+        }).text = metadata.journal_ref
+    SubElement(entry, 'link', attrib={ 
+        'href': metadata.canonical_url(),
+        'rel': 'alternate', 
+        'type': 'text/html'
+    })
+
+    #TODO: linkType, linkScore?
+
+    SubElement(entry, 'link', attrib={
+        'title': 'pdf',
+        'href': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True),
+        'rel': 'alternate', 
+        'type': 'application/pdf'
+    })
+
+    SubElement(entry, 'arxiv:primary_category', attrib={
+         'xmlns:arxiv': ARXIV_SCHEMA_URI,
+        'term': metadata.primary_category.id,
+        'scheme': ARXIV_SCHEMA_URI,
+        'label': metadata.primary_category.display
+    })
+
+    for category in metadata.categories:
+        SubElement(entry, 'category', attrib={
+            'term': category,
+            'scheme': ARXIV_SCHEMA_URI,
+            'label': Category(category).display
+        })
+    
+
+def _get_atom_feed (id: str, atom2: bool = False) -> str:
+    user_id, is_orcid = _get_user_id(id)
+
+    if user_id is None:
+        raise BadRequest (f'Author {id} not found')
+    
+    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'})
+    SubElement(feed, 'title').text = get_user_display_name(user_id)
+    SubElement(feed, 'link', attrib={ 
+        'rel': 'describes', 
+        'href': (f'{ORCID_URI_PREFIX}/{unquote(id)}' 
+                if is_orcid else _get_orcid_uri(user_id))
+    })
+    # TODO: May need to add timezone info
+    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min))
+    SubElement(feed, 'id').text = f'{request.url_root}{id}'
+    SubElement(feed, 'link', 
+               attrib={ 
+                    'rel': 'describes', 
+                    'href': f'{request.url_root}{id}'
+                })
+    
+    for li in get_articles_for_author(user_id):
+        _add_atom_feed_entry(get_doc_service().get_abs(li.id), feed, atom2)
+
+    return tostring(feed, pretty_print=True)
+    
+
