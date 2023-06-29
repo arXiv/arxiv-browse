@@ -2,7 +2,6 @@ from typing import Optional, Dict, Any, Tuple, List
 from urllib.parse import unquote
 import re
 from datetime import datetime, time
-from pytz import UTC
 from lxml.etree import Element, SubElement, tostring
 import json
 import xmltodict
@@ -182,7 +181,8 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
         'href': (f'{ORCID_URI_PREFIX}/{unquote(id)}' 
                 if is_orcid else _get_orcid_uri(user_id))
     })
-    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min, tz=UTC))
+    # TODO: May need to add timezone info
+    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min))
     SubElement(feed, 'id').text = f'{request.url_root}{id}'
     SubElement(feed, 'link', 
                attrib={ 
