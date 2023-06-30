@@ -1,19 +1,19 @@
 """Service to get source for an article."""
 
-import html
 import logging
 import re
-from typing import Optional
+from typing import Optional, List
 
 from arxiv.identifier import Identifier
-from browse.domain.fileformat import FileFormat, dvigz, htmlgz, \
-    pdf, psgz, ps, docx, odf, targz, pdftex, tex
+from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
+                                      pdf, pdftex, ps, psgz, tex)
 from browse.domain.metadata import DocMetadata
-
-from browse.services.object_store.fileobj import FileObj
-from browse.services.key_patterns import abs_path_current_parent, abs_path_orig_parent
-
+from browse.services.key_patterns import (abs_path_current_parent,
+                                          abs_path_orig_parent)
 from browse.services.object_store import ObjectStore
+from browse.services.object_store.fileobj import FileObj
+
+from .ancillary_files import list_ancillary_files
 
 logger = logging.getLogger(__file__)
 
@@ -117,11 +117,21 @@ class SourceStore():
         else:
             return tex  # Default is tex in a tgz file
 
-    # def src_includes_ancillary(self):
-    #     pass
+    def get_ancillary_files(self, docmeta: DocMetadata) -> List[dict]:
+        """Get list of ancillary file names and sizes.
 
-    # def src_ancillary_list(self):
-    #     pass
+        Parameters
+        ----------
+        docmeta : DocMetadata
+            DocMetadata to get the ancillary files for.
 
-    # def get_src_file(self, docmeta: DocMetadata, version: VersionEntry):
-    #     pass
+        Returns
+        -------
+        List[Dict]
+            List of Dict where each dict is a file name and size.
+        """
+        version = docmeta.version
+        source_type = docmeta.version_history[version - 1].source_type
+        if not source_type.includes_ancillary_files:
+            return []
+        return list_ancillary_files(self.get_src(docmeta.arxiv_identifier, docmeta))

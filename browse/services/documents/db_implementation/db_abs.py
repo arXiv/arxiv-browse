@@ -122,12 +122,6 @@ class DbDocMetadataService(DocMetadataService):
 
         return to_docmeta(res, version_history, self.business_tz)
 
-    def get_ancillary_files(self, docmeta: DocMetadata) \
-            -> List[Dict]:
-        """Get list of ancillary file names and sizes."""
-        # TODO implement get_ancillary_files
-        return []
-
     def service_status(self)->List[str]:
         try:
             Metadata.query.limit(1).first()
