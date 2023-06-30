@@ -145,13 +145,21 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         'type': 'application/pdf'
     })
 
+    all_categories = []
+    if metadata.primary_category:
+        all_categories.append(metadata.primary_category)
+    else:
+        return
+    if metadata.secondary_categories:
+        all_categories.extend(metadata.secondary_categories)
+
     SubElement(entry, QName(ARXIV_SCHEMA_URI, 'primary_category'), attrib={
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
         'label': metadata.primary_category.display
     })
 
-    for category in [metadata.primary_category].extend(metadata.secondary_categories):
+    for category in all_categories:
         SubElement(entry, 'category', attrib={
             'term': category.id,
             'scheme': ARXIV_SCHEMA_URI,
