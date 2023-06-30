@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any, Tuple, List
 from urllib.parse import unquote
 import re
 from datetime import datetime, time
-from lxml.etree import Element, SubElement, tostring
+from lxml.etree import Element, SubElement, tostring, QName
 import json
 import xmltodict
 
@@ -125,15 +125,15 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
             affils = _author_affils(author_line)
             if affils:
                 for affil in affils:
-                    SubElement(author, 'arxiv:affiliation', attrib={
+                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation'), attrib={
                         'xmlns:arxiv': ARXIV_SCHEMA_URI
                     }).text = affil
     if metadata.comments:
-        SubElement(entry, 'arxiv:comment', attrib={
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment'), attrib={
             'xmlns:arxiv': ARXIV_SCHEMA_URI
         }).text = metadata.comments
     if metadata.journal_ref:
-        SubElement(entry, 'arxiv:journal_ref', attrib={
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref'), attrib={
             'xmlns:arxiv': ARXIV_SCHEMA_URI
         }).text = metadata.journal_ref
     SubElement(entry, 'link', attrib={ 
@@ -151,7 +151,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         'type': 'application/pdf'
     })
 
-    SubElement(entry, 'arxiv:primary_category', attrib={
+    SubElement(entry, QName(ARXIV_SCHEMA_URI, 'primary_category'), attrib={
          'xmlns:arxiv': ARXIV_SCHEMA_URI,
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
