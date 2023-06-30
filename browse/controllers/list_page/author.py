@@ -125,17 +125,11 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
             affils = _author_affils(author_line)
             if affils:
                 for affil in affils:
-                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation'), attrib={
-                        'xmlns:arxiv': ARXIV_SCHEMA_URI
-                    }).text = affil
+                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation')).text = affil
     if metadata.comments:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment'), attrib={
-            'xmlns:arxiv': ARXIV_SCHEMA_URI
-        }).text = metadata.comments
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment')).text = metadata.comments
     if metadata.journal_ref:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref'), attrib={
-            'xmlns:arxiv': ARXIV_SCHEMA_URI
-        }).text = metadata.journal_ref
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref')).text = metadata.journal_ref
     SubElement(entry, 'link', attrib={ 
         'href': metadata.canonical_url(),
         'rel': 'alternate', 
@@ -152,7 +146,6 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     })
 
     SubElement(entry, QName(ARXIV_SCHEMA_URI, 'primary_category'), attrib={
-         'xmlns:arxiv': ARXIV_SCHEMA_URI,
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
         'label': metadata.primary_category.display
