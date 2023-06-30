@@ -42,7 +42,7 @@ def get_atom2 (id: str) -> str:
     return _get_atom_feed(id, True)
 
 def get_json (id: str) -> Dict:
-    return xmltodict.parse(get_atom(id))
+    return xmltodict.parse(get_atom(id), xml_attribs=False)
 
 def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
@@ -115,7 +115,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     SubElement(entry, 'title').text = metadata.title
     SubElement(entry, 'summary').text = metadata.abstract
     if atom2:
-        names = ', '.join(map(_author_name, parse_author_affil(metadata.authors)))
+        names = ', '.join(map(_author_name, parse_author_affil(metadata.authors.raw)))
         author = SubElement(entry, 'author')
         SubElement(author, 'name').text = names
     else:
@@ -151,11 +151,11 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         'label': metadata.primary_category.display
     })
 
-    for category in metadata.categories:
+    for category in [metadata.primary_category].extend(metadata.secondary_categories):
         SubElement(entry, 'category', attrib={
-            'term': category,
+            'term': category.id,
             'scheme': ARXIV_SCHEMA_URI,
-            'label': Category(category).display
+            'label': category.display
         })
     
 

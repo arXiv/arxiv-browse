@@ -491,9 +491,9 @@ def a (id: str, ext: str):
     if ext is None and '.' in id:
         raise BadRequest
     if ext == 'atom':
-        return Response(author.get_atom(id), mimetype='text/xml')
+        return Response(author.get_atom(id), content_type='application/atom+xml')
     if ext == 'atom2':
-        return Response(author.get_atom2(id), mimetype='text/xml')
+        return Response(author.get_atom2(id), mimetype='application/atom+xml')
     if ext == 'json':
         return author.get_json(id)
     response, code, headers = author.get_html_page(id)
