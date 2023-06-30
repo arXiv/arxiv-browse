@@ -165,7 +165,9 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
     if user_id is None:
         raise BadRequest (f'Author {id} not found')
     
-    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'})
+    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'}, nsmap={
+        'arxiv': ARXIV_SCHEMA_URI
+    })
     SubElement(feed, 'title').text = get_user_display_name(user_id)
     SubElement(feed, 'link', attrib={ 
         'rel': 'describes', 
