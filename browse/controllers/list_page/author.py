@@ -125,11 +125,17 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
             affils = _author_affils(author_line)
             if affils:
                 for affil in affils:
-                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation')).text = affil
+                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation'), nsmap={
+                        'arxiv': ARXIV_SCHEMA_URI
+                    }).text = affil
     if metadata.comments:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment')).text = metadata.comments
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment'), nsmap={
+            'arxiv': ARXIV_SCHEMA_URI
+        }).text = metadata.comments
     if metadata.journal_ref:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref')).text = metadata.journal_ref
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref'), nsmap={
+            'arxiv': ARXIV_SCHEMA_URI
+        }).text = metadata.journal_ref
     SubElement(entry, 'link', attrib={ 
         'href': metadata.canonical_url(),
         'rel': 'alternate', 
@@ -157,6 +163,8 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
         'label': metadata.primary_category.display
+    }, nsmap={
+        'arxiv': ARXIV_SCHEMA_URI
     })
 
     for category in all_categories:
@@ -173,9 +181,7 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
     if user_id is None:
         raise BadRequest (f'Author {id} not found')
     
-    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'}, nsmap={
-        'arxiv': ARXIV_SCHEMA_URI
-    })
+    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'})
     SubElement(feed, 'title').text = get_user_display_name(user_id)
     SubElement(feed, 'link', attrib={ 
         'rel': 'describes', 
