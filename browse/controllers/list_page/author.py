@@ -200,6 +200,6 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
     for li in get_articles_for_author(user_id):
         _add_atom_feed_entry(get_doc_service().get_abs(li.id), feed, atom2)
 
-    return tostring(feed, pretty_print=True)
+    return tostring(feed, pretty_print=True, xml_declaration=True, encoding='UTF-8')
     
 
