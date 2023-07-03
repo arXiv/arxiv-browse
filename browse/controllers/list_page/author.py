@@ -113,7 +113,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version))
     SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1))
     SubElement(entry, 'title').text = metadata.title
-    SubElement(entry, 'summary').text = metadata.abstract.strip()
+    SubElement(entry, 'summary').text = metadata.abstract
     if atom2:
         names = ', '.join(map(_author_name, parse_author_affil(metadata.authors.raw)))
         author = SubElement(entry, 'author')
