@@ -192,6 +192,12 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
     SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min))
     SubElement(feed, 'id').text = f'{request.url_root}{id}'
     SubElement(feed, 'link', 
+               attrib={
+                   'href': request.base_url,
+                   'rel': 'self',
+                   'type': 'application/atom+xml'
+               }
+    SubElement(feed, 'link', 
                attrib={ 
                     'rel': 'describes', 
                     'href': f'{request.url_root}{id}'
