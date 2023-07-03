@@ -196,7 +196,7 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
                    'href': request.base_url,
                    'rel': 'self',
                    'type': 'application/atom+xml'
-               }
+               })
     SubElement(feed, 'link', 
                attrib={ 
                     'rel': 'describes', 
