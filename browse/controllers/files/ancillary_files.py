@@ -40,18 +40,18 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         abort(400, description="Invalid path for ancillary file")
 
     # todo handle exceptions
-    doc = get_doc_service().get_abs(arxiv_id) 
+    doc = get_doc_service().get_abs(arxiv_id)
 
-    if mode == 'anc' and (doc.get_version() is None
-                          or not doc.get_version().source_type.includes_ancillary_files):
+    ver = doc.get_version()
+    if mode == 'anc' and ver is not None \
+       and not ver.source_type.includes_ancillary_files:
         if arxiv_id.has_version:
             headers = {'Cache-Control': cc_versioned()}
         else:
             headers = {'Expires': format_datetime(next_publish())} 
-
         return make_response(
             render_template("src/anc_not_found.html",
-                            reason=f"No ancillary file for {arxiv_id.id_v}",
+                            reason=f"No ancillary file for {arxiv_id.idv}",
                             arxiv_id=arxiv_id), 404, headers)
 
     dis_res = get_article_store().dissemination('e-print', arxiv_id, doc)

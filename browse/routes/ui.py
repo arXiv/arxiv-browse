@@ -476,18 +476,21 @@ def robots_txt() -> Response:
     """Robots.txt endpoint."""
     #This is intended for browse.arxiv.org before this code is at arxiv.org
     return make_response("User-agent: * \nDisallow: /", 200)
+
+
 @blueprint.route('openurl-cookie', methods=['GET', 'POST'])
-def openurl_cookie ():
+def openurl_cookie (): # type: ignore
     if request.method == 'POST':
         resp = redirect(url_for('browse.openurl_cookie'))
-        resp.set_cookie(**make_openurl_cookie())
+        resp.set_cookie(**make_openurl_cookie())  # type: ignore
         return resp
     response, code, headers = get_openurl_page()
     return render_template('openurl_cookies.html', **response), code, headers
 
+
 @blueprint.route('a/<id>.<any("html", "json", "atom", "atom2"):ext>', methods=['GET'])
 @blueprint.route('a/<id>', defaults={'ext': None}, methods=['GET'])
-def a (id: str, ext: str):
+def a (id: str, ext: str):  # type: ignore
     if ext is None and '.' in id:
         raise BadRequest
     if ext == 'atom':
@@ -498,4 +501,3 @@ def a (id: str, ext: str):
         return author.get_json(id)
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
-    

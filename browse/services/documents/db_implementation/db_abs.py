@@ -1,6 +1,6 @@
 """Legacy DB backed core metadata service."""
 from dataclasses import replace
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from zoneinfo import ZoneInfo
 
 import sqlalchemy

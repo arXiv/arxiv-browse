@@ -42,7 +42,7 @@ def get_atom2 (id: str) -> str:
     return _get_atom_feed(id, True)
 
 def get_json (id: str) -> Dict:
-    return xmltodict.parse(get_atom(id), xml_attribs=False)
+    return xmltodict.parse(get_atom(id), xml_attribs=False)  # type: ignore
 
 def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
@@ -107,7 +107,7 @@ def _author_name (author_line: List[str]) -> str:
 def _author_affils (author_line: List[str]) -> Optional[List[str]]:
     return author_line[3:] if len(author_line) > 3 else None
 
-def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False):    
+def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False) -> None:
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.canonical_url()
     SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version).isoformat())
@@ -206,6 +206,6 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
     for li in get_articles_for_author(user_id):
         _add_atom_feed_entry(get_doc_service().get_abs(li.id), feed, atom2)
 
-    return tostring(feed, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+    return tostring(feed, pretty_print=True, xml_declaration=True, encoding='UTF-8')  # type: ignore
     
 
