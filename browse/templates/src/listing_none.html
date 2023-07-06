@@ -1,0 +1,17 @@
+{%- extends "base.html" -%}
+
+{% block title %}No Ancillary files for {{arxiv_id.idv}}{% endblock %}
+
+{% block header_h1 %}
+<div class="header-breadcrumbs">
+  <a href="{{ url_for('browse.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
+
+  <a href="{{url_for('browse.list_articles', context=abs_meta.primary_archive.id, subcontext='recent')}}">{{abs_meta.primary_archive.id}}</a> <span>&gt;</span>
+  <a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.idv)}}">{{arxiv_id.idv}}</a>
+  <span>&gt;</span> ancillary files
+  </div>
+{% endblock %}
+
+{% block content %}
+<h2>There are no ancillary files for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.idv)}}">arXiv:{{arxiv_id.idv}}</a></h2>
+{% endblock %}

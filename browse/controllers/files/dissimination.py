@@ -3,7 +3,6 @@
 import logging
 from email.utils import format_datetime
 from typing import Callable, Optional
-from datetime import timezone
 
 from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -21,19 +20,22 @@ from browse.stream.tarstream import tar_stream_gen
 from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
+from . import last_modified, add_time_headers
+
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
 
-Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata, VersionEntry],
-                       Response]
+Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata,
+                        VersionEntry], Response]
 
 
 def default_resp_fn(format: FileFormat,
                     file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
-                    version: VersionEntry) -> Response:
+                    version: VersionEntry,
+                    extra: Optional[str] = None) -> Response:
     """Creates a response with approprate headers for the `file`.
 
     Parameters
@@ -48,7 +50,7 @@ def default_resp_fn(format: FileFormat,
 
     # Have to do Range Requests to get GCP CDN to accept larger objects.
     resp: Response = RangeRequest(file.open('rb'),
-                                  etag=_last_modified(file),
+                                  etag=last_modified(file),
                                   last_modified=file.updated,
                                   size=file.size).make_response()
 
@@ -60,10 +62,10 @@ def default_resp_fn(format: FileFormat,
         # For large files on CloudRun chunked and no content-length needed
         # TODO revisit this, in some cases it doesn't work maybe when
         # combined with gzip encoding?
-        #resp.headers['Transfer-Encoding'] = 'chunked'
+        # resp.headers['Transfer-Encoding'] = 'chunked'
         resp.headers.pop('Content-Length')
 
-    _add_time_headers(resp, file, arxiv_id)
+    add_time_headers(resp, file, arxiv_id)
     return resp
 
 
@@ -71,7 +73,8 @@ def src_resp_fn(format: FileFormat,
                 file: FileObj,
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
-                version: VersionEntry) -> Response:
+                version: VersionEntry,
+                extra: Optional[str] = None) -> Response:
     """Prepares a response where the payload will be a tar of the source.
 
     No matter what the actual format of the source, this will try to return a
@@ -82,9 +85,10 @@ def src_resp_fn(format: FileFormat,
     the bytestream and the file will be saved as .tar.
     """
     if file.name.endswith(".tar.gz"):  # Nothing extra to do, already .tar.gz
-        resp = RangeRequest(file.open('rb'), etag=_last_modified(file),
-                           last_modified=file.updated, size=file.size).make_response()
-    elif file.name.endswith(".gz"):  # need to unzip the single file gz and then tar
+        resp = RangeRequest(file.open('rb'), etag=last_modified(file),
+                            last_modified=file.updated,
+                            size=file.size).make_response()
+    elif file.name.endswith(".gz"):  # unzip single file gz and then tar
         outstream = tar_stream_gen([UngzippedFileObj(file)])
         resp = make_response(outstream, 200)
     else:  # tar single flie like .pdf
@@ -94,20 +98,19 @@ def src_resp_fn(format: FileFormat,
     archive = f"{arxiv_id.archive}-" if arxiv_id.is_old_id else ""
     filename = f"arXiv-{archive}{arxiv_id.filename}v{version.version}.tar"
 
-
     resp.headers["Content-Encoding"] = "x-gzip"  # tar_stream_gen() gzips
     resp.headers["Content-Type"] = "application/x-eprint-tar"
-    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
-
-    _add_time_headers(resp, file, arxiv_id)
-    resp.headers["ETag"] = _last_modified(file)
-
+    resp.headers["Content-Disposition"] = \
+        f"attachment; filename=\"{filename}\""
+    add_time_headers(resp, file, arxiv_id)
+    resp.headers["ETag"] = last_modified(file)
     return resp  # type: ignore
 
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
+    return get_dissimination_resp("e-print", arxiv_id_str, archive,
+                                  src_resp_fn)
 
 
 def get_e_print_resp(arxiv_id_str: str,
@@ -156,18 +159,6 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
 
-def _cc_versioned() -> str:
-    """Versioned pdfs should not change so let's put a time a bit in the future.
-
-    Non versioned could change during the next publish.
-
-    This could cause a version to stay in a CDN on a delete. That might require
-    manual cache invalidation.
-
-    """
-    return 'max-age=604800'  # 7 days
-
-
 def withdrawn(arxiv_id: str) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
     headers = {'Cache-Control': 'max-age=31536000'}
@@ -192,6 +183,12 @@ def not_found(arxiv_id: str) -> Response:
                                          arxiv_id=arxiv_id), 404, headers)
 
 
+def not_found_anc(arxiv_id: str) -> Response:
+    headers = {'Expires': format_datetime(next_publish())}
+    return make_response(render_template("src/anc_not_found.html",
+                                         arxiv_id=arxiv_id), 404, headers)
+
+
 def bad_id(arxiv_id: str, err_msg: str) -> Response:
     return make_response(render_template("pdf/bad_id.html",
                                          err_msg=err_msg,
@@ -202,16 +199,3 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
     return make_response(render_template("pdf/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
-
-
-def _add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
-    resp.headers["Last-Modified"] = _last_modified(file)
-    if arxiv_id.has_version:
-        resp.headers['Cache-Control'] = _cc_versioned()
-    else:
-        resp.headers['Expires'] = format_datetime(next_publish())
-
-
-def _last_modified(fileobj: FileObj) -> str:
-    return format_datetime(fileobj.updated.astimezone(timezone.utc),
-                           usegmt=True)

@@ -25,7 +25,7 @@ from browse.services.key_patterns import (abs_path_current_parent,
                                           current_ps_path, previous_ps_path,
                                           ps_cache_ps_path)
 from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj
+from browse.services.object_store.fileobj import FileObj, FileFromTar
 
 from .source_store import SourceStore
 from .ancillary_files import list_ancillary_files
@@ -116,7 +116,8 @@ def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
 
-The format `e-print` is a reqeust to get the articles source in its original format."""
+The format `e-print` is a reqeust to get the article's original source data.
+"""
 
 class ArticleStore():
     def __init__(self,
@@ -132,12 +133,9 @@ class ArticleStore():
         self.sourcestore = SourceStore(self.objstore)
 
         self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
-            #            formats.src_orig: self._src_orig,
-            #            formats.src_targz: self._src_targz,
             fileformat.pdf: self._pdf,
             "e-print": self._e_print,
-            fileformat.ps: self._ps,
-            #            formats.htmlgz: self._htmlgz,
+            fileformat.ps: self._ps
         }
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
@@ -174,8 +172,7 @@ class ArticleStore():
     def dissemination(self,
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
-                      docmeta: Optional[DocMetadata] = None,
-                      path: Optional[str] = None) \
+                      docmeta: Optional[DocMetadata] = None) \
             -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
@@ -403,9 +400,6 @@ class ArticleStore():
         logger.debug("No PS found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(cached_ps), str(ps_file)])
         return "UNAVAIABLE"
-
-    def _htmlgz(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
-        raise Exception("Not implemented")
 
     def _e_print(self,
                  arxiv_id: Identifier,

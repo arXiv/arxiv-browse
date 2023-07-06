@@ -2,8 +2,9 @@
 import logging
 from typing import Optional
 
-from browse.controllers.dissimination import (get_dissimination_resp,
+from browse.controllers.files.dissimination import (get_dissimination_resp,
                                               get_src_resp)
+from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
 from browse.services.dissemination import get_article_store
 from browse.services.documents import get_doc_service
 from flask import Blueprint, render_template
@@ -25,10 +26,13 @@ def anc_listing(arxiv_id: str):  #type: ignore
     data['abs_meta'] = docmeta
     data['arxiv_id'] = docmeta.arxiv_identifier
     data['anc_file_list'] = get_article_store().get_ancillary_files(docmeta)
-    return render_template("src/listing.html", **data), 200, {}
+    if data['anc_file_list']:
+        return render_template("src/listing.html", **data), 200, {}
+    else:
+        return render_template("src/listing_none.html", **data), 404, {}
 
 
-@blueprint.route("/src/<path:arxiv_id>/<path:file_path>")
+@blueprint.route("/src/<path:arxiv_id>/anc/<path:file_path>")
 def anc(arxiv_id: str, file_path:str):  # type: ignore
     """Serves ancillary files or show html page of ancillary files
 
@@ -39,7 +43,7 @@ def anc(arxiv_id: str, file_path:str):  # type: ignore
     ex https://arxiv.org/src/1911.08265v1/anc
     ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
     """
-    pass
+    return get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
 
 
 @blueprint.route("/src/<path:arxiv_id_str>")
