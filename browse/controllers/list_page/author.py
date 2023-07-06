@@ -3,7 +3,7 @@ from urllib.parse import unquote
 import re
 from datetime import datetime, time
 from lxml.etree import Element, SubElement, tostring, QName
-import json
+from pytz import UTC
 import xmltodict
 
 from flask import request, url_for
@@ -189,7 +189,7 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
                 if is_orcid else _get_orcid_uri(user_id))
     })
     # TODO: May need to add timezone info
-    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min).isoformat())
+    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min, UTC).isoformat())
     SubElement(feed, 'id').text = f'{request.url_root}{id}'
     SubElement(feed, 'link', 
                attrib={
