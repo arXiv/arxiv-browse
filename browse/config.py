@@ -378,7 +378,8 @@ class Settings(BaseSettings):
     def check(self) -> None:
         """A check and fix up of a settings object."""
         if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
-            log.warning(f"using SQLite DB at {self.SQLALCHEMY_DATABASE_URI}")
+            if not self.TESTING:
+                log.warning(f"using SQLite DB at {self.SQLALCHEMY_DATABASE_URI}")
             self.SQLALCHEMY_MAX_OVERFLOW = None
             self.SQLALCHEMY_POOL_SIZE = None
 

@@ -21,7 +21,7 @@ steps:
   - name: 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA'
     script: |
         #!/usr/bin/env bash
-        TRACE=0 $GUNICORN &
+        TRACE=0 TESTING=1 $GUNICORN &
         sleep 10
         pytest --runintegration
         exit_code=$?
