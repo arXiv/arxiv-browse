@@ -111,7 +111,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.canonical_url()
     SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version).isoformat())
-    SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1))
+    SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1).isoformat())
     SubElement(entry, 'title').text = metadata.title
     SubElement(entry, 'summary').text = re.sub(r'\n+', ' ', metadata.abstract.strip())
     if atom2:
