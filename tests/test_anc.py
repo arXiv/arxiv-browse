@@ -44,8 +44,12 @@ def test_anc_listing(client_with_test_fs):
 
 def test_anc_listing_no_anc_files(client_with_test_fs):
     client = client_with_test_fs
-    rv = client.get('/src/physics/9707012/anc')
-    assert rv.status_code == 404
+    for link in ["/src/physics/9707012/anc",
+                 "/src/physics/9707012/anc/Integration_Example_System.m",
+                 "/src/physics/9707012/anc/",
+                 ]:
+        rv = client.get(link)
+        assert link and rv.status_code == 404
 
 
 def test_1601_04345_anc_files(client_with_test_fs):
@@ -58,3 +62,6 @@ def test_1601_04345_anc_files(client_with_test_fs):
                  "/src/1601.04345v2/anc/Quadrupole_Pout_Oscillation_jz_maxmin.m"]:
         rv = client.get(link)
         assert link and rv.status_code == 200
+
+        rsp = client.get("/src/1601.04345v2/anc/bogus-should-not-exist")
+        assert rsp.status_code == 404
