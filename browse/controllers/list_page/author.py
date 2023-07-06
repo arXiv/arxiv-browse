@@ -110,7 +110,7 @@ def _author_affils (author_line: List[str]) -> Optional[List[str]]:
 def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False):    
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.canonical_url()
-    SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version))
+    SubElement(entry, 'updated').text = str(metadata.get_datetime_of_version(metadata.version).isoformat())
     SubElement(entry, 'published').text = str(metadata.get_datetime_of_version(1))
     SubElement(entry, 'title').text = metadata.title
     SubElement(entry, 'summary').text = re.sub(r'\n+', ' ', metadata.abstract.strip())
@@ -189,7 +189,7 @@ def _get_atom_feed (id: str, atom2: bool = False) -> str:
                 if is_orcid else _get_orcid_uri(user_id))
     })
     # TODO: May need to add timezone info
-    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min))
+    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min).isoformat())
     SubElement(feed, 'id').text = f'{request.url_root}{id}'
     SubElement(feed, 'link', 
                attrib={
