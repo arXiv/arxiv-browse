@@ -18,16 +18,16 @@ steps:
       - '--all-tags'
       - 'gcr.io/$PROJECT_ID/arxiv-browse'
     id: Push
-  # - name: 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA'
-  #   script: |
-  #       #!/usr/bin/env bash
-  #       TRACE=0 $GUNICORN &
-  #       sleep 10
-  #       pytest --runintegration
-  #       exit_code=$?
-  #       kill %1
-  #       exit "$exit_code"
-  #   id: IntegrationTest
+  - name: 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA'
+    script: |
+        #!/usr/bin/env bash
+        TRACE=0 $GUNICORN &
+        sleep 10
+        pytest --runintegration
+        exit_code=$?
+        kill %1
+        exit "$exit_code"
+    id: IntegrationTest
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
       - run
