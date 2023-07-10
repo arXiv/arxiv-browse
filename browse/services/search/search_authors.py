@@ -141,8 +141,9 @@ def _link_for_name_or_collab(item: str) -> AuthorList:
     if len(name_bits) == 0:
         query_str = item
     else:
-        # Do not include Jr, Sr, III, etc. in search
-        if re.search(r'Jr\b|Sr\b|[IV]{2, }]', name_bits[-1]):
+        # Do not include SJ, Jr, Sr, III, IV, etc. in search
+        if re.match(r'SJ|Jr|Sr|[IV]{2,}$', name_bits[-1]) \
+           and len(name_bits) > 1:
             name_bits.pop()
 
         surname = ''
