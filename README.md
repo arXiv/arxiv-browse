@@ -1,6 +1,6 @@
 # arxiv-browse
 
-### Running Browse with the Flask development server
+## Running Browse with the Flask development server
 
 You can run the browse app directly. Using pipenv:
 
@@ -26,13 +26,13 @@ By default, the application will use the directory trees in
 document metadata and cache files, respectively. These paths can be
 overridden via environment variables (see `browse/config.py`).
 
-### Pipfile Edits for Development
+## Pipfile Edits for Development
 ```
 arxiv-base = { editable = true, path = "../arxiv-base" }
 arxiv-base = {editable = true, git = "https://github.com/arXiv/arxiv-base.git", ref = "ARXIVNG-3824-bootstrap"}
 ```
 
-### Rebuilding the test database
+## Rebuilding the test database
 
 The default app configuration uses a test SQLite database in
 ``tests/data/browse.db``; it has been pre-populated with a small set of test
@@ -44,7 +44,7 @@ To rebuild the test database, run the following script:
 FLASK_APP=app.py pipenv run python populate_test_database.py --drop_and_create
 ```
 
-### Running Browse in Docker
+## Running Browse in Docker
 You can also run the browse app in Docker. The following commands will build
 and run browse using defaults for the configuration parameters and will use
 the test data from `tests/data`.
@@ -59,7 +59,7 @@ This command will build the docker image and run it.
 
 If all goes well, http://localhost:8000/ will render the home page.
 
-### Configuration Parameters
+## Configuration Parameters
 
 Configuration parameters (and defaults) are defined in `browse/config.py`.
 Any of these can be overridden on the command line when testing the application.
@@ -79,7 +79,7 @@ Path to cache directory:
 arXiv Labs options:
 * `LABS_BIBEXPLORER_ENABLED`
 
-### Serving static files on S3
+## Serving static files on S3
 
 We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
 files via S3.
@@ -99,7 +99,7 @@ and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
 It may be help to use a web browser's inspect->network to find the active release version.
 
 
-### Test suite
+## Test suite
 
 Before running the test suite, install the dev packages:
 
@@ -113,7 +113,7 @@ Run the main test suite with the following command:
 pipenv run nose2 --with-coverage
 ```
 
-### Static checking
+## Static checking
 Goal: zero errors/warnings.
 
 Use `# type: ignore` to disable mypy messages that do not reveal actual
@@ -130,14 +130,14 @@ pipenv run mypy -p browse | grep -v "test.*" | grep -v "defined here"
 Note that we filter out messages about test modules, and messages about a known
 limitation of mypy related to ``dataclasses`` support.
 
-### Documentation style
+## Documentation style
 Goal: zero errors/warnings.
 
 ```bash
 pipenv run pydocstyle --convention=numpy --add-ignore=D401 browse
 ```
 
-### Linting
+## Linting
 Goal: 9/10 or better.
 
 ```bash
