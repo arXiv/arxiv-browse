@@ -1,4 +1,5 @@
 """Application factory for browse service components."""
+import os
 from functools import partial
 
 import logging
@@ -13,39 +14,30 @@ from flask_s3 import FlaskS3
 
 # This gives the error on import
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
-#from arxiv.users.auth import Auth
+# from arxiv.users.auth import Auth
 
 from browse.config import settings
-from browse.routes import ui, dissemination
 from browse.routes import ui, dissemination, src
 from browse.services.database import models
-from browse.services.database.populate_test_latexmldb import populate_test_latexmldb
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
 
-
-import os
-
 s3 = FlaskS3()
 
+
 def create_web_app() -> Flask:
-
     """Initialize an instance of the browse web application."""
-
     root = logging.getLogger()
     root.addHandler(default_handler)
 
     settings.check()
-    app = Flask('browse', static_url_path=f'/static/browse/{settings.APP_VERSION}')
-    app.config.from_object(settings)  # facilitates sqlalchemy and flask plugins
+    app = Flask('browse',
+                static_url_path=f'/static/browse/{settings.APP_VERSION}')
+    app.config.from_object(settings)  # facilitates sqlalchemy flask plugins
     setattr(app, 'settings', settings)  # facilitates typed access to settings
 
     models.init_app(app)  # type: ignore
-    # root.warning(f"DEBUG: {app.config.get('DEBUG')}")
-    # if app.config.get('DEBUG'):
-    #     with app.app_context():
-    #         populate_test_latexmldb()
 
     Base(app)
     #Auth(app)
@@ -75,6 +67,7 @@ def create_web_app() -> Flask:
     app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
     app.jinja_env.filters['tidy_filesize'] = tidy_filesize
+
     @app.before_first_request
     def check_services()->None:
         problems = service_statuses()
@@ -85,10 +78,7 @@ def create_web_app() -> Flask:
     return app
 
 
-
-"""Setup GCP trace and logging."""
-
-def setup_trace(name: str, app: Flask): # type: ignore
+def setup_trace(name: str, app: Flask):  # type: ignore
     """Setup GCP trace and logging."""
     from opentelemetry import trace
     from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter

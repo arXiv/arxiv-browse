@@ -1,6 +1,7 @@
 """FileObj for representing a file."""
 
 import gzip
+import tarfile
 import io
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
@@ -168,7 +169,7 @@ class MockStringFileObj(FileObj):
 
 
 class UngzippedFileObj(FileObj):
-    """File object backed by different file object and unzipped."""
+    """File object backed by different file object and un-gzipped."""
 
     def __init__(self, gzipped_file: FileObj):
         self._fileobj = gzipped_file
@@ -218,3 +219,52 @@ class UngzippedFileObj(FileObj):
 
     def __str__(self) -> str:
         return f"<GunzipFileObj fileobj={self._fileobj}>"
+
+
+class FileNotFound(Exception):
+    """Raised when a `path` cannot be found in a tar."""
+
+
+class FileFromTar(FileObj):
+    """Single file from a tar `FileObj`."""
+
+    def __init__(self, tar_file: FileObj, path: str):
+        self._fileobj = tar_file
+        self._path = path
+        self._size = -1
+        self._path_exists = None
+
+    @property
+    def name(self) -> str:
+        return self._path
+
+    def exists(self) -> bool:
+        raise Exception("Not implemented due to it being inefficent")
+
+    @contextmanager
+    def open(self, *args, **kwargs) -> IO:  # type: ignore
+        with self._fileobj.open(mode="rb") as fh:
+            with tarfile.open(fileobj=fh, mode="r") as tar:
+                try:
+                    member = tar.getmember(self._path)
+                except KeyError:
+                    raise FileNotFound(f"could not find {self._path} in tar")
+                yield tar.extractfile(member)
+
+    @property
+    def etag(self) -> str:
+        raise Exception("Not implemented due to it being inefficent")
+
+    @property
+    def size(self) -> int:
+        raise Exception("Not implemented due to it being inefficent")
+
+    @property
+    def updated(self) -> datetime:
+        return self._fileobj.updated
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return f"<FileFromTar fileobj={self._fileobj} path={self._path}>"

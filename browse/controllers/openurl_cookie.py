@@ -35,9 +35,9 @@ def _build_cookie (values: Dict[str, str]) -> str:
     return '&'.join([f'{k}={v}' for k,v in values.items()])
 
 def _parse_cookie (value: str) -> Dict[str, str]:
-    return dict([tuple(pair.split('=')) for pair in value.split('&')])
+    return dict([tuple(pair.split('=')) for pair in value.split('&')]) # type: ignore
 
-def _get_display_values ():
+def _get_display_values () -> dict:
     default_vals = {'cookieExists': False,
                     'baseURL': '[no OpenURL linking service]',
                     'icon': '[not set]', 
@@ -52,25 +52,21 @@ def _get_display_values ():
     return default_vals
 
 def make_openurl_cookie () -> Dict[str, str]:
-    values = _get_form_items(request.form)        
+    values = _get_form_items(request.form)
 
     if values['Action'] == 'Delete cookie':
         return {
             'key': COOKIE_NAME,
             'path': COOKIE_PATH,
-            'expires': 0
+            'expires': "0"
         }
-    
+
     return {
         'key': COOKIE_NAME,
         'path': COOKIE_PATH,
         'value': _build_cookie(values),
-        'max_age': timedelta(days=(COOKIE_EXPIRY_YEARS * 365))
+        'max_age': "{timedelta(days=(COOKIE_EXPIRY_YEARS * 365))}"
     }
 
 def get_openurl_page () -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     return _get_display_values(), 200, {}
-
-    
-
-

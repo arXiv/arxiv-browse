@@ -11,20 +11,18 @@ python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry
 poetry install
-FLASK_APP=app.py FLASK_DEBUG=1 flask run
+FLASK_APP=app.py FLASK_DEBUG=1 python main.py
 ```
-
-If all goes well, http://127.0.0.1:5000/abs/0906.5132 should render the basic
-abs page.
+Then go to http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and restart the server.
 Unfortunately static files and templates are not monitored, so you'll have to
 manually restart to see those changes take effect.
 
 By default, the application will use the directory trees in
-`tests/data/abs_files` and `tests/data/cache` and when looking for the
-document metadata and cache files, respectively. These paths can be
-overridden via environment variables (see `browse/config.py`).
+`tests/data/abs_files` and `tests/data/cache` and when looking for the document
+metadata and PDF files. These paths can be overridden via environment variables
+(see `browse/config.py`).
 
 ### Test suite
 
@@ -32,18 +30,6 @@ Run the main test suite with the following command:
 
 ```bash
 pytest
-```
-
-### Building the test database
-
-A database is needed for many features of browse. Run this and it will create  a test SQLite database in
-``tests/data/browse.db``. The default app configuration uses this file.
-
-To rebuild the test database, run the following script:
-
-```bash
-source ./venv/bin/activate
-FLASK_APP=app.py python populate_test_database.py --drop_and_create
 ```
 
 ### Running Browse in Docker
@@ -63,24 +49,8 @@ If all goes well, http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
 
-Configuration parameters (and defaults) are defined in
-`browse/config.py`.  Any of these can be overridden with environment
-variables when testing the application.
-
-Below are some examples of some application-specific parameters:
-
-Database URI:
-* `SQLALCHEMY_DATABASE_URI`
-
-Paths to .abs and source files:
-* `DOCUMENT_LATEST_VERSIONS_PATH`
-* `DOCUMENT_ORIGNAL_VERSIONS_PATH`
-
-Path to cache directory:
-* `DOCUMENT_CACHE_PATH`
-
-arXiv Labs options:
-* `LABS_BIBEXPLORER_ENABLED`
+See `browse/config.py` for configuration parameters and defaults). Any of these
+can be overridden with environment variables.
 
 ### Serving static files on S3
 

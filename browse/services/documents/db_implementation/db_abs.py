@@ -1,6 +1,6 @@
 """Legacy DB backed core metadata service."""
 from dataclasses import replace
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from zoneinfo import ZoneInfo
 
 import sqlalchemy
@@ -36,8 +36,7 @@ class DbDocMetadataService(DocMetadataService):
             raise ValueError("Must pass a valid timzone")
         self.business_tz = zz
 
-
-    def get_abs(self, arxiv_id: str) -> DocMetadata:
+    def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
         Parameters
@@ -50,8 +49,12 @@ class DbDocMetadataService(DocMetadataService):
         :class:`DocMetadata`
         """
 
-        # TODO Probably doesn't do docmeta.version_history correctly
-        paper_id = Identifier(arxiv_id=arxiv_id)
+        if isinstance(arxiv_id, Identifier):
+            paper_id = arxiv_id
+        else:
+            # TODO Probably doesn't do docmeta.version_history correctly
+            paper_id = Identifier(arxiv_id=arxiv_id)
+
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 

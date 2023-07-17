@@ -11,12 +11,12 @@ from arxiv import taxonomy
 RE_ARXIV_OLD_ID = re.compile(
     r'^(?P<archive>[a-z]{1,}(\-[a-z]{2,})?)(\.([a-zA-Z\-]{2,}))?\/'
     r'(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))(?P<num>\d\d\d)'
-    r'(v(?P<version>[1-9]\d*))?([#\/].*)?$')
+    r'(v(?P<version>[1-9]\d*))?(?P<extra>[#\/].*)?$')
 
 # arXiv ID format used from 2007-04 to present
 RE_ARXIV_NEW_ID = re.compile(
     r'^(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))\.(?P<num>\d{4,5})'
-    r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
+    r'(v(?P<version>[1-9]\d*))?(?P<extra>[#\/].*)?$'
 )
 
 Sub_type = List[Tuple[str, Union[str, Callable[[Match[str]], str]],
@@ -57,6 +57,7 @@ class Identifier:
         self.year: Optional[int] = None
         self.month: Optional[int] = None
         self.is_old_id: Optional[bool] = None
+        self.extra: Optional[str] = None
 
         if self.ids in taxonomy.definitions.ARCHIVES:
             raise IdentifierIsArchiveException(
@@ -150,6 +151,9 @@ class Identifier:
         self.filename = f'{match_obj.group("yymm")}{int(match_obj.group("num")):03d}'
         self.id = f'{self.archive}/{self.filename}'
 
+        if match_obj.group('extra'):
+            self.extra = match_obj.group('extra')
+
     def _parse_new_id(self, match_obj: Match[str]) -> None:
         """
         Populate instance attributes from a new arXiv identifier.
@@ -180,6 +184,9 @@ class Identifier:
         else:
             self.id = f'{int(match_obj.group("yymm")):04d}.{int(match_obj.group("num")):04d}'
         self.filename = self.id
+
+        if match_obj.group('extra'):
+            self.extra = match_obj.group('extra')
 
     def __str__(self) -> str:
         """Return the string representation of the instance in json."""

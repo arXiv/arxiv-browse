@@ -21,7 +21,7 @@ from werkzeug.exceptions import InternalServerError
 
 from browse.controllers import check_supplied_identifier, biz_tz
 
-from arxiv import status, taxonomy
+from arxiv import taxonomy
 # from arxiv.base import logging
 from browse.domain.category import Category
 from browse.domain.identifier import (
@@ -117,7 +117,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         abs_meta = get_doc_service().get_abs(arxiv_id)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
-            return {}, status.HTTP_304_NOT_MODIFIED, response_headers
+            return {}, status.NOT_MODIFIED, response_headers
 
         response_data["requested_id"] = (
             arxiv_identifier.idv
@@ -203,7 +203,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             "help@arxiv.org."
         ) from ex
 
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, status.OK, response_headers
 
 
 def _non_critical_abs_data(

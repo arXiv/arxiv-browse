@@ -8,7 +8,7 @@ from browse.services.dissemination import get_article_store
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
-from browse.controllers.dissimination import get_dissimination_resp
+from browse.controllers.files.dissimination import get_dissimination_resp
 from browse.controllers import check_supplied_identifier
 
 

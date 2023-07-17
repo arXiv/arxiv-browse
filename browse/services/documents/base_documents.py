@@ -1,16 +1,17 @@
 """Base classes for the abstracts service."""
 
 import abc
-from typing import Dict, List, Optional
+from typing import Union
 
-from browse.domain.metadata import DocMetadata
+from browse.domain.metadata import DocMetadata, Identifier
 from browse.services import HasStatus
+
 
 class DocMetadataService(abc.ABC, HasStatus):
     """Class for arXiv document abstract metadata service."""
 
     @abc.abstractmethod
-    def get_abs(self, arxiv_id: str) -> DocMetadata:
+    def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
         Parameters

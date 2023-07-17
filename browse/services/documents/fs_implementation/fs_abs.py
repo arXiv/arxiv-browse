@@ -1,6 +1,6 @@
 """File system backed core metadata service."""
-import os
-from typing import Dict, List, Optional
+
+from typing import List, Optional, Union
 import dataclasses
 
 from browse.domain.metadata import DocMetadata
@@ -12,10 +12,8 @@ from browse.services.documents.base_documents import DocMetadataService, \
     AbsDeletedException, AbsNotFoundException, \
     AbsVersionNotFoundException
 
-from . import cache
 from .legacy_fs_paths import FSDocMetaPaths
 from .parse_abs import parse_abs_file
-from ..format_codes import formats_from_source_type
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
@@ -27,7 +25,7 @@ class FsDocMetadataService(DocMetadataService):
         """Initialize the FS document metadata service."""
         self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
 
-    def get_abs(self, arxiv_id: str) -> DocMetadata:
+    def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
 
         Parameters
@@ -39,7 +37,10 @@ class FsDocMetadataService(DocMetadataService):
         -------
         :class:`DocMetadata`
         """
-        paper_id = Identifier(arxiv_id=arxiv_id)
+        if isinstance(arxiv_id, Identifier):
+            paper_id = arxiv_id
+        else:
+            paper_id = Identifier(arxiv_id=arxiv_id)
 
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
