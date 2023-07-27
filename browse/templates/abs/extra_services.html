@@ -48,27 +48,35 @@
     {%- for format in format_list if not (format == 'src' and not current) %}
     {%- if format.startswith('pdf') -%}
   <li><a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
-    {%- endif -%}
-    {%- if format == 'latexml' -%}
+    {%- elif format == 'latexml' -%}
   <li>
     <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (beta)</a>
   </li>
-      {%- endif -%}
+    {%- elif format == 'src' and current -%}
   <li>
-    {%- if format == 'src' -%}
     <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a>
-    {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format == 'dvi' -%}
-    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
-    {%- elif format == 'html' -%}
-    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
-    {%- elif format == 'other' -%}
-    <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
-    {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
-    {%- endif -%}
   </li>
+    {%- elif format.startswith('ps') -%}
+  <li>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
+  </li>
+    {%- elif format == 'dvi' -%}
+  <li>
+    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
+  </li>
+    {%- elif format == 'html' -%}
+  <li>
+    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
+  </li>
+    {%- elif format == 'other' -%}
+  <li>
+    <a href=“NEW endpoint goes directly to the source files” class="abs-button download-format">TeX Source</a>
+  </li>
+    {%- elif format == 'nops' -%}
+  <li>
+    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
+  </li>
+    {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 </ul>
