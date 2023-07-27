@@ -237,6 +237,8 @@ SQLALCHEMY_BINDS = {
         ('sqlite:///../tests/data/latexmldb.db' if TESTING or DEBUG else None)
 }
 
+LATEXML_URL_BASE = os.environ.get("LATEXML_URL_BASE", "https://services.dev.arxiv.org/html")
+
 if (
     os.environ.get("FLASK_ENV", False) == "production"
     and "sqlite" in SQLALCHEMY_DATABASE_URI
