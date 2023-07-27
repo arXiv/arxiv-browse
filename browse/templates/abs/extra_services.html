@@ -49,11 +49,11 @@
     {%- if format.startswith('pdf') -%}
   <li><a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
     {%- endif -%}
-    {%- if latexml_url -%}
+    {%- if format == 'latexml' -%}
   <li>
-    <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a>
+    <a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (beta)</a>
   </li>
-    {%- endif -%}
+      {%- endif -%}
   <li>
     {%- if format == 'src' -%}
     <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a>

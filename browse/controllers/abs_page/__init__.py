@@ -132,6 +132,8 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["formats"] = metadata.get_dissemination_formats(
             abs_meta, download_format_pref, add_sciencewise_ping
         )
+        if response_data['latexml_url'] is not None:
+            response_data['formats'].append('latexml')
 
         # Following are less critical and template must display without them
         # try:
