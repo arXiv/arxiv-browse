@@ -42,7 +42,24 @@ def get_atom2 (id: str) -> str:
     return _get_atom_feed(id, True)
 
 def get_json (id: str) -> Dict:
-    return xmltodict.parse(get_atom(id), xml_attribs=False)  # type: ignore
+    user_id, is_orcid = _get_user_id(id)
+    
+    entries = []
+    for li in get_articles_for_author(user_id):
+        entries.append(_make_json_entry(get_doc_service().get_abs(li.id)))
+
+    if is_orcid:
+        orcid = f'{ORCID_URI_PREFIX}/{unquote(id)}'
+    else:
+        orcid = _get_orcid_uri (user_id)
+    
+    return {
+        'entries': entries,
+        'id': f'{request.url_root}{id}',
+        'modified': str(datetime.combine(datetime.today(), time.min, timezone.utc).isoformat()),
+        'orcid': orcid,
+        'title': f'{get_user_display_name(user_id)}\'s articles on arXiv'
+    }
 
 def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
@@ -107,6 +124,63 @@ def _author_name (author_line: List[str]) -> str:
 def _author_affils (author_line: List[str]) -> Optional[List[str]]:
     return author_line[3:] if len(author_line) > 3 else None
 
+def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
+    entry = {}
+
+    # 'authors' field
+    entry['authors'] = ', '.join(map(_author_name, parse_author_affil(metadata.authors.raw)))
+
+    # 'categories' field
+    all_categories = []
+    if metadata.primary_category:
+        all_categories.append(metadata.primary_category.display)
+        if metadata.secondary_categories:
+            all_categories.extend(map(lambda cat: cat.display, metadata.secondary_categories))
+    entry['categories'] = all_categories
+
+    # 'comment' field
+    entry['comment'] = metadata.comments if metadata.comments else ''
+
+    # 'doi' field
+    if metadata.doi: # don't include if None
+        entry['doi'] = metadata.doi
+
+    # 'formats' field
+    # TODO: ps format? It doesn't seem like this is possible in the arXiv-NG implementation
+    entry['formats'] = {
+        'html': metadata.canonical_url(),
+        'pdf': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True)
+    }
+
+    # 'id' field
+    # TODO: This seems to be redundant with entry['formats']['html'] right above
+    entry['id'] = metadata.canonical_url()
+
+    # 'journal_ref' field
+    if metadata.journal_ref:
+        entry['journal_ref'] = metadata.journal_ref
+
+    # 'published' field
+    entry['published'] = str(metadata.get_datetime_of_version(1).isoformat())
+
+    # 'subject' field
+    if metadata.primary_category:
+        entry['subject'] = metadata.primary_category.display
+
+    # 'summary' field
+    entry['summary'] = re.sub(r'\n+', ' ', metadata.abstract.strip())
+
+    # 'title' field
+    entry['title'] = metadata.title
+
+    # 'updated' field
+    dt_ver = metadata.get_datetime_of_version(metadata.version)
+    if dt_ver:
+        entry['updated'] = str(dt_ver.isoformat())
+    
+    return entry
+
+
 def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False) -> None:
     entry = SubElement(feed, 'entry')
     SubElement(entry, 'id').text = metadata.canonical_url()
@@ -132,6 +206,10 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
                     SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation'), nsmap={
                         'arxiv': ARXIV_SCHEMA_URI
                     }).text = affil
+    if metadata.doi:
+        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'doi'), nsmap={
+            'arxiv': ARXIV_SCHEMA_URI
+        }).text = metadata.doi
     if metadata.comments:
         SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment'), nsmap={
             'arxiv': ARXIV_SCHEMA_URI
@@ -154,6 +232,8 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         'rel': 'alternate', 
         'type': 'application/pdf'
     })
+
+    #TODO: ps link
 
     all_categories = []
     if metadata.primary_category:
