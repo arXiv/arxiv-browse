@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     default, the SQLITE test DB is used.
     """
 
-    LATEXML_BASE_URL = os.environ.get('LATEXML_BASE_URL')
+    LATEXML_BASE_URL: str = os.environ.get('LATEXML_BASE_URL')
     """ For the database tracking html conversion metadata """
     SQLALCHEMY_BINDS = { "latexml": os.environ.get('LATEXML_DB_URI') or TESTING_LATEXML_DB }
 
