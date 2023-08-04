@@ -1,8 +1,6 @@
+
 """Web Server Gateway Interface (WSGI) entry-point."""
 import os
-
-from browse.factory import create_web_app
-
 
 # We need someplace to keep the flask app around between requests.
 # Double underscores excludes this from * imports.
@@ -32,21 +30,14 @@ def application(environ, start_response):
     This will not be needed once each app is on docker+nginx.
     """
     # Copy string WSGI envrion to os.environ. This is to get apache
-    # SetEnv vars.  It needs to be done before the call to
-    # create_web_app() due to how config is setup from os in
-    # browse/config.py.
+    # SetEnv vars.  It needs to be done before the import of
+    # browse.config and the call to create_web_app()
     for key, value in environ.items():
         if type(value) is str:
             os.environ[key] = value
 
-    # 'global' actually means module scope, and that is exactly what
-    # we want here.
-    #
-    # Python docs are thin. I'm seeing this sort of thing on
-    # stackoverflow: "In Python there is no such thing as absolute
-    # globals automatically defined across all namespaces
-    # (thankfully). As you correctly pointed out, a global is bound to
-    # a namespace within a module..."
+    from browse.factory import create_web_app
+
     global __flask_app__
     if __flask_app__ is None:
         __flask_app__ = create_web_app()
