@@ -10,7 +10,7 @@ import logging
 
 def get_latexml_url (article: DocMetadata, most_recent=False) -> Optional[str]:
     LATEXML_URI_BASE = current_app.config['LATEXML_BASE_URL']
-    status = get_latexml_status_for_document(article.arxiv_id, article.highest_version) if most_recent \
+    status = get_latexml_status_for_document(article.arxiv_id, article.highest_version()) if most_recent \
              else get_latexml_status_for_document(article.arxiv_id, article.version)
     logging.warn(f'{article.arxiv_id_v} version: {article.version}')
     path = f'{article.arxiv_id}v{article.version}/{article.arxiv_id}v{article.version}.html'
