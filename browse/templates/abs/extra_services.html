@@ -65,6 +65,7 @@
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
       {%- elif format == 'other' -%}
+  <li>{{ format_list }}</li>
   <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other Formats</a></li>
       {%- elif format == 'nops' -%}
   <li><a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a></li>
