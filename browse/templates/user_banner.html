@@ -21,7 +21,7 @@ production. -#}
 
 
 {%- macro content(request_datetime) -%}
-{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}#}
+{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
 <aside class="slider-wrapper bps-banner dark" >
   <div class="copy-donation bps-banner">
     <h1>Example banner</h1>
@@ -29,14 +29,14 @@ production. -#}
     <p><a href="https://arxiv.org/support/bug_report">Report bugs here</a></p>
   </div>
 </aside>
-{#{%- endif -%}#}
+{%- endif -%}
 {%- endmacro -%}
 
 
 {%- macro script(request_datetime) -%}
-{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}#}
+{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-{#{%- endif -%}#}
+{%- endif -%}
 {%- endmacro -%}
 
 {#################### disabled example banners ####################}
