@@ -16,22 +16,17 @@ This no longer uses env vars set in browse.config or httpd/conf/ng_flask.conf on
 production. -#}
 
 {# Set these variables to a string of YYYYMMMDD of the start and end date #}
-{% set BANNER_START = '20230329' %}
-{% set BANNER_END = '20230409' %}
+{% set BANNER_START = '202000101' %}
+{% set BANNER_END = '20200101' %}
 
 
 {%- macro content(request_datetime) -%}
 {#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}#}
 <aside class="slider-wrapper bps-banner dark" >
   <div class="copy-donation bps-banner">
-    <h1>BETA DEMO FOR ARXIV</h1>
-    <p>This is a beta server for arxiv to demo.</p>
+    <h1>Example banner</h1>
+    <p>Banner text would go here.</p>
     <p><a href="https://arxiv.org/support/bug_report">Report bugs here</a></p>
-  </div>
-  <div>
-    <h1>arXiv is hiring!</h1>
-    <p>We are looking for a community engagement manager, several software developers, and a project manager.</p>
-    <p><a href="https://info.arxiv.org/hiring/">View open roles</a></p>
   </div>
 </aside>
 {#{%- endif -%}#}
