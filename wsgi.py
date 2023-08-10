@@ -1,6 +1,10 @@
 
 """Web Server Gateway Interface (WSGI) entry-point."""
 import os
+import logging
+
+logger = logging.getLogger(__file__)
+#logger.setLevel(logging.DEBUG)
 
 # We need someplace to keep the flask app around between requests.
 # Double underscores excludes this from * imports.
@@ -33,13 +37,17 @@ def application(environ, start_response):
     # SetEnv vars.  It needs to be done before the import of
     # browse.config and the call to create_web_app()
     for key, value in environ.items():
+        if key == 'SERVER_NAME':
+            # Somehow server_name can break routing
+            continue
         if type(value) is str:
             os.environ[key] = value
 
-    from browse.factory import create_web_app
-
     global __flask_app__
     if __flask_app__ is None:
+        from browse.factory import create_web_app
         __flask_app__ = create_web_app()
+        logger.debug("in arxiv-browse")
+        logger.debug(__flask_app__.config)
 
     return __flask_app__(environ, start_response)
