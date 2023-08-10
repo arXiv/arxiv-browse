@@ -11,7 +11,7 @@ python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry
 poetry install
-FLASK_APP=app.py FLASK_DEBUG=1 python main.py
+python main.py
 ```
 Then go to http://127.0.0.1:8080/abs/0906.5132
 
