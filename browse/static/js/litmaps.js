@@ -42,6 +42,6 @@
     }
 
     function renderNotFoundError() {
-        $output.html(cssTag + `<div id="litmaps_error_group"><img id="litmaps_error_logo" src="https://www.litmaps.co/litmaps_logo_black.svg" alt="Litmaps Logo" /><p id="litmaps_body">This article is not currently in the Litmaps database. Please check again in a few days. In the meantime here is an example of what it might look like: <a href="${litmapsAppUrl}?seedId=2043441718" title="Example Literature Map" rel="noopener" target="_blank">Example Map</a></p></div>`);
+        $output.html(cssTag + `<div id="litmaps_error_group"><img id="litmaps_error_logo" src="https://www.litmaps.co/litmaps_logo_black.svg" alt="Litmaps Logo" /><p id="litmaps_body">This article is not currently in the Litmaps database. Please check again in a few days. In the meantime here is an example of what it might look like: <a href="${litmapsAppUrl}?seedId=52220247" title="Example Literature Map" rel="noopener" target="_blank">Example Map</a></p></div>`);
     }
 })();
