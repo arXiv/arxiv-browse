@@ -40,7 +40,7 @@ class GsObjectStore(ObjectStore):
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Gets if bucket can be read."""
-        if self.bucket.exists:
+        if self.bucket.exists():
             return ("GOOD", '')
         else:
             return ("BAD", 'bucket does not exist or API down')

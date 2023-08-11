@@ -334,9 +334,11 @@ class FsListingFilesService(ListingService):
 
     def service_status(self)->List[str]:
         try:
-            fobj = self.obj_store.to_obj(self.listing_files_root)
-            if not fobj.exists():
-                return [f"listing_files_root '{self.listing_files_root}' does not exist"]
+            stat, msg = self.obj_store.status()
+            if stat != "GOOD":
+                return [f"Supporting ObjectStore not good: {msg}"]
+            if not any(self.obj_store.list(self.listing_files_root)):
+                return [f"No files under listing_files_root '{self.listing_files_root}' or not exist"]
             else:
                 return []
         except Exception as ex:

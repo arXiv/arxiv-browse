@@ -106,7 +106,7 @@ class Settings(BaseSettings):
     - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
        produciton since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
        DOCUMENT_ORIGNAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
-    - `browose.services.documents.db_docs`: DocMetadata using the database.
+    - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
     DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
