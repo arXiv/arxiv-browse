@@ -223,10 +223,8 @@ def get_listing(subject_or_category: str,
         if not hasattr(item, 'article') or item.article is None:
             setattr(item, 'article', get_doc_service().get_abs(item.id))
 
-
     response_data['listings'] = listings
     response_data['author_links'] = authors_for_articles(listings)
-    logger.debug('Running dl_for_articles')
     response_data['downloads'] = dl_for_articles(listings)
     response_data['latexml'] = latexml_links_for_articles(listings)
 
