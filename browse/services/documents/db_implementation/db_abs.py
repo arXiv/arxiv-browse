@@ -127,7 +127,11 @@ class DbDocMetadataService(DocMetadataService):
 
     def service_status(self)->List[str]:
         try:
-            Metadata.query.limit(1).first()
+            res = Metadata.query.limit(1).first()
+            if not res:
+                return ["Nothing in arXiv_metadata table"]
+            if not hasattr(res, 'document_id'):
+                return ["arXiv_metadata lacks document_id"]
         except NoResultFound:
             return ["DbDocMetadataService: No Metadata rows found in db"]
         except (OperationalError, DBAPIError) as ex:
