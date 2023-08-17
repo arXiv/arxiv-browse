@@ -498,6 +498,11 @@ def a (id: str, ext: str):  # type: ignore
     if ext == 'atom2':
         return Response(author.get_atom2(id), mimetype='application/atom+xml')
     if ext == 'json':
-        return author.get_json(id)
+        ajson = author.get_json(id)
+        if ajson is not None:
+            return ajson
+        else:
+            return make_response("", 404, {})
+
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers

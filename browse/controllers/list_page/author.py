@@ -41,9 +41,11 @@ def get_atom (id: str) -> str:
 def get_atom2 (id: str) -> str:
     return _get_atom_feed(id, True)
 
-def get_json (id: str) -> Dict:
+def get_json (id: str) -> Optional[Dict]:
     user_id, is_orcid = _get_user_id(id)
-    
+    if user_id is None:
+        return None
+
     entries = []
     for li in get_articles_for_author(user_id):
         entries.append(_make_json_entry(get_doc_service().get_abs(li.id)))
@@ -51,8 +53,8 @@ def get_json (id: str) -> Dict:
     if is_orcid:
         orcid = f'{ORCID_URI_PREFIX}/{unquote(id)}'
     else:
-        orcid = _get_orcid_uri (user_id)
-    
+        orcid = _get_orcid_uri(user_id) or ''
+
     return {
         'entries': entries,
         'id': f'{request.url_root}{id}',
@@ -124,8 +126,24 @@ def _author_name (author_line: List[str]) -> str:
 def _author_affils (author_line: List[str]) -> Optional[List[str]]:
     return author_line[3:] if len(author_line) > 3 else None
 
+
+def _guess_pub_date(metadata: DocMetadata) -> Optional[str]:
+    """Very old submisisons lack a pub date so guess one from the id"""
+    if metadata.arxiv_identifier.year is None or \
+       metadata.arxiv_identifier.month is None:
+        return None
+
+    yy = metadata.arxiv_identifier.year
+    if yy > 90:
+        yyyy = 1900 + yy
+    else:
+        yyyy = 20 + yy
+
+    return f"{yyyy}-{metadata.arxiv_identifier.month}-01:00:00.000000"
+
+
 def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
-    entry = {}
+    entry: Dict[str, Any] = {}
 
     # 'authors' field
     entry['authors'] = ', '.join(map(_author_name, parse_author_affil(metadata.authors.raw)))
@@ -136,7 +154,7 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
         all_categories.append(metadata.primary_category.display)
         if metadata.secondary_categories:
             all_categories.extend(map(lambda cat: cat.display, metadata.secondary_categories))
-    entry['categories'] = all_categories
+    entry['categories'] = ', '.join(all_categories)
 
     # 'comment' field
     entry['comment'] = metadata.comments if metadata.comments else ''
@@ -161,7 +179,9 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
         entry['journal_ref'] = metadata.journal_ref
 
     # 'published' field
-    entry['published'] = str(metadata.get_datetime_of_version(1).isoformat())
+    pubdate = metadata.get_datetime_of_version(1)
+    entry['published'] = pubdate.isoformat() if pubdate is not None \
+        else _guess_pub_date(metadata)
 
     # 'subject' field
     if metadata.primary_category:
@@ -177,7 +197,7 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
     dt_ver = metadata.get_datetime_of_version(metadata.version)
     if dt_ver:
         entry['updated'] = str(dt_ver.isoformat())
-    
+
     return entry
 
 
