@@ -640,13 +640,6 @@ class NextMail(db.Model):
     extra = Column(String(255))
     mail_id = Column(String(6))
     is_written = Column(Integer, nullable=False, server_default=text("'0'"))
-    document = relationship('Document',
-                            primaryjoin='Document.document_id == NextMail.document_id',
-                            foreign_keys='Document.document_id')
-
-    arxiv_metadata = relationship('Metadata',
-                                  primaryjoin='and_ (Metadata.paper_id == NextMail.paper_id, Metadata.version == NextMail.version)',
-                                  foreign_keys='Metadata.paper_id, Metadata.version')
 
 
 class AdminLog(db.Model):
