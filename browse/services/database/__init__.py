@@ -464,13 +464,21 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 def service_status()->List[str]:
     try:
         db.session.query(Document.document_id).limit(1).first()
-        db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
     except NoResultFound:
         return ["service.database: No documents found in db"]
     except (OperationalError, DBAPIError) as ex:
         return [f"service.database: Error executing test query count on documents: {ex}"]
     except Exception as ex:
         return [f"service.database: Problem with DB: {ex}"]
+
+    try:
+        db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
+    except NoResultFound:
+        return ["service.database DBLaTeXML: No documents found in db"]
+    except (OperationalError, DBAPIError) as ex:
+        return [f"service.database DBLaTeXML: Error executing test query count on documents: {ex}"]
+    except Exception as ex:
+        return [f"service.database DBLaTeXML: Problem with DB: {ex}"]
 
     return []
 
