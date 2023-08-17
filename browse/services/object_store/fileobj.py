@@ -6,7 +6,7 @@ import io
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import IO
+from typing import IO, Optional, Any
 from contextlib import contextmanager
 
 
@@ -232,21 +232,46 @@ class FileFromTar(FileObj):
         self._fileobj = tar_file
         self._path = path
         self._size = -1
-        self._path_exists = None
+        self._path_exists: Optional[bool] = None
+        self._tarinfo: Optional[Any] = None
 
     @property
     def name(self) -> str:
         return self._path
 
     def exists(self) -> bool:
-        raise Exception("Not implemented due to it being inefficent")
+        """Returns `True` if `tar_file` exists and a member exists at `path` in
+        the tar.
+
+        The this extracts and saves the tarinfo. That records the offset into
+        the tar file. So it should not be too inefficent.
+        """
+        if self._path_exists is not None:
+            return self._path_exists
+
+        if not self._fileobj.exists():
+            self._path_exists = False
+            return False
+
+        with self._fileobj.open(mode="rb") as fh:
+            with tarfile.open(fileobj=fh, mode="r") as tar:
+                try:
+                    self._tarinfo = tar.getmember(self._path)
+                    self._path_exists = True
+                    return True
+                except KeyError:
+                    self._path_exists = False
+                    return False
 
     @contextmanager
     def open(self, *args, **kwargs) -> IO:  # type: ignore
         with self._fileobj.open(mode="rb") as fh:
             with tarfile.open(fileobj=fh, mode="r") as tar:
                 try:
-                    member = tar.getmember(self._path)
+                    if self._tarinfo is None:
+                        member = tar.getmember(self._path)
+                    else:
+                        member = self._tarinfo
                 except KeyError:
                     raise FileNotFound(f"could not find {self._path} in tar")
                 yield tar.extractfile(member)
