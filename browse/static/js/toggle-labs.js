@@ -24,7 +24,7 @@ $(document).ready(function() {
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "bibex": {
-      "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
+      "url": "localhost:8080/js/bibex/bibex.js",
       "container": "#bib-main"
     },
     "core-recommender": {
