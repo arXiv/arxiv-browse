@@ -1,78 +1,58 @@
-import unittest
+"""Tests /archive path."""
 
-from app import app
+def test_astroph_archive(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/astro-ph")
+    assert rv.status_code == 200
+    assert 'Expires' in rv.headers, 'Should have expires header'
 
+    rv = client_with_test_fs.get("/archive/astro-ph/")
+    assert rv.status_code == 200, 'Trailing slash should be allowed'
 
-class BrowseTest(unittest.TestCase):
-    def setUp(self):
-        app.testing = True
-        app.config["APPLICATION_ROOT"] = ""
-        self.app = app.test_client()
+    src = rv.data.decode("utf-8")
+    assert "Astrophysics" in src
+    assert "/year/astro-ph/92" in src
+    assert "/year/astro-ph/19" in src
 
-    def test_astroph_archive(self):
-        rv = self.app.get("/archive/astro-ph")
-        self.assertEqual(rv.status_code, 200)
-        self.assertIn('Expires', rv.headers, 'Should have expires header')
+    assert "Astrophysics of Galaxies" in src, "Subcategories of astro-ph should be on archive page"
+    assert "Earth and Planetary Astrophysics" in src, "Subcategories of astro-ph should be on archive page"
 
-        rv = self.app.get("/archive/astro-ph/")
-        self.assertEqual(rv.status_code, 200,
-                         'Trailing slash should be allowed')
+def test_list(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/list")
+    assert rv.status_code == 200
+    src = rv.data.decode("utf-8")
 
-        src = rv.data.decode("utf-8")
-        self.assertIn("Astrophysics", src)
-        self.assertIn("/year/astro-ph/92", src)
-        self.assertIn("/year/astro-ph/19", src)
+    assert "Astrophysics" in src
+    assert "astro-ph" in src
 
-        self.assertIn(
-            "Astrophysics of Galaxies",
-            src,
-            "Subcategories of astro-ph should be on archive page",
-        )
-        self.assertIn(
-            "Earth and Planetary Astrophysics",
-            src,
-            "Subcategories of astro-ph should be on archive page",
-        )
+    assert "Materials Theory" in src
+    assert "mtrl-th" in src
 
-    def test_list(self):
-        rv = self.app.get("/archive/list")
-        self.assertEqual(rv.status_code, 200)
-        src = rv.data.decode("utf-8")
+    rv = client_with_test_fs.get("/archive/bogus-archive")
+    assert rv.status_code == 404
 
-        self.assertIn("Astrophysics", src)
-        self.assertIn("astro-ph", src)
+def test_subsumed_archive(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/comp-lg")
+    assert rv.status_code == 404
+    src = rv.data.decode("utf-8")
 
-        self.assertIn("Materials Theory", src)
-        self.assertIn("mtrl-th", src)
+    assert "Computer Science" in src
+    assert "cs.CL" in src
 
-        rv = self.app.get("/archive/bogus-archive")
-        self.assertEqual(rv.status_code, 404)
+    rv = client_with_test_fs.get("/archive/acc-phys")
+    assert rv.status_code == 200
+    src = rv.data.decode("utf-8")
 
-    def test_subsumed_archive(self):
-        rv = self.app.get("/archive/comp-lg")
-        self.assertEqual(rv.status_code, 404)
-        src = rv.data.decode("utf-8")
+    assert "Accelerator Physics" in src
+    assert "physics.acc-ph" in src
 
-        self.assertIn("Computer Science", src)
-        self.assertIn("cs.CL", src)
+def test_single_archive(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/hep-ph")
+    assert rv.status_code == 200
+    src = rv.data.decode("utf-8")
 
-        rv = self.app.get("/archive/acc-phys")
-        self.assertEqual(rv.status_code, 200)
-        src = rv.data.decode("utf-8")
+    assert "High Energy Physics" in src
+    assert "Categories within" not in src
 
-        self.assertIn("Accelerator Physics", src)
-        self.assertIn("physics.acc-ph", src)
-
-    def test_single_archive(self):
-        rv = self.app.get("/archive/hep-ph")
-        self.assertEqual(rv.status_code, 200)
-        src = rv.data.decode("utf-8")
-
-        self.assertIn("High Energy Physics", src)
-        self.assertNotIn("Categories within", src)
-
-    def test_301_redirects(self):
-        rv = self.app.get("/archive/astro-ph/Astrophysics")
-        self.assertEqual(rv.status_code, 301,
-                         "/archive/astro-ph/Astrophysics should get a "
-                         "301 redirect ARXIVNG-2119")
+def test_301_redirects(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/astro-ph/Astrophysics")
+    assert rv.status_code == 301, "/archive/astro-ph/Astrophysics should get a 301 redirect ARXIVNG-2119"

@@ -1,16 +1,14 @@
 """Documents Service and implementations."""
 from typing import Any, cast
 
+from flask import g, current_app
 
 from .base_documents import DocMetadataService
 
 def get_doc_service() -> DocMetadataService:
     """Gets the documents service configured for this app context."""
-    from browse.config import settings
-    from flask import g
-
     if 'doc_service' not in g:
-        g.doc_service = settings.DOCUMENT_ABSTRACT_SERVICE(settings, g)   # pylint disable:E1102
+        g.doc_service = current_app.settings.DOCUMENT_ABSTRACT_SERVICE(current_app.settings, g) # type: ignore
 
     return cast(DocMetadataService, g.doc_service)
 

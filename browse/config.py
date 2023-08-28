@@ -7,17 +7,17 @@ import os
 from secrets import token_hex
 import warnings
 
-from datetime import date, datetime, timedelta
-from typing import Optional
+from typing import Optional, Dict, Any
 import logging
 
-from pydantic import BaseSettings, SecretStr, PyObject, AnyHttpUrl
+from pydantic import BaseSettings, SecretStr, PyObject
 
 log = logging.getLogger(__name__)
 
 
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
+
 
 class Settings(BaseSettings):
     """Class for settings for arxiv-browse web app."""
@@ -35,8 +35,6 @@ class Settings(BaseSettings):
     FLASKS3_FORCE_MIMETYPE: bool = True
     FLASKS3_ACTIVE: bool = False
 
-    # SQLAlchemy configuration
-    # For mysql: 'mysql://user:pass@localhost/dbname'
     SQLALCHEMY_DATABASE_URI: str = DEFAULT_DB
     """SQLALCHEMY_DATABASE_URI is pulled from
     BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
@@ -44,15 +42,35 @@ class Settings(BaseSettings):
     default, the SQLITE test DB is used.
     """
 
-    LATEXML_BASE_URL: str = os.environ.get('LATEXML_BASE_URL')
-    LATEXML_DB_URI: str = os.environ.get('LATEXML_DB_URI') or TESTING_LATEXML_DB
+    LATEXML_BASE_URL: str = ''
+    """Base GS bucket URL to find the HTML."""
+
+    LATEXML_DB_USER: str = ''
+    """DB username for latexml DB."""
+
+    LATEXML_DB_PASS: str = ''
+    """DB password for latexml DB."""
+
+    LATEXML_DB_NAME: str = ''
+    """DB name for latexml DB."""
+
+    LATEXML_INSTANCE_CONNECTION_NAME: str = ''
+    """GCP instance connection name of managed DB.
+    ex. arxiv-xyz:us-central1:my-special-db
+
+    If this is set, a TLS protected GCP connection will be used to connect to
+    the latexml db. See
+    https://cloud.google.com/sql/docs/postgres/connect-connectors#python_1"""
+
+    LATEXML_IP_TYPE: str = 'PUBLIC_IP'
+    """If the GCP connection is public or private"""
+
+    SQLALCHEMY_BINDS: Dict[str, Any] = {}
     """ For the database tracking html conversion metadata """
-    SQLALCHEMY_BINDS = { "latexml": LATEXML_DB_URI}
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_RECORD_QUERIES = False
-
 
     SQLALCHEMY_POOL_SIZE: Optional[int] = 10
     """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
@@ -199,11 +217,6 @@ class Settings(BaseSettings):
     """
 
     """XXXXXXXXXXXXXXX Some flask specific configs XXXXXXXXXXXX"""
-
-    #DEBUG = os.environ.get("DEBUG") == ON
-    # Setts werkzeug debugging mode
-    # May not work when set from code, so don't try to use it here
-    # Set in the env vars
 
     TESTING: bool = True
     """enable/disable testing mode. Enable testing mode. Exceptions are
@@ -407,6 +420,3 @@ class Settings(BaseSettings):
             log.warning(f"Unexpected: using FS listings and abs sevice but FS don't match. "
                         "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
                         f"but listings at {self.DOCUMENT_LISTING_PATH}")
-
-
-settings = Settings()

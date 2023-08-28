@@ -1,7 +1,7 @@
 """Tests for prevnext controller, :mod:`browse.controllers.prevnext`."""
 
 # mypy: ignore-errors
-
+import pytest
 from unittest import TestCase, mock
 
 from werkzeug.exceptions import BadRequest
@@ -9,13 +9,9 @@ from werkzeug.exceptions import BadRequest
 from browse.controllers import prevnext
 from browse.factory import create_web_app
 
+@pytest.mark.usefixtures("unittest_add_fake_app")
 class TestPrevNextController(TestCase):
     """Tests for :func:`.get_prevnext`."""
-
-    def setUp(self):
-        self.app = create_web_app()
-        self.app.testing = True
-        self.app.config['APPLICATION_ROOT'] = ''
 
     def test_missing_parameters(self) -> None:
         """Test request with missing parameters."""

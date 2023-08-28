@@ -21,7 +21,6 @@ from flask import (
 )
 from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 
-from browse.config import settings
 from browse.controllers import (
     abs_page,
     archive_page,
@@ -45,74 +44,10 @@ geoip_reader = None
 blueprint = Blueprint("browse", __name__, url_prefix="/")
 
 
-@blueprint.record_once
-def load_global_data(_) -> None: # type: ignore
-    """Load global data."""
-    if settings.BROWSE_ANALYTICS_ENABLED:
-        global geoip_reader
-        try:
-            geoip_reader = geoip2.database.Reader("data/GeoLite2-City.mmdb")
-        except Exception as ex:
-            logger.error("problem loading geoip database: %s", ex)
-
-
 @blueprint.app_context_processor
 def inject_now() -> Dict:
     """Inject current datetime into request context."""
     return dict(request_datetime=datetime.now())
-
-
-@blueprint.before_request
-def before_request() -> None:
-    """ Get geo data and institutional affiliation from ip address. """
-    if settings.BROWSE_ANALYTICS_ENABLED:
-        global geoip_reader
-        try:
-            if geoip_reader:
-                # For new db or new session vars, can force a re-check by incrementing 'geoip.version'.
-                geoip_version = "1"
-                if (
-                    "geoip.version" not in session
-                    or session["geoip.version"] != geoip_version
-                ):
-                    session["geoip.version"] = geoip_version
-                    # https://geoip2.readthedocs.io/en/latest/
-                    response = geoip_reader.city(request.remote_addr or '')
-                    if response:
-                        if response.continent:
-                            session["continent"] = {
-                                "code": response.continent.code,
-                                "name": response.continent.names["en"],
-                            }
-                        if response.country and response.country.iso_code:
-                            session["country"] = response.country.iso_code
-                        if (
-                            response.subdivisions
-                            and response.subdivisions.most_specific
-                            and response.subdivisions.most_specific.iso_code
-                        ):
-                            session[
-                                "subnational"
-                            ] = response.subdivisions.most_specific.iso_code
-                        if response.city and response.city.name:
-                            session["city"] = response.city.name
-        # except AddressNotFoundError as ex:
-        #    logger.debug('problem getting match on IP: %s', ex)
-        except ValueError as ex:
-            logger.debug("problem with IP address format: %s", ex)
-        except Exception as ex:
-            logger.debug("problem using geoip: %s", ex)
-
-        try:
-            if "hashed_user_id" not in session:
-                if hasattr(request, "auth") and hasattr(request.auth, "user"):
-                    user_id = str(request.auth.user.user_id).encode("utf-8")
-                    salt = bcrypt.gensalt()
-                    tmp = bcrypt.hashpw(user_id, salt)
-                    hashed_user_id = str(tmp, "utf-8")
-                    session["hashed_user_id"] = hashed_user_id
-        except Exception as ex:
-            logger.debug("problem creating hashed_user_id: %s", ex)
 
 
 @blueprint.after_request
@@ -260,7 +195,7 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args:
-        if is_hash_valid(settings.CLICKTHROUGH_SECRET.get_secret_value(),
+        if is_hash_valid(current_app.settiings.CLICKTHROUGH_SECRET.get_secret_value(), # type: ignore
                          request.args.get('url'),
                          request.args.get('v')):
             return redirect(request.args.get('url'))  # type: ignore

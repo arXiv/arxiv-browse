@@ -51,13 +51,15 @@ class Document(db.Model):
     paper_id = Column(
         String(20), nullable=False, unique=True, server_default=text("''")
     )
-    title = Column(String(255), nullable=False, index=True, server_default=text("''"))
+    title = Column(String(255), nullable=False,
+                   index=True, server_default=text("''"))
     authors = Column(Text)
     submitter_email = Column(
         String(64), nullable=False, index=True, server_default=text("''")
     )
     submitter_id = Column(ForeignKey("tapir_users.user_id"), index=True)
-    dated = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    dated = Column(Integer, nullable=False, index=True,
+                   server_default=text("'0'"))
     primary_subject_class = Column(String(16))
     created = Column(DateTime)
     submitter = relationship("User")
@@ -213,21 +215,27 @@ class User(db.Model):
 
     # This handles the fact that first_name and last_name are set to utf8 in this table.
     # It sets the whole table to utf8 but hopefully that isn't a problem.
-    __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
+    __table_args__ = {'mysql_engine': 'InnoDB',
+                      'mysql_charset': 'utf8', 'mysql_collate': 'utf8_unicode_ci'}
 
     # This handles the fact that first_name and last_name are set to utf8 in this table.
     # It sets the whole table to utf8 but hopefully that isn't a problem.
-    __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8','mysql_collate':'utf8_unicode_ci'}
+    __table_args__ = {'mysql_engine': 'InnoDB',
+                      'mysql_charset': 'utf8', 'mysql_collate': 'utf8_unicode_ci'}
 
     user_id = Column(Integer, primary_key=True)
     first_name = Column(String(50), index=True)
     last_name = Column(String(50), index=True)
     suffix_name = Column(String(50))
-    share_first_name = Column(Integer, nullable=False, server_default=text("'1'"))
-    share_last_name = Column(Integer, nullable=False, server_default=text("'1'"))
-    email = Column(String(255), nullable=False, unique=True, server_default=text("''"))
+    share_first_name = Column(Integer, nullable=False,
+                              server_default=text("'1'"))
+    share_last_name = Column(Integer, nullable=False,
+                             server_default=text("'1'"))
+    email = Column(String(255), nullable=False,
+                   unique=True, server_default=text("''"))
     share_email = Column(Integer, nullable=False, server_default=text("'8'"))
-    email_bouncing = Column(Integer, nullable=False, server_default=text("'0'"))
+    email_bouncing = Column(Integer, nullable=False,
+                            server_default=text("'0'"))
     policy_class = Column(
         ForeignKey("tapir_policy_classes.class_id"),
         nullable=False,
@@ -238,15 +246,18 @@ class User(db.Model):
         Integer, nullable=False, index=True, server_default=text("'0'")
     )
     joined_ip_num = Column(String(16), index=True)
-    joined_remote_host = Column(String(255), nullable=False, server_default=text("''"))
+    joined_remote_host = Column(
+        String(255), nullable=False, server_default=text("''"))
     flag_internal = Column(
         Integer, nullable=False, index=True, server_default=text("'0'")
     )
     flag_edit_users = Column(
         Integer, nullable=False, index=True, server_default=text("'0'")
     )
-    flag_edit_system = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_email_verified = Column(Integer, nullable=False, server_default=text("'0'"))
+    flag_edit_system = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    flag_email_verified = Column(
+        Integer, nullable=False, server_default=text("'0'"))
     flag_approved = Column(
         Integer, nullable=False, index=True, server_default=text("'1'")
     )
@@ -256,8 +267,10 @@ class User(db.Model):
     flag_banned = Column(
         Integer, nullable=False, index=True, server_default=text("'0'")
     )
-    flag_wants_email = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_html_email = Column(Integer, nullable=False, server_default=text("'0'"))
+    flag_wants_email = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    flag_html_email = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
     tracking_cookie = Column(
         String(255), nullable=False, index=True, server_default=text("''")
     )
@@ -268,25 +281,29 @@ class User(db.Model):
     tapir_policy_class = relationship('UserPolicyClass')
 
 
-
 class Nickname(db.Model):
     __tablename__ = 'tapir_nicknames'
     __table_args__ = (
         Index('user_id', 'user_id', 'user_seq', unique=True),
     )
-  
+
     nick_id = Column(Integer, primary_key=True)
-    nickname = Column(String(20), nullable=False, unique=True, server_default=text("''"))
-    user_id = Column(ForeignKey('tapir_users.user_id'), nullable=False, server_default=text("'0'"))
+    nickname = Column(String(20), nullable=False,
+                      unique=True, server_default=text("''"))
+    user_id = Column(ForeignKey('tapir_users.user_id'),
+                     nullable=False, server_default=text("'0'"))
     user_seq = Column(Integer, nullable=False, server_default=text("'0'"))
-    flag_valid = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    role = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    policy = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    flag_valid = Column(Integer, nullable=False, index=True,
+                        server_default=text("'0'"))
+    role = Column(Integer, nullable=False, index=True,
+                  server_default=text("'0'"))
+    policy = Column(Integer, nullable=False, index=True,
+                    server_default=text("'0'"))
     flag_primary = Column(Integer, nullable=False, server_default=text("'0'"))
 
     user = relationship('User')
 
-    
+
 class UserPolicyClass(db.Model):
     """Model for the legacy user policy class."""
 
@@ -295,9 +312,12 @@ class UserPolicyClass(db.Model):
     class_id = Column(SmallInteger, primary_key=True)
     name = Column(String(64), nullable=False, server_default=text("''"))
     description = Column(Text, nullable=False)
-    password_storage = Column(Integer, nullable=False, server_default=text("'0'"))
-    recovery_policy = Column(Integer, nullable=False, server_default=text("'0'"))
-    permanent_login = Column(Integer, nullable=False, server_default=text("'0'"))
+    password_storage = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
+    recovery_policy = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
+    permanent_login = Column(Integer, nullable=False,
+                             server_default=text("'0'"))
 
 
 class TrackbackPing(db.Model):
@@ -309,15 +329,18 @@ class TrackbackPing(db.Model):
     document_id = Column(Integer, index=True)
     title = Column(String(255), nullable=False, server_default=text("''"))
     excerpt = Column(String(255), nullable=False, server_default=text("''"))
-    url = Column(String(255), nullable=False, index=True, server_default=text("''"))
+    url = Column(String(255), nullable=False,
+                 index=True, server_default=text("''"))
     blog_name = Column(String(255), nullable=False, server_default=text("''"))
-    remote_host = Column(String(255), nullable=False, server_default=text("''"))
+    remote_host = Column(String(255), nullable=False,
+                         server_default=text("''"))
     remote_addr = Column(String(16), nullable=False, server_default=text("''"))
     posted_date = Column(
         Integer, nullable=False, index=True, server_default=text("'0'")
     )
     is_stale = Column(Integer, nullable=False, server_default=text("'0'"))
-    approved_by_user = Column(Integer, nullable=False, server_default=text("'0'"))
+    approved_by_user = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
     approved_time = Column(Integer, nullable=False, server_default=text("'0'"))
     status = Column(
         Enum("pending", "pending2", "accepted", "rejected", "spam"),
@@ -360,7 +383,8 @@ class TrackbackSite(db.Model):
 
     __tablename__ = "arXiv_trackback_sites"
 
-    pattern = Column(String(255), nullable=False, index=True, server_default=text("''"))
+    pattern = Column(String(255), nullable=False,
+                     index=True, server_default=text("''"))
     site_id = Column(Integer, primary_key=True)
     action = Column(
         Enum("neutral", "accept", "reject", "spam"),
@@ -421,12 +445,12 @@ class DBLaTeXMLDocuments(db.Model):
 
     paper_id = Column(String(20), primary_key=True)
     document_version = Column(Integer, primary_key=True)
-    # conversion_status codes: 
+    # conversion_status codes:
     #   - 0 = in progress
     #   - 1 = success
     #   - 2 = failure
     conversion_status = Column(Integer, nullable=False)
-    latexml_version = Column(String(40), nullable=False)
+    latexmldb = Column(String(40), nullable=False)
     tex_checksum = Column(String)
     conversion_start_time = Column(Integer)
     conversion_end_time = Column(Integer)
@@ -455,7 +479,8 @@ class Category(db.Model):
     endorse_email = Column(
         Enum("y", "n", "d"), nullable=False, server_default=text("'d'")
     )
-    papers_to_endorse = Column(SmallInteger, nullable=False, server_default=text("'0'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'0'"))
     endorsement_domain = Column(
         ForeignKey("arXiv_endorsement_domains.endorsement_domain"), index=True
     )
@@ -469,14 +494,16 @@ class Archive(db.Model):
 
     __tablename__ = "arXiv_archives"
 
-    archive_id = Column(String(16), primary_key=True, server_default=text("''"))
+    archive_id = Column(String(16), primary_key=True,
+                        server_default=text("''"))
     in_group = Column(
         ForeignKey("arXiv_groups.group_id"),
         nullable=False,
         index=True,
         server_default=text("''"),
     )
-    archive_name = Column(String(255), nullable=False, server_default=text("''"))
+    archive_name = Column(String(255), nullable=False,
+                          server_default=text("''"))
     start_date = Column(String(4), nullable=False, server_default=text("''"))
     end_date = Column(String(4), nullable=False, server_default=text("''"))
     subdivided = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -499,22 +526,29 @@ class EndorsementDomain(db.Model):
 
     __tablename__ = "arXiv_endorsement_domains"
 
-    endorsement_domain = Column(String(32), primary_key=True, server_default=text("''"))
-    endorse_all = Column(Enum("y", "n"), nullable=False, server_default=text("'n'"))
+    endorsement_domain = Column(
+        String(32), primary_key=True, server_default=text("''"))
+    endorse_all = Column(Enum("y", "n"), nullable=False,
+                         server_default=text("'n'"))
     mods_endorse_all = Column(
         Enum("y", "n"), nullable=False, server_default=text("'n'")
     )
-    endorse_email = Column(Enum("y", "n"), nullable=False, server_default=text("'y'"))
-    papers_to_endorse = Column(SmallInteger, nullable=False, server_default=text("'4'"))
+    endorse_email = Column(Enum("y", "n"), nullable=False,
+                           server_default=text("'y'"))
+    papers_to_endorse = Column(
+        SmallInteger, nullable=False, server_default=text("'4'"))
+
 
 class AuthorIds(db.Model):
     __tablename__ = 'arXiv_author_ids'
 
     user_id = Column(ForeignKey('tapir_users.user_id'), primary_key=True)
     author_id = Column(String(50), nullable=False, index=True)
-    updated = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    updated = Column(DateTime, nullable=False,
+                     server_default=text("CURRENT_TIMESTAMP"))
 
     user = relationship('User', uselist=False)
+
 
 class OrcidIds(db.Model):
     __tablename__ = 'arXiv_orcid_ids'
@@ -522,9 +556,11 @@ class OrcidIds(db.Model):
     user_id = Column(ForeignKey('tapir_users.user_id'), primary_key=True)
     orcid = Column(String(19), nullable=False, index=True)
     authenticated = Column(Integer, nullable=False, server_default=text("'0'"))
-    updated = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    updated = Column(DateTime, nullable=False,
+                     server_default=text("CURRENT_TIMESTAMP"))
 
     user = relationship('User', uselist=False)
+
 
 in_category = Table(
     "arXiv_in_category",
@@ -537,7 +573,8 @@ in_category = Table(
         server_default=text("'0'"),
     ),
     Column("archive", String(16), nullable=False, server_default=text("''")),
-    Column("subject_class", String(16), nullable=False, server_default=text("''")),
+    Column("subject_class", String(16),
+           nullable=False, server_default=text("''")),
     Column("is_primary", Integer, nullable=False, server_default=text("'0'")),
     ForeignKeyConstraint(
         ["archive", "subject_class"],
@@ -563,10 +600,11 @@ class StatsMonthlySubmission(db.Model):
     __tablename__ = "arXiv_stats_monthly_submissions"
 
     ym = Column(Date, primary_key=True
-                #,server_default=text("'0000-00-00'") # does not work in sqlite
+                # ,server_default=text("'0000-00-00'") # does not work in sqlite
                 )
     num_submissions = Column(SmallInteger, nullable=False)
-    historical_delta = Column(Integer, nullable=False, server_default=text("'0'"))
+    historical_delta = Column(Integer, nullable=False,
+                              server_default=text("'0'"))
 
 
 stats_hourly = Table(
@@ -580,17 +618,24 @@ stats_hourly = Table(
 )
 
 paper_owners = Table(
-    'arXiv_paper_owners', 
+    'arXiv_paper_owners',
     metadata,
-    Column('document_id', ForeignKey('arXiv_documents.document_id'), nullable=False, server_default=text("'0'")),
-    Column('user_id', ForeignKey('tapir_users.user_id'), nullable=False, index=True, server_default=text("'0'")),
+    Column('document_id', ForeignKey('arXiv_documents.document_id'),
+           nullable=False, server_default=text("'0'")),
+    Column('user_id', ForeignKey('tapir_users.user_id'),
+           nullable=False, index=True, server_default=text("'0'")),
     Column('date', INTEGER(10), nullable=False, server_default=text("'0'")),
-    Column('added_by', ForeignKey('tapir_users.user_id'), nullable=False, index=True, server_default=text("'0'")),
-    Column('remote_addr', String(16), nullable=False, server_default=text("''")),
-    Column('remote_host', String(255), nullable=False, server_default=text("''")),
-    Column('tracking_cookie', String(32), nullable=False, server_default=text("''")),
+    Column('added_by', ForeignKey('tapir_users.user_id'),
+           nullable=False, index=True, server_default=text("'0'")),
+    Column('remote_addr', String(16), nullable=False,
+           server_default=text("''")),
+    Column('remote_host', String(255),
+           nullable=False, server_default=text("''")),
+    Column('tracking_cookie', String(32),
+           nullable=False, server_default=text("''")),
     Column('valid', INTEGER(1), nullable=False, server_default=text("'0'")),
-    Column('flag_author', INTEGER(1), nullable=False, server_default=text("'0'")),
+    Column('flag_author', INTEGER(1), nullable=False,
+           server_default=text("'0'")),
     Column('flag_auto', INTEGER(1), nullable=False, server_default=text("'1'")),
     Index('document_id', 'document_id', 'user_id', unique=True)
 )
@@ -599,7 +644,8 @@ paper_owners = Table(
 class CategoryDef(db.Model):
     __tablename__ = 'arXiv_category_def'
     __table_args__ = (
-        ForeignKeyConstraint(['archive', 'subject_class'], ['arXiv_categories.archive', 'arXiv_categories.subject_class']),
+        ForeignKeyConstraint(['archive', 'subject_class'], [
+                             'arXiv_categories.archive', 'arXiv_categories.subject_class']),
         Index('cat_def_fk', 'archive', 'subject_class')
     )
 
@@ -607,11 +653,12 @@ class CategoryDef(db.Model):
     name = Column(String(255))
     active = Column(Integer, server_default=text("'1'"))
     archive = Column(String(16), nullable=False, server_default=text("''"))
-    subject_class = Column(String(16), nullable=False, server_default=text("''"))
+    subject_class = Column(String(16), nullable=False,
+                           server_default=text("''"))
 
     arXiv_categories = relationship('Category')
 
-    
+
 class DocumentCategory(db.Model):
     __tablename__ = 'arXiv_document_category'
 
@@ -629,11 +676,13 @@ class NextMail(db.Model):
     """Model for mailings from publish"""
     __tablename__ = 'arXiv_next_mail'
     __table_args__ = (
-        Index('arXiv_next_mail_idx_document_id_version', 'document_id', 'version'),
+        Index('arXiv_next_mail_idx_document_id_version',
+              'document_id', 'version'),
     )
     next_mail_id = Column(Integer, primary_key=True)
     submission_id = Column(Integer, nullable=False)
-    document_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    document_id = Column(Integer, nullable=False,
+                         index=True, server_default=text("'0'"))
     paper_id = Column(String(20))
     version = Column(Integer, nullable=False, server_default=text("'1'"))
     type = Column(String(255), nullable=False, server_default=text("'new'"))
@@ -649,7 +698,7 @@ class AdminLog(db.Model):
     logtime = Column(String(24))
     created = Column(DateTime, nullable=False,
                      # Only works on mysql:
-                     #server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+                     # server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
                      )
     paper_id = Column(String(20), index=True)
     username = Column(String(20), index=True)
@@ -662,8 +711,50 @@ class AdminLog(db.Model):
     notify = Column(Integer(), server_default=text("'0'"))
 
 
-
 def init_app(app: Optional[LocalProxy]) -> None:
     """Set configuration defaults and attach session to the application."""
+    if app is None:
+        raise RuntimeError("Cannot init a app of None")
+
+    _config_latexml(app)
     db.init_app(app)
+
+
+def _config_latexml(app: LocalProxy) -> None:
+    """Set up the latexml database.
+
+    This will detech if LATEXML_INSTANCE_CONNECTION_NAME is set and if it is,
+    it will use a GCP connector with TLS."""
+
+    latexml_config: dict = {}
+    settings = app.settings  # type: ignore
+
+    if hasattr(settings, "SQLALCHEMY_BINDS") and settings.SQLALCHEMY_BINDS:
+        # already set?
+        return
+
+    if settings.LATEXML_INSTANCE_CONNECTION_NAME:
+        from google.cloud.sql.connector import Connector, IPTypes
+        import pg8000
+
+        ip_type = IPTypes.PRIVATE if settings == "PRIVATE_IP"\
+            else IPTypes.PUBLIC
+        connector = Connector()
+
+        def getconn() -> pg8000.dbapi.Connection:
+            conn: pg8000.dbapi.Connection = connector.connect(
+                settings.LATEXML_INSTANCE_CONNECTION_NAME,
+                "pg8000",
+                user=settings.LATEXML_DB_USER,
+                password=settings.LATEXML_DB_PASS,
+                db=settings.LATEXML_DB_NAME,
+                ip_type=ip_type,
+            )
+            return conn
+
+        settings.SQLALCHEMY_BINDS["latexml"] = {"url": "postgresql+pg8000://",
+                                                "creator": getconn}
+    elif settings.LATEXML_DB_USER and settings.LATEXML_DB_PASS and settings.LATEXML_DB_NAME:
+        settings.SQLALCHEMY_BINDS["latexml"] = {"url":
+                                                f"postgresql+pg8000://{settings.LATEXML_DB_USER}@{settings.LATEXML_DB_PASS}/{settings.LATEXML_DB_NAME}"}
 

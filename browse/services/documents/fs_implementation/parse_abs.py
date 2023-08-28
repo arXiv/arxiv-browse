@@ -1,11 +1,13 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Optional
 from datetime import datetime
 
 from zoneinfo import ZoneInfo
 from dateutil import parser
+
+from flask import current_app
 
 from browse.services.anypath import to_anypath
 
@@ -18,10 +20,6 @@ from browse.domain.version import VersionEntry, SourceType
 from browse.domain.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
-from browse.config import settings
-
-ARXIV_BUSINESS_TZ = ZoneInfo(settings.ARXIV_BUSINESS_TZ)
-FS_TZ = ZoneInfo(settings.FS_TZ)
 
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
@@ -63,14 +61,25 @@ The latest versions of these papers should always have the "Categories:" line.
 """
 
 
-def parse_abs_file(filename: str) -> DocMetadata:
-    """Parse an arXiv .abs file."""
+_fs_tz: Optional[ZoneInfo] = None
+"""FS timezone if in a flask app."""
 
+
+def parse_abs_file(filename: str) -> DocMetadata:
+    """Parse an arXiv .abs file.
+
+    The modified time on the abs file will be used as the modified time for the
+    abstract. It will be pulled from `flask.config` if in a app_context. It
+    can be specified with tz arg.
+    """
     absfile = to_anypath(filename)
     try:
         with absfile.open(mode='r', encoding='latin-1') as absf:
             raw = absf.read()
-            modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=FS_TZ)
+            if current_app:
+                modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=_get_tz())
+            else:
+                modified = datetime.fromtimestamp(absfile.stat().st_mtime)
             modified = modified.astimezone(ZoneInfo("UTC"))
             return parse_abs(raw, modified)
 
@@ -285,3 +294,12 @@ def alt_component_split(components: List[str]) -> List[str]:
     alt_comp.append(abstract)
     alt_comp.append('')
     return alt_comp
+
+
+def _get_tz() -> ZoneInfo:
+    """Gets the timezone from the flask current_app."""
+    global _fs_tz
+    if _fs_tz is None:
+        _fs_tz = ZoneInfo(current_app.settings.FS_TZ) # type: ignore
+
+    return _fs_tz

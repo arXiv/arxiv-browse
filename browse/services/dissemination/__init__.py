@@ -1,14 +1,11 @@
 """Service to get PDF and other disseminations of an item."""
-from typing import Optional
+from flask import current_app
 
-from browse.config import settings
 from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
                                       pdf, ps, psgz, targz)
-from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from google.cloud import storage
 
-from browse.services.documents import get_doc_service
 from browse.services.object_store import ObjectStore
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.object_store_local import LocalObjectStore
@@ -41,11 +38,11 @@ def _get_object_store() -> ObjectStore:
     if _object_store is not None:
         return _object_store
 
-    if not settings.DISSEMINATION_STORAGE_PREFIX.startswith("gs://"):
-        _object_store = LocalObjectStore(settings.DISSEMINATION_STORAGE_PREFIX)
+    if not current_app.settings.DISSEMINATION_STORAGE_PREFIX.startswith("gs://"):
+        _object_store = LocalObjectStore(current_app.settings.DISSEMINATION_STORAGE_PREFIX)
     else:
         gs_client = storage.Client()
-        bname = settings.DISSEMINATION_STORAGE_PREFIX.replace('gs://','')
+        bname = current_app.settings.DISSEMINATION_STORAGE_PREFIX.replace('gs://','')
         bucket = gs_client.bucket(bname)
         _object_store = GsObjectStore(bucket)
 

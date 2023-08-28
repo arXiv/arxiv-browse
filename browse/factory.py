@@ -16,7 +16,7 @@ from flask_s3 import FlaskS3
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
 # from arxiv.users.auth import Auth
 
-from browse.config import settings
+from browse.config import Settings
 from browse.routes import ui, dissemination, src
 from browse.services.database import models
 from browse.services.check import service_statuses
@@ -26,12 +26,14 @@ from browse.filters import entity_to_utf
 s3 = FlaskS3()
 
 
-def create_web_app() -> Flask:
+def create_web_app(**kwargs) -> Flask: # type: ignore
     """Initialize an instance of the browse web application."""
     root = logging.getLogger()
     root.addHandler(default_handler)
 
+    settings = Settings(**kwargs)
     settings.check()
+
     app = Flask('browse',
                 static_url_path=f'/static/browse/{settings.APP_VERSION}')
     app.config.from_object(settings)  # facilitates sqlalchemy flask plugins

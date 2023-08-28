@@ -7,19 +7,17 @@ from time import mktime
 from typing import Any, List, Literal, Optional, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
 
+from flask import g, current_app
+
 from browse.domain.metadata import DocMetadata
 from browse.services import HasStatus
 
 
 def get_listing_service() -> "ListingService":
     """Get the listing service configured for the app context."""
-    from browse.config import settings
-    from flask import g
-
     if "listing_service" not in g:
-        g.listing_service = settings.DOCUMENT_LISTING_SERVICE(
-            settings, g
-        )  # pylint disable:E1102
+        fn = current_app.settings.DOCUMENT_LISTING_SERVICE # type: ignore
+        g.listing_service = fn(current_app.settings, g)  # type: ignore
 
     return cast(ListingService, g.listing_service)
 

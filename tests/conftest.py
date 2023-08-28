@@ -21,6 +21,18 @@ import os
 
 from tests import path_of_for_test
 
+DEFAULT_DB = "sqlite:///../tests/data/browse.db"
+TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
+
+
+TESTING_CONFIG = {
+    "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
+    "APPLICATION_ROOT": "",
+    "TESTING": True,
+    }
+
+def test_config():
+    return TESTING_CONFIG.copy()
 
 @pytest.fixture(scope='session')
 def loaded_db():
@@ -33,21 +45,16 @@ def loaded_db():
         populate_test_database(True, models)
 
 
-
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
     """App setup with DB backends."""
     import browse.services.documents as documents
     from browse.services.listing import db_listing
 
-    app = create_web_app()
-    app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})
-    app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
-    app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
-    app.settings.DOCUMENT_LISTING_SERVICE = db_listing
-
-    app.testing = True
-    app.config['APPLICATION_ROOT'] = ''
+    conf = test_config()
+    conf.update({'DOCUMENT_LISTING_SERVICE': db_listing})
+    conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
+    app = create_web_app(**conf)
 
     with app.app_context():
         import browse.services.documents as documents
@@ -65,19 +72,15 @@ def app_with_fake(loaded_db):
 
     # This depends on loaded_db becasue the services.database needs the DB
     # to be loaded eventhough listings and abs are done via fake and FS.
-    app = create_web_app()
+
     import browse.services.documents as documents
     import browse.services.listing as listing
 
-    app.config.update({'DOCUMENT_LISTING_SERVICE': listing.fake})
-    app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.fs_docs})
+    conf = test_config()
+    conf.update({'DOCUMENT_LISTING_SERVICE': listing.fake})
+    conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.fs_docs})
 
-    app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
-    app.settings.DOCUMENT_LISTING_SERVICE = listing.fake
-
-    app.testing = True
-    app.config['APPLICATION_ROOT'] = ''
-
+    app = create_web_app(**conf)
     with app.app_context():
         from flask import g
         g.doc_service = documents.fs_docs(app.settings, g)
@@ -99,18 +102,16 @@ def app_with_test_fs(loaded_db):
 
     import browse.services.documents as documents
     import browse.services.listing as listing
-    from browse.config import settings
 
-    settings.DISSEMINATION_STORAGE_PREFIX = './tests/data/abs_files/'
-    settings.DOCUMENT_ABSTRACT_SERVICE = documents.fs_docs
-    settings.DOCUMENT_LISTING_SERVICE = listing.fs_listing
-    settings.DOCUMENT_LISTING_PATH = "tests/data/abs_files/ftp"
-    settings.DOCUMENT_LATEST_VERSIONS_PATH = "tests/data/abs_files/ftp"
-    settings.DOCUMENT_ORIGNAL_VERSIONS_PATH = "tests/data/abs_files/orig"
+    conf = test_config()
+    conf["DISSEMINATION_STORAGE_PREFIX"] = './tests/data/abs_files/'
+    conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.fs_docs
+    conf["DOCUMENT_LISTING_SERVICE"] = listing.fs_listing
+    conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
+    conf["DOCUMENT_LATEST_VERSIONS_PATH"] = "tests/data/abs_files/ftp"
+    conf["DOCUMENT_ORIGNAL_VERSIONS_PATH"] = "tests/data/abs_files/orig"
 
-    app = create_web_app()
-    app.testing = True
-    app.config['APPLICATION_ROOT'] = ''
+    app = create_web_app(**conf)
 
     with app.app_context():
         from flask import g
@@ -140,6 +141,14 @@ def client_with_test_fs(app_with_test_fs):
 
 
 @pytest.fixture()
+def unittest_add_fake_app(request, app_with_fake):
+    """Adds fake_app to the calling UnitTest object
+
+    To use this add @pytest.mark.usefixtures("unittest_add_fake_app") to the UnitTest TestCase class."""
+    request.cls.app = app_with_fake
+
+
+@pytest.fixture()
 def unittest_add_db(request, dbclient):
     """Adds dbclient to the calling UnitTest object
 
@@ -166,14 +175,12 @@ def _app_with_db():
     import browse.services.documents as documents
     from browse.services.listing import db_listing
 
-    app = create_web_app()
-    app.config.update({'DOCUMENT_LISTING_SERVICE': db_listing})
-    app.config.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
+    conf = test_conf()
+    conf["settings.DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
+    conf["settings.DOCUMENT_LISTING_SERVICE"] = db_listing
 
-    app.settings.DOCUMENT_ABSTRACT_SERVICE = documents.db_docs
-    app.settings.DOCUMENT_LISTING_SERVICE = db_listing
-    app.testing = True
-    app.config['APPLICATION_ROOT'] = ''
+    app = create_web_app(**conf)
+
     return app
 
 

@@ -9,10 +9,6 @@ from browse.formatting.search_authors import queries_for_authors, split_long_aut
 from tests import path_of_for_test
 
 from browse.domain import metadata
-from browse.formatting.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
 
 
 class TestAuthorLinkCreation(TestCase):
