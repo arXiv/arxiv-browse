@@ -29,12 +29,31 @@ from sqlalchemy.dialects.mysql import (
     TINYINT,
     INTEGER
 )
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import relationship
 from validators import url as is_valid_url
 from werkzeug.local import LocalProxy
 
+class BrowseSQLAlchemy(SQLAlchemy):
+    """Overrides how flask_sqlalchemy handles options that need to be passed to
+    create_engine.
 
-db: SQLAlchemy = SQLAlchemy()
+    Inspite of documentation to the contrary, flask_sqlalchemy does not seem to
+    be able to handle a dict as the value for a SQLALCHEMY_BINDS.
+    """
+
+    def apply_driver_hacks(self, app, sa_url, options):
+        if not isinstance(sa_url, dict):
+            return super().apply_driver_hacks(app, sa_url, options)
+
+        url = make_url(sa_url["url"])
+        options.update(sa_url)
+        options.pop("url")
+        return url, options
+
+
+
+db: SQLAlchemy = BrowseSQLAlchemy()
 
 app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
@@ -725,10 +744,7 @@ def _config_latexml(app: LocalProxy) -> None:
 
     This will detech if LATEXML_INSTANCE_CONNECTION_NAME is set and if it is,
     it will use a GCP connector with TLS."""
-
-    latexml_config: dict = {}
     settings = app.settings  # type: ignore
-
     if hasattr(settings, "SQLALCHEMY_BINDS") and settings.SQLALCHEMY_BINDS:
         # already set?
         return
@@ -752,8 +768,13 @@ def _config_latexml(app: LocalProxy) -> None:
             )
             return conn
 
-        settings.SQLALCHEMY_BINDS["latexml"] = {"url": "postgresql+pg8000://",
-                                                "creator": getconn}
+
+        bind = {
+            #"url": make_url("postgresql+pg8000://"),
+            "url": "postgresql+pg8000://",
+            "creator": getconn}
+
+        settings.SQLALCHEMY_BINDS["latexml"] = bind
     elif settings.LATEXML_DB_USER and settings.LATEXML_DB_PASS and settings.LATEXML_DB_NAME:
         settings.SQLALCHEMY_BINDS["latexml"] = {"url":
                                                 f"postgresql+pg8000://{settings.LATEXML_DB_USER}@{settings.LATEXML_DB_PASS}/{settings.LATEXML_DB_NAME}"}
