@@ -469,7 +469,6 @@ class DBLaTeXMLDocuments(db.Model):
     #   - 1 = success
     #   - 2 = failure
     conversion_status = Column(Integer, nullable=False)
-    latexmldb = Column(String(40), nullable=False)
     tex_checksum = Column(String)
     conversion_start_time = Column(Integer)
     conversion_end_time = Column(Integer)
