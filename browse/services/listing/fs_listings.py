@@ -44,6 +44,7 @@ class FsListingFilesService(ListingService):
     """
 
     def __init__(self, document_listing_path: str):
+        self.document_listing_path = document_listing_path
         self.obj_store: ObjectStore = LocalObjectStore(document_listing_path)
         self.listing_files_root = "./"
         
@@ -336,10 +337,10 @@ class FsListingFilesService(ListingService):
         try:
             stat, msg = self.obj_store.status()
             if stat != "GOOD":
-                return [f"Supporting ObjectStore not good: {msg}"]
+                return [f"{__name__} Supporting ObjectStore not good: {msg}"]
             if not any(self.obj_store.list(self.listing_files_root)):
-                return [f"No files under listing_files_root '{self.listing_files_root}' or not exist"]
+                return [f"{__name__} No files under '{self.document_listing_path}' or not exist"]
             else:
                 return []
         except Exception as ex:
-            return [f"Could not access listing_files_root '{self.listing_files_root}' due to {ex}"]
+            return [f"{__name__} Could not access '{self.document_listing_path}' due to {ex}"]

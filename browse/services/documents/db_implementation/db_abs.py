@@ -129,14 +129,14 @@ class DbDocMetadataService(DocMetadataService):
         try:
             res = Metadata.query.limit(1).first()
             if not res:
-                return ["Nothing in arXiv_metadata table"]
+                return [f"{__name__}: Nothing in arXiv_metadata table"]
             if not hasattr(res, 'document_id'):
-                return ["arXiv_metadata lacks document_id"]
+                return [f"{__name__}: arXiv_metadata lacks document_id"]
         except NoResultFound:
-            return ["DbDocMetadataService: No Metadata rows found in db"]
+            return [f"{__name__}: No Metadata rows found in db"]
         except (OperationalError, DBAPIError) as ex:
-            return [f"DbDocMetadataService: Error executing test query count on Metadata: {ex}"]
+            return [f"{__name__}: Error executing test query count on Metadata: {ex}"]
         except Exception as ex:
-            return [f"DbDocMetadataService: Problem with DB: {ex}"]
+            return [f"{__name__}: Problem with DB: {ex}"]
 
         return []

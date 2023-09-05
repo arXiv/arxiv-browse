@@ -42,7 +42,7 @@ class BrowseSQLAlchemy(SQLAlchemy):
     be able to handle a dict as the value for a SQLALCHEMY_BINDS.
     """
 
-    def apply_driver_hacks(self, app, sa_url, options):
+    def apply_driver_hacks(self, app, sa_url, options): # type: ignore
         if not isinstance(sa_url, dict):
             return super().apply_driver_hacks(app, sa_url, options)
 
@@ -744,6 +744,9 @@ def _config_latexml(app: LocalProxy) -> None:
     This will detech if LATEXML_INSTANCE_CONNECTION_NAME is set and if it is,
     it will use a GCP connector with TLS."""
     settings = app.settings  # type: ignore
+    if not settings.LATEXML_ENABLED:
+        return
+
     if hasattr(settings, "SQLALCHEMY_BINDS") and settings.SQLALCHEMY_BINDS:
         # already set?
         return

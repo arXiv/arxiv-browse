@@ -9,6 +9,9 @@ from browse.services.database import get_latexml_status_for_document
 import logging
 
 def get_latexml_url (article: DocMetadata, most_recent: bool=False) -> Optional[str]:
+    if not current_app.config["LATEXML_ENABLED"]:
+        return None
+
     LATEXML_URI_BASE = current_app.config['LATEXML_BASE_URL']
     status = get_latexml_status_for_document(article.arxiv_id, article.highest_version()) if most_recent \
              else get_latexml_status_for_document(article.arxiv_id, article.version)

@@ -7,10 +7,10 @@ import os
 from secrets import token_hex
 import warnings
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import logging
 
-from pydantic import BaseSettings, SecretStr, PyObject
+from pydantic import SecretStr, PyObject, BaseSettings
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 class Settings(BaseSettings):
     """Class for settings for arxiv-browse web app."""
 
-    APP_VERSION = "0.3.4"
+    APP_VERSION: str = "0.3.4"
     """The application version """
 
     """
@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI is checked. If that is not set, the
     default, the SQLITE test DB is used.
     """
+
+    LATEXML_ENABLED: bool = False
+    """Sets if LATEXML is enabled or not"""
 
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
@@ -68,9 +71,9 @@ class Settings(BaseSettings):
     SQLALCHEMY_BINDS: Dict[str, Any] = {}
     """ For the database tracking html conversion metadata """
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False
-    SQLALCHEMY_RECORD_QUERIES = False
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: bool = False
+    SQLALCHEMY_RECORD_QUERIES: bool = False
 
     SQLALCHEMY_POOL_SIZE: Optional[int] = 10
     """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
@@ -93,10 +96,10 @@ class Settings(BaseSettings):
     total_papers 1456755."""
 
     BROWSE_SITE_LABEL: str = "arXiv.org"
-    BROWSE_SITE_HOST: Optional[str]
+    BROWSE_SITE_HOST: Optional[str] = None
     """This is similar to, but decoupled from SERVER_NAME."""
 
-    BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
+    BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
     """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
     ############################## Services ##############################
@@ -138,7 +141,7 @@ class Settings(BaseSettings):
         This can start with gs:// to use Google Storage.
     """
 
-    DOCUMENT_CACHE_PATH =  "tests/data/cache"
+    DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""
 
     PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
@@ -149,7 +152,7 @@ class Settings(BaseSettings):
     """
 
 
-    DISSEMINATION_STORAGE_PREFIX = "./tests/data/abs_files/"
+    DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data
 
     If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have
@@ -186,7 +189,7 @@ class Settings(BaseSettings):
     AUTH_SESSION_COOKIE_NAME: str = "ARXIVNG_SESSION_ID"
     AUTH_SESSION_COOKIE_DOMAIN: str = ".arxiv.org"
     AUTH_SESSION_COOKIE_SECURE: bool = True
-    AUTH_UPDATED_SESSION_REF = True
+    AUTH_UPDATED_SESSION_REF: bool = True
 
     CLASSIC_COOKIE_NAME: str = "tapir_session"
     CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
@@ -194,7 +197,7 @@ class Settings(BaseSettings):
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
 
-    URLS = [
+    URLS: List[tuple] = [
         ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
         # This is a temporary workaround for ARXIVNG-2063
     ]

@@ -6,6 +6,8 @@ from datetime import date, datetime
 from logging import Logger
 from typing import Any, Callable, List, Mapping, Optional, Tuple
 
+from flask import current_app
+
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
@@ -465,20 +467,21 @@ def service_status()->List[str]:
     try:
         db.session.query(Document.document_id).limit(1).first()
     except NoResultFound:
-        return ["service.database: No documents found in db"]
+        return [f"{__file__}: service.database: No documents found in db"]
     except (OperationalError, DBAPIError) as ex:
-        return [f"service.database: Error executing test query count on documents: {ex}"]
+        return [f"{__file__}: Error executing test query count on documents: {ex}"]
     except Exception as ex:
-        return [f"service.database: Problem with DB: {ex}"]
+        return [f"{__file__}: Problem with DB: {ex}"]
 
-    try:
-        db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
-    except NoResultFound:
-        return ["service.database DBLaTeXML: No documents found in db"]
-    except (OperationalError, DBAPIError) as ex:
-        return [f"service.database DBLaTeXML: Error executing test query count on documents: {ex}"]
-    except Exception as ex:
-        return [f"service.database DBLaTeXML: Problem with DB: {ex}"]
+    if current_app.config["LATEXML_ENABLED"]:
+        try:
+            db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
+        except NoResultFound:
+            return [f"{__file__}: service.database DBLaTeXML: No documents found in db"]
+        except (OperationalError, DBAPIError) as ex:
+            return [f"{__file__}: DBLaTeXML: Error executing test query count on documents: {ex}"]
+        except Exception as ex:
+            return [f"{__file__}: DBLaTeXML: Problem with DB: {ex}"]
 
     return []
 
