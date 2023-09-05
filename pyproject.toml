@@ -38,7 +38,6 @@ types-python-dateutil = "^2.8.19.12"
 pg8000 = "^1.29.8"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
-cloud-sql-python-connector = {extras = ["pymysql"], version = "^1.4.1"}
 
 [tool.poetry.dev-dependencies]
 beautifulsoup4 = "*"
