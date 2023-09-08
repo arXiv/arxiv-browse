@@ -300,6 +300,6 @@ def _get_tz() -> ZoneInfo:
     """Gets the timezone from the flask current_app."""
     global _fs_tz
     if _fs_tz is None:
-        _fs_tz = ZoneInfo(current_app.settings.FS_TZ) # type: ignore
+        _fs_tz = ZoneInfo(current_app.config["FS_TZ"])
 
     return _fs_tz

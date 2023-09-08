@@ -16,33 +16,29 @@ from browse.services import HasStatus
 def get_listing_service() -> "ListingService":
     """Get the listing service configured for the app context."""
     if "listing_service" not in g:
-        fn = current_app.settings.DOCUMENT_LISTING_SERVICE # type: ignore
-        g.listing_service = fn(current_app.settings, g)  # type: ignore
+        fn = current_app.config["DOCUMENT_LISTING_SERVICE"]
+        g.listing_service = fn(current_app.config, g)
 
     return cast(ListingService, g.listing_service)
 
 
-def fs_listing(settings: Any, _: Any) -> "ListingService":
+def fs_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for filesystem-based listing service."""
     from .fs_listings import FsListingFilesService
+    return FsListingFilesService(config["DOCUMENT_LISTING_PATH"])
 
-    return FsListingFilesService(settings.DOCUMENT_LISTING_PATH)
 
-
-def db_listing(settings: Any, _: Any) -> "ListingService":
+def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
     from browse.services.database import models
-
     from .db_listing_impl import DBListingService
-
     # maybe pass in the specific classes for the tables we need?
     return DBListingService(models.db)
 
 
-def fake(settings: Any, _: Any) -> "ListingService":
+def fake(config: Any, _: Any) -> "ListingService":
     """Factory function for fake listing service."""
     from .fake_listings import FakeListingFilesService
-
     return FakeListingFilesService()
 
 

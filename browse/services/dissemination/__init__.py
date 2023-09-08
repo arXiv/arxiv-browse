@@ -38,11 +38,12 @@ def _get_object_store() -> ObjectStore:
     if _object_store is not None:
         return _object_store
 
-    if not current_app.settings.DISSEMINATION_STORAGE_PREFIX.startswith("gs://"):
-        _object_store = LocalObjectStore(current_app.settings.DISSEMINATION_STORAGE_PREFIX)
+    config = current_app.config
+    if not config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
+        _object_store = LocalObjectStore(config["DISSEMINATION_STORAGE_PREFIX"])
     else:
         gs_client = storage.Client()
-        bname = current_app.settings.DISSEMINATION_STORAGE_PREFIX.replace('gs://','')
+        bname = config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')
         bucket = gs_client.bucket(bname)
         _object_store = GsObjectStore(bucket)
 

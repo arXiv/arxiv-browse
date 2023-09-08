@@ -60,8 +60,8 @@ def app_with_db(loaded_db):
         import browse.services.documents as documents
         from browse.services.listing import db_listing
         from flask import g
-        g.doc_service = documents.db_docs(app.settings, g)
-        g.listing_service = db_listing(app.settings, g)
+        g.doc_service = documents.db_docs(app.config, g)
+        g.listing_service = db_listing(app.config, g)
 
     return app
 
@@ -83,8 +83,8 @@ def app_with_fake(loaded_db):
     app = create_web_app(**conf)
     with app.app_context():
         from flask import g
-        g.doc_service = documents.fs_docs(app.settings, g)
-        g.listing_service = listing.fs_listing(app.settings, g)
+        g.doc_service = documents.fs_docs(app.config, g)
+        g.listing_service = listing.fs_listing(app.config, g)
         yield app
 
 
@@ -115,8 +115,8 @@ def app_with_test_fs(loaded_db):
 
     with app.app_context():
         from flask import g
-        g.doc_service = documents.fs_docs(app.settings, g)
-        g.listing_service = listing.fs_listing(app.settings, g)
+        g.doc_service = documents.fs_docs(app.config, g)
+        g.listing_service = listing.fs_listing(app.config, g)
         yield app
 
 @pytest.fixture(scope='function')
@@ -176,8 +176,8 @@ def _app_with_db():
     from browse.services.listing import db_listing
 
     conf = test_conf()
-    conf["settings.DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
-    conf["settings.DOCUMENT_LISTING_SERVICE"] = db_listing
+    conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
+    conf["DOCUMENT_LISTING_SERVICE"] = db_listing
 
     app = create_web_app(**conf)
 

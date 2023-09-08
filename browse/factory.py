@@ -36,8 +36,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
 
     app = Flask('browse',
                 static_url_path=f'/static/browse/{settings.APP_VERSION}')
-    app.config.from_object(settings)  # facilitates sqlalchemy flask plugins
-    setattr(app, 'settings', settings)  # facilitates typed access to settings
+    app.config.from_object(settings)
 
     models.init_app(app)  # type: ignore
 
