@@ -195,9 +195,8 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
     if 'url' in request.args and 'v' in request.args:
-        if is_hash_valid(current_app.settiings.CLICKTHROUGH_SECRET.get_secret_value(), # type: ignore
-                         request.args.get('url'),
-                         request.args.get('v')):
+        sec = current_app.config["CLICKTHROUGH_SECRET"].get_secret_value()
+        if is_hash_valid(sec, request.args.get('url'), request.args.get('v')):
             return redirect(request.args.get('url'))  # type: ignore
         else:
             raise BadRequest("Bad click-through redirect")
@@ -206,7 +205,8 @@ def clickthrough() -> Response:
 
 
 @blueprint.route(
-    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"], strict_slashes=False
+    "list", defaults={"context": "", "subcontext": ""}, methods=["GET", "POST"],
+    strict_slashes=False
 )
 @blueprint.route("list/<context>/<subcontext>", methods=["GET", "POST"])
 def list_articles(context: str, subcontext: str) -> Response:
