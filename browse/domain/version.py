@@ -15,14 +15,14 @@ class SourceType:
     @property
     def ignore(self) -> bool:
         """Withdarawn. All files auto ignore. No paper available."""
-        return 'I' in self.code
+        return self.code is not None and 'I' in self.code
 
     @property
     def source_encrypted(self)->bool:
         """
         Source is encrypted and should not be made available.
         """
-        return 'S' in self.code
+        return self.code is not None and 'S' in self.code
 
     @property
     def ps_only(self)->bool:
@@ -30,56 +30,56 @@ class SourceType:
         Multi-file PS submission. It is not necessary to indicate P with single file PS
         since in this case the source file has .ps.gz extension.
         """
-        return 'P' in self.code
+        return self.code is not None and 'P' in self.code
 
     @property
     def pdflatex(self)->bool:
         """
         A TeX submission that must be processed with PDFlatex
         """
-        return 'D' in self.code
+        return self.code is not None and 'D' in self.code
 
     @property
     def html(self)->bool:
         """
         Multi-file HTML submission.
         """
-        return 'H' in self.code
+        return self.code is not None and 'H' in self.code
 
     @property
     def includes_ancillary_files(self)->bool:
         """
         Submission includes ancillary files in the /anc directory
         """
-        return 'A' in self.code
+        return self.code is not None and 'A' in self.code
 
     @property
     def dc_pilot_data(self)->bool:
         """
         Submission has associated data in the DC pilot system
         """
-        return 'B' in self.code
+        return self.code is not None and 'B' in self.code
 
     @property
     def docx(self)->bool:
         """
         Submission in Microsoft DOCX (Office Open XML) format
         """
-        return 'X' in self.code
+        return self.code is not None and 'X' in self.code
 
     @property
     def odf(self)->bool:
         """
         Submission in Open Document Format
         """
-        return 'O' in self.code
+        return self.code is not None and 'O' in self.code
 
     @property
     def pdf_only(self)->bool:
         """
         PDF only submission with .tar.gz package. (likely because of anc files)
         """
-        return 'F' in self.code
+        return self.code is not None and 'F' in self.code
 
     @property
     def cannot_pdf(self) -> bool:
@@ -87,14 +87,14 @@ class SourceType:
         Is this version unable to produce a PDF?
         Does not take into account withdarawn.
         """
-        return self.html or self.odf or self.docx
+        return self.code is not None and self.html or self.odf or self.docx
 
     @property
     def is_single_file(self) -> bool:
         """
         Is the source for this version a single file?
         """
-        return '1' in self.code
+        return self.code is not None and '1' in self.code
 
 
 @dataclass(frozen=True)
