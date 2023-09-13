@@ -1,7 +1,7 @@
 """Archive landing page."""
 
 import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Optional
 from http import HTTPStatus as status
 
 from arxiv.taxonomy.definitions import ARCHIVES, ARCHIVES_SUBSUMED, CATEGORIES
@@ -12,13 +12,13 @@ from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
 
 
-def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
-    if archive_id == "list":
-        return archive_index(archive_id, status_in=status.OK)
+    if not archive_id or archive_id == "list":
+        return archive_index("list", status_in=status.OK)
 
     archive = ARCHIVES.get(archive_id, None)
     if not archive:
