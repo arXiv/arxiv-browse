@@ -1,7 +1,7 @@
 """Provides the user interfaces for browse."""
 import re
 from datetime import datetime
-from typing import Any, Callable, Dict, Mapping, Tuple, Union
+from typing import Any, Callable, Dict, Mapping, Tuple, Union, Optional
 from http import HTTPStatus as status
 import bcrypt
 import geoip2.database
