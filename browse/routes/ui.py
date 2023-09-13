@@ -1,7 +1,7 @@
 """Provides the user interfaces for browse."""
 import re
 from datetime import datetime
-from typing import Any, Callable, Dict, Mapping, Tuple, Union
+from typing import Any, Callable, Dict, Mapping, Tuple, Union, Optional
 from http import HTTPStatus as status
 import bcrypt
 import geoip2.database
@@ -392,20 +392,6 @@ def bibtex(arxiv_id: str):  # type: ignore
     """BibTeX for a paper."""
     return bibtex_citation(arxiv_id)
 
-
-SAFE_HELP = re.compile(r"[a-zA-Z0-9.-/]*")
-
-
-@blueprint.route("help")
-@blueprint.route("help/<path:help_path>")
-def help_redirect(help_path: str="") -> Response:
-    """Redirect to help"""
-    if not help_path:
-        return make_response("", 301, {"Location": url_for("help")})
-    if SAFE_HELP.fullmatch(help_path):
-        return make_response("", 301, {"Location": url_for("help") + '/' + help_path})
-
-    raise BadRequest()
 
 @blueprint.route("robots.txt")
 def robots_txt() -> Response:
