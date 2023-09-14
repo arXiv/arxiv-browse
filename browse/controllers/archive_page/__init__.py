@@ -12,7 +12,7 @@ from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
 
 
-def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}

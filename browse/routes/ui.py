@@ -331,6 +331,9 @@ def form(arxiv_id: str) -> Response:
 @blueprint.route("archive/<archive>", strict_slashes=False)
 def archive(archive: Optional[str] = None):  # type: ignore
     """Landing page for an archive."""
+    if archive is None:
+        return archive_page.archive_index("list", status_in=200)
+
     response, code, headers = archive_page.get_archive(archive)
     if code == status.OK or code == status.NOT_FOUND:
         return render_template(response["template"], **response), code, headers
@@ -410,7 +413,7 @@ def help_redirect(help_path: str="") -> Response:
 @blueprint.route("robots.txt")
 def robots_txt() -> Response:
     """Robots.txt endpoint."""
-    #This is intended for browse.arxiv.org before this code is at arxiv.org
+    # This is intended for browse.arxiv.org before this code is at arxiv.org
     return make_response("User-agent: * \nDisallow: /", 200)
 
 
