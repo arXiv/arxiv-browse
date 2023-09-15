@@ -126,11 +126,12 @@ class FSPrevNext(PrevNextService):
         absfiles = path.glob("*.abs")  # TODO slow with a large directory
         if not absfiles:
             return None
-
-        max_id = max(absfiles)
-        if not max_id:
+        try:
+            max_id = max(absfiles)
+            if not max_id:
+                return None
+        except ValueError:
             return None
-
         try:
             if previous_id.is_old_id:
                 short_id = Identifier(
