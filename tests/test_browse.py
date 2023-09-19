@@ -417,7 +417,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_authors_with_suffixes(self):
         id = '2108.10257'
-        rv = self.app.get('/abs/' + id)
+        rv = self.client.get('/abs/' + id)
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 

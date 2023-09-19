@@ -62,9 +62,9 @@
 <h2>About arXiv</h2>
 <ul>
   <li><a href="{{- url_for('about') -}}">General information</a></li>
-  <li><a href="https://info.arxiv.org/help/submit/index.html">How to Submit to arXiv</a></li>
-  <li><a href="https://info.arxiv.org/about/donate.html">Membership &amp; Giving</a></li>
-  <li><a href="https://info.arxiv.org/about/people/index.html">Who We Are</a></li>
+  <li><a href="{{url_for('help')}}/submit/index.html">How to Submit to arXiv</a></li>
+  <li><a href="{{url_for('about')}}/donate.html">Membership &amp; Giving</a></li>
+  <li><a href="{{url_for('about')}}/people/index.html">Who We Are</a></li>
 </ul>
 
 {% endblock content -%}
@@ -90,12 +90,7 @@
       <br/>includes:
       (see <a href="{{url_for('archive', archive=archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
       {%- elif group_key != 'grp_physics' -%}
-      HEAD
-      <br/>includes (see <a href="https://info.arxiv.org/help/{{archive_key}}/index.html)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
-      master
-      <br/>includes:
-      (see <a href="{{url_for('desc_' ~ archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
-
+      <br/>includes: (see <a href="{{url_for('help_archive_description', archive=archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
       {%- endif -%}
 
       {% for category_key, category_details in categories.items()|sort(attribute='1.name') if categories[category_key].in_archive == archive_key %}
