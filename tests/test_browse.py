@@ -365,7 +365,7 @@ class BrowseTest(unittest.TestCase):
         a_tags = auths_elmt.find_all('a')
         self.assertEqual(
             len(a_tags), 2, 'Should be two <a> tags in authors div')
-
+        
         colab = a_tags[1]
 
         self.assertIsNotNone(
@@ -415,6 +415,29 @@ class BrowseTest(unittest.TestCase):
                       abs_elmt.text,
                       "Expecting uncoverted $\\phi$ in html abstract.")
 
+    def test_authors_with_suffixes(self):
+        id = '2108.10257'
+        rv = self.app.get('/abs/' + id)
+        self.assertEqual(rv.status_code, 200)
+        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+
+        auths_elmt = html.find('div', 'authors')
+        self.assertTrue(auths_elmt, 'Should authors div element')
+
+        a_tags = auths_elmt.find_all('a')
+        self.assertEqual(
+            len(a_tags), 6, 'Should be 6 <a> tags in authors div')
+
+        j_liang = a_tags[0]
+        self.assertEqual(
+            j_liang['href'], 'https://arxiv.org/search/eess?searchtype=author&query=Liang,+J')
+        j_cao = a_tags[1]
+        self.assertEqual(
+            j_cao['href'], 'https://arxiv.org/search/eess?searchtype=author&query=Cao,+J')
+        g_sun = a_tags[2]
+        self.assertEqual(
+            g_sun['href'], 'https://arxiv.org/search/eess?searchtype=author&query=Sun,+G')
+        
     def test_year(self):
         rv = self.client.get('/year/astro-ph/09')
         self.assertEqual(rv.status_code, 200)
