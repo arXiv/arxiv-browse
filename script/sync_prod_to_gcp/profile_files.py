@@ -11,6 +11,12 @@ from digester import digest_from_filepath, get_file_mtime
 
 GIT_DIR = [".git/"]
 DEFAULT_IGNORES = """*~
+lost+found/
+.snapshot/
+.htaccess
+.nfs*
+.cit_nfs_mount_test
+arxiv-sync.txt
 """
 
 
