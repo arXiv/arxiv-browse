@@ -6,7 +6,3 @@ module APIs. Specifically, the :mod:`browse.controllers` and
 "language". This is intended to make static checking easier and enhance
 overall intelligibility of the codebase.
 """
-
-# pylint: disable=wildcard-import
-from .institution import *
-from .metadata import *

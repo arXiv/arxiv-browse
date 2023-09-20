@@ -1,5 +1,0 @@
-kind: compute#urlMap
-name: phoenix-lb-http
-defaultUrlRedirect:
-   redirectResponseCode: MOVED_PERMANENTLY_DEFAULT
-   httpsRedirect: True

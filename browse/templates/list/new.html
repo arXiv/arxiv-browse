@@ -8,8 +8,15 @@ It needs to do headings for the new/cross/rep sections.
 #}
 
 {% block list_index %}
-{{ listdate() }}
-{{ type_index() }}
+<div class="list-dateline">Submissions received from
+  {{ submitted[0].strftime('%a %-d %b') }} to {{ submitted[1].strftime('%a %-d %b') }}, announced {{ announced.strftime('%a %-d %b') }}
+</div>
+
+<ul>
+  {% for ityp in index_for_types %}
+  <li><a href="{{ityp[1]}}#item{{ityp[2]}}">{{ityp[0]}}</a></li>
+  {% endfor %}
+</ul>
 {% endblock %}
 
 {% block items %}
@@ -18,21 +25,3 @@ It needs to do headings for the new/cross/rep sections.
   {% endfor %}
 {% endblock %}
 
-{% macro type_index() %}
-  {% if index_for_types %}
-    <ul>
-      {% for ityp in index_for_types %}
-    <li><a href="{{ityp[1]}}#item{{ityp[2]}}">{{ityp[0]}}</a></li>
-  {% endfor %}
-  </ul>
-{% endif %}
-{% endmacro %}
-
-{% macro listdate() %}
-  {% if announced %}
-    <div class="list-dateline">Submissions received from
-      {{ submitted[0].strftime('%A, %-d %B %Y') }} to {{ submitted[1].strftime('%A, %-d %B %Y') }},
-      announced {{ announced.strftime('%A, %-d %B %Y') }}
-    </div>
-  {% endif %}
-{% endmacro %}

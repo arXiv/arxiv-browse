@@ -1,0 +1,9 @@
+{% extends "base/base.html" %}
+
+{# This is when the arxiv ID from the client is valid but the article
+or version does not exist. #}
+
+{%- block content -%}
+<h1>No PDF for '{{arxiv_id.ids}}'</h1>
+<p>Please inform help@arxiv.org if you believe that the identifier should correspond to a valid paper in arXiv.</p>
+{%- endblock -%}

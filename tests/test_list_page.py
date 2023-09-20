@@ -1,485 +1,649 @@
-import unittest
+import pytest
 import re
-from hamcrest import *
 from unittest.mock import MagicMock
 
+from browse.services.listing import NotModifiedResponse, get_listing_service
 from bs4 import BeautifulSoup
 
-from tests.test_abs_parser import ABS_FILES
-from browse.services.document.metadata import AbsMetaSession
-from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.listing.fake_listings import FakeListingFilesService
-from browse.services.listing import ListingService, get_listing_service
-import os
 
-from app import app
+def test_basic_lists(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
+    rv = client.get("/list/hep-ph/09")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-class ListPageTest(unittest.TestCase):
+    rv = client.get("/list/hep-ph/new")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-    def setUp(self):
-        app.testing = True
-        app.config['APPLICATION_ROOT'] = ''
-        self.app = app
-        self.client = app.test_client()
+    rv = client.get("/list/hep-ph/current")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-    def test_basic_lists(self):
-        rv = self.client.get('/list/hep-ph/0901')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/hep-ph/pastweek")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-        rv = self.client.get('/list/hep-ph/09')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/hep-ph/recent")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-        rv = self.client.get('/list/hep-ph/new')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/hep-ph/0901?skip=925&show=25")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-        rv = self.client.get('/list/hep-ph/current')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/astro-ph/04")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-        rv = self.client.get('/list/hep-ph/pastweek')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/math/92")
+    assert rv.status_code == 200
+    assert rv.headers.get("Expires", None) != None
 
-        rv = self.client.get('/list/hep-ph/recent')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/math/9201")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/hep-ph/0901?skip=925&show=25')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/math/0101")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/astro-ph/04')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/math/0102")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/92')
-        self.assertEqual(rv.status_code, 200)
-        self.assertNotEqual(rv.headers.get('Expires', None), None)
+    rv = client.get("/list/math/0103")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/9201')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0104")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0101')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0105")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0102')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0106")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0103')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0107")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0104')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0108")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0105')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0109")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0106')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0110")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0107')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0111")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0108')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/0112")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0109')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/01")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0110')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/18")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0111')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/20")  # year 2020
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/0112')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/30")  # year 2030
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/01')
-        self.assertEqual(rv.status_code, 200)
+    rv = client.get("/list/math/200101")
+    assert rv.status_code == 200
 
-        rv = self.client.get('/list/math/18')
-        self.assertEqual(rv.status_code, 200)
 
-        rv = self.client.get('/list/math/20')  # year 2020
-        self.assertEqual(rv.status_code, 200)
+def test_listing_authors(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901")
+    assert rv.status_code == 200
+    text = rv.data.decode("utf-8")
+    au = "Eqab M. Rabei"
+    assert au in text  # Simple check for author in response
 
-        rv = self.client.get('/list/math/30')  # year 2030
-        self.assertEqual(rv.status_code, 200)
+    html = BeautifulSoup(text, "html.parser")
 
-        rv = self.client.get('/list/math/200101')
-        self.assertEqual(rv.status_code, 200)
+    auDivs = html.find_all("div", "list-authors")
+    assert auDivs != None
+    assert len(auDivs) > 5  # Should have some .list-author divs
 
-    def test_listing_authors(self):
-        rv = self.client.get('/list/hep-ph/0901')
-        self.assertEqual(rv.status_code, 200)
-        au = b'Eqab M. Rabei'
-        assert au in rv.data, f'Simple check for author {au} in response.'
+    first_aus = auDivs[0].find_all("a")
+    assert (
+        len(first_aus) == 4
+    )  # expect 4 <a> tags for first artcile "Fractional WKB Approximation"
 
-        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+    assert first_aus[0].get_text() == "Eqab M. Rabei"
+    assert first_aus[1].get_text() == "Ibrahim M. A. Altarazi"
+    assert first_aus[2].get_text() == "Sami I. Muslih"
+    assert first_aus[3].get_text() == "Dumitru Baleanu"
 
-        auDivs = html.find_all('div', 'list-authors')
-        assert_that(auDivs, not_none())
-        assert_that(len(auDivs), greater_than(
-            5), 'Should have some .list-author divs')
+    assert (
+        " ," not in auDivs[0].get_text()
+    )  # Should not have a comma with a space in front of it
 
-        first_aus = auDivs[0].find_all('a')
-        assert_that(first_aus, has_length(4),
-                    'expect 4 <a> tags for first artcile "Fractional WKB Approximation"')
 
-        assert_that(first_aus[0].get_text(), equal_to('Eqab M. Rabei'))
-        assert_that(first_aus[1].get_text(),
-                    equal_to('Ibrahim M. A. Altarazi'))
-        assert_that(first_aus[2].get_text(), equal_to('Sami I. Muslih'))
-        assert_that(first_aus[3].get_text(), equal_to('Dumitru Baleanu'))
+def test_paging_first(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901")
+    assert rv.status_code == 200
 
-        assert_that(auDivs[0].get_text(), is_not(contains_string(' ,')),
-                    'Should not have a comma with a space in front of it')
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
 
-    def test_paging_first(self):
-        rv = self.client.get('/list/hep-ph/0901')
-        self.assertEqual(rv.status_code, 200)
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs != None
+    assert len(tgs) == 6
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
+    assert tgs[0].name == "span"
+    assert tgs[0].get_text() == "1-25"
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 6)
+    assert tgs[1].name == "a"
+    assert tgs[1].get_text() == "26-50"
 
-        assert_that(tgs[0].name, equal_to('span'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "51-75"
 
-        assert_that(tgs[1].name, equal_to('a'))
-        assert_that(tgs[1].get_text(), equal_to('26-50'))
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "76-100"
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('51-75'))
+    assert tgs[4].name == "span"
+    assert tgs[4].get_text() == "..."
 
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('76-100'))
+    assert tgs[5].name == "a"
+    assert tgs[5].get_text() == "1001-1001"
 
-        assert_that(tgs[4].name, equal_to('span'))
-        assert_that(tgs[4].get_text(), equal_to('...'))
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] == "item1"
+    assert first_index_atag.string == "[1]"
 
-        assert_that(tgs[5].name, equal_to('a'))
-        assert_that(tgs[5].get_text(), equal_to('1001-1001'))
 
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], equal_to('item1'))
-        assert_that(first_index_atag.string, equal_to('[1]'))
+def test_paging_second(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=25&show=25")
+    assert rv.status_code == 200
 
-    def test_paging_second(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=25&show=25')
-        self.assertEqual(rv.status_code, 200)
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs != None
+    assert len(tgs) == 7
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 7)
+    assert tgs[0].name == "a"
+    assert tgs[0].get_text() == "1-25"
 
-        assert_that(tgs[0].name, equal_to('a'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
+    assert tgs[1].name == "span"
+    assert tgs[1].get_text() == "26-50"
 
-        assert_that(tgs[1].name, equal_to('span'))
-        assert_that(tgs[1].get_text(), equal_to('26-50'))
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "51-75"
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('51-75'))
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "76-100"
 
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('76-100'))
+    assert tgs[4].name == "a"
+    assert tgs[4].get_text() == "101-125"
 
-        assert_that(tgs[4].name, equal_to('a'))
-        assert_that(tgs[4].get_text(), equal_to('101-125'))
+    assert tgs[5].name == "span"
+    assert tgs[5].get_text() == "..."
 
-        assert_that(tgs[5].name, equal_to('span'))
-        assert_that(tgs[5].get_text(), equal_to('...'))
+    assert tgs[6].name == "a"
+    assert tgs[6].get_text() == "1001-1001"
 
-        assert_that(tgs[6].name, equal_to('a'))
-        assert_that(tgs[6].get_text(), equal_to('1001-1001'))
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] != "item1"  # first item index should not be 1
+    assert first_index_atag.string == "[26]"
 
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], is_not(
-            'item1'), 'first item index should not be 1')
-        assert_that(first_index_atag.string, equal_to('[26]'))
 
-    def test_paging_middle(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=175&show=25')
-        self.assertEqual(rv.status_code, 200)
+def test_paging_middle(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=175&show=25")
+    assert rv.status_code == 200
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 7)
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs != None
+    assert len(tgs) == 11
 
-        assert_that(tgs[0].name, equal_to('a'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
+    assert tgs[0].name == "a"
+    assert tgs[0].get_text() == "1-25"
 
-        assert_that(tgs[1].name, equal_to('span'))
-        assert_that(tgs[1].get_text(), equal_to('...'))
+    assert tgs[1].name == "span"
+    assert tgs[1].get_text() == "..."
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('101-125'))
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "101-125"
 
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('126-150'))
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "126-150"
 
-        assert_that(tgs[4].name, equal_to('a'))
-        assert_that(tgs[4].get_text(), equal_to('151-175'))
+    assert tgs[4].name == "a"
+    assert tgs[4].get_text() == "151-175"
 
-        assert_that(tgs[5].name, equal_to('span'))
-        assert_that(tgs[5].get_text(), equal_to('176-200'))
+    assert tgs[5].name == "span"
+    assert tgs[5].get_text() == "176-200"
 
-        assert_that(tgs[6].name, equal_to('a'))
-        assert_that(tgs[6].get_text(), equal_to('201-225'))
+    assert tgs[6].name == "a"
+    assert tgs[6].get_text() == "201-225"
 
-        assert_that(tgs[7].name, equal_to('a'))
-        assert_that(tgs[7].get_text(), equal_to('226-250'))
+    assert tgs[7].name == "a"
+    assert tgs[7].get_text() == "226-250"
 
-        assert_that(tgs[8].name, equal_to('a'))
-        assert_that(tgs[8].get_text(), equal_to('251-275'))
+    assert tgs[8].name == "a"
+    assert tgs[8].get_text() == "251-275"
 
-        assert_that(tgs[9].name, equal_to('span'))
-        assert_that(tgs[9].get_text(), equal_to('...'))
+    assert tgs[9].name == "span"
+    assert tgs[9].get_text() == "..."
 
-        assert_that(tgs[10].name, equal_to('a'))
-        assert_that(tgs[10].get_text(), equal_to('1001-1001'))
+    assert tgs[10].name == "a"
+    assert tgs[10].get_text() == "1001-1001"
 
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], is_not(
-            'item1'), 'first item index should not be 1')
-        assert_that(first_index_atag.string, equal_to('[176]'))
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
+    assert first_index_atag.string == "[176]"
 
-    def test_paging_last(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=1000&show=25')
-        self.assertEqual(rv.status_code, 200)
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
+def test_paging_last(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=1000&show=25")
+    assert rv.status_code == 200
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 7)
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
 
-        assert_that(tgs[0].name, equal_to('a'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs and len(tgs) == 6
 
-        assert_that(tgs[1].name, equal_to('span'))
-        assert_that(tgs[1].get_text(), equal_to('...'))
+    assert tgs[0].name == "a"
+    assert tgs[0].get_text() == "1-25"
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('926-950'))
+    assert tgs[1].name == "span"
+    assert tgs[1].get_text() == "..."
 
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('951-975'))
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "926-950"
 
-        assert_that(tgs[4].name, equal_to('a'))
-        assert_that(tgs[4].get_text(), equal_to('976-1000'))
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "951-975"
 
-        assert_that(tgs[5].name, equal_to('span'))
-        assert_that(tgs[5].get_text(), equal_to('1001-1001'))
+    assert tgs[4].name == "a"
+    assert tgs[4].get_text() == "976-1000"
 
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], is_not(
-            'item1'), 'first item index should not be 1')
-        assert_that(first_index_atag.string, equal_to('[1001]'))
+    assert tgs[5].name == "span"
+    assert tgs[5].get_text() == "1001-1001"
 
-    def test_paging_penultimate(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=975&show=25')
-        self.assertEqual(rv.status_code, 200)
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
+    assert first_index_atag.string == "[1001]"
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 7)
+def test_paging_penultimate(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=975&show=25")
+    assert rv.status_code == 200
 
-        assert_that(tgs[0].name, equal_to('a'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
 
-        assert_that(tgs[1].name, equal_to('span'))
-        assert_that(tgs[1].get_text(), equal_to('...'))
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs != None
+    assert len(tgs) == 7
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('901-925'))
+    assert tgs[0].name == "a"
+    assert tgs[0].get_text() == "1-25"
 
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('926-950'))
+    assert tgs[1].name == "span"
+    assert tgs[1].get_text() == "..."
 
-        assert_that(tgs[4].name, equal_to('a'))
-        assert_that(tgs[4].get_text(), equal_to('951-975'))
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "901-925"
 
-        assert_that(tgs[5].name, equal_to('span'))
-        assert_that(tgs[5].get_text(), equal_to('976-1000'))
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "926-950"
 
-        assert_that(tgs[6].name, equal_to('a'))
-        assert_that(tgs[6].get_text(), equal_to('1001-1001'))
+    assert tgs[4].name == "a"
+    assert tgs[4].get_text() == "951-975"
 
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], is_not(
-            'item1'), 'first item index should not be 1')
-        assert_that(first_index_atag.string, equal_to('[976]'))
+    assert tgs[5].name == "span"
+    assert tgs[5].get_text() == "976-1000"
 
-    def test_paging_925(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=925&show=25')
-        self.assertEqual(rv.status_code, 200)
+    assert tgs[6].name == "a"
+    assert tgs[6].get_text() == "1001-1001"
 
-        rvdata = rv.data.decode('utf-8')
-        html = BeautifulSoup(rvdata, 'html.parser')
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
+    assert first_index_atag.string == "[976]"
 
-        paging = html.find(id='dlpage').find_all('div')[0]
-        assert_that(paging, not_none())
-        tgs = paging.find_all(['span', 'a'])
-        assert_that(tgs, not_none())
-        assert_that(len(tgs), 7)
 
-        assert_that(tgs[0].name, equal_to('a'))
-        assert_that(tgs[0].get_text(), equal_to('1-25'))
-
-        assert_that(tgs[1].name, equal_to('span'))
-        assert_that(tgs[1].get_text(), equal_to('...'))
+def test_paging_925(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=925&show=25")
+    assert rv.status_code == 200
 
-        assert_that(tgs[2].name, equal_to('a'))
-        assert_that(tgs[2].get_text(), equal_to('851-875'))
-
-        assert_that(tgs[3].name, equal_to('a'))
-        assert_that(tgs[3].get_text(), equal_to('876-900'))
-
-        assert_that(tgs[4].name, equal_to('a'))
-        assert_that(tgs[4].get_text(), equal_to('901-925'))
-
-        assert_that(tgs[5].name, equal_to('span'))
-        assert_that(tgs[5].get_text(), equal_to('926-950'))
-
-        assert_that(tgs[6].name, equal_to('a'))
-        assert_that(tgs[6].get_text(), equal_to('951-975'))
-
-        assert_that(tgs[7].name, equal_to('a'))
-        assert_that(tgs[7].get_text(), equal_to('976-1000'))
-
-        assert_that(tgs[8].name, equal_to('a'))
-        assert_that(tgs[8].get_text(), equal_to('1001-1001'))
-
-        # find the first article index tag
-        first_index_atag = html.find(id='articles').find_all(
-            'dt')[0].find('a', string=re.compile(r'\[\d*\]'))
-        assert_that(first_index_atag, not_none())
-        assert_that(first_index_atag['name'], is_not(
-            'item1'), 'first item index should not be 1')
-        assert_that(first_index_atag.string, equal_to('[926]'))
-
-    def test_odd_requests(self):
-        rv = self.client.get('/list/hep-ph/0901?skip=925&show=1000000')
-        self.assertEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/hep-ph/bogusTimePeriod')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/junkarchive')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/ao-si/0901?skip=925&show=25')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/0100')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/0113')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/0199')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/200199')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/2')
-        self.assertNotEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/math/2001999999')
-        self.assertNotEqual(rv.status_code, 200)
-
-    def test_abs_service(self):
-        service = ListingService()
-        assert_that(calling(service.list_articles_by_year).with_args('a', 1, 1, 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_articles_by_month).with_args('a', 1, 1, 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_new_articles).with_args('a', 1, 1),
-                    raises(NotImplementedError))
-        assert_that(calling(service.list_pastweek_articles).with_args('a', 1, 1),
-                    raises(NotImplementedError))
-
-        assert_that(service.version(), is_not(None))
-
-    def test_not_modified_from_listing_service(self):
-        with self.app.app_context():
-            flservice = get_listing_service()
-            flservice.list_new_articles = MagicMock(return_value={'not_modified': True,
-                                                                  'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-            rv = self.client.get('/list/hep-ph/new')
-            self.assertEqual(
-                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-            
-            flservice.list_pastweek_articles = MagicMock(return_value={'not_modified': True,
-                                                                       'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-            rv = self.client.get('/list/hep-ph/recent')
-            self.assertEqual(
-                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')        
-            rv = self.client.get('/list/hep-ph/pastweek')
-            self.assertEqual(
-                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-            
-            flservice.list_articles_by_month = MagicMock(return_value={'not_modified': True,
-                                                                       'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-            rv = self.client.get('/list/hep-ph/1801')
-            self.assertEqual(
-                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-
-            flservice.list_articles_by_year = MagicMock(return_value={'not_modified': True,
-                                                                      'expires': 'Wed, 21 Oct 2015 07:28:00 GMT'})
-            rv = self.client.get('/list/hep-ph/18')
-            self.assertEqual(
-                rv.status_code, 304, '/list controller should return 304 when service indicates not-modified')
-
-    def test_list_called_from_archive(self):
-        rv = self.client.get('/list/?archive=hep-ph&year=08&month=03&submit=Go')        
-        self.assertEqual(rv.status_code, 200)
-
-        rv = self.client.get('/list/?archive=hep-ph&year=08&month=all&submit=Go')        
-        self.assertEqual(rv.status_code, 200)
+    rvdata = rv.data.decode("utf-8")
+    html = BeautifulSoup(rvdata, "html.parser")
+
+    paging = html.find(id="dlpage").find_all("div")[0]
+    assert paging != None
+    tgs = paging.find_all(["span", "a"])
+    assert tgs and len(tgs) == 9
+
+    assert tgs[0].name == "a"
+    assert tgs[0].get_text() == "1-25"
+
+    assert tgs[1].name == "span"
+    assert tgs[1].get_text() == "..."
+
+    assert tgs[2].name == "a"
+    assert tgs[2].get_text() == "851-875"
+
+    assert tgs[3].name == "a"
+    assert tgs[3].get_text() == "876-900"
+
+    assert tgs[4].name == "a"
+    assert tgs[4].get_text() == "901-925"
+
+    assert tgs[5].name == "span"
+    assert tgs[5].get_text() == "926-950"
+
+    assert tgs[6].name == "a"
+    assert tgs[6].get_text() == "951-975"
+
+    assert tgs[7].name == "a"
+    assert tgs[7].get_text() == "976-1000"
+
+    assert tgs[8].name == "a"
+    assert tgs[8].get_text() == "1001-1001"
+
+    # find the first article index tag
+    first_index_atag = (
+        html.find(id="articles")
+        .find_all("dt")[0]
+        .find("a", string=re.compile(r"\[\d*\]"))
+    )
+    assert first_index_atag != None
+    assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
+    assert first_index_atag.string == "[926]"
+
+
+def test_odd_requests(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/0901?skip=925&show=1000000")
+    assert rv.status_code == 200
+
+    rv = client.get("/list/hep-ph/bogusTimePeriod")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/junkarchive")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/ao-si/0901?skip=925&show=25")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/0100")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/0113")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/0199")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/200199")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/2")
+    assert rv.status_code != 200
+
+    rv = client.get("/list/math/2001999999")
+    assert rv.status_code != 200
+
+
+def test_not_modified_from_listing_service(client_with_fake_listings):
+    client = client_with_fake_listings
+
+    flservice = get_listing_service()
+    flservice.list_new_articles = MagicMock(
+        return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
+    )
+    rv = client.get("/list/hep-ph/new")
+    assert (
+        rv.status_code == 304
+    )  # /list controller should return 304 when service indicates not-modified
+
+    flservice.list_pastweek_articles = MagicMock(
+        return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
+    )
+    rv = client.get("/list/hep-ph/recent")
+    assert (
+        rv.status_code == 304
+    )  # '/list controller should return 304 when service indicates not-modified'
+    rv = client.get("/list/hep-ph/pastweek")
+    assert (
+        rv.status_code == 304
+    )  # '/list controller should return 304 when service indicates not-modified'
+
+    flservice.list_articles_by_month = MagicMock(
+        return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
+    )
+    rv = client.get("/list/hep-ph/1801")
+    assert (
+        rv.status_code == 304
+    )  # '/list controller should return 304 when service indicates not-modified'
+
+    flservice.list_articles_by_year = MagicMock(
+        return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
+    )
+    rv = client.get("/list/hep-ph/18")
+    assert (
+        rv.status_code == 304
+    )  # '/list controller should return 304 when service indicates not-modified'
+
+
+def test_list_called_from_archive(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/?archive=hep-ph&year=08&month=03&submit=Go")
+    assert rv.status_code == 200
+
+    rv = client.get("/list/?archive=hep-ph&year=08&month=all&submit=Go")
+    assert rv.status_code == 200
+
+
+
+def test_astro_ph_months(client_with_test_fs, abs_path):
+    client = client_with_test_fs
+    files = list( (abs_path / "ftp/astro-ph/listings").glob("./[0-9]*") )
+    for file in files:
+        rv = client.get(f"/list/astro-ph/{file.stem}")
+        rv.status_code == 200
+
+
+def test_astro_ph_years(client_with_test_fs, abs_path):
+    client = client_with_test_fs
+    years=['99', '98', '97', '96','95','94','93','07']
+    for yy in sorted(years):
+        rv = client.get(f"/year/astro-ph/{yy}")
+        rv.status_code == 200
+
+    # start year with only partal data
+    rv = client.get("/year/astro-ph/92")
+    rv.status_code == 200
+
+    # 2023 only has start of the year and simulates a archive that stopped midyear
+    rv = client.get("/year/astro-ph/23")
+    rv.status_code == 200
+
+
+def test_astro_ph_ep_recent(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.EP/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "Earth and Planetary Astrophysics" in text
+    assert "Authors and titles for recent submissions" in text
+
+    assert "arXiv:2303.01496" in text
+    assert "arXiv:2303.01458" in text
+    assert "arXiv:2303.01358" in text
+    assert "arXiv:2303.01337" in text
+    assert "arXiv:2303.00867" in text
+    assert "arXiv:2303.00768" in text
+    assert "arXiv:2303.01154" in text
+    assert "arXiv:2303.01138" in text
+    assert "arXiv:2303.01100" in text
+    assert "arXiv:2303.00812" in text
+    assert "arXiv:2303.00670" in text
+    assert "arXiv:2303.00659" in text
+    assert "arXiv:2303.00624" in text
+    assert "arXiv:2303.00540" in text
+    assert "arXiv:2303.00397" in text
+    assert "arXiv:2303.00221" in text
+    assert "arXiv:2303.00084" in text
+    assert "arXiv:2303.00062" in text
+    assert "arXiv:2303.00012" in text
+    assert "arXiv:2303.00011" in text
+    assert "arXiv:2303.00006" in text
+    assert "arXiv:2303.00718" in text
+    assert "arXiv:2303.00063" in text
+    assert "arXiv:2302.14847" in text
+    assert "arXiv:2302.14425" in text
+
+    rv = client.get("/list/astro-ph.EP/recent?skip=25&show=25")
+    text = rv.text
+    assert "arXiv:2302.14100" in text
+    assert "arXiv:2302.14832" in text
+    assert "arXiv:2302.14636" in text
+    assert "arXiv:2302.14054" in text
+    assert "arXiv:2302.13969" in text
+    assert "arXiv:2302.13620" in text
+    assert "arXiv:2302.13544" in text
+    assert "arXiv:2302.13370" in text
+    assert "arXiv:2302.13303" in text
+    assert "arXiv:2302.13226" in text
+    assert "arXiv:2302.12841" in text
+    assert "arXiv:2302.13354" in text
+    assert "arXiv:2302.12778" in text
+    assert "arXiv:2302.12753" in text
+    assert "arXiv:2302.12722" in text
+    assert "arXiv:2302.12607" in text
+    assert "arXiv:2302.12556" in text
+    assert "arXiv:2302.12518" in text
+    assert "arXiv:2302.12457" in text
+    assert "arXiv:2302.12376" in text
+    assert "arXiv:2302.12340" in text
+    assert "arXiv:2302.12824" in text
+    assert "arXiv:2302.12723" in text
+    assert "arXiv:2302.12566" in text
+
+    assert "49 entries" in text
+
+def test_astro_ph_recent(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "showing first 25 of 320 entries" in text
+
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.CO/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "63 entries" in text
+
+    client = client_with_test_fs
+    rv = client.get(f"/list/astro-ph.GA/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "101 entries" in text
+
+    rv = client.get(f"/list/astro-ph.HE/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "85 entries" in text
+
+    rv = client.get(f"/list/astro-ph.IM/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "55 entries" in text
+
+    rv = client.get(f"/list/astro-ph.SR/recent")
+    rv.status_code == 200
+    text = rv.text
+    assert "Friday, 3 March 2023" in text
+    assert "67 entries" in text
+
+
+def test_abs_in_new_listing(client_with_test_fs):
+    """/list/new should have the abstracts"""
+    client = client_with_test_fs
+    rv = client.get("/list/astro-ph/new")
+    rv.status_code == 200
+    text = rv.text
+    assert "We present a search for gas-containing dwarf galaxies" in text
+    assert "is likely at play." in text
+    # Test that cruft at end of abstract is not displayed
+    assert "https://arxiv.org/abs/2303.00763" not in text
+    assert "3197kb" not in text
+
+
+def test_math_ph_9701(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get("/list/math-ph/199701")
+    rv.status_code == 200
+    text = rv.text
+    assert "On Exact Solutions" in text
+    assert "unknown-id" not in text

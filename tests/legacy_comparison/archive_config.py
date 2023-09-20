@@ -1,6 +1,7 @@
 """Functions go generate /archive URLs."""
 from response_comparisons import compare_status
 
+
 res_comparisons = [compare_status]
 text_comparisons = []
 html_comparisons = []

@@ -1,0 +1,1898 @@
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Papers received as of Tue Nov  1 01:06:03 MET 1994.
+(abstracts alone may be retrieved via, e.g.    get 9411001.abs )
+ get 3 2.abs 9108001  , e.g., returns multiple papers.
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411001
+From: Philippe P. Brieu  <example@example.com>
+Date: Tue, 1 Nov 1994 00:11:51 GMT   (208kb)
+
+Title: Cosmological Simulations Using Special Purpose Computers: Implementing
+  P3M on Grape
+Authors: Philippe P. Brieu, FJ Summers, & Jeremiah P. Ostriker
+Categories: astro-ph
+Comments: 9 pages (ApJS style); uuencoded compressed PostScript file (371 kb)
+  Also available by anonymous 'ftp' to astro.Princeton.EDU [128.112.24.45] in:
+  summers/grape/p3mg3a.ps (668 kb) and WWW at:
+  http://astro.Princeton.EDU/~library/prep.html (as POPe-600) Send all
+  comments, questions, requests, etc. to: philippe@Princeton.EDU
+Report-no: Princeton Observatory Preprint #600 (e)
+Journal-ref: Astrophys.J. 453 (1995) 566
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411002
+From: Raymond LaFlamme  <example@example.com>
+Date: Tue, 1 Nov 1994 16:25:51 GMT   (56kb)
+
+Title: The Least Action Method, CDM and $\Omega$
+Authors: A.M. Dunn and Raymond Laflamme
+Categories: astro-ph
+Comments: 8 pages, Plain Tex, 3 figures
+Report-no: LA-UR-94-2231
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411003
+From: Oxide Owner  <example@example.com>
+Date: Tue, 1 Nov 1994 18:11:16 GMT   (324kb)
+
+Title: Galactic Chemical Evolution: Hydrogen Through Zinc
+Authors: by F. X. Timmes, S. E. Woosley and Thomas A. Weaver
+Categories: astro-ph
+Comments: 114 pages including 39 figures, uuencoded gzipped postscript;
+  accepted ApJ Supp
+Journal-ref: Astrophys.J.Suppl. 98 (1995) 617
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411004
+From: Krzysztof Stanek  <example@example.com>
+Date: Tue, 1 Nov 1994 20:18:37 GMT   (7kb)
+
+Title: Results from the Optical Gravitational Lensing Experiment (OGLE)
+Authors: B. Paczynski, K. Z. Stanek, A. Udalski, M. Szymanski, J. Kaluzny, M.
+  Kubiak, M. Mateo, W. Krzeminski and G. W. Preston
+Categories: astro-ph
+Comments: 10 pages, 5 figures, invited talk presented at the IAU Symposium 169
+  ``Unsolved Problems of the Milky Way'', uses Kluwer LaTeX style macro,
+  PostScript version with figures available through anonymous ftp from
+  astro.princeton.edu, directory stanek/Hague, through WWW,
+  http://astro.princeton.edu/~library/prep.html, or on request. Princeton
+  Observatory Preprint (electronic) POPe-598
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411005
+From: Nick Kaiser  <example@example.com>
+Date: Tue, 1 Nov 1994 21:51:26 GMT   (26kb)
+
+Title: A Method for Weak Lensing Observations
+Authors: Nick Kaiser, Gordon Squires, and Tom Broadhurst
+Categories: astro-ph
+Comments: 39 pages, no figures, Latex, available by anonymous ftp inc figs from
+  ftp://ftp.cita.utoronto.ca/cita/nick/methods.ps
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411006
+From: Arjun Dey  <example@example.com>
+Date: Tue, 1 Nov 1994 06:40:54 GMT   (116kb)
+
+Title: Discovery of a z=2.76 Dusty Radio Galaxy?
+Authors: Arjun Dey (U.C.Berkeley), Hyron Spinrad (U.C.Berkeley), and Mark
+  Dickinson (STScI)
+Categories: astro-ph
+Comments: 11 pages + 4 figures To appear in 20 February 1995 issue of The
+  Astrophysical Journal, Part 1. Paper in uuencoded tar-compressed format;
+  includes figures and tables
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411007
+From: Arjun Dey  <example@example.com>
+Date: Tue, 1 Nov 1994 07:26:16 GMT   (75kb,P)
+
+Title: Keck Observations of the Most Distant Galaxy: 8C1435+63 at z=4.25
+Authors: Hyron Spinrad, Arjun Dey and James R. Graham (U.C.Berkeley)
+Categories: astro-ph
+Comments: 4 pages + 4 figures; uuencoded tar compressed PostScript files;
+  figures and tables included. To appear in 1 Jan 1995 issue of The
+  Astrophysical Journal, Letters. Please direct requests/questions/comments to
+  dey@copacabana.berkeley.edu
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411008
+From: Wayne Hu  <example@example.com>
+Date: Tue, 1 Nov 1994 20:11:07 GMT   (497kb)
+
+Title: Toward Understanding CMB Anisotropies and Their Implications
+Authors: Wayne Hu and Naoshi Sugiyama
+Categories: astro-ph
+Comments: 43 pages, Plain TeX (complete postscript file, with 23 figures,
+  available [ftp://pac2.berkeley.edu/pub/hu/ ] and strongly recommended)
+Report-no: CfPA-94-Th-55 UTAP-193
+Journal-ref: Phys.Rev. D51 (1995) 2599-2630
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411009
+From: Steve Zepf  <example@example.com>
+Date: Tue, 1 Nov 1994 14:20:23 GMT   (45kb)
+
+Title: Galaxy Formation from Spectroscopy of Extragalactic Globular Cluster
+  Systems
+Authors: Stephen E. Zepf
+Categories: astro-ph
+Comments: to appear in the proceedings of the 35th Herstmonceux Conference
+  ``Wide-Field Spectroscopy and the Distant Universe'' 6 pages, uuencoded,
+  compressed postscript
+Report-no: UCB-AST-002
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411010
+From: Ruth Durrer  <example@example.com>
+Date: Wed, 2 Nov 1994 11:10:14 GMT   (78kb)
+
+Title: Global field dynamics and cosmological tructure formation
+Authors: Ruth Durrer
+Categories: astro-ph
+Comments: To appear in the Proceedings of the NATO Summer School on Topological
+  Defects in Cambridge, UK. 28pages, latex, 6 out of 8 postscrpt figures
+  included
+Report-no: ZU-TH34/94
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411011
+From: Donald Garnett  <example@example.com>
+Date: Wed, 2 Nov 1994 20:24:04 GMT   (54kb)
+
+Title: The Evolution of C/O in Dwarf Galaxies from HST Fos Observations
+Authors: D. R. Garnett, E. D. Skillman, R. J. Dufour, M. Peimbert, S.
+  Torres-Peimbert, R. J. Terlevich, E.Terlevich, and G. A. Shields
+Categories: astro-ph
+Comments: 28 pages (LaTeX formatted with AASTex macro) + 7 figures (uuencoded
+  Postscript files); to appear in ApJ 10 Apr 1995
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411012
+From: Jane Charlton  <example@example.com>
+Date: Thu, 3 Nov 1994 03:19:38 GMT   (171kb,P)
+
+Title: Competition of Supermassive Black Holes and Galactic Spheroids in the
+  Destruction of Globular Clusters
+Authors: Jane C. Charlton and Pablo Laguna
+Categories: astro-ph
+Comments: 13 pages and 7 figures, uuencoded Z-compressed tar file. Accepted to
+  The Astrophysical Journal
+Report-no: PSU-94-CL1
+Journal-ref: Astrophys.J. 444 (1995) 193-199
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411013
+From: Yasusada Nambu  <example@example.com>
+Date: Thu, 3 Nov 1994 05:21:36 GMT   (67kb)
+
+Title: Application of Gradient Expansion to Inflationary Universe
+Authors: Yasusada Nambu and Atsushi Taruya
+Categories: astro-ph gr-qc
+Comments: 11 pages, revtex
+Journal-ref: Class.Quant.Grav. 13 (1996) 705-714
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411014
+From: Gavin B. Dalton  <example@example.com>
+Date: Thu, 3 Nov 1994 11:08:23 GMT   (116kb,P)
+
+Title: Higher Order Statistics from the Apm Galaxy Survey
+Authors: Istv\'an Szapudi, Gavin Dalton, George Efstathiou and Alexander Szalay
+Categories: astro-ph
+Comments: 30 pages text, 3 pages tables, 5 figures, uuencoded tarred postscript
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411015
+From: Wolfgang Duschl  <example@example.com>
+Date: Thu, 3 Nov 1994 14:05:17 GMT   (49kb)
+
+Title: The radio spectrum of Sgr A*
+Authors: Wolfgang J. Duschl and Harald Lesch
+Categories: astro-ph
+Comments: uuencoded Postscript file (including 1 figure)
+Report-no: none
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411016
+From: Tim Bedding  <example@example.com>
+Date: Thu, 3 Nov 1994 17:23:04 GMT   (102kb)
+
+Title: Solar-like oscillations in eta Boo
+Authors: Hans Kjeldsen, Timothy R. Bedding, Michael Viskum & Soeren Frandsen
+Categories: astro-ph
+Comments: uuencoded and compressed Postscript (including figures)
+Report-no: ESO1044
+Journal-ref: Astron.J. 109 (1995) 1313
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411017
+From:  <example@example.com>
+Date: Thu, 3 Nov 1994 20:14:00 GMT   (23kb)
+
+Title: The Cosmological Mass Distribution from Cayley Trees with Disorder
+Authors: A. Cavaliere, and N. Menci
+Categories: astro-ph
+Comments: Plain TEX, compressed and uuencoded, 30 pages, 4 figs upon request
+  from cavaliere@roma2.infn.it
+Report-no: Preprint ROM2F/94/25 (to appear in Ap.J.)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411018
+From: Philippe Jetzer  <example@example.com>
+Date: Fri, 4 Nov 1994 11:10:16 GMT   (9kb)
+
+Title: A Scenario for a Baryonic Dark Halo
+Authors: F. DePaolis, G. Ingrosso, Ph. Jetzer and M. Roncadelli
+Categories: astro-ph
+Comments: 10 pages, latex, accepted in Astronomy and Astrophysics
+Report-no: Zurich University ZU-TH 15/1994
+Journal-ref: Astron.Astrophys. 295 (1995) 567
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411019
+From: Kim Griest  <example@example.com>
+Date: Fri, 4 Nov 1994 22:04:23 GMT   (323kb)
+
+Title: Theory of Exploring the Dark Halo with Microlensing 1: Power--Law Models
+Authors: C.Alcock, R.A.Allsman, T.S.Axelrod, D.P. Bennett, K.H.Cook, N.W.Evans,
+  K.C.Freeman, K. Griest, J.Jijina, M. Lehner, S.L.Marshall, S.Perlmutter,
+  B.A.Peterson, M.R. Pratt, P.J.Quinn, A.W.Rodgers, C.W.Stubbs, and W.
+  Sutherland (the MACHO collaboration)
+Categories: astro-ph hep-ph
+Comments: 19 pages, tex, 12 figures(uuencoded + text.ps)
+Report-no: UCSD/PTH 94-21; CfPA 94-th-56
+Journal-ref: Astrophys.J. 449 (1995) 28
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411020
+From:  <example@example.com>
+Date: Sat, 5 Nov 1994 01:46:48 GMT   (52kb)
+
+Title: Cold + Hot Dark Matter Cosmology with $m(\nu_\mu) \approx m(\nu_\tau)
+  \approx 2.4$ ev
+Authors: Joel R. Primack, Jon Holtzman, Anatoly Klypin, and David O. Caldwell
+  Comments 8 pages, uuencoded compressed .ps file
+Categories: astro-ph hep-ph
+Report-no: SCIPP 94/28 (October 1994), submitted to Phys. Rev. Lett
+Journal-ref: Phys.Rev.Lett. 74 (1995) 2160-2163
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411021
+From: Heinz Andernach  <example@example.com>
+Date: Sat, 5 Nov 1994 17:23:17 GMT   (45kb,P)
+
+Title: The EINSTEIN On-Line Service
+Authors: D.E.Harris, C.S.Grant, and H.Andernach
+Categories: astro-ph
+Comments: 4 pages, uuencoded compressed PostScript; including 1 figure; to
+  appear in "Astronomical Data Analysis Software and Systems - IV", ASP
+  Conf.Ser.(1995), eds. H.Payne, D.Shaw, & J.Hayes
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411022
+From: Paul Mancinelli  <example@example.com>
+Date: Sun, 6 Nov 1994 17:34:55 GMT   (123kb)
+
+Title: Local Nonlinear Approximations to the Growth of Cosmic Structures
+Authors: Paul J. Mancinelli and Amos Yahil
+Categories: astro-ph
+Comments: Submitted to ApJ Letters. 13 pages of uuencoded compressed
+  PostScript; 3 figures included
+Report-no: SUSB0194
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411023
+From: Albert Zijlstra  <example@example.com>
+Date: Mon, 7 Nov 1994 11:30:10 GMT   (11kb)
+
+Title: Stellar Evolution and Mass Loss on the Asymptotic Giant Branch
+Authors: Albert A. Zijlstra
+Categories: astro-ph
+Comments: latex, 10pages, 3 figures available on request from azijlstr@eso.org
+Report-no: ESO preprint no. 1040
+Journal-ref: Astrophys.Space Sci. 224 (1995) 309
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411024
+From: Brian Chaboyer  <example@example.com>
+Date: Mon, 7 Nov 1994 14:07:26 GMT   (7kb)
+
+Title: Ages of Galactic Globular Clusters from the New Yale Isochrones
+Authors: Brian Chaboyer, P. Demarque, D.B. Guenther, M.H. Pinsonneault & L.L.
+  Pinsonneault
+Categories: astro-ph
+Comments: 4 pages, Latex, uses cupconf.sty complete postscript file (including
+  figures) available via anonymous ftp to:
+  ftp://ftp.cita.utoronto.ca/cita/brian/papers/age.ps
+Report-no: CITA-94-46
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411025
+From: Andrea Biviano  <example@example.com>
+Date: Mon, 7 Nov 1994 14:02:22 GMT   (89kb)
+
+Title: On the galaxy luminosity function in the central regions of the Coma
+  cluster
+Authors: A. Biviano, F. Durret, D. Gerbal, O. Le F\`evre, C. Lobo, A. Mazure,
+  E. Slezak
+Categories: astro-ph
+Comments: 7 pages, uuencoded postscript file (figures included) Accepted for
+  publication on A&A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411026
+From: Heinz Andernach  <example@example.com>
+Date: Mon, 7 Nov 1994 17:31:18 GMT   (38kb)
+
+Title: Extragalactic Databases: Present and Future
+Authors: H. Andernach
+Categories: astro-ph
+Comments: 8 pages; compressed uuencoded PostScript; accepted for Proc. "World
+  of Galaxies - II", Lyon Sept 5-7, 1994; Astrophysical Lett. & Comm. 1995,
+  eds. G.Paturel & C.Petit
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411027
+From: Heinz Andernach  <example@example.com>
+Date: Mon, 7 Nov 1994 17:51:36 GMT   (75kb,P)
+
+Title: How Complete is the Electronic Catalogue Archive at CDS in the
+  Extragalactic Domain?
+Authors: H. Andernach
+Categories: astro-ph
+Comments: 11 pages uuencoded tarred, compressed PostScript; 2 figures included;
+  to appear in Bull.Inf. CDS vol. 45, 1994
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411028
+From: Heinz Andernach  <example@example.com>
+Date: Mon, 7 Nov 1994 18:00:24 GMT   (107kb)
+
+Title: Network Resources for Astronomers
+Authors: H.Andernach, R.J.Hanisch and F.Murtagh
+Categories: astro-ph
+Comments: 53 pages; uuencoded compressed PostScript; includes one table, no
+  figures; Lyon-41 (Aug'94) and ESO-1033 (Sept'94), to appear in PASP, November
+  1994 issue
+Journal-ref: Publ.Astron.Soc.Pac. 106 (1994) 1190
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411029
+From: Nick Kaiser  <example@example.com>
+Date: Mon, 7 Nov 1994 18:18:02 GMT   (13kb)
+
+Title: Recent Developments in Weak Lensing
+Authors: Nick Kaiser, Gordon Squires, Greg Fahlman, David Woods and Tom
+  Broadhurst
+Categories: astro-ph
+Comments: 15 pages, latex no figs. postscript file including figs available by
+  anonymous ftp at ftp://ftp.cita.utoronto/cita/nick/hx35.ps Proceedings of
+  1994 Herstmonceux conference "Wide Field Spectroscopy"
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411030
+From: Steve Zepf  <example@example.com>
+Date: Mon, 7 Nov 1994 03:10:35 GMT   (142kb,P)
+
+Title: Constraints on the Formation History of the Elliptical Galaxy NGC 3923
+  from the Colors of Its Globular Clusters
+Authors: Stephen E. Zepf, Keith M. Ashman, and Doug Geisler
+Categories: astro-ph
+Comments: 26 pages + 4 figures, uuencoded, tar, compressed postscript file. To
+  be published in the Astrophysical Journal
+Report-no: UCB-AST-003
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411031
+From: Isaac Shlosman  <example@example.com>
+Date: Mon, 7 Nov 1994 21:40:57 GMT   (229kb)
+
+Title: A New Criterion for Bar-Forming Instability in Rapidly Rotating Gaseous
+  and Stellar Systems. I. Axisymmetric Form
+Authors: D.M. Christodoulou, I. Shlosman & J.E. Tohline
+Categories: astro-ph
+Comments: 29 pages, postscript, compressed, uuencoded. Accepted by ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411032
+From: Nikolaos Stergioulas  <example@example.com>
+Date: Tue, 8 Nov 1994 16:22:58 GMT   (70kb)
+
+Title: Comparing Models of Rapidly Rotating Relativistic Stars Constructed by
+  Two Numerical Methods
+Authors: Nikolaos Stergioulas and John L. Friedman
+Categories: astro-ph gr-qc
+Comments: 12 pages, AASTEX + 10 postscript figures and postscript version of
+  tex file, accepted for publication in the Astrophysical Journal
+Report-no: WISC-MILW-94-TH-14
+Journal-ref: Astrophys.J. 444 (1995) 306
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411033
+From: Matthias Bartelmann  <example@example.com>
+Date: Tue, 8 Nov 1994 17:12:11 GMT   (136kb)
+
+Title: Gravitational Lensing and the Mass Distribution of Clusters
+Authors: Matthias Bartelmann and Ramesh Narayan
+Categories: astro-ph
+Comments: 13 pages, uuencoded compressed postscript file including one figure;
+  contribution to the proceedings of the 5th annual astrophysics conference in
+  Maryland on Dark Matter, 10 - 12 October, 1994
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411034
+From: Andrew Ulmer  <example@example.com>
+Date: Tue, 8 Nov 1994 08:42:19 GMT   (161kb)
+
+Title: Constraints on the Gamma-ray Burst Luminosity Function from PVO and BATSE
+Authors: Andrew Ulmer, Ralph A.M.J. Wijers, and Edward E. Fenimore
+Categories: astro-ph
+Comments: 10 pages latex + 2 uuencoded figures; APJL accepted
+Report-no: Princeton Observatory Preprint 599
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411035
+From: Barth Netterfield  <example@example.com>
+Date: Tue, 8 Nov 1994 20:31:11 GMT   (49kb)
+
+Title: The Anisotropy in the Cosmic Microwave Background At Degree Angular
+  Scales
+Authors: C. B. Netterfield, N. Jarosik, L. Page, D. Wilkinson, E. Wollack
+Categories: astro-ph
+Comments: 16 pages, 2 figures. Saskatoon 1993/1994 combined analysis
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411036
+From: Mats Carlsson  <example@example.com>
+Date: Wed, 9 Nov 1994 08:11:28 GMT   (41kb)
+
+Title: Does a Non-Magnetic Solar Chromosphere Exist?
+Authors: Mats Carlsson and Robert F. Stein
+Categories: astro-ph
+Comments: 4 pages, uuencoded compressed postscript file including three
+  figures. APJL accepted
+Report-no: Institute of Theoretical Astrophysics, Oslo, preprint 21
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411037
+From: T. Joseph W. Lazio  <example@example.com>
+Date: Wed, 9 Nov 1994 14:37:41 GMT   (57kb)
+Date (revised): Thu, 10 Nov 1994 14:45:44 GMT
+
+Title: Images of HCO+ (1-0) Emission in a Molecular Cloud near 1E1740.7-2942
+Authors: J.A. Phillips (Owens Valley Radio Observatory) and T. Joseph W. Lazio
+  (Cornell University)
+Categories: astro-ph
+Comments: 7 pages + 3 figures, AAS LaTeX macros, submitted to ApJL, uuencode'd,
+  tar'ed, gzip'ed PostScript figures also available
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411038
+From: Kim Griest  <example@example.com>
+Date: Wed, 9 Nov 1994 19:27:33 GMT   (25kb)
+
+Title: The Particle- and Astro-Physics of Dark Matter
+Authors: Kim Griest
+Categories: astro-ph hep-ph
+Comments: Plenary review talk at Snowmass 94 (Particle and Nuclear Astrophysics
+  and Cosmology in the Next Millennium, June 1994.), 13 pages (tex, phyzzx
+  macro package included)
+Report-no: UCSD/PTH 94-20
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411039
+From:  <example@example.com>
+Date: Thu, 10 Nov 1994 09:29:42 GMT   (24kb)
+
+Title: Angular Momemtum and Large-Scale Magnetic Field in Textures Seeded Models
+Authors: Hugues Sicotte (Princeton University)
+Categories: astro-ph
+Comments: 19 pages, 2 figures. Tex, harvmac
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411040
+From: Kohji Tomisaka  <example@example.com>
+Date: Thu, 10 Nov 1994 13:43:12 GMT   (19kb)
+
+Title: Collapse and Fragmentation of Cylindrical Magnetized Clouds. II.
+  Simulation with Nested Grid Scheme
+Authors: Kohji Tomisaka (Niigata University)
+Categories: astro-ph
+Comments: 12 pages without figures, AASTEX, submitted to ApJ. Postscript
+  version with figures is available from
+  http://quasar.ed.niigata-u.ac.jp/docs/Papers/mag2.ps.gz
+Report-no: NIGAST9404
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411041
+From:  <example@example.com>
+Date: Thu, 10 Nov 1994 12:51:55 GMT   (20kb)
+
+Title: Chemical evolution models with a new stellar nucleosynthesis
+Authors: A. Giovagnoli, M. Tosi
+Categories: astro-ph
+Comments: 6 pages, MNRAS LaTex style, figures available on request from
+  TOSI@ASTBO3.BO.ASTRO.IT
+Report-no: BAP-11-1994-034
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411042
+From: Sandip Chakrabarti  <example@example.com>
+Date: Thu, 10 Nov 1994 20:59:05 GMT   (33kb)
+
+Title: Velocity Profile of the Ionized Disk and the Mass of the Black Hole in
+  M87
+Authors: Sandip K. Chakrabarti
+Categories: astro-ph
+Comments: 17 pages text + 6 pages of figures uucoded, LaTeX (aasms style)
+Report-no: MPA/94-820, ApJ (March-10th 1995), in Press
+Journal-ref: Astrophys.J. 441 (1995) 576
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411043
+From: Reuven Ramaty  <example@example.com>
+Date: Thu, 10 Nov 1994 21:39:17 GMT   (237kb)
+
+Title: Gamma Ray Lines from the Orion Complex
+Authors: Reuven Ramaty, Benzion Kozlovsky, Richard E. Lingenfelter
+Categories: astro-ph
+Comments: 12 pages, uuencoded compressed postscript with 4 figures ApJL in
+  press 1995
+Report-no: NASA/GSFC LHEA Preprint
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411044
+From: Andy Connolly  <example@example.com>
+Date: Thu, 10 Nov 1994 22:01:10 GMT   (272kb)
+
+Title: Spectral Classification of Galaxies: An Orthogonal Approach
+Authors: A.J. Connolly, A.S. Szalay (Johns Hopkins University), M.A. Bershady
+  (Penn State University), A.L. Kinney and D. Calzetti (STSci)
+Categories: astro-ph
+Comments: 24 pages (6 figures), uuencoded gzip compressed Postscript file,
+  submitted to AJ
+Journal-ref: Astron.J. 110 (1995) 1071-1082
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411045
+From: Yipeng Jing  <example@example.com>
+Date: Fri, 11 Nov 1994 09:06:27 GMT   (56kb)
+
+Title: Substructures of Clusters and Cosmological Models
+Authors: Y. P. Jing, H. J. Mo, G. Boerner, L. Z. Fang
+Categories: astro-ph
+Comments: uuencoded compressed PS file, including 2 figures. Contribution to
+  the 11th Potsdam Cosmology Workshop, Potsdam, 18 -- 24 September 1994
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411046
+From: Jeff Willick  <example@example.com>
+Date: Fri, 11 Nov 1994 17:43:36 GMT   (185kb)
+
+Title: Homogeneous Velocity-Distance Data for Peculiar Velocity Analysis. I.
+  Calibration of Cluster Samples
+Authors: Jeffrey A. Willick, Stephane Courteau, Sandra M. Faber, David
+  Burstein, and Avishai Dekel
+Categories: astro-ph
+Comments: 42 Pages, uuencoded PostScript. Submitted to ApJ. 22 Figures not
+  included, can be obtained via ftp, contact jeffw@ociw.edu
+Journal-ref: Astrophys.J. 453 (1995) 566
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411047
+From: Masperi Luis  <example@example.com>
+Date: Fri, 11 Nov 1994 15:44:08 GMT   (8kb)
+
+Title: Influence of Strings with Axionic Content on the Polarization of
+  Extragalactic Sources
+Authors: Luis Masperi and Sandra Savaglio
+Categories: astro-ph hep-ph
+Comments: 11 pages, latex, no figures
+Journal-ref: Astropart.Phys. 3 (1995) 209-213
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411048
+From: Matthias Bartelmann  <example@example.com>
+Date: Fri, 11 Nov 1994 20:29:14 GMT   (37kb)
+
+Title: The lens parallax method: determining the redshifts of the faint blue
+  galaxies through gravitational lensing
+Authors: Ramesh Narayan and Matthias Bartelmann
+Categories: astro-ph
+Comments: 9 pages, uuencoded compressed postscript including one figure
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411049
+From: Robert Brandenberger  <example@example.com>
+Date: Fri, 11 Nov 1994 23:02:14 GMT   (72kb)
+
+Title: Modern Cosmology and Structure Formation
+Authors: Robert H. BRANDENBERGER (Brown University)
+Categories: astro-ph hep-ph
+Comments: 120 pages, phyzzx macros. There are 47 figures + 1 table available at
+  http://www.het.brown.edu/people/rhb/index.html
+Report-no: BROWN HET-964
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411050
+From: GianLuca Israel  <example@example.com>
+Date: Sun, 13 Nov 1994 12:01:39 GMT   (201kb)
+
+Title: Continuum Power Spectrum Components in X-Ray Sources: Detailed Modelling
+  and Search for Coherent Periodicities
+Authors: L. Stella, E. Arlandi, G. Tagliaferri and G.L. Israel
+Categories: astro-ph
+Comments: 10 pages, uuencoded tar-compressed PostSript file, to appear on the
+  Proceedings of the "International Conference on Applications of Time Series
+  Analysis in Astronomy and Meteorology" (TSAM93). Send all comments,
+  questions, requests, etc. to: israel@tsmi19.sissa.it
+Report-no: Milano Series in Astrophysics N.136
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411051
+From: Jean-Philippe Beaulieu  <example@example.com>
+Date: Mon, 14 Nov 1994 16:08:52 GMT   (41kb)
+
+Title: Spectroscopic Studies of the Two Eros Candidate Microlensed Stars
+Authors: J.P. Beaulieu, R. Ferlet, Ph. Grison, A. Vidal-Madjar, J.P. Kneib, E.
+  Maurice, L. Prevot, C. Gry, J. Guibert, O. Moreau, F. Tajahmady, E. Aubourg,
+  P. Bareyre, S. Brehin, M. Gros, M. Lachieze-Rey, B. Laurent, E. Lesquoy, C.
+  Magneville, A. Milsztajn, L. Moscoso, F. Queinnec, J. Rich, M. Spiro, L.
+  Vigroux, S. Zylberajch, R. Ansari, F. Cavalier and M. Moniez (EROS project)
+Categories: astro-ph
+Comments: 5 pages, uuencoded compressed PS file, including 1 figure. submitted
+  to Astronomy and Astrophysics, 28 July, 1994
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411052
+From: Lori Lubin  <example@example.com>
+Date: Mon, 14 Nov 1994 17:09:39 GMT   (57kb)
+
+Title: Using X-rays to Determine Which Compact Groups are Illusory
+Authors: Jeremiah P. Ostriker, Lori M. Lubin, and Lars Hernquist
+Categories: astro-ph
+Comments: 12 pages, uuencoded compressed PostScript. Submitted to ApJ
+Journal-ref: Astrophys.J. 453 (1995) 566
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411053
+From: Peter Morley  <example@example.com>
+Date: Mon, 14 Nov 1994 16:35:00 GMT   (5kb)
+
+Title: Platelet Collapse Model of Pulsar Glitches
+Authors: P.D. Morley and Ivan Schmidt
+Categories: astro-ph
+Comments: Figures available by sending request to Ivan Schmidt:
+  ischmidt@schmidt.fis.utfsm.cl
+Report-no: USM-TH-64
+Journal-ref: Europhys.Lett. 33 (1996) 105-109
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411054
+From: Avi Loeb  <example@example.com>
+Date: Mon, 14 Nov 1994 20:14:36 GMT   (131kb)
+Date (revised): Wed, 8 Feb 1995 17:30:13 GMT
+
+Title: Probing Early Clustering with Lyman-Alpha Absorption Lines Beyond the
+  Quasar Redshift
+Authors: Abraham Loeb and Daniel J. Eisenstein (Harvard Univ.)
+Categories: astro-ph
+Comments: 28 pages, uuencoded compressed Postscript, 5 figures included. Final
+  version, accepted to the Astrophysical Journal (7/20/95 issue)
+Report-no: CfA Preprint No. 4030
+Journal-ref: Astrophys.J. 448 (1995) 17
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411055
+From:  <example@example.com>
+Date: Tue, 15 Nov 1994 14:09:41 GMT   (5kb)
+
+Title: Statistical properties of the faint early-type galaxies sample: possible
+  effects of evolution
+Authors: I.A.Trifalenkov
+Categories: astro-ph
+Comments: pages, 0 figures, latex
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411056
+From: Garrelt Mellema  <example@example.com>
+Date: Tue, 15 Nov 1994 15:23:03 GMT   (144kb)
+
+Title: General Relativistic Hydrodynamics with a Roe solver
+Authors: Frits Eulderink and Garrelt Mellema
+Categories: astro-ph
+Comments: 34 pages, uuencoded compressed Postscript, no figures; for figures
+  contact gam@ast.ma.umist.ac.uk; accepted by A&A Suppl.Ser.; also available in
+  ftp://axp1.ast.man.ac.uk/outgoing/gm/aa_GRRoe.v2.ps.Z and
+  http://saturn.ma.umist.ac.uk/Preprints2.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411057
+From:  <example@example.com>
+Date: Tue, 15 Nov 1994 16:40:14 GMT   (70kb)
+
+Title: Chemical Evolution of the Galaxy
+Authors: M.Tosi
+Categories: astro-ph
+Comments: ten pages in CUPstyle LaTex: extract at the end the corresponding
+  confguid.tex
+Report-no: BAP 11-1994-037-OAB
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411058
+From: Insu Yi  <example@example.com>
+Date: Tue, 15 Nov 1994 23:52:49 GMT   (25kb)
+
+Title: Advection-Dominated Accretion: Self-Similarity and Bipolar Outflows
+Authors: Ramesh Narayan and Insu Yi
+Categories: astro-ph
+Comments: 22 Pages, 5 Figures are available by request to yi@cfa.harvard.edu,
+  Plain Tex, CfA Preprint No. 3931, To Appear in Astrophysical Journal 5/1/95
+Journal-ref: Astrophys.J. 444 (1995) 231
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411059
+From: Insu Yi  <example@example.com>
+Date: Tue, 15 Nov 1994 23:54:11 GMT   (46kb)
+Date (revised): Sat, 29 Jul 1995 21:47:14 GMT
+
+Title: Advection-Dominated Accretion: Underfed Black Holes and Neutron Stars
+Authors: Ramesh Narayan and Insu Yi
+Categories: astro-ph
+Comments: 46 pages, 11 Figs available upon request to yi@cfa.harvard.edu,
+  Revised, Expanded, Final version, To Appear in Astrophysical Journal Oct. 20,
+  1995
+Journal-ref: Astrophys.J. 452 (1995) 710
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411060
+From: Insu Yi  <example@example.com>
+Date: Wed, 16 Nov 1994 02:31:00 GMT   (53kb)
+
+Title: Advection-Dominated Accretion Model for Sagittarius A$^*$: Evidence for
+  a $10^6\msun$ Black Hole at the Galactic Center
+Authors: Ramesh Narayan, Insu Yi, and Rohan Mahadevan
+Categories: astro-ph
+Comments: 7 Pages, 2 Figures included, compressed Postscript, Submitted to
+  Nature
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411061
+From: Doug Welch  <example@example.com>
+Date: Wed, 16 Nov 1994 03:23:04 GMT   (15kb)
+
+Title: The MACHO Project LMC Variable Star Inventory: I. Beat Cepheids -
+  Conclusive Evidence for the Excitation of the Second Overtone in Classical
+  Cepheids
+Authors: C. Alcock, R.A. Allsman, T.S. Axelrod, D.P. Bennett, K.H. Cook, K.C.
+  Freeman, K. Griest, S.L. Marshall, B.A. Peterson, M.R. Pratt, P.J. Quinn, J.
+  Reimann, A.W. Rodgers, C.W. Stubbs, W. Sutherland, and D.L. Welch (The MACHO
+  Collaboration)
+Categories: astro-ph
+Comments: Plain TeX, 21 page Tex output; title page (1 page), Table 1 (2
+  pages), Figures (13 pages) available at ftp://igpp.llnl.gov/pub/macho/ OR at
+  http://meteor.anu.edu.au/~pjq/Publications/Cepheids/welch.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411062
+From:  <example@example.com>
+Date: Wed, 16 Nov 1994 03:17:00 GMT   (69kb,P)
+
+Title: Resurrection of Traditional Luminosity Evolution Models to Explain Faint
+  Field Galaxies
+Authors: Caryl Gronwall and David C. Koo
+Categories: astro-ph
+Comments: 9 pages + 1 table + 4 figures; uuencoded tar compressed postscript;
+  to be published in The Astrohysical Journal Letters
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411063
+From:  <example@example.com>
+Date: Wed, 16 Nov 1994 14:02:53 GMT   (104kb)
+
+Title: ROSAT PSPC Observations of the Seyfert 1 Galaxies Ark 564, NGC 985, Kaz
+  163, MRK 79 and RX J 2256.6+0525
+Authors: W.N. Brandt, A.C. Fabian, K. Nandra, C.S. Reynolds, W. Brinkmann
+Categories: astro-ph
+Comments: 10 pages, uuencoded compressed postscript, ps figs available by email
+  from wnb@mail.ast.cam.ac.uk, MNRAS in press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411064
+From: Sergio Campana  <example@example.com>
+Date: Wed, 16 Nov 1994 15:54:07 GMT   (14kb)
+
+Title: Radio pulsar and accretion regimes of rapidly rotating magnetic neutron
+  stars in early-type eccentric binaries
+Authors: S. Campana, L. Stella, S. Mereghetti & M. Colpi
+Categories: astro-ph
+Comments: accepted for publication in A&A main journal. 5 pages, latex file,
+  laa style, no figures
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411065
+From:  <example@example.com>
+Date: Wed, 16 Nov 1994 16:29:00 GMT   (50kb)
+
+Title: WHAT IS SGR A*? The Starved Black Hole in the Center of the Milky Way
+Authors: Heino Falcke
+Categories: astro-ph gr-qc
+Comments: invited review, IAU Symp. 169, 9 pages, POSTSCRIPT file
+Report-no: MPIFR-Bonn 1994/11/15
+Journal-ref: Unsolved Problems of the Milky Way, IAU Symp. 169, L. Blitz and
+  P.J. Teuben (eds.), Kluwer, Dordrecht, p. 163-175 (1996)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411066
+From: Lauro Moscardini  <example@example.com>
+Date: Wed, 16 Nov 1994 19:35:34 GMT   (41kb)
+Date (revised): Thu, 17 Nov 1994 06:27:40 GMT
+Date (revised): Wed, 29 Mar 1995 11:25:02 GMT
+
+Title: Eulerian Perturbation Theory in Non-Flat Universes: Second-Order
+  Approximation
+Authors: Paolo Catelan, Francesco Lucchin, Sabino Matarrese & Lauro Moscardini
+Categories: astro-ph
+Comments: 17 pages, Latex (mn.sty), 1 figure, revised version (1 figure is
+  dropped; eq.46 is corrected and some consequent results are re-discussed), to
+  be published in Monthly Notices of the Royal Astronomical Society
+Report-no: OUAST-94-42
+Journal-ref: Mon.Not.Roy.Astron.Soc. 276 (1995) 39
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411067
+From: Rosemary Wyse  <example@example.com>
+Date: Wed, 16 Nov 1994 22:32:40 GMT   (31kb)
+
+Title: Dwarf Spheroidal Galaxies : Keystones of Galaxy Evolution
+Authors: John S.~Gallagher, III and Rosemary F.G.~Wyse
+Categories: astro-ph
+Comments: 41 pages, plain tex (no figures included -- available by snail mail).
+  review to appear in PASP
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411068
+From: Gerry Gilmore  <example@example.com>
+Date: Thu, 17 Nov 1994 10:06:41 GMT   (8kb)
+
+Title: Astrometric Tests of Galactic Evolution
+Authors: Gerard Gilmore (Institute of Astronomy, Cambridge, UK)
+Categories: astro-ph
+Comments: 6 pages, Review at IAUSymp 166, Kluwer crckapbk latex macro required
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411069
+From: Gerry Gilmore  <example@example.com>
+Date: Thu, 17 Nov 1994 10:18:45 GMT   (9kb)
+
+Title: Evolution of the Galactic Halo and Disk
+Authors: Gerard Gilmore (Institute of Astronomy, Cambridge, UK)
+Categories: astro-ph
+Comments: review at IAU Symp164, 9pp, kluwer latex format
+Journal-ref: Astrophys.Space Sci. 267 (1999) 109-117
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411070
+From: Abraham Naim  <example@example.com>
+Date: Thu, 17 Nov 1994 12:40:00 GMT   (202kb)
+Date (revised): Thu, 17 Nov 1994 13:10:00 GMT
+Date (revised): Thu, 17 Nov 1994 14:44:00 GMT
+
+Title: Approaches to Automated Morphological Classification of Galaxies
+Authors: Avi Naim
+Categories: astro-ph
+Comments: 8 pages, uu-encoded compressed postscript file (containing 2 figures)
+Report-no: IoA-Vis-ANN94/2
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411071
+From: Ofer Lahav  <example@example.com>
+Date: Thu, 17 Nov 1994 15:29:00 GMT   (45kb)
+
+Title: Artificial Neural Networks as Non-Linear Extensions of Statistical
+  Methods in Astronomy
+Authors: Ofer Lahav
+Categories: astro-ph
+Comments: 9 pages, uu-encoded compressed postscript file. Also available by
+  anonymous ftp to cast0.ast.cam.ac.uk (131.111.68.35) at
+  ftp://cast0.ast.cam.ac.uk/pub/lahav/vistas/vistas4.ps.Z with figure at
+  ftp://cast0.ast.cam.ac.uk/pub/lahav/vistas/fig1.ps.Z To appear in Vistas in
+  Astronomy, special issue on Artificial Neural Networks in Astronomy
+Report-no: IoA-Vis-ANN94/1
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411072
+From: Masashi Chiba  <example@example.com>
+Date: Thu, 17 Nov 1994 17:50:56 GMT   (56kb,P)
+
+Title: Protogalactic evolution and magnetic fields
+Authors: Harald Lesch and Masashi Chiba
+Categories: astro-ph
+Comments: 6 pages, uuencoded compressed PS file including 1 figure, A & A in
+  press
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411073
+From: Geza Gyuk  <example@example.com>
+Date: Thu, 17 Nov 1994 21:39:03 GMT   (109kb)
+Date (revised): Fri, 18 Nov 1994 06:15:27 GMT
+Date (revised): Wed, 30 Nov 1994 02:55:40 GMT
+
+Title: Microlensing and Halo Cold Dark Matter
+Authors: Evalyn I. Gates, Geza Gyuk, and Michael S. Turner
+Categories: astro-ph hep-ph
+Comments: 8 pages, latex, 4 figures, (Minor revisions of our galactic models)
+Report-no: FERMILAB-Pub-94/381-A
+Journal-ref: Phys.Rev.Lett. 74 (1995) 3724-3727
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411074
+From: Dan Kiselman  <example@example.com>
+Date: Fri, 18 Nov 1994 08:46:35 GMT   (5kb)
+
+Title: A non-LTE study of Li I lines in AGB stars
+Authors: Dan Kiselman (NORDITA, Copenhagen) and Bertrand Plez (Niels Bohr
+  Institute, Copenhagen)
+Categories: astro-ph
+Comments: 4 pages, to be published in Memorie della societa astronomica
+  italiana, proceedings of IAU XXII: "Lithium day", latex requiring
+  memsait.sty. Paper and 3 figures available in PostScript format at
+  ftp://hugin.astro.su.se/pub/solar/lithium/ (mget *.ps)
+Report-no: KVAVAVETJA-94-1
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411075
+From:  <example@example.com>
+Date: Fri, 18 Nov 1994 11:23:00 GMT   (63kb)
+
+Title: The Space Distribution of the Lyman Alpha Clouds in the Line of Sight to
+  the Z=3.66 QSO 0055-269
+Authors: S. Cristiani, S. D'Odorico, A. Fontana, E. Giallongo, S. Savaglio
+Categories: astro-ph
+Comments: 19 pages + 3 tables uuencoded compressed postscript + 15 figures
+  (available on request) MNRAS in press
+Report-no: AKP-94-1
+Journal-ref: Mon.Not.Roy.Astron.Soc. 273 (1995) 1016
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411076
+From:  <example@example.com>
+Date: Fri, 18 Nov 1994 10:33:18 GMT   (17kb)
+
+Title: ROSAT observations of the B2 radio galaxies 1615+35 and 1621+38:
+  implications on the radio source confinement
+Authors: L.Feretti, R. Fanti, P. Parma, S. Massaglia, E. Trussoni, W. Brinkmann
+  (IRA, Bologna - OA, Torino - MPE, Garching)
+Categories: astro-ph
+Comments: 20 pages, Tex, figure request to lferetti@astbo1.bo.cnr.it
+Report-no: BAP 11-1994-036-IRA
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411077
+From: Janusz Kaluzny  <example@example.com>
+Date: Fri, 18 Nov 1994 13:23:21 GMT   (63kb)
+
+Title: Open clusters as tracers of the evolution of the Galaxy
+Authors: Janusz Kaluzny, Wojtek Krzeminski & Beata Mazur
+Categories: astro-ph
+Comments: 2 pages, uuencoded compressed postscript
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411078
+From: Janusz Kaluzny  <example@example.com>
+Date: Fri, 18 Nov 1994 15:05:52 GMT   (155kb)
+
+Title: The Optical Gravitational Lensing Experiment. Variable stars in the
+  Sculptor dwarf speroidal galaxy
+Authors: J. Kaluzny, M. Kubiak, M. Szymanski, A. Udalski, W. Krzeminski & M.
+  Mateo
+Categories: astro-ph
+Comments: 21 pages, uuencoded compressed postscript, figures 2a-h avalilable at
+  ftp://sirius.astrouw.edu.pl/pub/submit/sculptor/fig2.tar.Z
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411079
+From:  <example@example.com>
+Date: Fri, 18 Nov 1994 15:15:46 GMT   (211kb,P)
+Date (revised): Mon, 21 Nov 1994 09:21:50 GMT 
+Date (revised): Tue, 22 Nov 1994 09:26:01 GMT 
+
+Title: The Cluster Distribution as a Test for Dark Matter Models. I: Clustering
+  Properties
+Authors: S. Borgani, M. Plionis, P. Coles, L. Moscardini
+Categories: astro-ph
+Comments: 13 pages+8 figures, uuencoded compressed postscript. MNRAS submitted.
+  Replaced because of problems in the uuencoding procedure
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411080
+From: Laerte Sodre Jr.  <example@example.com>
+Date: Fri, 18 Nov 1994 15:50:18 GMT   (30kb)
+
+Title: Spectral Classification of Galaxies
+Authors: Laerte Sodre Jr. and Hector Cuevas
+Categories: astro-ph
+Comments: 7 pages uuencoded compressed PostScript file. To appear in Vistas in
+  Astronomy, special issue on Artificial Neural Networks in Astronomy
+Report-no: IAGUSP-vistas-01
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411081
+From: Matthew Bate  <example@example.com>
+Date: Fri, 18 Nov 1994 16:39:00 GMT   (239kb)
+Date (revised): Fri, 18 Nov 1994 17:32:00 GMT
+
+Title: The formation of close binary systems
+Authors: Ian A. Bonnell and Matthew R. Bate
+Categories: astro-ph
+Comments: 6 pages, uuencoded compressed postscript file (containing 2 figures)
+Journal-ref: Mon.Not.Roy.Astron.Soc. 271 (1994) 999
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411082
+From: Chris Kochanek  <example@example.com>
+Date: Sat, 19 Nov 1994 15:47:03 GMT   (257kb)
+
+Title: Gravitational Lensing Limits on Cold Dark Matter and Its Variants
+Authors: Christopher S. Kochanek
+Categories: astro-ph
+Comments: 27 pages, uuencoded compressed postscript file including figures
+Journal-ref: Astrophys.J. 453 (1995) 545
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411083
+From: Bianca Garilli  <example@example.com>
+Date: Mon, 21 Nov 1994 09:33:38 GMT   (199kb)
+Date (revised): Fri, 13 Jan 1995 07:53:44 GMT
+
+Title: Multicolor surface photometry of brightest cluster galaxies: II.
+  Enlarging the sample and improving the analysis
+Authors: S. Andreon, B.Garilli and D. Maccagni
+Categories: astro-ph
+Comments: New version of paper 9411083. A few changes in the discussion
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411084
+From: J. Kirk  <example@example.com>
+Date: Mon, 21 Nov 1994 12:45:52 GMT   (21kb)
+
+Title: Radio Supernovae as Tev Gamma-Ray Sources
+Authors: J.G. Kirk, P. Duffy and Lewis Ball
+Categories: astro-ph
+Comments: 4 pages uuencoded, compressed postscript. Accepted for publication as
+  a Letter in Astronomy and Astrophysics
+Report-no: MPK-ASTRO-94-04
+Journal-ref: Astron.Astrophys. 293 (1995) L37
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411085
+From: Sangeeta Malhotra  <example@example.com>
+Date: Mon, 21 Nov 1994 16:23:52 GMT   (104kb)
+
+Title: Quasar Populations in a Cosmological Constant Dominated Flat Universe
+Authors: Sangeeta Malhotra and Edwin L Turner
+Categories: astro-ph
+Comments: 15 pages, uuencoded, compressed, postscript file, can also be
+  obtained by ftp:/astro.princeton.edu/san/Qlam/qlam.ps.Z or at
+  http://astro.princeton.edu/~san/research.html POP number 576, to appear in
+  ApJ
+Journal-ref: Astrophys.J. 445 (1995) 553
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411086
+From: Karl Mannheim  <example@example.com>
+Date: Mon, 21 Nov 1994 17:13:43 GMT   (104kb)
+
+Title: The UV-Drag on Hadronic Hot Jets as the Origin of X-Ray Irradiation in
+  AGN
+Authors: Karl Mannheim (Goettingen University Observatory)
+Categories: astro-ph
+Comments: 11 pages, postscript compressed with uufiles, accepted for
+  publication in A&A
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411087
+From: Francine Marleau  <example@example.com>
+Date: Mon, 21 Nov 1994 19:51:49 GMT   (13kb)
+
+Title: Complete Model of a Self-gravitating Cosmic String I. A New Class of
+  Exact Solutions and Gravitational Lensing
+Authors: Charles C. Dyer and Francine R. Marleau (Department of Astronomy,
+  University of Toronto, Canada)
+Categories: astro-ph
+Comments: 15 pages, LaTex file, 9 figures available in PostScript format at
+  ftp://manitou.astro.utoronto.ca/pub/string/ (get fig1-9.ps)
+Journal-ref: Phys.Rev. D52 (1995) 5588-5597
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411088
+From: Sangeeta Malhotra  <example@example.com>
+Date: Mon, 21 Nov 1994 19:54:09 GMT   (14kb)
+
+Title: The Vertical Distribution and Kinematics of HI and Mass Models of the
+  Galactic Disk
+Authors: Sangeeta Malhotra
+Categories: astro-ph
+Comments: 17 pages, latex file without figures (uses aaspp style file). The
+  postscipt version can be obtained by ftp:/astro.princeton.edu/san/HI/hi.ps.Z
+  or at http://astro.princeton.edu/~san/research.html POP number 593, Submitted
+  to ApJ
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411089
+From:  <example@example.com>
+Date: Tue, 22 Nov 1994 14:34:06 GMT   (462kb)
+
+Title: Extragalactic Large-Scale Structures behind the Southern Milky Way. - I.
+  Redshifts Obtained at the SAAO in the Hydra/Antlia Extension
+Authors: Renee C. Kraan-Korteweg (Kapteyn Institute, Groningen), Tony P.
+  Fairall (UCT, Cape Town), Chantal Balkowksi (Observatoire de Meudon)
+Categories: astro-ph
+Comments: 18 pages, Latex-file, needs Latex A&A style file L-AA version 3,
+  accepted for publication in Astronomy and Astrophysics, the 3 tables and 6
+  figures are available as uuencoded compressed PostScript file
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411090
+From: JJ Kavelaars  <example@example.com>
+Date: Tue, 22 Nov 1994 14:39:07 GMT   (59kb)
+
+Title: A $BVI$ Photometric Study of the Near-Galactic Center Globular Cluster
+  NGC 6517 (C1759-089)
+Authors: JJ Kavelaars, David A. Hanes, Terry J. Bridges and William E. Harris
+Categories: astro-ph
+Comments: Submitted as a uuencoded gziped tar file containing tex document and
+  macros. Also available via ftp://astro.queensu.ca/pub/ngc6517.ps or
+  http://astro.queensu.ca/~kauelaar/ngc6517.html
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411091
+From: Luciano  <example@example.com>
+Date: Tue, 22 Nov 1994 14:38:32 GMT   (112kb)
+
+Title: Hydrodynamics of the Cosmological Quark-Hadron Transition in the
+  Presence of Long-Range Energy and Momentum Transfer
+Authors: J.C. Miller and L. Rezzolla
+Categories: astro-ph gr-qc hep-ph
+Comments: 21 pages, Plain Tex, nofigures. uucoded file containing the postcript
+  version of the paper and 9 figures is available on a separate file
+Report-no: SISSA 161/94/A-EP
+Journal-ref: Phys.Rev. D51 (1995) 4017-4027
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411092
+From: Michal Szymanski  <example@example.com>
+Date: Tue, 22 Nov 1994 17:28:32 GMT   (6kb)
+
+Title: The Optical Gravitational Lensing Experiment. Follow-Up Observations of
+  the Macho Microlensing Event in the Galactic Bulge
+Authors: M. Szymanski, A. Udalski, J. Kaluzny, M. Kubiak, W. Krzeminski and M.
+  Mateo
+Categories: astro-ph
+Comments: 5 pages, 2 tables, 2 figures; LaTeX format. Submitted to Acta
+  Astronomica. PostScript figures (and text also) available via anonymous ftp
+  from (148.81.8.1) ftp://sirius.astrouw.edu.pl/ogle/macho/
+Report-no: OAUW-11/94
+Journal-ref: Acta Astron. 44 (1994) 387
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411093
+From: Grant Gussie  <example@example.com>
+Date: Tue, 22 Nov 1994 23:44:05 GMT   (69kb)
+
+Title: HI and CO Observations of Circumnebular Envelopes of Planetary Nebulae
+Authors: G. T. Gussie and A. R. Taylor
+Categories: astro-ph
+Comments: 36 pages, postscript file includes 4 figures, accepted for
+  publication in MNRAS, file also available as
+  ftp://pandora.phys.utas.edu.au/HI.ps
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411094
+From: Grant Gussie  <example@example.com>
+Date: Tue, 22 Nov 1994 23:44:15 GMT   (111kb)
+
+Title: Molecular Photodissociation in the Neutral Envelopesof Planetary Nebulae
+Authors: G.T.Gussie, A.R.Taylor, P.E.Dewdney, and R.S.Roger
+Categories: astro-ph
+Comments: 36 pages, postscript file includes 8 figures, accepted for
+  publication in MNRAS, file also available as
+  ftp://pandora.phys.utas.edu.au/IC418.ps
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411095
+From: Annie Robin  <example@example.com>
+Date: Tue, 22 Nov 1994 16:25:06 GMT   (5kb)
+
+Title: How Do the Stellar Disc and Thick Disc Stop ?
+Authors: Annie C. Robin, Michel Creze, Vijay Mohan
+Categories: astro-ph
+Comments: Latex 6 pages (crckapbk style). 2 figures upon request or by
+  anonymous ftp to ftp://ftp.obs-besancon.fr/pub/outgoing/annie/ Send all
+  Comments, questions, requests, etc. to: annie@obs-besancon.fr
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411096
+From:  <example@example.com>
+Date: Wed, 23 Nov 1994 09:42:25 GMT   (58kb)
+
+Title: The jet-disk symbiosis. I. Radio to X-ray emission models for quasars
+Authors: Heino Falcke and Peter L. Biermann
+Categories: astro-ph
+Comments: Astronomy & Astrophysics in press LaTeX, 5 PS-figures (hardcopy
+  available on request)
+Report-no: MPIfR-Bonn #584
+Journal-ref: Astron.Astrophys. 293 (1995) 665
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411097
+From:  <example@example.com>
+Date: Wed, 23 Nov 1994 12:57:35 GMT   (116kb,P)
+
+Title: Comparison of the COBE DMR and Tenerife Data
+Authors: C. H. Lineweaver, S. Hancock, G. F. Smoot, A. N. Lasenby, R. D.
+  Davies, A. J. Banday, C. M. Gutierrez de la Cruz, R. A. Watson, R. Rebolo
+Categories: astro-ph
+Comments: 15 pages + 4 figs uuencoded compressed postscript, submitted to APJL
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411098
+From: Martin White  <example@example.com>
+Date: Wed, 23 Nov 1994 07:32:13 GMT   (83kb)
+
+Title: Structure Formation with Decaying Neutrinos
+Authors: M.White, G.Gelmini & J.Silk
+Categories: astro-ph
+Comments: 13 pages, compressed uuencoded self-unpacking postscript file with 5
+  figures and 1 table (included)
+Report-no: CfPA-94-TH-48, UCLA/94/TEP/37
+Journal-ref: Phys.Rev. D51 (1995) 2669-2676
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411099
+From:  <example@example.com>
+Date: Thu, 24 Nov 1994 06:59:48 GMT   (154kb)
+Date (revised): Fri, 25 Nov 1994 08:44:55 GMT 
+
+Title: Screening of Nuclear Reactions in the Sun and Solar Neutrinos
+Authors: B.Ricci, S. Degl'Innocenti and G. Fiorentini
+Categories: astro-ph
+Comments: postscript file 11 pages + 4 figures compressed and uuencoded we have
+  replaced the previous paper with a uuencoded file (the text is the same) for
+  any problem please write to scilla@vaxfe.fe.infn.it
+Report-no: INFNFE-12-94
+Journal-ref: Phys.Rev. C52 (1995) 1095-1101
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411100
+From:  <example@example.com>
+Date: Thu, 24 Nov 1994 08:30:09 GMT   (134kb)
+
+Title: The jet-disk symbiosis. II. Interpreting the Radio/UV correlations in
+  quasars
+Authors: Heino Falcke, Matthew A. Malkan and Peter L. Biermann
+Categories: astro-ph
+Comments: Astron. & Astrophys., in press LaTeX, 8 PS-figures (hardcopy
+  available on request)
+Report-no: MPIFR-Bonn #613
+Journal-ref: Astron.Astrophys. 298 (1995) 375
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411101
+From: C. Xu  <example@example.com>
+Date: Thu, 24 Nov 1994 09:52:44 GMT   (44kb)
+
+Title: Are Spiral Disks Really Opaque ?
+Authors: C. Xu and V. Buat
+Categories: astro-ph
+Comments: 4 pages of uuencoded postscript file, accepted as a Letter to
+  Astronomy and Astrophysics. 3 of 4 figures (Figures 1, 2, 4) are in a
+  separate file. Figure 3 is available on request
+Report-no: MPK-ASTRO-94-05
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411102
+From: Juan Perez Mercader  <example@example.com>
+Date: Fri, 25 Nov 1994 10:19:44 GMT   (6kb)
+
+Title: Gamma Ray Bursts, Neutron Star Quakes, and the Casimir Effect
+Authors: C. Carlson, T. Goldman and J. Perez-Mercader
+Categories: astro-ph hep-ph hep-th
+Comments: This paper uses ReVTeX version 3.0
+Report-no: WM-94-113, LA-UR-94-3996, LAEFF-94/10
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411103
+From: Richard Ellis  <example@example.com>
+Date: Fri, 25 Nov 1994 17:24:00 GMT   (8kb)
+
+Title: The Morphological Evolution of Field Galaxies
+Authors: Richard S Ellis (Institute of Astronomy, Cambridge, UK)
+Categories: astro-ph
+Comments: 9 pages, no figs, LaTeX (requiring crckapbk style file)
+Report-no: RSE-153
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411104
+From:  <example@example.com>
+Date: Fri, 25 Nov 1994 17:26:00 GMT   (12kb)
+
+Title: False Vacuum Inflation with a Quartic Potential
+Authors: David Roberts, Andrew R Liddle and David H Lyth
+Categories: astro-ph
+Comments: 10 pages, RevTeX 3.0, no figures
+Report-no: LANCS-TH/9412, SUSSEX-AST 94/11-1, NI94026
+Journal-ref: Phys.Rev. D51 (1995) 4122-4128
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411105
+From: Eyal Maoz  <example@example.com>
+Date: Sun, 27 Nov 1994 18:07:56 GMT   (65kb)
+
+Title: Halo/Thick Disk CVs and the Cosmic X-Ray Background
+Authors: Jonathan E. Grindlay and Eyal Maoz
+Categories: astro-ph
+Comments: Invited talk presented at the IAU Symposium 168. 6 pages; PostScript
+  file (214 kb)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411106
+From:  <example@example.com>
+Date: Mon, 28 Nov 1994 08:59:14 GMT   (38kb)
+
+Title: Unified schemes for active galaxies: a clue from the missing
+  Fanaroff-Riley type I quasar population
+Authors: Heino Falcke, Gopal-Krishna, Peter L. Biermann
+Categories: astro-ph
+Comments: Astron. & Astrophys. in press, plain LaTeX, 2 figures added with
+  figures command, hardcopy or complete PS file available on request
+Report-no: MPIFR-Bonn #594
+Journal-ref: Astron.Astrophys. 298 (1995) 395
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411107
+From: Robert Crittenden  <example@example.com>
+Date: Mon, 28 Nov 1994 17:56:39 GMT   (64kb)
+
+Title: Temperature-Polarization Correlations from Tensor Fluctuations
+Authors: R.G. Crittenden, D. Coulson and N.G. Turok
+Categories: astro-ph hep-ph
+Comments: 5 pages, revtex, 5 figures, compressed and uuencoded
+Report-no: PUPT 94-1514
+Journal-ref: Phys.Rev. D52 (1995) 5402-5406
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411108
+From: Pedro Colin  <example@example.com>
+Date: Mon, 28 Nov 1994 22:51:25 GMT   (22kb)
+Date (revised): Tue, 29 Nov 1994 16:50:40 GMT
+
+Title: Chemical Evolution of Irregular and Blue Compact Galaxies
+Authors: L. Carigi (CIDA, Venezuela), P. Colin, M. Peimbert, and A. Sarmiento
+  (IAUNAM, Mexico)
+Categories: astro-ph
+Comments: 26 pages, plain Tex, a postscript version with the figures included
+  is available at ftp://132.248.1.7/papers/chem_evolution/irr_bcg.tar ; ApJ
+  accepted
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411109
+From: Norbert Zacharias  <example@example.com>
+Date: Tue, 29 Nov 1994 12:10:27 GMT   (1kb)
+
+Title: RORF - a Radio Optical Reference Frame
+Authors: N.Zacharias, A.L.Fey, J.L.Russell and K.J.Johnston
+Categories: astro-ph
+Comments: 1 page (LaTeX), IAU Symp.166, The radio catalog is available at
+  ftp://maia.usno.navy.mil/rorf , and complete poster paper is available as
+  hardcopy from nz@pyxis.usno.navy.mil
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411110
+From:  <example@example.com>
+Date: Tue, 29 Nov 1994 15:19:00 GMT   (8kb)
+
+Title: Millimeter Observations of a Complete Sample of IRAS Galaxies: Dust
+  Emission and Absorption in Spirals
+Authors: A. Franceschini and P. Andreani (Osservatorio Astronomico - Padova)
+Categories: astro-ph
+Comments: enclosed LateX file needs ApJ style files .STY
+Report-no: Padova1994-100
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411111
+From: Michal Jaroszynski  <example@example.com>
+Date: Tue, 29 Nov 1994 14:14:53 GMT   (12kb)
+
+Title: The Cosmic Microwave Background Dipole as a Cosmological Effect
+Authors: M. Jaroszynski (Warsaw University Observatory, Princeton University
+  Observatory) and B. Paczynski(Princeton University Observatory)
+Categories: astro-ph
+Comments: 14 pages, plain TEX Submitted to ApJ The full postscript version with
+  3 figures at ftp://astro.princeton.edu/library/preprints/pop602.ps.Z (88kB,
+  compressed). e-mails: mj@orion.astrouw.edu.pl, bp@astro.princeton.edu
+Report-no: POPe-602 (electronic form only)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411112
+From: Haret Rosu  <example@example.com>
+Date: Tue, 29 Nov 1994 18:05:00 GMT   (5kb)
+Date (revised): Wed, 23 Apr 1997 16:04:49 GMT 
+
+Title: Spatiotemporal complexity of the universe at subhorizon scales
+Authors: H.C. Rosu
+Categories: astro-ph gr-qc
+Comments: references updated
+Journal-ref: Nuovo Cimento B 110, (April 1995), 457-459
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411113
+From: Jochen Greiner  <example@example.com>
+Date: Tue, 29 Nov 1994 18:18:01 GMT   (130kb)
+
+Title: Optical variability of the supersoft source RX~J0019.8+2156
+Authors: J. Greiner, W. Wenzel
+Categories: astro-ph
+Comments: uuencoded postscript (4 pages)
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411114
+From: Dave Bennett  <example@example.com>
+Date: Wed, 30 Nov 1994 12:50:12 GMT   (350kb)
+
+Title: Recent Developments in Gravitational Microlensing and the Latest MACHO
+  Results: Microlensing Towards the Galactic Bulge
+Authors: D.P. Bennett, C. Alcock, R.A. Allsman, T.S. Axelrod, K.H. Cook, K.C.
+  Freeman, K. Griest, S.L. Marshall, S. Perlmutter, B.A. Peterson, M.R. Pratt,
+  P.J. Quinn, A.W. Rodgers, C.W. Stubbs, and W. Sutherland (The MACHO
+  Collaboration)
+Categories: astro-ph
+Comments: 14 pages, 10 Figures which are included with the epsf package.
+  Available via WWW: http://meteor.anu.edu.au. To appear in the Proceedings of
+  the 5th Annual October Astrophysics Conference in Maryland: DARK MATTER
+Report-no: MACHO-Bulge-002
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411115
+From: Ana  <example@example.com>
+Date: Wed, 30 Nov 1994 22:09:52 GMT   (38kb)
+
+Title: Faint Field Galaxies: A Population of Intrinsically Faint Objects at Low
+  Redshift?
+Authors: Ana Campos (Instituto Astrofisica Andalucia Csic)
+Categories: astro-ph
+Comments: 5 pages 2 Figures, uuencoded compressed Postscript. To appear in the
+  Proceedings of the 11th Internation Potsdam Workshop on Large Scale Structure
+  in The Universe
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411116
+From: Rosemary Wyse  <example@example.com>
+Date: Thu, 1 Dec 1994 00:06:42 GMT   (35kb)
+
+Title: A Determination of the Thick Disk Chemical Abundance Distribution:
+  Implications for Galaxy Evolution
+Authors: Gerard Gilmore (Institute of Astronomy, Cambridge), Rosemary F.G. Wyse
+  (Center for Particle Astrophysics, University of California, Berkeley) and J.
+  Bryn Jones (University of Wales, College of Cardiff)
+Categories: astro-ph
+Comments: 38 pages, plain tex, 19 figures (available by snail mail). To appear
+  in the Astronomical Journal
+\\
+------------------------------------------------------------------------------
+\\
+Paper: astro-ph/9411117
+From: Gautam Vasisht  <example@example.com>
+Date: Thu, 1 Dec 1994 02:03:50 GMT   (12kb)
+
+Title: Radio Monitoring and High Resolution Observations of the Soft Gamma Ray
+  Repeater 1806-20. by Vasisht et al. Postscript file, 13 pages
+Authors: G. Vasisht, D. A. Frail, and S. R. Kulkarni
+Categories: astro-ph
+Comments: Requests for figures and tables from authors, 14 pages AAS format.
+  Requests to gv@astro.caltech.edu
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9411029
+From: Joan Centrella  <example@example.com>
+Date: Fri, 11 Nov 1994 16:49:34 GMT   (21kb)
+
+Title: Gravitational Radiation from Coalescing Binary Neutron Stars
+Authors: Xing Zhuge, Joan M. Centrella, and Stephen L. W. McMillan (Drexel
+  University)
+Categories: gr-qc astro-ph
+Comments: 33 pages, LaTex with RevTex macros; 21 figures available in
+  compressed PostScript format via anonymous ftp to
+  ftp://zonker.drexel.edu/papers/ns_coll_1 ; in press, Phys. Rev. D (Nov 15,
+  1994 issue)
+Journal-ref: Phys.Rev. D50 (1994) 6247-6261
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9411037
+From: Carlos O. Lousto  <example@example.com>
+Date: Mon, 14 Nov 1994 19:15:04 GMT   (10kb)
+Date (revised): Tue, 25 Apr 1995 17:55:47 GMT
+
+Title: The Energy Spectrum of the Membrane effective Model for Quantum Black
+  Holes
+Authors: Carlos O. Lousto
+Categories: gr-qc astro-ph hep-th
+Comments: 13 pages, RevTEX. Paper rewritten; energy levels and entropy
+  recomputed
+Report-no: UAB-FT-351
+Journal-ref: Physics Letters B352 (1995) 228-234
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9411041
+From: Janna Levin  <example@example.com>
+Date: Tue, 15 Nov 1994 20:52:20 GMT   (13kb)
+
+Title: Inflation from Extra Dimensions
+Authors: Janna Levin
+Categories: gr-qc astro-ph
+Comments: 15 pages, LaTeX file, 4 Figures
+Report-no: CITA-94-34
+Journal-ref: Phys.Lett. B343 (1995) 69-75
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): gr-qc/9411042
+From: Redouane Fakir  <example@example.com>
+Date: Wed, 16 Nov 1994 12:55:16 GMT   (11kb)
+Date (revised): Tue, 3 Jan 1995 18:20:50 GMT
+
+Title: The Interstellar Medium as a Gravity Wave Detector
+Authors: Redouane Fakir
+Categories: gr-qc astro-ph
+Comments: 13 pages, latex, no figures
+Report-no: UBCTP-94-011
+Journal-ref: Int.J.Mod.Phys. D6 (1997) 49-56
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411206
+From: Martin Bucher  <example@example.com>
+Date: Wed, 2 Nov 1994 00:59:00 GMT   (54kb)
+Date (revised): Wed, 2 Nov 1994 01:27:00 GMT
+Date (revised): Wed, 2 Nov 1994 01:39:00 GMT
+Date (revised): Wed, 2 Nov 1994 15:49:00 GMT
+Date (revised): Fri, 4 Nov 1994 12:32:00 GMT
+Date (revised): Tue, 21 Mar 1995 04:34:35 GMT
+
+Title: An Open Universe from Inflation
+Authors: M. Bucher (Princeton U.), A.S. Goldhaber (SUNYSB), and N. Turok
+Categories: hep-ph astro-ph hep-th
+Comments: 60 pages + 3 figures. Uses PHYZZX macro package. In this revised
+  version we replace the numerical results of the previous version with exact
+  analytic solutions. Some minor mistakes are corrected and there is some new
+  material.
+Journal-ref: Phys.Rev. D52 (1995) 3314-3337
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411219
+From: Carlo Giunti  <example@example.com>
+Date: Thu, 3 Nov 1994 16:40:11 GMT   (67kb)
+Date (revised): Fri, 4 Nov 1994 08:02:27 GMT
+Date (revised): Sun, 6 Nov 1994 16:56:17 GMT
+Date (revised): Wed, 8 Mar 1995 16:05:04 GMT 
+
+Title: Atmospheric Neutrino Problem in Maximally-Mixed Three Generations of
+  Neutrinos
+Authors: C. Giunti, C. W. Kim and J. D. Kim
+Categories: hep-ph astro-ph
+Comments: Revtex file, 11 pages + 3 figures (included). The postscript file of
+  text and figures is available at
+  ftp://toxd01.to.infn.it/pub/giunti/1994/dftt-54-94/dftt-54-94.ps.Z
+Report-no: DFTT 54/94; SNUTH-94-109
+Journal-ref: Phys.Lett. B352 (1995) 357-364
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411272
+From:  <example@example.com>
+Date: Fri, 11 Nov 1994 16:36:13 GMT   (8kb)
+
+Title: Nucleosynthesis and the Time Dependence of Fundamental Couplings
+Authors: Bruce A. Campbell and Keith A. Olive
+Categories: hep-ph astro-ph
+Comments: 10 pages, latex, no figures
+Report-no: UMN-TH-1318/94
+Journal-ref: Phys.Lett. B345 (1995) 429-434
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411299
+From: Antonio Lanza  <example@example.com>
+Date: Tue, 15 Nov 1994 10:25:44 GMT   (13kb)
+
+Title: Solar Neutrino Data, Neutrino Magnetic Moments and Flavor Mixing
+Authors: E.Kh. Akhmedov, A. Lanza, S.T. Petcov
+Categories: hep-ph astro-ph
+Comments: 16 pages, latex, 5 figures available upon request from Authors
+Report-no: FTUV/94/64, IFIC/94/67, SISSA 169/94/A-EP
+Journal-ref: Phys.Lett. B348 (1995) 124-132
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411315
+From: Ernest Ma  <example@example.com>
+Date: Wed, 16 Nov 1994 17:22:03 GMT   (8kb)
+Date (revised): Sat, 19 Nov 1994 18:47:39 GMT 
+
+Title: Simple Radiative Neutrino Mass Matrix for Solar and Atmospheric
+  Oscillations
+Authors: Ernest Ma (UC Riverside)
+Categories: hep-ph astro-ph
+Comments: One typo corrected, one Note Added
+Report-no: UCRHEP-T136
+Journal-ref: Phys.Rev. D51 (1995) 3145-3148
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411339
+From: Paul Langacker  <example@example.com>
+Date: Sat, 19 Nov 1994 01:34:44 GMT   (22kb)
+
+Title: Solar Neutrinos
+Authors: Paul Langacker
+Categories: hep-ph astro-ph
+Comments: Invited talk presented at 32nd International School of Subnuclear
+  Physics, Erice, July 1994. 33 pages, Latex, 15 figures, not included;
+  postscript file with embedded figures by anonymous ftp at
+  ftp://dept.physics.upenn.edu/pub/Langacker/erice.ps
+Report-no: UPR-0640T
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411342
+From: M. B. Hindmarsh  <example@example.com>
+Date: Sat, 19 Nov 1994 15:20:48 GMT   (361kb)
+
+Title: Cosmic strings
+Authors: M.B. Hindmarsh and T.W.B. Kibble
+Categories: hep-ph astro-ph hep-th
+Comments: 120pp Plain TeX (IOP preprint.sty file included) + 18/19
+  self-unpacking .ps figures. TeX twice to get citation numbering. Submitted to
+  Reports on Progress in Physics
+Report-no: SUSX--TP--94--74 IMPERIAL/TP/94-95/5 NI94025
+Journal-ref: Rept.Prog.Phys. 58 (1995) 477-562
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411373
+From: Carlo Giunti  <example@example.com>
+Date: Wed, 23 Nov 1994 13:24:34 GMT   (124kb)
+Date (revised): Sat, 16 Oct 2004 01:48:07 GMT
+
+Title: A Model Independent Approach to Solar Neutrino Experiments
+Authors: S.M. Bilenky and C. Giunti
+Categories: hep-ph astro-ph
+Comments: 24 pages; published in the proceedings of the 1st Arctic Workshop on
+  Future Physics and Accelerators, Saariselka, Finland, 21-26 Aug 1994,
+  p.170-192
+Report-no: DFTT 63/94
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411425
+From: Patrick Peter  <example@example.com>
+Date: Tue, 29 Nov 1994 18:49:00 GMT   (7kb)
+
+Title: Supersonic String Model for Witten Vortices
+Authors: Brandon Carter and Patrick Peter
+Categories: hep-ph astro-ph gr-qc hep-th
+Comments: 7 pages, LaTeX-RevTeX, no figures
+Report-no: DAMTP R-94/56
+Journal-ref: Phys.Rev. D52 (1995) 1744-1748
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411432
+From: Alakabha Datta  <example@example.com>
+Date: Wed, 30 Nov 1994 03:06:42 GMT   (18kb)
+
+Title: Gamma--Ray Bursters, Neutrinos, and Cosmology
+Authors: T.J. Weiler, W.A. Simmons, S. Pakvasa and J.G. Learned
+Categories: hep-ph astro-ph gr-qc
+Comments: 21 pages, latex, two figures (part of the latex file)
+Report-no: UH-511-801-94 and VAND-TH-94-20
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-ph/9411443
+From: Smaragda Lola  <example@example.com>
+Date: Wed, 30 Nov 1994 21:07:14 GMT   (21kb)
+Date (revised): Thu, 1 Jun 1995 12:35:35 GMT
+
+Title: Inflation from superstrings
+Authors: A. De la Macorra and S. Lola
+Categories: hep-ph astro-ph
+Comments: 22 pages, no figures, latex file We have corrected the magnitude of
+  the density fluctuations, which become smaller than the COBE ones. Some
+  references have also been added, and a few misprints corrected
+Report-no: HD-THEP-94-45, IFUNAM-FT-94-63
+Journal-ref: Int.J.Mod.Phys. D5 (1996) 541-566
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9411111
+From: Andrei Linde  <example@example.com>
+Date: Wed, 16 Nov 1994 06:13:06 GMT   (13kb)
+
+Title: Do We Live in the Center of the World?
+Authors: Andrei Linde, Dmitri Linde and Arthur Mezhlumian
+Categories: hep-th astro-ph gr-qc hep-ph
+Comments: 11 pages, LaTeX
+Report-no: SU-ITP-94-39
+Journal-ref: Phys.Lett. B345 (1995) 203-210
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9411230
+From: Jakub Rembielinski  <example@example.com>
+Date: Wed, 30 Nov 1994 22:07:37 GMT   (11kb)
+Date (revised): Mon, 5 Dec 1994 21:21:21 GMT
+
+Title: Tachyonic neutrinos?
+Authors: J. Rembielinski
+Categories: hep-th astro-ph gr-qc hep-ph
+Comments: 8 pp., RevTeX (AmSsymb removed, due to reported troubles with
+  processing)
+Report-no: KFT UL 5/94
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): hep-th/9411231
+From: Patrick Peter  <example@example.com>
+Date: Wed, 30 Nov 1994 16:10:13 GMT   (8kb)
+
+Title: Transonic Elastic Model for Wiggly Goto-Nambu String
+Authors: Brandon Carter
+Categories: hep-th astro-ph gr-qc hep-ph
+Comments: 8 pages, plain TeX, no figures
+Journal-ref: Phys.Rev.Lett. 74 (1995) 3098-3101
+\\
+------------------------------------------------------------------------------
+\\
+Paper (*cross-listing*): solv-int/9411005
+From:  <example@example.com>
+Date: Thu, 17 Nov 1994 22:33:09 GMT   (7kb)
+
+Title: Limits to Extensions of Burgers Equation
+Authors: Steven Nerney (National Research Council Associate, NASA-Marshall
+  Space Flight Center, Alabama 35812), Edward J. Schmahl (Astronomy Department,
+  University of Maryland, College Park, MD 20742) and Z. E. Musielak
+  (Department of Mechanical and Aerospace Engineering, and Center for Space
+  Plasmas and Aeronomic Research, University of Alabama at Huntsville,
+  Huntsville, Alabama 35899)
+Categories: solv-int astro-ph chao-dyn comp-gas nlin.CD nlin.CG nlin.SI
+Comments: Plain Tex, no figures
+Report-no: 94-107
+Subj-class: Exactly Solvable and Integrable Systems; Chaotic Dynamics; Cellular
+  Automata and Lattice Gases
+\\

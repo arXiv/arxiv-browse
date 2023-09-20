@@ -1,0 +1,632 @@
+Date: Fri,  3 Mar 23 01:36:02 GMT
+Subject: astro-ph.GA daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: physics@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+Astrophysics of Galaxies
+ received from  Wed  1 Mar 23 19:00:00 GMT  to  Thu  2 Mar 23 19:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00763
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (3197kb,D)
+
+Title: Census of Gaseous Satellites around Local Spiral Galaxies
+Authors: Jingyao Zhu and Mary E Putman
+Categories: astro-ph.GA
+Comments: 18 pages, 13 figures, accepted by MNRAS
+\\
+  We present a search for gas-containing dwarf galaxies as satellite systems
+around nearby spiral galaxies using 21 cm neutral hydrogen (HI) data from the
+Arecibo Legacy Fast ALFA (ALFALFA) Survey. We have identified 15 spiral
+`primary' galaxies in a local volume of 10 Mpc with a range of total masses,
+and have found 19 gas-containing dwarf satellite candidates within the
+primaries' virial volumes ($R_{200}$) and 46 candidates within $2R_{200}$. Our
+sensitivity using ALFALFA data converts to $M_{\rm HI} \approx 7.4 \times
+10^{6}$ $M_{\odot}$ at 10 Mpc, which includes 13 of the 26 gaseous dwarf
+galaxies in the Local Group, and the HI properties of our sample are overall
+similar to these 13. We found $0-3$ gaseous satellites per host galaxy within
+$R_{200}$ and $0-5$ within $2R_{200}$, which agrees with the low numbers
+present for the Milky Way and M31. There is also agreement with the
+star-forming satellite numbers per host in the deep optical surveys SAGA and
+ELVES, and the Auriga cosmological simulations. When scaled to $R_{200}$, the
+optical surveys do not show a trend of increasing quenched fraction with host
+mass; there is a slight increase in the total number of gaseous satellites with
+host mass for our sample. The low numbers of gaseous/star-forming satellites
+around spiral hosts are consistent with the idea that a universal and effective
+satellite quenching mechanism, such as ram pressure stripping by the host halo,
+is likely at play.
+\\ ( https://arxiv.org/abs/2303.00763 ,  3197kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00766
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (1799kb,D)
+
+Title: Black hole mergers as tracers of spinning massive black hole and galaxy
+  populations in the Obelisk simulation
+Authors: C. A. Dong-P\'aez, M. Volonteri, R. S. Beckmann, Y. Dubois, M.
+  Trebitsch, A. Mangiagli, S. Vergani, N. Webb
+Categories: astro-ph.GA astro-ph.HE
+Comments: 13 pages, 9 figures, submitted to A&A
+\\
+  Massive black hole (BH) mergers will be key targets of future gravitational
+wave and electromagnetic observational facilities. In order to constrain BH
+evolution with the information extracted from BH mergers, one must take into
+account the complex relationship between the population of merging BHs and the
+global BH population. We analyse the high-resolution cosmological
+radiation-hydrodynamics simulation Obelisk, run to redshift $z=3.5$, to study
+the properties of the merging BH population, and its differences with the
+underlying global BH population in terms of BH and galaxy properties. We
+calculate in post-processing dynamical delays between the merger in the
+simulation at the resolution limit and the actual coalescence well below the
+resolution scale. We find that merging BHs are hosted in relatively massive
+galaxies with stellar mass $M_\ast\gtrsim10^9\,M_\odot$. Given that galaxy mass
+is correlated with other BH and galaxy properties, BH mergers tend to also have
+higher total BH mass and higher BH accretion rates than the global population
+of main BHs. These differences generally disappear if the merger population is
+compared with a BH population sampled with the same galaxy mass distribution as
+merger hosts. Galaxy mergers can temporarily boost the BH accretion rate and
+the host's star formation rate, which can remain active at the BH merger if
+sub-resolution delays are not taken into account. When dynamical delays are
+taken into account the burst has generally faded by the time the BHs merge. BH
+spins are followed self-consistently in the simulation, under the effect of
+accretion and BH mergers. We find that merging BHs have higher spins than the
+global population, but similar or somewhat lower spins compared to a
+mass-matched sample. For our sample, mergers tend to decrease the spin of the
+final BH remnant.
+\\ ( https://arxiv.org/abs/2303.00766 ,  1799kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00770
+Date: Wed, 1 Mar 2023 19:00:23 GMT   (6928kb,D)
+
+Title: Another X-ray UFO without a momentum-boosted molecular outflow
+Authors: F. Bonanomi, C. Cicone, P. Severgnini, V. Braito, C. Vignali, J. N.
+  Reeves, M. Sirressi, I. Montoya Arroyave, R. Della Ceca, L. Ballo, M. Dotti
+Categories: astro-ph.GA
+Comments: Accepted by A&A
+\\
+  We present ALMA CO(1-0) observations of the nearby LIRG galaxy pair
+IRAS05054+1718 with a new analysis of X-ray data collected between 2012 and
+2021 using NuSTAR, Swift, and XMM-Newton. The western component of the pair,
+NED01, hosts a Seyfert 1.9 nucleus launching a powerful X-ray UFO. Our X-ray
+spectral analysis suggests the UFO could be variable or multi-component in
+velocity and constrains its momentum flux to $\dot p^{X-ray}_{out} \sim
+(4\pm2)\times 10^{34}$ gcms$^{-2}$. ALMA CO(1-0) observations include also the
+eastern component of the pair, a LIRG with no clear evidence for an AGN. We
+study the CO(1-0) kinematics in the two galaxies using the 3D-BAROLO code. In
+both sources, we can model the bulk of the CO(1-0) emission with rotating disks
+and, after subtracting the best-fit models, we detect compact residual emission
+at S/N=15 within $\sim3$kpc from the centre. A molecular outflow in NED01, if
+present, cannot be brighter than such residuals, implying an upper limit on its
+outflow rate of $\dot{M}^{mol}_{out} \lesssim 19\pm14~M_{\odot}~yr^{-1}$ and on
+its momentum rate of $\dot p^{mol}_{out} \lesssim (2.7\pm2.4) \times
+10^{34}$gcms$^{-1}$. Combined with the revised energetics of the X-ray wind, we
+derive an upper limit on the momentum rate ratio of
+$\dot{p}^{mol}_{out}/\dot{p}^{X-ray}_{out}<0.67$. We discuss these results in
+the context of the expectations of AGN feedback models, and we propose the
+X-ray disk wind in NED01 has not significantly impacted the molecular gas
+reservoir (yet), and we can constrain its effect to be much smaller than
+expectations of AGN ''energy-driven'' feedback models. We also consider and
+discuss the hypothesis of asymmetries of the molecular disk not properly
+captured by the 3D-BAROLO code. Our results highlight the challenges in testing
+the predictions of popular AGN disk-wind feedback theories, even with good
+quality multi-wavelength observations.
+\\ ( https://arxiv.org/abs/2303.00770 ,  6928kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00773
+Date: Wed, 1 Mar 2023 19:01:06 GMT   (617kb,D)
+
+Title: Revisiting the alignment of radio galaxies in the ELAIS-N1 field
+Authors: Marco Simonte, Heinz Andernach, Marcus Brueggen, Philip Best, Erik
+  Osinga
+Categories: astro-ph.GA astro-ph.CO
+Comments: 10 pages, 6 figures, 2 tables Accepted for publication in A&A
+\\
+  Aims. Previous studies reported an alignment of the major axes of radio
+galaxies on various angular scales. Here, we study the alignment of radio
+galaxies in the ELAIS-N1 Low Frequency ARray (LOFAR) deep field, which covers
+an area of 25 $\rm deg^2$. \newline Methods. The low noise level of about 20$
+\rm ~ \mu Jy/beam$ of the LOFAR deep field observations at 150 MHz enabled the
+identification of 447 extended ($> 30 \rm ''$) radio galaxies for which we have
+measured the major axis position angle. We found that 95\% of these sources
+have either photometric or spectroscopic redshifts, which we then used for a
+three-dimensional analysis. \newline Results. We show the distribution of the
+position angles of radio galaxies in the ELAIS-N1 field and perform multiple
+statistical tests to check whether the radio galaxies are randomly oriented. We
+found that the distribution of position angles is consistent with being
+uniform. Two peaks around position angles of 50 and 140$\rm~ deg$ are spurious
+and are not caused by an alignment, as shown by a 3D analysis. In conclusion,
+our results do not support a 2D or 3D alignment of radio galaxies on scales
+smaller than $\sim 4 \rm ~ deg$.
+\\ ( https://arxiv.org/abs/2303.00773 ,  617kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00774
+Date: Wed, 1 Mar 2023 19:01:54 GMT   (698kb,D)
+
+Title: Systematically Measuring Ultra-Diffuse Galaxies (SMUDGes). IV.
+  Ultra-Diffuse Satellites of Milky Way Analogs
+Authors: Hina Goto, Dennis Zaritsky, Ananthan Karunakaran, Richard Donnerstein,
+  David J. Sand
+Categories: astro-ph.GA
+Comments: Submitted for publication. 12 pages, 6 figures
+\\
+  To better understand the formation of large, low surface brightness galaxies,
+we measure the correlation function between ultra-diffuse galaxy (UDG)
+candidates and Milky Way analogs (MWAs). We find that (1) the projected radial
+distribution of UDG satellites (projected surface density $\propto
+r^{-0.84\pm0.06}$) is consistent with that of normal satellite galaxies, (2)
+the number of UDG satellites per MWA ($S_{\rm UDG}$) is $\sim 0.5\pm0.1$ over
+projected radii from 20 to 250 kpc and $-17< M_r < -13.5$, (3) $S_{\rm UDG}$ is
+consistent with a linear extrapolation of the relationship between the number
+of UDGs per halo vs. halo mass obtained over galaxy group and cluster scales,
+(4) red UDG satellites dominate the population of UDG satellites ($\sim80$%),
+(5) over the range of satellite magnitudes studied, UDG satellites comprise
+$\sim$ 10% of the satellite galaxy population of MWAs, (6) a significant
+fraction of these ($\sim$13%) have estimated total masses $>$ 10$^{10.9}$
+M$_\odot$ or, equivalently, at least half the halo mass of the LMC, and
+populate a large fraction ($\sim$ 18%) of the expected subhalos down to these
+masses. All of these results suggest a close association between the overall
+low mass galaxy population and UDGs, which we interpret as favoring models
+where UDG formation principally occurs within the general context of low mass
+galaxy formation over models invoking more exotic physical processes
+specifically invoked to form UDGs.
+\\ ( https://arxiv.org/abs/2303.00774 ,  698kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00782
+Date: Wed, 1 Mar 2023 19:09:15 GMT   (3263kb,D)
+
+Title: Discovery of Extended Fe Ka Complex X-ray Emission in NGC 5728
+Authors: Anna Trindade Falcao, G. Fabbiano, M. Elvis, A. Paggi, W. P. Maksym
+Categories: astro-ph.GA astro-ph.HE
+\\
+  We present Chandra ACIS imaging spectroscopy results for the extended
+(1.5$''$-8$''$) hard X-ray emission of the Compton thick (CT) Seyfert NGC 5728.
+We find spectrally and spatially-resolved features in the Fe K$\alpha$ complex
+(5.5-7.2 keV), redward and blueward of the neutral 6.4 keV line in the extended
+bicone. The [red, blue] features have [6.5$\sigma$, 5.3$\sigma$] significance,
+with an equivalent width = [1.76 keV, 2.60 keV], much higher than in the
+nuclear spectrum. Hence these red and blue wings are extended in a few
+arcsecond scale, as confirmed by narrow-band X-ray imaging. These energies
+imply line-of-sight velocities of [$\sim$19,000-42,000, $\sim$ 28,000] km
+s$^{-1}$, if the emission is due to neutral Fe K$\alpha$.
+\\ ( https://arxiv.org/abs/2303.00782 ,  3263kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00789
+Date: Wed, 1 Mar 2023 19:30:09 GMT   (9365kb,D)
+
+Title: Deep Chandra Observations of NGC 5728: Morphology and Spectral
+  Properties of the Extended X-ray Emission
+Authors: Anna Trindade Falcao, G. Fabbiano, M. Elvis, A. Paggi, W. P. Maksym
+Categories: astro-ph.GA
+\\
+  Recent deep Chandra observations of nearby Compton thick (CT) AGN have
+produced surprising results, uncovering extended emission not only in the soft
+X-rays but in the hard emission (>3 keV), challenging the long-held belief that
+the characteristic hard X-ray continuum and fluorescent Fe Ka lines are
+associated with the torus in the standard picture of AGN. In this work, we
+present the analysis of our deep (~261 ks) X-ray Chandra ACIS-S observations of
+NGC 5728, a nearby (z=0.00932) CT AGN. We find that the diffuse emission is
+more extended at lower energies, in the bicone direction out to ~2 kpc
+radially, but also significantly extended in the direction of the cross-cone,
+out to ~1.4 kpc. Our results suggest that the ratio of detected photons in the
+cross-cone to the bicone region is ~16%, below 3 keV, decreasing to 5% for
+energies 3-6 keV. The nuclear spectrum suggests a low photoionization phase
+mixed with a more ionized gas component, while the bicone and cross-cone
+spectra are dominated by a mix of photoionization and shocked gas emission. A
+mixture of thermal and photoionization models to fit the spectra indicates the
+presence of complex gas interactions, consistent with previous observations of
+other CT AGN (e.g., ESO 428-G014).
+\\ ( https://arxiv.org/abs/2303.00789 ,  9365kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00826
+Date: Wed, 1 Mar 2023 21:24:57 GMT   (1712kb,D)
+
+Title: Quenching star formation with low-luminosity AGN winds
+Authors: Ivan Almeida, Rodrigo Nemmen, and Rogemar Riffel
+Categories: astro-ph.GA
+Comments: 6 pages, 5 figures, submitted to MNRAS
+\\
+  We present a simple model for low-luminosity active galactic nucleus (LLAGN)
+feedback through thermal winds produced by a hot accretion flow. The wind
+carries considerable energy and deposits it on the host galaxy at kiloparsec
+scales and beyond, heating the galactic gas thereby quenching star formation.
+Our model predicts that the typical LLAGN can quench more than $10\%$ of star
+formation in its host galaxy. We find that long-lived LLAGN winds from
+supermassive black holes (SMBH) with masses $\geq 10^8 M_{\odot}$ and mass
+accretion rates $\dot{M} > 10^{-3}\dot{M}_{\rm Edd}$ can prevent gas collapse
+and significantly quench galactic star formation compared to a scenario without
+AGN, if the wind persists over 1 Myr. For sustained wind production over
+timescales of 10 Myr or longer, SMBHs with $10^8 M_{\odot}$ or larger masses
+have important feedback effects with $\dot{M} > 10^{-4} \dot{M}_{\rm Edd}$.
+\\ ( https://arxiv.org/abs/2303.00826 ,  1712kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01053
+Date: Thu, 2 Mar 2023 08:23:11 GMT   (33309kb,D)
+
+Title: Distances to nearby molecular clouds traced by young stars
+Authors: Miaomiao Zhang
+Categories: astro-ph.GA
+Comments: 31 pages; 11 figures; one of figures is a figset including 63
+  components; figset can be obtained as part of source files; accepted by ApJS
+\\
+  I present a catalog of distances to 63 molecular clouds located within ~2.5
+kpc of the Sun. The cloud distances are derived based on utilizing the Gaia DR3
+parallaxes of the young stellar objects (YSOs). By identifying AllWISE YSO
+candidates (YSOCs) with infrared excesses and combining them with published
+YSOC catalogs, I compile an all-sky YSOC sample that is devoid of a significant
+proportion of contaminants. Using Gaia DR3 astrometric measurements, I
+associate over 3000 YSOCs with 63 local clouds and obtain the average distance
+to each cloud by fitting the YSOC parallax distribution within the cloud. I
+find good agreements with typical scatter of <10% between my new cloud
+distances and previous distance estimates. Unlike cloud distances obtained
+using stellar extinction, my catalog provides distances to the relatively dense
+areas of local clouds, which makes them more appropriate references for
+investigating the physical properties of nearby dense regions.
+\\ ( https://arxiv.org/abs/2303.01053 ,  33309kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01097
+Date: Thu, 2 Mar 2023 09:30:28 GMT   (1220kb,D)
+
+Title: Small-scale dynamo with finite correlation times
+Authors: Yann Carteret, Dominik Schleicher and Jennifer Schober
+Categories: astro-ph.GA physics.plasm-ph
+\\
+  Fluctuation dynamos occur in most turbulent plasmas in astrophysics and are
+the prime candidates for amplifying and maintaining cosmic magnetic fields. A
+few analytical models exist to describe their behaviour but they are based on
+simplifying assumptions. For instance the well-known Kazantsev model assumes an
+incompressible flow that is delta-correlated in time. However, these
+assumptions can break down in the interstellar medium as it is highly
+compressible and the velocity field has a finite correlation time. Using the
+renewing flow method developed by Bhat and Subramanian (2014), we aim to extend
+Kazantsev's results to a more general class of turbulent flows. The cumulative
+effect of both compressibility and finite correlation time over the Kazantsev
+spectrum is studied analytically. We derive an equation for the longitudinal
+two-point magnetic correlation function in real space to first order in the
+correlation time $\tau$ and for an arbitrary degree of compressibility (DOC).
+This generalised Kazantsev equation encapsulates the original Kazantsev
+equation. In the limit of small Strouhal numbers $St \propto \tau$ we use the
+WKB approximation to derive the growth rate and scaling of the magnetic power
+spectrum. We find the result that the Kazantsev spectrum is preserved, i.e.
+$M_k(k)\sim k^{3/2}$. The growth rate is also negligibly affected by the finite
+correlation time; however, it is reduced by the finite magnetic diffusivity,
+and the DOC together.
+\\ ( https://arxiv.org/abs/2303.01097 ,  1220kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01115
+Date: Thu, 2 Mar 2023 09:56:47 GMT   (16655kb,D)
+
+Title: Early results from GLASS-JWST. XX: Unveiling a population of
+  "red-excess'' galaxies in Abell2744 and in the coeval field
+Authors: Benedetta Vulcani (INAF-OaPD), Tommaso Treu, Antonello Calabro, Jacopo
+  Fritz, Bianca Poggianti, Pietro Bergamini, Andrea Bonchi, Kit Boyett, Gabriel
+  Caminha, Marco Castellano, Alan Dressler, Adriano Fontana, Karl Glazebrook,
+  Claudio Grillo, Matthew Malkan, Sara Mascia, Amata Mercurio, Emiliano Merlin,
+  Benjamin Metha, Takahiro Morishita, Themiya Nanayakkara, Diego Paris, Guido
+  Roberts-Borsani, Piero Rosati, Namrata Roy, Paola Santini, Michele Trenti,
+  Eros Vanzella, and Xin Wang
+Categories: astro-ph.GA
+Comments: submitted to ApJL
+\\
+  We combine the superior JWST/NIRCam imaging and MUSE data to characterize the
+properties of galaxies in different environmental conditions in the cluster
+Abell2744 (z=0.3064) and in its immediate surroundings. Our most striking
+result is the discovery of a ``red-excess'' population in F200W-F444W colors
+both in the cluster regions and the field. These galaxies have normal
+F115W-F150W colors, but are up to 0.8 mag redder than red sequence galaxies in
+F200W-F444W. They also have rather blue rest frame B-V colors. Galaxies with
+the largest color deviations are found in the field and at the cluster virial
+radius, suggesting that mechanisms taking place in these regions might be more
+effective in producing these colors. Looking at their morphology, many cluster
+galaxies show signatures consistent with ram pressure stripping, while field
+galaxies have features resembling interactions and mergers. Our hypothesis is
+that these galaxies are characterized by dust enshrouded star formation: a
+JWST/NIRSpec spectrum for one of the galaxies is dominated by a strong PAH at
+3.3mu m, suggestive of dust obscured star formation. Larger spectroscopic
+samples are needed to understand if the color excess is due exclusively to
+dust-obscured star formation, and the role of environment in triggering it.
+\\ ( https://arxiv.org/abs/2303.01115 ,  16655kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01116
+Date: Thu, 2 Mar 2023 09:57:02 GMT   (792kb,D)
+
+Title: Observed UV continuum slopes ($\beta$) of galaxies at $z = 0.40-0.75$ in
+  the GOODS-north field
+Authors: Chayan Mondal, Kanak Saha, Rogier A. Windhorst, Rolf A. Jansen
+Categories: astro-ph.GA
+Comments: Accepted for publication in the Astrophysical Journal
+\\
+  We estimate the UV continuum slope ($\beta$) of 465 galaxies (with
+luminosities of 0.028 $-$ 3.3 $L^{*}_{z=0.5}$) in the Great Observatories
+Origins Survey (GOODS) Northern field in the redshift range $z=0.40 - 0.75$. We
+use two AstroSat/UVIT (N242W, N245M), two HST (F275W, F336W), and a KPNO (U)
+bands to sample the UV continuum slope of selected galaxies between 1215 and
+2600 angstrom. The mean (median) and 1$\sigma$ scatter in the observed $\beta$
+are found to be $-1.33\pm0.07~(-1.32)$ and 0.60 within the considered redshift
+range. We do not find any significant evolution in the mean $\beta$ within our
+redshift window. Our measurements add new data points to the global $\beta$ -
+$z$ relation in the least-explored redshift regime, further reinforcing the
+gradual reddening of galaxy UV continuum with cosmic time. We notice no strong
+consistent trend between $\beta$ and M$_{1500}$ for the entire luminosity range
+$-21$ $< M_{1500} <-15$ mag. Although, the majority of the most luminous
+galaxies (M$_{1500} <-19$ mag) are found to have relatively redder slopes.
+Using UVIT, we detect galaxies as faint as M$_{1500} = -15.6$ mag (i.e., 0.028
+$L^{*}_{z=0.5}$). The faintest galaxies (M$_{1500} > -16$ mag) tend to be
+redder, which indicates they were less actively forming stars during this
+cosmic time interval. Our study highlights the unique capability of UVIT
+near-UV imaging to characterize the rest-frame far-UV properties of galaxies at
+redshift $z \sim 0.5$.
+\\ ( https://arxiv.org/abs/2303.01116 ,  792kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01299
+Date: Thu, 2 Mar 2023 14:25:10 GMT   (335kb)
+
+Title: Excitation of Langmuir waves in the magnetospheres of AGN
+Authors: Z.N. Osmanov
+Categories: astro-ph.GA astro-ph.HE physics.plasm-ph
+Comments: 6 pages, 4 figures
+\\
+  In the paper we study the process of excitation of Langmuir waves in the
+magnetospheres of active galactic nuclei (AGN), by taking a
+general-relativistic expression of the Goldreich-Julian density into account.
+We considered the linearised set of equations which describe dynamics of the
+studied mechanism: the Euler equation, the continuity equation and the Poisson
+equation. After solving the dispersion relation and obtaining the instability
+growth rate, we explored it versus several physical parameters: electron's and
+proton's relativistic factors and the mass and luminosity of AGN, which are
+supposed to be Kerr black holes. We showed that the parametric process of
+energy pumping into the Langmuir waves is very efficient and the electrostatic
+field's amplitude will be exponentially amplifying, which might account for
+pair creation, particle acceleration and plasma heating processes in the nearby
+regions of AGN.
+\\ ( https://arxiv.org/abs/2303.01299 ,  335kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01495
+Date: Thu, 2 Mar 2023 18:56:41 GMT   (10724kb,D)
+
+Title: Detailed shapes of the line-of-sight velocity distributions in massive
+  early-type galaxies from non-parametric spectral models
+Authors: Kianusch Mehrgan, Jens Thomas, Roberto Saglia, Taniya Parikh and Ralf
+  Bender
+Categories: astro-ph.GA
+Comments: Accepted for publication in the Astrophysical Journal
+\\
+  We present the first systematic study of the detailed shapes of the
+line-of-sight velocity distributions (LOSVDs) in nine massive early-type
+galaxies (ETGs) using the novel non-parametric modelling code WINGFIT.
+High-signal spectral observations with MUSE at the VLT allow us to measure
+between 40 and 400 individual LOSVDs in each galaxy at a signal-to-noise level
+better than 100 per spectral bin and to trace the LOSVDs all the way out to the
+highest stellar velocities. We extensively discuss potential LOSVD distortions
+due to template mismatch and strategies to avoid them. Our analysis uncovers a
+plethora of complex, large scale kinematic structures for the shapes of the
+LOSVDs. Most notably, in the centers of all ETGs in our sample, we detect
+faint, broad LOSVD ``wings'' extending the line-of-sight velocities, v_los,
+well beyond 3 sigma to v_los = +- 1000 - 1500 km/s on both sides of the peak of
+the LOSVDs. These wings likely originate from PSF effects and contain velocity
+information about the very central unresolved regions of the galaxies. In
+several galaxies, we detect wings of similar shape also towards the outer parts
+of the MUSE field-of-view. We propose that these wings originate from faint
+halos of loosely bound stars around the ETGs, similar to the cluster-bound
+stellar envelopes found around many brightest cluster galaxies.
+\\ ( https://arxiv.org/abs/2303.01495 ,  10724kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01374 (*cross-listing*)
+Date: Thu, 2 Mar 2023 16:00:16 GMT   (921kb,D)
+
+Title: Raising the observed metallicity floor with a 3D non-LTE analysis of
+  SDSS J102915.14+172927.9
+Authors: C. Lagae, A. M. Amarsi, L. F. Rodr\'iguez D\'iaz, K. Lind, T.
+  Nordlander, T. T. Hansen, A. Heger
+Categories: astro-ph.SR astro-ph.GA
+Comments: 14 pages, 9 figures, Accepted for publication in Astronomy &
+  Astrophysics
+\\
+  Context: The first stars produced the first heavy elements and set the stage
+for the formation of the first galaxies. Accurate chemical abundances of ultra
+metal-poor stars ([Fe/H]<-4) can be used to infer properties of the first
+stars, and thus the formation mechanism for low-mass second generation stars in
+the early universe. Spectroscopic studies have shown that most second
+generation stars are carbon-enhanced with one notable exception SDSS
+J102915.14+172927.9. Aims: We reanalyse the composition of SDSS
+J102915.14+172927.9. Methods: We developed a tailored 3D model atmosphere for
+SDSS J102915.14+172927.9 with the Stagger-code, making use of an improved
+surface gravity estimate based on the Gaia DR3 parallax. This model was used as
+input in the radiative transfer code Balder to compute 3D non-LTE synthetic
+spectra. These spectra were then used to infer abundances for Mg, Si, Ca, Fe
+and Ni, and upper limits on Li, Na and Al. 3D LTE synthetic spectra were
+computed with Scate to infer the abundance of Ti and upper limits on C and N.
+Results: In contrast to earlier works based on 1D non-LTE corrections to 3D LTE
+results, we are able to achieve ionisation balance for Ca I and Ca II when
+employing our consistent 3D non-LTE treatment. Moreover, the elemental
+abundances are systematically higher than those found in earlier works. In
+particular, [Fe/H] increases by 0.57 dex, and the upper limits of C and N
+increase by 0.90 dex and 1.82 dex, respectively. Conclusions: We find that
+Population III progenitors with masses 10-20 M_sun exploding with energy
+E<=3*10^{51} erg can reproduce our 3D non-LTE abundance pattern. Contrary to
+previous work, we obtain higher upper limits on the carbon abundance that are
+``marginally consistent'' with star formation through atomic line cooling, and
+as such, prevent strong conclusions about the formation mechanism of this low
+mass star.
+\\ ( https://arxiv.org/abs/2303.01374 ,  921kb)
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2201.07304
+replaced with revised version Thu, 2 Mar 2023 18:19:24 GMT   (1151kb,D)
+
+Title: Detection of Chemo-Kinematical Structures in Leo I
+Authors: A.G. Alarcon Jara, M. Fellhauer, J. Simon, A. del Pino, S.W. Fu, S.T.
+  Sohn
+Categories: astro-ph.GA
+Comments: 12 pages, accepted by A&A
+\\ ( https://arxiv.org/abs/2201.07304 ,  1151kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2203.08478
+replaced with revised version Thu, 2 Mar 2023 09:41:12 GMT   (1034kb,D)
+
+Title: A binary origin for the first isolated stellar-mass black hole detected
+  with astrometric microlensing
+Authors: Alejandro Vigna-G\'omez and Enrico Ramirez-Ruiz
+Categories: astro-ph.GA astro-ph.HE astro-ph.SR
+Comments: 13 pages, 8 figures, 1 table. Accepted for publication in ApJL
+\\ ( https://arxiv.org/abs/2203.08478 ,  1034kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2208.08843
+replaced with revised version Thu, 2 Mar 2023 16:29:24 GMT   (44kb,D)
+
+Title: Catastrophic Dark Matter Capture
+Authors: Ruth Durrer and Serge Parnovsky
+Categories: astro-ph.GA astro-ph.CO
+Comments: 23 pages 2 figures, version accepted for publication in PRD
+\\ ( https://arxiv.org/abs/2208.08843 ,  44kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2212.00032
+replaced with revised version Thu, 2 Mar 2023 16:31:51 GMT   (20350kb,D)
+
+Title: PHANGS-JWST First Results: Spurring on Star Formation: JWST Reveals
+  Localised Star Formation in a Spiral Arm Spur of NGC 628
+Authors: Thomas G. Williams, Jiayi Sun, Ashley T. Barnes, Eva Schinnerer,
+  Jonathan D. Henshaw, Sharon E. Meidt, Miguel Querejeta, Elizabeth J. Watkins,
+  Frank Bigiel, Guillermo A. Blanc, M\'ed\'eric Boquien, Yixian Cao, M\'elanie
+  Chevance, Oleg V. Egorov, Eric Emsellem, Simon C. O. Glover, Kathryn Grasha,
+  Hamid Hassani, Sarah Jeffreson, Mar\'ia J. Jim\'enez-Donaire, Jaeyeon Kim,
+  Ralf S. Klessen, Kathryn Kreckel, J. M. Diederik Kruijssen, Kirsten L.
+  Larson, Adam K. Leroy, Daizhong Liu, Ismael Pessa, J\'er\^ome Pety, Francesca
+  Pinna, Erik Rosolowsky, Karin M. Sandstrom, Rowan Smith, Mattia C. Sormani,
+  Sophia Stuber, David A. Thilker, Bradley C. Whitmore
+Categories: astro-ph.GA
+Comments: 11 pages, 5 Figures, accepted as part of a PHANGS-JWST Focus Issue to
+  appear in ApJ. Updated to include missing author and published paper
+  references
+DOI: 10.3847/2041-8213/aca674
+\\ ( https://arxiv.org/abs/2212.00032 ,  20350kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.07186
+replaced with revised version Wed, 1 Mar 2023 22:03:19 GMT   (2359kb,D)
+
+Title: ABYSS I: Targeting strategy for APOGEE & BOSS young star survey in
+  SDSS-V
+Authors: Marina Kounkel, Eleonora Zari, Kevin Covey, Andrew Tkachenko, Carlos
+  Rom\'an Z\'u\~niga, Keivan Stassun, Amelia M. Stutz, Guy Stringfellow,
+  Alexandre Roman-Lopes, Jes\'us Hern\'andez, Karla Pe\~na Ram\'irez, Amelia
+  Bayo, Jinyoung Serena Kim, Lyra Cao, Scott J. Wolk, Juna Kollmeier, Ricardo
+  L\'opez-Valdivia, B\'arbara Rojas-Ayala
+Categories: astro-ph.GA astro-ph.SR
+Comments: 18 pages, 12 pages. Accepted to ApJS. Part of SDSS DR18
+\\ ( https://arxiv.org/abs/2301.07186 ,  2359kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.11412
+replaced with revised version Thu, 2 Mar 2023 11:02:35 GMT   (5110kb,D)
+
+Title: Accretion of sub-stellar companions as the origin of chemical abundance
+  inhomogeneities in globular clusters
+Authors: Andrew J. Winter and Cathie J. Clarke
+Categories: astro-ph.GA astro-ph.EP astro-ph.SR
+Comments: 29 pages, 20 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2301.11412 ,  5110kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.07890
+replaced with revised version Thu, 2 Mar 2023 08:57:40 GMT   (22973kb,D)
+
+Title: $\mathrm{morphofit}$: An automated galaxy structural parameters fitting
+  package
+Authors: Luca Tortorelli and Amata Mercurio
+Categories: astro-ph.GA
+Comments: Accepted for publication in Frontiers of Astronomy and Space
+  Sciences, 27 pages, 8 figures
+\\ ( https://arxiv.org/abs/2302.07890 ,  22973kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.14155
+replaced with revised version Wed, 1 Mar 2023 23:01:50 GMT   (6195kb,D)
+
+Title: Discovery of a quiescent galaxy at z=7.3
+Authors: Tobias J. Looser, Francesco D'Eugenio, Roberto Maiolino, Joris
+  Witstok, Lester Sandles, Emma Curtis-Lake, Jacopo Chevallard, Sandro
+  Tacchella, Benjamin D. Johnson, William M. Baker, Katherine A. Suess, Stefano
+  Carniani, Pierre Ferruit, Santiago Arribas, Nina Bonaventura, Andrew J.
+  Bunker, Alex J. Cameron, Stephane Charlot, Mirko Curti, Anna de Graaff,
+  Michael V. Maseda, Tim Rawle, Hans-Walter Rix, Bruno Rodriguez Del Pino,
+  Renske Smit, Hannah \"Ubler, Chris Willott, Stacey Alberts, Eiichi Egami,
+  Daniel J. Eisenstein, Ryan Endsley, Ryan Hausen, Marcia Rieke, Brant
+  Robertson, Irene Shivaei, Christina C. Williams, Kristan Boyett, Zuyi Chen,
+  Zhiyuan Ji, Gareth J. Jones, Nimisha Kumari, Erica Nelson, Michele Perna,
+  Aayush Saxena and Jan Scholtz
+Categories: astro-ph.GA
+\\ ( https://arxiv.org/abs/2302.14155 ,  6195kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00025
+replaced with revised version Thu, 2 Mar 2023 13:28:32 GMT   (3053kb,D)
+
+Title: A variable active galactic nucleus at $z=2.06$ triply-imaged by the
+  galaxy cluster MACS J0035.4-2015
+Authors: Lukas J. Furtak, Ramesh Mainali, Adi Zitrin, Ad\`ele Plat, Seiji
+  Fujimoto, Megan Donahue, Erica J. Nelson, Franz E. Bauer, Ryosuke Uematsu,
+  Gabriel B. Caminha, Felipe Andrade-Santos, Larry D. Bradley, Karina I.
+  Caputi, St\'ephane Charlot, Jacopo Chevallard, Dan Coe, Emma Curtis-Lake,
+  Daniel Espada, Brenda L. Frye, Kirsten K. Knudsen, Anton M. Koekemoer, Kotaro
+  Kohno, Vasily Kokorev, Nicolas Laporte, Minju M. Lee, Brian C. Lemaux,
+  Georgios E. Magdis, Keren Sharon, Daniel P. Stark, Yuanyuan Su, Katherine A.
+  Suess, Yoshihiro Ueda, Hideki Umehata, Alba Vidal-Garc\'ia and John F. Wu
+Categories: astro-ph.GA astro-ph.CO
+Comments: Submitted to MNRAS. Minor edits compared to v1
+\\ ( https://arxiv.org/abs/2303.00025 ,  3053kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2209.05283
+replaced with revised version Thu, 2 Mar 2023 12:12:22 GMT   (1658kb,D)
+
+Title: A UV census of the environments of stripped-envelope supernovae
+Authors: Ning-Chen Sun, Justyn R. Maund and Paul A. Crowther
+Categories: astro-ph.SR astro-ph.GA astro-ph.HE
+Comments: 15 pages, 9 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2209.05283 ,  1658kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2211.11150
+replaced with revised version Thu, 2 Mar 2023 11:59:41 GMT   (300kb)
+
+Title: Comparing hierarchical black hole mergers in star clusters and active
+  galactic nuclei
+Authors: Guo-Peng Li, Da-Bin Lin, and Yong Yuan
+Categories: astro-ph.HE astro-ph.GA
+Comments: 12 pages, 5 figures, 2 tables, accepted for publication in PHYS. REV.
+  D; v2. add Figs. 4 and 5, showing mass-ratios and effective precession
+  parameters, respectively; v3. delete an additional free parameter (maximum
+  generation, $N_{\rm max}^{\rm G}$), replot Fig. 3 using the mergers detected
+  by LIGO-Virgo, and add Yong Yuan as the third author of this manuscript; v4.
+  add more details for SNR
+\\ ( https://arxiv.org/abs/2211.11150 ,  300kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---
+For subscribe options to combined physics archives,
+e-mail To: physics@arxiv.org, Subject: subscribe
+-----------------------------------------------------------------------------
+For help on viewing and making submissions, see http://arxiv.org/help/

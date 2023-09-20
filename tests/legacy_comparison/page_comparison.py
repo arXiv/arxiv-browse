@@ -1,26 +1,41 @@
 """Browse page comparison tests."""
-import archive_config
-from text_comparisons import text_similarity
-from response_comparisons import compare_status
-from html_comparisons import html_similarity, metadata_fields_similarity, \
-    archive_h1_similarity, archive_catchup, archive_search, archive_by_year, \
-    archive_browse, archive_bogus
-from comparison_types import res_comparison_fn, \
-    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict, \
-    html_arg_dict, BadResult
 import argparse
+import gzip
+import json
+import logging
+import os
 import sys
 import traceback
-import os
 from functools import partial
-import multiprocessing_on_dill as mp
-from typing import Callable, Iterator, List, Set, Tuple, Dict, Any
-import gzip
-import logging
-import json
+from typing import Any, Callable, Dict, Iterator, List, Set, Tuple
 
 import requests
 from bs4 import BeautifulSoup
+
+import archive_config
+import multiprocessing_on_dill as mp
+from comparison_types import (
+    BadResult,
+    html_arg_dict,
+    html_comparison_fn,
+    res_arg_dict,
+    res_comparison_fn,
+    text_arg_dict,
+    text_comparison_fn,
+)
+from html_comparisons import (
+    archive_bogus,
+    archive_browse,
+    archive_by_year,
+    archive_catchup,
+    archive_h1_similarity,
+    archive_search,
+    html_similarity,
+    metadata_fields_similarity,
+)
+from response_comparisons import compare_status
+from text_comparisons import text_similarity
+
 
 # BDC34: some how I need this under pipenv to get to browse, not sure why
 sys.path.append('')

@@ -1,0 +1,1867 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00005
+From: Matthew Ho  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (1484kb,D)
+
+Title: Benchmarks and Explanations for Deep Learning Estimates of X-ray Galaxy
+  Cluster Masses
+Authors: Matthew Ho, John Soltis, Arya Farahi, Daisuke Nagai, August Evrard,
+  Michelle Ntampaka
+Categories: astro-ph.CO
+Comments: 13 pages, 9 figures, 3 tables, submitted to MNRAS
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00006
+From: Tiger Lu  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (2351kb,D)
+
+Title: Self-Consistent Spin, Tidal and Dynamical Equations of Motion in the
+  REBOUNDx Framework
+Authors: Tiger Lu, Hanno Rein, Daniel Tamayo, Sam Hadden, Rosemary Mardling,
+  Sarah C. Millholland, Gregory Laughlin
+Categories: astro-ph.EP astro-ph.IM physics.comp-ph
+Comments: Accepted to ApJ. 15 pages, 6 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00008
+From: Adam Dillamore  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (5856kb,D)
+
+Title: A stellar halo walks into a bar: creation of substructure from a smooth
+  distribution function
+Authors: Adam M. Dillamore, Vasily Belokurov, N. Wyn Evans and Elliot Y. Davies
+Categories: astro-ph.GA
+Comments: 11 pages, 11 figures, submitted to MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00009
+From: Mattia Libralato  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:00 GMT   (20066kb,D)
+
+Title: JWST-TST Proper Motions: I. High-Precision NIRISS Calibration and Large
+  Magellanic Cloud Kinematics
+Authors: M. Libralato, A. Bellini, R. P. van der Marel, J. Anderson, S. T.
+  Sohn, L. L. Watkins, L. Alderson, N. Allen, M. Clampin, A. Glidden, J. Goyal,
+  J. Huang, J. Kammerer, N. K. Lewis, Z. Lin, D. Long, D. Louie, R. J.
+  MacDonald, M. Mountain, M. Pe\~na-Guerrero, M. D. Perrin, I. Rebollido, E.
+  Rickman, S. Seager, K. B. Stevenson, J. A. Valenti, D. Valentine, H. R.
+  Wakeford
+Categories: astro-ph.GA astro-ph.IM astro-ph.SR
+Comments: 28 pages, 25 figures, 2 tables. Submitted to ApJ. The effective
+  point-spread-function models and geometric-distortion solutions are already
+  available at the links provided in the manuscript. A preliminary version of
+  the code to use them will be released after the paper is accepted for
+  publication
+DOI: 10.17909/hv07-tg13
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00010
+From: Nora Linn Strotjohann  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:01 GMT   (2173kb,D)
+
+Title: Direct detection of supernova progenitor stars with ZTF and LSST
+Authors: Nora L. Strotjohann, Eran O. Ofek, Avishay Gal-Yam, Jesper Sollerman,
+  Ping Chen, Ofer Yaron, Barak Zackay, Nabeel Rehemtulla, Phillipe Gris, Frank
+  J. Masci, Ben Rusholme, Josiah Purdum
+Categories: astro-ph.SR astro-ph.GA astro-ph.HE
+Comments: Submitted to ApJ. Comments are welcome
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00011
+From: Gabriel-Dominique Marleau  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:01 GMT   (133kb,D)
+Date (revised v2): Thu, 2 Mar 2023 08:21:51 GMT   (133kb,D)
+
+Title: Planetary line-to-accretion luminosity scaling relations: Extrapolating
+  to higher-order hydrogen lines
+Authors: Gabriel-Dominique Marleau and Yuhiko Aoyama
+Categories: astro-ph.EP astro-ph.SR
+Comments: 3 pages, 1 four-panel figure. Published on December 9th, 2022. v1:
+  updated links to published papers, added thanks. Fits of scaling relations
+  available in Tomas Stolker's "species" toolkit
+  (https://species.readthedocs.io). v2: corrected the accidental shuffle of the
+  author names (!)
+Journal-ref: RNAAS (2022) 6, 262
+DOI: 10.3847/2515-5172/acaa34
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00012
+From: Alexandre Emsenhuber  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:01 GMT   (4407kb,D)
+
+Title: Planetary Population Synthesis and the Emergence of Four Classes of
+  Planetary System Architectures
+Authors: Alexandre Emsenhuber, Christoph Mordasini, Remo Burn
+Categories: astro-ph.EP
+Comments: Invited review accepted for publication in EPJ+, Focus Point on
+  Environmental and Multiplicity Effects on Planet Formation by guest editors
+  G. Lodato and C.F. Manara
+Journal-ref: Eur. Phys. J. Plus (2023) 138:181
+DOI: 10.1140/epjp/s13360-023-03784-x
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00013
+From: J\'anos Tak\'atsy  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:02 GMT   (32192kb,D)
+
+Title: What neutron stars tell about the hadron-quark phase transition: a
+  Bayesian study
+Authors: J\'anos Tak\'atsy, P\'eter Kov\'acs, Gy\"orgy Wolf, J\"urgen
+  Schaffner-Bielich
+Categories: astro-ph.HE hep-ph nucl-th
+Comments: 17 pages, 9 figures, submitted to Phys. Rev. D
+License: http://creativecommons.org/licenses/by-sa/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00015
+From: Vladimir Strokov N.  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:03 GMT   (968kb,D)
+
+Title: LISA Constraints on an Intermediate-Mass Black Hole in the Galactic
+  Centre
+Authors: Vladimir Strokov, Giacomo Fragione, Emanuele Berti
+Categories: astro-ph.HE gr-qc
+Comments: 8 pages, 4 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00016
+From: Diane Feuillet  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:03 GMT   (8149kb,D)
+
+Title: The metal-weak Milky Way stellar disk hidden in the
+  Gaia-Sausage-Enceladus debris: the APOGEE DR17 view
+Authors: Sofia Feltzing and Diane Feuillet
+Categories: astro-ph.GA astro-ph.SR
+Comments: 31 pages, 18 figures, submitted to ApJ, comments welcome
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00019
+From: Gabriele Surcis  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:06 GMT   (311kb)
+
+Title: Monitoring of the polarized $H_{2}O$ maser emission around the massive
+  protostars W75N(B)-VLA1 and W75N(B)-VLA2
+Authors: G.Surcis, W.H.T. Vlemmings, C. Goddi, J.M. Torrelles, J.F. G\'omez, A.
+  Rodr\'iguez-Kamenetzky, C. Carrasco-Gonz\'alez, S. Curiel, S.-W. Kim, J.-S.
+  Kim, H.J. van Langevelde
+Categories: astro-ph.SR astro-ph.GA
+Comments: 32 pages, 15 figures, 17 tables, accepted by Astronomy & Astrophysics
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00020
+From: Federico Vincentelli  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:22 GMT   (7508kb)
+
+Title: A shared accretion instability for black holes and neutron stars
+Authors: F. M. Vincentelli, J. Neilsen, A.J. Tetarenko, Y. Cavecchi, N. Castro
+  Segura, S. del Palacio, J. van den Eijnden, G. Vasilopoulos, D. Altamirano,
+  M. Armas Padilla, C. D. Bailyn, T. Belloni, D. J. K. Buisson, V. A. Cuneo, N.
+  Degenaar, C. Knigge, K. S. Long, F. Jimenez-Ibarra, J. Milburn, T. Mu\~noz
+  Darias, M. Ozbey Arabaci, R. Remillard, T. Russell
+Categories: astro-ph.HE
+Comments: Published in Nature. 26 pages, 10 figures. DOI:
+  10.1038/s41586-022-05648-3
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00025
+From: Lukas J. Furtak  <example@example.com>
+Date: Tue, 28 Feb 2023 19:02:04 GMT   (3052kb,D)
+Date (revised v2): Thu, 2 Mar 2023 13:28:32 GMT   (3053kb,D)
+
+Title: A variable active galactic nucleus at $z=2.06$ triply-imaged by the
+  galaxy cluster MACS J0035.4-2015
+Authors: Lukas J. Furtak, Ramesh Mainali, Adi Zitrin, Ad\`ele Plat, Seiji
+  Fujimoto, Megan Donahue, Erica J. Nelson, Franz E. Bauer, Ryosuke Uematsu,
+  Gabriel B. Caminha, Felipe Andrade-Santos, Larry D. Bradley, Karina I.
+  Caputi, St\'ephane Charlot, Jacopo Chevallard, Dan Coe, Emma Curtis-Lake,
+  Daniel Espada, Brenda L. Frye, Kirsten K. Knudsen, Anton M. Koekemoer, Kotaro
+  Kohno, Vasily Kokorev, Nicolas Laporte, Minju M. Lee, Brian C. Lemaux,
+  Georgios E. Magdis, Keren Sharon, Daniel P. Stark, Yuanyuan Su, Katherine A.
+  Suess, Yoshihiro Ueda, Hideki Umehata, Alba Vidal-Garc\'ia and John F. Wu
+Categories: astro-ph.GA astro-ph.CO
+Comments: Submitted to MNRAS. Minor edits compared to v1
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00034
+From: Uddipan Banik  <example@example.com>
+Date: Tue, 28 Feb 2023 19:16:40 GMT   (2200kb,D)
+
+Title: A Comprehensive Perturbative Formalism for Phase Mixing in Perturbed
+  Disks. II. Phase Spirals in an Inhomogeneous Disk Galaxy with a
+  Non-responsive Dark Matter Halo
+Authors: Uddipan Banik, Frank C. van den Bosch and Martin D. Weinberg
+Categories: astro-ph.GA
+Comments: 10 figures, 1 table; Submitted to ApJ
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00038
+From: Daniel B. Thomas  <example@example.com>
+Date: Tue, 28 Feb 2023 19:22:34 GMT   (1124kb,D)
+
+Title: Consistent cosmological structure formation on all scales in
+  relativistic extensions of MOND
+Authors: Daniel B Thomas, Ali Mozaffari and Tom Zlosnik
+Categories: astro-ph.CO gr-qc
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00044
+From: Ilaria Lonoce  <example@example.com>
+Date: Tue, 28 Feb 2023 19:32:33 GMT   (10216kb,D)
+
+Title: The Initial Mass Function and Other Stellar Properties Across the Core
+  of the Hydra I Cluster
+Authors: Ilaria Lonoce, Wendy Freedman and Anja Feldmeier-Krause
+Categories: astro-ph.GA
+Comments: 32 pages, 18 figures. Accepted for publication in ApJ
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00056
+From: Abel Rosales-Guzman  <example@example.com>
+Date: Tue, 28 Feb 2023 19:53:42 GMT   (5689kb,D)
+
+Title: The K-band highest-resolution images of the Mira star R Car with
+  GRAVITY-VLTI
+Authors: A. Rosales-Guzman, J. Sanchez-Bermudez, C. Paladini, A. Alberdi, W.
+  Brandner, E. Cannon, G. Gonz\'alez-Tor\`a, X. Haubois, Th. Henning, P.
+  Kervella, M. Montarges, G. Perrin, R. Sch\"odel, M. Wittkowski
+Categories: astro-ph.SR
+Comments: Accepted to be published by A&A, 20 pages, 21 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00060
+From: Francisco Cesar De Geronimo Dr.  <example@example.com>
+Date: Tue, 28 Feb 2023 20:04:27 GMT   (232kb)
+
+Title: Uncertainties in the 12C+12C reaction rate and their impact on the
+  composition of ultra-massive WDs
+Authors: F. C. De Ger\'onimo, M. M. Miller Bertolami, M. Catelan, and T.
+  Battich
+Categories: astro-ph.SR
+Comments: Poster presented at the 22nd European Workshop on White Dwarfs. No
+  proceedings were published at the conference
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00062
+From: Audrey Chatain Dr  <example@example.com>
+Date: Tue, 28 Feb 2023 20:05:58 GMT   (3012kb)
+
+Title: Interaction dust-plasma in Titan's ionosphere: feedbacks on the gas
+  phase composition
+Authors: Audrey Chatain, Nathalie Carrasco, Ludovic Vettier and Olivier
+  Guaitella
+Categories: astro-ph.EP physics.plasm-ph physics.space-ph
+Comments: This paper has been accepted in Icarus (February 2023). The current
+  version in arXiv is the submitted version
+License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00063
+From: Alexandra Doyle  <example@example.com>
+Date: Tue, 28 Feb 2023 20:06:31 GMT   (2925kb,D)
+
+Title: New chondritic bodies identified in eight oxygen-bearing white dwarfs
+Authors: Alexandra E. Doyle, Beth L. Klein, Patrick Dufour, Carl Melis, B.
+  Zuckerman, Siyi Xu, Alycia J. Weinberger, Isabella L. Trierweiler, Nathaniel
+  N. Monson, Michael A. Jura and Edward D. Young
+Categories: astro-ph.SR astro-ph.EP
+Comments: Accepted for publication in ApJ. 7 Figures, 7 Tables
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00084
+From: Alexandre Revol  <example@example.com>
+Date: Tue, 28 Feb 2023 21:02:21 GMT   (22008kb,D)
+
+Title: Spin evolution of Venus-like planets subjected to gravitational and
+  thermal tides
+Authors: Alexandre Revol, \'Emeline Bolmont, Gabriel Tobie, Caroline Dumoulin,
+  Yann Musseau, St\'ephane Mathis, Antoine Strugarek, Allan-Sacha Brun
+Categories: astro-ph.EP
+Comments: 19 pages, 16 figues
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00097
+From: Sanjiv K. Tiwari  <example@example.com>
+Date: Tue, 28 Feb 2023 21:48:43 GMT   (2420kb)
+
+Title: Prospective Implications of EUV Coronal Plumes for Magnetic-network
+  Genesis of Coronal Heating, Coronal-hole Solar Wind, and Solar-wind
+  Magnetic-field Switchbacks
+Authors: Ronald L. Moore, Sanjiv K. Tiwari, Navdeep K. Panesar, Alphonse C.
+  Sterling
+Categories: astro-ph.SR
+Comments: 22 pages, 2 figures, to appear in ApJ Letters
+License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00120
+From: Suzanne Madden  <example@example.com>
+Date: Tue, 28 Feb 2023 22:44:25 GMT   (1005kb,D)
+
+Title: The LMC+ SOFIA Legacy Program
+Authors: Suzanne C. Madden and The LMC+ Consortium
+Categories: astro-ph.GA
+Comments: Proceedings of the 7th Chile-Cologne-Bonn-Symposium "Physics and
+  Chemistry of Star Formation, The Dynamical ISM Across Time and Spatial
+  Scales", Puerto-Varas Chile, September 26-30, 2022 V. Ossenkopf-Okada, R.
+  Schaaf, I. Breloy (eds.)
+Journal-ref: Publisher: Universit\"ats- und Stadtbibliothek K\"oln (USB) ISBN:
+  978-3-00-074740-3 DOI: 10.18716/kups/64624 Publication date: February 19,
+  2023
+DOI: 10.18716/kups/64624
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00153
+From: Saavidra Perera  <example@example.com>
+Date: Wed, 1 Mar 2023 00:55:44 GMT   (4023kb,D)
+
+Title: SHIMM: A Versatile Seeing Monitor for Astronomy
+Authors: Saavidra Perera, Richard W. Wilson, Tim Butterley, James Osborn, Ollie
+  J. D. Farley, Douglas J. Laidlaw
+Categories: astro-ph.IM
+Comments: Published in MNRAS
+Journal-ref: MNRAS, Volume 520, 2023, Pages 5475-5486
+DOI: 10.1093/mnras/stad339
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00183
+From: Yu-Ting Kuang  <example@example.com>
+Date: Wed, 1 Mar 2023 02:20:04 GMT   (62kb,D)
+
+Title: Pulsars as candidates of LHAASO sources J2226+6057, J1908+0621 and
+  J1825-1326: The leptonic origin
+Authors: Zhe Chang, Yu-Ting Kuang, Xukun Zhang, Jing-Zhi Zhou
+Categories: astro-ph.HE hep-ph
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00194
+From: David S. N. Rupke  <example@example.com>
+Date: Wed, 1 Mar 2023 03:04:22 GMT   (2363kb,D)
+
+Title: The Ionization and Dynamics of the Makani Galactic Wind
+Authors: David S. N. Rupke (1), Alison L. Coil (2), Serena Perrotta (2), Julie
+  D. Davis (3), Aleksandar M. Diamond-Stanic (4), James E. Geach (5), Ryan C.
+  Hickox (6), John Moustakas (7), Grayson C. Petter (6), Gregory H. Rudnick
+  (8), Paul H. Sell (9), Christy A. Tremonti (3) and Kelly E. Whalen (6) ((1)
+  Rhodes College, (2) San Diego, (3) Wisconsin, (4) Bates College, (5)
+  Hertfordshire, (6) Dartmouth, (7) Siena College, (8) Kansas, (9) Florida)
+Categories: astro-ph.GA
+Comments: ApJ, in press
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00221
+From: Quanzhi Ye  <example@example.com>
+Date: Wed, 1 Mar 2023 03:59:30 GMT   (1535kb,D)
+
+Title: Comet P/2021 HS (PANSTARRS) and the Challenge of Detecting Low-Activity
+  Comets
+Authors: Quanzhi Ye, Michael S. P. Kelley, James M. Bauer, Tony L. Farnham,
+  Dennis Bodewits, Luca Buzzi, Robert Weryk, Frank J. Masci, Michael S.
+  Medford, Reed Riddle, Avery Wold
+Categories: astro-ph.EP
+Comments: PSJ in press
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00291
+From: Montserrat Villar-Martin  <example@example.com>
+Date: Wed, 1 Mar 2023 07:33:40 GMT   (892kb,D)
+
+Title: Limited impact of jet induced feedback in the multi-phase nuclear
+  interstellar medium of 4C12.50
+Authors: M. Villar-Mart\'in, N. Castro-Rodr\'iguez, M. Pereira Santaella, I.
+  Lamperti, C. Tadhunter, B. Emonts, L. Colina, A. Alonso Herrero, A.
+  Cabrera-Lavers, E. Bellocchi
+Categories: astro-ph.GA
+Comments: Accepted for publication in A&A,18 pages, 13 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00306
+From: Kristan Boyett  <example@example.com>
+Date: Wed, 1 Mar 2023 08:11:22 GMT   (5555kb,D)
+
+Title: A massive interacting galaxy 525 million years after the Big Bang
+Authors: Kristan Boyett, Michele Trenti, Nicha Leethochawalit, Antonello
+  Calabr\'o, Benjamin Metha, Guido Roberts-Borsani, Nicol\'o Dalmasso, Lilan
+  Yang, Paola Santini, Tommaso Treu, Tucker Jones, Alaina Henry, Charlotte A.
+  Mason, Takahiro Morishita, Themiya Nanayakkara, Namrata Roy, Xin Wang,
+  Adriano Fontana, Emiliano Merlin, Marco Castellano, Diego Paris, Marusa
+  Bradac, Danilo Marchesini, Sara Mascia, Laura Pentericci, Eros Vanzella and
+  Benedetta Vulcani
+Categories: astro-ph.GA
+Comments: 52 pages, 10 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00339
+From: Ying Tan  <example@example.com>
+Date: Wed, 1 Mar 2023 09:06:27 GMT   (540kb)
+
+Title: In-orbit Performance of ME onboard Insight-HXMT in the first 5 years
+Authors: Ying Tan (1), Xuelei Cao (1), Weichun Jiang (1), Xiaobo Li (1), Bin
+  Meng (1), Wanchang Zhang (1), Sheng Yang (1), Tao Luo (1), Yudong Gu (1),
+  Liang Sun (1), Xiaojing Liu (1), Yuanyuan Du (1), Jiawei Yang (1), Yanjun Xu
+  (1), Jinyuan Liao (1), Yupeng Xu (1), Fangjun Lu (1), Liming Song (1) and
+  Shuangnan Zhang (1)
+Categories: astro-ph.IM
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00360
+From: Jinyuan Liao  <example@example.com>
+Date: Wed, 1 Mar 2023 09:38:41 GMT   (3081kb,D)
+
+Title: The Long-term Monitoring Results of Insight-HXMT in the First 4 Yr
+  Galactic Plane Scanning Survey
+Authors: Chen Wang, Jin-Yuan Liao, Ju Guan, Yuan Liu, Cheng-Kui Li, Na Sai, Qi
+  Luo, Jing Jin, Yi Nang and Shuang-Nan Zhang
+Categories: astro-ph.HE
+Comments: 43 pages, 26 figures, accepted for publication in ApJS
+License: http://creativecommons.org/licenses/by-sa/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00366
+From: David O'Ryan Mr  <example@example.com>
+Date: Wed, 1 Mar 2023 09:48:29 GMT   (3685kb,D)
+
+Title: Harnessing the Hubble Space Telescope Archives: A Catalogue of 21,926
+  Interacting Galaxies
+Authors: David O'Ryan, Bruno Mer\'in, Brooke D. Simmons, Ant\'onia Vojtekov\'a,
+  Anna Anku, Mike Walmsley, Izzy L. Garland, Tobias G\'eron, William Keel,
+  Sandor Kruk, Chris J. Lintott, Kameswara Bharadwaj Mantha, Karen L. Masters,
+  Jan Reerink, Rebecca J. Smethurst, Matthew R. Thorne
+Categories: astro-ph.GA astro-ph.IM
+Comments: 29 pages, 17 figures, 4 tables, accepted for publication in ApJ
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00370
+From: Peng Zhang  <example@example.com>
+Date: Wed, 1 Mar 2023 09:51:18 GMT   (16432kb,D)
+Date (revised v2): Thu, 2 Mar 2023 17:32:08 GMT   (16430kb,D)
+
+Title: Application of Deep Learning Methods for Distinguishing Gamma-Ray Bursts
+  from Fermi/GBM TTE Data
+Authors: Peng Zhang, Bing Li, RenZhou Gui, Shaolin Xiong, Ze-Cheng Zou,
+  Xianggao Wang, Xiaobo Li, Ce Cai, Yi Zhao, Yanqiu Zhang, Wangchen Xue, Chao
+  Zheng, Hongyu Zhao
+Categories: astro-ph.HE astro-ph.IM
+Comments: 42 pages,12 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00384
+From: Yuren Zhou  <example@example.com>
+Date: Wed, 1 Mar 2023 10:11:11 GMT   (651kb,D)
+
+Title: Misaligned gas accretion as a formation pathway of S0 galaxies
+Authors: Yuren Zhou, Yanmei Chen, Yong Shi, Qiusheng Gu, Junfeng Wang and
+  Dmitry Bizyaev
+Categories: astro-ph.GA
+Comments: 7 pages, 6 figures, submitted to MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00397
+From: Su Wang  <example@example.com>
+Date: Wed, 1 Mar 2023 10:36:16 GMT   (1935kb)
+
+Title: Dynamical Evolution of Closely Packed Multiple Planetary Systems Subject
+  to Atmospheric Mass-Loss
+Authors: S. Wang and D. N. C. Lin
+Categories: astro-ph.EP
+Comments: 21 pages, 13 figures, accepted for publication in AJ
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00410
+From: Alice Shapley  <example@example.com>
+Date: Wed, 1 Mar 2023 11:00:51 GMT   (1478kb,D)
+
+Title: JWST/NIRSpec Measurements of the Relationships Between Nebular
+  Emission-line Ratios and Stellar Mass at z~3-6
+Authors: Alice E. Shapley, Naveen A. Reddy, Ryan L. Sanders, Michael W.
+  Topping, Gabriel B. Brammer
+Categories: astro-ph.GA
+Comments: 8 pages, 4 figures, submitted to ApJL
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00412
+From: Fabian Leuschner  <example@example.com>
+Date: Wed, 1 Mar 2023 11:08:55 GMT   (580kb,D)
+
+Title: Validating Monte Carlo simulations for an analysis chain in H.E.S.S
+Authors: Fabian Leuschner (1), Johannes Sch\"afer (2), Simon Steinmassl (3),
+  Tim Lukas Holch (4), Konrad Bernl\"ohr (3), Stefan Funk (2), Jim Hinton (3),
+  Stefan Ohm (4), Gerd P\"uhlhofer (1) ((1) Institut f\"ur Astronomie und
+  Astrophysik T\"ubingen, Eberhard Karls Universit\"at T\"ubingen (IAAT), (2)
+  Erlangen Centre for Astroparticle Physics, Friedrich-Alexander-Universit\"at
+  Erlangen-N\"urnberg (ECAP), (3) Max-Planck-Institut f\"ur Kernphysik (MPIK),
+  (4) Deutsches Elektronen-Synchrotron (DESY))
+Categories: astro-ph.IM astro-ph.HE
+Comments: 8 pages, 4 figures, 1 table. Accepted as Proceeding of the 7th
+  Heidelberg International Symposium on High-Energy Gamma-Ray Astronomy
+  (Gamma2022)
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00441
+From: Yingzhong Xu  <example@example.com>
+Date: Wed, 1 Mar 2023 12:00:17 GMT   (1088kb,D)
+
+Title: On the Satellite Plane Problem
+Authors: Yingzhong Xu, Xi Kang and Noam I. Libeskind
+Categories: astro-ph.GA
+Comments: 11pages, 8 figures. submitted to ApJ
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00453
+From: Oliver Pfuhl  <example@example.com>
+Date: Wed, 1 Mar 2023 12:22:43 GMT   (2520kb,D)
+
+Title: Advances in Optical / Infrared Interferometry
+Authors: Frank Eisenhauer, John D. Monnier and Oliver Pfuhl
+Categories: astro-ph.IM astro-ph.GA astro-ph.SR
+Comments: 50 pages, 14 figures, to be published in Annual Review of Astronomy
+  and Astrophysics
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00467
+From: Ignacio Negueruela  <example@example.com>
+Date: Wed, 1 Mar 2023 12:49:11 GMT   (613kb)
+
+Title: Gaia colour-magnitude diagrams of young open clusters: Identification in
+  the UBC catalogue and a comparison of manual and automated analysis
+Authors: Ignacio Negueruela (Alicante), Abel de Burgos (IAC)
+Categories: astro-ph.SR astro-ph.IM
+Comments: Accepted for publication in A&A
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00468
+From: Jonathan Squire  <example@example.com>
+Date: Mon, 20 Feb 2023 19:00:04 GMT   (2252kb,D)
+
+Title: Pressure anisotropy and viscous heating in weakly collisional plasma
+  turbulence
+Authors: Jonathan Squire and Matthew W Kunz and Lev Arzamasskiy and Zade
+  Johnston and Eliot Quataert and Alexander A Schekochihin
+Categories: astro-ph.HE astro-ph.SR physics.plasm-ph
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00481
+From: Xiang Ma  <example@example.com>
+Date: Wed, 1 Mar 2023 13:11:36 GMT   (389kb)
+
+Title: A detailed view of low-frequency quasi-periodic oscillation in the
+  broadband 0.2-200 keV with Insight-HXMT and NICER
+Authors: X. Ma, L. Zhang, L. Tao, Q.C. Bu, J. L. Qu, S.N. Zhang, D.K. Zhou, Y.
+  Huang, S.M. Jia, L.M. Song, S. Zhang, M.Y. Ge, H.X. Liu, Z.X. Yang, W. Yu, E.
+  S. Yorgancioglu
+Categories: astro-ph.HE
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00489
+From: Nat\'alia Rodrigues  <example@example.com>
+Date: Wed, 1 Mar 2023 13:25:09 GMT   (4804kb,D)
+
+Title: The miniJPAS survey quasar selection II: Machine learning classification
+  with photometric measurements and uncertainties
+Authors: Nat\'alia V.N. Rodrigues, L. Raul Abramo, Carolina Queiroz, Gin\'es
+  Mart\'inez-Solaeche, Ignasi P\'erez-R\`afols, Silvia Bonoli, Jon\'as
+  Chaves-Montero, Matthew M. Pieri, Rosa M. Gonz\'alez Delgado, Sean S.
+  Morrison, Valerio Marra, Isabel M\'arquez, A. Hern\'an-Caballero, L.A.
+  D\'iaz-Garc\'ia, Narciso Ben\'itez, A. Javier Cenarro, Renato A. Dupke,
+  Alessandro Ederoclite, Carlos L\'opez-Sanjuan, Antonio Mar\'in-Franch,
+  Claudia Mendes de Oliveira, Mariano Moles, Laerte Sodr\'e Jr., Jes\'us
+  Varela, H\'ector V\'azquez Rami\'o, Keith Taylor
+Categories: astro-ph.GA astro-ph.CO
+Comments: 16 pages, 15 figures, published by MNRAS
+Journal-ref: Monthly Notices of the Royal Astronomical Society, 2023, 520,
+  3494-3509
+DOI: 10.1093/mnras/stac2836
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00508
+From: Jeff Riley  <example@example.com>
+Date: Tue, 28 Feb 2023 04:42:29 GMT   (2444kb,D)
+
+Title: Probing cosmic history with merging compact binaries
+Authors: Jeff Riley and Ilya Mandel
+Categories: astro-ph.SR astro-ph.CO astro-ph.GA astro-ph.HE astro-ph.IM gr-qc
+Comments: 16 pages, 3 tables, 8 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00518
+From: Steven Hale  <example@example.com>
+Date: Wed, 1 Mar 2023 13:49:08 GMT   (1325kb,D)
+
+Title: Detector bandwidth and polarisation switching rates: spectrophotometric
+  observations of the Sun by the Birmingham Solar Oscillations Network (BiSON)
+Authors: S. J. Hale, W. J. Chaplin, G. R. Davies, Y. P. Elsworth, R. Howe
+Categories: astro-ph.IM astro-ph.SR
+Comments: 6 pages, 9 figures, 1 table. Accepted by RAS Techniques and
+  Instruments: 2023 March 1
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00537
+From: Da-Li Zhang  <example@example.com>
+Date: Wed, 1 Mar 2023 14:25:30 GMT   (2596kb)
+
+Title: The performance of SiPM-based gamma-ray detector (GRD) of GECAM-C
+Authors: Dali Zhang, Chao Zheng, Jiacong Liu, Zhenghua An, Chenwei Wang,
+  Xiangyang Wen, Xinqiao Li, Xilei Sun, Ke Gong, Yaqing Liu, Xiaojing Liu,
+  Sheng Yang, Wenxi Peng, Rui Qiao, Dongya Guo, Peiyi Feng, Yanqiu Zhang,
+  Wangchen Xue, Wenjun Tan, Ce Cai, Shuo Xiao, Qibin Yi, Yanbing Xu, Min Gao,
+  Jinzhou Wang, Dongjie Hou, Yue Huang, Xiaoyun Zhao, Xiang Ma, Ping Wang, Jin
+  Wang, Xiaobo Li, Peng Zhang, Zhen Zhang, Yanguo Li, Hui Wang, Xiaohua Liang,
+  Yuxi Wang, Bing Li, Jianying Ye, Shijie Zheng, Liming Song, Fan Zhang, Gang
+  Chen, Shaolin Xiong
+Categories: astro-ph.IM physics.ins-det
+Comments: 18 pages, 16 figures
+License: http://creativecommons.org/licenses/by-nc-nd/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00540
+From: Manika Singla  <example@example.com>
+Date: Wed, 1 Mar 2023 14:29:13 GMT   (7062kb,D)
+
+Title: New models of reflection spectra for terrestrial exoplanets: Present and
+  prebiotic Earth orbiting around stars of different spectral types
+Authors: Manika Singla, Sujan Sengupta
+Categories: astro-ph.EP
+Comments: Accepted for publication in New Astronomy Journal, 51 pages, 17
+  figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00559
+From: Yongmin Yoon  <example@example.com>
+Date: Wed, 1 Mar 2023 15:01:10 GMT   (4692kb,D)
+
+Title: Impact of Galaxy Mergers on Stellar Population Profiles of Early-type
+  Galaxies
+Authors: Yongmin Yoon, Jongwan Ko, Jae-Woo Kim
+Categories: astro-ph.GA
+Comments: 22 pages, 14 figures, 1 table, accepted for publication in the ApJ
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00584
+From: Yahya Nasolo  <example@example.com>
+Date: Wed, 1 Mar 2023 15:26:13 GMT   (167kb)
+
+Title: A Search for Chemical Anomalies of Seven A-types Stars
+Authors: Yahya Nasolo and \c{S}eyma \c{C}al{\i}\c{s}kan
+Categories: astro-ph.SR
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00598
+From: Lisa Chmyreva  <example@example.com>
+Date: Wed, 1 Mar 2023 15:44:11 GMT   (1423kb,D)
+
+Title: On the Possibility of Direct Detection of the Emission of Microlens
+  MOA-2011-BLG-191/OGLE-2011-BLG-0462 -- a Probable Black Hole
+Authors: L.Chmyreva, G.M.Beskin
+Categories: astro-ph.HE astro-ph.GA astro-ph.SR
+Journal-ref: 2022AstBu..77..223C
+DOI: 10.1134/S199034132203004X
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00600
+From: Theodoros Papanikolaou  <example@example.com>
+Date: Wed, 1 Mar 2023 15:47:11 GMT   (349kb)
+
+Title: The $H_0$ tension alleviated through ultra-light primordial black holes:
+  an information insight through gravitational waves
+Authors: Theodoros Papanikolaou
+Categories: astro-ph.CO hep-th
+Comments: Contribution to the Corfu Summer Institute 2022 "School and Workshops
+  on Elementary Particle Physics and Gravity", 28 August - 1 October, 2022,
+  Corfu, Greece
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00603
+From: Sebastiano Daniel Maximilian von Fellenberg  <example@example.com>
+Date: Wed, 1 Mar 2023 15:52:49 GMT   (3765kb,D)
+
+Title: Radio jet precession in M81*
+Authors: S.D. von Fellenberg, M. Janssen, J. Davelaar, M. Zaja\v{c}ek, S.
+  Britzen, H. Falcke, E. K\"ording, E. Ros
+Categories: astro-ph.HE astro-ph.GA
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00624
+From: Christian Magliano  <example@example.com>
+Date: Wed, 1 Mar 2023 16:26:01 GMT   (12844kb,D)
+
+Title: The TESS Triple-9 Catalog II: a new set of 999 uniformly-vetted
+  exoplanet candidates
+Authors: Christian Magliano, Veselin Kostov, Luca Cacciapuoti, Giovanni Covone,
+  Laura Inno, Stefano Fiscale, Marc Kuchner, Elisa V. Quintana, Ryan Salik,
+  Vito Saggese, John M. Yablonsky, Aline U. Fornear, Michiharu Hyogo, Marco Z.
+  Di Fraia, Hugo A. Durantini Luca, Julien S. de Lambilly, Fabrizio Oliva,
+  Isabella Pagano, Riccardo M. Ienco, Lucas T. de Lima, Marc
+  Andr\'es-Carcasona, Francesco Gallo, Sovan Acharya
+Categories: astro-ph.EP
+Comments: 17 pages, 11 figures, 5 tables. Accepted for publication on MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00626
+From: Joe Grundy  <example@example.com>
+Date: Wed, 1 Mar 2023 16:27:51 GMT   (23485kb,D)
+
+Title: WALLABY Pre-Pilot Survey: Radio Continuum Properties of the Eridanus
+  Supergroup
+Authors: J. A. Grundy, O. I. Wong, K. Lee-Waddell, N. Seymour, B.-Q. For, C.
+  Murugeshan, B. S. Koribalski, J. P. Madrid, J. Rhee, T. Westmeier
+Categories: astro-ph.GA
+Comments: 26 pages, 14 figures, Accepted for publication at PASA 23/2/2023,
+  Full catalogues and underlying data available at:
+  https://doi.org/10.25919/8ga8-0n09
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00639
+From: Xin Liu  <example@example.com>
+Date: Wed, 1 Mar 2023 16:41:57 GMT   (3610kb,D)
+
+Title: Numerical Discreteness Errors in Multi-Species Cosmological N-body
+  Simulations
+Authors: Xin Liu, J.D. Emberson, Michael Buehlmann, Nicholas Frontiere, Salman
+  Habib
+Categories: astro-ph.CO
+Comments: 17 pages, 12 figures, submitted to MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00656
+From: Oliver Bartlett  <example@example.com>
+Date: Wed, 1 Mar 2023 16:56:50 GMT   (12927kb,D)
+
+Title: Noise reduction on single-shot images using an autoencoder
+Authors: Oliver. J. Bartlett, David. M. Benoit, Kevin. A. Pimbblet, Brooke
+  Simmons, Laura Hunt
+Categories: astro-ph.IM astro-ph.GA
+Comments: 13 pages, 6 figures, 6 tables, Accepted for publication in MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00659
+From: Edward Bryant  <example@example.com>
+Date: Wed, 1 Mar 2023 16:58:01 GMT   (1021kb,D)
+
+Title: The occurrence rate of giant planets orbiting low-mass stars with TESS
+Authors: Edward M Bryant, Daniel Bayliss, Vincent Van Eylen
+Categories: astro-ph.EP
+Comments: 20 pages, 14 figures. Accepted for publication in MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00670
+From: Alexios Liakos  <example@example.com>
+Date: Wed, 1 Mar 2023 17:07:20 GMT   (4343kb)
+
+Title: Lunar impact flash results and space surveillance activities at Kryoneri
+  Observatory
+Authors: Alexios Liakos, Alceste Z. Bonanos, Emmanouil Xilouris, Detlef
+  Koschny, Panayotis Boumis, Ioannis Bellas-Velidis, Richard Moissl,
+  Athanassios Maroussis, Spyros Basilakos, Charalambos Kontoes
+Categories: astro-ph.EP astro-ph.IM
+Comments: 14 pages, 19 figures. Proceedings of the 2nd NEO and Debris Detection
+  Conference, Darmstadt, Germany, 24-26 January 2023
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00684
+From: Michael Sarkis  <example@example.com>
+Date: Wed, 1 Mar 2023 17:30:37 GMT   (642kb,D)
+
+Title: A radio-frequency search for WIMPs in RXC J0225.1-2928
+Authors: Michael Sarkis, Geoff Beck and Natasha Lavis
+Categories: astro-ph.HE astro-ph.CO
+Comments: 4 pages, 2 figures, to be published in LHEP Special Issue on
+  Neutrinos and Dark Matter-2022
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00687
+From: Chao Zheng  <example@example.com>
+Date: Wed, 1 Mar 2023 17:33:16 GMT   (4230kb,D)
+
+Title: Ground calibration of Gamma-Ray Detectors of GECAM-C
+Authors: Chao Zheng, Zheng-Hua An, Wen-Xi Peng, Da-Li Zhang, Shao-Lin Xiong,
+  Rui. Qiao, Yan-Qiu Zhang, Wang-Chen Xue, Jia-Cong Liu, Pei-Yi Feng, Ce. Cai,
+  Min Gao, Ke Gong, Dong-Ya Guo, Dong-Jie Hou, Gang Li, Xin-Qiao Li, Yan-Guo
+  Li, Mao-Shun Li, Xiao-Hua Liang, Ya-Qing Liu, Xiao-Jing Liu, Li-Ming Song,
+  Xi-Lei Sun, Wen-Jun Tan, Chen-Wei Wang, Hui Wang, Jin-Zhou Wang, Xiang-Yang
+  Wen, Shuo Xiao, Yan-Bing Xu, Sheng Yang, Qi-Bing Yi, Fan Zhang, Peng Zhang,
+  Zhen Zhang, Yi Zhao, Xing Zhou
+Categories: astro-ph.IM physics.ins-det
+Comments: preliminary version, will be updated soon
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00698
+From: Zhang Yanqiu  <example@example.com>
+Date: Wed, 1 Mar 2023 17:46:22 GMT   (7489kb,D)
+
+Title: Cross calibration of gamma-ray detectors (GRD) of GECAM-C
+Authors: Yan-Qiu Zhang, Shao-Lin Xiong, Rui Qiao, Dong-Ya Guo, Wen-Xi Peng,
+  Xin-Qiao Li, Wang-Chen Xue, Chao Zheng, Jia-Cong Liu, Wen-Jun Tan, Chen-Wei
+  Wang, Peng Zhang, Ping Wang, Ce Cai, Shuo Xiao, Yue Huang, Pei-Yi Feng,
+  Xiao-Bo Li, Li-Ming Song, Qi-Bin Yi, Yi Zhao, Zhi-Wei Guo, Jian-Jian He,
+  Chao-Yang Li, Ya-Qing Liu, Ke Gong, Yan-Qi Du, Xiao-Jing Liu, Sheng-Lun Xie,
+  Guo-Ying Zhao, Xiao-Yun Zhao, Xiao-Lu Zhang, Zhen Zhang, Shi-Jie Zheng, Jin
+  Wang, Xiang-Yang Wen, Zheng-Hua An, Da-Li Zhang, Min Gao, Xi-Lei Sun,
+  Xiao-Hua Liang, Sheng Yang, Jin-Zhou Wang, Gang Chen, Fan Zhang
+Categories: astro-ph.IM astro-ph.HE
+Comments: preliminary version, will be updated soon
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00734
+From: Caroline Huang  <example@example.com>
+Date: Wed, 1 Mar 2023 18:48:50 GMT   (1633kb,D)
+
+Title: Shocks and Photoionization of the Inner 650 AU Jet of the Interacting
+  Binary Star R Aquarii from Multiwavelength Hubble Space Telescope
+  Observations
+Authors: Caroline D. Huang, Margarita Karovska, Warren Hack, John C. Raymond,
+  Rodolfo Montez Jr., and Vinay L. Kashyap
+Categories: astro-ph.SR astro-ph.HE
+Comments: 22 pages, 10 figures, accepted for publication in ApJ
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00746
+From: Samuel Goldstein  <example@example.com>
+Date: Wed, 1 Mar 2023 18:59:00 GMT   (8664kb,D)
+
+Title: Canonical Hubble-Tension-Resolving Early Dark Energy Cosmologies are
+  Inconsistent with the Lyman-$\alpha$ Forest
+Authors: Samuel Goldstein, J. Colin Hill, Vid Ir\v{s}i\v{c}, Blake D. Sherwin
+Categories: astro-ph.CO hep-ph
+Comments: 6 pages, 2 figures; supplemental material: 6 pages, 7 figures
+License: http://creativecommons.org/publicdomain/zero/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00751
+From: Ching-Yao Tang  <example@example.com>
+Date: Wed, 1 Mar 2023 18:59:59 GMT   (8081kb,D)
+
+Title: Clumpy Structures within the Turbulent Primordial Cloud
+Authors: Ching-Yao Tang and Ke-Jung Chen
+Categories: astro-ph.GA astro-ph.CO
+Comments: All comments are welcome. Submitted to ApJ. (16 pages, 10 figures, 2
+  tables)
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00763
+From: Jingyao Zhu  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (3197kb,D)
+
+Title: Census of Gaseous Satellites around Local Spiral Galaxies
+Authors: Jingyao Zhu and Mary E Putman
+Categories: astro-ph.GA
+Comments: 18 pages, 13 figures, accepted by MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00765
+From: Nick Ekanger  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (1726kb,D)
+
+Title: Nucleosynthesis in outflows of compact objects and detection prospects
+  of associated kilonovae
+Authors: Nick Ekanger, Mukul Bhattacharya, Shunsaku Horiuchi
+Categories: astro-ph.HE
+Comments: 14 pages, 5+3 figures, 1 table. Comments welcome
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00766
+From: Chi An Dong-P\'aez  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (1799kb,D)
+
+Title: Black hole mergers as tracers of spinning massive black hole and galaxy
+  populations in the Obelisk simulation
+Authors: C. A. Dong-P\'aez, M. Volonteri, R. S. Beckmann, Y. Dubois, M.
+  Trebitsch, A. Mangiagli, S. Vergani, N. Webb
+Categories: astro-ph.GA astro-ph.HE
+Comments: 13 pages, 9 figures, submitted to A&A
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00768
+From: Margot Leemker  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:03 GMT   (5650kb,D)
+
+Title: A major asymmetric ice trap in a planet-forming disk IV. Nitric oxide
+  gas and a lack of CN tracing sublimating ices and a C/O ratio $< 1$
+Authors: M. Leemker, A. S. Booth, E. F. van Dishoeck, N. van der Marel, B.
+  Tabone, N. F. W. Ligterink, N. G. C. Brunken, M. R. Hogerheijde
+Categories: astro-ph.EP astro-ph.SR
+Comments: Accepted for publication in Astronomy and Astrophysics
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00769
+From: Giuseppe Angora  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:06 GMT   (32463kb,D)
+
+Title: Searching for galaxy-scale strong-lenses in galaxy clusters with deep
+  networks -- I: methodology and network performance
+Authors: G. Angora, P. Rosati, M. Meneghetti, M. Brescia, A. Mercurio, C.
+  Grillo, P. Bergamini, A. Acebron, G. Caminha, M. Nonino, L. Tortorelli, L.
+  Bazzanini, E. Vanzella
+Categories: astro-ph.CO astro-ph.IM
+Comments: 17 pages, 13 figures, submitted to A&A
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00770
+From: Francesca Bonanomi  <example@example.com>
+Date: Wed, 1 Mar 2023 19:00:23 GMT   (6928kb,D)
+
+Title: Another X-ray UFO without a momentum-boosted molecular outflow
+Authors: F. Bonanomi, C. Cicone, P. Severgnini, V. Braito, C. Vignali, J. N.
+  Reeves, M. Sirressi, I. Montoya Arroyave, R. Della Ceca, L. Ballo, M. Dotti
+Categories: astro-ph.GA
+Comments: Accepted by A&A
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00773
+From: Marco Simonte  <example@example.com>
+Date: Wed, 1 Mar 2023 19:01:06 GMT   (617kb,D)
+
+Title: Revisiting the alignment of radio galaxies in the ELAIS-N1 field
+Authors: Marco Simonte, Heinz Andernach, Marcus Brueggen, Philip Best, Erik
+  Osinga
+Categories: astro-ph.GA astro-ph.CO
+Comments: 10 pages, 6 figures, 2 tables Accepted for publication in A&A
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00774
+From: Dennis Zaritsky  <example@example.com>
+Date: Wed, 1 Mar 2023 19:01:54 GMT   (698kb,D)
+
+Title: Systematically Measuring Ultra-Diffuse Galaxies (SMUDGes). IV.
+  Ultra-Diffuse Satellites of Milky Way Analogs
+Authors: Hina Goto, Dennis Zaritsky, Ananthan Karunakaran, Richard Donnerstein,
+  David J. Sand
+Categories: astro-ph.GA
+Comments: Submitted for publication. 12 pages, 6 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00782
+From: Anna Luiza Trindade Falcao  <example@example.com>
+Date: Wed, 1 Mar 2023 19:09:15 GMT   (3263kb,D)
+
+Title: Discovery of Extended Fe Ka Complex X-ray Emission in NGC 5728
+Authors: Anna Trindade Falcao, G. Fabbiano, M. Elvis, A. Paggi, W. P. Maksym
+Categories: astro-ph.GA astro-ph.HE
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00787
+From: Justyn Maund  <example@example.com>
+Date: Wed, 1 Mar 2023 19:20:51 GMT   (1419kb,D)
+
+Title: A flash of polarized optical light points to an aspherical "cow"
+Authors: J.R. Maund, P.A. Hoeflich, I.A. Steele, Y. Yang, K. Wiersema, S.
+  Kobayashi, N. Jordana-Mitjans, C. Mundell, A. Gomboc, C. Guidorzi and R. J.
+  Smith
+Categories: astro-ph.SR astro-ph.HE
+Comments: MNRAS Accepted, 10 pages, 8 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00789
+From: Anna Trindade Falcao  <example@example.com>
+Date: Wed, 1 Mar 2023 19:30:09 GMT   (9365kb,D)
+
+Title: Deep Chandra Observations of NGC 5728: Morphology and Spectral
+  Properties of the Extended X-ray Emission
+Authors: Anna Trindade Falcao, G. Fabbiano, M. Elvis, A. Paggi, W. P. Maksym
+Categories: astro-ph.GA
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00826
+From: Ivan Almeida  <example@example.com>
+Date: Wed, 1 Mar 2023 21:24:57 GMT   (1712kb,D)
+
+Title: Quenching star formation with low-luminosity AGN winds
+Authors: Ivan Almeida, Rodrigo Nemmen, and Rogemar Riffel
+Categories: astro-ph.GA
+Comments: 6 pages, 5 figures, submitted to MNRAS
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00843
+From: Zesen Huang  <example@example.com>
+Date: Wed, 1 Mar 2023 22:21:25 GMT   (13694kb,D)
+
+Title: New Observations of Solar Wind 1/f Turbulence Spectrum from Parker Solar
+  Probe
+Authors: Zesen Huang, Nikos Sioulas, Chen Shi, Marco Velli, Trevor Bowen,
+  Nooshin Davis, B. D. G. Chandran, Ning Kang, Xiaofei Shi, Jia Huang, Stuart
+  D. Bale, J. C. Kasper, Davin E. Larson, Roberto Livi, P. L. Whittlesey, Ali
+  Rahmati, Kristoff Paulson, M. Stevens, A. W. Case, Thierry Dudok de Wit,
+  David M. Malaspina, J.W. Bonnell, Keith Goetz, Peter R. Harvey, Robert J.
+  MacDowall
+Categories: astro-ph.SR physics.flu-dyn physics.geo-ph physics.plasm-ph physics.space-ph
+Comments: Submitted to ApJL
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00867
+From: Sonia Cornejo  <example@example.com>
+Date: Wed, 1 Mar 2023 23:45:30 GMT   (4030kb,D)
+
+Title: Evolution of the eccentricity and inclination of low-mass planets
+  subjected to thermal forces: a numerical study
+Authors: S. Cornejo, F. S. Masset, R. O. Chametla and S. Fromenteau
+Categories: astro-ph.EP
+Comments: Accepted for publication in MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00898
+From: Jun Yang  <example@example.com>
+Date: Thu, 2 Mar 2023 01:43:40 GMT   (2491kb,D)
+
+Title: Synchrotron Radiation Dominates the Extremely Bright GRB 221009A
+Authors: Jun Yang, Xiao-Hong Zhao, Zhenyu Yan, Xiangyu I. Wang, Yan-Qiu Zhang,
+  Zheng-Hua An, Ce Cai, Xin-Qiao Li, Zihan Li, Jia-Cong Liu, Zi-Ke Liu, Xiang
+  Ma, Yan-Zhi Meng, Wen-Xi Peng, Rui Qiao, Lang Shao, Li-Ming Song, Wen-Jun
+  Tan, Ping Wang, Chen-Wei Wang, Xiang-Yang Wen, Shuo Xiao, Wang-Chen Xue,
+  Yu-han Yang, Yihan Yin, Bing Zhang, Fan Zhang, Shuai Zhang, Shuang-Nan Zhang,
+  Chao Zheng, Shi-Jie Zheng, Shao-Lin Xiong, Bin-Bin Zhang
+Categories: astro-ph.HE
+Comments: 11 pages, 6 figures, 2 tables
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00916
+From: David Zegeye  <example@example.com>
+Date: Thu, 2 Mar 2023 02:24:51 GMT   (96kb,D)
+
+Title: CMB-S4: Forecasting Constraints on $f_\mathrm{NL}$ Through
+  $\mu$-distortion Anisotropy
+Authors: David Zegeye, Federico Bianchini, J. Richard Bond, Jens Chluba, Thomas
+  Crawford, Giulio Fabbian, Vera Gluscevic, Daniel Grin, J. Colin Hill, P.
+  Daniel Meerburg, Giorgio Orlando, Bruce Partridge, Christian L. Reichardt,
+  Mathieu Remazeilles, Douglas Scott, Edward J. Wollack, and The CMB-S4
+  Collaboration
+Categories: astro-ph.CO gr-qc
+Comments: 19 pages, 6 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00931
+From: Reinabelle Reyes  <example@example.com>
+Date: Thu, 2 Mar 2023 03:08:26 GMT   (17758kb)
+
+Title: A Model-Independent Determination of Red Noise in Pulsar Timing Arrivals
+Authors: Reinabelle Reyes and Christopher C. Bernido
+Categories: astro-ph.IM stat.ME
+Comments: 15 pages, 6 figures. Submitted to Frontiers in Astronomy and Space
+  Sciences
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00961
+From: YanHong Yao  <example@example.com>
+Date: Thu, 2 Mar 2023 04:46:00 GMT   (1106kb,D)
+
+Title: Observational constraints on non-cold dark matter and phenomenological
+  emergent dark energy
+Authors: Yan-Hong Yao, Jun-Chao Wang, Xin-He Meng
+Categories: astro-ph.CO
+Comments: 7 pages, 2 figure
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00985
+From: Masahiro Tsujimoto  <example@example.com>
+Date: Thu, 2 Mar 2023 05:33:38 GMT   (3777kb,D)
+
+Title: Ground test results of the electromagnetic interference for the x-ray
+  microcalorimeter onboard XRISM
+Authors: Miki Kurihara (1 and 2), Masahiro Tsujimoto (2), Megan E. Eckart (3),
+  Caroline A. Kilbourne (4), Frederick T. Matsuda (2), Brian McLaughlin (4),
+  Shugo Oguri (2), Frederick S. Porter (4), Yoh Takei (5, on behalf of the
+  XRISM Resolve team) and Yoichi Kochibe (6) ((1) University of Tokyo, (2) JAXA
+  ISAS, (3) LLNL, (4) NASA GSFC, (5) JAXA, (6) Fujitsu Limited)
+Categories: astro-ph.IM
+Comments: JATIS in press
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00999
+From: Chong-Bin Chen  <example@example.com>
+Date: Thu, 2 Mar 2023 06:26:46 GMT   (1907kb,D)
+
+Title: Implications of multi-axion dark matter on structure formation
+Authors: Chong-Bin Chen, Jiro Soda
+Categories: astro-ph.CO gr-qc
+Comments: 33 pages, 17 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01004
+From: Masahiro Tsujimoto  <example@example.com>
+Date: Thu, 2 Mar 2023 06:46:46 GMT   (2138kb)
+
+Title: Mechanical cryocooler noise observed in the ground testing of the
+  Resolve X-ray microcalorimeter onboard XRISM
+Authors: R. Imamura (1), H. Awaki (1), M. Tsujimoto (2), S. Yamada (3), F. S.
+  Porter (4), C. A. Kilbourne (4), R. L. Kelley (4), Y. Takei (2) (on behalf of
+  the XRISM Resolve team, (1) Ehime U., (2) JAXA ISAS, (3) Rikkyo U., (4) NASA
+  GSFC)
+Categories: astro-ph.IM
+Comments: J Low Temp Phys (2023)
+DOI: 10.1007/s10909-022-02935-1
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01006
+From: Masahiro Tsujimoto  <example@example.com>
+Date: Thu, 2 Mar 2023 06:47:13 GMT   (3744kb,D)
+
+Title: Ground test results of the micro-vibration interference for the x-ray
+  microcalorimeter onboard XRISM
+Authors: Takashi Hasebe (1), Ryuta Imamura (2), Masahiro Tsujimoto (3),
+  Hisamitsu Awaki (2), Meng P. Chiao (4), Ryuichi Fujimoto (5), Leslie S. Hartz
+  (4), Caroline A. Kilbourne (4), Gary A. Sneiderman (4), Yoh Takei (3), Susumu
+  Yasuda (6) (on behalf of the XRISM Resolve team, (1) Kavli IPMU, (2) Ehime
+  U., (3) JAXA ISAS, (4) NASA GSFC, (5) Kanazawa U., (6) JAXA)
+Categories: astro-ph.IM
+Comments: Journal of Astronomical Telescopes, Instruments, and Systems, Vol. 9,
+  Issue 1, 014003 (March 2023)
+DOI: 10.1117/1.JATIS.9.1.014003
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01014
+From: Hyunwook Ro  <example@example.com>
+Date: Thu, 2 Mar 2023 07:03:13 GMT   (11666kb,D)
+
+Title: Spectral analysis of a parsec-scale jet in M87: Observational constraint
+  on the magnetic field strengths in the jet
+Authors: Hyunwook Ro, Motoki Kino, Bong Won Sohn, Kazuhiro Hada, Jongho Park,
+  Masanori Nakamura, Yuzhu Cui, Kunwoo Yi, Aeree Chung, Jeffrey Hodgson,
+  Tomohisa Kawashima, Tao An, Sascha Trippe, Juan-Carlos Algaba, Jae-Young Kim,
+  Satoko Sawada-Satoh, Kiyoaki Wajima, Zhiqiang Shen, Xiaopeng Cheng, Ilje Cho,
+  Wu Jiang, Taehyun Jung, Jee-Won Lee, Kotaro Niinuma, Junghwan Oh, Fumie
+  Tazaki, Guang-Yao Zhao, Kazunori Akiyama, Mareki Honma, Jeong Ae Lee, Rusen
+  Lu, Yingkang Zhang, Keiichi Asada, Lang Cui, Yoshiaki Hagiwara, Tomoya
+  Hirota, Noriyuki Kawaguchi, Shoko Koyama, Sang-Sung Lee, Se-Jin Oh, Koichiro
+  Sugiyama, Mieko Takamura, Xuezheng Wang, Ju-Yeon Hwang, Dong-Kyu Jung,
+  Hyo-Ryoung Kim, Jeong-Sook Kim, Hideyuki Kobayashi, Chung-Sik Oh, Tomoaki
+  Oyama, Duk-Gyoo Roh, Jae-Hwan Yeom
+Categories: astro-ph.HE astro-ph.CO
+Comments: 16 pages, 9 figures. Accepted for publication in Astronomy &
+  Astrophysics
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01027
+From: Zhixing Ling Dr  <example@example.com>
+Date: Thu, 2 Mar 2023 07:34:52 GMT   (1643kb,D)
+
+Title: Improving the X-ray energy resolution of a scientific CMOS detector by
+  pixel-level gain correction
+Authors: Qinyu Wu, Zhixing Ling, Xinyang Wang, Chen Zhang, Weimin Yuan,
+  Shuang-Nan Zhang
+Categories: astro-ph.IM hep-ex physics.ins-det
+Comments: accepted by PASP
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01033
+From: Gregor Rauw  <example@example.com>
+Date: Thu, 2 Mar 2023 07:43:30 GMT   (1508kb,D)
+
+Title: Diving into the magnetosphere of the Of?p star HD108
+Authors: Gregor Rauw, Ya\"el Naz\'e, Asif ud-Doula, Coralie Neiner
+Categories: astro-ph.SR astro-ph.HE
+Comments: Accepted for publication in MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01048
+From: Fumie Tazaki Dr.  <example@example.com>
+Date: Thu, 2 Mar 2023 08:02:59 GMT   (676kb,D)
+
+Title: Super-Resolved Image of M87 Observed with East Asian VLBI Network
+Authors: Fumie Tazaki, Yuzhu Cui, Kazuhiro Hada, Motoki Kino, Ilje Cho,
+  Guang-Yao Zhao, Kazunori Akiyama, Yosuke Mizuno, Hyunwook Ro, Mareki Honma,
+  Ru-Sen Lu, Zhi-Qiang Shen, Lang Cui, and Yoshinori Yonekura
+Categories: astro-ph.HE astro-ph.IM
+Comments: 9 pages, 5 figures, published in Galaxies
+Journal-ref: Galaxies 2023, 11(2), 39
+DOI: 10.3390/galaxies11020039
+License: http://creativecommons.org/licenses/by-sa/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01053
+From: Miaomiao Zhang  <example@example.com>
+Date: Thu, 2 Mar 2023 08:23:11 GMT   (33309kb,D)
+
+Title: Distances to nearby molecular clouds traced by young stars
+Authors: Miaomiao Zhang
+Categories: astro-ph.GA
+Comments: 31 pages; 11 figures; one of figures is a figset including 63
+  components; figset can be obtained as part of source files; accepted by ApJS
+License: http://creativecommons.org/licenses/by-nc-sa/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01059
+From: Tyrone O'Doherty  <example@example.com>
+Date: Thu, 2 Mar 2023 08:31:05 GMT   (4621kb,D)
+
+Title: An Observationally-Derived Kick Distribution for Neutron Stars in Binary
+  Systems
+Authors: Tyrone N. O'Doherty, Arash Bahramian, James C. A. Miller-Jones, Adelle
+  J. Goodwin, Ilya Mandel, Reinhold Willcox, Pikky Atri, Jay Strader
+Categories: astro-ph.HE
+Comments: Accepted for publication in MNRAS. 28 pages, 19 figures, 8 tables
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01097
+From: Yann Carteret  <example@example.com>
+Date: Thu, 2 Mar 2023 09:30:28 GMT   (1220kb,D)
+
+Title: Small-scale dynamo with finite correlation times
+Authors: Yann Carteret, Dominik Schleicher and Jennifer Schober
+Categories: astro-ph.GA physics.plasm-ph
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01100
+From: Maria Lugaro  <example@example.com>
+Date: Thu, 2 Mar 2023 09:32:38 GMT   (102kb,D)
+
+Title: Representation of s-process abundances for comparison to data from bulk
+  meteorites
+Authors: Maria Lugaro, Mattias Ek, M\'aria Pet\H{o}, Marco Pignatari, Georgy V.
+  Makhatadze, Isaac J. Onyett, Maria Sch\"onb\"achler
+Categories: astro-ph.SR astro-ph.EP physics.geo-ph
+Comments: Accepted for publication in the EPJA Special Issue on: 'From reactors
+  to stars' in honor of Franz K\"appeler
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01106
+From: Hyunwook Ro  <example@example.com>
+Date: Thu, 2 Mar 2023 09:39:10 GMT   (9367kb,D)
+
+Title: Transverse Oscillations of the M87 Jet Revealed by KaVA Observations
+Authors: Hyunwook Ro, Kunwoo Yi, Yuzhu Cui, Motoki Kino, Kazuhiro Hada,
+  Tomohisa Kawashima, Yosuke Mizuno, Bong Won Sohn, Fumie Tazaki
+Categories: astro-ph.HE astro-ph.SR
+Comments: 14 pages, 6 figures. Contribution to the Galaxies Special Issue
+  "Challenges in Understanding Black Hole Powered Jets with VLBI"
+Journal-ref: Galaxies 2023, 11(1), 33
+DOI: 10.3390/galaxies11010033
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01115
+From: Benedetta Vulcani  <example@example.com>
+Date: Thu, 2 Mar 2023 09:56:47 GMT   (16655kb,D)
+
+Title: Early results from GLASS-JWST. XX: Unveiling a population of
+  "red-excess'' galaxies in Abell2744 and in the coeval field
+Authors: Benedetta Vulcani (INAF-OaPD), Tommaso Treu, Antonello Calabro, Jacopo
+  Fritz, Bianca Poggianti, Pietro Bergamini, Andrea Bonchi, Kit Boyett, Gabriel
+  Caminha, Marco Castellano, Alan Dressler, Adriano Fontana, Karl Glazebrook,
+  Claudio Grillo, Matthew Malkan, Sara Mascia, Amata Mercurio, Emiliano Merlin,
+  Benjamin Metha, Takahiro Morishita, Themiya Nanayakkara, Diego Paris, Guido
+  Roberts-Borsani, Piero Rosati, Namrata Roy, Paola Santini, Michele Trenti,
+  Eros Vanzella, and Xin Wang
+Categories: astro-ph.GA
+Comments: submitted to ApJL
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01116
+From: Chayan Mondal  <example@example.com>
+Date: Thu, 2 Mar 2023 09:57:02 GMT   (792kb,D)
+
+Title: Observed UV continuum slopes ($\beta$) of galaxies at $z = 0.40-0.75$ in
+  the GOODS-north field
+Authors: Chayan Mondal, Kanak Saha, Rogier A. Windhorst, Rolf A. Jansen
+Categories: astro-ph.GA
+Comments: Accepted for publication in the Astrophysical Journal
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01154
+From: Frank Stefani  <example@example.com>
+Date: Thu, 2 Mar 2023 10:57:32 GMT   (748kb,D)
+
+Title: No evidence for absence of solar dynamo synchronization
+Authors: F. Stefani, J. Beer, T. Weier
+Categories: astro-ph.SR astro-ph.EP
+Comments: 8 pages, 7 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01174
+From: Alexandra Veledina  <example@example.com>
+Date: Thu, 2 Mar 2023 11:37:30 GMT   (2059kb,D)
+
+Title: Astronomical puzzle Cyg X-3 is a hidden Galactic ultraluminous X-ray
+  source
+Authors: Alexandra Veledina, Fabio Muleri, Juri Poutanen, Jakub Podgorn\'y,
+  Michal Dov\v{c}iak, Fiamma Capitanio, Eugene Churazov, Alessandra De Rosa,
+  Alessandro Di Marco, Sofia Forsblom, Philip Kaaret, Henric Krawczynski, Fabio
+  La Monaca, Vladislav Loktev, Alexander A. Lutovinov, Sergey V. Molkov,
+  Alexander A. Mushtukov, Ajay Ratheesh, Nicole Rodriguez Cavero, James F.
+  Steiner, Rashid A. Sunyaev, Sergey S. Tsygankov, Andrzej A. Zdziarski,
+  Stefano Bianchi, Joe S. Bright, Nikolaj Bursov, Enrico Costa, Elise Egron,
+  Javier A. Garcia, David A. Green, Mark Gurwell, Adam Ingram, Jari J. E.
+  Kajava, Ruta Kale, Alex Kraus, Denys Malyshev, Fr\'ed\'eric Marin, Giorgio
+  Matt, Michael McCollough, Ilia A. Mereminskiy, Nikolaj Nizhelsky, Giovanni
+  Piano, Maura Pilia, Carlotta Pittori, Ramprasad Rao, Simona Righini, et al.
+  (84 additional authors not shown)
+Categories: astro-ph.HE astro-ph.SR
+Comments: 52 pages, 18 figures, 4 tables
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01198
+From: Bastien Carreres  <example@example.com>
+Date: Thu, 2 Mar 2023 12:28:09 GMT   (8824kb,D)
+
+Title: Growth-rate measurement with type-Ia supernovae using ZTF survey
+  simulations
+Authors: Bastien Carreres, Julian E. Bautista, Fabrice Feinstein, Dominique
+  Fouchez, Benjamin Racine, Mathew Smith, Mellissa Amenouche, Marie Aubert,
+  Suhail Dhawan, Madeleine Ginolin, Ariel Goobar, Philippe Gris, Leander
+  Lacroix, Eric Nuss, Nicolas Regnault, Mickael Rigault, Estelle Robert,
+  Philippe Rosnet, Kelian Sommer, Richard Dekany, Steven L. Groom, Niharika
+  Sravan, Frank J. Masci and Josiah Purdum
+Categories: astro-ph.CO
+Comments: 20 pages, 13 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01203
+From: Yan-Qiu Zhang  <example@example.com>
+Date: Thu, 2 Mar 2023 12:38:35 GMT   (17826kb,D)
+
+Title: Insight-HXMT and GECAM-C observations of the brightest-of-all-time GRB
+  221009A
+Authors: Zheng-Hua An, S. Antier, Xing-Zi Bi, Qing-Cui Bu, Ce Cai, Xue-Lei Cao,
+  Anna-Elisa Camisasca, Zhi Chang, Gang Chen, Li Chen, Tian-Xiang Chen, Wen
+  Chen, Yi-Bao Chen, Yong Chen, Yu-Peng Chen, Michael W. Coughlin, Wei-Wei Cui,
+  Zi-Gao Dai, T. Hussenot-Desenonges, Yan-Qi Du, Yuan-Yuan Du, Yun-Fei Du,
+  Cheng-Cheng Fan, Filippo Frontera, He Gao, Min Gao, Ming-Yu Ge, Ke Gong,
+  Yu-Dong Gu, Ju Guan, Dong-Ya Guo, Zhi-Wei Guo, Cristiano Guidorzi, Da-Wei
+  Han, Jian-Jian He, Jun-Wang He, Dong-Jie Hou, Yue Huang, Jia Huo, Zhen Ji,
+  Shu-Mei Jia, Wei-Chun Jiang, David Alexander Kann, A. Klotz, Ling-Da Kong,
+  Lin Lan, An Li, Bing Li, Chao-Yang Li, Cheng-Kui Li, Gang Li, Mao-Shun Li,
+  Ti-Pei Li, Wei Li, Xiao-Bo Li, Xin-Qiao Li, Xu-Fang Li, Yan-Guo Li, Zheng-Wei
+  Li, Jing Liang, Xiao-Hua Liang, Jin-Yuan Liao, Lin Lin, et al. (115
+  additional authors not shown)
+Categories: astro-ph.HE
+Comments: Submitted to National Science Review. This paper is under press
+  embargo, contact the corresponding author for details
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01209
+From: Anthony Yeates  <example@example.com>
+Date: Thu, 2 Mar 2023 12:49:52 GMT   (11408kb,D)
+
+Title: Surface Flux Transport
+Authors: Anthony R. Yeates, Mark C.M. Cheung, Jie Jiang, Kristof Petrovay,
+  Yi-Ming Wang
+Categories: astro-ph.SR
+Comments: 35 pages, 11 figures, submitted to Space Science Reviews
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01299
+From: Zaza Osmanov  <example@example.com>
+Date: Thu, 2 Mar 2023 14:25:10 GMT   (335kb)
+
+Title: Excitation of Langmuir waves in the magnetospheres of AGN
+Authors: Z.N. Osmanov
+Categories: astro-ph.GA astro-ph.HE physics.plasm-ph
+Comments: 6 pages, 4 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01321
+From: Andrei Plotnikov  <example@example.com>
+Date: Thu, 2 Mar 2023 14:51:42 GMT   (1357kb,D)
+
+Title: Statistical analysis of the total magnetic flux decay rate in solar
+  active regions
+Authors: Andrei A. Plotnikov, Valentina I. Abramenko, Alexander S. Kutsenko
+Categories: astro-ph.SR
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01337
+From: Garrett Levine  <example@example.com>
+Date: Thu, 2 Mar 2023 15:14:44 GMT   (722kb,D)
+
+Title: Shape-Driven Selection Effects for Aspherical Near-Earth Objects in
+  Systematic Surveys
+Authors: W. Garrett Levine and Robert Jedicke
+Categories: astro-ph.EP
+Comments: 21 pages, 10 figure, 1 table. Accepted for publication in Icarus
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01349
+From: Andrzej A. Zdziarski  <example@example.com>
+Date: Thu, 2 Mar 2023 15:28:37 GMT   (105kb,D)
+
+Title: No Need for an Extreme Jet Energy in the Black-Hole X-Ray Binary MAXI
+  J1348--630
+Authors: Andrzej A. Zdziarski, Marek Sikora, Michal Szanecki and Markus
+  Boettcher
+Categories: astro-ph.HE
+Comments: submitted to ApJ
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01356
+From: Luciano Ferreyro L P Ferreyro  <example@example.com>
+Date: Thu, 2 Mar 2023 15:37:08 GMT   (8322kb,D)
+
+Title: An Implementation of a Channelizer based on a Goertzel Filter Bank for
+  the Read-Out of Cryogenic Sensors
+Authors: L. P. Ferreyro, M. Garc\'ia Redondo, M. R. Hampel, A. Almela, A.
+  Fuster, J. Salum, J. M. Geria, J. Bonaparte, J. Bonilla-Neira, N. M\"uller,
+  N. Karcher, O. Sander, M. Platino, A. Etchegoyen
+Categories: astro-ph.IM eess.SP
+Comments: 17 pages, 18 figures, paper submitted for review for the Journal of
+  Instrumentation (JINST)
+License: http://creativecommons.org/licenses/by-sa/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01358
+From: Thiago Ferreira Dos Santos  <example@example.com>
+Date: Thu, 2 Mar 2023 15:37:47 GMT   (742kb,D)
+
+Title: A Jupiter analogue and a cold Super-Neptune orbiting the solar-twin star
+  HIP 104045
+Authors: Thiago Ferreira, Jorge Mel\'endez, Diego Lorenzo-Oliveira, Jacob L.
+  Bean, Lorenzo Spina, and Megan Bedell
+Categories: astro-ph.EP
+Comments: submitted to MNRAS
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01367
+From: Laura Scott  <example@example.com>
+Date: Thu, 2 Mar 2023 15:53:34 GMT   (3430kb,D)
+
+Title: Abundance analysis of a nitrogen-rich extreme-helium hot subdwarf from
+  the SALT survey
+Authors: L. J. A. Scott. and C. S. Jeffery and D. Farren and C. Tap and M.
+  Dorsch
+Categories: astro-ph.SR
+Comments: 10 pages, 5 figures, 5 tables, accepted for publication in MNRAS
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01374
+From: Cis Lagae  <example@example.com>
+Date: Thu, 2 Mar 2023 16:00:16 GMT   (921kb,D)
+
+Title: Raising the observed metallicity floor with a 3D non-LTE analysis of
+  SDSS J102915.14+172927.9
+Authors: C. Lagae, A. M. Amarsi, L. F. Rodr\'iguez D\'iaz, K. Lind, T.
+  Nordlander, T. T. Hansen, A. Heger
+Categories: astro-ph.SR astro-ph.GA
+Comments: 14 pages, 9 figures, Accepted for publication in Astronomy &
+  Astrophysics
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01382
+From: Valery Suleimanov  <example@example.com>
+Date: Thu, 2 Mar 2023 16:06:51 GMT   (990kb,D)
+
+Title: Expected polarization properties of non-magnetized CCOs
+Authors: Valery F. Suleimanov, Juri Poutanen, Victor Doroshenko, and Klaus
+  Werner
+Categories: astro-ph.HE astro-ph.SR
+Comments: 10 pages, 16 figures. accepted to be published by A&A
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01431
+From: Anthony Mallama  <example@example.com>
+Date: Thu, 2 Mar 2023 17:41:11 GMT   (1079kb)
+
+Title: Roll Angle Adjustment Dims Starlink Satellites
+Authors: Anthony Mallama and Jay Respler
+Categories: astro-ph.IM
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01438
+From: Margaret Ridder  <example@example.com>
+Date: Thu, 2 Mar 2023 17:51:53 GMT   (361kb,D)
+
+Title: Radio detections of two unusual cataclysmic variables in the VLA Sky
+  Survey
+Authors: Margaret E Ridder, Craig O Heinke, Gregory R Sivakoff, Andrew K Hughes
+Categories: astro-ph.HE
+Journal-ref: MNRAS 519 (2023) 5922-5930
+DOI: 10.1093/mnras/stad038
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01458
+From: Kohji Takimoto  <example@example.com>
+Date: Thu, 2 Mar 2023 18:15:03 GMT   (5132kb,D)
+
+Title: Near-infrared Polarization Charateristics of the Zodiacal Light Observed
+  with DIRBE/COBE
+Authors: Kohji Takimoto, Shuji Matsuura, Kei Sano, and Richard M. Feder
+Categories: astro-ph.EP
+Comments: 11 pages, 12 figures, accepted by ApJ
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01463
+From: Vaibhav Tiwari  <example@example.com>
+Date: Thu, 2 Mar 2023 18:26:11 GMT   (3906kb,D)
+
+Title: VARAHA: A Fast Non-Markovian sampler for estimating Gravitational-Wave
+  posteriors
+Authors: Vaibhav Tiwari, Charlie Hoy, Stephen Fairhurst and Duncan MacLeod
+Categories: astro-ph.HE
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01495
+From: Kianusch Mehrgan  <example@example.com>
+Date: Thu, 2 Mar 2023 18:56:41 GMT   (10724kb,D)
+
+Title: Detailed shapes of the line-of-sight velocity distributions in massive
+  early-type galaxies from non-parametric spectral models
+Authors: Kianusch Mehrgan, Jens Thomas, Roberto Saglia, Taniya Parikh and Ralf
+  Bender
+Categories: astro-ph.GA
+Comments: Accepted for publication in the Astrophysical Journal
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01496
+From: Connor Cheverall  <example@example.com>
+Date: Thu, 2 Mar 2023 18:56:47 GMT   (828kb,D)
+
+Title: Robustness Measures for Molecular Detections using High-Resolution
+  Transmission Spectroscopy of Exoplanets
+Authors: Connor J. Cheverall, Nikku Madhusudhan, M{\aa}ns Holmberg
+Categories: astro-ph.EP
+Comments: Accepted for publication in MNRAS
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00022 (*cross-listing*)
+From: Juan Pablo Ya\~nez Garza  <example@example.com>
+Date: Tue, 28 Feb 2023 19:00:36 GMT   (1607kb,D)
+
+Title: daemonflux: DAta-drivEn MuOn-calibrated Neutrino Flux
+Authors: Juan Pablo Ya\~nez and Anatoli Fedynitch
+Categories: hep-ph astro-ph.HE
+Comments: 21 pages, 23 figures
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00190 (*cross-listing*)
+From: Xjao-Jun Gao  <example@example.com>
+Date: Wed, 1 Mar 2023 02:39:50 GMT   (205kb)
+
+Title: Gravitational lensing by a charged spherically symmetric black hole
+  immersed in thin dark matter
+Authors: Xiao-Jun Gao, Xiao-kun Yan, Yihao Yin and Ya-Peng Hu
+Categories: gr-qc astro-ph.CO
+Comments: 14 pages, 3 figures. To be submitted to European Physical Journal C
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00341 (*cross-listing*)
+From: Jason Kristiano  <example@example.com>
+Date: Wed, 1 Mar 2023 09:07:36 GMT   (108kb,D)
+
+Title: Response to criticism on "Ruling Out Primordial Black Hole Formation
+  From Single-Field Inflation": A note on bispectrum and one-loop correction in
+  single-field inflation with primordial black hole formation
+Authors: Jason Kristiano and Jun'ichi Yokoyama
+Categories: hep-th astro-ph.CO
+Comments: arXiv admin note: text overlap with arXiv:2211.03395
+Report-no: RESCEU-3/23
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00342 (*cross-listing*)
+From: Shinsuke Kawai  <example@example.com>
+Date: Wed, 1 Mar 2023 09:10:35 GMT   (402kb,D)
+
+Title: Reheating consistency condition on the classically conformal
+  $U(1)_{B-L}$ Higgs inflation model
+Authors: Shinsuke Kawai, Nobuchika Okada
+Categories: hep-ph astro-ph.CO hep-th
+Comments: 10 pages, 3 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00661 (*cross-listing*)
+From: Pawel Swaczyna  <example@example.com>
+Date: Wed, 1 Mar 2023 17:01:08 GMT   (11764kb)
+
+Title: Spherical Harmonic Representation of Energetic Neutral Atom Flux
+  Components Observed by IBEX
+Authors: P. Swaczyna (1), M. A. Dayeh (2 and 3), E. J. Zirnstein (1) ((1)
+  Department of Astrophysical Sciences, Princeton University, Princeton, NJ,
+  USA, (2) Southwest Research Institute, San Antonio, TX, USA, (3) Department
+  of Physics and Astronomy, University of Texas at San Antonio, San Antonio,
+  TX, USA)
+Categories: physics.space-ph astro-ph.GA astro-ph.SR
+Comments: 27 pages, 12 figures, submitted to ApJS
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00718 (*cross-listing*)
+From: Jeremy Rekier  <example@example.com>
+Date: Wed, 1 Mar 2023 18:24:58 GMT   (919kb,D)
+
+Title: Electric interface condition for sliding and viscous contacts
+Authors: J\'er\'emy Rekier and Santiago A. Triana and Antony Trinh and Bruce A.
+  Buffett
+Categories: physics.class-ph astro-ph.EP physics.flu-dyn
+Comments: 19 pages, 9 figures
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00812 (*cross-listing*)
+From: Lorenzo Iorio  <example@example.com>
+Date: Wed, 1 Mar 2023 20:28:17 GMT   (603kb,D)
+
+Title: One EURO for Uranus: the Elliptical Uranian Relativity Orbiter mission
+Authors: Lorenzo Iorio, Athul P. Girija, Daniele Durante
+Categories: gr-qc astro-ph.EP astro-ph.IM physics.space-ph
+Comments: LaTex2e, 38 pages, 7 figures, no tables
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01138 (*cross-listing*)
+From: Martin Archer PhD MSci DiC ARCS  <example@example.com>
+Date: Thu, 2 Mar 2023 10:33:37 GMT   (8132kb,D)
+
+Title: Auroral, Ionospheric and Ground Magnetic Signatures of Magnetopause
+  Surface Modes
+Authors: M.O. Archer, M.D. Hartinger, L. Rastaetter, D.J. Southwood, M. Heyns,
+  J.W.B. Eggington, A.N. Wright, F. Plaschke, X. Shi
+Categories: physics.space-ph astro-ph.EP physics.plasm-ph
+Journal-ref: Journal of Geophysical Research: Space Physics, 128, e2022JA031081
+DOI: 10.1029/2022JA031081
+License: http://creativecommons.org/licenses/by/4.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01322 (*cross-listing*)
+From: Patricio A. Mu\~noz  <example@example.com>
+Date: Thu, 2 Mar 2023 14:53:15 GMT   (9750kb,D)
+
+Title: Electron inertia effects in 3D hybrid-kinetic collisionless plasma
+  turbulence
+Authors: Patricio A. Mu\~noz, Meisam Farzalipour Tabriz, Markus Rampp, J\"org
+  B\"uchner
+Categories: physics.plasm-ph astro-ph.SR physics.space-ph
+Comments: 23 pages, 9 figures, submitted
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01398 (*cross-listing*)
+From: John Paul Bernaldez  <example@example.com>
+Date: Thu, 2 Mar 2023 16:33:10 GMT   (66kb,D)
+
+Title: Eccentricity-tide coupling: impact on binary neutron stars and extreme
+  mass-ratio inspirals
+Authors: John Paul Bernaldez and Sayak Datta
+Categories: gr-qc astro-ph.HE
+License: http://creativecommons.org/licenses/by/4.0/
+\\

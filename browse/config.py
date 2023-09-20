@@ -4,342 +4,422 @@ Docstrings are from the `Flask configuration documentation
 <http://flask.pocoo.org/docs/0.12/config/>`_.
 """
 import os
+from secrets import token_hex
 import warnings
-import dateutil.parser
-from datetime import datetime, timedelta
 
-APP_VERSION = "0.3.4"
+from typing import Optional, Dict, Any, List
+import logging
 
-"""The application version """
+from pydantic import SecretStr, PyObject, BaseSettings
 
-ON = "yes"
-OFF = "no"
+log = logging.getLogger(__name__)
 
-DEBUG = os.environ.get("DEBUG") == ON
-"""enable/disable debug mode"""
 
-TESTING = os.environ.get("TESTING") == ON
-"""enable/disable testing mode"""
+DEFAULT_DB = "sqlite:///../tests/data/browse.db"
+TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 
-PROPAGATE_EXCEPTIONS = True if os.environ.get("PROPAGATE_EXCEPTIONS") == ON else None
-"""
-explicitly enable or disable the propagation of exceptions. If not set or
-explicitly set to None this is implicitly true if either TESTING or DEBUG is
-true.
-"""
 
-PRESERVE_CONTEXT_ON_EXCEPTION = (
-    True if os.environ.get("PRESERVE_CONTEXT_ON_EXCEPTION") == ON else None
-)
-"""
-By default if the application is in debug mode the request context is not
-popped on exceptions to enable debuggers to introspect the data. This can be
-disabled by this key. You can also use this setting to force-enable it for non
-debug execution which might be useful to debug production applications (but
-also very risky).
-"""
+class Settings(BaseSettings):
+    """Class for settings for arxiv-browse web app."""
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "qwert2345")
-"""
-the secret key
-"""
+    APP_VERSION: str = "0.3.4"
+    """The application version """
 
-SESSION_COOKIE_NAME = os.environ.get("SESSION_COOKIE_NAME", "arxiv_browse")
-"""
-the name of the session cookie
-"""
+    """
+    Flask-S3 plugin settings.
+    See `<https://flask-s3.readthedocs.io/en/latest/>`_.
+    """
+    FLASKS3_BUCKET_NAME: str = "some_bucket"
+    FLASKS3_CDN_DOMAIN: str = "static.arxiv.org"
+    FLASKS3_USE_HTTPS: bool = True
+    FLASKS3_FORCE_MIMETYPE: bool = True
+    FLASKS3_ACTIVE: bool = False
 
-SESSION_COOKIE_DOMAIN = os.environ.get("SESSION_COOKIE_DOMAIN", None)
-"""
-the domain for the session cookie. If this is not set, the cookie will be valid
-for all subdomains of SERVER_NAME.
-"""
+    SQLALCHEMY_DATABASE_URI: str = DEFAULT_DB
+    """SQLALCHEMY_DATABASE_URI is pulled from
+    BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
+    SQLALCHEMY_DATABASE_URI is checked. If that is not set, the
+    default, the SQLITE test DB is used.
+    """
 
-SESSION_COOKIE_PATH = os.environ.get("SESSION_COOKIE_PATH", None)
-"""
-the path for the session cookie. If this is not set the cookie will be valid
-for all of APPLICATION_ROOT or if that is not set for '/'.
-"""
+    LATEXML_ENABLED: bool = False
+    """Sets if LATEXML is enabled or not"""
 
-SESSION_COOKIE_HTTPONLY = os.environ.get("SESSION_COOKIE_HTTPONLY") != OFF
-"""
-controls if the cookie should be set with the httponly flag. Defaults to True.
-"""
+    LATEXML_BASE_URL: str = ''
+    """Base GS bucket URL to find the HTML."""
 
-SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE") == ON
-"""
-controls if the cookie should be set with the secure flag. Defaults to False.
-"""
+    LATEXML_DB_USER: str = ''
+    """DB username for latexml DB."""
 
-PERMANENT_SESSION_LIFETIME = int(os.environ.get("PERMANENT_SESSION_LIFETIME", "3600"))
-"""
-the lifetime of a permanent session as datetime.timedelta object. Starting with
-Flask 0.8 this can also be an integer representing seconds.
-"""
+    LATEXML_DB_PASS: str = ''
+    """DB password for latexml DB."""
 
-SESSION_REFRESH_EACH_REQUEST = os.environ.get("SESSION_REFRESH_EACH_REQUEST") != OFF
-"""
-this flag controls how permanent sessions are refreshed. If set to True (which
-is the default) then the cookie is refreshed each request which automatically
-bumps the lifetime. If set to False a set-cookie header is only sent if the
-session is modified. Non permanent sessions are not affected by this.
-"""
+    LATEXML_DB_NAME: str = ''
+    """DB name for latexml DB."""
 
-USE_X_SENDFILE = os.environ.get("USE_X_SENDFILE") == ON
-"""
-enable/disable x-sendfile
-"""
+    LATEXML_INSTANCE_CONNECTION_NAME: str = ''
+    """GCP instance connection name of managed DB.
+    ex. arxiv-xyz:us-central1:my-special-db
 
-LOGGER_NAME = os.environ.get("LOGGER_NAME", "browse")
-"""
-the name of the logger
-"""
+    If this is set, a TLS protected GCP connection will be used to connect to
+    the latexml db. See
+    https://cloud.google.com/sql/docs/postgres/connect-connectors#python_1"""
 
-LOGGER_HANDLER_POLICY = os.environ.get("LOGGER_HANDLER_POLICY", "always")
-"""
-the policy of the default logging handler. The default is 'always' which means
-that the default logging handler is always active. 'debug' will only activate
-logging in debug mode, 'production' will only log in production and 'never'
-disables it entirely.
-"""
+    LATEXML_IP_TYPE: str = 'PUBLIC_IP'
+    """If the GCP connection is public or private"""
 
-SERVER_NAME = os.environ.get("BROWSE_SERVER_NAME", None)
-"""
-the name and port number of the server. Required for subdomain support (e.g.:
-'myapp.dev:5000') Note that localhost does not support subdomains so setting
-this to "localhost" does not help. Setting a SERVER_NAME also by default
-enables URL generation without a request context but with an application
-context.
+    SQLALCHEMY_BINDS: Dict[str, Any] = {}
+    """ For the database tracking html conversion metadata """
 
-If this is set and the Host header of a request does not match the SERVER_NAME,
-then Flask will respond with a 404. Test with
-curl http://127.0.0.1:5000/ -sv -H "Host: subdomain.arxiv.org"
-"""
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: bool = False
+    SQLALCHEMY_RECORD_QUERIES: bool = False
 
-APPLICATION_ROOT = os.environ.get("APPLICATION_ROOT", None)
-"""
-If the application does not occupy a whole domain or subdomain this can be set
-to the path where the application is configured to live. This is for session
-cookie as path value. If domains are used, this should be None.
-"""
-
-MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH", None)
-"""
-If set to a value in bytes, Flask will reject incoming requests with a content
-length greater than this by returning a 413 status code.
-"""
-
-SEND_FILE_MAX_AGE_DEFAULT = int(os.environ.get("SEND_FILE_MAX_AGE_DEFAULT", 43200))
-"""
-Default cache control max age to use with send_static_file() (the default
-static file handler) and send_file(), as datetime.timedelta or as seconds.
-Override this value on a per-file basis using the get_send_file_max_age() hook
-on Flask or Blueprint, respectively. Defaults to 43200 (12 hours).
-"""
-
-TRAP_HTTP_EXCEPTIONS = os.environ.get("TRAP_HTTP_EXCEPTIONS") == ON
-"""
-If this is set to True Flask will not execute the error handlers of HTTP
-exceptions but instead treat the exception like any other and bubble it through
-the exception stack. This is helpful for hairy debugging situations where you
-have to find out where an HTTP exception is coming from.
-"""
-
-TRAP_BAD_REQUEST_ERRORS = os.environ.get("TRAP_BAD_REQUEST_ERRORS") == ON
-"""
-Werkzeug's internal data structures that deal with request specific data will
-raise special key errors that are also bad request exceptions. Likewise many
-operations can implicitly fail with a BadRequest exception for consistency.
-Since it’s nice for debugging to know why exactly it failed this flag can be
-used to debug those situations. If this config is set to True you will get a
-regular traceback instead.
-"""
-
-PREFERRED_URL_SCHEME = os.environ.get("PREFERRED_URL_SCHEME", "http")
-"""
-The URL scheme that should be used for URL generation if no URL scheme is
-available. This defaults to http.
-"""
-
-JSON_AS_ASCII = os.environ.get("JSON_AS_ASCII") == ON
-"""
-By default Flask serialize object to ascii-encoded JSON. If this is set to
-False Flask will not encode to ASCII and output strings as-is and return
-unicode strings. jsonify will automatically encode it in utf-8 then for
-transport for instance.
-"""
-
-JSON_SORT_KEYS = os.environ.get("JSON_AS_ASCII") != OFF
-"""
-By default Flask will serialize JSON objects in a way that the keys are
-ordered. This is done in order to ensure that independent of the hash seed of
-the dictionary the return value will be consistent to not trash external HTTP
-caches. You can override the default behavior by changing this variable.
-This is not recommended but might give you a performance improvement on the
-cost of cacheability.
-"""
-
-JSONIFY_PRETTYPRINT_REGULAR = os.environ.get("JSON_AS_ASCII") != OFF
-"""
-If this is set to True (the default) jsonify responses will be pretty printed
-if they are not requested by an XMLHttpRequest object (controlled by the
-X-Requested-With header).
-"""
-
-JSONIFY_MIMETYPE = os.environ.get("JSONIFY_MIMETYPE", "application/json")
-"""
-MIME type used for jsonify responses.
-"""
-
-TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
-"""
-Whether to check for modifications of the template source and reload it
-automatically. By default the value is None which means that Flask checks
-original file only in debug mode.
-"""
-
-EXPLAIN_TEMPLATE_LOADING = os.environ.get("EXPLAIN_TEMPLATE_LOADING") == OFF
-"""
-If this is enabled then every attempt to load a template will write an info
-message to the logger explaining the attempts to locate the template. This can
-be useful to figure out why templates cannot be found or wrong templates appear
-to be loaded.
-"""
-
-"""
-Flask-S3 plugin settings.
-See `<https://flask-s3.readthedocs.io/en/latest/>`_.
-"""
-FLASKS3_BUCKET_NAME = os.environ.get("FLASKS3_BUCKET_NAME", "some_bucket")
-FLASKS3_CDN_DOMAIN = os.environ.get("FLASKS3_CDN_DOMAIN", "static.arxiv.org")
-FLASKS3_USE_HTTPS = bool(int(os.environ.get("FLASKS3_USE_HTTPS", 1)))
-FLASKS3_FORCE_MIMETYPE = bool(int(os.environ.get("FLASKS3_FORCE_MIMETYPE", "1")))
-FLASKS3_ACTIVE = bool(int(os.environ.get("FLASKS3_ACTIVE", "0")))
-
-# SQLAlchemy configuration
-# For mysql: 'mysql://user:pass@localhost/dbname'
-SQLALCHEMY_DATABASE_URI = os.environ.get(
-    "BROWSE_SQLALCHEMY_DATABASE_URI",
-    os.environ.get("SQLALCHEMY_DATABASE_URI", "sqlite:///../tests/data/browse.db"),
-)
-"""SQLALCHEMY_DATABASE_URI is pulled from
-BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
-SQLALCHEMY_DATABASE_URI is checked. If that is not set, the SQLITE
-test DB is used.
-
-If neither of those is set and TESTING is the string 'yes', then a
-SQLITE test DB is used.
-"""
-
-if (
-    os.environ.get("FLASK_ENV", False) == "production"
-    and "sqlite" in SQLALCHEMY_DATABASE_URI
-):
-    warnings.warn(
-        "Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment"
-    )
-
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_ECHO = False
-SQLALCHEMY_RECORD_QUERIES = False
-
-# SQLALCHEMY_POOL_SIZE and SQLALCHEMY_MAX_OVERFLOW will not work with sqlite
-if "sqlite" not in SQLALCHEMY_DATABASE_URI:
-    SQLALCHEMY_POOL_SIZE = int(os.environ.get("BROWSE_SQLALCHEMY_POOL_SIZE", "10"))
+    SQLALCHEMY_POOL_SIZE: Optional[int] = 10
     """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
     Ignored under sqlite."""
 
-    SQLALCHEMY_MAX_OVERFLOW = int(os.environ.get("BROWSE_SQLALCHEMY_MAX_OVERFLOW", "0"))
+    SQLALCHEMY_MAX_OVERFLOW: Optional[int] = 0
     """SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
     Ignored under sqlite."""
 
-BROWSE_DAILY_STATS_PATH = os.environ.get(
-    "BROWSE_DAILY_STATS_PATH", "tests/data/daily_stats"
-)
-"""The classic home page uses this file to get the total paper count
-The file contains one line, with key "total_papers" and an integer, e.g.
-total_papers 1456755."""
+    BROWSE_DISABLE_DATABASE: bool = False
+    """Disable DB queries even if other SQLAlchemy config are defined
+    This, for example, could be used in conjunction with the
+    `no-write` runlevel in the legacy infrastructure, which is a case
+    where we know the DB is unavailable and thus intentionally bypass
+    any DB access."""
 
-BROWSE_DISABLE_DATABASE = os.environ.get("BROWSE_DISABLE_DATABASE", False)
-"""Disable DB queries even if other SQLAlchemy config are defined
-This, for example, could be used in conjunction with the `no-write` runlevel
-in the legacy infrastructure, which is a case where we know the DB is
-unavailable and thus intentionally bypass any DB access."""
+    BROWSE_DAILY_STATS_PATH: str = "tests/data/daily_stats"
+    """The classic home page uses this file to get the total paper count
+    The file contains one line, with key "total_papers" and an integer, e.g.
+    total_papers 1456755."""
 
-BROWSE_SITE_LABEL = os.environ.get("BROWSE_SITE_LABEL", "arXiv.org")
-BROWSE_SITE_HOST = os.environ.get("BROWSE_SITE_HOST", None)
-"""This is similar to, but decoupled from SERVER_NAME."""
+    BROWSE_SITE_LABEL: str = "arXiv.org"
+    BROWSE_SITE_HOST: Optional[str] = None
+    """This is similar to, but decoupled from SERVER_NAME."""
 
-BROWSE_ANALYTICS_ENABLED = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
-"""Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
+    BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
+    """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
-BROWSE_STATUS_BANNER_SCRIPT_URL = os.environ.get(
-    "BROWSE_STATUS_BANNER_SCRIPT_URL",
-    "https://code.sorryapp.com/status-bar/4.latest/status-bar.min.js",
-)
+    ############################## Services ##############################
+    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
+    """What implementation to use for the listing service.
 
-BROWSE_STATUS_BANNER_SITE_ID = os.environ.get("BROWSE_STATUS_BANNER_SITE_ID", "foo")
-"""Enable/disable status service banner."""
+    Accepted values are
+    - `browse.services.listing.fs_listing`: Listing from legacy listing files. Needs to
+      have DOCUMENT_LISTING_PATH set.
+    - `browse.services.listing.db_listing`: Listing from DB. Slow and lacks data for
+       before 2010.
+    - `browse.services.listing.fake`: A totally fake set of listings for testing.
+    """
 
-DOCUMENT_LATEST_VERSIONS_PATH = os.environ.get(
-    "DOCUMENT_LATEST_VERSIONS_PATH", "tests/data/abs_files/ftp"
-)
-"""Paths to .abs and source files."""
+    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp'
+    """Path to get listing files from.
 
-DOCUMENT_ORIGNAL_VERSIONS_PATH = os.environ.get(
-    "DOCUMENT_ORIGNAL_VERSIONS_PATH", "tests/data/abs_files/orig"
-)
-"""Paths to .abs and source files."""
-
-DOCUMENT_CACHE_PATH = os.environ.get("DOCUMENT_CACHE_PATH", "tests/data/cache")
-"""Path to cache directory"""
-
-SHOW_EMAIL_SECRET = os.environ.get("SHOW_EMAIL_SECRET", "foo")
-"""Used in linking to /show-email."""
-
-CLICKTHROUGH_SECRET = os.environ.get("CLICKTHROUGH_SECRET", "bar")
-"""Used in linking to /ct."""
-
-TRACKBACK_SECRET = os.environ.get("TRACKBACK_SECRET", "baz")
-"""Used in linking to trackbacks in /tb pages."""
-
-LABS_ENABLED = bool(int(os.environ.get("LABS_ENABLED", "1")))
-"""arXiv Labs global enable/disable."""
-
-LABS_BIBEXPLORER_ENABLED = bool(int(os.environ.get("LABS_BIBEXPLORER_ENABLED", "1")))
-"""arXiv Labs Bibliographic Explorer enable/disable."""
-
-LABS_CORE_RECOMMENDER_ENABLED = bool(int(os.environ.get('LABS_CORE_RECOMMENDER_ENABLED', "0")))
-"""CORE Recommender enabled/disabled."""
-
-# Auth settings
-AUTH_SESSION_COOKIE_NAME = "ARXIVNG_SESSION_ID"
-AUTH_SESSION_COOKIE_DOMAIN = os.environ.get("AUTH_SESSION_COOKIE_DOMAIN", ".arxiv.org")
-AUTH_SESSION_COOKIE_SECURE = bool(
-    int(os.environ.get("AUTH_SESSION_COOKIE_SECURE", "1"))
-)
-AUTH_UPDATED_SESSION_REF = True
-
-CLASSIC_COOKIE_NAME = os.environ.get("CLASSIC_COOKIE_NAME", "tapir_session")
-CLASSIC_PERMANENT_COOKIE_NAME = os.environ.get(
-    "CLASSIC_PERMANENT_COOKIE_NAME", "tapir_permanent"
-)
-CLASSIC_TRACKING_COOKIE = os.environ.get("CLASSIC_TRACKING_COOKIE", "browser")
-CLASSIC_DATABASE_URI = os.environ.get(
-    "CLASSIC_DATABASE_URI",
-    os.environ.get("BROWSE_SQLALCHEMY_DATABASE_URI", default=None),
-)
-"""If not set, legacy database integrations for auth will not be available."""
+    This can start with gs:// to use Google Storage.
+    Ex gs://arxiv-production-data/ftp."""
 
 
-CLASSIC_SESSION_HASH = os.environ.get("CLASSIC_SESSION_HASH", "foosecret")
-SESSION_DURATION = os.environ.get("SESSION_DURATION", "36000")
+    DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore
+    """Implementation to use for abstracts.
 
-URLS = [
-    ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
-    # This is a temporary workaround for ARXIVNG-2063
-]
-"""External URLs."""
+    Accepted values are:
+    - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
+       produciton since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
+       DOCUMENT_ORIGNAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
+    - `browse.services.documents.db_docs`: DocMetadata using the database.
+    """
 
-TEMPLATES_AUTO_RELOAD = os.environ.get("TEMPLATES_AUTO_RELOAD") == ON
-"""Enable template auto reload in flask"""
+    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
+    """Paths to .abs and source files.
+
+        This can start with gs:// to use Google Storage."""
+    DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
+    """Paths to .abs and source files.
+
+        This can start with gs:// to use Google Storage.
+    """
+
+    DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
+    """Path to cache directory"""
+
+    PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
+    """Implementation of the prev/next service used for those features on the abs page.
+
+    Currently the only value is `browse.services.prevnext.fsprevnext` This uses
+       DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
+    """
+
+
+    DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
+    """Storage prefix to use. Ex gs://arxiv-production-data
+
+    If it is a GS bucket it must be just gs://{BUCKET_NAME} and not have
+    any key parts. ex 'gs://arxiv-production-data'
+
+    Use something like `/cache/` for a file system. Use something like
+    `./testing/data/` for testing data. Must end with a /
+    """
+
+    ######################### End of Services ###########################
+
+    SHOW_EMAIL_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to /show-email.
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
+    CLICKTHROUGH_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to /ct.
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
+    TRACKBACK_SECRET: SecretStr = SecretStr(token_hex(10))
+    """Used in linking to trackbacks in /tb pages
+
+    Set to be random by default to avoid leaking in misconfigured apps."""
+
+    # Labs settings
+    LABS_ENABLED: bool = True
+    """arXiv Labs global enable/disable."""
+    LABS_BIBEXPLORER_ENABLED: bool = True
+    """arXiv Labs Bibliographic Explorer enable/disable."""
+    LABS_CORE_RECOMMENDER_ENABLED: bool = False
+    """CORE Recommender enabled/disabled."""
+
+    # Auth settings These set settings of the arxiv-auth package.
+    AUTH_SESSION_COOKIE_NAME: str = "ARXIVNG_SESSION_ID"
+    AUTH_SESSION_COOKIE_DOMAIN: str = ".arxiv.org"
+    AUTH_SESSION_COOKIE_SECURE: bool = True
+    AUTH_UPDATED_SESSION_REF: bool = True
+
+    CLASSIC_COOKIE_NAME: str = "tapir_session"
+    CLASSIC_PERMANENT_COOKIE_NAME: str = "tapir_permanent"
+
+    CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
+    SESSION_DURATION: int = 36000
+
+    URLS: List[tuple] = [
+        ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
+        # This is a temporary workaround for ARXIVNG-2063
+    ]
+    """External URLs."""
+
+
+    ARXIV_BUSINESS_TZ: str = 'US/Eastern'
+    """
+    Timezone of the arxiv business offices.
+    """
+
+    FS_TZ: str = "US/Eastern"
+    """
+    Timezone of the filesystems used for abs, src and other files.
+
+    This should be stirng that can be used with `zoneinfo.ZoneInfo`.
+
+    If this is at a cloud provider is likley to be "UTC". On Cornell VM's it is
+    "US/Eastern".
+    """
+
+    """XXXXXXXXXXXXXXX Some flask specific configs XXXXXXXXXXXX"""
+
+    TESTING: bool = True
+    """enable/disable testing mode. Enable testing mode. Exceptions are
+    propagated rather than handled by the the app’s error
+    handlers. Extensions may also change their behavior to facilitate
+    easier testing. You should enable this in your own tests."""
+
+    TEMPLATES_AUTO_RELOAD: Optional[bool] = None
+    """Enable template auto reload in flask.
+
+    Whether to check for modifications of the template source and reload it
+    automatically. By default the value is None which means that Flask checks
+    original file only in debug mode.
+    """
+
+
+    SECRET_KEY: str = "qwert2345"
+
+    SESSION_COOKIE_NAME: str = "arxiv_browse"
+
+    SESSION_COOKIE_DOMAIN: Optional[str] = None
+    """
+    the domain for the session cookie. If this is not set, the cookie will be valid
+    for all subdomains of SERVER_NAME.
+    """
+
+    SESSION_COOKIE_PATH: Optional[str] = None
+    """
+    the path for the session cookie. If this is not set the cookie will be valid
+    for all of APPLICATION_ROOT or if that is not set for '/'.
+    """
+
+    SESSION_COOKIE_HTTPONLY: bool = True
+    """
+    controls if the cookie should be set with the httponly flag. Defaults to True.
+    """
+
+    SESSION_COOKIE_SECURE: bool = True
+    """
+    controls if the cookie should be set with the secure flag. Defaults to False.
+    """
+
+    PERMANENT_SESSION_LIFETIME: int = 3600
+    """
+    the lifetime of a permanent session as datetime.timedelta object. Starting with
+    Flask 0.8 this can also be an integer representing seconds.
+    """
+
+    SESSION_REFRESH_EACH_REQUEST: bool = True
+    """
+    this flag controls how permanent sessions are refreshed. If set to True (which
+    is the default) then the cookie is refreshed each request which automatically
+    bumps the lifetime. If set to False a set-cookie header is only sent if the
+    session is modified. Non permanent sessions are not affected by this.
+    """
+
+    USE_X_SENDFILE: bool = False
+    """enable/disable x-sendfile"""
+
+    LOGGER_NAME: str = "browse"
+    """the name of the logger"""
+
+    LOGGER_HANDLER_POLICY: str = "always"
+    """
+    the policy of the default logging handler. The default is 'always' which means
+    that the default logging handler is always active. 'debug' will only activate
+    logging in debug mode, 'production' will only log in production and 'never'
+    disables it entirely.
+    """
+
+    SERVER_NAME: Optional[str] = None
+    """
+    the name and port number of the server. Required for subdomain support (e.g.:
+    'myapp.dev:5000') Note that localhost does not support subdomains so setting
+    this to "localhost" does not help. Setting a SERVER_NAME also by default
+    enables URL generation without a request context but with an application
+    context.
+
+    If this is set and the Host header of a request does not match the SERVER_NAME,
+    then Flask will respond with a 404. Test with
+    curl http://127.0.0.1:5000/ -sv -H "Host: subdomain.arxiv.org"
+    """
+
+    APPLICATION_ROOT: Optional[str] = None
+    """
+    If the application does not occupy a whole domain or subdomain this can be set
+    to the path where the application is configured to live. This is for session
+    cookie as path value. If domains are used, this should be None.
+    """
+
+    MAX_CONTENT_LENGTH: Optional[int] = None
+    """
+    If set to a value in bytes, Flask will reject incoming requests with a content
+    length greater than this by returning a 413 status code.
+    """
+
+    SEND_FILE_MAX_AGE_DEFAULT: int = 43200
+    """
+    Default cache control max age to use with send_static_file() (the default
+    static file handler) and send_file(), as datetime.timedelta or as seconds.
+    Override this value on a per-file basis using the get_send_file_max_age() hook
+    on Flask or Blueprint, respectively. Defaults to 43200 (12 hours).
+    """
+
+    TRAP_HTTP_EXCEPTIONS: bool = True
+    """
+    If this is set to True Flask will not execute the error handlers of HTTP
+    exceptions but instead treat the exception like any other and bubble it through
+    the exception stack. This is helpful for hairy debugging situations where you
+    have to find out where an HTTP exception is coming from.
+    """
+
+    TRAP_BAD_REQUEST_ERRORS: bool = True
+    """
+    Werkzeug's internal data structures that deal with request specific data will
+    raise special key errors that are also bad request exceptions. Likewise many
+    operations can implicitly fail with a BadRequest exception for consistency.
+    Since it’s nice for debugging to know why exactly it failed this flag can be
+    used to debug those situations. If this config is set to True you will get a
+    regular traceback instead.
+    """
+
+    PREFERRED_URL_SCHEME: str = "http"
+    """
+    The URL scheme that should be used for URL generation if no URL scheme is
+    available. This defaults to http.
+    """
+
+    JSON_AS_ASCII: bool = True
+    """
+    By default Flask serialize object to ascii-encoded JSON. If this is set to
+    False Flask will not encode to ASCII and output strings as-is and return
+    unicode strings. jsonify will automatically encode it in utf-8 then for
+    transport for instance.
+    """
+
+    JSON_SORT_KEYS: bool = True
+    """
+    By default Flask will serialize JSON objects in a way that the keys are
+    ordered. This is done in order to ensure that independent of the hash seed of
+    the dictionary the return value will be consistent to not trash external HTTP
+    caches. You can override the default behavior by changing this variable.
+    This is not recommended but might give you a performance improvement on the
+    cost of cacheability.
+    """
+
+    JSONIFY_PRETTYPRINT_REGULAR: bool = True
+    """
+    If this is set to True (the default) jsonify responses will be pretty printed
+    if they are not requested by an XMLHttpRequest object (controlled by the
+    X-Requested-With header).
+    """
+
+    JSONIFY_MIMETYPE: str = "application/json"
+    """MIME type used for jsonify responses."""
+
+    EXPLAIN_TEMPLATE_LOADING: bool = False
+    """
+    If this is enabled then every attempt to load a template will write an info
+    message to the logger explaining the attempts to locate the template. This can
+    be useful to figure out why templates cannot be found or wrong templates appear
+    to be loaded.
+    """
+
+    class Config:
+        """Additional pydantic config of these settings."""
+
+        fields = {
+            'SQLALCHEMY_DATABASE_URI': {
+                'env': ['BROWSE_SQLALCHEMY_DATABASE_URI', 'CLASSIC_DATABASE_URI']
+            }
+        }
+
+    def check(self) -> None:
+        """A check and fix up of a settings object."""
+        if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
+            if not self.TESTING:
+                log.warning(f"using SQLite DB at {self.SQLALCHEMY_DATABASE_URI}")
+            self.SQLALCHEMY_MAX_OVERFLOW = None
+            self.SQLALCHEMY_POOL_SIZE = None
+
+        if (os.environ.get("FLASK_ENV", False) == "production"
+                and "sqlite" in self.SQLALCHEMY_DATABASE_URI):
+            warnings.warn(
+                "Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment"
+            )
+
+        if self.DOCUMENT_ORIGNAL_VERSIONS_PATH.startswith("gs://") and \
+           self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
+           self.FS_TZ = "UTC"
+           log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
+                       "and DOCUMENT_ORIGNAL_VERSIONS_PATH are Google Storage")
+           if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
+               log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
+           else:
+               log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
+
+        if ("fs_docs" in str(type(self.DOCUMENT_ABSTRACT_SERVICE)) and
+            "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
+            self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
+            log.warning(f"Unexpected: using FS listings and abs sevice but FS don't match. "
+                        "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
+                        f"but listings at {self.DOCUMENT_LISTING_PATH}")

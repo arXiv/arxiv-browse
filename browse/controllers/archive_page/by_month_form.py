@@ -1,9 +1,10 @@
 """Form for month selection of list controller."""
-from typing import List, Any, Dict
+from typing import Any, Dict, List
 
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField, HiddenField
+from wtforms import HiddenField, SelectField, SubmitField
 from wtforms.validators import DataRequired
+
 
 MONTHS = [
     ('all', 'all months'),

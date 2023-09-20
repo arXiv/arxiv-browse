@@ -1,0 +1,19 @@
+{% extends "base/base.html" %}
+
+{% import "base/error_macros.html" as error_macros %}
+
+{% block title %}{{ msg_headline }}{% endblock %}
+
+{% block content %}
+<div class="has-text-centered">
+  <h1 class="title is-size-1">{{ msg_headline }}</h1>
+  <div class="status-code">
+    <img src="{{ url_for('base.static', filename='images/smileybones-error-yellow.svg') }}"
+         alt="0"
+         width="340"
+         height="340"
+         />
+  </div>
+  <p class="is-size-5">{{ msg|safe }}</p>
+</div>
+{% endblock %}

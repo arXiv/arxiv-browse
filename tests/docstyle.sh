@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pipenv run pydocstyle --convention=numpy --add-ignore=D401
+pydocstyle --convention=numpy --add-ignore=D401
 PYDOCSTYLE_STATUS=$?
 if [ $PYDOCSTYLE_STATUS -ne 0 ]; then PYDOCSTYLE_STATE="failure" && echo "pydocstyle failed"; else PYDOCSTYLE_STATE="success" &&  echo "pydocstyle passed"; fi
 curl -u $USERNAME:$GITHUB_TOKEN \

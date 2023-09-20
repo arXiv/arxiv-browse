@@ -1,0 +1,104 @@
+Date: Thu, 16 Mar 23 00:46:22 GMT
+Subject: q-fin.GN daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: q-fin@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+General Finance
+ received from  Tue 14 Mar 23 18:00:00 GMT  to  Wed 15 Mar 23 18:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.08748
+Date: Mon, 23 Jan 2023 10:13:39 GMT   (1945kb,D)
+
+Title: DeFi Lending During The Merge
+Authors: Lioba Heimbach, Eric Schertenleib, Roger Wattenhofer
+Categories: q-fin.GN
+\\
+  Lending protocols in decentralized finance enable the permissionless exchange
+of capital from lenders to borrowers without relying on a trusted third party
+for clearing or market-making. Interest rates are purely set by the supply and
+demand of capital according to a pre-defined function. In the lead-up to The
+Merge: Ethereum blockchain's transition from proof-of-work (PoW) to
+proof-of-stake (PoS), a fraction of the Ethereum ecosystem announced plans of
+continuing with a PoW-chain. Owners of ETH - whether their ETH was borrowed or
+not - would hold the native tokens on each chain. This development alarmed
+lending protocols. They feared spiking ETH borrowing rates would lead to mass
+liquidations which could undermine their viability. Thus, the decentralized
+autonomous organization running the protocols saw no alternative to
+intervention - restricting users' ability to borrow.
+  We investigate the effects of the merge and the intervention on the two
+biggest lending protocols on Ethereum: AAVE and Compound. Our analysis finds
+that borrowing rates were extremely volatile, jumping by two orders of
+magnitude, and borrowing at times reached 100% of the available funds. Despite
+this, no spike in mass liquidations or irretrievable loans materialized.
+Further, we are the first to quantify and analyze hard-fork-arbitrage,
+profiting from holding debt in the native blockchain token during a hard fork.
+We find that arbitrageurs made 13 Mio US$, money that was effectively extracted
+from the platforms' lenders.
+  Finally, we identify alarming security risks to the entire Ethereum
+ecosystem. Around one-fifth of the staked ETH through LIDO (stETH) was locked
+as collateral on lending protocols. Mass liquidations caused by spiking rates
+would have devastating effects on the stETH price and pose security concerns
+for the consensus layer, as staking power could be bought at a significant
+discount.
+\\ ( https://arxiv.org/abs/2303.08748 ,  1945kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2302.07117
+replaced with revised version Wed, 1 Mar 2023 14:13:00 GMT   (793kb)
+
+Title: Control of Emerging-Market Target, Abnormal Stock Return: Evidence in
+  Vietnam
+Authors: Quyen Van, Vy Tran
+Categories: q-fin.GN
+\\ ( https://arxiv.org/abs/2302.07117 ,  793kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2205.12043
+replaced with revised version Thu, 2 Mar 2023 13:22:09 GMT   (192kb)
+
+Title: Static Replication of Impermanent Loss for Concentrated Liquidity
+  Provision in Decentralised Markets
+Authors: Jun Deng, Hua Zong and Yun Wang
+Categories: q-fin.GN q-fin.RM
+Comments: 12pages, 1 figure
+\\ ( https://arxiv.org/abs/2205.12043 ,  192kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2212.10317
+replaced with revised version Tue, 7 Mar 2023 21:10:55 GMT   (760kb,D)
+
+Title: Peer-reviewed theory does not help predict the cross-section of stock
+  returns
+Authors: Andrew Y. Chen, Alejandro Lopez-Lira, and Tom Zimmermann
+Categories: q-fin.GN
+\\ ( https://arxiv.org/abs/2212.10317 ,  760kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2211.15260
+replaced with revised version Mon, 13 Mar 2023 17:34:16 GMT   (3694kb,D)
+
+Title: ETF construction on CRIX
+Authors: Konstantin H\"ausler
+Categories: q-fin.GN q-fin.PM
+\\ ( https://arxiv.org/abs/2211.15260 ,  3694kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2210.11203 (*cross-listing*)
+replaced with revised version Wed, 1 Mar 2023 20:03:26 GMT   (2323kb)
+
+Title: Voter Coalitions and democracy in Decentralized Finance: Evidence from
+  MakerDAO
+Authors: Xiaotong Sun, Xi Chen, Charalampos Stasinakis, Georgios Sermpinis
+Categories: cs.SI cs.MA q-fin.GN q-fin.TR
+\\ ( https://arxiv.org/abs/2210.11203 ,  2323kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---

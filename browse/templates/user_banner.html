@@ -16,12 +16,32 @@ This no longer uses env vars set in browse.config or httpd/conf/ng_flask.conf on
 production. -#}
 
 {# Set these variables to a string of YYYYMMMDD of the start and end date #}
-{% set BANNER_START = '20230329' %}
-{% set BANNER_END = '20230409' %}
+{% set BANNER_START = '202000101' %}
+{% set BANNER_END = '20200101' %}
 
 
 {%- macro content(request_datetime) -%}
 {%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+<aside class="slider-wrapper bps-banner dark" >
+  <div class="copy-donation bps-banner">
+    <h1>Example banner</h1>
+    <p>Banner text would go here.</p>
+    <p><a href="https://arxiv.org/support/bug_report">Report bugs here</a></p>
+  </div>
+</aside>
+{%- endif -%}
+{%- endmacro -%}
+
+
+{%- macro script(request_datetime) -%}
+{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
+{%- endif -%}
+{%- endmacro -%}
+
+{#################### disabled example banners ####################}
+
+{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
 {# accessibility CTA banner #}
 <aside class="slider-wrapper bps-banner dark" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
@@ -36,20 +56,9 @@ production. -#}
       </div>
     </div>
   </div>
-</aside>
-{%- endif -%}
-{%- endmacro -%}
+</aside>#}
+{#{%- endif -%}#}
 
-
-{%- macro script(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script language="javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script language="javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-{%- endif -%}
-{%- endmacro -%}
-
-{#################### disabled example banners ####################}
 {# donation banner #}
 {#<aside class="slider-wrapper bps-banner" style="display:none">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>

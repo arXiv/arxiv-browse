@@ -1,0 +1,465 @@
+Date: Fri,  3 Mar 23 01:36:02 GMT
+Subject: astro-ph.EP daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: physics@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+Earth and Planetary Astrophysics
+ received from  Wed  1 Mar 23 19:00:00 GMT  to  Thu  2 Mar 23 19:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00768
+Date: Wed, 1 Mar 2023 19:00:03 GMT   (5650kb,D)
+
+Title: A major asymmetric ice trap in a planet-forming disk IV. Nitric oxide
+  gas and a lack of CN tracing sublimating ices and a C/O ratio $< 1$
+Authors: M. Leemker, A. S. Booth, E. F. van Dishoeck, N. van der Marel, B.
+  Tabone, N. F. W. Ligterink, N. G. C. Brunken, M. R. Hogerheijde
+Categories: astro-ph.EP astro-ph.SR
+Comments: Accepted for publication in Astronomy and Astrophysics
+\\
+  [Abridged] Most well-resolved disks observed with ALMA show signs of dust
+traps. These dust traps set the chemical composition of the planet forming
+material in these disks, as the dust grains with their icy mantles are trapped
+at specific radii and could deplete the gas and dust of volatiles at smaller
+radii. In this work we analyse the first detection of nitric oxide (NO) in a
+protoplanetary disk. We aim to constrain the nitrogen chemistry and the
+gas-phase C/O ratio in the highly asymmetric dust trap in the Oph-IRS 48 disk.
+We use ALMA observations of NO, CN, C$_2$H, and related molecules and model the
+effect of the dust trap on the physical and chemical structure using the
+thermochemical code DALI. Furthermore, we explore how ice sublimation
+contributes to the observed emission lines. NO is only observed at the location
+of the dust trap but CN and C$_2$H are not detected in the Oph-IRS 48 disk.
+This results in an CN/NO column density ratio of $< 0.05$ and thus a low C/O
+ratio at the location of the dust trap. The main gas-phase formation pathways
+to NO through OH and NH in the fiducial model predict NO emission that is an
+order of magnitude lower than is observed. The gaseous NO column density can be
+increased by factors ranging from 2.8 to 10 when the H$_2$O and NH$_3$ gas
+abundances are significantly boosted by ice sublimation. However, these models
+are inconsistent with the upper limits on the H$_2$O and OH column densities
+derived from observations. We propose that the NO emission in the Oph-IRS 48
+disk is closely related to the nitrogen containing ices sublimating in the dust
+trap. The non-detection of CN constrains the C/O ratio both inside and outside
+the dust trap to be $< 1$ if all nitrogen initially starts as N$_2$ and $\leq
+0.6$, consistent with the Solar value, if (part of) the nitrogen initially
+starts as N or NH$_3$.
+\\ ( https://arxiv.org/abs/2303.00768 ,  5650kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00867
+Date: Wed, 1 Mar 2023 23:45:30 GMT   (4030kb,D)
+
+Title: Evolution of the eccentricity and inclination of low-mass planets
+  subjected to thermal forces: a numerical study
+Authors: S. Cornejo, F. S. Masset, R. O. Chametla and S. Fromenteau
+Categories: astro-ph.EP
+Comments: Accepted for publication in MNRAS
+\\
+  By means of three dimensional, high resolution hydrodynamical simulations we
+study the orbital evolution of weakly eccentric or inclined low-mass
+protoplanets embedded in gaseous discs subject to thermal diffusion. We
+consider both non-luminous planets, and planets that also experience the
+radiative feedback from their own luminosity. We compare our results to
+previous analytical work, and find that thermal forces (the contribution to the
+disc's force arising from thermal effects) match those predicted by linear
+theory within $\sim 20$%. When the planet's luminosity exceeds a threshold
+found to be within $10$% of that predicted by linear theory, its eccentricity
+and inclination grow exponentially, whereas these quantities undergo a strong
+damping below this threshold. In this regime of low luminosity indeed, thermal
+diffusion cools the surroundings of the planet and allows gas to accumulate in
+its vicinity. It is the dynamics of this gas excess that contributes to damp
+eccentricity and inclination. The damping rates obtained can be up to $h^{-1}$
+times larger than those due to the resonant interaction with the disc, where
+$h$ is the disc's aspect ratio. This suggests that models that incorporate
+planet-disc interactions using well-known formulae based on resonant
+wave-launching to describe the evolution of eccentricity and inclination
+underestimate the damping action of the disc on the eccentricity and
+inclination of low-mass planets by an order of magnitude.
+\\ ( https://arxiv.org/abs/2303.00867 ,  4030kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01337
+Date: Thu, 2 Mar 2023 15:14:44 GMT   (722kb,D)
+
+Title: Shape-Driven Selection Effects for Aspherical Near-Earth Objects in
+  Systematic Surveys
+Authors: W. Garrett Levine and Robert Jedicke
+Categories: astro-ph.EP
+Comments: 21 pages, 10 figure, 1 table. Accepted for publication in Icarus
+\\
+  The apparent magnitude of elongated small bodies is time-dependent over their
+rotation phase. Therefore, previously undiscovered aspherical minor planets may
+experience a shape-driven selection effect in systematic surveys versus their
+spherical counterparts. In this study, we conduct injection-recovery exercises
+of synthetic asteroid lightcurves using a simple model to quantify the effect
+of varying axial ratio on detection efficiencies. We find that high-amplitude
+lightcurves are confronted with adverse selection effects for survey cadences
+and discovery thresholds for constructing tracklets that are representative of
+modern and proposed future NEO searches. Furthermore, we illustrate the
+possible hazards of drawing population-level inferences on an underlying
+reservoir of elongated small bodies. If physical size and characteristic axial
+ratios are correlated, then size-frequency distributions may require revision
+at small diameters. In particular, this effect could alter the estimated
+populations of near-Earth objects. We conclude by discussing the applicability
+of our results to various other classes of solar system minor planets and
+interstellar interlopers, as well as discuss future work that may further
+interrogate this detection bias.
+\\ ( https://arxiv.org/abs/2303.01337 ,  722kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01358
+Date: Thu, 2 Mar 2023 15:37:47 GMT   (742kb,D)
+
+Title: A Jupiter analogue and a cold Super-Neptune orbiting the solar-twin star
+  HIP 104045
+Authors: Thiago Ferreira, Jorge Mel\'endez, Diego Lorenzo-Oliveira, Jacob L.
+  Bean, Lorenzo Spina, and Megan Bedell
+Categories: astro-ph.EP
+Comments: submitted to MNRAS
+\\
+  We present the discovery of two planets around the solar twin HIP 104045 via
+radial velocity data obtained with the ESO/HARPS spectrograph as part of the
+Solar Twin Planet Search observing programme. The joint Keplerian and Gaussian
+Process model fit accounting for both planetary and intrinsic stellar
+modulations, as well as no timing-radial velocity correlations of several
+activity tracers of the host star, reveal the presence of a Jupiter analogue
+$m\sin{i}_b$ = 0.498$\pm$0.074 M$_{\rm Jup}$ under circular orbit with $P_b$ =
+2315$\pm$310 days and a cold Super-Neptune $m\sin{i}_c$ = 43.15$\pm$10.3
+M$_\oplus$ under circular orbit with $P_c$ = 316$\pm$75 days.
+\\ ( https://arxiv.org/abs/2303.01358 ,  742kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01458
+Date: Thu, 2 Mar 2023 18:15:03 GMT   (5132kb,D)
+
+Title: Near-infrared Polarization Charateristics of the Zodiacal Light Observed
+  with DIRBE/COBE
+Authors: Kohji Takimoto, Shuji Matsuura, Kei Sano, and Richard M. Feder
+Categories: astro-ph.EP
+Comments: 11 pages, 12 figures, accepted by ApJ
+\\
+  We report near-infrared polarization of the zodiacal light (ZL) measured from
+space by the Diffuse Infrared Background Experiment (DIRBE) on board the Cosmic
+Background Explorer in photometric bands centered at 1.25, 2.2, and 3.5 $\mu$m.
+To constrain the physical properties of interplanetary dust (IPD), we use DIRBE
+Weekly Sky Maps to investigate the solar elongation ($\epsilon$), ecliptic
+latitude ($\beta$), and wavelength ($\lambda$) dependence of ZL polarization.
+We find that the polarization of the ZL varies as a function of $\epsilon$ and
+$\beta$, consistent with observed polarization at $\lambda$ = 550 nm. While the
+polarization dependence with wavelength at $(\epsilon$, $\beta)=(90^{\circ}$,
+$0^{\circ})$ is modest (increasing from 17.7 $\pm$ 0.2% at 1.25 $\mu$m to 21.0
+$\pm$ 0.3% at 3.5 $\mu$m), the variation is more pronounced at the North
+Ecliptic Pole (23.1 $\pm$ 1.6, 35.1 $\pm$ 2.0 and 39.3 $\pm$ 2.1% at 1.25, 2.2
+and 3.5 $\mu$m, respectively). The variation of ZL polarization with wavelength
+is not explained by either Rayleigh scattering or by absorptive particles
+larger than 10 $\mu$m.
+\\ ( https://arxiv.org/abs/2303.01458 ,  5132kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01496
+Date: Thu, 2 Mar 2023 18:56:47 GMT   (828kb,D)
+
+Title: Robustness Measures for Molecular Detections using High-Resolution
+  Transmission Spectroscopy of Exoplanets
+Authors: Connor J. Cheverall, Nikku Madhusudhan, M{\aa}ns Holmberg
+Categories: astro-ph.EP
+Comments: Accepted for publication in MNRAS
+\\
+  Ground-based high-resolution transmission spectroscopy has emerged as a
+promising technique for detecting chemicals in transiting exoplanetary
+atmospheres. Despite chemical inferences in several exoplanets and previous
+robustness studies, a robust and consistent detrending method to remove
+telluric and stellar features from transmission spectra has yet to be agreed
+upon. In this work we investigate the robustness of metrics used to optimise
+PCA-based detrending for high-resolution transmission spectra of exoplanets in
+the near-infrared. As a case study, we consider observations of the hot Jupiter
+HD 189733 b obtained using the CARMENES spectrograph on the 3.5 m CAHA
+telescope. We confirm that optimising the detrending parameters to maximise the
+S/N of a cross-correlation signal in the presence of noise has the potential to
+bias the detection significance at the planetary velocity of optimisation.
+However, we find that optimisation using the difference between a
+signal-injected cross-correlation function and the direct cross-correlation
+function (CCF) is more robust against over-optimisation of noise and spurious
+signals. We additionally examine the robustness of weighting the contribution
+of each order to the final CCF, and of S/N calculations. Using a prescribed
+robust methodology, we confirm H2O in the atmosphere of HD 189733 b (S/N =
+6.1). We then investigate two further case studies, of exoplanets HD 209458 b
+and WASP-76 b, confirming OH in the atmosphere of WASP-76 b (S/N = 4.7), and
+demonstrating how non-robust methods may induce false positive or inflated
+detections. Our findings pave the way towards a robust framework for
+homogeneous characterisation of exoplanetary atmospheres using high-resolution
+transmission spectroscopy in the near-infrared.
+\\ ( https://arxiv.org/abs/2303.01496 ,  828kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00812 (*cross-listing*)
+Date: Wed, 1 Mar 2023 20:28:17 GMT   (603kb,D)
+
+Title: One EURO for Uranus: the Elliptical Uranian Relativity Orbiter mission
+Authors: Lorenzo Iorio, Athul P. Girija, Daniele Durante
+Categories: gr-qc astro-ph.EP astro-ph.IM physics.space-ph
+Comments: LaTex2e, 38 pages, 7 figures, no tables
+\\
+  Recent years have seen an increasing interest in sending a mission to Uranus,
+visited so far only by Voyager 2 in 1986. EURO (Elliptical Uranian Relativity
+Orbiter) is a preliminary mission concept investigating the possibility of
+dynamically measuring the planet's angular momentum ${\boldsymbol S}$ by means
+of the Lense-Thirring effect affecting a putative Uranian orbiter. It is
+possible, at least in principle, to separate the relativistic precessions of
+the orbital inclination $I$ to the Celestial Equator and of the longitude of
+the ascending node $\Omega$ of the spacecraft from its classical rates of the
+pericentre $\omega$ induced by the multipoles $J_\ell,\,\ell=2,\,3,\,4,\ldots$
+of the planet's gravity field by adopting an orbital plane containing the
+planet's spin axis $\boldsymbol{\hat{k}}$, perpendicular to the Celestial
+Equator, and whose position in the latter is the same as of the projection of
+$\boldsymbol{\hat{k}}$ on to it. For a wide and elliptical $2\,000\times
+100\,000\,\mathrm{km}$ orbit, the gravitomagnetic signatures amount to tens of
+milliarcseconds per year, while, for a suitable choice of the initial
+conditions, the peak-to-peak amplitude of the range-rate shift can reach the
+level of $\simeq 1.5\times 10^{-3}$ millimetre per second in a single
+pericentre passage of a few hours. By lowering the apocentre height to
+$10\,000\,\mathrm{km}$, the Lense-Thirring precessions are enhanced to the
+level of hundreds of milliarcseconds per year. The uncertainties in the
+orientation of $\boldsymbol{\hat{k}}$ and in $I$ are major sources of
+systematic bias; it turns out that they should be determined with accuracies as
+good as $\simeq 0.1-1$ and $\simeq 1-10$ milliarcseconds, respectively.
+\\ ( https://arxiv.org/abs/2303.00812 ,  603kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01100 (*cross-listing*)
+Date: Thu, 2 Mar 2023 09:32:38 GMT   (102kb,D)
+
+Title: Representation of s-process abundances for comparison to data from bulk
+  meteorites
+Authors: Maria Lugaro, Mattias Ek, M\'aria Pet\H{o}, Marco Pignatari, Georgy V.
+  Makhatadze, Isaac J. Onyett, Maria Sch\"onb\"achler
+Categories: astro-ph.SR astro-ph.EP physics.geo-ph
+Comments: Accepted for publication in the EPJA Special Issue on: 'From reactors
+  to stars' in honor of Franz K\"appeler
+\\
+  Analysis of bulk meteorite compositions has revealed small isotopic
+variations due to the presence of material (e.g., stardust) that preserved the
+signature of nuclear reactions occurring in specific stellar sites. The
+interpretation of such anomalies provides evidence for the environment of the
+birth of the Sun, its accretion process, the evolution of the solar
+proto-planetary disk, and the formation of the planets. A crucial element of
+such interpretation is the comparison of the observed anomalies to predictions
+from models of stellar nucleosynthesis. To date, however, this comparison has
+been limited to a handful of model predictions. This is mostly because the
+calculated stellar abundances need to be transformed into a specific
+representation, which nuclear astrophysicists and stellar nucleosynthesis
+researchers are not familiar with. Here, we show in detail that this
+representation is needed to account for mass fractionation effects in meteorite
+data that can be generated both in nature and during instrumental analysis. We
+explain the required internal normalisation to a selected isotopic ratio,
+describe the motivations behind such representation more widely, and provide
+the tools to perform the calculations. Then, we present some examples
+considering two elements produced by the $slow$ neutron-capture ($s$) process:
+Sr and Mo. We show which specific representations for the Sr isotopic
+composition calculated by $s$-process models better disentangle the
+nucleosynthetic signatures from stars of different metallicity. For Mo, the
+comparison between data and models is improved due to a recent re-analysis of
+the $^{95}$Mo neutron-capture cross section.
+\\ ( https://arxiv.org/abs/2303.01100 ,  102kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01138 (*cross-listing*)
+Date: Thu, 2 Mar 2023 10:33:37 GMT   (8132kb,D)
+
+Title: Auroral, Ionospheric and Ground Magnetic Signatures of Magnetopause
+  Surface Modes
+Authors: M.O. Archer, M.D. Hartinger, L. Rastaetter, D.J. Southwood, M. Heyns,
+  J.W.B. Eggington, A.N. Wright, F. Plaschke, X. Shi
+Categories: physics.space-ph astro-ph.EP physics.plasm-ph
+Journal-ref: Journal of Geophysical Research: Space Physics, 128, e2022JA031081
+DOI: 10.1029/2022JA031081
+\\
+  Surface waves on Earth's magnetopause have a controlling effect upon global
+magnetospheric dynamics. Since spacecraft provide sparse in situ observation
+points, remote sensing these modes using ground-based instruments in the polar
+regions is desirable. However, many open conceptual questions on the expected
+signatures remain. Therefore, we provide predictions of key qualitative
+features expected in auroral, ionospheric, and ground magnetic observations
+through both magnetohydrodynamic theory and a global coupled
+magnetosphere-ionosphere simulation of a magnetopause surface eigenmode. These
+show monochromatic oscillatory field-aligned currents, due to both the surface
+mode and its non-resonant Alfv\'en coupling, are present throughout the
+magnetosphere. The currents peak in amplitude at the equatorward edge of the
+magnetopause boundary layer, not the open-closed boundary as previously
+thought. They also exhibit slow poleward phase motion rather than being purely
+evanescent. We suggest the upward field-aligned current perturbations may
+result in periodic auroral brightenings. In the ionosphere, convection vortices
+circulate the poleward moving field-aligned current structures. Finally,
+surface mode signals are predicted in the ground magnetic field, with
+ionospheric Hall currents rotating perturbations by approximately (but not
+exactly) 90{\deg} compared to the magnetosphere. Thus typical dayside
+magnetopause surface modes should be strongest in the East-West ground magnetic
+field component. Overall, all ground-based signatures of the magnetopause
+surface mode are predicted to have the same frequency across L-shells,
+amplitudes that maximise near the magnetopause's equatorward edge, and larger
+latitudinal scales than for field line resonance. Implications in terms of
+ionospheric Joule heating and geomagnetically induced currents are discussed.
+\\ ( https://arxiv.org/abs/2303.01138 ,  8132kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01154 (*cross-listing*)
+Date: Thu, 2 Mar 2023 10:57:32 GMT   (748kb,D)
+
+Title: No evidence for absence of solar dynamo synchronization
+Authors: F. Stefani, J. Beer, T. Weier
+Categories: astro-ph.SR astro-ph.EP
+Comments: 8 pages, 7 figures
+\\
+  Context: The old question of whether the solar dynamo is synchronized by the
+tidal forces of the orbiting planets has recently received renewed interest,
+both from the viewpoint of historical data analysis and in terms of theoretical
+and numerical modelling. Aims: We aim to contribute to the solution of this
+longstanding puzzle by analyzing cosmogenic radionuclide data from the last
+millennium. Methods: We reconsider a recent time-series of $^{14}$C-inferred
+sunspot data and compare the resulting cycle minima and maxima with the
+corresponding conventional series down to 1610 A.D., enhanced by Schove's data
+before that time. Results: We find that, despite recent claims to the contrary,
+the $^{14}$C-inferred sunspot data are well compatible with a synchronized
+solar dynamo, exhibiting a relatively phase-stable period of 11.07 years, which
+points to a synchronizing role of the spring tides of the Venus-Earth-Jupiter
+system.
+\\ ( https://arxiv.org/abs/2303.01154 ,  748kb)
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2205.05709
+replaced with revised version Thu, 2 Mar 2023 15:38:45 GMT   (3066kb,D)
+
+Title: Another Shipment of Six Short-Period Giant Planets from TESS
+Authors: Joseph E. Rodriguez, Samuel N. Quinn, Andrew Vanderburg, George Zhou,
+  Jason D. Eastman, Erica Thygesen, Bryson Cale, David R. Ciardi, Phillip A.
+  Reed, Ryan J. Oelkers, Karen A. Collins, Allyson Bieryla, David W. Latham, B.
+  Scott Gaudi, Coel Hellier, Kirill Sokolovsky, Jack Schulte, Gregor Srdoc,
+  John Kielkopf, Ferran Grau Horta, Bob Massey, Phil Evans, Denise C. Stephens,
+  Kim K. McLeod, Nikita Chazov, Vadim Krushinsky, Mourad Ghachoui, Boris
+  Safonov, Cayla M. Dedrick, Dennis Conti, Didier Laloum, Steven Giacalone,
+  Carl Ziegler, Pere Guerra Serra, Ramon Naves Nogues, Felipe Murgas, Edward J.
+  Michaels, George R. Ricker, Roland K. Vanderspek, Joshua N. Winn, Jon M.
+  Jenkins, Brett Addison, Owen Alfaro, D. R. Anderson, Elias Ayad, Timothy
+  Bedding, Alexandr A. Belinsky, Zouhair Benkhaldoun, Perry Berlind, et al. (72
+  additional authors not shown)
+Categories: astro-ph.EP astro-ph.SR
+Comments: 20 Pages, 6 Figures, 8 Tables, Accepted by MNRAS
+\\ ( https://arxiv.org/abs/2205.05709 ,  3066kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2210.12847
+replaced with revised version Wed, 1 Mar 2023 21:58:31 GMT   (18651kb,D)
+
+Title: The Mantis Network III: A titanium cold-trap on the ultra-hot Jupiter
+  WASP-121 b
+Authors: H.J. Hoeijmakers, D. Kitzmann, B.M. Morris, B. Prinoth, N. Borsato, L.
+  Pino, B. Thorsbro, E. K. H. Lee, C. Ak{\i}n, and K. Heng
+Categories: astro-ph.EP
+Comments: 19 pages, submitted to A\&A on September 13, 2022
+\\ ( https://arxiv.org/abs/2210.12847 ,  18651kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.08162
+replaced with revised version Wed, 1 Mar 2023 22:52:45 GMT   (23312kb,D)
+
+Title: Characterization of a set of small planets with TESS and CHEOPS and an
+  analysis of photometric performance
+Authors: Dominic Oddo, Diana Dragomir, Alexis Brandeker, Hugh P. Osborn, Karen
+  Collins, Keivan Stassun, Nicola Astudillo-Defru, Allyson Bieryla, Steve B.
+  Howell, David R. Ciardi, Samuel Quinn, Jose M. Almenara, Cesar Briceno, Kevin
+  I. Collins, Knicole D. Colon, Dennis M. Conti, Nicolas Crouzet, Elise Furlan,
+  Tianjun Gan, Crystal L. Gnilka, Robert F. Goeke, Erica Gonzales, Mallory
+  Harris, Jon M. Jenkins, Eric L.N. Jensen, David Latham, Nicholas Law, Michael
+  B. Lund, Andrew W. Mann, Bob Massey, Felipe Murgas, George Ricker, Howard M.
+  Relles, Pamela Rowden, Richard P. Schwarz, Joshua Schlieder, Avi Shporer,
+  Sara Seager, Gregor Srdoc, Guillermo Torres, Joseph D. Twicken, Roland
+  Vanderspek, Joshua N. Winn, Carl Ziegler
+Categories: astro-ph.EP
+Comments: Accepted for publication in AJ
+\\ ( https://arxiv.org/abs/2301.08162 ,  23312kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.01352
+replaced with revised version Thu, 2 Mar 2023 14:21:59 GMT   (3718kb,D)
+
+Title: A new dynamical modeling of the WASP-47 system with CHEOPS observations
+Authors: V. Nascimbeni, L. Borsato, T. Zingales, G. Piotto, I. Pagano, M. Beck,
+  C. Broeg, D. Ehrenreich, S. Hoyer, F. Z. Majidi, V. Granata, S. G. Sousa, T.
+  G. Wilson, V. Van Grootel, A. Bonfanti, S. Salmon, A. J. Mustill, L. Delrez,
+  Y. Alibert, R. Alonso, G. Anglada, T. B\'arczy, D. Barrado, S. C. C. Barros,
+  W. Baumjohann, T. Beck, W. Benz, M. Bergomi, N. Billot, X. Bonfils, A.
+  Brandeker, J. Cabrera, S. Charnoz, A. Collier Cameron, Sz. Csizmadia, P. E.
+  Cubillos, M. B. Davies, M. Deleuil, A. Deline, O. D. S. Demangeon, B.-O.
+  Demory, A. Erikson, A. Fortier, L. Fossati, M. Fridlund, D. Gandolfi, M.
+  Gillon, M. G\"udel, K. G. Isaak, L. L. Kiss, J. Laskar, A. Lecavelier des
+  Etangs, M. Lendl, C. Lovis, R. Luque, D. Magrin, P. F. L. Maxted, C.
+  Mordasini, G. Olofsson, R. Ottensamer, E. Pall\'e, G. Peter, D. Piazza, et
+  al. (20 additional authors not shown)
+Categories: astro-ph.EP astro-ph.SR
+Comments: 17 pages, 8 figures, 10 tables, A&A in press. Typos corrected
+\\ ( https://arxiv.org/abs/2302.01352 ,  3718kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12841
+replaced with revised version Thu, 2 Mar 2023 17:53:58 GMT   (1295kb,D)
+
+Title: Resolved imaging of an extrasolar radiation belt around an ultracool
+  dwarf
+Authors: Melodie M. Kao, Amy J. Mioduszewski, Jackie Villadsen and Evgenya L.
+  Shkolnik
+Categories: astro-ph.EP astro-ph.SR
+Comments: Fixed a reference mix-up and clarified in abstract that this
+  manuscript is currently under review
+\\ ( https://arxiv.org/abs/2302.12841 ,  1295kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00011
+replaced with revised version Thu, 2 Mar 2023 08:21:51 GMT   (133kb,D)
+
+Title: Planetary line-to-accretion luminosity scaling relations: Extrapolating
+  to higher-order hydrogen lines
+Authors: Gabriel-Dominique Marleau and Yuhiko Aoyama
+Categories: astro-ph.EP astro-ph.SR
+Comments: 3 pages, 1 four-panel figure. Published on December 9th, 2022. v1:
+  updated links to published papers, added thanks. Fits of scaling relations
+  available in Tomas Stolker's "species" toolkit
+  (https://species.readthedocs.io). v2: corrected the accidental shuffle of the
+  author names (!)
+Journal-ref: RNAAS (2022) 6, 262
+DOI: 10.3847/2515-5172/acaa34
+\\ ( https://arxiv.org/abs/2303.00011 ,  133kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.04273
+replaced with revised version Wed, 1 Mar 2023 21:19:49 GMT   (4312kb,D)
+
+Title: Heat transport and convective velocities in compositionally-driven
+  convection in neutron star and white dwarf interiors
+Authors: J. R. Fuentes, A. Cumming, M. Castro-Tapia, and E. H. Anders
+Categories: astro-ph.SR astro-ph.EP astro-ph.HE physics.flu-dyn
+Comments: New version with changes suggested by referee (ApJ)
+\\ ( https://arxiv.org/abs/2301.04273 ,  4312kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.11412
+replaced with revised version Thu, 2 Mar 2023 11:02:35 GMT   (5110kb,D)
+
+Title: Accretion of sub-stellar companions as the origin of chemical abundance
+  inhomogeneities in globular clusters
+Authors: Andrew J. Winter and Cathie J. Clarke
+Categories: astro-ph.GA astro-ph.EP astro-ph.SR
+Comments: 29 pages, 20 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2301.11412 ,  5110kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---
+For subscribe options to combined physics archives,
+e-mail To: physics@arxiv.org, Subject: subscribe
+-----------------------------------------------------------------------------
+For help on viewing and making submissions, see http://arxiv.org/help/

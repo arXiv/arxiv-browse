@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cs/0011004
+From: Mueller-Quade <example@example.com>
+Date: Sat, 4 Nov 2000 06:14:57 GMT   (9kb)
+Date (revised v2): Sun, 3 Dec 2000 08:09:58 GMT   (11kb)
+
+Title: Anonymous Oblivious Transfer
+Authors: J. Mueller-Quade and H. Imai
+Categories: cs.CR
+Comments: 6 pages, some things clearified, especially that a broadcast channel
+  is not necessary
+ACM-class: C.2.0
+\\
+  In this short note we want to introduce {\em anonymous oblivious transfer} a
+new cryptographic primitive which can be proven to be strictly more powerful
+than oblivious transfer. We show that all functions can be robustly realized by
+multi party protocols with {\em anonymous oblivious transfer}. No assumption
+about possible collusions of cheaters or disruptors have to be made.
+Furthermore we shortly discuss how to realize anonymous oblivious transfer with
+oblivious broadcast or by quantum cryptography. The protocol of anonymous
+oblivious transfer was inspired by a quantum protocol: the anonymous quantum
+channel.
+\\
