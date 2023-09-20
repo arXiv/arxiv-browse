@@ -7,7 +7,7 @@ import pathspec
 import argparse
 import re
 
-from digester import digest_from_filepath
+from digester import digest_from_filepath, get_file_mtime
 
 GIT_DIR = [".git/"]
 DEFAULT_IGNORES = """*~
@@ -64,14 +64,14 @@ def walk_docs(doc_root: str) -> List[dict]:
                 logging.debug(f"Skip {rel_path}")
                 continue
             try:
-                digested = digest_from_filepath(filepath)
                 file_stat = os.stat(filepath)
+                # digested = digest_from_filepath(filepath)
+                digested = None
                 entry = {
                     "filepath": canonicalize_filepath(rel_path),
                     "digest": digested,
                     "size": file_stat.st_size,
-                    "modified_at": datetime.fromtimestamp(file_stat.st_mtime, tz=timezone.utc).isoformat(),
-                    "gcp": None,
+                    "mtime": get_file_mtime(filepath)
                 }
                 local_files.append(entry)
                 progress.fileop_progress_logging(len(local_files))
@@ -90,14 +90,15 @@ def doc_root_to_table_name(doc_root: str) -> str:
     return "doc_" + re.sub('\W|^(?=\d)', '_', doc_root)
 
 
-COLUMNS_LOCAL = ["filepath", "digest", "size", "modified_at"]
-COLUMNS_REMOTE = ["blob", "remote_digest"]
+COLUMNS_LOCAL = ["filepath", "digest", "size", "mtime"]
+COLUMNS_REMOTE = ["blob", "remote_digest", "remote_mtime"]
 COLUMN_DESC = {
     "filepath": "varchar primary key",
     "digest": "char(64)",
     "size": "number",
-    "modified_at": "char(30)",
+    "mtime": "char(30)",
     "blob": "varchar",
+    "remote_mtime": "char(30)",
     "remote_digest": "varchar",
 }
 
@@ -146,7 +147,7 @@ def compare_doc_db(doc_root: str, metas: List[dict], db_url: str):
             pass
         if known_meta_row:
             known_meta = {attr: value for attr, value in zip(COLUMNS_LOCAL, known_meta_row)}
-            if meta["digest"] != known_meta["digest"]:
+            if meta["mtime"] != known_meta["mtime"]:
                 # modified file
                 logging.info(repr(meta))
                 pass

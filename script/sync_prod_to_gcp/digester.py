@@ -1,5 +1,7 @@
 import hashlib
 import io
+import os
+from datetime import datetime, timezone
 
 IO_BUFFER_1 = bytearray(2 ** 18)  # Reusable buffer to reduce allocations.
 IO_VIEW_1 = memoryview(IO_BUFFER_1)
@@ -25,3 +27,8 @@ def digest_from_filepath(localfile: str, hasher=None) -> str:
     with open(localfile, "rb") as fd:
         return binary_file_digest(fd, hasher)
     pass
+
+
+def get_file_mtime(localfile: str) -> str:
+    file_stat = os.stat(localfile)
+    return datetime.fromtimestamp(file_stat.st_mtime, tz=timezone.utc).isoformat()

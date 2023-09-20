@@ -43,7 +43,7 @@ from typing import List, Tuple
 from pathlib import Path
 
 from identifier import Identifier
-from digester import digest_from_filepath
+from digester import digest_from_filepath, get_file_mtime
 
 overall_start = perf_counter()
 
@@ -262,6 +262,7 @@ def ensure_pdf(session, host, arxiv_id):
         headers = { 'User-Agent': ENSURE_UA }
         logger.debug("Getting %s", url)
         resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+        # noinspection PyStatementEffect
         [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
         if resp.status_code != 200:
             raise(Exception(f"ensure_pdf: GET status {resp.status_code} {url}"))
@@ -310,7 +311,7 @@ def upload(gs_client, localpath, key):
             logger.debug(f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
         sha_value = digest_from_filepath(localpath)
         try:
-            destination.metadata = {"sha256": sha_value, "localpath": localpath}
+            destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath), "sha256": sha_value}
             destination.update()
         except:
             pass
