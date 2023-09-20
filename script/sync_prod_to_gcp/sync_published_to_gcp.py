@@ -43,6 +43,7 @@ from typing import List, Tuple
 from pathlib import Path
 
 from identifier import Identifier
+from digester import digest_from_filepath
 
 overall_start = perf_counter()
 
@@ -303,9 +304,16 @@ def upload(gs_client, localpath, key):
     bucket = gs_client.bucket(GS_BUCKET)
     blob = bucket.get_blob(key)
     if blob is None or blob.size != localpath.stat().st_size:
+        destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
-            bucket.blob(key).upload_from_file(fh, content_type=mime_from_fname(localpath))
+            destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
             logger.debug(f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
+        sha_value = digest_from_filepath(localpath)
+        try:
+            destination.metadata = {"sha256": sha_value, "localpath": localpath}
+            destination.update()
+        except:
+            pass
         return ("upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size)
     else:
         logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
