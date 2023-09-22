@@ -9,5 +9,5 @@ sync.venv:
 	. sync.venv/bin/activate && pip install --upgrade pip
 	. sync.venv/bin/activate && pip install -r requirements.txt
 
-test:
+test: sync.venv
 	. sync.venv/bin/activate && python3 -m test.test_sync_prod_to_gcp
