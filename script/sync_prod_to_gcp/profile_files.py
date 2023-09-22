@@ -38,11 +38,14 @@ class WalkerReport(object):
         pass
 
 
-def canonicalize_filepath(filepath: str) -> str:
-    if filepath.startswith("./"):
-        filepath = filepath[2:]
+
+def canonicalize_filepath(doc_root: str, dirpath: str, name: str) -> (str, str):
+    child = os.path.join(dirpath, name)
+    rel = os.path.relpath(child, doc_root)
+    if rel.startswith("./"):
+        rel = rel[2:]
         pass
-    return filepath
+    return child, rel
 
 
 class Visitor(object):
@@ -73,14 +76,21 @@ def walk_docs(doc_root: str, visitor: Visitor=None) -> List[dict]:
     local_files = []
     progress = WalkerReport()
     for dirpath, dirnames, filenames in os.walk(doc_root):
+        def dir_is_good(child_dirname):
+            chind_dirpath, canon_dirpath = canonicalize_filepath(doc_root, dirpath, child_dirname)
+            if ignore_spec.match_file(chind_dirpath):
+                logging.debug(f"Skip {child_dirpath}")
+                return False
+            return True
+
+        dirnames = [dirname for dirname in dirnames if dir_is_good(dirname)]
+
         for filename in filenames:
-            filepath = os.path.join(dirpath, filename)
-            rel_path = os.path.relpath(filepath, doc_root)
-            canon_path = canonicalize_filepath(rel_path)
+            filepath, canon_path = canonicalize_filepath(doc_root, dirpath, filename)
             if visitor and visitor.skip_insert(canon_path):
                 continue
             if ignore_spec.match_file(filepath):
-                logging.debug(f"Skip {rel_path}")
+                logging.debug(f"Skip {canon_path}")
                 continue
             try:
                 file_stat = os.stat(filepath)
