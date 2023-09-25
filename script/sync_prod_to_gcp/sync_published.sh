@@ -5,11 +5,13 @@ if [ ! -d sync.venv ] ; then
   make
 fi
 
+echo $1
+
 # Is this a test/
-if [ $1 = YES_THIS_IS_A_TEST ]
+if [ "$1" = "YES_THIS_IS_A_TEST" ]
 then
     shift
-    TESTING_ARGS = -v -d --test
+    TESTING_ARGS="-v -d --test"
 fi
 
 
@@ -38,7 +40,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
 python sync_published_to_gcp.py $TESTING_ARGS --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
 deactivate
 
-if [ "$TESTING_ARGS" != ""] ; then 
+if [ ! -z "$TESTING_ARGS" ]; then 
   exit 0
 fi
 
