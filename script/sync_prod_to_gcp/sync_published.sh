@@ -1,7 +1,17 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
-make sync.venv
+if [ ! -d sync.venv ] ; then
+  make
+fi
+
+# Is this a test/
+if [ $1 = YES_THIS_IS_A_TEST ]
+then
+    shift
+    TESTING_ARGS = -v -d --test
+fi
+
 
 # if running between 8pm and midnight
 DATE=`date +%y%m%d --date='12:00 tomorrow'`
@@ -25,8 +35,12 @@ mkdir -p /opt_arxiv/e-prints/logs/sync
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python sync_published_to_gcp.py --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
+python sync_published_to_gcp.py $TESTING_ARGS --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
 deactivate
+
+if [ "$TESTING_ARGS" != ""] ; then 
+  exit 0
+fi
 
 if [ -s sync_published_$DATE.report ]
 then    
