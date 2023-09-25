@@ -1,4 +1,7 @@
-cd /opt_arxiv/e-prints/dissemination/sync_prod_to_gcp/
+#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR"
+make sync.venv
 
 # if running between 8pm and midnight
 DATE=`date +%y%m%d --date='12:00 tomorrow'`
@@ -17,9 +20,12 @@ then
     exit 1
 fi
 
-. venv/bin/activate
+JSON_LOG_DIR=/opt_arxiv/e-prints/logs/sync
+mkdir -p /opt_arxiv/e-prints/logs/sync
+
+. sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python sync_published_to_gcp.py /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
+python sync_published_to_gcp.py --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log > sync_published_$DATE.report 2> sync_published_$DATE.err
 deactivate
 
 if [ -s sync_published_$DATE.report ]

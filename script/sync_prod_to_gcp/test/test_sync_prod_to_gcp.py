@@ -23,7 +23,7 @@ class SyncTestCase(unittest.TestCase):
 
 
     def tearDown(self) -> None:
-        shutil.rmtree("./test/test-output")
+        #shutil.rmtree("./test/test-output")
         pass
 
     def test_json_log(self):
@@ -40,12 +40,23 @@ class SyncTestCase(unittest.TestCase):
         self.assertEqual(expected, todos)
 
         with open("./test/test-output/sync-to-gcp.log") as logfd:
-            second = logfd.readlines()[1]
-            actual = json.loads(second)
+            logs = logfd.readlines()
             pass
+        actual = json.loads(logs[1])
         self.assertEqual("INFO", actual.get("level"))
         self.assertEqual("Dry run no changes made", actual.get("message"))
         self.assertEqual(1285, actual.get("todos"))
+
+        success_log = json.loads(logs[2])
+        self.assertEqual("1234", success_log.get("paper_id"))
+        self.assertEqual("upload", success_log.get("action"))
+        self.assertEqual("already_on_gs", success_log.get("outcome"))
+
+        failure_log = json.loads(logs[3])
+        self.assertEqual("5678", failure_log.get("paper_id"))
+        self.assertEqual("faile", success_log.get("action"))
+        self.assertEqual("already_on_gs", success_log.get("outcome"))
+
         pass
 
 

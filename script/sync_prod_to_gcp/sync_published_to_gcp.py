@@ -389,19 +389,34 @@ def sync_to_gcp(todo_q, host):
             except Exception as ex:
                 extra.update({SEVERITY: "error", CATEGORY: "upload"})
                 extra.update(job_details)
-                logger.exception(f"Problem during {job['paper_id']} {action} {item}",
-                                 extra=extra)
+                logger.exception(f"Problem during {job['paper_id']} {action} {item}", extra=extra)
                 summary_q.put((job['paper_id'], ms_since(start), "failed", str(ex)))
         todo_q.task_done()
+
+
+def log_summary():
+    # Don't worry about the log level being INFO.
+    # Summary is always "calm" logging. When the error happens, the log entry is generated at the spot of failure.
+    dispatch = {
+        "build+upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]},
+        "upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]},
+        "failed": lambda it: {"paper_id": it[0], "action": it[2], "error": it[3]}
+    }
+    for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):
+        summary = list(map(str, row))
+        digester = dispatch.get(summary[2], lambda it: {"summary": repr(it)})
+        summary_log = {SEVERITY: "normal", CATEGORY: "status"}
+        summary_log.update(digester(summary))
+        logger.info(','.join(summary), extra=summary_log)
 
 
 # #################### MAIN #################### #
 
 def main(args):
     global RUN, DONE
-    if not args.d:
+    if not (args.d or args.test):
         storage.Client()  # will fail if no auth setup
-    if args.v:
+    if args.v or args.test:
         logger.setLevel(logging.INFO)
 
     if args.json_log_dir and os.path.exists(args.json_log_dir):
@@ -422,6 +437,13 @@ def main(args):
         if args.test:
             logger.info("Dry run no changes made",
                         extra={SEVERITY: "normal", CATEGORY: "status", "todos": len(todo)})
+            localpath = "/foo"
+            key = "bar"
+            res = ()
+            paper_id = "1234"
+            summary_q.put(("1234", 0, "upload", localpath, key, "already_on_gs", 0, 0))
+            summary_q.put(("5678", 0, "failed", "bad!"))
+            log_summary()
             return todo
         print(json.dumps(todo, indent=2))
         print(f"{len(todo)} submissions (some may be test submissions)")
@@ -450,11 +472,10 @@ def main(args):
     [th.join() for th in threads]
     logger.debug("Threads done joining")
 
-    for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):
-        summary = map(str, row)
-        logger.info(','.join(summary),
-                    extra={SEVERITY: "normal", CATEGORY: "status", "summary": repr(summary)})
+    # Summary report
+    log_summary()
 
+    # Epilogue
     logger.info(f"Done at {datetime.now().isoformat()}",
                 extra={SEVERITY: "normal", CATEGORY: "status"})
     duration = perf_counter() - overall_start
