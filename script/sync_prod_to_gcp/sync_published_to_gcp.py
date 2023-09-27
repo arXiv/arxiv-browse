@@ -34,7 +34,7 @@ import threading
 from threading import Thread
 from queue import Queue, Empty
 import requests
-from time import sleep, perf_counter
+from time import sleep, perf_counter, gmtime
 from datetime import datetime
 import signal
 import json
@@ -59,7 +59,6 @@ logger.setLevel(logging.WARNING)
 import logging_json
 
 CATEGORY = "category"
-SEVERITY = "severity"
 
 LOG_FORMAT_KWARGS = {
     "fields": {
@@ -69,8 +68,6 @@ LOG_FORMAT_KWARGS = {
     "message_field_name": "message",
     "datefmt": "%Y-%m-%dT%H:%M:%SZ"
 }
-
-
 
 GS_BUCKET = 'arxiv-production-data'
 GS_KEY_PREFIX = '/ps_cache'
@@ -173,7 +170,7 @@ def make_todos(filename) -> List[dict]:
             actions.append(('build+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         else:
             logger.error("Could not determine source for submission {arxiv_id}",
-                         extra={SEVERITY: "warning", CATEGORY: "internal", "arxiv_id": arxiv_id})
+                         extra={CATEGORY: "internal", "arxiv_id": arxiv_id})
 
         return actions
 
@@ -290,7 +287,7 @@ def ensure_pdf(session, host, arxiv_id):
         if resp.status_code != 200:
             msg = f"ensure_pdf: GET status {resp.status_code} {url}"
             logger.warning(msg,
-                           extra={SEVERITY: "error", CATEGORY: "download",
+                           extra={CATEGORY: "download",
                                   "url": url, "status_code": resp.status_code, "pdf_file": str(pdf_file)})
             raise (Exception(msg))
         start_wait = perf_counter()
@@ -298,7 +295,7 @@ def ensure_pdf(session, host, arxiv_id):
             if perf_counter() - start_wait > PDF_WAIT_SEC:
                 msg = f"No PDF, waited longer than {PDF_WAIT_SEC} sec {url}"
                 logger.warning(msg,
-                               extra={SEVERITY: "error", CATEGORY: "download",
+                               extra={CATEGORY: "download",
                                       "url": url, "pdf_file": str(pdf_file)})
                 raise (Exception(msg))
             else:
@@ -365,11 +362,11 @@ def sync_to_gcp(todo_q, host):
             job = todo_q.get(block=False)
             if not job:
                 logger.error("todo_q.get() returned {job}",
-                             extra={"job": repr(job), SEVERITY: "error", CATEGORY: "internal"})
+                             extra={"job": repr(job), CATEGORY: "internal"})
                 continue
             if not job.get('paper_id', None):
                 logger.error("todo_q.get() job lacked paper_id, skipping",
-                             extra={"job": repr(job), SEVERITY: "error", CATEGORY: "internal"})
+                             extra={"job": repr(job), CATEGORY: "internal"})
                 continue
         except Empty:  # queue is empty and thread is done
             break
@@ -387,7 +384,7 @@ def sync_to_gcp(todo_q, host):
 
                 summary_q.put((job['paper_id'], ms_since(start)) + res)
             except Exception as ex:
-                extra.update({SEVERITY: "error", CATEGORY: "upload"})
+                extra.update({CATEGORY: "upload"})
                 extra.update(job_details)
                 logger.exception(f"Problem during {job['paper_id']} {action} {item}", extra=extra)
                 summary_q.put((job['paper_id'], ms_since(start), "failed", str(ex)))
@@ -404,10 +401,14 @@ def log_summary():
     }
     for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):
         summary = list(map(str, row))
-        digester = dispatch.get(summary[2], lambda it: {"summary": repr(it)})
-        summary_log = {SEVERITY: "normal", CATEGORY: "status"}
+        action = summary[2]
+        digester = dispatch.get(action, lambda it: {"summary": repr(it)})
+        summary_log = {CATEGORY: "summary"}
         summary_log.update(digester(summary))
-        logger.info(','.join(summary), extra=summary_log)
+        if action == "failed":
+            logger.warning(','.join(summary), extra=summary_log)
+        else:
+            logger.info(','.join(summary), extra=summary_log)
 
 
 # #################### MAIN #################### #
@@ -424,11 +425,12 @@ def main(args):
                                                                maxBytes=4 * 1024 * 1024,
                                                                backupCount=10)
         json_formatter = logging_json.JSONFormatter(**LOG_FORMAT_KWARGS)
+        json_formatter.converter = gmtime
         json_logHandler.setFormatter(json_formatter)
         logger.addHandler(json_logHandler)
         pass
 
-    logger.info(f"Starting at {datetime.now().isoformat()}", extra={SEVERITY: "normal", CATEGORY: "status"})
+    logger.info(f"Starting at {datetime.now().isoformat()}", extra={CATEGORY: "status"})
 
     [todo_q.put(item) for item in make_todos(args.filename)]
 
@@ -436,7 +438,7 @@ def main(args):
         todo = list(todo_q.queue)
         if args.test:
             logger.info("Dry run no changes made",
-                        extra={SEVERITY: "normal", CATEGORY: "status", "todos": len(todo)})
+                        extra={CATEGORY: "status", "todos": len(todo)})
             localpath = "/foo"
             key = "bar"
             res = ()
@@ -477,11 +479,11 @@ def main(args):
 
     # Epilogue
     logger.info(f"Done at {datetime.now().isoformat()}",
-                extra={SEVERITY: "normal", CATEGORY: "status"})
+                extra={CATEGORY: "status"})
     duration = perf_counter() - overall_start
 
     logger.info(f"Overall time: {duration:.2f} sec for {overall_size} submissions",
-                extra={SEVERITY: "normal", CATEGORY: "status", "duration": str(duration)})
+                extra={CATEGORY: "status", "duration": str(duration)})
 
 
 if __name__ == "__main__":

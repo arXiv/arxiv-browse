@@ -18,7 +18,7 @@ class SyncTestCase(unittest.TestCase):
         if os.path.exists("./test/test-output"):
             shutil.rmtree("./test/test-output")
             pass
-        os.makedirs("./test/test-output")
+        os.makedirs("./test/test-output", exist_ok=True)
         pass
 
 
@@ -50,12 +50,14 @@ class SyncTestCase(unittest.TestCase):
         success_log = json.loads(logs[2])
         self.assertEqual("1234", success_log.get("paper_id"))
         self.assertEqual("upload", success_log.get("action"))
+        self.assertEqual("summary", success_log.get("category"))
         self.assertEqual("already_on_gs", success_log.get("outcome"))
 
         failure_log = json.loads(logs[3])
+        self.assertEqual("WARNING", failure_log.get("level"))
         self.assertEqual("5678", failure_log.get("paper_id"))
-        self.assertEqual("faile", success_log.get("action"))
-        self.assertEqual("already_on_gs", success_log.get("outcome"))
+        self.assertEqual("failed", failure_log.get("action"))
+        self.assertEqual("summary", failure_log.get("category"))
 
         pass
 
