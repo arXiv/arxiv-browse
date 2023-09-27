@@ -1,0 +1,25 @@
+{% extends "list/base.html" %}
+
+{% block title %}{{ head_title }}{% endblock %}
+
+{% block head %}
+  {{super()-}}
+  <base href="{{base_href}}"" />
+{% endblock %}
+
+<body>
+
+  {% block content %}
+  <div id='content-inner'>
+      <div id='dlpage'>
+          <address><p>{{ address_line }}</p></address>
+
+          <h1>{{ title }}</h1>
+
+          <p>{{ additional_info }}</p>
+
+          {{ item_list ( abstracts, '' ) }}
+      </div>
+  </div>
+  {% endblock %}
+</body>
