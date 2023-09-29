@@ -10,10 +10,14 @@ logger.setLevel(logging.INFO)
 blueprint = Blueprint('processing', __name__)
 
 # Unwraps payload and only starts processing if it is 
+#urls can take form of ftp/arxiv/papers/RANDNUMBER/ID.html.gz or ftp/CATNAME/papers/RANDNUMBER/ID.gz
 # the desired format and a .html.gz
 def _unwrap_payload (payload: Dict[str, str]) -> Tuple[str, str, str]:
     if payload['name'].endswith('.html.gz'):
-        id = payload['name'].split('/')[1].replace('.html.gz', '') # TODO: This might fail on old arxiv_ids
+        splits=payload['name'].split('/')
+        id=splits[4].replace('.html.gz', '')
+        if splits[1] != "arxiv": #old style IDs
+            id=splits[1]+"/"+id
         return id, payload['name'], payload['bucket']
     raise ValueError ('Received extraneous file')
 
