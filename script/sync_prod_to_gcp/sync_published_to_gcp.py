@@ -34,7 +34,8 @@ import threading
 from threading import Thread
 from queue import Queue, Empty
 import requests
-from time import sleep, perf_counter, gmtime
+from time import sleep, perf_counter, gmtime, strftime as time_strftime
+
 from datetime import datetime
 import signal
 import json
@@ -60,21 +61,15 @@ import logging_json
 
 CATEGORY = "category"
 
-LOG_FORMAT_KWARGS = {
-    "fields": {
-        "timestamp": "asctime",
-        "level": "levelname",
-    },
-    "message_field_name": "message",
-    "datefmt": "%Y-%m-%dT%H:%M:%SZ"
-}
-
 GS_BUCKET = 'arxiv-production-data'
 GS_KEY_PREFIX = '/ps_cache'
 
+CACHE_PREFIX = '/cache/'
 PS_CACHE_PREFIX = '/cache/ps_cache/'
 FTP_PREFIX = '/data/ftp/'
-ORIG_PREIFX = '/data/orig/'
+ORIG_PREFIX = '/data/orig/'
+DATA_PREFIX = '/data/'
+REUPLOADS = {}
 
 ENSURE_UA = 'periodic-rebuild'
 
@@ -112,6 +107,25 @@ def handler_stop_signals(signum, frame):
 signal.signal(signal.SIGINT, handler_stop_signals)
 signal.signal(signal.SIGTERM, handler_stop_signals)
 
+#####
+
+LOG_FORMAT_KWARGS = {
+    "fields": {
+        "timestamp": "asctime",
+        "level": "levelname",
+    },
+    "message_field_name": "message",
+    # time.strftime has no %f code "datefmt": "%Y-%m-%dT%H:%M:%S.%fZ%z",
+}
+
+class ArxivSyncJsonFormatter(logging_json.JSONFormatter):
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        return time_strftime("%Y-%m-%dT%H:%M:%S", ct) + ".%03d" % record.msecs + time_strftime("%z", ct)
+
+    pass
+
+#####
 
 def ms_since(start: float) -> int:
     return int((perf_counter() - start) * 1000)
@@ -169,7 +183,7 @@ def make_todos(filename) -> List[dict]:
             actions.append(('upload', texm.group(1)))
             actions.append(('build+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         else:
-            logger.error("Could not determine source for submission {arxiv_id}",
+            logger.error(f"Could not determine source for submission {arxiv_id}",
                          extra={CATEGORY: "internal", "arxiv_id": arxiv_id})
 
         return actions
@@ -240,10 +254,10 @@ def path_to_bucket_key(pdf) -> str:
     """Handels both source and cache files. Should handle pdfs, abs, txt
     and other types of files under these directories. Bucket key should
     not start with a /"""
-    if str(pdf).startswith('/cache/'):
-        return str(pdf).replace('/cache/', '')
-    elif str(pdf).startswith('/data/'):
-        return str(pdf).replace('/data/', '')
+    if str(pdf).startswith(CACHE_PREFIX):
+        return str(pdf).replace(CACHE_PREFIX, '')
+    elif str(pdf).startswith(DATA_PREFIX):
+        return str(pdf).replace(DATA_PREFIX, '')
     else:
         raise ValueError(f"Cannot convert PDF path {pdf} to a GS key")
 
@@ -320,24 +334,22 @@ def upload(gs_client, localpath, key):
     """Upload a file to GS_BUCKET"""
 
     def mime_from_fname(filepath):
-        if filepath.suffix == '.pdf':
-            return 'application/pdf'
-        if filepath.suffix == '.gz':
-            return 'application/gzip'
-        if filepath.suffix == '.abs':
-            return 'text/plain'
-        else:
-            return ''
+        return {
+            '.pdf': 'application/pdf',
+            '.gz': 'application/gzip',
+            '.abs': 'text/plain'
+        }.get(filepath.suffix, '')
 
     start = perf_counter()
 
     bucket = gs_client.bucket(GS_BUCKET)
     blob = bucket.get_blob(key)
-    if blob is None or blob.size != localpath.stat().st_size:
+    if blob is None or blob.size != localpath.stat().st_size or key in REUPLOADS:
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
+
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
-            logger.debug(
+            logger.info(
                 f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
         sha_value = digest_from_filepath(localpath)
         try:
@@ -347,7 +359,7 @@ def upload(gs_client, localpath, key):
             pass
         return ("upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size)
     else:
-        logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
         return ("upload", localpath, key, "already_on_gs", ms_since(start), 0)
 
 
@@ -374,7 +386,7 @@ def sync_to_gcp(todo_q, host):
         logger.debug("doing %s", job['paper_id'])
         job_details = {"job": repr(job), "paper_id": job['paper_id']}
         for action, item in job['actions']:
-            extra = {"action": action, "item": repr(item)}
+            extra = {"action": action, "item": str(item)}
             try:
                 res = ()
                 if action == 'build+upload':
@@ -386,7 +398,7 @@ def sync_to_gcp(todo_q, host):
             except Exception as ex:
                 extra.update({CATEGORY: "upload"})
                 extra.update(job_details)
-                logger.exception(f"Problem during {job['paper_id']} {action} {item}", extra=extra)
+                logger.error(f"Problem during {job['paper_id']} {action} {item}", extra=extra, exc_info=True)
                 summary_q.put((job['paper_id'], ms_since(start), "failed", str(ex)))
         todo_q.task_done()
 
@@ -415,6 +427,8 @@ def log_summary():
 
 def main(args):
     global RUN, DONE
+    if args.globals:
+        globals().update(eval(args.globals))
     if not (args.d or args.test):
         storage.Client()  # will fail if no auth setup
     if args.v or args.test:
@@ -424,7 +438,7 @@ def main(args):
         json_logHandler = logging.handlers.RotatingFileHandler(os.path.join(args.json_log_dir, "sync-to-gcp.log"),
                                                                maxBytes=4 * 1024 * 1024,
                                                                backupCount=10)
-        json_formatter = logging_json.JSONFormatter(**LOG_FORMAT_KWARGS)
+        json_formatter = ArxivSyncJsonFormatter(**LOG_FORMAT_KWARGS)
         json_formatter.converter = gmtime
         json_logHandler.setFormatter(json_formatter)
         logger.addHandler(json_logHandler)
@@ -492,6 +506,7 @@ if __name__ == "__main__":
     ad.add_argument('--json-log-dir', help='Additional JSON logging', default='/var/log/e-prints')
     ad.add_argument('-v', help='verbose', action='store_true')
     ad.add_argument('-d', help="Dry run no action", action='store_true')
+    ad.add_argument('--globals', help="Global variables")
     ad.add_argument('filename')
     args = ad.parse_args()
     main(args)
