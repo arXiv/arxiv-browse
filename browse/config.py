@@ -114,7 +114,7 @@ class Settings(BaseSettings):
     - `browse.services.listing.fake`: A totally fake set of listings for testing.
     """
 
-    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp'
+    DOCUMENT_LISTING_PATH: str = 'gs://arxiv-production-data/ftp'
     """Path to get listing files from.
 
     This can start with gs:// to use Google Storage.
@@ -131,7 +131,7 @@ class Settings(BaseSettings):
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
-    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
+    DOCUMENT_LATEST_VERSIONS_PATH: str = "gs://arxiv-production-data/ftp"
     """Paths to .abs and source files.
 
         This can start with gs:// to use Google Storage."""
