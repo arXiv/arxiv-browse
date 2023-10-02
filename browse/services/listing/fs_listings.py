@@ -29,9 +29,6 @@ from .parse_new_listing_file import parse_new_listing_file
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
 
-FS_TZ = ZoneInfo(get_application_config()["ARXIV_BUSINESS_TZ"])
-"""Time used on the FS with the listing files."""
-
 ListingFileType = Literal["new", "pastweek", "month"]
 """These are the listing file types."""
 
