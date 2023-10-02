@@ -9,7 +9,7 @@ LIST_ITEM_RE = re.compile(r'<\!--\s(.+)\s-->\nLIST:(.+)\n')
 
 def get_listing_ids (html: str) -> List[str]:
     """ Return list of arxiv_ids for LIST: entries in the html """
-    return list(map(lambda x: x.group(2)), re.finditer(LIST_ITEM_RE, html))
+    return list(map(lambda x: x.group(2), re.finditer(LIST_ITEM_RE, html)))
 
 def get_lis_for_papers (arxiv_ids: List[str]) -> List[ListingItem]:
     lis = []
