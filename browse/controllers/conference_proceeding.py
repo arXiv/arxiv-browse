@@ -1,4 +1,4 @@
-from browse.services.html_processing import get_lis_for_papers, get_listing_ids
+from browse.services.html_processing import parse_conference_html, get_lis_for_papers, get_listing_ids
 from browse.services.object_store.fileobj import UngzippedFileObj
 from browse.services.object_store.object_store_gs import GsObjectStore
 from typing import Optional, Dict, Any, Tuple, List
@@ -20,10 +20,8 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
     text_html=rawdata.decode('utf-8')
     
     #processes file
-    id_list=get_listing_ids(text_html)
-    print(id_list)
-    listing=(get_lis_for_papers(id_list))
-    print(listing)
+    title, extradata, lis=(parse_conference_html(text_html))
+    
 
     response_data: Dict[str, Any] = {}
 
