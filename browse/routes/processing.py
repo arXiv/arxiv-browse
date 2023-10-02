@@ -2,6 +2,7 @@
 import logging
 from typing import Dict, Tuple
 
+from browse.controllers.conference_proceeding import post_process_conference
 from flask import Blueprint, render_template, Response, request
 
 logger = logging.getLogger(__file__)
@@ -14,16 +15,16 @@ blueprint = Blueprint('processing', __name__)
 # the desired format and a .html.gz
 def _unwrap_payload (payload: Dict[str, str]) -> Tuple[str, str, str]:
     if payload['name'].endswith('.html.gz'):
-        splits=payload['name'].split('/')
-        id=splits[4].replace('.html.gz', '')
-        if splits[1] != "arxiv": #old style IDs
-            id=splits[1]+"/"+id
-        return id, payload['name'], payload['bucket']
+        return payload['name'], payload['bucket']
     raise ValueError ('Received extraneous file')
 
+#this should only be called on html format conference proceeedings
 @blueprint.route('/post_process_html', methods=['POST'])
 def post_process_html () -> Response:
     try:
-        id, blob, bucket = _unwrap_payload(request.json)
+        blob, bucket = _unwrap_payload(request.json)
     except Exception as e:
         return '', 202
+  
+    response, code, headers = post_process_conference(blob, bucket)
+    #return render_template('list/conference_proceedings.html', **response), code, headers
