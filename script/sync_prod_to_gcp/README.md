@@ -85,7 +85,7 @@ There are two logging, one plain text, and the second is NDJSON that is designed
 
 The plugin must be deployed on "arxiv-sync" host.
 
-`arxiv-browse/scripts/sync_prod_to_gcp/stanza/plugins/arxiv_sync2gcp_log.yaml` -> `/opt/observeiq/stanza/plugins/arxiv_sync2gcp_log.yaml`
+`arxiv-browse/scripts/sync_prod_to_gcp/stanza/plugins/arxiv_sync2gcp_log.yaml` -> `/opt/observiq/stanza/plugins/arxiv_sync2gcp_log.yaml`
 
 On arxiv-sync, `/opt/observeiq/stanza/config.yaml` must include the following:
 

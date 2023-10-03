@@ -27,7 +27,7 @@ test/arxiv-development_arxiv-stanza.json:
 	op read "op://hs3xn7ldhg3pgrql5j524rgpee/grvumhkt4kc47f53t7qjntpg3q/j3msyqb2pa5wec7hbsr3cirnky" > $@
 
 test/arxiv-development_sync-test.json:
-	op read "op:///hs3xn7ldhg3pgrql5j524rgpee/w2wtsf5v7kahbngr64m43mciou/qrdfsd5gbnatjpv7zof6vwca4q" > $@
+	op read "op://hs3xn7ldhg3pgrql5j524rgpee/w2wtsf5v7kahbngr64m43mciou/qrdfsd5gbnatjpv7zof6vwca4q" > $@
 
 ${APP_CRED}:
 	gcloud auth application-default login

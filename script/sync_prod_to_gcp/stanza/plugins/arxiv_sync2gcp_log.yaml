@@ -8,7 +8,7 @@ parameters:
     label: Log Path
     description: Path to the sync to GCP log
     type: string
-    default: "/opt_arviv/logs/sync/*"
+    default: "/opt_arxiv/logs/sync/*"
     required: true
   - name: start_at
     label: Start At
