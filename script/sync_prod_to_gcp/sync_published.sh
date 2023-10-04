@@ -24,8 +24,8 @@ PUBLISHLOG=/data/new/logs/publish_${DATE}.log
 if [ ! -e $PUBLISHLOG ]
 then
     echo "No publish log at $PUBLISHLOG, no sync attempted."
-    echo "No publish log at $PUBLISHLOG, no sync attempted." > err.txt
-    /bin/gsutil -q -h "Content-Type:text/plain" cp err.txt gs://legacy_support/sync_published/$DATE.err ;
+    echo "No publish log at $PUBLISHLOG, no sync attempted." > $TEXT_LOG_DIR/err.txt
+    /bin/gsutil -q -h "Content-Type:text/plain" cp $TEXT_LOG_DIR/err.txt gs://legacy_support/sync_published/$DATE.err ;
     rm err.txt
     exit 1
 fi
@@ -35,7 +35,7 @@ mkdir -p $JSON_LOG_DIR
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python sync_published_to_gcp.py $TESTING_ARGS --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log > $TEXT_LOG_DIR/sync_published_$DATE.report 2> $TEXT_LOG_DIR/sync_published_$DATE.err
+python sync_published_to_gcp.py $TESTING_ARGS --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log >> $TEXT_LOG_DIR/sync_published_$DATE.report 2>> $TEXT_LOG_DIR/sync_published_$DATE.err
 deactivate
 
 if [ ! -z "$TESTING_ARGS" ]; then 
