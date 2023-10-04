@@ -197,13 +197,6 @@ class Settings(BaseSettings):
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
 
-    URLS: List[tuple] = [
-        ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
-        # This is a temporary workaround for ARXIVNG-2063
-    ]
-    """External URLs."""
-
-
     ARXIV_BUSINESS_TZ: str = 'US/Eastern'
     """
     Timezone of the arxiv business offices.
