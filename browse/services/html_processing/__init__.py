@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from flask import Flask, render_template
 from browse.domain.identifier import Identifier
 import re
 import urllib.parse
@@ -46,7 +47,7 @@ def get_lis_for_papers (arxiv_ids: List[str]) -> List[ListingItem]:
 
 def post_process_html(html:str) -> str:
     new_html=""
-
+    printed=False
     #do we still want to count expansions?
 
     for line in html.split('\n'):
@@ -56,6 +57,10 @@ def post_process_html(html:str) -> str:
 
         if list_match:
             cmd = list_match.group(1) #which command to perform
+            if cmd=='ABS':
+                include_abstract=True
+            else:
+                include_abstract=False
             id = list_match.group(2) #document ID
 
             try: 
@@ -68,7 +73,12 @@ def post_process_html(html:str) -> str:
             if arxiv_id:
                 #get and format metadata here as html
                 abs_meta=get_doc_service().get_abs(arxiv_id)
-                item_string=""
+                item_string=render_template('list/conference_proceeding.html', item=abs_meta, include_abstract=include_abstract )
+
+                if not printed: #remove after testing
+                    printed=True
+                    print(item_string)
+                
                 new_html+= item_string
             else:
                 new_html += f"<dd>{id} [failed to get identifier for paper]</dd>\n"

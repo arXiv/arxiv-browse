@@ -1,25 +1,53 @@
 {% extends "list/base.html" %}
 
-{% block title %}{{ head_title }}{% endblock %}
-
-{% block head %}
-  {{super()-}}
-  <base href="{{base_href}}"" />
-{% endblock %}
-
-<body>
+{# removing the other block types from base.html #}
+{% block title %}{% endblock %}
+{% block head %}{% endblock %}
+{% block header_h1 %}{% endblock %}
 
   {% block content %}
-  <div id='content-inner'>
-      <div id='dlpage'>
-          <address><p>{{ address_line }}</p></address>
+  {% set article = item.article %}
+  {% set ids = item.arxiv_id %}
 
-          <h1>{{ title }}</h1>
-
-          <p>{{ additional_info }}</p>
-
-          {{ item_list ( abstracts, '' ) }}
+  <dt>
+    <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
+      arXiv:{{ ids }}
+    </a>
+    {{ dl_links( article ) }}
+  </dt>
+  <dd>
+    <div class='meta'>
+      <div class='list-title mathjax'><span class='descriptor'>Title:</span>
+        {{article.title}}
       </div>
-  </div>
+      <div class='list-authors'>
+        {{- do_author_list( article ) -}}
+      </div>
+
+      {% if article.comments %}
+      <div class='list-comments mathjax'><span class='descriptor'>Comments:</span>
+        {{article.comments|tex2utf|urlize|safe}}
+      </div>
+      {% endif %}
+
+      {% if article.journal_ref %}
+      <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
+        {{article.journal_ref}}
+      </div>
+      {% endif %}
+
+      <div class='list-subjects'><span class='descriptor'>Subjects:</span>
+        {{category_line(article)}}
+      </div>
+
+      {% if include_abstract  %}
+      <p class='mathjax'>
+        {{ article.abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+      </p>
+      {% endif %}
+    </div>
+  </dd>
   {% endblock %}
-</body>
+
+
+
