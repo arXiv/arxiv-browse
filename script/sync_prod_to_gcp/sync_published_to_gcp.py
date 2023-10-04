@@ -321,7 +321,7 @@ def ensure_pdf(session, host, arxiv_id):
         else:
             raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
     else:
-        logger.debug(f"ensure_file_url_exists: {str(pdf_file)} already exists")
+        logger.info(f"ensure_file_url_exists: {str(pdf_file)} already exists")
         return (pdf_file, url, "already exists", ms_since(start))
 
 
@@ -383,10 +383,10 @@ def sync_to_gcp(todo_q, host):
         except Empty:  # queue is empty and thread is done
             break
 
-        logger.debug("doing %s", job['paper_id'])
         job_details = {"job": repr(job), "paper_id": job['paper_id']}
+        logger.info("doing %s", job['paper_id'], extra=job_details)
         for action, item in job['actions']:
-            extra = {"action": action, "item": str(item)}
+            extra = {"action": action, "item": str(item), "job": repr(job), "paper_id": job['paper_id']}
             try:
                 res = ()
                 if action == 'build+upload':
@@ -395,6 +395,7 @@ def sync_to_gcp(todo_q, host):
                     res = upload(tl_data.gs_client, Path(item), path_to_bucket_key(item))
 
                 summary_q.put((job['paper_id'], ms_since(start)) + res)
+                logger.info("success uploading %s", job['paper_id'], extra=extra)
             except Exception as ex:
                 extra.update({CATEGORY: "upload"})
                 extra.update(job_details)
@@ -441,6 +442,7 @@ def main(args):
         json_formatter = ArxivSyncJsonFormatter(**LOG_FORMAT_KWARGS)
         json_formatter.converter = gmtime
         json_logHandler.setFormatter(json_formatter)
+        json_logHandler.setLevel(logging.DEBUG if args.v or args.test else logging.INFO)
         logger.addHandler(json_logHandler)
         pass
 
@@ -467,7 +469,7 @@ def main(args):
 
     logger.debug("made todo_q, getting size")
     overall_size = todo_q.qsize()
-    logger.debug('Made %d todos', overall_size)
+    logger.info('Made %d todos', overall_size, extra={"n_todos": overall_size})
 
     threads = []
     for host, n_th in ENSURE_HOSTS:
@@ -484,9 +486,9 @@ def main(args):
 
     DONE = True
     RUN = False
-    logger.debug("wating to join threads")
+    logger.info("Run is complete. Wating to join threads")
     [th.join() for th in threads]
-    logger.debug("Threads done joining")
+    logger.info("Run is complete. Threads done joining")
 
     # Summary report
     log_summary()
