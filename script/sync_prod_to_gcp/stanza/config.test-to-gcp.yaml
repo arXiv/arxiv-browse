@@ -1,0 +1,130 @@
+# File: config-localhost.yaml
+# Desc: Test stanza locally.
+# Use:  ./stanza -c config-localhost.yaml | jq .
+# Install:
+#   https://github.com/observiq/stanza/releases
+#   probably this one: stanza_darwin_amd64
+
+# sudo /bin/bash
+# vi /opt/observiq/stanza/config.yaml
+# systemctl restart stanza
+
+# https://github.com/observIQ/stanza/blob/main/docs/operators/README.md
+# https://github.com/observIQ/stanza/blob/main/docs/types/expression.md
+# https://github.com/antonmedv/expr/blob/master/docs/Language-Definition.md
+
+# https://github.com/observIQ/stanza/blob/main/docs/pipeline.md
+pipeline:
+
+  ############################################
+  # Use operators (or plugins) to load and logs files.
+  # Use parsers to clean up the data. 
+  # The "id" and "output" keys define the graph of how data flows.
+  #   "id" defaults to the value of "type".
+  #   "output" defaults to the "id" of the next item in the pipeline.
+  ############################################
+
+  # Quickstart:
+  # cat arxiv-operations/stanza/logs/arxiv_access_log.example \
+  #     >> arxiv-operations/stanza/logs/arxiv_access_log
+
+  #- type: arxiv_python_log
+  #  log_path: logs/modapi_log
+  #  start_at: beginning
+  #  output: host_metadata
+  #  #parse_to: parsed
+  #  #preserve: true
+
+  #- type: arxiv_access_log
+  #  log_path: logs/arxiv_access_log
+  #  output: host_metadata
+
+  #- type: arxiv_error_log
+  #  log_path: logs/arxiv_error_log
+  #  output: host_metadata
+
+  #- type: arxiv_pdf_log
+  #  log_path: logs/arxiv_pdf_log
+  #  output: host_metadata
+
+  #- type: arxiv_stats_log
+  #  log_path: logs/arxiv_stats_log
+  #  output: host_metadata
+
+  - type: arxiv_sync2gcp_log
+    log_path: "test/test-output/*"
+    
+  #- type: arxiv_classifier_log
+  #  log_path: logs/arxiv_classifier_log
+  #  output: host_metadata
+
+  #- type: file_input
+  #  start_at: beginning
+  #  include: 
+  #    - logs/modapi_log
+  #  output: modapi_log
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/metadata.md
+  #- type: metadata
+  #  id: modapi_log
+  #  resource:
+  #    nicename: arxiv-localhost
+  #  output: json_parser
+
+  #- type: json_parser
+  #  output: host_metadata
+  #      timestamp:
+  #    parse_from: time
+  #    layout: '%d/%b/%Y:%H:%M:%S %z'
+  ##  #source: file
+  #  #log_path: logs/modapi_log
+  #  #pod_name: ""
+  #  #include: logs/modapi_log
+
+  # https://github.com/observIQ/stanza/blob/master/docs/operators/file_input.md
+  #- type: file_input
+
+  # https://github.com/observIQ/stanza-plugins/blob/main/docs/plugins/apache_combined.md
+  # https://github.com/observIQ/stanza-plugins/blob/main/docs/plugins/apache_common.md
+  #- type: arxiv_stats_log
+  #  log_path: /Users/bgm37/Documents/apps/stanza/test_stats_log
+  #  output: host_metadata
+
+  #######################################
+  # Below is intended for all log streams
+  #######################################
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/host_metadata.md
+  - type: host_metadata
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/restructure.md
+  #- type: restructure
+  #  id: nicename_restructure
+  #  if: '$labels["host.name"] != nil'
+  #  ops:
+  #    - move:
+  #        from: '$labels["host.nicename"]'
+  #        to: '$resource["host.nicename"]'
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/metadata.md
+  - type: metadata
+    resource:
+      nicename: arxiv-localhost
+
+  # https://github.com/observIQ/stanza/blob/main/docs/types/severity.md
+  # - type: severity
+
+  ############################################
+  # Send to google logging or test with stdout
+  ############################################
+
+  # https://github.com/observIQ/stanza/blob/master/docs/operators/google_cloud_output.md
+  - type: google_cloud_output
+    credentials_file: test/arxiv-development_arxiv-stanza.json
+
+  # For testing
+  # - type: stdout
+
+  # For testing
+  - type: file_output
+    path: test/test-output/stanza.log
