@@ -17,7 +17,8 @@ class BrowseTest(unittest.TestCase):
         """Test the home page."""
         rv = self.client.get('/')
         self.assertEqual(rv.status_code, 200)
-        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        txt = rv.data.decode('utf-8')
+        html = BeautifulSoup(txt, 'html.parser')
 
         for group_key, group_value in taxonomy.definitions.GROUPS.items():
             if group_key == 'grp_test':
@@ -26,6 +27,9 @@ class BrowseTest(unittest.TestCase):
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
         self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
+
+        self.assertNotIn('None/login', txt)
+
 
     def test_tb(self):
         """Test the /tb/<arxiv_id> page."""
@@ -353,6 +357,7 @@ class BrowseTest(unittest.TestCase):
                          'Collaboration author query should not have "The"')
         self.assertEqual(au_a_tags[0].text, 'SuperSuper Collaboration')
 
+    @unittest.skip("bug in flask https://github.com/pallets/flask/issues/5286")
     def test_long_author_colab(self):
         id = '1501.05201'
         rv = self.client.get('/abs/' + id)
