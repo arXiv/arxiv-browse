@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from browse.domain.identifier import Identifier
 import re
+import urllib.parse
 from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 
@@ -75,13 +76,10 @@ def post_process_html(html:str) -> str:
             new_html += "</dl>\n"
             #count directive numbers?
 
-        elif report_no_match:
-            #report matching stuff here
+        elif report_no_match: #need to find proceeding to test with
             rn = report_no_match.group(1)
-            rn_match = rn.replace('/', ';')
-
-
-            new_html+="reportno match found"
+            url_encoded_rn = urllib.parse.quote(rn,safe="")
+            new_html+=f"<a href=\"/search/?searchtype=report_num&query={url_encoded_rn}\">{rn}</a>\n"
 
         else:
             out += line + "\n"
@@ -89,4 +87,5 @@ def post_process_html(html:str) -> str:
     return new_html
 
 def write_for_dl_list(meta:DocMetadata) -> str:
+    #see brian c comment about list items
     return meta.title
