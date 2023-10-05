@@ -108,7 +108,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
 
 def _write_expires_header(response_headers: Dict[str, Any]) -> None:
     """Writes an expires header for the response."""
-    response_headers["Expires"] = abs_expires_header(biz_tz())[1]
+    response_headers["Expires"] = abs_expires_header(biz_tz())
 
 
 DAYS = ["{:0>2d}".format(i) for i in range(1, 32)]
