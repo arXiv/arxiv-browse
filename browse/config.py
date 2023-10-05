@@ -96,8 +96,6 @@ class Settings(BaseSettings):
     total_papers 1456755."""
 
     BROWSE_SITE_LABEL: str = "arXiv.org"
-    BROWSE_SITE_HOST: Optional[str] = None
-    """This is similar to, but decoupled from SERVER_NAME."""
 
     BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
     """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
@@ -196,13 +194,6 @@ class Settings(BaseSettings):
 
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
-
-    URLS: List[tuple] = [
-        ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
-        # This is a temporary workaround for ARXIVNG-2063
-    ]
-    """External URLs."""
-
 
     ARXIV_BUSINESS_TZ: str = 'US/Eastern'
     """

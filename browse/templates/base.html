@@ -86,11 +86,11 @@
                 <h2 id="mobilemenulabel">quick links</h2>
                 <ul>
                     {% if request.auth is defined and request.auth.user is defined %}
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a></li>
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user/create">Start Submission</a></li>
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a></li>
+                    <li><a href="{{ url_for('account') }}">My Account</a></li>
+                    <li><a href="{{ url_for('create') }}">Start Submission</a></li>
+                    <li><a href="{{ url_for('logout')}} ">Logout</a></li>
                     {% else %}
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('help') }}">Help Pages</a></li>
                     <li><a href="{{ url_for('about') }}">About</a></li>

@@ -124,7 +124,7 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "arxiv-base"
-version = "1.0.0a5"
+version = "1.0.1"
 description = "Common code for arXiv NG"
 optional = false
 python-versions = "^3.10"
@@ -142,13 +142,14 @@ pytz = "*"
 retry = "*"
 semantic-version = "*"
 typing-extensions = "*"
+werkzeug = "~=2.3"
 wtforms = "*"
 
 [package.source]
 type = "git"
-url = "https://github.com/arXiv/arxiv-base"
-reference = "1.0.1"
-resolved_reference = "45c557e75bc6b645dded63811770b87c405bda3e"
+url = "https://github.com/arXiv/arxiv-base.git"
+reference = "1a6035ab"
+resolved_reference = "1a6035ab2083c1ac9863e49d7c638b714c1e2b84"
 
 [[package]]
 name = "asn1crypto"
@@ -737,13 +738,13 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "flask"
-version = "2.2.3"
+version = "2.2.5"
 description = "A simple framework for building complex web applications."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Flask-2.2.3-py3-none-any.whl", hash = "sha256:c0bec9477df1cb867e5a67c9e1ab758de9cb4a3e52dd70681f59fa40a62b3f2d"},
-    {file = "Flask-2.2.3.tar.gz", hash = "sha256:7eb373984bf1c770023fce9db164ed0c3353cd0b53f130f4693da0ca756a2e6d"},
+    {file = "Flask-2.2.5-py3-none-any.whl", hash = "sha256:58107ed83443e86067e41eff4631b058178191a355886f8e479e347fa1285fdf"},
+    {file = "Flask-2.2.5.tar.gz", hash = "sha256:edee9b0a7ff26621bd5a8c10ff484ae28737a2410d99b0bb9a6850c7fb977aa0"},
 ]
 
 [package.dependencies]
@@ -2727,20 +2728,20 @@ files = [
 
 [[package]]
 name = "werkzeug"
-version = "2.2.3"
+version = "2.3.7"
 description = "The comprehensive WSGI web application library."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "Werkzeug-2.2.3-py3-none-any.whl", hash = "sha256:56433961bc1f12533306c624f3be5e744389ac61d722175d543e1751285da612"},
-    {file = "Werkzeug-2.2.3.tar.gz", hash = "sha256:2e1ccc9417d4da358b9de6f174e3ac094391ea1d4fbef2d667865d819dfd0afe"},
+    {file = "werkzeug-2.3.7-py3-none-any.whl", hash = "sha256:effc12dba7f3bd72e605ce49807bbe692bd729c3bb122a3b91747a6ae77df528"},
+    {file = "werkzeug-2.3.7.tar.gz", hash = "sha256:2b8c0e447b4b9dbcc85dd97b6eeb4dcbaf6c8b6c3be0bd654e25553e0a2157d8"},
 ]
 
 [package.dependencies]
 MarkupSafe = ">=2.1.1"
 
 [package.extras]
-watchdog = ["watchdog"]
+watchdog = ["watchdog (>=2.3)"]
 
 [[package]]
 name = "wrapt"
@@ -2944,4 +2945,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5fde4a1fcf60a8553d614ca56baf3a23f0a8f471a4f089258a974311d6be0f68"
+content-hash = "a0b49fc841f13b13ccb19e9e31a0c59c5ad3d7b60bfa6d4afb3ebafd9ada2ecb"

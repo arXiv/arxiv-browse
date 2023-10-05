@@ -13,7 +13,7 @@ MarkupSafe = "*"
 SQLAlchemy = "~=1.4" 
 bcrypt = "*"
 cloudpathlib = {extras = ["gs"], version = "*"}
-flask = "~=2.2"  
+werkzeug = "~=2.3"
 flask-rangerequest = "^0.0.2"
 flask-s3 = "*"
 flask-wtf = "*"
@@ -38,7 +38,8 @@ types-python-dateutil = "^2.8.19.12"
 pg8000 = "^1.30.1"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base", rev = "1.0.1"}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "1a6035ab"}
+flask = "~=2.2.2"
 
 [tool.poetry.dev-dependencies]
 beautifulsoup4 = "*"
