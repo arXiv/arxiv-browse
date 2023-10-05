@@ -2,7 +2,7 @@
 
 The content() and script() macro get added to the base.html.
 
-The content() elements will be added at the starty of the <body> above the
+The content() elements will be added at the start of the <body> above the
 header in base.html.
 
 The script() elements will be added to the <head> in the base.html. This has
@@ -13,20 +13,23 @@ sure to use the same date conditionals in the user_banner.content() macro and
 the user_banner.script() macro.
 
 This no longer uses env vars set in browse.config or httpd/conf/ng_flask.conf on
-production. -#}
+production.
 
-{# Set these variables to a string of YYYYMMMDD of the start and end date #}
-{% set BANNER_START = '202000101' %}
-{% set BANNER_END = '20200101' %}
+Adding an environment var, so we can enable only on gcp.
+-#}
+
+{# Set these variables to a string of YYYYMMDD of the start and end date #}
+{% set BANNER_START = '20221001' %}
+{% set BANNER_END = '20221030' %}
 
 
 {%- macro content(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+{%- if config['BROWSE_USER_BANNER_ENABLED'] and (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
 <aside class="slider-wrapper bps-banner dark" >
   <div class="copy-donation bps-banner">
-    <h1>Example banner</h1>
-    <p>Banner text would go here.</p>
-    <p><a href="https://arxiv.org/support/bug_report">Report bugs here</a></p>
+    <h1>Cloud Transition</h1>
+    <p>We're making arXiv even more stable by transitioning to the cloud.</p>
+    <p><a href="https://arxiv-org.atlassian.net/servicedesk/customer/portal/1l">Report an issue</a></p>
   </div>
 </aside>
 {%- endif -%}
@@ -34,7 +37,7 @@ production. -#}
 
 
 {%- macro script(request_datetime) -%}
-{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
+{%- if config['BROWSE_USER_BANNER_ENABLED'] and (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
 {%- endif -%}
 {%- endmacro -%}

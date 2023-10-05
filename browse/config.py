@@ -100,6 +100,15 @@ class Settings(BaseSettings):
     BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
     """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 
+    BROWSE_USER_BANNER_ENABLED: bool = bool(int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0")))
+    """Enable/disable the user banner, the full width one, above the Cornell logo."""
+
+    BROWSE_MINIMAL_BANNER_ENABLED: bool = bool(int(os.environ.get("BROWSE_MINIMAL_BANNER_ENABLED", "0")))
+    """Enable/disable the banner to the right of the Cornell logo, before the donate button."""
+
+    BROWSE_SPECIAL_MESSAGE_ENABLED: bool = bool(int(os.environ.get("BROWSE_SPECIAL_MESSAGE_ENABLED", "0")))
+    """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
+
     ############################## Services ##############################
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
     """What implementation to use for the listing service.
