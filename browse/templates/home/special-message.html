@@ -5,7 +5,12 @@
 
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
-{%- if rd_int >= 202305010100 and rd_int <= 202312300100 -%}
+<div class="message-special dark column">
+  <span class="label">arXiv News</span>
+  <p><a href="https://blog.arxiv.org/">Visit our blog for the latest news</a></p>
+</div>
+
+{%- if rd_int >= 202305010100 and rd_int <= 202307170100 -%}
 <div class="message-special dark column">
   <span class="label">arXiv News</span>
   <h2>TeX Live 2023 Upgrade</h2>
