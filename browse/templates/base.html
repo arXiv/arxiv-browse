@@ -34,12 +34,13 @@
         <div class="column" id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
-        {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-        {%- if rd_int >= 202305010100 and rd_int <= 202307170100 -%}
+        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
         <div class="column banner-minimal">
-            <a href="https://info.arxiv.org/hiring/">We are hiring</a></p>
+            <a href="https://info.arxiv.org/about/index.html">To the cloud!</a></p>
+            <!--<a href="https://info.arxiv.org/hiring/">We are hiring</a></p> --!>
         </div>
         {%- endif -%}
+
         <div class="column" id="support-ack">
           <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors. <a href="https://info.arxiv.org/about/donate.html">Donate</a></span>
         </div>
