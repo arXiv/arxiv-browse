@@ -370,10 +370,10 @@ class BrowseTest(unittest.TestCase):
 
         self.assertIsNotNone(
             colab['href'], '<a> tag in title should have href')
-        self.assertEqual(
-            colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
-        self.assertEqual(
-            colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
+        self.assertRegex(colab['href'],
+                         'search\/physics\?searchtype=author\&query=ILL.ESS.LiU\+collaboration')
+        self.assertEqual(colab.text,
+                         'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
 
     @unittest.skip("In current implementation, conflicts with comma test below.")
     def test_space_in_author_list(self):
