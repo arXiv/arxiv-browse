@@ -100,7 +100,7 @@ def abstract(arxiv_id: str) -> Any:
 
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
-            return Response(response["abs_meta"].raw_safe, mimetype="text/plain")
+            return Response(response["abs_meta"].raw(), mimetype="text/plain")
         return render_template("abs/abs.html", **response), code, headers
     elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)

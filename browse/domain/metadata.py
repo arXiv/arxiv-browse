@@ -267,3 +267,29 @@ class DocMetadata:
 
     def __repr__(self) -> str:
         return f"DocMetadata({self.arxiv_id_v or self.arxiv_id})"
+
+    def raw(self) -> str:
+        """Produces a txt output of the object."""
+        if self.raw_safe:
+            return self.raw_safe
+
+        rv = f"arXiv:{self.arxiv_id}\n"
+        rv += f"From: {self.submitter.name}\n"
+        for version in self.version_history:
+            rev = "" if version.version == 1 else f"(revised v{version.version}) "
+            rv += f"Date: {rev}{version.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z')} "\
+                f"({version.size_kilobytes}kb)\n"
+
+        rv += f"Title: {self.title}\n"
+        rv += f"Authors: {self.authors}\n"
+        rv += f"Categories: {self.categories}\n"
+        if self.comments:
+            rv += f"Comments: {self.comments}\n"
+        if self.msc_class:
+            rv += f"MSC-class: {self.msc_class}\n"
+        if self.journal_ref:
+            rv += f"Journal-ref: {self.journal_ref}\n"
+        if self.license:
+            rv += f"License: {self.license.recorded_uri}\n"
+
+        return rv
