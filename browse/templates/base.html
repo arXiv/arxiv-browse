@@ -35,8 +35,10 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
         {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
-        <div class="column banner-minimal">
-            <p><a href="https://info.arxiv.org/about/index.html">This page served from the cloud</a></p>
+        <div class="column">
+            <a href="https://info.arxiv.org/about/index.html"><span style="color:white;text-decoration-line:underline;">
+                This page served from the cloud
+            </span></a>
             <!--<p><a href="https://info.arxiv.org/hiring/">We are hiring</a></p> --!>
         </div>
         {%- endif -%}
