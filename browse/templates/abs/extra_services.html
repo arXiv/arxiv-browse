@@ -214,7 +214,7 @@
       <ul>
         {% if include_inspire_link %}
         <li>
-          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
         </li>
         {% endif %}
         <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
