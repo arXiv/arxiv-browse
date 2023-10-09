@@ -92,7 +92,7 @@ def post_process_html(html:str) -> str:
             new_html+=f"<a href=\"/search/?searchtype=report_num&query={url_encoded_rn}\">{rn}</a>\n"
 
         else:
-            out += line + "\n"
+            new_html += line + "\n"
 
     return new_html
 
