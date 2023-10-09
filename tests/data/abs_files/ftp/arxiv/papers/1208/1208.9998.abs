@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1208.9998
+From: Smith, Bob <bob@example.com>
+Date: Thu, 29 Aug 2012 23:00:00 GMT   (300kb)
+
+Title: Fake paper to test no source condition
+Authors: Smith, bob
+Categories: cs.CV
+Comments: so fake
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Fake paper to test the no source condition. The abs exist but
+there is no source or pdf in ps_cache.
+\\
