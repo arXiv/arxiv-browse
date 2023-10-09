@@ -323,16 +323,29 @@ def _src_code(article: DocMetadata)->str:
     else:
         return ''
 
+def dl_for_article(article: DocMetadata)-> Dict[str, Any]:
+    """Gets the download links for an article."""
+    dl_pref = request.cookies.get('xxx-ps-defaults')
+    return {article.arxiv_id_v: formats_from_source_type(_src_code(article), dl_pref)}
+
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
     return {item.article.arxiv_id_v: formats_from_source_type(_src_code(item.article), dl_pref)
             for item in items}
 
+def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
+    """Returns a Dict of article id to latexml links"""
+    return {article.arxiv_id_v: get_latexml_url(article, True)}
+
 def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
                 for item in listings}
+
+def authors_for_article(article: DocMetadata)->Dict[str, Any]:
+    """Returns a Dict of article id to author links."""
+    return {article.arxiv_id_v: author_links(article)}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to author links."""
