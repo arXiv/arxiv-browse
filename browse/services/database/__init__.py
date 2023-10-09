@@ -3,12 +3,10 @@
 
 import ipaddress
 from datetime import date, datetime
-from logging import Logger
 from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app
 
-from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
 from sqlalchemy import asc, desc, not_
