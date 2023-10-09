@@ -1,10 +1,11 @@
 from typing import List, Tuple
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from browse.domain.identifier import Identifier
 import re
 import urllib.parse
 from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
+from browse.controllers.list_page import dl_for_article, latexml_links_for_article, authors_for_article
 
 from ..listing import ListingItem
 
@@ -67,14 +68,22 @@ def post_process_html(html:str) -> str:
                 arxiv_id=Identifier(id) 
             except Exception as e:
                 return e, 202
-            
             new_html += "<dl>\n"
 
             if arxiv_id:
                 #get and format metadata here as html
-                abs_meta=get_doc_service().get_abs(arxiv_id)
-                item_string=render_template('list/conference_proceeding.html', item=abs_meta, include_abstract=include_abstract )
-
+                metadata=get_doc_service().get_abs(arxiv_id)
+                downloads= dl_for_article(metadata)
+                latexml=latexml_links_for_article(metadata)
+                author_links=authors_for_article(metadata)
+                #fails here
+                item_string=render_template('list/conference_proceeding.html', 
+                                            item=metadata, 
+                                            include_abstract=include_abstract, 
+                                            downloads=downloads, 
+                                            latexml=latexml, 
+                                            author_links=author_links,
+                                            url_for_author_search=author_query )     
                 if not printed: #remove after testing
                     printed=True
                     print(item_string)
@@ -93,9 +102,13 @@ def post_process_html(html:str) -> str:
 
         else:
             new_html += line + "\n"
-
     return new_html
+
+
 
 def write_for_dl_list(meta:DocMetadata) -> str:
     #see brian c comment about list items
     return meta.title
+
+def author_query(article: DocMetadata, query: str)->str:
+    return str(url_for('search_box', searchtype='author', query=query))
