@@ -1,13 +1,13 @@
 
 def test_oldids_in_ps_cache(client_with_test_fs):
-    # resp = client_with_test_fs.get("/pdf/acc-phys/9502001v1.pdf")
-    # assert "9502001v1" in resp.text
+    resp = client_with_test_fs.get("/pdf/acc-phys/9502001v1.pdf")
+    assert "9502001v1" in resp.text
 
-    # resp = client_with_test_fs.get("/pdf/cs/0011004v1.pdf")
-    # assert "0011004v1" in resp.text
+    resp = client_with_test_fs.get("/pdf/cs/0011004v1.pdf")
+    assert "0011004v1" in resp.text
 
-    # resp = client_with_test_fs.get("/pdf/cs/0011004v2.pdf")
-    # assert "0011004v2" in resp.text
+    resp = client_with_test_fs.get("/pdf/cs/0011004v2.pdf")
+    assert "0011004v2" in resp.text
 
     resp = client_with_test_fs.get("/pdf/cs/0011004.pdf")
     assert "0011004v2" in resp.text
