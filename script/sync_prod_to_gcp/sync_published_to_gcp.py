@@ -291,6 +291,30 @@ def path_to_bucket_key(pdf) -> str:
 
 
 @retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
+def get_pdf(session, pdf_url) -> None:
+    headers = {'User-Agent': ENSURE_UA}
+    logger.debug("Getting %s", pdf_url)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    # noinspection PyStatementEffect
+    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    if resp.status_code == 503:
+        msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code})
+        raise Overloaded503Exception(msg)
+    if resp.status_code != 200:
+        msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code})
+        raise (Exception(msg))
+    else:
+        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code})
+
+
 def ensure_pdf(session, host, arxiv_id):
     """Ensures PDF exits for arxiv_id.
 
@@ -309,7 +333,6 @@ def ensure_pdf(session, host, arxiv_id):
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
     url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
-
     start = perf_counter()
 
     if pdf_file.exists():
@@ -317,23 +340,7 @@ def ensure_pdf(session, host, arxiv_id):
         return pdf_file, url, "already exists", ms_since(start)
 
     start = perf_counter()
-    headers = {'User-Agent': ENSURE_UA}
-    logger.debug("Getting %s", url)
-    resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
-    # noinspection PyStatementEffect
-    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
-    if resp.status_code == 503:
-        msg = f"ensure_pdf: GET status 503, server overloaded {url}"
-        logger.warning(msg,
-                       extra={CATEGORY: "download",
-                              "url": url, "status_code": resp.status_code, "pdf_file": str(pdf_file)})
-        raise Overloaded503Exception(msg)
-    if resp.status_code != 200:
-        msg = f"ensure_pdf: GET status {resp.status_code} {url}"
-        logger.warning(msg,
-                       extra={CATEGORY: "download",
-                              "url": url, "status_code": resp.status_code, "pdf_file": str(pdf_file)})
-        raise (Exception(msg))
+    get_pdf(session, url)
     start_wait = perf_counter()
     while not pdf_file.exists():
         if perf_counter() - start_wait > PDF_WAIT_SEC:
@@ -341,7 +348,7 @@ def ensure_pdf(session, host, arxiv_id):
             logger.warning(msg,
                            extra={CATEGORY: "download",
                                   "url": url, "pdf_file": str(pdf_file)})
-            raise (WaitTimeout(msg))
+            raise (Exception(msg))
         else:
             sleep(0.2)
     if pdf_file.exists():
@@ -349,7 +356,7 @@ def ensure_pdf(session, host, arxiv_id):
             f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
         return pdf_file, url, None, ms_since(start)
     else:
-        raise (NoPdfFile(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
+        raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
 
 
 def upload_pdf(gs_client, ensure_tuple):
