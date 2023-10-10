@@ -23,8 +23,10 @@ def _unwrap_payload (payload: Dict[str, str]) -> Tuple[str, str, str]:
 def post_process_html () -> Response:
     try:
         blob, bucket = _unwrap_payload(request.json)
+    except KeyError as e:
+        return e, 400
     except Exception as e:
-        return '', 202
+        return e, 400
   
-    response, code, headers = post_process_conference(blob, bucket)
-    #return render_template('list/conference_proceedings.html', **response), code, headers
+    response, code = post_process_conference(blob, bucket)
+    return response, code

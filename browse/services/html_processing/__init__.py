@@ -25,11 +25,8 @@ def post_process_html(html:str) -> str:
             else:
                 include_abstract=False
             id = list_match.group(2) #document ID
+            arxiv_id=Identifier(id) 
 
-            try: 
-                arxiv_id=Identifier(id) 
-            except Exception as e:
-                return e, 202
             new_html += "<dl>\n"
 
             if arxiv_id:
@@ -38,7 +35,6 @@ def post_process_html(html:str) -> str:
                 downloads= dl_for_article(metadata)
                 latexml=latexml_links_for_article(metadata)
                 author_links=authors_for_article(metadata)
-                #fails here
                 item_string=render_template('list/conference_item.html', 
                                             item=metadata, 
                                             include_abstract=include_abstract, 
@@ -52,7 +48,6 @@ def post_process_html(html:str) -> str:
                 new_html += f"<dd>{id} [failed to get identifier for paper]</dd>\n"
 
             new_html += "</dl>\n"
-            #count directive numbers?
 
         elif report_no_match: #need to find proceeding to test with
             rn = report_no_match.group(1)
