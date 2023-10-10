@@ -69,19 +69,7 @@ class Overloaded503Exception(Exception):
     pass
 
 
-class WaitTimeout(Exception):
-    """The wait for the PDF to show up in /cache/ps_cache greater than PDF_WAIT_SEC."""
-    pass
-
-
-class NoPdfFile(Exception):
-    """Raised when the PDF is not in /cache/ps_cache"""
-    pass
-
-
-PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, WaitTimeout, NoPdfFile,
-                        requests.exceptions.ConnectionError,
-                        requests.exceptions.Timeout]
+PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
 CATEGORY = "category"
 
 GS_BUCKET = 'arxiv-production-data'
