@@ -1,5 +1,4 @@
-from typing import List, Tuple
-from flask import Flask, render_template, url_for
+from flask import render_template, url_for
 from browse.domain.identifier import Identifier
 import re
 import urllib.parse
@@ -7,48 +6,11 @@ from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from browse.controllers.list_page import dl_for_article, latexml_links_for_article, authors_for_article
 
-from ..listing import ListingItem
-
 LIST_ITEM_RE = re.compile(r'<\!--\s(.+)\s-->\nLIST:(.+)\n')
 LAX_ID_REGEX = '(arXiv:)?([a-z-]+(\.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
 
-def parse_conference_html(html:str) -> Tuple[str, str,List[ListingItem]]:
-    split=html.split("\n")
-    title=split[5].replace("<h1>","").replace("</h1>","")
-    extra_data=""
-    
-    #pull out all the extra info before paper listings start
-    for i in range (6, len(split)):
-        line=split[i]
-        if line[0:4] =="LIST" or line[0:4]=="<!--":
-            break
-        extra_data+= line+"\n"
-        
-    lis=get_lis_for_papers(get_listing_ids(html))
-    
-    return title, extra_data, lis
-
-def get_listing_ids (html: str) -> List[str]:
-    """ Return list of arxiv_ids for LIST: entries in the html """
-    return list(map(lambda x: x.group(2), re.finditer(LIST_ITEM_RE, html)))
-
-def get_lis_for_papers (arxiv_ids: List[str]) -> List[ListingItem]:
-    lis = []
-    for i, id in enumerate(arxiv_ids):
-        metadata = get_doc_service().get_abs(id)
-        li = ListingItem(
-                id,
-                'new',
-                metadata.primary_category.canonical or metadata.primary_category
-            )
-        setattr(li, 'article', metadata)
-        setattr(li, 'list_index', i + 1)
-        lis.append(li)
-    return lis
-
 def post_process_html(html:str) -> str:
     new_html=""
-    printed=False
     #do we still want to count expansions?
 
     for line in html.split('\n'):
@@ -77,16 +39,13 @@ def post_process_html(html:str) -> str:
                 latexml=latexml_links_for_article(metadata)
                 author_links=authors_for_article(metadata)
                 #fails here
-                item_string=render_template('list/conference_proceeding.html', 
+                item_string=render_template('list/conference_item.html', 
                                             item=metadata, 
                                             include_abstract=include_abstract, 
                                             downloads=downloads, 
                                             latexml=latexml, 
                                             author_links=author_links,
                                             url_for_author_search=author_query )     
-                if not printed: #remove after testing
-                    printed=True
-                    print(item_string)
                 
                 new_html+= item_string
             else:
@@ -103,12 +62,6 @@ def post_process_html(html:str) -> str:
         else:
             new_html += line + "\n"
     return new_html
-
-
-
-def write_for_dl_list(meta:DocMetadata) -> str:
-    #see brian c comment about list items
-    return meta.title
 
 def author_query(article: DocMetadata, query: str)->str:
     return str(url_for('search_box', searchtype='author', query=query))
