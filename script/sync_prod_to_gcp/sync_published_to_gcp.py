@@ -73,21 +73,26 @@ REUPLOADS = {}
 
 ENSURE_UA = 'periodic-rebuild'
 
-ENSURE_HOSTS = [
-    # ('web2.arxiv.org', 40),
-    # ('web3.arxiv.org', 40),
-    # ('web4.arxiv.org', 40),
-    ('web5.arxiv.org', 8),
-    ('web6.arxiv.org', 8),
-    ('web7.arxiv.org', 8),
-    ('web8.arxiv.org', 8),
-    ('web9.arxiv.org', 8),
+CONCURRENCY_PER_WEBNODE = [
+    ('web5.arxiv.org', 4),
+    ('web6.arxiv.org', 4),
+    ('web7.arxiv.org', 4),
+    ('web8.arxiv.org', 4),
+    ('web9.arxiv.org', 4),
 ]
-"""Tuples of form HOST, THREADS_FOR_HOST"""
+"""Tuples of form HOST, THREADS_FOR_HOST
+
+The THREADS_FOR_HOST controls the maximum concurrent requests to a web node when
+making HTTP GET requests to /pdf.
+
+The code at /pdf has a hard coded limit to the maximum number of PDF build jobs
+on the VM it will allow. It will send a HTTP response of 503 if there are too
+many.  As of 2023-10 the limit is 5.
+"""
 
 ENSURE_CERT_VERIFY = False
 
-PDF_WAIT_SEC = 60 * 3
+PDF_WAIT_SEC = 60 * 5
 """Maximum sec to wait for a PDF to be created"""
 
 todo_q: Queue = Queue()
@@ -482,7 +487,7 @@ def main(args):
     logger.debug('Made %d todos', overall_size, extra={"n_todos": overall_size})
 
     threads = []
-    for host, n_th in ENSURE_HOSTS:
+    for host, n_th in CONCURRENCY_PER_WEBNODE:
         ths = [Thread(target=sync_to_gcp, args=(todo_q, host)) for _ in range(0, n_th)]
         threads.extend(ths)
         [t.start() for t in ths]
