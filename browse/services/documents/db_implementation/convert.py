@@ -56,7 +56,7 @@ def to_docmeta(dbmd: Metadata,
     modified = modified.astimezone(utc)
 
     return DocMetadata(
-        raw_safe='-no-raw-since-sourced-from-db-',
+        raw_safe='',
         abstract=dbmd.abstract,
         arxiv_id=dbmd.paper_id,
         arxiv_id_v=dbmd.paper_id + 'v' + str(dbmd.version),
