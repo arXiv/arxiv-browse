@@ -47,17 +47,6 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
         tar.addfile(tarinfo, html_file)
         
     tar_buffer.seek(0)
-    # with open('test3.tar.gz', 'wb') as local_file:
-    #     local_file.write(tar_buffer.getvalue())
-
-    
-    # with open(html_file_name, 'w') as html_file:
-    #     html_file.write(processed_html)
-
-    # #html file to tar.gz
-    # output_file_name=file_name+".tar.gz"
-    # with tarfile.open(output_file_name, 'w:gz') as tar:
-    #     tar.add(html_file_name)
 
     #upload to GCP
     try:
@@ -67,7 +56,6 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
     except Exception as ex:
         logger.error('Error sending file to GCP',exc_info=True)
         return ex, 400
-
 
     response_data: Dict[str, Any] = {}
     response_data['result'] = "success"
