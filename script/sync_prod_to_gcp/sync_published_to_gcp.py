@@ -43,7 +43,11 @@ from typing import List, Tuple
 
 from pathlib import Path
 
+from google.api_core import retry
+from google.cloud.storage.retry import DEFAULT_RETRY as STORAGE_RETRY
+
 from identifier import Identifier
+
 from digester import get_file_mtime
 
 overall_start = perf_counter()
@@ -59,6 +63,13 @@ logger.setLevel(logging.WARNING)
 
 import logging_json
 
+
+class Overloaded503Exception(Exception):
+    """Raised when the response to /pdf is a 503, indicating a need to slow down calls to server."""
+    pass
+
+
+PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
 CATEGORY = "category"
 
 GS_BUCKET = 'arxiv-production-data'
@@ -73,21 +84,26 @@ REUPLOADS = {}
 
 ENSURE_UA = 'periodic-rebuild'
 
-ENSURE_HOSTS = [
-    # ('web2.arxiv.org', 40),
-    # ('web3.arxiv.org', 40),
-    # ('web4.arxiv.org', 40),
-    ('web5.arxiv.org', 8),
-    ('web6.arxiv.org', 8),
-    ('web7.arxiv.org', 8),
-    ('web8.arxiv.org', 8),
-    ('web9.arxiv.org', 8),
+CONCURRENCY_PER_WEBNODE = [
+    ('web5.arxiv.org', 4),
+    ('web6.arxiv.org', 4),
+    ('web7.arxiv.org', 4),
+    ('web8.arxiv.org', 4),
+    ('web9.arxiv.org', 4),
 ]
-"""Tuples of form HOST, THREADS_FOR_HOST"""
+"""Tuples of form HOST, THREADS_FOR_HOST
+
+The THREADS_FOR_HOST controls the maximum concurrent requests to a web node when
+making HTTP GET requests to /pdf.
+
+The code at /pdf has a hard coded limit to the maximum number of PDF build jobs
+on the VM it will allow. It will send a HTTP response of 503 if there are too
+many.  As of 2023-10 the limit is 5.
+"""
 
 ENSURE_CERT_VERIFY = False
 
-PDF_WAIT_SEC = 60 * 3
+PDF_WAIT_SEC = 60 * 5
 """Maximum sec to wait for a PDF to be created"""
 
 todo_q: Queue = Queue()
@@ -262,6 +278,33 @@ def path_to_bucket_key(pdf) -> str:
         raise ValueError(f"Cannot convert PDF path {pdf} to a GS key")
 
 
+@retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
+def get_pdf(session, pdf_url) -> None:
+    start = perf_counter()
+    headers = {'User-Agent': ENSURE_UA}
+    logger.debug("Getting %s", pdf_url)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    # noinspection PyStatementEffect
+    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    pdf_ms: int = ms_since(start)
+    if resp.status_code == 503:
+        msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise Overloaded503Exception(msg)
+    if resp.status_code != 200:
+        msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise (Exception(msg))
+    else:
+        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
+                    extra={CATEGORY: "download",
+                           "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+
+
 def ensure_pdf(session, host, arxiv_id):
     """Ensures PDF exits for arxiv_id.
 
@@ -277,59 +320,40 @@ def ensure_pdf(session, host, arxiv_id):
 
     This does not check if the arxiv_id is PDF source.
     """
-
-    def pdf_cache_path(arxiv_id) -> Path:
-        """Gets the PDF file in the ps_cache. Returns Path object."""
-        archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-        return Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-
-    def arxiv_pdf_url(host, arxiv_id) -> str:
-        """Gets the URL that would be used to request the pdf for the arxiv_id"""
-        return f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
-
-    pdf_file, url = pdf_cache_path(arxiv_id), arxiv_pdf_url(host, arxiv_id)
-
+    archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
+    pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
+    url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
     start = perf_counter()
 
-    if not pdf_file.exists():
-        start = perf_counter()
-        headers = {'User-Agent': ENSURE_UA}
-        logger.debug("Getting %s", url)
-        resp = session.get(url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
-        # noinspection PyStatementEffect
-        [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
-        if resp.status_code != 200:
-            msg = f"ensure_pdf: GET status {resp.status_code} {url}"
+    if pdf_file.exists():
+        logger.debug(f"ensure_file_url_exists: {str(pdf_file)} already exists")
+        return pdf_file, url, "already exists", ms_since(start)
+
+    start = perf_counter()
+    get_pdf(session, url)
+    start_wait = perf_counter()
+    while not pdf_file.exists():
+        if perf_counter() - start_wait > PDF_WAIT_SEC:
+            msg = f"No PDF, waited longer than {PDF_WAIT_SEC} sec {url}"
             logger.warning(msg,
                            extra={CATEGORY: "download",
-                                  "url": url, "status_code": resp.status_code, "pdf_file": str(pdf_file)})
+                                  "url": url, "pdf_file": str(pdf_file)})
             raise (Exception(msg))
-        start_wait = perf_counter()
-        while not pdf_file.exists():
-            if perf_counter() - start_wait > PDF_WAIT_SEC:
-                msg = f"No PDF, waited longer than {PDF_WAIT_SEC} sec {url}"
-                logger.warning(msg,
-                               extra={CATEGORY: "download",
-                                      "url": url, "pdf_file": str(pdf_file)})
-                raise (Exception(msg))
-            else:
-                sleep(0.2)
-        if pdf_file.exists():
-            logger.debug(
-                f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
-            return (pdf_file, url, None, ms_since(start))
         else:
-            raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
+            sleep(0.2)
+    if pdf_file.exists():
+        logger.debug(
+            f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
+        return pdf_file, url, None, ms_since(start)
     else:
-        logger.debug(f"ensure_file_url_exists: {str(pdf_file)} already exists")
-        return (pdf_file, url, "already exists", ms_since(start))
+        raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
 
 
 def upload_pdf(gs_client, ensure_tuple):
     """Uploads a PDF from ps_cache to GS_BUCKET"""
     return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
 
-
+@STORAGE_RETRY
 def upload(gs_client, localpath, key):
     """Upload a file to GS_BUCKET"""
 
@@ -482,7 +506,7 @@ def main(args):
     logger.debug('Made %d todos', overall_size, extra={"n_todos": overall_size})
 
     threads = []
-    for host, n_th in ENSURE_HOSTS:
+    for host, n_th in CONCURRENCY_PER_WEBNODE:
         ths = [Thread(target=sync_to_gcp, args=(todo_q, host)) for _ in range(0, n_th)]
         threads.extend(ths)
         [t.start() for t in ths]

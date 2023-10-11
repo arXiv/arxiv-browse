@@ -30,17 +30,17 @@ Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata,
                         VersionEntry], Response]
 
 
-def default_resp_fn(format: FileFormat,
+def default_resp_fn(file_format: FileFormat,
                     file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
                     version: VersionEntry,
                     extra: Optional[str] = None) -> Response:
-    """Creates a response with approprate headers for the `file`.
+    """Creates a response with appropriate headers for the `file`.
 
     Parameters
     ----------
-    format : FileFormat
+    file_format : FileFormat
         `FileFormat` of the `file`
     item : DocMetadata
         article that the response is for.
@@ -55,8 +55,8 @@ def default_resp_fn(format: FileFormat,
                                   size=file.size).make_response()
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-    if isinstance(format, FileFormat):
-        resp.headers['Content-Type'] = format.content_type
+    if isinstance(file_format, FileFormat):
+        resp.headers['Content-Type'] = file_format.content_type
 
     if resp.status_code == 200:
         # For large files on CloudRun chunked and no content-length needed
@@ -118,7 +118,7 @@ def get_e_print_resp(arxiv_id_str: str,
     return get_dissimination_resp("e-print", arxiv_id_str, archive)
 
 
-def get_dissimination_resp(format: Acceptable_Format_Requests,
+def get_dissimination_resp(file_format: Acceptable_Format_Requests,
                            arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
@@ -137,18 +137,20 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
 
-    item = get_article_store().dissemination(format, arxiv_id)
+    item = get_article_store().dissemination(file_format, arxiv_id)
     logger. debug(f"dissemination_for_id({arxiv_id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
-    elif item == "WITHDRAWN" or item == "NO_SOURCE":
+    elif item == "WITHDRAWN":
         return withdrawn(arxiv_id)
-    elif item == "UNAVAIABLE":
+    elif item == "NO_SOURCE":
+        return no_source(arxiv_id)
+    elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif item == "NOT_PDF":
         return not_pdf(arxiv_id)
     elif isinstance(item, Deleted):
-        return bad_id(arxiv_id, item.msg)
+        return bad_id(arxiv_id.ids, item.msg)
     elif isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
 
@@ -159,43 +161,77 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
 
-def withdrawn(arxiv_id: str) -> Response:
-    """Sets expire to one year, max allowed by RFC 2616"""
+def no_source(arxiv_id: Identifier) -> Response:
+    """Response sent when the source is missing.
+
+    This could be either due to an administrative removal of source, which
+    isn't an error and should be a 404
+
+    or
+
+    It could be due to a technical problem where the source isn't synced yet.
+
+    This returns a 500 so the technical problem with sync can more easily be
+    detected. Later this could be set to a less severe.
+    """
+    headers = {'Cache-Control': 'max-age=3000'}
+    return make_response(render_template("pdf/withdrawn.html",
+                                         arxiv_id=arxiv_id),
+                         500, headers)
+
+
+def withdrawn(arxiv_id: Identifier) -> Response:
+    """Response sent when the paper version is withdrawn.
+
+    Sets expire to one year since this isn't going to change
+    in the future, max allowed by RFC 2616"""
     headers = {'Cache-Control': 'max-age=31536000'}
     return make_response(render_template("pdf/withdrawn.html",
                                          arxiv_id=arxiv_id),
                          200, headers)
 
 
-def unavailable(arxiv_id: str) -> Response:
+def unavailable(arxiv_id: Identifier) -> Response:
+    """Response sent when the article and version exists but files cannot be found.
+
+    This is an error since the expected files don't exist. """
     return make_response(render_template("pdf/unavaiable.html",
                                          arxiv_id=arxiv_id), 500, {})
 
 
-def not_pdf(arxiv_id: str) -> Response:
+def not_pdf(arxiv_id: Identifier) -> Response:
+    """Response when there is no PDF for this paper.
+
+    The client requested a PDF for a paper which has a different format."""
     return make_response(render_template("pdf/unavaiable.html",
                                          arxiv_id=arxiv_id), 404, {})
 
 
-def not_found(arxiv_id: str) -> Response:
+def not_found(arxiv_id: Identifier) -> Response:
+    """Response when the paper or version does not exist."""
     headers = {'Expires': format_datetime(next_publish())}
     return make_response(render_template("pdf/not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
-def not_found_anc(arxiv_id: str) -> Response:
+def not_found_anc(arxiv_id: Identifier) -> Response:
+    """Response when an ancillary file does not exist."""
     headers = {'Expires': format_datetime(next_publish())}
     return make_response(render_template("src/anc_not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
 def bad_id(arxiv_id: str, err_msg: str) -> Response:
+    """Response when the client requests a bad ID."""
     return make_response(render_template("pdf/bad_id.html",
                                          err_msg=err_msg,
                                          arxiv_id=arxiv_id), 404, {})
 
 
-def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
+def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
+    """Response when the PDF cannot be built.
+
+    These are listed in the REASONS."""
     return make_response(render_template("pdf/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})

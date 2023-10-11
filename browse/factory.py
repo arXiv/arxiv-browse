@@ -18,6 +18,7 @@ from flask_s3 import FlaskS3
 
 from browse.config import Settings
 from browse.routes import ui, dissemination, src, unimplemented, redirects
+from browse.commands import invalidate
 from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
@@ -39,14 +40,19 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.config.from_object(settings)
 
     models.init_app(app)  # type: ignore
-
     Base(app)
     #Auth(app)
+
+    # routes
     app.register_blueprint(ui.blueprint)
     app.register_blueprint(dissemination.blueprint)
     app.register_blueprint(src.blueprint)
     app.register_blueprint(redirects.blueprint)
     app.register_blueprint(unimplemented.blueprint)
+
+    # commands
+    app.register_blueprint(invalidate.bp)
+
     s3.init_app(app)
 
     app.jinja_env.trim_blocks = True

@@ -411,7 +411,7 @@ class Settings(BaseSettings):
            self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
            self.FS_TZ = "UTC"
            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
-                       "and DOCUMENT_ORIGNAL_VERSIONS_PATH are Google Storage")
+                       "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
            if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
                log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
            else:
