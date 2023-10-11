@@ -280,27 +280,29 @@ def path_to_bucket_key(pdf) -> str:
 
 @retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
 def get_pdf(session, pdf_url) -> None:
+    start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}
     logger.debug("Getting %s", pdf_url)
     resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
     # noinspection PyStatementEffect
     [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    pdf_ms: int = ms_since(start)
     if resp.status_code == 503:
         msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
         logger.warning(msg,
                        extra={CATEGORY: "download",
-                              "url": pdf_url, "status_code": resp.status_code})
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
         raise Overloaded503Exception(msg)
     if resp.status_code != 200:
         msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
         logger.warning(msg,
                        extra={CATEGORY: "download",
-                              "url": pdf_url, "status_code": resp.status_code})
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
         raise (Exception(msg))
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
-                       extra={CATEGORY: "download",
-                              "url": pdf_url, "status_code": resp.status_code})
+                    extra={CATEGORY: "download",
+                           "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
 
 
 def ensure_pdf(session, host, arxiv_id):
