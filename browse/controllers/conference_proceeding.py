@@ -3,6 +3,9 @@ from google.cloud import storage
 import logging
 import tarfile
 import io
+
+from flask import current_app
+
 from browse.services.html_processing import post_process_html
 from browse.services.object_store.fileobj import UngzippedFileObj
 from browse.services.object_store.object_store_gs import GsObjectStore
@@ -10,8 +13,6 @@ from browse.services.object_store.object_store_gs import GsObjectStore
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
-
-DESTINATION_BUCKET_NAME="arxiv-dev-html-papers"
 
 def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Optional[Any]], int]: 
     
@@ -50,7 +51,7 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
 
     #upload to GCP
     try:
-        destination_bucket=gs_client.bucket(DESTINATION_BUCKET_NAME)
+        destination_bucket=gs_client.bucket(current_app.config['CLASSIC_HTML_BUCKET'])
         destination_blob=destination_bucket.blob(blob_name+".tar.gz")
         destination_blob.upload_from_file(tar_buffer, content_type='application/gzip')
     except Exception as ex:

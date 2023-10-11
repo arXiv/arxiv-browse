@@ -58,6 +58,8 @@ class Settings(BaseSettings):
     """DB name for latexml DB."""
 
     LATEXML_INSTANCE_CONNECTION_NAME: str = ''
+
+    CLASSIC_HTML_BUCKET = os.environ.get('CLASSIC_HTML_BUCKET')
     """GCP instance connection name of managed DB.
     ex. arxiv-xyz:us-central1:my-special-db
 
@@ -114,7 +116,7 @@ class Settings(BaseSettings):
     - `browse.services.listing.fake`: A totally fake set of listings for testing.
     """
 
-    DOCUMENT_LISTING_PATH: str = 'gs://arxiv-production-data/ftp'
+    DOCUMENT_LISTING_PATH: str = 'tests/data/abs_files/ftp'
     """Path to get listing files from.
 
     This can start with gs:// to use Google Storage.
@@ -131,7 +133,7 @@ class Settings(BaseSettings):
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
-    DOCUMENT_LATEST_VERSIONS_PATH: str = "gs://arxiv-production-data/ftp"
+    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files.
 
         This can start with gs:// to use Google Storage."""
