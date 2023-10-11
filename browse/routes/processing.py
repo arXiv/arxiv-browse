@@ -3,7 +3,7 @@ import logging
 from typing import Dict, Tuple
 
 from browse.controllers.conference_proceeding import post_process_conference
-from flask import Blueprint, render_template, Response, request
+from flask import Blueprint, Response, request
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -14,7 +14,7 @@ blueprint = Blueprint('processing', __name__)
 #urls can take form of ftp/arxiv/papers/RANDNUMBER/ID.html.gz or ftp/CATNAME/papers/RANDNUMBER/ID.gz
 # the desired format and a .html.gz
 def _unwrap_payload (payload: Dict[str, str]) -> Tuple[str, str, str]:
-    if payload['name'].endswith('.html.gz'):
+    if payload['name'].endswith('.html.gz') or payload['name'].endswith('.tar.gz'):
         return payload['name'], payload['bucket']
     raise ValueError ('Received extraneous file')
 
@@ -28,5 +28,11 @@ def post_process_html () -> Response:
     except Exception as e:
         return e, 400
   
+
+
+
     response, code = post_process_conference(blob, bucket)
+
+
+    
     return response, code

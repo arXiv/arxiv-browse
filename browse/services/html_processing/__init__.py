@@ -11,7 +11,6 @@ LAX_ID_REGEX = '(arXiv:)?([a-z-]+(\.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
 
 def post_process_html(html:str) -> str:
     new_html=""
-    #do we still want to count expansions?
 
     for line in html.split('\n'):
         # Match LIST: or ABS: directives followed by an identifier using regular expressions
