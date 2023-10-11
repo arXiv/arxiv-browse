@@ -29,23 +29,21 @@ metadata and PDF files. These paths can be overridden via environment variables
 Run the main test suite with the following command:
 
 ```bash
-pytest
+pytest tests
 ```
 
 ### Running Browse in Docker
-You can also run the browse app in Docker. The following commands will build
-and run browse using defaults for the configuration parameters and will use
-the test data from `tests/data`.
-
-Install [Docker](https://docs.docker.com/get-docker/) if you haven't already, then run the following:
+You can also run the browse app in Docker. The following commands will build and
+run browse using defaults for the configuration parameters and will use the test
+data from `tests/data`. Install [Docker](https://docs.docker.com/get-docker/) if
+you haven't already, then run the following:
 
 ```bash
 script/start
 ```
 
-This command will build the docker image and run it.
-
-If all goes well, http://localhost:8000/ will render the home page.
+This command will build the docker image and run it. If all goes well,
+http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
 
@@ -71,32 +69,13 @@ and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
 
 It may be help to use a web browser's inspect->network to find the active release version.
 
-### Static checking
-Goal: zero errors/warnings.
+### Tests and linting for PRs
+There is a github action that runs on PRs that merge to develop. PRs for which
+these tests fail will be blocked. It is the equivalent of running:
 
-Use `# type: ignore` to disable mypy messages that do not reveal
-actual programming errors and are impractical to fix. If ignoring
-without verifying, insert a `# TODO: recheck`. If there is an active
-`mypy` GitHub issue (i.e. it's a bug/limitation in mypy) relevant to
-missed check, link that for later follow-up.
-
-```bash
-mypy -p browse
 ```
+# if there are Python syntax errors or undefined names
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-Note that we filter out messages about test modules, and messages about a known
-limitation of mypy related to ``dataclasses`` support.
-
-### Documentation style
-Goal: zero errors/warnings.
-
-```bash
-pydocstyle --convention=numpy --add-ignore=D401 browse
-```
-
-### Linting
-Goal: 9/10 or better.
-
-```bash
-pylint browse
+pytest tests
 ```
