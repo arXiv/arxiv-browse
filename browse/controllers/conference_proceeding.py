@@ -25,11 +25,9 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
     except Exception as ex:
         logger.error('Error getting file from GCP',exc_info=True)
         return ex, 400
-
-    
+   
     html_files=[]
     other_files=[]
-
 
     if ungzipped_file.name.endswith(".tar"): #get all interior files from tar
         with ungzipped_file.open() as data:           
@@ -37,7 +35,6 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
             tar_bytes=io.BytesIO(raw_data)
 
             with tarfile.open(fileobj=tar_bytes, mode='r') as tar: #open tar file from byte string
-                file_list=tar.getnames()
                 for file_info in tar:
                     if file_info.name.endswith(".html"):
                         html_files.append(
@@ -46,7 +43,8 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
                     else:
                         other_files.append(
                             {"file":tar.extractfile(file_info),
-                             "name":file_info.name})
+                             "name":file_info.name,
+                             "size":file_info.size})
 
     else: #get single html file
         try:
@@ -75,7 +73,7 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
         #add back non html files
         for entry in other_files:
             tarinfo = tarfile.TarInfo(entry["name"])
-            tarinfo.size = entry["file"].size
+            tarinfo.size = entry["size"]
             tar.addfile(tarinfo, entry["file"])
 
 
@@ -92,13 +90,3 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
         return ex, 400
 
     return {"result":"success"}, 200 
-
-
-def post_process_conference_file (file: UngzippedFileObj) -> str: 
-#called on each html file in conference proceedings to be processed
-
-
-    text_html=rawdata.decode('utf-8')
-    processed_html=post_process_html(text_html)
-
-    return processed_html
