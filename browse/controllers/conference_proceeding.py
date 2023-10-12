@@ -21,11 +21,16 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
     try:
         gs_client=storage.Client()
         gzipped_file=GsObjectStore(gs_client.bucket(bucket_name)).to_obj(name)
+        if  not gzipped_file.exists():
+            logger.warning("Unable to retrieve %s from %s",name,bucket_name)
+            return {"error":"Could not retrieve"}, 400 
         ungzipped_file=UngzippedFileObj(gzipped_file)
+ 
     except Exception as ex:
         logger.error('Error getting file from GCP',exc_info=True)
-        return ex, 400
+        return {"error":ex}, 400
    
+    
     html_files=[]
     other_files=[]
 
@@ -53,7 +58,7 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
                 html_files.append({"name":data.name, "file":raw_data} )
         except Exception as ex:
             logger.error('Error opening file',exc_info=True)
-            return ex, 400
+            return {"error":ex}, 400
 
     if len(html_files) <1:
         logger.warning("File retrieved has no html files: %s",ungzipped_file.name)
@@ -91,6 +96,6 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
         destination_blob.upload_from_file(tar_buffer, content_type='application/gzip')
     except Exception as ex:
         logger.error('Error sending file to GCP',exc_info=True)
-        return ex, 400
+        return {"error":ex}, 400
 
     return {"result":"success"}, 200 

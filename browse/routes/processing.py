@@ -27,15 +27,12 @@ def post_process_html () -> Response:
     try:
         blob, bucket = _unwrap_payload(request.json)
     except KeyError as e:
-        return e, 400
+        logger.warning("Request payload missing key: %s",str(e))
+        return {"KeyError":str(e)}, 400
     except Exception as e:
-        return e, 400
-  
-
-
+        logger.warning("There was an error with the request: %s",str(e))
+        return {"error":str(e)}, 400
 
     response, code = post_process_conference(blob, bucket)
-
-
-    
+ 
     return response, code
