@@ -22,10 +22,9 @@ Once that returns the PDF will be uploaded to the GS bucket.
 
 This uses the SFS but there is a technique to get the files in a
 manner similar to the mirrors. If we did this we could copy the
-publish file to GS and then kick off a CloudRun job to do the sync.
+publishing file to GS and then kick off a CloudRun job to do the sync.
 """
 import os.path
-# pylint: disable=locally-disabled, line-too-long, logging-fstring-interpolation, global-statement
 
 import sys
 import argparse
@@ -113,6 +112,7 @@ summary_q: Queue = Queue()
 RUN = True
 DONE = False
 
+
 def handler_stop_signals(signum, frame):
     """Stop threads on ctrl-c, mostly useful during testing"""
     global RUN
@@ -133,12 +133,14 @@ LOG_FORMAT_KWARGS = {
     # time.strftime has no %f code "datefmt": "%Y-%m-%dT%H:%M:%S.%fZ%z",
 }
 
+
 class ArxivSyncJsonFormatter(logging_json.JSONFormatter):
     def formatTime(self, record, datefmt=None):
         ct = self.converter(record.created)
         return time_strftime("%Y-%m-%dT%H:%M:%S", ct) + ".%03d" % record.msecs + time_strftime("%z", ct)
 
     pass
+
 
 #####
 
@@ -342,8 +344,6 @@ def ensure_pdf(session, host, arxiv_id):
         else:
             sleep(0.2)
     if pdf_file.exists():
-        logger.debug(
-            f"ensure_file_url_exists: {str(pdf_file)} requested {url} status_code {resp.status_code} {ms_since(start)} ms")
         return pdf_file, url, None, ms_since(start)
     else:
         raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
@@ -352,6 +352,7 @@ def ensure_pdf(session, host, arxiv_id):
 def upload_pdf(gs_client, ensure_tuple):
     """Uploads a PDF from ps_cache to GS_BUCKET"""
     return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
+
 
 @STORAGE_RETRY
 def upload(gs_client, localpath, key):
@@ -378,12 +379,12 @@ def upload(gs_client, localpath, key):
         try:
             destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath)}
             destination.update()
-        except:
-            pass
-        return ("upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size)
+        except BaseException:
+            logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
+        return "upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size
     else:
         logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
-        return ("upload", localpath, key, "already_on_gs", ms_since(start), 0)
+        return "upload", localpath, key, "already_on_gs", ms_since(start), 0
 
 
 def sync_to_gcp(todo_q, host):
@@ -449,8 +450,11 @@ def log_summary(duration, overall_size):
             logger.debug(','.join(summary), extra=summary_log)
             n_good += 1
 
-    logger.info( f"Done at {datetime.now().isoformat()}. Overall time: {duration:.2f} sec for {overall_size} submissions. Success/Failed: {n_good}/{n_bad}",
-                extra={"total": overall_size, "duration": str(duration), "success": n_good, "failure": n_bad, CATEGORY: "summary"})
+    logger.info(
+        f"Done at {datetime.now().isoformat()}. Overall time: {duration:.2f} sec"
+        " for {overall_size} submissions. Success/Failed: {n_good}/{n_bad}",
+        extra={"total": overall_size, "duration": str(duration), "success": n_good, "failure": n_bad,
+               CATEGORY: "summary"})
 
 
 # #################### MAIN #################### #
@@ -488,11 +492,9 @@ def main(args):
             todo_q.get()
         if args.test:
             logger.debug("Dry run no changes made",
-                        extra={CATEGORY: "status", "todos": len(todo)})
+                         extra={CATEGORY: "status", "todos": len(todo)})
             localpath = "/foo"
             key = "bar"
-            res = ()
-            paper_id = "1234"
             summary_q.put(("1234", 0, "upload", localpath, key, "already_on_gs", 0, 0))
             summary_q.put(("5678", 0, "failed", "bad!"))
             log_summary(perf_counter() - overall_start, 2)
