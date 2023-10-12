@@ -34,12 +34,17 @@
         <div class="column" id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
-        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
-        <div class="column">
-            <a href="https://info.arxiv.org/help/cloud.html"><span style="color:white;text-decoration-line:underline;">
-                Served from the cloud
-            </span></a>
-            <!--<p><a href="https://info.arxiv.org/hiring/">We are hiring</a></p> --!>
+
+        {%- if rd_int >= 202310120100 and rd_int <= 202311150100 -%}
+        <div class="column banner-minimal">
+          <p><a href="https://cornell.wd1.myworkdayjobs.com/en-US/CornellCareerPage/job/arXiv-Production-Editor--Cornell-Tech--NYC-_WDR-00040646">We are hiring</a></p>
+        </div>
+        {%- endif -%}
+
+
+        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202310010100 -%}
+        <div class="column banner-minimal">
+            <p><a href="https://info.arxiv.org/help/cloud.html">Served from the cloud</a></p>
         </div>
         {%- endif -%}
 
