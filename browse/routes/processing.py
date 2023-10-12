@@ -1,6 +1,8 @@
 """Routes for handling the post_processing of conference_proceedings """
 import logging
 from typing import Dict, Tuple
+import json
+from base64 import b64decode
 
 from browse.controllers.conference_proceeding import post_process_conference
 from flask import Blueprint, Response, request
@@ -14,8 +16,9 @@ blueprint = Blueprint('processing', __name__)
 #urls can take form of ftp/arxiv/papers/RANDNUMBER/ID.html.gz or ftp/CATNAME/papers/RANDNUMBER/ID.gz
 # the desired format and a .html.gz
 def _unwrap_payload (payload: Dict[str, str]) -> Tuple[str, str, str]:
-    if payload['name'].endswith('.html.gz') or payload['name'].endswith('.tar.gz'):
-        return payload['name'], payload['bucket']
+    data = json.loads(b64decode(payload['message']['data']).decode('utf-8'))
+    if data['name'].endswith('.html.gz') or data['name'].endswith('.tar.gz'):
+        return data['name'], data['bucket']
     raise ValueError ('Received extraneous file')
 
 #this should only be called on html format conference proceeedings
