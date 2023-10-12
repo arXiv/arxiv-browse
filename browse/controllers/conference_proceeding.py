@@ -55,6 +55,10 @@ def post_process_conference (name: str, bucket_name: str) -> Tuple[Dict[str, Opt
             logger.error('Error opening file',exc_info=True)
             return ex, 400
 
+    if len(html_files) <1:
+        logger.warning("File retrieved has no html files: %s",ungzipped_file.name)
+        return {"result":"no html files"}, 400 
+
     tar_buffer = io.BytesIO()
     with tarfile.open(fileobj=tar_buffer, mode="w:gz") as tar:
         #process and add each html file
