@@ -1,10 +1,15 @@
 """Routes for PDF, source and other downloads."""
 from typing import Optional
-from flask import Blueprint, redirect, url_for, Response, render_template, request
+from flask import Blueprint, redirect, url_for, Response, render_template, request, current_app, make_response
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
+
+# Temporary imports before moving over to controller
+from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.fileobj import UngzippedFileObj, FileFromTar
+from browse.controllers.files import stream_gen
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
@@ -91,9 +96,35 @@ def dvi(arxiv_id: str) -> Response:
 
 
 @blueprint.route("/html/<arxiv_id>")
-def html(arxiv_id: str) -> Response:
+@blueprint.route("/html/<arxiv_id>/<path:path>")
+def html(arxiv_id: str, path: Optional[str] = None) -> Response:
     """Get html for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+    if arxiv_id.endswith('.html'):
+        return redirect(f'/html/{arxiv_id.split(".html")[0]}')
+    
+    try:
+        arxiv_identifier = Identifier(arxiv_id=arxiv_id)
+        metadata = get_doc_service().get_abs(arxiv_identifier)
+    except IdentifierException:
+        raise BadRequest("Bad paper identifier")
+
+        
+    if metadata.get_version().source_type == 'html':
+        # Put post_processing code here
+        ...
+
+        ###############################
+    else:
+        obj_store = GsObjectStore(current_app.config['CONVERTED_BUCKET_ARXIV_ID'])
+        
+    tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_identifier.idv}.tar.gz'))
+    if path:
+        tarmember = FileFromTar(tar, path)
+    else:
+        tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}.html')
+    if tarmember.exists():
+        return make_response(stream_gen(tarmember), 200)
+    return BadRequest("No such file exists in conversion")
 
 
 @blueprint.route("/ps/<arxiv_id>")
