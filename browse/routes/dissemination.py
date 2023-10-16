@@ -10,6 +10,8 @@ from browse.services.dissemination import get_article_store
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.fileobj import UngzippedFileObj, FileFromTar
 from browse.controllers.files import stream_gen
+from google.cloud import storage
+
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
@@ -115,13 +117,17 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
 
         ###############################
     else:
-        obj_store = GsObjectStore(current_app.config['CONVERTED_BUCKET_ARXIV_ID'])
+        obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
         
     tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_identifier.idv}.tar.gz'))
     if path:
-        tarmember = FileFromTar(tar, path)
+        tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}/{path}')
     else:
-        tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}.html')
+        tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}/{arxiv_identifier.idv}.html')
+    print(tar.name)
+    print(tar.exists())
+    print(tarmember.name)
+    print(tarmember.exists())
     if tarmember.exists():
         return make_response(stream_gen(tarmember), 200)
     return BadRequest("No such file exists in conversion")
