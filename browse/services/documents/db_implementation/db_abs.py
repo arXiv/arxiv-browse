@@ -120,7 +120,7 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=SourceType(ver.source_format))
+                                 source_type=SourceType(ver.source_flags))
             version_history.append(entry)
 
         return to_docmeta(res, version_history, self.business_tz)
