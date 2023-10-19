@@ -272,15 +272,17 @@ class DocMetadata:
         """Produces a txt output of the object.
 
         Based on arXiv::Schema:Role:WrtieAbs"""
-        if self.raw_safe:
-            return self.raw_safe
-
-        rv = f"arXiv:{self.arxiv_id}\n"
+        rv = "------------------------------------------------------------------------------\n"
+        rv += "\\\n"
+        rv += f"arXiv:{self.arxiv_id}\n"
         rv += f"From: {self.submitter.name}\n"
         for version in self.version_history:
             rev = "" if version.version == 1 else f" (revised v{version.version})"
             rv += f"Date{rev}: {version.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z')}   "\
-                f"({version.size_kilobytes}kb)\n"
+                f"({version.size_kilobytes}kb"
+            if version.source_type.code and version.source_type.code.upper() == version.source_type.code:
+                rv += f",{version.source_type.code}"
+            rv += ")\n"
 
         rv += "\n"
         rv += f"Title: {self.title}\n"
@@ -301,4 +303,7 @@ class DocMetadata:
             rv += f"DOI: {self.doi}\n"
         if self.license:
             rv += f"License: {self.license.recorded_uri}\n"
+        rv += "\\\n"
+        rv += f"  {self.abstract}\n"
+        rv += "\\"
         return rv
