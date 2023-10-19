@@ -19,27 +19,31 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START = '20221001' %}
-{% set BANNER_END = '20221030' %}
+{% set BANNER_START = '20231023' %}
+{% set BANNER_END = '20231030' %}
 
 
 {%- macro content(request_datetime) -%}
-{%- if config['BROWSE_USER_BANNER_ENABLED'] and (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
-<aside class="slider-wrapper bps-banner dark" >
+{%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
+<aside class="slider-wrapper bps-banner">
+  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
-    <h1>Cloud Transition</h1>
-    <p>We're making arXiv even more stable by transitioning to the cloud.</p>
-    <p><a href="https://arxiv-org.atlassian.net/servicedesk/customer/portal/1l">Report an issue</a></p>
+    <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
+    <h1>Open Access Giving Week</h1>
+    <p>arXiv is community supported – we depend on you! <a href="https://arxiv.salsalabs.org/2023openaccessweek" target="_blank">Donate today</a> and your contribution will fund essential operations and new initiatives.</p>
+  </div>
+  <div class="amount-donation bps-banner">
+    <div class="wrapper">
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://arxiv.salsalabs.org/2023openaccessweek"><b>Donate</b></a>
+      </div>
+    </div>
   </div>
 </aside>
 {%- endif -%}
 {%- endmacro -%}
 
-
 {%- macro script(request_datetime) -%}
-{%- if config['BROWSE_USER_BANNER_ENABLED'] and (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-{%- endif -%}
 {%- endmacro -%}
 
 {#################### disabled example banners ####################}
