@@ -272,9 +272,6 @@ class DocMetadata:
         """Produces a txt output of the object.
 
         Based on arXiv::Schema:Role:WrtieAbs"""
-        if self.raw_safe:
-            return self.raw_safe
-
         rv = "------------------------------------------------------------------------------\n"
         rv += "\\\n"
         rv += f"arXiv:{self.arxiv_id}\n"
