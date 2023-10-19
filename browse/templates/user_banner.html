@@ -24,6 +24,7 @@ Adding an environment var, so we can enable only on gcp.
 
 
 {%- macro content(request_datetime) -%}
+{%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
 <aside class="slider-wrapper bps-banner">
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
@@ -38,6 +39,7 @@ Adding an environment var, so we can enable only on gcp.
     </div>
   </div>
 </aside>
+{%- endif -%}
 {%- endmacro -%}
 
 {%- macro script(request_datetime) -%}
