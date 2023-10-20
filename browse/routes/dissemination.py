@@ -8,8 +8,11 @@ from browse.services.dissemination import get_article_store
 
 # Temporary imports before moving over to controller
 from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.object_store_local import LocalObjectStore
 from browse.services.object_store.fileobj import UngzippedFileObj, FileFromTar
-from browse.controllers.files import stream_gen
+from browse.services.next_published import next_publish
+from browse.controllers.files import stream_gen, last_modified, add_time_headers
+from email.utils import format_datetime
 from google.cloud import storage
 
 
@@ -110,30 +113,46 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
     except IdentifierException:
         raise BadRequest("Bad paper identifier")
 
-        
-    if metadata.get_version().source_type == 'html':
-        # Put post_processing code here
-        ...
-
-        ###############################
+    if metadata.get_version().source_type.html:
+        native_html = True
+        if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
+            obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
+        else:
+            obj_store = GsObjectStore(storage.Client().bucket(
+                current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
+        # tar = ? .html.gz, .tar.gz
     else:
+        native_html = False
         obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-        
-    tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_identifier.idv}.tar.gz'))
+        tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_identifier.idv}.tar.gz'))
+
     if path:
         tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}/{path}')
     else:
         tarmember = FileFromTar(tar, f'{arxiv_identifier.idv}/{arxiv_identifier.idv}.html')
-    print(tar.name)
-    print(tar.exists())
-    print(tarmember.name)
-    print(tarmember.exists())
     if tarmember.exists():
-        return make_response(stream_gen(tarmember), 200)
-    return BadRequest("No such file exists in conversion")
+        response = make_response(stream_gen(tarmember), 200)
+    else:
+        return BadRequest("No such file exists")
+
+    response.headers["Content-Type"] = "text/html" #this will need to be expanded if we return tar files, or images seperately
+
+    if native_html: 
+        """special cases for the fact that documents within conference proceedings can change 
+        which will appear differently in the conference proceeding even if the conference proceeding paper stays the same"""
+        response.headers['Expires'] = format_datetime(next_publish())
+        response.headers["Last-Modified"] = last_modified(tarmember)
+    else:
+        """files converted from latex behave normally"""
+        add_time_headers(response, tarmember, arxiv_id)
+        response.headers["ETag"] = last_modified(tarmember)
+
+    return response
 
 
 @blueprint.route("/ps/<arxiv_id>")
 def ps(arxiv_id: str) -> Response:
     """Get ps for article."""
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
+
+# <img src="https://browse.arxiv.org/static/logo.png"/>
