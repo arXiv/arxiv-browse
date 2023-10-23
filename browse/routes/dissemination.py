@@ -117,7 +117,7 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
     print (metadata.get_version())
     print (metadata.get_version().source_flag)
     print (metadata.get_version().source_flag.html)
-    if metadata.get_version().source_flag.html:
+    if metadata.source_format == 'html':
         native_html = True
 
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
