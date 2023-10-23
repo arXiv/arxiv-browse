@@ -3,7 +3,7 @@ import re
 from collections import abc
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Iterator, List, Optional, Set
+from typing import Iterator, List, Optional, Set, Literal
 
 from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
@@ -77,7 +77,7 @@ class DocMetadata:
     submitter: Submitter
     """Submitter of the article."""
 
-    source_type: Optional[str]
+    
 
     categories: Optional[str]
     """Article classification (raw string)."""
@@ -113,6 +113,9 @@ class DocMetadata:
     comments: Optional[str] = None
     """Submitter- and/or administrator-provided comments about the article."""
 
+    __source_format_options__ = Literal['tex', 'pdftex', 'ps', 'html', ]
+    source_format: Optional[__source_format_options__] = None
+
     version: int = 1
     """Version of this article."""
 
@@ -134,6 +137,7 @@ class DocMetadata:
         Indicates whether this DocMetadata is from the latest
         version of this article.
     """
+
 
 
     private: bool = field(default=False)

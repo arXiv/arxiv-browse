@@ -41,5 +41,5 @@ formats = {
     "gz": gz,
     "docx": docx,
     "odf": odf,
-    "html_source":html_source
+    "html_source": html_source
     }

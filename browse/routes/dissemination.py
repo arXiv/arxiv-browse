@@ -116,13 +116,15 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
     print (metadata)
     print (metadata.get_version())
     print (metadata.get_version().source_flag)
-    print (metadata.get_version().source_flag.html)
+    print (metadata.source_format == 'html')
     if metadata.source_format == 'html':
         native_html = True
 
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
+            print ('local object store')
             obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
         else:
+            print ('gcs object store')
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
         # tar = ? .html.gz, .tar.gz
