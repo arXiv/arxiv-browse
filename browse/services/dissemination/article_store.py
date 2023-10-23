@@ -7,7 +7,7 @@ import re
 from collections.abc import Callable
 from typing import Dict, List, Literal, Optional, Tuple, Union
 
-from arxiv.identifier import Identifier
+from browse.domain.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 from browse.domain import fileformat
 from browse.domain.metadata import DocMetadata, VersionEntry
