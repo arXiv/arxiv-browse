@@ -115,12 +115,15 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
 
     if metadata.get_version().source_type.html:
         native_html = True
+
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
             obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
         else:
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
         # tar = ? .html.gz, .tar.gz
+        item = get_article_store().dissemination(fileformat.html_source, arxiv_identifier)
+        tar=UngzippedFileObj(item[0])
     else:
         native_html = False
         obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
