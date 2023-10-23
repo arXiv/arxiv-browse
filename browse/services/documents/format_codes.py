@@ -41,7 +41,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     return []
 
 
-def formats_from_source_type(source_type: str,
+def formats_from_source_flag(source_flag: str,
                              format_pref: Optional[str] = None,
                              cache_flag: bool = False,
                              add_sciencewise: bool = False) -> List[str]:
@@ -71,17 +71,17 @@ def formats_from_source_type(source_type: str,
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
     formats = []
-    if not source_type:
-        source_type = ''
+    if not source_flag:
+        source_flag = ''
     if not format_pref:
         format_pref = ''
-    has_encrypted_source = re.search('S', source_type, re.IGNORECASE)
-    has_ignore = re.search('I', source_type, re.IGNORECASE)
-    has_ps_only = re.search('P', source_type, re.IGNORECASE)
-    has_pdflatex = re.search('D', source_type, re.IGNORECASE)
-    has_pdf_only = re.search('F', source_type, re.IGNORECASE)
-    has_html = re.search('H', source_type, re.IGNORECASE)
-    has_docx_or_odf = re.search(r'[XO]', source_type, re.IGNORECASE)
+    has_encrypted_source = re.search('S', source_flag, re.IGNORECASE)
+    has_ignore = re.search('I', source_flag, re.IGNORECASE)
+    has_ps_only = re.search('P', source_flag, re.IGNORECASE)
+    has_pdflatex = re.search('D', source_flag, re.IGNORECASE)
+    has_pdf_only = re.search('F', source_flag, re.IGNORECASE)
+    has_html = re.search('H', source_flag, re.IGNORECASE)
+    has_docx_or_odf = re.search(r'[XO]', source_flag, re.IGNORECASE)
     has_src_pref = format_pref and re.search('src', format_pref)
     append_other = False
 

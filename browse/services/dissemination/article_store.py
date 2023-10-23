@@ -17,7 +17,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 from browse.services.documents.format_codes import (
-    formats_from_source_file_name, formats_from_source_type)
+    formats_from_source_file_name, formats_from_source_flag)
 from browse.services.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent,
                                           current_pdf_path, previous_pdf_path,
@@ -285,13 +285,13 @@ class ArticleStore():
             # check source type from metadata, with consideration of
             # user format preference and cache
             version = docmeta.version
-            format_code = docmeta.version_history[version - 1].source_type.code
+            format_code = docmeta.version_history[version - 1].source_flag.code
             cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
             cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
                 and cached_ps_file.size == 0 \
                 and src_file \
                 and src_file.updated < cached_ps_file.updated)
-            source_type_formats = formats_from_source_type(format_code,
+            source_type_formats = formats_from_source_flag(format_code,
                                                            format_pref,
                                                            cache_flag,
                                                            add_sciencewise)
@@ -346,7 +346,7 @@ class ArticleStore():
 
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
-        if version.source_type.cannot_pdf:
+        if version.source_flag.cannot_pdf:
             return "NOT_PDF"
 
         res = self.reasons(arxiv_id.idv, 'pdf')

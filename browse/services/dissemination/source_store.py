@@ -103,7 +103,7 @@ class SourceStore():
         if not vent:
             raise Exception(f"No version entry for {docmeta.arxiv_identifier}")
 
-        srctype = vent.source_type
+        srctype = vent.source_flag
 
         if srctype.ps_only:
             return ps
@@ -134,7 +134,7 @@ class SourceStore():
             List of Dict where each dict is a file name and size.
         """
         version = docmeta.version
-        source_type = docmeta.version_history[version - 1].source_type
+        source_type = docmeta.version_history[version - 1].source_flag
         if not source_type.includes_ancillary_files:
             return []
         return list_ancillary_files(self.get_src(docmeta.arxiv_identifier, docmeta))

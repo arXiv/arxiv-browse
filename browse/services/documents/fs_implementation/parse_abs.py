@@ -16,7 +16,7 @@ from arxiv import taxonomy
 from browse.domain.license import License
 from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, Submitter
-from browse.domain.version import VersionEntry, SourceType
+from browse.domain.version import VersionEntry, SourceFlag
 from browse.domain.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
@@ -234,10 +234,10 @@ def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
             raise AbsParsingException(
                 f'Could not parse submitted date {sd} as datetime') from ex
 
-        source_type = SourceType(code=date_match.group('source_type'))
+        source_type = SourceFlag(code=date_match.group('source_type'))
         ve = VersionEntry(
             raw=date_match.group(0),
-            source_type=source_type,
+            source_flag=source_type,
             size_kilobytes=int(date_match.group('size_kilobytes')),
             submitted_date=submitted_date,
             version=version_count

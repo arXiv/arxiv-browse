@@ -40,7 +40,7 @@ from browse.services.database import (
     has_sciencewise_ping,
 )
 from browse.services.documents import get_doc_service
-from browse.services.documents.format_codes import formats_from_source_type
+from browse.services.documents.format_codes import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
@@ -149,7 +149,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
         for ver_index in range(0, abs_meta.highest_version()):
-            formats = formats_from_source_type(abs_meta.version_history[ver_index].source_type.code)
+            formats = formats_from_source_flag(abs_meta.version_history[ver_index].source_flag.code)
             if len(formats) == 1 and formats[0] == "src":
                 response_data["withdrawn_versions"].append(abs_meta.version_history[ver_index])
                 if not response_data["higher_version_withdrawn"] and ver_index > abs_meta.version - 1:

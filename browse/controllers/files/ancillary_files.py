@@ -49,7 +49,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
 
     ver = doc.get_version()
     if mode == 'anc' and ver is not None \
-       and not ver.source_type.includes_ancillary_files:
+       and not ver.source_flag.includes_ancillary_files:
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),

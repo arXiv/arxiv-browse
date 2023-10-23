@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 @dataclass(frozen=True)
-class SourceType:
+class SourceFlag:
     """Represents arXiv article source file type."""
 
     code: str
@@ -112,9 +112,9 @@ class VersionEntry:
     size_kilobytes: int = 0
     """Size of the article source, in kilobytes."""
 
-    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
+    source_flag: SourceFlag = field(default_factory=SourceFlag)  # type: ignore
     """Source file type."""
 
     @property
     def is_withdrawn(self) -> bool:
-        return self.source_type.ignore
+        return self.source_flag.ignore

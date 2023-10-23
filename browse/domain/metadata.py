@@ -77,6 +77,8 @@ class DocMetadata:
     submitter: Submitter
     """Submitter of the article."""
 
+    source_type: Optional[str] = None
+
     categories: Optional[str]
     """Article classification (raw string)."""
 
@@ -132,6 +134,7 @@ class DocMetadata:
         Indicates whether this DocMetadata is from the latest
         version of this article.
     """
+
 
     private: bool = field(default=False)
     """TODO: NOT IMPLEMENTED """

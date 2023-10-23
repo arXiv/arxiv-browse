@@ -10,7 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from browse.domain.identifier import Identifier
 from browse.domain.metadata import DocMetadata
-from browse.domain.version import SourceType, VersionEntry
+from browse.domain.version import SourceFlag, VersionEntry
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
@@ -18,7 +18,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from dateutil.tz import tzutc
 
-from ..format_codes import formats_from_source_type
+from ..format_codes import formats_from_source_flag
 from .convert import to_docmeta
 
 
@@ -120,7 +120,7 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='fromdb-no-raw',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=SourceType(ver.source_format))
+                                 source_flag=SourceFlag(ver.source_format))
             version_history.append(entry)
 
         return to_docmeta(res, version_history, self.business_tz)

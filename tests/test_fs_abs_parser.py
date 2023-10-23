@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from dateutil.tz import tzutc
 from browse.domain.metadata import DocMetadata, Submitter
-from browse.domain.version import VersionEntry, SourceType
+from browse.domain.version import VersionEntry, SourceFlag
 
 from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from tests import path_of_for_test
@@ -67,7 +67,7 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 6, 28, 11, 24, 35,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_type=SourceType(code='')
+                    source_flag=SourceFlag(code='')
                 ),
                 VersionEntry(
                     version=2,
@@ -76,7 +76,7 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 7, 21, 9, 45, 44,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_type=SourceType(code='')
+                    source_flag=SourceFlag(code='')
                 ),
                 VersionEntry(
                     version=3,
@@ -85,7 +85,7 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 7, 29, 11, 13, 43,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_type=SourceType(code='')
+                    source_flag=SourceFlag(code='')
                 )
             ]
         )
