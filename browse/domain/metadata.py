@@ -77,7 +77,7 @@ class DocMetadata:
     submitter: Submitter
     """Submitter of the article."""
 
-    source_type: Optional[str] = None
+    source_type: Optional[str]
 
     categories: Optional[str]
     """Article classification (raw string)."""
