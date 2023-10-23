@@ -115,6 +115,9 @@ def html(arxiv_id: str, path: Optional[str] = None) -> Response:
 
     if metadata.get_version().source_type.html:
         native_html = True
+        file, item_format, docmeta, version = get_article_store().dissemination('html', arxiv_id)
+        tar=UngzippedFileObj(file)
+
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
             obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
         else:
