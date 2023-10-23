@@ -135,7 +135,8 @@ class ArticleStore():
         self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
             fileformat.pdf: self._pdf,
             "e-print": self._e_print,
-            fileformat.ps: self._ps
+            fileformat.ps: self._ps,
+            fileformat.html_source: self._html_source
         }
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
@@ -409,5 +410,14 @@ class ArticleStore():
         Lists through possible extensions to find source file.
 
         Returns `FileObj` if found, `None` if not."""
+        src = self.sourcestore.get_src(arxiv_id, docmeta)
+        return src if src is not None else "NO_SOURCE"
+
+
+    def _html_source(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+        """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
+
+        # TODO Check that it is a HTML submission
+
         src = self.sourcestore.get_src(arxiv_id, docmeta)
         return src if src is not None else "NO_SOURCE"
