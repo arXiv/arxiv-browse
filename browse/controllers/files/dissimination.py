@@ -170,9 +170,7 @@ def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     # if arxiv_id_str.endswith('.html'):
-    #     return redirect(f'/html/{arxiv_id.split(".html")[0]}')
-    
-    path="" #TODO deal with sub files, also .html ending
+    #     return redirect(f'/html/{arxiv_id.split(".html")[0]}') 
 
     arxiv_id_str = f"{archive}/{arxiv_id_str}" if archive else arxiv_id_str
     try:
@@ -184,6 +182,7 @@ def get_html_response(arxiv_id_str: str,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
 
+    path=arxiv_id.extra
     metadata = get_doc_service().get_abs(arxiv_id)
 
 
@@ -195,7 +194,9 @@ def get_html_response(arxiv_id_str: str,
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
         item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
-        file=UngzippedFileObj(item[0])
+        file, item_format, docmeta, version = item
+  
+        
 
         # html_files=[]
         # other_files=[]
@@ -230,7 +231,7 @@ def get_html_response(arxiv_id_str: str,
         add_time_headers(response, tarmember, arxiv_id)
         response.headers["ETag"] = last_modified(tarmember)
 
-    return response
+    return default_resp_fn(item_format,file,arxiv_id,docmeta,version)
 
 def withdrawn(arxiv_id: str) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
