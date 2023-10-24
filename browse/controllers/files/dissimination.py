@@ -4,12 +4,19 @@ import logging
 from email.utils import format_datetime
 from typing import Callable, Optional
 
-from arxiv.identifier import Identifier, IdentifierException
+from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
 from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
+from browse.domain import fileformat
 
-from browse.services.object_store.fileobj import FileObj, UngzippedFileObj
+from browse.controllers.files import stream_gen, last_modified, add_time_headers
+
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj,FileFromTar
+from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.object_store_local import LocalObjectStore
+
+from browse.services.documents import get_doc_service
 
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
@@ -17,10 +24,11 @@ from browse.services.dissemination.article_store import (
 from browse.services.next_published import next_publish
 
 from browse.stream.tarstream import tar_stream_gen
-from flask import Response, abort, make_response, render_template
+from flask import Response, abort, make_response, render_template, current_app
 from flask_rangerequest import RangeRequest
+from werkzeug.exceptions import BadRequest
+from google.cloud import storage
 
-from . import last_modified, add_time_headers
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -158,6 +166,71 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
+def get_html_response(arxiv_id_str: str,
+                           archive: Optional[str] = None,
+                           resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
+    # if arxiv_id_str.endswith('.html'):
+    #     return redirect(f'/html/{arxiv_id.split(".html")[0]}')
+    
+    path="" #TODO deal with sub files, also .html ending
+
+    arxiv_id_str = f"{archive}/{arxiv_id_str}" if archive else arxiv_id_str
+    try:
+        if len(arxiv_id_str) > 40:
+            abort(400)
+        if arxiv_id_str.startswith('arxiv/'):
+            abort(400, description="do not prefix non-legacy ids with arxiv/")
+        arxiv_id = Identifier(arxiv_id_str)
+    except IdentifierException as ex:
+        return bad_id(arxiv_id_str, str(ex))
+
+    metadata = get_doc_service().get_abs(arxiv_id)
+
+
+    if metadata.source_format == 'html':
+        native_html = True
+        if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
+            obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
+        else:
+            obj_store = GsObjectStore(storage.Client().bucket(
+                current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
+        item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
+        file=UngzippedFileObj(item[0])
+
+        # html_files=[]
+        # other_files=[]
+        # """handle single html files"""
+        # if file.name.endswith(".html"):
+        #     print("hi") #TODO
+        # else:
+        #     tar=file
+    else:
+        native_html = False
+        obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
+        tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_id.idv}.tar.gz'))
+
+    if path:
+        tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{path}')
+    else:
+        tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{arxiv_id.idv}.html')
+    if tarmember.exists():
+        response = make_response(stream_gen(tarmember), 200)
+    else:
+        return BadRequest("No such file exists")
+
+    response.headers["Content-Type"] = "text/html" #this will need to be expanded if we return tar files, or images seperately
+
+    if native_html: 
+        """special cases for the fact that documents within conference proceedings can change 
+        which will appear differently in the conference proceeding even if the conference proceeding paper stays the same"""
+        response.headers['Expires'] = format_datetime(next_publish())
+        response.headers["Last-Modified"] = last_modified(tarmember)
+    else:
+        """files converted from latex behave normally"""
+        add_time_headers(response, tarmember, arxiv_id)
+        response.headers["ETag"] = last_modified(tarmember)
+
+    return response
 
 def withdrawn(arxiv_id: str) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
