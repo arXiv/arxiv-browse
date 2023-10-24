@@ -61,10 +61,7 @@ class SourceStore():
             parent = abs_path_orig_parent(arxiv_id)
 
         pattern = parent + '/' + arxiv_id.filename
-        print(self.objstore)
-        print("object store issues here")
         items = list(self.objstore.list(pattern))
-        print(items)
         if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:
             raise Exception(f"Too many src matches for {pattern}")
         if len(items) > .9 * MAX_ITEMS_IN_PATTERN_MATCH:
