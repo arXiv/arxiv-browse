@@ -193,22 +193,27 @@ def get_html_response(arxiv_id_str: str,
         else:
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
+            
         item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
-        file, item_format, docmeta, version = item
-  
-        
-
-        # html_files=[]
-        # other_files=[]
-        # """handle single html files"""
-        # if file.name.endswith(".html"):
-        #     print("hi") #TODO
-        # else:
-        #     tar=file
+        gzipped_file, item_format, docmeta, version = item
+       
     else:
         native_html = False
+        #you probably want to wire this one to go through dissemination too
         obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-        tar = UngzippedFileObj(obj_store.to_obj(f'{arxiv_id.idv}.tar.gz'))
+        gzipped_file = obj_store.to_obj(f'{arxiv_id.idv}.tar.gz')
+
+    unzipped_file=UngzippedFileObj(gzipped_file)
+
+    if unzipped_file.name.endswith(".html"): #handle single html files here
+        
+        if path != "":
+            pass #TODO cant request path for a single file
+        else:
+            pass #TODO handle single file error
+    else:
+        tar=unzipped_file
+
 
     if path:
         tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{path}')
