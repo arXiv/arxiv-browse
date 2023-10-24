@@ -171,6 +171,7 @@ def get_html_response(arxiv_id_str: str,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     # if arxiv_id_str.endswith('.html'):
     #     return redirect(f'/html/{arxiv_id.split(".html")[0]}') 
+    #TODO possibly add handling for .html at end of path, doesnt currently work on legacy either, currently causes Identifier Exception
 
     arxiv_id_str = f"{archive}/{arxiv_id_str}" if archive else arxiv_id_str
     try:
