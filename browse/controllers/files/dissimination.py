@@ -186,31 +186,42 @@ def get_html_response(arxiv_id_str: str,
     metadata = get_doc_service().get_abs(arxiv_id)
 
 
-    if metadata.source_format == 'html':
+    if metadata.source_format == 'html': #TODO find a way to distinguish that works. perhaps all the latex files have a latex source?
         native_html = True
+
+        #TODO doesnt brian C have some sort of abstraction so we dont have to do this
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
             obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
+            #TODO would these files also come gzipped or some other format
         else:
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
             
         item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
+        if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
+            return not_found(arxiv_id)
+        elif item == "WITHDRAWN" or item == "NO_SOURCE":
+            return withdrawn(arxiv_id)
+        elif item == "UNAVAIABLE":
+            return unavailable(arxiv_id)
+        elif isinstance(item, Deleted):
+            return bad_id(arxiv_id, item.msg)
         gzipped_file, item_format, docmeta, version = item
+        if not gzipped_file.exists():
+            return not_found(arxiv_id)
        
     else:
         native_html = False
+        #TODO assign some of the other variables like item format
         #you probably want to wire this one to go through dissemination too
         obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
         gzipped_file = obj_store.to_obj(f'{arxiv_id.idv}.tar.gz')
 
+    #TODO some sort of error handlingfor not beign able to retrieve file, draft in conference proceeding.py
     unzipped_file=UngzippedFileObj(gzipped_file)
 
     if unzipped_file.name.endswith(".html"): #handle single html files here
-        
-        if path != "":
-            pass #TODO cant request path for a single file
-        else:
-            pass #TODO handle single file error
+        requested_file=unzipped_file
     else:
         tar=unzipped_file
 
@@ -219,24 +230,22 @@ def get_html_response(arxiv_id_str: str,
         tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{path}')
     else:
         tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{arxiv_id.idv}.html')
+
     if tarmember.exists():
-        response = make_response(stream_gen(tarmember), 200)
+        requested_file=tarmember
     else:
         return BadRequest("No such file exists")
 
-    response.headers["Content-Type"] = "text/html" #this will need to be expanded if we return tar files, or images seperately
+    if native_html:
+        pass #TODO process file here
 
+    response=default_resp_fn(item_format,requested_file,arxiv_id,docmeta,version)
     if native_html: 
         """special cases for the fact that documents within conference proceedings can change 
         which will appear differently in the conference proceeding even if the conference proceeding paper stays the same"""
         response.headers['Expires'] = format_datetime(next_publish())
-        response.headers["Last-Modified"] = last_modified(tarmember)
-    else:
-        """files converted from latex behave normally"""
-        add_time_headers(response, tarmember, arxiv_id)
-        response.headers["ETag"] = last_modified(tarmember)
 
-    return default_resp_fn(item_format,file,arxiv_id,docmeta,version)
+    return response
 
 def withdrawn(arxiv_id: str) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
