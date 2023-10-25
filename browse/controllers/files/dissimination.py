@@ -2,7 +2,7 @@
 
 import logging
 from email.utils import format_datetime
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -12,7 +12,7 @@ from browse.domain import fileformat
 
 from browse.controllers.files import stream_gen, last_modified, add_time_headers
 
-from browse.services.object_store.fileobj import FileObj, UngzippedFileObj,FileFromTar
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj, FileFromTar, FileDoesNotExist
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.object_store_local import LocalObjectStore
 
@@ -166,6 +166,18 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
+def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: # str here should be the conditions
+    obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
+    if arxiv_id.extra:
+        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.extra}')
+        if isinstance(item, FileDoesNotExist):
+            return "NO_SOURCE" # TODO: This could be more specific
+    else:
+        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.idv}.html')
+        if isinstance(item, FileDoesNotExist):
+            return "ARTICLE_NOT_FOUND"
+
+
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
@@ -183,9 +195,7 @@ def get_html_response(arxiv_id_str: str,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
 
-    path=arxiv_id.extra
     metadata = get_doc_service().get_abs(arxiv_id)
-
 
     if metadata.source_format == 'html': #TODO find a way to distinguish that works. perhaps all the latex files have a latex source?
         native_html = True
@@ -199,14 +209,6 @@ def get_html_response(arxiv_id_str: str,
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
             
         item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
-        if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
-            return not_found(arxiv_id)
-        elif item == "WITHDRAWN" or item == "NO_SOURCE":
-            return withdrawn(arxiv_id)
-        elif item == "UNAVAIABLE":
-            return unavailable(arxiv_id)
-        elif isinstance(item, Deleted):
-            return bad_id(arxiv_id, item.msg)
         gzipped_file, item_format, docmeta, version = item
         if not gzipped_file.exists():
             return not_found(arxiv_id)
@@ -215,30 +217,31 @@ def get_html_response(arxiv_id_str: str,
         native_html = False
         #TODO assign some of the other variables like item format
         #you probably want to wire this one to go through dissemination too
-        obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-        gzipped_file = obj_store.to_obj(f'{arxiv_id.idv}.tar.gz')
+        requested_file = _get_latexml_conversion_file(arxiv_id)
+        if not arxiv_id.extra:
+            return requested_file # Serve static asset
+        docmeta = metadata
+        version = docmeta.version
+        item_format = fileformat.html_source
 
-    #TODO some sort of error handlingfor not beign able to retrieve file, draft in conference proceeding.py
-    unzipped_file=UngzippedFileObj(gzipped_file)
-
-    if unzipped_file.name.endswith(".html"): #handle single html files here
-        requested_file=unzipped_file
-    else:
-        tar=unzipped_file
-
-
-    if path:
-        tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{path}')
-    else:
-        tarmember = FileFromTar(tar, f'{arxiv_id.idv}/{arxiv_id.idv}.html')
-
-    if tarmember.exists():
-        requested_file=tarmember
-    else:
-        return BadRequest("No such file exists")
+    if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
+            return not_found(arxiv_id)
+    elif item == "WITHDRAWN" or item == "NO_SOURCE":
+        return withdrawn(arxiv_id)
+    elif item == "UNAVAIABLE":
+        return unavailable(arxiv_id)
+    elif isinstance(item, Deleted):
+        return bad_id(arxiv_id, item.msg)
 
     if native_html:
-        pass #TODO process file here
+        #TODO some sort of error handlingfor not beign able to retrieve file, draft in conference proceeding.py
+        unzipped_file=UngzippedFileObj(gzipped_file)
+
+        if unzipped_file.name.endswith(".html"): #handle single html files here
+            requested_file=unzipped_file
+        else:
+            tar=unzipped_file
+        #TODO process file here
 
     response=default_resp_fn(item_format,requested_file,arxiv_id,docmeta,version)
     if native_html: 
