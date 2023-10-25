@@ -17,12 +17,14 @@ from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.object_store_local import LocalObjectStore
 
 from browse.services.documents import get_doc_service
+from browse.services.html_processing import post_process_html2
 
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
 from browse.services.next_published import next_publish
 
+from browse.stream.file_processing import process_file
 from browse.stream.tarstream import tar_stream_gen
 from flask import Response, abort, make_response, render_template, current_app
 from flask_rangerequest import RangeRequest
@@ -199,7 +201,6 @@ def get_html_response(arxiv_id_str: str,
 
     if metadata.source_format == 'html': #TODO find a way to distinguish that works. perhaps all the latex files have a latex source?
         native_html = True
-
         #TODO doesnt brian C have some sort of abstraction so we dont have to do this
         if not current_app.config["DISSEMINATION_STORAGE_PREFIX"].startswith("gs://"):
             obj_store = LocalObjectStore(current_app.config["DISSEMINATION_STORAGE_PREFIX"])
@@ -209,9 +210,7 @@ def get_html_response(arxiv_id_str: str,
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
             
         item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
-        gzipped_file, item_format, docmeta, version = item
-        if not gzipped_file.exists():
-            return not_found(arxiv_id)
+
        
     else:
         native_html = False
@@ -234,6 +233,9 @@ def get_html_response(arxiv_id_str: str,
         return bad_id(arxiv_id, item.msg)
 
     if native_html:
+        gzipped_file, item_format, docmeta, version = item
+        if not gzipped_file.exists():
+            return not_found(arxiv_id)
         #TODO some sort of error handlingfor not beign able to retrieve file, draft in conference proceeding.py
         unzipped_file=UngzippedFileObj(gzipped_file)
 
@@ -242,12 +244,15 @@ def get_html_response(arxiv_id_str: str,
         else:
             tar=unzipped_file
         #TODO process file here
+        with requested_file.open('rb') as f:
+            output= process_file(f,post_process_html2) #TODO put this into a file object
 
     response=default_resp_fn(item_format,requested_file,arxiv_id,docmeta,version)
     if native_html: 
         """special cases for the fact that documents within conference proceedings can change 
         which will appear differently in the conference proceeding even if the conference proceeding paper stays the same"""
         response.headers['Expires'] = format_datetime(next_publish())
+        #TODO handle file modification times here
 
     return response
 
