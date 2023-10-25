@@ -135,11 +135,11 @@ def formats_from_source_flag(source_flag: str,
     return formats
 
 
-def has_ancillary_files(source_type: str) -> bool:
+def has_ancillary_files(source_flag: str) -> bool:
     """Check source type for indication of ancillary files."""
-    if not source_type:
+    if not source_flag:
         return False
-    return re.search('A', source_type, re.IGNORECASE) is not None
+    return re.search('A', source_flag, re.IGNORECASE) is not None
 
 
 def list_ancillary_files(tarball_path: APath) -> List[Dict]:
