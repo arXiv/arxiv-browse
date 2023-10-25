@@ -3,6 +3,7 @@
 import logging
 from email.utils import format_datetime
 from typing import Callable, Optional, Union
+import tarfile
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -242,7 +243,28 @@ def get_html_response(arxiv_id_str: str,
         if unzipped_file.name.endswith(".html"): #handle single html files here
             requested_file=unzipped_file
         else:
-            tar=unzipped_file
+            tar_file=unzipped_file
+            if arxiv_id.extra: #get specific file from tar file
+                tarmember=FileFromTar(tar_file,arxiv_id.extra)
+                if not tarmember.exists():
+                    pass #TODO return appropriate error
+                else:
+                    requested_file=tarmember
+            else: #check if one html file which we can serve or many to be selected from
+                html_files=[]
+                with tar_file.open(mode="rb") as fh:
+                    with tarfile.open(fileobj=fh, mode="r") as tar:
+                        for file_info in tar:
+                            if file_info.name.endswith(".html"):
+                                html_files.append(file_info.path)
+                if len(html_files) ==1:
+                    tarmember=FileFromTar(tar_file,html_files[0])
+                    if not tarmember.exists():
+                        pass #TODO return appropriate error
+                    else:
+                        requested_file=tarmember
+                else:
+                    pass #TODO do something about multiple file options
         #TODO process file here
         with requested_file.open('rb') as f:
             output= process_file(f,post_process_html2) #TODO put this into a file object
