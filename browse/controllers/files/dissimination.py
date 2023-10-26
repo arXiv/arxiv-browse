@@ -4,6 +4,7 @@ import logging
 from email.utils import format_datetime
 from typing import Callable, Optional, Union
 import tarfile
+import mimetypes
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -181,7 +182,7 @@ def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: 
             return "ARTICLE_NOT_FOUND"
 
 
-def get_html_response(arxiv_id_str: str,
+def get_html_response_old(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     # if arxiv_id_str.endswith('.html'):
@@ -278,6 +279,13 @@ def get_html_response(arxiv_id_str: str,
 
     return response
 
+def get_html_response(arxiv_id_str: str,
+                           archive: Optional[str] = None,
+                           resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
+    
+    return get_dissimination_resp()
+    
+
 def withdrawn(arxiv_id: str) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
     headers = {'Cache-Control': 'max-age=31536000'}
@@ -318,3 +326,72 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
     return make_response(render_template("pdf/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
+
+def html_source_response_function(format: FileFormat,
+                file: FileObj,
+                arxiv_id: Identifier,
+                docmeta: DocMetadata,
+                version: VersionEntry,
+                extra: Optional[str] = None):
+    path=arxiv_id.extra
+
+    if file.name.endswith(".html.gz") and path:
+        # todo need return a 404 for this path
+        return not_found_anc() # todo something like new fn not_found_html()
+
+    unzipped_file = UngzippedFileObj(file)
+
+    if unzipped_file.name.endswith(".html"):  # handle single html files here
+        requested_file = unzipped_file
+    else: #tar files here
+        tar_file=unzipped_file
+        if path: #get specific file from tar file
+                tarmember=FileFromTar(tar_file, path)
+                if not tarmember.exists():
+                    pass #TODO return appropriate error
+                else:
+                    requested_file=tarmember
+        else: #check if one html file which we can serve or many to be selected from
+            html_files=[]
+            with tar_file.open(mode="rb") as fh:
+                with tarfile.open(fileobj=fh, mode="r") as tar:
+                    for file_info in tar:
+                        if file_info.name.endswith(".html"):
+                            html_files.append(file_info.path)
+            if len(html_files) ==1:
+                tarmember=FileFromTar(tar_file,html_files[0])
+                if not tarmember.exists():
+                    pass #TODO return appropriate error
+                else:
+                    requested_file=tarmember
+            else:
+                pass #TODO do something about multiple file options
+
+    if requested_file.name.endswith(".html"):
+        # TODO use example class sent via slack
+        # processed_file = TransformFileObj(requested_file, preprocess_html)
+        last_mod= last_modified(requested_file)
+        with requested_file.open('rb') as f:
+            output= process_file(f,post_process_html2)
+        #TODO turn output into a file
+        return _source_html_response(processed_file, last_mod)
+    else:
+        return _guess_response(requested_file, arxiv_id)
+
+def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
+    """make a response for an unknown file type"""
+    resp = make_response(file, 200)
+    add_time_headers(resp, file, arxiv_id)
+    content_type, _ =mimetypes.guess_type(file.name)
+    if content_type:
+        resp.headers["Content-Type"] =content_type
+    return resp
+
+def _source_html_response(file: FileObj, last_mod: str) -> Response:
+    """make a response for a native html paper"""
+    resp = make_response(file, 200)
+    resp.headers["Last-Modified"] = last_mod
+    resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
+    resp.headers["Content-Type"] = "text/html"
+    resp.headers["ETag"] = last_mod
+    return resp 
