@@ -345,7 +345,12 @@ def _latexml_response(file: FileObj, arxiv_id:Identifier) -> Response:
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""
-    resp = make_response(file, 200)
+    resp: Response = RangeRequest(file.open('rb'),
+                                  etag=last_modified(file),
+                                  last_modified=file.updated,
+                                  size=file.size).make_response()
+
+    resp.headers['Access-Control-Allow-Origin'] = '*'
     add_time_headers(resp, file, arxiv_id)
     content_type, _ =mimetypes.guess_type(file.name)
     if content_type:
@@ -354,7 +359,13 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
 
 def _source_html_response(file: Generator[BytesIO], last_mod: str) -> Response:
     """make a response for a native html paper"""
-    resp = make_response(file, 200)
+    resp: Response = RangeRequest(file.open('rb'),
+                                  etag=last_mod,
+                                  last_modified=last_mod,
+                                  size=file.size).make_response()
+
+    resp.headers.pop('Content-Length')
+    resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers["Last-Modified"] = last_mod
     resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
     resp.headers["Content-Type"] = "text/html"
