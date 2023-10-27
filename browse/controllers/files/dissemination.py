@@ -295,13 +295,7 @@ def html_response_function(format: FileFormat,
     if docmeta.source_format == 'html':
         return html_source_response_function(file,arxiv_id)
     else:
-        return latexml_response_function(file,arxiv_id)
-
-def latexml_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
-    #TODO Mark file should be the the main file (your verison of my tar file) that holds all the things. 
-    # use the path in arxiv_id.extra to return specific files and your handling for whatever your default file it
-    #non html assets can go to _guess_response, the html for the paper should go to latexml response
-    pass
+        return default_resp_fn(format,file,arxiv_id,docmeta,version)
 
 def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
