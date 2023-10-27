@@ -123,16 +123,16 @@ def src_resp_fn(format: FileFormat,
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str, archive,
+    return get_dissemination_resp("e-print", arxiv_id_str, archive,
                                   src_resp_fn)
 
 
 def get_e_print_resp(arxiv_id_str: str,
                      archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp("e-print", arxiv_id_str, archive)
+    return get_dissemination_resp("e-print", arxiv_id_str, archive)
 
 
-def get_dissimination_resp(format: Acceptable_Format_Requests,
+def get_dissemination_resp(format: Acceptable_Format_Requests,
                            arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
@@ -285,7 +285,7 @@ def get_html_response_old(arxiv_id_str: str,
 
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
-    return get_dissimination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
+    return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
     
 
 def withdrawn(arxiv_id: str) -> Response:
