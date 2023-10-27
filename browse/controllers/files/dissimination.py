@@ -213,7 +213,7 @@ def get_html_response_old(arxiv_id_str: str,
             obj_store = GsObjectStore(storage.Client().bucket(
                 current_app.config["DISSEMINATION_STORAGE_PREFIX"].replace('gs://', '')))
             
-        item = get_article_store().dissemination(fileformat.html_source, arxiv_id)
+        item = get_article_store().dissemination(fileformat.html, arxiv_id)
 
        
     else:
@@ -225,7 +225,7 @@ def get_html_response_old(arxiv_id_str: str,
             return requested_file # Serve static asset
         docmeta = metadata
         version = docmeta.version
-        item_format = fileformat.html_source
+        item_format = fileformat.html
 
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
             return not_found(arxiv_id)
