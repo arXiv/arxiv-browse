@@ -157,7 +157,7 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id)
-    elif item == "UNAVAIABLE":
+    elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif format==fileformat.pdf and item == "NOT_PDF":
         return not_pdf(arxiv_id)
@@ -233,7 +233,7 @@ def get_html_response_old(arxiv_id_str: str,
             return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id)
-    elif item == "UNAVAIABLE":
+    elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
@@ -297,12 +297,12 @@ def withdrawn(arxiv_id: str) -> Response:
 
 
 def unavailable(arxiv_id: str) -> Response:
-    return make_response(render_template("dissemination/unavaiable.html",
+    return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 500, {})
 
 
 def not_pdf(arxiv_id: str) -> Response:
-    return make_response(render_template("dissemination/unavaiable.html",
+    return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 404, {})
 
 

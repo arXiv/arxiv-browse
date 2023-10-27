@@ -4,12 +4,12 @@ arXiv:1208.9999
 From: Smith, Bob <bob@example.com>
 Date: Thu, 30 Aug 2012 23:00:00 GMT   (300kb)
 
-Title: Fake paper to test unavaiable condition
+Title: Fake paper to test unavailable condition
 Authors: Smith, bob
 Categories: cs.CV
 Comments: so fake
 License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
 \\
-  Fake paper to test the unavaiable condition. The abs and source exist but
+  Fake paper to test the unavailable condition. The abs and source exist but
 there is no pdf in ps_cache.
 \\

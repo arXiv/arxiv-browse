@@ -48,7 +48,7 @@ Conditions = Union[
             "ARTICLE_NOT_FOUND",  # Where there is no article
             "VERSION_NOT_FOUND",  # Where article exists but not version
             "NO_SOURCE",  # Article and version exists but no source exists
-            "UNAVAIABLE",  # Where the PDF unexpectedly does not exist
+            "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
             "NOT_PDF",  # format that doens't serve a pdf
             ],
     Deleted,
@@ -223,7 +223,7 @@ class ArticleStore():
         handler_fn = self.format_handlers[format]
         fileobj = handler_fn(arxiv_id, docmeta, version)
         if not fileobj:
-            return "UNAVAIABLE"
+            return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
             return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version)
         else:
@@ -373,7 +373,7 @@ class ArticleStore():
 
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(pdf_file)])
-        return "UNAVAIABLE"
+        return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         res = self.reasons(arxiv_id.idv, 'ps')
@@ -400,7 +400,7 @@ class ArticleStore():
 
         logger.debug("No PS found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(cached_ps), str(ps_file)])
-        return "UNAVAIABLE"
+        return "UNAVAILABLE"
 
     def _e_print(self,
                  arxiv_id: Identifier,
