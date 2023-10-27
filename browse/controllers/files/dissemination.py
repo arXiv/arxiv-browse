@@ -357,7 +357,7 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
         resp.headers["Content-Type"] =content_type
     return resp
 
-def _source_html_response(file: Generator[BytesIO], last_mod: str) -> Response:
+def _source_html_response(file: Generator[BytesIO, None, None], last_mod: str) -> Response:
     """make a response for a native html paper"""
     resp: Response = RangeRequest(file.open('rb'),
                                   etag=last_mod,
