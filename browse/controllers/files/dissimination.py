@@ -5,6 +5,8 @@ from email.utils import format_datetime
 from typing import Callable, Optional, Union
 import tarfile
 import mimetypes
+from io import BytesIO
+from typing import Generator
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
@@ -282,7 +284,12 @@ def get_html_response_old(arxiv_id_str: str,
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
-    
+    #convert id
+    #get metadata
+    #check native html or latex (3rd option?)
+    #fetch correct file
+    #divert to appropriate file handling
+
     return get_dissimination_resp()
     
 
@@ -327,12 +334,7 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
 
-def html_source_response_function(format: FileFormat,
-                file: FileObj,
-                arxiv_id: Identifier,
-                docmeta: DocMetadata,
-                version: VersionEntry,
-                extra: Optional[str] = None):
+def html_source_response_function(file: FileObj, arxiv_id: Identifier):
     path=arxiv_id.extra
 
     if file.name.endswith(".html.gz") and path:
@@ -373,8 +375,7 @@ def html_source_response_function(format: FileFormat,
         last_mod= last_modified(requested_file)
         with requested_file.open('rb') as f:
             output= process_file(f,post_process_html2)
-        #TODO turn output into a file
-        return _source_html_response(processed_file, last_mod)
+        return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
 
@@ -387,7 +388,7 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
         resp.headers["Content-Type"] =content_type
     return resp
 
-def _source_html_response(file: FileObj, last_mod: str) -> Response:
+def _source_html_response(file: Generator[BytesIO], last_mod: str) -> Response:
     """make a response for a native html paper"""
     resp = make_response(file, 200)
     resp.headers["Last-Modified"] = last_mod
