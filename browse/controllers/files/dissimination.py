@@ -173,6 +173,7 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
 def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: # str here should be the conditions
+    """this is unused and leftover in case we want to reference peices from it, delete when done"""
     obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
     if arxiv_id.extra:
         item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.extra}')
@@ -187,6 +188,7 @@ def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: 
 def get_html_response_old(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
+    """this is unused and leftover in case we want to reference peices from it, delete when done"""
     # if arxiv_id_str.endswith('.html'):
     #     return redirect(f'/html/{arxiv_id.split(".html")[0]}') 
     #TODO possibly add handling for .html at end of path, doesnt currently work on legacy either, currently causes Identifier Exception
@@ -332,11 +334,15 @@ def html_response_function(format: FileFormat,
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry)-> Response:
-    #do version check
-    #send file to html_source_response_function or html_latex_response_function
-    pass
+    if docmeta.source_format == 'html':
+        return html_source_response_function(file,arxiv_id)
+    else:
+        return latexml_response_function(file,arxiv_id)
 
-def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
+def latexml_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
+    #TODO Mark file should be the the main file (your verison of my tar file) that holds all the things. 
+    # use the path in arxiv_id.extra to return specific files and your handling for whatever your default file it
+    #non html assets can go to _guess_response, the html for the paper should go to latexml response
     pass
 
 def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
@@ -380,6 +386,10 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Respons
         return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
+
+def _latexml_response(file: FileObj, arxiv_id:Identifier) -> Response:
+    #TODO actually Erin can do this part, Mark just needs to call it
+    pass
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""

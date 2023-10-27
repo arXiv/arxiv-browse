@@ -417,8 +417,13 @@ class ArticleStore():
     def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
 
-        # TODO Check  html or latex and set source properly
+        if docmeta.source_format == 'html':
+            #TODO Mark set src to the correct source for native html documents. use _pdf as a model. specific file name stuff goes in key_patterns.py
+            pass
+        else:
+            #TODO Mark set src to the correct source for latexml documents. use _pdf as a model. specific file name stuff goes in key_patterns.py
+            pass
 
-        #src = self.sourcestore.get_src(arxiv_id, docmeta) # i think works for native html
+        #src = self.sourcestore.get_src(arxiv_id, docmeta) # i think works for native html originally
         pass
         return src if src is not None else "NO_SOURCE"

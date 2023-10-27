@@ -110,3 +110,8 @@ def abs_path_current(arxiv_id: Identifier) -> str:
     """Returns the path to the abstract in the current version location"""
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
     return f"{abs_path_current_parent(arxiv_id)}/{arxiv_id.filename}.abs"
+
+
+# ################## HTML ####################
+
+#TODO Mark use this area with pdf as an example to set any file paths as needed for latexml and native html
