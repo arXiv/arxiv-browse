@@ -30,7 +30,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
-        return make_response(render_template("pdf/bad_id.html",
+        return make_response(render_template("dissemination/bad_id.html",
                                              err_msg=str(ex),
                                              arxiv_id=arxiv_id_str), 404, {})
 
