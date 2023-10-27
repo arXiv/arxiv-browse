@@ -32,7 +32,7 @@ from browse.stream.file_processing import process_file
 from browse.stream.tarstream import tar_stream_gen
 from flask import Response, abort, make_response, render_template, current_app
 from flask_rangerequest import RangeRequest
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 from google.cloud import storage
 
 
@@ -285,9 +285,11 @@ def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     #convert id
+        #raise different not found for failures
     #get metadata
     #check native html or latex (3rd option?)
     #fetch correct file
+        #raise different not found for failures
     #divert to appropriate file handling
 
     return get_dissimination_resp()
@@ -338,8 +340,7 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier):
     path=arxiv_id.extra
 
     if file.name.endswith(".html.gz") and path:
-        # todo need return a 404 for this path
-        return not_found_anc() # todo something like new fn not_found_html()
+        raise NotFound
 
     unzipped_file = UngzippedFileObj(file)
 
@@ -350,7 +351,7 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier):
         if path: #get specific file from tar file
                 tarmember=FileFromTar(tar_file, path)
                 if not tarmember.exists():
-                    pass #TODO return appropriate error
+                    raise NotFound
                 else:
                     requested_file=tarmember
         else: #check if one html file which we can serve or many to be selected from
@@ -363,15 +364,13 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier):
             if len(html_files) ==1:
                 tarmember=FileFromTar(tar_file,html_files[0])
                 if not tarmember.exists():
-                    pass #TODO return appropriate error
+                    raise NotFound
                 else:
                     requested_file=tarmember
             else:
                 pass #TODO do something about multiple file options
 
     if requested_file.name.endswith(".html"):
-        # TODO use example class sent via slack
-        # processed_file = TransformFileObj(requested_file, preprocess_html)
         last_mod= last_modified(requested_file)
         with requested_file.open('rb') as f:
             output= process_file(f,post_process_html2)
