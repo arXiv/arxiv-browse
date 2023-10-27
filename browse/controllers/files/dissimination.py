@@ -159,11 +159,11 @@ def get_dissimination_resp(format: Acceptable_Format_Requests,
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE":
         return unavailable(arxiv_id)
-    elif item == "NOT_PDF":
+    elif format==fileformat.pdf and item == "NOT_PDF":
         return not_pdf(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
-    elif isinstance(item, CannotBuildPdf):
+    elif format==fileformat.pdf and isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
 
     file, item_format, docmeta, version = item
@@ -282,17 +282,8 @@ def get_html_response_old(arxiv_id_str: str,
     return response
 
 def get_html_response(arxiv_id_str: str,
-                           archive: Optional[str] = None,
-                           resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
-    #convert id
-        #raise different not found for failures
-    #get metadata
-    #check native html or latex (3rd option?)
-    #fetch correct file
-        #raise different not found for failures
-    #divert to appropriate file handling
-
-    return get_dissimination_resp()
+                           archive: Optional[str] = None) -> Response:
+    return get_dissimination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
     
 
 def withdrawn(arxiv_id: str) -> Response:
@@ -336,7 +327,19 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
 
-def html_source_response_function(file: FileObj, arxiv_id: Identifier):
+def html_response_function(format: FileFormat,
+                file: FileObj,
+                arxiv_id: Identifier,
+                docmeta: DocMetadata,
+                version: VersionEntry)-> Response:
+    #do version check
+    #send file to html_source_response_function or html_latex_response_function
+    pass
+
+def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
+    pass
+
+def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
 
     if file.name.endswith(".html.gz") and path:
