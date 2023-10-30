@@ -176,6 +176,7 @@ def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: 
         item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.idv}.html')
         if isinstance(item, FileDoesNotExist):
             return "ARTICLE_NOT_FOUND"
+    return item
 
 
 def get_html_response(arxiv_id_str: str,
@@ -215,9 +216,7 @@ def get_html_response(arxiv_id_str: str,
        
     else:
         native_html = False
-        #TODO assign some of the other variables like item format
-        #you probably want to wire this one to go through dissemination too
-        requested_file = _get_latexml_conversion_file(arxiv_id)
+        requested_file = item = _get_latexml_conversion_file(arxiv_id)
         if not arxiv_id.extra:
             return requested_file # Serve static asset
         docmeta = metadata
@@ -225,7 +224,7 @@ def get_html_response(arxiv_id_str: str,
         item_format = fileformat.html_source
 
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
-            return not_found(arxiv_id)
+        return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id)
     elif item == "UNAVAIABLE":
