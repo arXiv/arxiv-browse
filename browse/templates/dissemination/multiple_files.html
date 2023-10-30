@@ -1,0 +1,12 @@
+{% extends "base/base.html" %}
+
+{%- block title -%}{{arxiv_id.ids}}{%- endblock -%}
+
+{%- block content -%}
+<h1>The following files are available for {{ arxiv_id.idv }}</h1>
+<ul>
+    {% for filename in files %}
+        <li><a href="{{url_for('dissemination.html', arxiv_id=arxiv_id.idv)}}/{{filename}}" title="{{filename}}" id="{{ arxiv_id.ids }}-{{filename}}" aria-labelledby="{{ arxiv_id.ids }}-{{filename}}">{{filename}}</a></li>
+    {% endfor %}
+</ul>
+{%- endblock -%}

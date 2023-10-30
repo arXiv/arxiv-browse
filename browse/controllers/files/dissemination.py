@@ -328,8 +328,8 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Respons
                     raise NotFound
                 else:
                     requested_file=tarmember
-            else:
-                pass #TODO do something about multiple file options
+            else: #file selector for multiple html files
+                return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, files=html_files), 200, {})
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
