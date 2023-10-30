@@ -5,7 +5,7 @@ from email.utils import format_datetime
 from typing import Callable, Optional, Union
 import tarfile
 import mimetypes
-from io import BytesIO
+from io import BytesIO, StringIO
 from typing import Generator
 
 from browse.domain.identifier import Identifier, IdentifierException
@@ -21,7 +21,7 @@ from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.object_store.object_store_local import LocalObjectStore
 
 from browse.services.documents import get_doc_service
-from browse.services.html_processing import post_process_html2
+from browse.services.html_processing import post_process_html
 
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
@@ -333,8 +333,7 @@ def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Respons
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
-        with requested_file.open('rb') as f:
-            output= process_file(f,post_process_html2)
+        output= process_file(requested_file,post_process_html)
         return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
@@ -357,14 +356,10 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
         resp.headers["Content-Type"] =content_type
     return resp
 
-def _source_html_response(file: Generator[BytesIO, None, None], last_mod: str) -> Response:
+def _source_html_response(file: Generator[StringIO, None, None], last_mod: str) -> Response:
     """make a response for a native html paper"""
-    resp: Response = RangeRequest(file.open('rb'),
-                                  etag=last_mod,
-                                  last_modified=last_mod,
-                                  size=file.size).make_response()
-
-    resp.headers.pop('Content-Length')
+    resp: Response = make_response(file)
+    resp.status_code=200
     resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.headers["Last-Modified"] = last_mod
     resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
