@@ -43,9 +43,11 @@ Adding an environment var, so we can enable only on gcp.
 {%- endmacro -%}
 
 {%- macro script(request_datetime) -%}
+{%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
+{%- endif -%}
 {%- endmacro -%}
 
 {#################### disabled example banners ####################}
