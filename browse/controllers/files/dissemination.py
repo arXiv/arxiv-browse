@@ -305,14 +305,14 @@ def html_response_function(format: FileFormat,
 
 def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
-
+    requested_file=None
     #try and serve specific file path
     if path:
         for file in file_list:
-            if file.name == path:
+            if file.name.endswith(path):
                 requested_file=file
                 break
-        if not requested_file: #couldn't find file with that path
+        if requested_file is None: #couldn't find file with that path
             raise NotFound
     else: #just serve the article
         html_files=[]
@@ -329,7 +329,10 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
         output= process_file(requested_file,post_process_html)
-        return _source_html_response(output, last_mod)
+        str_out=""
+        for data in output:
+            str_out+=data
+        return _source_html_response(str_out, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
 
