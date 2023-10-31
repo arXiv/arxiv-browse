@@ -88,9 +88,8 @@ def dvi(arxiv_id: str) -> Response:
     """Get DVI for article."""
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
 
-
-@blueprint.route("/html/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/html/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/html/<string:archive>/<path:arxiv_id>", methods=['GET', 'HEAD'])
 def html(arxiv_id: str, archive=None):  # type: ignore
     """get html for article"""
     return get_html_response(arxiv_id,archive)
