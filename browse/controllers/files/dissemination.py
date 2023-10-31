@@ -2,7 +2,7 @@
 
 import logging
 from email.utils import format_datetime
-from typing import Callable, Optional, Union
+from typing import Callable, Optional, Union, Iterable, List
 import tarfile
 import mimetypes
 from io import BytesIO, StringIO
@@ -167,8 +167,14 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return cannot_build_pdf(arxiv_id, item.msg)
 
     file, item_format, docmeta, version = item
-    if not file.exists():
-        return not_found(arxiv_id)
+
+    #check for existence
+    if not isinstance(file, Iterable):
+        if not file.exists():
+            return not_found(arxiv_id)
+    else:
+        if not file[0].exists():
+            return not_found(arxiv_id)
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
@@ -288,7 +294,7 @@ def get_html_response(arxiv_id_str: str,
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
     
 def html_response_function(format: FileFormat,
-                file: FileObj,
+                file: List[FileObj],
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry)-> Response:
@@ -297,38 +303,25 @@ def html_response_function(format: FileFormat,
     else:
         return default_resp_fn(format,file,arxiv_id,docmeta,version)
 
-def html_source_response_function(file: FileObj, arxiv_id: Identifier)-> Response:
+def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
 
-    if file.name.endswith(".html.gz") and path:
-        raise NotFound
-
-    unzipped_file = UngzippedFileObj(file)
-
-    if unzipped_file.name.endswith(".html"):  # handle single html files here
-        requested_file = unzipped_file
-    else: #tar files here
-        tar_file=unzipped_file
-        if path: #get specific file from tar file
-                tarmember=FileFromTar(tar_file, path)
-                if not tarmember.exists():
-                    raise NotFound
-                else:
-                    requested_file=tarmember
-        else: #check if one html file which we can serve or many to be selected from
-            html_files=[]
-            with tar_file.open(mode="rb") as fh:
-                with tarfile.open(fileobj=fh, mode="r") as tar:
-                    for file_info in tar:
-                        if file_info.name.endswith(".html"):
-                            html_files.append(file_info.path)
-            if len(html_files) ==1:
-                tarmember=FileFromTar(tar_file,html_files[0])
-                if not tarmember.exists():
-                    raise NotFound
-                else:
-                    requested_file=tarmember
-            else: #file selector for multiple html files
+    #try and serve specific file path
+    if path:
+        for file in file_list:
+            if file.name == path:
+                requested_file=file
+                break
+        if not requested_file: #couldn't find file with that path
+            raise NotFound
+    else: #just serve the article
+        html_files=[]
+        for file in file_list:
+            if file.name.endswith(".html"):
+                html_files.append(file)
+        if len(html_files)==1: #serve the only html file
+            requested_file=html_files[0]
+        else: #file selector for multiple html files
                 return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, files=html_files), 200, {})
 
     if requested_file.name.endswith(".html"):

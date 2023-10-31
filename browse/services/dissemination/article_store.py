@@ -5,7 +5,7 @@ These are focused on using the GS bucket abs and source files."""
 import logging
 import re
 from collections.abc import Callable
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
 
 from browse.domain.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
@@ -174,7 +174,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry],Tuple[List[FileObj], fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -226,6 +226,8 @@ class ArticleStore():
             return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
             return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version)
+        if isinstance(fileobj, Iterable): #html requests return an iterable of files in the folder
+            return (fileobj, format, docmeta, version)
         else:
             return fileobj
 
@@ -424,11 +426,11 @@ class ArticleStore():
         #     #TODO Mark set src to the correct source for latexml documents. use _pdf as a model. specific file name stuff goes in key_patterns.py
         #     pass
         path=ps_cache_html_path(arxiv_id, version.version)
-        
         file=self.objstore.list(path)
-        return file #TODO existance checking doesnt work here
-        if True:
-            pass
+        file_list=list(file)
+    
+        if len(file_list) >0:
+            return file_list
         else:
             return "NO_SOURCE"
         #src = self.sourcestore.get_src(arxiv_id, docmeta) # i think works for native html originally
