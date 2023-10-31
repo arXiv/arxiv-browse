@@ -491,12 +491,6 @@ INSERT INTO `arXiv_next_mail` VALUES (119785,189832,670048,'1102.0278',1,'new',N
 /*!40000 ALTER TABLE `arXiv_reject_session_usernames` ENABLE KEYS */;
 
 --
--- Dumping data for table `arXiv_sciencewise_pings`
---
-
-/*!40000 ALTER TABLE `arXiv_sciencewise_pings` DISABLE KEYS */;
-INSERT INTO `arXiv_sciencewise_pings` VALUES ('1102.0776v2','2015-07-09 08:45:45'),('1102.0901v1','2015-07-09 08:45:33'),('1102.1084v1','2015-07-09 08:44:19'),('1102.1494v3','2012-08-09 22:58:51'),('1102.2522v1','2015-07-09 08:45:49'),('1102.2812v2','2015-07-09 08:46:14'),('1102.4168v2','2015-07-09 08:48:19'),('1102.4598v1','2011-04-11 13:21:58'),('1102.4712v1','2015-07-09 08:46:08'),('1102.4837v2','2015-07-09 08:44:35'),('1102.5006v1','2015-07-09 08:45:39'),('1102.5023v2','2015-07-09 08:45:32'),('1102.5473v2','2015-07-09 08:44:38');
-/*!40000 ALTER TABLE `arXiv_sciencewise_pings` ENABLE KEYS */;
 
 --
 -- Dumping data for table `arXiv_show_email_requests`

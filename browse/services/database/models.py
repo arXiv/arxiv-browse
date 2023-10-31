@@ -218,15 +218,6 @@ class MemberInstitutionIP(db.Model):
     Subscription_UniversalInstitution = relationship("MemberInstitution")
 
 
-class SciencewisePing(db.Model):
-    """Model for ScienceWISE (trackback) pings."""
-
-    __tablename__ = "arXiv_sciencewise_pings"
-
-    paper_id_v = Column(String(32), primary_key=True)
-    updated = Column(DateTime)
-
-
 class User(db.Model):
     """Model for legacy user data."""
 

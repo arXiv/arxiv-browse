@@ -231,7 +231,6 @@ class ArticleStore():
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False,
                                   src_file: Optional[FileObj] = None
                                   ) -> List[str]:
         """Get a list of possible formats for a `DocMetadata`.
@@ -251,8 +250,6 @@ class ArticleStore():
         docmeta : :class:`DocMetadata`
         format_pref : str
             The format preference string.
-        add_sciencewise : bool
-            Specify whether to include 'sciencewise_pdf' format in list.
         src_file: Optional[FileObj]
             What src file to use in the format check. This will be
             looked up if it is `None`
@@ -274,12 +271,6 @@ class ArticleStore():
                 formats_from_source_file_name(src_file.name)
         if source_file_formats:
             formats.extend(source_file_formats)
-
-            if add_sciencewise:
-                if formats and formats[-1] == 'other':
-                    formats.insert(-1, 'sciencewise_pdf')
-                else:
-                    formats.append('sciencewise_pdf')
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -292,8 +283,7 @@ class ArticleStore():
                 and src_file.updated < cached_ps_file.updated)
             source_type_formats = formats_from_source_type(format_code,
                                                            format_pref,
-                                                           cache_flag,
-                                                           add_sciencewise)
+                                                           cache_flag)
             if source_type_formats:
                 formats.extend(source_type_formats)
 
