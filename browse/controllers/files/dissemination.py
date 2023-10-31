@@ -316,13 +316,15 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
             raise NotFound
     else: #just serve the article
         html_files=[]
+        file_names=[]
         for file in file_list:
             if file.name.endswith(".html"):
                 html_files.append(file)
+                file_names.append(_get_html_file_name(file.name))
         if len(html_files)==1: #serve the only html file
             requested_file=html_files[0]
         else: #file selector for multiple html files
-                return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, files=html_files), 200, {})
+            return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, file_names=file_names), 200, {})
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
@@ -330,6 +332,16 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
         return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
+
+def _get_html_file_name(name:str) -> str:
+    # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes
+    item= "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html"
+    parts = name.split('/')
+    if len(parts) > 5:
+        result = '/'.join(parts[5:])
+    else:
+        result= parts[-1]
+    return result
 
 def _latexml_response(file: FileObj, arxiv_id:Identifier) -> Response:
     #TODO actually Erin can do this part, Mark just needs to call it
