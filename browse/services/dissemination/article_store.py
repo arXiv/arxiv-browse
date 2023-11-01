@@ -23,7 +23,7 @@ from browse.services.key_patterns import (abs_path_current_parent,
                                           current_pdf_path, previous_pdf_path,
                                           ps_cache_pdf_path,
                                           current_ps_path, previous_ps_path,
-                                          ps_cache_ps_path, ps_cache_html_path)
+                                          ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
 from browse.services.object_store import ObjectStore
 from browse.services.object_store.fileobj import FileObj, FileDoesNotExist
 from .source_store import SourceStore
@@ -420,17 +420,19 @@ class ArticleStore():
     def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
 
-        if docmeta.source_format == 'html':
+        if docmeta.source_format == 'html':#native html
             path=ps_cache_html_path(arxiv_id, version.version)
             file=self.objstore.list(path) 
-        else:
+            file_list=list(file)
+            if len(file_list) >0:
+                return file_list
+            else:
+                return "NO_SOURCE"
+        else: #latex to html
             latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-            path="2012.02198v1"
-            file=latex_obj_store.list(path)
-
-        file_list=list(file)
-
-        if len(file_list) >0:
-            return file_list
-        else:
-            return "NO_SOURCE"
+            path=latexml_html_path(arxiv_id, version.version)
+            file=latex_obj_store.to_obj(path)
+            if file.exists():
+                return file
+            else:
+                return "NO_SOURCE"

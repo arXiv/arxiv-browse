@@ -114,7 +114,6 @@ def abs_path_current(arxiv_id: Identifier) -> str:
 
 # ################## HTML ####################
 
-#TODO Mark use this area with pdf as an example to set any file paths as needed for latexml and native html
 def ps_cache_html_path(arxiv_id: Identifier, version: int=0) -> str:
     """Returns the path for a native HTML document from the ps_cache for a version.
 
@@ -125,3 +124,13 @@ def ps_cache_html_path(arxiv_id: Identifier, version: int=0) -> str:
     if not version:
         version = arxiv_id.version
     return f"{dir}/{arxiv_id.filename}v{version}/"
+
+def latexml_html_path(arxiv_id: Identifier, version: int=0) -> str:
+    if not version:
+        version = arxiv_id.version
+    path=f"{arxiv_id.filename}v{version}/"
+    if arxiv_id.extra:
+                path+=arxiv_id.extra
+    else:
+        path+=arxiv_id.idv+".html"
+    return path

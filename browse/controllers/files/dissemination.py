@@ -194,14 +194,14 @@ def get_html_response(arxiv_id_str: str,
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
     
 def html_response_function(format: FileFormat,
-                file: List[FileObj],
+                file_list: Union[List[FileObj],FileObj],
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry)-> Response:
     if docmeta.source_format == 'html':
-        return html_source_response_function(file,arxiv_id)
+        return html_source_response_function(file_list,arxiv_id)
     else:
-        return default_resp_fn(format,file,arxiv_id,docmeta,version)
+        return _latexml_response(format,file_list,arxiv_id,docmeta,version)
 
 def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
@@ -242,9 +242,15 @@ def _get_html_file_name(name:str) -> str:
         result= parts[-1]
     return result
 
-def _latexml_response(file: FileObj, arxiv_id:Identifier) -> Response:
-    #TODO actually Erin can do this part, Mark just needs to call it
-    pass
+def _latexml_response(format: FileFormat,
+                    file_list: List[FileObj],
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry) -> Response:
+    
+    resp=default_resp_fn(format,file_list,arxiv_id,docmeta,version)
+    resp.headers['Content-Disposition'] = 'inline'
+    return resp
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""
