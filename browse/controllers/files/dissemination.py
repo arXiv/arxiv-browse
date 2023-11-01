@@ -259,12 +259,12 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
         resp.headers["Content-Type"] =content_type
     return resp
 
-def _source_html_response(gen: Generator[StringIO, None, None], last_mod: str) -> Response:
+def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) -> Response:
     """make a response for a native html paper"""
     #turn generator into temp file
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
         for data in gen:
-            temp_file.write(data.encode('utf-8'))
+            temp_file.write(data)
         temp_file.seek(0)
     #make response
         resp: Response = make_response(temp_file.read())

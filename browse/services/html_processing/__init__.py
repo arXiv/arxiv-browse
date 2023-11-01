@@ -7,22 +7,21 @@ from browse.domain.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from browse.controllers.list_page import dl_for_article, latexml_links_for_article, authors_for_article
 
-LIST_ITEM_RE = re.compile(r'<\!--\s(.+)\s-->\nLIST:(.+)\n')
-LAX_ID_REGEX = '(arXiv:)?([a-z-]+(\.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
+LAX_ID_REGEX = b'(arXiv:)?([a-z-]+(\.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
 
-def post_process_html(byte_line:bytes) -> str:
-    line=byte_line.decode('utf-8')
+def post_process_html(byte_line:bytes) -> bytes:
+    #line=byte_line.decode('utf-8')
     # Match LIST: or ABS: directives followed by an identifier using regular expressions
-    list_match = re.match(r'(LIST|ABS):(' + LAX_ID_REGEX + ')', line, re.I)
-    report_no_match = re.match(r'^\s*REPORT-NO:([A-Za-z0-9-\/]+)', line, re.I)
+    list_match = re.match(b'(LIST|ABS):(' + LAX_ID_REGEX + b')', byte_line, re.I)
+    report_no_match = re.match(b'^\s*REPORT-NO:([A-Za-z0-9-\/]+)', byte_line, re.I)
 
     if list_match:
         cmd = list_match.group(1) #which command to perform
-        if cmd=='ABS':
+        if cmd==b'ABS':
             include_abstract=True
         else:
             include_abstract=False
-        id = list_match.group(2) #document ID
+        id = list_match.group(2).decode('utf-8') #document ID
         arxiv_id=Identifier(id) 
 
         new_html = "<dl>\n"
@@ -46,15 +45,16 @@ def post_process_html(byte_line:bytes) -> str:
             new_html += f"<dd>{id} [failed to get identifier for paper]</dd>\n"
 
         new_html += "</dl>\n"
+        new_bytes=new_html.encode('utf-8')
 
     elif report_no_match: #need to find proceeding to test with
-        rn = report_no_match.group(1)
+        rn = report_no_match.group(1).decode('utf-8')
         url_encoded_rn = urllib.parse.quote(rn,safe="")
         new_html=f"<a href=\"/search/?searchtype=report_num&query={url_encoded_rn}\">{rn}</a>\n"
-
+        new_bytes=new_html.encode('utf-8')
     else:
-        new_html = line
-    return new_html
+        new_bytes = byte_line
+    return new_bytes
 
 def author_query(article: DocMetadata, query: str)->str:
     return str(url_for('search_box', searchtype='author', query=query))
