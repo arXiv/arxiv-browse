@@ -239,7 +239,6 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
 
 def _get_html_file_name(name:str) -> str:
     # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes
-    item= "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html"
     parts = name.split('/')
     if len(parts) > 5:
         result = '/'.join(parts[5:])
