@@ -15,7 +15,7 @@ from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-
+from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
     formats_from_source_file_name, formats_from_source_flag)
 from browse.services.key_patterns import (abs_path_current_parent,
@@ -25,10 +25,11 @@ from browse.services.key_patterns import (abs_path_current_parent,
                                           current_ps_path, previous_ps_path,
                                           ps_cache_ps_path, ps_cache_html_path)
 from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj, FileFromTar
-
+from browse.services.object_store.fileobj import FileObj, FileDoesNotExist
 from .source_store import SourceStore
 from .ancillary_files import list_ancillary_files
+from google.cloud import storage
+from flask import current_app
 
 logger = logging.getLogger(__file__)
 
@@ -421,11 +422,14 @@ class ArticleStore():
 
         if docmeta.source_format == 'html':
             path=ps_cache_html_path(arxiv_id, version.version)
-            file=self.objstore.list(path)
-            file_list=list(file)
+            file=self.objstore.list(path) 
         else:
-            pass #TODO Mark set src to the correct source for latexml documents. use _pdf as a model. specific file name stuff goes in key_patterns.py
-    
+            latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
+            path="2012.02198v1"
+            file=latex_obj_store.list(path)
+
+        file_list=list(file)
+
         if len(file_list) >0:
             return file_list
         else:
