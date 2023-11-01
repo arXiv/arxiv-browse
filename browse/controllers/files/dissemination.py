@@ -2,8 +2,8 @@
 
 import logging
 from email.utils import format_datetime
-from typing import Callable, Optional, Union, Iterable, List
-import tarfile
+from typing import Callable, Optional, Union, List
+import tempfile
 import mimetypes
 from io import BytesIO, StringIO
 from typing import Generator
@@ -16,11 +16,9 @@ from browse.domain import fileformat
 
 from browse.controllers.files import stream_gen, last_modified, add_time_headers
 
-from browse.services.object_store.fileobj import FileObj, UngzippedFileObj, FileFromTar, FileDoesNotExist
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj, FileDoesNotExist
 from browse.services.object_store.object_store_gs import GsObjectStore
-from browse.services.object_store.object_store_local import LocalObjectStore
 
-from browse.services.documents import get_doc_service
 from browse.services.html_processing import post_process_html
 
 from browse.services.dissemination import get_article_store
@@ -230,10 +228,7 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
         output= process_file(requested_file,post_process_html)
-        str_out=""
-        for data in output:
-            str_out+=data
-        return _source_html_response(str_out, last_mod)
+        return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
 
@@ -264,15 +259,21 @@ def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
         resp.headers["Content-Type"] =content_type
     return resp
 
-def _source_html_response(file: Generator[StringIO, None, None], last_mod: str) -> Response:
+def _source_html_response(gen: Generator[StringIO, None, None], last_mod: str) -> Response:
     """make a response for a native html paper"""
-    resp: Response = make_response(file)
-    resp.status_code=200
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers["Last-Modified"] = last_mod
-    resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
-    resp.headers["Content-Type"] = "text/html"
-    resp.headers["ETag"] = last_mod
+    #turn generator into temp file
+    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
+        for data in gen:
+            temp_file.write(data.encode('utf-8'))
+        temp_file.seek(0)
+    #make response
+        resp: Response = make_response(temp_file.read())
+        resp.status_code=200
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.headers["Last-Modified"] = last_mod
+        resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
+        resp.headers["Content-Type"] = "text/html"
+        resp.headers["ETag"] = last_mod
     return resp 
 
 def withdrawn(arxiv_id: str) -> Response:
