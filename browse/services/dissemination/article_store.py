@@ -5,7 +5,7 @@ These are focused on using the GS bucket abs and source files."""
 import logging
 import re
 from collections.abc import Callable
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
 
 from browse.domain.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
@@ -15,7 +15,7 @@ from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-
+from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
     formats_from_source_file_name, formats_from_source_flag)
 from browse.services.key_patterns import (abs_path_current_parent,
@@ -23,12 +23,13 @@ from browse.services.key_patterns import (abs_path_current_parent,
                                           current_pdf_path, previous_pdf_path,
                                           ps_cache_pdf_path,
                                           current_ps_path, previous_ps_path,
-                                          ps_cache_ps_path)
+                                          ps_cache_ps_path, ps_cache_html_path)
 from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj, FileFromTar
-
+from browse.services.object_store.fileobj import FileObj, FileDoesNotExist
 from .source_store import SourceStore
 from .ancillary_files import list_ancillary_files
+from google.cloud import storage
+from flask import current_app
 
 logger = logging.getLogger(__file__)
 
@@ -48,7 +49,7 @@ Conditions = Union[
             "ARTICLE_NOT_FOUND",  # Where there is no article
             "VERSION_NOT_FOUND",  # Where article exists but not version
             "NO_SOURCE",  # Article and version exists but no source exists
-            "UNAVAIABLE",  # Where the PDF unexpectedly does not exist
+            "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
             "NOT_PDF",  # format that doens't serve a pdf
             ],
     Deleted,
@@ -66,7 +67,7 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
                       Deleted]
 
 
-FormatHandlerReturn = Union[Conditions, FileObj]
+FormatHandlerReturn = Union[Conditions, FileObj, List[FileObj]]
 
 FHANDLER = Callable[[Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
@@ -136,7 +137,7 @@ class ArticleStore():
             fileformat.pdf: self._pdf,
             "e-print": self._e_print,
             fileformat.ps: self._ps,
-            fileformat.html_source: self._html_source
+            fileformat.html: self._html
         }
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
@@ -174,7 +175,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -223,9 +224,11 @@ class ArticleStore():
         handler_fn = self.format_handlers[format]
         fileobj = handler_fn(arxiv_id, docmeta, version)
         if not fileobj:
-            return "UNAVAIABLE"
+            return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
             return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version)
+        if isinstance(fileobj, List): #html requests return an iterable of files in the folder
+            return (fileobj, format, docmeta, version)
         else:
             return fileobj
 
@@ -373,7 +376,7 @@ class ArticleStore():
 
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(pdf_file)])
-        return "UNAVAIABLE"
+        return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         res = self.reasons(arxiv_id.idv, 'ps')
@@ -400,7 +403,7 @@ class ArticleStore():
 
         logger.debug("No PS found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(cached_ps), str(ps_file)])
-        return "UNAVAIABLE"
+        return "UNAVAILABLE"
 
     def _e_print(self,
                  arxiv_id: Identifier,
@@ -414,10 +417,20 @@ class ArticleStore():
         return src if src is not None else "NO_SOURCE"
 
 
-    def _html_source(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+    def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
 
-        # TODO Check that it is a HTML submission
+        if docmeta.source_format == 'html':
+            path=ps_cache_html_path(arxiv_id, version.version)
+            file=self.objstore.list(path) 
+        else:
+            latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
+            path="2012.02198v1"
+            file=latex_obj_store.list(path)
 
-        src = self.sourcestore.get_src(arxiv_id, docmeta)
-        return src if src is not None else "NO_SOURCE"
+        file_list=list(file)
+
+        if len(file_list) >0:
+            return file_list
+        else:
+            return "NO_SOURCE"

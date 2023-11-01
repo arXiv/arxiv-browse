@@ -2,7 +2,7 @@
 import logging
 from typing import Optional
 
-from browse.controllers.files.dissimination import (get_dissimination_resp,
+from browse.controllers.files.dissemination import (get_dissemination_resp,
                                               get_src_resp)
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
 from browse.services.dissemination import get_article_store
@@ -93,4 +93,4 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
 def e_print(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
     """Serves the source of a requested paper as a original format submitted and
     form that we store it (.tar.gz, .pdf, etc.)."""
-    return get_dissimination_resp("e-print", arxiv_id, archive)
+    return get_dissemination_resp("e-print", arxiv_id, archive)

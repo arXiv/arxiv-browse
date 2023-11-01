@@ -7,7 +7,7 @@ from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
-from browse.controllers.files.dissimination import get_dissimination_resp, get_html_response
+from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response
 from browse.controllers import check_supplied_identifier
 
 
@@ -44,7 +44,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
-    return get_dissimination_resp(fileformat.pdf, arxiv_id, archive)
+    return get_dissemination_resp(fileformat.pdf, arxiv_id, archive)
 
 
 @blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -88,9 +88,8 @@ def dvi(arxiv_id: str) -> Response:
     """Get DVI for article."""
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
 
-
-@blueprint.route("/html/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/html/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/html/<string:archive>/<path:arxiv_id>", methods=['GET', 'HEAD'])
 def html(arxiv_id: str, archive=None):  # type: ignore
     """get html for article"""
     return get_html_response(arxiv_id,archive)
