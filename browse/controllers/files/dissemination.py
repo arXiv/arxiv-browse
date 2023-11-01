@@ -243,13 +243,14 @@ def _get_html_file_name(name:str) -> str:
     return result
 
 def _latexml_response(format: FileFormat,
-                    file_list: List[FileObj],
+                    file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
                     version: VersionEntry) -> Response:
     
-    resp=default_resp_fn(format,file_list,arxiv_id,docmeta,version)
-    resp.headers['Content-Disposition'] = 'inline'
+ 
+    resp=default_resp_fn(format,file,arxiv_id,docmeta,version)
+    resp.headers['Content-Type'] = "text/html"
     return resp
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
