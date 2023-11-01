@@ -141,14 +141,13 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     """
     arxiv_id_str = f"{archive}/{arxiv_id_str}" if archive else arxiv_id_str
     try:
-        if len(arxiv_id_str) > 40:
+        if len(arxiv_id_str) > 2048:
             abort(400)
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
-
     item = get_article_store().dissemination(format, arxiv_id)
     logger. debug(f"dissemination_for_id({arxiv_id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
