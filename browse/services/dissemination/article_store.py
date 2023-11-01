@@ -66,7 +66,7 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
                       Deleted]
 
 
-FormatHandlerReturn = Union[Conditions, FileObj]
+FormatHandlerReturn = Union[Conditions, FileObj, List[FileObj]]
 
 FHANDLER = Callable[[Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
@@ -174,7 +174,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[FileObj, fileformat.FileFormat, DocMetadata, VersionEntry],Tuple[List[FileObj], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -226,7 +226,7 @@ class ArticleStore():
             return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
             return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version)
-        if isinstance(fileobj, Iterable): #html requests return an iterable of files in the folder
+        if isinstance(fileobj, List): #html requests return an iterable of files in the folder
             return (fileobj, format, docmeta, version)
         else:
             return fileobj

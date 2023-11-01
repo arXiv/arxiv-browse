@@ -169,10 +169,10 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     file, item_format, docmeta, version = item
 
     #check for existence
-    if not isinstance(file, Iterable):
+    if not isinstance(file, List): #single file
         if not file.exists():
             return not_found(arxiv_id)
-    else:
+    else: #potential list of files
         if not file[0].exists():
             return not_found(arxiv_id)
 
