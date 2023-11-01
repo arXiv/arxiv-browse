@@ -128,9 +128,9 @@ def ps_cache_html_path(arxiv_id: Identifier, version: int=0) -> str:
 def latexml_html_path(arxiv_id: Identifier, version: int=0) -> str:
     if not version:
         version = arxiv_id.version
-    path=f"{arxiv_id.filename}v{version}/"
+    path=f"{arxiv_id.filename}v{version}"
     if arxiv_id.extra:
                 path+=arxiv_id.extra
     else:
-        path+=arxiv_id.idv+".html"
+        path+='/'+arxiv_id.idv+".html"
     return path
