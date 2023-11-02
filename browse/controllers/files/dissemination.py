@@ -246,11 +246,8 @@ def _latexml_response(format: FileFormat,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
                     version: VersionEntry) -> Response:
-    
- 
-    resp=default_resp_fn(format,file,arxiv_id,docmeta,version)
-    resp.headers['Content-Type'] = "text/html"
-    return resp
+
+    return _guess_response(file,arxiv_id)
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""
