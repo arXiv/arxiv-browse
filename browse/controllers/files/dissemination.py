@@ -208,7 +208,7 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
     #try and serve specific file path
     if path:
         for file in file_list:
-            if file.name.endswith(path):
+            if path[1:]== _get_html_file_name(file.name): #first character of path is /
                 requested_file=file
                 break
         if requested_file is None: #couldn't find file with that path
