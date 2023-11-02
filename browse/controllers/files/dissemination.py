@@ -177,19 +177,6 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
-def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: # str here should be the conditions
-    """this is unused and leftover in case we want to reference peices from it, delete when done"""
-    obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-    if arxiv_id.extra:
-        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.extra}')
-        if isinstance(item, FileDoesNotExist):
-            return "NO_SOURCE" # TODO: This could be more specific
-    else:
-        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.idv}.html')
-        if isinstance(item, FileDoesNotExist):
-            return "ARTICLE_NOT_FOUND"
-    return item
-
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
