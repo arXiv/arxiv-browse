@@ -5,7 +5,7 @@ from email.utils import format_datetime
 from typing import Callable, Optional, Union, List
 import tempfile
 import mimetypes
-from io import BytesIO, StringIO
+from io import BytesIO
 from typing import Generator
 
 from browse.domain.identifier import Identifier, IdentifierException
@@ -14,10 +14,9 @@ from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
 from browse.domain import fileformat
 
-from browse.controllers.files import stream_gen, last_modified, add_time_headers
+from browse.controllers.files import last_modified, add_time_headers, cc_versioned
 
-from browse.services.object_store.fileobj import FileObj, UngzippedFileObj, FileDoesNotExist
-from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj
 
 from browse.services.html_processing import post_process_html
 
@@ -28,10 +27,9 @@ from browse.services.next_published import next_publish
 
 from browse.stream.file_processing import process_file
 from browse.stream.tarstream import tar_stream_gen
-from flask import Response, abort, make_response, render_template, current_app
+from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
-from werkzeug.exceptions import BadRequest, NotFound
-from google.cloud import storage
+from werkzeug.exceptions import  NotFound
 
 
 logger = logging.getLogger(__file__)
@@ -209,10 +207,12 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
             if file.name.endswith(".html"):
                 html_files.append(file)
                 file_names.append(_get_html_file_name(file.name))
+        if len(html_files)<1:
+            return unavailable(arxiv_id)
         if len(html_files)==1: #serve the only html file
             requested_file=html_files[0]
         else: #file selector for multiple html files
-            return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, file_names=file_names), 200, {})
+            return multiple_html_files(arxiv_id,file_names)
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
@@ -312,3 +312,13 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
     return make_response(render_template("dissemination/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
+
+def multiple_html_files(arxiv_id: str, file_names: List[str]) -> Response:
+    resp=make_response(render_template("dissemination/multiple_files.html",
+                                         arxiv_id=arxiv_id, file_names=file_names), 200, {})
+    resp.headers["Content-Type"] = "text/html"
+    if arxiv_id.has_version:
+        resp.headers['Cache-Control'] = cc_versioned()
+    else:
+        resp.headers['Expires'] = format_datetime(next_publish())
+    return resp
