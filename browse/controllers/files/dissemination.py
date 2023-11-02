@@ -158,6 +158,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return unavailable(arxiv_id)
     elif format==fileformat.pdf and item == "NOT_PDF":
         return not_pdf(arxiv_id)
+    elif format==fileformat.html and item == "NO_HTML":
+        return no_html(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif format==fileformat.pdf and isinstance(item, CannotBuildPdf):
@@ -297,6 +299,9 @@ def not_pdf(arxiv_id: str) -> Response:
     return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 404, {})
 
+def no_html(arxiv_id: str) -> Response:
+    return make_response(render_template("dissemination/no_html.html",
+                                         arxiv_id=arxiv_id), 404, {})
 
 def not_found(arxiv_id: str) -> Response:
     headers = {'Expires': format_datetime(next_publish())}

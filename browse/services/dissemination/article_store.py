@@ -51,6 +51,7 @@ Conditions = Union[
             "NO_SOURCE",  # Article and version exists but no source exists
             "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
             "NOT_PDF",  # format that doens't serve a pdf
+            "NO_HTML" #not native HTML, no HTML conversion available
             ],
     Deleted,
     CannotBuildPdf]
@@ -435,4 +436,4 @@ class ArticleStore():
             if file.exists():
                 return file
             else:
-                return "NO_SOURCE"
+                return "NO_HTML"

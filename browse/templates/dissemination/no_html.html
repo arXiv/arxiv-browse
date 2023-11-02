@@ -1,0 +1,9 @@
+{% extends "base/base.html" %}
+
+{# This is when an html version is unavailable for some reason, 
+    either we havent converted the latex or failed to, or its another type of document that isnt latex or native html #}
+
+{%- block content -%}
+<h1>No HTML for '{{arxiv_id.idv}}'</h1>
+<p>This file was not submitted as HTML and our automated HTML covnversion system has not converted it. Please inform help@arxiv.org if you think this is an error</p>
+{%- endblock -%}
