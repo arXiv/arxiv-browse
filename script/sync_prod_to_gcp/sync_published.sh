@@ -8,7 +8,7 @@ if [ -f "$PIDFILE" ]; then
     if ps -p $PID > /dev/null; then
         # Wait loop to wait until the lock is released
         while ps -p $PID > /dev/null; do
-            sleep 1
+            sleep 5
         done
     else
         rm "$PIDFILE"
