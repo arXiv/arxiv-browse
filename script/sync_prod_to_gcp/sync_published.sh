@@ -2,14 +2,14 @@
 
 PIDFILE="/var/run/sync_to_gcp_cron_job.pid"
 
-# Check if the PID file exists
-    if [ -f "$PIDFILE" ]; then
-    fi
 if [ -f "$PIDFILE" ]; then
     # Check if the process with the stored PID is still running
     PID=$(cat "$PIDFILE")
     if ps -p $PID > /dev/null; then
-        exit 0
+        # Wait loop to wait until the lock is released
+        while ps -p $PID > /dev/null; do
+            sleep 1
+        done
     else
         rm "$PIDFILE"
     fi
