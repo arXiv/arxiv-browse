@@ -3,6 +3,8 @@
 PIDFILE="/var/run/sync_to_gcp_cron_job.pid"
 
 # Check if the PID file exists
+    if [ -f "$PIDFILE" ]; then
+    fi
 if [ -f "$PIDFILE" ]; then
     # Check if the process with the stored PID is still running
     PID=$(cat "$PIDFILE")
@@ -16,7 +18,12 @@ echo $$ > "$PIDFILE"
 
 # Remove the lock file at exit.
 at_exit() {
-    rm "$PIDFILE"
+    if [ -f "$PIDFILE" ]; then
+        FILE_PID=$(cat "$PIDFILE")
+        if [ "$FILE_PID" -eq "$$" ]; then
+            rm -f "$PIDFILE"
+        fi
+    fi
 }
 trap at_exit EXIT
 
