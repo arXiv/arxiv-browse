@@ -28,10 +28,13 @@ def get_home_page() -> Response:
     """Get the data needed to generated the home page."""
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-    try:
-        response_data['document_count'] = _get_document_count()
-    except Exception as ex:
-        raise InternalServerError from ex
+
+    # We're removing the document count for now until we can
+    # do this without a DB query on each page
+    # try:
+    #     response_data['document_count'] = _get_document_count()
+    # except Exception as ex:
+    #     raise InternalServerError from ex
 
     response_data['groups'] = taxonomy.definitions.GROUPS
     response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE
