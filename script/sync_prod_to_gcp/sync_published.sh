@@ -1,4 +1,26 @@
 #!/bin/bash
+
+PIDFILE="/var/run/sync_to_gcp_cron_job.pid"
+
+# Check if the PID file exists
+if [ -f "$PIDFILE" ]; then
+    # Check if the process with the stored PID is still running
+    PID=$(cat "$PIDFILE")
+    if ps -p $PID > /dev/null; then
+        exit 0
+    else
+        rm "$PIDFILE"
+    fi
+fi
+echo $$ > "$PIDFILE"
+
+# Remove the lock file at exit.
+at_exit() {
+    rm "$PIDFILE"
+}
+trap at_exit EXIT
+
+
 TEXT_LOG_DIR=/opt_arxiv/e-prints/dissemination/sync_prod_to_gcp
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
@@ -39,7 +61,7 @@ python sync_published_to_gcp.py $TESTING_ARGS --json-log-dir $JSON_LOG_DIR  /dat
 deactivate
 
 if [ ! -z "$TESTING_ARGS" ]; then 
-  exit 0
+    exit 0
 fi
 
 if [ -s $TEXT_LOG_DIR/sync_published_$DATE.report ]
