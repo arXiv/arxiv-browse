@@ -5,7 +5,7 @@ from email.utils import format_datetime
 from typing import Callable, Optional, Union, List
 import tempfile
 import mimetypes
-from io import BytesIO, StringIO
+from io import BytesIO
 from typing import Generator
 
 from browse.domain.identifier import Identifier, IdentifierException
@@ -14,10 +14,9 @@ from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
 from browse.domain import fileformat
 
-from browse.controllers.files import stream_gen, last_modified, add_time_headers
+from browse.controllers.files import last_modified, add_time_headers, cc_versioned
 
-from browse.services.object_store.fileobj import FileObj, UngzippedFileObj, FileDoesNotExist
-from browse.services.object_store.object_store_gs import GsObjectStore
+from browse.services.object_store.fileobj import FileObj, UngzippedFileObj
 
 from browse.services.html_processing import post_process_html
 
@@ -28,10 +27,9 @@ from browse.services.next_published import next_publish
 
 from browse.stream.file_processing import process_file
 from browse.stream.tarstream import tar_stream_gen
-from flask import Response, abort, make_response, render_template, current_app
+from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
-from werkzeug.exceptions import BadRequest, NotFound
-from google.cloud import storage
+from werkzeug.exceptions import  NotFound
 
 
 logger = logging.getLogger(__file__)
@@ -141,14 +139,13 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     """
     arxiv_id_str = f"{archive}/{arxiv_id_str}" if archive else arxiv_id_str
     try:
-        if len(arxiv_id_str) > 40:
+        if len(arxiv_id_str) > 2048:
             abort(400)
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
-
     item = get_article_store().dissemination(format, arxiv_id)
     logger. debug(f"dissemination_for_id({arxiv_id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
@@ -159,6 +156,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return unavailable(arxiv_id)
     elif format==fileformat.pdf and item == "NOT_PDF":
         return not_pdf(arxiv_id)
+    elif format==fileformat.html and item == "NO_HTML":
+        return no_html(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif format==fileformat.pdf and isinstance(item, CannotBuildPdf):
@@ -176,32 +175,19 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version)
 
-def _get_latexml_conversion_file (arxiv_id: Identifier) -> Union[str, FileObj]: # str here should be the conditions
-    """this is unused and leftover in case we want to reference peices from it, delete when done"""
-    obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-    if arxiv_id.extra:
-        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.extra}')
-        if isinstance(item, FileDoesNotExist):
-            return "NO_SOURCE" # TODO: This could be more specific
-    else:
-        item = obj_store.to_obj(f'{arxiv_id.idv}/{arxiv_id.idv}.html')
-        if isinstance(item, FileDoesNotExist):
-            return "ARTICLE_NOT_FOUND"
-    return item
-
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
     
 def html_response_function(format: FileFormat,
-                file: List[FileObj],
+                file_list: Union[List[FileObj],FileObj],
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry)-> Response:
     if docmeta.source_format == 'html':
-        return html_source_response_function(file,arxiv_id)
+        return html_source_response_function(file_list,arxiv_id)
     else:
-        return default_resp_fn(format,file,arxiv_id,docmeta,version)
+        return _latexml_response(format,file_list,arxiv_id,docmeta,version)
 
 def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
     path=arxiv_id.extra
@@ -209,7 +195,7 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
     #try and serve specific file path
     if path:
         for file in file_list:
-            if file.name.endswith(path):
+            if path[1:]== _get_html_file_name(file.name): #first character of path is /
                 requested_file=file
                 break
         if requested_file is None: #couldn't find file with that path
@@ -221,10 +207,12 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
             if file.name.endswith(".html"):
                 html_files.append(file)
                 file_names.append(_get_html_file_name(file.name))
+        if len(html_files)<1:
+            return unavailable(arxiv_id)
         if len(html_files)==1: #serve the only html file
             requested_file=html_files[0]
         else: #file selector for multiple html files
-            return make_response(render_template("dissemination/multiple_files.html",arxiv_id=arxiv_id, file_names=file_names), 200, {})
+            return multiple_html_files(arxiv_id,file_names)
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
@@ -242,9 +230,13 @@ def _get_html_file_name(name:str) -> str:
         result= parts[-1]
     return result
 
-def _latexml_response(file: FileObj, arxiv_id:Identifier) -> Response:
-    #TODO actually Erin can do this part, Mark just needs to call it
-    pass
+def _latexml_response(format: FileFormat,
+                    file: FileObj,
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry) -> Response:
+
+    return _guess_response(file,arxiv_id)
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""
@@ -294,6 +286,9 @@ def not_pdf(arxiv_id: str) -> Response:
     return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 404, {})
 
+def no_html(arxiv_id: str) -> Response:
+    return make_response(render_template("dissemination/no_html.html",
+                                         arxiv_id=arxiv_id), 404, {})
 
 def not_found(arxiv_id: str) -> Response:
     headers = {'Expires': format_datetime(next_publish())}
@@ -317,3 +312,13 @@ def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
     return make_response(render_template("dissemination/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
+
+def multiple_html_files(arxiv_id: str, file_names: List[str]) -> Response:
+    resp=make_response(render_template("dissemination/multiple_files.html",
+                                         arxiv_id=arxiv_id, file_names=file_names), 200, {})
+    resp.headers["Content-Type"] = "text/html"
+    if arxiv_id.has_version:
+        resp.headers['Cache-Control'] = cc_versioned()
+    else:
+        resp.headers['Expires'] = format_datetime(next_publish())
+    return resp

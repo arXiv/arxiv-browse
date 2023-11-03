@@ -17,7 +17,7 @@ from flask_s3 import FlaskS3
 # from arxiv.users.auth import Auth
 
 from browse.config import Settings
-from browse.routes import ui, dissemination, src, unimplemented, redirects, processing
+from browse.routes import ui, dissemination, src, unimplemented, redirects
 from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
@@ -44,7 +44,6 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     #Auth(app)
     app.register_blueprint(ui.blueprint)
     app.register_blueprint(dissemination.blueprint)
-    app.register_blueprint(processing.blueprint)
     app.register_blueprint(src.blueprint)
     app.register_blueprint(redirects.blueprint)
     app.register_blueprint(unimplemented.blueprint)
