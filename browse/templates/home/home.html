@@ -92,7 +92,8 @@
       <br/>includes:
       {%- elif group_key == 'cs' -%}
       <br/>includes:
-      (see <a href="{{url_for('archive', archive=archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
+      {#- (see <a href="{{url_for('archive', archive=archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
+      -#}
       {%- elif group_key != 'grp_physics' -%}
       <br/>includes: (see <a href="{{url_for('help_archive_description', archive=archive_key)}}" id="details-{{ archive_key }}" aria-labelledby="details-{{ archive_key }} main-{{ archive_key }}">detailed description</a>):
       {%- endif -%}
