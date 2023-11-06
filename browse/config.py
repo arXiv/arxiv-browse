@@ -135,7 +135,7 @@ class Settings(BaseSettings):
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
-    DOCUMENT_LATEST_VERSIONS_PATH: str = "gs://arxiv-production-data/ftp"
+    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
     """Paths to .abs and source files.
 
         This can start with gs:// to use Google Storage."""
