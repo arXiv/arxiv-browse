@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from browse.domain.license import ASSUMED_LICENSE_URI
 
 

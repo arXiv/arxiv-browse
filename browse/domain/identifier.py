@@ -2,19 +2,21 @@
 import json
 import re
 from re import RegexFlag
-from typing import Match, Optional, Union, Tuple, Callable, List
+from typing import Callable, List, Match, Optional, Tuple, Union
+
 from arxiv import taxonomy
+
 
 # arXiv ID format used from 1991 to 2007-03
 RE_ARXIV_OLD_ID = re.compile(
     r'^(?P<archive>[a-z]{1,}(\-[a-z]{2,})?)(\.([a-zA-Z\-]{2,}))?\/'
     r'(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))(?P<num>\d\d\d)'
-    r'(v(?P<version>[1-9]\d*))?([#\/].*)?$')
+    r'(v(?P<version>[1-9]\d*))?(?P<extra>[#\/].*)?$')
 
 # arXiv ID format used from 2007-04 to present
 RE_ARXIV_NEW_ID = re.compile(
     r'^(?P<yymm>(?P<yy>\d\d)(?P<mm>\d\d))\.(?P<num>\d{4,5})'
-    r'(v(?P<version>[1-9]\d*))?([#\/].*)?$'
+    r'(v(?P<version>[1-9]\d*))?(?P<extra>[#\/].*)?$'
 )
 
 Sub_type = List[Tuple[str, Union[str, Callable[[Match[str]], str]],
@@ -34,13 +36,9 @@ SUBSTITUTIONS: Sub_type = [
 class IdentifierException(Exception):
     """Error class for general arXiv identifier exceptions."""
 
-    pass
-
 
 class IdentifierIsArchiveException(IdentifierException):
     """Error class for case where supplied arXiv identifier is an archive."""
-
-    pass
 
 
 class Identifier:
@@ -59,6 +57,7 @@ class Identifier:
         self.year: Optional[int] = None
         self.month: Optional[int] = None
         self.is_old_id: Optional[bool] = None
+        self.extra: Optional[str] = None
 
         if self.ids in taxonomy.definitions.ARCHIVES:
             raise IdentifierIsArchiveException(
@@ -98,7 +97,7 @@ class Identifier:
                or (self.num > 9999 and self.year < 2015) \
                or (self.num > 999 and self.is_old_id):
                 raise IdentifierException(
-                    'invalid arXiv identifier {}'.format(self.ids)
+                    f'invalid arXiv identifier {self.ids}'
                 )
         self.has_version: bool = False
         self.idv: str = self.id
@@ -149,10 +148,11 @@ class Identifier:
 
         if match_obj.group('version'):
             self.version = int(match_obj.group('version'))
-        self.filename = '{}{:03d}'.format(
-            match_obj.group('yymm'),
-            int(match_obj.group('num')))
+        self.filename = f'{match_obj.group("yymm")}{int(match_obj.group("num")):03d}'
         self.id = f'{self.archive}/{self.filename}'
+
+        if match_obj.group('extra'):
+            self.extra = match_obj.group('extra')
 
     def _parse_new_id(self, match_obj: Match[str]) -> None:
         """
@@ -180,14 +180,13 @@ class Identifier:
         # NB: this works only until 2099
         self.year = int(match_obj.group('yy')) + 2000
         if self.year >= 2015:
-            self.id = '{:04d}.{:05d}'.format(
-                int(match_obj.group('yymm')),
-                int(match_obj.group('num')))
+            self.id = f'{int(match_obj.group("yymm")):04d}.{int(match_obj.group("num")):05d}'
         else:
-            self.id = '{:04d}.{:04d}'.format(
-                int(match_obj.group('yymm')),
-                int(match_obj.group('num')))
+            self.id = f'{int(match_obj.group("yymm")):04d}.{int(match_obj.group("num")):04d}'
         self.filename = self.id
+
+        if match_obj.group('extra'):
+            self.extra = match_obj.group('extra')
 
     def __str__(self) -> str:
         """Return the string representation of the instance in json."""

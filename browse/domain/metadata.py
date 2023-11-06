@@ -1,24 +1,17 @@
 """Representations of arXiv document metadata."""
-import collections
-from typing import List, Optional, Iterator, Set
-from datetime import datetime
+import re
+from collections import abc
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Iterator, List, Optional, Set
 
 from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
+
+from browse.domain.category import Category
 from browse.domain.identifier import Identifier
 from browse.domain.license import License
-from browse.domain.category import Category
-
-
-@dataclass(frozen=True)
-class SourceType:
-    """Represents arXiv article source file type."""
-
-    code: str
-    """Internal code for the source type."""
-
-    __slots__ = ['code']
+from browse.domain.version import VersionEntry
 
 
 @dataclass(frozen=True)
@@ -32,25 +25,6 @@ class Submitter:
     """Email address."""
 
     __slots__ = ['name', 'email']
-
-
-@dataclass(frozen=True)
-class VersionEntry:
-    """Represents a single arXiv article version history entry."""
-
-    version: int
-
-    raw: str
-    """Raw history entry, e.g. as parsed from .abs file."""
-
-    submitted_date: datetime
-    """Date for the entry."""
-
-    size_kilobytes: int = 0
-    """Size of the article source, in kilobytes."""
-
-    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
-    """Source file type."""
 
 
 @dataclass(frozen=True)
@@ -89,7 +63,7 @@ class DocMetadata:
     """arXiv paper identifier string with version affix, e.g. 1810.12345v2."""
 
     arxiv_identifier: Identifier
-    """arXiv Identifier for this paper. Does not include version data."""
+    """arXiv Identifier for this paper."""
 
     title: str
     abstract: str
@@ -185,11 +159,15 @@ class DocMetadata:
             else:
                 return []
 
+
         if self.primary_category:
             options = {
                 self.primary_category.id: True,
                 taxonomy.definitions.CATEGORIES[self.primary_category.id]['in_archive']: True
             }
+        else:
+            options = {}
+
         for category in self.secondary_categories:
             options[category.id] = True
             in_archive = taxonomy.definitions.CATEGORIES[category.id]['in_archive']
@@ -205,10 +183,33 @@ class DocMetadata:
         """
         if self.private:
             return 1
-        if not isinstance(self.version_history, collections.Iterable):
+        if not isinstance(self.version_history, abc.Iterable):
             raise ValueError(
-                'version_history was not an Iterable for %s' % self.arxiv_id_v)
+                f'version_history was not an Iterable for {self.arxiv_id_v}')
         return max(map(lambda ve: ve.version, self.version_history))
+
+
+    def get_version(self, version:Optional[int] = None) -> Optional[VersionEntry]:
+        """Gets `VersionEntry` for `version`.
+
+        Returns None if version does not exist."""
+        if version is None:
+            if self.arxiv_identifier.has_version:
+                version = self.arxiv_identifier.version
+            else:
+                version = self.highest_version()
+
+        if version < 1:
+            raise ValueError("Version must be > 1")
+        versions = list(
+            v for v in self.version_history if v.version == version)
+        if len(versions) > 1:
+            raise ValueError(
+                '{self.arxiv_id} version_history had more than one version {version}')
+        if not versions:
+            return None
+        else:
+            return versions[0]
 
     def get_datetime_of_version(
             self, version: Optional[int]) -> Optional[datetime]:
@@ -224,8 +225,7 @@ class DocMetadata:
             v for v in self.version_history if v.version == version)
         if len(versions) > 1:
             raise ValueError(
-                '%s version_history had more than one version %i' % (
-                    self.arxiv_id, version))
+                '{self.arxiv_id} version_history had more than one version {version}')
         if not versions:
             return None
         else:
@@ -264,3 +264,46 @@ class DocMetadata:
         else:
             url = canonical_url(self.arxiv_identifier.idv)
         return url
+
+    def __repr__(self) -> str:
+        return f"DocMetadata({self.arxiv_id_v or self.arxiv_id})"
+
+    def raw(self) -> str:
+        """Produces a txt output of the object.
+
+        Based on arXiv::Schema:Role:WrtieAbs"""
+        rv = "------------------------------------------------------------------------------\n"
+        rv += "\\\n"
+        rv += f"arXiv:{self.arxiv_id}\n"
+        rv += f"From: {self.submitter.name}\n"
+        for version in self.version_history:
+            rev = "" if version.version == 1 else f" (revised v{version.version})"
+            rv += f"Date{rev}: {version.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z')}   "\
+                f"({version.size_kilobytes}kb"
+            if version.source_type.code and version.source_type.code.upper() == version.source_type.code:
+                rv += f",{version.source_type.code}"
+            rv += ")\n"
+
+        rv += "\n"
+        rv += f"Title: {self.title}\n"
+        rv += f"Authors: {self.authors}\n"
+        rv += f"Categories: {self.categories}\n"
+        if self.comments:
+            rv += f"Comments: {self.comments}\n"
+        # skipping proxy to avoid harvesting of email addresses
+        if self.report_num:
+            rv += "Report-no: {self.report_num}\n"
+        if self.msc_class:
+            rv += f"MSC-class: {self.msc_class}\n"
+        if self.acm_class:
+            rv += f"ACM-class: {self.acm_class}\n"
+        if self.journal_ref:
+            rv += f"Journal-ref: {self.journal_ref}\n"
+        if self.doi:
+            rv += f"DOI: {self.doi}\n"
+        if self.license:
+            rv += f"License: {self.license.recorded_uri}\n"
+        rv += "\\\n"
+        rv += f"  {self.abstract}\n"
+        rv += "\\"
+        return rv

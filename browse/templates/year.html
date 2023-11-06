@@ -17,26 +17,23 @@
 <i>cross-listings to {{archive_id}}</i> in {{year}}
 (each '|' represents 20 articles):</p>
 
-<h2>TODO fake data as of 2019-03-04</h2>
-
 <ul>
- {% for month in months %}
+ {% for month in month_data %}
     <li>
-      <a href="{{month['url']}}">{{month['yymm']}}
-      </a>
-      {% for txt, url in month['art'] -%}
+      <a href="{{month['url']}}">{{month.yymm}}</a>
+      {% for txt, url in month.art -%}
         {%- if url  -%}
           <a href={{url}}>{{txt}}</a>
         {%- else -%}
           {{txt}}
         {%- endif -%}
       {%- endfor %}
-      <b>{{month['new']|default('0',true)}}</b> + {{month['cross']|default('0',true)}}
+      <b>{{month.month_count.new}}</b> + {{month.month_count.cross}} ({{month.my}})
   </li>
   {% endfor %}
 </ul>
 
-<p>{{year}} totals: <b>{{listing['new_count']|default('unknown')}} articles</b> + <i>{{listing['cross_count']|default('unknown')}} cross-lists</i></p>
+<p>{{year}} totals: <b>{{listing.new_count|default('unknown')}} articles</b> + <i>{{listing.cross_count|default('unknown')}} cross-lists</i></p>
 
 <p><b>Other years:</b>
       <li>Article statistics by year:<br>

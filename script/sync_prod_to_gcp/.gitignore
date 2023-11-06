@@ -1,0 +1,4 @@
+sync.venv
+test/test-output/
+test/arxiv-development_arxiv-stanza.json
+test/stanza.db

@@ -1,0 +1,458 @@
+Date: Fri,  3 Mar 23 01:36:02 GMT
+Subject: astro-ph.CO daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: physics@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+Cosmology and Nongalactic Astrophysics
+ received from  Wed  1 Mar 23 19:00:00 GMT  to  Thu  2 Mar 23 19:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00769
+Date: Wed, 1 Mar 2023 19:00:06 GMT   (32463kb,D)
+
+Title: Searching for galaxy-scale strong-lenses in galaxy clusters with deep
+  networks -- I: methodology and network performance
+Authors: G. Angora, P. Rosati, M. Meneghetti, M. Brescia, A. Mercurio, C.
+  Grillo, P. Bergamini, A. Acebron, G. Caminha, M. Nonino, L. Tortorelli, L.
+  Bazzanini, E. Vanzella
+Categories: astro-ph.CO astro-ph.IM
+Comments: 17 pages, 13 figures, submitted to A&A
+\\
+  Galaxy-scale strong lenses in galaxy clusters provide a unique tool to
+investigate their inner mass distribution and the sub-halo density profiles in
+the low-mass regime, which can be compared with the predictions from
+cosmological simulations. We search for galaxy-galaxy strong-lensing systems in
+HST multi-band imaging of galaxy cluster cores from the CLASH and HFF programs
+by exploring the classification capabilities of deep learning techniques.
+Convolutional neural networks are trained utilising highly-realistic
+simulations of galaxy-scale strong lenses injected into the HST cluster fields
+around cluster members. To this aim, we take advantage of extensive
+spectroscopic information on member galaxies in 16 clusters and the accurate
+knowledge of the deflection fields in half of these from high-precision strong
+lensing models. Using observationally-based distributions, we sample
+magnitudes, redshifts and sizes of the background galaxy population. By placing
+these sources within the secondary caustics associated with cluster galaxies,
+we build a sample of ~3000 galaxy-galaxy strong lenses which preserve the full
+complexity of real multi-colour data and produce a wide diversity of strong
+lensing configurations. We study two deep learning networks processing a large
+sample of image cutouts in three HST/ACS bands, and we quantify their
+classification performance using several standard metrics. We find that both
+networks achieve a very good trade-off between purity and completeness
+(85%-95%), as well as good stability with fluctuations within 2%-4%. We
+characterise the limited number of false negatives and false positives in terms
+of the physical properties of the background sources and cluster members. We
+also demonstrate the neural networks' high degree of generalisation by applying
+our method to HST observations of 12 clusters with previously known
+galaxy-scale lensing systems.
+\\ ( https://arxiv.org/abs/2303.00769 ,  32463kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00916
+Date: Thu, 2 Mar 2023 02:24:51 GMT   (96kb,D)
+
+Title: CMB-S4: Forecasting Constraints on $f_\mathrm{NL}$ Through
+  $\mu$-distortion Anisotropy
+Authors: David Zegeye, Federico Bianchini, J. Richard Bond, Jens Chluba, Thomas
+  Crawford, Giulio Fabbian, Vera Gluscevic, Daniel Grin, J. Colin Hill, P.
+  Daniel Meerburg, Giorgio Orlando, Bruce Partridge, Christian L. Reichardt,
+  Mathieu Remazeilles, Douglas Scott, Edward J. Wollack, and The CMB-S4
+  Collaboration
+Categories: astro-ph.CO gr-qc
+Comments: 19 pages, 6 figures
+\\
+  Diffusion damping of the cosmic microwave background (CMB) power spectrum
+results from imperfect photon-baryon coupling in the pre-recombination plasma.
+At redshift $5 \times 10^4 < z < 2 \times 10^6$, the plasma acquires an
+effective chemical potential, and energy injections from acoustic damping in
+this era create $\mu$-type spectral distortions of the CMB. These $\mu$
+distortions trace the underlying photon density fluctuations, probing the
+primordial power spectrum in short-wavelength modes $k_\mathrm{S}$ over the
+range $50 \ \mathrm{Mpc}^{-1} \lesssim k \lesssim 10^4 \ \mathrm{Mpc}^{-1}$.
+Small-scale power modulated by long-wavelength modes $k_\mathrm{L}$ from
+squeezed-limit non-Gaussianities introduces cross-correlations between CMB
+temperature anisotropies and $\mu$ distortions. Under single-field inflation
+models, $\mu \times T$ correlations measured from an observer in an inertial
+frame should vanish up to a factor of $(k_\mathrm{L}/k_\mathrm{S})^2 \ll 1$.
+Thus, any measurable correlation rules out single-field inflation models. We
+forecast how well the next-generation ground-based CMB experiment CMB-S4 will
+be able to constrain primordial squeezed-limit non-Gaussianity, parameterized
+by $f_\mathrm{NL}$, using measurements of $C_{\ell}^{\mu T}$ as well as
+$C_{\ell}^{\mu E}$ from CMB $E$ modes. Using current experimental
+specifications and foreground modeling, we expect $\sigma(f_\mathrm{NL})
+\lesssim 1000$. This is roughly four times better than the current limit on
+$f_\mathrm{NL}$ using $\mu \times T$ and $\mu \times E$ correlations from
+Planck and is comparable to what is achievable with LiteBIRD, demonstrating the
+power of the CMB-S4 experiment. This measurement is at an effective scale of $k
+\simeq 740 \ \text{Mpc}^{-1}$ and is thus highly complementary to measurements
+at larger scales from primary CMB and large-scale structure.
+\\ ( https://arxiv.org/abs/2303.00916 ,  96kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00961
+Date: Thu, 2 Mar 2023 04:46:00 GMT   (1106kb,D)
+
+Title: Observational constraints on non-cold dark matter and phenomenological
+  emergent dark energy
+Authors: Yan-Hong Yao, Jun-Chao Wang, Xin-He Meng
+Categories: astro-ph.CO
+Comments: 7 pages, 2 figure
+\\
+  Although almost all of the models proposed to resolve several long-standing
+problems making $\Lambda$CDM imperfect assume that dark matter is pressureless,
+the probability that dark matter is non-cold is still not excluded by current
+observations. Therefore, in this article, we treat the equation of state for
+dark matter as a free parameter, and apply observational data to investigate
+the non-coldness of dark matter. Impressing by the simplicity of the
+phenomenological emergent dark energy (PEDE) and its ability to relieve the
+Hubble tension, we propose the PEDE+$w$DM model based on PEDE and non-cold dark
+matter. We then place constraints on this model in light of the Planck 2018
+Cosmic Microwave Background (CMB) anisotropies, baryon acoustic
+oscillation(BAO) measurements and the Pantheon compilation of Type Ia
+supernovae. The results indicate a preference for a negative dark matter
+equation of state at $95\%$ CL for all data sets except CMB alone, which
+suggests that the non-coldness assumption of dark matter worth to be
+investigated further in order to understand the nature of dark matter.
+\\ ( https://arxiv.org/abs/2303.00961 ,  1106kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00999
+Date: Thu, 2 Mar 2023 06:26:46 GMT   (1907kb,D)
+
+Title: Implications of multi-axion dark matter on structure formation
+Authors: Chong-Bin Chen, Jiro Soda
+Categories: astro-ph.CO gr-qc
+Comments: 33 pages, 17 figures
+\\
+  Axions are candidates for dark matter in the universe. We developed an
+accurate numerical code to study multi-axion dark matter. As an interesting
+example, we investigate a mixed dark matter model consisting of cold dark
+matter (CDM) and two-axion dark matter. We analyze the growth of the structure
+numerically and analytically. We find that an effective single axion with an
+effective mass and an effective abundance is useful to characterize the
+two-axion cosmology. Moreover, we generalize the effective single axion
+description to multi-axion dark matter cosmology. We also compare the results
+with those of warm dark matter (WDM) model. Moreover, we calculate halo mass
+functions for the mixed model and determine the mass function as a function of
+masses and axion abundance.
+\\ ( https://arxiv.org/abs/2303.00999 ,  1907kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01198
+Date: Thu, 2 Mar 2023 12:28:09 GMT   (8824kb,D)
+
+Title: Growth-rate measurement with type-Ia supernovae using ZTF survey
+  simulations
+Authors: Bastien Carreres, Julian E. Bautista, Fabrice Feinstein, Dominique
+  Fouchez, Benjamin Racine, Mathew Smith, Mellissa Amenouche, Marie Aubert,
+  Suhail Dhawan, Madeleine Ginolin, Ariel Goobar, Philippe Gris, Leander
+  Lacroix, Eric Nuss, Nicolas Regnault, Mickael Rigault, Estelle Robert,
+  Philippe Rosnet, Kelian Sommer, Richard Dekany, Steven L. Groom, Niharika
+  Sravan, Frank J. Masci and Josiah Purdum
+Categories: astro-ph.CO
+Comments: 20 pages, 13 figures
+\\
+  Measurements of the growth rate of structures at $z < 0.1$ with peculiar
+velocity surveys have the potential of testing the validity of general
+relativity on cosmic scales. In this work, we present growth-rate measurements
+from realistic simulated sets of type-Ia supernovae (SNe Ia) from the Zwicky
+Transient Facility (ZTF). We describe our simulation methodology, the
+light-curve fitting and peculiar velocity estimation. Using the maximum
+likelihood method, we derive constraints on $f\sigma_8$ using only ZTF SN Ia
+peculiar velocities. We carefully tested the method and we quantified biases
+due to selection effects (photometric detection, spectroscopic follow-up for
+typing) on several independent realizations. We simulated the equivalent of 6
+years of ZTF data, and considering an unbiased spectroscopically typed sample
+at $z < 0.06$, we obtained unbiased estimates of $f\sigma_8$ with an average
+uncertainty of 19% precision. We also investigated the information gain in
+applying bias correction methods. Our results validate our framework which can
+be used on real ZTF data.
+\\ ( https://arxiv.org/abs/2303.01198 ,  8824kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00773 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:01:06 GMT   (617kb,D)
+
+Title: Revisiting the alignment of radio galaxies in the ELAIS-N1 field
+Authors: Marco Simonte, Heinz Andernach, Marcus Brueggen, Philip Best, Erik
+  Osinga
+Categories: astro-ph.GA astro-ph.CO
+Comments: 10 pages, 6 figures, 2 tables Accepted for publication in A&A
+\\
+  Aims. Previous studies reported an alignment of the major axes of radio
+galaxies on various angular scales. Here, we study the alignment of radio
+galaxies in the ELAIS-N1 Low Frequency ARray (LOFAR) deep field, which covers
+an area of 25 $\rm deg^2$. \newline Methods. The low noise level of about 20$
+\rm ~ \mu Jy/beam$ of the LOFAR deep field observations at 150 MHz enabled the
+identification of 447 extended ($> 30 \rm ''$) radio galaxies for which we have
+measured the major axis position angle. We found that 95\% of these sources
+have either photometric or spectroscopic redshifts, which we then used for a
+three-dimensional analysis. \newline Results. We show the distribution of the
+position angles of radio galaxies in the ELAIS-N1 field and perform multiple
+statistical tests to check whether the radio galaxies are randomly oriented. We
+found that the distribution of position angles is consistent with being
+uniform. Two peaks around position angles of 50 and 140$\rm~ deg$ are spurious
+and are not caused by an alignment, as shown by a 3D analysis. In conclusion,
+our results do not support a 2D or 3D alignment of radio galaxies on scales
+smaller than $\sim 4 \rm ~ deg$.
+\\ ( https://arxiv.org/abs/2303.00773 ,  617kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01014 (*cross-listing*)
+Date: Thu, 2 Mar 2023 07:03:13 GMT   (11666kb,D)
+
+Title: Spectral analysis of a parsec-scale jet in M87: Observational constraint
+  on the magnetic field strengths in the jet
+Authors: Hyunwook Ro, Motoki Kino, Bong Won Sohn, Kazuhiro Hada, Jongho Park,
+  Masanori Nakamura, Yuzhu Cui, Kunwoo Yi, Aeree Chung, Jeffrey Hodgson,
+  Tomohisa Kawashima, Tao An, Sascha Trippe, Juan-Carlos Algaba, Jae-Young Kim,
+  Satoko Sawada-Satoh, Kiyoaki Wajima, Zhiqiang Shen, Xiaopeng Cheng, Ilje Cho,
+  Wu Jiang, Taehyun Jung, Jee-Won Lee, Kotaro Niinuma, Junghwan Oh, Fumie
+  Tazaki, Guang-Yao Zhao, Kazunori Akiyama, Mareki Honma, Jeong Ae Lee, Rusen
+  Lu, Yingkang Zhang, Keiichi Asada, Lang Cui, Yoshiaki Hagiwara, Tomoya
+  Hirota, Noriyuki Kawaguchi, Shoko Koyama, Sang-Sung Lee, Se-Jin Oh, Koichiro
+  Sugiyama, Mieko Takamura, Xuezheng Wang, Ju-Yeon Hwang, Dong-Kyu Jung,
+  Hyo-Ryoung Kim, Jeong-Sook Kim, Hideyuki Kobayashi, Chung-Sik Oh, Tomoaki
+  Oyama, Duk-Gyoo Roh, Jae-Hwan Yeom
+Categories: astro-ph.HE astro-ph.CO
+Comments: 16 pages, 9 figures. Accepted for publication in Astronomy &
+  Astrophysics
+\\
+  Because of its proximity and the large size of its black hole, M87 is one of
+the best targets for studying the launching mechanism of active galactic
+nucleus jets. Currently, magnetic fields are considered to be an essential
+factor in the launching and accelerating of the jet. However, current
+observational estimates of the magnetic field strength of the M87 jet are
+limited to the innermost part of the jet or to HST-1. No attempt has yet been
+made to measure the magnetic field strength in between. We aim to infer the
+magnetic field strength of the M87 jet out to a distance of several thousand
+$r_s$ by tracking the distance-dependent changes in the synchrotron spectrum of
+the jet from high-resolution very long baseline interferometry observations. In
+order to obtain high-quality spectral index maps, quasi-simultaneous
+observations at 22 and 43 GHz were conducted using the KVN and VERA Array
+(KaVA) and the VLBA. We compared the spectral index distributions obtained from
+the observations with a model and placed limits on the magnetic field strengths
+as a function of distance. The overall spectral morphology is broadly
+consistent over the course of these observations. The observed synchrotron
+spectrum rapidly steepens from $\alpha_{22-43 GHz}$ ~ -0.7 at ~ 2 mas to
+$\alpha_{22-43 GHz}$ ~ -2.5 at ~ 6 mas. A spectral index model in which
+nonthermal electron injections inside the jet decrease with distance can
+adequately reproduce the observed trend. This suggests the magnetic field
+strength of the jet at a distance of 2 - 10 mas (~ 900 $r_s$ - ~ 4500 $r_s$ in
+the deprojected distance) has a range of $B=(0.3 - 1.0 G)(z/2 mas)^{-0.73}$.
+Extrapolating to the EHT scale yields consistent results, suggesting that the
+majority of the magnetic flux of the jet near the black hole is preserved out
+to ~ 4500 $r_s$ without significant dissipation.
+\\ ( https://arxiv.org/abs/2303.01014 ,  11666kb)
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2104.03145
+replaced with revised version Thu, 2 Mar 2023 11:00:13 GMT   (1527kb,D)
+
+Title: Isotropic X-ray bound on Primordial Black Hole Dark Matter
+Authors: J. Iguaz, P. D. Serpico, T. Siegert
+Categories: astro-ph.CO hep-ph
+Comments: 10 pages, 14 figures Clarification added and a software output
+  interpretation mistake corrected; only minor changes to the results
+Report-no: LAPTH-014/21
+Journal-ref: Phys. Rev. D 103, 103025 (2021)
+DOI: 10.1103/PhysRevD.103.103025
+\\ ( https://arxiv.org/abs/2104.03145 ,  1527kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2207.08435
+replaced with revised version Thu, 2 Mar 2023 18:51:38 GMT   (2226kb,D)
+
+Title: Robust Simulation-Based Inference in Cosmology with Bayesian Neural
+  Networks
+Authors: Pablo Lemos, Miles Cranmer, Muntazir Abidi, ChangHoon Hahn, Michael
+  Eickenberg, Elena Massara, David Yallup, Shirley Ho
+Categories: astro-ph.CO cs.LG
+Comments: 5 pages, 3 figures. Preliminary version accepted at the ML4Astro
+  Machine Learning for Astrophysics Workshop at the Thirty-ninth International
+  Conference on Machine Learning (ICML 2022). Final version published at
+  Machine Learning: Science and Technology
+Journal-ref: Mach. Learn.: Sci. Technol. 4 01LT01 (2023)
+DOI: 10.1088/2632-2153/acbb53
+\\ ( https://arxiv.org/abs/2207.08435 ,  2226kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2210.07075
+replaced with revised version Thu, 2 Mar 2023 11:14:09 GMT   (5372kb,D)
+
+Title: Conformal model for gravitational waves and dark matter: A status update
+Authors: Maciej Kierkla, Alexandros Karam, Bogumila Swiezewska
+Categories: astro-ph.CO hep-ph hep-th
+Journal-ref: JHEP03(2023)007
+DOI: 10.1007/JHEP03(2023)007
+\\ ( https://arxiv.org/abs/2210.07075 ,  5372kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.01354
+replaced with revised version Thu, 2 Mar 2023 04:25:14 GMT   (1834kb,D)
+
+Title: Cosmological constraints from HSC survey first-year data using deep
+  learning
+Authors: Tianhuan Lu, Zolt\'an Haiman, and Xiangchong Li
+Categories: astro-ph.CO
+Comments: 22 pages, 14 figures
+\\ ( https://arxiv.org/abs/2301.01354 ,  1834kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.13671
+replaced with revised version Thu, 2 Mar 2023 16:57:08 GMT   (118kb,D)
+
+Title: Questioning the $H_0$ tension via the look-back time
+Authors: Salvatore Capozziello, Giuseppe Sarracino, and Alessandro D.A.M.
+  Spallicci
+Categories: astro-ph.CO gr-qc hep-th
+Comments: 8 pages, 1 figure, accepted for publication in Physics of the Dark
+  Universe
+\\ ( https://arxiv.org/abs/2302.13671 ,  118kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2111.11495
+replaced with revised version Wed, 1 Mar 2023 22:27:44 GMT   (17996kb,D)
+
+Title: The Simons Observatory: Magnetic Shielding Measurements for the
+  Universal Multiplexing Module
+Authors: Zachary B. Huber, Yaqiong Li, Eve M. Vavagiakis, Steve K. Choi, Jake
+  Connors, Nicholas F. Cothard, Cody J. Duell, Nicholas Galitzki, Erin Healy,
+  Johannes Hubmayr, Bradley R. Johnson, Benjamin Keller, Heather McCarrick,
+  Michael D. Niemack, Yuhan Wang, Zhilei Xu, Kaiwen Zheng
+Categories: astro-ph.IM astro-ph.CO physics.ins-det
+Comments: 7 pages, 4 figure, conference proceedings submitted to the Journal of
+  Low Temperature Physics; includes updates in response to reviewer comments
+Journal-ref: J Low Temp Phys 209, 667-676 (2022)
+DOI: 10.1007/s10909-022-02875-w
+\\ ( https://arxiv.org/abs/2111.11495 ,  17996kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2206.11293 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 14:37:26 GMT   (1153kb,D)
+
+Title: Dark Matter Dilution Mechanism through the Lens of Large Scale Structure
+Authors: Miha Nemev\v{s}ek, Yue Zhang
+Categories: hep-ph astro-ph.CO
+Comments: 6 pages, 4 figures. v2: added supplement material. Accepted for
+  publication in Physical Review Letters
+\\ ( https://arxiv.org/abs/2206.11293 ,  1153kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2206.14228 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 02:25:52 GMT   (20kb)
+
+Title: A comparison between the Jordan and Einstein Frames in Brans-Dicke
+  theories with torsion
+Authors: R.Gonzalez Quaglia, Gabriel German
+Categories: gr-qc astro-ph.CO hep-ph hep-th
+Comments: 25 pages, references added and improved manuscript. Accepted for
+  publication in EPJP
+\\ ( https://arxiv.org/abs/2206.14228 ,  20kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2208.08843
+replaced with revised version Thu, 2 Mar 2023 16:29:24 GMT   (44kb,D)
+
+Title: Catastrophic Dark Matter Capture
+Authors: Ruth Durrer and Serge Parnovsky
+Categories: astro-ph.GA astro-ph.CO
+Comments: 23 pages 2 figures, version accepted for publication in PRD
+\\ ( https://arxiv.org/abs/2208.08843 ,  44kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2208.09589 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 06:58:07 GMT   (15kb)
+
+Title: On the nature of cosmic strings in the brane world
+Authors: Chia-Min Lin
+Categories: hep-th astro-ph.CO gr-qc hep-ph
+Comments: 11 pages, 3 figures, the version to be published in the Chinese
+  Journal of Physics
+\\ ( https://arxiv.org/abs/2208.09589 ,  15kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2211.12027 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 05:38:34 GMT   (1192kb,D)
+
+Title: Non-perturbative analysis for a massless minimal quantum scalar with
+  $V(\phi)=\lambda \phi^4/4!+\beta \phi^3/3!$ in the inflationary de Sitter
+  spacetime
+Authors: Sourav Bhattacharya, Nitin Joshi
+Categories: hep-th astro-ph.CO gr-qc
+Comments: v3, 38pp, 11 figures, 1 table; Added figure, references, discussions
+  and clarifications; Improved presentation; Accepted in JCAP
+\\ ( https://arxiv.org/abs/2211.12027 ,  1192kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2211.13988 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 17:33:29 GMT   (630kb,D)
+
+Title: Prospects of Probing Dark Matter Condensates with Gravitational Waves
+Authors: Shreya Banerjee, Sayantani Bera, David F. Mota
+Categories: gr-qc astro-ph.CO
+Comments: 26 pages, 6 figures; references added, typos corrected; version
+  accepted for publication in JCAP
+\\ ( https://arxiv.org/abs/2211.13988 ,  630kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2212.03466 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 14:50:52 GMT   (323kb,D)
+
+Title: Cosmic QCD transition-from quark to strangeon and nucleon
+Authors: Xuhao Wu, Weibo He, Yudong Luo, Guo-Yun Shao, and Renxin Xu
+Categories: hep-ph astro-ph.CO
+Comments: 19 pages, 7 figures
+\\ ( https://arxiv.org/abs/2212.03466 ,  323kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.11167 (*cross-listing*)
+replaced with revised version Wed, 1 Mar 2023 22:14:08 GMT   (7kb)
+
+Title: Fluctuations of atomic energy levels due to axion and scalar fields
+Authors: V. V. Flambaum
+Categories: hep-ph astro-ph.CO nucl-th physics.atom-ph
+\\ ( https://arxiv.org/abs/2302.11167 ,  7kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2302.12524 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 08:57:49 GMT   (137kb,D)
+
+Title: Probing dark fluids and modified gravity with gravitational lensing
+Authors: L. Perivolaropoulos, I. Antoniou and D. Papadopoulos
+Categories: gr-qc astro-ph.CO physics.space-ph
+Comments: 18 pages, 4 Figures. References added, comments added. The
+  Mathematica files used for the construction of Fig. 2 and 3 may be downloaded
+  from https://github.com/leandros11/lensing1
+\\ ( https://arxiv.org/abs/2302.12524 ,  137kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00025
+replaced with revised version Thu, 2 Mar 2023 13:28:32 GMT   (3053kb,D)
+
+Title: A variable active galactic nucleus at $z=2.06$ triply-imaged by the
+  galaxy cluster MACS J0035.4-2015
+Authors: Lukas J. Furtak, Ramesh Mainali, Adi Zitrin, Ad\`ele Plat, Seiji
+  Fujimoto, Megan Donahue, Erica J. Nelson, Franz E. Bauer, Ryosuke Uematsu,
+  Gabriel B. Caminha, Felipe Andrade-Santos, Larry D. Bradley, Karina I.
+  Caputi, St\'ephane Charlot, Jacopo Chevallard, Dan Coe, Emma Curtis-Lake,
+  Daniel Espada, Brenda L. Frye, Kirsten K. Knudsen, Anton M. Koekemoer, Kotaro
+  Kohno, Vasily Kokorev, Nicolas Laporte, Minju M. Lee, Brian C. Lemaux,
+  Georgios E. Magdis, Keren Sharon, Daniel P. Stark, Yuanyuan Su, Katherine A.
+  Suess, Yoshihiro Ueda, Hideki Umehata, Alba Vidal-Garc\'ia and John F. Wu
+Categories: astro-ph.GA astro-ph.CO
+Comments: Submitted to MNRAS. Minor edits compared to v1
+\\ ( https://arxiv.org/abs/2303.00025 ,  3053kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---
+For subscribe options to combined physics archives,
+e-mail To: physics@arxiv.org, Subject: subscribe
+-----------------------------------------------------------------------------
+For help on viewing and making submissions, see http://arxiv.org/help/

@@ -1,24 +1,19 @@
 {%- extends "list/base.html" -%}
 
-{% block list_index %}
+{%- block list_index -%}
 <h2>Authors and titles for recent submissions</h2>
-
 <ul>
-  {% for pdate in pubdates %}
-  {% set skipfordate = pdate[1] %}
+  {%- for pdate in pubdates -%}
+  {%- set skipfordate = pdate[1] -%}
   <li>
     <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
       {{ pdate[0].strftime('%A, %-d %B %Y') }}
     </a>
   </li>
-  {% endfor %}
+  {%- endfor -%}
 </ul>
-{% endblock %}
+{%- endblock -%}
 
-
-{% macro listdate() %}
-  {% if announced %}
-    <div class="list-dateline">Submissions announced {{ announced.strftime('%A, %-d %B %Y') }}
-    </div>
-  {% endif %}
-{% endmacro %}
+{%- block pre_items -%}
+<h3>(showing first {{shown}} of {{count}} entries)</h3>
+{%- endblock -%}

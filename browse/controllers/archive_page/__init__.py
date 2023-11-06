@@ -1,14 +1,15 @@
 """Archive landing page."""
 
 import datetime
-from typing import Dict, Any, Tuple, List
+from typing import Any, Dict, List, Tuple, Optional
+from http import HTTPStatus as status
 
-from arxiv import status
-from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES, ARCHIVES_SUBSUMED
+from arxiv.taxonomy.definitions import ARCHIVES, ARCHIVES_SUBSUMED, CATEGORIES
 
+from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm
-from browse.controllers.years_operating import years_operating, stats_by_year
-from browse.services.util.response_headers import abs_expires_header
+from browse.controllers.years_operating import stats_by_year, years_operating
+from browse.controllers.response_headers import abs_expires_header
 
 
 def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
@@ -16,8 +17,8 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
-    if archive_id == "list":
-        return archive_index(archive_id, status=status.HTTP_200_OK)
+    if not archive_id or archive_id == "list":
+        return archive_index("list", status_in=status.OK)
 
     archive = ARCHIVES.get(archive_id, None)
     if not archive:
@@ -25,7 +26,7 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         archive = ARCHIVES.get(cat_id, None)
         if not archive:
             return archive_index(archive_id,
-                                 status=status.HTTP_404_NOT_FOUND)
+                                 status_in=status.NOT_FOUND)
         else:
             archive_id = cat_id
 
@@ -54,10 +55,10 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
 
     data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
     data["template"] = "archive/single_archive.html"
-    return data, status.HTTP_200_OK, response_headers
+    return data, status.OK, response_headers
 
 
-def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def archive_index(archive_id: str, status_in: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Landing page for when there is no archive specified."""
     data: Dict[str, Any] = {}
     data["bad_archive"] = archive_id
@@ -79,10 +80,10 @@ def archive_index(archive_id: str, status: int) -> Tuple[Dict[str, Any], int, Di
     data["defunct"] = defunct
 
     data["template"] = "archive/archive_list_all.html"
-    return data, status, {}
+    return data, status_in, {}
 
 
-def subsumed_msg(archive: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
+def subsumed_msg(_: Dict[str, str], subsumed_by: str) -> Dict[str, str]:
     """Adds information about subsuming categories and archives."""
     sb = CATEGORIES.get(subsumed_by, {"name": "unknown category"})
     sa = ARCHIVES.get(sb.get("in_archive", None), {"name": "unknown archive"})
@@ -107,7 +108,7 @@ def category_list(archive_id: str) -> List[Dict[str, str]]:
 
 def _write_expires_header(response_headers: Dict[str, Any]) -> None:
     """Writes an expires header for the response."""
-    response_headers["Expires"] = abs_expires_header()[1]
+    response_headers["Expires"] = abs_expires_header(biz_tz())
 
 
 DAYS = ["{:0>2d}".format(i) for i in range(1, 32)]

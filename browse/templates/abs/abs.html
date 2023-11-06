@@ -192,7 +192,10 @@
     {%- endif -%}
   </div>
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a aria-describedby="download-button-info" class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a class="mobile-submission-download" href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    {% if 'latexml' in formats %}
+    <a class="mobile-submission-download" href="{{ latexml_url }}">HTML (experimental)</a>
+    {% endif %}
   {% else %}
     <a aria-describedby="download-button-info" class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}

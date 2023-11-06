@@ -1,0 +1,38 @@
+Date: Fri, 17 Mar 23 00:51:30 GMT
+Subject: q-fin.TR daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: q-fin@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+Trading and Market Microstructure
+ received from  Wed 15 Mar 23 18:00:00 GMT  to  Thu 16 Mar 23 18:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.08867
+Date: Wed, 15 Mar 2023 18:34:08 GMT   (243kb,D)
+
+Title: A Bayesian derivation of the square root law of market impact
+Authors: Louis Saddier and Matteo Marsili
+Categories: q-fin.TR cond-mat.stat-mech
+Comments: 16 pages, 5 figures
+\\
+  We show that the main empirical findings on the impact of a sequence of
+transactions on prices of financial assets can be recovered within a
+surprisingly simple model with fully Bayesian market expectations. This
+includes {\em i)} the square-root behavior of the expected price variation with
+the total volume traded, {\em ii)} it's crossover to a linear regime for small
+volumes, and {\em iii)} the impact decay back to equilibrium, after the
+sequence of trades is over. The simplicity of this derivation lends further
+support to its robustness and universality, and it sheds light on its origin.
+In particular, it suggests that the square-root impact law originates from the
+over-estimation of order flows originating from meta-orders.
+\\ ( https://arxiv.org/abs/2303.08867 ,  243kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---

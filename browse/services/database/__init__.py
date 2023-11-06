@@ -1,62 +1,75 @@
 """Import db instance and define utility functions."""
+# pylint disable=no-member
 
 import ipaddress
 from datetime import date, datetime
-from dateutil.tz import tzutc, gettz
-from typing import Mapping, List, Optional, Any, Callable, Tuple
-from sqlalchemy import not_, desc, asc
-from sqlalchemy.sql import func
+from typing import Any, Callable, List, Mapping, Optional, Tuple
+
+from flask import current_app
+
+from arxiv.base.globals import get_application_config
+from dateutil.tz import gettz, tzutc
+from sqlalchemy import asc, desc, not_
+from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.exc import OperationalError, DBAPIError
-from arxiv.base.globals import get_application_config
+from sqlalchemy.sql import func
 
+from browse.domain.identifier import Identifier
 from browse.services.database.models import (
-    db,
-    Document,
-    MemberInstitution,
-    MemberInstitutionIP,
-    TrackbackPing,
-    SciencewisePing,
     DBLP,
     DBLPAuthor,
     DBLPDocumentAuthor,
-    StatsMonthlySubmission,
-    StatsMonthlyDownload,
     DataciteDois,
+    Document,
+    MemberInstitution,
+    MemberInstitutionIP,
+    SciencewisePing,
+    StatsMonthlyDownload,
+    StatsMonthlySubmission,
+    TrackbackPing,
+    DBLaTeXMLDocuments,
+    OrcidIds,
+    AuthorIds,
+    User,
+    db,
+    in_category,
+    stats_hourly,
+    paper_owners
 )
 from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
+from browse.services.listing import ListingItem
 from arxiv.base import logging
 from logging import Logger
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
-tz = gettz(app_config.get("ARXIV_BUSINESS_TZ", "US/Eastern"))
+tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 
-def db_handle_error(logger: Logger, default_return_val: Any) -> Any:
+def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
     """Handle operational database errors via decorator."""
 
-    def decorator(func: Callable) -> Any:
+    def decorator(func_to_wrap: Callable) -> Any:
         def wrapper(*args, **kwargs):  # type: ignore
             # Bypass attempt to perform query and just return default value
             is_db_disabled: bool = app_config.get("BROWSE_DISABLE_DATABASE") or False
             if is_db_disabled:
-                if logger:
-                    logger.info("Database is disabled per BROWSE_DISABLE_DATABASE")
+                if db_logger:
+                    db_logger.info("Database is disabled per BROWSE_DISABLE_DATABASE")
                 return default_return_val
             try:
-                return func(*args, **kwargs)
+                return func_to_wrap(*args, **kwargs)
             except NoResultFound:
                 return default_return_val
             except (OperationalError, DBAPIError) as ex:
-                if logger:
-                    logger.warning(f"Error executing query in {func.__name__}: {ex}")
+                if db_logger:
+                    db_logger.warning(f"Error executing query in {func_to_wrap.__name__}: {ex}")
                 return default_return_val
             except Exception as ex:
-                if logger:
-                    logger.warning(f"Unknown exception in {func.__name__}: {ex}")
+                if db_logger:
+                    db_logger.warning(f"Unknown exception in {func_to_wrap.__name__}: {ex}")
                 raise
 
         return wrapper
@@ -76,7 +89,7 @@ def __paper_trackbacks_query(paper_id: str) -> Query:
         .filter(TrackbackPing.status == "accepted")
     )
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     """Get institution label from IP address."""
     decimal_ip = int(ipaddress.ip_address(ip))
@@ -109,13 +122,15 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     return h
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# Only used in tests
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_all_trackback_pings() -> List[TrackbackPing]:
     """Get all trackback pings in database."""
     return list(__all_trackbacks_query().all())
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# Used only on trackback page
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     return list(
@@ -126,8 +141,8 @@ def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
         .all()
     )
 
-
-@db_handle_error(logger=logger, default_return_val=None)
+# Used on tb page and abs page
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     """Get an individual trackback ping by its id (trackback_id)."""
     trackback: TrackbackPing = db.session.query(TrackbackPing).filter(
@@ -136,14 +151,14 @@ def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     return trackback
 
 
-@db_handle_error(logger=logger, default_return_val=list())
-def get_recent_trackback_pings(
-    max_trackbacks: int = 25,
-) -> List[Tuple[TrackbackPing, str, str]]:
+# Used only on tb page
+@db_handle_error(db_logger=logger, default_return_val=list())
+def get_recent_trackback_pings(max_trackbacks: int = 25) \
+        -> List[Tuple[TrackbackPing, str, str]]:
     """Get recent trackback pings across all of arXiv."""
     max_trackbacks = min(max(max_trackbacks, 0), 500)
     if max_trackbacks == 0:
-        return list()
+        return []
 
     # subquery to get the specified number of distinct trackback URLs
     stmt = (
@@ -167,7 +182,8 @@ def get_recent_trackback_pings(
     return list(tb_doc_tup)
 
 
-@db_handle_error(logger=logger, default_return_val=None)
+#Used on abs page
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
     timestamp: int = db.session.query(func.max(TrackbackPing.approved_time)).filter(
@@ -175,12 +191,13 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     ).filter(Document.paper_id == paper_id).filter(
         TrackbackPing.status == "accepted"
     ).scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=gettz("US/Eastern"))
+    dt = datetime.fromtimestamp(timestamp, tz=tz)
     dt = dt.astimezone(tz=tzutc())
     return dt
 
 
-@db_handle_error(logger=logger, default_return_val=0)
+# used on abs page
+@db_handle_error(db_logger=logger, default_return_val=0)
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
     row = (
@@ -196,7 +213,8 @@ def count_trackback_pings(paper_id: str) -> int:
     return int(row.num_pings)
 
 
-@db_handle_error(logger=logger, default_return_val=0)
+#Not used, only in tests
+@db_handle_error(db_logger=logger, default_return_val=0)
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
     c = __all_trackbacks_query().count()
@@ -204,7 +222,8 @@ def count_all_trackback_pings() -> int:
     return c
 
 
-@db_handle_error(logger=logger, default_return_val=False)
+# Used in abs page
+@db_handle_error(db_logger=logger, default_return_val=False)
 def has_sciencewise_ping(paper_id_v: str) -> bool:
     """Determine whether versioned document has a ScienceWISE ping."""
     has_ping: bool = db.session.query(SciencewisePing).filter(
@@ -213,7 +232,8 @@ def has_sciencewise_ping(paper_id_v: str) -> bool:
     return has_ping
 
 
-@db_handle_error(logger=logger, default_return_val=None)
+# used in abs page
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     url: str = db.session.query(DBLP.url).join(Document).filter(
@@ -222,7 +242,8 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     return url
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# used in abs page
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_dblp_authors(paper_id: str) -> List[str]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
     authors_t = (
@@ -236,8 +257,8 @@ def get_dblp_authors(paper_id: str) -> List[str]:
     authors = [a for (a,) in authors_t]
     return authors
 
-
-@db_handle_error(logger=logger, default_return_val=None)
+# Used on home page and stats page
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_document_count() -> Optional[int]:
     """Get the number of documents."""
     # func.count is used here because .count() forces a subquery which
@@ -250,7 +271,8 @@ def get_document_count() -> Optional[int]:
     return int(row.num_documents)
 
 
-@db_handle_error(logger=logger, default_return_val=0)
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=0)
 def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     """Get number of papers for a given year and month."""
     paper_date = date.today() if not isinstance(paper_date, date) else paper_date
@@ -267,10 +289,11 @@ def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     return int(row.num_documents)
 
 
-@db_handle_error(logger=logger, default_return_val=None)
-def get_sequential_id(
-    paper_id: Identifier, context: str = "all", is_next: bool = True
-) -> Optional[str]:
+# Only used on prevnext page
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_sequential_id(paper_id: Identifier,
+                      context: str = 'all',
+                      is_next: bool = True) -> Optional[str]:
     """Get the next or previous paper ID in sequence."""
     if not isinstance(paper_id, Identifier) or not paper_id.month or not paper_id.year:
         return None
@@ -330,7 +353,9 @@ def __all_hourly_stats_query() -> Query:
     return db.session.query(stats_hourly)
 
 
-@db_handle_error(logger=logger, default_return_val=(0, 0, 0))
+
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=(0, 0, 0))
 def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     """Get sum of normal/admin connections and nodes for a given date."""
     stats_date = date.today() if not isinstance(stats_date, date) else stats_date
@@ -356,7 +381,9 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     return (normal_count, admin_count, num_nodes)
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# Used on stats page
+# maybe on /today page?
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     """Get the hourly stats for a given date."""
     stats_date = date.today() if not isinstance(stats_date, date) else stats_date
@@ -372,7 +399,8 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     )
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_monthly_submission_stats() -> List:
     """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(
@@ -381,8 +409,8 @@ def get_monthly_submission_stats() -> List:
         .all()
     )
 
-
-@db_handle_error(logger=logger, default_return_val=(0, 0))
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=(0, 0))
 def get_monthly_submission_count() -> Tuple[int, int]:
     """Get submission totals: number of submissions and number migrated."""
     row = db.session.query(
@@ -392,7 +420,8 @@ def get_monthly_submission_count() -> Tuple[int, int]:
     return (row.num_submissions, row.num_migrated)
 
 
-@db_handle_error(logger=logger, default_return_val=[])
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=[])
 def get_monthly_download_stats() -> List:
     """Get all the monthly download stats."""
     return list(
@@ -401,8 +430,8 @@ def get_monthly_download_stats() -> List:
         .all()
     )
 
-
-@db_handle_error(logger=logger, default_return_val=0)
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=0)
 def get_monthly_download_count() -> int:
     """Get the sum of monthly downloads for all time."""
     row = db.session.query(
@@ -412,14 +441,15 @@ def get_monthly_download_count() -> int:
     return total_downloads
 
 
-@db_handle_error(logger=logger, default_return_val=None)
+# Used on stats page
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_max_download_stats_dt() -> Optional[datetime]:
     """Get the datetime of the most recent download stats."""
     row = db.session.query(func.max(StatsMonthlyDownload.ym).label("max_ym")).first()
     return row.max_ym if row else None
 
 
-@db_handle_error(logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None)
 def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
     """Get the DataCite DOI for a given paper ID."""
     row = (
@@ -429,3 +459,99 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
         .first()
     )
     return row.doi if row else None
+
+
+def service_status()->List[str]:
+    try:
+        db.session.query(Document.document_id).limit(1).first()
+    except NoResultFound:
+        return [f"{__file__}: service.database: No documents found in db"]
+    except (OperationalError, DBAPIError) as ex:
+        return [f"{__file__}: Error executing test query count on documents: {ex}"]
+    except Exception as ex:
+        return [f"{__file__}: Problem with DB: {ex}"]
+
+    if current_app.config["LATEXML_ENABLED"]:
+        try:
+            db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
+        except NoResultFound:
+            return [f"{__file__}: service.database DBLaTeXML: No documents found in db"]
+        except (OperationalError, DBAPIError) as ex:
+            return [f"{__file__}: DBLaTeXML: Error executing test query count on documents: {ex}"]
+        except Exception as ex:
+            return [f"{__file__}: DBLaTeXML: Problem with DB: {ex}"]
+
+    return []
+
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
+    """Get latexml conversion status for a given paper_id and version"""
+    row = (
+        db.session.query(DBLaTeXMLDocuments)
+        .filter(DBLaTeXMLDocuments.paper_id == paper_id)
+        .filter(DBLaTeXMLDocuments.document_version == version)
+        .first()
+    )
+    return row.conversion_status if row else None
+
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_user_id_by_author_id(author_id: str) -> Optional[int]:
+    row = (
+        db.session.query(AuthorIds)
+        .filter(AuthorIds.author_id == author_id)
+        .first()
+    )
+    return row.user_id if row else None
+
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_user_id_by_orcid(orcid: str) -> Optional[int]:
+    row = (
+        db.session.query(OrcidIds)
+        .filter(OrcidIds.orcid == orcid)
+        .first()
+    )
+    return row.user_id if row else None
+
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_user_display_name(user_id: int) -> Optional[str]:
+    row = (
+        db.session.query(User)
+        .filter(User.user_id == user_id)
+        .first()
+    )
+    if row is None:
+        return None
+
+    first = f"{row.first_name} " if row.first_name else ""
+    last = f"{row.last_name}" if row.last_name else ""
+    return first + last
+
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_orcid_by_user_id(user_id: int) -> Optional[str]:
+    row = (
+        db.session.query(OrcidIds)
+        .filter(OrcidIds.user_id == user_id)
+        .first()
+    )
+    return row.orcid if row else None
+
+
+@db_handle_error(db_logger=logger, default_return_val=[])
+def get_articles_for_author(user_id: int) -> List[ListingItem]:
+    rows = (
+        db.session.query(Document, paper_owners)
+        .filter(Document.document_id == paper_owners.c.document_id)
+        .filter(paper_owners.c.user_id == user_id)
+        .filter(paper_owners.c.flag_author == 1)
+        .filter(paper_owners.c.valid == 1)
+        .filter(Document.paper_id.notlike('test%'))
+        .order_by(Document.dated.desc())
+        .all()
+    )
+    return [ListingItem(row[0].paper_id, 'new', row[0].primary_subject_class)
+            for row in rows]

@@ -2,6 +2,12 @@
 
 {% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
 
+{% block head %}
+  {{super()-}}
+  <script src="{{ url_for('static', filename='js/mathjaxToggle.min.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+{% endblock head %}
+
 {% block header_h1 %}
 <div class="header-breadcrumbs">
   <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
@@ -15,10 +21,14 @@
   <h1>{{list_ctx_name}}</h1>
 
   {% block list_index %}
-    {# list index is empty by default #}
+    {# empty by default and intended to be overridden in your templates #}
   {% endblock %}
 
   {{ page_divs() }}
+
+  {% block pre_items %}
+    {# empty by default and intended to be overridden in your templates #}
+  {% endblock %}
 
   {% block items %}
     {{ item_list( listings, '' ) }}
@@ -31,14 +41,12 @@
 
 
 {%- macro page_divs() -%}
-<div class='paging'>[ total of {{count}} entries
- {{ pages() }}
-  ]
+<div class='paging'>Total of {{count}} entries {{ pages() }}
 </div>
-<div class='morefewer'>[ showing {{shown}} entries per page:
+<div class='morefewer'>Showing {{shown}} entries per page:
   {{ show_link('fewer',mf_fewer) }} |
   {{ show_link('more', mf_more)  }} |
-  {{ show_link('all',  mf_all)   }} ]
+  {{ show_link('all',  mf_all)   }}
 </div>
 {%- endmacro -%}
 
@@ -50,13 +58,13 @@
   {% endif %}
 
   {% for item in items %}
-  {% set article = item['article'] %}
-  {% set ids = article.arxiv_identifier.ids %}
-  {% set listing_index = item['list_index'] %}
+  {% set article = item.article %}
+  {% set ids = article.arxiv_id %}
+  {% set listing_index = item.list_index %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
-        arXiv:{{ article.arxiv_identifier.ids }}
+        arXiv:{{ article.arxiv_id }}
       </a>
       {{ type_info( item ) }}
       {{ dl_links( article ) }}
@@ -71,21 +79,26 @@
         </div>
 
         {% if article.comments %}
-          <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
-            {{article.comments|arxiv_urlize}}
-          </div>
+        <div class='list-comments mathjax'><span class='descriptor'>Comments:</span>
+          {{article.comments|tex2utf|urlize|safe}}
+        </div>
         {% endif %}
 
         {% if article.journal_ref %}
-          <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
-            {{article.journal_ref}}
-          </div>
+        <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
+          {{article.journal_ref}}
+        </div>
         {% endif %}
 
         <div class='list-subjects'><span class='descriptor'>Subjects:</span>
-          <span class='primary-subject'>{{article.primary_category.display}}</span>
+          {{category_line(article)}}
         </div>
 
+        {% if list_type == 'new' %}
+        <p class='mathjax'>
+          {{ article.abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+        </p>
+        {% endif %}
       </div>
     </dd>
   {% endfor %}
@@ -135,12 +148,16 @@
 {%- macro dl_links( article ) -%}
   {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
-  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
+  {% set latexml_link = latexml[ article.arxiv_id_v ] %}
+  [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
   {%- if 'ps' in downloads -%}
-    , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
+    , <a href="{{url_for('dissemination.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
+  {%- endif -%}
+  {%- if latexml_link -%}
+    , <a href="{{ latexml_link }}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
   {%- if 'other' in downloads -%}
-    , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
+    , <a href="{{url_for('dissemination.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
   {%- endif -%}
   ]
 {%- endmacro -%}
@@ -153,3 +170,13 @@
     (replaced)
   {% endif %}
 {% endmacro %}
+
+
+{%- macro category_line(article) -%}
+  <span class="primary-subject">{{- article.primary_category.unalias().display -}}</span>
+  {%- if article.secondary_categories -%}
+    {%- for category in article.display_secondaries() -%}
+        ; {{ category }}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}

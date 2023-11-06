@@ -1,10 +1,10 @@
 """Browse jinja filters."""
+import html
 import re
 from typing import Union
-
-from jinja2 import Markup
 import html
 
+from markupsafe import Markup
 
 JinjaFilterInput = Union[Markup, str]
 """
@@ -30,8 +30,6 @@ def entity_to_utf(text: str) -> str:
     It tries to avoid junk like <script> but it is a bad idea.
     This MUST NEVER BE USED ON USER PROVIDED INPUT. Submission titles etc.
     """
-    # TODO it would be good to move this out of a jinja filter
-    # and to the controller, it is only used for things coming from DBLP
     if hasattr(text, '__html__'):
         return text
 

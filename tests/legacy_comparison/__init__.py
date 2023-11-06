@@ -1,1 +1,0 @@
-"""Contains legacy comparison tests."""

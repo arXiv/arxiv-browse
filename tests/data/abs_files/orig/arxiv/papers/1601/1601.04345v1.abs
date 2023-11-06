@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------
+\\
+arXiv:1601.04345
+From: Subo Dong <ex@example.com>
+Date: Sun, 17 Jan 2016 21:00:04 GMT   (8274kb,D)
+
+Title: Double-Averaging Can Fail to Characterize the Long-Term Evolution of
+  Lidov-Kozai Cycles & Derivation of an Analytical Correction
+Authors: Liantong Luo (KIAA-PKU), Boaz Katz (Weizmann), Subo Dong (KIAA-PKU)
+Categories: astro-ph.EP
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  The double-averaging (DA) approximation is widely employed as the standard
+technique in studying the secular evolution of the hierarchical three-body
+system. We show that effects stemmed from the short-timescale oscillations
+ignored by DA can accumulate over long timescales and lead to significant
+errors in the long-term evolution of the Lidov-Kozai cycles. In particular, the
+conditions for having an orbital flip, where the inner orbit switches between
+prograde and retrograde with respect to the outer orbit and the associated
+extremely high eccentricities during the switch, can be modified significantly.
+The failure of DA can arise for a relatively strong perturber where the mass of
+the tertiary is considerable compared to the total mass of the inner binary.
+This issue can be relevant for astrophysical systems such as stellar triples,
+planets in stellar binaries, stellar-mass binaries orbiting massive black holes
+and moons of the planets perturbed by the Sun. We derive analytical equations
+for the short-term oscillations of the inner orbit to the leading order for all
+inclinations, eccentricities and mass ratios. Under the test particle
+approximation, we derive the "corrected double-averaging" (CDA) equations by
+incorporating the effects of short-term oscillations into the DA. By comparing
+to N-body integrations, we show that the CDA equations successfully correct
+most of the errors of the long-term evolution under the DA approximation for a
+large range of initial conditions. We provide an implementation of CDA that can
+be directly added to codes employing DA equations.
+\\
