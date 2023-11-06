@@ -185,8 +185,12 @@ def html_response_function(format: FileFormat,
                 docmeta: DocMetadata,
                 version: VersionEntry)-> Response:
     if docmeta.source_format == 'html':
+        if not isinstance(file_list,list):
+            return unavailable(arxiv_id)
         return html_source_response_function(file_list,arxiv_id)
     else:
+        if not isinstance(file_list,FileObj):
+            return unavailable(arxiv_id)
         return _latexml_response(format,file_list,arxiv_id,docmeta,version)
 
 def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
