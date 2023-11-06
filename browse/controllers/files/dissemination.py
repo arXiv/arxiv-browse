@@ -160,7 +160,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return no_html(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
-    elif format==fileformat.pdf and isinstance(item, CannotBuildPdf):
+    elif isinstance(item, CannotBuildPdf):
         return cannot_build_pdf(arxiv_id, item.msg)
 
     file, item_format, docmeta, version = item
