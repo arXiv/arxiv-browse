@@ -173,7 +173,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         if not file[0].exists():
             return not_found(arxiv_id)
 
-    return resp_fn(item_format, file, arxiv_id, docmeta, version)
+    return resp_fn(item_format, file, arxiv_id, docmeta, version) #type: ignore
 
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
