@@ -154,9 +154,9 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return withdrawn(arxiv_id)
     elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
-    elif format==fileformat.pdf and item == "NOT_PDF":
+    elif item == "NOT_PDF":
         return not_pdf(arxiv_id)
-    elif format==fileformat.html and item == "NO_HTML":
+    elif item == "NO_HTML":
         return no_html(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
