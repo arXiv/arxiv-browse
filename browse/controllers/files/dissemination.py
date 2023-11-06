@@ -261,7 +261,7 @@ def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) ->
     #turn generator into temp file
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
         for data in gen:
-            temp_file.write(data)
+            temp_file.write(data) #type: ignore
         temp_file.seek(0)
     #make response
         resp: Response = make_response(temp_file.read())
