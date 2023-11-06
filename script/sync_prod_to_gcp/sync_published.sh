@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PIDFILE="/var/run/sync_to_gcp_cron_job.pid"
+PIDFILE="/opt_arxiv/e-prints/var/run/sync_to_gcp_cron_job.pid"
 
 if [ -f "$PIDFILE" ]; then
     # Check if the process with the stored PID is still running
