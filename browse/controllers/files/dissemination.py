@@ -269,7 +269,7 @@ def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) ->
         resp.headers["ETag"] = last_mod
     return resp 
 
-def withdrawn(arxiv_id: str) -> Response:
+def withdrawn(arxiv_id: Identifier) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
     headers = {'Cache-Control': 'max-age=31536000'}
     return make_response(render_template("dissemination/withdrawn.html",
@@ -277,43 +277,43 @@ def withdrawn(arxiv_id: str) -> Response:
                          200, headers)
 
 
-def unavailable(arxiv_id: str) -> Response:
+def unavailable(arxiv_id: Identifier) -> Response:
     return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 500, {})
 
 
-def not_pdf(arxiv_id: str) -> Response:
+def not_pdf(arxiv_id: Identifier) -> Response:
     return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 404, {})
 
-def no_html(arxiv_id: str) -> Response:
+def no_html(arxiv_id: Identifier) -> Response:
     return make_response(render_template("dissemination/no_html.html",
                                          arxiv_id=arxiv_id), 404, {})
 
-def not_found(arxiv_id: str) -> Response:
+def not_found(arxiv_id: Identifier) -> Response:
     headers = {'Expires': format_datetime(next_publish())}
     return make_response(render_template("dissemination/not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
-def not_found_anc(arxiv_id: str) -> Response:
+def not_found_anc(arxiv_id: Identifier) -> Response:
     headers = {'Expires': format_datetime(next_publish())}
     return make_response(render_template("src/anc_not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
-def bad_id(arxiv_id: str, err_msg: str) -> Response:
+def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
     return make_response(render_template("dissemination/bad_id.html",
                                          err_msg=err_msg,
                                          arxiv_id=arxiv_id), 404, {})
 
 
-def cannot_build_pdf(arxiv_id: str, msg: str) -> Response:
+def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
     return make_response(render_template("dissemination/cannot_build_pdf.html",
                                          err_msg=msg,
                                          arxiv_id=arxiv_id), 404, {})
 
-def multiple_html_files(arxiv_id: str, file_names: List[str]) -> Response:
+def multiple_html_files(arxiv_id: Identifier, file_names: List[str]) -> Response:
     resp=make_response(render_template("dissemination/multiple_files.html",
                                          arxiv_id=arxiv_id, file_names=file_names), 200, {})
     resp.headers["Content-Type"] = "text/html"
