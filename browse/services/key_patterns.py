@@ -5,7 +5,7 @@ from typing import Literal
 from arxiv.identifier import Identifier
 
 
-def _ps_cache_part(format: Literal["pdf", "ps"], arxiv_id: Identifier) -> str:
+def _ps_cache_part(format: Literal["pdf", "ps", "html"], arxiv_id: Identifier) -> str:
     archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
     return f"ps_cache/{archive}/{format}/{arxiv_id.yymm}"
 

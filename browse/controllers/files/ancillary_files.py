@@ -65,7 +65,8 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
 
     if not isinstance(dis_res, tuple):
         abort(500, description="Unexpected result for source")
-
+    if not isinstance(dis_res[0], FileObj):
+        abort(500, description="Unexpected result for source")
     src_file = dis_res[0]
     tarmember = FileFromTar(src_file, path)
     if not tarmember.exists():

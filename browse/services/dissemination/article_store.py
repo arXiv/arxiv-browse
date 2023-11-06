@@ -229,7 +229,7 @@ class ArticleStore():
         if isinstance(fileobj, FileObj):
             return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version) #TODO I dont think we want to always return the source format
         if isinstance(fileobj, List): #html requests return an iterable of files in the folder
-            return (fileobj, format, docmeta, version)
+            return (fileobj, format, docmeta, version) #type: ignore
         else:
             return fileobj
 
@@ -423,8 +423,8 @@ class ArticleStore():
 
         if docmeta.source_format == 'html':#native html
             path=ps_cache_html_path(arxiv_id, version.version)
-            file=self.objstore.list(path) 
-            file_list=list(file)
+            files=self.objstore.list(path) 
+            file_list=list(files)
             if len(file_list) >0:
                 return file_list
             else:
@@ -432,7 +432,7 @@ class ArticleStore():
         else: #latex to html
             latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
             path=latexml_html_path(arxiv_id, version.version)
-            file=latex_obj_store.to_obj(path)
+            file=latex_obj_store.to_obj(path) 
             if file.exists():
                 return file
             else:

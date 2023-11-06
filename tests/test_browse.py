@@ -353,6 +353,7 @@ class BrowseTest(unittest.TestCase):
                          'Collaboration author query should not have "The"')
         self.assertEqual(au_a_tags[0].text, 'SuperSuper Collaboration')
 
+    @unittest.skip("bug in flask https://github.com/pallets/flask/issues/5286")
     def test_long_author_colab(self):
         id = '1501.05201'
         rv = self.client.get('/abs/' + id)
