@@ -37,7 +37,6 @@ from browse.services.database import (
     get_dblp_authors,
     get_dblp_listing_path,
     get_trackback_ping_latest_date,
-    has_sciencewise_ping,
 )
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_type
@@ -139,10 +138,8 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
-        add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data["formats"] = get_article_store().get_dissemination_formats(
-            abs_meta, download_format_pref, add_sciencewise_ping
-        )
+            abs_meta, download_format_pref)
         if response_data['latexml_url'] is not None:
             response_data['formats'].append('latexml')
 
@@ -404,14 +401,6 @@ def _is_covid_match(docmeta: DocMetadata) -> bool:
         ):
             return True
     return False
-
-
-def _check_sciencewise_ping(paper_id_v: str) -> bool:
-    """Check whether paper has a ScienceWISE ping."""
-    try:
-        return has_sciencewise_ping(paper_id_v)  # type: ignore
-    except IOError:
-        return False
 
 
 def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dict]:

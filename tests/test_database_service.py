@@ -185,20 +185,6 @@ class TestBrowseDatabaseService(TestCase):
                 arxiv_id=tb[1]), Identifier, 'Value looks like an Identifier')
             self.assertIsInstance(tb[2], str)
 
-    def test_sciencewise_ping(self) -> None:
-        """Test whether paper with version suffix has a ScienceWISE ping."""
-        test_paper_id_v = '1605.09669v2'
-        self.assertTrue(
-            database.
-            has_sciencewise_ping(test_paper_id_v))
-        test_paper_id_v = '1605.09669'
-        self.assertFalse(
-            database.
-            has_sciencewise_ping(test_paper_id_v))
-        test_paper_id_v = None
-        self.assertFalse(
-            database.
-            has_sciencewise_ping(test_paper_id_v))
 
     def test_get_dblp_listing_path(self) -> None:
         """Test whether paper has a DBLP Bibliography URL."""
@@ -250,8 +236,6 @@ class TestBrowseDatabaseService(TestCase):
         self.assertEqual(
             database.count_all_trackback_pings(), 0)
         self.assertEqual(
-            database.has_sciencewise_ping('0704.0361'), False)
-        self.assertEqual(
             database.get_dblp_listing_path('0704.0361'), None)
         self.assertEqual(
             database.get_dblp_authors('0704.0361'), [])
@@ -264,8 +248,6 @@ class TestBrowseDatabaseService(TestCase):
             SQLAlchemyError, database.get_paper_trackback_pings, 'paperx')
         self.assertRaises(
             SQLAlchemyError, database.count_all_trackback_pings)
-        self.assertRaises(
-            SQLAlchemyError, database.has_sciencewise_ping, 'px')
         self.assertRaises(
             SQLAlchemyError, database.get_dblp_listing_path, 'px')
         self.assertRaises(
