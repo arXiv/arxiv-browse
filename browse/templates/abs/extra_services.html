@@ -42,10 +42,10 @@
   </div>
 
   {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
-  {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
-  <li>Unavailable</li>
-  {%- elif withdrawn -%}
+  {%- if withdrawn -%}
   <li>Withdrawn</li>
+  {%- elif format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
+  <li>Unavailable</li>
   {% else %}
     {%- for format in format_list %}
       {%- if format.startswith('pdf') -%}

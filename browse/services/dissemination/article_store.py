@@ -216,7 +216,7 @@ class ArticleStore():
         if not version:
             return "VERSION_NOT_FOUND"
 
-        if version.is_withdrawn:
+        if version.withdrawn_or_ignore:
             return "WITHDRAWN"
 
         handler_fn = self.format_handlers[format]
@@ -260,6 +260,9 @@ class ArticleStore():
             A list of format strings.
         """
         formats: List[str] = []
+        version = docmeta.get_requested_version()
+        if version.withdrawn_or_ignore or version.size_kilobytes <= 0:
+            return formats
 
         # first, get possible list of formats based on available source file
         if src_file is None:
@@ -274,8 +277,7 @@ class ArticleStore():
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
-            version = docmeta.version
-            format_code = docmeta.version_history[version - 1].source_type.code
+            format_code = version.source_type.code
             cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
             cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
                 and cached_ps_file.size == 0 \
@@ -313,7 +315,7 @@ class ArticleStore():
             formats.extend(['pdf', src_fmt])
 
         ver = docmeta.get_version()
-        if ver and not ver.is_withdrawn:
+        if ver and not ver.withdrawn_or_ignore:
             formats.append('src')
 
         return formats

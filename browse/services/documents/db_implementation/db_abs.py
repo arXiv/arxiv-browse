@@ -114,13 +114,14 @@ class DbDocMetadataService(DocMetadataService):
 
         for ver in all_versions:
             size_kilobytes = int(ver.source_size / 1024 + .5)
-            # Set UTC timezone
             created_tz = ver.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=ver.version,
                                  raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=SourceType(ver.source_flags))
+                                 source_type=SourceType(ver.source_flags),
+                                 is_withdrawn=ver.is_withdrawn
+                                 )
             version_history.append(entry)
 
         return to_docmeta(res, version_history, self.business_tz)
