@@ -148,15 +148,16 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
-        for ver_index in range(0, abs_meta.highest_version()):
-            formats = formats_from_source_type(abs_meta.version_history[ver_index].source_type.code)
-            if len(formats) == 1 and formats[0] == "src":
-                response_data["withdrawn_versions"].append(abs_meta.version_history[ver_index])
-                if not response_data["higher_version_withdrawn"] and ver_index > abs_meta.version - 1:
+        response_data["withdrawn"] = False
+        for ver in abs_meta.version_history:
+            if ver.withdrawn_or_ignore:
+                response_data["withdrawn_versions"].append(ver)
+                if abs_meta.version == ver.version:
+                    response_data["withdrawn"] = True
+                if not response_data["higher_version_withdrawn"] and ver.version > abs_meta.version:
                     response_data["higher_version_withdrawn"] = True
-                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier, ver_index+1)
-
-        response_data["withdrawn"] = abs_meta.version_history[abs_meta.version - 1] in response_data["withdrawn_versions"]
+                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier,
+                                                                                         ver.version)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 

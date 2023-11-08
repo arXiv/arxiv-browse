@@ -115,6 +115,9 @@ class VersionEntry:
     source_type: SourceType = field(default_factory=SourceType)  # type: ignore
     """Source file type."""
 
+    is_withdrawn: bool = False
+    """Is the version withdrawn."""
+
     @property
-    def is_withdrawn(self) -> bool:
-        return self.source_type.ignore
+    def withdrawn_or_ignore(self) -> bool:
+        return self.source_type.ignore or self.is_withdrawn
