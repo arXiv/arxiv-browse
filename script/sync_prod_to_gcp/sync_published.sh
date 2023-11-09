@@ -2,7 +2,7 @@
 
 PIDFILE="/opt_arxiv/e-prints/var/run/sync_to_gcp_cron_job.pid"
 
-if [ -f "$PIDFILE" ]; then
+while [ -f "$PIDFILE" ]; do
     # Check if the process with the stored PID is still running
     PID=$(cat "$PIDFILE")
     if ps -p $PID > /dev/null; then
@@ -10,10 +10,8 @@ if [ -f "$PIDFILE" ]; then
         while ps -p $PID > /dev/null; do
             sleep 5
         done
-    else
-        rm "$PIDFILE"
     fi
-fi
+done
 echo $$ > "$PIDFILE"
 
 # Remove the lock file at exit.
