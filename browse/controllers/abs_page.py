@@ -113,7 +113,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
 
-        abs_meta = get_doc_service().get_abs(arxiv_id)
+        abs_meta = get_doc_service().get_abs(arxiv_identifier)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
             return {}, status.NOT_MODIFIED, response_headers
