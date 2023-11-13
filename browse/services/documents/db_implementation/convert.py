@@ -10,6 +10,7 @@ from browse.services.documents.base_documents import AbsException
 
 
 def to_docmeta(dbmd: Metadata,
+               identifier: Identifier,
                version_history: List[VersionEntry],
                business_tz: ZoneInfo) -> DocMetadata:
     """Convert a Metadata object from the DB to a DocMetadata object
@@ -19,7 +20,7 @@ def to_docmeta(dbmd: Metadata,
 
     """
     # This is from parse_abs.py
-    arxiv_identifier = Identifier(dbmd.paper_id)
+    arxiv_identifier = identifier
 
     primary_category = None
     secondary_categories = []
@@ -60,7 +61,7 @@ def to_docmeta(dbmd: Metadata,
         abstract=dbmd.abstract,
         arxiv_id=dbmd.paper_id,
         arxiv_id_v=dbmd.paper_id + 'v' + str(dbmd.version),
-        arxiv_identifier = Identifier(dbmd.paper_id),
+        arxiv_identifier = identifier,
         title = dbmd.title,
         modified=modified,
         authors=AuthorList(dbmd.authors),

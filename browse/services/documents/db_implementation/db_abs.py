@@ -52,7 +52,6 @@ class DbDocMetadataService(DocMetadataService):
         if isinstance(arxiv_id, Identifier):
             paper_id = arxiv_id
         else:
-            # TODO Probably doesn't do docmeta.version_history correctly
             paper_id = Identifier(arxiv_id=arxiv_id)
 
         if paper_id.id in DELETED_PAPERS:
@@ -124,7 +123,7 @@ class DbDocMetadataService(DocMetadataService):
                                  )
             version_history.append(entry)
 
-        return to_docmeta(res, version_history, self.business_tz)
+        return to_docmeta(res, identifier, version_history, self.business_tz)
 
     def service_status(self)->List[str]:
         try:
