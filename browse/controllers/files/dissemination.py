@@ -144,11 +144,15 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
+        print (f'arxiv_id: {arxiv_id}')
+        print (f'arxiv_id_str: {arxiv_id_str}')
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
+    print (f'ARTICLE STORE STATUS: {get_article_store().status()}')
     item = get_article_store().dissemination(format, arxiv_id)
     logger. debug(f"dissemination_for_id({arxiv_id.idv}) was {item}")
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
+        print (item)
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id)
