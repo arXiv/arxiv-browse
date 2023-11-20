@@ -8,7 +8,7 @@ cachetools==4.2.4
 certifi==2022.9.24
 charset-normalizer==2.0.12
 click==8.0.4
-Flask==2.0.3
+Flask==2.2.5
 google-api-core==2.10.2
 google-auth==2.14.1
 google-cloud==0.34.0
