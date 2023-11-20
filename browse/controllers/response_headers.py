@@ -67,13 +67,13 @@ def guess_next_update_utc(arxiv_business_tz: ZoneInfo, dt: Optional[datetime] = 
     return (possible_publish_dt.astimezone(tz=timezone.utc), likely_in_publish)
 
 
-def abs_expires_header(arxiv_business_tz: ZoneInfo) -> Tuple[str, str]:
+def abs_expires_header(arxiv_business_tz: ZoneInfo) -> str:
     """Get the expires header key and value that should be used by abs."""
     (next_update_dt, likely_in_publish) = guess_next_update_utc(arxiv_business_tz)
     if likely_in_publish:
-        return ('Expires', '-1')
+        return '-1'
     else:
-        return ('Expires', mime_header_date(next_update_dt))
+        return mime_header_date(next_update_dt)
 
 
 def mime_header_date(dt: datetime) -> str:

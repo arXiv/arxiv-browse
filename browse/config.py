@@ -100,11 +100,18 @@ class Settings(BaseSettings):
     total_papers 1456755."""
 
     BROWSE_SITE_LABEL: str = "arXiv.org"
-    BROWSE_SITE_HOST: Optional[str] = None
-    """This is similar to, but decoupled from SERVER_NAME."""
 
     BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
     """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
+
+    BROWSE_USER_BANNER_ENABLED: bool = bool(int(os.environ.get("BROWSE_USER_BANNER_ENABLED", "0")))
+    """Enable/disable the user banner, the full width one, above the Cornell logo."""
+
+    BROWSE_MINIMAL_BANNER_ENABLED: bool = bool(int(os.environ.get("BROWSE_MINIMAL_BANNER_ENABLED", "0")))
+    """Enable/disable the banner to the right of the Cornell logo, before the donate button."""
+
+    BROWSE_SPECIAL_MESSAGE_ENABLED: bool = bool(int(os.environ.get("BROWSE_SPECIAL_MESSAGE_ENABLED", "0")))
+    """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
     ############################## Services ##############################
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
@@ -200,13 +207,6 @@ class Settings(BaseSettings):
 
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
-
-    URLS: List[tuple] = [
-        ("ui.login", "/login", os.environ.get("SERVER_NAME", "arxiv.org"))
-        # This is a temporary workaround for ARXIVNG-2063
-    ]
-    """External URLs."""
-
 
     ARXIV_BUSINESS_TZ: str = 'US/Eastern'
     """
@@ -415,7 +415,7 @@ class Settings(BaseSettings):
            self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
            self.FS_TZ = "UTC"
            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
-                       "and DOCUMENT_ORIGNAL_VERSIONS_PATH are Google Storage")
+                       "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
            if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
                log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
            else:

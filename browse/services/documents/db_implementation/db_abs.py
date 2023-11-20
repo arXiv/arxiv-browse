@@ -117,7 +117,7 @@ class DbDocMetadataService(DocMetadataService):
             # Set UTC timezone
             created_tz = ver.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=ver.version,
-                                 raw='fromdb-no-raw',
+                                 raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
                                  source_flag=SourceFlag(ver.source_format))

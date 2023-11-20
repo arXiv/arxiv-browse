@@ -47,6 +47,8 @@ from google.cloud.storage.retry import DEFAULT_RETRY as STORAGE_RETRY
 
 from identifier import Identifier
 
+from digester import get_file_mtime
+
 overall_start = perf_counter()
 
 from google.cloud import storage
@@ -342,6 +344,33 @@ def get_html(session, html_url) -> None:
                            "url": html_url, "status_code": resp.status_code, "ms": html_url})
 
 
+@retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
+def get_pdf(session, pdf_url) -> None:
+    start = perf_counter()
+    headers = {'User-Agent': ENSURE_UA}
+    logger.debug("Getting %s", pdf_url)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    # noinspection PyStatementEffect
+    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    pdf_ms: int = ms_since(start)
+    if resp.status_code == 503:
+        msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise Overloaded503Exception(msg)
+    if resp.status_code != 200:
+        msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise (Exception(msg))
+    else:
+        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
+                    extra={CATEGORY: "download",
+                           "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+
+
 def ensure_pdf(session, host, arxiv_id):
     """Ensures PDF exists for arxiv_id.
 
@@ -439,7 +468,6 @@ def upload_html(gs_client, ensure_tuple):
     ret = []
     for file in ensure_tuple[0]:
         yield upload(gs_client, file, path_to_bucket_key_html(file))
-
 
 @STORAGE_RETRY
 def upload(gs_client, localpath, key):

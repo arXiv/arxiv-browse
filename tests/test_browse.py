@@ -17,7 +17,8 @@ class BrowseTest(unittest.TestCase):
         """Test the home page."""
         rv = self.client.get('/')
         self.assertEqual(rv.status_code, 200)
-        html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
+        txt = rv.data.decode('utf-8')
+        html = BeautifulSoup(txt, 'html.parser')
 
         for group_key, group_value in taxonomy.definitions.GROUPS.items():
             if group_key == 'grp_test':
@@ -26,6 +27,9 @@ class BrowseTest(unittest.TestCase):
             self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
         self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
+
+        self.assertNotIn('None/login', txt)
+
 
     def test_tb(self):
         """Test the /tb/<arxiv_id> page."""
@@ -371,10 +375,10 @@ class BrowseTest(unittest.TestCase):
 
         self.assertIsNotNone(
             colab['href'], '<a> tag in title should have href')
-        self.assertEqual(
-            colab['href'], 'https://arxiv.org/search/physics?searchtype=author&query=ILL%2FESS%2FLiU+collaboration')
-        self.assertEqual(
-            colab.text, 'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
+        self.assertRegex(colab['href'],
+                         'search\/physics\?searchtype=author\&query=ILL.ESS.LiU\+collaboration')
+        self.assertEqual(colab.text,
+                         'ILL/ESS/LiU collaboration for the development of the B10 detector technology in the framework of the CRISP project')
 
     @unittest.skip("In current implementation, conflicts with comma test below.")
     def test_space_in_author_list(self):

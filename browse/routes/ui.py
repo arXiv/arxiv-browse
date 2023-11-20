@@ -1,6 +1,7 @@
 """Provides the user interfaces for browse."""
 import re
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Tuple, Union, Optional
 from http import HTTPStatus as status
 import bcrypt
@@ -16,6 +17,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_file,
     session,
     url_for,
 )
@@ -70,6 +72,13 @@ def home() -> Response:
 
     raise InternalServerError("Unexpected error")
 
+@blueprint.route("/favicon.ico")
+@blueprint.route("/apple-touch-icon-120x120-precomposed.png")
+@blueprint.route("/apple-touch-icon-120x120.png")
+@blueprint.route("/apple-touch-icon-precomposed.png")
+def favicon() -> Response:
+    """Send favicon."""
+    return send_file(Path(current_app.root_path, "static/images/icons/favicon.ico"))
 
 @blueprint.route("abs", methods=["GET"])
 def bare_abs() -> Any:
@@ -100,7 +109,7 @@ def abstract(arxiv_id: str) -> Any:
 
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
-            return Response(response["abs_meta"].raw_safe, mimetype="text/plain")
+            return Response(response["abs_meta"].raw(), mimetype="text/plain")
         return render_template("abs/abs.html", **response), code, headers
     elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)

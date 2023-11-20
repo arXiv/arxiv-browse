@@ -34,12 +34,21 @@
         <div class="column" id="cu-logo">
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
-        {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-        {%- if rd_int >= 202305010100 and rd_int <= 202307170100 -%}
+
+        {%- if rd_int >= 202310120100 and rd_int <= 202310220100 -%}
         <div class="column banner-minimal">
-            <a href="https://info.arxiv.org/hiring/">We are hiring</a></p>
+          <p><a href="https://cornell.wd1.myworkdayjobs.com/en-US/CornellCareerPage/job/arXiv-Production-Editor--Cornell-Tech--NYC-_WDR-00040646">We are hiring</a></p>
         </div>
         {%- endif -%}
+
+        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
+        <div class="column">
+            <a href="https://info.arxiv.org/help/cloud.html"><span style="color:white;text-decoration-line:underline;">
+                Served from the cloud
+            </span></a>
+        </div>
+        {%- endif -%}
+
         <div class="column" id="support-ack">
           <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors. <a href="https://info.arxiv.org/about/donate.html">Donate</a></span>
         </div>
@@ -86,11 +95,11 @@
                 <h2 id="mobilemenulabel">quick links</h2>
                 <ul>
                     {% if request.auth is defined and request.auth.user is defined %}
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user">My Account</a></li>
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/user/create">Start Submission</a></li>
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/logout">Logout</a></li>
+                    <li><a href="{{ url_for('account') }}">My Account</a></li>
+                    <li><a href="{{ url_for('create') }}">Start Submission</a></li>
+                    <li><a href="{{ url_for('logout')}} ">Logout</a></li>
                     {% else %}
-                    <li><a href="{{ config['BROWSE_SITE_HOST'] }}/login">Login</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('help') }}">Help Pages</a></li>
                     <li><a href="{{ url_for('about') }}">About</a></li>
