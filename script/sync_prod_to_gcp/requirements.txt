@@ -45,7 +45,7 @@ six==1.16.0
 tomli==1.2.3
 typed-ast==1.5.4
 typing-extensions==4.1.1
-urllib3==1.26.12
+urllib3==1.26.18
 uWSGI==2.0.21
 webencodings==0.5.1
 Werkzeug==2.0.3
