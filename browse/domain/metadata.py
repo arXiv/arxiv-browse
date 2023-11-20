@@ -293,8 +293,8 @@ class DocMetadata:
             rev = "" if version.version == 1 else f" (revised v{version.version})"
             rv += f"Date{rev}: {version.submitted_date.strftime('%a, %-d %b %Y %H:%M:%S %Z')}   "\
                 f"({version.size_kilobytes}kb"
-            if version.source_type.code and version.source_type.code.upper() == version.source_type.code:
-                rv += f",{version.source_type.code}"
+            if version.source_flag.code and version.source_flag.code.upper() == version.source_flag.code:
+                rv += f",{version.source_flag.code}"
             rv += ")\n"
 
         rv += "\n"
