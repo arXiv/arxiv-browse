@@ -195,6 +195,12 @@ class DocMetadata:
                 f'version_history was not an Iterable for {self.arxiv_id_v}')
         return max(map(lambda ve: ve.version, self.version_history))
 
+    def get_requested_version(self) -> VersionEntry:
+        """Get the version indicated in `self.arxiv_identifier.version`."""
+        ver_obj = self.get_version()
+        if not ver_obj:
+            raise ValueError('{self.arxiv_id} version_history has no version {version}')
+        return ver_obj
 
     def get_version(self, version:Optional[int] = None) -> Optional[VersionEntry]:
         """Gets `VersionEntry` for `version`.

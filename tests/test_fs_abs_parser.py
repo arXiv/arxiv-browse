@@ -15,6 +15,7 @@ ABS_FILES = path_of_for_test('data/abs_files')
 
 class TestAbsParser(TestCase):
     """Test  parsing metadata from .abs files."""
+    maxDiff = None
 
     def test_bulk_parsing(self):
         """Parse all nonempty .abs files in test set."""
@@ -67,7 +68,8 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 6, 28, 11, 24, 35,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_flag=SourceFlag(code='')
+                    source_flag=SourceFlag(code=''),
+                    is_withdrawn=False
                 ),
                 VersionEntry(
                     version=2,
@@ -76,7 +78,8 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 7, 21, 9, 45, 44,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_flag=SourceFlag(code='')
+                    source_flag=SourceFlag(code=''),
+                    is_withdrawn=False
                 ),
                 VersionEntry(
                     version=3,
@@ -85,7 +88,8 @@ class TestAbsParser(TestCase):
                     submitted_date=datetime(2009, 7, 29, 11, 13, 43,
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
-                    source_flag=SourceFlag(code='')
+                    source_flag=SourceFlag(code=''),
+                    is_withdrawn=False
                 )
             ]
         )

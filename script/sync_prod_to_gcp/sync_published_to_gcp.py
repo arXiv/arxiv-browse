@@ -85,11 +85,11 @@ REUPLOADS = {}
 ENSURE_UA = 'periodic-rebuild'
 
 CONCURRENCY_PER_WEBNODE = [
-    ('web5.arxiv.org', 4),
-    ('web6.arxiv.org', 4),
-    ('web7.arxiv.org', 4),
-    ('web8.arxiv.org', 4),
-    ('web9.arxiv.org', 4),
+    ('web5.arxiv.org', 1),
+    ('web6.arxiv.org', 1),
+    ('web7.arxiv.org', 1),
+    ('web8.arxiv.org', 1),
+    ('web9.arxiv.org', 1),
 ]
 """Tuples of form HOST, THREADS_FOR_HOST
 
@@ -539,6 +539,7 @@ def sync_to_gcp(todo_q, host):
                 if action != 'build_html+upload':
                     summary_q.put((job['paper_id'], ms_since(start)) + res)
                 logger.debug("success uploading %s", job['paper_id'], extra=extra)
+                sleep(0.5)
             except Exception as ex:
                 extra.update({CATEGORY: "upload"})
                 extra.update(job_details)
@@ -572,7 +573,7 @@ def log_summary(duration, overall_size):
 
     logger.info(
         f"Done at {datetime.now().isoformat()}. Overall time: {duration:.2f} sec"
-        " for {overall_size} submissions. Success/Failed: {n_good}/{n_bad}",
+        f" for {overall_size} submissions. Success/Failed: {n_good}/{n_bad}",
         extra={"total": overall_size, "duration": str(duration), "success": n_good, "failure": n_bad,
                CATEGORY: "summary"})
 

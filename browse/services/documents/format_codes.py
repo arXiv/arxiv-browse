@@ -43,8 +43,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
 
 def formats_from_source_flag(source_flag: str,
                              format_pref: Optional[str] = None,
-                             cache_flag: bool = False,
-                             add_sciencewise: bool = False) -> List[str]:
+                             cache_flag: bool = False) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:
@@ -125,9 +124,6 @@ def formats_from_source_flag(source_flag: str,
             formats.extend(['pdf', 'ps'])
 
         append_other = True
-
-    if add_sciencewise:
-        formats.append('sciencewise_pdf')
 
     if append_other:
         formats.append('other')

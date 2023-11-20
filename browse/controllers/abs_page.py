@@ -37,7 +37,6 @@ from browse.services.database import (
     get_dblp_authors,
     get_dblp_listing_path,
     get_trackback_ping_latest_date,
-    has_sciencewise_ping,
 )
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_flag
@@ -114,7 +113,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         if redirect:
             return redirect
 
-        abs_meta = get_doc_service().get_abs(arxiv_id)
+        abs_meta = get_doc_service().get_abs(arxiv_identifier)
         not_modified = _check_request_headers(abs_meta, response_data, response_headers)
         if not_modified:
             return {}, status.NOT_MODIFIED, response_headers
@@ -139,24 +138,23 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         # Dissemination formats for download links
         download_format_pref = request.cookies.get("xxx-ps-defaults")
-        add_sciencewise_ping = _check_sciencewise_ping(abs_meta.arxiv_id_v)
         response_data["formats"] = get_article_store().get_dissemination_formats(
-            abs_meta, download_format_pref, add_sciencewise_ping
-        )
+            abs_meta, download_format_pref)
         if response_data['latexml_url'] is not None:
             response_data['formats'].append('latexml')
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
-        for ver_index in range(0, abs_meta.highest_version()):
-            formats = formats_from_source_flag(abs_meta.version_history[ver_index].source_flag.code)
-            if len(formats) == 1 and formats[0] == "src":
-                response_data["withdrawn_versions"].append(abs_meta.version_history[ver_index])
-                if not response_data["higher_version_withdrawn"] and ver_index > abs_meta.version - 1:
+        response_data["withdrawn"] = False
+        for ver in abs_meta.version_history:
+            if ver.withdrawn_or_ignore:
+                response_data["withdrawn_versions"].append(ver)
+                if abs_meta.version == ver.version:
+                    response_data["withdrawn"] = True
+                if not response_data["higher_version_withdrawn"] and ver.version > abs_meta.version:
                     response_data["higher_version_withdrawn"] = True
-                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier, ver_index+1)
-
-        response_data["withdrawn"] = abs_meta.version_history[abs_meta.version - 1] in response_data["withdrawn_versions"]
+                    response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier,
+                                                                                         ver.version)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
@@ -404,14 +402,6 @@ def _is_covid_match(docmeta: DocMetadata) -> bool:
         ):
             return True
     return False
-
-
-def _check_sciencewise_ping(paper_id_v: str) -> bool:
-    """Check whether paper has a ScienceWISE ping."""
-    try:
-        return has_sciencewise_ping(paper_id_v)  # type: ignore
-    except IOError:
-        return False
 
 
 def _check_dblp(docmeta: DocMetadata, db_override: bool = False) -> Optional[Dict]:

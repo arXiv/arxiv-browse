@@ -235,12 +235,14 @@ def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
                 f'Could not parse submitted date {sd} as datetime') from ex
 
         source_type = SourceFlag(code=date_match.group('source_type'))
+        kb = int(date_match.group('size_kilobytes'))
         ve = VersionEntry(
             raw=date_match.group(0),
             source_flag=source_type,
-            size_kilobytes=int(date_match.group('size_kilobytes')),
+            size_kilobytes=kb,
             submitted_date=submitted_date,
-            version=version_count
+            version=version_count,
+            is_withdrawn=kb == 0 or source_type.ignore
         )
         version_entries.append(ve)
 

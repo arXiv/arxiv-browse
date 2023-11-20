@@ -24,7 +24,6 @@ from browse.services.database.models import (
     Document,
     MemberInstitution,
     MemberInstitutionIP,
-    SciencewisePing,
     StatsMonthlyDownload,
     StatsMonthlySubmission,
     TrackbackPing,
@@ -220,16 +219,6 @@ def count_all_trackback_pings() -> int:
     c = __all_trackbacks_query().count()
     assert isinstance(c, int)
     return c
-
-
-# Used in abs page
-@db_handle_error(db_logger=logger, default_return_val=False)
-def has_sciencewise_ping(paper_id_v: str) -> bool:
-    """Determine whether versioned document has a ScienceWISE ping."""
-    has_ping: bool = db.session.query(SciencewisePing).filter(
-        SciencewisePing.paper_id_v == paper_id_v
-    ).count() > 0
-    return has_ping
 
 
 # used in abs page

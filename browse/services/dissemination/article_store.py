@@ -219,7 +219,7 @@ class ArticleStore():
         if not version:
             return "VERSION_NOT_FOUND"
 
-        if version.is_withdrawn:
+        if version.withdrawn_or_ignore:
             return "WITHDRAWN"
 
         handler_fn = self.format_handlers[format]
@@ -236,7 +236,6 @@ class ArticleStore():
     def get_dissemination_formats(self,
                                   docmeta: DocMetadata,
                                   format_pref: Optional[str] = None,
-                                  add_sciencewise: bool = False,
                                   src_file: Optional[FileObj] = None
                                   ) -> List[str]:
         """Get a list of possible formats for a `DocMetadata`.
@@ -256,8 +255,6 @@ class ArticleStore():
         docmeta : :class:`DocMetadata`
         format_pref : str
             The format preference string.
-        add_sciencewise : bool
-            Specify whether to include 'sciencewise_pdf' format in list.
         src_file: Optional[FileObj]
             What src file to use in the format check. This will be
             looked up if it is `None`
@@ -268,6 +265,9 @@ class ArticleStore():
             A list of format strings.
         """
         formats: List[str] = []
+        version = docmeta.get_requested_version()
+        if version.withdrawn_or_ignore or version.size_kilobytes <= 0:
+            return formats
 
         # first, get possible list of formats based on available source file
         if src_file is None:
@@ -279,12 +279,6 @@ class ArticleStore():
                 formats_from_source_file_name(src_file.name)
         if source_file_formats:
             formats.extend(source_file_formats)
-
-            if add_sciencewise:
-                if formats and formats[-1] == 'other':
-                    formats.insert(-1, 'sciencewise_pdf')
-                else:
-                    formats.append('sciencewise_pdf')
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
@@ -297,8 +291,7 @@ class ArticleStore():
                 and src_file.updated < cached_ps_file.updated)
             source_type_formats = formats_from_source_flag(format_code,
                                                            format_pref,
-                                                           cache_flag,
-                                                           add_sciencewise)
+                                                           cache_flag)
             if source_type_formats:
                 formats.extend(source_type_formats)
 
@@ -328,7 +321,7 @@ class ArticleStore():
             formats.extend(['pdf', src_fmt])
 
         ver = docmeta.get_version()
-        if ver and not ver.is_withdrawn:
+        if ver and not ver.withdrawn_or_ignore:
             formats.append('src')
 
         return formats

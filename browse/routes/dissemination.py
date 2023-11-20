@@ -66,8 +66,6 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
             "arxiv_idv": arxiv_identifier.idv,
             "abs_meta": abs_meta}
 
-    download_format_pref = request.cookies.get("xxx-ps-defaults")
-    add_sciencewise_ping = False
     formats = get_article_store().get_all_paper_formats(abs_meta)
     data["formats"] = formats
     for fmt in formats:

@@ -52,7 +52,6 @@ class DbDocMetadataService(DocMetadataService):
         if isinstance(arxiv_id, Identifier):
             paper_id = arxiv_id
         else:
-            # TODO Probably doesn't do docmeta.version_history correctly
             paper_id = Identifier(arxiv_id=arxiv_id)
 
         if paper_id.id in DELETED_PAPERS:
@@ -114,16 +113,16 @@ class DbDocMetadataService(DocMetadataService):
 
         for ver in all_versions:
             size_kilobytes = int(ver.source_size / 1024 + .5)
-            # Set UTC timezone
             created_tz = ver.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=ver.version,
                                  raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_flag=SourceFlag(ver.source_format))
+                                 source_flag=SourceFlag(ver.source_format),
+                                is_withdrawn=ver.is_withdrawn)
             version_history.append(entry)
 
-        return to_docmeta(res, version_history, self.business_tz)
+        return to_docmeta(res, identifier, version_history, self.business_tz)
 
     def service_status(self)->List[str]:
         try:
