@@ -97,5 +97,3 @@ def html(arxiv_id: str, archive=None):  # type: ignore
 def ps(arxiv_id: str) -> Response:
     """Get ps for article."""
     raise InternalServerError(f"Not yet implemented {arxiv_id}")
-
-# <img src="https://browse.arxiv.org/static/logo.png"/>
