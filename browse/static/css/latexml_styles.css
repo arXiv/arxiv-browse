@@ -3,12 +3,13 @@
   --text-font-family: "freight-sans-pro";
   --toc-font-family: "ibm-plex-sans-condensed";
   --other-font-family: "freight-sans-pro";
-  --note-highlight-color: #f9f7f7;
+  --note-highlight-color: #f9f7f7; /* warm wash */
   --toc-text-highlight-color: #b31b1b; /* Cornell Red */
   --inpage-text-highlight-color: #1f5e96; /* Archival Blue */
   --rp-button-hover-color: #fb595a; /* Publishing Pink */
   --text-color: black;
-  --link-text-color: #1e8bc3;
+  --link-text-color: #1b7cac; /* blue, passes color contrast with white bg*/
+  --header-text-color: #f9f7f7; /* warm wash */
 }
 [data-theme=dark] {
   --note-highlight-color: #6b6459; /* Open Blue */
@@ -17,8 +18,9 @@
   --text-color: #f9f7f7;
   --link-text-color: #1e8bc3;
   --background-color: #282623;
-  /* --link-text-color: #282623; */
+  --link-text-color: #2198d4; /* blue, passes color contrast with dark bg */
   --rp-button-hover-color: #fb595a; /* Publishing Pink */
+  --header-text-color: #f9f7f7; /* warm wash */
 }
 
 /* Hover Overwrite Section */
@@ -556,7 +558,32 @@ header a {
 header.desktop_header {
   position: fixed;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
 }
+header .html-header-logo .logo, header .html-header-logo .logomark {
+  background-color: transparent;
+  filter: brightness(1); /*overrides ar5iv translucent style in dark mode*/
+}
+header .html-header-message {
+  margin-right: auto;
+  max-width: 50%;
+}
+header .html-header-nav {
+  display: flex;
+  align-items: center;
+}
+header .html-header-nav a {
+  text-decoration: none;
+  color: #f9f7f7;
+}
+header .html-header-nav a span {
+  text-shadow: 0 0 0 var(--header-text-color);
+  color: transparent;
+}
+
+
+
 
 .logo {
   background-color: transparent !important;
@@ -699,7 +726,7 @@ body:after {
   padding: 0.5rem;
   margin-top: 0.1rem;
   color: transparent;
-  text-shadow: 0 0 0 var(--text-color);
+  text-shadow: 0 0 0 var(--header-text-color);
 }
 
 .ar5iv-footer-button {
@@ -714,7 +741,7 @@ body:after {
 /* Update: For toc */
 .ltx_page_main >.ltx_TOC{
   position: sticky;
-  top: 7vh;
+  top: 6.5vh;
   max-height: 95vh;
   margin-top: 0;
   /* xxx */
@@ -761,10 +788,6 @@ body:after {
   background-color: var(--background-color);
   color: #c9d1d9;
 }
-
-/* [data-theme=dark] .ltx_ref {
-  color: var(--text-color);
-} */
 
 .ltx_TOC>.ltx_toclist>.ltx_tocentry {
   margin-bottom: 0.3em;
@@ -897,6 +920,8 @@ li.ltx_tocentry.ltx_tocentry_appendix {
 @media only screen and (max-width: 719px) {
   header {
     gap: .75em;
+    padding-right: 3em;
+    padding-left: 3em;
   }
 
   .header-message {
@@ -942,7 +967,6 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     position: fixed;
     width:100%;
     z-index:1;
-    /* display: none; */
   }
 
   [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
@@ -1094,4 +1118,3 @@ article{
 :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_square {
   width: 100%;
 }
-
