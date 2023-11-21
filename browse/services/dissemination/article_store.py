@@ -265,7 +265,7 @@ class ArticleStore():
             A list of format strings.
         """
         formats: List[str] = []
-        version = docmeta.get_requested_version()
+        version: VersionEntry = docmeta.get_requested_version()
         if version.withdrawn_or_ignore or version.size_kilobytes <= 0:
             return formats
 
@@ -282,8 +282,7 @@ class ArticleStore():
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
-            version = docmeta.version
-            format_code = docmeta.version_history[version - 1].source_flag.code
+            format_code = docmeta.get_requested_version().source_flag.code
             cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
             cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
                 and cached_ps_file.size == 0 \

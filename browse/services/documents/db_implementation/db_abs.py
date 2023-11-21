@@ -103,13 +103,9 @@ class DbDocMetadataService(DocMetadataService):
         if not res:
             raise AbsNotFoundException(identifier.id)
 
-        # Gather version history metadata from each document version
-        # entry in database.
+        # Gather version history metadata from each document version entry in database.
         version_history = list()
-
-        all_versions = (Metadata.query
-               .filter(Metadata.paper_id == identifier.id)
-               )
+        all_versions = (Metadata.query.filter(Metadata.paper_id == identifier.id))
 
         for ver in all_versions:
             size_kilobytes = int(ver.source_size / 1024 + .5)
@@ -118,8 +114,10 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_flag=SourceFlag(ver.source_format),
-                                is_withdrawn=ver.is_withdrawn)
+                                 source_flag=SourceFlag(ver.source_flags),
+                                 source_format=ver.source_format,
+                                 is_withdrawn=ver.is_withdrawn or ver.source_format == "withdrawn"
+                                              or ver.source_size == 0)
             version_history.append(entry)
 
         return to_docmeta(res, identifier, version_history, self.business_tz)

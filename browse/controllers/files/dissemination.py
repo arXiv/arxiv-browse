@@ -144,18 +144,14 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
-        print (f'arxiv_id: {arxiv_id}')
-        print (f'arxiv_id_str: {arxiv_id_str}')
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
-    print (f'ARTICLE STORE STATUS: {get_article_store().status()}')
     item = get_article_store().dissemination(format, arxiv_id)
-    logger. debug(f"dissemination_for_id({arxiv_id.idv}) was {item}")
+    logger. debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
-        print (item)
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
-        return withdrawn(arxiv_id)
+        return withdrawn(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif item == "NOT_PDF":
@@ -277,12 +273,15 @@ def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) ->
         resp.headers["ETag"] = last_mod
     return resp 
 
-def withdrawn(arxiv_id: Identifier) -> Response:
+def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
-    headers = {'Cache-Control': 'max-age=31536000'}
+    if had_specific_version:
+        headers = {'Cache-Control': 'max-age=31536000'}
+    else:
+        headers = {'Expires': format_datetime(next_publish())}
     return make_response(render_template("dissemination/withdrawn.html",
                                          arxiv_id=arxiv_id),
-                         200, headers)
+                         404, headers)
 
 
 def unavailable(arxiv_id: Identifier) -> Response:
