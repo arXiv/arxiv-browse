@@ -30,7 +30,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
             abort(400, description="do not prefix non-legacy ids with arxiv/")
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
-        return make_response(render_template("pdf/bad_id.html",
+        return make_response(render_template("dissemination/bad_id.html",
                                              err_msg=str(ex),
                                              arxiv_id=arxiv_id_str), 404, {})
 
@@ -49,7 +49,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
 
     ver = doc.get_version()
     if mode == 'anc' and ver is not None \
-       and not ver.source_type.includes_ancillary_files:
+       and not ver.source_flag.includes_ancillary_files:
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),
@@ -65,7 +65,8 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
 
     if not isinstance(dis_res, tuple):
         abort(500, description="Unexpected result for source")
-
+    if not isinstance(dis_res[0], FileObj):
+        abort(500, description="Unexpected result for source")
     src_file = dis_res[0]
     tarmember = FileFromTar(src_file, path)
     if not tarmember.exists():

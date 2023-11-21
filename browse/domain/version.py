@@ -1,10 +1,16 @@
 """Representations of a version of a document."""
+from typing import Literal, Optional
 from dataclasses import dataclass, field
 from datetime import datetime
 
+SOURCE_FORMAT = Literal["tex", "ps", "html", "pdf", "withdrawn", "pdftex", "docx"]
+"""All values used in DB for the source_format column.
+
+Excluding NULL."""
+
 
 @dataclass(frozen=True)
-class SourceType:
+class SourceFlag:
     """Represents arXiv article source file type."""
 
     code: str
@@ -112,12 +118,15 @@ class VersionEntry:
     size_kilobytes: int = 0
     """Size of the article source, in kilobytes."""
 
-    source_type: SourceType = field(default_factory=SourceType)  # type: ignore
+    source_flag: SourceFlag = field(default_factory=SourceFlag)  # type: ignore
     """Source file type."""
 
     is_withdrawn: bool = False
     """Is the version withdrawn."""
 
+    source_format: Optional[SOURCE_FORMAT] = None
+    """Source format."""
+
     @property
     def withdrawn_or_ignore(self) -> bool:
-        return self.source_type.ignore or self.is_withdrawn
+        return self.source_flag.ignore or self.is_withdrawn

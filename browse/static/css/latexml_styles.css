@@ -1,0 +1,1097 @@
+:root,[data-theme=light] {
+  --headings-font-family: "freight-text-pro";
+  --text-font-family: "freight-sans-pro";
+  --toc-font-family: "ibm-plex-sans-condensed";
+  --other-font-family: "freight-sans-pro";
+  --note-highlight-color: #f9f7f7;
+  --toc-text-highlight-color: #b31b1b; /* Cornell Red */
+  --inpage-text-highlight-color: #1f5e96; /* Archival Blue */
+  --rp-button-hover-color: #fb595a; /* Publishing Pink */
+  --text-color: black;
+  --link-text-color: #1e8bc3;
+}
+[data-theme=dark] {
+  --note-highlight-color: #6b6459; /* Open Blue */
+  --toc-text-highlight-color: #a5d6fe; /* Open Blue */
+  --inpage-text-highlight-color:#a5d6fe;
+  --text-color: #f9f7f7;
+  --link-text-color: #1e8bc3;
+  --background-color: #282623;
+  /* --link-text-color: #282623; */
+  --rp-button-hover-color: #fb595a; /* Publishing Pink */
+}
+
+/* Hover Overwrite Section */
+
+#modal-submit{
+  background-color: #b31b1b;
+  border-color: #690604;
+}
+
+.ltx_cite>.ltx_ref:hover,
+.ltx_p>.ltx_ref:hover {
+  text-decoration: none;
+}
+
+
+.ar5iv-footer-button:hover {
+  color: var(--inpage-text-highlight-color);
+  text-decoration: underline;
+}
+
+/* Hover for modal button. */
+@media (min-width: 768px) {
+  #openForm:hover, #modal-submit:hover, small-report-button:hover {
+    text-decoration: underline;
+    background-color: var(--rp-button-hover-color);
+    color: black;
+  }
+}
+
+@media (max-width: 767px) {
+  #openForm:active, #modal-submit:active, small-report-button:hover {
+    text-decoration: underline;
+    background-color: var(--rp-button-hover-color);
+    color: black;
+  }
+}
+
+/* Overwrite font color*/
+
+.btn {
+  font: var(--other-font-family);
+}
+
+.ltx_TOC>h6, .ltx_title_abstract {
+  color: var(--text-color);
+}
+
+.ltx_TOC>.ltx_toclist>.ltx_tocentry>a.ltx_ref {
+  color: var(--text-color);
+}
+
+.form-text{
+  font: var(--other-font-family);
+}
+
+.ltx_cite>.ltx_ref{
+  text-decoration: underline;
+  border-bottom: none;
+}
+
+.ltx_p>.ltx_ref {
+  text-decoration: underline;
+  border-bottom: none;
+}
+
+.freight-text-pro {
+  font-family: "freight-text-pro";
+}
+
+.modal-title,
+textarea.form-control{
+  font: var(--other-font-family);
+}
+
+.mob_header{
+  display: none;
+}
+
+#target-section {
+  position: relative;
+}
+
+#watermark-tr {
+  text-align: center;
+  opacity: 0.5;
+  z-index: 9999;
+  color: rgb(75, 75, 75);
+  font-size: 24px;
+  user-select: none;
+  padding: 5px;
+  position: relative;
+  width: 100%;
+}
+
+#license-tr {
+  text-align: center;
+  opacity: 0.5;
+  z-index: 9999;
+  color: rgb(75, 75, 75);
+  font-size: 20px;
+  user-select: none;
+  padding: 5px;
+  position: relative;
+  width: 100%;
+}
+
+/* CSS for Footnote */
+
+@media only screen and (min-width: 104.5rem){
+  .ltx_note_outer {
+      display: block;
+      opacity: 100;
+      position: relative;
+      clear: both;
+      float: right;
+      padding-bottom: 2rem;
+      padding-right: 2rem;
+  }
+}
+
+@media only screen and (max-width: 104.5rem){
+  .ltx_note_content {
+      overflow-wrap: break-word;
+      width: 90%;
+  }
+
+  .ltx_note:not(.ltx_note_frontmatter):not(.ltx_role_affiliationmark):not(.ltx_role_footnotemark):active>.ltx_note_outer,
+    .ltx_note:not(.ltx_note_frontmatter):not(.ltx_role_affiliationmark):not(.ltx_role_footnotemark):hover>.ltx_note_outer {
+        display: block;
+        opacity: 100;
+        z-index: 100;
+        position: absolute;
+        top: 0;
+        margin: auto;
+        padding: 2rem;
+        background-color: var(--background-color);
+        border-width: .1rem 0;
+        border-bottom: double;
+        border-top: double
+  }
+}
+
+@media only screen and (min-width: 104.5rem){
+  .ltx_note_content>.ltx_note_mark {
+    display: block;
+    opacity: 100;
+    margin-top: -1.8rem;
+  }
+}
+
+@media only screen and (max-width: 104.5rem){
+  .ltx_note_outer {
+    display: none;
+    opacity: 0;
+    width: auto;
+    max-width: 30rem;
+  }
+}
+
+@media only screen and (min-width: 104.5rem) and (max-width: 108.99rem){
+  .ltx_note_outer {
+    width: 14rem;
+    margin-right: -17rem;
+  }
+}
+
+@media only screen and (min-width: 109rem){
+  .ltx_note_outer {
+    width: 18rem;
+    margin-right: -23rem;
+  }
+}
+
+.ltx_note>.ltx_note_mark {
+  text-decoration: underline;
+}
+
+.ltx_note>.ltx_note_mark:hover {
+  text-decoration: none;
+}
+
+/* CSS for Footnote End*/
+
+
+/* Hover */
+
+.ltx_TOC>.ltx_toclist>.ltx_tocentry>a.ltx_ref:hover {
+  color: var(--inpage-text-highlight-color);
+}
+.ltx_tag_bibitem:active~*,
+.ltx_tag_bibitem:hover~*,
+.ltx_tag_bibitem~:active,
+.ltx_tag_bibitem~:hover {
+    /* do nothing */
+    background-color: var(--background-color);
+}
+
+header {
+  background-color: #b31313;
+  display: flex;
+  top: 0;
+  width: 100%;
+  justify-content: space-between;
+  padding: .5em 4em;
+  align-items: center;
+}
+
+header a {
+  color: white;
+}
+.logo {
+  max-height: 2em
+}
+.logomark {
+  max-height: 2.5em;
+  display: none;
+}
+svg.icon, [data-theme=dark] svg.icon {
+  background-color: transparent !important;
+  z-index: 1 !important;
+  margin-left:2px;
+
+}
+.header-message {
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  /* max-width: 50%; */
+  font-family: var(--other-font-family);
+  font-size: smaller;
+  color: white;
+}
+.header-message a:hover{
+  text-shadow:0px 0px 2px white;
+}
+.report-container {
+  display: block;
+  max-width: 40em;
+  margin: 3em auto;
+  border: 2px solid #a5d6fe;
+  border-radius: 5px;
+  padding: 1em;
+  box-shadow: 1px 3px 8px 0.1px grey;
+}
+.report-container-mobile {
+  display: none;
+}
+a.skip{
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+a.skip:focus{
+  position:static;
+  width:auto;
+  height:auto;
+}
+button.feedback-button {
+  position: sticky;
+  bottom: 1em;
+  left: 1em;
+  margin-bottom: 0;
+  margin-top: 0.05em;
+  background-color: #a5d6fe;
+  color: black;
+  padding:.5em 1em;
+  border-radius: .5em;
+  font-size: 1.1em;
+  font-weight: bold;
+  box-shadow: 1px 1px 6px 0.05px grey;
+}
+.close-icon {
+  position: relative;
+  top: -10px;
+  right: -99%;
+}
+footer {
+  font-family: var(--other-font-family);
+}
+footer h2 {
+  font-size: 1.5em;
+}
+footer p, footer ul {
+  font-size: 0.9em;
+}
+footer .keyboard-glossary {
+  margin-bottom: 3em;
+}
+.ltx_page_footer {
+  font-family: arial, tahoma, sans-serif;
+  user-select: none;
+}
+
+/*mobile*/
+@media only screen and (max-width: 719px) {
+  header {
+    gap: .75em;
+  }
+  .header-message {
+    max-width:100%;
+    display: none;
+  }
+  .report-container {
+    display: none;
+  }
+  .report-container-mobile {
+    display: block;
+    margin: 1em auto;
+    border: 1px solid #cecece;
+    padding: 1em;
+    max-width: 150px;
+    box-shadow: 1px 3px 8px 0.1px grey;
+    border-radius: .5em
+  }
+  .logo {
+    display: none;
+  }
+  .logomark {
+    display: inline-flex;
+  }
+  .banner {
+    display: none;
+  }
+  #footer{
+    margin-bottom: 8vh;
+  }
+}
+
+/*BETA corner banner*/
+body:after {
+  content: "beta";
+  position: fixed;
+  z-index: 1070;
+  width: 80px;
+  height: 25px;
+  background: #fb595a;
+  top: 7px;
+  left: -20px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: black;
+  line-height: 27px;
+  -ms-transform:rotate(-45deg);
+  -webkit-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
+/*will display to screen readers, but not be visible to sighted users*/
+.sr-only {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+body {
+  position: relative;
+}
+
+#openForm {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 20px;
+  background-color: #b31b1b;
+}
+
+.report-box {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: rgb(6, 6, 6);
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+  display: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.text-report {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.take-screenshot {
+  margin-top: 10px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+[data-theme=light] .modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  /*width: 50%; /* Could be more or less, depending on screen size */
+}
+
+[data-theme=dark] .modal-content {
+  background-color: #0d1117;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #c9d1d9;
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Form label */
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-submit {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme=dark] .form-control:focus {
+  color:  #c9d1d9;
+  background-color: #0d1117;
+}
+
+/* Write new CSS which force in-line-color to follow root color. */
+[data-theme=dark] .ltx_table .ltx_text {
+  color: var(--text-color) !important;
+}
+
+[data-theme=dark] .form-control {
+  background-color: #0d1117;
+  color:#c9d1d9;
+  /* Add additional styles as needed */
+}
+
+[data-theme=dark] .form-control::placeholder {
+  color: #c9d1d9;
+}
+
+[data-theme=dark] .btn.btn-primary {
+  color:  var(--text-color);
+  border-color: var(--text-color);
+}
+
+[data-theme=dark] .btn.btn-outline-secondary#take-screenshot {
+  color:  #c9d1d9;
+  border-color:  #c9d1d9;
+}
+
+header{
+  user-select: none;
+}
+
+footer{
+  user-select: none;
+}
+
+
+/* Submit button */
+.modal-submit {
+  background-color: #595151;
+  color: white;
+  cursor: pointer;
+  width: 100px;
+}
+
+.modal-submit:hover {
+  background-color: #b31b1b;
+  width: 100px;
+}
+
+img#screenshot-img {
+  display: none;
+  max-width: 100px;
+  max-height: 400px;
+}
+
+header {
+  background-color: #b31313;
+  display: flex;
+  justify-content: space-between;
+  padding: .5em 4em;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+header a {
+  color: white;
+}
+header.desktop_header {
+  position: fixed;
+  z-index: 1000;
+}
+
+.logo {
+  background-color: transparent !important;
+  max-height: 2em;
+}
+
+#back-arrow {
+  background-color: transparent !important;
+}
+
+/* .header-message {
+  border: 10px solid #fb595a;
+  background: #fb595a;
+  border-radius: 6px;
+  max-width: 50%;
+  font-family: sans-serif;
+  font-size: smaller;
+  color: black;
+} */
+
+.body-message {
+  display: block;
+  max-width: 40em;
+  margin: 3em auto;
+  border: 2px solid #a5d6fe;
+  font-family: "Noto Serif", serif;
+  border-radius: 5px;
+  padding: 1em;
+  box-shadow: 1px 3px 8px 0.1px grey;
+}
+
+.body-message p,
+.body-message-mobile p {
+  margin: 0;
+  margin-top: -15px;
+}
+
+.body-message-mobile {
+  display: none;
+}
+
+a.skip {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+a.skip:focus {
+  position: static;
+  width: auto;
+  height: auto;
+}
+
+button.feedback-button {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  background-color: #a5d6fe;
+  color: black;
+  padding: .5em 1em;
+  border-radius: .5em;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.close-icon {
+  position: relative;
+  top: -10px;
+  right: -99%;
+}
+
+
+/*BETA corner banner*/
+body:after {
+  content: "beta";
+  position: fixed;
+  z-index: 1070;
+  width: 80px;
+  height: 25px;
+  background: #fb595a;
+  top: 7px;
+  left: -20px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: black;
+  line-height: 27px;
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+/*will display to screen readers, but not be visible to sighted users*/
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* For warning label. */
+[data-theme=light] #warningLabel {
+  color: #b31313;
+  background-color: rgb(250, 241, 230);
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 1em;
+  border-radius: .5em;
+  margin: 1em auto;
+}
+
+[data-theme=dark] #warningLabel {
+  color: rgb(209, 190, 137);
+  background-color: rgb(65, 57, 33);
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 1em;
+  border-radius: .5em;
+  margin: 1em auto;
+}
+
+.color-scheme-icon::before {
+  content: "🌙";
+}
+[data-theme="dark"] .color-scheme-icon::before {
+  content: "☀️";
+}
+.ar5iv-toggle-color-scheme {
+  text-decoration: none;
+  display: block;
+  float: left;
+  padding: 0.5rem;
+  margin-top: 0.1rem;
+  color: transparent;
+  text-shadow: 0 0 0 var(--text-color);
+}
+
+.ar5iv-footer-button {
+  color: var(--link-text-color);
+  font: var(--other-font-family);
+  padding: 0.5rem;
+  display: inline-block;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+/* Update: For toc */
+.ltx_page_main >.ltx_TOC{
+  position: sticky;
+  top: 7vh;
+  max-height: 95vh;
+  margin-top: 0;
+  /* xxx */
+  overflow-y: auto;
+  user-select: none;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  flex: 0 0 3rem;
+  font: var(--toc-font-family);
+}
+
+.ltx_page_main >.ltx_TOC.active{
+  flex:1 0 20%;
+  min-width: 18em;
+}
+.ltx_page_main > .ltx_TOC:not(.active) {
+  margin-right: -50px;
+}
+.ltx_page_main ol.ltx_toclist {
+  padding: 0 2em;
+}
+#toc_header{
+  display: none;
+}
+
+.ltx_page_main {
+  display: flex;
+  padding:1em;
+}
+
+.ltx_page_main > .ltx_page_content {
+  width: 100%;
+  min-height: 80vh;
+  margin: 3em auto;
+  flex-grow: 0;  /* This allows the content to grow and consume remaining space */
+  flex-shrink: 1;
+  flex-basis: 80vw;  /* Initial size */
+  overflow-x: auto;
+  overflow-y: clip;
+}
+
+[data-theme=dark] .ltx_TOC {
+  /* background-color: #0d1117; */
+  background-color: var(--background-color);
+  color: #c9d1d9;
+}
+
+/* [data-theme=dark] .ltx_ref {
+  color: var(--text-color);
+} */
+
+.ltx_TOC>.ltx_toclist>.ltx_tocentry {
+  margin-bottom: 0.3em;
+  margin-left: 1.5rem;
+}
+
+.ltx_tocentry.ltx_tocentry_appendix {
+  margin-bottom: 0.3rem;
+  margin-left: 1.5rem;
+}
+/*appendix nav styles*/
+.ltx_TOC>.ltx_toclist>.ltx_tocentry.ltx_tocentry_appendix>a.ltx_ref {
+  font-weight: 500;
+}
+.ltx_TOC>.ltx_toclist>.ltx_tocentry.ltx_tocentry_appendix>a.ltx_ref .ltx_tag_ref {
+  font-weight: 700;
+}
+
+.ltx_toclist.ltx_toclist_section{
+  display: none !important;
+}
+
+/*optimize for toc displaying*/
+li.ltx_tocentry.ltx_tocentry_subsection {
+  display: none;
+}
+
+li.ltx_tocentry.ltx_tocentry_appendix {
+  display: none;
+}
+
+
+/* Hover for TOC */
+.ltx_ref:hover{
+  /* background-color: var(--note-highlight-color); */
+  /* Add underline */
+  text-decoration: underline;
+  /* Chaneg text color */
+  color: var(--toc-text-highlight-color);
+}
+
+.ltx_p>.ltx_ref:hover,
+.ltx_cite>.ltx_ref:hover{
+  color: var(--inpage-text-highlight-color);
+}
+
+#listIcon {
+  width: 20px;
+  height: 20px;
+  margin-left: 1.4rem;
+  margin-top: 10px;
+  margin-bottom: 1rem;
+  /* align-items: center; */
+  z-index: 100;
+  /* display: none; */
+}
+
+#arrowIcon {
+  width: 20px;
+  height: 20px;
+  margin-left: 1.4rem;
+  margin-top: 10px;
+  margin-bottom: 1rem;
+  /* align-items: center; */
+  /* display: block; */
+}
+
+#listIcon svg, #arrowIcon svg {
+  background-color:var(--background-color);
+  fill:var(--text-color);
+}
+
+#toc_header {
+  font-size: 1.5rem;
+  margin-bottom: 1.3rem;
+  font-family: var(--text-font-family);
+  font-weight: 1000;
+}
+
+.ltx_toclist a.active {
+  font-weight: bold; /* You can apply any styling you want to indicate the active link */
+  background-color: var(--note-highlight-color);
+}
+
+/* Build for header */
+.hover-effect:hover{
+  text-decoration: underline;
+  color: var(--note-highlight-color);
+}
+
+.back-to-reference-btn {
+  /* background-color: #FFFFFF; */
+  background-color: var(--background-color);
+  display:block;
+  color: var(--border-color);
+  border: 1px solid var(--border-color);
+  border-radius: .5rem;
+  box-sizing: border-box;
+  /* color: #111827; */
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: .25rem 1rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.back-to-reference-btn:hover {
+  color: var(--background-color);
+  background-color: var(--inpage-text-highlight-color);
+}
+
+.back-to-reference-btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.back-to-reference-btn:focus-visible {
+  box-shadow: none;
+}
+
+/*mobile*/
+@media only screen and (max-width: 719px) {
+  header {
+    gap: .75em;
+  }
+
+  .header-message {
+    max-width: 100%;
+    display: none;
+  }
+
+  .body-message {
+    display: none;
+  }
+
+  .body-message-mobile {
+    display: block;
+    margin: 1em auto;
+    border: 1px solid #cecece;
+    padding: 1em;
+    max-width: 150px;
+    box-shadow: 1px 3px 8px 0.1px grey;
+    border-radius: .5em
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .logomark {
+    display: inline-flex;
+  }
+
+  .banner {
+    display: none;
+  }
+
+  #listIcon, #arrowIcon {
+    display: none;
+  }
+
+  .ltx_page_main >.ltx_TOC.mobile{
+    max-height: 60vh;
+    overflow-y: scroll;
+    margin-bottom: 0;
+    background-color: #f1f1f1;
+    position: fixed;
+    width:100%;
+    z-index:1;
+    /* display: none; */
+  }
+
+  [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
+    background-color: #5e5e5e;
+  }
+
+
+  .ltx_toclist{
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    display: block !important;
+  }
+
+  .ltx_page_main > .ltx_page_content{
+    padding:1em;
+    width: 100%;
+  }
+
+  .ltx_page_main{
+    padding:0;
+    display: inline-block;
+  }
+
+  .mob_header{
+    display:flex;
+  }
+  .desktop_header{
+    display:none;
+  }
+
+  section{
+    scroll-margin-top: 85px;
+  }
+
+  .ltx_bibitem {
+    scroll-margin-top: 80px; /* equal to the height of your fixed header */
+  }
+
+}
+
+.hide{
+  display: none;
+}
+
+ .collapse.show{
+  display: block !important;
+}
+
+/*print style*/
+@media print {
+  /* All your print styles go here */
+  header,
+  nav,
+  footer,
+  body::after,
+  .ltx_page_footer,
+  .ltx_page_main >.ltx_TOC.flex,
+  .back-to-reference-btn,
+  #small-report-button,
+  #openForm{
+    display: none;
+  }
+
+  /*problem*/
+  .ltx_page_main {
+    display: block;
+    width:95%;
+  }
+
+  header{
+    padding: 1em;
+  }
+  .ar5iv-footer-button{
+    margin-right: 0em;
+  }
+  .ltx_para{
+    overflow: scroll;
+  }
+}
+
+.ltx_bibitem{
+  padding-left: 10px;
+}
+
+.ltx_text{
+  white-space: normal;
+}
+.ltx_listingline{
+  white-space: normal;
+}
+article{
+  width: 100%;
+}
+.ltx_bibblock{
+  box-sizing: border-box;
+  width: 100%;
+}
+.ltx_table{
+  overflow-x: scroll;
+}
+
+.bg-body-tertiary{
+  background-color: #b31313 !important;
+  position: fixed;
+  z-index:1000;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+[data-bs-theme=dark] .navbar-toggler-icon {
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='1em' viewBox='0 0 448 512'%3E%3Cstyle%3Esvg%7Bfill%3A%23fdf7f7%7D%3C/style%3E%3Cpath d='M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z'/%3E%3C/svg%3E");
+}
+
+@media only screen and (max-width: 719px) {
+  .ltx_note > .ltx_note_mark{
+    font-size: 1.2em;
+    padding: 0.5rem;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+
+.package-alerts {
+  display: block;
+  background-color: #fff5f5;
+  border: 1px solid #cd0200;
+  color: #970503;
+  border-radius: 1em;
+  font-size: .9em;
+  padding: 1em;
+}
+.package-alerts button {
+  float: right;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 4px;
+  padding: 0.1em 0.2em 0.3em 0.2em;
+}
+
+/* Set Image/math equation width. */
+:not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_portrait {
+    width: 100%;
+}
+
+:not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_square {
+  width: 100%;
+}
+

@@ -54,7 +54,7 @@ from browse.domain.metadata import DocMetadata
 from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
-from browse.services.documents.format_codes import formats_from_source_type
+from browse.services.documents.format_codes import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service)
 
@@ -319,20 +319,33 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 def _src_code(article: DocMetadata)->str:
     vhs = [vh for vh in article.version_history if vh.version == article.version]
     if vhs:
-        return vhs[0].source_type.code
+        return vhs[0].source_flag.code
     else:
         return ''
+
+def dl_for_article(article: DocMetadata)-> Dict[str, Any]:
+    """Gets the download links for an article."""
+    dl_pref = request.cookies.get('xxx-ps-defaults')
+    return {article.arxiv_id_v: formats_from_source_flag(_src_code(article), dl_pref)}
 
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
     dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {item.article.arxiv_id_v: formats_from_source_type(_src_code(item.article), dl_pref)
+    return {item.article.arxiv_id_v: formats_from_source_flag(_src_code(item.article), dl_pref)
             for item in items}
+
+def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
+    """Returns a Dict of article id to latexml links"""
+    return {article.arxiv_id_v: get_latexml_url(article, True)}
 
 def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
                 for item in listings}
+
+def authors_for_article(article: DocMetadata)->Dict[str, Any]:
+    """Returns a Dict of article id to author links."""
+    return {article.arxiv_id_v: author_links(article)}
 
 def authors_for_articles(listings: List[Any])->Dict[str, Any]:
     """Returns a Dict of article id to author links."""

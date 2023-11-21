@@ -38,7 +38,7 @@ from time import sleep, perf_counter, gmtime, strftime as time_strftime
 from datetime import datetime
 import signal
 import json
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from pathlib import Path
 
@@ -69,6 +69,7 @@ class Overloaded503Exception(Exception):
 
 
 PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
+HTML_RETRY_EXCEPTIONS = PDF_RETRY_EXCEPTIONS
 CATEGORY = "category"
 
 GS_BUCKET = 'arxiv-production-data'
@@ -196,9 +197,10 @@ def make_todos(filename) -> List[dict]:
             actions.append(('upload', pdfm.group(1)))
         elif htmlm:  # must be before tex due to pattern overlap
             actions.append(('upload', htmlm.group(1)))
+            actions.append(('build_html+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         elif texm:
             actions.append(('upload', texm.group(1)))
-            actions.append(('build+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
+            actions.append(('build_pdf+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         else:
             logger.error(f"Could not determine source for submission {arxiv_id}",
                          extra={CATEGORY: "internal", "arxiv_id": arxiv_id})
@@ -249,7 +251,7 @@ def make_todos(filename) -> List[dict]:
             arxiv_id = Identifier(f"{m.group(1)}v{m.group(3)}")
             # withdrawals don't need the pdf synced since they should lack source
             actions = list(
-                filter(lambda tt: tt[0] != 'build+upload', rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)))
+                filter(lambda tt: tt[0] != 'build_pdf+upload', rep_version_acts(txt) + upload_abs_src_acts(arxiv_id, txt)))
             todo.append({'submission_id': subid, 'paper_id': m.group(1), 'type': 'wdr',
                          'actions': actions})
             continue
@@ -278,6 +280,68 @@ def path_to_bucket_key(pdf) -> str:
     else:
         logging.error(f"path_to_bucket_key: {pdf} does not start with {CACHE_PREFIX} or {DATA_PREFIX}")
         raise ValueError(f"Cannot convert PDF path {pdf} to a GS key")
+    
+def path_to_bucket_key_html(html) -> str:
+    if str(html).startswith(CACHE_PREFIX):
+        return str(html).replace(CACHE_PREFIX, '')
+    elif str(html).startswith(DATA_PREFIX):
+        return str(html).replace(DATA_PREFIX, '')
+    else:
+        logging.error(f"path_to_bucket_key: {html} does not start with {CACHE_PREFIX} or {DATA_PREFIX}")
+        raise ValueError(f"Cannot convert PDF path {html} to a GS key")
+
+
+@retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
+def get_pdf(session, pdf_url) -> None:
+    start = perf_counter()
+    headers = {'User-Agent': ENSURE_UA}
+    logger.debug("Getting %s", pdf_url)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    # noinspection PyStatementEffect
+    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    pdf_ms: int = ms_since(start)
+    if resp.status_code == 503:
+        msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise Overloaded503Exception(msg)
+    if resp.status_code != 200:
+        msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        raise (Exception(msg))
+    else:
+        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
+                    extra={CATEGORY: "download",
+                           "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
+        
+@retry.Retry(predicate=retry.if_exception_type(HTML_RETRY_EXCEPTIONS))
+def get_html(session, html_url) -> None:
+    start = perf_counter()
+    headers = {'User-Agent': ENSURE_UA}
+    logger.debug("Getting %s", html_url)
+    resp = session.get(html_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    # noinspection PyStatementEffect
+    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
+    html_ms: int = ms_since(start)
+    if resp.status_code == 503:
+        msg = f"ensure_pdf: GET status 503, server overloaded {html_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": html_url, "status_code": resp.status_code, "ms": html_url})
+        raise Overloaded503Exception(msg)
+    if resp.status_code != 200:
+        msg = f"ensure_pdf: GET status {resp.status_code} {html_url}"
+        logger.warning(msg,
+                       extra={CATEGORY: "download",
+                              "url": html_url, "status_code": resp.status_code, "ms": html_url})
+        raise (Exception(msg))
+    else:
+        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {html_url}",
+                    extra={CATEGORY: "download",
+                           "url": html_url, "status_code": resp.status_code, "ms": html_url})
 
 
 @retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
@@ -308,7 +372,7 @@ def get_pdf(session, pdf_url) -> None:
 
 
 def ensure_pdf(session, host, arxiv_id):
-    """Ensures PDF exits for arxiv_id.
+    """Ensures PDF exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
     for the PDF to be built.
@@ -347,12 +411,63 @@ def ensure_pdf(session, host, arxiv_id):
         return pdf_file, url, None, ms_since(start)
     else:
         raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
+    
+def ensure_html(session, host, arxiv_id: Identifier):
+    """Ensures HTML exists for arxiv_id.
+
+    Check on the ps_cache.  If it does not exist, request it and wait
+    for the HTML to be pre-processed.
+
+    Returns tuple with html_file, url, msec
+
+    arxiv_id must have a version.
+
+    This does not check if the arxiv_id is HTML source.
+    """
+    archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
+    html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.id}v{arxiv_id.version}/")
+    url = f"https://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
+
+    def _get_files_for_html (path: str) -> List[str]:
+        files = []
+        for root_dir, cur_dir, files in os.walk(html_path):
+            files.extend(map(lambda file: os.path.join(root_dir, file), files))
+        return files
+
+    start = perf_counter()
+
+    files = _get_files_for_html(html_path)
+
+    if len(files) > 0:
+        logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
+        return files, url, "already exists", ms_since(start)
+
+    start = perf_counter()
+    get_html(session, url)
+    start_wait = perf_counter()
+    while len(files := _get_files_for_html(html_path)) < 1:
+        if perf_counter() - start_wait > PDF_WAIT_SEC: # TODO: Does this need to be different for html?
+            msg = f"No HTML, waited longer than {PDF_WAIT_SEC} sec {url}"
+            logger.warning(msg,
+                           extra={CATEGORY: "download",
+                                  "url": url, "pdf_file": str(html_path)})
+            raise (Exception(msg))
+        else:
+            sleep(0.2)
+    if len(files) > 0:
+        return files, html_path, url, None, ms_since(start)
+    else:
+        raise (Exception(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start)} ms"))
 
 
 def upload_pdf(gs_client, ensure_tuple):
     """Uploads a PDF from ps_cache to GS_BUCKET"""
     return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
 
+def upload_html(gs_client, ensure_tuple):
+    ret = []
+    for file in ensure_tuple[0]:
+        yield upload(gs_client, file, path_to_bucket_key_html(file))
 
 @STORAGE_RETRY
 def upload(gs_client, localpath, key):
@@ -413,12 +528,16 @@ def sync_to_gcp(todo_q, host):
             extra = {"action": action, "item": str(item), "job": repr(job), "paper_id": job['paper_id']}
             try:
                 res = ()
-                if action == 'build+upload':
+                if action == 'build_pdf+upload':
                     res = upload_pdf(tl_data.gs_client, ensure_pdf(tl_data.session, host, Identifier(item)))
                 if action == 'upload':
                     res = upload(tl_data.gs_client, Path(item), path_to_bucket_key(item))
+                if action == 'build_html+upload':
+                    for res in upload_html(tl_data.gs_client, ensure_html(tl_data.session, host, Identifier(item))):
+                        summary_q.put((job['paper_id'], ms_since(start)) + res)
 
-                summary_q.put((job['paper_id'], ms_since(start)) + res)
+                if action != 'build_html+upload':
+                    summary_q.put((job['paper_id'], ms_since(start)) + res)
                 logger.debug("success uploading %s", job['paper_id'], extra=extra)
                 sleep(0.5)
             except Exception as ex:
@@ -433,9 +552,10 @@ def log_summary(duration, overall_size):
     # Don't worry about the log level being INFO.
     # Summary is always "calm" logging. When the error happens, the log entry is generated at the spot of failure.
     dispatch = {
-        "build+upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]},
+        "build_pdf+upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]},
         "upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]},
-        "failed": lambda it: {"paper_id": it[0], "action": it[2], "error": it[3]}
+        "failed": lambda it: {"paper_id": it[0], "action": it[2], "error": it[3]},
+        "build_html+upload": lambda it: {"paper_id": it[0], "action": it[2], "outcome": it[5]}
     }
     n_good, n_bad = 0, 0
     for row in sorted(list(summary_q.queue), key=lambda tup: tup[0]):

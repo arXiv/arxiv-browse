@@ -22,7 +22,7 @@ from typing import List, Literal, Tuple, Union
 
 from browse.domain.category import Category
 from browse.domain.metadata import DocMetadata, AuthorList
-from browse.domain.version import VersionEntry, SourceType
+from browse.domain.version import VersionEntry, SourceFlag
 from browse.services.object_store import FileObj
 from browse.services.listing import (Listing, ListingItem,
                                      MonthCount, NotModifiedResponse,
@@ -339,7 +339,7 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         version = ver,
         version_history = [VersionEntry(version=ver, raw='', submitted_date=None,
                                         size_kilobytes=kb,
-                                        source_type=SourceType(source_type))],
+                                        source_flag=SourceFlag(source_type))],
         raw_safe = '',
         submitter=None,
         arxiv_identifier=None,

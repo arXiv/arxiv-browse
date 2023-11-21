@@ -29,6 +29,7 @@ ps = FileFormat("ps", None, "application/postscript")
 gz = FileFormat("gz", "x-gzip", "application/x-eprint")
 docx = FileFormat("docx", "TODO", "TODO")
 odf = FileFormat("odf", "TODO", "TODO")
+html = FileFormat("html","text/html", "text/html")
 
 formats = {
     "targz": targz,
@@ -40,4 +41,5 @@ formats = {
     "gz": gz,
     "docx": docx,
     "odf": odf,
+    "html": html
     }

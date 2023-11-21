@@ -39,7 +39,7 @@ from browse.services.database import (
     get_trackback_ping_latest_date,
 )
 from browse.services.documents import get_doc_service
-from browse.services.documents.format_codes import formats_from_source_type
+from browse.services.documents.format_codes import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service

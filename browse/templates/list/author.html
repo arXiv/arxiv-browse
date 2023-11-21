@@ -1,4 +1,5 @@
 {% extends "list/base.html" %}
+{% import "list/list_macros.html" as list_macros with context %}
 
 {% block title %}{{title}}{% endblock %}
 
@@ -13,7 +14,7 @@
             {{ orcid_logo() }} <a href="{{ orcid }}">{{ orcid }}</a>.
         </p>
         {%- endif -%}
-        {{ item_list ( abstracts, '' ) }}
+        {{ list_macros.item_list ( abstracts, '' ) }}
         {{ footer_text() }}
     </div>
 </div>

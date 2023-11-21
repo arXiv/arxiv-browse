@@ -45,6 +45,8 @@ class Settings(BaseSettings):
     LATEXML_ENABLED: bool = False
     """Sets if LATEXML is enabled or not"""
 
+    LATEXML_BUCKET: str = os.environ.get('LATEXML_BUCKET', 'latexml_arxiv_id_converted')
+
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
 
@@ -60,10 +62,12 @@ class Settings(BaseSettings):
     LATEXML_INSTANCE_CONNECTION_NAME: str = ''
     """GCP instance connection name of managed DB.
     ex. arxiv-xyz:us-central1:my-special-db
+    
 
     If this is set, a TLS protected GCP connection will be used to connect to
     the latexml db. See
     https://cloud.google.com/sql/docs/postgres/connect-connectors#python_1"""
+    
 
     LATEXML_IP_TYPE: str = 'PUBLIC_IP'
     """If the GCP connection is public or private"""

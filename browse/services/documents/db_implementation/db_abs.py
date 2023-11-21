@@ -10,7 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from browse.domain.identifier import Identifier
 from browse.domain.metadata import DocMetadata
-from browse.domain.version import SourceType, VersionEntry
+from browse.domain.version import SourceFlag, VersionEntry
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
@@ -18,7 +18,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from dateutil.tz import tzutc
 
-from ..format_codes import formats_from_source_type
+from ..format_codes import formats_from_source_flag
 from .convert import to_docmeta
 
 
@@ -103,13 +103,9 @@ class DbDocMetadataService(DocMetadataService):
         if not res:
             raise AbsNotFoundException(identifier.id)
 
-        # Gather version history metadata from each document version
-        # entry in database.
+        # Gather version history metadata from each document version entry in database.
         version_history = list()
-
-        all_versions = (Metadata.query
-               .filter(Metadata.paper_id == identifier.id)
-               )
+        all_versions = (Metadata.query.filter(Metadata.paper_id == identifier.id))
 
         for ver in all_versions:
             size_kilobytes = int(ver.source_size / 1024 + .5)
@@ -118,9 +114,10 @@ class DbDocMetadataService(DocMetadataService):
                                  raw='',
                                  size_kilobytes=size_kilobytes,
                                  submitted_date=created_tz,
-                                 source_type=SourceType(ver.source_flags),
-                                 is_withdrawn=ver.is_withdrawn
-                                 )
+                                 source_flag=SourceFlag(ver.source_flags),
+                                 source_format=ver.source_format,
+                                 is_withdrawn=ver.is_withdrawn or ver.source_format == "withdrawn"
+                                              or ver.source_size == 0)
             version_history.append(entry)
 
         return to_docmeta(res, identifier, version_history, self.business_tz)
