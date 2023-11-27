@@ -18,7 +18,8 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
     auths = _fmt_author_list(pauths)
 
     pc = docm.primary_category if docm.primary_category else "unknown"
-
+    url = "https://doi.org/" + docm.doi
+    
     return (
         "@misc{" + _txt_id(docm, pauths, year) + ",\n"
         "      title={" + title + "}, \n"
@@ -26,7 +27,9 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      year={" + year + "},\n"
         "      eprint={" + docm.arxiv_id + "},\n"
         "      archivePrefix={arXiv},\n"
-        "      primaryClass={" + str(pc) + "}\n"
+        "      primaryClass={" + str(pc) + "},\n"
+        "      url={" + str(url) + "},\n"
+        "      doi={" + str(docm.doi) + "},\n"
         "}"
     )
 
