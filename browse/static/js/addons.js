@@ -27,8 +27,8 @@ let create_header = () => {
       </a>
     </div>
     <div class="html-header-message" role="banner">
-        <p>${id === 'submission' ? 'This is <strong>Experimental HTML</strong>. By design, HTML will not look exactly like the PDF. We invite you to report any errors that don\'t represent the intent or meaning of your paper. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span><a href=https://github.com/brucemiller/LaTeXML/wiki/Porting-LaTeX-packages-for-LaTeXML target="_blank">View supported LaTeX packages</a> and <a href=https://github.com/brucemiller/LaTeXML/issues target="_blank">help improve conversions</a>.' :
-        'This is <strong>Experimental HTML</strong>. We invite you to report rendering errors. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> Learn more <a href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">about this project</a> and <a href=https://github.com/brucemiller/LaTeXML/issues target="_blank">help improve conversions</a>.'}
+        <p>${id === 'submission' ? 'This is <strong>experimental HTML</strong>. By design, HTML will not look exactly like the PDF. We invite you to report any errors that don\'t represent the intent or meaning of your paper. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span><a href="https://github.com/brucemiller/LaTeXML/wiki/Porting-LaTeX-packages-for-LaTeXML" target="_blank">View supported LaTeX packages</a> and <a href="https://github.com/brucemiller/LaTeXML/issues" target="_blank">help improve conversions</a>.' :
+        'This is <strong>experimental HTML</strong>. We invite you to report rendering errors. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> Learn more <a href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">about this project</a> and <a href="https://github.com/brucemiller/LaTeXML/issues" target="_blank">help improve conversions</a>.'}
         </p>
     </div>`;
 
