@@ -236,11 +236,10 @@ header a {
   max-height: 2.5em;
   display: none;
 }
-svg.icon, [data-theme=dark] svg.icon {
+svg.icon, [data-theme=dark] svg.icon, header svg {
   background-color: transparent !important;
   z-index: 1 !important;
   margin-left:2px;
-
 }
 .header-message {
   border: none;
@@ -579,7 +578,20 @@ header .html-header-nav a span {
   text-shadow: 0 0 0 var(--header-text-color);
   color: transparent;
 }
-
+header .html-header-nav a span:hover {
+  text-shadow: 0 0 0 #000000;
+  color: transparent;
+}
+header .html-header-nav svg {
+  fill: white;
+  background: transparent;
+}
+header .html-header-nav svg:hover {
+  fill: black;
+}
+header.mob_header .html-header-nav {
+  gap: 15%;
+}
 
 
 
@@ -989,12 +1001,11 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     display: inline-block;
   }
 
-  .mob_header {
+  header.mob_header {
     display:flex;
     position:fixed;
-    gap: 15%;
   }
-  .desktop_header {
+  header.desktop_header {
     display:none;
   }
 
