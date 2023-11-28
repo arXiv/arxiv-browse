@@ -248,7 +248,7 @@ svg.icon, [data-theme=dark] svg.icon {
   border: none;
   background: transparent;
   border-radius: 6px;
-  /* max-width: 50%; */
+  max-width: 50%;
   font-family: var(--other-font-family);
   font-size: smaller;
   color: white;
@@ -967,6 +967,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     position: fixed;
     width:100%;
     z-index:1;
+    top: 5.5vh;
   }
 
   [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
@@ -990,10 +991,11 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     display: inline-block;
   }
 
-  .mob_header{
+  .mob_header {
     display:flex;
+    position:fixed;
   }
-  .desktop_header{
+  .desktop_header {
     display:none;
   }
 
