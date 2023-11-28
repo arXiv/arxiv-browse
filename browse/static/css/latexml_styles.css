@@ -103,25 +103,12 @@ textarea.form-control{
   position: relative;
 }
 
-#watermark-tr {
+#watermark-tr, #license-tr {
   text-align: center;
   opacity: 0.5;
   color: rgb(75, 75, 75);
   font-size: 24px;
-  user-select: none;
   padding: 5px;
-  position: relative;
-  width: 100%;
-}
-
-#license-tr {
-  text-align: center;
-  opacity: 0.5;
-  color: rgb(75, 75, 75);
-  font-size: 20px;
-  user-select: none;
-  padding: 5px;
-  position: relative;
   width: 100%;
 }
 
@@ -312,6 +299,16 @@ footer .keyboard-glossary {
 .ltx_page_footer {
   font-family: arial, tahoma, sans-serif;
   user-select: none;
+}
+
+/* tablet */
+@media only screen and (max-width: 980px) and (min-width: 720px) {
+  .ltx_page_main > .ltx_page_content{
+    margin-top: 7.5em !important;
+  }
+  .ltx_page_main >.ltx_TOC {
+    top: 9.5vh !important;
+  }
 }
 
 /*mobile*/
@@ -751,7 +748,7 @@ body:after {
 /* Update: For toc */
 .ltx_page_main >.ltx_TOC{
   position: sticky;
-  top: 6.5vh;
+  top: 7.5vh;
   max-height: 95vh;
   margin-top: 0;
   /* xxx */
@@ -785,7 +782,7 @@ body:after {
 .ltx_page_main > .ltx_page_content {
   width: 100%;
   min-height: 80vh;
-  margin: 3em auto;
+  margin: 5.5em auto 3.5em auto;
   flex-grow: 0;  /* This allows the content to grow and consume remaining space */
   flex-shrink: 1;
   flex-basis: 80vw;  /* Initial size */
@@ -794,7 +791,6 @@ body:after {
 }
 
 [data-theme=dark] .ltx_TOC {
-  /* background-color: #0d1117; */
   background-color: var(--background-color);
   color: #c9d1d9;
 }
