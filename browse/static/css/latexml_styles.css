@@ -10,6 +10,7 @@
   --text-color: black;
   --link-text-color: #1b7cac; /* blue, passes color contrast with white bg*/
   --header-text-color: #f9f7f7; /* warm wash */
+  --secondary-text-color: #7D7568; /* lighter Library Grey */
 }
 [data-theme=dark] {
   --note-highlight-color: #6b6459; /* Open Blue */
@@ -21,6 +22,7 @@
   --link-text-color: #2198d4; /* blue, passes color contrast with dark bg */
   --rp-button-hover-color: #fb595a; /* Publishing Pink */
   --header-text-color: #f9f7f7; /* warm wash */
+  --secondary-text-color: #ADA4A4; /* darker warm wash */
 }
 
 /* Hover Overwrite Section */
@@ -105,11 +107,8 @@ textarea.form-control{
 
 #watermark-tr, #license-tr {
   text-align: center;
-  opacity: 0.5;
-  color: rgb(75, 75, 75);
-  font-size: 24px;
-  padding: 5px;
-  width: 100%;
+  color: var(--secondary-text-color);
+  font-family: var(--toc-font-family);
 }
 
 /* CSS for Footnote */
