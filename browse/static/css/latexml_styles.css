@@ -106,7 +106,6 @@ textarea.form-control{
 #watermark-tr {
   text-align: center;
   opacity: 0.5;
-  z-index: 9999;
   color: rgb(75, 75, 75);
   font-size: 24px;
   user-select: none;
@@ -118,7 +117,6 @@ textarea.form-control{
 #license-tr {
   text-align: center;
   opacity: 0.5;
-  z-index: 9999;
   color: rgb(75, 75, 75);
   font-size: 20px;
   user-select: none;
@@ -967,7 +965,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     position: fixed;
     width:100%;
     z-index:1;
-    top: 5.5vh;
+    top: 5.7vh;
   }
 
   [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
@@ -994,6 +992,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
   .mob_header {
     display:flex;
     position:fixed;
+    gap: 15%;
   }
   .desktop_header {
     display:none;
