@@ -12,6 +12,7 @@
   --link-hover-color: #6b6459;
   --header-text-color: #f9f7f7; /* warm wash */
   --secondary-text-color: #7D7568; /* lighter Library Grey */
+  --TOC-gradient: linear-gradient(#f9f7f7, #ffffff);/*warm wash to white*/
 }
 [data-theme=dark] {
   --note-highlight-color: #6b6459; /* warm grey */
@@ -24,6 +25,7 @@
   --rp-button-hover-color: #fb595a; /* Publishing Pink */
   --header-text-color: #f9f7f7; /* warm wash */
   --secondary-text-color: #ADA4A4; /* darker warm wash */
+  --TOC-gradient: linear-gradient(#110C03, #282623);/*darker shade to background*/
 }
 
 a, a.ltx_ref {
@@ -60,7 +62,7 @@ a:hover, a.ltx_ref:hover {
 
 /*TOC link color*/
 .ltx_TOC>.ltx_toclist>.ltx_tocentry>a.ltx_ref {
-  color: var(--text-color) !important;
+  color: var(--secondary-text-color) !important;
 }
 .ltx_TOC>.ltx_toclist>.ltx_tocentry>a.ltx_ref:hover {
   color: var(--link-text-color) !important;
@@ -286,10 +288,11 @@ footer .keyboard-glossary {
 /* tablet */
 @media only screen and (max-width: 980px) and (min-width: 720px) {
   .ltx_page_main > .ltx_page_content{
-    margin-top: 7.5em !important;
+    margin-top: 6.5em !important;
+    padding: 1em 2em;
   }
-  .ltx_page_main >.ltx_TOC {
-    top:11.5vh !important;
+  .ltx_page_main >.ltx_TOC.active {
+    max-width: 15%;
   }
 }
 
@@ -757,23 +760,21 @@ body:after {
 }
 
 /* Update: For toc */
-.ltx_page_main >.ltx_TOC{
+.ltx_page_main >.ltx_TOC {
   position: sticky;
-  top: 8.5vh;
-  max-height: 95vh;
-  margin-top: 0;
-  /* xxx */
+  top:0;
+  height: 100vh;
+  margin: 0;
+  padding-top: 8.5vh;
   overflow-y: auto;
   user-select: none;
-  background-color: var(--background-color);
   color: var(--text-color);
-  flex: 0 0 3rem;
   font: var(--toc-font-family);
 }
-
-.ltx_page_main >.ltx_TOC.active{
-  flex:1 0 20%;
+.ltx_page_main >.ltx_TOC.active {
   min-width: 18em;
+  max-width:20%;
+  background-image: var(--TOC-gradient);
 }
 .ltx_page_main > .ltx_TOC:not(.active) {
   margin-right: -50px;
@@ -787,12 +788,10 @@ body:after {
 
 .ltx_page_main {
   display: flex;
-  padding:1em;
 }
 
 .ltx_page_main > .ltx_page_content {
   width: 100%;
-  min-height: 80vh;
   margin: 5.5em auto 3.5em auto;
   flex-grow: 0;  /* This allows the content to grow and consume remaining space */
   flex-shrink: 1;
@@ -837,7 +836,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
 }
 
 
-/* Hover for TOC */
+/* TOC styles */
 .ltx_ref:hover{
   /* background-color: var(--note-highlight-color); */
   /* Add underline */
@@ -873,8 +872,11 @@ li.ltx_tocentry.ltx_tocentry_appendix {
 }
 
 #listIcon svg, #arrowIcon svg {
-  background-color:var(--background-color);
-  fill:var(--text-color);
+  background-color: transparent;
+  fill:var(--text-color) !important;
+}
+#listIcon svg:hover, #arrowIcon svg:hover {
+  fill:var(--link-text-color) !important;
 }
 
 #toc_header {
@@ -977,14 +979,19 @@ li.ltx_tocentry.ltx_tocentry_appendix {
   }
 
   .ltx_page_main >.ltx_TOC.mobile {
-    max-height: 60vh;
     overflow-y: scroll;
     margin-bottom: 0;
     background-color: #f1f1f1;
     position: fixed;
     width:100%;
     z-index:1;
-    top: 5.8vh;
+    padding-top:3em;
+    padding-bottom: 1em;
+    max-height: 60vh;
+    height: auto;
+  }
+  .ltx_page_main >.ltx_TOC.mobile:not(.show) {
+    
   }
 
   [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
@@ -1011,6 +1018,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
   header.mob_header {
     display:flex;
     position:fixed;
+    z-index:1000;
   }
   header.desktop_header {
     display:none;
