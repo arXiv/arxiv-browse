@@ -10,6 +10,7 @@
   --text-color: black;
   --link-text-color: #1b7cac; /* blue, passes color contrast with white bg*/
   --link-hover-color: #6b6459;
+  --background-color: #ffffff;
   --header-text-color: #f9f7f7; /* warm wash */
   --secondary-text-color: #7D7568; /* lighter Library Grey */
   --TOC-gradient: linear-gradient(#f9f7f7, #ffffff);/*warm wash to white*/
@@ -991,7 +992,7 @@ li.ltx_tocentry.ltx_tocentry_appendix {
     height: auto;
   }
   .ltx_page_main >.ltx_TOC.mobile:not(.show) {
-    
+
   }
 
   [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
@@ -1126,15 +1127,23 @@ article{
   border-radius: 1em;
   font-size: .9em;
   padding: 1em;
+  margin-bottom: 2em;
 }
 .package-alerts button {
   float: right;
   margin-left: 1em;
   margin-bottom: 1em;
   border: 1px solid black;
-  background-color: white;
-  border-radius: 4px;
-  padding: 0.1em 0.2em 0.3em 0.2em;
+  background-color: var(--background-color);
+  border-radius: 7px;
+  padding: 0.1em 0.3em 0.25em 0.25em;
+}
+.package-alerts button svg {
+  background-color: transparent;
+  fill: var(--text-color);
+}
+.package-alerts a {
+  color: #1A78A8 !important;
 }
 
 /* Set Image/math equation width. */
