@@ -24,6 +24,7 @@ let create_header = () => {
     <div class="html-header-logo">
       <a href="https://arxiv.org/">
           <img alt="logo" class="logo" role="presentation" width="100" src="https://services.dev.arxiv.org/html/static/arxiv-logo-one-color-white.svg">
+          <span class="sr-only">Back to arXiv</span>
       </a>
     </div>
     <div class="html-header-message" role="banner">
@@ -56,6 +57,7 @@ let create_mobile_header = () => {
     <div class="html-header-logo">
       <a href="https://arxiv.org/">
         <img alt="logo" class="logomark" role="presentation" width="100" src="https://services.dev.arxiv.org/html/static/arxiv-logomark-small-white.svg">
+        <span class="sr-only">Back to arXiv</span>
       </a>
     </div>
 
