@@ -48,23 +48,6 @@ a:hover, a.ltx_ref:hover {
   text-decoration: underline;
 }
 
-/* Hover for modal button. */
-@media (min-width: 768px) {
-  #openForm:hover, #modal-submit:hover, small-report-button:hover {
-    text-decoration: underline;
-    background-color: var(--rp-button-hover-color);
-    color: black;
-  }
-}
-
-@media (max-width: 767px) {
-  #openForm:active, #modal-submit:active, small-report-button:hover {
-    text-decoration: underline;
-    background-color: var(--rp-button-hover-color);
-    color: black;
-  }
-}
-
 /* Overwrite font color*/
 
 .btn {
@@ -387,6 +370,22 @@ body {
   right: 20px;
   font-size: 20px;
   background-color: #b31b1b;
+  border-color: var(--secondary-text-color);
+}
+/* Hover for openForm */
+@media (min-width: 768px) {
+  #openForm:hover, #modal-submit:hover, small-report-button:hover {
+    text-decoration: none;
+    background-color: var(--rp-button-hover-color);
+    color: black;
+  }
+}
+@media (max-width: 767px) {
+  #openForm:active, #modal-submit:active, small-report-button:hover {
+    text-decoration: none;
+    background-color: var(--rp-button-hover-color);
+    color: black;
+  }
 }
 
 .report-box {
