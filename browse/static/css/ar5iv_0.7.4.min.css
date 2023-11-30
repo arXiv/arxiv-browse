@@ -43,12 +43,12 @@
     --fatal-text-color: #d52f36;
     --index-ref-color: darkcyan;
     --image-color: black;
-    --image-background-color: transparent;
+    --image-background-color: white;
 }
 
 [data-theme=dark] img,
 svg {
-    filter: brightness(.8) contrast(1.2) invert(1) hue-rotate(180deg);
+    filter: brightness(.8) contrast(1.2);
     background-color: #fff;
     color: #000
 }

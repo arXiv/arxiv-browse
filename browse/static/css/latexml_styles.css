@@ -27,6 +27,8 @@
   --header-text-color: #f9f7f7; /* warm wash */
   --secondary-text-color: #ADA4A4; /* darker warm wash */
   --TOC-gradient: linear-gradient(#110C03, #282623);/*darker shade to background*/
+  --image-color: black;
+  --image-background-color: transparent;
 }
 
 a, a.ltx_ref {
@@ -1102,6 +1104,29 @@ article{
   z-index:1000;
 }
 
+.navbar-toggler {
+  position: relative;
+}
+
+.navbar-toggler .popup {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.navbar-toggler:hover .popup {
+  display: block;
+}
+
+
 .navbar-toggler:focus {
   box-shadow: none;
 }
@@ -1153,4 +1178,27 @@ article{
 
 :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_square {
   width: 100%;
+}
+
+/* set dark mode svg background */
+[data-theme=dark] img, svg {
+  filter: brightness(.8) contrast(1.2) invert(1) hue-rotate(180deg);
+  background-color: #fff;
+  color: #000
+}
+
+svg {
+  color: var(--image-color);
+  background-color: var(--image-background-color);
+  z-index: -1;
+}
+
+.ltx_figure img {
+  color: var(--image-color);
+  background-color: var(--image-background-color);
+  -webkit-transition: all .2s ease;
+  -moz-transition: all .2s ease;
+  -ms-transition: all .2s ease;
+  -o-transition: all .2s ease;
+  transition: all .2s ease;
 }
