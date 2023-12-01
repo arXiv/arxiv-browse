@@ -112,7 +112,7 @@ class DbDocMetadataService(DocMetadataService):
                )
 
         for ver in all_versions:
-            size_kilobytes = int(ver.source_size / 1024 + .5)
+            size_kilobytes = int(ver.source_size / 1024 + .5) if ver.source_size is not None else 0
             created_tz = ver.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=ver.version,
                                  raw='',

@@ -41,11 +41,14 @@ def test_db_abs_history(dbclient):
     assert "this version, v3" in dateline.get_text()
 
 
-
 def test_db_abs_comment(dbclient):
-    pytest.skip('not yet implemented in db backend')
-
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
     assert rt.headers.get('Expires')
     assert '21 pages' in rt.data.decode('utf-8')
+
+
+def test_db_abs_null_source_size(dbclient):
+    """Tests a paper where the arxiv_metadata.source_size is zero ARXIVCE-1050."""
+    rt = dbclient.get('/abs/2305.11452')
+    assert rt.status_code == 200
