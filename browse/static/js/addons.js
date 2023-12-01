@@ -210,10 +210,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        window.history.pushState({}, '', this.getAttribute('href'));
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
+        const href = this.getAttribute('href');
+        const targetElement = document.getElementById(href.substring(1));
+        if (targetElement) {
+          window.history.pushState({}, '', href);
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          console.warn('No element found for selector:', href);
+        }
       });
     });
     document.querySelector('.ltx_page_main').id = 'main';
