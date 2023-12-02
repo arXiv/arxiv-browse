@@ -189,10 +189,25 @@
               <span id="label-for-spaces">Hugging Face Spaces</span> <em>(<a href="https://huggingface.co/docs/hub/spaces" target="_blank">What is Spaces?</a>)</em>
             </div>
           </div>
-
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
+                <input
+                  id="txyz-toggle"
+                  data-script-url="{{ url_for('static', filename='js/txyz.js') }}"
+                  type="checkbox" class="lab-toggle" aria-labelledby="label-for-txyz">
+                <span class="slider"></span>
+                <span class="is-sr-only">Spaces Toggle</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+              <span id="label-for-txyz">TXYZ.AI</span> <em>(<a href="https://txyz.ai" target="_blank">What is TXYZ.AI?</a>)</em>
+            </div>
+          </div>
         </div>
         <div id="replicate-output"></div>
         <div id="spaces-output"></div>
+        <div id="txyz-output"></div>
       </div>
       <input type="radio" name="tabs" id="tabfour">
       <label for="tabfour">Related Papers</label>
