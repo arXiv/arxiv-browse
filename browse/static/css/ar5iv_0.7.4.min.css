@@ -43,7 +43,7 @@
     --fatal-text-color: #d52f36;
     --index-ref-color: darkcyan;
     --image-color: black;
-    --image-background-color: white
+    --image-background-color: white;
 }
 
 [data-theme=dark] img,
