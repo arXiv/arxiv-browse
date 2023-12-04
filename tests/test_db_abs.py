@@ -54,11 +54,14 @@ def test_db_abs_small_source_size(dbclient):
     assert rt.status_code == 200
 
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
-    download_button = html.select_one("#download-button-info")
-    # todo: add assert
+    download_button = html.select_one("download-pdf")
+    assert download_button
 
 
 def test_db_abs_null_source_size(dbclient):
     """Tests a paper where the arxiv_metadata.source_size is zero ARXIVCE-1050."""
     rt = dbclient.get('/abs/2305.11452')
     assert rt.status_code == 200
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button = html.select_one("#download-pdf")
+    assert download_button is None
