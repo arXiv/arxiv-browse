@@ -48,6 +48,16 @@ def test_db_abs_comment(dbclient):
     assert '21 pages' in rt.data.decode('utf-8')
 
 
+def test_db_abs_small_source_size(dbclient):
+    """Tests a paper where the arxiv_metadata.source_size is less than half of 1kb ARXIVCE-1053."""
+    rt = dbclient.get('/abs/2310.08262')
+    assert rt.status_code == 200
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button = html.select_one("#download-button-info")
+    # todo: add assert
+
+
 def test_db_abs_null_source_size(dbclient):
     """Tests a paper where the arxiv_metadata.source_size is zero ARXIVCE-1050."""
     rt = dbclient.get('/abs/2305.11452')
