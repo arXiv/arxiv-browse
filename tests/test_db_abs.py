@@ -54,8 +54,10 @@ def test_db_abs_small_source_size(dbclient):
     assert rt.status_code == 200
 
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
-    download_button = html.select_one("download-pdf")
-    assert download_button
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf is None # should not have a pdf download since it is a html source submission
 
 
 def test_db_abs_null_source_size(dbclient):
@@ -63,5 +65,7 @@ def test_db_abs_null_source_size(dbclient):
     rt = dbclient.get('/abs/2305.11452')
     assert rt.status_code == 200
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
-    download_button = html.select_one("#download-pdf")
-    assert download_button is None
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf is None
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html is None
