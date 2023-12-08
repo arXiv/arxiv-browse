@@ -1142,10 +1142,14 @@ article{
   background-color: var(--background-color);
   border-radius: 7px;
   padding: 0.1em 0.3em 0.25em 0.25em;
+  transition: background-color .2s ease-in-out;
 }
 .package-alerts button svg {
   background-color: transparent;
   fill: var(--text-color);
+}
+.package-alerts button:hover {
+  background-color: #fecccc;
 }
 .package-alerts a {
   color: #1A78A8 !important;
