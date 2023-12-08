@@ -284,13 +284,18 @@ footer .keyboard-glossary {
   user-select: none;
 }
 
-
+/* narrow desktop */
+@media only screen and (min-width: 980px) and (max-width: 1180px) {
+  .ltx_page_main > .ltx_page_content {
+    margin: 5.5em 1em 3.5em 1em;
+  }
+}
 
 /* tablet */
 @media only screen and (max-width: 980px) and (min-width: 720px) {
   .ltx_page_main > .ltx_page_content{
     margin-top: 6.5em !important;
-    padding: 1em 2em;
+    padding: 1em;
   }
   .ltx_page_main >.ltx_TOC.active {
     max-width: 15%;
@@ -793,7 +798,7 @@ body:after {
 
 .ltx_page_main > .ltx_page_content {
   width: 100%;
-  margin: 5.5em auto 3.5em auto;
+  margin: 5.5em 1em 3.5em 1em;
   flex-grow: 0;  /* This allows the content to grow and consume remaining space */
   flex-shrink: 1;
   flex-basis: 80vw;  /* Initial size */
