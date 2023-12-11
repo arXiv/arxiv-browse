@@ -108,7 +108,14 @@ class DbDocMetadataService(DocMetadataService):
         all_versions = (Metadata.query.filter(Metadata.paper_id == identifier.id))
 
         for ver in all_versions:
-            size_kilobytes = int(ver.source_size / 1024 + .5)
+            size_kilobytes = 0
+            if ver.source_size is not None:
+                size_kilobytes = round(ver.source_size/1024)
+
+                # ie: 2310.08262v1 where source_size is 484 bytes
+                if size_kilobytes == 0 and ver.source_size > 0:
+                    size_kilobytes = 1
+
             created_tz = ver.created.replace(tzinfo=tzutc())
             entry = VersionEntry(version=ver.version,
                                  raw='',

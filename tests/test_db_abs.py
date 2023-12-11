@@ -41,11 +41,31 @@ def test_db_abs_history(dbclient):
     assert "this version, v3" in dateline.get_text()
 
 
-
 def test_db_abs_comment(dbclient):
-    pytest.skip('not yet implemented in db backend')
-
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
     assert rt.headers.get('Expires')
     assert '21 pages' in rt.data.decode('utf-8')
+
+
+def test_db_abs_small_source_size(dbclient):
+    """Tests a paper where the arxiv_metadata.source_size is less than half of 1kb ARXIVCE-1053."""
+    rt = dbclient.get('/abs/2310.08262')
+    assert rt.status_code == 200
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf is None # should not have a pdf download since it is a html source submission
+
+
+def test_db_abs_null_source_size(dbclient):
+    """Tests a paper where the arxiv_metadata.source_size is zero ARXIVCE-1050."""
+    rt = dbclient.get('/abs/2305.11452')
+    assert rt.status_code == 200
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf is None
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html is None
