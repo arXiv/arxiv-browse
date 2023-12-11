@@ -212,9 +212,11 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const href = this.getAttribute('href');
         const targetElement = document.getElementById(href.substring(1));
+        const position = targetElement.getBoundingClientRect();
         if (targetElement) {
-          window.history.pushState({}, '', href);
-          targetElement.scrollIntoView({ behavior: 'smooth' });
+          window.scrollTo({left: position.left, 
+                           top: position.top + window.scrollY - 60, 
+                           behavior: 'smooth'});
         } else {
           console.warn('No element found for selector:', href);
         }

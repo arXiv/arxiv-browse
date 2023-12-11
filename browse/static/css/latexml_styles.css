@@ -284,8 +284,6 @@ footer .keyboard-glossary {
   user-select: none;
 }
 
-
-
 /* tablet */
 @media only screen and (max-width: 980px) and (min-width: 720px) {
   .ltx_page_main > .ltx_page_content{
