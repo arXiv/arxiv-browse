@@ -242,11 +242,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       else{
         //TOC is shown
-        const toc_m= document.querySelector('.ltx_page_main>.ltx_TOC.mobile');
-        toc_m.classList.remove('mobile');
-        toc_m.classList.remove('collapse');
-        toc_m.classList.remove('show');
-        toc_m.classList.add('active');
+        try {
+          const toc_m = document.querySelector('.ltx_page_main>.ltx_TOC.mobile');
+          toc_m.classList.remove('mobile');
+          toc_m.classList.remove('collapse');
+          toc_m.classList.remove('show');
+          toc_m.classList.add('active');
+        } catch {
+          console.log('ToC isn\'t mobile');
+        }
         //arrow Icon is shown
         const arrowIcon = document.getElementById('arrowIcon');
         arrowIcon.classList.remove('hide');
