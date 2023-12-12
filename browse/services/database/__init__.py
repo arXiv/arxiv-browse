@@ -9,13 +9,14 @@ from flask import current_app
 
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
-from sqlalchemy import asc, desc, not_
+from sqlalchemy import asc, desc, not_, case, distinct
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import func
 
 from browse.domain.identifier import Identifier
+from browse.services.listing import MonthTotal, YearCount
 from browse.services.database.models import (
     DBLP,
     DBLPAuthor,
@@ -34,9 +35,9 @@ from browse.services.database.models import (
     db,
     in_category,
     stats_hourly,
-    paper_owners
+    paper_owners,
+    Metadata
 )
-from browse.services.database.models import in_category, stats_hourly
 from browse.domain.identifier import Identifier
 from browse.services.listing import ListingItem
 from arxiv.base import logging
@@ -471,6 +472,37 @@ def service_status()->List[str]:
             return [f"{__file__}: DBLaTeXML: Problem with DB: {ex}"]
 
     return []
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_yearly_article_counts(archive: str, year: int) -> YearCount:
+    # Define the case statement for categorizing entries
+    categorization_case = case([(Metadata.abs_categories.startswith(archive), 'new'),
+                               (Metadata.abs_categories.contains(f" {archive}"), 'cross')],
+                              else_='no_match')
+
+    # Build the query to get both counts for all months
+    count_query = (
+        db.session.query(
+            func.substr(Metadata.paper_id, 3, 2).label('month'),
+            func.count(distinct(case([(categorization_case == 'new', Metadata.paper_id)], else_=None))).label('count_new'),
+            func.count(distinct(case([(categorization_case == 'cross', Metadata.paper_id)], else_=None))).label('count_cross')
+        )
+        .filter(Metadata.paper_id.startswith(f"{year % 100:02d}"))
+        .group_by('month')
+        .all()
+    )
+
+    monthlist=[]
+    new_total=0
+    cross_total=0
+    for entry in count_query:
+        month=MonthTotal(year, entry.month, entry.count_new, entry.count_cross)
+        monthlist.append(month)
+        new_total+=entry.count_new
+        cross_total+=entry.count_cross
+
+    year=YearCount(year,new_total, cross_total,monthlist)
+    return year
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)

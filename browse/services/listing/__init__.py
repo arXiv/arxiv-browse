@@ -27,6 +27,10 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
     from .fs_listings import FsListingFilesService
     return FsListingFilesService(config["DOCUMENT_LISTING_PATH"])
 
+def hybrid_listing(config: dict, _: Any) -> "ListingService":
+    """Factory function for filesystem-based listing service."""
+    from .hybrid_listing import HybridListingService
+    return HybridListingService(config["DOCUMENT_LISTING_PATH"])
 
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
@@ -171,6 +175,26 @@ class MonthCount:
     expires: str
     listings: List[ListingItem]
 
+@dataclass
+class MonthTotal:
+    year: int
+    month: int
+    new: int
+    cross: int
+
+@dataclass
+class YearCount:
+    """
+    by_month are counts for individual months.
+
+    new_count is the count of new articles for the year.
+
+    cross_count is the count of cross articles for the year.
+    """
+    year:int
+    new_count:int
+    cross_count: int
+    by_month: List[MonthTotal]
 
 @dataclass
 class ListingCountResponse:
@@ -253,7 +277,7 @@ class ListingService(ABC, HasStatus):
         """
 
     @abstractmethod
-    def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
+    def monthly_counts(self, archive: str, year: int) -> YearCount:
         """Gets monthly listing counts for the year."""
 
 

@@ -13,7 +13,7 @@ from google.cloud import storage
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config
-from browse.services.listing import (Listing, ListingCountResponse,
+from browse.services.listing import (Listing, YearCount, MonthTotal,
                                      ListingItem, ListingNew, ListingService,
                                      MonthCount, NotModifiedResponse,
                                      gen_expires)
@@ -304,7 +304,7 @@ class FsListingFilesService(ListingService):
             rv.listings = rv.listings[skip:skip + show] # Adjust for skip/show
             return rv
 
-    def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
+    def monthly_counts(self, archive: str, year: int) -> YearCount:
         """Gets monthly listing counts for the year."""
         monthly_counts: List[MonthCount] = []
         new_cnt, cross_cnt = 0, 0
@@ -314,7 +314,7 @@ class FsListingFilesService(ListingService):
         for month in range(1, end_month + 1):
             file = self._generate_listing_path('month', archive, year, month)
             files.append((month, file, file.exists()))
-
+        month_totals=[]
         for month, file, exists in files:
             if not exists:
                 continue
@@ -325,10 +325,13 @@ class FsListingFilesService(ListingService):
                 monthly_counts.append(response)
                 new_cnt += response.new
                 cross_cnt += response.cross
+                month_totals.append(MonthTotal(year,month,response.new,response.cross))
 
-        return ListingCountResponse(month_counts=monthly_counts,
-                                    new_count=new_cnt,
-                                    cross_count= cross_cnt)
+        year_resp=YearCount(year, new_cnt, cross_cnt,month_totals)
+
+        return year_resp
+
+
 
     def service_status(self)->List[str]:
         try:
