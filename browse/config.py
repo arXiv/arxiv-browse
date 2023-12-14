@@ -47,16 +47,16 @@ class Settings(BaseSettings):
 
     LATEXML_BUCKET: str = os.environ.get('LATEXML_BUCKET', 'latexml_arxiv_id_converted')
 
-    LATEXML_BASE_URL: str = ''
+    LATEXML_BASE_URL: str = os.environ.get('LATEXML_BASE_URL')
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_DB_USER: str = ''
+    LATEXML_DB_USER: str = os.environ.get('LATEXML_DB_USER')
     """DB username for latexml DB."""
 
-    LATEXML_DB_PASS: str = ''
+    LATEXML_DB_PASS: str = os.environ.get('LATEXML_DB_PASS')
     """DB password for latexml DB."""
 
-    LATEXML_DB_NAME: str = ''
+    LATEXML_DB_NAME: str = os.environ.get('LATEXML_DB_NAME')
     """DB name for latexml DB."""
 
     LATEXML_INSTANCE_CONNECTION_NAME: str = ''
