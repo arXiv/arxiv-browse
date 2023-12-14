@@ -476,7 +476,6 @@ def service_status()->List[str]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
-    logger.warn(db.get_engine(bind='latexml'))
     row = (
         db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
