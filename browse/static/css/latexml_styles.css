@@ -1160,6 +1160,9 @@ article{
     .ltx_page_main > .ltx_TOC:not(.active) {
       margin-right: -30px;
     }
+    .ltx_page_main > .ltx_TOC {
+        padding-top: 10vh;
+    }
   }
 
 
