@@ -772,5 +772,5 @@ def _config_latexml(app: LocalProxy) -> None:
         pw = config["LATEXML_DB_PASS"]
         db = config["LATEXML_DB_NAME"]
         instance_name = config["LATEXML_INSTANCE_CONNECTION_NAME"]
-        config["SQLALCHEMY_BINDS"]["latexml"] = {"url": f"postgresql+pg8000://{user}@{pw}/{db}?unix_sock=/cloud/{instance_name}/.s.PGSQL.5432"}
+        config["SQLALCHEMY_BINDS"]["latexml"] = {"url": f"postgresql+pg8000://{user}@{pw}/{db}?unix_sock=/cloudsql/{instance_name}/.s.PGSQL.5432"}
 
