@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     LATEXML_DB_NAME: str = os.environ.get('LATEXML_DB_NAME')
     """DB name for latexml DB."""
 
-    LATEXML_INSTANCE_CONNECTION_NAME: str = ''
+    LATEXML_INSTANCE_CONNECTION_NAME: str = os.environ.get('LATEXML_INSTANCE_CONNECTION_NAME')
     """GCP instance connection name of managed DB.
     ex. arxiv-xyz:us-central1:my-special-db
     
