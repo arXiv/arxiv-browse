@@ -741,35 +741,36 @@ def _config_latexml(app: LocalProxy) -> None:
     if "SQLALCHEMY_BINDS" in config and config["SQLALCHEMY_BINDS"]:
         return  # already set?
 
-    if config["LATEXML_INSTANCE_CONNECTION_NAME"]:
-        from google.cloud.sql.connector import Connector, IPTypes
-        import pg8000
+    # if config["LATEXML_INSTANCE_CONNECTION_NAME"]:
+    #     from google.cloud.sql.connector import Connector, IPTypes
+    #     import pg8000
 
-        ip_type = IPTypes.PRIVATE if config["LATEXML_IP_TYPE"] == "PRIVATE_IP"\
-            else IPTypes.PUBLIC
-        connector = Connector()
+    #     ip_type = IPTypes.PRIVATE if config["LATEXML_IP_TYPE"] == "PRIVATE_IP"\
+    #         else IPTypes.PUBLIC
+    #     connector = Connector()
 
-        def getconn() -> pg8000.dbapi.Connection:
-            conn: pg8000.dbapi.Connection = connector.connect(
-                config["LATEXML_INSTANCE_CONNECTION_NAME"],
-                "pg8000",
-                user=config["LATEXML_DB_USER"],
-                password=config["LATEXML_DB_PASS"],
-                db=config["LATEXML_DB_NAME"],
-                ip_type=ip_type,
-            )
-            return conn
+    #     def getconn() -> pg8000.dbapi.Connection:
+    #         conn: pg8000.dbapi.Connection = connector.connect(
+    #             config["LATEXML_INSTANCE_CONNECTION_NAME"],
+    #             "pg8000",
+    #             user=config["LATEXML_DB_USER"],
+    #             password=config["LATEXML_DB_PASS"],
+    #             db=config["LATEXML_DB_NAME"],
+    #             ip_type=ip_type,
+    #         )
+    #         return conn
 
 
-        bind = {
-            #"url": make_url("postgresql+pg8000://"),
-            "url": "postgresql+pg8000://",
-            "creator": getconn}
+    #     bind = {
+    #         #"url": make_url("postgresql+pg8000://"),
+    #         "url": "postgresql+pg8000://",
+    #         "creator": getconn}
 
-        config["SQLALCHEMY_BINDS"]["latexml"] = bind
-    elif config["LATEXML_DB_USER"] and config["LATEXML_DB_PASS"] and config["LATEXML_DB_NAME"]:
+    #     config["SQLALCHEMY_BINDS"]["latexml"] = bind
+    if config["LATEXML_DB_USER"] and config["LATEXML_DB_PASS"] and config["LATEXML_DB_NAME"] and config["LATEXML_INSTANCE_CONNECTION_NAME"]:
         user = config["LATEXML_DB_USER"]
         pw = config["LATEXML_DB_PASS"]
         db = config["LATEXML_DB_NAME"]
-        config["SQLALCHEMY_BINDS"]["latexml"] = {"url": f"postgresql+pg8000://{user}@{pw}/{db}"}
+        instance_name = config["LATEXML_INSTANCE_CONNECTION_NAME"]
+        config["SQLALCHEMY_BINDS"]["latexml"] = {"url": f"postgresql+pg8000://{user}@{pw}/{db}?unix_sock=/cloud/{instance_name}/.s.PGSQL.5432"}
 
