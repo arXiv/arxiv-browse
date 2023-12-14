@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     """If the GCP connection is public or private"""
 
     SQLALCHEMY_BINDS: Dict[str, Any] = {
-        'latexml': f"postgresql+pg8000://{LATEXML_DB_USER}@{LATEXML_DB_PASS}/{LATEXML_DB_NAME}?unix_sock=/cloudsql/{LATEXML_INSTANCE_CONNECTION_NAME}/.s.PGSQL.5432"
+        'latexml': f"postgresql+pg8000://{LATEXML_DB_USER}:{LATEXML_DB_PASS}@/{LATEXML_DB_NAME}?unix_sock=/cloudsql/{LATEXML_INSTANCE_CONNECTION_NAME}/.s.PGSQL.5432"
     }
     """ For the database tracking html conversion metadata """
 
