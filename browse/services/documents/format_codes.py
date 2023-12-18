@@ -40,6 +40,30 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
             return extension[1]
     return []
 
+def formats_from_source_format(source_format: str, 
+                               format_pref: Optional[str]=None,
+                               cache_flag: bool=False) -> List[str]:
+    """Get the dissemination formats from the source_format and preference"""
+
+    # TODO: This code does not care about format_pref... It is simplified
+    # TODO: See browse/routes/dissemination.py lines 74-78
+    formats = []
+    if not source_format:
+        return ['pdf', 'ps', 'other']
+    elif source_format == 'withdrawn':
+        return ['withdrawn']
+    elif source_format == 'tex' or source_format == 'pdftex' or source_format == 'ps':
+        return ['pdf', 'ps', 'other']
+    elif source_format == 'html':
+        return ['html', 'other']
+    elif source_format == 'pdf':
+        return ['pdf']
+    elif source_format == 'docx':
+        return ['pdf', 'other']
+    else:
+        return ['pdf', 'ps', 'other']
+    
+
 
 def formats_from_source_flag(source_flag: str,
                              format_pref: Optional[str] = None,
