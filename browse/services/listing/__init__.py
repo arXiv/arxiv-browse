@@ -196,6 +196,18 @@ class YearCount:
     cross_count: int
     by_month: List[MonthTotal]
 
+    def __init__( self, year: int, new_count: int = 0, cross_count: int = 0, by_month: List[MonthTotal] = []):
+        self.year = year
+        self.new_count = new_count
+        self.cross_count = cross_count
+        if by_month==[]:
+            months=[]
+            for i in range(1,13):
+                months.append(MonthTotal(year,i,0,0))
+            self.by_month = months
+        else:
+            self.by_month=by_month
+
 @dataclass
 class ListingCountResponse:
     """Response with the counts for an archive for a given year.

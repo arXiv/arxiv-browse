@@ -475,7 +475,7 @@ def service_status()->List[str]:
     return []
 
 @db_handle_error(db_logger=logger, default_return_val=None)
-def get_yearly_article_counts(archive: str, year: int) -> YearCount:
+def get_yearly_article_counts(archive: str, year: int) -> Optional[YearCount]:
     """fetch total of new and cross-listed articles by month for a given category and year
         supports both styles of ids at once
     """
@@ -491,7 +491,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
         return _get_yearly_article_counts_old_id(archive,year)
 
 @db_handle_error(db_logger=logger, default_return_val=None)
-def _get_yearly_article_counts_new_id(archive: str, year: int) -> YearCount:
+def _get_yearly_article_counts_new_id(archive: str, year: int) -> Optional[YearCount]:
     """fetch total of new and cross-listed articles by month for a given category and year
         designed to match new style ids
     """
@@ -515,7 +515,7 @@ def _get_yearly_article_counts_new_id(archive: str, year: int) -> YearCount:
     return _process_yearly_article_counts(count_query, year)
 
 @db_handle_error(db_logger=logger, default_return_val=None)
-def _get_yearly_article_counts_old_id(archive: str, year: int) -> YearCount:
+def _get_yearly_article_counts_old_id(archive: str, year: int) -> Optional[YearCount]:
     """fetch total of new and cross-listed articles by month for a given category and year
         designed to match old style ids
     """

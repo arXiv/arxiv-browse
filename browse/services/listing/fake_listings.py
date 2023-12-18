@@ -6,7 +6,7 @@ import datetime
 from typing import List, Optional
 
 from . import (Listing, ListingCountResponse, ListingItem, ListingNew,
-               ListingService, MonthCount)
+               ListingService, MonthCount, YearCount, MonthTotal)
 
 
 class FakeListingFilesService(ListingService):
@@ -25,27 +25,29 @@ class FakeListingFilesService(ListingService):
         """Version."""
         return f"0.{__file__}"
 
-    def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
+    def monthly_counts(self, archive: str, year: int) -> YearCount:
         """Example of monthly_counts."""
-        counts = [
-            MonthCount(year, 1, 1234, 234, '', []),
-            MonthCount(year, 2, 1224, 134, '', []),
-            MonthCount(year, 3, 1334, 324, '', []),
-            MonthCount(year, 4, 1534, 134, '', []),
-            MonthCount(year, 5, 1644, 234, '', []),
-            MonthCount(year, 6, 983, 314, '', []),
-            MonthCount(year, 7, 876, 132, '', []),
-            MonthCount(year, 8, 1233, 294, '', []),
-            MonthCount(year, 9, 1453, 273, '', []),
-            MonthCount(year, 10, 1502, 120, '', []),
-            MonthCount(year, 11, 1638, 100, '', []),
-            MonthCount(year, 12, 1601, 233, '', []),
-        ]
-        return ListingCountResponse(
-            month_counts= counts,
-            new_count= sum([mm.new for mm in counts]),
-            cross_count= sum([mm.cross for mm in counts]))
 
+        months=[
+            MonthTotal(year,1, 1234, 234),
+            MonthTotal(year, 2, 1224, 134),
+            MonthTotal(year, 3, 1334, 324),
+            MonthTotal(year, 4, 1534, 134),
+            MonthTotal(year, 5, 1644, 234),
+            MonthTotal(year, 6, 983, 314),
+            MonthTotal(year, 7, 876, 132),
+            MonthTotal(year, 8, 1233, 294),
+            MonthTotal(year, 9, 1453, 273),
+            MonthTotal(year, 10, 1502, 120),
+            MonthTotal(year, 11, 1638, 100),
+            MonthTotal(year, 12, 1601, 233)
+        ]
+
+        result=YearCount(year)
+        result.new_count=16256
+        result.cross_count=2526
+        result.by_month=months
+        return result
 
     def list_new_articles(
         self,
