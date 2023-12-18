@@ -209,3 +209,14 @@ class Identifier:
             return self.__dict__ == other.__dict__
         except AttributeError:
             return False
+
+
+    @staticmethod
+    def is_mostly_safe(input: Optional[str]) -> bool:
+        """Checks that the input could reasonably be parsed as an ID,
+        fails if strange unicode, strange characters, very long etc."""
+        if not input:
+            return False
+        if len(input) > 200:
+            return False
+        return bool(re.match(re.compile(r"[.\\0-9a-zA-Z-]*"), input))
