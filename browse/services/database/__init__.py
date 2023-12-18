@@ -496,8 +496,8 @@ def _get_yearly_article_counts_new_id(archive: str, year: int) -> YearCount:
         designed to match new style ids
     """
     # Define the case statement for categorizing entries
-    categorization_case = case([(Metadata.abs_categories.startswith(archive), 'new'),
-                               (Metadata.abs_categories.contains(f" {archive}"), 'cross')],
+    categorization_case = case([(Metadata.abs_categories.startswith(f"{archive}."), 'new'),
+                               (Metadata.abs_categories.contains(f" {archive}."), 'cross')],
                               else_='no_match')
 
     # Build the query to get both counts for all months
