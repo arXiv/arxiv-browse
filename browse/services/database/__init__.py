@@ -479,6 +479,8 @@ def get_yearly_article_counts(archive: str, year: int) -> Optional[YearCount]:
     """fetch total of new and cross-listed articles by month for a given category and year
         supports both styles of ids at once
     """
+    if "." not in archive: #adds ending to archive name requests
+        archive=archive+"."
 
     #filters to the correct database query based on the year the id schema changed
     if year > 2007: #query with the new id system
@@ -496,8 +498,8 @@ def _get_yearly_article_counts_new_id(archive: str, year: int) -> Optional[YearC
         designed to match new style ids
     """
     # Define the case statement for categorizing entries
-    categorization_case = case([(Metadata.abs_categories.startswith(f"{archive}."), 'new'),
-                               (Metadata.abs_categories.contains(f" {archive}."), 'cross')],
+    categorization_case = case([(Metadata.abs_categories.startswith(f"{archive}"), 'new'),
+                               (Metadata.abs_categories.contains(f" {archive}"), 'cross')],
                               else_='no_match')
 
     # Build the query to get both counts for all months

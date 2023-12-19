@@ -10,7 +10,4 @@ logger.level = logging.DEBUG
 class HybridListingService(FsListingFilesService):
 
     def monthly_counts(self, archive: str, year: int) -> YearCount:
-        if year > 2007: #data present in metadata table
-            return get_yearly_article_counts(archive,year)
-        else: #parse data from file system
-            return super().monthly_counts(archive,year)
+        return get_yearly_article_counts(archive,year)
