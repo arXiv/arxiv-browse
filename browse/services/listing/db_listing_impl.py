@@ -8,7 +8,7 @@ from browse.services.database.models import (Document, DocumentCategory,
                                              NextMail, db)
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew,
-                                     ListingService, MonthCount,YearCount, MonthTotal,
+                                     ListingService, MonthTotal,YearCount, MonthCount,
                                      NotModifiedResponse, gen_expires)
 from sqlalchemy import func, text
 
@@ -165,7 +165,7 @@ GROUP BY month
         yy = self._year_to_yy(int(year))
         res = db.session.execute(text(txtq), {"yy": yy+"%"})
 
-        months= [MonthTotal(int(yy), int(mm), int(new), int(cross))
+        months= [MonthCount(int(yy), int(mm), int(new), int(cross))
                 for mm,new,cross in res]
 
         result=YearCount(year, sum([mx.new for mx in months]), sum([mx.cross for mx in months]), months)

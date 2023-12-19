@@ -13,9 +13,9 @@ from google.cloud import storage
 
 from arxiv import taxonomy
 from arxiv.base.globals import get_application_config
-from browse.services.listing import (Listing, YearCount, MonthTotal,
+from browse.services.listing import (Listing, YearCount, MonthCount,
                                      ListingItem, ListingNew, ListingService,
-                                     MonthCount, NotModifiedResponse,
+                                     MonthTotal, NotModifiedResponse,
                                      gen_expires)
 from browse.services.object_store import FileObj, ObjectStore
 from browse.services.object_store.object_store_gs import GsObjectStore
@@ -119,7 +119,7 @@ class FsListingFilesService(ListingService):
                                  show: int,
                                  if_modified_since: Optional[str] = None,
                                  mode: ParsingMode = 'month')\
-                                 -> Union[Listing, MonthCount, NotModifiedResponse]:
+                                 -> Union[Listing, MonthTotal, NotModifiedResponse]:
         """Gets listing for a list of `months`.
 
         This gets the listings for all the months in `months`. It works fine for
@@ -306,7 +306,7 @@ class FsListingFilesService(ListingService):
 
     def monthly_counts(self, archive: str, year: int) -> YearCount:
         """Gets monthly listing counts for the year."""
-        monthly_counts: List[MonthCount] = []
+        monthly_counts: List[MonthTotal] = []
         new_cnt, cross_cnt = 0, 0
         currentYear, currentMonth, end_month = self._current_y_m_em(year)
 
@@ -321,11 +321,11 @@ class FsListingFilesService(ListingService):
             response = get_updates_from_list_file(year, month, file, 'monthly_counts'
                                                   # archive TODO Does this need archive?
                                                   )
-            if isinstance(response, MonthCount):
+            if isinstance(response, MonthTotal):
                 monthly_counts.append(response)
                 new_cnt += response.new
                 cross_cnt += response.cross
-                month_totals.append(MonthTotal(year,month,response.new,response.cross))
+                month_totals.append(MonthCount(year,month,response.new,response.cross))
 
         year_resp=YearCount(year, new_cnt, cross_cnt,month_totals)
 

@@ -11,13 +11,13 @@ from werkzeug.exceptions import BadRequest
 
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
-from browse.services.listing import MonthCount, YearCount, MonthTotal
+from browse.services.listing import MonthTotal, YearCount, MonthCount
 
 
 @dataclass
 class MonthData:
     """Class to pass data to template"""
-    month_count: MonthTotal
+    month_count: MonthCount
     art: List[Tuple[str, Optional[str]]]
     yymm:str
     my:str
@@ -98,7 +98,7 @@ ASCII_ART_CHR = '|'
 ASCII_ART_URL_STEP = 100
 
 
-def ascii_art_month(archive_id: str, month: MonthTotal) -> List[Tuple[str, Optional[str]]]:
+def ascii_art_month(archive_id: str, month: MonthCount) -> List[Tuple[str, Optional[str]]]:
     """Make ascii art for a MonthTotal."""
     tot = month.new + month.cross
     yyyymm = f"{month.year}{month.month:02}"

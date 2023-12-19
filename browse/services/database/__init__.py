@@ -17,7 +17,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 
 from browse.domain.identifier import Identifier
-from browse.services.listing import MonthTotal, YearCount
+from browse.services.listing import MonthCount, YearCount
 from browse.services.database.models import (
     DBLP,
     DBLPAuthor,
@@ -541,7 +541,7 @@ def _process_yearly_article_counts(query_result: List[Row], year: int) -> YearCo
     monthlist=[]
     #create empty months
     for i in range(1,13):
-        monthlist.append(MonthTotal(year,i,0,0))
+        monthlist.append(MonthCount(year,i,0,0))
     new_total=0
     cross_total=0
 
@@ -564,7 +564,7 @@ def _combine_yearly_article_counts(yc1: YearCount, yc2: YearCount)-> YearCount:
     cross_count=yc1.cross_count+yc2.cross_count
     months=[]
     for i in range(1,13):
-        new_month= MonthTotal(yc1.year, i, yc1.by_month[i-1].new+yc2.by_month[i-1].new, yc1.by_month[i-1].cross+yc2.by_month[i-1].cross)
+        new_month= MonthCount(yc1.year, i, yc1.by_month[i-1].new+yc2.by_month[i-1].new, yc1.by_month[i-1].cross+yc2.by_month[i-1].cross)
         months.append(new_month)
     total=YearCount(yc1.year,new_count, cross_count, months )
     return total

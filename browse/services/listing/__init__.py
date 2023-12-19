@@ -153,7 +153,7 @@ class NotModifiedResponse:
 
 
 @dataclass
-class MonthCount:
+class MonthTotal:
     """A single month's count for an archive.
 
     year is the year the listing is for.
@@ -176,7 +176,7 @@ class MonthCount:
     listings: List[ListingItem]
 
 @dataclass
-class MonthTotal:
+class MonthCount:
     year: int
     month: int
     new: int
@@ -194,16 +194,16 @@ class YearCount:
     year:int
     new_count:int
     cross_count: int
-    by_month: List[MonthTotal]
+    by_month: List[MonthCount]
 
-    def __init__( self, year: int, new_count: int = 0, cross_count: int = 0, by_month: List[MonthTotal] = []):
+    def __init__( self, year: int, new_count: int = 0, cross_count: int = 0, by_month: List[MonthCount] = []):
         self.year = year
         self.new_count = new_count
         self.cross_count = cross_count
         if by_month==[]:
             months=[]
             for i in range(1,13):
-                months.append(MonthTotal(year,i,0,0))
+                months.append(MonthCount(year,i,0,0))
             self.by_month = months
         else:
             self.by_month=by_month
@@ -221,7 +221,7 @@ class ListingCountResponse:
     rep_count is the count of replaced articles for the year.
     """
 
-    month_counts: List[MonthCount]
+    month_counts: List[MonthTotal]
     new_count: int
     cross_count: int
 

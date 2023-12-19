@@ -25,7 +25,7 @@ from browse.domain.metadata import DocMetadata, AuthorList
 from browse.domain.version import VersionEntry, SourceFlag
 from browse.services.object_store import FileObj
 from browse.services.listing import (Listing, ListingItem,
-                                     MonthCount, NotModifiedResponse,
+                                     MonthTotal, NotModifiedResponse,
                                      gen_expires)
 
 DATE     = re.compile(r'^Date:\s+')
@@ -80,7 +80,7 @@ ParsingMode = Literal['month', 'monthly_counts', 'year']
 
 def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
                                parsingMode: ParsingMode, listingFilter: str='')\
-                               -> Union[Listing, NotModifiedResponse, MonthCount]:
+                               -> Union[Listing, NotModifiedResponse, MonthTotal]:
     """Read the paperids that have been updated from a listings file.
 
     There are three forms of listing file: new, pastweek, and monthly.
@@ -226,7 +226,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
 
     if parsingMode == 'monthly_counts':
         # We need the new and cross counts for the monthly count summary
-        return MonthCount(
+        return MonthTotal(
             year=year, month=month, new=len(new_items), cross=len(cross_items),
             expires=gen_expires(), listings=new_items + cross_items + rep_items)
     else:
