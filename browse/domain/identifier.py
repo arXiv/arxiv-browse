@@ -212,11 +212,11 @@ class Identifier:
 
 
     @staticmethod
-    def is_mostly_safe(input: Optional[str]) -> bool:
+    def is_mostly_safe(idin: Optional[str]) -> bool:
         """Checks that the input could reasonably be parsed as an ID,
-        fails if strange unicode, strange characters, very long etc."""
-        if not input:
+        fails if strange unicode, starts with strange characters, very long etc."""
+        if not idin:
             return False
-        if len(input) > 200:
+        if len(idin) > 200:
             return False
-        return bool(re.match(re.compile(r"[.\\0-9a-zA-Z-]*"), input))
+        return bool(re.match(re.compile(r"^[./0-9a-zA-Z-]{8}"), idin))
