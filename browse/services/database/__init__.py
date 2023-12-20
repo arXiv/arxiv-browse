@@ -478,7 +478,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     """fetch total of new and cross-listed articles by month for a given category and year
         supports both styles of ids at once
     """
-    if "." not in archive: #adds ending to archive name requests
+    if archive=="math" and "." not in archive: #seperates math-ph from the general math category
         archive=archive+"."
 
     #filters to the correct database query based on the year the id schema changed
