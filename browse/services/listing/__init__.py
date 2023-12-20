@@ -27,6 +27,10 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
     from .fs_listings import FsListingFilesService
     return FsListingFilesService(config["DOCUMENT_LISTING_PATH"])
 
+def hybrid_listing(config: dict, _: Any) -> "ListingService":
+    """Factory function for filesystem-based listing service."""
+    from .hybrid_listing import HybridListingService
+    return HybridListingService(config["DOCUMENT_LISTING_PATH"])
 
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
@@ -149,7 +153,7 @@ class NotModifiedResponse:
 
 
 @dataclass
-class MonthCount:
+class MonthTotal:
     """A single month's count for an archive.
 
     year is the year the listing is for.
@@ -171,6 +175,38 @@ class MonthCount:
     expires: str
     listings: List[ListingItem]
 
+@dataclass
+class MonthCount:
+    year: int
+    month: int
+    new: int
+    cross: int
+
+@dataclass
+class YearCount:
+    """
+    by_month are counts for individual months.
+
+    new_count is the count of new articles for the year.
+
+    cross_count is the count of cross articles for the year.
+    """
+    year:int
+    new_count:int
+    cross_count: int
+    by_month: List[MonthCount]
+
+    def __init__( self, year: int, new_count: int = 0, cross_count: int = 0, by_month: List[MonthCount] = []):
+        self.year = year
+        self.new_count = new_count
+        self.cross_count = cross_count
+        if by_month==[]:
+            months=[]
+            for i in range(1,13):
+                months.append(MonthCount(year,i,0,0))
+            self.by_month = months
+        else:
+            self.by_month=by_month
 
 @dataclass
 class ListingCountResponse:
@@ -185,7 +221,7 @@ class ListingCountResponse:
     rep_count is the count of replaced articles for the year.
     """
 
-    month_counts: List[MonthCount]
+    month_counts: List[MonthTotal]
     new_count: int
     cross_count: int
 
@@ -253,7 +289,7 @@ class ListingService(ABC, HasStatus):
         """
 
     @abstractmethod
-    def monthly_counts(self, archive: str, year: int) -> ListingCountResponse:
+    def monthly_counts(self, archive: str, year: int) -> YearCount:
         """Gets monthly listing counts for the year."""
 
 
