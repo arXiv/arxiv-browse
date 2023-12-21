@@ -647,3 +647,11 @@ def test_math_ph_9701(client_with_test_fs):
     text = rv.text
     assert "On Exact Solutions" in text
     assert "unknown-id" not in text
+
+def test_year_archive_with_end_date(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get("/year/funct-an")
+    assert rv.status_code == 200
+    text=rv.text
+    assert '<a href="/year/funct-an/97">1997</a>' in text
+    assert '<a href="/year/funct-an/98">1998</a>' not in text
