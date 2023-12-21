@@ -186,3 +186,27 @@ def test_monthly_counts_hybrid(app_with_hybrid_listings):
         ]
         year = YearCount(2009, 8, 2, months)
         assert result == year
+
+def test_finds_archives_with_no_categories(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+
+        months = [
+            MonthCount(2009, 1, 0, 0),
+            MonthCount(2009, 2, 0, 0),
+            MonthCount(2009, 3, 0, 0),
+            MonthCount(2009, 4, 0, 0),
+            MonthCount(2009, 5, 0, 0),
+            MonthCount(2009, 6, 1, 0),
+            MonthCount(2009, 7, 1, 0),
+            MonthCount(2009, 8, 0, 0),
+            MonthCount(2009, 9, 0, 0),
+            MonthCount(2009, 10, 0, 0),
+            MonthCount(2009, 11, 0, 0),
+            MonthCount(2009, 12, 0, 0),
+        ]
+        year1 = YearCount(2009, 2, 0, months)
+
+        assert year1 == get_yearly_article_counts(
+            "gr-qc", 2009
+        )  
