@@ -247,35 +247,16 @@ def _check_request_headers(
         # If there is a more recent trackback ping, use that datetime
         last_mod_dt = response_data["trackback_ping_latest"]
 
-    last_mod_mime = mime_header_date(last_mod_dt)
-    etag = f'"{last_mod_mime}"'
+    resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
 
-    resp_headers["Last-Modified"] = last_mod_mime
-    resp_headers["ETag"] = etag
-    resp_headers["Expires"] = abs_expires_header(biz_tz())
+    #resp_headers["Expires"] = abs_expires_header(biz_tz())
+    # Above we had a Expires: based on publish time but admins wanted shorter when
+    # handling service tickets.
+    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
+    resp_headers["Cache-Control"] = "max-age=3600"
 
-    not_modified = _not_modified(
-        last_mod_dt,
-        _time_header_parse("If-Modified-Since"),
-        _get_req_header("if-none-match"),
-        etag,
-    )
-
-    return not_modified
-
-
-def _not_modified(
-    last_mod_dt: datetime,
-    mod_since_dt: Optional[datetime],
-    none_match: Optional[str],
-    current_etag: str,
-) -> bool:
-    if none_match and none_match == current_etag:
-        return True
-    elif mod_since_dt:
-        return mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0)
-    else:
-        return False
+    mod_since_dt = _time_header_parse("If-Modified-Since")
+    return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
 
 
 def _time_header_parse(header: str) -> Optional[datetime]:

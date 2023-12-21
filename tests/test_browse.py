@@ -655,7 +655,7 @@ class BrowseTest(unittest.TestCase):
 
 
     def test_bad_data(self):
-        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
+        """Test bad URL."""
         rv = self.client.get('/abs/gr-qc/۹۷۰۶123')
         self.assertNotEqual(rv.status_code, 200)
         self.assertNotEqual(rv.status_code, 500)
