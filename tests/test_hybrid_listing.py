@@ -151,9 +151,9 @@ def test_year_page_hybrid(mock, client_with_hybrid_listings):
     assert '<a href="/year/cond-mat/11">2011</a>' in text
     assert "<p>2009 totals: <b>8 articles</b> + <i>2 cross-lists</i></p>" in text
     assert (
-        "<a href=/list/cond-mat/200911?skip=0>|</a>      <b>2</b> + 0 (Nov 2009)"
+        "<a href=/list/cond-mat/0911?skip=0>|</a>      <b>2</b> + 0 (Nov 2009)"
         in text
-    )
+    ) #TODO change this back to 4 digit year when all of listings is running on browse
     assert '<a href="/year/cond-mat/92">1992</a>' in text
 
     rv = client.get("/year/cs/23")
