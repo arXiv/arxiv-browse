@@ -47,19 +47,19 @@ class Settings(BaseSettings):
 
     LATEXML_BUCKET: str = os.environ.get('LATEXML_BUCKET', 'latexml_arxiv_id_converted')
 
-    LATEXML_BASE_URL: str = ''
+    LATEXML_BASE_URL: str = os.environ.get('LATEXML_BASE_URL')
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_DB_USER: str = ''
+    LATEXML_DB_USER: str = os.environ.get('LATEXML_DB_USER')
     """DB username for latexml DB."""
 
-    LATEXML_DB_PASS: str = ''
+    LATEXML_DB_PASS: str = os.environ.get('LATEXML_DB_PASS')
     """DB password for latexml DB."""
 
-    LATEXML_DB_NAME: str = ''
+    LATEXML_DB_NAME: str = os.environ.get('LATEXML_DB_NAME')
     """DB name for latexml DB."""
 
-    LATEXML_INSTANCE_CONNECTION_NAME: str = ''
+    LATEXML_INSTANCE_CONNECTION_NAME: str = os.environ.get('LATEXML_INSTANCE_CONNECTION_NAME')
     """GCP instance connection name of managed DB.
     ex. arxiv-xyz:us-central1:my-special-db
     
@@ -72,7 +72,9 @@ class Settings(BaseSettings):
     LATEXML_IP_TYPE: str = 'PUBLIC_IP'
     """If the GCP connection is public or private"""
 
-    SQLALCHEMY_BINDS: Dict[str, Any] = {}
+    SQLALCHEMY_BINDS: Dict[str, Any] = {
+        'latexml': f"postgresql+pg8000://{LATEXML_DB_USER}:{LATEXML_DB_PASS}@/{LATEXML_DB_NAME}?unix_sock=/cloudsql/{LATEXML_INSTANCE_CONNECTION_NAME}/.s.PGSQL.5432"
+    }
     """ For the database tracking html conversion metadata """
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False

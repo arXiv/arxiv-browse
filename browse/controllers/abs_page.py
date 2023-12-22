@@ -144,7 +144,7 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["formats"] = get_article_store().get_dissemination_formats(
             abs_meta, download_format_pref)
         if response_data['latexml_url'] is not None:
-            response_data['formats'].append('latexml')
+            response_data['formats'].insert(1, 'latexml')
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False

@@ -17,7 +17,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
-    formats_from_source_file_name, formats_from_source_flag)
+    formats_from_source_file_name, formats_from_source_flag, formats_from_source_format)
 from browse.services.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent,
                                           current_pdf_path, previous_pdf_path,
@@ -282,17 +282,16 @@ class ArticleStore():
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
-            format_code = docmeta.get_requested_version().source_flag.code
+            version_source_format = version.source_format
             cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
             cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
                 and cached_ps_file.size == 0 \
                 and src_file \
                 and src_file.updated < cached_ps_file.updated)
-            source_type_formats = formats_from_source_flag(format_code,
+            version_source_formats = formats_from_source_format(version_source_format,
                                                            format_pref,
                                                            cache_flag)
-            if source_type_formats:
-                formats.extend(source_type_formats)
+            formats.extend(version_source_formats)
 
         return formats
 
@@ -417,7 +416,7 @@ class ArticleStore():
             path=ps_cache_html_path(arxiv_id, version.version)
             files=self.objstore.list(path) 
             file_list=list(files)
-            if len(file_list) >0:
+            if len(file_list) > 0:
                 return file_list
             else:
                 return "NO_SOURCE"
