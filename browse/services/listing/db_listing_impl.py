@@ -8,7 +8,7 @@ from browse.services.database.models import (Document, DocumentCategory,
                                              NextMail, db)
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew,
-                                     ListingService, MonthCount,
+                                     ListingService, MonthTotal,YearCount, MonthCount,
                                      NotModifiedResponse, gen_expires)
 from sqlalchemy import func, text
 
@@ -150,7 +150,7 @@ class DBListingService(ListingService):
 
     def monthly_counts(self,
                        archive: str,
-                       year: int) -> ListingCountResponse:
+                       year: int) -> YearCount:
         """Gets monthly listing counts for the year."""
         # TODO needs filtering by archive
         txtq="""
@@ -164,11 +164,12 @@ GROUP BY month
         # TODO Limit to archive!
         yy = self._year_to_yy(int(year))
         res = db.session.execute(text(txtq), {"yy": yy+"%"})
-        counts = [MonthCount(int(yy), int(mm), int(new), int(cross), gen_expires(), [])
-                  for mm,new,cross in res]
-        return ListingCountResponse(counts,
-                                    sum([mx.new for mx in counts]),
-                                    sum([mx.cross for mx in counts]))
+
+        months= [MonthCount(int(yy), int(mm), int(new), int(cross))
+                for mm,new,cross in res]
+
+        result=YearCount(year, sum([mx.new for mx in months]), sum([mx.cross for mx in months]), months)
+        return result
 
 
 

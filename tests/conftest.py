@@ -21,12 +21,18 @@ import os
 
 from tests import path_of_for_test
 
+import browse.services.documents as documents
+from browse.services.listing import db_listing
+
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 
 
 TESTING_CONFIG = {
     "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
+    "SQLALCHEMY_DATABASE_URI" : DEFAULT_DB,
+    'DOCUMENT_LISTING_SERVICE': db_listing,
+    'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
     "TESTING": True,
     }
@@ -37,10 +43,9 @@ def test_config():
 @pytest.fixture(scope='session')
 def loaded_db():
     """Loads the testing db"""
-    app = create_web_app()
+    app = create_web_app(**test_config())
     with app.app_context():
         from browse.services.database import models
-
         from . import populate_test_database
         populate_test_database(True, models)
 
@@ -48,12 +53,8 @@ def loaded_db():
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
     """App setup with DB backends."""
-    import browse.services.documents as documents
-    from browse.services.listing import db_listing
 
     conf = test_config()
-    conf.update({'DOCUMENT_LISTING_SERVICE': db_listing})
-    conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
     app = create_web_app(**conf)
 
     with app.app_context():
@@ -65,6 +66,25 @@ def app_with_db(loaded_db):
 
     return app
 
+@pytest.fixture(scope='session')
+def app_with_hybrid_listings(loaded_db):
+    """App setup with DB backends."""
+    import browse.services.documents as documents
+    from browse.services.listing import hybrid_listing
+
+    conf = test_config()
+    conf.update({'DOCUMENT_LISTING_SERVICE': hybrid_listing})
+    conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.fs_docs})
+    app = create_web_app(**conf)
+
+    with app.app_context():
+        import browse.services.documents as documents
+        from browse.services.listing import hybrid_listing
+        from flask import g
+        g.doc_service = documents.fs_docs(app.config, g)
+        g.listing_service = hybrid_listing(app.config, g)
+
+    return app
 
 @pytest.fixture(scope='function')
 def app_with_fake(loaded_db):
@@ -133,6 +153,10 @@ def client_with_fake_listings(app_with_fake):
     with app_with_fake.app_context():
         yield app_with_fake.test_client() # yield so the tests already have the app_context
 
+@pytest.fixture(scope='function')
+def client_with_hybrid_listings(app_with_hybrid_listings):
+    with app_with_hybrid_listings.app_context():
+        yield app_with_hybrid_listings.test_client() # yield so the tests already have the app_context
 
 @pytest.fixture(scope='function')
 def client_with_test_fs(app_with_test_fs):

@@ -106,6 +106,9 @@ def get_abs_page(arxiv_id: str) -> Response:
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
     try:
+        if not Identifier.is_mostly_safe(arxiv_id):
+            raise AbsNotFound(data={"reason": "poorly formatted paper id"})
+
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
 

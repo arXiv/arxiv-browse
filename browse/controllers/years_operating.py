@@ -17,7 +17,7 @@ def years_operating(archive: Dict[str, Any]) -> List[int]:
     ):
         return []
     start = archive["start_date"].year
-    end = archive.get("end_date", None) or date.today().year
+    end = archive.get("end_date", date.today()).year #end date could be None or a date
     return list(reversed(range(start, end + 1)))
 
 

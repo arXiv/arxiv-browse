@@ -114,11 +114,13 @@ class Settings(BaseSettings):
     """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
     ############################## Services ##############################
-    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.fs_listing'  # type: ignore
+    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.hybrid_listing'  # type: ignore
     """What implementation to use for the listing service.
 
     Accepted values are
     - `browse.services.listing.fs_listing`: Listing from legacy listing files. Needs to
+      have DOCUMENT_LISTING_PATH set.
+    - `browse.services.listing.hybrid_listing`: Listing from legacy listing files with new bits from database. Needs to
       have DOCUMENT_LISTING_PATH set.
     - `browse.services.listing.db_listing`: Listing from DB. Slow and lacks data for
        before 2010.

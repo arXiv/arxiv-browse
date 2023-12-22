@@ -503,7 +503,7 @@ def test_astro_ph_months(client_with_test_fs, abs_path):
     files = list( (abs_path / "ftp/astro-ph/listings").glob("./[0-9]*") )
     for file in files:
         rv = client.get(f"/list/astro-ph/{file.stem}")
-        rv.status_code == 200
+        assert rv.status_code == 200
 
 
 def test_astro_ph_years(client_with_test_fs, abs_path):
@@ -511,21 +511,21 @@ def test_astro_ph_years(client_with_test_fs, abs_path):
     years=['99', '98', '97', '96','95','94','93','07']
     for yy in sorted(years):
         rv = client.get(f"/year/astro-ph/{yy}")
-        rv.status_code == 200
+        assert rv.status_code == 200
 
     # start year with only partal data
     rv = client.get("/year/astro-ph/92")
-    rv.status_code == 200
+    assert rv.status_code == 200
 
     # 2023 only has start of the year and simulates a archive that stopped midyear
     rv = client.get("/year/astro-ph/23")
-    rv.status_code == 200
+    assert rv.status_code == 200
 
 
 def test_astro_ph_ep_recent(client_with_test_fs):
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.EP/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "Earth and Planetary Astrophysics" in text
@@ -589,39 +589,39 @@ def test_astro_ph_ep_recent(client_with_test_fs):
 def test_astro_ph_recent(client_with_test_fs):
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "showing first 25 of 320 entries" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.CO/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "63 entries" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.GA/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "101 entries" in text
 
     rv = client.get(f"/list/astro-ph.HE/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "85 entries" in text
 
     rv = client.get(f"/list/astro-ph.IM/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "55 entries" in text
 
     rv = client.get(f"/list/astro-ph.SR/recent")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "Friday, 3 March 2023" in text
     assert "67 entries" in text
@@ -631,7 +631,7 @@ def test_abs_in_new_listing(client_with_test_fs):
     """/list/new should have the abstracts"""
     client = client_with_test_fs
     rv = client.get("/list/astro-ph/new")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "We present a search for gas-containing dwarf galaxies" in text
     assert "is likely at play." in text
@@ -643,7 +643,15 @@ def test_abs_in_new_listing(client_with_test_fs):
 def test_math_ph_9701(client_with_test_fs):
     client = client_with_test_fs
     rv = client.get("/list/math-ph/199701")
-    rv.status_code == 200
+    assert rv.status_code == 200
     text = rv.text
     assert "On Exact Solutions" in text
     assert "unknown-id" not in text
+
+def test_year_archive_with_end_date(client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get("/year/funct-an")
+    assert rv.status_code == 200
+    text=rv.text
+    assert '<a href="/year/funct-an/97">1997</a>' in text
+    assert '<a href="/year/funct-an/98">1998</a>' not in text

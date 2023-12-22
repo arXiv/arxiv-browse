@@ -652,3 +652,10 @@ class BrowseTest(unittest.TestCase):
 
         self.assertIn("Older arxiv papers may lack submitter name", txt,
                       "Expect a message about lack of submitter name on old paper")
+
+
+    def test_bad_data(self):
+        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
+        rv = self.client.get('/abs/gr-qc/۹۷۰۶123')
+        self.assertNotEqual(rv.status_code, 200)
+        self.assertNotEqual(rv.status_code, 500)

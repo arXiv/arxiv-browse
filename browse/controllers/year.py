@@ -11,7 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
-from browse.services.listing import MonthCount
+from browse.services.listing import MonthTotal, YearCount, MonthCount
 
 
 @dataclass
@@ -73,10 +73,10 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
             month_count= month_count,
             art=ascii_art_month(archive_id, month_count),
             yymm= f"{str(month_count.year)[2:]}{month_count.month:02}",
-            my = date(year=month_count.year,month=month_count.month, day=1).strftime("%b %Y"),
+            my = date(year=int(month_count.year),month=int(month_count.month), day=1).strftime("%b %Y"),
             url= url_for('browse.list_articles', context=archive_id,
-                         subcontext=f"{month_count.year}{month_count.month:02}"))
-        for month_count in count_listing.month_counts]
+                         subcontext=f"{month_count.year%100:02}{month_count.month:02}")) #TODO return to 4 digit year when all of listings is running on browse
+        for month_count in count_listing.by_month]
 
     response_data: Dict[str, Any] = {
         'archive_id': archive_id,
@@ -99,9 +99,9 @@ ASCII_ART_URL_STEP = 100
 
 
 def ascii_art_month(archive_id: str, month: MonthCount) -> List[Tuple[str, Optional[str]]]:
-    """Make ascii art for a MonthCount."""
+    """Make ascii art for a MonthTotal."""
     tot = month.new + month.cross
-    yyyymm = f"{month.year}{month.month:02}"
+    yyyymm = f"{month.year%100:02}{month.month:02}" #TODO return to 4 digit year when all of listings is running on browse
 
     def _makestep(idx: int) -> Tuple[str, Optional[str]]:
         if idx % ASCII_ART_URL_STEP == 0:
