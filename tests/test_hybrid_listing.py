@@ -1,7 +1,7 @@
-from browse.services.database import (
+from browse.services.database.listings import (
     _combine_yearly_article_counts,
     _process_yearly_article_counts,
-    get_yearly_article_counts,
+    get_yearly_article_counts
 )
 from browse.services.listing import YearCount, MonthCount, hybrid_listing
 
@@ -132,7 +132,7 @@ def test_get_yearly_article_counts(app_with_hybrid_listings):
         # TODO cant test early 2007 data on sqlite
 
 
-@patch("browse.services.database._get_yearly_article_counts_old_id")
+@patch("browse.services.database.listings._get_yearly_article_counts_old_id")
 def test_year_page_hybrid(mock, client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
