@@ -1,12 +1,13 @@
 from dateutil.tz import gettz, tzutc
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import case, distinct
 from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
+from sqlalchemy.orm import aliased
 
-from browse.services.listing import MonthCount, YearCount
-from browse.services.database.models import Metadata, db
+from browse.services.listing import MonthCount, YearCount, Listing, ListingItem
+from browse.services.database.models import Metadata, db, DocumentCategory, Document
 
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
@@ -15,6 +16,38 @@ from logging import Logger
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
+
+def get_articles_for_month(archive:str, year: int, month: int, skip: int, show: int) -> Listing:
+    if archive=="math" and "." not in archive: #seperates math-ph from the general math category
+        archive=archive+"."
+
+    #filters to the correct database query based on the year the id schema changed
+    if year > 2007: #query with the new id system
+        return _get_articles_for_month_new_id(archive,year, month, skip, show)
+    elif year ==2007: #combine queries from both systems - ouch
+        print("2007 sucks")
+    else: #query with the old id system
+        return _get_articles_for_month_old_id(archive,year, month, skip, show)
+    return
+
+def _get_articles_for_month_new_id(archive:str, year: int, month: int, skip: int, show: Optional[int]) -> Listing:
+    """Retrieve entries from the Document table for papers in a given category and month."""
+    doc = aliased(Document)
+    dc = aliased(DocumentCategory)
+    query = (
+        db.session.query(doc, dc)
+        .join(dc, doc.document_id == dc.document_id)
+        .filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        .filter(dc.category.startswith(archive))
+        .offset(skip)
+        .limit(show)
+        .all()
+    )
+    return query
+
+
+def _get_articles_for_month_old_id(archive:str, year: int, month: int, skip: int, show: int) -> Listing:
+    return
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     """fetch total of new and cross-listed articles by month for a given category and year
