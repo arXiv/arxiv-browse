@@ -1,13 +1,17 @@
+from datetime import datetime
 from dateutil.tz import gettz, tzutc
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from sqlalchemy import case, distinct
 from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased
 
-from browse.services.listing import MonthCount, YearCount, Listing, ListingItem
+from browse.services.listing import MonthCount, YearCount, Listing, ListingItem, gen_expires
 from browse.services.database.models import Metadata, db, DocumentCategory, Document
+from browse.domain.metadata import DocMetadata, AuthorList
+from browse.domain.category import Category
+from browse.domain.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
@@ -20,7 +24,7 @@ tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 def get_articles_for_month(archive:str, year: int, month: int, skip: int, show: int) -> Listing:
     if archive=="math" and "." not in archive: #seperates math-ph from the general math category
         archive=archive+"."
-
+    print("ran new code")
     #filters to the correct database query based on the year the id schema changed
     if year > 2007: #query with the new id system
         return _get_articles_for_month_new_id(archive,year, month, skip, show)
@@ -32,22 +36,83 @@ def get_articles_for_month(archive:str, year: int, month: int, skip: int, show: 
 
 def _get_articles_for_month_new_id(archive:str, year: int, month: int, skip: int, show: Optional[int]) -> Listing:
     """Retrieve entries from the Document table for papers in a given category and month."""
-    doc = aliased(Document)
     dc = aliased(DocumentCategory)
+    doc = aliased(Document)
+    meta= aliased(Metadata)
+    #get only listings for items to display
     query = (
-        db.session.query(doc, dc)
-        .join(dc, doc.document_id == dc.document_id)
-        .filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        db.session.query(meta, dc)
+        .join(dc, meta.document_id == dc.document_id)
+        .filter(meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        .filter(meta.is_current==1)
         .filter(dc.category.startswith(archive))
         .offset(skip)
         .limit(show)
         .all()
     )
-    return query
+    new_listings, cross_listings=_entries_into_listing_items(query)
 
+    #get count for all possible hits
+    doc = aliased(Document)
+    query_count = (
+        db.session.query(func.count(db.distinct(doc.paper_id)))
+        .join(dc, doc.document_id == dc.document_id)
+        .filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        .filter(dc.category.startswith(archive))
+        .scalar()  # Use scalar to retrieve the count as a single value
+    )
+
+    return Listing(listings=new_listings+cross_listings,
+        pubdates=[(datetime(year,month,1),1)],#only used for display month
+        count=query_count,
+        expires=gen_expires())
 
 def _get_articles_for_month_old_id(archive:str, year: int, month: int, skip: int, show: int) -> Listing:
     return
+
+def _entries_into_listing_items(query_result: List[Tuple[Metadata, DocumentCategory]]) -> (List[ListingItem],List[ListingItem]):
+    """turns rows of document and category into a underfilled version of DocMetadata.
+    Underfilled to match the behavior of fs_listings, omits data not needed for listing items
+    """
+    new_listings=[]
+    cross_listings=[]
+    for entry in query_result:
+        meta, cat= entry
+        doc= DocMetadata(
+            arxiv_id=meta.paper_id,
+            arxiv_id_v=f"{meta.paper_id}v{meta.version}",
+            title=meta.title,
+            authors=AuthorList(meta.authors),
+            abstract=meta.abstract,
+            categories=meta.abs_categories,
+            primary_category= Category(meta.abs_categories.split()[0]),
+            secondary_categories=[Category(sc) for sc in meta.abs_categories.split()[1:]],
+            comments=meta.comments,
+            journal_ref=meta.journal_ref,
+            version = meta.version,
+            version_history = [VersionEntry(version=meta.version, raw='', submitted_date=None,
+                                            size_kilobytes=meta.source_size,
+                                            source_flag=SourceFlag(meta.source_flags))],
+            raw_safe = '',
+            submitter=None,
+            arxiv_identifier=None,
+            primary_archive = None,
+            primary_group = None,
+            modified = None,        
+        )
+        item=ListingItem(
+            id=meta.paper_id,
+            listingType= "new" if cat.is_primary==1 else "cross",
+            primary=Category(meta.abs_categories.split()[0]).id,
+            article=doc
+        )
+        if cat.is_primary==1: #new listings go before crosslists
+            new_listings.append(item)
+        else: #new listings go before crosslists
+            cross_listings.append(item)
+        
+    return new_listings,cross_listings
+       
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     """fetch total of new and cross-listed articles by month for a given category and year
