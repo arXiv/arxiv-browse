@@ -22,19 +22,12 @@ app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 def get_articles_for_month(archive:str, year: int, month: int, skip: int, show: int) -> Listing:
+    """archive: archive or category name, year:requested year, monht: requested month, 
+    skip: number of entries to skip, show:number of entries to return
+    """
     if archive=="math" and "." not in archive: #seperates math-ph from the general math category
         archive=archive+"."
-    print("ran new code")
-    #filters to the correct database query based on the year the id schema changed
-    if year > 2007: #query with the new id system
-        return _get_articles_for_month_new_id(archive,year, month, skip, show)
-    elif year ==2007: #combine queries from both systems - ouch
-        print("2007 sucks")
-    else: #query with the old id system
-        return _get_articles_for_month_old_id(archive,year, month, skip, show)
-    return
 
-def _get_articles_for_month_new_id(archive:str, year: int, month: int, skip: int, show: Optional[int]) -> Listing:
     """Retrieve entries from the Document table for papers in a given category and month."""
     dc = aliased(DocumentCategory)
     doc = aliased(Document)
@@ -43,7 +36,10 @@ def _get_articles_for_month_new_id(archive:str, year: int, month: int, skip: int
     query = (
         db.session.query(meta, dc)
         .join(dc, meta.document_id == dc.document_id)
-        .filter(meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        .filter(
+            (meta.paper_id.startswith(f"{year % 100:02d}{month:02d}")) | 
+            (meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+        )
         .filter(meta.is_current==1)
         .filter(dc.category.startswith(archive))
         .offset(skip)
@@ -57,7 +53,10 @@ def _get_articles_for_month_new_id(archive:str, year: int, month: int, skip: int
     query_count = (
         db.session.query(func.count(db.distinct(doc.paper_id)))
         .join(dc, doc.document_id == dc.document_id)
-        .filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        .filter(
+            (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}")) | 
+            (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+        )
         .filter(dc.category.startswith(archive))
         .scalar()  # Use scalar to retrieve the count as a single value
     )
