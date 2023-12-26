@@ -2,7 +2,7 @@ from datetime import datetime
 from dateutil.tz import gettz, tzutc
 from typing import List, Optional, Tuple
 
-from sqlalchemy import case, distinct
+from sqlalchemy import case, distinct, or_
 from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased
@@ -34,10 +34,6 @@ def get_articles_for_month(
     """archive: archive or category name, year:requested year, monht: requested month,
     skip: number of entries to skip, show:number of entries to return
     """
-    if (
-        archive == "math" and "." not in archive
-    ):  # seperates math-ph from the general math category
-        archive = archive + "."
 
     """Retrieve entries from the Document table for papers in a given category and month."""
     dc = aliased(DocumentCategory)
@@ -53,6 +49,7 @@ def get_articles_for_month(
         )
         .filter(meta.is_current == 1)
         .filter(dc.category.startswith(archive))
+        .order_by(dc.is_primary.desc())
         .offset(skip)
         .limit(show)
         .all()
