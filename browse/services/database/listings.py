@@ -2,8 +2,8 @@ from datetime import datetime
 from dateutil.tz import gettz, tzutc
 from typing import List, Optional, Tuple
 
-from sqlalchemy import case, distinct, or_
-from sqlalchemy.sql import func
+from sqlalchemy import case, distinct, or_, and_
+from sqlalchemy.sql import func, select
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased
 
@@ -19,9 +19,12 @@ from browse.domain.metadata import DocMetadata, AuthorList
 from browse.domain.category import Category
 from browse.domain.version import VersionEntry, SourceFlag
 
+from arxiv import taxonomy
+from arxiv.taxonomy.definitions import CATEGORIES
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
 from logging import Logger
+from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
@@ -29,50 +32,82 @@ tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 
 def get_articles_for_month(
-    archive: str, year: int, month: int, skip: int, show: int
+    archive_or_cat: str, year: int, month: int, skip: int, show: int
 ) -> Listing:
     """archive: archive or category name, year:requested year, monht: requested month,
     skip: number of entries to skip, show:number of entries to return
     """
 
     """Retrieve entries from the Document table for papers in a given category and month."""
+    category_list=_all_possible_categories(archive_or_cat)
+
     dc = aliased(DocumentCategory)
     doc = aliased(Document)
     meta = aliased(Metadata)
-    # get only listings for items to display
+
+    """
+    retrieves the max value for is_primary over all searched for categories per document
+    this results in one entry per document with a value of 1 if any of the requested categories is the primary and 0 otherwise
+    """
+    subquery = (
+        db.session.query(
+            dc.document_id,
+            func.max(dc.is_primary).label('primary')
+        )
+        .filter(or_(*(dc.category==category for category in category_list)))
+        .group_by(dc.document_id)
+        .subquery()
+    )
+
     query = (
-        db.session.query(meta, dc)
-        .join(dc, meta.document_id == dc.document_id)
+        db.session.query(meta, dc.is_primary)
+        .join(subquery, meta.document_id == subquery.c.document_id)
+        .join(
+            dc,
+            and_(
+                dc.document_id == subquery.c.document_id,
+                dc.is_primary == subquery.c.primary
+            )
+        )
         .filter(
             (meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
             | (meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
         )
         .filter(meta.is_current == 1)
-        .filter(dc.category.startswith(archive))
         .order_by(dc.is_primary.desc())
         .offset(skip)
         .limit(show)
-        .all()
     )
-    new_listings, cross_listings = _entries_into_listing_items(query)
+    result=query.all()
+
+    #results into listing items
+    new_listings, cross_listings = _entries_into_listing_items(result)
 
     # get count for all possible hits
-    doc = aliased(Document)
     query_count = (
-        db.session.query(func.count(db.distinct(doc.paper_id)))
-        .join(dc, doc.document_id == dc.document_id)
+        db.session.query(
+            func.count(db.distinct(doc.paper_id))
+        )
+        .join(subquery, doc.document_id == subquery.c.document_id)
+        .join(
+            dc,
+            and_(
+                dc.document_id == subquery.c.document_id,
+                dc.is_primary == subquery.c.primary
+            )
+        )
         .filter(
             (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
             | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-        )
-        .filter(dc.category.startswith(archive))
-        .scalar()  # Use scalar to retrieve the count as a single value
+        ) 
     )
+
+    count=query_count.scalar()
 
     return Listing(
         listings=new_listings + cross_listings,
         pubdates=[(datetime(year, month, 1), 1)],  # only used for display month
-        count=query_count,
+        count=count,
         expires=gen_expires(),
     )
 
@@ -86,7 +121,7 @@ def _entries_into_listing_items(
     new_listings = []
     cross_listings = []
     for entry in query_result:
-        meta, cat = entry
+        meta, primary = entry
       
         doc = DocMetadata(  
             arxiv_id=meta.paper_id,
@@ -121,17 +156,64 @@ def _entries_into_listing_items(
 
         item = ListingItem(
             id=meta.paper_id,
-            listingType="new" if cat.is_primary == 1 else "cross",
+            listingType="new" if primary == 1 else "cross",
             primary=Category(meta.abs_categories.split()[0]).id,
             article=doc,
         )
-        if cat.is_primary == 1:  # new listings go before crosslists
+        if primary == 1:  # new listings go before crosslists
             new_listings.append(item)
         else:  # new listings go before crosslists
             cross_listings.append(item)
 
     return new_listings, cross_listings
 
+def _all_possible_categories(archive_or_cat:str) -> List[str]:
+    """returns a list of all categories in an archive, or all possible alternate names for categories
+    takes into account aliases and subsumed archives
+    """
+    if archive_or_cat in taxonomy.ARCHIVES: #get all categories for archvie
+        return get_categories_from_archive(archive_or_cat)
+    elif archive_or_cat in taxonomy.CATEGORIES: #check for alternate names
+        second_name=_check_alternate_name(archive_or_cat)
+        if second_name: 
+            return [archive_or_cat, second_name]
+        else:
+            return [archive_or_cat]
+    else:
+        raise BadRequest
+
+def get_categories_from_archive(archive:str) ->List[str]:
+    """returns a list names of all categories under an archive
+    includes defunct categories and all possible names wrt aliases and subsumed categories
+    """
+    list=[]
+    for category in CATEGORIES.keys():
+        if CATEGORIES[category]["in_archive"] == archive:
+            list.append(category)
+            second_name=_check_alternate_name(category)
+            if second_name:
+                list.append(second_name)
+
+    return list
+
+def _check_alternate_name(category:str) -> Optional[str]:
+    #returns alternate name if the category has one
+
+    #check for aliases
+    for key, value in taxonomy.CATEGORY_ALIASES.items():
+        if category == key: #old alias name provided
+            return value
+        elif category == value: #new alias name provided
+            return key
+        
+    #check for subsumed archives
+    for key, value in taxonomy.ARCHIVES_SUBSUMED.items():
+        if category == key: #old archive name provided
+            return value
+        elif category == value: #new category name provided
+            return key
+
+    return None #no alternate names
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     """fetch total of new and cross-listed articles by month for a given category and year
