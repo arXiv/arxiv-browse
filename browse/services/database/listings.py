@@ -49,60 +49,46 @@ def get_articles_for_month(
     retrieves the max value for is_primary over all searched for categories per document
     this results in one entry per document with a value of 1 if any of the requested categories is the primary and 0 otherwise
     """
+    #filter for if documents have any of the requested categories, also returns if any of them are the articles primary category
     subquery = (
         db.session.query(
             dc.document_id,
             func.max(dc.is_primary).label('primary')
         )
-        .filter(or_(*(dc.category==category for category in category_list)))
+        .filter(dc.category.in_(category_list))
         .group_by(dc.document_id)
         .subquery()
     )
 
-    query = (
-        db.session.query(meta, dc.is_primary)
-        .join(subquery, meta.document_id == subquery.c.document_id)
-        .join(
-            dc,
-            and_(
-                dc.document_id == subquery.c.document_id,
-                dc.is_primary == subquery.c.primary
-            )
-        )
-        .filter(
+    query1 = (
+        db.session.query( meta, subquery.c.primary)
+        .filter(meta.is_current == 1)
+    )
+
+    #apply paper_id filter based on year
+    if year > 2007: #new ids
+        query2=query1.filter(meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+    elif year < 2007: #old ids (slow)
+        query2=query1.filter(meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+    else: #both styles present
+        query2=query1.filter(
             (meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
             | (meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
         )
-        .filter(meta.is_current == 1)
-        .order_by(dc.is_primary.desc())
+
+    query3=(query2.join(subquery,meta.document_id == subquery.c.document_id)) #all papers that meet the criteria
+
+    count=query3.count()
+    
+    query4=( #retrieve entries for only requested subset
+        query3.order_by(subquery.c.primary.desc())
         .offset(skip)
-        .limit(show)
-    )
-    result=query.all()
+        .limit(show)) 
+    
+    result=query4.all()
 
     #results into listing items
     new_listings, cross_listings = _entries_into_listing_items(result)
-
-    # get count for all possible hits
-    query_count = (
-        db.session.query(
-            func.count(db.distinct(doc.paper_id))
-        )
-        .join(subquery, doc.document_id == subquery.c.document_id)
-        .join(
-            dc,
-            and_(
-                dc.document_id == subquery.c.document_id,
-                dc.is_primary == subquery.c.primary
-            )
-        )
-        .filter(
-            (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-            | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-        ) 
-    )
-
-    count=query_count.scalar()
 
     return Listing(
         listings=new_listings + cross_listings,
@@ -110,7 +96,6 @@ def get_articles_for_month(
         count=count,
         expires=gen_expires(),
     )
-
 
 def _entries_into_listing_items(
     query_result: List[Tuple[Metadata, DocumentCategory]]
