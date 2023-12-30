@@ -49,45 +49,44 @@ def get_articles_for_month(
     retrieves the max value for is_primary over all searched for categories per document
     this results in one entry per document with a value of 1 if any of the requested categories is the primary and 0 otherwise
     """
-    #filter for if documents have any of the requested categories, also returns if any of them are the articles primary category
-    subquery = (
-        db.session.query(
-            dc.document_id,
-            func.max(dc.is_primary).label('primary')
-        )
-        .filter(dc.category.in_(category_list))
+
+    #gets document_ids of paper_ids in right time frame
+    starter=db.session.query(doc.document_id)
+    if year > 2007: #new ids
+        doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+    elif year < 2007: #old ids (slow)
+        doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+    else: #both styles present
+        doc_ids=starter.filter(
+            (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+            | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+        )                        
+
+    #filters to only the ones in the right category and records if any of the requested categories are primary
+    cat_query = (db.session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
+        .where(dc.document_id.in_(doc_ids))
+        .where(dc.category.in_(category_list))
         .group_by(dc.document_id)
         .subquery()
     )
 
-    query1 = (
-        db.session.query( meta, subquery.c.primary)
+    #gets the metadata for applicable documents
+    main_query=(db.session.query(meta, cat_query.c.is_primary)
+        .select_from(
+            cat_query.join(meta, meta.document_id==cat_query.c.document_id)
+            )
         .filter(meta.is_current == 1)
     )
 
-    #apply paper_id filter based on year
-    if year > 2007: #new ids
-        query2=query1.filter(meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-    elif year < 2007: #old ids (slow)
-        query2=query1.filter(meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-    else: #both styles present
-        query2=query1.filter(
-            (meta.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-            | (meta.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-        )
-
-    query3=(query2.join(subquery,meta.document_id == subquery.c.document_id)) #all papers that meet the criteria
-
-    count=query3.count()
-    
-    query4=( #retrieve entries for only requested subset
-        query3.order_by(subquery.c.primary.desc())
+    rows=( 
+        main_query.order_by(cat_query.c.is_primary.desc(), meta.paper_id)
         .offset(skip)
-        .limit(show)) 
+        .limit(show)
+        )
     
-    result=query4.all()
+    result=rows.all() #get listings to display
+    count=main_query.count() #get total entries 
 
-    #results into listing items
     new_listings, cross_listings = _entries_into_listing_items(result)
 
     return Listing(
