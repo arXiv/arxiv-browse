@@ -181,7 +181,7 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
 
 def get_categories_from_archive(archive:str) ->List[str]:
     """returns a list names of all categories under an archive
-    includes defunct categories and all possible names wrt aliases and subsumed categories
+    includes older names that make no longer be active
     """
     list=[]
     for category in CATEGORIES.keys():
@@ -194,7 +194,8 @@ def get_categories_from_archive(archive:str) ->List[str]:
     return list
 
 def _check_alternate_name(category:str) -> Optional[str]:
-    #returns alternate name if the category has one
+    # returns alternate name for aliases
+    #returns previous name if archive was subsumed
 
     #check for aliases
     for key, value in taxonomy.CATEGORY_ALIASES.items():
@@ -205,9 +206,7 @@ def _check_alternate_name(category:str) -> Optional[str]:
         
     #check for subsumed archives
     for key, value in taxonomy.ARCHIVES_SUBSUMED.items():
-        if category == key: #old archive name provided
-            return value
-        elif category == value: #new category name provided
+        if category == value: #has old archive name
             return key
 
     return None #no alternate names

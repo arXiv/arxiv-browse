@@ -1,13 +1,48 @@
 from browse.services.database.listings import (
     _combine_yearly_article_counts,
     _process_yearly_article_counts,
-    get_yearly_article_counts
+    get_yearly_article_counts,
+    _check_alternate_name,
+    _all_possible_categories,
+    _entries_into_listing_items
 )
 from browse.services.listing import YearCount, MonthCount, hybrid_listing
 
 from unittest.mock import MagicMock, patch
 from flask import g, current_app
 
+#monthly listing pages below
+def test_alt_name():
+    #aliases both directions
+    assert "math.MP"==_check_alternate_name("math-ph")
+    assert "math-ph"==_check_alternate_name("math.MP")
+
+    #subsumed only fetches older names
+    assert "cs.CL"!=_check_alternate_name("cmp-lg")
+    assert "cmp-lg"==_check_alternate_name("cs.CL")
+
+def test_possible_categories():
+    
+    assert ["math.KT"]==_all_possible_categories("math.KT") #single category
+
+    #single category with different name
+    assert "cs.SY" in _all_possible_categories("eess.SY")
+    assert "eess.SY" in _all_possible_categories("eess.SY")
+
+    #new archive
+    assert "q-alg" in _all_possible_categories("math") 
+    assert "stat.TH" in _all_possible_categories("math")
+    assert "math.GM" in _all_possible_categories("math")
+    #legacy archive
+    assert "comp-gas" in _all_possible_categories("comp-gas")
+    assert "nlin.CG" not in _all_possible_categories("comp-gas")
+    #archive is category and archive
+    assert "astro-ph" in _all_possible_categories("astro-ph")
+    assert "astro-ph.EP" in _all_possible_categories("astro-ph")
+
+
+
+#year page below
 
 def test_combine_yearly_article_counts():
     months1 = [
