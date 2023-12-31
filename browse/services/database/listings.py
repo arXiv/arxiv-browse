@@ -32,13 +32,14 @@ tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 
 def get_articles_for_month(
-    archive_or_cat: str, year: int, month: int, skip: int, show: int
+    archive_or_cat: str, year: int, month: Optional[int], skip: int, show: int
 ) -> Listing:
-    """archive: archive or category name, year:requested year, monht: requested month,
+    """archive: archive or category name, year:requested year, month: requested month - no month means retreive listings for the year,
     skip: number of entries to skip, show:number of entries to return
+    Retrieve entries from the Metadata table for papers in a given category and month.
+    Searches for all possible category names that could apply to a particular archive or category
+    also retrieves information on if any of the possible categories is the articles primary
     """
-
-    """Retrieve entries from the Document table for papers in a given category and month."""
     category_list=_all_possible_categories(archive_or_cat)
 
     dc = aliased(DocumentCategory)
@@ -52,15 +53,26 @@ def get_articles_for_month(
 
     #gets document_ids of paper_ids in right time frame
     starter=db.session.query(doc.document_id)
-    if year > 2007: #new ids
-        doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-    elif year < 2007: #old ids (slow)
-        doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-    else: #both styles present
-        doc_ids=starter.filter(
-            (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-            | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-        )                        
+    if month: #for monthly listings
+        if year > 2007: #new ids
+            doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+        elif year < 2007: #old ids (slow)
+            doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+        else: #both styles present
+            doc_ids=starter.filter(
+                (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+                | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+            )  
+    else: #for yearly listings   
+        if year > 2007: #new ids
+            doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}"))
+        elif year < 2007: #old ids (slow)
+            doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}%"))
+        else: #both styles present
+            doc_ids=starter.filter(
+                (doc.paper_id.startswith(f"{year % 100:02d}"))
+                | (doc.paper_id.like(f"%/{year % 100:02d}%"))
+            )                     
 
     #filters to only the ones in the right category and records if any of the requested categories are primary
     cat_query = (db.session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
@@ -86,8 +98,9 @@ def get_articles_for_month(
     
     result=rows.all() #get listings to display
     count=main_query.count() #get total entries 
-
     new_listings, cross_listings = _entries_into_listing_items(result)
+
+    if not month: month=1 #yearly listings need a month for datetime
 
     return Listing(
         listings=new_listings + cross_listings,
