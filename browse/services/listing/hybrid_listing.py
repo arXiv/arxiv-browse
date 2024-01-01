@@ -44,5 +44,9 @@ class HybridListingService(FsListingFilesService):
 
         if_modified_since is ignored
         """
+        if year<91: #in 2000s
+            year+=2000
+        elif year<1900: #90s articles
+            year+=1900
 
         return get_articles_for_month(archiveOrCategory, year, month, skip, show)

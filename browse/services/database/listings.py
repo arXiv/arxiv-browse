@@ -110,7 +110,7 @@ def get_articles_for_month(
     )
 
 def _entries_into_listing_items(
-    query_result: List[Tuple[Metadata, DocumentCategory]]
+    query_result: List[Tuple[Metadata, int]]
 ) -> Tuple[List[ListingItem], List[ListingItem]]:
     """turns rows of document and category into a underfilled version of DocMetadata.
     Underfilled to match the behavior of fs_listings, omits data not needed for listing items
@@ -200,14 +200,14 @@ def _check_alternate_name(category:str) -> Optional[str]:
     #check for aliases
     for key, value in taxonomy.CATEGORY_ALIASES.items():
         if category == key: #old alias name provided
-            return value
+            return value # type: ignore
         elif category == value: #new alias name provided
-            return key
+            return key # type: ignore
         
     #check for subsumed archives
     for key, value in taxonomy.ARCHIVES_SUBSUMED.items():
         if category == value: #has old archive name
-            return key
+            return key # type: ignore
 
     return None #no alternate names
 
