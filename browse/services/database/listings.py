@@ -58,11 +58,12 @@ def get_articles_for_month(
             doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
         elif year < 2007: #old ids (slow)
             doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-        else: #both styles present
-            doc_ids=starter.filter(
-                (doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
-                | (doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
-            )  
+        else: #2007 splits in april
+            if month<4:
+                doc_ids=starter.filter(doc.paper_id.like(f"%/{year % 100:02d}{month:02d}%"))
+            else:
+                doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
+
     else: #for yearly listings   
         if year > 2007: #new ids
             doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}"))
