@@ -577,10 +577,10 @@ def main(args):
         logger.addHandler(json_logHandler)
         pass
 
-    logger.info(f"Starting at {datetime.now().isoformat()} ({'bulid' if args.generate else 'no-build'})",
+    todos = make_todos(args.filename, generate=args.generate)
+    logger.info(f"Starting at {datetime.now().isoformat()} ({'bulid' if args.generate else 'no-build'}) todo count {len(todos)}",
                 extra={CATEGORY: "status"})
-
-    [todo_q.put(item) for item in make_todos(args.filename, generate=args.generate)]
+    [todo_q.put(item) for item in todos]
 
     if args.d:
         todo = list(todo_q.queue)
