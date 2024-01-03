@@ -38,7 +38,7 @@ from time import sleep, perf_counter, gmtime, strftime as time_strftime
 from datetime import datetime
 import signal
 import json
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 from pathlib import Path
 
@@ -149,7 +149,7 @@ def ms_since(start: float) -> int:
     return int((perf_counter() - start) * 1000)
 
 
-def make_todos(filename) -> List[dict]:
+def make_todos(filename, generate=True) -> List[dict]:
     """Reades `filename` and figures out what work needs to be done for the sync.
     This only uses data from the publish file.
 
@@ -197,10 +197,12 @@ def make_todos(filename) -> List[dict]:
             actions.append(('upload', pdfm.group(1)))
         elif htmlm:  # must be before tex due to pattern overlap
             actions.append(('upload', htmlm.group(1)))
-            actions.append(('build_html+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
+            if generate:
+                actions.append(('build_html+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         elif texm:
             actions.append(('upload', texm.group(1)))
-            actions.append(('build_pdf+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
+            if generate:
+                actions.append(('build_pdf+upload', f"{arxiv_id.id}v{arxiv_id.version}"))
         else:
             logger.error(f"Could not determine source for submission {arxiv_id}",
                          extra={CATEGORY: "internal", "arxiv_id": arxiv_id})
@@ -290,33 +292,6 @@ def path_to_bucket_key_html(html) -> str:
         logging.error(f"path_to_bucket_key: {html} does not start with {CACHE_PREFIX} or {DATA_PREFIX}")
         raise ValueError(f"Cannot convert PDF path {html} to a GS key")
 
-
-@retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
-def get_pdf(session, pdf_url) -> None:
-    start = perf_counter()
-    headers = {'User-Agent': ENSURE_UA}
-    logger.debug("Getting %s", pdf_url)
-    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
-    # noinspection PyStatementEffect
-    [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
-    pdf_ms: int = ms_since(start)
-    if resp.status_code == 503:
-        msg = f"ensure_pdf: GET status 503, server overloaded {pdf_url}"
-        logger.warning(msg,
-                       extra={CATEGORY: "download",
-                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
-        raise Overloaded503Exception(msg)
-    if resp.status_code != 200:
-        msg = f"ensure_pdf: GET status {resp.status_code} {pdf_url}"
-        logger.warning(msg,
-                       extra={CATEGORY: "download",
-                              "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
-        raise (Exception(msg))
-    else:
-        logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
-                    extra={CATEGORY: "download",
-                           "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
-        
 @retry.Retry(predicate=retry.if_exception_type(HTML_RETRY_EXCEPTIONS))
 def get_html(session, html_url) -> None:
     start = perf_counter()
@@ -436,7 +411,7 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     start = perf_counter()
 
-    files = _get_files_for_html(html_path)
+    files = _get_files_for_html(str(html_path))
 
     if len(files) > 0:
         logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
@@ -445,7 +420,7 @@ def ensure_html(session, host, arxiv_id: Identifier):
     start = perf_counter()
     get_html(session, url)
     start_wait = perf_counter()
-    while len(files := _get_files_for_html(html_path)) < 1:
+    while len(files := _get_files_for_html(str(html_path))) < 1:
         if perf_counter() - start_wait > PDF_WAIT_SEC: # TODO: Does this need to be different for html?
             msg = f"No HTML, waited longer than {PDF_WAIT_SEC} sec {url}"
             logger.warning(msg,
@@ -602,9 +577,10 @@ def main(args):
         logger.addHandler(json_logHandler)
         pass
 
-    logger.info(f"Starting at {datetime.now().isoformat()}", extra={CATEGORY: "status"})
-
-    [todo_q.put(item) for item in make_todos(args.filename)]
+    todos = make_todos(args.filename, generate=args.generate)
+    logger.info(f"Starting at {datetime.now().isoformat()} ({'bulid' if args.generate else 'no-build'}) todo count {len(todos)}",
+                extra={CATEGORY: "status"})
+    [todo_q.put(item) for item in todos]
 
     if args.d:
         todo = list(todo_q.queue)
@@ -652,6 +628,17 @@ def main(args):
     pass
 
 
+class store_boolean(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values.lower() in ['true', 't', 'yes', 'y', '1']:
+            setattr(namespace, self.dest, True)
+        elif values.lower() in ['false', 'f', 'no', 'n', '0']:
+            setattr(namespace, self.dest, False)
+        else:
+            raise argparse.ArgumentError(self, f"Invalid boolean value '{values}'")
+
+
+
 if __name__ == "__main__":
     ad = argparse.ArgumentParser(epilog=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ad.add_argument('--test', help='test mode', action='store_true')
@@ -660,6 +647,8 @@ if __name__ == "__main__":
     ad.add_argument('-d', help="Dry run no action", action='store_true')
     ad.add_argument('--debug', help='Set logging to debug', action='store_true')
     ad.add_argument('--globals', help="Global variables")
+    ad.add_argument('--generate', default=True, type=str, action=store_boolean,
+                    help="Generate files (default). Use =false to disable PDF/HTML gen")
     ad.add_argument('filename')
     args = ad.parse_args()
     main(args)
