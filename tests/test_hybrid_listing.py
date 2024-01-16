@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from browse.services.database.listings import (
-    _combine_yearly_article_counts,
     _process_yearly_article_counts,
     get_yearly_article_counts,
     _check_alternate_name,
@@ -254,58 +253,6 @@ def test_year_listing_page( client_with_hybrid_listings):
     # assert 'Authors and titles for October 1995' in text
 
 #year page below
-
-def test_combine_yearly_article_counts():
-    months1 = [
-        MonthCount(2005, 1, 1, 1),
-        MonthCount(2005, 2, 2, 2),
-        MonthCount(2005, 3, 5, 16),
-        MonthCount(2005, 4, 7, 0),
-        MonthCount(2005, 5, 11, 21),
-        MonthCount(2005, 6, 19, 1),
-        MonthCount(2005, 7, 0, 1),
-        MonthCount(2005, 8, 0, 6),
-        MonthCount(2005, 9, 1, 1),
-        MonthCount(2005, 10, 45, 2),
-        MonthCount(2005, 11, 1, 1),
-        MonthCount(2005, 12, 3, 5),
-    ]
-    months2 = [
-        MonthCount(2005, 1, 0, 5),
-        MonthCount(2005, 2, 0, 0),
-        MonthCount(2005, 3, 1, 7),
-        MonthCount(2005, 4, 3, 8),
-        MonthCount(2005, 5, 71, 2),
-        MonthCount(2005, 6, 9, 51),
-        MonthCount(2005, 7, 0, 4),
-        MonthCount(2005, 8, 50, 6),
-        MonthCount(2005, 9, 1, 1),
-        MonthCount(2005, 10, 4, 22),
-        MonthCount(2005, 11, 1, 1),
-        MonthCount(2005, 12, 3, 5),
-    ]
-    months_total = [
-        MonthCount(2005, 1, 1, 6),
-        MonthCount(2005, 2, 2, 2),
-        MonthCount(2005, 3, 6, 23),
-        MonthCount(2005, 4, 10, 8),
-        MonthCount(2005, 5, 82, 23),
-        MonthCount(2005, 6, 28, 52),
-        MonthCount(2005, 7, 0, 5),
-        MonthCount(2005, 8, 50, 12),
-        MonthCount(2005, 9, 2, 2),
-        MonthCount(2005, 10, 49, 24),
-        MonthCount(2005, 11, 2, 2),
-        MonthCount(2005, 12, 6, 10),
-    ]
-    year1 = YearCount(2005, 95, 57, months1)
-    year2 = YearCount(2005, 143, 112, months2)
-    year_total = YearCount(2005, 238, 169, months_total)
-
-    assert year_total == _combine_yearly_article_counts(year1, year2)
-    assert year_total.new_count == sum(month.new for month in year_total.by_month)
-    assert year_total.cross_count == sum(month.cross for month in year_total.by_month)
-
 
 def test_process_yearly_article_counts():
     row1 = MagicMock()
