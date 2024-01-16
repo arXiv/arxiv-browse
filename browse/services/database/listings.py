@@ -213,6 +213,72 @@ def _check_alternate_name(category:str) -> Optional[str]:
     return None #no alternate names
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
+
+    dc = aliased(DocumentCategory)
+    doc = aliased(Document)
+
+    category_list=_all_possible_categories(archive)
+    new_doc_ids=(
+        db.session.query(
+            doc.document_id,
+            func.substr(doc.paper_id, 3, 2).label("month"),
+        )
+        .filter(doc.paper_id.startswith(f"{year % 100:02d}"))
+        .subquery()
+    )
+    old_doc_ids=(
+        db.session.query(
+            doc.document_id,
+            func.substring(
+                func.substring_index(doc.paper_id, "/", -1), 3, 2
+            ).label("month")
+        )
+        .filter(doc.paper_id.like(f"%/{year % 100:02d}%"))
+        .subquery()
+    )
+
+    if year > 2007: 
+        doc_ids=new_doc_ids        
+    elif year < 2007: 
+        doc_ids=old_doc_ids
+    else: #both styles present
+        doc_ids=db.session.query(
+            old_doc_ids.c.document_id.label("document_id"), 
+            old_doc_ids.c.month.label("month")
+            ).union_all(
+                db.session.query(
+                    new_doc_ids.c.document_id.label("document_id"), 
+                    new_doc_ids.c.month.label("month")
+                )
+            ).subquery()
+
+    subquery=(
+        db.session.query(
+            doc_ids.c.month,
+            func.max(dc.is_primary).label("is_primary")
+        )
+        .select_from(
+        doc_ids.join(dc, dc.document_id==doc_ids.c.document_id)
+        )
+        .where(dc.category.in_(category_list))
+        .group_by(doc_ids.c.document_id)
+        .subquery()
+    )
+
+    query = (
+        db.session.query(
+            subquery.c.month,
+            func.count(case([(subquery.c.is_primary == 1, 1)])).label("count_new"),
+            func.count(case([(subquery.c.is_primary == 0, 1)])).label("count_cross")
+        )
+        .group_by(subquery.c.month)
+    )
+
+
+    result=query.all()
+    return _process_yearly_article_counts(result, year)
+
+def get_yearly_article_counts_v2(archive: str, year: int) -> YearCount:
     """fetch total of new and cross-listed articles by month for a given category and year
     supports both styles of ids at once
     """

@@ -357,18 +357,18 @@ def test_get_yearly_article_counts(app_with_hybrid_listings):
         months = [
             MonthCount(2009, 1, 0, 0),
             MonthCount(2009, 2, 0, 0),
-            MonthCount(2009, 3, 1, 0),
-            MonthCount(2009, 4, 1, 0),
+            MonthCount(2009, 3, 0, 0),
+            MonthCount(2009, 4, 0, 0),
             MonthCount(2009, 5, 0, 0),
             MonthCount(2009, 6, 1, 1),
             MonthCount(2009, 7, 0, 0),
             MonthCount(2009, 8, 0, 0),
-            MonthCount(2009, 9, 1, 1),
-            MonthCount(2009, 10, 1, 0),
-            MonthCount(2009, 11, 2, 0),
-            MonthCount(2009, 12, 1, 0),
+            MonthCount(2009, 9, 0, 0),
+            MonthCount(2009, 10, 0, 0),
+            MonthCount(2009, 11, 0, 0),
+            MonthCount(2009, 12, 0, 0),
         ]
-        year1 = YearCount(2009, 8, 2, months)
+        year1 = YearCount(2009, 1, 1, months)
 
         assert year1 == get_yearly_article_counts(
             "cond-mat", 2009
@@ -377,8 +377,7 @@ def test_get_yearly_article_counts(app_with_hybrid_listings):
         # 2007 mid id-swap
         # TODO cant test early 2007 data on sqlite
 
-
-@patch("browse.services.database.listings._get_yearly_article_counts_old_id")
+@patch("browse.services.listing.hybrid_listing.get_yearly_article_counts")
 def test_year_page_hybrid(mock, client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
@@ -390,17 +389,21 @@ def test_year_page_hybrid(mock, client_with_hybrid_listings):
     rv = client.get("/year/cond-mat/07")
     assert rv.status_code == 200
 
+
+def test_year_page_data_hybrid(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+
     # has data in test database
-    rv = client.get("/year/cond-mat/09")
+    rv = client.get("/year/math/09")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/year/cond-mat/11">2011</a>' in text
-    assert "<p>2009 totals: <b>8 articles</b> + <i>2 cross-lists</i></p>" in text
+    assert '<a href="/year/math/11">2011</a>' in text
+    assert "<p>2009 totals: <b>4 articles</b> + <i>0 cross-lists</i></p>" in text
     assert (
-        "<a href=/list/cond-mat/0911?skip=0>|</a>      <b>2</b> + 0 (Nov 2009)"
+        "<a href=/list/math/0906?skip=0>|</a>      <b>4</b> + 0 (Jun 2009)"
         in text
     ) #TODO change this back to 4 digit year when all of listings is running on browse
-    assert '<a href="/year/cond-mat/92">1992</a>' in text
+    assert '<a href="/year/math/92">1992</a>' in text
 
     rv = client.get("/year/cs/23")
     assert rv.status_code == 200
@@ -418,18 +421,18 @@ def test_monthly_counts_hybrid(app_with_hybrid_listings):
         months = [
             MonthCount(2009, 1, 0, 0),
             MonthCount(2009, 2, 0, 0),
-            MonthCount(2009, 3, 1, 0),
-            MonthCount(2009, 4, 1, 0),
+            MonthCount(2009, 3, 0, 0),
+            MonthCount(2009, 4, 0, 0),
             MonthCount(2009, 5, 0, 0),
             MonthCount(2009, 6, 1, 1),
             MonthCount(2009, 7, 0, 0),
             MonthCount(2009, 8, 0, 0),
-            MonthCount(2009, 9, 1, 1),
-            MonthCount(2009, 10, 1, 0),
-            MonthCount(2009, 11, 2, 0),
-            MonthCount(2009, 12, 1, 0),
+            MonthCount(2009, 9, 0, 0),
+            MonthCount(2009, 10, 0, 0),
+            MonthCount(2009, 11, 0, 0),
+            MonthCount(2009, 12, 0, 0),
         ]
-        year = YearCount(2009, 8, 2, months)
+        year = YearCount(2009, 1, 1, months)
         assert result == year
 
 def test_finds_archives_with_no_categories(app_with_hybrid_listings):
