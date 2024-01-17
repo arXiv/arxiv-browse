@@ -290,9 +290,7 @@ class ArticleStore():
                 and src_file.updated < cached_ps_file.updated)
 
             src_flag = docmeta.get_requested_version().source_flag
-            src_flag_code = ''
-            if src_flag is not None and src_flag.code is not None:
-                src_flag_code = src_flag.code
+            src_flag_code = '' if src_flag is None or src_flag.code is None else src_flag.code
 
             source_type_formats = formats_from_source_flag(src_flag_code,
                                                            format_pref,
