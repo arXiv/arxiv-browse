@@ -2196,7 +2196,7 @@ div#long-dc-list {
   padding-top: 0.3em;
 }
 
-.abs-license a {
+.abs-license .has_license {
   display: flex;
   align-items: center;
   gap: 5px;
