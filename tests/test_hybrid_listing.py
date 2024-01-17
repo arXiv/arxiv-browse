@@ -5,8 +5,7 @@ from browse.services.database.listings import (
     get_yearly_article_counts,
     _check_alternate_name,
     _all_possible_categories,
-    _entries_into_listing_items,
-    get_articles_for_month
+    _entries_into_monthly_listing_items
 )
 from browse.services.listing import YearCount, MonthCount, get_listing_service
 from browse.services.database.models import Metadata
@@ -106,7 +105,7 @@ def test_possible_categories():
 
 def test_transform_into_listing():
     items=[(SAMPLE_METADATA1,1),(SAMPLE_METADATA2,0)]
-    new, cross=_entries_into_listing_items(items)
+    new, cross=_entries_into_monthly_listing_items(items)
 
     assert len(new)==1 and len(cross)==1
     assert new[0].id=="1234.5678" and cross[0].id=="1234.5679"

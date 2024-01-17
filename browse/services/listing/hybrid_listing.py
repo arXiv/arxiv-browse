@@ -2,10 +2,11 @@ import logging
 from typing import Optional
 
 from browse.services.listing.fs_listings import FsListingFilesService
-from browse.services.listing import YearCount, Listing
+from browse.services.listing import YearCount, Listing, ListingNew
 from browse.services.database.listings import (
     get_yearly_article_counts,
     get_articles_for_month,
+    get_new_listing
 )
 
 logger = logging.getLogger(__name__)
@@ -50,3 +51,11 @@ class HybridListingService(FsListingFilesService):
             year+=1900
 
         return get_articles_for_month(archiveOrCategory, year, month, skip, show)
+
+    def list_new_articles(self,
+                          archiveOrCategory: str,
+                          skip: int,
+                          show: int,
+                          if_modified_since: Optional[str] = None)\
+                          -> ListingNew:
+        return get_new_listing(archiveOrCategory,skip,show)

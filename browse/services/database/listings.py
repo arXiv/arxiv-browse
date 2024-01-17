@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.tz import gettz, tzutc
 from typing import List, Optional, Tuple
 
-from sqlalchemy import case, distinct, or_, and_
+from sqlalchemy import case, distinct, or_, and_, desc
 from sqlalchemy.sql import func, select
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased
@@ -13,8 +13,10 @@ from browse.services.listing import (
     Listing,
     ListingItem,
     gen_expires,
+    ListingNew,
+    AnnounceTypes
 )
-from browse.services.database.models import Metadata, db, DocumentCategory, Document
+from browse.services.database.models import NextMail, Metadata, db, DocumentCategory, Document, Updates
 from browse.domain.metadata import DocMetadata, AuthorList
 from browse.domain.category import Category
 from browse.domain.version import VersionEntry, SourceFlag
@@ -30,6 +32,121 @@ logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
+def get_past_week_dates():
+    results = (
+        db.session.query(distinct(Updates.date))
+        .order_by(desc(Updates.date))
+        .limit(5)
+        .all()
+    )   
+    return
+
+def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
+    "gets the most recent day of listings for an archive or category"
+
+    category_list=_all_possible_categories(archive_or_cat)
+    nm=aliased(NextMail)
+    dc = aliased(DocumentCategory)
+    mail_id=db.session.query(func.max(nm.mail_id)).scalar() #most recent mailing date
+  
+    #all document ids being mailed (other than jref)
+    doc_ids = (
+        db.session.query(nm.document_id, nm.type)
+        .filter(nm.mail_id==mail_id)
+        .filter(nm.type!= "jref")
+        .filter(nm.version<6)
+        .subquery()
+    )
+
+    #all listings for the specific category set
+    all = (
+        db.session.query(
+            doc_ids.c.document_id, 
+            doc_ids.c.type, 
+            func.max(dc.is_primary).label('is_primary')
+        )
+        .join(dc, dc.document_id == doc_ids.c.document_id)
+        .where(dc.category.in_(category_list))
+        .group_by(dc.document_id)
+        .subquery()
+    )
+
+    #sorting and counting by type of listing
+    listing_type = case(
+        [
+            (and_(all.c.type == 'new', all.c.is_primary == 1), 'new'),
+            (or_(all.c.type == 'new', all.c.type == 'cross'), 'cross'),
+            (and_(or_(all.c.type == 'rep', all.c.type == 'wdr'), all.c.is_primary == 1), 'rep'),
+            (or_(all.c.type == 'rep', all.c.type == 'wdr'), 'repcross')
+        ],
+        else_="no_match"
+    ).label('listing_type')
+
+    case_order = case(
+        [
+            (listing_type == 'new', 0),
+            (listing_type == 'cross', 1),
+            (listing_type == 'rep', 2),
+            (listing_type == 'repcross', 3),
+        ],
+        else_=4 
+    ).label('case_order')
+
+    #how many of each type
+    counts = (
+        db.session.query(
+            listing_type,
+            func.count().label('type_count')
+        )
+        .group_by(listing_type)
+        .order_by(case_order)
+        .all()
+    )
+    new_count=counts[0][1]
+    cross_count=counts[1][1]
+    rep_count=counts[2][1] + counts[3][1] #ordered with crosslistings last, but counted together
+
+    #data for listings to be displayed
+    meta = aliased(Metadata)
+    results = (
+        db.session.query(
+            listing_type,
+            meta
+        )
+        .join(meta, meta.document_id == all.c.document_id)
+        .filter(meta.is_current ==1)
+        .order_by(case_order, meta.paper_id)
+        .offset(skip)
+        .limit(show)
+        .all()
+    )
+
+    #organize results into expected listing
+    items=[]
+    for row in results:
+        listing_case, metadata = row
+        if listing_case=="repcross":
+            listing_type="rep"
+        item= _metadata_to_listing_item(metadata, listing_case)
+        items.append(item)
+
+    announced=_mailing_id_to_date(mail_id)
+    submission_start=announced#TODO how to get data from database
+    submission_end=announced #TODO how to get data from database
+
+    return ListingNew(listings=items, 
+                      new_count=new_count, 
+                      cross_count=cross_count, 
+                      rep_count=rep_count, 
+                      announced=announced,
+                      submitted=(submission_start, submission_end),
+                      expires=gen_expires())
+
+def _mailing_id_to_date(id:str)->date:
+    year=2000+int(id[0:2])
+    month=int(id[2:4])
+    day=int(id[4:6])
+    return date(year,month,day)
 
 def get_articles_for_month(
     archive_or_cat: str, year: int, month: Optional[int], skip: int, show: int
@@ -99,7 +216,7 @@ def get_articles_for_month(
     
     result=rows.all() #get listings to display
     count=main_query.count() #get total entries 
-    new_listings, cross_listings = _entries_into_listing_items(result)
+    new_listings, cross_listings = _entries_into_monthly_listing_items(result)
 
     if not month: month=1 #yearly listings need a month for datetime
 
@@ -110,54 +227,66 @@ def get_articles_for_month(
         expires=gen_expires(),
     )
 
-def _entries_into_listing_items(
+def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingItem:
+    """"turns rows of document and category into a underfilled version of DocMetadata.
+    Underfilled to match the behavior of fs_listings, omits data not needed for listing items
+    meta: the metadata for an item 
+    type: the type of announcement "new" "cross" or "rep" """
+    doc = DocMetadata(  
+        arxiv_id=meta.paper_id,
+        arxiv_id_v=f"{meta.paper_id}v{meta.version}",
+        title=meta.title,
+        authors=AuthorList(meta.authors),
+        abstract=meta.abstract,
+        categories=meta.abs_categories,
+        primary_category=Category(meta.abs_categories.split()[0]),
+        secondary_categories=[
+            Category(sc) for sc in meta.abs_categories.split()[1:]
+        ],
+        comments=meta.comments,
+        journal_ref=meta.journal_ref,
+        version=meta.version,
+        version_history=[
+            VersionEntry(
+                version=meta.version,
+                raw="",
+                submitted_date=None, # type: ignore
+                size_kilobytes=meta.source_size,
+                source_flag=SourceFlag(meta.source_flags),
+            )
+        ],
+        raw_safe="",
+        submitter=None, # type: ignore
+        arxiv_identifier=None, # type: ignore
+        primary_archive=None, # type: ignore
+        primary_group=None, # type: ignore
+        modified=None, # type: ignore
+    )
+    item = ListingItem(
+        id=meta.paper_id,
+        listingType=type,
+        primary=Category(meta.abs_categories.split()[0]).id,
+        article=doc,
+    )
+    return item
+
+def _entries_into_monthly_listing_items(
     query_result: List[Tuple[Metadata, int]]
 ) -> Tuple[List[ListingItem], List[ListingItem]]:
-    """turns rows of document and category into a underfilled version of DocMetadata.
-    Underfilled to match the behavior of fs_listings, omits data not needed for listing items
+    """ monthly and yearly listings only show new articles, 
+    and new articles crosslisted into the category
     """
     new_listings = []
     cross_listings = []
     for entry in query_result:
         meta, primary = entry
-      
-        doc = DocMetadata(  
-            arxiv_id=meta.paper_id,
-            arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-            title=meta.title,
-            authors=AuthorList(meta.authors),
-            abstract=meta.abstract,
-            categories=meta.abs_categories,
-            primary_category=Category(meta.abs_categories.split()[0]),
-            secondary_categories=[
-                Category(sc) for sc in meta.abs_categories.split()[1:]
-            ],
-            comments=meta.comments,
-            journal_ref=meta.journal_ref,
-            version=meta.version,
-            version_history=[
-                VersionEntry(
-                    version=meta.version,
-                    raw="",
-                    submitted_date=None, # type: ignore
-                    size_kilobytes=meta.source_size,
-                    source_flag=SourceFlag(meta.source_flags),
-                )
-            ],
-            raw_safe="",
-            submitter=None, # type: ignore
-            arxiv_identifier=None, # type: ignore
-            primary_archive=None, # type: ignore
-            primary_group=None, # type: ignore
-            modified=None, # type: ignore
-        )
+        if primary==1:
+            list_type="new"
+        else:
+            list_type="cross"
 
-        item = ListingItem(
-            id=meta.paper_id,
-            listingType="new" if primary == 1 else "cross",
-            primary=Category(meta.abs_categories.split()[0]).id,
-            article=doc,
-        )
+        item=_metadata_to_listing_item(meta,list_type)
+
         if primary == 1:  # new listings go before crosslists
             new_listings.append(item)
         else:  # new listings go before crosslists
