@@ -182,12 +182,12 @@
         {%- if withdrawn -%}
         <div hidden>No license for this version due to withdrawn</div>
         {%- elif abs_meta.license.icon_uri_path -%}
-        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article" class="has_license">
           <img alt="license icon" role="presentation" src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/>
           <span>view license</span>
         </a>
         {%- else -%}
-        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>)
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>
         {%- endif -%}
       </div>
     </div>
