@@ -56,14 +56,10 @@
       {%- endif -%}
       {%- if format == 'src' and current-%}
   <li><a href="{{url_for('src.src', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
-      {%- elif format.startswith('ps') -%}
-  <li><a href="{{url_for('dissemination.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a></li>
-      {%- elif format == 'dvi' -%}
-  <li><a href="{{url_for('dissemination.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a></li>
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
-      {%- elif format == 'nops' -%}
-  <li><a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a></li>
+      {%- elif format == 'other' -%}
+  <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other Formats</a></li>
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
@@ -185,14 +181,14 @@
       <div class="abs-license">
         {%- if withdrawn -%}
         <div hidden>No license for this version due to withdrawn</div>
+        {%- elif abs_meta.license.icon_uri_path -%}
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">
+          <img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/>
+          <span>view license</span>
+        </a>
         {%- else -%}
-          {%- if 'other' in formats -%}
-        (<a href="{{abs_meta.license.effective_uri}}" target="_blank" title="Rights to this article">view license</a>, <a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}">view other formats</a>)
-          {%- else -%}
-        (<a href="{{abs_meta.license.effective_uri}}" target="_blank" title="Rights to this article">view license</a>)
-          {%- endif -%}
+        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>)
         {%- endif -%}
-        
       </div>
     </div>
     <!--end full-text-->
