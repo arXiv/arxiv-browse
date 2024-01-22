@@ -25,7 +25,7 @@ RE_TOTAL_PAPERS = re.compile(r'^total_papers\s+(?P<count>[0-9]+)',
 
 
 def get_home_page() -> Response:
-    """Get the data needed to generated the home page."""
+    """Get the data needed to generate the home page."""
     response_data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
 
@@ -39,7 +39,7 @@ def get_home_page() -> Response:
     response_data['groups'] = taxonomy.definitions.GROUPS
     response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE
     response_data['categories'] = taxonomy.definitions.CATEGORIES_ACTIVE
-
+    response_headers['Cache-Control'] = "max-age: 3600"
     return response_data, status.OK, response_headers
 
 
