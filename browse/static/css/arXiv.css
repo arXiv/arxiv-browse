@@ -2196,6 +2196,12 @@ div#long-dc-list {
   padding-top: 0.3em;
 }
 
+.abs-license .has_license {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 /****************************************
  * DL-list styles (/list/arch-ive/new|recent, search)
  ****************************************/

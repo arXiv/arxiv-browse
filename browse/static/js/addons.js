@@ -21,28 +21,27 @@ let create_header = () => {
     let id = window.location.pathname.split('/')[2];
 
     var LogoBanner = `
-    <div style="display: flex; width: 60%;">
-        <a href="https://arxiv.org/" style="text-decoration: none; width:80px">
-            <img alt="logo" class="logo" role="presentation" style="background-color: transparent;" src="https://services.dev.arxiv.org/html/static/arxiv-logo-one-color-white.svg">
-            <img alt="logo" class="logomark" role="presentation" style="background-color: transparent;" src="https://services.dev.arxiv.org/html/static/arxiv-logomark-small-white.svg">
-        </a>
-        <div class="header-message" role="banner" style="padding-left: 15px; padding-top: 5px;">
-            ${id === 'submission' ? 'This is <strong>Experimental HTML</strong>. By design, HTML will not look exactly like the PDF. We invite you to report any errors that don\'t represent the intent or meaning of your paper. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span><a href=https://github.com/brucemiller/LaTeXML/wiki/Porting-LaTeX-packages-for-LaTeXML target="_blank">View supported LaTeX packages</a> and <a href=https://github.com/brucemiller/LaTeXML/issues target="_blank">help improve conversions</a>.' :
-            'This is <strong>Experimental HTML</strong>. We invite you to report rendering errors. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> Learn more <a href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">about this project</a> and <a href=https://github.com/brucemiller/LaTeXML/issues target="_blank">help improve conversions</a>.'}
-        </div>
+    <div class="html-header-logo">
+      <a href="https://arxiv.org/">
+          <img alt="logo" class="logo" role="presentation" width="100" src="https://services.dev.arxiv.org/html/static/arxiv-logo-one-color-white.svg">
+          <span class="sr-only">Back to arXiv</span>
+      </a>
+    </div>
+    <div class="html-header-message" role="banner">
+        <p>${id === 'submission' ? 'This is <strong>experimental HTML</strong> to improve accessibility. By design, HTML will not look exactly like the PDF. Please report any errors that don\'t represent the intent or meaning of your paper. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> View LaTeX Markup <a href="https://info.arxiv.org/help/submit_latex_best_practices.html" target="_blank">Best Practices</a> for Successful HTML Papers.' :
+        'This is <strong>experimental HTML</strong> to improve accessibility. We invite you to report rendering errors. <span class="sr-only">Use Alt+Y to toggle on accessible reporting links and Alt+Shift+Y to toggle off.</span> Learn more <a href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">about this project</a> and <a href="https://info.arxiv.org/help/submit_latex_best_practices.html" target="_blank">help improve conversions</a>.'}
+        </p>
     </div>`;
 
-
     var Links = `
-        <div style="display: inline-flex; align-items: center;">
-            <a class="ar5iv-footer-button hover-effect" style="color: white;" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
-            <a class="ar5iv-footer-button hover-effect" target="_blank" style="color: white;" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
-            ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" style="color: white;" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">Back to Abstract</a>`}
-
-            <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle ar5iv color scheme" style="float: right;">
-                <span class="color-scheme-icon"></span>
-            </a>
-        </div>`;
+    <nav class="html-header-nav">
+      <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
+      <a class="ar5iv-footer-button hover-effect" target="_blank" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
+      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">Back to Abstract</a>`}
+      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode">
+          <span class="color-scheme-icon"></span>
+      </a>
+    </nav>`;
 
     desktop_header.innerHTML = LogoBanner + Links;
     desktop_header.classList.add('desktop_header');
@@ -55,41 +54,38 @@ let create_mobile_header = () => {
     let id = window.location.pathname.split('/')[2];
 
     var mobile_header= `
-    <div class="container-fluid">
-    <a class="navbar-brand" href="https://arxiv.org/" style="text-decoration: none; width:80px">
-      <img alt="logo" class="logo" role="presentation" style="background-color: transparent;"
-        src="https://services.dev.arxiv.org/html/static/arxiv-logo-one-color-white.svg">
-      <img alt="logo" class="logomark" role="presentation" style="background-color: transparent; margin-left:40px;"
-        src="https://services.dev.arxiv.org/html/static/arxiv-logomark-small-white.svg">
-    </a>
-        <!--toc button-->
-        <div class='subcontainer-fluid'>
-          <button class="navbar-toggler ar5iv-footer-button" type="button" data-bs-theme="dark" data-bs-toggle="collapse" aria-expanded="false"
-            data-bs-target=".ltx_page_main >.ltx_TOC.mobile" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation" style="border:none; margin-right: 0em;">
-            <span class="navbar-toggler-icon" style="width:1em;height:1em;margin-top: 0.1em;"></span>
-          </button>
-          <!--back to abstract-->
-          ${id === 'submission' ? '' : `
-          <!-- <a class="nav-link ar5iv-footer-button hover-effect" style="color: white; display:inline-flex; flex-direction: column; align-items:center; text-align:center" href="#"> -->
-            <a class="nav-link ar5iv-footer-button hover-effect" style="color: white; margin-right:0em;" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">
-            <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 512 512" style="background-color:transparent; z-index:2">
-                <style>svg{fill:rgb(255, 255, 255)}</style>
-                <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"/>
-            </svg>
-            <!-- <span style="font-size: 0.75em;">Abstract</span> -->
-            </a>`}
-          <!--dark mode-->
-          <a class="nav-link ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
-            title="Toggle ar5iv color scheme" style="padding: 0.6rem;margin-top: 0rem;">
-            <span class="color-scheme-icon"></span>
-          </a>
-      </div>
-  </div>
+    <div class="html-header-logo">
+      <a href="https://arxiv.org/">
+        <img alt="logo" class="logomark" role="presentation" width="100" src="https://services.dev.arxiv.org/html/static/arxiv-logomark-small-white.svg">
+        <span class="sr-only">Back to arXiv</span>
+      </a>
+    </div>
+
+    <!--TOC, dark mode, links-->
+    <div class='html-header-nav'>
+      <!--back to abstract-->
+      ${id === 'submission' ? '' : `
+        <a class="nav-link ar5iv-footer-button hover-effect" aria-label="Back to abstract page" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 512 512" fill="#ffffff" aria-hidden="true">
+            <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"/>
+        </svg>
+        </a>`}
+      <!--dark mode-->
+      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
+        title="Toggle dark/light mode">
+        <span class="color-scheme-icon"></span>
+      </a>
+      <!--nav-->
+      <button class="navbar-toggler ar5iv-footer-button" type="button" data-bs-theme="dark" data-bs-toggle="collapse" aria-expanded="false"
+        data-bs-target=".ltx_page_main >.ltx_TOC.mobile" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation" style="border:none; margin-right: 0em;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 448 512" aria-hidden="true" role="img" fill="#ffffff"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+      </button>
+    </div>
     `;
     mob_header.innerHTML=mobile_header
-    mob_header.classList.add('navbar');
-    mob_header.classList.add('bg-body-tertiary');
+    // mob_header.classList.add('navbar');
+    // mob_header.classList.add('bg-body-tertiary');
     mob_header.classList.add('mob_header');
     document.body.insertBefore(mob_header, document.body.firstChild);
 }
@@ -137,14 +133,14 @@ let create_footer = () => {
     footer.innerHTML = `
         <div class="keyboard-glossary">
             <h2>Instructions for reporting errors</h2>
-            <p>HTML versions of papers are experimental, and your feedback helps bring arXiv steps closer towards improving accessibility and mobile device support. While experimental HTML may not be perfect, it is essential for open access and accessibility. To report errors in the HTML that will help us improve conversion and rendering, choose any of the methods listed below:</p>
+            <p>We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the methods listed below:</p>
             <ul>
-                <li>Use the "Report Issue" button.</li>
-                <li>To open the report feedback form via keyboard, use "<strong>Ctrl + ?</strong>".</li>
-                <li>Make a text selection and use the "Report Issue for Selection" button that will display near your cursor.</li>
+                <li>Click the "Report Issue" button.</li>
+                <li>Open a report feedback form via keyboard, use "<strong>Ctrl + ?</strong>".</li>
+                <li>Make a text selection and click the "Report Issue for Selection" button near your cursor.</li>
                 <li class="sr-only">You can use Alt+Y to toggle on and Alt+Shift+Y to toggle off accessible reporting links at each section.</li>
             </ul>
-            <p>Our team has already identified <a class="ltx_ref" href=https://github.com/arXiv/html_feedback/issues target="_blank">the following issues</a>. We appreciate your time reviewing and reporting rendering errors we may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability should not be a barrier to accessing research in your field. Thank you for your continued support in making arXiv more accessible and championing open access above all and for all.</p>
+            <p>Our team has already identified <a class="ltx_ref" href=https://github.com/arXiv/html_feedback/issues target="_blank">the following issues</a>. We appreciate your time reviewing and reporting rendering errors we may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability should not be a barrier to accessing research. Thank you for your continued support in championing open access for all.</p>
             <p>Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a <a class="ltx_ref" href=https://github.com/brucemiller/LaTeXML/wiki/Porting-LaTeX-packages-for-LaTeXML target="_blank">list of packages that need conversion</a>, and welcome <a class="ltx_ref" href=https://github.com/brucemiller/LaTeXML/issues target="_blank">developer contributions</a>.</p>
         </div>
     `;
@@ -214,10 +210,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        window.history.pushState({}, '', this.getAttribute('href'));
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
+        const href = this.getAttribute('href');
+        const targetElement = document.getElementById(href.substring(1));
+        const position = targetElement.getBoundingClientRect();
+        if (targetElement) {
+          window.scrollTo({left: position.left, 
+                           top: position.top + window.scrollY - 60, 
+                           behavior: 'smooth'});
+        } else {
+          console.warn('No element found for selector:', href);
+        }
       });
     });
     document.querySelector('.ltx_page_main').id = 'main';
