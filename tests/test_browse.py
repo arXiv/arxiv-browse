@@ -655,7 +655,13 @@ class BrowseTest(unittest.TestCase):
 
 
     def test_bad_data(self):
-        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
+        """Test strange data."""
         rv = self.client.get('/abs/gr-qc/۹۷۰۶123')
         self.assertNotEqual(rv.status_code, 200)
         self.assertNotEqual(rv.status_code, 500)
+
+    def test_old_id_format(self):
+        """Test the old "arxiv:astro-ph/001201" style ID."""
+        rv = self.client.get("/abs/arxiv:physics/9707012")
+        self.assertEqual(rv.status_code, 301)
+        self.assertEqual(rv.headers['Location'], "/abs/physics/9707012")
