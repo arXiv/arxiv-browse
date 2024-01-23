@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+import time
 
 from browse.services.listing.fs_listings import FsListingFilesService
 from browse.services.listing import YearCount, Listing, ListingNew
@@ -58,4 +59,5 @@ class HybridListingService(FsListingFilesService):
                           show: int,
                           if_modified_since: Optional[str] = None)\
                           -> ListingNew:
-        return get_new_listing(archiveOrCategory,skip,show)
+        items=get_new_listing(archiveOrCategory,skip,show)
+        return items

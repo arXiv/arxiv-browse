@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import time
 from dateutil.tz import gettz, tzutc
 from typing import List, Optional, Tuple
 
@@ -45,39 +46,55 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
 
     category_list=_all_possible_categories(archive_or_cat)
-    nm=aliased(NextMail)
-    dc = aliased(DocumentCategory)
-    mail_id=db.session.query(func.max(nm.mail_id)).scalar() #most recent mailing date
-  
-    #all document ids being mailed (other than jref)
-    doc_ids = (
-        db.session.query(nm.document_id, nm.type)
-        .filter(nm.mail_id==mail_id)
-        .filter(nm.type!= "jref")
-        .filter(nm.version<6)
-        .subquery()
+    
+    up=aliased(Updates)
+    case_order = case(
+        [
+            (up.action == 'new', 0),
+            (up.action == 'cross', 1),
+            (up.action == 'replace', 2),
+        ],
+        else_=3 
+    ).label('case_order')
+        
+    recent_date=db.session.query(func.max(up.date)).scalar_subquery()   
+    doc_ids=(
+        db.session.query(
+            up.document_id,
+            up.date,
+            up.action
+        )
+        .filter(up.date==recent_date)
+        .filter(up.version<6)
+        .filter(up.action!="absonly")
+        .filter(up.category.in_(category_list))
+        .group_by(up.document_id) #one listings per paper
+        .order_by(case_order) #action kept chosen by priority if multiple
+        .subquery() 
     )
 
+    dc = aliased(DocumentCategory)
     #all listings for the specific category set
     all = (
         db.session.query(
             doc_ids.c.document_id, 
-            doc_ids.c.type, 
+            doc_ids.c.action, 
+            doc_ids.c.date, 
             func.max(dc.is_primary).label('is_primary')
         )
         .join(dc, dc.document_id == doc_ids.c.document_id)
         .where(dc.category.in_(category_list))
-        .group_by(dc.document_id)
-        .subquery()
+        .group_by(dc.document_id) 
+        .subquery() 
     )
 
     #sorting and counting by type of listing
     listing_type = case(
         [
-            (and_(all.c.type == 'new', all.c.is_primary == 1), 'new'),
-            (or_(all.c.type == 'new', all.c.type == 'cross'), 'cross'),
-            (and_(or_(all.c.type == 'rep', all.c.type == 'wdr'), all.c.is_primary == 1), 'rep'),
-            (or_(all.c.type == 'rep', all.c.type == 'wdr'), 'repcross')
+            (and_(all.c.action == 'new', all.c.is_primary == 1), 'new'),
+            (or_(all.c.action == 'new', all.c.action == 'cross'), 'cross'),
+            (and_(all.c.action == 'replace', all.c.is_primary == 1), 'rep'),
+            (all.c.action == 'replace', 'repcross')
         ],
         else_="no_match"
     ).label('listing_type')
@@ -100,45 +117,58 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         )
         .group_by(listing_type)
         .order_by(case_order)
-        .all()
+        .all() 
     )
-    new_count=counts[0][1]
-    cross_count=counts[1][1]
-    rep_count=counts[2][1] + counts[3][1] #ordered with crosslistings last, but counted together
+
+    new_count=0
+    cross_count=0
+    rep_count=0
+    for name, number in counts:
+        if name =="new":
+            new_count+=number
+        elif name=="cross":
+            cross_count+=number
+        else:
+            rep_count+=number
 
     #data for listings to be displayed
     meta = aliased(Metadata)
     results = (
         db.session.query(
             listing_type,
-            meta
+            meta,
+            all.c.date
         )
         .join(meta, meta.document_id == all.c.document_id)
         .filter(meta.is_current ==1)
         .order_by(case_order, meta.paper_id)
         .offset(skip)
         .limit(show)
-        .all()
+        .all() 
     )
 
     #organize results into expected listing
     items=[]
     for row in results:
-        listing_case, metadata = row
+        listing_case, metadata, _ = row
         if listing_case=="repcross":
             listing_type="rep"
         item= _metadata_to_listing_item(metadata, listing_case)
         items.append(item)
 
-    announced=_mailing_id_to_date(mail_id)
-    submission_start=announced#TODO how to get data from database
-    submission_end=announced #TODO how to get data from database
+    if len(items)==0: #no results to find the last mailing day from
+        mail_date=db.session.query(func.max(up.date)).scalar()
+    else:
+        mail_date=results[0][2] 
+    
+    submission_start=mail_date#TODO how to get data from database
+    submission_end=mail_date #TODO how to get data from database
 
     return ListingNew(listings=items, 
                       new_count=new_count, 
                       cross_count=cross_count, 
                       rep_count=rep_count, 
-                      announced=announced,
+                      announced=mail_date,
                       submitted=(submission_start, submission_end),
                       expires=gen_expires())
 
