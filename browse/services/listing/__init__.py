@@ -132,7 +132,6 @@ class ListingNew:
     cross_count: int
     rep_count: int
     announced: date
-    submitted: Tuple[date, date]
     expires: str
 
 

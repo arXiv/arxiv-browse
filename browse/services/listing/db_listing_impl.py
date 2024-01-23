@@ -128,8 +128,6 @@ class DBListingService(ListingService):
         new=list(map(_nextmail_to_listing, res))
         return ListingNew(listings=new,
                           announced=datetime.date(2007, 4, 1), # TODO
-                          submitted= (datetime.date(2007, 3, 30),
-                                      datetime.date(2007, 4, 1)),
                           new_count=len(new),
                           cross_count=0, # TODO crosses
                           rep_count=0, # TODO repcount

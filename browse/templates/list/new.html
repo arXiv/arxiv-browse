@@ -4,14 +4,10 @@
 {#
 New is quite different than the other list pages.
 It has an index of types of items.
-It needs to display the submitted dates and announced dates.
 It needs to do headings for the new/cross/rep sections.
 #}
 
 {% block list_index %}
-<div class="list-dateline">Submissions received from
-  {{ submitted[0].strftime('%a %-d %b') }} to {{ submitted[1].strftime('%a %-d %b') }}, announced {{ announced.strftime('%a %-d %b') }}
-</div>
 
 <ul>
   {% for ityp in index_for_types %}

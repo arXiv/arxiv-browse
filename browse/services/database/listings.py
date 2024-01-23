@@ -33,15 +33,6 @@ logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
-def get_past_week_dates():
-    results = (
-        db.session.query(distinct(Updates.date))
-        .order_by(desc(Updates.date))
-        .limit(5)
-        .all()
-    )   
-    return
-
 def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
 
@@ -169,7 +160,6 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
                       cross_count=cross_count, 
                       rep_count=rep_count, 
                       announced=mail_date,
-                      submitted=(submission_start, submission_end),
                       expires=gen_expires())
 
 def _mailing_id_to_date(id:str)->date:
@@ -315,7 +305,7 @@ def _entries_into_monthly_listing_items(
         else:
             list_type="cross"
 
-        item=_metadata_to_listing_item(meta,list_type)
+        item=_metadata_to_listing_item(meta,list_type) #type:ignore
 
         if primary == 1:  # new listings go before crosslists
             new_listings.append(item)

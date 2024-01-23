@@ -166,7 +166,6 @@ def get_listing(subject_or_category: str,
         count = new_resp.new_count + \
             new_resp.rep_count + new_resp.cross_count
         response_data['announced'] = new_resp.announced
-        response_data['submitted'] = new_resp.submitted
         response_data.update(
             index_for_types(new_resp, subject_or_category, time_period, skipn, shown))
         response_data.update(sub_sections_for_types(new_resp, skipn, shown))

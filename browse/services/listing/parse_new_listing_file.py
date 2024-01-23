@@ -137,7 +137,6 @@ def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
 
     return ListingNew(listings= new_items + cross_items + rep_items,
                       announced= announce_date,  # type: ignore
-                      submitted= (submit_start_date, submit_end_date),  # type: ignore
                       new_count= len(new_items),
                       cross_count= len(cross_items),
                       rep_count= len(rep_items),
