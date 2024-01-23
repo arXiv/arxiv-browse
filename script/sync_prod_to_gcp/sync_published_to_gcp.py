@@ -305,18 +305,18 @@ def get_html(session, html_url) -> None:
         msg = f"ensure_pdf: GET status 503, server overloaded {html_url}"
         logger.warning(msg,
                        extra={CATEGORY: "download",
-                              "url": html_url, "status_code": resp.status_code, "ms": html_url})
+                              "url": html_url, "status_code": resp.status_code, "ms": html_ms})
         raise Overloaded503Exception(msg)
     if resp.status_code != 200:
         msg = f"ensure_pdf: GET status {resp.status_code} {html_url}"
         logger.warning(msg,
                        extra={CATEGORY: "download",
-                              "url": html_url, "status_code": resp.status_code, "ms": html_url})
+                              "url": html_url, "status_code": resp.status_code, "ms": html_ms})
         raise (Exception(msg))
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {html_url}",
                     extra={CATEGORY: "download",
-                           "url": html_url, "status_code": resp.status_code, "ms": html_url})
+                           "url": html_url, "status_code": resp.status_code, "ms": html_ms})
 
 
 @retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
@@ -405,8 +405,8 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     def _get_files_for_html (path: str) -> List[str]:
         files = []
-        for root_dir, cur_dir, files in os.walk(html_path):
-            files.extend(map(lambda file: os.path.join(root_dir, file), files))
+        for root_dir, cur_dir, fs in os.walk(html_path):
+            files.extend(map(lambda file: os.path.join(root_dir, file), fs))
         return files
 
     start = perf_counter()
