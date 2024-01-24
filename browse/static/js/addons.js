@@ -207,21 +207,6 @@ window.addEventListener('load', function() {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const href = this.getAttribute('href');
-        const targetElement = document.getElementById(href.substring(1));
-        const position = targetElement.getBoundingClientRect();
-        if (targetElement) {
-          window.scrollTo({left: position.left, 
-                           top: position.top + window.scrollY - 60, 
-                           behavior: 'smooth'});
-        } else {
-          console.warn('No element found for selector:', href);
-        }
-      });
-    });
     document.querySelector('.ltx_page_main').id = 'main';
 
     ref_ArXivFont();
@@ -242,20 +227,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       else{
         //TOC is shown
-        const toc_m= document.querySelector('.ltx_page_main>.ltx_TOC.mobile');
-        toc_m.classList.remove('mobile');
-        toc_m.classList.remove('collapse');
-        toc_m.classList.remove('show');
-        toc_m.classList.add('active');
-        //arrow Icon is shown
-        const arrowIcon = document.getElementById('arrowIcon');
-        arrowIcon.classList.remove('hide');
-        //list Icon is hidden
-        const listIcon = document.getElementById('listIcon');
-        listIcon.classList.add('hide');
-        //TOC list is shown
-        const toc_list= document.querySelector('.ltx_toclist');
-        toc_list.classList.remove('hide');
+        const toc_m = document.querySelector('.ltx_page_main>.ltx_TOC.mobile');
+        if (toc_m !== null) {
+          toc_m.classList.remove('mobile');
+          toc_m.classList.remove('collapse');
+          toc_m.classList.remove('show');
+          toc_m.classList.add('active');
+
+          //arrow Icon is shown
+          const arrowIcon = document.getElementById('arrowIcon');
+          arrowIcon.classList.remove('hide');
+          //list Icon is hidden
+          const listIcon = document.getElementById('listIcon');
+          listIcon.classList.add('hide');
+          //TOC list is shown
+          const toc_list= document.querySelector('.ltx_toclist');
+          toc_list.classList.remove('hide');
+        }
       }
     });
 
@@ -275,14 +263,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (clickedCite) {
           window.scrollTo(0, scrollPosition);
         } else {
-          const citeElement = document.querySelector(`cite a[href="#${referenceId}"]`);
+          const citeElement = document.querySelector(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
           if (citeElement) {
             citeElement.scrollIntoView({ behavior: "smooth" });
           }
         }
       });
 
-      const citeElements = document.querySelectorAll(`cite a[href="#${referenceId}"]`);
+      const citeElements = document.querySelectorAll(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
       citeElements.forEach(citeElement => {
         citeElement.addEventListener("click", function() {
           scrollPosition = window.scrollY;
