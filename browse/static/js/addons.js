@@ -263,14 +263,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (clickedCite) {
           window.scrollTo(0, scrollPosition);
         } else {
-          const citeElement = document.querySelector(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
+          let citeElement = document.querySelector(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
+          if (citeElement === null) {
+            citeElement = document.querySelector(`cite a[href="#${referenceId}"]`)
+          }
           if (citeElement) {
             citeElement.scrollIntoView({ behavior: "smooth" });
           }
         }
       });
 
-      const citeElements = document.querySelectorAll(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
+      let citeElements = document.querySelectorAll(`cite a[href="${window.location.origin}${window.location.pathname}#${referenceId}"]`);
+      if (citeElements.length === 0) {
+        citeElements = document.querySelectorAll(`cite a[href="#${referenceId}"]`);
+      }
       citeElements.forEach(citeElement => {
         citeElement.addEventListener("click", function() {
           scrollPosition = window.scrollY;
