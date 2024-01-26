@@ -83,6 +83,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     listing_type = case(
         [
             (and_(all.c.action == 'new', all.c.is_primary == 1), 'new'),
+            (and_(all.c.action == 'cross', all.c.is_primary == 1), 'no-match'), #removes intra archive crosses
             (or_(all.c.action == 'new', all.c.action == 'cross'), 'cross'),
             (and_(all.c.action == 'replace', all.c.is_primary == 1), 'rep'),
             (all.c.action == 'replace', 'repcross')
@@ -100,12 +101,15 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         else_=4 
     ).label('case_order')
 
+    valid_types=["new", "cross", 'rep','repcross']
+
     #how many of each type
     counts = (
         db.session.query(
             listing_type,
             func.count().label('type_count')
         )
+        .filter(listing_type.label('case_order').in_(valid_types))
         .group_by(listing_type)
         .order_by(case_order)
         .all() 
@@ -119,7 +123,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
             new_count+=number
         elif name=="cross":
             cross_count+=number
-        else: #rrep and repcross
+        else: #rep and repcross
             rep_count+=number
 
     #data for listings to be displayed
@@ -131,6 +135,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
             all.c.date
         )
         .join(meta, meta.document_id == all.c.document_id)
+        .filter(listing_type.label('case_order').in_(valid_types))
         .filter(meta.is_current ==1)
         .order_by(case_order, meta.paper_id)
         .offset(skip)

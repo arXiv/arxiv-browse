@@ -197,7 +197,7 @@ def test_archive_listing(app_with_hybrid_listings):
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_new_articles("math", 0, 30)
-        listing2=ls.list_new_articles("eess.SY", 0, 15)
+        listing2=ls.list_new_articles("eess", 0, 15)
 
     #finds different math categories
     validate_listing(listing1.listings)
@@ -207,6 +207,15 @@ def test_archive_listing(app_with_hybrid_listings):
     #finds alias category in alternate archive
     validate_listing(listing2.listings)
     assert any(item.id =="1008.3222" and item.listingType == "new" for item in listing2.listings)
+
+def test_intra_archive_crosses(app_with_hybrid_listings):
+    #crosslists from one category into another shouldnt appear as crosses on the archive page
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math", 0, 30)
+    validate_listing(listing.listings)
+    assert all(item.id !="0906.2112" or item.listingType != "cross" for item in listing.listings)
 
 def test_new_listing_page( client_with_hybrid_listings):
     client = client_with_hybrid_listings
