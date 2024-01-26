@@ -186,11 +186,57 @@ def test_identify_replace(app_with_hybrid_listings):
     # cross listing replacement aka rep-cross
     assert any(item.id =="cond-mat/0703772" and item.listingType=="rep" for item in listing2.listings)
     
-#TODO counts by type
+def test_listing_counts(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math", 0, 100)
+    validate_listing(listing.listings)
+    assert listing.new_count==1
+    assert listing.cross_count==1
+    assert listing.rep_count==4
+    assert len(listing.listings) == listing.new_count + listing.cross_count + listing.rep_count
+
+def test_listing_order(app_with_hybrid_listings):
+    #new then cross then replace then replace cross
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math", 0, 100)
+    validate_listing(listing.listings)
+    order={"new":1, "cross":2, "rep":3}
+    current_min=1
+    last_id="0" #its string ordering and some old ids start with letters
+    now_repcross=False
+    for item in listing.listings:
+        score=order[item.listingType] 
+        assert score >= current_min
+        if score > current_min:
+            current_min=score
+            last_id=item.id
+        else:
+            if not now_repcross and item.listingType=="rep" and item.id<last_id:
+                #replace is allowed to have one disconnect between rep and repcross
+                now_repcross=True
+            else:
+                assert item.id>last_id
+            last_id=item.id
     
-#TODO order for new cross rep and rep cross, and internal paperid order 
-    
-#TODO pagination
+def test_pagination(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing1=ls.list_new_articles("math", 0, 1)
+        listing2=ls.list_new_articles("math", 1, 14)
+    validate_listing(listing1.listings)
+    validate_listing(listing2.listings)
+    assert listing1.new_count==listing2.new_count
+    assert listing1.cross_count==listing2.cross_count
+    assert listing1.rep_count==listing2.rep_count
+    assert len(listing1.listings)==1
+    assert len(listing2.listings)>0
+    first_id=listing1.listings[0].id
+    assert all(item.id !=first_id for item in listing2.listings)
     
 def test_archive_listing(app_with_hybrid_listings):
     app = app_with_hybrid_listings

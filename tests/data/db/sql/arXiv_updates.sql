@@ -23,4 +23,16 @@ INSERT INTO 'arXiv_updates' VALUES (3, 3, '2011-01-31', 'replace', 'math', 'math
 INSERT INTO 'arXiv_updates' VALUES (3, 2, '2011-01-28', 'replace', 'math', 'math.DG');
 INSERT INTO 'arXiv_updates' VALUES (3, 1, '2011-01-27', 'new', 'math', 'math.DG');
 INSERT INTO 'arXiv_updates' VALUES (636255, 1, '2011-02-03', 'new', 'cs', 'cs.SY');
-
+INSERT INTO 'arXiv_updates' VALUES (422025, 1, '2011-02-03', 'new', 'quant-ph', 'quant-ph');
+INSERT INTO 'arXiv_updates' VALUES (422025, 1, '2011-02-03', 'new', 'cs', 'cs.IT');
+INSERT INTO 'arXiv_updates' VALUES (422025, 1, '2011-02-03', 'new', 'math', 'math.IT');
+INSERT INTO 'arXiv_updates' VALUES (422229, 1, '2011-02-01', 'new', 'math', 'math.MP');
+INSERT INTO 'arXiv_updates' VALUES (422229, 1, '2011-02-01', 'new', 'math-ph', 'math-ph');
+INSERT INTO 'arXiv_updates' VALUES (422229, 1, '2011-02-01', 'new', 'physics', 'physics.optics');
+INSERT INTO 'arXiv_updates' VALUES (422229, 2, '2011-02-03', 'replace', 'math', 'math.MP');
+INSERT INTO 'arXiv_updates' VALUES (422229, 2, '2011-02-03', 'replace', 'math-ph', 'math-ph');
+INSERT INTO 'arXiv_updates' VALUES (422229, 2, '2011-02-03', 'replace', 'physics', 'physics.optics');
+INSERT INTO 'arXiv_updates' VALUES (4, 1, '2011-01-28', 'new', 'math', 'math.KT');
+INSERT INTO 'arXiv_updates' VALUES (4, 1, '2011-01-28', 'new', 'math', 'math.CT');
+INSERT INTO 'arXiv_updates' VALUES (4, 2, '2011-02-03', 'replace', 'math', 'math.KT');
+INSERT INTO 'arXiv_updates' VALUES (4, 2, '2011-02-03', 'replace', 'math', 'math.CT');
