@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, date
+from typing import List
 
 from browse.services.database.listings import (
     _process_yearly_article_counts,
@@ -7,7 +8,7 @@ from browse.services.database.listings import (
     _all_possible_categories,
     _entries_into_monthly_listing_items
 )
-from browse.services.listing import YearCount, MonthCount, get_listing_service
+from browse.services.listing import YearCount, MonthCount, get_listing_service, ListingItem
 from browse.services.database.models import Metadata
 
 from unittest.mock import MagicMock, patch
@@ -74,7 +75,7 @@ SAMPLE_METADATA2=Metadata(
 )
 
 
-#listing pages below
+# listing pages below
 def test_alt_name():
     #aliases both directions
     assert "math.MP"==_check_alternate_name("math-ph")
@@ -102,6 +103,133 @@ def test_possible_categories():
     #archive is category and archive
     assert "astro-ph" in _all_possible_categories("astro-ph")
     assert "astro-ph.EP" in _all_possible_categories("astro-ph")
+
+#new listing tests
+def validate_listing(listing: List[ListingItem]):
+    all_ids=set()
+    for item in listing:
+        assert item.id not in all_ids
+        all_ids.add(item.id)
+        assert item.listingType!="no_match"
+
+def test_basic_listing(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math.RT", 0, 15)
+    validate_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==1
+    assert listing.announced == date(2011,2,3)
+    assert any(
+        item.id == "math/0510544" and item.listingType == "rep" and item.primary == "math.RT"
+        for item in listing.listings
+    )
+
+def test_no_abs(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math.PR", 0, 100)
+    validate_listing(listing.listings)
+    assert all(item.id !="0712.3217" for item in listing.listings)
+
+def test_no_replacements_above_5(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math.DG", 0, 100)
+    validate_listing(listing.listings)
+    assert all(item.id !="0906.3336" for item in listing.listings)
+    
+def test_find_alias(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("eess.SY", 0, 15)
+    validate_listing(listing.listings)
+    assert any(item.id =="1008.3222" and item.listingType=="new" for item in listing.listings)
+    
+def test_identify_new(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math.CO", 0, 15)
+    validate_listing(listing.listings)
+    assert any(item.id =="0906.3421" and item.listingType=="new" for item in listing.listings)
+
+def test_identify_new_cross(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("cond-mat.stat-mech", 0, 15)
+    validate_listing(listing.listings)
+    assert any(item.id =="0906.3421" and item.listingType=="cross" for item in listing.listings)
+
+def test_identify_cross(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing=ls.list_new_articles("math.NT", 0, 15)
+    validate_listing(listing.listings)
+    assert any(item.id =="0906.2112" and item.listingType=="cross" for item in listing.listings)
+
+def test_identify_replace(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing1=ls.list_new_articles("math-ph", 0, 15)
+        listing2=ls.list_new_articles("cond-mat.mtrl-sci", 0, 15)
+    validate_listing(listing1.listings)
+    validate_listing(listing2.listings)
+    #primary replacement
+    assert any(item.id =="0806.4129" and item.listingType=="rep" for item in listing1.listings)
+    # cross listing replacement aka rep-cross
+    assert any(item.id =="cond-mat/0703772" and item.listingType=="rep" for item in listing2.listings)
+    
+#TODO counts by type
+    
+#TODO order for new cross rep and rep cross, and internal paperid order 
+    
+#TODO pagination
+    
+def test_archive_listing(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing1=ls.list_new_articles("math", 0, 30)
+        listing2=ls.list_new_articles("eess.SY", 0, 15)
+
+    #finds different math categories
+    validate_listing(listing1.listings)
+    assert any(item.id =="0806.4129" and item.listingType == "rep" for item in listing1.listings)
+    assert any(item.id =="math/0510544" and item.listingType == "rep" for item in listing1.listings)
+    
+    #finds alias category in alternate archive
+    validate_listing(listing2.listings)
+    assert any(item.id =="1008.3222" and item.listingType == "new" for item in listing2.listings)
+
+def test_new_listing_page( client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    rv = client.get("/list/math.RT/new")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Replacement submissions for Thursday, 3 February 2011" in text
+    assert "arXiv:math/0510544" in text
+    assert "Leibniz superalgebras graded by finite root systems" in text
+    assert "showing 1 of 1 entries" in text
+
+def test_new_listing_page_alternate_names( client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    #subsumed archive case
+    rv = client.get("/list/mtrl-th/new")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Replacement submissions for Thursday, 3 February 2011" in text
+    assert "arXiv:cond-mat/0703772" in text
+
+    #TODO both sides of alias
+
+#month listing tests
 
 def test_transform_into_listing():
     items=[(SAMPLE_METADATA1,1),(SAMPLE_METADATA2,0)]
@@ -251,7 +379,7 @@ def test_year_listing_page( client_with_hybrid_listings):
     # assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     # assert 'Authors and titles for October 1995' in text
 
-#year page below
+#year page tests
 
 def test_process_yearly_article_counts():
     row1 = MagicMock()

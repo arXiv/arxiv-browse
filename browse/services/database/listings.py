@@ -119,7 +119,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
             new_count+=number
         elif name=="cross":
             cross_count+=number
-        else:
+        else: #rrep and repcross
             rep_count+=number
 
     #data for listings to be displayed
@@ -143,7 +143,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     for row in results:
         listing_case, metadata, _ = row
         if listing_case=="repcross":
-            listing_type="rep"
+            listing_case="rep"
         item= _metadata_to_listing_item(metadata, listing_case)
         items.append(item)
 
@@ -151,9 +151,6 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         mail_date=db.session.query(func.max(up.date)).scalar()
     else:
         mail_date=results[0][2] 
-    
-    submission_start=mail_date#TODO how to get data from database
-    submission_end=mail_date #TODO how to get data from database
 
     return ListingNew(listings=items, 
                       new_count=new_count, 
@@ -162,11 +159,6 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
                       announced=mail_date,
                       expires=gen_expires())
 
-def _mailing_id_to_date(id:str)->date:
-    year=2000+int(id[0:2])
-    month=int(id[2:4])
-    day=int(id[4:6])
-    return date(year,month,day)
 
 def get_articles_for_month(
     archive_or_cat: str, year: int, month: Optional[int], skip: int, show: int
