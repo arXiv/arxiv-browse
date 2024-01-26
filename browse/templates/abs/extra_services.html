@@ -55,7 +55,7 @@
   <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
       {%- endif -%}
       {%- if format == 'src' and current-%}
-  <li><a href="{{url_for('src.src', arxiv_id=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
+  <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
       {%- elif format == 'other' -%}
