@@ -281,6 +281,7 @@ class FileFromTar(FileObj):
                 try:
                     self._tarinfo = tar.getmember(self._path)
                     self._path_exists = True
+                    self._size = self._tarinfo.size
                     return True
                 except KeyError:
                     self._path_exists = False

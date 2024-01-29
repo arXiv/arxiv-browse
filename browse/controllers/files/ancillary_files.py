@@ -18,9 +18,6 @@ from browse.services.object_store.fileobj import FileFromTar
 
 from . import last_modified, add_time_headers, cc_versioned, stream_gen, add_mimetype
 
-logger = logging.getLogger(__file__)
-logger.setLevel(logging.INFO)
-
 
 def get_extracted_src_file_resp(arxiv_id_str: str,
                                 path: str,
