@@ -1,7 +1,8 @@
-from typing import Iterator
+from typing import Iterator, Union
 from email.utils import format_datetime
 from flask import Response
 from datetime import timezone
+import mimetypes
 
 from browse.domain.metadata import Identifier
 from browse.services.next_published import next_publish
@@ -46,3 +47,9 @@ def stream_gen(file: FileObj) -> Iterator[bytes]:
             if not chunk:
                 break
             yield chunk
+
+
+def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
+    content_type, _ = mimetypes.guess_type(filename.name if isinstance(filename, FileObj) else filename)
+    if content_type:
+        resp.headers["Content-Type"] = content_type

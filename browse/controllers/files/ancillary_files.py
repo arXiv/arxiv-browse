@@ -4,7 +4,9 @@ import logging
 from email.utils import format_datetime
 from typing import Literal
 
+import flask_rangerequest
 from flask import Response, abort, make_response, render_template
+from flask_rangerequest import RangeRequest
 
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.dissemination import get_article_store
@@ -14,7 +16,8 @@ from browse.services.next_published import next_publish
 from browse.services.object_store import FileObj
 from browse.services.object_store.fileobj import FileFromTar
 
-from . import last_modified, add_time_headers, cc_versioned, stream_gen
+from . import last_modified, add_time_headers, cc_versioned, stream_gen, add_mimetype
+
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
@@ -63,11 +66,10 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         # TODO better error handling
         abort(404, description="not found")
 
-    if not isinstance(dis_res, tuple):
+    if not isinstance(dis_res, tuple) or not isinstance(dis_res[0], FileObj):
         abort(500, description="Unexpected result for source")
-    if not isinstance(dis_res[0], FileObj):
-        abort(500, description="Unexpected result for source")
-    src_file = dis_res[0]
+
+    src_file: FileObj = dis_res[0]
     tarmember = FileFromTar(src_file, path)
     if not tarmember.exists():
         return make_response(
@@ -75,9 +77,15 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
                             reason=f"File not in ancillary files for {arxiv_id.idv}"),
             404, nf_headers)
 
-    resp = make_response(stream_gen(tarmember), 200)
-    # TODO guess Content-Type from file name?
-    # resp.headers["Content-Type"] = "application/x-eprint-tar"
+    """RangeRequest does a seek and that seems odd with gzip and tarfile but both of
+    those support seek."""
+    resp: Response = RangeRequest(
+            data=tarmember.open("rb"),  # RangeRequest and flask are expected to call `close()`
+            etag=last_modified(src_file),
+            last_modified=src_file.updated,
+            size=tarmember.size
+    ).make_response()
+
+    add_mimetype(resp, tarmember.name)
     add_time_headers(resp, src_file, arxiv_id)
-    resp.headers["ETag"] = last_modified(src_file)
     return resp
