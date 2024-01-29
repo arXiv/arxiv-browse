@@ -463,6 +463,7 @@ class DBLaTeXMLDocuments(db.Model):
     tex_checksum = Column(String)
     conversion_start_time = Column(Integer)
     conversion_end_time = Column(Integer)
+    publish_dt = Column(DateTime)
 
 
 class Category(db.Model):

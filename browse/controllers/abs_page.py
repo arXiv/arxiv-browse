@@ -37,6 +37,7 @@ from browse.services.database import (
     get_dblp_authors,
     get_dblp_listing_path,
     get_trackback_ping_latest_date,
+    get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_flag
@@ -238,7 +239,8 @@ def _check_request_headers(
     docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
 ) -> bool:
     """Check the request headers, update the response headers accordingly."""
-    last_mod_dt: datetime = docmeta.modified
+    html_updated = get_latexml_publish_dt(docmeta.arxiv_id, docmeta.get_version())
+    last_mod_dt: datetime = max(html_updated, docmeta.modified) if html_updated else docmeta.modified
 
     # Latest trackback ping time depends on the database
     if 'trackback_ping_latest' in response_data \

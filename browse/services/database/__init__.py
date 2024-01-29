@@ -580,6 +580,16 @@ def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional
     )
     return row.conversion_status if row else None
 
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
+    row = (
+        db.session.query(DBLaTeXMLDocuments)
+        .filter(DBLaTeXMLDocuments.paper_id == paper_id)
+        .filter(DBLaTeXMLDocuments.document_version == version)
+        .first()
+    )
+    return row.publish_dt if row else None
+
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_author_id(author_id: str) -> Optional[int]:
