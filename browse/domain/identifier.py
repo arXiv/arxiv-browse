@@ -111,8 +111,8 @@ class Identifier:
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
             self.has_version = True
-        self.squashed = self.id.replace('/', '')
-        self.squashedv = self.idv.replace('/', '')
+        self.squashed: str = self.id.replace('/', '')
+        self.squashedv: str = self.idv.replace('/', '')
         self.yymm: str = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
         if self.month > 12 or self.month < 1:
