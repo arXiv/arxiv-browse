@@ -227,10 +227,9 @@ class UngzippedFileObj(FileObj):
             # file.  That won't record file sizes larger than 4Gb and there may
             # be other quirks.  So for now we get it by reading and unzipping
             # the whole file.
-            unzipped_fh = self.open(mode="rb")
-            size = unzipped_fh.seek(0, io.SEEK_END)
-            unzipped_fh.close()
-            self._size = size
+            with self._fileobj.open("rb") as unzip_f:
+                size = unzip_f.seek(0, io.SEEK_END)
+                self._size = size
             return self._size
 
     @property
