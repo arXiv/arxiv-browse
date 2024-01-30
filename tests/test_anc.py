@@ -72,3 +72,25 @@ def test_1601_04345_anc_files(client_with_test_fs, path, status, bytes):
         assert rv.headers["Accept-Ranges"] == "bytes"  # Must do Accept-Ranges for CDNs
         assert int(rv.headers["Content-Length"]) == bytes  # CDNs need length
         assert parsedate_to_datetime(rv.headers["Last-Modified"])  # just check that it parses
+
+ranges = [
+    ("00", "00", b"f"),
+    ("00", "07", b"function"),
+    ("00", "af",
+     b"function [jz_oscmax,jz_oscmin] = Quadrupole_Pout_Oscillation_jz_maxmin(ep_SA,eper,jt,et)\r\n"
+     b"%calculate the fast oscillating component from slowly evolving component bar_j_e_vec\r\n"
+     ),
+    ("349", "3d8",
+     b"om_osc=atan2(S,-C);\r\n"
+     b"%jz_osc = sin1.*sin(ft)+cos1.*cos(ft)+sin2.*sin(2*ft)+...\r\n"
+     b"%    cos2.*cos(2*ft)+sin3.*sin(3*ft)+cos3.*cos(3*ft);\r\n"
+     b"\r\n"
+     b"end\r\n\r\n"
+     ),
+]
+@pytest.mark.parametrize("start,end,bytes", ranges)
+def test_1601_04345_anc_range_request_bytes(client_with_test_fs, start, end, bytes):
+    resp = client_with_test_fs.get("/src/1601.04345v2/anc/Quadrupole_Pout_Oscillation_jz_maxmin.m",
+                                   headers={"Range": f"bytes={int(start,16)}-{int(end,16)}"})
+    assert resp.status_code == 206
+    assert resp.data == bytes
