@@ -390,6 +390,12 @@ class Settings(BaseSettings):
     to be loaded.
     """
 
+    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
+    """URL of the genpdf API"""
+
+    GENPDF_API_TIMEOUT: int = 590
+    """Time ouf for the genpdf API access"""
+
     class Config:
         """Additional pydantic config of these settings."""
 

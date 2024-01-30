@@ -1,8 +1,14 @@
 # arxiv-browse
 
-### Running Browse with the Flask development server
+## Running Browse with the Flask development server
 
 You can run the browse app directly.
+
+```bash
+make venv
+````
+
+or 
 
 ```bash
 python --version
@@ -23,6 +29,72 @@ By default, the application will use the directory trees in
 `tests/data/abs_files` and `tests/data/cache` and when looking for the document
 metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
+
+### Running Browse with .env file
+
+First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
+
+    export GOOGLE_APPLICATION_CREDENTIALS=<Your SA credential>
+    export BROWSE_SQLALCHEMY_DATABASE_URI="mysql://browse:<BROWSE_PASSWORD>@127.0.0.1:1234/arXiv"
+    export DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
+    export DOCUMENT_LATEST_VERSIONS_PATH=gs://arxiv-production-data/ftp
+    export DOCUMENT_ORIGNAL_VERSIONS_PATH=gs://arxiv-production-data/orig
+    export DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
+    export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
+    export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
+    export LATEXML_ENABLED=True
+    export LATEXML_BASE_URL=https://browse.arxiv.org/latexml
+    export FLASKS3_ACTIVE=1
+
+You need a SA cred to access the db, and the cloud-sql-proxy running.
+
+You can find the browse password here:
+https://console.cloud.google.com/security/secret-manager/secret/browse-sqlalchemy-db-uri/versions?project=arxiv-production
+
+If you have a PyCharm,
+script: main.py
+Enable env files
+   Add tests/.env
+
+![docs/development/pycharm-run-setting.png](docs/development/pycharm-run-setting.png)
+
+### SA Credentials
+
+Your SA needs followings:
+
+* Cloud SQL Client
+* Secret Manager Secret Accessor
+* Storage Object Viewer
+
+Save the private key somewhere on your local machine. Optionally save it in 1password.
+
+### Running cloud-sql-proxy
+
+Once you have the google SA private key, you can run the cloud-sql-proxy.
+
+```bash
+main proxy
+``` 
+
+NOTE: cloud_sql_proxy and cloud-sql-proxy (new) have different options.
+In this, only describes the new as you probably don't have the old one.
+
+	cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4
+
+If the proxy is working, you can use mysql client to connect to the db.
+
+```bash
+mysql -u browse -p --host 127.0.0.1 --port 1234 arXiv
+Enter password: 
+...
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables;
++------------------------------------------+
+| Tables_in_arXiv                          |
++------------------------------------------+
+| Subscription_UniversalInstitution        |
+````
 
 ### Test suite
 
@@ -79,3 +151,4 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
 pytest tests
 ```
+

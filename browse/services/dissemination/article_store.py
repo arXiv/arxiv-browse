@@ -1,11 +1,14 @@
 """Functions related to articles.
 
 These are focused on using the GS bucket abs and source files."""
-
+import http
 import logging
 import re
+import time
 from collections.abc import Callable
 from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
+
+import requests
 
 from browse.domain.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
@@ -114,6 +117,16 @@ def _is_deleted(id: str) -> Optional[str]:
 def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
+def from_bucket_url_to_key(gs_url: str) -> (str, str):
+    """Converts a gs:// url to a gs key.
+    returns the bucket name and key as a tuple.
+    """
+    if gs_url.startswith("gs://"):
+        url = gs_url[5:]
+        bucket_slash = url.find("/")
+        if bucket_slash > 0:
+            return url[:bucket_slash], url[bucket_slash+1:]
+    return (None, None)
 
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
@@ -349,6 +362,10 @@ class ArticleStore():
         if version.source_flag.cannot_pdf:
             return "NOT_PDF"
 
+        GENPDF_API_URL = current_app.config.get("GENPDF_API_URL", "")
+        if GENPDF_API_URL:
+            return self._genpdf(arxiv_id, docmeta, version, GENPDF_API_URL)
+
         res = self.reasons(arxiv_id.idv, 'pdf')
         if res:
             return CannotBuildPdf(res)
@@ -373,6 +390,52 @@ class ArticleStore():
 
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(pdf_file)])
+        return "UNAVAILABLE"
+
+    def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry, api: str) -> FormatHandlerReturn:
+        """Gets a PDF from the genpdf-api."""
+        if version.source_flag.cannot_pdf:
+            return "NOT_PDF"
+
+        # requests.get() cannod have timeout <= 0
+        timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
+        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}"
+        logger.debug("genpdf-api request(timeout=%d): %s ", timeout, url)
+        t_start = time.perf_counter()
+        try:
+            response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
+        except Exception as _exc:
+            logger.warning("genpdf-api access failed", exc_info=True)
+            return "UNAVAILABLE"
+
+        t_end = time.perf_counter()
+        # Normal operation is a redirect to the bucket
+        if response.status_code == http.HTTPStatus.FOUND:
+            bucket_url = response.headers.get('location')
+            logger.debug("genpdf-api returned %s in %f seconds", bucket_url, t_end - t_start)
+            if isinstance(self.objstore, GsObjectStore):
+                bucket_name, obj_key = from_bucket_url_to_key(bucket_url)
+                if obj_key and bucket_name == self.objstore.bucket.name:
+                    return self.objstore.to_obj(obj_key)
+            logger.error("??? %s", bucket_url)
+            raise NotImplementedError("Somthing is wrong here")
+
+        # Sadly, if you get 200, error out as this is not expected
+        if response.status_code == requests.status_codes.codes.OK:
+            logger.error("genpdf-api should not return 200. Check URL and turn off download")
+            raise NotImplementedError("Cannot support getting PDF")
+
+        if response.status_code == http.HTTPStatus.REQUEST_TIMEOUT:
+            logger.error("genpdf-api request timed out")
+            return "UNAVAILABLE"
+
+        if response.status_code == http.HTTPStatus.NOT_FOUND:
+            logger.error("genpdf-api ruturned 404")
+            return "UNAVAILABLE"
+
+        if not self.sourcestore.source_exists(arxiv_id, docmeta):
+            return "NO_SOURCE"
+
         return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
