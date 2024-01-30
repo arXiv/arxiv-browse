@@ -44,7 +44,11 @@ ftp/cs/papers/0011/0011004.gz
     ("2101.10016v7", "2101.10016v7.tar.gz", "current version wdr"),
     #("1208.9999", "1208.9999"),
     ("cs/0012007", "cs0012007", ""),
+
     ("cond-mat/9805021v1", "cond-mat9805021v1.ps.gz", "gzipped ps"),
+    ("cond-mat/9805021", "cond-mat9805021v2.gz", "gzipped ps"),
+    ("cond-mat/9805021v2", "cond-mat9805021v2.gz", "gzipped ps"),
+
     ("1601.04345v1", "1601.04345v1.tar.gz", ""),
     ("cs/0012007", "cs0012007v3.tar.gz", ""),
     # ("cs/0011004", "cs-0011004"), # single file gz paper but bad gzip file
@@ -66,9 +70,20 @@ def test_src(client_with_test_fs, paperid, expected_file, desc ):
 
     assert parsedate_to_datetime(resp.headers["Last-Modified"])  # just check that it parses
 
+def test_src_version_not_found(client_with_test_fs):
+    resp = client_with_test_fs.get("/src/cond-mat/9805021v9")
+    assert resp.status_code == 404
+    resp = client_with_test_fs.get("/src/2101.10016v9")
+    assert resp.status_code == 404
+    resp = client_with_test_fs.get("/src/2101.10016v10")
+    assert resp.status_code == 404
 
 def test_wdr_current_src(client_with_test_fs):
-    """Current source of a wdr paper should be 404."""
+    """Current source of a wdr paper should be 404.
+
+    The 2101.10016 papers in test_src represent reqeusts get earlier version src
+    for a wdr paper.
+    """
     resp = client_with_test_fs.get("/src/2101.10016")
     assert resp.status_code == 404
 
