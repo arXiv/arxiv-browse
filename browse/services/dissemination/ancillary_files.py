@@ -18,7 +18,7 @@ def list_ancillary_files(tarball: Optional[FileObj]) -> List[Dict]:
     anc_files = []
     try:
         with tarball.open(mode='rb') as fh:
-            tf = tarfile.open(fileobj=fh, mode='r')
+            tf = tarfile.open(fileobj=fh, mode='r')  # type: ignore
             for member in \
                     (m for m in tf if re.search(r'^anc\/', m.name) and m.isfile()):
                 name = re.sub(r'^anc\/', '', member.name)

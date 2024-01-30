@@ -3,12 +3,34 @@
 import gzip
 import tarfile
 import io
+import typing
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import IO, Optional, Any
+from types import TracebackType
+from typing import BinaryIO, Optional, Any, Union
+
 from contextlib import contextmanager
 
+class BinaryMinimalFile(typing.Protocol):
+    def read(self, size: Optional[int] = -1) -> bytes:
+        pass
+    def seek(self, pos: int, whence:int=io.SEEK_SET) -> int:
+        pass
+    def close(self)->None:
+        pass
+
+    def __enter__(self) -> 'BinaryMinimalFile':
+        pass
+
+    def __exit__(self,
+                 exc_type: Optional[typing.Type[BaseException]],
+                 exc_val: Optional[BaseException],
+                 exc_tb: Optional[TracebackType]) -> None:
+        pass
+
+    def __iter__(self) -> typing.Iterator[bytes]:
+        pass
 
 class FileObj(ABC):
     """FileObj is a subset of the methods on GS `Blob`.
@@ -37,7 +59,7 @@ class FileObj(ABC):
         pass
 
     @abstractmethod
-    def open(self,  *args, **kwargs) -> IO:  # type: ignore
+    def open(self, mode:str) -> BinaryMinimalFile:
         """Opens the object similar to the normal Python `open()`"""
         pass
 
@@ -72,7 +94,7 @@ class FileDoesNotExist(FileObj):
     def exists(self) -> bool:
         return False
 
-    def open(self, *args, **kwargs) -> IO:  # type: ignore
+    def open(self, mode:str) -> BinaryMinimalFile:
         raise Exception("File does not exist")
 
     @property
@@ -108,7 +130,7 @@ class LocalFileObj(FileObj):
     def exists(self) -> bool:
         return self.item.exists()
 
-    def open(self, *args, **kwargs) -> IO:  # type: ignore
+    def open(self, *args, **kwargs) -> BinaryIO:  # type: ignore
         return self.item.open(*args, **kwargs)  # type: ignore
 
     @property
@@ -146,7 +168,7 @@ class MockStringFileObj(FileObj):
     def exists(self) -> bool:
         return True
 
-    def open(self, *args, **kwargs) -> IO:  # type: ignore
+    def open(self, mode:str) -> BinaryMinimalFile:
         return io.BytesIO(self._data)
 
     @property
@@ -187,10 +209,10 @@ class UngzippedFileObj(FileObj):
     def exists(self) -> bool:
         return self._fileobj.exists()
 
-    @contextmanager
-    def open(self, *args, **kwargs) -> IO:  # type: ignore
-        with self._fileobj.open(mode="rb") as zipped:
-            yield gzip.GzipFile(filename="", mode="rb", fileobj=zipped)
+    def open(self, mode:str) -> BinaryMinimalFile:
+        return gzip.GzipFile(filename="",
+                             mode=mode,
+                             fileobj=self._fileobj.open(mode))
 
     @property
     def etag(self) -> str:
@@ -205,10 +227,10 @@ class UngzippedFileObj(FileObj):
             # file.  That won't record file sizes larger than 4Gb and there may
             # be other quirks.  So for now we get it by reading and unzipping
             # the whole file.
-            with self.open(mode="rb") as unzipped_fh:
-                size = unzipped_fh.seek(0, io.SEEK_END)
+            with self._fileobj.open("rb") as unzip_f:
+                size = unzip_f.seek(0, io.SEEK_END)
                 self._size = size
-                return self._size
+            return self._size
 
     @property
     def updated(self) -> datetime:
@@ -233,7 +255,7 @@ class FileFromTar(FileObj):
         self._path = path
         self._size = -1
         self._path_exists: Optional[bool] = None
-        self._tarinfo: Optional[Any] = None
+        self._tarinfo: Optional[tarfile.TarInfo] = None
 
     @property
     def name(self) -> str:
@@ -243,8 +265,8 @@ class FileFromTar(FileObj):
         """Returns `True` if `tar_file` exists and a member exists at `path` in
         the tar.
 
-        The this extracts and saves the tarinfo. That records the offset into
-        the tar file. So it should not be too inefficent.
+        This extracts and saves the tarinfo. That records the offset into
+        the tar file. So it should not be too inefficient.
         """
         if self._path_exists is not None:
             return self._path_exists
@@ -253,28 +275,34 @@ class FileFromTar(FileObj):
             self._path_exists = False
             return False
 
-        with self._fileobj.open(mode="rb") as fh:
-            with tarfile.open(fileobj=fh, mode="r") as tar:
+        with self._fileobj.open("rb") as fh:
+            with tarfile.open(fileobj=fh, mode="r") as tar:  # type: ignore
                 try:
                     self._tarinfo = tar.getmember(self._path)
                     self._path_exists = True
+                    self._size = self._tarinfo.size
                     return True
                 except KeyError:
                     self._path_exists = False
                     return False
 
-    @contextmanager
-    def open(self, *args, **kwargs) -> IO:  # type: ignore
-        with self._fileobj.open(mode="rb") as fh:
-            with tarfile.open(fileobj=fh, mode="r") as tar:
-                try:
-                    if self._tarinfo is None:
-                        member = tar.getmember(self._path)
-                    else:
-                        member = self._tarinfo
-                except KeyError:
-                    raise FileNotFound(f"could not find {self._path} in tar")
-                yield tar.extractfile(member)
+    def open(self, mode:str) -> BinaryMinimalFile:
+        # Why does this not use `with`? Because after the return it would be out of the with scope
+        # and the file will be closed and unusable.
+        fh = self._fileobj.open(mode)
+        tfh = tarfile.open(fileobj=fh, mode="r")  # type: ignore
+        try:
+            if self._tarinfo is None:
+                member = tfh.getmember(self._path)
+            else:
+                member = self._tarinfo
+        except KeyError:
+            raise FileNotFound(f"could not find {self._path} in tar")
+        ef = tfh.extractfile(member)
+        if ef:
+            return typing.cast(BinaryMinimalFile, ef)
+        else:
+            raise FileNotFound(f"could not extract {self._path} in tar")
 
     @property
     def etag(self) -> str:
@@ -282,7 +310,8 @@ class FileFromTar(FileObj):
 
     @property
     def size(self) -> int:
-        raise Exception("Not implemented due to it being inefficent")
+        """This is only set after `open()` or `exists()` were called."""
+        return self._size
 
     @property
     def updated(self) -> datetime:
