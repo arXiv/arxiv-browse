@@ -4,7 +4,9 @@ from flask import Response
 from datetime import timezone
 import mimetypes
 
+from browse.domain.identifier import Identifier
 from browse.domain.metadata import Identifier
+from browse.domain.version import VersionEntry
 from browse.services.next_published import next_publish
 from browse.services.object_store import FileObj
 
@@ -53,3 +55,14 @@ def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
     content_type, _ = mimetypes.guess_type(filename.name if isinstance(filename, FileObj) else filename)
     if content_type:
         resp.headers["Content-Type"] = content_type
+
+
+def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str]) -> str:
+    """Returns a `str` to use for a downloaded filename.
+
+    It will always have a version so that if the user has a download directory full of
+    arxiv files new ones will not overwrite old ones.
+
+    Ex. arXiv-cs02021234v3 or arXiv-1802.12345v9"""
+    v_num = version.version if isinstance(version, VersionEntry) else int(version)
+    return f"arXiv-{arxiv_id.squashed}v{v_num}"

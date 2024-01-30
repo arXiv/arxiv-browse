@@ -67,17 +67,11 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
                               "NO_ID"],
                       Deleted]
 
-
 FormatHandlerReturn = Union[Conditions, FileObj, List[FileObj]]
 
 FHANDLER = Callable[[Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
 """Type format handler should return."""
-
-
-cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
-"""Regex for use aginst source_type for formats that cannot serve a PDF,
-these are HTML, ODF and DOCX"""
 
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
@@ -203,8 +197,7 @@ class ArticleStore():
         try:
             if docmeta is None:
                 docmeta = self.metadataservice.get_abs(arxiv_id.id)
-        # Not excepting AbsParsingException or AbsException since that is bad
-        # data that we want to know about and fix.
+        # Not excepting AbsParsingException or AbsException since that is bad data that we want to know about and fix.
         except AbsNotFoundException:
             return "ARTICLE_NOT_FOUND"
         except AbsVersionNotFoundException:
