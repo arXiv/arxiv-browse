@@ -44,7 +44,6 @@ def test_anc_listing(client_with_test_fs):
         assert link in data
 
 
-@pytest.mark.skip(reason="need to fix failing /src/physics/9707012/anc/")
 def test_anc_listing_no_anc_files(client_with_test_fs):
     client = client_with_test_fs
     for link in ["/src/physics/9707012/anc",
