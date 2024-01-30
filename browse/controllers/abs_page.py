@@ -239,8 +239,8 @@ def _check_request_headers(
     docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
 ) -> bool:
     """Check the request headers, update the response headers accordingly."""
-    html_updated = get_latexml_publish_dt(docmeta.arxiv_id, docmeta.get_version())
-    last_mod_dt: datetime = max(html_updated, docmeta.modified) if html_updated else docmeta.modified
+    html_updated = get_latexml_publish_dt(docmeta.arxiv_id, docmeta.get_version()) or datetime.fromtimestamp(0)
+    last_mod_dt: datetime = max(html_updated, docmeta.modified)
 
     # Latest trackback ping time depends on the database
     if 'trackback_ping_latest' in response_data \
