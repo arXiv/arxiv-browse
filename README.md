@@ -43,10 +43,13 @@ First, you'd need to create the '.env' file somewhere. Using tests/.env is sugge
     export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
     export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
     export LATEXML_ENABLED=True
+    export LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
     export LATEXML_BASE_URL=https://browse.arxiv.org/latexml
     export FLASKS3_ACTIVE=1
 
 You need a SA cred to access the db, and the cloud-sql-proxy running.
+For LATEXML_INSTANCE_CONNECTION_NAME, you may need to ask someone who knows the db.
+(This is obviously a production DB.)
 
 You can find the browse password here:
 https://console.cloud.google.com/security/secret-manager/secret/browse-sqlalchemy-db-uri/versions?project=arxiv-production
