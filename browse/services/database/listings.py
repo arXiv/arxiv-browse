@@ -443,3 +443,9 @@ def _process_yearly_article_counts(query_result: List[Row], year: int) -> YearCo
 
     data = YearCount(year, new_total, cross_total, monthlist)
     return data
+
+def check_service() -> str:
+    query=db.session.query(Metadata).limit(1).all()
+    if len(query)==1:
+        return "GOOD"
+    return "BAD"

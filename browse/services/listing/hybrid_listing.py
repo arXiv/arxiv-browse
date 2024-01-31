@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, List
 import time
 
 from browse.services.listing.fs_listings import FsListingFilesService
@@ -7,7 +7,8 @@ from browse.services.listing import YearCount, Listing, ListingNew
 from browse.services.database.listings import (
     get_yearly_article_counts,
     get_articles_for_month,
-    get_new_listing
+    get_new_listing,
+    check_service
 )
 
 logger = logging.getLogger(__name__)
@@ -61,3 +62,14 @@ class HybridListingService(FsListingFilesService):
                           -> ListingNew:
         items=get_new_listing(archiveOrCategory,skip,show)
         return items
+    
+    def service_status(self)->List[str]:
+        try:
+            result=check_service()
+            if result != "GOOD":
+                return [f"{__name__} Could not retrieve data from database"]
+            else:
+                return []
+        except Exception as ex:
+            return [f"{__name__} Could not access '{self.document_listing_path}' due to {ex}"]
+    
