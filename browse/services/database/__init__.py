@@ -582,6 +582,8 @@ def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
+    if not current_app.config["LATEXML_ENABLED"]:
+        return None
     row = (
         db.session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
