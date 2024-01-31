@@ -432,7 +432,7 @@ class ArticleStore():
                 return "UNAVAILABLE"
 
             case http.HTTPStatus.NOT_FOUND:
-                logger.error("genpdf-api ruturned 404")
+                logger.error("genpdf-api returned 404")
                 return "UNAVAILABLE"
 
             case _:  # catch all
