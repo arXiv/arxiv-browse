@@ -590,7 +590,7 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
     )
-    return row.publish_dt if row else None
+    return row.publish_dt.replace(tzinfo=tzutc()) if row else None
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)
