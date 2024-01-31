@@ -407,36 +407,39 @@ class ArticleStore():
         except Exception as _exc:
             logger.warning("genpdf-api access failed", exc_info=True)
             return "UNAVAILABLE"
-
         t_end = time.perf_counter()
+        logger.debug("genpdf-api responded in %f seconds", t_end - t_start)
+
         # Normal operation is a redirect to the bucket
-        if response.status_code == http.HTTPStatus.FOUND:
-            bucket_url = response.headers.get('location')
-            logger.debug("genpdf-api returned %s in %f seconds", bucket_url, t_end - t_start)
-            if isinstance(self.objstore, GsObjectStore):
-                bucket_name, obj_key = from_bucket_url_to_key(bucket_url)
-                if obj_key and bucket_name == self.objstore.bucket.name:
-                    return self.objstore.to_obj(obj_key)
-            logger.error("??? %s", bucket_url)
-            raise NotImplementedError("Somthing is wrong here")
 
-        # Sadly, if you get 200, error out as this is not expected
-        if response.status_code == requests.status_codes.codes.OK:
-            logger.error("genpdf-api should not return 200. Check URL and turn off download")
-            raise NotImplementedError("Cannot support getting PDF")
+        match response.status_code:
+            case http.HTTPStatus.FOUND:
+                bucket_url = response.headers.get('location')
+                if isinstance(self.objstore, GsObjectStore):
+                    bucket_name, obj_key = from_bucket_url_to_key(bucket_url)
+                    if obj_key and bucket_name == self.objstore.bucket.name:
+                        return self.objstore.to_obj(obj_key)
+                logger.error("??? %s", bucket_url)
+                raise NotImplementedError("Somthing is wrong here")
 
-        if response.status_code == http.HTTPStatus.REQUEST_TIMEOUT:
-            logger.error("genpdf-api request timed out")
-            return "UNAVAILABLE"
+            case http.HTTPStatus.OK:
+                # Sadly, if you get 200, error out as this is not expected
+                logger.error("genpdf-api should not return 200. Check URL and turn off download")
+                raise NotImplementedError("Cannot support getting PDF")
 
-        if response.status_code == http.HTTPStatus.NOT_FOUND:
-            logger.error("genpdf-api ruturned 404")
-            return "UNAVAILABLE"
+            case http.HTTPStatus.REQUEST_TIMEOUT:
+                logger.error("genpdf-api request timed out")
+                return "UNAVAILABLE"
 
-        if not self.sourcestore.source_exists(arxiv_id, docmeta):
-            return "NO_SOURCE"
+            case http.HTTPStatus.NOT_FOUND:
+                logger.error("genpdf-api ruturned 404")
+                return "UNAVAILABLE"
 
-        return "UNAVAILABLE"
+            case _:  # catch all
+                logger.error("genpdf-api returned %s", str(response.status_code))
+                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                    return "NO_SOURCE"
+                return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         res = self.reasons(arxiv_id.idv, 'ps')
