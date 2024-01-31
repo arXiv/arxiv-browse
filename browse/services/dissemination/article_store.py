@@ -129,6 +129,11 @@ def from_bucket_url_to_key(gs_url: str) -> typing.Tuple[str|None, str|None]:
             return url[:bucket_slash], url[bucket_slash+1:]
     return (None, None)
 
+def is_genpdf_able(arxiv_id: Identifier) -> bool:
+    """You can use the genpdf-api for papers from 2023-05 onwards."""
+    api = current_app.config.get("GENPDF_API_URL")
+    return bool(api and arxiv_id.year and (arxiv_id.year >= 2023) and arxiv_id.month and (arxiv_id.month >= 5))
+
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
 
@@ -363,10 +368,6 @@ class ArticleStore():
         if version.source_flag.cannot_pdf:
             return "NOT_PDF"
 
-        GENPDF_API_URL = current_app.config.get("GENPDF_API_URL", "")
-        if GENPDF_API_URL:
-            return self._genpdf(arxiv_id, docmeta, version, GENPDF_API_URL)
-
         res = self.reasons(arxiv_id.idv, 'pdf')
         if res:
             return CannotBuildPdf(res)
@@ -380,11 +381,15 @@ class ArticleStore():
             pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
+            if is_genpdf_able(arxiv_id):
+                return self._genpdf(arxiv_id, docmeta, version)
         else:
             # try from the /orig with version number for a pdf only paper
             pdf_file=self.objstore.to_obj(previous_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
+            if is_genpdf_able(arxiv_id):
+                return self._genpdf(arxiv_id, docmeta, version)
 
         if not self.sourcestore.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
@@ -393,11 +398,13 @@ class ArticleStore():
                      [str(ps_cache_pdf), str(pdf_file)])
         return "UNAVAILABLE"
 
-    def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry, api: str) -> FormatHandlerReturn:
+    def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets a PDF from the genpdf-api."""
         if version.source_flag.cannot_pdf:
             return "NOT_PDF"
-
+        api = current_app.config.get("GENPDF_API_URL")
+        if not api:
+            return "UNAVAILABLE"
         # requests.get() cannod have timeout <= 0
         timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
         url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}"
@@ -436,6 +443,8 @@ class ArticleStore():
                 return "UNAVAILABLE"
 
             case http.HTTPStatus.NOT_FOUND:
+                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                    return "NO_SOURCE"
                 logger.error("genpdf-api returned 404")
                 return "UNAVAILABLE"
 
