@@ -5,6 +5,7 @@ import http
 import logging
 import re
 import time
+import typing
 from collections.abc import Callable
 from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
 
@@ -117,7 +118,7 @@ def _is_deleted(id: str) -> Optional[str]:
 def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
-def from_bucket_url_to_key(gs_url: str) -> (str, str):
+def from_bucket_url_to_key(gs_url: str) -> typing.Tuple[str|None, str|None]:
     """Converts a gs:// url to a gs key.
     returns the bucket name and key as a tuple.
     """
@@ -415,6 +416,9 @@ class ArticleStore():
         match response.status_code:
             case http.HTTPStatus.FOUND:
                 bucket_url = response.headers.get('location')
+                if not bucket_url:
+                    logger.error("Redirect did not provide location")
+                    return "UNAVAILABLE"
                 if isinstance(self.objstore, GsObjectStore):
                     bucket_name, obj_key = from_bucket_url_to_key(bucket_url)
                     if obj_key and bucket_name == self.objstore.bucket.name:
