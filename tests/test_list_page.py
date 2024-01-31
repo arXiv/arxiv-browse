@@ -655,3 +655,21 @@ def test_year_archive_with_end_date(client_with_test_fs):
     text=rv.text
     assert '<a href="/year/funct-an/97">1997</a>' in text
     assert '<a href="/year/funct-an/98">1998</a>' not in text
+
+def test_listing_page_subsumed_archive( client_with_test_fs):
+    client = client_with_test_fs
+    rv = client.get("/list/alg-geom/new")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Algebraic Geometry" in text
+    assert "math.AG" in text
+    rv = client.get("/list/alg-geom/recent")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Algebraic Geometry" in text
+    assert "math.AG" in text
+    rv = client.get("/list/alg-geom/2103")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Algebraic Geometry" in text
+    assert "math.AG" in text

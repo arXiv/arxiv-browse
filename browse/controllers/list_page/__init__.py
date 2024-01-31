@@ -121,6 +121,9 @@ def get_listing(subject_or_category: str,
               time_period in ['new', 'current', 'pastweek', 'recent']))):
         raise BadRequest
 
+    if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
+        subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
+
     if subject_or_category in taxonomy.CATEGORIES:
         list_type = 'category'
         list_ctx_name = taxonomy.CATEGORIES[subject_or_category]['name']
@@ -157,7 +160,7 @@ def get_listing(subject_or_category: str,
     if time_period == 'new':
         list_type = 'new'
         new_resp: Union[ListingNew, NotModifiedResponse] =\
-            listing_service.list_new_articles(subject_or_category, skipn,
+            listing_service.list_new_articles(list_ctx_id, skipn,
                                               shown, if_mod_since)
         response_headers.update(_expires_headers(new_resp))
         if isinstance(new_resp, NotModifiedResponse):
@@ -167,14 +170,14 @@ def get_listing(subject_or_category: str,
             new_resp.rep_count + new_resp.cross_count
         response_data['announced'] = new_resp.announced
         response_data.update(
-            index_for_types(new_resp, subject_or_category, time_period, skipn, shown))
+            index_for_types(new_resp, list_ctx_id, time_period, skipn, shown))
         response_data.update(sub_sections_for_types(new_resp, skipn, shown))
 
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
-            subject_or_category, skipn, shown, if_mod_since)
+            list_ctx_id, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
         if isinstance(rec_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
@@ -196,11 +199,11 @@ def get_listing(subject_or_category: str,
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             resp = listing_service.list_articles_by_month(
-                subject_or_category, list_year, list_month, skipn, shown, if_mod_since)
+                list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
             resp = listing_service.list_articles_by_year(
-                subject_or_category, list_year, skipn, shown, if_mod_since)
+                list_ctx_id, list_year, skipn, shown, if_mod_since)
 
         response_headers.update(_expires_headers(resp))
         if isinstance(resp, NotModifiedResponse):
@@ -228,7 +231,7 @@ def get_listing(subject_or_category: str,
     response_data['latexml'] = latexml_links_for_articles(listings)
 
     response_data.update({
-        'context': subject_or_category,
+        'context': list_ctx_id,
         'count': count,
         'subcontext': time_period,
         'shown': shown,
@@ -238,7 +241,7 @@ def get_listing(subject_or_category: str,
         'list_ctx_id': list_ctx_id,
         'list_ctx_in_archive': list_ctx_in_archive,
         'paging': paging(count, skipn, shown,
-                         subject_or_category, time_period),
+                         list_ctx_id, time_period),
         'viewing_all': shown >= count,
         'template': type_to_template[list_type]
     })

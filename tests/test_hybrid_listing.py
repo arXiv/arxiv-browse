@@ -282,7 +282,6 @@ def test_new_listing_page_alternate_names( client_with_hybrid_listings):
     assert "Replacement submissions for Thursday, 3 February 2011" in text
     assert "arXiv:cond-mat/0703772" in text
 
-    #TODO both sides of alias
 
 #month listing tests
 
