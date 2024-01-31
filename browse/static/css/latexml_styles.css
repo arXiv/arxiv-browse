@@ -1166,9 +1166,18 @@ article{
 
 /* Set Image/math equation width. */
 :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_portrait {
-    width: 100%;
+  width: 100%;
 }
-
 :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_square {
   width: 100%;
+}
+@media only screen and (min-width: 820px) {
+  :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_portrait {
+      width: auto;
+      height: auto;
+  }
+  :not(mtext):not(.ltx_flex_cell)>:not(mtext):not(.ltx_flex_cell)>.ltx_img_square {
+    width: auto;
+    height: auto;
+  }
 }
