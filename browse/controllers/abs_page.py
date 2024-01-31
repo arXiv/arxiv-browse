@@ -239,8 +239,9 @@ def _check_request_headers(
     docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
 ) -> bool:
     """Check the request headers, update the response headers accordingly."""
-    if docmeta.get_version():
-        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, docmeta.get_version().version) or datetime.fromtimestamp(0, tz=timezone.utc)
+    version = docmeta.get_version()
+    if version:
+        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, version.version) or datetime.fromtimestamp(0, tz=timezone.utc)
     else:
         html_updated = datetime.fromtimestamp(0, tz=timezone.utc)
     last_mod_dt: datetime = max(html_updated, docmeta.modified)
