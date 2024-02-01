@@ -26,7 +26,7 @@ from browse.services.dissemination.article_store import (
 from browse.services.next_published import next_publish
 
 from browse.stream.file_processing import process_file
-from flask import Response, abort, make_response, render_template
+from flask import Response, abort, make_response, render_template, url_for
 from flask_rangerequest import RangeRequest
 from werkzeug.exceptions import  NotFound
 
@@ -39,13 +39,13 @@ Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata,
                         VersionEntry], Response]
 
 
-def default_resp_fn(format: FileFormat,
+def _pdf_resp_fn(format: FileFormat,
                     file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
                     version: VersionEntry,
                     extra: Optional[str] = None) -> Response:
-    """Creates a response with approprate headers for the `file`.
+    """Creates a response with appropriate headers for the PDF `file`.
 
     Parameters
     ----------
@@ -66,14 +66,19 @@ def default_resp_fn(format: FileFormat,
     resp.headers['Access-Control-Allow-Origin'] = '*'
     if isinstance(format, FileFormat):
         resp.headers['Content-Type'] = format.content_type
-    else:
-        add_mimetype(resp, file)
+
+    # https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls#rel-canonical-header-method
+    resp.headers["Link"] = f'{url_for("dissemination.pdf", arxiv_id=arxiv_id.idv, _external=True)}; rel="canonical"'
 
     # `inline` causes browsers to open the file for in-browser viewing ex a PDF.
     resp.headers["Content-Disposition"] = f"inline; filename=\"{download_filename(arxiv_id, version, file)}\""
     add_time_headers(resp, file, arxiv_id)
     return resp
 
+
+def get_pdf_resp(arxiv_id_str: str, archive: Optional[str] = None) -> Response:
+    """Make a response that is appropriate for a PDF download."""
+    return get_dissemination_resp(fileformat.pdf, _pdf_resp_fn, arxiv_id_str, archive)
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
@@ -93,13 +98,13 @@ def get_src_resp(arxiv_id_str: str,
         add_time_headers(resp, file, arxiv_id)
         return resp  # type: ignore
 
-    return get_dissemination_resp("e-print", arxiv_id_str, archive, _src_resp_fn)
+    return get_dissemination_resp("e-print", _src_resp_fn, arxiv_id_str, archive)
 
 
-def get_dissemination_resp(format: Acceptable_Format_Requests,
+def get_dissemination_resp(file_format: Acceptable_Format_Requests,
+                           resp_fn: Resp_Fn_Sig,
                            arxiv_id_str: str,
-                           archive: Optional[str] = None,
-                           resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
+                           archive: Optional[str] = None) -> Response:
     """
     Returns a `Flask` response ojbject for a given `arxiv_id` and `FileFormat`.
 
@@ -114,7 +119,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
-    item = get_article_store().dissemination(format, arxiv_id)
+    item = get_article_store().dissemination(file_format, arxiv_id)
     logger. debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
@@ -141,11 +146,12 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         if not file[0].exists():
             return not_found(arxiv_id)
 
+    resp_fn = _pdf_resp_fn if resp_fn is None else resp_fn
     return resp_fn(item_format, file, arxiv_id, docmeta, version) #type: ignore
 
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
+    return get_dissemination_resp(fileformat.html, html_response_function, arxiv_id_str, archive)
     
 def html_response_function(format: FileFormat,
                 file_list: Union[List[FileObj],FileObj],
