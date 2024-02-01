@@ -132,7 +132,9 @@ def from_bucket_url_to_key(gs_url: str) -> typing.Tuple[str|None, str|None]:
 def is_genpdf_able(arxiv_id: Identifier) -> bool:
     """You can use the genpdf-api for papers from 2023-05 onwards."""
     api = current_app.config.get("GENPDF_API_URL")
-    return bool(api and arxiv_id.year and (arxiv_id.year >= 2023) and arxiv_id.month and (arxiv_id.month >= 5))
+    if api and arxiv_id.year and arxiv_id.month:
+        return (arxiv_id.year * 12 + arxiv_id.month) >= (2023 * 12 + 5)
+    return False
 
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
