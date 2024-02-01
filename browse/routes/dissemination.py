@@ -14,27 +14,27 @@ from browse.controllers import check_supplied_identifier
 blueprint = Blueprint('dissemination', __name__)
 
 
-@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def redirect_pdf(arxiv_id: str, archive=None):  # type: ignore
-    """Redirect urls without .pdf so they download a filename recognized as a PDF."""
+    """Redirect urls with .pdf
+
+     There was a period from 2022 to 2024 where PDF were sometimes redirected to {paper_id}.pdf
+     so they would download a filename recognized as a PDF. Then Content-Disposition with inline was used instead."""
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
     return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
 
 
-@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
 def pdf(arxiv_id: str, archive=None):  # type: ignore
     """Want to handle the following patterns:
 
         /pdf/{archive}/{id}v{v}
-        /pdf/{archive}/{id}v{v}.pdf
         /pdf/{id}v{v}
-        /pdf/{id}v{v}.pdf
 
-    The dissemination service does not handle versionless
-    requests. The version should be figured out in some other service
-    and redirected to the CDN.
+    The dissemination service does not handle versionless requests. The version should be figured out in some
+    other service and redirected.
 
     Serve these from storage bucket URLs like:
 

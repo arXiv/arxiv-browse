@@ -2,7 +2,6 @@
 
 import logging
 from email.utils import format_datetime
-from pathlib import Path
 from typing import Callable, Optional, Union, List
 import tempfile
 import mimetypes
@@ -15,7 +14,7 @@ from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
 from browse.domain import fileformat
 
-from browse.controllers.files import last_modified, add_time_headers, cc_versioned, add_mimetype, download_file_base
+from browse.controllers.files import last_modified, add_time_headers, cc_versioned, add_mimetype, download_filename
 
 from browse.services.object_store.fileobj import FileObj
 
@@ -67,41 +66,34 @@ def default_resp_fn(format: FileFormat,
     resp.headers['Access-Control-Allow-Origin'] = '*'
     if isinstance(format, FileFormat):
         resp.headers['Content-Type'] = format.content_type
+    else:
+        add_mimetype(resp, file)
 
+    # `inline` causes browsers to open the file for in-browser viewing ex a PDF.
+    resp.headers["Content-Disposition"] = f"inline; filename=\"{download_filename(arxiv_id, version, file)}\""
     add_time_headers(resp, file, arxiv_id)
     return resp
 
 
-def src_resp_fn(format: FileFormat,
-                file: FileObj,
-                arxiv_id: Identifier,
-                docmeta: DocMetadata,
-                version: VersionEntry,
-                extra: Optional[str] = None) -> Response:
-    """Download source"""
-    resp = RangeRequest(file.open('rb'),
-                        etag=last_modified(file),
-                        last_modified=file.updated,
-                        size=file.size).make_response()
-    suffixes = Path(file.name).suffixes
-    if not arxiv_id.is_old_id:
-        suffixes.pop(0)  # get rid of .12345
-    filename = download_file_base(arxiv_id, version) + "".join(suffixes)
-
-    add_mimetype(resp, file.name)
-    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
-    add_time_headers(resp, file, arxiv_id)
-    return resp  # type: ignore
-
-
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
+    """Makes a response that is appropriate for a source download."""
+    def _src_resp_fn(format: FileFormat,
+                    file: FileObj,
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry,
+                    extra: Optional[str] = None) -> Response:
+        resp = RangeRequest(file.open('rb'),
+                            etag=last_modified(file),
+                            last_modified=file.updated,
+                            size=file.size).make_response()
+        add_mimetype(resp, file.name)
+        resp.headers["Content-Disposition"] = f"attachment; filename=\"{download_filename(arxiv_id, version, file)}\""
+        add_time_headers(resp, file, arxiv_id)
+        return resp  # type: ignore
 
-
-def get_e_print_resp(arxiv_id_str: str,
-                     archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp("e-print", arxiv_id_str, archive)
+    return get_dissemination_resp("e-print", arxiv_id_str, archive, _src_resp_fn)
 
 
 def get_dissemination_resp(format: Acceptable_Format_Requests,
