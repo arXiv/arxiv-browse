@@ -6,7 +6,7 @@ venv: .prerequisit
 	python3 -c 'import sys; assert sys.hexversion >= 0x030a0000'
 	python3 -m venv ./venv
 	. venv/bin/activate && pip install pip --upgrade
-	. venv/bin/activate && pip install poetry
+	. venv/bin/activate && pip install poetry==1.3.2
 	. venv/bin/activate && poetry install
 
 /usr/local/bin/cloud-sql-proxy:
