@@ -164,6 +164,89 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
                       announced=mail_date,
                       expires=gen_expires())
 
+def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
+
+    category_list=_all_possible_categories(archive_or_cat)
+    up=aliased(Updates)
+    dates = (
+        db.session.query(distinct(up.date))
+        .order_by(desc(up.date))
+        .limit(5)
+        .subquery()
+    )
+
+    doc_ids=(
+        db.session.query(
+            up.document_id,
+            up.date
+        )
+        .filter(up.date.in_(dates))
+        .filter(or_(up.action=="new", up.action=="cross"))
+        .filter(up.category.in_(category_list))
+        .group_by(up.document_id) #one listing per paper
+        .subquery() 
+    )
+
+    counts = (
+        db.session.query(
+            doc_ids.c.date,
+            func.count()
+        )
+        .group_by(doc_ids.c.date)
+        .order_by(desc(doc_ids.c.date))
+        .all()
+    )
+
+    dc = aliased(DocumentCategory)
+    all = (
+        db.session.query(
+            doc_ids.c.date,
+            doc_ids.c.document_id,   
+            func.max(dc.is_primary).label('is_primary')
+        )
+        .join(dc, dc.document_id == doc_ids.c.document_id)
+        .where(dc.category.in_(category_list))
+        .group_by(dc.document_id) 
+        .subquery() 
+    )
+
+    meta = aliased(Metadata)
+    result=(
+        db.session.query(   
+            all.c.is_primary,
+            meta
+        )
+        .join(meta, meta.document_id == all.c.document_id)
+        .filter(meta.is_current ==1)
+        .order_by(desc(all.c.date), desc(all.c.is_primary), desc(meta.paper_id))
+        .offset(skip)
+        .limit(show)
+        .all()
+    )
+
+    total=0
+    daily_counts=[]
+    for count in counts:
+        day, number = count
+        daily_counts.append((day, number))
+        total+=number
+
+    items=[]
+    for row in result:
+        primary, metadata=row
+        if primary:
+            listing_case="new"
+        else:
+            listing_case="cross"
+        item= _metadata_to_listing_item(metadata, listing_case)
+        items.append(item)
+
+    return Listing(
+        listings=items,
+        pubdates=daily_counts,
+        count=total,
+        expires=gen_expires()
+    )
 
 def get_articles_for_month(
     archive_or_cat: str, year: int, month: Optional[int], skip: int, show: int

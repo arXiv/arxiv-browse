@@ -7,6 +7,7 @@ from browse.services.listing import YearCount, Listing, ListingNew
 from browse.services.database.listings import (
     get_yearly_article_counts,
     get_articles_for_month,
+    get_recent_listing,
     get_new_listing,
     check_service
 )
@@ -53,6 +54,17 @@ class HybridListingService(FsListingFilesService):
             year+=1900
 
         return get_articles_for_month(archiveOrCategory, year, month, skip, show)
+
+    def list_pastweek_articles(self,
+                               archiveOrCategory: str,
+                               skip: int,
+                               show: int,
+                               if_modified_since: Optional[str] = None)\
+                               ->Listing:
+        """Gets listings for the 5 most recent announcement/publish.
+        """
+        items=get_recent_listing(archiveOrCategory,skip,show)
+        return items
 
     def list_new_articles(self,
                           archiveOrCategory: str,
