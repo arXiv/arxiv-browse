@@ -1,17 +1,19 @@
 {%- extends "list/base.html" -%}
 
 {%- block list_index -%}
-<h2>Authors and titles for recent submissions</h2>
-<ul>
-  {%- for pdate in pubdates -%}
-  {%- set skipfordate = pdate[1] -%}
-  <li>
-    <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
-      {{ pdate[0].strftime('%A, %-d %B %Y') }}
-    </a>
-  </li>
-  {%- endfor -%}
-</ul>
+  <h2>Authors and titles for recent submissions</h2>
+  <ul>
+    {% set cumulative = namespace(total=0) %}
+    {%- for pdate in pubdates -%}
+      {%- set skipfordate = cumulative.total -%}
+      {%- set cumulative.total = cumulative.total + pdate[1] -%}
+      <li>
+        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
+          {{ pdate[0].strftime('%a, %-d %b %Y') }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
 {%- endblock -%}
 
 {%- block pre_items -%}
