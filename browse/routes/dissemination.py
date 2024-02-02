@@ -7,44 +7,37 @@ from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
 from browse.domain.identifier import Identifier, IdentifierException
 from browse.domain import fileformat
-from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response
+from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response, get_pdf_resp
 from browse.controllers import check_supplied_identifier
 
 
 blueprint = Blueprint('dissemination', __name__)
 
 
-@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
 def redirect_pdf(arxiv_id: str, archive=None):  # type: ignore
-    """Redirect urls without .pdf so they download a filename recognized as a PDF."""
+    """Redirect urls with .pdf to ones without.
+
+     There was a period from 2022 to 2024 where PDF were sometimes redirected to {paper_id}.pdf
+     This was intended to make the browser download a filename recognized as a PDF. Then in 2024,
+     Content-Disposition with inline was used instead."""
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
     return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
 
 
-@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf/<string:arxiv_id>", methods=['GET', 'HEAD'])
 def pdf(arxiv_id: str, archive=None):  # type: ignore
-    """Want to handle the following patterns:
+    """Downloads a pdf.
 
+    Handles the following patterns:
         /pdf/{archive}/{id}v{v}
-        /pdf/{archive}/{id}v{v}.pdf
         /pdf/{id}v{v}
-        /pdf/{id}v{v}.pdf
-
-    The dissemination service does not handle versionless
-    requests. The version should be figured out in some other service
-    and redirected to the CDN.
-
-    Serve these from storage bucket URLs like:
-
-    gs://arxiv-production-data/ps_cache/acc-phys/pdf/9502/9502001v1.pdf
-
-    Does a 400 if the ID is malformed or lacks a version.
-
-    Does a 404 if the key for the ID does not exist on the bucket.
+        /pdf/{archive}/{id}
+        /pdf/{id}
     """
-    return get_dissemination_resp(fileformat.pdf, arxiv_id, archive)
+    return get_pdf_resp(arxiv_id, archive)
 
 
 @blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
