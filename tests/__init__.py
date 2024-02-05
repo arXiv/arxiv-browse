@@ -67,7 +67,9 @@ def _populate_latexml_test_data (models):
         'tex_checksum': 'test_checksum',
         'conversion_start_time': 0,
         'conversion_end_time': 1,
+        'publish_dt': datetime(2024, 1, 1, 0, 0, 0)
     }
+
     doc2 = {
         'paper_id': '2303.00763',
         'document_version': 1,
@@ -86,7 +88,19 @@ def _populate_latexml_test_data (models):
         'conversion_start_time': 0,
         'conversion_end_time': 1,
     }
-    for doc in [doc1, doc2, doc3]:
+
+    doc4 = {
+        'paper_id': '2310.08262',
+        'document_version': 1,
+        'conversion_status': 1,
+        'latexml_version': 'test_latexml_version',
+        'tex_checksum': 'test_checksum',
+        'conversion_start_time': 0,
+        'conversion_end_time': 1,
+        'publish_dt': datetime(2022, 1, 1, 0, 0, 0)
+    }
+
+    for doc in [doc1, doc2, doc3, doc4]:
         models.db.session.add(DBLaTeXMLDocuments(**doc))
     models.db.session.commit()
 

@@ -27,7 +27,6 @@ from browse.services.listing import db_listing
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 
-
 TESTING_CONFIG = {
     "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
     "SQLALCHEMY_DATABASE_URI" : DEFAULT_DB,

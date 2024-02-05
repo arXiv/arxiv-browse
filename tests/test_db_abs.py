@@ -74,8 +74,22 @@ def test_html_conversion_dissemination (dbclient):
     rt = dbclient.get('/abs/0906.2112')
 
     assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'] == 'Mon, 01 Jan 2024 00:00:00 GMT'
     
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
-    assert html.select_one('.extra-services') \
-        .select_one('.full-text').find('ul') \
-        .find_all('li')[1].text == 'HTML (experimental)'
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified (dbclient):
+    rt = dbclient.get('/abs/2310.08262')
+    
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'] == 'Fri, 13 Oct 2023 04:22:59 GMT'
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
