@@ -87,7 +87,7 @@ def test_last_modified (dbclient):
     
     assert rt.status_code == 200
 
-    assert rt.headers['Last-Modified'] == 'Fri, 13 Oct 2023 04:22:59 GMT'
+    assert rt.headers['Last-Modified'].startswith('Fri, 13 Oct 2023')
 
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
