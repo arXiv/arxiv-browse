@@ -46,16 +46,20 @@ def anc(arxiv_id: str, file_path:str):  # type: ignore
     return get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
 
 
+
+@blueprint.route("/e-print/<string:arxiv_id>")
+@blueprint.route("/e-print/<string:archive>/<int:arxiv_id>")
 @blueprint.route("/src/<path:arxiv_id_str>")
 @blueprint.route("/src/<string:archive>/<string:arxiv_id_str>")
 def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
-    """Serves the source of a requested paper as a tar.gz.
+    """Serves the source of a requested paper.
 
-     /src/id - tar.gz of whole source package
+    This serves it in the original format submitted. Before 2024 it would .tar up
+    single file submissions.
 
-     /src/id/file - Returns just the specified file within the source package. Has
-     meaning only for .tar.gz packages and will most frequently be used to access
-     ancillary files such as /src/anc/some_file
+    The e-print path serves the source of a requested paper as original format submitted and
+    form that we store it (.tar.gz, .pdf, etc.). It is used to support the mirrors.
+    Before 2024 /src did something different then /e-print
      """
     return get_src_resp(arxiv_id_str, archive)
 
@@ -84,13 +88,3 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
 # TODO need test data for src_format has_ancillary_files (A)
 # ex. https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
 # TODO need test data for src_format has_pilot_data (B)
-
-# TODO need to do /src/id/file
-
-
-@blueprint.route("/e-print/<string:arxiv_id>")
-@blueprint.route("/e-print/<string:archive>/<int:arxiv_id>")
-def e_print(arxiv_id: str, archive: Optional[str]=None):  # type: ignore
-    """Serves the source of a requested paper as a original format submitted and
-    form that we store it (.tar.gz, .pdf, etc.)."""
-    return get_dissemination_resp("e-print", arxiv_id, archive)

@@ -1,13 +1,13 @@
 
 def test_unavailable(client_with_test_fs):
     """Tests when there is no dissemination file for an existing tex version"""
-    resp = client_with_test_fs.get("/pdf/1208.9999.pdf")
+    resp = client_with_test_fs.get("/pdf/1208.9999")
     assert resp.status_code == 500
     assert 'file unavailable' in resp.text
 
-    resp = client_with_test_fs.get("/pdf/1208.9999v1.pdf")
+    resp = client_with_test_fs.get("/pdf/1208.9999v1")
     assert resp.status_code == 500
     assert 'file unavailable' in resp.text
 
-    resp = client_with_test_fs.get("/pdf/1208.9999v3.pdf")
+    resp = client_with_test_fs.get("/pdf/1208.9999v3")
     assert resp.status_code == 404
