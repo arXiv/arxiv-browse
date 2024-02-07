@@ -464,7 +464,7 @@ class DBLaTeXMLDocuments(db.Model):
     tex_checksum = Column(String)
     conversion_start_time = Column(Integer)
     conversion_end_time = Column(Integer)
-    publish_dt = Column(DateTime(timezone=True), default=datetime.utcnow)
+    publish_dt = Column(DateTime(timezone=True))
 
 
 class Category(db.Model):

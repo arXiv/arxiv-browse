@@ -82,7 +82,7 @@ def test_html_conversion_dissemination (dbclient):
 
     assert atag and atag.text == "HTML (experimental)"
 
-def test_last_modified (dbclient):
+def test_last_modified_old_html_conversion (dbclient):
     rt = dbclient.get('/abs/2310.08262')
     
     assert rt.status_code == 200
@@ -93,3 +93,27 @@ def test_last_modified (dbclient):
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
 
     assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified_no_publish_dt (dbclient):
+    rt = dbclient.get('/abs/0906.5132')
+
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'].startswith('Thu, 15 Oct 2009')
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified_no_html (dbclient):
+    rt = dbclient.get('/abs/0906.5504')
+    
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'].startswith('Tue, 13 Oct 2009')
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag is None

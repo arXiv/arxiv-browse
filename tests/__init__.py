@@ -80,13 +80,14 @@ def _populate_latexml_test_data (models):
         'conversion_end_time': 1,
     }
     doc3 = {
-        'paper_id': '0704.0526',
-        'document_version': 1,
+        'paper_id': '0906.5132',
+        'document_version': 4,
         'conversion_status': 1,
         'latexml_version': 'test_latexml_version',
         'tex_checksum': 'test_checksum',
         'conversion_start_time': 0,
         'conversion_end_time': 1,
+        'publish_dt': None
     }
 
     doc4 = {

@@ -241,9 +241,9 @@ def _check_request_headers(
     """Check the request headers, update the response headers accordingly."""
     version = docmeta.get_version()
     if version:
-        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, version.version) or datetime.fromtimestamp(0, tz=timezone.utc)
+        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, version.version) or datetime.min.replace(tzinfo=timezone.utc)
     else:
-        html_updated = datetime.fromtimestamp(0, tz=timezone.utc)
+        html_updated = datetime.min.replace(tzinfo=timezone.utc)
     last_mod_dt: datetime = max(html_updated, docmeta.modified)
 
     # Latest trackback ping time depends on the database
