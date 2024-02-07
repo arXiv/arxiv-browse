@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Iterator, Union
 from email.utils import format_datetime
 from flask import Response
@@ -66,11 +65,3 @@ def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str
     Ex. arXiv-cs02021234v3 or arXiv-1802.12345v9"""
     v_num = version.version if isinstance(version, VersionEntry) else int(version)
     return f"arXiv-{arxiv_id.squashed}v{v_num}"
-
-
-def download_filename(arxiv_id: Identifier, version:VersionEntry, file: FileObj) -> str:
-    """Gets a filename for the download, for use in a Content-Disposition header."""
-    suffixes = Path(file.name).suffixes
-    if not arxiv_id.is_old_id:
-        suffixes.pop(0)  # get rid of .12345
-    return download_file_base(arxiv_id, version) + "".join(suffixes)
