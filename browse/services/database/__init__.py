@@ -591,7 +591,8 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
         .first()
     )
     if row and row.publish_dt:
-        return row.publish_dt.replace(tzinfo=timezone.utc)
+        dt: datetime = row.publish_dt.replace(tzinfo=timezone.utc)
+        return dt
     else:
         return None
 
