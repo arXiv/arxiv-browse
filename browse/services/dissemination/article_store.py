@@ -7,7 +7,8 @@ import re
 import time
 import typing
 from collections.abc import Callable
-from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
+from typing import Dict, List, Literal, Optional, Tuple, Union
+from urllib.parse import urlparse
 
 import requests
 
@@ -118,16 +119,14 @@ def _is_deleted(id: str) -> Optional[str]:
 def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
-def from_bucket_url_to_key(gs_url: str) -> typing.Tuple[str|None, str|None]:
-    """Converts a gs:// url to a gs key.
-    returns the bucket name and key as a tuple.
+def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
+    """Translates the genpdf-api redirect location for the genpdf object store.
+    returns the bucket name and key as a tuple if it is a gcp bucket.
     """
-    if gs_url.startswith("gs://"):
-        url = gs_url[5:]
-        bucket_slash = url.find("/")
-        if bucket_slash > 0:
-            return url[:bucket_slash], url[bucket_slash+1:]
-    return (None, None)
+    uri = urlparse(location)
+    if uri.scheme == "gs":
+        return uri.netloc, uri.path if uri.path[0] != '/' else uri.path[1:]
+    return ("", uri.path)
 
 def is_genpdf_able(arxiv_id: Identifier) -> bool:
     """You can use the genpdf-api for papers from 2023-05 onwards."""
@@ -146,11 +145,13 @@ class ArticleStore():
     def __init__(self,
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
+                 genpdf_store: ObjectStore,
                  reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted
                  ):
         self.metadataservice = metaservice
         self.objstore: ObjectStore = objstore
+        self.genpdf_store: ObjectStore = genpdf_store
         self.reasons = reasons
         self.is_deleted = is_deleted
         self.sourcestore = SourceStore(self.objstore)
@@ -402,21 +403,24 @@ class ArticleStore():
 
     def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets a PDF from the genpdf-api."""
-        if version.source_flag.cannot_pdf:
-            return "NOT_PDF"
         api = current_app.config.get("GENPDF_API_URL")
         if not api:
             return "UNAVAILABLE"
         # requests.get() cannod have timeout <= 0
         timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
-        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}"
+        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
         logger.debug("genpdf-api request(timeout=%d): %s ", timeout, url)
         t_start = time.perf_counter()
-        try:
-            response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
-        except Exception as _exc:
-            logger.warning("genpdf-api access failed", exc_info=True)
-            return "UNAVAILABLE"
+        for _ in range(3):  # cannot be infinite loop but 500s are common when the cloud run's service is starting up.
+            try:
+                response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
+            except ConnectionError as _exc:
+                logger.warning("The HTTP connection is reset. Retrying...")
+                time.sleep(0.1) # just a fraction is enough
+                continue
+            except Exception as _exc:
+                logger.warning("genpdf-api access failed", exc_info=True)
+                return "UNAVAILABLE"
         t_end = time.perf_counter()
         logger.debug("genpdf-api responded in %f seconds", t_end - t_start)
 
@@ -428,12 +432,8 @@ class ArticleStore():
                 if not bucket_url:
                     logger.error("Redirect did not provide location")
                     return "UNAVAILABLE"
-                if isinstance(self.objstore, GsObjectStore):
-                    bucket_name, obj_key = from_bucket_url_to_key(bucket_url)
-                    if obj_key and bucket_name == self.objstore.bucket.name:
-                        return self.objstore.to_obj(obj_key)
-                logger.error("??? %s", bucket_url)
-                raise NotImplementedError("Somthing is wrong here")
+                _bucket_name, obj_key = from_genpdf_location(bucket_url)
+                return self.genpdf_store.to_obj(obj_key)
 
             case http.HTTPStatus.OK:
                 # Sadly, if you get 200, error out as this is not expected
@@ -441,7 +441,7 @@ class ArticleStore():
                 raise NotImplementedError("Cannot support getting PDF")
 
             case http.HTTPStatus.REQUEST_TIMEOUT:
-                logger.error("genpdf-api request timed out")
+                logger.error("genpdf-api request timed out: duration=%f", t_end - t_start)
                 return "UNAVAILABLE"
 
             case http.HTTPStatus.NOT_FOUND:

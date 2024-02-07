@@ -396,6 +396,11 @@ class Settings(BaseSettings):
     GENPDF_API_TIMEOUT: int = 590
     """Time ouf for the genpdf API access"""
 
+    GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
+    """Where genpdf stores the PDFs. It is likely the local file system does not work here but
+    it is plausible to match the gs bucket with local file system, esp. for testing.
+    """
+
     class Config:
         """Additional pydantic config of these settings."""
 
