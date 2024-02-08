@@ -120,6 +120,7 @@ celerybeat.pid
 
 # Environments
 .env
+tests/.env
 .venv
 env
 env/
@@ -191,3 +192,4 @@ TAG.txt
 
 .htaccess
 
+/.prerequisit
