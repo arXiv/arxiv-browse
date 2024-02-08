@@ -184,6 +184,7 @@ def get_listing(subject_or_category: str,
         listings = rec_resp.listings
         count = rec_resp.count
         response_data['pubdates'] = rec_resp.pubdates
+        response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
     else:  # current or YYMM or YYYYMM
         yandm = year_month(time_period)
@@ -408,6 +409,43 @@ def index_for_types(resp: ListingNew,
 
     return {'index_for_types': ift}
 
+def sub_sections_for_recent(
+        resp: Listing,
+        skip: int, show: int) -> Dict[str, Any]:
+    """Creates data used in section headings on /list/ARCHIVE/recent."""
+    secs = []
+    articles_passed=0
+    shown=0
+    for entry in resp.pubdates:
+        day, count=entry
+        skipped=max(skip-articles_passed,0)
+        to_show=max(min(count-skipped, show-shown),0)
+        sec={
+            'day': day.strftime('%a, %-d %b %Y'),
+            'items': resp.listings[shown:shown+to_show],
+            'total': count,
+            'continued': skipped > 0,
+            'last': skipped + to_show ==count
+        }
+        if to_show>0:
+            secs.append(sec)
+        articles_passed+=count
+        shown+=to_show
+
+    for sec in secs:
+        showing = 'showing '
+        if sec['continued']:
+            showing = 'continued, ' + showing
+            if sec['last']:
+                showing = showing + 'last '
+        if not sec['last'] and not sec['continued']:
+            showing = showing + 'first '
+
+        n = len(sec['items'])  # type: ignore
+        tot = sec['total']
+        sec['heading'] = f'{sec["day"]} ({showing}{n} of {tot} entries )'
+
+    return {'sub_sections_for_types': secs}
 
 def sub_sections_for_types(
         resp: ListingNew,
