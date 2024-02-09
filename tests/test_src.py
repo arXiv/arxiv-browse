@@ -49,6 +49,11 @@ cases = [
     ["cond-mat/9805021", "cond-mat9805021v2.gz", "gzipped ps"],
     ["cond-mat/9805021v2", "cond-mat9805021v2.gz", "gzipped ps"],
 
+    ["cs/0012007", "cs0012007v3.tar.gz", "leading zero"],
+    ["cs/0012007v3", "cs0012007v3.tar.gz", "leading zero"],
+    ["cs/0012007v2", "cs0012007v2.pdf", "leading zero"],
+    ["cs/0012007v1", "cs0012007v1.pdf", "leading zero"],
+
     ["1601.04345v1", "1601.04345v1.tar.gz", ""],
     ["cs/0012007", "cs0012007v3.tar.gz", ""],
     # ["cs/0011004", "cs-0011004"], # single file gz paper but bad gzip file
