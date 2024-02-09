@@ -76,7 +76,7 @@ def test_html_conversion_dissemination (dbclient):
     assert rt.status_code == 200
 
     assert rt.headers['Last-Modified'] == 'Mon, 01 Jan 2024 00:00:00 GMT'
-
+    
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
 
@@ -84,7 +84,7 @@ def test_html_conversion_dissemination (dbclient):
 
 def test_last_modified_old_html_conversion (dbclient):
     rt = dbclient.get('/abs/2310.08262')
-
+    
     assert rt.status_code == 200
 
     assert rt.headers['Last-Modified'].startswith('Fri, 13 Oct 2023')
