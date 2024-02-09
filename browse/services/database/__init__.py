@@ -2,7 +2,7 @@
 # pylint disable=no-member
 
 import ipaddress
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app
@@ -590,7 +590,11 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
     )
-    return row.publish_dt if row else None
+    if row and row.publish_dt:
+        dt: datetime = row.publish_dt.replace(tzinfo=timezone.utc)
+        return dt
+    else:
+        return None
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)

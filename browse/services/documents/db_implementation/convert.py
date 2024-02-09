@@ -53,7 +53,7 @@ def to_docmeta(dbmd: Metadata,
 
     modified = dbmd.updated or dbmd.created
 
-    modified.replace(tzinfo=business_tz)
+    modified = modified.replace(tzinfo=business_tz)
     modified = modified.astimezone(utc)
 
     return DocMetadata(

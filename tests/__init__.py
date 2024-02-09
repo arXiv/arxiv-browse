@@ -1,10 +1,13 @@
 """Test utility functions."""
+from datetime import datetime, timezone
 import glob
 import os
 from typing import List, Optional
 
 from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
+
+from browse.services.database.models import DBLaTeXMLDocuments
 
 
 def grep_f_count(filename: str, query: str) -> Optional[int]:
@@ -51,6 +54,56 @@ def foreign_key_check(engine, check_on:bool ):
             engine.execute(text('PRAGMA foreign_keys = OFF;'))
         else:
             engine.execute(text('SET FOREIGN_KEY_CHECKS = 0;'))
+
+def _populate_latexml_test_data (models):
+    dt = datetime(2024, 1, 30, 15, 0, 0)
+    dt = dt.replace(tzinfo=timezone.utc)
+
+    doc1 = {
+        'paper_id': '0906.2112',
+        'document_version': 3,
+        'conversion_status': 1,
+        'latexml_version': 'test_latexml_version',
+        'tex_checksum': 'test_checksum',
+        'conversion_start_time': 0,
+        'conversion_end_time': 1,
+        'publish_dt': datetime(2024, 1, 1, 0, 0, 0)
+    }
+
+    doc2 = {
+        'paper_id': '2303.00763',
+        'document_version': 1,
+        'conversion_status': 1,
+        'latexml_version': 'test_latexml_version',
+        'tex_checksum': 'test_checksum',
+        'conversion_start_time': 0,
+        'conversion_end_time': 1,
+    }
+    doc3 = {
+        'paper_id': '0906.5132',
+        'document_version': 4,
+        'conversion_status': 1,
+        'latexml_version': 'test_latexml_version',
+        'tex_checksum': 'test_checksum',
+        'conversion_start_time': 0,
+        'conversion_end_time': 1,
+        'publish_dt': None
+    }
+
+    doc4 = {
+        'paper_id': '2310.08262',
+        'document_version': 1,
+        'conversion_status': 1,
+        'latexml_version': 'test_latexml_version',
+        'tex_checksum': 'test_checksum',
+        'conversion_start_time': 0,
+        'conversion_end_time': 1,
+        'publish_dt': datetime(2022, 1, 1, 0, 0, 0)
+    }
+
+    for doc in [doc1, doc2, doc3, doc4]:
+        models.db.session.add(DBLaTeXMLDocuments(**doc))
+    models.db.session.commit()
 
 def populate_test_database(drop_and_create: bool, models):
     """Initialize the browse tables."""
@@ -124,3 +177,5 @@ def populate_test_database(drop_and_create: bool, models):
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
     foreign_key_check(models.db.engine, False)
     execute_sql_files(sql_files, models.db.engine)
+
+    _populate_latexml_test_data(models)
