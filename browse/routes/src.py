@@ -46,7 +46,6 @@ def anc(arxiv_id: str, file_path:str):  # type: ignore
     return get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
 
 
-
 @blueprint.route("/e-print/<string:arxiv_id_str>")
 @blueprint.route("/e-print/<string:archive>/<string:arxiv_id_str>")
 @blueprint.route("/src/<string:arxiv_id_str>")
@@ -59,24 +58,14 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
 
     The e-print path serves the source of a requested paper as original format submitted and
     form that we store it (.tar.gz, .pdf, etc.). It is used to support the mirrors.
-    Before 2024 /src did something different then /e-print
+    Before 2024 /src behavior was different than /e-print.
      """
     return get_src_resp(arxiv_id_str, archive)
 
-# TODO need test data for src_format pdf
-# 2101.04792 v1-4
 
 # TODO need test data for src_format ps
 # tests/data/abs_files/orig/cond-mat/papers/9805/9805021v1.ps.gz
 
-# Examples of gz source
-# tests/data/abs_files/orig/cs/papers/0011/0011004v1.gz
-# tests/data/abs_files/ftp/cs/papers/0011/0011004.gz
-# tests/data/abs_files/ftp/cond-mat/papers/9805/9805021.gz
-# tests/data/abs_files/ftp/arxiv/papers/1208/1208.9999.gz
-
-# Example of tgz source
-# tests/data/abs_files/ftp/cs/papers/0012/0012007.tar.gz
 
 # TODO need test data for src_format html
 # TODO need test data for src_format tex
@@ -88,3 +77,5 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
 # TODO need test data for src_format has_ancillary_files (A)
 # ex. https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
 # TODO need test data for src_format has_pilot_data (B)
+
+# TODO need to do /src/id/file
