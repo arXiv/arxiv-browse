@@ -1,11 +1,13 @@
 """Test utility functions."""
 import glob
+from datetime import datetime, timezone
 import os
 from typing import List, Optional
 
 from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
 
+from browse.services.database.models import DBLaTeXMLDocuments
 
 def grep_f_count(filename: str, query: str) -> Optional[int]:
     """Like counting lines from grep -F "query" filename."""
@@ -174,3 +176,5 @@ def populate_test_database(drop_and_create: bool, models):
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
     foreign_key_check(models.db.engine, False)
     execute_sql_files(sql_files, models.db.engine)
+
+    _populate_latexml_test_data(models)

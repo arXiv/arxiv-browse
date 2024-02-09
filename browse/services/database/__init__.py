@@ -2,7 +2,7 @@
 # pylint disable=no-member
 
 import ipaddress
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app

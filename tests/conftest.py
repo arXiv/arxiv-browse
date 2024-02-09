@@ -35,6 +35,7 @@ TESTING_CONFIG = {
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
     "TESTING": True,
+    "LATEXML_ENABLED": True,
     }
 
 def test_config():
