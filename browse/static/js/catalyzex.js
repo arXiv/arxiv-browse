@@ -4,6 +4,17 @@
   const paperUrl = window.location.href.split('?')[0];
   const $output = $("#catalyzex-output");
 
+  const url = new URL(location.href);
+  let cxToken = url.searchParams.get('cx_token');
+
+  if(cxToken) {
+    localStorage.setItem('@cx/token', cxToken)
+    url.searchParams.delete('cx_token')
+    window.history.replaceState({}, document.title, url.href);
+  } else {
+    cxToken = localStorage.getItem('@cx/token')
+  }
+
   if ($output.html() != "") {
     // Toggled off
     $output.html("");
@@ -19,14 +30,27 @@
   }
 
   const fetchCatalyzeXCode = async () => {
-    const cxApiUrl = `https://www.catalyzex.com/api/code?src=arxiv&paper_arxiv_id=${arxivId}`;
+    const cxApiUrl =  new URL("https://www.catalyzex.com/api/code")
+    const queryParams = {
+      src: 'arxiv',
+      paper_arxiv_id: arxivId,
+      paper_url: paperUrl,
+      paper_title: paperTitle
+    }
 
-    let result = {};
+    Object.entries(queryParams).forEach(([key, val]) => {
+      cxApiUrl.searchParams.set(key, val);
+    })
 
     try {
-      result = await $.ajax({ url: cxApiUrl, timeout: 2000, dataType: "json" });
+      result = await $.ajax({ 
+        url: cxApiUrl, 
+        timeout: 2000, 
+        dataType: "json",
+        headers: cxToken ? { 'Authorization': `Bearer ${cxToken}`} : undefined
+      });
     } catch (error) {
-      result = {};
+      result = error?.responseJSON || {};
     }
 
     return result;
@@ -34,8 +58,7 @@
 
   $output.html('');
 
-  const { count: implementations, cx_url: cxImplementationsUrl } = await fetchCatalyzeXCode()
-
+  const { count: implementations, cx_url: cxImplementationsUrl, is_alert_active: isAlertActive } = await fetchCatalyzeXCode()
   $output.append("<h2>CatalyzeX</h2>");
 
   const addCodeURL = new URL("https://www.catalyzex.com/add_code");
@@ -59,4 +82,20 @@
     $output.append(`<p>No code found for this paper just yet.</p>`)
   }
   $output.append(`<p>If you have code to share with the arXiv community, please ${submitItHereLink} to benefit all researchers & engineers.</p>`)
+  
+  if(isAlertActive) {
+    $output.append(`<p>You have created an alert for this paper and will be notified when new code is available 🔔</p>`)
+  } else {
+    const createAlertUrl = new URL("https://www.catalyzex.com/alerts/code/create");
+    const queryParams = {
+      paper_arxiv_id: arxivId,
+      paper_url: paperUrl,
+      paper_title: paperTitle,
+      redirect_url: paperUrl
+    }
+    Object.entries(queryParams).forEach(([key, val]) => {
+      createAlertUrl.searchParams.set(key, val);
+    })
+    $output.append(`<p><a href="${createAlertUrl}">Create an alert</a> to get notified when new code is available for this paper.</p>`)
+  }
 })();
