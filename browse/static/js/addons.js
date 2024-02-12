@@ -197,6 +197,12 @@ function ref_ArXivFont(){
   document.head.appendChild(link);
 }
 
+let create_toc = () => {
+  let toc = document.createElement('ol');
+  toc.setAttribute('class', 'ltx_toclist');
+
+}
+
 window.addEventListener('load', function() {
   if (window.location.pathname.split('/')[2] === 'submission') {
     const baseTag = this.document.querySelector('base');
