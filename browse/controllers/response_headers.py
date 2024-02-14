@@ -1,8 +1,11 @@
 """Response header utility functions."""
-from datetime import datetime, timedelta, timezone
+import json
+from datetime import datetime, timedelta, timezone, date
+from hashlib import sha1
 from zoneinfo import ZoneInfo
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any, Dict
 
+from flask import request
 
 APPROX_PUBLISH_DURATION = timedelta(hours=1, minutes=30)
 PUBLISH_ISO_WEEKDAYS = [1, 2, 3, 4, 7]
@@ -79,3 +82,32 @@ def abs_expires_header(arxiv_business_tz: ZoneInfo) -> str:
 def mime_header_date(dt: datetime) -> str:
     """Convert a datetime to string in MIME date format (RFC 1123)."""
     return dt.astimezone(tz=timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
+
+
+def _etag_seralizer(input: Any) -> Any:
+    if isinstance(input, datetime):
+        return date.fromtimestamp(input.timestamp()).isoformat()
+    else:
+        # avoids unstable values like <lamda_fn:0XA23F2B> in the hash input
+        return f"<{type(input).__name__} encoded by abs_page._etag_seralizer()>"
+
+
+def check_etag_same(response_data: Dict[str, Any], resp_headers: Dict[str, Any]) -> bool:
+    """Returns True if the reqeust had an etag and the content is different.
+
+    Has side effects of setting etag header."""
+    value = json.dumps(response_data, sort_keys=True, default=_etag_seralizer, ensure_ascii=True)
+    hash = sha1(value.encode('utf8')).hexdigest()
+    resp_headers["ETag"] = hash
+    print("hash was " + hash)
+    print("req header was " + str(get_req_header("If-None-Match")))
+    return get_req_header("If-None-Match") == hash
+
+
+def get_req_header(header: str) -> Optional[str]:
+    """Gets request header, needs to be case insensative for keys.
+
+    HTTP header keys are case insensitive. RFC 2616
+    """
+    return next((value for key, value in request.headers.items()
+                 if key.lower() == header.lower()), None)
