@@ -122,12 +122,11 @@ def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
         return uri.netloc, uri.path if uri.path[0] != '/' else uri.path[1:]
     return ("", uri.path)
 
-def is_genpdf_able(arxiv_id: Identifier) -> bool:
-    """You can use the genpdf-api for papers from 2023-05 onwards."""
-    api = current_app.config.get("GENPDF_API_URL")
-    if api and arxiv_id.year and arxiv_id.month:
-        return (arxiv_id.year * 12 + arxiv_id.month) >= (2023 * 12 + 5)
-    return False
+def is_genpdf_able(_arxiv_id: Identifier) -> bool:
+    """Is genpdf api available for this arxiv_id?"""
+
+    return bool(current_app.config.get("GENPDF_API_URL"))
+
 
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
