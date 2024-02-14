@@ -12,39 +12,39 @@ def test_modified(client_with_test_fs):
     rv = client_with_test_fs.get('/abs/0704.0600')
     assert rv.status_code == 200
 
-    last_mod = rv.headers['Last-Modified']
+    last_mod = rv.headers['Etag']
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'If-Modified-Since': last_mod})
+                         headers={'If-None-Match': last_mod})
     assert rv.status_code == 304
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'if-modified-since': last_mod})
+                         headers={'if-none-match': last_mod})
     assert rv.status_code == 304
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'IF-MODIFIED-SINCE': last_mod})
+                         headers={'IF-NONE-MATCH': last_mod})
     assert rv.status_code == 304
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'If-ModiFIED-SiNCE': last_mod})
+                         headers={'If-NoNe-MaTcH': last_mod})
     assert rv.status_code == 304
 
 
-def test_not_modified(client_with_test_fs):
+def test_etag(client_with_test_fs):
     """Test when pages is not modified"""
 
     rv = client_with_test_fs.get('/abs/0704.0600')
     assert rv.status_code == 200
 
-    mod_dt = parser.parse(rv.headers['Last-Modified'])
+    etag =rv.headers['ETag']
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'If-Modified-Since': mime_header_date(mod_dt)})
+                         headers={'If-None-Match': etag})
     assert rv.status_code == 304
 
     rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'If-Modified-Since': mime_header_date(mod_dt + timedelta(seconds=-1))})
+                         headers={'If-None-Match': "bogus"+etag})
     assert rv.status_code == 200
 
     rv = client_with_test_fs.get('/abs/0704.0600',
