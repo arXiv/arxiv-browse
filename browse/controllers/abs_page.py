@@ -128,9 +128,9 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data['latexml_url'] = get_latexml_url(abs_meta)
 
         # Dissemination formats for download links
-        download_format_pref = request.cookies.get("xxx-ps-defaults")
         response_data["formats"] = get_article_store().get_dissemination_formats(
-            abs_meta, download_format_pref)
+            abs_meta, 'src')
+
         if response_data['latexml_url'] is not None:
             response_data['formats'].insert(1, 'latexml')
 

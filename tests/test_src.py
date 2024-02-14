@@ -30,34 +30,42 @@ ftp/cs/papers/0212/0212040.pdf
 ftp/cs/papers/0011/0011004.gz
 """
 
-@pytest.mark.parametrize("paperid,expected_file,desc",[
-    ("cond-mat/9805021", "arXiv-cond-mat9805021v2.gz", "single file .gz"),
-    ("1809.00949", "arXiv-1809.00949v1.pdf", ".pdf only"),
-    ("1601.04345", "arXiv-1601.04345v2.tar.gz", ".tar.gz with anc files, 2 versions"),
-    ("2101.04792", "arXiv-2101.04792v4.pdf", ".pdf only"),
-    ("2101.10016v1", "2101.10016v1.tar.gz", "current version wdr, ver 8 wdr"),
-    ("2101.10016v2", "2101.10016v2.tar.gz", "current version wdr"),
-    ("2101.10016v3", "2101.10016v3.tar.gz", "current version wdr"),
-    ("2101.10016v4", "2101.10016v4.tar.gz", "current version wdr"),
-    ("2101.10016v5", "2101.10016v5.tar.gz", "current version wdr"),
-    ("2101.10016v6", "2101.10016v6.tar.gz", "current version wdr"),
-    ("2101.10016v7", "2101.10016v7.tar.gz", "current version wdr"),
-    #("1208.9999", "1208.9999"),
-    ("cs/0012007", "cs0012007", ""),
+cases = [
+    ["cond-mat/9805021", "arXiv-cond-mat9805021v2.gz", "single file .gz"],
+    ["1809.00949", "arXiv-1809.00949v1.pdf", ".pdf only"],
+    ["1601.04345", "arXiv-1601.04345v2.tar.gz", ".tar.gz with anc files, 2 versions"],
+    ["2101.04792", "arXiv-2101.04792v4.pdf", ".pdf only"],
+    ["2101.10016v1", "2101.10016v1.tar.gz", "current version wdr, ver 8 wdr"],
+    ["2101.10016v2", "2101.10016v2.tar.gz", "current version wdr"],
+    ["2101.10016v3", "2101.10016v3.tar.gz", "current version wdr"],
+    ["2101.10016v4", "2101.10016v4.tar.gz", "current version wdr"],
+    ["2101.10016v5", "2101.10016v5.tar.gz", "current version wdr"],
+    ["2101.10016v6", "2101.10016v6.tar.gz", "current version wdr"],
+    ["2101.10016v7", "2101.10016v7.tar.gz", "current version wdr"],
+    #["1208.9999", "1208.9999"],
+    ["cs/0012007", "cs0012007", ""],
 
-    ("cond-mat/9805021v1", "cond-mat9805021v1.ps.gz", "gzipped ps"),
-    ("cond-mat/9805021", "cond-mat9805021v2.gz", "gzipped ps"),
-    ("cond-mat/9805021v2", "cond-mat9805021v2.gz", "gzipped ps"),
+    ["cond-mat/9805021v1", "cond-mat9805021v1.ps.gz", "gzipped ps"],
+    ["cond-mat/9805021", "cond-mat9805021v2.gz", "gzipped ps"],
+    ["cond-mat/9805021v2", "cond-mat9805021v2.gz", "gzipped ps"],
 
-    ("1601.04345v1", "1601.04345v1.tar.gz", ""),
-    ("cs/0012007", "cs0012007v3.tar.gz", ""),
-    # ("cs/0011004", "cs-0011004"), # single file gz paper but bad gzip file
-    # ("cs/0011004v1", "cs-0011004v1"),  # single file gz paper but bad gzip file
+    ["cs/0012007", "cs0012007v3.tar.gz", "leading zero"],
+    ["cs/0012007v3", "cs0012007v3.tar.gz", "leading zero"],
+    ["cs/0012007v2", "cs0012007v2.pdf", "leading zero"],
+    ["cs/0012007v1", "cs0012007v1.pdf", "leading zero"],
+
+    ["1601.04345v1", "1601.04345v1.tar.gz", ""],
+    ["cs/0012007", "cs0012007v3.tar.gz", ""],
+    # ["cs/0011004", "cs-0011004"], # single file gz paper but bad gzip file
+    # ["cs/0011004v1", "cs-0011004v1"],  # single file gz paper but bad gzip file
 ]
+
+@pytest.mark.parametrize("path,paperid,expected_file,desc",
+                         [ ["/src/"]+c for c in cases] + [ ["/e-print/"]+c for c in cases]
  )
-def test_src(client_with_test_fs, paperid, expected_file, desc ):
+def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     client = client_with_test_fs
-    resp = client.get("/src/" + paperid)
+    resp = client.get(path + paperid)
     assert resp
     assert resp.status_code == 200
 
