@@ -73,6 +73,7 @@ function toggleColorScheme() {
 }
 
 function addBugReportForm() {
+    const is_submission = window.location.pathname.split('/')[2] === 'submission';
     const theme = document.documentElement.getAttribute("data-theme");
     
     // Create the button element(the right bottom button)
@@ -134,7 +135,7 @@ function addBugReportForm() {
     const warningLabel = document.createElement("div");
     warningLabel.id = "warningLabel";
     warningLabel.setAttribute('class', 'form-text');
-    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including the content of an unannounced submission.";
+    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
 
     // Create the description input field
     const selectedTextDescriptionLabel = document.createElement("label");
@@ -200,7 +201,9 @@ function addBugReportForm() {
 
     // Append the elements to their respective parents
     // Update: Add warning label (next line)
-    modalBody.appendChild(warningLabel);
+    if (is_submission) {
+        modalBody.appendChild(warningLabel);
+    }
     modalBody.appendChild(titleLabel);
     modalBody.appendChild(titleInput);
     modalBody.appendChild(selectedTextDescriptionLabel);
