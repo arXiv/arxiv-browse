@@ -65,7 +65,7 @@ cases = [
  )
 def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     client = client_with_test_fs
-    resp = client.get("/src/" + paperid)
+    resp = client.get(path + paperid)
     assert resp
     assert resp.status_code == 200
 
