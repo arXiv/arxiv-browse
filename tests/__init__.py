@@ -1,6 +1,7 @@
 """Test utility functions."""
 from datetime import datetime, timezone
 import glob
+from datetime import datetime, timezone
 import os
 from typing import List, Optional
 
@@ -8,7 +9,6 @@ from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
 
 from browse.services.database.models import DBLaTeXMLDocuments
-
 
 def grep_f_count(filename: str, query: str) -> Optional[int]:
     """Like counting lines from grep -F "query" filename."""
