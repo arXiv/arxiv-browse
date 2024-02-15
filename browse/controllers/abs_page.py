@@ -3,21 +3,23 @@
 The primary entrypoint to this module is :func:`.get_abs_page`, which
 handles GET requests to the abs endpoint.
 """
-
 import re
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
 from http import HTTPStatus as status
 
-from flask import request, url_for
+from arxiv import taxonomy
+from arxiv.base import logging
+from dateutil import parser
+from dateutil.tz import tzutc
+from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
-from browse.controllers import check_supplied_identifier
+from browse.controllers import check_supplied_identifier, biz_tz
 
 from arxiv import taxonomy
-
-from browse.controllers.response_headers import check_etag_same
 from browse.domain.category import Category
 from browse.domain.identifier import (
     Identifier,
@@ -32,8 +34,10 @@ from browse.services.database import (
     get_dblp_authors,
     get_dblp_listing_path,
     get_trackback_ping_latest_date,
+    get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
+from browse.services.documents.format_codes import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
 from browse.services.prevnext import prevnext_service
@@ -58,7 +62,10 @@ from browse.formatting.search_authors import (
     queries_for_authors,
     split_long_author_list,
 )
-
+from browse.controllers.response_headers import (
+    abs_expires_header,
+    mime_header_date
+)
 from browse.formatting.metatags import meta_tag_metadata
 
 import logging
@@ -108,6 +115,9 @@ def get_abs_page(arxiv_id: str) -> Response:
             return redirect
 
         abs_meta = get_doc_service().get_abs(arxiv_identifier)
+        not_modified = _check_request_headers(abs_meta, response_data, response_headers)
+        if not_modified:
+            return {}, status.NOT_MODIFIED, response_headers
 
         response_data["requested_id"] = (
             arxiv_identifier.idv
@@ -148,7 +158,6 @@ def get_abs_page(arxiv_id: str) -> Response:
                                                                                          ver.version)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
-        _add_caching_headers(abs_meta, response_headers)
 
     except AbsNotFoundException as ex:
         if (arxiv_identifier.is_old_id
@@ -193,9 +202,6 @@ def get_abs_page(arxiv_id: str) -> Response:
             "help@arxiv.org."
         ) from ex
 
-    if check_etag_same(response_data, response_headers):
-        return {}, status.NOT_MODIFIED, response_headers
-
     return response_data, status.OK, response_headers
 
 
@@ -225,12 +231,55 @@ def _non_critical_abs_data(
         paper_id=abs_meta.arxiv_id
     )
 
-def _add_caching_headers(docmeta: DocMetadata, resp_headers: Dict[str, str]) -> None:
-    resp_headers["Surrogate-Control"] = f"max-age={60*15}"  # caching services may strip this
-    resp_headers["Cache-Control"] = f"max-age={60*15}"
 
-    # see https://docs.fastly.com/en/guides/working-with-surrogate-keys
-    resp_headers["Surrogate-Key"] = f"abs {docmeta.arxiv_identifier.year:04}{docmeta.arxiv_identifier.month:02}"
+def _check_request_headers(
+    docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
+) -> bool:
+    """Check the request headers, update the response headers accordingly."""
+    version = docmeta.get_version()
+    if version:
+        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, version.version) or datetime.min.replace(tzinfo=timezone.utc)
+    else:
+        html_updated = datetime.min.replace(tzinfo=timezone.utc)
+    last_mod_dt: datetime = max(html_updated, docmeta.modified)
+
+    # Latest trackback ping time depends on the database
+    if 'trackback_ping_latest' in response_data \
+       and isinstance(response_data['trackback_ping_latest'], datetime) \
+       and response_data['trackback_ping_latest'] > last_mod_dt:
+        # If there is a more recent trackback ping, use that datetime
+        last_mod_dt = response_data["trackback_ping_latest"]
+
+    resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
+
+    #resp_headers["Expires"] = abs_expires_header(biz_tz())
+    # Above we had a Expires: based on publish time but admins wanted shorter when
+    # handling service tickets.
+    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
+    resp_headers["Cache-Control"] = "max-age=3600"
+
+    mod_since_dt = _time_header_parse("If-Modified-Since")
+    return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
+
+
+def _time_header_parse(header: str) -> Optional[datetime]:
+    try:
+        dt = parser.parse(str(_get_req_header(header)))
+        if not dt.tzinfo:
+            dt = dt.replace(tzinfo=tzutc())
+        return dt
+    except (ValueError, TypeError, KeyError):
+        pass
+    return None
+
+
+def _get_req_header(header: str) -> Optional[str]:
+    """Gets request header, needs to be case insensative for keys.
+
+    HTTP header keys are case insensitive. RFC 2616
+    """
+    return next((value for key, value in request.headers.items()
+                 if key.lower() == header.lower()), None)
 
 
 def _check_legacy_id_params(arxiv_id: str) -> str:
