@@ -38,6 +38,7 @@ let create_header = () => {
       <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
       <a class="ar5iv-footer-button hover-effect" target="_blank" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
       ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">Back to Abstract</a>`}
+      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}" target="_blank">Download PDF</a>`}
       <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode">
           <span class="color-scheme-icon"></span>
       </a>
