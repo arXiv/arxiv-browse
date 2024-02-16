@@ -666,11 +666,11 @@ def test_year_page_hybrid(mock, client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
     mock.return_value = YearCount(1998)  # TODO dont mock function if able to run on sql
-    rv = client.get("/year/cond-mat/98")
+    rv = client.get("/year/cond-mat/1998")
     assert rv.status_code == 200
 
     mock.return_value = YearCount(2007)  # TODO dont mock function if able to run on sql
-    rv = client.get("/year/cond-mat/07")
+    rv = client.get("/year/cond-mat/2007")
     assert rv.status_code == 200
 
 
@@ -678,21 +678,21 @@ def test_year_page_data_hybrid(client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
     # has data in test database
-    rv = client.get("/year/math/09")
+    rv = client.get("/year/math/2009")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/year/math/11">2011</a>' in text
+    assert '<a href="/year/math/2011">2011</a>' in text
     assert "<p>2009 totals: <b>4 articles</b> + <i>0 cross-lists</i></p>" in text
     assert (
-        "<a href=/list/math/0906?skip=0>|</a>      <b>4</b> + 0 (Jun 2009)"
+        "<a href=/list/math/2009-06?skip=0>|</a>      <b>4</b> + 0 (Jun 2009)"
         in text
     ) #TODO change this back to 4 digit year when all of listings is running on browse
-    assert '<a href="/year/math/92">1992</a>' in text
+    assert '<a href="/year/math/1992">1992</a>' in text
 
-    rv = client.get("/year/cs/23")
+    rv = client.get("/year/cs/2023")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/year/cs/92">1992</a>' not in text  # cs didnt exist in 1992
+    assert '<a href="/year/cs/1992">1992</a>' not in text  # cs didnt exist in 1992
 
 
 def test_monthly_counts_hybrid(app_with_hybrid_listings):
