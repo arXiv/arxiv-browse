@@ -8,11 +8,11 @@ from bs4 import BeautifulSoup
 
 def test_basic_lists(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901")
+    rv = client.get("/list/hep-ph/2009-01")
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
-    rv = client.get("/list/hep-ph/09")
+    rv = client.get("/list/hep-ph/2009")
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
@@ -32,70 +32,70 @@ def test_basic_lists(client_with_fake_listings):
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
-    rv = client.get("/list/hep-ph/0901?skip=925&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=925&show=25")
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
-    rv = client.get("/list/astro-ph/04")
+    rv = client.get("/list/astro-ph/2004")
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
-    rv = client.get("/list/math/92")
+    rv = client.get("/list/math/1992")
     assert rv.status_code == 200
     assert rv.headers.get("Expires", None) != None
 
-    rv = client.get("/list/math/9201")
+    rv = client.get("/list/math/1992-01")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0101")
+    rv = client.get("/list/math/2001-01")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0102")
+    rv = client.get("/list/math/2001-02")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0103")
+    rv = client.get("/list/math/2001-03")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0104")
+    rv = client.get("/list/math/2001-04")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0105")
+    rv = client.get("/list/math/2001-05")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0106")
+    rv = client.get("/list/math/2001-06")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0107")
+    rv = client.get("/list/math/2001-07")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0108")
+    rv = client.get("/list/math/2001-08")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0109")
+    rv = client.get("/list/math/2001-09")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0110")
+    rv = client.get("/list/math/2001-10")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0111")
+    rv = client.get("/list/math/2001-11")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/0112")
+    rv = client.get("/list/math/2001-12")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/01")
+    rv = client.get("/list/math/2001")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/18")
+    rv = client.get("/list/math/2018")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/20")  # year 2020
+    rv = client.get("/list/math/2020")  # year 2020
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/30")  # year 2030
+    rv = client.get("/list/math/2030")  # year 2030
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/200101")
+    rv = client.get("/list/math/2001-01")
     assert rv.status_code == 200
 
 
@@ -416,7 +416,7 @@ def test_paging_925(client_with_fake_listings):
 
 def test_odd_requests(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=925&show=1000000")
+    rv = client.get("/list/hep-ph/2009-01?skip=925&show=1000000")
     assert rv.status_code == 200
 
     rv = client.get("/list/hep-ph/bogusTimePeriod")
@@ -425,25 +425,25 @@ def test_odd_requests(client_with_fake_listings):
     rv = client.get("/list/junkarchive")
     assert rv.status_code != 200
 
-    rv = client.get("/list/ao-si/0901?skip=925&show=25")
+    rv = client.get("/list/ao-si/2009-01?skip=925&show=25")
     assert rv.status_code != 200
 
-    rv = client.get("/list/math/0100")
+    rv = client.get("/list/math/2001-00")
     assert rv.status_code != 200
 
-    rv = client.get("/list/math/0113")
+    rv = client.get("/list/math/2001-13")
     assert rv.status_code != 200
 
-    rv = client.get("/list/math/0199")
+    rv = client.get("/list/math/2001-99")
     assert rv.status_code != 200
 
-    rv = client.get("/list/math/200199")
+    rv = client.get("/list/math/2001-99")
     assert rv.status_code != 200
 
     rv = client.get("/list/math/2")
     assert rv.status_code != 200
 
-    rv = client.get("/list/math/2001999999")
+    rv = client.get("/list/math/2001-999999")
     assert rv.status_code != 200
 
 
@@ -474,7 +474,7 @@ def test_not_modified_from_listing_service(client_with_fake_listings):
     flservice.list_articles_by_month = MagicMock(
         return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
     )
-    rv = client.get("/list/hep-ph/1801")
+    rv = client.get("/list/hep-ph/2018-01")
     assert (
         rv.status_code == 304
     )  # '/list controller should return 304 when service indicates not-modified'
@@ -482,7 +482,7 @@ def test_not_modified_from_listing_service(client_with_fake_listings):
     flservice.list_articles_by_year = MagicMock(
         return_value=NotModifiedResponse(True, "Wed, 21 Oct 2015 07:28:00 GMT")
     )
-    rv = client.get("/list/hep-ph/18")
+    rv = client.get("/list/hep-ph/2018")
     assert (
         rv.status_code == 304
     )  # '/list controller should return 304 when service indicates not-modified'
@@ -490,10 +490,10 @@ def test_not_modified_from_listing_service(client_with_fake_listings):
 
 def test_list_called_from_archive(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/?archive=hep-ph&year=08&month=03&submit=Go")
+    rv = client.get("/list/?archive=hep-ph&year=2008&month=03&submit=Go")
     assert rv.status_code == 200
 
-    rv = client.get("/list/?archive=hep-ph&year=08&month=all&submit=Go")
+    rv = client.get("/list/?archive=hep-ph&year=2008&month=all&submit=Go")
     assert rv.status_code == 200
 
 
@@ -502,23 +502,28 @@ def test_astro_ph_months(client_with_test_fs, abs_path):
     client = client_with_test_fs
     files = list( (abs_path / "ftp/astro-ph/listings").glob("./[0-9]*") )
     for file in files:
-        rv = client.get(f"/list/astro-ph/{file.stem}")
+        year=int(file.stem[0:2])+1900
+        if year< 1990:
+            year+=100
+        month=file.stem[2:4]
+        name=f"{year}-{month}"
+        rv = client.get(f"/list/astro-ph/{name}")
         assert rv.status_code == 200
 
 
 def test_astro_ph_years(client_with_test_fs, abs_path):
     client = client_with_test_fs
-    years=['99', '98', '97', '96','95','94','93','07']
-    for yy in sorted(years):
-        rv = client.get(f"/year/astro-ph/{yy}")
+    years=['1999', '1998', '1997', '1996','1995','1994','1993','2007']
+    for yyyy in sorted(years):
+        rv = client.get(f"/year/astro-ph/{yyyy}")
         assert rv.status_code == 200
 
     # start year with only partal data
-    rv = client.get("/year/astro-ph/92")
+    rv = client.get("/year/astro-ph/1992")
     assert rv.status_code == 200
 
     # 2023 only has start of the year and simulates a archive that stopped midyear
-    rv = client.get("/year/astro-ph/23")
+    rv = client.get("/year/astro-ph/2023")
     assert rv.status_code == 200
 
 
@@ -527,7 +532,7 @@ def test_astro_ph_ep_recent(client_with_test_fs):
     rv = client.get(f"/list/astro-ph.EP/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "Earth and Planetary Astrophysics" in text
     assert "Authors and titles for recent submissions" in text
 
@@ -591,39 +596,40 @@ def test_astro_ph_recent(client_with_test_fs):
     rv = client.get(f"/list/astro-ph/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
-    assert "showing first 25 of 320 entries" in text
+    assert "Fri, 3 Mar 2023" in text
+    assert "Total of 320 entries :" in text
+    assert "Thu, 2 Mar 2023 (showing first 25 of 57 entries )" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.CO/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "63 entries" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.GA/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "101 entries" in text
 
     rv = client.get(f"/list/astro-ph.HE/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "85 entries" in text
 
     rv = client.get(f"/list/astro-ph.IM/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "55 entries" in text
 
     rv = client.get(f"/list/astro-ph.SR/recent")
     assert rv.status_code == 200
     text = rv.text
-    assert "Friday, 3 March 2023" in text
+    assert "Fri, 3 Mar 2023" in text
     assert "67 entries" in text
 
 
@@ -642,7 +648,7 @@ def test_abs_in_new_listing(client_with_test_fs):
 
 def test_math_ph_9701(client_with_test_fs):
     client = client_with_test_fs
-    rv = client.get("/list/math-ph/199701")
+    rv = client.get("/list/math-ph/1997-01")
     assert rv.status_code == 200
     text = rv.text
     assert "On Exact Solutions" in text
@@ -668,8 +674,39 @@ def test_listing_page_subsumed_archive( client_with_test_fs):
     text = rv.text
     assert "Algebraic Geometry" in text
     assert "math.AG" in text
-    rv = client.get("/list/alg-geom/2103")
+    rv = client.get("/list/alg-geom/2021-03")
     assert rv.status_code == 200
     text = rv.text
     assert "Algebraic Geometry" in text
     assert "math.AG" in text
+
+def test_YY_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    rv = client.get("/list/math-ph/03", follow_redirects=False)
+    assert rv.status_code == 301
+    assert rv.headers["Location"]== "/list/math-ph/2003"
+
+    rv = client.get("/list/math-ph/03", follow_redirects=True)
+    assert rv.status_code == 200
+    assert "titles for 2003" in rv.text
+    
+def test_YYYYMM_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    rv = client.get("/list/math-ph/200301", follow_redirects=False)
+    assert rv.status_code == 301
+    assert rv.headers["Location"]== "/list/math-ph/2003-01"
+
+    rv = client.get("/list/math-ph/200301", follow_redirects=True)
+    assert rv.status_code == 200
+    assert "titles for January 2003" in rv.text
+    
+# YYYY-M
+def test_YYYY_M_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    rv = client.get("/list/math-ph/2003-1", follow_redirects=False)
+    assert rv.status_code == 301
+    assert rv.headers["Location"]== "/list/math-ph/2003-01"
+
+    rv = client.get("/list/math-ph/2003-1", follow_redirects=True)
+    assert rv.status_code == 200
+    assert "titles for January 2003" in rv.text

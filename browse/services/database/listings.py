@@ -234,6 +234,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     items=[]
     for row in result:
         primary, metadata=row
+        listing_case: AnnounceTypes
         if primary:
             listing_case="new"
         else:

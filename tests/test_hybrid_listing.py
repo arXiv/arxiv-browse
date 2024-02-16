@@ -561,7 +561,7 @@ def test_listings_for_year(app_with_hybrid_listings):
 def test_month_listing_page( client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
-    rv = client.get("/list/chao-dyn/199510")
+    rv = client.get("/list/chao-dyn/1995-10")
     assert rv.status_code == 200
     text = rv.text
     #page formatting
@@ -573,20 +573,11 @@ def test_month_listing_page( client_with_hybrid_listings):
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
 
-    #two digit year
-    rv = client.get("/list/chao-dyn/9510")
-    assert rv.status_code == 200
-    text = rv.text
-    assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
-    assert 'Authors and titles for October 1995' in text
-
-    #TODO make sure subsumed archives go to the new page
-
 def test_year_listing_page( client_with_hybrid_listings):
     client = client_with_hybrid_listings
 
     #two digit year
-    rv = client.get("/list/chao-dyn/95")
+    rv = client.get("/list/chao-dyn/1995")
     assert rv.status_code == 200
     text = rv.text
     #page formatting
@@ -598,13 +589,6 @@ def test_year_listing_page( client_with_hybrid_listings):
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
     
-    #TODO fix conflist with YYMM
-    # rv = client.get("/list/chao-dyn/1995")
-    # assert rv.status_code == 200
-    # text = rv.text
-    # assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
-    # assert 'Authors and titles for October 1995' in text
-
 #year page tests
 
 def test_process_yearly_article_counts():
