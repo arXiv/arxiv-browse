@@ -673,9 +673,25 @@ def test_math_ph_9701(client_with_test_fs):
     assert "On Exact Solutions" in text
     assert "unknown-id" not in text
 
+def test_invalid_archive_years(client_with_test_fs):
+    client = client_with_test_fs
+
+    #started in 1996
+    rv = client.get("/year/physics/1994")
+    assert rv.status_code == 400
+    text=rv.text
+    assert 'Invalid year' in text
+
+    #ended in 1997
+    rv = client.get("/year/funct-an/1998")
+    assert rv.status_code == 400
+    text=rv.text
+    assert 'Invalid year' in text
+    
+
 def test_year_archive_with_end_date(client_with_test_fs):
     client = client_with_test_fs
-    rv = client.get("/year/funct-an")
+    rv = client.get("/year/funct-an/1996")
     assert rv.status_code == 200
     text=rv.text
     assert '<a href="/year/funct-an/1997">1997</a>' in text

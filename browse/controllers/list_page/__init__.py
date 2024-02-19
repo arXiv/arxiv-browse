@@ -62,7 +62,7 @@ from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
 from browse.formatting.latexml import get_latexml_url
 
 from flask import request, url_for, redirect
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -206,7 +206,7 @@ def get_listing(subject_or_category: str,
         if list_year<1990:
             raise BadRequest(f"Invalid Year: {list_year}")
         if list_year>date.today().year:
-            return {}, status.NOT_FOUND, {} #not BadRequest, might be valid in future
+            raise NotFound(f"Invalid Year: {list_year}") #not BadRequest, might be valid in future
 
         if should_redir:
             if list_month:
@@ -216,7 +216,8 @@ def get_listing(subject_or_category: str,
             new_address=url_for("browse.list_articles", context=subject_or_category, subcontext=new_time)
             response_headers["Location"]=new_address
             return {}, status.MOVED_PERMANENTLY, response_headers
-        response_data['list_time'] = time_period #TODO
+        
+        response_data['list_time'] = time_period #doesnt appear to be used
         response_data['list_year'] = str(list_year)
         if list_month or list_month == 0:
             if list_month < 1 or list_month > 12:
