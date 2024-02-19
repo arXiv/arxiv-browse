@@ -4,6 +4,6 @@ def test_should_be_db_listings(dbclient):
     assert 'db_listing' in str(get_listing_service())
 
 def test_basic_db_lists(dbclient):
-    rv = dbclient.get('/list/hep-ph/1102')
+    rv = dbclient.get('/list/hep-ph/2011-02')
     assert rv.status_code == 200
 

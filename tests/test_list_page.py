@@ -92,16 +92,34 @@ def test_basic_lists(client_with_fake_listings):
     rv = client.get("/list/math/2020")  # year 2020
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/2030")  # year 2030
-    assert rv.status_code == 200
-
     rv = client.get("/list/math/2001-01")
     assert rv.status_code == 200
+
+def test_basic_lists_errors(client_with_fake_listings):
+    client = client_with_fake_listings
+
+    rv = client.get("/list/math/2090")  # year 2090, will need to revise after 2090
+    assert rv.status_code == 404
+
+    rv = client.get("/list/math/1980") #arxiv wasnt around yet 
+    assert rv.status_code == 400
+
+    rv = client.get("/list/math/80") #redirected to 2080 which is in future 
+    assert rv.status_code == 404
+
+    rv = client.get("/list/math/198") #nonsense year 
+    assert rv.status_code == 400
+
+    rv = client.get("/list/math/001") #no 3 digit years 
+    assert rv.status_code == 400
+
+    rv = client.get("/list/math/1")  #no 1 digit years
+    assert rv.status_code == 400
 
 
 def test_listing_authors(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901")
+    rv = client.get("/list/hep-ph/2009-01")
     assert rv.status_code == 200
     text = rv.data.decode("utf-8")
     au = "Eqab M. Rabei"
@@ -130,7 +148,7 @@ def test_listing_authors(client_with_fake_listings):
 
 def test_paging_first(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901")
+    rv = client.get("/list/hep-ph/2009-01")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")
@@ -173,7 +191,7 @@ def test_paging_first(client_with_fake_listings):
 
 def test_paging_second(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=25&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=25&show=25")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")
@@ -219,7 +237,7 @@ def test_paging_second(client_with_fake_listings):
 
 def test_paging_middle(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=175&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=175&show=25")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")
@@ -277,7 +295,7 @@ def test_paging_middle(client_with_fake_listings):
 
 def test_paging_last(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=1000&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=1000&show=25")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")
@@ -319,7 +337,7 @@ def test_paging_last(client_with_fake_listings):
 
 def test_paging_penultimate(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=975&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=975&show=25")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")
@@ -365,7 +383,7 @@ def test_paging_penultimate(client_with_fake_listings):
 
 def test_paging_925(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/0901?skip=925&show=25")
+    rv = client.get("/list/hep-ph/2009-01?skip=925&show=25")
     assert rv.status_code == 200
 
     rvdata = rv.data.decode("utf-8")

@@ -7,7 +7,7 @@ from http import HTTPStatus as status
 
 from arxiv import taxonomy
 from flask import url_for
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, abort
 
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
@@ -51,15 +51,22 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
     if year is None:
         year = thisYear
 
-    if year > thisYear:
-        # 307 because year might be valid in the future
-        return {}, status.TEMPORARY_REDIRECT, {'Location': '/'}
-
+    #redirect 2 digit years
     if year < 100:
         if year >= 91:
             year = 1900 + year
         else:
             year = 2000 + year
+        
+        new_address=url_for("browse.year", archive=archive_id, year=year)
+        return {}, status.MOVED_PERMANENTLY, {"Location":new_address}
+        
+    #early years make no sense
+    if year<1990:
+        raise BadRequest(f"Invalid Year: {year}")
+
+    if year > thisYear:
+        abort(404, description=f"Year {year} not yet happened") #TODO how should the basic 404 be called
 
     if archive_id not in taxonomy.ARCHIVES:
         raise BadRequest("Unknown archive.")

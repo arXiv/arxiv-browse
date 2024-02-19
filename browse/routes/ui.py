@@ -371,6 +371,8 @@ def year_default(archive: str):  # type: ignore
     response, code, headers = year_page(archive, None)
     if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
+    elif code == status.MOVED_PERMANENTLY:
+        return redirect(headers["Location"], code=code) 
     return render_template("year.html", **response), code, headers
 
 
@@ -381,6 +383,8 @@ def year(archive: str, year: int):  # type: ignore
     response, code, headers = year_page(archive, year)
     if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
+    elif code == status.MOVED_PERMANENTLY:
+        return redirect(headers["Location"], code=code) 
     return render_template("year.html", **response), code, headers
 
 

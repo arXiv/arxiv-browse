@@ -131,7 +131,7 @@ def get_listing(subject_or_category: str,
               )
         )
     ):
-        raise BadRequest
+        raise BadRequest #TODO make a less dramatic error
 
     if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
         subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
@@ -147,7 +147,7 @@ def get_listing(subject_or_category: str,
         list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
         list_ctx_in_archive = list_ctx_name
     else:
-        raise BadRequest
+        raise BadRequest #TODO make a less dramatic error
 
     listing_service = get_listing_service()
 
@@ -201,8 +201,13 @@ def get_listing(subject_or_category: str,
     else:  # current or YYMM or YYYYMM or YY
         yandm = year_month(time_period)
         if yandm is None:
-            raise BadRequest
+            raise BadRequest #TODO make a less dramatic error
         should_redir, list_year, list_month = yandm
+        if list_year<1990:
+            raise BadRequest(f"Invalid Year: {list_year}")
+        if list_year>date.today().year:
+            return {}, status.NOT_FOUND, {} #not BadRequest, might be valid in future
+
         if should_redir:
             if list_month:
                 new_time=f"{list_year:04d}-{list_month:02d}"
@@ -292,6 +297,7 @@ def get_listing(subject_or_category: str,
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""
+    print(tp)
     if tp == "current":
         day = date.today()
         return False, day.year, day.month
