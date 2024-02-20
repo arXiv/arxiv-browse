@@ -58,7 +58,7 @@
 
   $output.html('');
 
-  const { count: implementations, cx_url: cxImplementationsUrl, is_alert_active: isAlertActive } = await fetchCatalyzeXCode()
+  const { count: implementations, cx_url: cxImplementationsUrl, is_alert_active: isAlertActive, authed_user_id: authedUserId } = await fetchCatalyzeXCode()
   $output.append("<h2>CatalyzeX</h2>");
 
   const addCodeURL = new URL("https://www.catalyzex.com/add_code");
@@ -82,9 +82,10 @@
     $output.append(`<p>No code found for this paper just yet.</p>`)
   }
   $output.append(`<p>If you have code to share with the arXiv community, please ${submitItHereLink} to benefit all researchers & engineers.</p>`)
-  
   if(isAlertActive) {
-    $output.append(`<p>You have created an alert for this paper and will be notified when new code is available 🔔</p>`)
+    $output.append(`
+      <p>You've set up an alert for this paper, and we'll notify you once new code becomes available. Manage all your alerts <a target="_blank" href="https://www.catalyzex.com/users/${authedUserId}/alerts">here</a>. 🚀
+   `)
   } else {
     const createAlertUrl = new URL("https://www.catalyzex.com/alerts/code/create");
     const queryParams = {
