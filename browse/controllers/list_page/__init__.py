@@ -298,7 +298,6 @@ def get_listing(subject_or_category: str,
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""
-    print(tp)
     if tp == "current":
         day = date.today()
         return False, day.year, day.month

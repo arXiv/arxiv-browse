@@ -154,7 +154,7 @@ def test_paging_first(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs != None
@@ -197,7 +197,7 @@ def test_paging_second(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs != None
@@ -243,7 +243,7 @@ def test_paging_middle(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs != None
@@ -301,7 +301,7 @@ def test_paging_last(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs and len(tgs) == 6
@@ -343,7 +343,7 @@ def test_paging_penultimate(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs != None
@@ -389,7 +389,7 @@ def test_paging_925(client_with_fake_listings):
     rvdata = rv.data.decode("utf-8")
     html = BeautifulSoup(rvdata, "html.parser")
 
-    paging = html.find(id="dlpage").find_all("div")[0]
+    paging = html.find(id="dlpage").find_all("div", class_=lambda x: x and 'alert' not in x)[0]
     assert paging != None
     tgs = paging.find_all(["span", "a"])
     assert tgs and len(tgs) == 9

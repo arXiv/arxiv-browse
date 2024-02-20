@@ -3164,3 +3164,31 @@ a:hover .icon.filter-blue,
 a:hover .icon.filter-red {
     fill: #ffffff;
 }
+
+/****************************************
+ * alert styles
+ ****************************************/
+ .alert {
+  display: block;
+  background-color: #fff5f5;
+  border: 1px solid #cd0200;
+  color: #970503;
+  border-radius: 1em;
+  font-size: 1em;
+  line-height: 1.5;
+  padding: .3em 1em;
+}
+
+.alert svg {
+  fill: #970503;
+}
+
+.alert button {
+  float: right;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  padding: 0.5em;
+}
