@@ -4,7 +4,7 @@ from typing import Any, Dict, Tuple
 from http import HTTPStatus as status
 
 from flask import url_for, escape
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from arxiv.base import logging
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
@@ -67,7 +67,7 @@ def get_prevnext(id: str, function: str, context: str) -> Response:
                                is_next=function == 'next',
                                context=context)
     if not seq_id:
-        raise BadRequest(
+        raise NotFound(
             escape(f'No {function} article found for '
                    f'{arxiv_id.id} in {context}'))
 
