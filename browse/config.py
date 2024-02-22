@@ -157,14 +157,6 @@ class Settings(BaseSettings):
     DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""
 
-    PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
-    """Implementation of the prev/next service used for those features on the abs page.
-
-    Currently the only value is `browse.services.prevnext.fsprevnext` This uses
-       DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
-    """
-
-
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data
 
