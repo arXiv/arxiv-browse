@@ -6,31 +6,26 @@ import mimetypes
 
 from browse.domain.identifier import Identifier
 from browse.domain.version import VersionEntry
-from browse.services.next_published import next_publish
 from browse.services.object_store import FileObj
 
 
 BUFFER_SIZE = 1024 * 4
 
-def cc_versioned() -> str:
-    """Versioned PDFs should not change so let's put a time a bit in the future.
+def maxage(versioned: bool=False) -> str:
+    """Returns a "max-age=N" `str` for use with "Cache-Control".
 
-    Non versioned could change during the next publish.
-
-    This could cause a version to stay in a CDN on a delete. That might require
+    This could cause a version to stay in a CDN on delete. That might require
     manual cache invalidation.
 
+    versioned: if the request was for a versioned paper or the current version.
     """
-    return 'max-age=604800'  # 7 days
+    return f'max-age={60 * 30}' if versioned else f'max-age={60 * 15}'  # sec
 
 
 def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
     """Adds time headers to `resp` given the `file` and `arxiv_id`."""
     resp.headers["Last-Modified"] = last_modified(file)
-    if arxiv_id.has_version:
-        resp.headers['Cache-Control'] = cc_versioned()
-    else:
-        resp.headers['Expires'] = format_datetime(next_publish())
+    resp.headers['Cache-Control'] = maxage(arxiv_id.has_version)
 
 
 def last_modified(fileobj: FileObj) -> str:
