@@ -1,7 +1,6 @@
 """Controller for PDF, source and other downloads."""
 
 import logging
-from email.utils import format_datetime
 from pathlib import Path
 from typing import Callable, Optional, Union, List
 import tempfile
@@ -46,19 +45,22 @@ def default_resp_fn(format: FileFormat,
                     docmeta: DocMetadata,
                     version: VersionEntry,
                     extra: Optional[str] = None) -> Response:
-    """Creates a response with approprate headers for the `file`.
+    """Creates a response with appropriate headers for the `file`.
 
     Parameters
     ----------
     format : FileFormat
         `FileFormat` of the `file`
-    item : DocMetadata
+    docmeta : DocMetadata
         article that the response is for.
     file : FileObj
         File object to use in the response.
+    version: VersionEntry
+        Version of the paper to consider.
+    extra: Optional[str], optional
+        Any extra after the normal URL path part. For use in anc files or html files.
     """
-
-    # Have to do Range Requests to get GCP CDN to accept larger objects.
+    # Have to do Range Requests to get GCP and fastly CDNs to accept larger objects.
     resp: Response = RangeRequest(file.open('rb'),
                                   etag=file.etag,
                                   last_modified=file.updated,
@@ -83,25 +85,36 @@ def src_resp_fn(format: FileFormat,
                         etag=file.etag,
                         last_modified=file.updated,
                         size=file.size).make_response()
+
     suffixes = Path(file.name).suffixes
     if not arxiv_id.is_old_id:
         suffixes.pop(0)  # get rid of .12345
     filename = download_file_base(arxiv_id, version) + "".join(suffixes)
+    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
 
     add_mimetype(resp, file.name)
-    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
     add_time_headers(resp, file, arxiv_id)
     return resp  # type: ignore
 
+def pdf_resp_fn(format: FileFormat,
+                 file: FileObj,
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry,
+                    extra: Optional[str] = None) -> Response:
+    """funciton to make a `Response` for a PDF."""
+    resp = default_resp_fn(format, file, arxiv_id, docmeta, version, extra)
+    filename = f"{arxiv_id.filename}v{version.version} .pdf"
+    resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
+    return resp
+
+def get_pdf_resp(arxiv_id_str: str, archive: Optional[str] = None) -> Response:
+    """Gets a `Response` for a PDF reqeust."""
+    return get_dissemination_resp(fileformat.pdf, arxiv_id_str, archive, pdf_resp_fn)
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
     return get_dissemination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
-
-
-def get_e_print_resp(arxiv_id_str: str,
-                     archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp("e-print", arxiv_id_str, archive)
 
 
 def get_dissemination_resp(format: Acceptable_Format_Requests,
