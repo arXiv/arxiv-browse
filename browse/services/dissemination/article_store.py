@@ -187,6 +187,11 @@ class ArticleStore():
                 if stat != 'GOOD']
         return ('BAD', ' and '.join(msgs))
 
+    def get_source(self, arxiv_id: Identifier, docmeta: Optional[DocMetadata] = None) \
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+        """Gets the source for a paper_id and version."""
+        return self.dissemination("e-print", arxiv_id, docmeta)
+
     def dissemination(self,
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
