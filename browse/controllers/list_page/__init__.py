@@ -57,7 +57,7 @@ from browse.formatting.search_authors import (AuthorList, queries_for_authors,
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
-                                     get_listing_service)
+                                     get_listing_service, ListingItem)
 
 from browse.formatting.latexml import get_latexml_url
 
@@ -86,6 +86,28 @@ type_to_template = {
     'month': 'list/month.html',
     'year': 'list/year.html'
 }
+
+class ListingSection:
+    heading:str
+    day: str
+    items: List[ListingItem]
+    total: int
+    continued: bool
+    last: bool
+    visible:bool
+
+    def __init__(self, day: str, items: List[ListingItem], total: int,
+                continued: bool, last: bool, visible: bool, heading: str):
+        self.day = day
+        self.items = items
+        self.total = total
+        self.continued = continued
+        self.last = last
+        self.visible = visible
+        self.heading = heading
+
+    def __repr__(self) -> str:
+        return f"<ListingSection {self.heading}>"
 
 def get_listing(subject_or_category: str,
                 time_period: str,
@@ -441,37 +463,51 @@ def sub_sections_for_recent(
         resp: Listing,
         skip: int, show: int) -> Dict[str, Any]:
     """Creates data used in section headings on /list/ARCHIVE/recent."""
-    secs = []
+    secs :List[ListingSection]= []
     articles_passed=0
     shown=0
+    
     for entry in resp.pubdates:
         day, count=entry
         skipped=max(skip-articles_passed,0)
         to_show=max(min(count-skipped, show-shown),0)
-        sec={
-            'day': day.strftime('%a, %-d %b %Y'),
-            'items': resp.listings[shown:shown+to_show],
-            'total': count,
-            'continued': skipped > 0,
-            'last': skipped + to_show ==count
-        }
-        if to_show>0:
-            secs.append(sec)
+        
+        if count>0 and skip >= articles_passed+count: #section with content completely skipped
+            display=False
+        elif count ==0 and skip > articles_passed: #empty section overskipped
+            display=False
+        elif show==shown: #no room
+            display=False
+        else:
+            display=True
+
+        sec=ListingSection(
+            day=day.strftime('%a, %-d %b %Y'),
+            items=resp.listings[shown:shown+to_show],
+            total=count,
+            continued=skipped > 0,
+            last=skipped + to_show ==count,
+            visible=display,
+            heading="" #filled out later
+        )
+
+        secs.append(sec)
         articles_passed+=count
         shown+=to_show
 
     for sec in secs:
         showing = 'showing '
-        if sec['continued']:
+        if sec.continued:
             showing = 'continued, ' + showing
-            if sec['last']:
+            if sec.last:
                 showing = showing + 'last '
-        if not sec['last'] and not sec['continued']:
+        if not sec.last and not sec.continued:
             showing = showing + 'first '
 
-        n = len(sec['items'])  # type: ignore
-        tot = sec['total']
-        sec['heading'] = f'{sec["day"]} ({showing}{n} of {tot} entries )'
+        heading=sec.day
+        if sec.total>0:
+            heading+=f' ({showing}{len(sec.items)} of {sec.total} entries )'
+        sec.heading = heading
 
     return {'sub_sections_for_types': secs}
 
@@ -479,7 +515,6 @@ def sub_sections_for_types(
         resp: ListingNew,
         skipn: int, shown: int) -> Dict[str, Any]:
     """Creates data used in section headings on /list/ARCHIVE/new."""
-    secs = []
     new_count = resp.new_count
     cross_count = resp.cross_count
     rep_count = resp.rep_count
@@ -493,53 +528,49 @@ def sub_sections_for_types(
     rep_start = new_count + cross_count + 1
     last_shown = skipn + shown
 
-    if news:
-        secs.append({
-            'type': 'new',
-            'items': news,
-            'total': new_count,
-            'continued': skipn > 0,
-            'last': skipn >= new_count - shown
-        })
-    # else already skipped past new section
+    date = resp.announced.strftime('%A, %-d %B %Y')
 
-    if crosses:
-        secs.append({
-            'type': 'cross',
-            'items': crosses,
-            'total': cross_count,
-            'continued': skipn + 1 > cross_start,
-            'last': skipn >= rep_start - shown
-        })
-    # else skipped past cross section
+    sec_new=ListingSection(
+        day=date,
+        items=news,
+        total=new_count,
+        continued=skipn > 0,
+        last=skipn >= new_count - shown,
+        visible=len(news)>0,
+        heading=f'New submissions for {date} ' 
+    )
 
-    if reps:
-        secs.append({
-            'type': 'rep',
-            'items': reps,
-            'total': rep_count,
-            'continued': skipn + 1 > rep_start,
-            'last': last_shown >= new_count + cross_count + rep_count
-        })
+    sec_cross=ListingSection(
+        day=resp.announced.strftime('%A, %-d %B %Y'),
+        items=crosses,
+        total=cross_count,
+        continued=skipn + 1 > cross_start,
+        last=skipn >= rep_start - shown,
+        visible=len(crosses)>0,
+        heading=f'Cross submissions for {date} '
+    )
+
+    sec_rep=ListingSection(
+        day=resp.announced.strftime('%A, %-d %B %Y'),
+        items=reps,
+        total=rep_count,
+        continued=skipn + 1 > rep_start,
+        last=last_shown >= new_count + cross_count + rep_count,
+        visible=len(reps)>0,
+        heading=f'Replacement submissions for {date} '
+    )
+
+    secs=[sec_new, sec_cross, sec_rep]
 
     for sec in secs:
-        typ = {'new': 'New',
-               'cross': 'Cross',
-               'rep': 'Replacement'}[sec['type']] # type: ignore
-        date = resp.announced.strftime('%A, %-d %B %Y')
-
         showing = 'showing '
-        if sec['continued']:
+        if sec.continued:
             showing = 'continued, ' + showing
-            if sec['last']:
+            if sec.last:
                 showing = showing + 'last '
-        if not sec['last'] and not sec['continued']:
+        if not sec.last and not sec.continued:
             showing = showing + 'first '
-
-        n = len(sec['items'])  # type: ignore
-        tot = sec['total']
-        sec['heading'] = f'{typ} submissions for {date} '\
-            f'({showing}{n} of {tot} entries )'
+        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries )'
 
     return {'sub_sections_for_types': secs}
 

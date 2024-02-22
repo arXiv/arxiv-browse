@@ -18,6 +18,8 @@
 
 {% block items %}
   {% for sec in sub_sections_for_types %}
-    {{ list_macros.item_list(sec['items'], sec['heading']) }}
+    {%if sec.visible%}
+      {{ list_macros.item_list(sec.items, sec.heading) }}
+    {% endif %}
   {% endfor %}
 {% endblock %}

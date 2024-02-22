@@ -359,7 +359,7 @@ def test_recent_listing_counts(app_with_hybrid_listings):
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math", 0, 100)
     validate_recent_listing(listing.listings)
-    expected_counts=[(date(2011,2,3),2), (date(2011,2,2),1), (date(2011,2,1),1), (date(2011,1,28),1)]
+    expected_counts=[(date(2011,2,3),2), (date(2011,2,2),1), (date(2011,2,1),1), (date(2011,1,31),0), (date(2011,1,28),1)]
     assert listing.count==5 and len(listing.listings) == listing.count
     assert listing.pubdates == expected_counts
 

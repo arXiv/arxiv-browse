@@ -745,3 +745,91 @@ def test_YYYY_M_redirect(client_with_hybrid_listings):
     rv = client.get("/list/math-ph/2003-1", follow_redirects=True)
     assert rv.status_code == 200
     assert "titles for January 2003" in rv.text
+
+def test_basic_no_listings(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    #month
+    rv = client.get("/list/hep-lat/2024-01")
+    assert rv.status_code == 200
+    assert "No updates for this time period." in rv.text
+    #year
+    rv = client.get("/list/hep-lat/2024")
+    assert rv.status_code == 200
+    assert "No updates for this time period." in rv.text
+    #current
+    rv = client.get("/list/hep-lat/current")
+    assert rv.status_code == 200
+    assert "No updates for this time period." in rv.text
+
+def test_no_listings_new(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    #no updates at all
+    rv = client.get("/list/hep-lat/new")
+    assert rv.status_code == 200
+    assert "No updates today." in rv.text
+
+    #only some types of updates
+    rv = client.get("/list/physics/new")
+    assert rv.status_code == 200
+    assert "No updates today." not in rv.text
+    assert "Replacement submissions" in rv.text
+    assert "New submissions" not in rv.text
+    assert "Cross submissions" not in rv.text
+
+
+#also tests sectioning visibility
+def test_no_listings_recent(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
+    expected_string = "No updates for this time period."
+
+    #no updates at all
+    rv = client.get("/list/hep-lat/recent")
+    assert rv.status_code == 200
+    assert rv.text.count(expected_string) == 5
+    assert rv.text.count("Thu, 3 Feb 2011") == 2
+    assert rv.text.count("Wed, 2 Feb 2011") == 2
+    assert rv.text.count("Tue, 1 Feb 2011") == 2
+    assert rv.text.count("Mon, 31 Jan 2011") == 2
+    assert rv.text.count("Fri, 28 Jan 2011") == 2
+
+    #only some types of updates
+    rv = client.get("/list/physics/recent")
+    assert rv.status_code == 200
+    assert rv.text.count(expected_string) == 4
+    assert rv.text.count("Thu, 3 Feb 2011") == 2
+    assert rv.text.count("Wed, 2 Feb 2011") == 2
+    assert rv.text.count("Tue, 1 Feb 2011") == 2
+    assert rv.text.count("Mon, 31 Jan 2011") == 2
+    assert rv.text.count("Fri, 28 Jan 2011") == 2
+
+    #skipped updates not shown
+    rv = client.get("/list/physics/recent?skip=1")
+    assert rv.status_code == 200
+    assert rv.text.count(expected_string) == 2
+    assert rv.text.count("Thu, 3 Feb 2011") == 1
+    assert rv.text.count("Wed, 2 Feb 2011") == 1
+    assert rv.text.count("Tue, 1 Feb 2011") == 1
+    assert rv.text.count("Mon, 31 Jan 2011") == 2
+    assert rv.text.count("Fri, 28 Jan 2011") == 2
+
+    #sections farther ahead not shown
+    rv = client.get("/list/physics/recent?show=1")
+    assert rv.status_code == 200
+    assert rv.text.count(expected_string) == 2
+    assert rv.text.count("Thu, 3 Feb 2011") == 2
+    assert rv.text.count("Wed, 2 Feb 2011") == 2
+    assert rv.text.count("Tue, 1 Feb 2011") == 2
+    assert rv.text.count("Mon, 31 Jan 2011") == 1
+    assert rv.text.count("Fri, 28 Jan 2011") == 1
+
+    #empty sections shown after a skip
+    rv = client.get("/list/math/recent?skip=4")
+    assert rv.status_code == 200
+    assert rv.text.count(expected_string) == 1
+    assert rv.text.count("Thu, 3 Feb 2011") == 1
+    assert rv.text.count("Wed, 2 Feb 2011") == 1
+    assert rv.text.count("Tue, 1 Feb 2011") == 1
+    assert rv.text.count("Mon, 31 Jan 2011") == 2
+    assert rv.text.count("Fri, 28 Jan 2011") == 2
+
+

@@ -1,11 +1,13 @@
 {%- macro page_divs() -%}
-<div class='paging'>Total of {{count}} entries {{ pages() }}
-</div>
-<div class='morefewer'>Showing up to {{shown}} entries per page:
-  {{ show_link('fewer',mf_fewer) }} |
-  {{ show_link('more', mf_more)  }} |
-  {{ show_link('all',  mf_all)   }}
-</div>
+  {% if count > 0 %}
+    <div class='paging'>Total of {{count}} entries {{ pages() }}
+    </div>
+    <div class='morefewer'>Showing up to {{shown}} entries per page:
+      {{ show_link('fewer',mf_fewer) }} |
+      {{ show_link('more', mf_more)  }} |
+      {{ show_link('all',  mf_all)   }}
+    </div>
+  {% endif %}
 {%- endmacro -%}
 
 
@@ -15,10 +17,14 @@
     <h3>{{heading}}</h3>
   {% endif %}
 
+  {% if items | length == 0 %}
+    <p>No updates for this time period.</p>
+  {% endif %}
+
   {% for item in items %}
-  {% set article = item.article %}
-  {% set ids = article.arxiv_id %}
-  {% set listing_index = item.list_index %}
+    {% set article = item.article %}
+    {% set ids = article.arxiv_id %}
+    {% set listing_index = item.list_index %}
     <dt>
       <a name='item{{listing_index}}'>[{{listing_index}}]</a>
       <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">

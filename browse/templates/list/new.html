@@ -17,8 +17,16 @@ It needs to do headings for the new/cross/rep sections.
 {% endblock %}
 
 {% block items %}
+
   {% for sec in sub_sections_for_types %}
-    {{ list_macros.item_list(sec['items'], sec['heading']) }}
+    {%if sec.visible%}
+      {{ list_macros.item_list(sec.items, sec.heading) }}
+    {% endif %}
   {% endfor %}
+
+  {% if not (sub_sections_for_types[0].visible or sub_sections_for_types[1].visible or sub_sections_for_types[2].visible) %}
+    <p>No updates today.</p>
+  {% endif %}
+
 {% endblock %}
 

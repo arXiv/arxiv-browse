@@ -169,7 +169,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     category_list=_all_possible_categories(archive_or_cat)
     up=aliased(Updates)
     dates = (
-        db.session.query(distinct(up.date))
+        db.session.query(distinct(up.date).label("date"))
         .order_by(desc(up.date))
         .limit(5)
         .subquery()
@@ -187,13 +187,22 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
         .subquery() 
     )
 
+    count_subquery = (
+        db.session.query(
+            dates.c.date,
+            func.count(doc_ids.c.document_id).label('count')
+        )
+        .outerjoin(doc_ids, doc_ids.c.date == dates.c.date)
+        .group_by(dates.c.date)
+        .order_by(desc(dates.c.date))
+        .subquery()
+    )
+
     counts = (
         db.session.query(
-            doc_ids.c.date,
-            func.count()
+            count_subquery.c.date,
+            count_subquery.c.count
         )
-        .group_by(doc_ids.c.date)
-        .order_by(desc(doc_ids.c.date))
         .all()
     )
 
