@@ -9,10 +9,10 @@ import mimetypes
 from io import BytesIO
 from typing import Generator
 
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.domain.fileformat import FileFormat
-from browse.domain.version import VersionEntry
-from browse.domain.metadata import DocMetadata
+from arxiv.document.version import VersionEntry
+from arxiv.document.metadata import DocMetadata
 from browse.domain import fileformat
 
 from browse.controllers.files import last_modified, add_time_headers, cc_versioned, add_mimetype, download_file_base

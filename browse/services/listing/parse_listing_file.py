@@ -20,9 +20,9 @@ import re
 from datetime import date, datetime
 from typing import List, Literal, Tuple, Union
 
-from browse.domain.category import Category
-from browse.domain.metadata import DocMetadata, AuthorList
-from browse.domain.version import VersionEntry, SourceFlag
+from arxiv.taxonomy.category import Category
+from arxiv.document.metadata import DocMetadata, AuthorList
+from arxiv.document.version import VersionEntry, SourceFlag
 from browse.services.object_store import FileObj
 from browse.services.listing import (Listing, ListingItem,
                                      MonthTotal, NotModifiedResponse,

@@ -8,10 +8,10 @@ from typing import Iterator, List, Optional, Set, Literal
 from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
 
-from browse.domain.category import Category
-from browse.domain.identifier import Identifier
-from browse.domain.license import License
-from browse.domain.version import VersionEntry
+from arxiv.taxonomy.category import Category
+from arxiv.identifier import Identifier
+from arxiv.license import License
+from arxiv.document.version import VersionEntry
 
 
 @dataclass(frozen=True)

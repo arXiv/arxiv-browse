@@ -7,7 +7,7 @@ from typing import Optional, List
 from arxiv.identifier import Identifier
 from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
                                       pdf, pdftex, ps, psgz, tex)
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 from browse.services.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent)
 from browse.services.object_store import ObjectStore

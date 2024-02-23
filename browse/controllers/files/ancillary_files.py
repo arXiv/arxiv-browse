@@ -8,7 +8,7 @@ import flask_rangerequest
 from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service

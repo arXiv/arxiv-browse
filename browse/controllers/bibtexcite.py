@@ -1,7 +1,7 @@
 """Gets BibTeX citation for the paper."""
 from typing import Callable
 
-from browse.domain.identifier import IdentifierIsArchiveException, IdentifierException
+from arxiv.identifier import IdentifierIsArchiveException, IdentifierException
 from browse.formatting.cite import arxiv_bibtex
 from browse.services.documents import get_doc_service
 from browse.services.documents.base_documents import (

@@ -8,9 +8,9 @@ from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 
-from browse.domain.identifier import Identifier
-from browse.domain.metadata import DocMetadata
-from browse.domain.version import SourceFlag, VersionEntry
+from arxiv.identifier import Identifier
+from arxiv.document.metadata import DocMetadata
+from arxiv.document.version import SourceFlag, VersionEntry
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,

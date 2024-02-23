@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from http import HTTPStatus as status
 from flask import url_for, current_app
 
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]

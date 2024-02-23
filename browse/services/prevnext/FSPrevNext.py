@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from browse.services.anypath import to_anypath, fs_check
 
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.services.documents.fs_implementation.legacy_fs_paths import FSDocMetaPaths
 
 from .prevnext_base import PrevNextService, PrevNextResult

@@ -9,7 +9,7 @@ from wsgiref.handlers import format_date_time
 
 from flask import g, current_app
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 from browse.services import HasStatus
 
 

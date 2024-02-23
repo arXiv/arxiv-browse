@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from browse.domain.license import ASSUMED_LICENSE_URI
+from arxiv.license import ASSUMED_LICENSE_URI
 
 
 class TestLicense(TestCase):
     def test_new_license(self):
-        from browse.domain.license import License
+        from arxiv.license import License
 
         r_uri = 'http://bogus/license/uri'
         lic = License(r_uri)

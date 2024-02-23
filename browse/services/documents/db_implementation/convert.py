@@ -2,9 +2,17 @@ from typing import List
 from zoneinfo import ZoneInfo
 
 from arxiv import taxonomy
-from browse.domain.metadata import (Archive, AuthorList, Category, DocMetadata,
-                                    Group, Identifier, License, Submitter,
-                                    VersionEntry)
+from arxiv.document.metadata import (
+    Archive, 
+    AuthorList, 
+    Category, 
+    DocMetadata,
+    Group, 
+    Identifier, 
+    License, 
+    Submitter,
+    VersionEntry
+)
 from browse.services.database.models import Metadata
 from browse.services.documents.base_documents import AbsException
 

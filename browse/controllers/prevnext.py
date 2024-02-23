@@ -9,7 +9,7 @@ from werkzeug.exceptions import BadRequest
 from arxiv.base import logging
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
 
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id
 
 

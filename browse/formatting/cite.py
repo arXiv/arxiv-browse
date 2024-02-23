@@ -5,7 +5,7 @@ from typing import List
 
 from arxiv.util.authors import parse_author_affil_utf
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 
 
 def arxiv_bibtex(docm: DocMetadata) -> str:

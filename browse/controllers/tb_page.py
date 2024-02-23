@@ -11,7 +11,7 @@ from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest, InternalServerError
 
 from browse.controllers import check_supplied_identifier
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.exceptions import TrackbackNotFound
 from browse.services.database import (
     get_paper_trackback_pings,

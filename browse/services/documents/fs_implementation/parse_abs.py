@@ -13,11 +13,11 @@ from browse.services.anypath import to_anypath
 
 from arxiv import taxonomy
 
-from browse.domain.license import License
-from browse.domain.metadata import Archive, AuthorList, Category, \
+from arxiv.license import License
+from arxiv.document.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, Submitter
 from browse.domain.version import VersionEntry, SourceFlag
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
 

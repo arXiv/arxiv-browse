@@ -3,8 +3,8 @@
 from typing import List, Optional, Union
 import dataclasses
 
-from browse.domain.metadata import DocMetadata
-from browse.domain.identifier import Identifier
+from arxiv.document.metadata import DocMetadata
+from arxiv.identifier import Identifier
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from browse.services.anypath import fs_check
 

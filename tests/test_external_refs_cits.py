@@ -1,14 +1,13 @@
 """Tests for external reference and citation configuration and utilities."""
 from unittest import TestCase, mock
 
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 from browse.formatting.external_refs_cits \
     import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
 from browse.formatting.external_refs_cits import include_inspire_link,\
     get_dblp_bibtex_path, include_dblp_section, get_computed_dblp_listing_path
 
-from browse.domain.category import Category
-from browse.domain.metadata import Archive
+from arxiv.taxonomy.category import Category, Archive
 
 from arxiv.taxonomy import CATEGORIES, ARCHIVES
 
@@ -20,7 +19,7 @@ class TestExternalReferencesCitations(TestCase):
         for category in INSPIRE_REF_CIT_CATEGORIES:
             self.assertIn(category, CATEGORIES)
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
+    @mock.patch('arxiv.document.metadata.DocMetadata')
     def test_include_inspire_link(self, mock_docmeta):
         """Tests for the include_inspire_link function."""
         mock_docmeta.arxiv_identifier = Identifier('1201.0001')
@@ -64,7 +63,7 @@ class TestExternalReferencesCitations(TestCase):
         listing_url = 'db/foo/aadebug/aadebug2000.html#Herranz-NievaM00'
         self.assertIsNone(get_dblp_bibtex_path(listing_url))
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
+    @mock.patch('arxiv.document.metadata.DocMetadata')
     def test_include_dblp_section(self, mock_docmeta):
         """Tests for the include_dblp_section fallback (from DB) function."""
         mock_docmeta.arxiv_identifier = Identifier('1806.00001')

@@ -11,7 +11,6 @@ from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
 from arxiv.base.filters import tidy_filesize
 from flask import Flask
 from flask_s3 import FlaskS3
-
 # This gives the error on import
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
 # from arxiv.users.auth import Auth
@@ -39,7 +38,6 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
                 static_url_path=f'/static/browse/{settings.APP_VERSION}')
     app.config.from_object(settings)
 
-    models.init_app(app)  # type: ignore
     Base(app)
     #Auth(app)
 

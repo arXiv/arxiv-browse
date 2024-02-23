@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from browse.services.database.models import TrackbackPing
 from browse.services.database import get_sequential_id
 from browse.services import database
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 

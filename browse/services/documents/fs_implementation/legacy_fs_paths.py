@@ -4,7 +4,7 @@ from typing import Optional, List, Dict
 
 from browse.services.anypath import to_anypath, APath
 
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 
 from .formats import list_ancillary_files
 from ..format_codes import has_ancillary_files, VALID_SOURCE_EXTENSIONS

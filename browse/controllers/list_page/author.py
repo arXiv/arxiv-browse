@@ -9,7 +9,7 @@ import xmltodict
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 
 from arxiv.util.authors import parse_author_affil
 from arxiv.taxonomy import Category

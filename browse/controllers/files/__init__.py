@@ -4,8 +4,8 @@ from flask import Response
 from datetime import timezone
 import mimetypes
 
-from browse.domain.identifier import Identifier
-from browse.domain.version import VersionEntry
+from arxiv.identifier import Identifier
+from arxiv.document.version import VersionEntry
 from browse.services.next_published import next_publish
 from browse.services.object_store import FileObj
 

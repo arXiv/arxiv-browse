@@ -50,7 +50,7 @@ from arxiv.taxonomy.definitions import CATEGORIES
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service

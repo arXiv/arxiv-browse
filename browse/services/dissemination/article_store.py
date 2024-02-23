@@ -12,10 +12,10 @@ from urllib.parse import urlparse
 
 import requests
 
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 from browse.domain import fileformat
-from browse.domain.metadata import DocMetadata, VersionEntry
+from arxiv.document.metadata import DocMetadata, VersionEntry
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
