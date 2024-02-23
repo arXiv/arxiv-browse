@@ -8,7 +8,7 @@ from browse.services.database.listings import (
     _all_possible_categories,
     _entries_into_monthly_listing_items
 )
-from browse.services.listing import YearCount, MonthCount, get_listing_service, ListingItem
+from browse.services.listing import YearCount, MonthCount, get_listing_service, ListingItem, NotModifiedResponse
 from browse.services.database.models import Metadata
 
 from unittest.mock import MagicMock, patch
@@ -742,3 +742,12 @@ def test_finds_archives_with_no_categories(app_with_hybrid_listings):
         assert year1 == get_yearly_article_counts(
             "gr-qc", 2009
         )  
+
+def test_not_modified(app_with_hybrid_listings):
+    app = app_with_hybrid_listings
+    with app.app_context():
+        ls=get_listing_service()
+        listing1=ls.list_pastweek_articles("math", 0, 100, "Wed, 10 Mar 2010 12:34:56 GMT")
+        listing2=ls.list_pastweek_articles("math", 0, 100, "Thu, 29 Mar 2012 00:03:56 GMT")
+    assert isinstance(listing1, NotModifiedResponse) 
+    assert not isinstance(listing2, NotModifiedResponse)

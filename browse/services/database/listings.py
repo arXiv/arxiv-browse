@@ -370,7 +370,7 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         arxiv_identifier=None, # type: ignore
         primary_archive=None, # type: ignore
         primary_group=None, # type: ignore
-        modified=None, # type: ignore
+        modified=max(meta.updated,datetime.fromtimestamp(meta.modtime))
     )
     item = ListingItem(
         id=meta.paper_id,
