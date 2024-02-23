@@ -1173,6 +1173,18 @@ p.tagline {
 
 /*END ScienceCast CSS*/
 
+/*BEGIN Gotit.pub CSS*/
+
+.gotitpub-logo {
+  margin-left: 0pt;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 100%;
+  font-family: "EB Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/*END Gotit.pub CSS*/
+
 /*BEGIN Spaces CSS*/
 
 .spaces-summary {

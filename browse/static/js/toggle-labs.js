@@ -24,6 +24,7 @@ $(document).ready(function() {
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
+    "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
       "container": "#bib-main"
@@ -113,7 +114,13 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load DagsHub script (on cookie check)", arguments)
           });
-       }
+        } else if (key === "gotitpub-toggle") {
+          $.cachedScript(scripts["gotitpub"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load gotitpub script (on cookie check)", arguments)
+          });
+        }
       }
     }
   } else {
@@ -209,7 +216,13 @@ $(document).ready(function() {
       }).fail(function() {
         console.error("failed to load dagshub script (on lab toggle)", arguments)
       });
-   }
+    } else if ($(this).attr("id") == "gotitpub-toggle") {
+      $.cachedScript(scripts["gotitpub"]).done(function(script, textStatus) {
+        console.log(textStatus, "gotitpub (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load gotitpub script (on lab toggle)", arguments)
+      });
+    }
   
 
     // TODO: clean this up

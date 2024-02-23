@@ -15,7 +15,8 @@ from browse.domain.version import VersionEntry
 from browse.domain.metadata import DocMetadata
 from browse.domain import fileformat
 
-from browse.controllers.files import last_modified, add_time_headers, cc_versioned, add_mimetype, download_file_base
+from browse.controllers.files import last_modified, add_time_headers, add_mimetype, \
+    download_file_base, maxage
 
 from browse.services.object_store.fileobj import FileObj
 
@@ -24,7 +25,6 @@ from browse.services.html_processing import post_process_html
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
-from browse.services.next_published import next_publish
 
 from browse.stream.file_processing import process_file
 from flask import Response, abort, make_response, render_template
@@ -60,7 +60,7 @@ def default_resp_fn(format: FileFormat,
 
     # Have to do Range Requests to get GCP CDN to accept larger objects.
     resp: Response = RangeRequest(file.open('rb'),
-                                  etag=last_modified(file),
+                                  etag=file.etag,
                                   last_modified=file.updated,
                                   size=file.size).make_response()
 
@@ -80,7 +80,7 @@ def src_resp_fn(format: FileFormat,
                 extra: Optional[str] = None) -> Response:
     """Download source"""
     resp = RangeRequest(file.open('rb'),
-                        etag=last_modified(file),
+                        etag=file.etag,
                         last_modified=file.updated,
                         size=file.size).make_response()
     suffixes = Path(file.name).suffixes
@@ -196,7 +196,7 @@ def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier
 
     if requested_file.name.endswith(".html"):
         last_mod= last_modified(requested_file)
-        output= process_file(requested_file,post_process_html)
+        output= process_file(requested_file, post_process_html)
         return _source_html_response(output, last_mod)
     else:
         return _guess_response(requested_file, arxiv_id)
@@ -221,15 +221,15 @@ def _latexml_response(format: FileFormat,
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
     """make a response for an unknown file type"""
     resp: Response = RangeRequest(file.open('rb'),
-                                  etag=last_modified(file),
+                                  etag=file.etag,
                                   last_modified=file.updated,
                                   size=file.size).make_response()
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
     add_time_headers(resp, file, arxiv_id)
-    content_type, _ =mimetypes.guess_type(file.name)
+    content_type, _ = mimetypes.guess_type(file.name)
     if content_type:
-        resp.headers["Content-Type"] =content_type
+        resp.headers["Content-Type"] = content_type
     return resp
 
 def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) -> Response:
@@ -244,7 +244,7 @@ def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) ->
         resp.status_code=200
         resp.headers['Access-Control-Allow-Origin'] = '*'
         resp.headers["Last-Modified"] = last_mod
-        resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
+        resp.headers['Cache-Control'] = maxage(False)
         resp.headers["Content-Type"] = "text/html"
         resp.headers["ETag"] = last_mod
     return resp 
@@ -254,7 +254,7 @@ def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Respons
     if had_specific_version:
         headers = {'Cache-Control': 'max-age=31536000'}
     else:
-        headers = {'Expires': format_datetime(next_publish())}
+        headers = {'Cache-Control': maxage(False)}
     return make_response(render_template("dissemination/withdrawn.html",
                                          arxiv_id=arxiv_id),
                          404, headers)
@@ -274,13 +274,13 @@ def no_html(arxiv_id: Identifier) -> Response:
                                          arxiv_id=arxiv_id), 404, {})
 
 def not_found(arxiv_id: Identifier) -> Response:
-    headers = {'Expires': format_datetime(next_publish())}
+    headers = {'Cache-Control': maxage(arxiv_id.has_version)}
     return make_response(render_template("dissemination/not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
 def not_found_anc(arxiv_id: Identifier) -> Response:
-    headers = {'Expires': format_datetime(next_publish())}
+    headers = {'Cache-Control':  maxage(arxiv_id.has_version)}
     return make_response(render_template("src/anc_not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
@@ -300,8 +300,5 @@ def multiple_html_files(arxiv_id: Identifier, file_names: List[str]) -> Response
     resp=make_response(render_template("dissemination/multiple_files.html",
                                          arxiv_id=arxiv_id, file_names=file_names), 200, {})
     resp.headers["Content-Type"] = "text/html"
-    if arxiv_id.has_version:
-        resp.headers['Cache-Control'] = cc_versioned()
-    else:
-        resp.headers['Expires'] = format_datetime(next_publish())
+    resp.headers['Cache-Control'] = maxage(arxiv_id.has_version)
     return resp
