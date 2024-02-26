@@ -89,10 +89,10 @@ def formats_from_source_flag(source_flag: str,
     elif has_ps_only:
         formats.extend(['pdf', 'ps', 'other'])
     elif has_pdflatex:
+        formats.extend(['pdf', 'other'])
         # PDFtex has source so honor src preference
         if has_src_pref and not has_encrypted_source:
-            formats.append('src')
-        formats.extend(['pdf', 'other'])
+            formats.insert(1, 'src')
     elif has_pdf_only:
         formats.extend(['pdf', 'other'])
     elif has_html:
@@ -117,9 +117,9 @@ def formats_from_source_flag(source_flag: str,
         elif re.search('dvi', format_pref):
             formats.append('dvi')
         elif has_src_pref:
+            formats.extend(['pdf', 'ps'])
             if not has_encrypted_source:
                 formats.append('src')
-            formats.extend(['pdf', 'ps'])
         else:
             formats.extend(['pdf', 'ps'])
 

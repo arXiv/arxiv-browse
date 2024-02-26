@@ -36,7 +36,7 @@ class TestFormats(TestCase):
         self.assertListEqual(formats_from_source_flag('P'),
                              ['pdf', 'ps', 'other'])
         self.assertListEqual(formats_from_source_flag('D', 'src'),
-                             ['src', 'pdf', 'other'])
+                             ['pdf', 'src', 'other'])
         self.assertListEqual(formats_from_source_flag('F'),
                              ['pdf', 'other'])
         self.assertListEqual(formats_from_source_flag('H'),

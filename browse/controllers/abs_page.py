@@ -3,10 +3,8 @@
 The primary entrypoint to this module is :func:`.get_abs_page`, which
 handles GET requests to the abs endpoint.
 """
-# pylint: disable=raise-missing-from
-
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
@@ -22,7 +20,6 @@ from werkzeug.exceptions import InternalServerError
 from browse.controllers import check_supplied_identifier, biz_tz
 
 from arxiv import taxonomy
-# from arxiv.base import logging
 from browse.domain.category import Category
 from browse.domain.identifier import (
     Identifier,
@@ -37,12 +34,12 @@ from browse.services.database import (
     get_dblp_authors,
     get_dblp_listing_path,
     get_trackback_ping_latest_date,
+    get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
-from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -140,11 +137,11 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data['latexml_url'] = get_latexml_url(abs_meta)
 
         # Dissemination formats for download links
-        download_format_pref = request.cookies.get("xxx-ps-defaults")
         response_data["formats"] = get_article_store().get_dissemination_formats(
-            abs_meta, download_format_pref)
+            abs_meta, 'src')
+
         if response_data['latexml_url'] is not None:
-            response_data['formats'].append('latexml')
+            response_data['formats'].insert(1, 'latexml')
 
         response_data["withdrawn_versions"] = []
         response_data["higher_version_withdrawn"] = False
@@ -225,8 +222,7 @@ def _non_critical_abs_data(
     # Ancillary files
     response_data["ancillary_files"] = get_article_store().get_ancillary_files(abs_meta)
 
-    # Browse context
-    _check_context(arxiv_identifier, abs_meta.primary_category, response_data)
+    _prevnext_links(arxiv_identifier, abs_meta.primary_category, response_data)
 
     response_data["is_covid_match"] = _is_covid_match(abs_meta)
     response_data["datacite_doi"] = get_datacite_doi(
@@ -238,7 +234,12 @@ def _check_request_headers(
     docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
 ) -> bool:
     """Check the request headers, update the response headers accordingly."""
-    last_mod_dt: datetime = docmeta.modified
+    version = docmeta.get_version()
+    if version:
+        html_updated = get_latexml_publish_dt(docmeta.arxiv_id, version.version) or datetime.min.replace(tzinfo=timezone.utc)
+    else:
+        html_updated = datetime.min.replace(tzinfo=timezone.utc)
+    last_mod_dt: datetime = max(html_updated, docmeta.modified)
 
     # Latest trackback ping time depends on the database
     if 'trackback_ping_latest' in response_data \
@@ -247,35 +248,16 @@ def _check_request_headers(
         # If there is a more recent trackback ping, use that datetime
         last_mod_dt = response_data["trackback_ping_latest"]
 
-    last_mod_mime = mime_header_date(last_mod_dt)
-    etag = f'"{last_mod_mime}"'
+    resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
 
-    resp_headers["Last-Modified"] = last_mod_mime
-    resp_headers["ETag"] = etag
-    resp_headers["Expires"] = abs_expires_header(biz_tz())
+    #resp_headers["Expires"] = abs_expires_header(biz_tz())
+    # Above we had a Expires: based on publish time but admins wanted shorter when
+    # handling service tickets.
+    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
+    resp_headers["Cache-Control"] = "max-age=3600"
 
-    not_modified = _not_modified(
-        last_mod_dt,
-        _time_header_parse("If-Modified-Since"),
-        _get_req_header("if-none-match"),
-        etag,
-    )
-
-    return not_modified
-
-
-def _not_modified(
-    last_mod_dt: datetime,
-    mod_since_dt: Optional[datetime],
-    none_match: Optional[str],
-    current_etag: str,
-) -> bool:
-    if none_match and none_match == current_etag:
-        return True
-    elif mod_since_dt:
-        return mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0)
-    else:
-        return False
+    mod_since_dt = _time_header_parse("If-Modified-Since")
+    return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
 
 
 def _time_header_parse(header: str) -> Optional[datetime]:
@@ -323,23 +305,12 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
     return arxiv_id
 
 
-def _check_context(
+def _prevnext_links(
     arxiv_identifier: Identifier,
     primary_category: Optional[Category],
     response_data: Dict[str, Any],
 ) -> None:
-    """Adds prev URL, next URLs and context to response.
-
-    Parameters
-    ----------
-    arxiv_identifier : :class:`Identifier`
-    primary_category : :class: `Category`
-
-    Returns
-    -------
-    Dict of values to add to response_data
-    """
-    # Set up the context
+    """Adds previous and next URLs and context to response."""
     context = None
     if "context" in request.args and (
         request.args["context"] == "arxiv"
@@ -355,44 +326,22 @@ def _check_context(
             if pc.id in taxonomy.definitions.ARCHIVES:
                 context = pc.id
             else:
-                context = arxiv_identifier.archive
-    else:
-        context = None
+                if arxiv_identifier.archive in taxonomy.definitions.ARCHIVES:
+                    context = arxiv_identifier.archive
 
     response_data["browse_context"] = context
-
-    prevnext = prevnext_service().prevnext(arxiv_identifier, context)
-    next_url = None
-    prev_url = None
-    if arxiv_identifier.is_old_id or context == "arxiv":
-        # Revert to hybrid approach per ARXIVNG-2080
-        if prevnext.next_id:
-            next_url = url_for(
-                "browse.abstract",
-                arxiv_id=prevnext.next_id.id,
-                context="arxiv" if context == "arxiv" else None,
-            )
-        if prevnext.previous_id:
-            prev_url = url_for(
-                "browse.abstract",
-                arxiv_id=prevnext.previous_id.id,
-                context="arxiv" if context == "arxiv" else None,
-            )
-    else:  # Use prevnext controller to determine what the previous or next ID is.
-        next_url = url_for(
-            "browse.previous_next",
-            id=arxiv_identifier.id,
-            function="next",
-            context=context if context else None,
-        )
-        prev_url = url_for(
+    response_data["browse_context_previous_url"] = url_for(
             "browse.previous_next",
             id=arxiv_identifier.id,
             function="prev",
             context=context if context else None,
         )
-    response_data["browse_context_previous_url"] = prev_url
-    response_data["browse_context_next_url"] = next_url
+    response_data["browse_context_next_url"] = url_for(
+            "browse.previous_next",
+            id=arxiv_identifier.id,
+            function="next",
+            context=context if context else None,
+        )
 
 
 def _is_covid_match(docmeta: DocMetadata) -> bool:

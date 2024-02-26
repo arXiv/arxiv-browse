@@ -10,7 +10,7 @@ def test_should_be_db_abs(dbclient):
 def test_basic_db_abs(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires')
+    assert rt.headers.get('Expires') or rt.headers.get('Cache-Control')
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
 
     subjects = html.select_one('.subjects')
@@ -44,7 +44,7 @@ def test_db_abs_history(dbclient):
 def test_db_abs_comment(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires')
+    assert rt.headers.get('Expires') or rt.headers.get('Cache-Control')
     assert '21 pages' in rt.data.decode('utf-8')
 
 
@@ -69,3 +69,51 @@ def test_db_abs_null_source_size(dbclient):
     assert download_button_pdf is None
     download_button_html = html.select_one(".download-html")
     assert download_button_html is None
+
+def test_html_conversion_dissemination (dbclient):
+    rt = dbclient.get('/abs/0906.2112')
+
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'] == 'Mon, 01 Jan 2024 00:00:00 GMT'
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified_old_html_conversion (dbclient):
+    rt = dbclient.get('/abs/2310.08262')
+
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'].startswith('Fri, 13 Oct 2023')
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified_no_publish_dt (dbclient):
+    rt = dbclient.get('/abs/0906.5132')
+
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'].startswith('Thu, 15 Oct 2009')
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag and atag.text == "HTML (experimental)"
+
+def test_last_modified_no_html (dbclient):
+    rt = dbclient.get('/abs/0906.5504')
+    
+    assert rt.status_code == 200
+
+    assert rt.headers['Last-Modified'].startswith('Tue, 13 Oct 2009')
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
+
+    assert atag is None

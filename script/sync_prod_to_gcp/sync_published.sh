@@ -40,6 +40,13 @@ then
     TESTING_ARGS="-v -d --test"
 fi
 
+#
+if [ "$1" = "--generate=false" ]
+then
+    shift
+    SYNC_EXTRA="--generate=false"
+fi
+
 # if running between 8pm and midnight
 DATE=`date +%y%m%d --date='12:00 tomorrow'`
 if [ ! -z $1 ]
@@ -62,7 +69,7 @@ mkdir -p $JSON_LOG_DIR
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python sync_published_to_gcp.py $TESTING_ARGS -v --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log >> $TEXT_LOG_DIR/sync_published_$DATE.report 2>> $TEXT_LOG_DIR/sync_published_$DATE.err
+python sync_published_to_gcp.py $TESTING_ARGS $SYNC_EXTRA -v --json-log-dir $JSON_LOG_DIR  /data/new/logs/publish_$DATE.log >> $TEXT_LOG_DIR/sync_published_$DATE.report 2>> $TEXT_LOG_DIR/sync_published_$DATE.err
 deactivate
 
 if [ ! -z "$TESTING_ARGS" ]; then 

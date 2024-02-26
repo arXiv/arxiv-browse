@@ -1,11 +1,16 @@
 """Functions related to articles.
 
 These are focused on using the GS bucket abs and source files."""
-
+import http
 import logging
 import re
+import time
+import typing
 from collections.abc import Callable
-from typing import Dict, List, Literal, Optional, Tuple, Union, Iterable
+from typing import Dict, List, Literal, Optional, Tuple, Union
+from urllib.parse import urlparse
+
+import requests
 
 from browse.domain.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
@@ -67,17 +72,11 @@ AbsConditions = Union[Literal["ARTICLE_NOT_FOUND",
                               "NO_ID"],
                       Deleted]
 
-
 FormatHandlerReturn = Union[Conditions, FileObj, List[FileObj]]
 
 FHANDLER = Callable[[Identifier, DocMetadata, VersionEntry],
                     FormatHandlerReturn]
 """Type format handler should return."""
-
-
-cannot_gen_pdf_regex = re.compile('H|O|X', re.IGNORECASE)
-"""Regex for use aginst source_type for formats that cannot serve a PDF,
-these are HTML, ODF and DOCX"""
 
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
@@ -114,6 +113,20 @@ def _is_deleted(id: str) -> Optional[str]:
 def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
+def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
+    """Translates the genpdf-api redirect location for the genpdf object store.
+    returns the bucket name and key as a tuple if it is a gcp bucket.
+    """
+    uri = urlparse(location)
+    if uri.scheme == "gs":
+        return uri.netloc, uri.path if uri.path[0] != '/' else uri.path[1:]
+    return ("", uri.path)
+
+def is_genpdf_able(_arxiv_id: Identifier) -> bool:
+    """Is genpdf api available for this arxiv_id?"""
+
+    return bool(current_app.config.get("GENPDF_API_URL"))
+
 
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 """Possible formats to request from the `ArticleStore`.
@@ -125,11 +138,13 @@ class ArticleStore():
     def __init__(self,
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
+                 genpdf_store: ObjectStore,
                  reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted
                  ):
         self.metadataservice = metaservice
         self.objstore: ObjectStore = objstore
+        self.genpdf_store: ObjectStore = genpdf_store
         self.reasons = reasons
         self.is_deleted = is_deleted
         self.sourcestore = SourceStore(self.objstore)
@@ -203,8 +218,7 @@ class ArticleStore():
         try:
             if docmeta is None:
                 docmeta = self.metadataservice.get_abs(arxiv_id.id)
-        # Not excepting AbsParsingException or AbsException since that is bad
-        # data that we want to know about and fix.
+        # Not excepting AbsParsingException or AbsException since that is bad data that we want to know about and fix.
         except AbsNotFoundException:
             return "ARTICLE_NOT_FOUND"
         except AbsVersionNotFoundException:
@@ -277,18 +291,22 @@ class ArticleStore():
         if src_file is not None:
             source_file_formats = \
                 formats_from_source_file_name(src_file.name)
+
         if source_file_formats:
             formats.extend(source_file_formats)
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
-            format_code = docmeta.get_requested_version().source_flag.code
             cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
             cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
                 and cached_ps_file.size == 0 \
                 and src_file \
                 and src_file.updated < cached_ps_file.updated)
-            source_type_formats = formats_from_source_flag(format_code,
+
+            src_flag = docmeta.get_requested_version().source_flag
+            src_flag_code = '' if src_flag is None or src_flag.code is None else src_flag.code
+
+            source_type_formats = formats_from_source_flag(src_flag_code,
                                                            format_pref,
                                                            cache_flag)
             if source_type_formats:
@@ -358,11 +376,15 @@ class ArticleStore():
             pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
+            if is_genpdf_able(arxiv_id):
+                return self._genpdf(arxiv_id, docmeta, version)
         else:
             # try from the /orig with version number for a pdf only paper
             pdf_file=self.objstore.to_obj(previous_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
+            if is_genpdf_able(arxiv_id):
+                return self._genpdf(arxiv_id, docmeta, version)
 
         if not self.sourcestore.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
@@ -370,6 +392,61 @@ class ArticleStore():
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
                      [str(ps_cache_pdf), str(pdf_file)])
         return "UNAVAILABLE"
+
+    def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
+        """Gets a PDF from the genpdf-api."""
+        api = current_app.config.get("GENPDF_API_URL")
+        if not api:
+            return "UNAVAILABLE"
+        # requests.get() cannod have timeout <= 0
+        timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
+        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
+        logger.debug("genpdf-api request(timeout=%d): %s ", timeout, url)
+        t_start = time.perf_counter()
+        for _ in range(3):  # cannot be infinite loop but 500s are common when the cloud run's service is starting up.
+            try:
+                response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
+            except ConnectionError as _exc:
+                logger.warning("The HTTP connection is reset. Retrying...")
+                time.sleep(0.1) # just a fraction is enough
+                continue
+            except Exception as _exc:
+                logger.warning("genpdf-api access failed", exc_info=True)
+                return "UNAVAILABLE"
+        t_end = time.perf_counter()
+        logger.debug("genpdf-api responded in %f seconds", t_end - t_start)
+
+        # Normal operation is a redirect to the bucket
+
+        match response.status_code:
+            case http.HTTPStatus.FOUND:
+                bucket_url = response.headers.get('location')
+                if not bucket_url:
+                    logger.error("Redirect did not provide location")
+                    return "UNAVAILABLE"
+                _bucket_name, obj_key = from_genpdf_location(bucket_url)
+                return self.genpdf_store.to_obj(obj_key)
+
+            case http.HTTPStatus.OK:
+                # Sadly, if you get 200, error out as this is not expected
+                logger.error("genpdf-api should not return 200. Check URL and turn off download")
+                raise NotImplementedError("Cannot support getting PDF")
+
+            case http.HTTPStatus.REQUEST_TIMEOUT:
+                logger.error("genpdf-api request timed out: duration=%f", t_end - t_start)
+                return "UNAVAILABLE"
+
+            case http.HTTPStatus.NOT_FOUND:
+                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                    return "NO_SOURCE"
+                logger.error("genpdf-api returned 404")
+                return "UNAVAILABLE"
+
+            case _:  # catch all
+                logger.error("genpdf-api returned %s", str(response.status_code))
+                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                    return "NO_SOURCE"
+                return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         res = self.reasons(arxiv_id.idv, 'ps')

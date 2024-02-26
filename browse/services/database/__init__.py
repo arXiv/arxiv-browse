@@ -2,7 +2,7 @@
 # pylint disable=no-member
 
 import ipaddress
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app
@@ -483,6 +483,22 @@ def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional
         .first()
     )
     return row.conversion_status if row else None
+
+@db_handle_error(db_logger=logger, default_return_val=None)
+def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
+    if not current_app.config["LATEXML_ENABLED"]:
+        return None
+    row = (
+        db.session.query(DBLaTeXMLDocuments)
+        .filter(DBLaTeXMLDocuments.paper_id == paper_id)
+        .filter(DBLaTeXMLDocuments.document_version == version)
+        .first()
+    )
+    if row and row.publish_dt:
+        dt: datetime = row.publish_dt.replace(tzinfo=timezone.utc)
+        return dt
+    else:
+        return None
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)

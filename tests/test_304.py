@@ -13,7 +13,6 @@ def test_modified(client_with_test_fs):
     assert rv.status_code == 200
 
     last_mod = rv.headers['Last-Modified']
-    etag = rv.headers['ETag']
 
     rv = client_with_test_fs.get('/abs/0704.0600',
                          headers={'If-Modified-Since': last_mod})
@@ -29,22 +28,6 @@ def test_modified(client_with_test_fs):
 
     rv = client_with_test_fs.get('/abs/0704.0600',
                          headers={'If-ModiFIED-SiNCE': last_mod})
-    assert rv.status_code == 304
-
-    rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'If-None-Match': etag})
-    assert rv.status_code == 304
-
-    rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'if-none-match': etag})
-    assert rv.status_code == 304
-
-    rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'IF-NONE-MATCH': etag})
-    assert rv.status_code == 304
-
-    rv = client_with_test_fs.get('/abs/0704.0600',
-                         headers={'iF-NoNE-MaTCH': etag})
     assert rv.status_code == 304
 
 

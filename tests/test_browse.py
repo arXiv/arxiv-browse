@@ -525,14 +525,25 @@ class BrowseTest(unittest.TestCase):
                       "Expect the abstract including the last sentence.")
 
     def test_no_prev(self):
+        """Test a abs page there it is the first in the category"""
         rv = self.client.get('/abs/math-ph/0509001')
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         link = html.find('a', class_='next-url')
         assert link
-        assert link['href'] == '/abs/math-ph/0509002'
+        assert link['href'].startswith("/prevnext?")
+        assert "id=math-ph/0509001" in link['href']
+        assert "function=next" in link['href']
+        assert "context=math-ph" in link['href']
 
         link = html.find('a', class_='prev-url')
-        assert link is None
+        assert link['href'].startswith("/prevnext?")
+        assert "id=math-ph/0509001" in link['href']
+        assert "function=prev" in link['href']
+        assert "context=math-ph" in link['href']
+
+        # the previous URL should do a 404
+        rv = self.client.get(link['href'])
+        assert rv.status_code == 404
 
     def test_withdrawn_msg(self):
         """Test that a withdrawn abs gets a withdrawn warning"""
@@ -655,7 +666,13 @@ class BrowseTest(unittest.TestCase):
 
 
     def test_bad_data(self):
-        """Test where v2 is withdrawn but then there is a non-withdrawn v3."""
+        """Test strange data."""
         rv = self.client.get('/abs/gr-qc/۹۷۰۶123')
         self.assertNotEqual(rv.status_code, 200)
         self.assertNotEqual(rv.status_code, 500)
+
+    def test_old_id_format(self):
+        """Test the old "arxiv:astro-ph/001201" style ID."""
+        rv = self.client.get("/abs/arxiv:physics/9707012")
+        self.assertEqual(rv.status_code, 301)
+        self.assertEqual(rv.headers['Location'], "/abs/physics/9707012")

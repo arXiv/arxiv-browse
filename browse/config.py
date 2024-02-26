@@ -157,14 +157,6 @@ class Settings(BaseSettings):
     DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""
 
-    PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
-    """Implementation of the prev/next service used for those features on the abs page.
-
-    Currently the only value is `browse.services.prevnext.fsprevnext` This uses
-       DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
-    """
-
-
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data
 
@@ -388,6 +380,19 @@ class Settings(BaseSettings):
     message to the logger explaining the attempts to locate the template. This can
     be useful to figure out why templates cannot be found or wrong templates appear
     to be loaded.
+    """
+
+    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
+    """URL of the genpdf API"""
+
+    GENPDF_API_TIMEOUT: int = 590
+    """Time ouf for the genpdf API access"""
+
+    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/"
+    """Where genpdf stores the PDFs. It is likely the local file system does not work here but
+    it is plausible to match the gs bucket with local file system, esp. for testing.
+    For production, it would be:
+    GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
     """
 
     class Config:

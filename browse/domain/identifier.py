@@ -58,10 +58,16 @@ class Identifier:
         self.month: Optional[int] = None
         self.is_old_id: Optional[bool] = None
         self.extra: Optional[str] = None
+        self.arxiv_prefix: bool = False
+        """Set to `True` if id like arxiv:astro-ph/011202. This was an acceptable old id format."""
 
         if self.ids in taxonomy.definitions.ARCHIVES:
             raise IdentifierIsArchiveException(
                 taxonomy.definitions.ARCHIVES[self.ids]['name'])
+
+        if self.ids.startswith("arxiv:"):
+            self.arxiv_prefix = True
+            arxiv_id = arxiv_id.removeprefix("arxiv:")
 
         for subtup in SUBSTITUTIONS:
             arxiv_id = re.sub(subtup[0],
@@ -105,8 +111,8 @@ class Identifier:
             self.version = int(id_match.group('version'))
             self.idv = f'{self.id}v{self.version}'
             self.has_version = True
-        self.squashed = self.id.replace('/', '')
-        self.squashedv = self.idv.replace('/', '')
+        self.squashed: str = self.id.replace('/', '')
+        self.squashedv: str = self.idv.replace('/', '')
         self.yymm: str = id_match.group('yymm')
         self.month = int(id_match.group('mm'))
         if self.month > 12 or self.month < 1:
@@ -219,4 +225,4 @@ class Identifier:
             return False
         if len(idin) > 200:
             return False
-        return bool(re.match(re.compile(r"^[./0-9a-zA-Z-]{8}"), idin))
+        return bool(re.match(re.compile(r"^[./0-9a-zA-Z:-]{8}"), idin))

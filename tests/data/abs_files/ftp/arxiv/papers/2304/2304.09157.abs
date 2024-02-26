@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:2304.09157
+From: Abhirup Datta <user@example.org>
+Date: Tue, 18 Apr 2023 17:52:23 GMT   (8808kb,D)
+Date (revised v2): Mon, 29 Jan 2024 23:56:47 GMT   (7828kb,D)
+
+Title: Neural networks for geospatial data
+Authors: Wentao Zhan, Abhirup Datta
+Categories: stat.ML cs.LG stat.ME
+License: http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+\\
+  Analysis of geospatial data has traditionally been model-based, with a mean
+model, customarily specified as a linear regression on the covariates, and a
+covariance model, encoding the spatial dependence. We relax the strong
+assumption of linearity and propose embedding neural networks directly within
+the traditional geostatistical models to accommodate non-linear mean functions
+while retaining all other advantages including use of Gaussian Processes to
+explicitly model the spatial covariance, enabling inference on the covariate
+effect through the mean and on the spatial dependence through the covariance,
+and offering predictions at new locations via kriging. We propose NN-GLS, a new
+neural network estimation algorithm for the non-linear mean in GP models that
+explicitly accounts for the spatial covariance through generalized least
+squares (GLS), the same loss used in the linear case. We show that NN-GLS
+admits a representation as a special type of graph neural network (GNN). This
+connection facilitates use of standard neural network computational techniques
+for irregular geospatial data, enabling novel and scalable mini-batching,
+backpropagation, and kriging schemes. Theoretically, we show that NN-GLS will
+be consistent for irregularly observed spatially correlated data processes. To
+our knowledge this is the first asymptotic consistency result for any neural
+network algorithm for spatial data. We demonstrate the methodology through
+simulated and real datasets.
+\\
