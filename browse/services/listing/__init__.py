@@ -30,7 +30,7 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
 def hybrid_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for filesystem-based listing service."""
     from .hybrid_listing import HybridListingService
-    return HybridListingService(config["DOCUMENT_LISTING_PATH"])
+    return HybridListingService()
 
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
@@ -132,7 +132,6 @@ class ListingNew:
     cross_count: int
     rep_count: int
     announced: date
-    submitted: Tuple[date, date]
     expires: str
 
 
