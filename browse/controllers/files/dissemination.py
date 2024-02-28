@@ -102,7 +102,7 @@ def pdf_resp_fn(format: FileFormat,
                     docmeta: DocMetadata,
                     version: VersionEntry,
                     extra: Optional[str] = None) -> Response:
-    """funciton to make a `Response` for a PDF."""
+    """function to make a `Response` for a PDF."""
     resp = default_resp_fn(format, file, arxiv_id, docmeta, version, extra)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
