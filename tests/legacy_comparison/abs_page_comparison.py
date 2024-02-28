@@ -15,7 +15,7 @@ from typing import Callable, Dict, Iterator, List, Set, Tuple
 import requests
 from bs4 import BeautifulSoup
 
-from arxiv.document.parse_abs import parse_abs_file, parse_abs_file_accessor
+from arxiv.document.parse_abs import parse_abs_file
 
 from comparison_types import (
     BadResult,

@@ -9,6 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
 
 from arxiv.files import VersionedFlavor, LocalFileAccessor, merge_path
+from arxiv.db.models import Metadata
 
 
 def grep_f_count(filename: str, query: str) -> Optional[int]:
@@ -64,7 +65,7 @@ def foreign_key_check(engine, check_on:bool ):
 def _populate_latexml_test_data (db):
     db.LaTeXMLBase.metadata.drop_all(bind=db.latexml_engine)
     db.LaTeXMLBase.metadata.create_all(bind=db.latexml_engine)
-    db.get_scoped_session().commit()
+    db.session.commit()
 
     dt = datetime(2024, 1, 30, 15, 0, 0)
     dt = dt.replace(tzinfo=timezone.utc)
@@ -112,33 +113,33 @@ def _populate_latexml_test_data (db):
     }
 
     for doc in [doc1, doc2, doc3, doc4]:
-        db.get_scoped_session().add(db.models.DBLaTeXMLDocuments(**doc))
-    db.get_scoped_session().commit()
+        db.session.add(db.models.DBLaTeXMLDocuments(**doc))
+    db.session.commit()
 
 def populate_test_database(drop_and_create: bool, db):
     """Initialize the browse tables."""
     if drop_and_create:
         foreign_key_check(db.engine, False)
         db.metadata.drop_all(bind=db.engine)
-        db.get_scoped_session().commit()
+        db.session.commit()
         foreign_key_check(db.engine, True)
         db.metadata.create_all(bind=db.engine)
-        db.get_scoped_session().commit()
+        db.session.commit()
 
     # Member institution data
-    db.get_scoped_session().add(
+    db.session.add(
         db.models.MemberInstitution(
             id=1, name='Localhost University', label='Localhost University'),
     )
-    db.get_scoped_session().add(db.models.MemberInstitutionIP(
+    db.session.add(db.models.MemberInstitutionIP(
         id=1, sid=1, start=2130706433, end=2130706433, exclude=0))
 
     # Intentionally add another insitution for the same loopback IP as above
-    db.get_scoped_session().add(
+    db.session.add(
         db.models.MemberInstitution(
             id=2, name='Loopback University', label='Loopback University'),
     )
-    db.get_scoped_session().add(db.models.MemberInstitutionIP(
+    db.session.add(db.models.MemberInstitutionIP(
         id=2, sid=2, start=2130706433, end=2130706433, exclude=0))
 
     inst_cornell = db.models.MemberInstitution(
@@ -146,7 +147,7 @@ def populate_test_database(drop_and_create: bool, db):
         name='Cornell University',
         label='Cornell University'
     )
-    db.get_scoped_session().add(inst_cornell)
+    db.session.add(inst_cornell)
 
     inst_cornell_ip = db.models.MemberInstitutionIP(
         id=3,
@@ -155,7 +156,7 @@ def populate_test_database(drop_and_create: bool, db):
         end=2153054207,    # 128.84.255.255
         exclude=0
     )
-    db.get_scoped_session().add(inst_cornell_ip)
+    db.session.add(inst_cornell_ip)
 
     inst_cornell_ip_exclude = \
         db.models.MemberInstitutionIP(
@@ -165,14 +166,14 @@ def populate_test_database(drop_and_create: bool, db):
             end=2152991242,    # 128.84.10.10
             exclude=1
         )
-    db.get_scoped_session().add(inst_cornell_ip_exclude)
+    db.session.add(inst_cornell_ip_exclude)
 
     inst_other = db.models.MemberInstitution(
         id=5,
         name='Other University',
         label='Other University'
     )
-    db.get_scoped_session().add(inst_other)
+    db.session.add(inst_other)
 
     inst_other_ip = db.models.MemberInstitutionIP(
         id=5,
@@ -181,12 +182,15 @@ def populate_test_database(drop_and_create: bool, db):
         end=2152991242,    # 128.84.10.10
         exclude=0
     )
-    db.get_scoped_session().add(inst_other_ip)
+    db.session.add(inst_other_ip)
 
-    db.get_scoped_session().commit()
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
     foreign_key_check(db.engine, False)
     execute_sql_files(sql_files, db.engine)
+    db.session.commit()
+
+    print ("FIRST METADATA:")
+    print (db.session.query(Metadata).first())
 
     _populate_latexml_test_data(db)
 

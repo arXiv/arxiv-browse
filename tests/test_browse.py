@@ -2,13 +2,13 @@ import os
 import unittest
 import pytest
 
-from arxiv import taxonomy
 from bs4 import BeautifulSoup
-from tests import ABS_FILES, TestLocalAbsAccessor
+from tests import ABS_FILES
 
+from arxiv import taxonomy
 from arxiv.license import ASSUMED_LICENSE_URI
-from arxiv.document.parse_abs import parse_abs_file, parse_abs_file_accessor
-from arxiv.identifier import Identifier
+from arxiv.document.parse_abs import parse_abs_file
+
 
 @pytest.mark.usefixtures("unittest_add_fake")
 class BrowseTest(unittest.TestCase):
@@ -118,7 +118,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
-        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('0704.0001'), latest=True))
+        m = parse_abs_file(filename=f1)
 
         rv = self.client.get('/abs/0704.0001')
         self.assertEqual(rv.status_code, 200)
@@ -131,7 +131,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_with_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
-        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('0704.0600'), latest=True))
+        m = parse_abs_file(filename=f1)
 
         self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
@@ -163,7 +163,6 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                print (dir_name)
                 m = parse_abs_file(filename=fname_path)
                 rv = self.client.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
@@ -445,7 +444,7 @@ class BrowseTest(unittest.TestCase):
             g_sun['href'], 'https://arxiv.org/search/eess?searchtype=author&query=Sun,+G')
         
     def test_year(self):
-        rv = self.client.get('/year/astro-ph/09')
+        rv = self.client.get('/year/astro-ph/2009')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.client.get('/year/astro-ph/')
@@ -454,17 +453,17 @@ class BrowseTest(unittest.TestCase):
         rv = self.client.get('/year/astro-ph')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.client.get('/year/astro-ph/09/')
+        rv = self.client.get('/year/astro-ph/2009/')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.client.get('/year')
         self.assertEqual(rv.status_code, 404)
 
         rv = self.client.get('/year/astro-ph/9999')
-        self.assertEqual(rv.status_code, 307,
-                         'Future year should cause temporary redirect')
+        self.assertEqual(rv.status_code, 404,
+                         'Future year should cause 404')
 
-        rv = self.client.get('/year/fakearchive/01')
+        rv = self.client.get('/year/fakearchive/2001')
         self.assertNotEqual(rv.status_code, 200)
         self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
@@ -526,14 +525,25 @@ class BrowseTest(unittest.TestCase):
                       "Expect the abstract including the last sentence.")
 
     def test_no_prev(self):
+        """Test a abs page there it is the first in the category"""
         rv = self.client.get('/abs/math-ph/0509001')
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
         link = html.find('a', class_='next-url')
         assert link
-        assert link['href'] == '/abs/math-ph/0509002'
+        assert link['href'].startswith("/prevnext?")
+        assert "id=math-ph/0509001" in link['href']
+        assert "function=next" in link['href']
+        assert "context=math-ph" in link['href']
 
         link = html.find('a', class_='prev-url')
-        assert link is None
+        assert link['href'].startswith("/prevnext?")
+        assert "id=math-ph/0509001" in link['href']
+        assert "function=prev" in link['href']
+        assert "context=math-ph" in link['href']
+
+        # the previous URL should do a 404
+        rv = self.client.get(link['href'])
+        assert rv.status_code == 404
 
     def test_withdrawn_msg(self):
         """Test that a withdrawn abs gets a withdrawn warning"""

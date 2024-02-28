@@ -9,7 +9,7 @@ from google.api_core import retry
 from google.cloud import compute_v1
 from sqlalchemy.orm import scoped_session
 
-from arxiv.db import get_scoped_session
+from arxiv.db import session
 from arxiv.db.models import NextMail
 
 bp = Blueprint("invalidate", __name__)
@@ -39,7 +39,7 @@ def invalidate_mailings(project: str, cdn: str, mailings: List[str], dry_run: bo
         raise ValueError("mailings values must be like '230130'")
 
     paths: List[str] = []
-    session: scoped_session = get_scoped_session()
+    session: scoped_session = session
     for mailing in mailings:
         if v:
             print(f"About to query for {mailing}")

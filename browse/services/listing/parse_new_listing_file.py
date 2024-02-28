@@ -16,7 +16,7 @@ from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
 
 from browse.services.object_store import FileObj
-from browse.services.documents.fs_implementation.parse_abs import (
+from arxiv.document.parse_abs import (
     parse_abs, parse_abs_top)
 from browse.services.listing import (ListingItem, ListingNew,
                                      gen_expires)

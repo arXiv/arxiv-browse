@@ -143,6 +143,8 @@ def app_with_test_fs(loaded_db):
 
 @pytest.fixture(scope='function')
 def dbclient(app_with_db):
+    print ("DB CLIENT FIXTURE IS GOOD")
+
     """A browse app client with a test DB populated with fresh data.
 
     This is function so each test funciton gets an new app_context."""

@@ -4,14 +4,11 @@ from datetime import datetime
 from unittest import TestCase
 
 from dateutil.tz import tzutc
-
-from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata, Submitter
 from arxiv.document.version import VersionEntry, SourceFlag
-from arxiv.document.parse_abs import parse_abs_file, parse_abs_file_accessor
 
-from tests import path_of_for_test, TestLocalAbsAccessor, ABS_FILES
-
+from arxiv.document.parse_abs import parse_abs_file
+from tests import ABS_FILES
 
 class TestAbsParser(TestCase):
     """Test  parsing metadata from .abs files."""
@@ -30,13 +27,8 @@ class TestAbsParser(TestCase):
                     continue
                 if not fname_path.endswith('.abs'):
                     continue
-                archive = dir_name.split('/')[-3]
-                if archive == 'arxiv':
-                    arxiv_id = Identifier(fname[:-4])
-                else:
-                    arxiv_id = Identifier(f'{archive}/{fname[:-4]}')
                 num_files_tested += 1
-                dm = parse_abs_file_accessor(TestLocalAbsAccessor(arxiv_id, latest=True))
+                dm = parse_abs_file(filename=fname_path)
                 self.assertIsInstance(dm, DocMetadata)
                 self.assertNotEqual(dm.license, None)
                 self.assertNotEqual(dm.license.effective_uri, None,
@@ -52,7 +44,8 @@ class TestAbsParser(TestCase):
 
     def test_individual_files(self):
         """Test individual .abs files."""
-        ams = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('0906.5132v3'), latest=False))
+        f1 = ABS_FILES + '/orig/arxiv/papers/0906/0906.5132v3.abs'
+        ams = parse_abs_file(filename=f1)
 
         self.assertIsInstance(ams, DocMetadata)
         self.assertEqual(ams.arxiv_id, '0906.5132', 'arxiv_id')
@@ -134,7 +127,8 @@ ferromagnet superconducting domains is discussed.
 
     def test_subsumed_category(self):
         """Test individual .abs files."""
-        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('adap-org/9303001'), latest=True))
+        f1 = ABS_FILES + '/ftp/adap-org/papers/9303/9303001.abs'
+        m = parse_abs_file(filename=f1)
         self.assertIsInstance(m, DocMetadata)
         self.assertEqual('adap-org/9303001', m.arxiv_id, 'arxiv_id')
 
@@ -144,7 +138,8 @@ ferromagnet superconducting domains is discussed.
 
     def test_psi_in_abs(self):
         """Test text in abs ARXIVNG-1612"""
-        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('1901.05426'), latest=True))
+        f1 = ABS_FILES + '/ftp/arxiv/papers/1901/1901.05426.abs'
+        m = parse_abs_file(filename=f1)
         self.assertIsInstance(m, DocMetadata)
         self.assertNotIn('$φ$', m.abstract,
                          'TeX psi in abstract should not get converted to UTF8')

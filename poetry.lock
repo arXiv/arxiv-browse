@@ -122,6 +122,7 @@ develop = false
 [package.dependencies]
 bleach = "*"
 boto3 = "==1.*"
+cloudpathlib = {version = "*", extras = ["gs"]}
 fire = "^0.5.0"
 flask = "3.0.2"
 flask-s3 = "*"
@@ -142,8 +143,8 @@ mysql = ["PyMySQL (>=1.1,<2.0)", "sqlalchemy (>=2.0.27,<2.1.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/arXiv/arxiv-base.git"
-reference = "71bfbc4d826622ab3bd4f8fe6f443e9372132501"
-resolved_reference = "71bfbc4d826622ab3bd4f8fe6f443e9372132501"
+reference = "5ce2fd57e08cd46d4115d691d19c1189e78377cc"
+resolved_reference = "5ce2fd57e08cd46d4115d691d19c1189e78377cc"
 
 [[package]]
 name = "asn1crypto"
@@ -3152,4 +3153,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "908af1d70fb872852bd6526b5b426b5e41361c0a667b3efc4c43cd1b6df44073"
+content-hash = "e0624eeaaf2b211dce1918c8a257957712168f757277f20eb463aca8f58a1638"

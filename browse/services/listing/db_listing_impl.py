@@ -4,7 +4,7 @@ from itertools import groupby
 from typing import Any, List, Optional, Tuple, Union
 
 from arxiv.taxonomy import ARCHIVES
-from arxiv.db import get_scoped_session
+from arxiv.db import session
 from arxiv.db.models import (Document, DocumentCategory,
                                              NextMail)
 from browse.services.listing import (Listing, ListingCountResponse,
@@ -38,7 +38,7 @@ class DBListingService(ListingService):
 
     def __init__(self) -> None:
         """Initialize the DB listing service."""
-        self.session=get_scoped_session
+        self.session=session
 
 
     def _latest_mail(self) -> str:

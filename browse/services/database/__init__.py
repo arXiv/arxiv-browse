@@ -7,7 +7,7 @@ from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app
 
-from arxiv.db import get_scoped_session
+from arxiv.db import session
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
 from sqlalchemy import asc, desc, not_, case, distinct, or_
@@ -78,7 +78,7 @@ def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
 
 
 def __all_trackbacks_query() -> Query:
-    return get_scoped_session().query(TrackbackPing)
+    return session.query(TrackbackPing)
 
 
 def __paper_trackbacks_query(paper_id: str) -> Query:
@@ -95,7 +95,7 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     decimal_ip = int(ipaddress.ip_address(ip))
 
     stmt = (
-        get_scoped_session().query(
+        session.query(
             MemberInstitution.id,
             MemberInstitution.label,
             func.sum(MemberInstitutionIP.exclude).label("exclusions"),
@@ -109,7 +109,7 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
         .subquery()
     )
     institution_row = (
-        get_scoped_session().query(stmt.c.id, stmt.c.label).filter(stmt.c.exclusions == 0).first()
+        session.query(stmt.c.id, stmt.c.label).filter(stmt.c.exclusions == 0).first()
     )
 
     h = None
@@ -145,7 +145,7 @@ def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     """Get an individual trackback ping by its id (trackback_id)."""
-    trackback: TrackbackPing = get_scoped_session().query(TrackbackPing).filter(
+    trackback: TrackbackPing = session.query(TrackbackPing).filter(
         TrackbackPing.trackback_id == trackback_id
     ).first()
     return trackback
@@ -162,7 +162,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
 
     # subquery to get the specified number of distinct trackback URLs
     stmt = (
-        get_scoped_session().query(TrackbackPing.url)
+        session.query(TrackbackPing.url)
         .filter(TrackbackPing.status == "accepted")
         .distinct(TrackbackPing.url)
         .group_by(TrackbackPing.url)
@@ -171,7 +171,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
         .subquery()
     )
     tb_doc_tup = (
-        get_scoped_session().query(TrackbackPing, Document.paper_id, Document.title)
+        session.query(TrackbackPing, Document.paper_id, Document.title)
         .join(Document, TrackbackPing.document_id == Document.document_id)
         .filter(TrackbackPing.status == "accepted")
         .filter(TrackbackPing.url == stmt.c.url)
@@ -186,7 +186,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
-    timestamp: int = get_scoped_session().query(func.max(TrackbackPing.approved_time)).filter(
+    timestamp: int = session.query(func.max(TrackbackPing.approved_time)).filter(
         TrackbackPing.document_id == Document.document_id
     ).filter(Document.paper_id == paper_id).filter(
         TrackbackPing.status == "accepted"
@@ -201,7 +201,7 @@ def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
     row = (
-        get_scoped_session().query(
+        session.query(
             func.count(func.distinct(TrackbackPing.url)).label("num_pings")
         )
         .filter(TrackbackPing.document_id == Document.document_id)
@@ -226,7 +226,7 @@ def count_all_trackback_pings() -> int:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
-    url: str = get_scoped_session().query(DBLP.url).join(Document).filter(
+    url: str = session.query(DBLP.url).join(Document).filter(
         Document.paper_id == paper_id
     ).one().url
     return url
@@ -237,7 +237,7 @@ def get_dblp_listing_path(paper_id: str) -> Optional[str]:
 def get_dblp_authors(paper_id: str) -> List[str]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
     authors_t = (
-        get_scoped_session().query(DBLPAuthor.name)
+        session.query(DBLPAuthor.name)
         .join(DBLPDocumentAuthor)
         .join(Document)
         .filter(Document.paper_id == paper_id)
@@ -254,7 +254,7 @@ def get_document_count() -> Optional[int]:
     # func.count is used here because .count() forces a subquery which
     # is inefficient
     row = (
-        get_scoped_session().query(func.count(Document.document_id).label("num_documents"))
+        session.query(func.count(Document.document_id).label("num_documents"))
         .filter(not_(Document.paper_id.like("test%")))
         .first()
     )
@@ -271,7 +271,7 @@ def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     if paper_date < date(2007, 4, 1):
         yymm_like = f"%/{yymm}%"
     row = (
-        get_scoped_session().query(func.count(Document.document_id).label("num_documents"))
+        session.query(func.count(Document.document_id).label("num_documents"))
         .filter(Document.paper_id.like(yymm_like))
         .filter(not_(Document.paper_id.like("test%")))
         .first()
@@ -299,7 +299,7 @@ def get_sequential_id(paper_id: Identifier,
 
     nextyymm = "{}{:02d}".format(str(nxyear)[2:], nxtmonth)
 
-    query = get_scoped_session().query(Document.paper_id)
+    query = session.query(Document.paper_id)
     if paper_id.is_old_id:
         # NB: classic did not support old identifiers in prevnext
         if context == "all":
@@ -340,7 +340,7 @@ def get_sequential_id(paper_id: Identifier,
 
 
 def __all_hourly_stats_query() -> Query:
-    return get_scoped_session().query(t_arXiv_stats_hourly)
+    return session.query(t_arXiv_stats_hourly)
 
 
 
@@ -353,7 +353,7 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     admin_count = 0
     num_nodes = 0
     rows = (
-        get_scoped_session().query(
+        session.query(
             func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
             t_arXiv_stats_hourly.c.access_type,
             func.max(t_arXiv_stats_hourly.c.node_num).label("num_nodes"),
@@ -394,7 +394,7 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
 def get_monthly_submission_stats() -> List:
     """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(
-        get_scoped_session().query(StatsMonthlySubmission)
+        session.query(StatsMonthlySubmission)
         .order_by(asc(StatsMonthlySubmission.ym))
         .all()
     )
@@ -403,7 +403,7 @@ def get_monthly_submission_stats() -> List:
 @db_handle_error(db_logger=logger, default_return_val=(0, 0))
 def get_monthly_submission_count() -> Tuple[int, int]:
     """Get submission totals: number of submissions and number migrated."""
-    row = get_scoped_session().query(
+    row = session.query(
         func.sum(StatsMonthlySubmission.num_submissions).label("num_submissions"),
         func.sum(StatsMonthlySubmission.historical_delta).label("num_migrated"),
     ).first()
@@ -415,7 +415,7 @@ def get_monthly_submission_count() -> Tuple[int, int]:
 def get_monthly_download_stats() -> List:
     """Get all the monthly download stats."""
     return list(
-        get_scoped_session().query(StatsMonthlyDownload)
+        session.query(StatsMonthlyDownload)
         .order_by(asc(StatsMonthlyDownload.ym))
         .all()
     )
@@ -424,7 +424,7 @@ def get_monthly_download_stats() -> List:
 @db_handle_error(db_logger=logger, default_return_val=0)
 def get_monthly_download_count() -> int:
     """Get the sum of monthly downloads for all time."""
-    row = get_scoped_session().query(
+    row = session.query(
         func.sum(StatsMonthlyDownload.downloads).label("total_downloads")
     ).first()
     total_downloads: int = row.total_downloads if row else 0
@@ -435,7 +435,7 @@ def get_monthly_download_count() -> int:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_max_download_stats_dt() -> Optional[datetime]:
     """Get the datetime of the most recent download stats."""
-    row = get_scoped_session().query(func.max(StatsMonthlyDownload.ym).label("max_ym")).first()
+    row = session.query(func.max(StatsMonthlyDownload.ym).label("max_ym")).first()
     return row.max_ym if row else None
 
 
@@ -443,7 +443,7 @@ def get_max_download_stats_dt() -> Optional[datetime]:
 def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
     """Get the DataCite DOI for a given paper ID."""
     row = (
-        get_scoped_session().query(DataciteDois)
+        session.query(DataciteDois)
         .filter(DataciteDois.paper_id == paper_id)
         .filter(DataciteDois.account == account)
         .first()
@@ -453,7 +453,7 @@ def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
 
 def service_status()->List[str]:
     try:
-        get_scoped_session().query(Document.document_id).limit(1).first()
+        session.query(Document.document_id).limit(1).first()
     except NoResultFound:
         return [f"{__file__}: service.database: No documents found in db"]
     except (OperationalError, DBAPIError) as ex:
@@ -463,7 +463,7 @@ def service_status()->List[str]:
 
     if current_app.config["LATEXML_ENABLED"]:
         try:
-            get_scoped_session().query(DBLaTeXMLDocuments.paper_id).limit(1).first()
+            session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
         except NoResultFound:
             return [f"{__file__}: service.database DBLaTeXML: No documents found in db"]
         except (OperationalError, DBAPIError) as ex:
@@ -501,7 +501,7 @@ def _get_yearly_article_counts_new_id(archive: str, year: int) -> YearCount:
 
     # Build the query to get both counts for all months
     count_query = (
-        get_scoped_session().query(
+        session.query(
             func.substr(Metadata.paper_id, 3, 2).label('month'),
             func.count(distinct(case([(categorization_case == 'new', Metadata.paper_id)], else_=None))).label('count_new'),
             func.count(distinct(case([(categorization_case == 'cross', Metadata.paper_id)], else_=None))).label('count_cross')
@@ -524,7 +524,7 @@ def _get_yearly_article_counts_old_id(archive: str, year: int) -> YearCount:
 
     # Build the query to get both counts for all months
     count_query = (
-        get_scoped_session().query(
+        session.query(
             func.substring(func.substring_index(Metadata.paper_id, '/', -1), 3,2).label('month'),
             func.count(distinct(case([(categorization_case == 'new', Metadata.paper_id)], else_=None))).label('count_new'),
             func.count(distinct(case([(categorization_case == 'cross', Metadata.paper_id)], else_=None))).label('count_cross')
@@ -572,7 +572,7 @@ def _combine_yearly_article_counts(yc1: YearCount, yc2: YearCount)-> YearCount:
 def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
     row = (
-        get_scoped_session().query(DBLaTeXMLDocuments)
+        session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
@@ -584,7 +584,7 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
     if not current_app.config["LATEXML_ENABLED"]:
         return None
     row = (
-        get_scoped_session().query(DBLaTeXMLDocuments)
+        session.query(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
         .first()
@@ -599,7 +599,7 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_author_id(author_id: str) -> Optional[int]:
     row = (
-        get_scoped_session().query(AuthorIds)
+        session.query(AuthorIds)
         .filter(AuthorIds.author_id == author_id)
         .first()
     )
@@ -609,7 +609,7 @@ def get_user_id_by_author_id(author_id: str) -> Optional[int]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_orcid(orcid: str) -> Optional[int]:
     row = (
-        get_scoped_session().query(OrcidIds)
+        session.query(OrcidIds)
         .filter(OrcidIds.orcid == orcid)
         .first()
     )
@@ -619,7 +619,7 @@ def get_user_id_by_orcid(orcid: str) -> Optional[int]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_display_name(user_id: int) -> Optional[str]:
     row = (
-        get_scoped_session().query(TapirUser)
+        session.query(TapirUser)
         .filter(TapirUser.user_id == user_id)
         .first()
     )
@@ -634,7 +634,7 @@ def get_user_display_name(user_id: int) -> Optional[str]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_orcid_by_user_id(user_id: int) -> Optional[str]:
     row = (
-        get_scoped_session().query(OrcidIds)
+        session.query(OrcidIds)
         .filter(OrcidIds.user_id == user_id)
         .first()
     )
@@ -644,7 +644,7 @@ def get_orcid_by_user_id(user_id: int) -> Optional[str]:
 @db_handle_error(db_logger=logger, default_return_val=[])
 def get_articles_for_author(user_id: int) -> List[ListingItem]:
     rows = (
-        get_scoped_session().query(Document, t_arXiv_paper_owners)
+        session.query(Document, t_arXiv_paper_owners)
         .filter(Document.document_id == t_arXiv_paper_owners.c.document_id)
         .filter(t_arXiv_paper_owners.c.user_id == user_id)
         .filter(t_arXiv_paper_owners.c.flag_author == 1)

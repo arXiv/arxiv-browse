@@ -11,10 +11,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import SourceFlag, VersionEntry
+from arxiv.db import session
 from arxiv.db.models import Metadata
-from browse.services.documents.base_documents import (
-    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
-    DocMetadataService)
+from arxiv.document.exceptions import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
+from browse.services.documents.base_documents import DocMetadataService
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from dateutil.tz import tzutc
 
@@ -92,11 +93,11 @@ class DbDocMetadataService(DocMetadataService):
 
         if version is None then get the latest version."""
         if version:
-            res = (Metadata.query
+            res = (session.query(Metadata)
                    .filter( Metadata.paper_id == identifier.id)
                    .filter( Metadata.version == identifier.version )).first()
         else:
-            res = (Metadata.query
+            res = (session.query(Metadata)
                    .filter(Metadata.paper_id == identifier.id)
                    .filter(Metadata.is_current == 1)).first()
         if not res:
@@ -104,7 +105,7 @@ class DbDocMetadataService(DocMetadataService):
 
         # Gather version history metadata from each document version entry in database.
         version_history = list()
-        all_versions = (Metadata.query.filter(Metadata.paper_id == identifier.id))
+        all_versions = (session.query(Metadata).filter(Metadata.paper_id == identifier.id))
 
         for ver in all_versions:
             size_kilobytes = 0
@@ -130,7 +131,7 @@ class DbDocMetadataService(DocMetadataService):
 
     def service_status(self)->List[str]:
         try:
-            res = Metadata.query.limit(1).first()
+            res = session.query(Metadata).limit(1).first()
             if not res:
                 return [f"{__name__}: Nothing in arXiv_metadata table"]
             if not hasattr(res, 'document_id'):

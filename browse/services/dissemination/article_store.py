@@ -16,9 +16,9 @@ from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
 from browse.domain import fileformat
 from arxiv.document.metadata import DocMetadata, VersionEntry
-from browse.services.documents.base_documents import (
-    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
-    DocMetadataService)
+from arxiv.document.exceptions import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
+from browse.services.documents.base_documents import DocMetadataService
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
