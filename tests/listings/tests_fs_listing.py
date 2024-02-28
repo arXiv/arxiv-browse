@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 from tests import path_of_for_test
 LISTING_FILES = path_of_for_test('data/listing_files')
 
-from .fs_listings import FsListingFilesService
+from browse.services.listing.fs_listings import FsListingFilesService
 
 class TestFsListingImplementation(TestCase):
     """Tests for the file system listing implementation.

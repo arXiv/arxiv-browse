@@ -342,6 +342,16 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     Underfilled to match the behavior of fs_listings, omits data not needed for listing items
     meta: the metadata for an item 
     type: the type of announcement "new" "cross" or "rep" """
+    updated=meta.updated
+    modtime=meta.modtime
+    if updated is None and modtime is None:
+        modified=datetime(2010,3,6) #some time required, most recent modtime of an article with no updated column
+    elif updated is not None and modtime is not None:
+        modified=max(meta.updated,datetime.fromtimestamp(meta.modtime))
+    elif updated is None:
+        modified=datetime.fromtimestamp(meta.modtime)
+    else:
+        modified=updated
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
@@ -370,7 +380,7 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         arxiv_identifier=None, # type: ignore
         primary_archive=None, # type: ignore
         primary_group=None, # type: ignore
-        modified=max(meta.updated,datetime.fromtimestamp(meta.modtime))
+        modified=modified
     )
     item = ListingItem(
         id=meta.paper_id,
