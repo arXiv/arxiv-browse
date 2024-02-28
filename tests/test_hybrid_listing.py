@@ -6,7 +6,8 @@ from browse.services.database.listings import (
     get_yearly_article_counts,
     _check_alternate_name,
     _all_possible_categories,
-    _entries_into_monthly_listing_items
+    _entries_into_monthly_listing_items,
+    _metadata_to_listing_item
 )
 from browse.services.listing import YearCount, MonthCount, get_listing_service, ListingItem, NotModifiedResponse
 from browse.services.database.models import Metadata
@@ -751,3 +752,22 @@ def test_not_modified(app_with_hybrid_listings):
         listing2=ls.list_pastweek_articles("math", 0, 100, "Thu, 29 Mar 2012 00:03:56 GMT")
     assert isinstance(listing1, NotModifiedResponse) 
     assert not isinstance(listing2, NotModifiedResponse)
+
+
+def test_metadata_to_listing_item():
+    meta=SAMPLE_METADATA1
+    result=_metadata_to_listing_item(meta, "new")
+    assert result.article.modified is not None
+    
+    #test that Null modification dates are handleable
+    meta.updated=None
+    result=_metadata_to_listing_item(meta, "new")
+    assert result.article.modified is not None
+    meta.updated=datetime(2000,1,1)
+    meta.modtime=None
+    result=_metadata_to_listing_item(meta, "new")
+    assert result.article.modified is not None
+    meta.updated=None
+    meta.modtime=None
+    result=_metadata_to_listing_item(meta, "new")
+    assert result.article.modified is not None
