@@ -33,6 +33,7 @@ from arxiv.document.exceptions import (
     AbsNotFoundException,
     AbsVersionNotFoundException,
 )
+from browse.exceptions import AbsNotFound
 from browse.services.database import (
     count_trackback_pings,
     get_datacite_doi,

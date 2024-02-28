@@ -4,12 +4,12 @@ from unittest import TestCase
 
 from arxiv.util.authors import split_authors
 
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 from browse.formatting.search_authors import queries_for_authors, split_long_author_list
-from tests import path_of_for_test
+from tests import path_of_for_test, TestLocalAbsAccessor
 
 from arxiv.document.metadata import DocMetadata
-from arxiv.document.parse_abs import parse_abs_file
+from arxiv.identifier import Identifier
+from arxiv.document.parse_abs import parse_abs_file_accessor
 
 
 class TestAuthorLinkCreation(TestCase):
@@ -50,9 +50,9 @@ class TestAuthorLinkCreation(TestCase):
             out, [('C. de la Fuente Marcos', 'de la Fuente Marcos, C')])
 
     def test_split_long_author_list(self):
-        f1 = path_of_for_test(
-            'data/abs_files/ftp/arxiv/papers/1411/1411.4413.abs')
-        meta: DocMetadata = parse_abs_file(filename=f1)
+        meta: DocMetadata = parse_abs_file_accessor(
+            TestLocalAbsAccessor(Identifier('1411.4413'), latest=True)
+        )
         alst = split_long_author_list(
             queries_for_authors(str(meta.authors)), 20)
         self.assertIs(type(alst), tuple)
@@ -63,10 +63,9 @@ class TestAuthorLinkCreation(TestCase):
         self.assertIs(type(alst[2]), int)
 
     def test_split_with_collaboration(self):
-        f1 = path_of_for_test(
-            'data/abs_files/ftp/arxiv/papers/0808/0808.4142.abs')
-        meta: DocMetadata = parse_abs_file(filename=f1)
-
+        meta: DocMetadata = parse_abs_file_accessor(
+            TestLocalAbsAccessor(Identifier('0808.4142'), latest=True)
+        )
         split = split_authors(str(meta.authors))
         self.assertListEqual(
             split, ['D0 Collaboration', ':', 'V. Abazov', ',', 'et al'])
@@ -77,9 +76,9 @@ class TestAuthorLinkCreation(TestCase):
 
     def test_split_strange_author_list(self):
         """Test odd author list that shows '0 additional authors' ARXIVNG-2083"""
-        f1 = path_of_for_test(
-            'data/abs_files/ftp/arxiv/papers/1902/1902.05884.abs')
-        meta: DocMetadata = parse_abs_file(filename=f1)
+        meta: DocMetadata = parse_abs_file_accessor(
+            TestLocalAbsAccessor(Identifier('1902.05884'), latest=True)
+        )
         alst = split_long_author_list(
             queries_for_authors(str(meta.authors)), 100)
 

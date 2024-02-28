@@ -33,9 +33,9 @@ from arxiv.db.models import (
     OrcidIds,
     AuthorIds,
     TapirUser,
-    InCategory,
-    StatsHourly,
-    PaperOwners,
+    t_arXiv_in_category,
+    t_arXiv_stats_hourly,
+    t_arXiv_paper_owners,
     Metadata
 )
 from browse.services.listing import ListingItem
@@ -329,9 +329,9 @@ def get_sequential_id(paper_id: Identifier,
         subject_class: str = ""
         if "." in archive:
             (archive, subject_class) = archive.split(".", 1)
-        query = query.join(InCategory).filter(InCategory.c.archive == archive)
+        query = query.join(t_arXiv_in_category).filter(t_arXiv_in_category.c.archive == archive)
         if subject_class:
-            query = query.filter(InCategory.c.subject_class == subject_class)
+            query = query.filter(t_arXiv_in_category.c.subject_class == subject_class)
 
     result = query.first()
     if result:
@@ -340,7 +340,7 @@ def get_sequential_id(paper_id: Identifier,
 
 
 def __all_hourly_stats_query() -> Query:
-    return get_scoped_session().query(StatsHourly)
+    return get_scoped_session().query(t_arXiv_stats_hourly)
 
 
 
@@ -354,12 +354,12 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     num_nodes = 0
     rows = (
         get_scoped_session().query(
-            func.sum(StatsHourly.c.connections).label("num_connections"),
-            StatsHourly.c.access_type,
-            func.max(StatsHourly.c.node_num).label("num_nodes"),
+            func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
+            t_arXiv_stats_hourly.c.access_type,
+            func.max(t_arXiv_stats_hourly.c.node_num).label("num_nodes"),
         )
-        .filter(StatsHourly.c.ymd == stats_date.isoformat())
-        .group_by(StatsHourly.c.access_type)
+        .filter(t_arXiv_stats_hourly.c.ymd == stats_date.isoformat())
+        .group_by(t_arXiv_stats_hourly.c.access_type)
         .all()
     )
     for r in rows:
@@ -381,10 +381,10 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     return list(
         __all_hourly_stats_query()
         .filter(
-            StatsHourly.c.access_type == "N",
-            StatsHourly.c.ymd == stats_date.isoformat(),
+            t_arXiv_stats_hourly.c.access_type == "N",
+            t_arXiv_stats_hourly.c.ymd == stats_date.isoformat(),
         )
-        .order_by(asc(StatsHourly.c.hour), StatsHourly.c.node_num)
+        .order_by(asc(t_arXiv_stats_hourly.c.hour), t_arXiv_stats_hourly.c.node_num)
         .all()
     )
 
@@ -644,11 +644,11 @@ def get_orcid_by_user_id(user_id: int) -> Optional[str]:
 @db_handle_error(db_logger=logger, default_return_val=[])
 def get_articles_for_author(user_id: int) -> List[ListingItem]:
     rows = (
-        get_scoped_session().query(Document, PaperOwners)
-        .filter(Document.document_id == PaperOwners.c.document_id)
-        .filter(PaperOwners.c.user_id == user_id)
-        .filter(PaperOwners.c.flag_author == 1)
-        .filter(PaperOwners.c.valid == 1)
+        get_scoped_session().query(Document, t_arXiv_paper_owners)
+        .filter(Document.document_id == t_arXiv_paper_owners.c.document_id)
+        .filter(t_arXiv_paper_owners.c.user_id == user_id)
+        .filter(t_arXiv_paper_owners.c.flag_author == 1)
+        .filter(t_arXiv_paper_owners.c.valid == 1)
         .filter(Document.paper_id.notlike('test%'))
         .order_by(Document.dated.desc())
         .all()

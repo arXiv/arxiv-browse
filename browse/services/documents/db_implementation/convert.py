@@ -13,7 +13,7 @@ from arxiv.document.metadata import (
     Submitter,
     VersionEntry
 )
-from browse.services.database.models import Metadata
+from arxiv.db.models import Metadata
 from browse.services.documents.base_documents import AbsException
 
 

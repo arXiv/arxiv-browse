@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
 
-from browse.services.database.models import TrackbackPing
+from arxiv.db.models import TrackbackPing
 from browse.services.database import get_sequential_id
 from browse.services import database
 from arxiv.identifier import Identifier

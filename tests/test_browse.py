@@ -4,11 +4,11 @@ import pytest
 
 from arxiv import taxonomy
 from bs4 import BeautifulSoup
-from tests.test_fs_abs_parser import ABS_FILES
+from tests import ABS_FILES, TestLocalAbsAccessor
 
 from arxiv.license import ASSUMED_LICENSE_URI
-from arxiv.document.parse_abs import parse_abs_file
-
+from arxiv.document.parse_abs import parse_abs_file, parse_abs_file_accessor
+from arxiv.identifier import Identifier
 
 @pytest.mark.usefixtures("unittest_add_fake")
 class BrowseTest(unittest.TestCase):
@@ -118,7 +118,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
-        m = parse_abs_file(filename=f1)
+        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('0704.0001'), latest=True))
 
         rv = self.client.get('/abs/0704.0001')
         self.assertEqual(rv.status_code, 200)
@@ -131,7 +131,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_with_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
-        m = parse_abs_file(filename=f1)
+        m = parse_abs_file_accessor(TestLocalAbsAccessor(Identifier('0704.0600'), latest=True))
 
         self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
@@ -163,6 +163,7 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
+                print (dir_name)
                 m = parse_abs_file(filename=fname_path)
                 rv = self.client.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)

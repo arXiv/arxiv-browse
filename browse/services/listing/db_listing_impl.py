@@ -4,8 +4,9 @@ from itertools import groupby
 from typing import Any, List, Optional, Tuple, Union
 
 from arxiv.taxonomy import ARCHIVES
-from browse.services.database.models import (Document, DocumentCategory,
-                                             NextMail, db)
+from arxiv.db import get_scoped_session
+from arxiv.db.models import (Document, DocumentCategory,
+                                             NextMail)
 from browse.services.listing import (Listing, ListingCountResponse,
                                      ListingItem, ListingNew,
                                      ListingService, MonthTotal,YearCount, MonthCount,
@@ -35,15 +36,15 @@ be better date granularity for new papers."""
 class DBListingService(ListingService):
     """arXiv document listings via DB."""
 
-    def __init__(self, db: Any) -> None:
+    def __init__(self) -> None:
         """Initialize the DB listing service."""
-        self.db=db
+        self.session=get_scoped_session
 
 
     def _latest_mail(self) -> str:
         """Latest mailing day in YYMMDD format from NextMail.mail_id"""
         #TODO add some sort of caching based on publish time
-        return str(self.db.session.query(func.max(NextMail.mail_id)).first()[0])
+        return str(self.session().query(func.max(NextMail.mail_id)).first()[0])
 
 
     def _year_to_yy(self, year:int)-> str:
@@ -163,7 +164,7 @@ GROUP BY month
 """
         # TODO Limit to archive!
         yy = self._year_to_yy(int(year))
-        res = db.session.execute(text(txtq), {"yy": yy+"%"})
+        res = self.session().execute(text(txtq), {"yy": yy+"%"})
 
         months= [MonthCount(int(yy), int(mm), int(new), int(cross))
                 for mm,new,cross in res]

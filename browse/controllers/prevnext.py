@@ -3,7 +3,8 @@
 from typing import Any, Dict, Tuple
 from http import HTTPStatus as status
 
-from flask import url_for, escape
+from flask import url_for
+from markupsafe import escape
 from werkzeug.exceptions import BadRequest
 
 from arxiv.base import logging

@@ -1,5 +1,5 @@
 from typing import Optional
-from browse.services.database.models import db, DBLaTeXMLDocuments
+# from browse.services.database.models import db, DBLaTeXMLDocuments
 from arxiv.base import logging
 
 # logger = logging.getLogger(__name__)

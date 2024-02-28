@@ -1,6 +1,6 @@
 """File system backed core metadata service."""
 
-from typing import List, Optional, Union
+from typing import List, Type, Union
 import dataclasses
 
 from arxiv.document.metadata import DocMetadata
@@ -13,17 +13,17 @@ from browse.services.documents.base_documents import DocMetadataService, \
     AbsVersionNotFoundException
 
 from .legacy_fs_paths import FSDocMetaPaths
-from .parse_abs import parse_abs_file
+
+from arxiv.files import AbsFlavor, LocalAbsAccessor
+from arxiv.document.parse_abs import parse_abs_file_accessor
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
     fs_paths: FSDocMetaPaths
 
-    def __init__(self,
-                 latest_versions_path: str,
-                 original_versions_path: str) -> None:
+    def __init__(self, abs_flavor: Type[AbsFlavor] = LocalAbsAccessor) -> None:
         """Initialize the FS document metadata service."""
-        self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
+        self.abs_accessor = abs_flavor
 
     def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
@@ -45,6 +45,7 @@ class FsDocMetadataService(DocMetadataService):
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 
+        print (paper_id)
         latest_version = self._abs_for_version(identifier=paper_id)
         if not paper_id.has_version \
            or paper_id.version == latest_version.version:
@@ -75,17 +76,16 @@ class FsDocMetadataService(DocMetadataService):
 
         return combined_version
 
-    def _abs_for_version(self, identifier: Identifier,
-                         version: Optional[int] = None) -> DocMetadata:
+    def _abs_for_version(self, identifier: Identifier) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata.
 
-        if version is None then get the latest version."""        
-        path = self.fs_paths.get_abs_file(identifier, version)
-        return parse_abs_file(filename=path)
+        if version is None then get the latest version."""
+        return parse_abs_file_accessor(self.abs_accessor(identifier, latest=(not identifier.has_version)))
 
 
 
     def service_status(self)->List[str]:
-        probs = fs_check(self.fs_paths.latest_versions_path)
-        probs.extend(fs_check(self.fs_paths.original_versions_path))
-        return ["FsDocMetadataService: {prob}" for prob in probs]
+        # probs = fs_check(self.fs_paths.latest_versions_path)
+        # probs.extend(fs_check(self.fs_paths.original_versions_path))
+        # return ["FsDocMetadataService: {prob}" for prob in probs]
+        return []

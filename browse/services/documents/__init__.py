@@ -16,13 +16,12 @@ def get_doc_service() -> DocMetadataService:
 def fs_docs(config: dict, _: Any) -> DocMetadataService:
     """Factory function for file system abstract service."""
     from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
-    return FsDocMetadataService(config["DOCUMENT_LATEST_VERSIONS_PATH"],
-                                config["DOCUMENT_ORIGNAL_VERSIONS_PATH"])
+    return FsDocMetadataService(config["DOCUMENT_ABS_ACCESSOR"])
 
 
 def db_docs(config: dict, _: Any) -> DocMetadataService:
     """Factory function for DB backed abstract service."""
     from browse.services.documents.db_implementation.db_abs import DbDocMetadataService
-    from browse.services.database.models import db
-    return DbDocMetadataService(db,
+    from arxiv.db import engine
+    return DbDocMetadataService(engine,
                                 config["ARXIV_BUSINESS_TZ"])

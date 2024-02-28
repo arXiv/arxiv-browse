@@ -11,14 +11,13 @@ from sqlalchemy.orm.exc import NoResultFound
 from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import SourceFlag, VersionEntry
-from browse.services.database.models import Metadata
+from arxiv.db.models import Metadata
 from browse.services.documents.base_documents import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
     DocMetadataService)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from dateutil.tz import tzutc
 
-from ..format_codes import formats_from_source_flag
 from .convert import to_docmeta
 
 

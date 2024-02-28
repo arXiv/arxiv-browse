@@ -10,13 +10,13 @@ import warnings
 from typing import Optional, Dict, Any, List
 import logging
 
-from pydantic import SecretStr, PyObject, BaseSettings
+from pydantic import SecretStr, BaseSettings, PyObject
 
 log = logging.getLogger(__name__)
 
 
-DEFAULT_DB = "sqlite:///../tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
+DEFAULT_DB = "sqlite:///tests/data/browse.db"
+TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
 
 class Settings(BaseSettings):
@@ -153,6 +153,7 @@ class Settings(BaseSettings):
 
         This can start with gs:// to use Google Storage.
     """
+    DOCUMENT_ABS_ACCESSOR: PyObject = 'arxiv.files.LocalAbsAccessor'
 
     DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""

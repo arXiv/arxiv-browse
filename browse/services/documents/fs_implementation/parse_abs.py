@@ -16,7 +16,7 @@ from arxiv import taxonomy
 from arxiv.license import License
 from arxiv.document.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, Submitter
-from browse.domain.version import VersionEntry, SourceFlag
+from arxiv.document.version import VersionEntry, SourceFlag
 from arxiv.identifier import Identifier
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
@@ -77,9 +77,9 @@ def parse_abs_file(filename: str) -> DocMetadata:
         with absfile.open(mode='r', encoding='latin-1') as absf:
             raw = absf.read()
             if current_app:
-                modified = datetime.fromtimestamp(absfile.stat().st_mtime, tz=_get_tz())
+                modified = datetime.fromtimestamp(absfile.modtime(), tz=_get_tz())
             else:
-                modified = datetime.fromtimestamp(absfile.stat().st_mtime)
+                modified = datetime.fromtimestamp(absfile.modtime())
             modified = modified.astimezone(ZoneInfo("UTC"))
             return parse_abs(raw, modified)
 

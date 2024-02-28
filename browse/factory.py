@@ -18,7 +18,6 @@ from flask_s3 import FlaskS3
 from browse.config import Settings
 from browse.routes import ui, dissemination, src, unimplemented, redirects
 from browse.commands import invalidate
-from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
@@ -75,8 +74,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
     app.jinja_env.filters['tidy_filesize'] = tidy_filesize
 
-    @app.before_first_request
-    def check_services()->None:
+    with app.app_context():
         problems = service_statuses()
         if problems:
             app.logger.error("Problems with services!!!!!")

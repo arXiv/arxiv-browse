@@ -19,13 +19,13 @@ from pathlib import Path
 from browse.factory import create_web_app
 import os
 
-from tests import path_of_for_test
+from tests import path_of_for_test, TestLocalAbsAccessor
 
 import browse.services.documents as documents
 from browse.services.listing import db_listing
 
-DEFAULT_DB = "sqlite:///../tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
+DEFAULT_DB = "sqlite:///tests/data/browse.db"
+TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
 
 TESTING_CONFIG = {
@@ -46,9 +46,9 @@ def loaded_db():
     """Loads the testing db"""
     app = create_web_app(**test_config())
     with app.app_context():
-        from browse.services.database import models
+        from arxiv import db
         from . import populate_test_database
-        populate_test_database(True, models)
+        populate_test_database(True, db)
 
 
 @pytest.fixture(scope='session')
@@ -131,6 +131,7 @@ def app_with_test_fs(loaded_db):
     conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
     conf["DOCUMENT_LATEST_VERSIONS_PATH"] = "tests/data/abs_files/ftp"
     conf["DOCUMENT_ORIGNAL_VERSIONS_PATH"] = "tests/data/abs_files/orig"
+    conf["DOCUMENT_ABS_ACCESSOR"] = TestLocalAbsAccessor
 
     app = create_web_app(**conf)
 
