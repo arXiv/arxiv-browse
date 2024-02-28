@@ -334,46 +334,46 @@ class BinaryMinimalFileTransformed(BinaryMinimalFile):
     """A file like object that includes a transform."""
 
     def __init__(self, inner_io: BinaryMinimalFile, transform: typing.Callable[[bytes], bytes]):
-        self._transform = transform
-        self._io = inner_io
-        self._buffer = b""
-        self._at_start = True
+        self.transform = transform
+        self.io = inner_io
+        self.buffer = b""
+        self.at_start = True
         super().__init__()
 
     def readline(self, size: Optional[int] = -1) -> bytes:
         if size is None or size <= 0:
             size = DEFAULT_IO_SIZE
-        if not self._buffer:
+        if not self.buffer:
             data = self.read(size)
-            self._buffer = data + self._buffer
+            self.buffer = data + self.buffer
 
-        lines = self._buffer.split(b"\n")
+        lines = self.buffer.split(b"\n")
         line = lines[0]
-        self._buffer = b"\n".join(lines[1:])
+        self.buffer = b"\n".join(lines[1:])
         return line
 
     def read(self, size: Optional[int] = -1) -> bytes:
         if size is None or size <= 0:
             size = DEFAULT_IO_SIZE
 
-        self._at_start = False
+        self.at_start = False
         while True:
-            data = self._io.readline(size)
-            self._buffer = self._buffer + self._transform(data)
-            if not data or len(self._buffer) >= size:
+            data = self.io.readline(size)
+            self.buffer = self.buffer + self.transform(data)
+            if not data or len(self.buffer) >= size:
                 break
 
-        if len(self._buffer) <= size:
-            to_return = self._buffer
-            self._buffer = b""
+        if len(self.buffer) <= size:
+            to_return = self.buffer
+            self.buffer = b""
             return to_return
         else:
-            to_return = self._buffer[:size]
-            self._buffer = self._buffer[size:]
+            to_return = self.buffer[:size]
+            self.buffer = self.buffer[size:]
             return to_return
 
     def seek(self, pos: int, whence: int = io.SEEK_SET) -> int:
-        if not self._at_start:
+        if not self.at_start:
             raise RuntimeError("Cannot seek after reading")
         if whence != io.SEEK_SET:
             raise ValueError("whence is not supported")
@@ -381,9 +381,9 @@ class BinaryMinimalFileTransformed(BinaryMinimalFile):
         return len(data)
 
     def close(self) -> None:
-        self._io.close()
-        self._buffer = b""
-        self._at_start = True
+        self.io.close()
+        self.buffer = b""
+        self.at_start = True
 
     def __enter__(self) -> 'BinaryMinimalFile':
         return self
@@ -395,8 +395,8 @@ class BinaryMinimalFileTransformed(BinaryMinimalFile):
         self.close()
 
     def __iter__(self) -> typing.Iterator[bytes]:
-        for line in self._io:
-            yield self._transform(line)
+        for line in self.io:
+            yield self.transform(line)
 
 
 
@@ -405,37 +405,36 @@ class FileTransform(FileObj):
     """A `FileObj` that applies a transform to the original data."""
 
     def __init__(self, file: FileObj, transform: typing.Callable[[bytes], bytes]):
-        self._fileobj = file
-        self._transform = transform
-        self._size = -1
+        self.fileobj = file
+        self.transform = transform
 
     @property
     def name(self) -> str:
-        return self._fileobj.name
+        return self.fileobj.name
 
     def exists(self) -> bool:
-        return self._fileobj.exists()
+        return self.fileobj.exists()
 
     def open(self, mode:str) -> BinaryMinimalFile:
-        return BinaryMinimalFileTransformed(self._fileobj.open('rb'), self._transform)
+        return BinaryMinimalFileTransformed(self.fileobj.open('rb'), self.transform)
 
     @property
     def etag(self) -> str:
-            return self._fileobj.etag
+            return self.fileobj.etag
     @property
     def size(self) -> int:
         """This is only set after `open()` or `exists()` were called."""
         # TODO Size is going to be a lie.
-        return self._fileobj.size
+        return self.fileobj.size
 
     @property
     def updated(self) -> datetime:
-        return self._fileobj.updated
+        return self.fileobj.updated
 
     def __repr__(self) -> str:
         return self.__str__()
 
     def __str__(self) -> str:
-        return f"<FileProcessed fileobj={self._fileobj} transform={self._transform}>"
+        return f"<FileProcessed fileobj={self.fileobj} transform={self.transform}>"
 
 
