@@ -53,29 +53,14 @@ def loaded_db():
 
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
-    """App setup with DB backends."""
+    """App setup with DB backends. Also hybrid listing service"""
 
-    conf = test_config()
-    app = create_web_app(**conf)
-
-    with app.app_context():
-        import browse.services.documents as documents
-        from browse.services.listing import db_listing
-        from flask import g
-        g.doc_service = documents.db_docs(app.config, g)
-        g.listing_service = hybrid_listing(app.config, g)
-
-    return app
-
-@pytest.fixture(scope='session')
-def app_with_hybrid_listings(loaded_db):
-    """App setup with DB backends."""
     conf = test_config()
     app = create_web_app(**conf)
 
     with app.app_context():
         from flask import g
-        g.doc_service = documents.fs_docs(app.config, g)
+        g.doc_service = documents.db_docs(app.config, g)
         g.listing_service = hybrid_listing(app.config, g)
 
     return app
@@ -114,7 +99,6 @@ def app_with_test_fs(loaded_db):
     # This depends on loaded_db becasue the services.database needs the DB
     # to be loaded eventhough listings and abs are done via FS.
 
-    import browse.services.documents as documents
     import browse.services.listing as listing
 
     conf = test_config()
@@ -148,9 +132,9 @@ def client_with_fake_listings(app_with_fake):
         yield app_with_fake.test_client() # yield so the tests already have the app_context
 
 @pytest.fixture(scope='function')
-def client_with_hybrid_listings(app_with_hybrid_listings):
-    with app_with_hybrid_listings.app_context():
-        yield app_with_hybrid_listings.test_client() # yield so the tests already have the app_context
+def client_with_hybrid_listings(app_with_db):
+    with app_with_db.app_context():
+        yield app_with_db.test_client() # yield so the tests already have the app_context
 
 @pytest.fixture(scope='function')
 def client_with_test_fs(app_with_test_fs):

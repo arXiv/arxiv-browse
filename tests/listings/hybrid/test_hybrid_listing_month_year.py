@@ -75,8 +75,8 @@ def test_transform_into_listing():
     assert new[0].primary=="cs.CG" and cross[0].primary=="cs.LO"
     assert new[0].article.arxiv_id_v=="1234.5678v1" and cross[0].article.arxiv_id_v=="1234.5679v1"
 
-def test_listings_for_month(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_listings_for_month(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         #finds primary listings for a category
@@ -140,8 +140,8 @@ def test_listings_for_month(app_with_hybrid_listings):
         assert items.pubdates[0][0].year==2009 and items.pubdates[0][0].month==6
         assert any(item.id=="0906.3421" and item.listingType=="new" for item in items.listings)
 
-def test_listings_for_year(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_listings_for_year(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
 
