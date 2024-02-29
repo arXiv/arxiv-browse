@@ -26,7 +26,7 @@ from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
 
 from browse.stream.file_processing import process_file
-from flask import Response, abort, make_response, render_template
+from flask import Response, abort, make_response, render_template, request
 from flask_rangerequest import RangeRequest
 from werkzeug.exceptions import  NotFound
 
@@ -60,11 +60,30 @@ def default_resp_fn(format: FileFormat,
     extra: Optional[str], optional
         Any extra after the normal URL path part. For use in anc files or html files.
     """
-    # Have to do Range Requests to get GCP and fastly CDNs to accept larger objects.
-    resp: Response = RangeRequest(file.open('rb'),
-                                  etag=file.etag,
-                                  last_modified=file.updated,
-                                  size=file.size).make_response()
+    resp: Response = Response()
+    if request.method == 'GET' and 'range' in [hk.lower() for hk in request.headers.keys()]:
+        # Fastly requires Range response to cache large objects (>20MB),
+        # Cloud run requires response larger than 20MB to be chunked but Range response will be smaller.
+        resp = RangeRequest(file.open('rb'),
+                            etag=file.etag,
+                            last_modified=file.updated,
+                            size=file.size).make_response()
+    else:
+        # Cloud run needs chunked for large responses
+        if request.method == "GET":
+            # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
+            resp = make_response(file.open("rb"))
+            # but the unit test client doesn't do that so we force it for those
+            # see https://github.com/pallets/flask/issues/5424
+            resp.headers["Transfer-Encoding"] = "chunked"
+            # Don't set Content-Length, it will disable Transfer-Encoding: chunked
+        else:
+            resp.headers["Content-Length"] = str(file.size)
+
+        resp.set_etag(file.etag)
+        resp.headers["Last-Modified"] = last_modified(file)
+        resp.headers["Accept-Ranges"] = "bytes"
+
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
     if isinstance(format, FileFormat):
@@ -81,20 +100,13 @@ def src_resp_fn(format: FileFormat,
                 version: VersionEntry,
                 extra: Optional[str] = None) -> Response:
     """Download source"""
-    resp = RangeRequest(file.open('rb'),
-                        etag=file.etag,
-                        last_modified=file.updated,
-                        size=file.size).make_response()
-
+    resp = default_resp_fn(format, file, arxiv_id, docmeta, version, extra)
     suffixes = Path(file.name).suffixes
     if not arxiv_id.is_old_id:
         suffixes.pop(0)  # get rid of .12345
     filename = download_file_base(arxiv_id, version) + "".join(suffixes)
     resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
-
-    add_mimetype(resp, file.name)
-    add_time_headers(resp, file, arxiv_id)
-    return resp  # type: ignore
+    return resp
 
 def pdf_resp_fn(format: FileFormat,
                  file: FileObj,
@@ -108,13 +120,16 @@ def pdf_resp_fn(format: FileFormat,
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
     return resp
 
+
 def get_pdf_resp(arxiv_id_str: str, archive: Optional[str] = None) -> Response:
     """Gets a `Response` for a PDF reqeust."""
     return get_dissemination_resp(fileformat.pdf, arxiv_id_str, archive, pdf_resp_fn)
 
+
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
     return get_dissemination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
+
 
 
 def get_dissemination_resp(format: Acceptable_Format_Requests,
@@ -172,47 +187,46 @@ def html_response_function(format: FileFormat,
                 file_list: Union[List[FileObj],FileObj],
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
-                version: VersionEntry)-> Response:
+                version: VersionEntry) -> Response:
     if docmeta.source_format == 'html':
-        if not isinstance(file_list,list):
-            return unavailable(arxiv_id)
-        return html_source_response_function(file_list,arxiv_id)
+        if isinstance(file_list, FileObj):
+            return html_source_single_response_function(file_list, arxiv_id)
+        else:
+            return html_source_listing_response_fn(file_list, arxiv_id)
+    elif isinstance(file_list, FileObj):
+        return _latexml_response(format, file_list, arxiv_id,docmeta,version)
     else:
-        if not isinstance(file_list,FileObj):
-            return unavailable(arxiv_id)
-        return _latexml_response(format,file_list,arxiv_id,docmeta,version)
+        return unavailable(arxiv_id)
 
-def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
-    path=arxiv_id.extra
-    requested_file=None
-    #try and serve specific file path
-    if path:
-        for file in file_list:
-            if path[1:]== _get_html_file_name(file.name): #first character of path is /
-                requested_file=file
-                break
-        if requested_file is None: #couldn't find file with that path
-            raise NotFound
-    else: #just serve the article
-        html_files=[]
-        file_names=[]
-        for file in file_list:
-            if file.name.endswith(".html"):
-                html_files.append(file)
-                file_names.append(_get_html_file_name(file.name))
-        if len(html_files)<1:
-            return unavailable(arxiv_id)
-        if len(html_files)==1: #serve the only html file
-            requested_file=html_files[0]
-        else: #file selector for multiple html files
-            return multiple_html_files(arxiv_id,file_names)
 
-    if requested_file.name.endswith(".html"):
-        last_mod= last_modified(requested_file)
-        output= process_file(requested_file, post_process_html)
+def html_source_single_response_function(file: FileObj, arxiv_id: Identifier) -> Response:
+    """Produces a `Response`for a single file for a paper with HTML source."""
+    # do post_processing
+    if file.name.endswith(".html"):
+        last_mod= last_modified(file)
+        output= process_file(file, post_process_html)
         return _source_html_response(output, last_mod)
     else:
-        return _guess_response(requested_file, arxiv_id)
+        return _guess_response(file, arxiv_id)
+
+def html_source_listing_response_fn(file_list: List[FileObj], arxiv_id: Identifier) -> Response:
+    """Produces a listing `Response` for a paper with HTML source."""
+    if not isinstance(file_list, list):
+        return unavailable(arxiv_id)
+
+    html_files = []
+    file_names = []
+    for file in file_list:
+        if file.name.endswith(".html"):
+            html_files.append(file)
+            file_names.append(_get_html_file_name(file.name))
+    if len(html_files) < 1:
+        return unavailable(arxiv_id)
+    if len(html_files) == 1:  # serve the only html file
+        return html_source_single_response_function(html_files[0], arxiv_id)
+    else:  # file selector for multiple html files
+        return multiple_html_files(arxiv_id, file_names)
+
 
 def _get_html_file_name(name:str) -> str:
     # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes
@@ -228,7 +242,6 @@ def _latexml_response(format: FileFormat,
                     arxiv_id: Identifier,
                     docmeta: DocMetadata,
                     version: VersionEntry) -> Response:
-
     return _guess_response(file,arxiv_id)
 
 def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:

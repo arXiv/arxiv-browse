@@ -58,6 +58,14 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     """
     return get_pdf_resp(arxiv_id, archive)
 
+@blueprint.route("/pdf_test/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+@blueprint.route("/pdf_test/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
+def pdf_test(arxiv_id: str, archive=None):  # type: ignore
+    """Path to test pdf via fastly.
+
+    Can be removed when no longer needed."""
+    return get_dissemination_resp(fileformat.pdf, arxiv_id, archive)
+
 
 @blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/format/<string:arxiv_id>", methods=['GET', 'HEAD'])
