@@ -122,8 +122,6 @@ class Settings(BaseSettings):
       have DOCUMENT_LISTING_PATH set.
     - `browse.services.listing.hybrid_listing`: Listing from legacy listing files with new bits from database. Needs to
       have DOCUMENT_LISTING_PATH set.
-    - `browse.services.listing.db_listing`: Listing from DB. Slow and lacks data for
-       before 2010.
     - `browse.services.listing.fake`: A totally fake set of listings for testing.
     """
 
