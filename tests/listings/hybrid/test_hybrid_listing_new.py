@@ -10,8 +10,8 @@ def validate_new_listing(listing: List[ListingItem]):
         all_ids.add(item.id)
         assert item.listingType!="no_match"
 
-def test_basic_listing(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_basic_listing(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math.RT", 0, 15)
@@ -23,56 +23,56 @@ def test_basic_listing(app_with_hybrid_listings):
         for item in listing.listings
     )
 
-def test_no_abs(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_no_abs(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math.PR", 0, 100)
     validate_new_listing(listing.listings)
     assert all(item.id !="0712.3217" for item in listing.listings)
 
-def test_no_replacements_above_5(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_no_replacements_above_5(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math.DG", 0, 100)
     validate_new_listing(listing.listings)
     assert all(item.id !="0906.3336" for item in listing.listings)
     
-def test_find_alias(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_find_alias(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("eess.SY", 0, 15)
     validate_new_listing(listing.listings)
     assert any(item.id =="1008.3222" and item.listingType=="new" for item in listing.listings)
     
-def test_identify_new(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_identify_new(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math.CO", 0, 15)
     validate_new_listing(listing.listings)
     assert any(item.id =="0906.3421" and item.listingType=="new" for item in listing.listings)
 
-def test_identify_new_cross(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_identify_new_cross(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("cond-mat.stat-mech", 0, 15)
     validate_new_listing(listing.listings)
     assert any(item.id =="0906.3421" and item.listingType=="cross" for item in listing.listings)
 
-def test_identify_cross(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_identify_cross(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math.NT", 0, 15)
     validate_new_listing(listing.listings)
     assert any(item.id =="0906.2112" and item.listingType=="cross" for item in listing.listings)
 
-def test_identify_replace(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_identify_replace(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_new_articles("math-ph", 0, 15)
@@ -84,8 +84,8 @@ def test_identify_replace(app_with_hybrid_listings):
     # cross listing replacement aka rep-cross
     assert any(item.id =="cond-mat/0703772" and item.listingType=="rep" for item in listing2.listings)
     
-def test_listing_counts(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_listing_counts(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math", 0, 100)
@@ -95,9 +95,9 @@ def test_listing_counts(app_with_hybrid_listings):
     assert listing.rep_count==4
     assert len(listing.listings) == listing.new_count + listing.cross_count + listing.rep_count
 
-def test_listing_order(app_with_hybrid_listings):
+def test_listing_order(app_with_db):
     #new then cross then replace then replace cross
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math", 0, 100)
@@ -120,8 +120,8 @@ def test_listing_order(app_with_hybrid_listings):
                 assert item.id>last_id
             last_id=item.id
     
-def test_pagination(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_pagination(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_new_articles("math", 0, 1)
@@ -136,8 +136,8 @@ def test_pagination(app_with_hybrid_listings):
     first_id=listing1.listings[0].id
     assert all(item.id !=first_id for item in listing2.listings)
     
-def test_archive_listing(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_archive_listing(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_new_articles("math", 0, 30)
@@ -152,9 +152,9 @@ def test_archive_listing(app_with_hybrid_listings):
     validate_new_listing(listing2.listings)
     assert any(item.id =="1008.3222" and item.listingType == "new" for item in listing2.listings)
 
-def test_intra_archive_crosses(app_with_hybrid_listings):
+def test_intra_archive_crosses(app_with_db):
     #crosslists from one category into another shouldnt appear as crosses on the archive page
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_new_articles("math", 0, 30)

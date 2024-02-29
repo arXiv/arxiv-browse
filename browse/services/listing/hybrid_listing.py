@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Any
 from datetime import datetime
 
 from browse.services.listing.fs_listings import FsListingFilesService
@@ -17,6 +17,9 @@ logger.level = logging.DEBUG
 
 
 class HybridListingService(ListingService):
+    def __init__(self, db: Any) -> None:
+        self.db=db
+
     def monthly_counts(self, archive: str, year: int) -> YearCount:
         return get_yearly_article_counts(archive, year)
 

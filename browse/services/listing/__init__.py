@@ -29,16 +29,9 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
 
 def hybrid_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for filesystem-based listing service."""
-    from .hybrid_listing import HybridListingService
-    return HybridListingService()
-
-def db_listing(config: dict, _: Any) -> "ListingService":
-    """Factory function for DB backed listing service."""
     from browse.services.database import models
-    from .db_listing_impl import DBListingService
-    # maybe pass in the specific classes for the tables we need?
-    return DBListingService(models.db)
-
+    from .hybrid_listing import HybridListingService
+    return HybridListingService(models.db)
 
 def fake(config: Any, _: Any) -> "ListingService":
     """Factory function for fake listing service."""
