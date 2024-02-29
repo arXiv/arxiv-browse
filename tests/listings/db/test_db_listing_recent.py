@@ -114,8 +114,8 @@ def test_archive_listing(app_with_db):
     validate_recent_listing(listing2.listings)
     assert any(item.id =="1008.3222" and item.listingType == "new" for item in listing2.listings)
 
-def test_recent_listing_page( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math.MP/recent")
     assert rv.status_code == 200
     text = rv.text
@@ -126,8 +126,8 @@ def test_recent_listing_page( client_with_hybrid_listings):
     assert "Optics (physics.optics)" in text
     assert "; Mathematical Physics (math-ph)" in text
 
-def test_recent_listing_page_alternate_names( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page_alternate_names( client_with_db_listings):
+    client = client_with_db_listings
     #subsumed archive case
     rv = client.get("/list/alg-geom/recent")
     assert rv.status_code == 200
@@ -150,8 +150,8 @@ def test_recent_pagination(app_with_db):
     first_id=listing1.listings[0].id
     assert all(item.id !=first_id for item in listing2.listings)
     
-def test_recent_listing_page_pagination( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page_pagination( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math/recent?show=1")
     assert rv.status_code == 200
     text = rv.text
@@ -166,8 +166,8 @@ def test_recent_listing_page_pagination( client_with_hybrid_listings):
     assert "0704.0046" in text
     assert "Tue, 1 Feb 2011 (showing 1 of 1 entries )" in text
 
-def test_recent_page_links( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_page_links( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text

@@ -161,8 +161,8 @@ def test_intra_archive_crosses(app_with_db):
     validate_new_listing(listing.listings)
     assert all(item.id !="0906.2112" or item.listingType != "cross" for item in listing.listings)
 
-def test_new_listing_page( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_new_listing_page( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math.RT/new")
     assert rv.status_code == 200
     text = rv.text
@@ -171,8 +171,8 @@ def test_new_listing_page( client_with_hybrid_listings):
     assert "Leibniz superalgebras graded by finite root systems" in text
     assert "showing 1 of 1 entries" in text
 
-def test_new_listing_page_alternate_names( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_new_listing_page_alternate_names( client_with_db_listings):
+    client = client_with_db_listings
     #subsumed archive case
     rv = client.get("/list/mtrl-th/new")
     assert rv.status_code == 200

@@ -22,7 +22,7 @@ import os
 from tests import path_of_for_test
 
 import browse.services.documents as documents
-from browse.services.listing import hybrid_listing
+from browse.services.listing import db_listing
 
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
@@ -31,7 +31,7 @@ TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
 TESTING_CONFIG = {
     "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
     "SQLALCHEMY_DATABASE_URI" : DEFAULT_DB,
-    'DOCUMENT_LISTING_SERVICE': hybrid_listing,
+    'DOCUMENT_LISTING_SERVICE': db_listing,
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
     "TESTING": True,
@@ -53,7 +53,7 @@ def loaded_db():
 
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
-    """App setup with DB backends. Also hybrid listing service"""
+    """App setup with DB backends and listing service."""
 
     conf = test_config()
     app = create_web_app(**conf)
@@ -61,7 +61,7 @@ def app_with_db(loaded_db):
     with app.app_context():
         from flask import g
         g.doc_service = documents.db_docs(app.config, g)
-        g.listing_service = hybrid_listing(app.config, g)
+        g.listing_service = db_listing(app.config, g)
 
     return app
 
@@ -132,7 +132,7 @@ def client_with_fake_listings(app_with_fake):
         yield app_with_fake.test_client() # yield so the tests already have the app_context
 
 @pytest.fixture(scope='function')
-def client_with_hybrid_listings(app_with_db):
+def client_with_db_listings(app_with_db):
     with app_with_db.app_context():
         yield app_with_db.test_client() # yield so the tests already have the app_context
 
@@ -179,7 +179,7 @@ def _app_with_db():
 
     conf = test_conf()
     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
-    conf["DOCUMENT_LISTING_SERVICE"] = hybrid_listing
+    conf["DOCUMENT_LISTING_SERVICE"] = db_listing
 
     app = create_web_app(**conf)
 
