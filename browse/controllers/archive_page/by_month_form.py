@@ -46,5 +46,5 @@ class ByMonthForm(FlaskForm):
                  archive: Dict[str, Any],
                  years: List[int]):
         super(ByMonthForm, self).__init__()
-        self.year.choices = [(str(ye)[-2:], str(ye)) for ye in years]
+        self.year.choices = [(str(ye), str(ye)) for ye in years]
         self.archive.data = archive_id

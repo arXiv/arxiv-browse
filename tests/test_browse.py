@@ -444,7 +444,7 @@ class BrowseTest(unittest.TestCase):
             g_sun['href'], 'https://arxiv.org/search/eess?searchtype=author&query=Sun,+G')
         
     def test_year(self):
-        rv = self.client.get('/year/astro-ph/09')
+        rv = self.client.get('/year/astro-ph/2009')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.client.get('/year/astro-ph/')
@@ -453,17 +453,17 @@ class BrowseTest(unittest.TestCase):
         rv = self.client.get('/year/astro-ph')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.client.get('/year/astro-ph/09/')
+        rv = self.client.get('/year/astro-ph/2009/')
         self.assertEqual(rv.status_code, 200)
 
         rv = self.client.get('/year')
         self.assertEqual(rv.status_code, 404)
 
         rv = self.client.get('/year/astro-ph/9999')
-        self.assertEqual(rv.status_code, 307,
-                         'Future year should cause temporary redirect')
+        self.assertEqual(rv.status_code, 404,
+                         'Future year should cause 404')
 
-        rv = self.client.get('/year/fakearchive/01')
+        rv = self.client.get('/year/fakearchive/2001')
         self.assertNotEqual(rv.status_code, 200)
         self.assertLess(rv.status_code, 500, 'should not cause a 5XX')
 
