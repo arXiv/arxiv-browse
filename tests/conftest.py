@@ -22,7 +22,7 @@ import os
 from tests import path_of_for_test
 
 import browse.services.documents as documents
-from browse.services.listing import db_listing
+from browse.services.listing import db_listing, hybrid_listing
 
 DEFAULT_DB = "sqlite:///../tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'

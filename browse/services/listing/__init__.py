@@ -29,8 +29,9 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
 
 def hybrid_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for filesystem-based listing service."""
+    from browse.services.database import models
     from .hybrid_listing import HybridListingService
-    return HybridListingService()
+    return HybridListingService(models.db)
 
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
