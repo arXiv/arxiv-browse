@@ -486,6 +486,7 @@ class ArticleStore():
         src = self.sourcestore.get_src(arxiv_id, docmeta)
         return src if src is not None else "NO_SOURCE"
 
+
     def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
         if docmeta.source_format == 'html': # paper source is html
