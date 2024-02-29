@@ -2,7 +2,6 @@ import logging
 from typing import Optional, List, Union, Any
 from datetime import datetime
 
-from browse.services.listing.fs_listings import FsListingFilesService
 from browse.services.listing import YearCount, Listing, ListingNew, ListingItem, NotModifiedResponse, gen_expires, ListingService
 from browse.services.database.listings import (
     get_yearly_article_counts,
@@ -16,7 +15,7 @@ logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
 
 
-class HybridListingService(ListingService):
+class DBListingService(ListingService):
     def __init__(self, db: Any) -> None:
         self.db=db
 

@@ -167,8 +167,8 @@ def test_listings_for_year(app_with_db):
         assert items.pubdates[0][0].year==2009
         assert any(item.id=="0906.3421" and item.listingType=="new" for item in items.listings)
 
-def test_month_listing_page( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_month_listing_page( client_with_db_listings):
+    client = client_with_db_listings
 
     rv = client.get("/list/chao-dyn/1995-10")
     assert rv.status_code == 200
@@ -182,8 +182,8 @@ def test_month_listing_page( client_with_hybrid_listings):
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
 
-def test_year_listing_page( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_year_listing_page( client_with_db_listings):
+    client = client_with_db_listings
 
     #two digit year
     rv = client.get("/list/chao-dyn/1995")

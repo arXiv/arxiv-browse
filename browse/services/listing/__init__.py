@@ -27,11 +27,11 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
     from .fs_listings import FsListingFilesService
     return FsListingFilesService(config["DOCUMENT_LISTING_PATH"])
 
-def hybrid_listing(config: dict, _: Any) -> "ListingService":
+def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for filesystem-based listing service."""
     from browse.services.database import models
-    from .hybrid_listing import HybridListingService
-    return HybridListingService(models.db)
+    from .db_listing import DBListingService
+    return DBListingService(models.db)
 
 def fake(config: Any, _: Any) -> "ListingService":
     """Factory function for fake listing service."""
