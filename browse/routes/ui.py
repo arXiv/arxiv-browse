@@ -203,6 +203,10 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route("ct")
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
+    # Phasing out clickthrough and just supporting until all the links are gone.
+    if datetime.now().year > 2024:
+        raise NotFound
+
     if 'url' in request.args and 'v' in request.args:
         sec = current_app.config["CLICKTHROUGH_SECRET"].get_secret_value()
         if is_hash_valid(sec, request.args.get('url'), request.args.get('v')):
