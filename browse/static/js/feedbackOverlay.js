@@ -25,27 +25,53 @@ var bugReportState = {
 };
 
 function detectColorScheme() {
-    var theme = "light";
-    var current_theme = localStorage.getItem("ar5iv_theme");
+    // var theme = "light";
+    // var current_theme = localStorage.getItem("ar5iv_theme");
 
+    // if (current_theme) {
+    //     if (current_theme == "dark") {
+    //         theme = "dark";
+    //     }
+    // } else if (!window.matchMedia) {
+    //     return false;
+    // } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    //     theme = "dark";
+    // }
+    var theme = "light"; // 默认主题为浅色
+    var current_theme = localStorage.getItem("ar5iv_theme");
+    var default_mode = false;
     if (current_theme) {
-        if (current_theme == "dark") {
-            theme = "dark";
-        }
-    } else if (!window.matchMedia) {
-        return false;
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        theme = "dark";
+        theme = current_theme;
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark"; // 操作系统偏好为深色模式
+        default_mode = true
+    } else {
+        theme = "light";
+        default_mode = true 
     }
 
     if (theme == "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
+        if (default_mode){
+            document.documentElement.setAttribute("data-theme", "dark");
+            document.documentElement.setAttribute("default_mode", "true");
+        }
+        else{
+            document.documentElement.setAttribute("data-theme", "dark");
+            document.documentElement.setAttribute("default_mode", "false");
+        }
         const colorSchemeIcon = document.querySelector('.color-scheme-icon');
         if (colorSchemeIcon) {
             colorSchemeIcon.setAttribute('aria-label', 'Dark mode');
         }
     } else {
-        document.documentElement.setAttribute("data-theme", "light");
+        if (default_mode){
+            document.documentElement.setAttribute("data-theme", "light");
+            document.documentElement.setAttribute("default_mode", "true");
+        }
+        else{
+            document.documentElement.setAttribute("data-theme", "light");
+            document.documentElement.setAttribute("default_mode", "false");
+        }
         const colorSchemeIcon = document.querySelector('.color-scheme-icon');
         if (colorSchemeIcon) {
             colorSchemeIcon.setAttribute('aria-label', 'Light mode');
@@ -59,21 +85,37 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function toggleColorScheme() {
+    // var current_theme = localStorage.getItem("ar5iv_theme");
+    // console.log("Current theme is ", current_theme);
+    // if (current_theme) {
+    //     if (current_theme == "light") {
+    //         localStorage.setItem("ar5iv_theme", "dark");
+    //     } else {
+    //         localStorage.setItem("ar5iv_theme", "light");
+    //     }
+    // } else {
+    //     localStorage.setItem("ar5iv_theme", "dark");
+    // }
+    // detectColorScheme();
     var current_theme = localStorage.getItem("ar5iv_theme");
-    if (current_theme) {
-        if (current_theme == "light") {
-            localStorage.setItem("ar5iv_theme", "dark");
-        } else {
-            localStorage.setItem("ar5iv_theme", "light");
-        }
-    } else {
+    // var desktopHeader = document.querySelectorAll('.desktop_header');
+    // var toggleButton = document.querySelectorAll('.ar5iv-toggle-color-scheme');
+    if (current_theme === "light") {
+        // toggleButton.title = 'Current mode is force light mode';
         localStorage.setItem("ar5iv_theme", "dark");
+    } else if (current_theme === "dark") {
+        // 新增状态，返回操作系统默认
+        // toggleButton.title = 'Current mode is force dark mode';
+        localStorage.removeItem("ar5iv_theme"); // 移除设置，使用操作系统默认
+    } else {
+        // toggleButton.title = 'Current mode is browser default mode';
+        localStorage.setItem("ar5iv_theme", "light"); // 如果之前是操作系统默认，下一状态设为强制浅色
     }
     detectColorScheme();
+
 }
 
 function addBugReportForm() {
-    const is_submission = window.location.pathname.split('/')[2] === 'submission';
     const theme = document.documentElement.getAttribute("data-theme");
     
     // Create the button element(the right bottom button)
@@ -135,7 +177,7 @@ function addBugReportForm() {
     const warningLabel = document.createElement("div");
     warningLabel.id = "warningLabel";
     warningLabel.setAttribute('class', 'form-text');
-    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
+    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including the content of an unannounced submission.";
 
     // Create the description input field
     const selectedTextDescriptionLabel = document.createElement("label");
@@ -201,9 +243,7 @@ function addBugReportForm() {
 
     // Append the elements to their respective parents
     // Update: Add warning label (next line)
-    if (is_submission) {
-        modalBody.appendChild(warningLabel);
-    }
+    modalBody.appendChild(warningLabel);
     modalBody.appendChild(titleLabel);
     modalBody.appendChild(titleInput);
     modalBody.appendChild(selectedTextDescriptionLabel);
