@@ -75,7 +75,7 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     try:
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
     except IdentifierException:
-        raise BadRequest("Bad paper identifier")
+        raise BadRequest(f"Bad paper identifier: {arxiv_id}")
 
     redirect = check_supplied_identifier(arxiv_identifier, "dissemination.format")
     if redirect:
