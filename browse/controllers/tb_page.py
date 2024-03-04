@@ -20,7 +20,7 @@ from browse.services.database import (
 )
 
 from browse.services.documents import get_doc_service
-from browse.services.documents.base_documents import AbsException, \
+from arxiv.document.exceptions import AbsException, \
     AbsNotFoundException
 from browse.formatting.search_authors import queries_for_authors, \
     split_long_author_list

@@ -143,8 +143,8 @@ mysql = ["PyMySQL (>=1.1,<2.0)", "sqlalchemy (>=2.0.27,<2.1.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/arXiv/arxiv-base.git"
-reference = "c53f7419a9d9224acd9f53bf389b5cebf1259a13"
-resolved_reference = "c53f7419a9d9224acd9f53bf389b5cebf1259a13"
+reference = "9d567727550bdd3aa6c370f98bdbedf971739d56"
+resolved_reference = "9d567727550bdd3aa6c370f98bdbedf971739d56"
 
 [[package]]
 name = "asn1crypto"
@@ -3153,4 +3153,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c0bdb6c5f02ac0b7e541c09fcbd69c3e21a81f627a6da0a9ade14b4afc93447d"
+content-hash = "0b87ed490a481d90f1bbcb59a5838c6e1e2d262763a1edf3146a90ee9ae5aaac"

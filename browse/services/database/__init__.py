@@ -33,7 +33,7 @@ from arxiv.db.models import (
     AuthorIds,
     TapirUser,
     t_arXiv_in_category,
-    t_arXiv_stats_hourly,
+    StatsHourly,
     t_arXiv_paper_owners,
     Metadata
 )
@@ -339,7 +339,7 @@ def get_sequential_id(paper_id: Identifier,
 
 
 def __all_hourly_stats_query() -> Query:
-    return session.execute(select(t_arXiv_stats_hourly))
+    return session.execute(select(StatsHourly))
 
 
 
@@ -354,12 +354,12 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     print ("MADE IT HERE")
     rows = session.execute(
         select(
-            func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
-            t_arXiv_stats_hourly.c.access_type,
-            func.max(t_arXiv_stats_hourly.c.node_num).label("num_nodes"),
+            func.sum(StatsHourly.connections).label("num_connections"),
+            StatsHourly.access_type,
+            func.max(StatsHourly.node_num).label("num_nodes"),
         )
-        .filter(t_arXiv_stats_hourly.c.ymd == stats_date.isoformat())
-        .group_by(t_arXiv_stats_hourly.c.access_type)
+        .filter(StatsHourly.ymd == stats_date.isoformat())
+        .group_by(StatsHourly.access_type)
     ).fetchall()
     for r in rows:
         if r.access_type == "A":
@@ -380,10 +380,10 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     return list(
         __all_hourly_stats_query()
         .filter(
-            t_arXiv_stats_hourly.c.access_type == "N",
-            t_arXiv_stats_hourly.c.ymd == stats_date.isoformat(),
+            StatsHourly.access_type == "N",
+            StatsHourly.ymd == stats_date.isoformat(),
         )
-        .order_by(asc(t_arXiv_stats_hourly.c.hour), t_arXiv_stats_hourly.c.node_num)
+        .order_by(asc(StatsHourly.hour), StatsHourly.node_num)
         .all()
     )
 
