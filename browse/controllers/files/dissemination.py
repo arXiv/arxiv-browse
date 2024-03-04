@@ -1,7 +1,6 @@
 """Controller for PDF, source and other downloads."""
 
 import logging
-from email.utils import format_datetime
 from pathlib import Path
 from typing import Callable, Optional, Union, List
 import tempfile
@@ -15,21 +14,19 @@ from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from browse.domain import fileformat
 
-from browse.controllers.files import last_modified, add_time_headers, cc_versioned, add_mimetype, download_file_base
+from browse.controllers.files import last_modified, add_time_headers, add_mimetype, \
+    download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html, not_found, bad_id, cannot_build_pdf
 
-from browse.services.object_store.fileobj import FileObj
+from browse.services.object_store.fileobj import FileObj, FileTransform
 
 from browse.services.html_processing import post_process_html
 
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
-from browse.services.next_published import next_publish
 
-from browse.stream.file_processing import process_file
-from flask import Response, abort, make_response, render_template
+from flask import Response, abort, make_response, render_template, request
 from flask_rangerequest import RangeRequest
-from werkzeug.exceptions import  NotFound
 
 
 logger = logging.getLogger(__file__)
@@ -40,68 +37,103 @@ Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata,
                         VersionEntry], Response]
 
 
-def default_resp_fn(format: FileFormat,
+def default_resp_fn(format: Optional[FileFormat],
                     file: FileObj,
                     arxiv_id: Identifier,
-                    docmeta: DocMetadata,
-                    version: VersionEntry,
-                    extra: Optional[str] = None) -> Response:
-    """Creates a response with approprate headers for the `file`.
+                    docmeta: Optional[DocMetadata] = None,
+                    version: Optional[VersionEntry] = None,
+                    guess_content_type: Optional[bool] = False) -> Response:
+    """Creates a response with appropriate headers for the `file`.
 
     Parameters
     ----------
     format : FileFormat
         `FileFormat` of the `file`
-    item : DocMetadata
+    docmeta : DocMetadata
         article that the response is for.
     file : FileObj
         File object to use in the response.
+    version: VersionEntry
+        Version of the paper to consider.
+    extra: Optional[str], optional
+        Any extra after the normal URL path part. For use in anc files or html files.
     """
+    resp: Response = Response()
+    if request.method == 'GET' and 'range' in [hk.lower() for hk in request.headers.keys()]:
+        # Fastly requires Range response to cache large objects (>20MB),
+        # Cloud run requires response larger than 20MB to be chunked but Range response will be smaller.
+        resp = RangeRequest(file.open('rb'),
+                            etag=file.etag,
+                            last_modified=file.updated,
+                            size=file.size).make_response()
+    else:
+        # Cloud run needs chunked for large responses
+        if request.method == "GET":
+            # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
+            resp = make_response(file.open("rb"))
+            # but the unit test client doesn't do that so we force it for those
+            # see https://github.com/pallets/flask/issues/5424
+            resp.headers["Transfer-Encoding"] = "chunked"
+            # Don't set Content-Length, it will disable Transfer-Encoding: chunked
+        else:
+            resp.headers["Content-Length"] = str(file.size)
 
-    # Have to do Range Requests to get GCP CDN to accept larger objects.
-    resp: Response = RangeRequest(file.open('rb'),
-                                  etag=last_modified(file),
-                                  last_modified=file.updated,
-                                  size=file.size).make_response()
+        resp.set_etag(file.etag)
+        resp.headers["Last-Modified"] = last_modified(file)
+        resp.headers["Accept-Ranges"] = "bytes"
+
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-    if isinstance(format, FileFormat):
-        resp.headers['Content-Type'] = format.content_type
+
+    if guess_content_type:
+        content_type, _ = mimetypes.guess_type(file.name)
+        if content_type:
+            resp.headers["Content-Type"] = content_type
+    else:
+        if format and isinstance(format, FileFormat):
+            resp.headers['Content-Type'] = format.content_type
 
     add_time_headers(resp, file, arxiv_id)
     return resp
 
 
-def src_resp_fn(format: FileFormat,
-                file: FileObj,
-                arxiv_id: Identifier,
-                docmeta: DocMetadata,
-                version: VersionEntry,
-                extra: Optional[str] = None) -> Response:
+def _src_response(format: FileFormat,
+                  file: FileObj,
+                  arxiv_id: Identifier,
+                  docmeta: DocMetadata,
+                  version: VersionEntry,
+                  extra: Optional[str] = None) -> Response:
     """Download source"""
-    resp = RangeRequest(file.open('rb'),
-                        etag=last_modified(file),
-                        last_modified=file.updated,
-                        size=file.size).make_response()
+    resp = default_resp_fn(format, file, arxiv_id, docmeta, version)
     suffixes = Path(file.name).suffixes
     if not arxiv_id.is_old_id:
         suffixes.pop(0)  # get rid of .12345
     filename = download_file_base(arxiv_id, version) + "".join(suffixes)
-
-    add_mimetype(resp, file.name)
     resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
-    add_time_headers(resp, file, arxiv_id)
-    return resp  # type: ignore
+    return resp
+
+def pdf_resp_fn(format: FileFormat,
+                 file: FileObj,
+                    arxiv_id: Identifier,
+                    docmeta: DocMetadata,
+                    version: VersionEntry,
+                    extra: Optional[str] = None) -> Response:
+    """function to make a `Response` for a PDF."""
+    resp = default_resp_fn(format, file, arxiv_id, docmeta, version)
+    filename = f"{arxiv_id.filename}v{version.version}.pdf"
+    resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
+    return resp
+
+
+def get_pdf_resp(arxiv_id_str: str, archive: Optional[str] = None) -> Response:
+    """Gets a `Response` for a PDF reqeust."""
+    return get_dissemination_resp(fileformat.pdf, arxiv_id_str, archive, pdf_resp_fn)
 
 
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp("e-print", arxiv_id_str, archive, src_resp_fn)
+    return get_dissemination_resp("e-print", arxiv_id_str, archive, _src_response)
 
-
-def get_e_print_resp(arxiv_id_str: str,
-                     archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp("e-print", arxiv_id_str, archive)
 
 
 def get_dissemination_resp(format: Acceptable_Format_Requests,
@@ -153,53 +185,51 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
 
 def get_html_response(arxiv_id_str: str,
                            archive: Optional[str] = None) -> Response:
-    return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, html_response_function)
+    return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, _html_response)
     
-def html_response_function(format: FileFormat,
-                file_list: Union[List[FileObj],FileObj],
-                arxiv_id: Identifier,
-                docmeta: DocMetadata,
-                version: VersionEntry)-> Response:
+def _html_response(format: FileFormat,
+                   file_list: Union[List[FileObj],FileObj],
+                   arxiv_id: Identifier,
+                   docmeta: DocMetadata,
+                   version: VersionEntry) -> Response:
     if docmeta.source_format == 'html':
-        if not isinstance(file_list,list):
-            return unavailable(arxiv_id)
-        return html_source_response_function(file_list,arxiv_id)
+        if isinstance(file_list, FileObj):
+            return _html_source_single_response(file_list, arxiv_id)
+        else:
+            return _html_source_listing_response(file_list, arxiv_id)
+    elif isinstance(file_list, FileObj):
+        return default_resp_fn(format, file_list, arxiv_id, docmeta, version, guess_content_type=True)
     else:
-        if not isinstance(file_list,FileObj):
-            return unavailable(arxiv_id)
-        return _latexml_response(format,file_list,arxiv_id,docmeta,version)
+        return unavailable(arxiv_id)
 
-def html_source_response_function(file_list: List[FileObj], arxiv_id: Identifier)-> Response:
-    path=arxiv_id.extra
-    requested_file=None
-    #try and serve specific file path
-    if path:
-        for file in file_list:
-            if path[1:]== _get_html_file_name(file.name): #first character of path is /
-                requested_file=file
-                break
-        if requested_file is None: #couldn't find file with that path
-            raise NotFound
-    else: #just serve the article
-        html_files=[]
-        file_names=[]
-        for file in file_list:
-            if file.name.endswith(".html"):
-                html_files.append(file)
-                file_names.append(_get_html_file_name(file.name))
-        if len(html_files)<1:
-            return unavailable(arxiv_id)
-        if len(html_files)==1: #serve the only html file
-            requested_file=html_files[0]
-        else: #file selector for multiple html files
-            return multiple_html_files(arxiv_id,file_names)
 
-    if requested_file.name.endswith(".html"):
-        last_mod= last_modified(requested_file)
-        output= process_file(requested_file,post_process_html)
-        return _source_html_response(output, last_mod)
+def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Response:
+    """Produces a `Response`for a single file for a paper with HTML source."""
+    if file.name.endswith(".html"):  # do post_processing
+        return default_resp_fn(fileformat.html, FileTransform(file, post_process_html), arxiv_id)
     else:
-        return _guess_response(requested_file, arxiv_id)
+        return default_resp_fn(None, file, arxiv_id, guess_content_type=True)
+
+
+def _html_source_listing_response(file_list: List[FileObj], arxiv_id: Identifier) -> Response:
+    """Produces a listing `Response` for a paper with HTML source."""
+    if not isinstance(file_list, list):
+        return unavailable(arxiv_id)
+
+    html_files = []
+    file_names = []
+    for file in file_list:
+        if file.name.endswith(".html"):
+            html_files.append(file)
+            file_names.append(_get_html_file_name(file.name))
+    if len(html_files) < 1:
+        return unavailable(arxiv_id)
+    if len(html_files) == 1:  # serve the only html file
+        return _html_source_single_response(html_files[0], arxiv_id)
+    else:  # file selector for multiple html files
+        return make_response(render_template("dissemination/multiple_files.html",
+                                             arxiv_id=arxiv_id, file_names=file_names), 200,
+                             {"Cache-Control": maxage(arxiv_id.has_version)})
 
 def _get_html_file_name(name:str) -> str:
     # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes
@@ -209,99 +239,3 @@ def _get_html_file_name(name:str) -> str:
     else:
         result= parts[-1]
     return result
-
-def _latexml_response(format: FileFormat,
-                    file: FileObj,
-                    arxiv_id: Identifier,
-                    docmeta: DocMetadata,
-                    version: VersionEntry) -> Response:
-
-    return _guess_response(file,arxiv_id)
-
-def _guess_response(file: FileObj, arxiv_id:Identifier) -> Response:
-    """make a response for an unknown file type"""
-    resp: Response = RangeRequest(file.open('rb'),
-                                  etag=last_modified(file),
-                                  last_modified=file.updated,
-                                  size=file.size).make_response()
-
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    add_time_headers(resp, file, arxiv_id)
-    content_type, _ =mimetypes.guess_type(file.name)
-    if content_type:
-        resp.headers["Content-Type"] =content_type
-    return resp
-
-def _source_html_response(gen: Generator[BytesIO, None, None], last_mod: str) -> Response:
-    """make a response for a native html paper"""
-    #turn generator into temp file
-    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-        for data in gen:
-            temp_file.write(data) #type: ignore
-        temp_file.seek(0)
-    #make response
-        resp: Response = make_response(temp_file.read())
-        resp.status_code=200
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        resp.headers["Last-Modified"] = last_mod
-        resp.headers['Expires'] = format_datetime(next_publish()) #conference proceedigns can change if the papers they reference get updated
-        resp.headers["Content-Type"] = "text/html"
-        resp.headers["ETag"] = last_mod
-    return resp 
-
-def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
-    """Sets expire to one year, max allowed by RFC 2616"""
-    if had_specific_version:
-        headers = {'Cache-Control': 'max-age=31536000'}
-    else:
-        headers = {'Expires': format_datetime(next_publish())}
-    return make_response(render_template("dissemination/withdrawn.html",
-                                         arxiv_id=arxiv_id),
-                         404, headers)
-
-
-def unavailable(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/unavailable.html",
-                                         arxiv_id=arxiv_id), 500, {})
-
-
-def not_pdf(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/unavailable.html",
-                                         arxiv_id=arxiv_id), 404, {})
-
-def no_html(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/no_html.html",
-                                         arxiv_id=arxiv_id), 404, {})
-
-def not_found(arxiv_id: Identifier) -> Response:
-    headers = {'Expires': format_datetime(next_publish())}
-    return make_response(render_template("dissemination/not_found.html",
-                                         arxiv_id=arxiv_id), 404, headers)
-
-
-def not_found_anc(arxiv_id: Identifier) -> Response:
-    headers = {'Expires': format_datetime(next_publish())}
-    return make_response(render_template("src/anc_not_found.html",
-                                         arxiv_id=arxiv_id), 404, headers)
-
-
-def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
-    return make_response(render_template("dissemination/bad_id.html",
-                                         err_msg=err_msg,
-                                         arxiv_id=arxiv_id), 404, {})
-
-
-def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
-    return make_response(render_template("dissemination/cannot_build_pdf.html",
-                                         err_msg=msg,
-                                         arxiv_id=arxiv_id), 404, {})
-
-def multiple_html_files(arxiv_id: Identifier, file_names: List[str]) -> Response:
-    resp=make_response(render_template("dissemination/multiple_files.html",
-                                         arxiv_id=arxiv_id, file_names=file_names), 200, {})
-    resp.headers["Content-Type"] = "text/html"
-    if arxiv_id.has_version:
-        resp.headers['Cache-Control'] = cc_versioned()
-    else:
-        resp.headers['Expires'] = format_datetime(next_publish())
-    return resp

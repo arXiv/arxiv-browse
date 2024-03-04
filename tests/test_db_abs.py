@@ -99,7 +99,7 @@ def test_last_modified_no_publish_dt (dbclient):
 
     assert rt.status_code == 200
 
-    assert rt.headers['Last-Modified'].startswith('Thu, 15 Oct 2009')
+    assert rt.headers['Last-Modified'].startswith('Wed, 14 Oct 2009 20:23:18 GMT')
 
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})

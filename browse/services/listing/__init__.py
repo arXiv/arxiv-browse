@@ -17,6 +17,7 @@ def get_listing_service() -> "ListingService":
     """Get the listing service configured for the app context."""
     if "listing_service" not in g:
         fn = current_app.config["DOCUMENT_LISTING_SERVICE"]
+        print (type(fn))
         g.listing_service = fn(current_app.config, g)
 
     return cast(ListingService, g.listing_service)
@@ -27,17 +28,11 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
     from .fs_listings import FsListingFilesService
     return FsListingFilesService(config["DOCUMENT_LISTING_PATH"])
 
-def hybrid_listing(config: dict, _: Any) -> "ListingService":
-    """Factory function for filesystem-based listing service."""
-    from .hybrid_listing import HybridListingService
-    return HybridListingService(config["DOCUMENT_LISTING_PATH"])
-
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
     from .db_listing_impl import DBListingService
     # maybe pass in the specific classes for the tables we need?
     return DBListingService()
-
 
 def fake(config: Any, _: Any) -> "ListingService":
     """Factory function for fake listing service."""
@@ -131,7 +126,6 @@ class ListingNew:
     cross_count: int
     rep_count: int
     announced: date
-    submitted: Tuple[date, date]
     expires: str
 
 

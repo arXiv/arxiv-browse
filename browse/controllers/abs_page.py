@@ -46,7 +46,6 @@ from browse.services.documents import get_doc_service
 from arxiv.formats import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
-from browse.services.prevnext import prevnext_service
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -224,8 +223,7 @@ def _non_critical_abs_data(
     # Ancillary files
     response_data["ancillary_files"] = get_article_store().get_ancillary_files(abs_meta)
 
-    # Browse context
-    _check_context(arxiv_identifier, abs_meta.primary_category, response_data)
+    _prevnext_links(arxiv_identifier, abs_meta.primary_category, response_data)
 
     response_data["is_covid_match"] = _is_covid_match(abs_meta)
     response_data["datacite_doi"] = get_datacite_doi(
@@ -308,23 +306,12 @@ def _check_legacy_id_params(arxiv_id: str) -> str:
     return arxiv_id
 
 
-def _check_context(
+def _prevnext_links(
     arxiv_identifier: Identifier,
     primary_category: Optional[Category],
     response_data: Dict[str, Any],
 ) -> None:
-    """Adds prev URL, next URLs and context to response.
-
-    Parameters
-    ----------
-    arxiv_identifier : :class:`Identifier`
-    primary_category : :class: `Category`
-
-    Returns
-    -------
-    Dict of values to add to response_data
-    """
-    # Set up the context
+    """Adds previous and next URLs and context to response."""
     context = None
     if "context" in request.args and (
         request.args["context"] == "arxiv"
@@ -340,44 +327,22 @@ def _check_context(
             if pc.id in taxonomy.definitions.ARCHIVES:
                 context = pc.id
             else:
-                context = arxiv_identifier.archive
-    else:
-        context = None
+                if arxiv_identifier.archive in taxonomy.definitions.ARCHIVES:
+                    context = arxiv_identifier.archive
 
     response_data["browse_context"] = context
-
-    prevnext = prevnext_service().prevnext(arxiv_identifier, context)
-    next_url = None
-    prev_url = None
-    if arxiv_identifier.is_old_id or context == "arxiv":
-        # Revert to hybrid approach per ARXIVNG-2080
-        if prevnext.next_id:
-            next_url = url_for(
-                "browse.abstract",
-                arxiv_id=prevnext.next_id.id,
-                context="arxiv" if context == "arxiv" else None,
-            )
-        if prevnext.previous_id:
-            prev_url = url_for(
-                "browse.abstract",
-                arxiv_id=prevnext.previous_id.id,
-                context="arxiv" if context == "arxiv" else None,
-            )
-    else:  # Use prevnext controller to determine what the previous or next ID is.
-        next_url = url_for(
-            "browse.previous_next",
-            id=arxiv_identifier.id,
-            function="next",
-            context=context if context else None,
-        )
-        prev_url = url_for(
+    response_data["browse_context_previous_url"] = url_for(
             "browse.previous_next",
             id=arxiv_identifier.id,
             function="prev",
             context=context if context else None,
         )
-    response_data["browse_context_previous_url"] = prev_url
-    response_data["browse_context_next_url"] = next_url
+    response_data["browse_context_next_url"] = url_for(
+            "browse.previous_next",
+            id=arxiv_identifier.id,
+            function="next",
+            context=context if context else None,
+        )
 
 
 def _is_covid_match(docmeta: DocMetadata) -> bool:

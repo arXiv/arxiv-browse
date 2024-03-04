@@ -41,6 +41,7 @@ def get_hourly_stats_page(business_tz: str, requested_date_str: Optional[str] = 
     response_data["requested_dt"] = requested_dt
     response_data["business_tz"] = business_tz
 
+
     if requested_date_str:
         try:
             requested_dt = dateutil.parser.parse(requested_date_str)

@@ -4,7 +4,6 @@ from typing import List
 
 from browse.services import database
 from browse.services.documents import get_doc_service
-from browse.services.prevnext import prevnext_service
 from browse.services.listing import get_listing_service
 
 
@@ -13,6 +12,5 @@ def service_statuses() ->List[str]:
     probs = []
     probs.extend(get_listing_service().service_status())
     probs.extend(get_doc_service().service_status())
-    probs.extend(prevnext_service().service_status())
     probs.extend(database.service_status())
     return probs

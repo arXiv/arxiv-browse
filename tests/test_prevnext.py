@@ -4,7 +4,7 @@
 import pytest
 from unittest import TestCase, mock
 
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from browse.controllers import prevnext
 from browse.factory import create_web_app
@@ -57,8 +57,8 @@ class TestPrevNextController(TestCase):
                 self.assertEqual(status, 301)
 
                 mock_get_sequential_id.return_value = None
-                with self.assertRaises(BadRequest):
+                with self.assertRaises(NotFound):
                     prevnext.get_prevnext("1701.00002", "next", "physics.gen-ph")
                 mock_get_sequential_id.return_value = ""
-                with self.assertRaises(BadRequest):
+                with self.assertRaises(NotFound):
                     prevnext.get_prevnext("1701.00002", "next", "physics.gen-ph")

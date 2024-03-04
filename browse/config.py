@@ -114,16 +114,14 @@ class Settings(BaseSettings):
     """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
     ############################## Services ##############################
-    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.hybrid_listing'  # type: ignore
+    DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.
 
     Accepted values are
     - `browse.services.listing.fs_listing`: Listing from legacy listing files. Needs to
       have DOCUMENT_LISTING_PATH set.
-    - `browse.services.listing.hybrid_listing`: Listing from legacy listing files with new bits from database. Needs to
+    - `browse.services.listing.db_listing`: Listing from legacy listing files with new bits from database. Needs to
       have DOCUMENT_LISTING_PATH set.
-    - `browse.services.listing.db_listing`: Listing from DB. Slow and lacks data for
-       before 2010.
     - `browse.services.listing.fake`: A totally fake set of listings for testing.
     """
 
@@ -157,14 +155,6 @@ class Settings(BaseSettings):
 
     DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""
-
-    PREV_NEXT_SERVICE: PyObject = 'browse.services.prevnext.fsprevnext'  # type: ignore
-    """Implementation of the prev/next service used for those features on the abs page.
-
-    Currently the only value is `browse.services.prevnext.fsprevnext` This uses
-       DOCUMENT_LATEST_VERSIONS_PATH and DOCUMENT_ORIGNAL_VERSIONS_PATH.
-    """
-
 
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data

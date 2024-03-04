@@ -24,5 +24,4 @@ def db_docs(config: dict, _: Any) -> DocMetadataService:
     """Factory function for DB backed abstract service."""
     from browse.services.documents.db_implementation.db_abs import DbDocMetadataService
     from arxiv.db import engine
-    return DbDocMetadataService(engine,
-                                config["ARXIV_BUSINESS_TZ"])
+    return DbDocMetadataService(engine)
