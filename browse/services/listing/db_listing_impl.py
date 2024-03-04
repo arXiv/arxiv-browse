@@ -69,7 +69,7 @@ class DBListingService(ListingService):
     def _query_base(self,
                     archiveOrCategory: str,
                     mail_id: Optional[str]=None) -> Any:
-        query = NextMail.query
+        query = session.query(NextMail)
         query = query.join(Document, NextMail.document_id==Document.document_id)
         query = query.join(DocumentCategory,
                            Document.document_id==DocumentCategory.document_id)

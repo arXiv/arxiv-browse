@@ -222,7 +222,7 @@ class TestBrowseDatabaseService(TestCase):
             'There is at least one document in the DB.'
         )
 
-    @mock.patch('browse.services.database.models.db.session.query')
+    @mock.patch('arxiv.db.session.query')
     def test_error_conditions(self, mock_query) -> None:
         mock_query.side_effect = NoResultFound
         self.assertEqual(

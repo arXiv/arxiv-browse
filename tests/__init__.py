@@ -37,6 +37,7 @@ def execute_sql_files(sql_files: List[str], engine: Engine) -> None:
                     if not comment(line):
                         with engine.connect() as conn:
                             conn.execute(text(line))
+                            conn.commit()
         except Exception as err:
             raise Exception( f"Error at line {filename}:{lnum}") from err
     list(map(exec_sql, sql_files))
