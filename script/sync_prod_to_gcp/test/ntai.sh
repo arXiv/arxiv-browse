@@ -9,10 +9,7 @@ if [ ! -d sync.venv ] ; then
   make
 fi
 
-# useful debugging
-# S2G_DEBUG_FLAGS=--debug --test
-
 . sync.venv/bin/activate
-export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python subscribe_submissions.py $S2G_DEBUG_FLAGS --json-log-dir $JSON_LOG_DIR
+export GOOGLE_APPLICATION_CREDENTIALS=~/sync-test.json
+python subscribe_submissions.py --project=arxiv-development --debug --bucket=arxiv-sync-test-01 --json-log-dir /users/nt385/temp --topic=submission-publish 
 deactivate
