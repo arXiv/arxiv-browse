@@ -1173,6 +1173,18 @@ p.tagline {
 
 /*END ScienceCast CSS*/
 
+/*BEGIN Gotit.pub CSS*/
+
+.gotitpub-logo {
+  margin-left: 0pt;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 100%;
+  font-family: "EB Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/*END Gotit.pub CSS*/
+
 /*BEGIN Spaces CSS*/
 
 .spaces-summary {
@@ -3169,4 +3181,32 @@ a:hover .icon.filter-grey,
 a:hover .icon.filter-blue,
 a:hover .icon.filter-red {
     fill: #ffffff;
+}
+
+/****************************************
+ * alert styles
+ ****************************************/
+ .alert {
+  display: block;
+  background-color: #fff5f5;
+  border: 1px solid #cd0200;
+  color: #970503;
+  border-radius: 1em;
+  font-size: 1em;
+  line-height: 1.5;
+  padding: .3em 1em;
+}
+
+.alert svg {
+  fill: #970503;
+}
+
+.alert button {
+  float: right;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  padding: 0.5em;
 }

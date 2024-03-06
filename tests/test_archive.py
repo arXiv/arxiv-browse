@@ -10,8 +10,8 @@ def test_astroph_archive(client_with_test_fs):
 
     src = rv.data.decode("utf-8")
     assert "Astrophysics" in src
-    assert "/year/astro-ph/92" in src
-    assert "/year/astro-ph/19" in src
+    assert "/year/astro-ph/1992" in src
+    assert "/year/astro-ph/2019" in src
 
     assert "Astrophysics of Galaxies" in src, "Subcategories of astro-ph should be on archive page"
     assert "Earth and Planetary Astrophysics" in src, "Subcategories of astro-ph should be on archive page"

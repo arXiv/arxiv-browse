@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "alert_macro.html" as alert with context %}
 
 {% block title %}{{archive.name}}{% endblock %}
 
@@ -11,6 +12,8 @@
 
 
 {% block content %}
+{{alert.alert(alert_title, alert_content)}}
+
 <h1>{{archive.name}}</h1>
 <h2>Article statistics for {{year}}</h2>
 <p>Available montly lists with counts of <b>{{archive_id}} articles</b> +

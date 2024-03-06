@@ -682,6 +682,25 @@ class DocumentCategory(db.Model):
 
     document = relationship('Document')
 
+class Updates(db.Model):
+    __tablename__ = "arXiv_updates"
+    __table_args__ = (db.PrimaryKeyConstraint('document_id', 'date', 'action', 'category'),)
+
+    document_id = Column(
+        ForeignKey("arXiv_documents.document_id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        server_default=text("'0'"),
+    )
+    version=Column(Integer, nullable=False, server_default=text("'1'"))
+    date=Column( Date, index=True)
+    action=Column( Enum('new', 'replace', 'absonly', 'cross', 'repcro'))
+    archive=Column(String(20), index=True)
+    category=Column( String(20), index=True)
+
+    def __repr__(self) -> str:
+        return f"ArXivUpdate(document_id={self.document_id}, version={self.version}, action={self.action}, date={self.date}, category={self.category}, archive={self.archive})"
+    
 
 class NextMail(db.Model):
     """Model for mailings from publish"""

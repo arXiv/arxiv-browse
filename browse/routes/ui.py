@@ -203,6 +203,10 @@ def trackback(arxiv_id: str) -> Union[str, Response]:
 @blueprint.route("ct")
 def clickthrough() -> Response:
     """Generate redirect for clickthrough links."""
+    # Phasing out clickthrough and just supporting until all the links are gone.
+    if datetime.now().year > 2024:
+        raise NotFound
+
     if 'url' in request.args and 'v' in request.args:
         sec = current_app.config["CLICKTHROUGH_SECRET"].get_secret_value()
         if is_hash_valid(sec, request.args.get('url'), request.args.get('v')):
@@ -227,6 +231,8 @@ def list_articles(context: str, subcontext: str) -> Response:
     """
     response, code, headers = list_page.get_listing(context, subcontext)
     if code == status.OK:
+        if subcontext not in ["new", "recent", "pastweek"]:
+            response=_add_year_url_alert(response)
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore
     elif code == status.MOVED_PERMANENTLY:
@@ -371,6 +377,9 @@ def year_default(archive: str):  # type: ignore
     response, code, headers = year_page(archive, None)
     if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
+    elif code == status.MOVED_PERMANENTLY:
+        return redirect(headers["Location"], code=code) 
+    response=_add_year_url_alert(response)
     return render_template("year.html", **response), code, headers
 
 
@@ -381,6 +390,9 @@ def year(archive: str, year: int):  # type: ignore
     response, code, headers = year_page(archive, year)
     if code == status.TEMPORARY_REDIRECT:
         return "", code, headers
+    elif code == status.MOVED_PERMANENTLY:
+        return redirect(headers["Location"], code=code) 
+    response=_add_year_url_alert(response)
     return render_template("year.html", **response), code, headers
 
 
@@ -440,3 +452,11 @@ def a (id: str, ext: str):  # type: ignore
 
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
+
+def _add_year_url_alert(data: Dict[str, Any]) -> Dict[str, Any]:
+    alert_title = "Change to 4 digit year in URLs"
+    alert_content = "ArXiv is updating URLs for the /list and /year paths to use 4 digit years: /YYYY for years and /YYYY-MM for months. Old paths will be redirected to the new correct forms where possible. Caution: /2002 no longer represents Feb 2020; it now represents the year 2002."
+
+    data['alert_title'] = alert_title
+    data['alert_content'] = alert_content
+    return data

@@ -2,12 +2,12 @@
   <div><h3>Bookmark</h3></div>
   {%- set absUrl = canonical_url( abs_meta.arxiv_id ) -%}
   {%- set title = abs_meta.title -%}
-  <a class="abs-button abs-button-grey abs-button-small" href="{{ ('http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=' + absUrl + '&description=' + title) | clickthrough_url_for }}"
+  <a class="abs-button abs-button-grey abs-button-small" href="{{ ('http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=' + absUrl + '&description=' + title) }}"
      title="Bookmark on BibSonomy">
     <img src="{{ url_for('static', filename='images/icons/social/bibsonomy.png') }}"
          alt="BibSonomy logo"/>
   </a>
-  <a class="abs-button abs-button-grey abs-button-small" href="{{('https://reddit.com/submit?url=' + absUrl + '&title=' + title) | clickthrough_url_for}}"
+  <a class="abs-button abs-button-grey abs-button-small" href="{{('https://reddit.com/submit?url=' + absUrl + '&title=' + title)}}"
      title="Bookmark on Reddit">
     <img src="{{ url_for('static', filename='images/icons/social/reddit.png') }}"
          alt="Reddit logo"/>

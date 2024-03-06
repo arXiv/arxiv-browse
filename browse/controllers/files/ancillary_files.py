@@ -1,10 +1,7 @@
 """Controller to download a ancillary file from a .tar.gz"""
 
-import logging
-from email.utils import format_datetime
 from typing import Literal
 
-import flask_rangerequest
 from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
@@ -12,11 +9,10 @@ from browse.domain.identifier import Identifier, IdentifierException
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service
-from browse.services.next_published import next_publish
 from browse.services.object_store import FileObj
 from browse.services.object_store.fileobj import FileFromTar
 
-from . import last_modified, add_time_headers, cc_versioned, stream_gen, add_mimetype
+from . import last_modified, add_time_headers, add_mimetype
 
 
 def get_extracted_src_file_resp(arxiv_id_str: str,
@@ -42,18 +38,13 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
     # todo handle exceptions
     doc = get_doc_service().get_abs(arxiv_id)
 
-    if arxiv_id.has_version:
-        nf_headers = {'Cache-Control': cc_versioned()}
-    else:
-        nf_headers = {'Expires': format_datetime(next_publish())}
-
     ver = doc.get_version()
     if mode == 'anc' and ver is not None \
        and not ver.source_flag.includes_ancillary_files:
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),
-            404, nf_headers)
+            404, {'Cache-Control': f"max-age={60*60}"})
 
     dis_res = get_article_store().dissemination('e-print', arxiv_id, doc)
 
@@ -72,13 +63,13 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"File not in ancillary files for {arxiv_id.idv}"),
-            404, nf_headers)
+            404, {"ETag": src_file.etag})
 
     """RangeRequest does a seek and that seems odd with gzip and tarfile but both of
     those support seek."""
     resp: Response = RangeRequest(
             data=tarmember.open("rb"),  # RangeRequest and flask are expected to call `close()`
-            etag=last_modified(src_file),
+            etag=src_file.etag,
             last_modified=src_file.updated,
             size=tarmember.size
     ).make_response()

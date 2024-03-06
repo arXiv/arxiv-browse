@@ -7,11 +7,12 @@ The primary entrypoint to this module is :func:`.get_list_page`, which
 handles GET and POST requests to the list endpoint.
 
 This should handle requests like:
-/list/$category/YYMM
+/list/$category/YYYY
+/list/$category/YYYY-MM
 /list/$category/new|recent|current|pastweek
 /list/$archive/new|recent|current|pastweek
 /list/$archive/YY
-/list/$category/YY
+/list/$category/YY should redirect to /YYYY
 
 And all of the above with ?skip=n&show=n
 Examples of odd requests to throw out:
@@ -56,17 +57,19 @@ from browse.formatting.search_authors import (AuthorList, queries_for_authors,
 from browse.services.documents import get_doc_service
 from browse.services.documents.format_codes import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
-                                     get_listing_service)
+                                     get_listing_service, ListingItem)
 
 from browse.formatting.latexml import get_latexml_url
 
-from flask import request, url_for
-from werkzeug.exceptions import BadRequest
+from flask import request, url_for, redirect
+from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
 
 show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
+
+year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
 max_show = show_values[-1]
 """Max value for show that controller respects."""
@@ -84,6 +87,28 @@ type_to_template = {
     'year': 'list/year.html'
 }
 
+class ListingSection:
+    heading:str
+    day: str
+    items: List[ListingItem]
+    total: int
+    continued: bool
+    last: bool
+    visible:bool
+
+    def __init__(self, day: str, items: List[ListingItem], total: int,
+                continued: bool, last: bool, visible: bool, heading: str):
+        self.day = day
+        self.items = items
+        self.total = total
+        self.continued = continued
+        self.last = last
+        self.visible = visible
+        self.heading = heading
+
+    def __repr__(self) -> str:
+        return f"<ListingSection {self.heading}>"
+
 def get_listing(subject_or_category: str,
                 time_period: str,
                 skip: str = '',
@@ -96,7 +121,7 @@ def get_listing(subject_or_category: str,
     subject_or_category
        Subject or categtory to get listing for.
     time_period
-       YY or YYMM or 'recent' or 'pastweek' or 'new' or 'current'.
+       YYYY or YYYY-MM or YY or'recent' or 'pastweek' or 'new' or 'current'.
        recent and pastweek mean the last 5 listings,
        new means the most recent listing,
        current means the listings for the current month.
@@ -105,6 +130,8 @@ def get_listing(subject_or_category: str,
     show
        Number of articles to show
     """
+    
+
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
@@ -113,13 +140,23 @@ def get_listing(subject_or_category: str,
         time_period = request.args.get('year')  # type: ignore
         month = request.args.get('month', None)
         if month and month != 'all':
-            time_period = time_period + request.args.get('month')  # type: ignore
+            time_period = time_period + "-"+request.args.get('month')  # type: ignore
 
-    if (not subject_or_category or
-        not (time_period and
-             (time_period.isdigit() or
-              time_period in ['new', 'current', 'pastweek', 'recent']))):
-        raise BadRequest
+
+    if (
+        not subject_or_category or
+        not (
+            time_period and
+             (time_period.isdigit()
+              or time_period in ['new', 'current', 'pastweek', 'recent']
+              or year_month_pattern.match(time_period)
+              )
+        )
+    ):
+        raise BadRequest("Listing requires subject and valid time period parameters.") 
+
+    if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
+        subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
 
     if subject_or_category in taxonomy.CATEGORIES:
         list_type = 'category'
@@ -132,7 +169,7 @@ def get_listing(subject_or_category: str,
         list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
         list_ctx_in_archive = list_ctx_name
     else:
-        raise BadRequest
+        raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
     listing_service = get_listing_service()
 
@@ -157,7 +194,7 @@ def get_listing(subject_or_category: str,
     if time_period == 'new':
         list_type = 'new'
         new_resp: Union[ListingNew, NotModifiedResponse] =\
-            listing_service.list_new_articles(subject_or_category, skipn,
+            listing_service.list_new_articles(list_ctx_id, skipn,
                                               shown, if_mod_since)
         response_headers.update(_expires_headers(new_resp))
         if isinstance(new_resp, NotModifiedResponse):
@@ -166,42 +203,56 @@ def get_listing(subject_or_category: str,
         count = new_resp.new_count + \
             new_resp.rep_count + new_resp.cross_count
         response_data['announced'] = new_resp.announced
-        response_data['submitted'] = new_resp.submitted
         response_data.update(
-            index_for_types(new_resp, subject_or_category, time_period, skipn, shown))
+            index_for_types(new_resp, list_ctx_id, time_period, skipn, shown))
         response_data.update(sub_sections_for_types(new_resp, skipn, shown))
 
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
         rec_resp = listing_service.list_pastweek_articles(
-            subject_or_category, skipn, shown, if_mod_since)
+            list_ctx_id, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
         if isinstance(rec_resp, NotModifiedResponse):
             return {}, status.NOT_MODIFIED, response_headers
         listings = rec_resp.listings
         count = rec_resp.count
         response_data['pubdates'] = rec_resp.pubdates
+        response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
-    else:  # current or YYMM or YYYYMM
+    else:  # current or YYMM or YYYYMM or YY
         yandm = year_month(time_period)
         if yandm is None:
-            raise BadRequest
-        list_year, list_month = yandm
-        response_data['list_time'] = time_period
+            raise BadRequest(f"Invalid time period: {time_period}") 
+        should_redir, list_year, list_month = yandm
+        if list_year<1990:
+            raise BadRequest(f"Invalid Year: {list_year}")
+        if list_year>date.today().year:
+            raise NotFound(f"Invalid Year: {list_year}") #not BadRequest, might be valid in future
+
+        if should_redir:
+            if list_month:
+                new_time=f"{list_year:04d}-{list_month:02d}"
+            else:
+                new_time=f"{list_year:04d}"
+            new_address=url_for("browse.list_articles", context=subject_or_category, subcontext=new_time)
+            response_headers["Location"]=new_address
+            return {}, status.MOVED_PERMANENTLY, response_headers
+        
+        response_data['list_time'] = time_period #doesnt appear to be used
         response_data['list_year'] = str(list_year)
         if list_month or list_month == 0:
             if list_month < 1 or list_month > 12:
-                raise BadRequest
+                raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             resp = listing_service.list_articles_by_month(
-                subject_or_category, list_year, list_month, skipn, shown, if_mod_since)
+                list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
             resp = listing_service.list_articles_by_year(
-                subject_or_category, list_year, skipn, shown, if_mod_since)
+                list_ctx_id, list_year, skipn, shown, if_mod_since)
 
         response_headers.update(_expires_headers(resp))
         if isinstance(resp, NotModifiedResponse):
@@ -229,7 +280,7 @@ def get_listing(subject_or_category: str,
     response_data['latexml'] = latexml_links_for_articles(listings)
 
     response_data.update({
-        'context': subject_or_category,
+        'context': list_ctx_id,
         'count': count,
         'subcontext': time_period,
         'shown': shown,
@@ -239,7 +290,7 @@ def get_listing(subject_or_category: str,
         'list_ctx_id': list_ctx_id,
         'list_ctx_in_archive': list_ctx_in_archive,
         'paging': paging(count, skipn, shown,
-                         subject_or_category, time_period),
+                         list_ctx_id, time_period),
         'viewing_all': shown >= count,
         'template': type_to_template[list_type]
     })
@@ -267,31 +318,33 @@ def get_listing(subject_or_category: str,
     return response_data, status.OK, response_headers
 
 
-
-
-def year_month(tp: str)->Optional[Tuple[int, Optional[int]]]:
-    """Gets the year and month from the time_period parameter."""
+def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
+    """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""
     if tp == "current":
         day = date.today()
-        return day.year, day.month
+        return False, day.year, day.month
 
-    if not tp or len(tp) > 6 or len(tp) < 2:
+    if not tp or len(tp) > 7 or len(tp) < 2:
         return None
 
-    if len(tp) == 2:  # 2dig year
-        return int(tp), None
+    if len(tp) == 2:  # 2dig year gets redirected to 4 now
+        year=int(tp) +1900
+        if year<1990:
+            year+=100
+        return True, year, None
 
-    if len(tp) == 4:  # 2 dig year, 2 dig month
-        mm_part = int(tp[2:4])
+    if len(tp) == 4:  # 4 dig year
+        return False, int(tp), None
 
-        yy_part = int(tp[:2])
-        if yy_part >= 91 and yy_part <= 99:
-            return (1900 + yy_part, mm_part)
-        else:
-            return (2000 + yy_part, mm_part)
-
-    if len(tp) == 4+2:  # wow, 4 digit year!
-        return int(tp[0:4]), int(tp[4:])
+    if len(tp) == 4+2 and tp.isdigit():  # 4 digit year, but no dash for month
+        return True, int(tp[0:4]), int(tp[4:])
+    
+    if year_month_pattern.match(tp): 
+        if len(tp)== 4+1+1: #YYYY-M, should be MM
+            return True, int(tp[0:4]), int(tp[5:])
+        else: #wow perfect url
+            return False, int(tp[0:4]), int(tp[5:])
+    
     else:
         return None
 
@@ -406,12 +459,62 @@ def index_for_types(resp: ListingNew,
 
     return {'index_for_types': ift}
 
+def sub_sections_for_recent(
+        resp: Listing,
+        skip: int, show: int) -> Dict[str, Any]:
+    """Creates data used in section headings on /list/ARCHIVE/recent."""
+    secs :List[ListingSection]= []
+    articles_passed=0
+    shown=0
+    
+    for entry in resp.pubdates:
+        day, count=entry
+        skipped=max(skip-articles_passed,0)
+        to_show=max(min(count-skipped, show-shown),0)
+        
+        if count>0 and skip >= articles_passed+count: #section with content completely skipped
+            display=False
+        elif count ==0 and skip > articles_passed: #empty section overskipped
+            display=False
+        elif show==shown: #no room
+            display=False
+        else:
+            display=True
+
+        sec=ListingSection(
+            day=day.strftime('%a, %-d %b %Y'),
+            items=resp.listings[shown:shown+to_show],
+            total=count,
+            continued=skipped > 0,
+            last=skipped + to_show ==count,
+            visible=display,
+            heading="" #filled out later
+        )
+
+        secs.append(sec)
+        articles_passed+=count
+        shown+=to_show
+
+    for sec in secs:
+        showing = 'showing '
+        if sec.continued:
+            showing = 'continued, ' + showing
+            if sec.last:
+                showing = showing + 'last '
+        if not sec.last and not sec.continued:
+            showing = showing + 'first '
+
+        heading=sec.day
+        if sec.total>0:
+            heading+=f' ({showing}{len(sec.items)} of {sec.total} entries )'
+        sec.heading = heading
+
+    return {'sub_sections_for_types': secs}
 
 def sub_sections_for_types(
         resp: ListingNew,
         skipn: int, shown: int) -> Dict[str, Any]:
     """Creates data used in section headings on /list/ARCHIVE/new."""
-    secs = []
     new_count = resp.new_count
     cross_count = resp.cross_count
     rep_count = resp.rep_count
@@ -425,53 +528,49 @@ def sub_sections_for_types(
     rep_start = new_count + cross_count + 1
     last_shown = skipn + shown
 
-    if news:
-        secs.append({
-            'type': 'new',
-            'items': news,
-            'total': new_count,
-            'continued': skipn > 0,
-            'last': skipn >= new_count - shown
-        })
-    # else already skipped past new section
+    date = resp.announced.strftime('%A, %-d %B %Y')
 
-    if crosses:
-        secs.append({
-            'type': 'cross',
-            'items': crosses,
-            'total': cross_count,
-            'continued': skipn + 1 > cross_start,
-            'last': skipn >= rep_start - shown
-        })
-    # else skipped past cross section
+    sec_new=ListingSection(
+        day=date,
+        items=news,
+        total=new_count,
+        continued=skipn > 0,
+        last=skipn >= new_count - shown,
+        visible=len(news)>0,
+        heading=f'New submissions for {date} ' 
+    )
 
-    if reps:
-        secs.append({
-            'type': 'rep',
-            'items': reps,
-            'total': rep_count,
-            'continued': skipn + 1 > rep_start,
-            'last': last_shown >= new_count + cross_count + rep_count
-        })
+    sec_cross=ListingSection(
+        day=resp.announced.strftime('%A, %-d %B %Y'),
+        items=crosses,
+        total=cross_count,
+        continued=skipn + 1 > cross_start,
+        last=skipn >= rep_start - shown,
+        visible=len(crosses)>0,
+        heading=f'Cross submissions for {date} '
+    )
+
+    sec_rep=ListingSection(
+        day=resp.announced.strftime('%A, %-d %B %Y'),
+        items=reps,
+        total=rep_count,
+        continued=skipn + 1 > rep_start,
+        last=last_shown >= new_count + cross_count + rep_count,
+        visible=len(reps)>0,
+        heading=f'Replacement submissions for {date} '
+    )
+
+    secs=[sec_new, sec_cross, sec_rep]
 
     for sec in secs:
-        typ = {'new': 'New',
-               'cross': 'Cross',
-               'rep': 'Replacement'}[sec['type']] # type: ignore
-        date = resp.announced.strftime('%A, %-d %B %Y')
-
         showing = 'showing '
-        if sec['continued']:
+        if sec.continued:
             showing = 'continued, ' + showing
-            if sec['last']:
+            if sec.last:
                 showing = showing + 'last '
-        if not sec['last'] and not sec['continued']:
+        if not sec.last and not sec.continued:
             showing = showing + 'first '
-
-        n = len(sec['items'])  # type: ignore
-        tot = sec['total']
-        sec['heading'] = f'{typ} submissions for {date} '\
-            f'({showing}{n} of {tot} entries )'
+        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries )'
 
     return {'sub_sections_for_types': secs}
 
