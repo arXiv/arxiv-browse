@@ -7,7 +7,7 @@ import logging
 from flask.logging import default_handler
 
 from arxiv.base import Base
-from arxiv.base.urls import canonical_url, clickthrough_url, urlizer
+from arxiv.base.urls import canonical_url, urlizer
 from arxiv.base.filters import tidy_filesize
 from flask import Flask
 from flask_s3 import FlaskS3
@@ -67,7 +67,6 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
 
     app.jinja_env.filters['entity_to_utf'] = entity_to_utf
 
-    app.jinja_env.filters['clickthrough_url_for'] = clickthrough_url
     app.jinja_env.filters['show_email_hash'] = \
         partial(generate_show_email_hash,
                 secret=settings.SHOW_EMAIL_SECRET.get_secret_value())  # pylint: disable=E1101
