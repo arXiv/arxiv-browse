@@ -46,8 +46,8 @@ def test_process_yearly_article_counts():
     assert result == year
 
 
-def test_get_yearly_article_counts(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_get_yearly_article_counts(app_with_db):
+    app = app_with_db
     with app.app_context():
         # pre id-swap
         # TODO cant test old data on sqlite
@@ -77,9 +77,9 @@ def test_get_yearly_article_counts(app_with_hybrid_listings):
         # 2007 mid id-swap
         # TODO cant test early 2007 data on sqlite
 
-@patch("browse.services.listing.hybrid_listing.get_yearly_article_counts")
-def test_year_page_hybrid(mock, client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+@patch("browse.services.listing.db_listing.get_yearly_article_counts")
+def test_year_page_db(mock, client_with_db_listings):
+    client = client_with_db_listings
 
     mock.return_value = YearCount(1998)  # TODO dont mock function if able to run on sql
     rv = client.get("/year/cond-mat/1998")
@@ -90,8 +90,8 @@ def test_year_page_hybrid(mock, client_with_hybrid_listings):
     assert rv.status_code == 200
 
 
-def test_year_page_data_hybrid(client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_year_page_data_db(client_with_db_listings):
+    client = client_with_db_listings
 
     # has data in test database
     rv = client.get("/year/math/2009")
@@ -111,9 +111,9 @@ def test_year_page_data_hybrid(client_with_hybrid_listings):
     assert '<a href="/year/cs/1992">1992</a>' not in text  # cs didnt exist in 1992
 
 
-def test_monthly_counts_hybrid(app_with_hybrid_listings):
+def test_monthly_counts_db(app_with_db):
 
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls = get_listing_service()
         result = ls.monthly_counts("cond-mat", 2009)
@@ -135,8 +135,8 @@ def test_monthly_counts_hybrid(app_with_hybrid_listings):
         year = YearCount(2009, 1, 1, months)
         assert result == year
 
-def test_finds_archives_with_no_categories(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_finds_archives_with_no_categories(app_with_db):
+    app = app_with_db
     with app.app_context():
 
         months = [

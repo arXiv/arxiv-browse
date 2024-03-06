@@ -65,8 +65,8 @@ def test_possible_categories():
     assert "astro-ph" in _all_possible_categories("astro-ph")
     assert "astro-ph.EP" in _all_possible_categories("astro-ph")
 
-def test_not_modified(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_not_modified(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_pastweek_articles("math", 0, 100, "Wed, 10 Mar 2010 12:34:56 GMT")
