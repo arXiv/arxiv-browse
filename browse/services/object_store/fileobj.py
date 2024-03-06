@@ -3,20 +3,18 @@
 import gzip
 import tarfile
 import io
+import typing
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from pathlib import Path
 from types import TracebackType
-import typing
-from typing import BinaryIO, Optional
+from typing import BinaryIO, Optional, Any, Union
+
+from contextlib import contextmanager
 
 class BinaryMinimalFile(typing.Protocol):
     def read(self, size: Optional[int] = -1) -> bytes:
         pass
-
-    def readline(self, size: Optional[int] = -1) -> bytes:
-        pass
-
     def seek(self, pos: int, whence:int=io.SEEK_SET) -> int:
         pass
     def close(self)->None:
@@ -324,117 +322,3 @@ class FileFromTar(FileObj):
 
     def __str__(self) -> str:
         return f"<FileFromTar fileobj={self._fileobj} path={self._path}>"
-
-
-
-DEFAULT_IO_SIZE = 8 * 1024 * 1024
-
-
-class BinaryMinimalFileTransformed(BinaryMinimalFile):
-    """A file like object that includes a transform."""
-
-    def __init__(self, inner_io: BinaryMinimalFile, transform: typing.Callable[[bytes], bytes]):
-        self.transform = transform
-        self.io = inner_io
-        self.buffer = b""
-        self.at_start = True
-        super().__init__()
-
-    def readline(self, size: Optional[int] = -1) -> bytes:
-        if size is None or size <= 0:
-            size = DEFAULT_IO_SIZE
-        if not self.buffer:
-            data = self.read(size)
-            self.buffer = data + self.buffer
-
-        lines = self.buffer.split(b"\n")
-        line = lines[0]
-        self.buffer = b"\n".join(lines[1:])
-        return line
-
-    def read(self, size: Optional[int] = -1) -> bytes:
-        if size is None or size <= 0:
-            size = DEFAULT_IO_SIZE
-
-        self.at_start = False
-        while True:
-            data = self.io.readline(size)
-            self.buffer = self.buffer + self.transform(data)
-            if not data or len(self.buffer) >= size:
-                break
-
-        if len(self.buffer) <= size:
-            to_return = self.buffer
-            self.buffer = b""
-            return to_return
-        else:
-            to_return = self.buffer[:size]
-            self.buffer = self.buffer[size:]
-            return to_return
-
-    def seek(self, pos: int, whence: int = io.SEEK_SET) -> int:
-        if not self.at_start:
-            raise RuntimeError("Cannot seek after reading")
-        if whence != io.SEEK_SET:
-            raise ValueError("whence is not supported")
-        data = self.read(pos)
-        return len(data)
-
-    def close(self) -> None:
-        self.io.close()
-        self.buffer = b""
-        self.at_start = True
-
-    def __enter__(self) -> 'BinaryMinimalFile':
-        return self
-
-    def __exit__(self,
-                 exc_type: Optional[typing.Type[BaseException]],
-                 exc_val: Optional[BaseException],
-                 exc_tb: Optional[TracebackType]) -> None:
-        self.close()
-
-    def __iter__(self) -> typing.Iterator[bytes]:
-        for line in self.io:
-            yield self.transform(line)
-
-
-
-
-class FileTransform(FileObj):
-    """A `FileObj` that applies a transform to the original data."""
-
-    def __init__(self, file: FileObj, transform: typing.Callable[[bytes], bytes]):
-        self.fileobj = file
-        self.transform = transform
-
-    @property
-    def name(self) -> str:
-        return self.fileobj.name
-
-    def exists(self) -> bool:
-        return self.fileobj.exists()
-
-    def open(self, mode:str) -> BinaryMinimalFile:
-        return BinaryMinimalFileTransformed(self.fileobj.open('rb'), self.transform)
-
-    @property
-    def etag(self) -> str:
-            return self.fileobj.etag
-    @property
-    def size(self) -> int:
-        """This is only set after `open()` or `exists()` were called."""
-        # TODO Size is going to be a lie.
-        return self.fileobj.size
-
-    @property
-    def updated(self) -> datetime:
-        return self.fileobj.updated
-
-    def __repr__(self) -> str:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return f"<FileProcessed fileobj={self.fileobj} transform={self.transform}>"
-
-

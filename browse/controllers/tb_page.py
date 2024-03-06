@@ -123,7 +123,7 @@ def get_recent_tb_page(request_params: MultiDict) -> Response:
         if 'views' in request_params:
             views = request_params['views']
         else:
-            raise BadRequest("No views in request params")
+            raise BadRequest
 
     try:
         if views:

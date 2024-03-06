@@ -17,204 +17,204 @@ def host():
 
 @pytest.mark.integration
 def test_new_pdf_only(host):
-    resp = requests.head(f"{host}/pdf/1208.6335v1")
+    resp = requests.head(f"{host}/pdf/1208.6335v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/1208.6335v1")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/1208.6335v2")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/1208.6335v2")
+    resp = requests.get(f"{host}/pdf/1208.6335v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/1809.00949v1")
+    resp = requests.head(f"{host}/pdf/1208.6335v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/1809.00949v1")
+    resp = requests.get(f"{host}/pdf/1208.6335v2.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/1809.00949v1.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/1809.00949v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
 @pytest.mark.integration
 def test_new_pdf_only_mutli_versions(host):
-    resp = requests.head(f"{host}/pdf/2101.04792v1")
+    resp = requests.head(f"{host}/pdf/2101.04792v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2101.04792v1")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/2101.04792v2")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/2101.04792v2")
+    resp = requests.get(f"{host}/pdf/2101.04792v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/2101.04792v3")
+    resp = requests.head(f"{host}/pdf/2101.04792v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2101.04792v3")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/2101.04792v4")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/2101.04792v4")
+    resp = requests.get(f"{host}/pdf/2101.04792v2.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/2101.04792")
+    resp = requests.head(f"{host}/pdf/2101.04792v3.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2101.04792")
+    resp = requests.get(f"{host}/pdf/2101.04792v3.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/2101.04792v4.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/2101.04792v4.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/2101.04792.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/2101.04792.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
 
 @pytest.mark.integration
 def test_oldids_in_ps_cache(host):
-    resp = requests.head(f"{host}/pdf/acc-phys/9502001v1")
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/acc-phys/9502001v1")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/cs/0011004v1")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/cs/0011004v1")
+    resp = requests.get(f"{host}/pdf/acc-phys/9502001v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/cs/0011004v2")
+    resp = requests.head(f"{host}/pdf/cs/0011004v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0011004v2")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/cs/0011004")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/cs/0011004")
+    resp = requests.get(f"{host}/pdf/cs/0011004v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/cs/0011004")
+    resp = requests.head(f"{host}/pdf/cs/0011004v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0011004")
+    resp = requests.get(f"{host}/pdf/cs/0011004v2.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/cs/0011004.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/cs/0011004.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/cs/0011004.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/cs/0011004.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
 
 @pytest.mark.integration
 def test_oldids_pdf_only(host):
-    resp = requests.head(f"{host}/pdf/cs/0212040v1")
+    resp = requests.head(f"{host}/pdf/cs/0212040v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0212040v1")
+    resp = requests.get(f"{host}/pdf/cs/0212040v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/cs/0212040")
+    resp = requests.head(f"{host}/pdf/cs/0212040.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0212040")
+    resp = requests.get(f"{host}/pdf/cs/0212040.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
 
 @pytest.mark.integration
 def test_pdf_only_v1_and_2_tex_v3(host):
-    resp = requests.head(f"{host}/pdf/cs/0012007v1")
+    resp = requests.head(f"{host}/pdf/cs/0012007v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0012007v1")
-    assert resp.status_code == 200
-    assert 'application/pdf' in resp.headers['content-type']
-
-    resp = requests.head(f"{host}/pdf/cs/0012007v2")
-    assert resp.status_code == 200
-
-    resp = requests.get(f"{host}/pdf/cs/0012007v2")
+    resp = requests.get(f"{host}/pdf/cs/0012007v1.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/cs/0012007v3")
+    resp = requests.head(f"{host}/pdf/cs/0012007v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0012007v3")
+    resp = requests.get(f"{host}/pdf/cs/0012007v2.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
-    resp = requests.head(f"{host}/pdf/cs/0012007")
+    resp = requests.head(f"{host}/pdf/cs/0012007v3.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/cs/0012007")
+    resp = requests.get(f"{host}/pdf/cs/0012007v3.pdf")
+    assert resp.status_code == 200
+    assert 'application/pdf' in resp.headers['content-type']
+
+    resp = requests.head(f"{host}/pdf/cs/0012007.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/pdf/cs/0012007.pdf")
     assert resp.status_code == 200
     assert 'application/pdf' in resp.headers['content-type']
 
 
 @pytest.mark.integration
 def test_big_pdf(host):
-    resp = requests.head(f"{host}/pdf/2209.08742v2")
+    resp = requests.head(f"{host}/pdf/2209.08742v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2209.08742v2", stream=True)
+    resp = requests.get(f"{host}/pdf/2209.08742v2.pdf", stream=True)
     assert resp.status_code == 200
 
 @pytest.mark.integration
 def test_500(host):
     """These pdfs returned 500s during a test in 2022-12"""
-    resp = requests.head(f"{host}/pdf/2104.02699v2")
+    resp = requests.head(f"{host}/pdf/2104.02699v2.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2104.02699v2")
-    assert resp.status_code == 200
-
-    resp = requests.head(f"{host}/pdf/2104.13478v2")
-    assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2104.13478v2")
+    resp = requests.get(f"{host}/pdf/2104.02699v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.head(f"{host}/pdf/2108.11539v1")
+    resp = requests.head(f"{host}/pdf/2104.13478v2.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2108.11539v1")
-    assert resp.status_code == 200
-
-    resp = requests.head(f"{host}/pdf/2112.10752v2")
-    assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2112.10752v2")
+    resp = requests.get(f"{host}/pdf/2104.13478v2.pdf")
     assert resp.status_code == 200
 
-    resp = requests.head(f"{host}/pdf/2209.08742v2")
+    resp = requests.head(f"{host}/pdf/2108.11539v1.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2209.08742v2")
-    assert resp.status_code == 200
-
-    resp = requests.head(f"{host}/pdf/2210.03142v2")
-    assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2210.03142v2")
+    resp = requests.get(f"{host}/pdf/2108.11539v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.head(f"{host}/pdf/2212.07280v1")
+    resp = requests.head(f"{host}/pdf/2112.10752v2.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2212.07280v1")
+    resp = requests.get(f"{host}/pdf/2112.10752v2.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.head(f"{host}/pdf/2209.08742v2.pdf")
+    assert resp.status_code == 200
+    resp = requests.get(f"{host}/pdf/2209.08742v2.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.head(f"{host}/pdf/2210.03142v2.pdf")
+    assert resp.status_code == 200
+    resp = requests.get(f"{host}/pdf/2210.03142v2.pdf")
+    assert resp.status_code == 200
+
+    resp = requests.head(f"{host}/pdf/2212.07280v1.pdf")
+    assert resp.status_code == 200
+    resp = requests.get(f"{host}/pdf/2212.07280v1.pdf")
     assert resp.status_code == 200
 
 
 @pytest.mark.integration
 def test_timedout(host):
     """These pdfs returned timedout during a test in 2022-12"""
-    resp = requests.head(f"{host}/pdf/2212.07879")
+    resp = requests.head(f"{host}/pdf/2212.07879.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/2212.07439")
+    resp = requests.get(f"{host}/pdf/2212.07439.pdf")
     assert resp.status_code == 200
 
 
@@ -222,20 +222,20 @@ def test_timedout(host):
 def test_wdr(host):
     """These are some verisons that are withdrawls."""
 
-    resp = requests.get(f"{host}/pdf/0911.3270v2")
+    resp = requests.get(f"{host}/pdf/0911.3270v2.pdf")
     assert resp.status_code == 200 # this version is wdr and in the legacy sytem does a 200 with a message like "paper not available"
 
-    resp = requests.get(f"{host}/pdf/0911.3270v3")
+    resp = requests.get(f"{host}/pdf/0911.3270v3.pdf")
     # paper exists but this version does not exist. The legacy system
     # does something similar to a withdrawn in that it retunrs a 200 and a message like
     # "source to generate pdf for this doesn't exist" but it should be a 404
     assert resp.status_code == 200
     assert 'unavailable' in resp.text
 
-    resp = requests.get(f"{host}/pdf/2212.03351v1")
+    resp = requests.get(f"{host}/pdf/2212.03351v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/2212.03351v2")
+    resp = requests.get(f"{host}/pdf/2212.03351v2.pdf")
     assert resp.status_code == 200
     assert 'unavailable' in resp.text
 
@@ -244,58 +244,58 @@ def test_wdr(host):
 def test_does_not_exist_without_version(host):
     """These are papers that don't exist. They were throwing `Max()
     arg is an empty sequence`"""
-    resp = requests.get(f"{host}/pdf/0712.9999")
+    resp = requests.get(f"{host}/pdf/0712.9999.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0011999")
+    resp = requests.head(f"{host}/pdf/cs/0011999.pdf")
     assert resp.status_code == 404
 
 
 @pytest.mark.integration
 def test_does_not_exist_with_version(host):
     """These are papers that don't exist."""
-    resp = requests.get(f"{host}/pdf/0712.9999v1")
+    resp = requests.get(f"{host}/pdf/0712.9999v1.pdf")
     assert resp.status_code == 404
 
-    resp = requests.get(f"{host}/pdf/0712.9999v23")
+    resp = requests.get(f"{host}/pdf/0712.9999v23.pdf")
     assert resp.status_code == 404
 
-    resp = requests.get(f"{host}/pdf/0712.9999v1")
+    resp = requests.get(f"{host}/pdf/0712.9999v1.pdf")
     assert resp.status_code == 404
 
-    resp = requests.get(f"{host}/pdf/0712.9999v23")
+    resp = requests.get(f"{host}/pdf/0712.9999v23.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0011999v1")
+    resp = requests.head(f"{host}/pdf/cs/0011999v1.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0011999v3")
+    resp = requests.head(f"{host}/pdf/cs/0011999v3.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0011999v1")
+    resp = requests.head(f"{host}/pdf/cs/0011999v1.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0011999v3")
+    resp = requests.head(f"{host}/pdf/cs/0011999v3.pdf")
     assert resp.status_code == 404
 
 
 @pytest.mark.integration
 def test_does_not_exist_pdf_only(host):
     """These are articles that exist but versions that don't exist for some pdf only submissions"""
-    resp = requests.head(f"{host}/pdf/2101.04792v99")
+    resp = requests.head(f"{host}/pdf/2101.04792v99.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/cs/0212040v99")
+    resp = requests.head(f"{host}/pdf/cs/0212040v99.pdf")
     assert resp.status_code == 404
 
 
 @pytest.mark.integration
 def test_does_not_exist_ps_cache(host):
     """These are articles that exist but versions that don't exist for some tex submissions"""
-    resp = requests.head(f"{host}/pdf/acc-phys/9502001v9")
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v9.pdf")
     assert resp.status_code == 404
 
-    resp = requests.head(f"{host}/pdf/acc-phys/9502001v99")
+    resp = requests.head(f"{host}/pdf/acc-phys/9502001v99.pdf")
     assert resp.status_code == 404
 
 
@@ -304,7 +304,7 @@ def test_withdrawn(host):
     """Sample of withdrawn versions"""
     EXPECTED_WDR_STATUS = 200
     def integration_test_of_withdrawn(arxiv_id):
-        resp = requests.get(f"{host}/pdf/{arxiv_id}")
+        resp = requests.get(f"{host}/pdf/{arxiv_id}.pdf")
         assert resp.status_code == EXPECTED_WDR_STATUS, f"For withdrawn paper {arxiv_id} HTTP status code should have been {EXPECTED_WDR_STATUS} but was {resp.status_code}"
         assert "The author has provided no source" in resp.text, f"For withdrawn paper {arxiv_id} the expected message was not found in the response"
 
@@ -336,10 +336,10 @@ def test_withdrawn(host):
 def test_html_src(host):
     """Submissions with HTML source"""
     # legacy returns 200 with msg: "Unavailable, The author has provided no source to generate PDF, and no PDF."
-    resp = requests.get(f"{host}/pdf/cond-mat/9906075v1")
+    resp = requests.get(f"{host}/pdf/cond-mat/9906075v1.pdf")
     assert resp.status_code == 404
 
-    html_src = 'astro-ph/0306581v1'
+    html_src = 'astro-ph/0306581v1.pdf'
 
 
 
@@ -347,27 +347,27 @@ def test_html_src(host):
 def test_reasons(host):
     """Paper in reasons"""
     msg = "submitter supplied incomplete or corrupted files"
-    resp = requests.get(f"{host}/pdf/1808.02949v1")
+    resp = requests.get(f"{host}/pdf/1808.02949v1.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
 
-    resp = requests.get(f"{host}/pdf/1310.4962")
+    resp = requests.get(f"{host}/pdf/1310.4962.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
-    resp = requests.get(f"{host}/pdf/1310.4962v1")
+    resp = requests.get(f"{host}/pdf/1310.4962v1.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
-    resp = requests.get(f"{host}/pdf/1310.4962v2")
+    resp = requests.get(f"{host}/pdf/1310.4962v2.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
 
-    resp = requests.get(f"{host}/pdf/physics/0411006")
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
-    resp = requests.get(f"{host}/pdf/physics/0411006")
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
-    resp = requests.get(f"{host}/pdf/physics/0411006")
+    resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     assert resp.status_code == 404
     assert msg in resp.text
 
@@ -375,12 +375,12 @@ def test_reasons(host):
 @pytest.mark.integration
 def test_404(host):
     """These returned 404s during a test in 2022-12"""
-    resp = requests.get(f"{host}/pdf/1304.1682v1")
+    resp = requests.get(f"{host}/pdf/1304.1682v1.pdf")
     assert resp.status_code == 200
-    resp = requests.get(f"{host}/pdf/1308.0729v1")
+    resp = requests.get(f"{host}/pdf/1308.0729v1.pdf")
     assert resp.status_code == 200
 
-    resp = requests.get(f"{host}/pdf/1302.1106v1")
+    resp = requests.get(f"{host}/pdf/1302.1106v1.pdf")
     assert resp.status_code == 200
 
 
@@ -388,34 +388,34 @@ def test_404(host):
 @pytest.mark.integration
 def test_deleted(host):
     """Paper is deleted"""
-    resp = requests.get(f"{host}/pdf/hep-ph/0509174")
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174.pdf")
     assert resp.status_code == 404
     assert "this identifier erroneously skipped during software upgrade" in resp.text
 
-    resp = requests.get(f"{host}/pdf/hep-ph/0509174v1")
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174v1.pdf")
     assert resp.status_code == 404
     assert "this identifier erroneously skipped during software upgrade" in resp.text
 
-    resp = requests.get(f"{host}/pdf/hep-ph/0509174v3")
+    resp = requests.get(f"{host}/pdf/hep-ph/0509174v3.pdf")
     assert resp.status_code == 404
     assert "this identifier erroneously skipped during software upgrade" in resp.text
 
-    # resp = requests.get(f"{host}/pdf/1310.4962")
+    # resp = requests.get(f"{host}/pdf/1310.4962.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text
-    # resp = requests.get(f"{host}/pdf/1310.4962v1")
+    # resp = requests.get(f"{host}/pdf/1310.4962v1.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text
-    # resp = requests.get(f"{host}/pdf/1310.4962v2")
+    # resp = requests.get(f"{host}/pdf/1310.4962v2.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text
 
-    # resp = requests.get(f"{host}/pdf/physics/0411006")
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text
-    # resp = requests.get(f"{host}/pdf/physics/0411006")
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text
-    # resp = requests.get(f"{host}/pdf/physics/0411006")
+    # resp = requests.get(f"{host}/pdf/physics/0411006.pdf")
     # assert resp.status_code == 404
     # assert msg in resp.text

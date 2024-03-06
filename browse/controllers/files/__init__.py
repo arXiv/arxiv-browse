@@ -1,6 +1,6 @@
 from typing import Iterator, Union
 from email.utils import format_datetime
-from flask import Response, make_response, render_template
+from flask import Response
 from datetime import timezone
 import mimetypes
 
@@ -60,53 +60,3 @@ def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str
     Ex. arXiv-cs02021234v3 or arXiv-1802.12345v9"""
     v_num = version.version if isinstance(version, VersionEntry) else int(version)
     return f"arXiv-{arxiv_id.squashed}v{v_num}"
-
-
-def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
-    """Sets expire to one year, max allowed by RFC 2616"""
-    if had_specific_version:
-        headers = {'Cache-Control': 'max-age=31536000'}
-    else:
-        headers = {'Cache-Control': maxage(False)}
-    return make_response(render_template("dissemination/withdrawn.html",
-                                         arxiv_id=arxiv_id),
-                         404, headers)
-
-
-def unavailable(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/unavailable.html",
-                                         arxiv_id=arxiv_id), 500, {})
-
-
-def not_pdf(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/unavailable.html",
-                                         arxiv_id=arxiv_id), 404, {})
-
-
-def no_html(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/no_html.html",
-                                         arxiv_id=arxiv_id), 404, {})
-
-
-def not_found(arxiv_id: Identifier) -> Response:
-    headers = {'Cache-Control': maxage(arxiv_id.has_version)}
-    return make_response(render_template("dissemination/not_found.html",
-                                         arxiv_id=arxiv_id), 404, headers)
-
-
-def not_found_anc(arxiv_id: Identifier) -> Response:
-    headers = {'Cache-Control':  maxage(arxiv_id.has_version)}
-    return make_response(render_template("src/anc_not_found.html",
-                                         arxiv_id=arxiv_id), 404, headers)
-
-
-def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
-    return make_response(render_template("dissemination/bad_id.html",
-                                         err_msg=err_msg,
-                                         arxiv_id=arxiv_id), 404, {})
-
-
-def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
-    return make_response(render_template("dissemination/cannot_build_pdf.html",
-                                         err_msg=msg,
-                                         arxiv_id=arxiv_id), 404, {})

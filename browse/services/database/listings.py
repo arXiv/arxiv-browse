@@ -427,7 +427,7 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
         else:
             return [archive_or_cat]
     else:
-        raise BadRequest(f'Invalid category: {archive_or_cat}')
+        raise BadRequest
 
 def get_categories_from_archive(archive:str) ->List[str]:
     """returns a list names of all categories under an archive
