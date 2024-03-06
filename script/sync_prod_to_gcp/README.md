@@ -99,5 +99,25 @@ OTOH, because of this, it is rather important for Stanza to be running.
 Currently, the max file size is set to 4MiB, with 10 log files. It should be fine for a few days.
 
 
+# Submissions to GCP service
 
+## General
+
+A systemd service "submssions-to-gcp" subscribes to GCP pub/sub queue for published and 
+copy the submission tarball and abstract file to GCP bucket.
+
+
+## Service setup
+
+There is a (template) unit file. The service process runs one process per web node.
+
+    sudo systemctl enable submissions-to-gcp@sync-node.service
+    sudo systemctl start  submissions-to-gcp@dync-node.service
+
+This instantiate the service for sync-node.arxiv.org. 
+
+## GCP Pub/sub
+
+The topic is already set up as [`submission-published`](https://console.cloud.google.com/cloudpubsub/topic/detail/submission-published?project=arxiv-production)
+This is used by HTML generation. 2nd subscriber is added for [this](https://console.cloud.google.com/cloudpubsub/subscription/detail/sync-submission-from-cit-to-gcp?project=arxiv-production).
 
