@@ -489,15 +489,20 @@ class ArticleStore():
 
     def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
-        if docmeta.source_format == 'html': # paper source is html
-            path = ps_cache_html_path(arxiv_id, version.version)
-            if arxiv_id.extra:  # requesting a specific file
-                return self.objstore.to_obj(path + arxiv_id.extra)
-            else:  # requesting list of files
-                file_list=list(self.objstore.list(path))
-                return file_list if file_list else "NO_SOURCE"
-        else: # latex to html
-            # TODO it may be expensive to recreate the GS Client each time
+
+        if docmeta.source_format == 'html':#native html
+            path=ps_cache_html_path(arxiv_id, version.version)
+            files=self.objstore.list(path) 
+            file_list=list(files)
+            if len(file_list) >0:
+                return file_list
+            else:
+                return "NO_SOURCE"
+        else: #latex to html
             latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-            file=latex_obj_store.to_obj(latexml_html_path(arxiv_id, version.version))
-            return file if file.exists() else "NO_HTML"
+            path=latexml_html_path(arxiv_id, version.version)
+            file=latex_obj_store.to_obj(path) 
+            if file.exists():
+                return file
+            else:
+                return "NO_HTML"

@@ -715,8 +715,8 @@ def test_listing_page_subsumed_archive( client_with_test_fs):
     assert "Algebraic Geometry" in text
     assert "math.AG" in text
 
-def test_YY_redirect(client_with_db_listings):
-    client = client_with_db_listings
+def test_YY_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     rv = client.get("/list/math-ph/03", follow_redirects=False)
     assert rv.status_code == 301
     assert rv.headers["Location"]== "/list/math-ph/2003"
@@ -725,8 +725,8 @@ def test_YY_redirect(client_with_db_listings):
     assert rv.status_code == 200
     assert "titles for 2003" in rv.text
     
-def test_YYYYMM_redirect(client_with_db_listings):
-    client = client_with_db_listings
+def test_YYYYMM_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     rv = client.get("/list/math-ph/200301", follow_redirects=False)
     assert rv.status_code == 301
     assert rv.headers["Location"]== "/list/math-ph/2003-01"
@@ -736,8 +736,8 @@ def test_YYYYMM_redirect(client_with_db_listings):
     assert "titles for January 2003" in rv.text
     
 # YYYY-M
-def test_YYYY_M_redirect(client_with_db_listings):
-    client = client_with_db_listings
+def test_YYYY_M_redirect(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     rv = client.get("/list/math-ph/2003-1", follow_redirects=False)
     assert rv.status_code == 301
     assert rv.headers["Location"]== "/list/math-ph/2003-01"
@@ -746,8 +746,8 @@ def test_YYYY_M_redirect(client_with_db_listings):
     assert rv.status_code == 200
     assert "titles for January 2003" in rv.text
 
-def test_basic_no_listings(client_with_db_listings):
-    client = client_with_db_listings
+def test_basic_no_listings(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     #month
     rv = client.get("/list/hep-lat/2024-01")
     assert rv.status_code == 200
@@ -761,8 +761,8 @@ def test_basic_no_listings(client_with_db_listings):
     assert rv.status_code == 200
     assert "No updates for this time period." in rv.text
 
-def test_no_listings_new(client_with_db_listings):
-    client = client_with_db_listings
+def test_no_listings_new(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     #no updates at all
     rv = client.get("/list/hep-lat/new")
     assert rv.status_code == 200
@@ -778,8 +778,8 @@ def test_no_listings_new(client_with_db_listings):
 
 
 #also tests sectioning visibility
-def test_no_listings_recent(client_with_db_listings):
-    client = client_with_db_listings
+def test_no_listings_recent(client_with_hybrid_listings):
+    client = client_with_hybrid_listings
     expected_string = "No updates for this time period."
 
     #no updates at all

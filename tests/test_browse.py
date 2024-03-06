@@ -242,7 +242,7 @@ class BrowseTest(unittest.TestCase):
         title_txt = title_elmt.text
         self.assertRegex(title_txt, r'physics\/9707012')
         self.assertNotRegex(title_txt, r'arXiv:physics\/9707012v')
-        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
+        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012.pdf'})
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link without version affix exists')
         pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v'})
@@ -260,10 +260,10 @@ class BrowseTest(unittest.TestCase):
         title_txt = title_elmt.text
         self.assertRegex(title_txt, r'physics\/9707012v4')
 
-        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v4'})
+        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012v4.pdf'})
         self.assertIsNotNone(pdf_dl_elmt,
                              'pdf download link with version affix exists')
-        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012'})
+        pdf_dl_elmt = html.find('a', {'href': '/pdf/physics/9707012.pdf'})
         self.assertIsNone(pdf_dl_elmt,
                           'pdf download link without version affix does not exist')
 
