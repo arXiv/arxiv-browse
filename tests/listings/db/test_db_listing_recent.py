@@ -12,8 +12,8 @@ def validate_recent_listing(listing: List[ListingItem]):
         all_ids.add(item.id)
         assert item.listingType=="new" or item.listingType=="cross"
 
-def test_recent_basic(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_recent_basic(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math.MP", 0, 15)
@@ -24,58 +24,58 @@ def test_recent_basic(app_with_hybrid_listings):
     assert any(item.id == "0906.3421" and item.listingType == "cross" for item in listing.listings)
     assert any(item.id == "0704.0248" and item.listingType == "cross" for item in listing.listings)
 
-def test_no_abs_in_recent(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_no_abs_in_recent(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math.PR", 0, 100)
     validate_recent_listing(listing.listings)
     assert all(item.id !="0712.3217" for item in listing.listings)
 
-def test_no_rep_in_recent(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_no_rep_in_recent(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math.RT", 0, 100)
     validate_recent_listing(listing.listings)
     assert all(item.id !="arXiv:math/0510544" for item in listing.listings)
 
-def test_recent_find_alias(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_recent_find_alias(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("eess.SY", 0, 15)
     validate_recent_listing(listing.listings)
     assert any(item.id =="1008.3222" and item.listingType=="new" for item in listing.listings)
      
-def test_recent_identify_new(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_recent_identify_new(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math.CO", 0, 15)
     validate_recent_listing(listing.listings)
     assert any(item.id =="0906.3421" and item.listingType=="new" for item in listing.listings)
    
-def test_recent_identify_new_cross(app_with_hybrid_listings):
+def test_recent_identify_new_cross(app_with_db):
     """new listings that arent primary in the category requessted"""
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("cond-mat.stat-mech", 0, 15)
     validate_recent_listing(listing.listings)
     assert any(item.id =="0906.3421" and item.listingType=="cross" for item in listing.listings)
 
-def test_recent_identify_cross(app_with_hybrid_listings):
+def test_recent_identify_cross(app_with_db):
     """updates that are specifically cross updates"""
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math.NT", 0, 15)
     validate_recent_listing(listing.listings)
     assert any(item.id =="0906.2112" and item.listingType=="cross" for item in listing.listings)
     
-def test_recent_listing_counts(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_recent_listing_counts(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math", 0, 100)
@@ -84,9 +84,9 @@ def test_recent_listing_counts(app_with_hybrid_listings):
     assert listing.count==5 and len(listing.listings) == listing.count
     assert listing.pubdates == expected_counts
 
-def test_recent_listing_order(app_with_hybrid_listings):
+def test_recent_listing_order(app_with_db):
     #new then cross
-    app = app_with_hybrid_listings
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing=ls.list_pastweek_articles("math", 0, 100)
@@ -98,8 +98,8 @@ def test_recent_listing_order(app_with_hybrid_listings):
         if not found:
             assert item.listingType != "cross"
 
-def test_archive_listing(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_archive_listing(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_pastweek_articles("math", 0, 30)
@@ -114,8 +114,8 @@ def test_archive_listing(app_with_hybrid_listings):
     validate_recent_listing(listing2.listings)
     assert any(item.id =="1008.3222" and item.listingType == "new" for item in listing2.listings)
 
-def test_recent_listing_page( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math.MP/recent")
     assert rv.status_code == 200
     text = rv.text
@@ -126,8 +126,8 @@ def test_recent_listing_page( client_with_hybrid_listings):
     assert "Optics (physics.optics)" in text
     assert "; Mathematical Physics (math-ph)" in text
 
-def test_recent_listing_page_alternate_names( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page_alternate_names( client_with_db_listings):
+    client = client_with_db_listings
     #subsumed archive case
     rv = client.get("/list/alg-geom/recent")
     assert rv.status_code == 200
@@ -136,8 +136,8 @@ def test_recent_listing_page_alternate_names( client_with_hybrid_listings):
     assert "0906.2112" in text
     assert "Wed, 2 Feb 2011" in text
    
-def test_recent_pagination(app_with_hybrid_listings):
-    app = app_with_hybrid_listings
+def test_recent_pagination(app_with_db):
+    app = app_with_db
     with app.app_context():
         ls=get_listing_service()
         listing1=ls.list_pastweek_articles("math", 0, 1)
@@ -150,8 +150,8 @@ def test_recent_pagination(app_with_hybrid_listings):
     first_id=listing1.listings[0].id
     assert all(item.id !=first_id for item in listing2.listings)
     
-def test_recent_listing_page_pagination( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_listing_page_pagination( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math/recent?show=1")
     assert rv.status_code == 200
     text = rv.text
@@ -166,8 +166,8 @@ def test_recent_listing_page_pagination( client_with_hybrid_listings):
     assert "0704.0046" in text
     assert "Tue, 1 Feb 2011 (showing 1 of 1 entries )" in text
 
-def test_recent_page_links( client_with_hybrid_listings):
-    client = client_with_hybrid_listings
+def test_recent_page_links( client_with_db_listings):
+    client = client_with_db_listings
     rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text

@@ -153,7 +153,7 @@ def get_listing(subject_or_category: str,
               )
         )
     ):
-        raise BadRequest #TODO make a less dramatic error
+        raise BadRequest("Listing requires subject and valid time period parameters.") 
 
     if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
         subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
@@ -169,7 +169,7 @@ def get_listing(subject_or_category: str,
         list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
         list_ctx_in_archive = list_ctx_name
     else:
-        raise BadRequest #TODO make a less dramatic error
+        raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
     listing_service = get_listing_service()
 
@@ -223,7 +223,7 @@ def get_listing(subject_or_category: str,
     else:  # current or YYMM or YYYYMM or YY
         yandm = year_month(time_period)
         if yandm is None:
-            raise BadRequest #TODO make a less dramatic error
+            raise BadRequest(f"Invalid time period: {time_period}") 
         should_redir, list_year, list_month = yandm
         if list_year<1990:
             raise BadRequest(f"Invalid Year: {list_year}")
@@ -243,7 +243,7 @@ def get_listing(subject_or_category: str,
         response_data['list_year'] = str(list_year)
         if list_month or list_month == 0:
             if list_month < 1 or list_month > 12:
-                raise BadRequest
+                raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
