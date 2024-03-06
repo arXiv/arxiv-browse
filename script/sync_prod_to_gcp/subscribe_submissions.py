@@ -2,20 +2,21 @@ import argparse
 import sys
 import typing
 from time import gmtime
+from pathlib import Path
 
-from google.cloud import pubsub_v1, storage
 import json
 import os
 import logging.handlers
 import logging
 
 from google.cloud.pubsub_v1.subscriber.message import Message
+from google.cloud import pubsub_v1, storage
 
 from identifier import Identifier
-from .sync_published_to_gcp import ORIG_PREFIX, FTP_PREFIX, upload, ArxivSyncJsonFormatter, \
+from sync_published_to_gcp import ORIG_PREFIX, FTP_PREFIX, upload, ArxivSyncJsonFormatter, \
     path_to_bucket_key
 
-logging.basicConfig(level=logging.WARNING, format='%(message)s (%(threadName)s)')
+logging.basicConfig(level=logging.WARNING, format='(%(loglevel)s): (%(timestamp)s) %(message)s')
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.WARNING)
 
@@ -49,17 +50,26 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
     xid = Identifier(f"{paper_id}v{version}" if version else paper_id)
     archive = ('arxiv' if not xid.is_old_id else xid.archive)
     logger.info("Processing %s", xid.ids)
+    pairs = []
 
-    # Process the message
     if xid.has_version:
-        tex_path = f"{ORIG_PREFIX}/{archive}/papers/{xid.yymm}/{xid.filename}.tar.gz"
+        tex_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}v{xid.version}.tar.gz"
+        if os.path.exists(tex_path):
+            pairs.append((tex_path, path_to_bucket_key(tex_path)))
+        abs_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}v{xid.version}.abs"
+        if os.path.exists(abs_path):
+            pairs.append((abs_path, path_to_bucket_key(abs_path)))
+    tex_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}.tar.gz"
+    if os.path.exists(tex_path):
+        pairs.append((tex_path, path_to_bucket_key(tex_path)))
     else:
-        tex_path = f"{FTP_PREFIX}/{archive}/papers/{xid.yymm}/{xid.filename}.tar.gz"
-    tex_key = path_to_bucket_key(tex_path)
-
-    abs_path = f"{FTP_PREFIX}/{archive}/papers/{xid.yymm}/{xid.filename}.abs"
-    abs_key = path_to_bucket_key(abs_path)
-    return (xid.ids, [(abs_path, abs_key), (tex_path, tex_key)])
+        logger.error("Tex source does not exist: %s", tex_path)
+    abs_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}.abs"
+    if os.path.exists(abs_path):
+        pairs.append((abs_path, path_to_bucket_key(abs_path)))
+    else:
+        logger.error("abs does not exist: %s", abs_path)
+    return (xid.ids, pairs)
 
 
 def submission_callback(message: Message) -> None:
@@ -75,7 +85,7 @@ def submission_callback(message: Message) -> None:
     try:
         for local, remote in payloads:
             logger.debug("uploading: %s -> %s", local, remote)
-            upload(gs_client, local, remote)
+            upload(gs_client, Path(local), remote)
 
         # Acknowledge the message so it is not re-sent
         logger.info("ack message: %s", xid.ids)
@@ -88,9 +98,9 @@ def submission_callback(message: Message) -> None:
 
 def test_callback(message: Message) -> None:
     arxiv_id_str, payloads = submission_message_to_payloads(message)
-    print(arxiv_id_str)
+    logger.debug(arxiv_id_str)
     for payload in payloads:
-        print("%s -> %s", payload[0], payload[1])
+        logger.debug(f"{payload[0]} -> {payload[1]}")
     message.nack()
     sys.exit(0)
 
@@ -104,6 +114,7 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
         subscription_id (str): ID of the Pub/Sub subscription
         test (bool): Test - get one message, print it, nack, and exit
     """
+    
     global gs_client
     gs_client = storage.Client()
 
@@ -115,6 +126,7 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
         try:
             streaming_pull_future.result()
         except Exception as e:
+            logger.error("Subscribe failed: %s", str(e), exc_info=True)
             streaming_pull_future.cancel()
 
 
@@ -128,11 +140,15 @@ if __name__ == "__main__":
                     default='/var/log/e-prints')
     ad.add_argument('--debug', help='Set logging to debug', action='store_true')
     ad.add_argument('--test', help='Test reading the queue', action='store_true')
+    ad.add_argument('--bucket', help='', dest="bucket", default="")
     ad.add_argument('--globals', help="Global variables")
     args = ad.parse_args()
 
     project_id = args.project
-    subscription_id = "your-subscription-id"
+    subscription_id = args.subscription
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
 
     if args.json_log_dir and os.path.exists(args.json_log_dir):
         json_logHandler = logging.handlers.RotatingFileHandler(os.path.join(args.json_log_dir, "submissions.log"),
@@ -141,13 +157,18 @@ if __name__ == "__main__":
         json_formatter = ArxivSyncJsonFormatter(**LOG_FORMAT_KWARGS)
         json_formatter.converter = gmtime
         json_logHandler.setFormatter(json_formatter)
-        json_logHandler.setLevel(logging.DEBUG if args.v or args.debug else logging.INFO)
+        json_logHandler.setLevel(logging.DEBUG if args.debug else logging.INFO)
         logger.addHandler(json_logHandler)
         pass
 
     # Ensure the environment is authenticated
     if "GOOGLE_APPLICATION_CREDENTIALS" not in os.environ:
-        print("Environment variable 'GOOGLE_APPLICATION_CREDENTIALS' is not set.")
+        logger.error("Environment variable 'GOOGLE_APPLICATION_CREDENTIALS' is not set.")
         sys.exit(1)
+    if args.bucket:
+        import sync_published_to_gcp
+        sync_published_to_gcp.GS_BUCKET = args.bucket
 
+    from sync_published_to_gcp import GS_BUCKET
+    logger.info("GCP bucket %s", GS_BUCKET)
     submission_pull_messages(project_id, subscription_id, test=args.test)
