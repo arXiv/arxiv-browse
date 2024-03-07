@@ -40,15 +40,19 @@ def check_paper_formats(yymm: str) -> None:
         if isinstance(src, str):
             result["src_file_problem"] = src
             continue
-        elif isinstance(src, tuple) and isinstance(src[0], FileObj):
+        elif isinstance(src, tuple):
             result["src_file_problem"] = ""
-            fileobj, fmt, docmeta, version = src
-            result["sizes_match"] = source_size == fileobj.size
-            result["fs_size"] = fileobj.size
-            result["fs_name"] = fileobj.name
-            result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, None, fileobj)
             result["source_flag_only_formats"] = formats_from_source_flag(source_flags)
-            result["formats_match"] = result["dissemination_formats"] == result["source_flag_only_formats"]
+
+            fileobj, fmt, docmeta, version = src
+            if isinstance(fileobj, FileObj):
+                result["sizes_match"] = source_size == fileobj.size
+                result["fs_size"] = fileobj.size
+                result["fs_name"] = fileobj.name
+                result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, None, fileobj)
+                result["formats_match"] = result["dissemination_formats"] == result["source_flag_only_formats"]
+            else:
+                result["src_file_problem"] = "MULTIPLE FILES"
         else:
             result["src_file_problem"] = "UNKNOWN SOURCE FORMAT TYPE {type(src)}"
             continue

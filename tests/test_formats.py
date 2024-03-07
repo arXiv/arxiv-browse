@@ -26,9 +26,7 @@ class TestFormats(TestCase):
         self.assertListEqual(formats_from_source_flag('I'), ['src'])
         self.assertListEqual(formats_from_source_flag('IS'),
                              ['pdf', 'ps', 'other'])
-        self.assertListEqual(formats_from_source_flag('', cache_flag=True),
-                             ['nops', 'other'])
-        self.assertListEqual(formats_from_source_flag('', cache_flag=False),
+        self.assertListEqual(formats_from_source_flag(''),
                              ['pdf', 'ps', 'other'])
         self.assertListEqual(
             formats_from_source_flag('', format_pref='fname=CM'),

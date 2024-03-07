@@ -41,9 +41,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     return []
 
 
-def formats_from_source_flag(source_flag: str,
-                             format_pref: Optional[str] = None,
-                             cache_flag: bool = False) -> List[str]:
+def formats_from_source_flag(source_flag: str, format_pref: Optional[str] = None) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:
@@ -99,10 +97,6 @@ def formats_from_source_flag(source_flag: str,
         formats.extend(['html', 'other'])
     elif has_docx_or_odf:
         formats.extend(['pdf', 'other'])
-    elif cache_flag:
-        # this is the case where the source is not newer than the cache file
-        # and the cache file is empty
-        formats.extend(['nops', 'other'])
     else:
         if re.search('pdf', format_pref):
             formats.append('pdf')

@@ -302,18 +302,10 @@ class ArticleStore():
         else:
             # check source type from metadata, with consideration of
             # user format preference and cache
-            cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
-            cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
-                and cached_ps_file.size == 0 \
-                and src_file \
-                and src_file.updated < cached_ps_file.updated)
-
             src_flag = docmeta.get_requested_version().source_flag
             src_flag_code = '' if src_flag is None or src_flag.code is None else src_flag.code
 
-            source_type_formats = formats_from_source_flag(src_flag_code,
-                                                           format_pref,
-                                                           cache_flag)
+            source_type_formats = formats_from_source_flag(src_flag_code, format_pref)
             if source_type_formats:
                 formats.extend(source_type_formats)
 
