@@ -49,7 +49,7 @@ def check_paper_formats(yymm: str) -> None:
                 result["sizes_match"] = source_size == fileobj.size
                 result["fs_size"] = fileobj.size
                 result["fs_name"] = fileobj.name
-                result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, None, fileobj)
+                result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, fileobj)
                 result["formats_match"] = result["dissemination_formats"] == result["source_flag_only_formats"]
             else:
                 result["src_file_problem"] = "MULTIPLE FILES"

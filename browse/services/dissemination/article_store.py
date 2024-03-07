@@ -252,11 +252,7 @@ class ArticleStore():
         else:
             return fileobj
 
-    def get_dissemination_formats(self,
-                                  docmeta: DocMetadata,
-                                  format_pref: Optional[str] = None,
-                                  src_file: Optional[FileObj] = None
-                                  ) -> List[str]:
+    def get_dissemination_formats(self, docmeta: DocMetadata, src_file: Optional[FileObj] = None) -> List[str]:
         """Get a list of possible formats for a `DocMetadata`.
 
         Several checks are performed to determine available formats:
@@ -272,8 +268,6 @@ class ArticleStore():
         Parameters
         ----------
         docmeta : :class:`DocMetadata`
-        format_pref : str
-            The format preference string.
         src_file: Optional[FileObj]
             What src file to use in the format check. This will be
             looked up if it is `None`
@@ -300,12 +294,11 @@ class ArticleStore():
         if source_file_formats:
             formats.extend(source_file_formats)
         else:
-            # check source type from metadata, with consideration of
-            # user format preference and cache
+            # check source type from metadata
             src_flag = docmeta.get_requested_version().source_flag
             src_flag_code = '' if src_flag is None or src_flag.code is None else src_flag.code
 
-            source_type_formats = formats_from_source_flag(src_flag_code, format_pref)
+            source_type_formats = formats_from_source_flag(src_flag_code)
             if source_type_formats:
                 formats.extend(source_type_formats)
 
@@ -316,8 +309,7 @@ class ArticleStore():
         be disseminated in. Takes sources format and knows what
         transformations can be applied.
 
-        Does not include sub-formats (like types of ps) and does
-        not pay attention to user preference settings.
+        Does not include sub-formats (like types of ps).
         """
         src_fmt: str = self.sourcestore.get_src_format(docmeta).id
         formats: List[str] = []

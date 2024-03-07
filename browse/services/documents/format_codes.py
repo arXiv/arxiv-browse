@@ -41,7 +41,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     return []
 
 
-def formats_from_source_flag(source_flag: str, format_pref: Optional[str] = None) -> List[str]:
+def formats_from_source_flag(source_flag: str) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:
@@ -67,61 +67,36 @@ def formats_from_source_flag(source_flag: str, format_pref: Optional[str] = None
     F - PDF only
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
-    formats = []
-    if not source_flag:
-        source_flag = ''
-    if not format_pref:
-        format_pref = ''
+    source_flag = source_flag if source_flag else ''
     has_encrypted_source = re.search('S', source_flag, re.IGNORECASE)
     has_ignore = re.search('I', source_flag, re.IGNORECASE)
+    if has_ignore:
+        if not has_encrypted_source:
+            return ['src']
+        else:
+            return []
+
     has_ps_only = re.search('P', source_flag, re.IGNORECASE)
     has_pdflatex = re.search('D', source_flag, re.IGNORECASE)
     has_pdf_only = re.search('F', source_flag, re.IGNORECASE)
     has_html = re.search('H', source_flag, re.IGNORECASE)
     has_docx_or_odf = re.search(r'[XO]', source_flag, re.IGNORECASE)
-    has_src_pref = format_pref and re.search('src', format_pref)
-    append_other = False
 
-    if has_ignore and not has_encrypted_source:
-        formats.append('src')
-    elif has_ps_only:
-        formats.extend(['pdf', 'ps', 'other'])
+    formats = []
+    if has_ps_only:
+        formats.extend(['pdf', 'ps'])
     elif has_pdflatex:
-        formats.extend(['pdf', 'other'])
-        # PDFtex has source so honor src preference
-        if has_src_pref and not has_encrypted_source:
-            formats.insert(1, 'src')
+        formats.extend(['pdf', 'src'])
     elif has_pdf_only:
-        formats.extend(['pdf', 'other'])
+        formats.extend(['pdf'])
     elif has_html:
-        formats.extend(['html', 'other'])
+        formats.extend(['html'])
     elif has_docx_or_odf:
-        formats.extend(['pdf', 'other'])
+        formats.extend(['pdf'])
     else:
-        if re.search('pdf', format_pref):
-            formats.append('pdf')
-        elif re.search('400', format_pref):
-            formats.append('ps(400)')
-        elif re.search('600', format_pref):
-            formats.append('ps(600)')
-        elif re.search('fname=cm', format_pref):
-            formats.append('ps(cm)')
-        elif re.search('fname=CM', format_pref):
-            formats.append('ps(CM)')
-        elif re.search('dvi', format_pref):
-            formats.append('dvi')
-        elif has_src_pref:
-            formats.extend(['pdf', 'ps'])
-            if not has_encrypted_source:
-                formats.append('src')
-        else:
-            formats.extend(['pdf', 'ps'])
+        formats.extend(['pdf', 'ps', 'src'])
 
-        append_other = True
-
-    if append_other:
-        formats.append('other')
-
+    formats.extend(['other'])
     return formats
 
 
