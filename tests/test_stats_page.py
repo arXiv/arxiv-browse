@@ -233,3 +233,10 @@ class TestStatsPageControllers(TestCase):
         response_data, code, headers = stats_page.get_submission_stats_csv()
         self.assertEqual(code, status.OK)
         self.assertEqual(response_data["csv"], expected_response)
+
+def test_stats_page_bad_params( client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/stats/?")
+    assert rv.status_code != 500
+    rv = client.get("/stats/lalalaa1245?fjdskfjsd3")
+    assert rv.status_code != 500
