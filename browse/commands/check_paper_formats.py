@@ -8,7 +8,8 @@ import json
 import click
 
 from browse.domain.identifier import Identifier
-from browse.services.database import db, Metadata
+from browse.services.database import db
+from browse.services.database.models import Metadata
 from browse.services.dissemination import get_article_store, ArticleStore
 from browse.services.documents.format_codes import formats_from_source_flag
 from browse.services.object_store import FileObj
@@ -25,6 +26,8 @@ def check_paper_formats(yymm: str) -> None:
                             Metadata.paper_id.like(f"{yymm}.%"))))
 
     rows = query.all()
+    if not rows:
+        print(f"No rows found.")
     a_store: ArticleStore = get_article_store()
     results = {}
     for row in rows:
@@ -40,20 +43,15 @@ def check_paper_formats(yymm: str) -> None:
         elif isinstance(src, tuple) and isinstance(src[0], FileObj):
             result["src_file_problem"] = ""
             fileobj, fmt, docmeta, version = src
+            result["sizes_match"] = source_size == fileobj.size
+            result["fs_size"] = fileobj.size
+            result["fs_name"] = fileobj.name
+            result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, None, fileobj)
+            result["source_flag_only_formats"] = formats_from_source_flag(source_flags)
+            result["formats_match"] = result["dissemination_formats"] == result["source_flag_only_formats"]
         else:
             result["src_file_problem"] = "UNKNOWN SOURCE FORMAT TYPE {type(src)}"
             continue
 
-        result["sizes_match"] = source_size == fileobj.size
-        result["fs_size"] = fileobj.size
-        result["fs_name"] = fileobj.name
-        result["dissemination_formats"] = a_store.get_dissemination_formats(docmeta, None, fileobj)
-        result["source_flag_only_formats"] = formats_from_source_flag(source_flags)
-        result["formats_match"] = result["dissemination_formats"] == result["source_flag_only_formats"]
-
     with open("paper_formats.json", "w") as fh:
         json.dump(results, fh, indent=4, default=str)
-
-
-
-
