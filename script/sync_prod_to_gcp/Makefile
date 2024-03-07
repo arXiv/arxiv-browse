@@ -42,6 +42,6 @@ sync-to-gcp-sub:
 	gcloud pubsub subscriptions create ${SYNC_TO_GCP_SUB_ID} --topic=${SYNC_TO_GCP_TOPIC} --ack-deadline=10 --min-retry-delay=60 --max-retry-delay=600 --max-delivery-attempts=100
 
 install-sync-to-gcp-service:
-	sudo -H install -m 0644 resource/systemd/submissions-to-gcp@.service /etc/systemd/system/
+	sudo -H install -m 0644 resource/systemd/submissions-to-gcp.service /etc/systemd/system/
 	sudo systemctl daemon-reload
 	@echo "Please run sudo systemctl enable submissions-to-gcp@sync-node.service"

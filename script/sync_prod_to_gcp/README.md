@@ -111,8 +111,8 @@ copy the submission tarball and abstract file to GCP bucket.
 
 There is a (template) unit file. The service process runs one process per web node.
 
-    sudo systemctl enable submissions-to-gcp@sync-node.service
-    sudo systemctl start  submissions-to-gcp@dync-node.service
+    sudo systemctl enable submissions-to-gcp.service
+    sudo systemctl start  submissions-to-gcp.service
 
 This instantiate the service for sync-node.arxiv.org. 
 
