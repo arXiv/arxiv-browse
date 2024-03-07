@@ -22,13 +22,14 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
 
     archive = ARCHIVES.get(archive_id, None)
     if not archive:
-        cat_id = CATEGORIES.get(archive_id, {}).get("in_archive", None)
-        archive = ARCHIVES.get(cat_id, None)
+        _cat_id = CATEGORIES.get(archive_id, None)
+        cat_id = _cat_id.get("in_archive", None) if _cat_id else None
+        archive = ARCHIVES.get(cat_id, None) if cat_id else None
         if not archive:
             return archive_index(archive_id,
                                  status_in=status.NOT_FOUND)
         else:
-            archive_id = cat_id
+            archive_id = cat_id # type: ignore
 
     _write_expires_header(response_headers)
 
@@ -37,9 +38,9 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         data["subsumed_id"] = archive_id
         data["subsumed_category"] = CATEGORIES.get(archive_id, {})
         data["subsumed_by"] = subsumed_by
-        subsuming_category = CATEGORIES.get(subsumed_by, {})
+        subsuming_category = CATEGORIES.get(subsumed_by, {}) # type: ignore
         data["subsuming_category"] = subsuming_category
-        archive_id = subsuming_category.get("in_archive", None)
+        archive_id = subsuming_category.get("in_archive", None) # type: ignore
         archive = ARCHIVES.get(archive_id, None)
 
     years = years_operating(archive)

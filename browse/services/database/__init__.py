@@ -75,11 +75,11 @@ def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
     return decorator
 
 
-def __all_trackbacks_query() -> Select[TrackbackPing]:
+def __all_trackbacks_query() -> Select[Tuple[TrackbackPing]]:
     return select(TrackbackPing)
 
 
-def __paper_trackbacks_query(paper_id: str) -> Select[TrackbackPing]:
+def __paper_trackbacks_query(paper_id: str) -> Select[Tuple[TrackbackPing]]:
     return (
         __all_trackbacks_query()
         .filter(TrackbackPing.document_id == Document.document_id)
@@ -124,9 +124,9 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
 
 # Only used in tests
 @db_handle_error(db_logger=logger, default_return_val=[])
-def get_all_trackback_pings() -> List[Row[TrackbackPing]]:
+def get_all_trackback_pings() -> List[Row[Tuple[TrackbackPing]]]:
     """Get all trackback pings in database."""
-    return list(session.execute(__all_trackbacks_query()).all())
+    return list(session.execute(__all_trackbacks_query()).fetchall())
 
 
 # Used only on trackback page
@@ -185,15 +185,17 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
-    timestamp: int = session.execute(
+    timestamp = session.execute(
         select(func.max(TrackbackPing.approved_time))
         .filter(TrackbackPing.document_id == Document.document_id)
         .filter(Document.paper_id == paper_id)
         .filter(TrackbackPing.status == "accepted")
     ).scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=tz)
-    dt = dt.astimezone(tz=tzutc())
-    return dt
+    if timestamp:
+        dt = datetime.fromtimestamp(timestamp, tz=tz)
+        dt = dt.astimezone(tz=tzutc())
+        return dt
+    return None
 
 
 # used on abs page
@@ -230,9 +232,6 @@ def count_all_trackback_pings() -> int:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
-    reveal_type(DBLP.url)
-    reveal_type(Document.paper_id)
-    reveal_type(Document)
     url = session.scalar(
         select(DBLP.url)
         .filter(Document.paper_id == paper_id)
@@ -421,7 +420,7 @@ def get_monthly_submission_count() -> Tuple[int, int]:
             func.sum(StatsMonthlySubmission.historical_delta),
         )
     ).first()
-    return row._t
+    return row._t if row else (0, 0)
 
 
 # Used on stats page
@@ -447,7 +446,7 @@ def get_monthly_download_count() -> int:
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=None)
-def get_max_download_stats_dt() -> Optional[datetime]:
+def get_max_download_stats_dt() -> Optional[date]:
     """Get the datetime of the most recent download stats."""
     return session.scalar(select(func.max(StatsMonthlyDownload.ym).label("max_ym")))
 

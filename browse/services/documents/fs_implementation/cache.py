@@ -11,6 +11,8 @@ from arxiv.base.globals import get_application_config, get_application_global
 from arxiv.document.metadata import DocMetadata
 from browse.services.anypath import APath
 
+from flask import Flask
+
 # Formats that currently reside in the cache filesystem
 CACHE_FORMATS = ['dvi', 'html', 'other', 'pdf', 'ps']
 
@@ -80,7 +82,7 @@ def get_cache_file_path(docmeta: DocMetadata, format: str) -> Optional[APath]:
     return current_session().get_cache_file_path(docmeta, format)
 
 
-def get_session(app: object = None) -> DocumentCacheSession:
+def get_session(app: Optional[Flask] = None) -> DocumentCacheSession:
     """Get a new session with the document cache service."""
     config = get_application_config(app)
     document_cache_path = config.get('DOCUMENT_CACHE_PATH', None)

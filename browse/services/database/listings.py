@@ -361,13 +361,13 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-        title=meta.title,
-        authors=AuthorList(meta.authors),
-        abstract=meta.abstract,
+        title=meta.title, # type: ignore
+        authors=AuthorList(meta.authors), # type: ignore
+        abstract=meta.abstract, # type: ignore
         categories=meta.abs_categories,
-        primary_category=Category(meta.abs_categories.split()[0]),
+        primary_category=Category(meta.abs_categories.split()[0]), # type: ignore
         secondary_categories=[
-            Category(sc) for sc in meta.abs_categories.split()[1:]
+            Category(sc) for sc in meta.abs_categories.split()[1:] # type: ignore
         ],
         comments=meta.comments,
         journal_ref=meta.journal_ref,
@@ -376,22 +376,22 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
             VersionEntry(
                 version=meta.version,
                 raw="",
-                submitted_date=None, 
-                size_kilobytes=meta.source_size,
-                source_flag=SourceFlag(meta.source_flags),
+                submitted_date=None, # type: ignore
+                size_kilobytes=meta.source_size, # type: ignore
+                source_flag=SourceFlag(meta.source_flags), # type: ignore
             )
         ],
         raw_safe="",
-        submitter=None,
-        arxiv_identifier=None,
-        primary_archive=None,
-        primary_group=None,
+        submitter=None, # type: ignore
+        arxiv_identifier=None, # type: ignore
+        primary_archive=None, # type: ignore
+        primary_group=None, # type: ignore
         modified=modified
     )
     item = ListingItem(
         id=meta.paper_id,
         listingType=type,
-        primary=Category(meta.abs_categories.split()[0]).id,
+        primary=Category(meta.abs_categories.split()[0]).id, # type: ignore
         article=doc,
     )
     return item
@@ -456,15 +456,14 @@ def _check_alternate_name(category:str) -> Optional[str]:
     #check for aliases
     for key, value in CATEGORY_ALIASES.items():
         if category == key: #old alias name provided
-            return value # type: ignore
+            return value
         elif category == value: #new alias name provided
-            return key # type: ignore
+            return key
         
     #check for subsumed archives
     for key, value in ARCHIVES_SUBSUMED.items():
         if category == value: #has old archive name
-            return key # type: ignore
-
+            return key
     return None #no alternate names
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:

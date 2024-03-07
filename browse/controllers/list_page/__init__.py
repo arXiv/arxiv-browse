@@ -302,7 +302,7 @@ def get_listing(subject_or_category: str,
             if article.primary_archive:
                 archive = article.primary_archive.id
             else:
-                archive = CATEGORIES[article.primary_category.id]['in_archive']
+                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
             return str(url_for('search_archive',
                            searchtype='author',
                            archive=archive,

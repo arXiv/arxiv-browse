@@ -186,7 +186,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
                     rep_items.append(item)
 
             elif listingFilter:
-                secondaries = ' '.join(article.categories.split()[1:])
+                secondaries = ' '.join(article.categories.split()[1:]) # type: ignore
                 if re.search(listingFilter, secondaries):
                     item = ListingItem(id=article.arxiv_id, listingType=neworcross,
                                        primary=primary, article=article)

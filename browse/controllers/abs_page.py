@@ -68,8 +68,6 @@ from browse.controllers.response_headers import (
 )
 from browse.formatting.metatags import meta_tag_metadata
 
-import logging
-
 logger = logging.getLogger(__name__)
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
