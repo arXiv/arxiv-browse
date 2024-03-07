@@ -58,32 +58,37 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
         logger.error(f"bad data {str(message.message_id)}")
         return ("",[])
 
+
     try:
         data = json.loads(json_str)
     except Exception as exc:
         logger.warning(f"bad({message.message_id}): {json_str[:1024]}")
         return ("",[])
 
+    # /data/{ftp|orig}/{archive}/papers/{yymm}/{paper_id}{src_ext}
     paper_id = data.get('paper_id')
     version = data.get('version')
+    src_ext = data.get('src_ext', ".tar.gz")
+
     xid = Identifier(f"{paper_id}v{version}" if version else paper_id)
     archive = ('arxiv' if not xid.is_old_id else xid.archive)
     logger.info("Processing %s", xid.ids)
     pairs = []
 
     if xid.has_version:
-        tex_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}v{xid.version}.tar.gz"
-        if os.path.exists(tex_path):
-            pairs.append((tex_path, path_to_bucket_key(tex_path)))
-        abs_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}v{xid.version}.abs"
+        src_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.idv}{src_ext}"
+        if os.path.exists(src_path):
+            pairs.append((src_path, path_to_bucket_key(src_path)))
+        abs_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.idv}.abs"
         if os.path.exists(abs_path):
             pairs.append((abs_path, path_to_bucket_key(abs_path)))
-    tex_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}.tar.gz"
-    if os.path.exists(tex_path):
-        pairs.append((tex_path, path_to_bucket_key(tex_path)))
+
+    src_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.id}{src_ext}"
+    if os.path.exists(src_path):
+        pairs.append((src_path, path_to_bucket_key(src_path)))
     else:
-        logger.error("Tex source does not exist: %s", tex_path)
-    abs_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.filename}.abs"
+        logger.error("Tex source does not exist: %s", src_path)
+    abs_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.id}.abs"
     if os.path.exists(abs_path):
         pairs.append((abs_path, path_to_bucket_key(abs_path)))
     else:
