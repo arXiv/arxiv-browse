@@ -222,9 +222,11 @@ class TestBrowseDatabaseService(TestCase):
             'There is at least one document in the DB.'
         )
 
-    @mock.patch('arxiv.db.session.query')
-    def test_error_conditions(self, mock_query) -> None:
-        mock_query.side_effect = NoResultFound
+    @mock.patch('arxiv.db.session.execute')
+    @mock.patch('arxiv.db.session.scalar')
+    def test_error_conditions(self, mock_scalar, mock_execute) -> None:
+        mock_execute.side_effect = NoResultFound
+        mock_scalar.side_effect = NoResultFound
         self.assertEqual(
             database.get_institution('10.0.0.1'), None)
         self.assertEqual([],
@@ -239,7 +241,8 @@ class TestBrowseDatabaseService(TestCase):
             database.get_dblp_listing_path('0704.0361'), None)
         self.assertEqual(
             database.get_dblp_authors('0704.0361'), [])
-        mock_query.side_effect = SQLAlchemyError
+        mock_execute.side_effect = SQLAlchemyError
+        mock_scalar.side_effect = SQLAlchemyError
         self.assertRaises(SQLAlchemyError,
                           database.get_institution, '10.0.0.1')
         self.assertRaises(

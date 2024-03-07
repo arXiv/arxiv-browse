@@ -228,6 +228,9 @@ def count_all_trackback_pings() -> int:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
+    reveal_type(DBLP.url)
+    reveal_type(Document.paper_id)
+    reveal_type(Document)
     url = session.scalar(
         select(DBLP.url)
         .filter(Document.paper_id == paper_id)
@@ -412,8 +415,8 @@ def get_monthly_submission_count() -> Tuple[int, int]:
     """Get submission totals: number of submissions and number migrated."""
     row = session.execute(
         select(
-            func.sum(StatsMonthlySubmission.num_submissions).label("num_submissions"),
-            func.sum(StatsMonthlySubmission.historical_delta).label("num_migrated"),
+            func.sum(StatsMonthlySubmission.num_submissions),
+            func.sum(StatsMonthlySubmission.historical_delta),
         )
     ).first()
     return row._t

@@ -50,7 +50,7 @@ class DocumentCacheSession():
         #     identifier.yymm,
         #     f'{identifier.filename}v{docmeta.version}']))
 
-        parent_path = (self.document_cache_path /
+        parent_path: APath = (self.document_cache_path /
             ('arxiv' if not identifier.is_old_id or identifier.archive is None
              else identifier.archive) /
             cache_format /

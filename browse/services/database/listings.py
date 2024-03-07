@@ -376,16 +376,16 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
             VersionEntry(
                 version=meta.version,
                 raw="",
-                submitted_date=None, # type: ignore
+                submitted_date=None, 
                 size_kilobytes=meta.source_size,
                 source_flag=SourceFlag(meta.source_flags),
             )
         ],
         raw_safe="",
-        submitter=None, # type: ignore
-        arxiv_identifier=None, # type: ignore
-        primary_archive=None, # type: ignore
-        primary_group=None, # type: ignore
+        submitter=None,
+        arxiv_identifier=None,
+        primary_archive=None,
+        primary_group=None,
         modified=modified
     )
     item = ListingItem(

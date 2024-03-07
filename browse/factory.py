@@ -77,7 +77,8 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
         problems = service_statuses()
         if problems:
             app.logger.error("Problems with services!!!!!")
-            [app.logger.error(prob) for prob in problems]
+            for prob in problems:
+                app.logger.error(prob)
 
     return app
 

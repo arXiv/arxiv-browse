@@ -19,7 +19,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
 
     pc = docm.primary_category if docm.primary_category else "unknown"
 
-    return (
+    res = (
         "@misc{" + _txt_id(docm, pauths, year) + ",\n"
         "      title={" + title + "}, \n"
         "      author={" + auths + "},\n"
@@ -29,6 +29,10 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      primaryClass={" + str(pc) + "}\n"
         "}"
     )
+    reveal_type(docm)
+    reveal_type(res)
+
+    return res
 
 
 def _normalize_whitespace(txt: str) -> str:

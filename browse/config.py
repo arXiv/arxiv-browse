@@ -151,8 +151,6 @@ class Settings(BaseSettings):
 
         This can start with gs:// to use Google Storage.
     """
-    DOCUMENT_ABS_ACCESSOR: PyObject = 'arxiv.files.LocalAbsAccessor'
-
     DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
     """Path to cache directory"""
 

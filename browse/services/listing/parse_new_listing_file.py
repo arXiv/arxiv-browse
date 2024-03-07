@@ -190,13 +190,13 @@ def _to_item(data: str, ltype: Literal['new', 'cross', 'rep']) -> ListingItem:
                             #TODO bogus time but don't think it is used in listing page.
                             datetime.now(),
                             '')
-        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc)  # type: ignore
+        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc)
     else:
         data = _strip_extra(data)
         doc = parse_abs(data,
                         #TODO bogus time but don't think it is used in listing page.
                         datetime.now())
-        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc) # type: ignore
+        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc)
 
 
 _stripex_re = re.compile(r"\\\\ \( https.*kb.*\)")
