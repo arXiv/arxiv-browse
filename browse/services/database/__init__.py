@@ -216,12 +216,14 @@ def count_trackback_pings(paper_id: str) -> int:
 @db_handle_error(db_logger=logger, default_return_val=0)
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
+
     c = session.scalar(
         select(func.count()).
         select_from(TrackbackPing)
     )
     assert isinstance(c, int)
     return c
+    
 
 
 # used in abs page

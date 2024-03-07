@@ -209,8 +209,10 @@ def clickthrough() -> Response:
 
     if 'url' in request.args and 'v' in request.args:
         sec = current_app.config["CLICKTHROUGH_SECRET"].get_secret_value()
-        if is_hash_valid(sec, request.args.get('url'), request.args.get('v')):
-            return redirect(request.args.get('url'))  # type: ignore
+        url = request.args.get('url')
+        v = request.args.get('v')
+        if url and v and is_hash_valid(sec, url, v):
+            return redirect(url)  # type: ignore
         else:
             raise BadRequest("Bad click-through redirect")
 

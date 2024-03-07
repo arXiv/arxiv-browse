@@ -506,7 +506,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
                     new_doc_ids.c.month.label("month")
                 )
             ).subquery()
-
+         
     subquery=(
         session.query(
             doc_ids.c.month,
