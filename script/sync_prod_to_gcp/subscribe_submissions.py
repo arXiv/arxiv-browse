@@ -1,3 +1,11 @@
+"""
+subscribe_submissions.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
+check the files exist on CIT and uploads them to GCP bucket.
+
+The "upload to GCP bucket" part is from existing sync_published_to_gcp.
+
+As a matter of fact, this borrows the most of heavy lifting part from sync_published_to_gcp.py.
+"""
 import argparse
 import sys
 import typing
@@ -33,6 +41,17 @@ LOG_FORMAT_KWARGS = {
 gs_client = storage.Client()
 
 def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
+    """
+    Parse the submission_published message, map it to CIT files and returns the list of
+    files to upload to GCP bucket.
+    The schema is
+    https://console.cloud.google.com/cloudpubsub/schema/detail/submission-publication?project=arxiv-production
+    however, this only cares paper_id and version.
+
+    Since upload() looks at the size of bucket object / CIT file to decide copy or not
+    copy, this will attempt to upload the versioned and latest at the same time but the uploading
+    may or may not happen.
+    """
     try:
         json_str = message.data.decode('utf-8')
     except UnicodeDecodeError:
@@ -73,10 +92,15 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
 
 
 def submission_callback(message: Message) -> None:
+    """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
     global gs_client
     arxiv_id_str, payloads = submission_message_to_payloads(message)
     if not arxiv_id_str:
         logger.error(f"bad data {str(message.message_id)}")
+        message.nack()
+        return
+    if not payloads:
+        logger.warning(f"There is no associated files? xid: {arxiv_id_str}, mid: {str(message.message_id)}")
         message.nack()
         return
     xid = Identifier(arxiv_id_str)
@@ -97,6 +121,7 @@ def submission_callback(message: Message) -> None:
 
 
 def test_callback(message: Message) -> None:
+    """Stand in callback to handle the pub/sub message. gets used for --test."""
     arxiv_id_str, payloads = submission_message_to_payloads(message)
     logger.debug(arxiv_id_str)
     for payload in payloads:
@@ -132,16 +157,25 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
 
 if __name__ == "__main__":
     ad = argparse.ArgumentParser(epilog=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ad.add_argument('--project', help='', dest="project", default="arxiv-production")
-    ad.add_argument('--topic', help='', dest="topic", default="submission-published")
-    ad.add_argument('--subscription', help='test mode', dest="subscription",
+    ad.add_argument('--project',
+                    help='GCP project name. Default is arxiv-production',
+                    dest="project", default="arxiv-production")
+    ad.add_argument('--topic',
+                    help='GCP pub/sub name. The default matches with arxiv-production',
+                    dest="topic", default="submission-published")
+    ad.add_argument('--subscription',
+                    help='Subscription name. Default is the one in production', dest="subscription",
                     default="sync-submission-from-cit-to-gcp")
-    ad.add_argument('--json-log-dir', help='Additional JSON logging',
+    ad.add_argument('--json-log-dir',
+                    help='JSON logging directory. The default is correct on the sync-node',
                     default='/var/log/e-prints')
-    ad.add_argument('--debug', help='Set logging to debug', action='store_true')
-    ad.add_argument('--test', help='Test reading the queue', action='store_true')
-    ad.add_argument('--bucket', help='', dest="bucket", default="")
-    ad.add_argument('--globals', help="Global variables")
+    ad.add_argument('--debug', help='Set logging to debug. Does not invoke testing',
+                    action='store_true')
+    ad.add_argument('--test', help='Test reading the queue but not do anything',
+                    action='store_true')
+    ad.add_argument('--bucket',
+                    help='The bucket name. The default is mentioned in sync_published_to_gcp so for the production, you do not need to provide this - IOW it automatically uses the same buchet as sync-to-gcp',
+                    dest="bucket", default="")
     args = ad.parse_args()
 
     project_id = args.project
