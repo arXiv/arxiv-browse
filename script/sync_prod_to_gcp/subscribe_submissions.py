@@ -18,7 +18,8 @@ import logging.handlers
 import logging
 
 from google.cloud.pubsub_v1.subscriber.message import Message
-from google.cloud import pubsub_v1, storage
+from google.cloud.pubsub_v1 import SubscriberClient
+from google.cloud.storage import Client as StorageClient
 
 from identifier import Identifier
 from sync_published_to_gcp import ORIG_PREFIX, FTP_PREFIX, upload, ArxivSyncJsonFormatter, \
@@ -38,7 +39,6 @@ LOG_FORMAT_KWARGS = {
     # time.strftime has no %f code "datefmt": "%Y-%m-%dT%H:%M:%S.%fZ%z",
 }
 
-gs_client = storage.Client()
 
 def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
     """
@@ -58,47 +58,70 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
         logger.error(f"bad data {str(message.message_id)}")
         return ("",[])
 
-
     try:
         data = json.loads(json_str)
     except Exception as exc:
         logger.warning(f"bad({message.message_id}): {json_str[:1024]}")
         return ("",[])
 
-    # /data/{ftp|orig}/{archive}/papers/{yymm}/{paper_id}{src_ext}
+    publish_type = data.get('type') # cross | jref | new | rep | wdr
     paper_id = data.get('paper_id')
     version = data.get('version')
-    src_ext = data.get('src_ext', ".tar.gz")
 
-    xid = Identifier(f"{paper_id}v{version}" if version else paper_id)
-    archive = ('arxiv' if not xid.is_old_id else xid.archive)
-    logger.info("Processing %s", xid.ids)
+    # The source may not have a consistent .tar.gz name.
+    # Some other possibilities:
+    #
+    # {paperidv}.pdf pdf only submission
+    # {paperidv}.gz single file submisison
+    # {paperidv}.html.gz html source submission
+    #
+    # NOTE: This cannot handle this special case.
+    # I think there is one case in the system where there is a submission with two source files
+    # that the admins manually crafted. It would have: {paperidv}.pdf and {paperidv}.tar.gz
+    # This was to get a pdf only submission with ancillary files.
+
+    # Now, the submission file extension is provided in the message
+    src_ext = data.get('src_ext', ".tar.gz")
+    # Not sure I have to do this but better safe than sorry
+    if src_ext and src_ext[0] != ".":
+        src_ext = f".{src_ext}"
+
+    xid_latest = Identifier(f"{paper_id}")
+    logger.info("Processing %s.v%s.%s", xid_latest.ids, str(version), src_ext)
+    archive = ('arxiv' if not xid_latest.is_old_id else xid_latest.archive)
     pairs = []
 
-    if xid.has_version:
-        src_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.idv}{src_ext}"
+    latest_dir = f"{FTP_PREFIX}{archive}/papers/{xid_latest.yymm}"
+    for dotext in [src_ext, ".abs"]:
+        src_path = f"{latest_dir}/{xid_latest.id}{dotext}"
         if os.path.exists(src_path):
             pairs.append((src_path, path_to_bucket_key(src_path)))
-        abs_path = f"{ORIG_PREFIX}{archive}/papers/{xid.yymm}/{xid.idv}.abs"
-        if os.path.exists(abs_path):
-            pairs.append((abs_path, path_to_bucket_key(abs_path)))
+        else:
+            logger.error("Source does not exist: %s", src_path)
 
-    src_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.id}{src_ext}"
-    if os.path.exists(src_path):
-        pairs.append((src_path, path_to_bucket_key(src_path)))
-    else:
-        logger.error("Tex source does not exist: %s", src_path)
-    abs_path = f"{FTP_PREFIX}{archive}/papers/{xid.yymm}/{xid.id}.abs"
-    if os.path.exists(abs_path):
-        pairs.append((abs_path, path_to_bucket_key(abs_path)))
-    else:
-        logger.error("abs does not exist: %s", abs_path)
-    return (xid.ids, pairs)
+    # if it is new/cross/jref just /data/ftp/arxiv/papers/{YYMM}/{paperidv}.* needs to be synced.
+    # If it is a replacement or wdr additionally /data/orig/arxiv/papers/{YYMM}/{paperid}{version-1}.* needs to be synced.
+    if publish_type in ["rep", "wdr"]:
+        prev_version = 1
+        try:
+            prev_version = max(1, int(version) - 1)
+        except:
+            pass
+        versioned_parent = f"{ORIG_PREFIX}{archive}/papers/{xid_latest.yymm}"
+        for dotext in [src_ext, ".abs"]:
+            src_path = f"{versioned_parent}/{xid_latest.id}v{prev_version}{dotext}"
+            if os.path.exists(src_path):
+                pairs.append((src_path, path_to_bucket_key(src_path)))
+
+    return (xid_latest.ids, pairs)
 
 
 def submission_callback(message: Message) -> None:
     """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
-    global gs_client
+    gs_client = globals().get("gs_client")
+    if gs_client is None:
+        gs_client = StorageClient()
+        globals()["gs_client"] = gs_client
     arxiv_id_str, payloads = submission_message_to_payloads(message)
     if not arxiv_id_str:
         logger.error(f"bad data {str(message.message_id)}")
@@ -144,11 +167,7 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
         subscription_id (str): ID of the Pub/Sub subscription
         test (bool): Test - get one message, print it, nack, and exit
     """
-    
-    global gs_client
-    gs_client = storage.Client()
-
-    subscriber_client = pubsub_v1.SubscriberClient()
+    subscriber_client = SubscriberClient()
     subscription_path = subscriber_client.subscription_path(project_id, subscription_id)
     callback = test_callback if test else submission_callback
     streaming_pull_future = subscriber_client.subscribe(subscription_path, callback=callback)
