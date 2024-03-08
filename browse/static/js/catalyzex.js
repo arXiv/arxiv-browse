@@ -76,16 +76,15 @@
       .append(icons.catalyzex)
       .append("CatalyzeX");
 
-    $output
-      .append(codeLink)
+    $output.append(window.DOMPurify.sanitize(codeLink))
   } else {
     $output.append(`<p>No code found for this paper just yet.</p>`)
   }
-  $output.append(`<p>If you have code to share with the arXiv community, please ${submitItHereLink} to benefit all researchers & engineers.</p>`)
+  $output.append(window.DOMPurify.sanitize(`<p>If you have code to share with the arXiv community, please ${submitItHereLink} to benefit all researchers & engineers.</p>`))
   if(isAlertActive) {
-    $output.append(`
+    $output.append(window.DOMPurify.sanitize(`
       <p>You've set up an alert for this paper, and we'll notify you once new code becomes available. Manage all your alerts <a target="_blank" href="https://www.catalyzex.com/users/${authedUserId}/alerts">here</a>. 🚀
-   `)
+   `))
   } else {
     const createAlertUrl = new URL("https://www.catalyzex.com/alerts/code/create");
     const queryParams = {
@@ -97,6 +96,6 @@
     Object.entries(queryParams).forEach(([key, val]) => {
       createAlertUrl.searchParams.set(key, val);
     })
-    $output.append(`<p><a href="${createAlertUrl}">Create an alert</a> to get notified when new code is available for this paper.</p>`)
+    $output.append(window.DOMPurify.sanitize(`<p><a href="${createAlertUrl}">Create an alert</a> to get notified when new code is available for this paper.</p>`))
   }
 })();
