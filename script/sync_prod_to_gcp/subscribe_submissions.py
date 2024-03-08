@@ -13,7 +13,7 @@ import argparse
 import signal
 import sys
 import typing
-from time import gmtime, time, sleep
+from time import gmtime, sleep
 from pathlib import Path
 
 import json
@@ -45,7 +45,7 @@ LOG_FORMAT_KWARGS = {
 }
 
 
-def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
+def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
     """
     Parse the submission_published message, map it to CIT files and returns the list of
     files to upload to GCP bucket.
@@ -60,18 +60,19 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
     try:
         json_str = message.data.decode('utf-8')
     except UnicodeDecodeError:
-        logger.error(f"bad data {str(message.message_id)}")
+        logger.error(f"bad data {str(message.message_id)}", extra=log_extra)
         return ("", [])
 
     try:
         data = json.loads(json_str)
     except Exception as _exc:
-        logger.warning(f"bad({message.message_id}): {json_str[:1024]}")
+        logger.warning(f"bad({message.message_id}): {json_str[:1024]}", extra=log_extra)
         return ("", [])
 
     publish_type = data.get('type') # cross | jref | new | rep | wdr
     paper_id = data.get('paper_id')
     version = data.get('version')
+    log_extra["arxiv_id"] = paper_id
 
     # The source may not have a consistent .tar.gz name.
     # Some other possibilities:
@@ -97,7 +98,7 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
         submission_exts = [".pdf", ".gz", ".html.gz", ".tar.gz", ".abs"]
 
     xid_latest = Identifier(f"{paper_id}")
-    logger.info("Processing %s.v%s:%s", xid_latest.ids, str(version), str(src_ext))
+    logger.info("Processing %s.v%s:%s", xid_latest.ids, str(version), str(src_ext), extra=log_extra)
     archive = ('arxiv' if not xid_latest.is_old_id else xid_latest.archive)
     pairs = []
 
@@ -108,7 +109,7 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
             pairs.append((src_path, path_to_bucket_key(src_path)))
         else:
             if src_ext is not None:
-                logger.error("Source does not exist: %s", src_path)
+                logger.error("Source does not exist: %s", src_path, extra=log_extra)
 
     # if it is new/cross/jref just /data/ftp/arxiv/papers/{YYMM}/{paperidv}.* needs to be synced.
     # If it is a replacement or wdr additionally /data/orig/arxiv/papers/{YYMM}/{paperid}{version-1}.* needs to be synced.
@@ -144,8 +145,8 @@ def submission_callback(message: Message) -> None:
     """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
     # Create a thread-local object
     gs_client = mydata.storage
-    arxiv_id_str, payloads = submission_message_to_payloads(message)
     log_extra = {"message_id": str(message.message_id), "app": "pubsub"}
+    arxiv_id_str, payloads = submission_message_to_payloads(message, log_extra)
     if not arxiv_id_str:
         logger.error(f"bad data {str(message.message_id)}", extra=log_extra)
         message.nack()
