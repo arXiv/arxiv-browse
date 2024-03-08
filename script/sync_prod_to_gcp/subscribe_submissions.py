@@ -61,13 +61,13 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
         json_str = message.data.decode('utf-8')
     except UnicodeDecodeError:
         logger.error(f"bad data {str(message.message_id)}")
-        return ("",[])
+        return ("", [])
 
     try:
         data = json.loads(json_str)
-    except Exception as exc:
+    except Exception as _exc:
         logger.warning(f"bad({message.message_id}): {json_str[:1024]}")
-        return ("",[])
+        return ("", [])
 
     publish_type = data.get('type') # cross | jref | new | rep | wdr
     paper_id = data.get('paper_id')
@@ -143,31 +143,32 @@ mydata = ThreadLocalData()
 def submission_callback(message: Message) -> None:
     """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
     # Create a thread-local object
-
     gs_client = mydata.storage
     arxiv_id_str, payloads = submission_message_to_payloads(message)
+    log_extra = {"message_id": str(message.message_id), "app": "pubsub"}
     if not arxiv_id_str:
-        logger.error(f"bad data {str(message.message_id)}")
+        logger.error(f"bad data {str(message.message_id)}", extra=log_extra)
         message.nack()
         return
     if not payloads:
-        logger.warning(f"There is no associated files? xid: {arxiv_id_str}, mid: {str(message.message_id)}")
+        logger.warning(f"There is no associated files? xid: {arxiv_id_str}, mid: {str(message.message_id)}", extra=log_extra)
         message.nack()
         return
     xid = Identifier(arxiv_id_str)
-    logger.info("Processing %s", arxiv_id_str)
+    log_extra["arxiv_id"] = arxiv_id_str
+    logger.info("Processing %s", arxiv_id_str, extra=log_extra)
 
     try:
         for local, remote in payloads:
-            logger.debug("uploading: %s -> %s", local, remote)
+            logger.debug("uploading: %s -> %s", local, remote, extra=log_extra)
             upload(gs_client, Path(local), remote)
 
         # Acknowledge the message so it is not re-sent
-        logger.info("ack message: %s", xid.ids)
+        logger.info("ack message: %s", xid.ids, extra=log_extra)
         message.ack()
 
     except Exception as exc:
-        logger.error("Error processing message: {exc}", exc_info=True)
+        logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
         message.nack()
 
 
@@ -206,7 +207,8 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
     subscription_path = subscriber_client.subscription_path(project_id, subscription_id)
     callback = test_callback if test else submission_callback
     streaming_pull_future = subscriber_client.subscribe(subscription_path, callback=callback)
-    logger.info("Starting %s %s", project_id, subscription_id)
+    log_extra = {"app": "pubsub"}
+    logger.info("Starting %s %s", project_id, subscription_id, extra=log_extra)
     with subscriber_client:
         try:
             while running:
@@ -217,9 +219,9 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
             logger.info("Timeout")
             streaming_pull_future.cancel()
         except Exception as e:
-            logger.error("Subscribe failed: %s", str(e), exc_info=True)
+            logger.error("Subscribe failed: %s", str(e), exc_info=True, extra=log_extra)
             streaming_pull_future.cancel()
-    logger.info("Exiting")
+    logger.info("Exiting", extra=log_extra)
 
 
 if __name__ == "__main__":
