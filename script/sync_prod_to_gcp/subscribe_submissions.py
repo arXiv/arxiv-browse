@@ -30,9 +30,9 @@ from identifier import Identifier
 from sync_published_to_gcp import ORIG_PREFIX, FTP_PREFIX, upload, ArxivSyncJsonFormatter, \
     path_to_bucket_key
 
-logging.basicConfig(level=logging.WARNING, format='(%(loglevel)s): (%(timestamp)s) %(message)s')
+logging.basicConfig(level=logging.INFO, format='(%(loglevel)s): (%(timestamp)s) %(message)s')
 logger = logging.getLogger(__file__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 
 LOG_FORMAT_KWARGS = {
