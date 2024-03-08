@@ -162,7 +162,7 @@ def submission_callback(message: Message) -> None:
     try:
         for local, remote in payloads:
             logger.debug("uploading: %s -> %s", local, remote, extra=log_extra)
-            upload(gs_client, Path(local), remote)
+            upload(gs_client, Path(local), remote, upload_logger=logger)
 
         # Acknowledge the message so it is not re-sent
         logger.info("ack message: %s", xid.ids, extra=log_extra)
