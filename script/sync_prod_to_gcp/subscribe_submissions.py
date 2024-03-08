@@ -5,17 +5,22 @@ check the files exist on CIT and uploads them to GCP bucket.
 The "upload to GCP bucket" part is from existing sync_published_to_gcp.
 
 As a matter of fact, this borrows the most of heavy lifting part from sync_published_to_gcp.py.
+
+The published submission queue provides the submission source file extension which is used to
+upload the legacy system submissions to the GCP bucket.
 """
 import argparse
+import signal
 import sys
 import typing
-from time import gmtime
+from time import gmtime, time, sleep
 from pathlib import Path
 
 import json
 import os
 import logging.handlers
 import logging
+import threading
 
 from google.cloud.pubsub_v1.subscriber.message import Message
 from google.cloud.pubsub_v1 import SubscriberClient
@@ -116,12 +121,24 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
     return (xid_latest.ids, pairs)
 
 
+class ThreadLocalData:
+    def __init__(self):
+        self._local = threading.local()
+
+    @property
+    def storage(self):
+        if not hasattr(self._local, 'storage'):
+            # Initialize the Storage instance for the current thread
+            self._local.storage = StorageClient()
+        return self._local.storage
+
+mydata = ThreadLocalData()
+
 def submission_callback(message: Message) -> None:
     """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
-    gs_client = globals().get("gs_client")
-    if gs_client is None:
-        gs_client = StorageClient()
-        globals()["gs_client"] = gs_client
+    # Create a thread-local object
+
+    gs_client = mydata.storage
     arxiv_id_str, payloads = submission_message_to_payloads(message)
     if not arxiv_id_str:
         logger.error(f"bad data {str(message.message_id)}")
@@ -158,6 +175,18 @@ def test_callback(message: Message) -> None:
     sys.exit(0)
 
 
+running = True
+
+def signal_handler(_signal: int, _frame: typing.Any):
+    """Graceful shutdown request"""
+    global running
+    running = False
+
+# Attach the signal handler
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+
+
 def submission_pull_messages(project_id: str, subscription_id: str, test: bool = False) -> None:
     """
     Create a subscriber client and pull messages from a Pub/Sub subscription.
@@ -171,12 +200,20 @@ def submission_pull_messages(project_id: str, subscription_id: str, test: bool =
     subscription_path = subscriber_client.subscription_path(project_id, subscription_id)
     callback = test_callback if test else submission_callback
     streaming_pull_future = subscriber_client.subscribe(subscription_path, callback=callback)
+    logger.info("Starting %s %s", project_id, subscription_id)
     with subscriber_client:
         try:
-            streaming_pull_future.result()
+            while running:
+                sleep(0.2)
+            streaming_pull_future.cancel()  # Trigger the shutdown
+            streaming_pull_future.result(timeout=30)  # Block until the shutdown is complete
+        except TimeoutError:
+            logger.info("Timeout")
+            streaming_pull_future.cancel()
         except Exception as e:
             logger.error("Subscribe failed: %s", str(e), exc_info=True)
             streaming_pull_future.cancel()
+    logger.info("Exiting")
 
 
 if __name__ == "__main__":
