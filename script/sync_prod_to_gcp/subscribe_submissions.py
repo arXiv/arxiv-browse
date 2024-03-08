@@ -175,7 +175,8 @@ def submission_callback(message: Message) -> None:
 
 def test_callback(message: Message) -> None:
     """Stand in callback to handle the pub/sub message. gets used for --test."""
-    arxiv_id_str, payloads = submission_message_to_payloads(message)
+    log_extra = {"message_id": str(message.message_id), "app": "pubsub-test"}
+    arxiv_id_str, payloads = submission_message_to_payloads(message, log_extra)
     logger.debug(arxiv_id_str)
     for payload in payloads:
         logger.debug(f"{payload[0]} -> {payload[1]}")
