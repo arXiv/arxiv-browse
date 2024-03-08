@@ -86,23 +86,27 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
     # This was to get a pdf only submission with ancillary files.
 
     # Now, the submission file extension is provided in the message
-    src_ext = data.get('src_ext', ".tar.gz")
+    src_ext = data.get('src_ext')
     # Not sure I have to do this but better safe than sorry
-    if src_ext and src_ext[0] != ".":
-        src_ext = f".{src_ext}"
+    if src_ext:
+        submission_exts = [src_ext, ".abs"]
+    else:
+        # cast a wider net for older queue element
+        submission_exts = [".pdf", ".gz", ".html.gz", ".tar.gz", ".abs"]
 
     xid_latest = Identifier(f"{paper_id}")
-    logger.info("Processing %s.v%s.%s", xid_latest.ids, str(version), src_ext)
+    logger.info("Processing %s.v%s:%s", xid_latest.ids, str(version), str(src_ext))
     archive = ('arxiv' if not xid_latest.is_old_id else xid_latest.archive)
     pairs = []
 
     latest_dir = f"{FTP_PREFIX}{archive}/papers/{xid_latest.yymm}"
-    for dotext in [src_ext, ".abs"]:
+    for dotext in submission_exts:
         src_path = f"{latest_dir}/{xid_latest.id}{dotext}"
         if os.path.exists(src_path):
             pairs.append((src_path, path_to_bucket_key(src_path)))
         else:
-            logger.error("Source does not exist: %s", src_path)
+            if src_ext is not None:
+                logger.error("Source does not exist: %s", src_path)
 
     # if it is new/cross/jref just /data/ftp/arxiv/papers/{YYMM}/{paperidv}.* needs to be synced.
     # If it is a replacement or wdr additionally /data/orig/arxiv/papers/{YYMM}/{paperid}{version-1}.* needs to be synced.
@@ -113,7 +117,7 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
         except:
             pass
         versioned_parent = f"{ORIG_PREFIX}{archive}/papers/{xid_latest.yymm}"
-        for dotext in [src_ext, ".abs"]:
+        for dotext in submission_exts:
             src_path = f"{versioned_parent}/{xid_latest.id}v{prev_version}{dotext}"
             if os.path.exists(src_path):
                 pairs.append((src_path, path_to_bucket_key(src_path)))
