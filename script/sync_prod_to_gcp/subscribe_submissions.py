@@ -88,9 +88,11 @@ def submission_message_to_payloads(message: Message) -> typing.Tuple[str, typing
     # Now, the submission file extension is provided in the message
     src_ext = data.get('src_ext')
     # Not sure I have to do this but better safe than sorry
+    src_ext = src_ext.strip() if src_ext else None
     if src_ext:
-        submission_exts = [src_ext, ".abs"]
+        submission_exts = [src_ext.strip(), ".abs"]
     else:
+        src_ext = None
         # cast a wider net for older queue element
         submission_exts = [".pdf", ".gz", ".html.gz", ".tar.gz", ".abs"]
 
