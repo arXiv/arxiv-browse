@@ -6,6 +6,7 @@ DOCKERPORT := 8080
 LOCALPORT := 6200
 DBPROXYPORT := 6201
 BROWSE_DOCKER_RUN := docker run --cpus 2 --rm -p ${LOCALPORT}:${DOCKERPORT} -e PORT=${DOCKERPORT} -v  ${HOME}/arxiv/arxiv-browse/tests:/tests  --name ${NAME} --env-file "${PWD}/tests/docker.env"  --security-opt="no-new-privileges=true" 
+PLATFORM := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 
 default: venv
 
@@ -17,7 +18,7 @@ venv: .prerequisit
 	. venv/bin/activate && poetry install
 
 /usr/local/bin/cloud-sql-proxy:
-	curl -o ./cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.2/cloud-sql-proxy.linux.amd64
+	curl -o ./cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.2/cloud-sql-proxy.${PLATFORM}.amd64
 	sudo install -m 755 cloud-sql-proxy /usr/local/bin
 	rm -f ./cloud-sql-proxy
 
