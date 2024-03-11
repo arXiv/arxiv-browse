@@ -1,7 +1,8 @@
 """Parse fields from a single arXiv abstract (.abs) file."""
 
 import re
-from typing import Any, Dict, List, Tuple, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List, Tuple, Optional, Sequence
 from datetime import datetime
 
 from zoneinfo import ZoneInfo
@@ -18,9 +19,10 @@ from browse.domain.metadata import Archive, AuthorList, Category, \
     DocMetadata, Group, Submitter
 from browse.domain.version import VersionEntry, SourceFlag
 from browse.domain.identifier import Identifier
+from browse.services.dissemination import get_article_store
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
-
+from browse.services.documents.format_codes import get_all_formats
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
@@ -216,8 +218,9 @@ def parse_abs_top(raw: str, modified:datetime, abstract:str) -> DocMetadata:
         # private=private  # TODO, not implemented
     )
 
+
 def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
-        -> Tuple[int, List[VersionEntry], str]:
+        -> Tuple[int, Sequence[VersionEntry], str]:
     """Parse the version entries from the arXiv .abs file."""
     version_count = 0
     version_entries = list()
@@ -237,12 +240,14 @@ def _parse_version_entries(arxiv_id: str, version_entry_list: List) \
         source_type = SourceFlag(code=date_match.group('source_type'))
         kb = int(date_match.group('size_kilobytes'))
         ve = VersionEntry(
+            #id = Identifier(f"{arxiv_id}v{version_count}"),
             raw=date_match.group(0),
             source_flag=source_type,
             size_kilobytes=kb,
             submitted_date=submitted_date,
             version=version_count,
-            is_withdrawn=kb == 0 or source_type.ignore
+            is_withdrawn=kb == 0 or source_type.ignore,
+            is_current = version_count == len(version_entry_list)
         )
         version_entries.append(ve)
 

@@ -96,7 +96,8 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
                              source_flag=SourceFlag(ver.source_flags),
                              source_format=ver.source_format,
                              is_withdrawn=ver.is_withdrawn or ver.source_format == "withdrawn"
-                                          or ver.source_size == 0)
+                                          or ver.source_size == 0,
+                             is_current= ver.version == len(all_versions))
         version_history.append(entry)
 
     doc_license: License = License() if not ver_of_interest.license else License(recorded_uri=ver_of_interest.license)

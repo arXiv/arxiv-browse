@@ -284,7 +284,7 @@ class ArticleStore():
 
         # first, get possible list of formats based on available source file
         if src_file is None:
-            src_file = self.sourcestore.get_src(docmeta.arxiv_identifier, docmeta)
+            src_file = self.sourcestore.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta)
 
         source_file_formats: List[str] = []
         if src_file is not None:
@@ -472,7 +472,7 @@ class ArticleStore():
         Lists through possible extensions to find source file.
 
         Returns `FileObj` if found, `None` if not."""
-        src = self.sourcestore.get_src(arxiv_id, docmeta)
+        src = self.sourcestore.get_src_for_docmeta(arxiv_id, docmeta)
         return src if src is not None else "NO_SOURCE"
 
 

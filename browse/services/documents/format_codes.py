@@ -1,6 +1,6 @@
 """Shared functions that support determination of dissemination formats."""
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import logging
 import tarfile
@@ -8,6 +8,7 @@ from operator import itemgetter
 from tarfile import CompressionError, ReadError
 from typing import Dict
 
+from browse.domain.version import SourceFlag
 from browse.services.anypath import APath
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     return []
 
 
-def formats_from_source_flag(source_flag: str) -> List[str]:
+def formats_from_source_flag(source_flag: Union[str, SourceFlag]) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:
@@ -67,6 +68,9 @@ def formats_from_source_flag(source_flag: str) -> List[str]:
     F - PDF only
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
+    if isinstance(source_flag, SourceFlag):
+        source_flag = source_flag.code
+
     source_flag = source_flag if source_flag else ''
     has_encrypted_source = re.search('S', source_flag, re.IGNORECASE)
     has_ignore = re.search('I', source_flag, re.IGNORECASE)
@@ -82,7 +86,7 @@ def formats_from_source_flag(source_flag: str) -> List[str]:
     has_html = re.search('H', source_flag, re.IGNORECASE)
     has_docx_or_odf = re.search(r'[XO]', source_flag, re.IGNORECASE)
 
-    formats = []
+    formats: list[str] = []
     if has_ps_only:
         formats.extend(['pdf', 'ps'])
     elif has_pdflatex:
@@ -99,6 +103,31 @@ def formats_from_source_flag(source_flag: str) -> List[str]:
     formats.extend(['other'])
     return formats
 
+def get_all_formats(src_fmt: str) -> List[str]:
+        """Returns the list of all formats that the given src can
+        be disseminated in. Takes sources format and knows what
+        transformations can be applied.
+
+        Does not include sub-formats (like types of ps).
+        """
+        formats: List[str] = []
+        if src_fmt == 'ps':
+            formats.extend([src_fmt, 'pdf'])
+        elif src_fmt == 'pdf' or src_fmt == 'html':
+            formats.append(src_fmt)
+        elif src_fmt == 'dvi':
+            formats.extend([src_fmt, 'tex-ps', 'pdf'])
+        elif src_fmt == 'tex':
+            formats.extend(['dvi', 'tex-ps', 'pdf'])
+        elif src_fmt == 'pdftex':
+            formats.append('pdf')
+        elif src_fmt == 'docx' or src_fmt == 'odf':
+            formats.extend(['pdf', src_fmt])
+
+        if src_fmt in ['pdflatex', 'tex', 'ps', 'html']:
+            formats.append('src')
+
+        return formats
 
 def has_ancillary_files(source_flag: str) -> bool:
     """Check source type for indication of ancillary files."""

@@ -69,7 +69,8 @@ class TestAbsParser(TestCase):
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
                     source_flag=SourceFlag(code=''),
-                    is_withdrawn=False
+                    is_withdrawn=False,
+                    is_current=False
                 ),
                 VersionEntry(
                     version=2,
@@ -79,7 +80,8 @@ class TestAbsParser(TestCase):
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
                     source_flag=SourceFlag(code=''),
-                    is_withdrawn=False
+                    is_withdrawn=False,
+                    is_current=False
                 ),
                 VersionEntry(
                     version=3,
@@ -89,7 +91,8 @@ class TestAbsParser(TestCase):
                                             tzinfo=tzutc()),
                     size_kilobytes=17,
                     source_flag=SourceFlag(code=''),
-                    is_withdrawn=False
+                    is_withdrawn=False,
+                    is_current=True
                 )
             ]
         )

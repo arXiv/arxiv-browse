@@ -1,5 +1,5 @@
 """Representations of a version of a document."""
-from typing import Literal, Optional
+from typing import Literal, Optional, List
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -9,7 +9,7 @@ SOURCE_FORMAT = Literal["tex", "ps", "html", "pdf", "withdrawn", "pdftex", "docx
 Excluding NULL."""
 
 
-@dataclass(frozen=True)
+@dataclass
 class SourceFlag:
     """Represents arXiv article source file type."""
 
@@ -103,7 +103,7 @@ class SourceFlag:
         return self.code is not None and '1' in self.code
 
 
-@dataclass(frozen=True)
+@dataclass
 class VersionEntry:
     """Represents a single arXiv article version history entry."""
 
@@ -127,6 +127,37 @@ class VersionEntry:
     source_format: Optional[SOURCE_FORMAT] = None
     """Source format."""
 
+    is_current: bool = False
+    """Is the version the highest existing version?"""
+
     @property
     def withdrawn_or_ignore(self) -> bool:
         return self.source_flag.ignore or self.is_withdrawn
+
+    def formats(self) -> List[str]:
+        if self.is_withdrawn or self.size_kilobytes == 0:
+            return []
+
+        if self.source_flag.ignore:
+            if not self.source_flag.source_encrypted:
+                return ['src']
+            else:
+                return []
+
+        formats = []
+        if self.source_flag.ps_only or self.source_format == "ps":
+            formats.extend(['pdf', 'ps'])
+        elif self.source_flag.pdflatex or self.source_format == "pdflatex":
+            formats.extend(['pdf', 'src'])
+        elif self.source_flag.pdf_only or self.source_format == "pdfonly":
+            formats.extend(['pdf'])
+        elif self.source_flag.html or self.source_format == "html":
+            formats.extend(['html'])
+        elif self.source_flag.docx or self.source_format == "docx":
+            formats.extend(['pdf'])
+        else:
+            formats.extend(['pdf', 'ps', 'src'])
+
+        # other is added for display purposes maybe move to controller or template?
+        formats.extend(['other'])
+        return formats

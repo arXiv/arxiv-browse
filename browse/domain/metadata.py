@@ -3,7 +3,7 @@ import re
 from collections import abc
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Iterator, List, Optional, Set, Literal
+from typing import Iterator, List, Optional, Set, Literal, Sequence
 
 from arxiv import taxonomy
 from arxiv.base.urls import canonical_url
@@ -122,7 +122,7 @@ class DocMetadata:
     license: License = field(default_factory=License)
     """License associated with the article."""
 
-    version_history: List[VersionEntry] = field(default_factory=list)
+    version_history: Sequence[VersionEntry] = field(default_factory=list)
     """Version history, consisting of at least one version history entry."""
 
     is_definitive: bool = field(default=False)
