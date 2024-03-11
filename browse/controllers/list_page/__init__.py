@@ -61,7 +61,7 @@ from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
 
 from browse.formatting.latexml import get_latexml_url
 
-from flask import request, url_for, redirect
+from flask import request, url_for, redirect, current_app
 from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
@@ -131,7 +131,8 @@ def get_listing(subject_or_category: str,
        Number of articles to show
     """
     
-
+    logging.warning(f"{current_app.config['DOCUMENT_LISTING_SERVICE']}: {type(get_listing_service())}")
+    logging.warning(f"LISTING PATH: {current_app.config['DOCUMENT_LISTING_PATH']}")
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:

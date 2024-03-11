@@ -161,7 +161,7 @@ private_vars.sh
 legacy_comparison.org
 
 tests/data/browse.db
-tests/data/latexmldb.db
+tests/data/latexml.db
 browse/pytest.db
 
 *.key

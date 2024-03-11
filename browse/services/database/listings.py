@@ -185,7 +185,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
             up.document_id,
             up.date
         )
-        .filter(up.date.in_(dates)) # type: ignore
+        .filter(up.date.in_(dates.select()))
         .filter(or_(up.action=="new", up.action=="cross"))
         .filter(up.category.in_(category_list))
         .group_by(up.document_id) #one listing per paper

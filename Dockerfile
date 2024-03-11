@@ -3,7 +3,7 @@
 # Defines the runtime for the arXiv browse service, which provides the main
 # UIs for browse.
 
-FROM python:3.10.8-buster
+FROM python:3.11.8-bookworm
 RUN apt-get update && apt-get -y upgrade
 
 ARG git_commit

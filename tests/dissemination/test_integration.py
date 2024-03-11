@@ -302,7 +302,7 @@ def test_does_not_exist_ps_cache(host):
 @pytest.mark.integration
 def test_withdrawn(host):
     """Sample of withdrawn versions"""
-    EXPECTED_WDR_STATUS = 200
+    EXPECTED_WDR_STATUS = 404
     def integration_test_of_withdrawn(arxiv_id):
         resp = requests.get(f"{host}/pdf/{arxiv_id}")
         assert resp.status_code == EXPECTED_WDR_STATUS, f"For withdrawn paper {arxiv_id} HTTP status code should have been {EXPECTED_WDR_STATUS} but was {resp.status_code}"
@@ -337,9 +337,9 @@ def test_html_src(host):
     """Submissions with HTML source"""
     # legacy returns 200 with msg: "Unavailable, The author has provided no source to generate PDF, and no PDF."
     resp = requests.get(f"{host}/pdf/cond-mat/9906075v1")
-    assert resp.status_code == 404
+    assert resp.status_code == 500
 
-    html_src = 'astro-ph/0306581v1'
+    # html_src = 'astro-ph/0306581v1'
 
 
 

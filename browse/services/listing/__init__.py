@@ -30,7 +30,7 @@ def fs_listing(config: dict, _: Any) -> "ListingService":
 
 def db_listing(config: dict, _: Any) -> "ListingService":
     """Factory function for DB backed listing service."""
-    from .db_listing_impl import DBListingService
+    from .db_listings import DBListingService
     # maybe pass in the specific classes for the tables we need?
     return DBListingService()
 
