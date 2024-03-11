@@ -1,7 +1,7 @@
 """Year link functions."""
 
 
-from typing import Any, Dict, List, Tuple
+from typing import List, Tuple
 
 from datetime import date
 

@@ -29,8 +29,6 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      primaryClass={" + str(pc) + "}\n"
         "}"
     )
-    reveal_type(docm)
-    reveal_type(res)
 
     return res
 

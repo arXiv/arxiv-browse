@@ -95,6 +95,7 @@ def current_session() -> DocumentCacheSession:
     if not g:
         return get_session()
     if 'doc_cache' not in g:
-        g.doc_cache = get_session()
+        setattr(g, 'doc_cache', get_session())
+    assert hasattr(g, 'doc_cache')
     assert isinstance(g.doc_cache, DocumentCacheSession)
     return g.doc_cache

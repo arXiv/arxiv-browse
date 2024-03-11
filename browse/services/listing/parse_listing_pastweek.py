@@ -96,7 +96,7 @@ def parse_listing_pastweek(listingFilePath: FileObj)\
             doc, type = _parse_doc(listing_lines)
             if doc:
                 item = ListingItem(id=doc.arxiv_id, listingType=type,
-                                   primary=doc.primary_category.id,
+                                   primary=doc.primary_category.id, # type: ignore
                                    article=doc)
                 day.items.append(item)
 

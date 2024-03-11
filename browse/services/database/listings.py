@@ -185,7 +185,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
             up.document_id,
             up.date
         )
-        .filter(up.date.in_(dates))
+        .filter(up.date.in_(dates)) # type: ignore
         .filter(or_(up.action=="new", up.action=="cross"))
         .filter(up.category.in_(category_list))
         .group_by(up.document_id) #one listing per paper
@@ -353,10 +353,10 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     if updated is None and modtime is None:
         modified=datetime(2010,3,6) #some time required, most recent modtime of an article with no updated column
     elif updated is not None and modtime is not None:
-        modified=max(meta.updated,datetime.fromtimestamp(meta.modtime))
-    elif updated is None:
-        modified=datetime.fromtimestamp(meta.modtime)
-    else:
+        modified=max(updated,datetime.fromtimestamp(float(modtime)))
+    elif updated is None and modtime is not None:
+        modified=datetime.fromtimestamp(float(modtime))
+    elif updated is not None and modtime is None:
         modified=updated
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,

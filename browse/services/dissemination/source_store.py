@@ -60,6 +60,8 @@ class SourceStore():
         else:
             parent = abs_path_orig_parent(arxiv_id)
 
+        if not arxiv_id.filename:
+            return None
         pattern = parent + '/' + arxiv_id.filename
         items = list(self.objstore.list(pattern))
         if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:

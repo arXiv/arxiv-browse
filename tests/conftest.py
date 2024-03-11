@@ -108,7 +108,6 @@ def app_with_test_fs(loaded_db):
     conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
     conf["DOCUMENT_LATEST_VERSIONS_PATH"] = "tests/data/abs_files/ftp"
     conf["DOCUMENT_ORIGNAL_VERSIONS_PATH"] = "tests/data/abs_files/orig"
-    conf["DOCUMENT_ABS_ACCESSOR"] = TestLocalAbsAccessor
 
     app = create_web_app(**conf)
 
