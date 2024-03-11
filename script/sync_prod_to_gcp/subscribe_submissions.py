@@ -86,16 +86,16 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
     # that the admins manually crafted. It would have: {paperidv}.pdf and {paperidv}.tar.gz
     # This was to get a pdf only submission with ancillary files.
 
-    # Now, the submission file extension is provided in the message
-    src_ext = data.get('src_ext')
-    # Not sure I have to do this but better safe than sorry
-    src_ext = src_ext.strip() if src_ext else None
+    # Now, the submission file extension is provided in the message.
+    src_ext: typing.Union[str, None] = data.get('src_ext')
+    src_ext = src_ext.strip() if src_ext else None # Not sure, but better safe than sorry
+    submission_exts: typing.List[str] = [".tar.gz", ".pdf", ".gz", ".html.gz"]
+    abs_ext = ".abs"
+    # if src_ext provided, reorder the format
     if src_ext:
-        submission_exts = [src_ext.strip(), ".abs"]
-    else:
-        src_ext = None
-        # cast a wider net for older queue element
-        submission_exts = [".pdf", ".gz", ".html.gz", ".tar.gz", ".abs"]
+        if src_ext in submission_exts:
+            submission_exts.remove(src_ext)
+        submission_exts.insert(0, src_ext)
 
     xid_latest = Identifier(f"{paper_id}")
     logger.info("Processing %s.v%s:%s", xid_latest.ids, str(version), str(src_ext), extra=log_extra)
@@ -103,12 +103,16 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
     pairs = []
 
     latest_dir = f"{FTP_PREFIX}{archive}/papers/{xid_latest.yymm}"
-    for dotext in submission_exts:
+    for dotext in [abs_ext] + submission_exts:
         src_path = f"{latest_dir}/{xid_latest.id}{dotext}"
         if os.path.exists(src_path):
             pairs.append((src_path, path_to_bucket_key(src_path)))
+            # When there is a source, stop looking for more. For majority of case, this would
+            # eliminate the extra fstat on the file system.
+            if dotext != abs_ext:
+                break
         else:
-            if src_ext is not None:
+            if dotext == src_ext:
                 logger.error("Source does not exist: %s", src_path, extra=log_extra)
 
     # if it is new/cross/jref just /data/ftp/arxiv/papers/{YYMM}/{paperidv}.* needs to be synced.
@@ -120,11 +124,15 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
         except:
             pass
         versioned_parent = f"{ORIG_PREFIX}{archive}/papers/{xid_latest.yymm}"
-        for dotext in submission_exts:
+        for dotext in [abs_ext] + submission_exts:
             src_path = f"{versioned_parent}/{xid_latest.id}v{prev_version}{dotext}"
             if os.path.exists(src_path):
                 pairs.append((src_path, path_to_bucket_key(src_path)))
-
+                if dotext != abs_ext:
+                    break
+            else:
+                if dotext == src_ext:
+                    logger.warning("Prev does not exist: %s", src_path, extra=log_extra)
     return (xid_latest.ids, pairs)
 
 
