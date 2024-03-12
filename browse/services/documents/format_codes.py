@@ -1,6 +1,6 @@
 """Shared functions that support determination of dissemination formats."""
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import logging
 import tarfile
@@ -8,6 +8,7 @@ from operator import itemgetter
 from tarfile import CompressionError, ReadError
 from typing import Dict
 
+from browse.domain.version import SourceFlag
 from browse.services.anypath import APath
 
 logger = logging.getLogger(__name__)
@@ -41,9 +42,7 @@ def formats_from_source_file_name(source_file_path: str) -> List[str]:
     return []
 
 
-def formats_from_source_flag(source_flag: str,
-                             format_pref: Optional[str] = None,
-                             cache_flag: bool = False) -> List[str]:
+def formats_from_source_flag(source_flag: Union[str, SourceFlag]) -> List[str]:
     """Get the dissemination formats based on source type and preference.
 
     Source file types are represented by single-character codes:
@@ -69,67 +68,66 @@ def formats_from_source_flag(source_flag: str,
     F - PDF only
         PDF-only submission with .tar.gz package (likely because of anc files)
     """
-    formats = []
-    if not source_flag:
-        source_flag = ''
-    if not format_pref:
-        format_pref = ''
+    if isinstance(source_flag, SourceFlag):
+        source_flag = source_flag.code
+
+    source_flag = source_flag if source_flag else ''
     has_encrypted_source = re.search('S', source_flag, re.IGNORECASE)
     has_ignore = re.search('I', source_flag, re.IGNORECASE)
+    if has_ignore:
+        if not has_encrypted_source:
+            return ['src']
+        else:
+            return []
+
     has_ps_only = re.search('P', source_flag, re.IGNORECASE)
     has_pdflatex = re.search('D', source_flag, re.IGNORECASE)
     has_pdf_only = re.search('F', source_flag, re.IGNORECASE)
     has_html = re.search('H', source_flag, re.IGNORECASE)
     has_docx_or_odf = re.search(r'[XO]', source_flag, re.IGNORECASE)
-    has_src_pref = format_pref and re.search('src', format_pref)
-    append_other = False
 
-    if has_ignore and not has_encrypted_source:
-        formats.append('src')
-    elif has_ps_only:
-        formats.extend(['pdf', 'ps', 'other'])
+    formats: list[str] = []
+    if has_ps_only:
+        formats.extend(['pdf', 'ps'])
     elif has_pdflatex:
-        formats.extend(['pdf', 'other'])
-        # PDFtex has source so honor src preference
-        if has_src_pref and not has_encrypted_source:
-            formats.insert(1, 'src')
+        formats.extend(['pdf', 'src'])
     elif has_pdf_only:
-        formats.extend(['pdf', 'other'])
+        formats.extend(['pdf'])
     elif has_html:
-        formats.extend(['html', 'other'])
+        formats.extend(['html'])
     elif has_docx_or_odf:
-        formats.extend(['pdf', 'other'])
-    elif cache_flag:
-        # this is the case where the source is not newer than the cache file
-        # and the cache file is empty
-        formats.extend(['nops', 'other'])
+        formats.extend(['pdf'])
     else:
-        if re.search('pdf', format_pref):
-            formats.append('pdf')
-        elif re.search('400', format_pref):
-            formats.append('ps(400)')
-        elif re.search('600', format_pref):
-            formats.append('ps(600)')
-        elif re.search('fname=cm', format_pref):
-            formats.append('ps(cm)')
-        elif re.search('fname=CM', format_pref):
-            formats.append('ps(CM)')
-        elif re.search('dvi', format_pref):
-            formats.append('dvi')
-        elif has_src_pref:
-            formats.extend(['pdf', 'ps'])
-            if not has_encrypted_source:
-                formats.append('src')
-        else:
-            formats.extend(['pdf', 'ps'])
+        formats.extend(['pdf', 'ps', 'src'])
 
-        append_other = True
-
-    if append_other:
-        formats.append('other')
-
+    formats.extend(['other'])
     return formats
 
+def get_all_formats(src_fmt: str) -> List[str]:
+        """Returns the list of all formats that the given src can
+        be disseminated in. Takes sources format and knows what
+        transformations can be applied.
+
+        Does not include sub-formats (like types of ps).
+        """
+        formats: List[str] = []
+        if src_fmt == 'ps':
+            formats.extend([src_fmt, 'pdf'])
+        elif src_fmt == 'pdf' or src_fmt == 'html':
+            formats.append(src_fmt)
+        elif src_fmt == 'dvi':
+            formats.extend([src_fmt, 'tex-ps', 'pdf'])
+        elif src_fmt == 'tex':
+            formats.extend(['dvi', 'tex-ps', 'pdf'])
+        elif src_fmt == 'pdftex':
+            formats.append('pdf')
+        elif src_fmt == 'docx' or src_fmt == 'odf':
+            formats.extend(['pdf', src_fmt])
+
+        if src_fmt in ['pdflatex', 'tex', 'ps', 'html']:
+            formats.append('src')
+
+        return formats
 
 def has_ancillary_files(source_flag: str) -> bool:
     """Check source type for indication of ancillary files."""
