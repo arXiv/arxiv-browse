@@ -35,6 +35,16 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
+        {%- if rd_int >= 202403120100 and rd_int <= 202403150100 -%}
+        <div class="column">
+          <p>Pi Day is Giving Day: arXiv depends on donations to operate and keep science open for all.
+              <a href="https://givingday.cornell.edu/campaigns/arxiv" target="_blank">
+              <span style="color:white;text-decoration-line:underline;">Give back to arXiv on 3.14.24!</span>
+              </a>
+          </p>
+        </div>
+        {%- endif -%}
+
         {%- if rd_int >= 202311270100 and rd_int <= 202311290100 -%}
         <div class="column banner-minimal">
           <p><a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_8wAZvATbZvWU2vc" target="_blank">Take the annual global survey</a></p>
