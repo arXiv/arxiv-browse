@@ -194,3 +194,14 @@ TAG.txt
 .htaccess
 
 /.prerequisit
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
