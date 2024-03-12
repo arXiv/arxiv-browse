@@ -6,6 +6,7 @@ DOCKERPORT := 8080
 LOCALPORT := 6200
 DBPROXYPORT := 6201
 BROWSE_DOCKER_RUN := docker run --cpus 2 --rm -p ${LOCALPORT}:${DOCKERPORT} -e PORT=${DOCKERPORT} -v  ${HOME}/arxiv/arxiv-browse/tests:/tests  --name ${NAME} --env-file "${PWD}/tests/docker.env"  --security-opt="no-new-privileges=true" 
+BIN_PATH ?= /usr/local/bin
 PLATFORM := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 
 default: venv
@@ -17,12 +18,13 @@ venv: .prerequisit
 	. venv/bin/activate && pip install poetry==1.3.2
 	. venv/bin/activate && poetry install
 
-/usr/local/bin/cloud-sql-proxy:
+${BIN_PATH}/cloud-sql-proxy:
 	curl -o ./cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.2/cloud-sql-proxy.${PLATFORM}.amd64
-	sudo install -m 755 cloud-sql-proxy /usr/local/bin
+	mkdir -p ${BIN_PATH}
+	sudo install -m 755 cloud-sql-proxy ${BIN_PATH}
 	rm -f ./cloud-sql-proxy
 
-.prerequisit: /usr/local/bin/cloud-sql-proxy
+.prerequisit: ${BIN_PATH}/cloud-sql-proxy
 	sudo apt install -y libmysqlclient-dev
 	touch .prerequisit
 
@@ -30,10 +32,10 @@ run:	venv
 	. venv/bin/activate && python main.py
 
 proxy:
-	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4 > /dev/null 2>&1 &
+	${BIN_PATH}/cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4 > /dev/null 2>&1 &
 
 dev-proxy:
-	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port ${DBPROXYPORT} arxiv-development:us-east4:arxiv-db-dev > /dev/null 2>&1 &
+	${BIN_PATH}/cloud-sql-proxy --address 0.0.0.0 --port ${DBPROXYPORT} arxiv-development:us-east4:arxiv-db-dev > /dev/null 2>&1 &
 
 tests/.env: ~/.arxiv/browse.env
 	cp $< $@ 
