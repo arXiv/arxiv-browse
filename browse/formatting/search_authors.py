@@ -2,7 +2,7 @@
 import re
 from typing import List, Tuple, Union
 
-from arxiv.util.authors import PREFIX_MATCH, split_authors
+from arxiv.authors import PREFIX_MATCH, split_authors
 from arxiv.util.tex2utf import tex2utf
 
 

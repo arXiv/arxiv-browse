@@ -5,15 +5,15 @@ import re
 from typing import Optional, List
 
 from arxiv.identifier import Identifier
-from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
+from arxiv.files.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
                                       pdf, pdftex, ps, psgz, tex)
 from arxiv.document.metadata import DocMetadata
-from browse.services.key_patterns import (abs_path_current_parent,
+from arxiv.files.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent)
-from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj
+from arxiv.files.object_store import ObjectStore
+from arxiv.files import FileObj
 
-from .ancillary_files import list_ancillary_files
+from arxiv.formats import list_ancillary_files
 
 logger = logging.getLogger(__file__)
 

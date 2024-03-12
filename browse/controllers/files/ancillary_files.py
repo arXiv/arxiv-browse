@@ -9,8 +9,8 @@ from arxiv.identifier import Identifier, IdentifierException
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service
-from browse.services.object_store import FileObj
-from browse.services.object_store.fileobj import FileFromTar
+from arxiv.files import FileObj
+from arxiv.files import FileFromTar
 
 from . import last_modified, add_time_headers, add_mimetype
 

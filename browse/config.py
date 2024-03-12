@@ -6,11 +6,13 @@ Docstrings are from the `Flask configuration documentation
 import os
 from secrets import token_hex
 import warnings
+from pydantic import BaseSettings
 
 from typing import Optional, Dict, Any, List
 import logging
 
-from pydantic import SecretStr, BaseSettings, PyObject
+import arxiv.config as arxiv_base
+from pydantic import SecretStr, PyObject
 
 log = logging.getLogger(__name__)
 
@@ -18,8 +20,7 @@ log = logging.getLogger(__name__)
 DEFAULT_DB = "sqlite:///tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
-
-class Settings(BaseSettings):
+class Settings(arxiv_base.Settings):
     """Class for settings for arxiv-browse web app."""
 
     APP_VERSION: str = "0.3.4"
@@ -35,57 +36,23 @@ class Settings(BaseSettings):
     FLASKS3_FORCE_MIMETYPE: bool = True
     FLASKS3_ACTIVE: bool = False
 
-    SQLALCHEMY_DATABASE_URI: str = DEFAULT_DB
-    """SQLALCHEMY_DATABASE_URI is pulled from
-    BROWSE_SQLALCHEMY_DATABASE_URI. If it is not there the
-    SQLALCHEMY_DATABASE_URI is checked. If that is not set, the
-    default, the SQLITE test DB is used.
-    """
-
     LATEXML_ENABLED: bool = False
     """Sets if LATEXML is enabled or not"""
-
-    LATEXML_BUCKET: str = os.environ.get('LATEXML_BUCKET', 'latexml_arxiv_id_converted')
 
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_DB_USER: str = ''
-    """DB username for latexml DB."""
-
-    LATEXML_DB_PASS: str = ''
-    """DB password for latexml DB."""
-
-    LATEXML_DB_NAME: str = ''
-    """DB name for latexml DB."""
-
-    LATEXML_INSTANCE_CONNECTION_NAME: str = ''
-    """GCP instance connection name of managed DB.
-    ex. arxiv-xyz:us-central1:my-special-db
-    
-
-    If this is set, a TLS protected GCP connection will be used to connect to
-    the latexml db. See
-    https://cloud.google.com/sql/docs/postgres/connect-connectors#python_1"""
-    
-
-    LATEXML_IP_TYPE: str = 'PUBLIC_IP'
-    """If the GCP connection is public or private"""
-
-    SQLALCHEMY_BINDS: Dict[str, Any] = {}
-    """ For the database tracking html conversion metadata """
+    LATEXML_BUCKET: str = 'latexml_arxiv_id_converted'
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
     SQLALCHEMY_RECORD_QUERIES: bool = False
 
     SQLALCHEMY_POOL_SIZE: Optional[int] = 10
-    """SQLALCHEMY_POOL_SIZE is set from BROWSE_SQLALCHEMY_POOL_SIZE.
-    Ignored under sqlite."""
+    """Ignored under sqlite."""
 
     SQLALCHEMY_MAX_OVERFLOW: Optional[int] = 0
-    """SQLALCHEMY_MAX_OVERFLOW is set from BROWSE_SQLALCHEMY_MAX_OVERFLOW.
-    Ignored under sqlite."""
+    """Ignored under sqlite."""
 
     BROWSE_DISABLE_DATABASE: bool = False
     """Disable DB queries even if other SQLAlchemy config are defined
@@ -199,10 +166,6 @@ class Settings(BaseSettings):
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
 
-    ARXIV_BUSINESS_TZ: str = 'US/Eastern'
-    """
-    Timezone of the arxiv business offices.
-    """
 
     FS_TZ: str = "US/Eastern"
     """
@@ -230,8 +193,6 @@ class Settings(BaseSettings):
     original file only in debug mode.
     """
 
-
-    SECRET_KEY: str = "qwert2345"
 
     SESSION_COOKIE_NAME: str = "arxiv_browse"
 
@@ -285,18 +246,6 @@ class Settings(BaseSettings):
     disables it entirely.
     """
 
-    SERVER_NAME: Optional[str] = None
-    """
-    the name and port number of the server. Required for subdomain support (e.g.:
-    'myapp.dev:5000') Note that localhost does not support subdomains so setting
-    this to "localhost" does not help. Setting a SERVER_NAME also by default
-    enables URL generation without a request context but with an application
-    context.
-
-    If this is set and the Host header of a request does not match the SERVER_NAME,
-    then Flask will respond with a 404. Test with
-    curl http://127.0.0.1:5000/ -sv -H "Host: subdomain.arxiv.org"
-    """
 
     APPLICATION_ROOT: Optional[str] = None
     """
@@ -392,27 +341,18 @@ class Settings(BaseSettings):
     GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
     """
 
-    class Config:
-        """Additional pydantic config of these settings."""
-
-        fields = {
-            'SQLALCHEMY_DATABASE_URI': {
-                'env': ['BROWSE_SQLALCHEMY_DATABASE_URI', 'CLASSIC_DATABASE_URI']
-            }
-        }
-
     def check(self) -> None:
         """A check and fix up of a settings object."""
-        if 'sqlite' in self.SQLALCHEMY_DATABASE_URI:
+        if 'sqlite' in self.CLASSIC_DB_URI:
             if not self.TESTING:
-                log.warning(f"using SQLite DB at {self.SQLALCHEMY_DATABASE_URI}")
+                log.warning(f"using SQLite DB at {self.CLASSIC_DB_URI}")
             self.SQLALCHEMY_MAX_OVERFLOW = None
             self.SQLALCHEMY_POOL_SIZE = None
 
         if (os.environ.get("FLASK_ENV", False) == "production"
-                and "sqlite" in self.SQLALCHEMY_DATABASE_URI):
+                and "sqlite" in self.CLASSIC_DB_URI):
             warnings.warn(
-                "Using sqlite in BROWSE_SQLALCHEMY_DATABASE_URI in production environment"
+                "Using sqlite in CLASSIC_DB_URI in production environment"
             )
 
         if self.DOCUMENT_ORIGNAL_VERSIONS_PATH.startswith("gs://") and \

@@ -11,7 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 from arxiv.document.metadata import DocMetadata
 
-from arxiv.util.authors import parse_author_affil
+from arxiv.authors import parse_author_affil
 from arxiv.taxonomy import Category
 
 from ...services.database import (

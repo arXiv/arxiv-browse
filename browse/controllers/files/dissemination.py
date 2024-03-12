@@ -9,15 +9,15 @@ from io import BytesIO
 from typing import Generator
 
 from arxiv.identifier import Identifier, IdentifierException
-from browse.domain.fileformat import FileFormat
+from arxiv.files.fileformat import FileFormat
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
-from browse.domain import fileformat
+from arxiv.files import fileformat
 
 from browse.controllers.files import last_modified, add_time_headers, add_mimetype, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html, not_found, bad_id, cannot_build_pdf
 
-from browse.services.object_store.fileobj import FileObj, FileTransform
+from arxiv.files import FileObj, FileTransform
 
 from browse.services.html_processing import post_process_html
 

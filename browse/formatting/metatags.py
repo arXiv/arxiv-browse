@@ -4,7 +4,7 @@ import re
 from datetime import datetime, timezone
 from typing import Dict, List, Union
 
-from arxiv.util.authors import parse_author_affil_utf
+from arxiv.authors import parse_author_affil_utf
 from flask import url_for
 
 from arxiv.document.metadata import DocMetadata

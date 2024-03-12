@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis.strategies import text, binary
 
-from browse.services.object_store.fileobj import MockStringFileObj, FileTransform
+from arxiv.files import MockStringFileObj, FileTransform
 
 
 @given(text())

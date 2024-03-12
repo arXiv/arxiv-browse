@@ -55,7 +55,7 @@ from arxiv.document.metadata import DocMetadata
 from browse.formatting.search_authors import (AuthorList, queries_for_authors,
                                               split_long_author_list)
 from browse.services.documents import get_doc_service
-from browse.services.documents.format_codes import formats_from_source_flag
+from arxiv.formats import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service, ListingItem)
 
@@ -131,8 +131,6 @@ def get_listing(subject_or_category: str,
        Number of articles to show
     """
     
-    logging.warning(f"{current_app.config['DOCUMENT_LISTING_SERVICE']}: {type(get_listing_service())}")
-    logging.warning(f"LISTING PATH: {current_app.config['DOCUMENT_LISTING_PATH']}")
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:

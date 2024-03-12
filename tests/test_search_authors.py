@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from arxiv.util.authors import split_authors
+from arxiv.authors import split_authors
 
 from arxiv.document.parse_abs import parse_abs_file
 from browse.formatting.search_authors import queries_for_authors, split_long_author_list

@@ -3,7 +3,7 @@
 
 from typing import List
 
-from arxiv.util.authors import parse_author_affil_utf
+from arxiv.authors import parse_author_affil_utf
 
 from arxiv.document.metadata import DocMetadata
 

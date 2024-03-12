@@ -8,7 +8,6 @@ from typing import List, Optional
 from sqlalchemy import text
 from sqlalchemy.engine.base import Engine
 
-from arxiv.files import VersionedFlavor, LocalFileAccessor, merge_path
 from arxiv.db.models import Metadata
 
 
@@ -196,13 +195,3 @@ def populate_test_database(drop_and_create: bool, db):
     _populate_latexml_test_data(db)
 
 ABS_FILES = path_of_for_test('data/abs_files')
-
-class TestAbsFlavor (VersionedFlavor):
-
-    @property
-    def local_path(self) -> str:
-        return merge_path(ABS_FILES, self.path_mapper(self.identifier, extent=".abs")[5:])
-
-class TestLocalAbsAccessor (LocalFileAccessor, TestAbsFlavor):
-    ...
-

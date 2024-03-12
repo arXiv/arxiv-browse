@@ -17,9 +17,9 @@ means that the fixture will be re-run for each test function.
 import pytest
 from pathlib import Path
 from browse.factory import create_web_app
-import os
+from arxiv.config import Settings
 
-from tests import path_of_for_test, TestLocalAbsAccessor
+from tests import path_of_for_test
 
 import browse.services.documents as documents
 import browse.services.listing as listing
@@ -28,9 +28,13 @@ DEFAULT_DB = "sqlite:///tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
 
+ARXIV_BASE_SETTINGS = Settings(
+    
+)
+
 TESTING_CONFIG = {
-    "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
-    "SQLALCHEMY_DATABASE_URI" : DEFAULT_DB,
+    "CLASSIC_DB_URI": DEFAULT_DB,
+    "LATEXML_DB_URI": TESTING_LATEXML_DB,
     'DOCUMENT_LISTING_SERVICE': listing.db_listing,
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",

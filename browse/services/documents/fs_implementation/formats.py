@@ -6,9 +6,9 @@ from typing import Dict, List
 
 import tarfile
 from tarfile import ReadError, CompressionError
-from browse.services.anypath import to_anypath
+from arxiv.files.anypath import to_anypath
 
-from ..format_codes import VALID_SOURCE_EXTENSIONS
+from arxiv.formats import VALID_SOURCE_EXTENSIONS
 
 import logging
 logger = logging.getLogger(__name__)

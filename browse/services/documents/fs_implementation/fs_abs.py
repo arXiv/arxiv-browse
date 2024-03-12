@@ -12,7 +12,7 @@ from arxiv.document.exceptions import (
     AbsVersionNotFoundException
 )
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from browse.services.anypath import fs_check
+from arxiv.files.anypath import fs_check
 
 from browse.services.documents.base_documents import DocMetadataService
 

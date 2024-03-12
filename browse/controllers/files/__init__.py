@@ -6,7 +6,7 @@ import mimetypes
 
 from arxiv.identifier import Identifier
 from arxiv.document.version import VersionEntry
-from browse.services.object_store import FileObj
+from arxiv.files import FileObj
 
 
 BUFFER_SIZE = 1024 * 4
