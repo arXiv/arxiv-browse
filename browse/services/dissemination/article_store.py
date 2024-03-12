@@ -22,7 +22,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
-    formats_from_source_file_name, formats_from_source_flag)
+    formats_from_source_file_name, formats_from_source_flag, get_all_formats)
 from browse.services.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent,
                                           current_pdf_path, previous_pdf_path,
@@ -301,34 +301,6 @@ class ArticleStore():
             source_type_formats = formats_from_source_flag(src_flag_code)
             if source_type_formats:
                 formats.extend(source_type_formats)
-
-        return formats
-
-    def get_all_paper_formats(self, docmeta: DocMetadata) -> List[str]:
-        """Returns the list of all formats that the given paper can
-        be disseminated in. Takes sources format and knows what
-        transformations can be applied.
-
-        Does not include sub-formats (like types of ps).
-        """
-        src_fmt: str = self.sourcestore.get_src_format(docmeta).id
-        formats: List[str] = []
-        if (src_fmt == 'ps'):
-            formats.extend([src_fmt, 'pdf'])
-        elif (src_fmt == 'pdf' or src_fmt == 'html'):
-            formats.append(src_fmt)
-        elif (src_fmt == 'dvi'):
-            formats.extend([src_fmt, 'tex-ps', 'pdf'])
-        elif (src_fmt == 'tex'):
-            formats.extend(['dvi', 'tex-ps', 'pdf'])
-        elif (src_fmt == 'pdftex'):
-            formats.append('pdf')
-        elif (src_fmt == 'docx' or src_fmt == 'odf'):
-            formats.extend(['pdf', src_fmt])
-
-        ver = docmeta.get_version()
-        if ver and not ver.withdrawn_or_ignore:
-            formats.append('src')
 
         return formats
 

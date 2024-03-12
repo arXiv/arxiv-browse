@@ -116,16 +116,13 @@ def get_all_formats(src_fmt: str) -> List[str]:
         elif src_fmt == 'pdf' or src_fmt == 'html':
             formats.append(src_fmt)
         elif src_fmt == 'dvi':
-            formats.extend([src_fmt, 'tex-ps', 'pdf'])
+            formats.extend([src_fmt, 'ps', 'pdf'])
         elif src_fmt == 'tex':
-            formats.extend(['dvi', 'tex-ps', 'pdf'])
+            formats.extend(['dvi', 'ps', 'pdf'])
         elif src_fmt == 'pdftex':
             formats.append('pdf')
         elif src_fmt == 'docx' or src_fmt == 'odf':
             formats.extend(['pdf', src_fmt])
-
-        if src_fmt in ['pdflatex', 'tex', 'ps', 'html']:
-            formats.append('src')
 
         return formats
 
