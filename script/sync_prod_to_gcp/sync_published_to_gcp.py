@@ -445,8 +445,10 @@ def upload_html(gs_client, ensure_tuple):
         yield upload(gs_client, file, path_to_bucket_key_html(file))
 
 @STORAGE_RETRY
-def upload(gs_client, localpath, key):
+def upload(gs_client, localpath, key, upload_logger=None):
     """Upload a file to GS_BUCKET"""
+    if upload_logger is None:
+        upload_logger = logger
 
     def mime_from_fname(filepath):
         return {
@@ -464,16 +466,16 @@ def upload(gs_client, localpath, key):
         with open(localpath, 'rb') as fh:
 
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
-            logger.debug(
+            upload_logger.debug(
                 f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
         try:
             destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath)}
             destination.update()
         except BaseException:
-            logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
+            upload_logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
         return "upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size
     else:
-        logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        upload_logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
         return "upload", localpath, key, "already_on_gs", ms_since(start), 0
 
 

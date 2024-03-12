@@ -632,6 +632,22 @@ class BrowseTest(unittest.TestCase):
         self.assertIn('href="/pdf/2101.10016', txt,
                          "Should have link to pdf")
 
+        rv = self.client.get('/format/2101.10016')
+        txt = rv.data.decode('utf-8').lower()
+        self.assertNotIn("download pdf", txt)
+        self.assertNotIn("download source", txt)
+
+        rv = self.client.get('/format/2101.10016v8')
+        txt = rv.data.decode('utf-8').lower()
+        self.assertNotIn("download pdf", txt)
+        self.assertNotIn("download source", txt)
+
+        rv = self.client.get('/format/2101.10016v1')
+        txt = rv.data.decode('utf-8').lower()
+        self.assertIn("download pdf", txt)
+        self.assertIn("download source", txt)
+        self.assertIn("download postscript", txt)
+        self.assertIn("dpi bitmapped fonts", txt)
 
     def test_withdrawn_then_new_version(self):
         """Test where v2 is withdrawn but then there is a non-withdrawn v3."""

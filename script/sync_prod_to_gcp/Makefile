@@ -1,6 +1,10 @@
-.PHONY: test stanza
+.PHONY: test stanza sync-to-gcp-queue sync-to-gcp-sub
 SHELL=/bin/bash
 APP_CRED=${HOME}/.config/gcloud/application_default_credentials.json
+ARXIV_PROJECT_ID := arxiv-production
+
+SYNC_TO_GCP_TOPIC := submission-published
+SYNC_TO_GCP_SUB_ID := sync-submission-from-cit-to-gcp
 
 default: sync.venv/bin/uwsgi
 
@@ -29,5 +33,15 @@ test/arxiv-development_arxiv-stanza.json:
 test/arxiv-development_sync-test.json:
 	op read "op://hs3xn7ldhg3pgrql5j524rgpee/w2wtsf5v7kahbngr64m43mciou/qrdfsd5gbnatjpv7zof6vwca4q" > $@
 
-${APP_CRED}:
-	gcloud auth application-default login
+sync-to-gcp-queue: CURRENT_PROJECT := $(shell gcloud config get project)
+
+sync-to-gcp-queue:
+	-gcloud pubsub topics create ${SYNC_TO_GCP_TOPIC} --message-retention-duration=31d --message-encoding=json --project ${ARXIV_PROJECT_ID} --schema p2p
+
+sync-to-gcp-sub: 
+	gcloud pubsub subscriptions create ${SYNC_TO_GCP_SUB_ID} --topic=${SYNC_TO_GCP_TOPIC} --ack-deadline=10 --min-retry-delay=60 --max-retry-delay=600 --max-delivery-attempts=100
+
+install-sync-to-gcp-service:
+	sudo -H install -m 0644 resource/systemd/submissions-to-gcp.service /etc/systemd/system/
+	sudo systemctl daemon-reload
+	@echo "Please run sudo systemctl enable submissions-to-gcp@sync-node.service"

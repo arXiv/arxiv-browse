@@ -22,7 +22,7 @@ from browse.services.documents.base_documents import (
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 from browse.services.object_store.object_store_gs import GsObjectStore
 from browse.services.documents.format_codes import (
-    formats_from_source_file_name, formats_from_source_flag)
+    formats_from_source_file_name, formats_from_source_flag, get_all_formats)
 from browse.services.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent,
                                           current_pdf_path, previous_pdf_path,
@@ -187,6 +187,11 @@ class ArticleStore():
                 if stat != 'GOOD']
         return ('BAD', ' and '.join(msgs))
 
+    def get_source(self, arxiv_id: Identifier, docmeta: Optional[DocMetadata] = None) \
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+        """Gets the source for a paper_id and version."""
+        return self.dissemination("e-print", arxiv_id, docmeta)
+
     def dissemination(self,
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
@@ -247,11 +252,7 @@ class ArticleStore():
         else:
             return fileobj
 
-    def get_dissemination_formats(self,
-                                  docmeta: DocMetadata,
-                                  format_pref: Optional[str] = None,
-                                  src_file: Optional[FileObj] = None
-                                  ) -> List[str]:
+    def get_dissemination_formats(self, docmeta: DocMetadata, src_file: Optional[FileObj] = None) -> List[str]:
         """Get a list of possible formats for a `DocMetadata`.
 
         Several checks are performed to determine available formats:
@@ -267,8 +268,6 @@ class ArticleStore():
         Parameters
         ----------
         docmeta : :class:`DocMetadata`
-        format_pref : str
-            The format preference string.
         src_file: Optional[FileObj]
             What src file to use in the format check. This will be
             looked up if it is `None`
@@ -285,7 +284,7 @@ class ArticleStore():
 
         # first, get possible list of formats based on available source file
         if src_file is None:
-            src_file = self.sourcestore.get_src(docmeta.arxiv_identifier, docmeta)
+            src_file = self.sourcestore.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta)
 
         source_file_formats: List[str] = []
         if src_file is not None:
@@ -295,51 +294,13 @@ class ArticleStore():
         if source_file_formats:
             formats.extend(source_file_formats)
         else:
-            # check source type from metadata, with consideration of
-            # user format preference and cache
-            cached_ps_file = self.dissemination(fileformat.ps, docmeta.arxiv_identifier, docmeta)
-            cache_flag = bool(cached_ps_file and isinstance(cached_ps_file, FileObj) \
-                and cached_ps_file.size == 0 \
-                and src_file \
-                and src_file.updated < cached_ps_file.updated)
-
+            # check source type from metadata
             src_flag = docmeta.get_requested_version().source_flag
             src_flag_code = '' if src_flag is None or src_flag.code is None else src_flag.code
 
-            source_type_formats = formats_from_source_flag(src_flag_code,
-                                                           format_pref,
-                                                           cache_flag)
+            source_type_formats = formats_from_source_flag(src_flag_code)
             if source_type_formats:
                 formats.extend(source_type_formats)
-
-        return formats
-
-    def get_all_paper_formats(self, docmeta: DocMetadata) -> List[str]:
-        """Returns the list of all formats that the given paper can
-        be disseminated in. Takes sources format and knows what
-        transformations can be applied.
-
-        Does not include sub-formats (like types of ps) and does
-        not pay attention to user preference settings.
-        """
-        src_fmt: str = self.sourcestore.get_src_format(docmeta).id
-        formats: List[str] = []
-        if (src_fmt == 'ps'):
-            formats.extend([src_fmt, 'pdf'])
-        elif (src_fmt == 'pdf' or src_fmt == 'html'):
-            formats.append(src_fmt)
-        elif (src_fmt == 'dvi'):
-            formats.extend([src_fmt, 'tex-ps', 'pdf'])
-        elif (src_fmt == 'tex'):
-            formats.extend(['dvi', 'tex-ps', 'pdf'])
-        elif (src_fmt == 'pdftex'):
-            formats.append('pdf')
-        elif (src_fmt == 'docx' or src_fmt == 'odf'):
-            formats.extend(['pdf', src_fmt])
-
-        ver = docmeta.get_version()
-        if ver and not ver.withdrawn_or_ignore:
-            formats.append('src')
 
         return formats
 
@@ -483,7 +444,7 @@ class ArticleStore():
         Lists through possible extensions to find source file.
 
         Returns `FileObj` if found, `None` if not."""
-        src = self.sourcestore.get_src(arxiv_id, docmeta)
+        src = self.sourcestore.get_src_for_docmeta(arxiv_id, docmeta)
         return src if src is not None else "NO_SOURCE"
 
 
