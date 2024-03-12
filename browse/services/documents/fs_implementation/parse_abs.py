@@ -22,7 +22,6 @@ from browse.domain.identifier import Identifier
 from browse.services.dissemination import get_article_store
 from browse.services.documents.base_documents import \
     AbsException, AbsParsingException, AbsNotFoundException
-from browse.services.documents.format_codes import get_all_formats
 
 RE_ABS_COMPONENTS = re.compile(r'^\\\\\n', re.MULTILINE)
 RE_FROM_FIELD = re.compile(
