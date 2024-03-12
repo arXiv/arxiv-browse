@@ -486,6 +486,8 @@ def service_status()->List[str]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
+    if not current_app.config["LATEXML_ENABLED"]:
+        return None
     return session.scalar(
         select(DBLaTeXMLDocuments.conversion_status)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
