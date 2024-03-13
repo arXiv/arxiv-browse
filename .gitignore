@@ -160,7 +160,8 @@ private_vars.sh
 .pyre
 legacy_comparison.org
 
-tests/data/*.db
+tests/data/browse.db
+tests/data/latexml.db
 browse/pytest.db
 
 *.key
