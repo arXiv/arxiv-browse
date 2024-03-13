@@ -6,7 +6,6 @@ Docstrings are from the `Flask configuration documentation
 import os
 from secrets import token_hex
 import warnings
-from pydantic import BaseSettings
 
 from typing import Optional, Dict, Any, List
 import logging

@@ -19,16 +19,10 @@ from arxiv.document.exceptions import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
 from browse.services.documents.base_documents import DocMetadataService
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from dateutil.tz import tzutc
 
 
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
-
-
-    def __init__(self, db: sqlalchemy.engine.base.Engine) -> None:
-        """Initialize the DB document metadata service."""
-        self.db = db
 
 
     def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:

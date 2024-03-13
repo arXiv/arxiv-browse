@@ -61,7 +61,7 @@ from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
 
 from browse.formatting.latexml import get_latexml_url
 
-from flask import request, url_for, redirect, current_app
+from flask import request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)

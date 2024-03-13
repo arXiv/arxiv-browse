@@ -354,7 +354,6 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     normal_count = 0
     admin_count = 0
     num_nodes = 0
-    print ("MADE IT HERE")
     a = (select(
             t_arXiv_stats_hourly,
             func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
