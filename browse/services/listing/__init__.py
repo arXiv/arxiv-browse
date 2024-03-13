@@ -17,7 +17,6 @@ def get_listing_service() -> "ListingService":
     """Get the listing service configured for the app context."""
     if "listing_service" not in g:
         fn = current_app.config["DOCUMENT_LISTING_SERVICE"]
-        print (type(fn))
         g.listing_service = fn(current_app.config, g)
 
     return cast(ListingService, g.listing_service)
