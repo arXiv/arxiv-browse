@@ -19,8 +19,8 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START = '20231023' %}
-{% set BANNER_END = '20231030' %}
+{% set BANNER_START = '20240314' %}
+{% set BANNER_END = '20240315' %}
 
 
 {%- macro content(request_datetime) -%}
@@ -29,12 +29,17 @@ Adding an environment var, so we can enable only on gcp.
   <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   <div class="copy-donation bps-banner">
     <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Open Access Giving Week</h1>
-    <p>arXiv is community supported – we depend on you! <a href="https://arxiv.salsalabs.org/2023openaccessweek" target="_blank">Donate today</a> and your contribution will fund essential operations and new initiatives.</p>
+    <h1>Happy π Day!</h1>
+    <p>Pi Day is finally here – and so is Giving Day for arXiv!
+      <a href="https://givingday.cornell.edu/campaigns/arxiv" target="_blank">Donate today</a>
+      to directly support arXiv initiatives and help keep open science open.
+      <br/><b>Infinite decimals. Infinite new ideas to discover. Infinite reasons to give.</b>
+    </p>
   </div>
   <div class="amount-donation bps-banner">
     <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://arxiv.salsalabs.org/2023openaccessweek"><b>Donate</b></a>
+      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank"
+           href="https://givingday.cornell.edu/campaigns/arxiv"><b>Donate</b></a>
       </div>
     </div>
   </div>
