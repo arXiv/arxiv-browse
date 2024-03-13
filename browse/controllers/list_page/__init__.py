@@ -377,13 +377,11 @@ def _src_code(article: DocMetadata)->str:
 
 def dl_for_article(article: DocMetadata)-> Dict[str, Any]:
     """Gets the download links for an article."""
-    dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {article.arxiv_id_v: formats_from_source_flag(_src_code(article), dl_pref)}
+    return {article.arxiv_id_v: formats_from_source_flag(_src_code(article))}
 
 def dl_for_articles(items: List[Any])->Dict[str, Any]:
     """Gets the download links for an article."""
-    dl_pref = request.cookies.get('xxx-ps-defaults')
-    return {item.article.arxiv_id_v: formats_from_source_flag(_src_code(item.article), dl_pref)
+    return {item.article.arxiv_id_v: formats_from_source_flag(_src_code(item.article))
             for item in items}
 
 def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:

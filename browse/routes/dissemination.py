@@ -86,17 +86,10 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
             "arxiv_idv": arxiv_identifier.idv,
             "abs_meta": abs_meta}
 
-    formats = get_article_store().get_all_paper_formats(abs_meta)
-    data["formats"] = formats
+    formats = data["formats"] = abs_meta.get_requested_version().formats()
     for fmt in formats:
         data[fmt] = True
-
-    # The formats from get_dissemination_formats don't do exactly what is needed
-    # for the format.html tempalte.
-    # TODO what about source?
-    # TODO how to disginguish the different ps?
-    # TODO DOCX doesn't seem like the url_for in the tempalte will work correctly with the .docx?
-
+    # TODO DOCX doesn't seem like the url_for in the template will work correctly with the .docx?
     return render_template("format.html", **data), 200, {}  # type: ignore
 
 

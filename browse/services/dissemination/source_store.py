@@ -8,6 +8,7 @@ from arxiv.identifier import Identifier
 from arxiv.files.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
                                       pdf, pdftex, ps, psgz, tex)
 from arxiv.document.metadata import DocMetadata
+from arxiv.document.version import VersionEntry
 from arxiv.files.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent)
 from arxiv.files.object_store import ObjectStore
@@ -44,21 +45,17 @@ class SourceStore():
                       arxiv_id: Identifier,
                       docmeta: DocMetadata) -> bool:
         """Does the source exist for this `arxiv_id` and `docmeta`?"""
-        return bool(self.get_src(arxiv_id, docmeta))
+        return bool(self.get_src_for_docmeta(arxiv_id, docmeta))
 
-    def get_src(self,
-                arxiv_id: Identifier,
-                docmeta: DocMetadata) -> Optional[FileObj]:
-        """Gets the src for the arxiv_id.
 
-        Lists through possible extensions to find source file.
-
-        Returns `FileObj` if found, `None` if not."""
-        if not arxiv_id.has_version \
-           or arxiv_id.version == docmeta.highest_version():
+    def get_src(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
+        if is_current:
             parent = abs_path_current_parent(arxiv_id)
         else:
-            parent = abs_path_orig_parent(arxiv_id)
+            if not arxiv_id.has_version:
+                raise ValueError(f"arxiv_id {arxiv_id} does not have version")
+            else:
+                parent = abs_path_orig_parent(arxiv_id)
 
         if not arxiv_id.filename:
             return None
@@ -74,15 +71,28 @@ class SourceStore():
                     None)  # does any obj key match with any extension?
         return item
 
-    def get_src_format(self,
-                       docmeta: DocMetadata,
-                       src_file: Optional[FileObj] = None) -> FileFormat:
-        """Gets article's source format as a `FileFormat`."""
-        if src_file is None:
-            src_file = self.get_src(docmeta.arxiv_identifier, docmeta)
-        if src_file is None or src_file.name is None:
-            raise ValueError(f"Must have  src_file and it must have a name for {docmeta.arxiv_identifier}")
+    def get_src_for_version(self, arxiv_id: Identifier, version: VersionEntry) -> Optional[FileObj]:
+        return self.get_src(arxiv_id, version.is_current)
 
+    def get_src_for_docmeta(self,
+                            arxiv_id: Identifier,
+                            docmeta: DocMetadata) -> Optional[FileObj]:
+        """Gets the src for the arxiv_id.
+
+        Lists through possible extensions to find source file.
+
+        Returns `FileObj` if found, `None` if not."""
+        if arxiv_id.has_version and arxiv_id.version == docmeta.highest_version():
+            return self.get_src(arxiv_id, True)
+        elif not arxiv_id.has_version:
+            return self.get_src(Identifier(arxiv_id.id), True)
+        else:
+            return self.get_src(arxiv_id, False)
+
+    def get_src_format_for_version(self,
+                                   version: VersionEntry,
+                                   src_file: FileObj)-> FileFormat:
+        """Gets article's source format as a `FileFormat`."""
         if src_file.name.endswith(".ps.gz"):
             return psgz
         if src_file.name.endswith(".pdf"):
@@ -92,17 +102,8 @@ class SourceStore():
         if src_file.name.endswith(".dvi.gz"):
             return dvigz
 
-        # Otherwise look at the special info in the metadata
-        # for help
-        if not docmeta.arxiv_identifier.has_version:
-            vent = docmeta.get_version(docmeta.highest_version())
-        else:
-            vent = docmeta.get_version(docmeta.arxiv_identifier.version)
-
-        if not vent:
-            raise Exception(f"No version entry for {docmeta.arxiv_identifier}")
-
-        srctype = vent.source_flag
+        # Otherwise look at the special info in the metadata for help
+        srctype = version.source_flag
 
         if srctype.ps_only:
             return ps
@@ -118,6 +119,24 @@ class SourceStore():
             return pdf
         else:
             return tex  # Default is tex in a tgz file
+
+    def get_src_format(self,
+                       docmeta: DocMetadata,
+                       src_file: Optional[FileObj] = None) -> FileFormat:
+        """Gets article's source format as a `FileFormat`."""
+        if src_file is None:
+            src_file = self.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta)
+        if src_file is None or src_file.name is None:
+            raise ValueError(f"Must have  src_file and it must have a name for {docmeta.arxiv_identifier}")
+        version: Optional[VersionEntry]
+        if not docmeta.arxiv_identifier.has_version:
+            version = docmeta.get_version(docmeta.highest_version())
+        else:
+            version = docmeta.get_version(docmeta.arxiv_identifier.version)
+        if not version:
+            raise ValueError("Could not determine what version")
+        else:
+            return self.get_src_format_for_version(version, src_file)
 
     def get_ancillary_files(self, docmeta: DocMetadata) -> List[dict]:
         """Get list of ancillary file names and sizes.
@@ -136,4 +155,4 @@ class SourceStore():
         source_type = docmeta.version_history[version - 1].source_flag
         if not source_type.includes_ancillary_files:
             return []
-        return list_ancillary_files(self.get_src(docmeta.arxiv_identifier, docmeta))
+        return list_ancillary_files(self.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta))

@@ -17,7 +17,7 @@ from flask_s3 import FlaskS3
 
 from browse.config import Settings
 from browse.routes import ui, dissemination, src, unimplemented, redirects
-from browse.commands import invalidate
+from browse.commands import invalidate, check_paper_formats
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
@@ -49,6 +49,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
 
     # commands
     app.register_blueprint(invalidate.bp)
+    app.register_blueprint(check_paper_formats.bp)
 
     s3.init_app(app)
 
