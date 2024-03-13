@@ -12,27 +12,24 @@ from urllib.parse import urlparse
 
 import requests
 
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 from arxiv.legacy.papers.dissemination.reasons import FORMATS
-from browse.domain import fileformat
-from browse.domain.metadata import DocMetadata, VersionEntry
-from browse.services.documents.base_documents import (
-    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
-    DocMetadataService)
+from arxiv.document.metadata import DocMetadata, VersionEntry
+from arxiv.document.exceptions import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
+from browse.services.documents.base_documents import DocMetadataService
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from browse.services.object_store.object_store_gs import GsObjectStore
-from browse.services.documents.format_codes import (
-    formats_from_source_file_name, formats_from_source_flag, get_all_formats)
-from browse.services.key_patterns import (abs_path_current_parent,
+from arxiv.files.object_store import ObjectStore, GsObjectStore
+from arxiv.formats import (
+    formats_from_source_file_name, formats_from_source_flag)
+from arxiv.files.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent,
                                           current_pdf_path, previous_pdf_path,
                                           ps_cache_pdf_path,
                                           current_ps_path, previous_ps_path,
                                           ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
-from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj, FileDoesNotExist
+from arxiv.files import FileObj, fileformat
 from .source_store import SourceStore
-from .ancillary_files import list_ancillary_files
 from google.cloud import storage
 from flask import current_app
 

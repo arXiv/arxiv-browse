@@ -7,19 +7,19 @@ import json
 
 import click
 
-from browse.domain.identifier import Identifier
-from browse.services.database import db
-from browse.services.database.models import Metadata
+from arxiv.identifier import Identifier
+from arxiv.db import session
+from arxiv.db.models import Metadata
 from browse.services.dissemination import get_article_store, ArticleStore
-from browse.services.documents.format_codes import formats_from_source_flag
-from browse.services.object_store import FileObj
+from arxiv.formats import formats_from_source_flag
+from arxiv.files import FileObj
 bp = Blueprint("check", __name__)
 
 @bp.cli.command("paper_formats")
 @click.argument("yymm")
 def check_paper_formats(yymm: str) -> None:
     """Checks formats for yymm."""
-    query = (db.session.query(Metadata.paper_id, Metadata.version,
+    query = (session.query(Metadata.paper_id, Metadata.version,
                             Metadata.source_format,
                             Metadata.source_flags, Metadata.source_size)
                 .filter(or_(Metadata.paper_id.like(f"%/{yymm}%"),

@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import HiddenField, SelectField, SubmitField
 from wtforms.validators import DataRequired
 
+from arxiv.taxonomy.definitions import tArchive
 
 MONTHS = [
     ('all', 'all months'),
@@ -43,7 +44,7 @@ class ByMonthForm(FlaskForm):
 
     def __init__(self,
                  archive_id: str,
-                 archive: Dict[str, Any],
+                 archive: tArchive,
                  years: List[int]):
         super(ByMonthForm, self).__init__()
         self.year.choices = [(str(ye), str(ye)) for ye in years]

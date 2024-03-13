@@ -3,9 +3,9 @@
 
 from typing import List
 
-from arxiv.util.authors import parse_author_affil_utf
+from arxiv.authors import parse_author_affil_utf
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 
 
 def arxiv_bibtex(docm: DocMetadata) -> str:
@@ -29,7 +29,6 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      primaryClass={" + str(pc) + "}\n"
         "}"
     )
-
 
 def _normalize_whitespace(txt: str) -> str:
     return " ".join(txt.split()) if txt else ""

@@ -1,9 +1,9 @@
 from flask import render_template, url_for
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 import re
 from io import BytesIO
 import urllib.parse
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 from browse.services.documents import get_doc_service
 from browse.controllers.list_page import dl_for_article, latexml_links_for_article, authors_for_article
 

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from browse.services.database.listings import _entries_into_monthly_listing_items
 from browse.services.listing import get_listing_service
-from browse.services.database.models import Metadata
+from arxiv.db.models import Metadata
 
 SAMPLE_METADATA1=Metadata(
     metadata_id = 1,

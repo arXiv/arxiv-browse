@@ -5,16 +5,16 @@ import re
 from typing import Optional, List
 
 from arxiv.identifier import Identifier
-from browse.domain.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
+from arxiv.files.fileformat import (FileFormat, docx, dvigz, htmlgz, odf,
                                       pdf, pdftex, ps, psgz, tex)
-from browse.domain.metadata import DocMetadata
-from browse.services.key_patterns import (abs_path_current_parent,
+from arxiv.document.metadata import DocMetadata
+from arxiv.document.version import VersionEntry
+from arxiv.files.key_patterns import (abs_path_current_parent,
                                           abs_path_orig_parent)
-from browse.services.object_store import ObjectStore
-from browse.services.object_store.fileobj import FileObj
+from arxiv.files.object_store import ObjectStore
+from arxiv.files import FileObj
 
-from .ancillary_files import list_ancillary_files
-from ...domain.version import VersionEntry
+from arxiv.formats import list_ancillary_files
 
 logger = logging.getLogger(__file__)
 
@@ -57,6 +57,8 @@ class SourceStore():
             else:
                 parent = abs_path_orig_parent(arxiv_id)
 
+        if not arxiv_id.filename:
+            return None
         pattern = parent + '/' + arxiv_id.filename
         items = list(self.objstore.list(pattern))
         if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:

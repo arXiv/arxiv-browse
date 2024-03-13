@@ -34,7 +34,7 @@ from browse.controllers import (
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
-from browse.exceptions import AbsNotFound
+from browse.exceptions import AbsNotFound # TODO: BASE
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
@@ -209,8 +209,10 @@ def clickthrough() -> Response:
 
     if 'url' in request.args and 'v' in request.args:
         sec = current_app.config["CLICKTHROUGH_SECRET"].get_secret_value()
-        if is_hash_valid(sec, request.args.get('url'), request.args.get('v')):
-            return redirect(request.args.get('url'))  # type: ignore
+        url = request.args.get('url')
+        v = request.args.get('v')
+        if url and v and is_hash_valid(sec, url, v):
+            return redirect(url)  # type: ignore
         else:
             raise BadRequest("Bad click-through redirect")
 

@@ -7,25 +7,22 @@ from arxiv import taxonomy
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
-from browse.domain.category import Category
-from browse.domain.identifier import Identifier
-from browse.domain.license import License
-from browse.domain.metadata import DocMetadata, Archive, AuthorList, Submitter, Group
-from browse.domain.version import SourceFlag, VersionEntry
-from browse.services.database.models import Metadata
-from browse.services.documents.base_documents import (
-    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException,
-    DocMetadataService, AbsException)
+from arxiv.identifier import Identifier
+from arxiv.taxonomy import Category, Archive, Group
+from arxiv.license import License
+from arxiv.document.metadata import DocMetadata, AuthorList, Submitter
+from arxiv.document.exceptions import AbsException
+from arxiv.document.version import SourceFlag, VersionEntry
+from arxiv.db import session
+from arxiv.db.models import Metadata
+from arxiv.document.exceptions import (
+    AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
+from browse.services.documents.base_documents import DocMetadataService
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 
 class DbDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
-
-
-    def __init__(self, db: sqlalchemy.engine.base.Engine) -> None:
-        """Initialize the DB document metadata service."""
-        self.db = db
 
 
     def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
@@ -44,7 +41,7 @@ class DbDocMetadataService(DocMetadataService):
         if identifier.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[identifier.id])
 
-        all_versions: List[Metadata] = (Metadata.query.filter(Metadata.paper_id == identifier.id)).all()
+        all_versions: List[Metadata] = (session.query(Metadata).filter(Metadata.paper_id == identifier.id)).all()
         if not all_versions:
             raise AbsNotFoundException(identifier.id)
 
@@ -61,7 +58,7 @@ class DbDocMetadataService(DocMetadataService):
 
     def service_status(self) -> List[str]:
         try:
-            res = Metadata.query.limit(1).first()
+            res = session.query(Metadata).limit(1).first()
             if not res:
                 return [f"{__name__}: Nothing in arXiv_metadata table"]
             if not hasattr(res, 'document_id'):
@@ -92,10 +89,11 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
         entry = VersionEntry(version=ver.version,
                              raw='',
                              size_kilobytes=size_kilobytes,
-                             submitted_date=ver.created.replace(tzinfo=timezone.utc),  # verified as UTC in DB
-                             source_flag=SourceFlag(ver.source_flags),
+                             submitted_date=ver.created.replace(tzinfo=timezone.utc),  # type: ignore
+                             # ^verified as UTC in DB
+                             source_flag=SourceFlag(ver.source_flags), # type: ignore
                              source_format=ver.source_format,
-                             is_withdrawn=ver.is_withdrawn or ver.source_format == "withdrawn"
+                             is_withdrawn=bool(ver.is_withdrawn) or ver.source_format == "withdrawn"
                                           or ver.source_size == 0,
                              is_current= ver.version == len(all_versions))
         version_history.append(entry)
@@ -103,21 +101,22 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
     doc_license: License = License() if not ver_of_interest.license else License(recorded_uri=ver_of_interest.license)
 
     modified = ver_of_interest.updated or ver_of_interest.created
-    modified = modified.replace(tzinfo=timezone.utc)  # Verified as UTC in DB
+    modified = modified.replace(tzinfo=timezone.utc) # type: ignore
+    # ^verified as UTC in DB
     primary_category, secondary_categories, primary_archive = _classification_for_metadata(identifier, latest)
 
     this_version = DocMetadata(
         raw_safe='',
-        abstract=ver_of_interest.abstract,
+        abstract=ver_of_interest.abstract, # type: ignore
         arxiv_id=ver_of_interest.paper_id,
         arxiv_id_v=ver_of_interest.paper_id + 'v' + str(ver_of_interest.version),
         arxiv_identifier = identifier,
-        title = ver_of_interest.title,
+        title = ver_of_interest.title, # type: ignore
         modified=modified,
-        authors=AuthorList(ver_of_interest.authors),
+        authors=AuthorList(ver_of_interest.authors), # type: ignore
         submitter=Submitter(name=ver_of_interest.submitter_name,
                             email=ver_of_interest.submitter_email),
-        source_format=ver_of_interest.source_format,
+        source_format=ver_of_interest.source_format, # type: ignore
         journal_ref=ver_of_interest.journal_ref or None,
         report_num=ver_of_interest.report_num or None,
         doi=ver_of_interest.doi or None,
@@ -129,8 +128,8 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
         license=doc_license,
         version_history=version_history,
 
-        is_definitive=ver_of_interest.is_current,
-        is_latest=ver_of_interest.is_current,
+        is_definitive=bool(ver_of_interest.is_current),
+        is_latest=bool(ver_of_interest.is_current),
 
         # Below are all from the latest version
         # On the abs page the convention is to display all versions as having these fields with values from the latest
@@ -146,9 +145,10 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
 
 def _classification_for_metadata(identifier: Identifier, metadata: Metadata) -> Tuple[Optional[Category], List[Category], Archive]:
     if not metadata.abs_categories:
-        raise AbsException(f"No categories found for {metadata.id}v{metadata.version}")
+        raise AbsException(f"No categories found for {metadata.paper_id}v{metadata.version}")
 
     primary_category = None
+    primary_archive = None
     secondary_categories = []
     category_list = metadata.abs_categories.split()
     if category_list and len(category_list) > 1:
@@ -157,7 +157,8 @@ def _classification_for_metadata(identifier: Identifier, metadata: Metadata) -> 
         primary_category = Category(category_list[0])
         primary_archive = Archive(taxonomy.CATEGORIES[primary_category.id]['in_archive'])
     else:
-        primary_archive = taxonomy.ARCHIVES.get(metadata.paper_id.split("/")[0],None)
+        archive = metadata.paper_id.split("/")[0]
+        primary_archive = Archive(archive) if archive in taxonomy.ARCHIVES else None
         if not primary_archive:
             raise AbsException(f'Cannot infer archive from identifier {metadata.paper_id}')
 

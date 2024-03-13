@@ -17,13 +17,14 @@ work for both.
 # mypy: disable-error-code="return,arg-type,assignment,attr-defined"
 import codecs
 import re
-from datetime import date, datetime
+from datetime import datetime
+import datetime as dt
 from typing import List, Literal, Tuple, Union
 
-from browse.domain.category import Category
-from browse.domain.metadata import DocMetadata, AuthorList
-from browse.domain.version import VersionEntry, SourceFlag
-from browse.services.object_store import FileObj
+from arxiv.taxonomy.category import Category
+from arxiv.document.metadata import DocMetadata, AuthorList
+from arxiv.document.version import VersionEntry, SourceFlag
+from arxiv.files import FileObj
 from browse.services.listing import (Listing, ListingItem,
                                      MonthTotal, NotModifiedResponse,
                                      gen_expires)
@@ -113,7 +114,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
     # TODO I think pubdates are only used by pastweek, check if this is true,
     # and alter the API so month listings don't return them.
     # pastweek
-    pub_dates:List[date] = []
+    pub_dates:List[dt.date] = []
     pub_counts:List[int] = []
 
     with listingFilePath.open('rb') as fh:
@@ -186,7 +187,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
                     rep_items.append(item)
 
             elif listingFilter:
-                secondaries = ' '.join(article.categories.split()[1:])  # type: ignore
+                secondaries = ' '.join(article.categories.split()[1:]) # type: ignore
                 if re.search(listingFilter, secondaries):
                     item = ListingItem(id=article.arxiv_id, listingType=neworcross,
                                        primary=primary, article=article)
@@ -215,7 +216,7 @@ def get_updates_from_list_file(year:int, month: int, listingFilePath: FileObj,
 
     count = len(new_items)
 
-    pub_dates_with_count:List[Tuple[date,int]] = []
+    pub_dates_with_count:List[Tuple[dt.date,int]] = []
     index = 0
     for pdate in pub_dates:
         pub_dates_with_count.append((pdate, pub_counts[index]))

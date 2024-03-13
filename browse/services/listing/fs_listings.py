@@ -17,9 +17,8 @@ from browse.services.listing import (Listing, YearCount, MonthCount,
                                      ListingItem, ListingNew, ListingService,
                                      MonthTotal, NotModifiedResponse,
                                      gen_expires)
-from browse.services.object_store import FileObj, ObjectStore
-from browse.services.object_store.object_store_gs import GsObjectStore
-from browse.services.object_store.object_store_local import LocalObjectStore
+from arxiv.files import FileObj
+from arxiv.files.object_store import ObjectStore, GsObjectStore, LocalObjectStore
 from werkzeug.exceptions import BadRequest
 
 from .parse_listing_file import ParsingMode, get_updates_from_list_file

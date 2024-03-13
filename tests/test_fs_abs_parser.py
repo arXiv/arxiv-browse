@@ -4,14 +4,11 @@ from datetime import datetime
 from unittest import TestCase
 
 from dateutil.tz import tzutc
-from browse.domain.metadata import DocMetadata, Submitter
-from browse.domain.version import VersionEntry, SourceFlag
+from arxiv.document.metadata import DocMetadata, Submitter
+from arxiv.document.version import VersionEntry, SourceFlag
 
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
-from tests import path_of_for_test
-
-ABS_FILES = path_of_for_test('data/abs_files')
-
+from arxiv.document.parse_abs import parse_abs_file
+from tests import ABS_FILES
 
 class TestAbsParser(TestCase):
     """Test  parsing metadata from .abs files."""

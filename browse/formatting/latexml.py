@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import current_app
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 
 from browse.services.database import get_latexml_status_for_document
 

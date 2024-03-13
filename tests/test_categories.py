@@ -3,7 +3,7 @@ import unittest
 from tests.test_fs_abs_parser import ABS_FILES
 from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
 
-from browse.domain.category import Category
+from arxiv.taxonomy.category import Category
 
 
 class CategoriesTest(unittest.TestCase):

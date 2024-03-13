@@ -1,14 +1,16 @@
 """Year link functions."""
 
 
-from typing import Any, Dict, List, Tuple
+from typing import List, Tuple
 
 from datetime import date
 
 from flask import url_for
 
+from arxiv.taxonomy.definitions import tArchive
 
-def years_operating(archive: Dict[str, Any]) -> List[int]:
+
+def years_operating(archive: tArchive) -> List[int]:
     """Returns list of years operating in desc order. ex [1993,1992,1991]."""
     if (
         not archive
@@ -23,7 +25,7 @@ def years_operating(archive: Dict[str, Any]) -> List[int]:
 
 def stats_by_year(
         archive_id: str,
-        archive: Dict[str, Any],
+        archive: tArchive,
         years: List[int],
         page_year: int=0) -> List[Tuple[str, str]]:
     """Returns links to year pages."""

@@ -9,9 +9,9 @@ import pprint
 
 from tests import path_of_for_test
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
+from arxiv.document.parse_abs import parse_abs_file
 from browse.formatting.metatags import meta_tag_metadata
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
 
 
 CLASSIC_RESULTS_FILE = path_of_for_test('data/classic_scholar_metadata_tags.json')

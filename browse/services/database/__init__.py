@@ -7,17 +7,16 @@ from typing import Any, Callable, List, Mapping, Optional, Tuple
 
 from flask import current_app
 
+from arxiv.db import session, engine
 from arxiv.base.globals import get_application_config
 from dateutil.tz import gettz, tzutc
-from sqlalchemy import asc, desc, not_
+from sqlalchemy import Row, asc, desc, not_, select
 from sqlalchemy.exc import DBAPIError, OperationalError
-from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, select, Select
 
-from browse.domain.identifier import Identifier
-
-from browse.services.database.models import (
+from arxiv.identifier import Identifier
+from arxiv.db.models import (
     DBLP,
     DBLPAuthor,
     DBLPDocumentAuthor,
@@ -31,14 +30,14 @@ from browse.services.database.models import (
     DBLaTeXMLDocuments,
     OrcidIds,
     AuthorIds,
-    User,
-    db,
-    in_category,
-    stats_hourly,
-    paper_owners
+    TapirUser,
+    t_arXiv_in_category,
+    t_arXiv_stats_hourly,
+    t_arXiv_paper_owners,
+    Metadata
 )
-from browse.domain.identifier import Identifier
 from browse.services.listing import ListingItem
+from browse.services.listing import MonthCount, YearCount
 from arxiv.base import logging
 from logging import Logger
 
@@ -76,11 +75,11 @@ def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
     return decorator
 
 
-def __all_trackbacks_query() -> Query:
-    return db.session.query(TrackbackPing)
+def __all_trackbacks_query() -> Select[Tuple[TrackbackPing]]:
+    return select(TrackbackPing)
 
 
-def __paper_trackbacks_query(paper_id: str) -> Query:
+def __paper_trackbacks_query(paper_id: str) -> Select[Tuple[TrackbackPing]]:
     return (
         __all_trackbacks_query()
         .filter(TrackbackPing.document_id == Document.document_id)
@@ -94,7 +93,7 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
     decimal_ip = int(ipaddress.ip_address(ip))
 
     stmt = (
-        db.session.query(
+        select(
             MemberInstitution.id,
             MemberInstitution.label,
             func.sum(MemberInstitutionIP.exclude).label("exclusions"),
@@ -108,7 +107,9 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
         .subquery()
     )
     institution_row = (
-        db.session.query(stmt.c.id, stmt.c.label).filter(stmt.c.exclusions == 0).first()
+        session.execute(
+            select(stmt.c.id, stmt.c.label).filter(stmt.c.exclusions == 0)
+        ).first()
     )
 
     h = None
@@ -123,9 +124,9 @@ def get_institution(ip: str) -> Optional[Mapping[str, str]]:
 
 # Only used in tests
 @db_handle_error(db_logger=logger, default_return_val=[])
-def get_all_trackback_pings() -> List[TrackbackPing]:
+def get_all_trackback_pings() -> List[Row[Tuple[TrackbackPing]]]:
     """Get all trackback pings in database."""
-    return list(__all_trackbacks_query().all())
+    return list(session.execute(__all_trackbacks_query()).fetchall())
 
 
 # Used only on trackback page
@@ -133,21 +134,21 @@ def get_all_trackback_pings() -> List[TrackbackPing]:
 def get_paper_trackback_pings(paper_id: str) -> List[TrackbackPing]:
     """Get trackback pings for a particular document (paper_id)."""
     return list(
-        __paper_trackbacks_query(paper_id)
-        .distinct(TrackbackPing.url)
-        .group_by(TrackbackPing.url)
-        .order_by(TrackbackPing.posted_date.desc())
-        .all()
+        session.execute(
+            __paper_trackbacks_query(paper_id)
+            .distinct(TrackbackPing.url)
+            .group_by(TrackbackPing.url)
+            .order_by(TrackbackPing.posted_date.desc())
+        ).scalars().all()
     )
 
 # Used on tb page and abs page
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping(trackback_id: int) -> Optional[TrackbackPing]:
     """Get an individual trackback ping by its id (trackback_id)."""
-    trackback: TrackbackPing = db.session.query(TrackbackPing).filter(
+    return session.execute(select(TrackbackPing).filter(
         TrackbackPing.trackback_id == trackback_id
-    ).first()
-    return trackback
+    )).scalar()
 
 
 # Used only on tb page
@@ -161,7 +162,7 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
 
     # subquery to get the specified number of distinct trackback URLs
     stmt = (
-        db.session.query(TrackbackPing.url)
+        select(TrackbackPing.url)
         .filter(TrackbackPing.status == "accepted")
         .distinct(TrackbackPing.url)
         .group_by(TrackbackPing.url)
@@ -170,81 +171,85 @@ def get_recent_trackback_pings(max_trackbacks: int = 25) \
         .subquery()
     )
     tb_doc_tup = (
-        db.session.query(TrackbackPing, Document.paper_id, Document.title)
+        select(TrackbackPing, Document.paper_id, Document.title)
         .join(Document, TrackbackPing.document_id == Document.document_id)
         .filter(TrackbackPing.status == "accepted")
         .filter(TrackbackPing.url == stmt.c.url)
         .order_by(TrackbackPing.posted_date.desc())
-        .all()
     )
 
-    return list(tb_doc_tup)
+    return [row._t for row in session.execute(tb_doc_tup).all()]
 
 
 #Used on abs page
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_trackback_ping_latest_date(paper_id: str) -> Optional[datetime]:
     """Get the most recent accepted trackback datetime for a paper_id."""
-    timestamp: int = db.session.query(func.max(TrackbackPing.approved_time)).filter(
-        TrackbackPing.document_id == Document.document_id
-    ).filter(Document.paper_id == paper_id).filter(
-        TrackbackPing.status == "accepted"
+    timestamp = session.execute(
+        select(func.max(TrackbackPing.approved_time))
+        .filter(TrackbackPing.document_id == Document.document_id)
+        .filter(Document.paper_id == paper_id)
+        .filter(TrackbackPing.status == "accepted")
     ).scalar()
-    dt = datetime.fromtimestamp(timestamp, tz=tz)
-    dt = dt.astimezone(tz=tzutc())
-    return dt
+    if timestamp:
+        dt = datetime.fromtimestamp(timestamp, tz=tz)
+        dt = dt.astimezone(tz=tzutc())
+        return dt
+    return None
 
 
 # used on abs page
 @db_handle_error(db_logger=logger, default_return_val=0)
 def count_trackback_pings(paper_id: str) -> int:
     """Count trackback pings for a particular document (paper_id)."""
-    row = (
-        db.session.query(
+    num_pings = session.scalar(
+        select(
             func.count(func.distinct(TrackbackPing.url)).label("num_pings")
         )
         .filter(TrackbackPing.document_id == Document.document_id)
         .filter(Document.paper_id == paper_id)
         .filter(TrackbackPing.status == "accepted")
-        .first()
     )
 
-    return int(row.num_pings)
+    return num_pings or 0
 
 
 #Not used, only in tests
 @db_handle_error(db_logger=logger, default_return_val=0)
 def count_all_trackback_pings() -> int:
     """Count trackback pings for all documents, without DISTINCT(URL)."""
-    c = __all_trackbacks_query().count()
+
+    c = session.scalar(
+        select(func.count()).
+        select_from(TrackbackPing)
+    )
     assert isinstance(c, int)
     return c
+    
 
 
 # used in abs page
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
-    url: str = db.session.query(DBLP.url).join(Document).filter(
-        Document.paper_id == paper_id
-    ).one().url
+    url = session.scalar(
+        select(DBLP.url)
+        .filter(Document.paper_id == paper_id)
+    )
     return url
 
 
 # used in abs page
 @db_handle_error(db_logger=logger, default_return_val=[])
-def get_dblp_authors(paper_id: str) -> List[str]:
+def get_dblp_authors(paper_id: str) -> List[Optional[str]]:
     """Get sorted list of DBLP authors for a given document (paper_id)."""
-    authors_t = (
-        db.session.query(DBLPAuthor.name)
+    return list(session.execute(
+        select(DBLPAuthor.name)
         .join(DBLPDocumentAuthor)
         .join(Document)
         .filter(Document.paper_id == paper_id)
         .order_by(DBLPDocumentAuthor.position)
-        .all()
-    )
-    authors = [a for (a,) in authors_t]
-    return authors
+    ).scalars().all())
 
 # Used on home page and stats page
 @db_handle_error(db_logger=logger, default_return_val=None)
@@ -252,12 +257,11 @@ def get_document_count() -> Optional[int]:
     """Get the number of documents."""
     # func.count is used here because .count() forces a subquery which
     # is inefficient
-    row = (
-        db.session.query(func.count(Document.document_id).label("num_documents"))
+    num_documents = session.scalar(
+        select(func.count(Document.document_id).label("num_documents"))
         .filter(not_(Document.paper_id.like("test%")))
-        .first()
     )
-    return int(row.num_documents)
+    return num_documents
 
 
 # Used on stats page
@@ -269,13 +273,12 @@ def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
     yymm_like = f"{yymm}%"
     if paper_date < date(2007, 4, 1):
         yymm_like = f"%/{yymm}%"
-    row = (
-        db.session.query(func.count(Document.document_id).label("num_documents"))
+    num_documents = session.scalar(
+        select(func.count(Document.document_id).label("num_documents"))
         .filter(Document.paper_id.like(yymm_like))
         .filter(not_(Document.paper_id.like("test%")))
-        .first()
     )
-    return int(row.num_documents)
+    return num_documents or 0
 
 
 # Only used on prevnext page
@@ -298,7 +301,7 @@ def get_sequential_id(paper_id: Identifier,
 
     nextyymm = "{}{:02d}".format(str(nxyear)[2:], nxtmonth)
 
-    query = db.session.query(Document.paper_id)
+    query = select(Document.paper_id)
     if paper_id.is_old_id:
         # NB: classic did not support old identifiers in prevnext
         if context == "all":
@@ -328,18 +331,18 @@ def get_sequential_id(paper_id: Identifier,
         subject_class: str = ""
         if "." in archive:
             (archive, subject_class) = archive.split(".", 1)
-        query = query.join(in_category).filter(in_category.c.archive == archive)
+        query = query.join(t_arXiv_in_category).filter(t_arXiv_in_category.c.archive == archive)
         if subject_class:
-            query = query.filter(in_category.c.subject_class == subject_class)
+            query = query.filter(t_arXiv_in_category.c.subject_class == subject_class)
 
-    result = query.first()
+    result = session.scalar(query)
     if result:
-        return f"{result.paper_id}"
+        return f"{result}"
     return None
 
 
-def __all_hourly_stats_query() -> Query:
-    return db.session.query(stats_hourly)
+def __all_hourly_stats_query() -> Select[Any]:
+    return select(t_arXiv_stats_hourly)
 
 
 
@@ -351,22 +354,27 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     normal_count = 0
     admin_count = 0
     num_nodes = 0
-    rows = (
-        db.session.query(
-            func.sum(stats_hourly.c.connections).label("num_connections"),
-            stats_hourly.c.access_type,
-            func.max(stats_hourly.c.node_num).label("num_nodes"),
+    a = (select(
+            t_arXiv_stats_hourly,
+            func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
+            t_arXiv_stats_hourly.c.access_type,
+            func.max(t_arXiv_stats_hourly.c.node_num).label("num_nodes"),
         )
-        .filter(stats_hourly.c.ymd == stats_date.isoformat())
-        .group_by(stats_hourly.c.access_type)
-        .all()
-    )
+        .filter(t_arXiv_stats_hourly.c.ymd == stats_date.isoformat())
+        .group_by(t_arXiv_stats_hourly.c.access_type))
+    
+    rows = session.execute(
+        a
+    ).all()
     for r in rows:
         if r.access_type == "A":
             admin_count = r.num_connections
         else:
             normal_count = r.num_connections
             num_nodes = r.num_nodes
+
+    assert isinstance(normal_count, int) and isinstance(admin_count, int) \
+        and isinstance(num_nodes, int)
     return (normal_count, admin_count, num_nodes)
 
 
@@ -378,81 +386,81 @@ def get_hourly_stats(stats_date: Optional[date] = None) -> List:
     stats_date = date.today() if not isinstance(stats_date, date) else stats_date
 
     return list(
-        __all_hourly_stats_query()
-        .filter(
-            stats_hourly.c.access_type == "N",
-            stats_hourly.c.ymd == stats_date.isoformat(),
-        )
-        .order_by(asc(stats_hourly.c.hour), stats_hourly.c.node_num)
-        .all()
+        session.execute(
+            __all_hourly_stats_query()
+            .filter(
+                t_arXiv_stats_hourly.c.access_type == "N",
+                t_arXiv_stats_hourly.c.ymd == stats_date.isoformat(),
+            )
+            .order_by(asc(t_arXiv_stats_hourly.c.hour), t_arXiv_stats_hourly.c.node_num)
+        ).all()
     )
 
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=[])
-def get_monthly_submission_stats() -> List:
+def get_monthly_submission_stats() -> List[StatsMonthlySubmission]:
     """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
     return list(
-        db.session.query(StatsMonthlySubmission)
-        .order_by(asc(StatsMonthlySubmission.ym))
-        .all()
+        session.execute(
+            select(StatsMonthlySubmission)
+            .order_by(asc(StatsMonthlySubmission.ym))
+        ).scalars().all()
     )
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=(0, 0))
 def get_monthly_submission_count() -> Tuple[int, int]:
     """Get submission totals: number of submissions and number migrated."""
-    row = db.session.query(
-        func.sum(StatsMonthlySubmission.num_submissions).label("num_submissions"),
-        func.sum(StatsMonthlySubmission.historical_delta).label("num_migrated"),
+    row = session.execute(
+        select(
+            func.sum(StatsMonthlySubmission.num_submissions),
+            func.sum(StatsMonthlySubmission.historical_delta),
+        )
     ).first()
-    return (row.num_submissions, row.num_migrated)
+    return row._t if row else (0, 0)
 
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=[])
-def get_monthly_download_stats() -> List:
+def get_monthly_download_stats() -> List[StatsMonthlyDownload]:
     """Get all the monthly download stats."""
     return list(
-        db.session.query(StatsMonthlyDownload)
-        .order_by(asc(StatsMonthlyDownload.ym))
-        .all()
+        session.execute(
+            select(StatsMonthlyDownload)
+            .order_by(asc(StatsMonthlyDownload.ym))
+        ).scalars().all()
     )
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=0)
 def get_monthly_download_count() -> int:
     """Get the sum of monthly downloads for all time."""
-    row = db.session.query(
-        func.sum(StatsMonthlyDownload.downloads).label("total_downloads")
-    ).first()
-    total_downloads: int = row.total_downloads if row else 0
-    return total_downloads
+    row = session.scalar(
+        select(func.sum(StatsMonthlyDownload.downloads).label("total_downloads"))
+    )
+    return row or 0
 
 
 # Used on stats page
 @db_handle_error(db_logger=logger, default_return_val=None)
-def get_max_download_stats_dt() -> Optional[datetime]:
+def get_max_download_stats_dt() -> Optional[date]:
     """Get the datetime of the most recent download stats."""
-    row = db.session.query(func.max(StatsMonthlyDownload.ym).label("max_ym")).first()
-    return row.max_ym if row else None
+    return session.scalar(select(func.max(StatsMonthlyDownload.ym).label("max_ym")))
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_datacite_doi(paper_id: str, account: str = "prod") -> Optional[str]:
     """Get the DataCite DOI for a given paper ID."""
-    row = (
-        db.session.query(DataciteDois)
+    return session.scalar(
+        select(DataciteDois.doi)
         .filter(DataciteDois.paper_id == paper_id)
         .filter(DataciteDois.account == account)
-        .first()
     )
-    return row.doi if row else None
-
 
 def service_status()->List[str]:
     try:
-        db.session.query(Document.document_id).limit(1).first()
+        session.execute(select(Document.document_id).limit(1)).one()
     except NoResultFound:
         return [f"{__file__}: service.database: No documents found in db"]
     except (OperationalError, DBAPIError) as ex:
@@ -462,7 +470,7 @@ def service_status()->List[str]:
 
     if current_app.config["LATEXML_ENABLED"]:
         try:
-            db.session.query(DBLaTeXMLDocuments.paper_id).limit(1).first()
+            session.execute(select(DBLaTeXMLDocuments.paper_id).limit(1)).one()
         except NoResultFound:
             return [f"{__file__}: service.database DBLaTeXML: No documents found in db"]
         except (OperationalError, DBAPIError) as ex:
@@ -476,23 +484,22 @@ def service_status()->List[str]:
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
-    row = (
-        db.session.query(DBLaTeXMLDocuments)
+    if not current_app.config["LATEXML_ENABLED"]:
+        return None
+    return session.scalar(
+        select(DBLaTeXMLDocuments.conversion_status)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
-        .first()
     )
-    return row.conversion_status if row else None
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
     if not current_app.config["LATEXML_ENABLED"]:
         return None
-    row = (
-        db.session.query(DBLaTeXMLDocuments)
+    row = session.scalar(
+        select(DBLaTeXMLDocuments)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
-        .first()
     )
     if row and row.publish_dt:
         dt: datetime = row.publish_dt.replace(tzinfo=timezone.utc)
@@ -503,30 +510,23 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_author_id(author_id: str) -> Optional[int]:
-    row = (
-        db.session.query(AuthorIds)
+    return session.scalar(
+        select(AuthorIds.user_id)
         .filter(AuthorIds.author_id == author_id)
-        .first()
     )
-    return row.user_id if row else None
-
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_id_by_orcid(orcid: str) -> Optional[int]:
-    row = (
-        db.session.query(OrcidIds)
+    return session.scalar(
+        select(OrcidIds.user_id)
         .filter(OrcidIds.orcid == orcid)
-        .first()
     )
-    return row.user_id if row else None
-
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_user_display_name(user_id: int) -> Optional[str]:
-    row = (
-        db.session.query(User)
-        .filter(User.user_id == user_id)
-        .first()
+    row = session.scalar(
+        select(TapirUser)
+        .filter(TapirUser.user_id == user_id)
     )
     if row is None:
         return None
@@ -538,25 +538,21 @@ def get_user_display_name(user_id: int) -> Optional[str]:
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_orcid_by_user_id(user_id: int) -> Optional[str]:
-    row = (
-        db.session.query(OrcidIds)
+    return session.scalar(
+        select(OrcidIds.orcid)
         .filter(OrcidIds.user_id == user_id)
-        .first()
     )
-    return row.orcid if row else None
-
 
 @db_handle_error(db_logger=logger, default_return_val=[])
 def get_articles_for_author(user_id: int) -> List[ListingItem]:
-    rows = (
-        db.session.query(Document, paper_owners)
-        .filter(Document.document_id == paper_owners.c.document_id)
-        .filter(paper_owners.c.user_id == user_id)
-        .filter(paper_owners.c.flag_author == 1)
-        .filter(paper_owners.c.valid == 1)
+    rows = session.execute(
+        select(Document, t_arXiv_paper_owners)
+        .filter(Document.document_id == t_arXiv_paper_owners.c.document_id)
+        .filter(t_arXiv_paper_owners.c.user_id == user_id)
+        .filter(t_arXiv_paper_owners.c.flag_author == 1)
+        .filter(t_arXiv_paper_owners.c.valid == 1)
         .filter(Document.paper_id.notlike('test%'))
         .order_by(Document.dated.desc())
-        .all()
-    )
+    ).scalars().all()
     return [ListingItem(row[0].paper_id, 'new', row[0].primary_subject_class)
             for row in rows]

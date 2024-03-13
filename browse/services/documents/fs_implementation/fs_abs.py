@@ -3,17 +3,20 @@
 from typing import List, Optional, Union
 import dataclasses
 
-from browse.domain.metadata import DocMetadata
-from browse.domain.identifier import Identifier
-from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from browse.services.anypath import fs_check
-
-from browse.services.documents.base_documents import DocMetadataService, \
-    AbsDeletedException, AbsNotFoundException, \
+from arxiv.document.metadata import DocMetadata
+from arxiv.document.parse_abs import parse_abs_file
+from arxiv.identifier import Identifier
+from arxiv.document.exceptions import (
+    AbsDeletedException, 
+    AbsNotFoundException,
     AbsVersionNotFoundException
+)
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+from arxiv.files.anypath import fs_check
+
+from browse.services.documents.base_documents import DocMetadataService
 
 from .legacy_fs_paths import FSDocMetaPaths
-from .parse_abs import parse_abs_file
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""

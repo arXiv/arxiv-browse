@@ -16,8 +16,6 @@ logger.level = logging.DEBUG
 
 
 class DBListingService(ListingService):
-    def __init__(self, db: Any) -> None:
-        self.db=db
 
     def monthly_counts(self, archive: str, year: int) -> YearCount:
         return get_yearly_article_counts(archive, year)

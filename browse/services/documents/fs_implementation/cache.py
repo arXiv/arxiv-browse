@@ -8,8 +8,10 @@ from browse.services.anypath import to_anypath
 
 from arxiv.base.globals import get_application_config, get_application_global
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 from browse.services.anypath import APath
+
+from flask import Flask
 
 # Formats that currently reside in the cache filesystem
 CACHE_FORMATS = ['dvi', 'html', 'other', 'pdf', 'ps']
@@ -50,7 +52,7 @@ class DocumentCacheSession():
         #     identifier.yymm,
         #     f'{identifier.filename}v{docmeta.version}']))
 
-        parent_path = (self.document_cache_path /
+        parent_path: APath = (self.document_cache_path /
             ('arxiv' if not identifier.is_old_id or identifier.archive is None
              else identifier.archive) /
             cache_format /
@@ -80,7 +82,7 @@ def get_cache_file_path(docmeta: DocMetadata, format: str) -> Optional[APath]:
     return current_session().get_cache_file_path(docmeta, format)
 
 
-def get_session(app: object = None) -> DocumentCacheSession:
+def get_session(app: Optional[Flask] = None) -> DocumentCacheSession:
     """Get a new session with the document cache service."""
     config = get_application_config(app)
     document_cache_path = config.get('DOCUMENT_CACHE_PATH', None)
@@ -93,6 +95,7 @@ def current_session() -> DocumentCacheSession:
     if not g:
         return get_session()
     if 'doc_cache' not in g:
-        g.doc_cache = get_session()
+        setattr(g, 'doc_cache', get_session())
+    assert hasattr(g, 'doc_cache')
     assert isinstance(g.doc_cache, DocumentCacheSession)
     return g.doc_cache

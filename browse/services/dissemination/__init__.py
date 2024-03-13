@@ -4,9 +4,7 @@ from urllib.parse import urlparse
 from google.cloud import storage
 
 from browse.services.documents import get_doc_service
-from browse.services.object_store import ObjectStore
-from browse.services.object_store.object_store_gs import GsObjectStore
-from browse.services.object_store.object_store_local import LocalObjectStore
+from arxiv.files.object_store import ObjectStore, GsObjectStore, LocalObjectStore
 
 from .article_store import ArticleStore
 

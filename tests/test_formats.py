@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from browse.services.documents.format_codes import formats_from_source_flag, formats_from_source_file_name
+from arxiv.formats import formats_from_source_flag, formats_from_source_file_name
 
 
 class TestFormats(TestCase):

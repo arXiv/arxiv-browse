@@ -4,7 +4,7 @@ from io import BytesIO
 import tarfile
 from typing import Callable, Iterator, List
 
-from browse.services.object_store import FileObj
+from arxiv.files import FileObj
 
 BUFFER_SIZE = 16 * 1024  # bytes, similar to tarfile.copyfileobj()
 

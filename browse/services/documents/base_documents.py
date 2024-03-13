@@ -3,7 +3,7 @@
 import abc
 from typing import Union
 
-from browse.domain.metadata import DocMetadata, Identifier
+from arxiv.document.metadata import DocMetadata, Identifier
 from browse.services import HasStatus
 
 
