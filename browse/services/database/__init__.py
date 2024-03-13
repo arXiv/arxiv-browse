@@ -363,7 +363,6 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
         .filter(t_arXiv_stats_hourly.c.ymd == stats_date.isoformat())
         .group_by(t_arXiv_stats_hourly.c.access_type))
     
-    print (a)
     rows = session.execute(
         a
     ).all()
