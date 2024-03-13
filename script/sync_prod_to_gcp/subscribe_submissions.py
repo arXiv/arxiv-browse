@@ -45,7 +45,7 @@ LOG_FORMAT_KWARGS = {
 }
 
 
-def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
+def submission_message_to_payloads(message: Message, log_extra: dict, testing: bool = False) -> typing.Tuple[str, typing.List[typing.Tuple[str, str]]]:
     """
     Parse the submission_published message, map it to CIT files and returns the list of
     files to upload to GCP bucket.
@@ -56,6 +56,9 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
     Since upload() looks at the size of bucket object / CIT file to decide copy or not
     copy, this will attempt to upload the versioned and latest at the same time but the uploading
     may or may not happen.
+
+    testing: bool - skips the fstat call on file system. This is for testing the payloads.
+    See test/test_subscribe_submissions.py.
     """
     try:
         json_str = message.data.decode('utf-8')
@@ -97,15 +100,17 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
             submission_exts.remove(src_ext)
         submission_exts.insert(0, src_ext)
 
-    xid_latest = Identifier(f"{paper_id}")
+    xid_latest = Identifier(paper_id)
     logger.info("Processing %s.v%s:%s", xid_latest.ids, str(version), str(src_ext), extra=log_extra)
     archive = ('arxiv' if not xid_latest.is_old_id else xid_latest.archive)
     pairs = []
 
     latest_dir = f"{FTP_PREFIX}{archive}/papers/{xid_latest.yymm}"
     for dotext in [abs_ext] + submission_exts:
-        src_path = f"{latest_dir}/{xid_latest.id}{dotext}"
-        if os.path.exists(src_path):
+        src_path = f"{latest_dir}/{xid_latest.filename}{dotext}"
+        # As mentioned in the doc string, by skipping the os.path.exist, you can test the
+        # payload src (CIT) / dest (Bucket) pairs.
+        if testing or os.path.exists(src_path):
             pairs.append((src_path, path_to_bucket_key(src_path)))
             # When there is a source, stop looking for more. For majority of case, this would
             # eliminate the extra fstat on the file system.
@@ -125,8 +130,8 @@ def submission_message_to_payloads(message: Message, log_extra: dict) -> typing.
             pass
         versioned_parent = f"{ORIG_PREFIX}{archive}/papers/{xid_latest.yymm}"
         for dotext in [abs_ext] + submission_exts:
-            src_path = f"{versioned_parent}/{xid_latest.id}v{prev_version}{dotext}"
-            if os.path.exists(src_path):
+            src_path = f"{versioned_parent}/{xid_latest.filename}v{prev_version}{dotext}"
+            if testing or os.path.exists(src_path):
                 pairs.append((src_path, path_to_bucket_key(src_path)))
                 if dotext != abs_ext:
                     break
