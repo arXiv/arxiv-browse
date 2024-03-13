@@ -17,21 +17,25 @@ means that the fixture will be re-run for each test function.
 import pytest
 from pathlib import Path
 from browse.factory import create_web_app
-import os
+from arxiv.config import Settings
 
 from tests import path_of_for_test
 
 import browse.services.documents as documents
-from browse.services.listing import db_listing
+import browse.services.listing as listing
 
-DEFAULT_DB = "sqlite:///../tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///../tests/data/latexmldb.db'
+DEFAULT_DB = "sqlite:///tests/data/browse.db"
+TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
+
+ARXIV_BASE_SETTINGS = Settings(
+    
+)
 
 TESTING_CONFIG = {
-    "SQLALCHEMY_BINDS": {"latexml": TESTING_LATEXML_DB},
-    "SQLALCHEMY_DATABASE_URI" : DEFAULT_DB,
-    'DOCUMENT_LISTING_SERVICE': db_listing,
+    "CLASSIC_DB_URI": DEFAULT_DB,
+    "LATEXML_DB_URI": TESTING_LATEXML_DB,
+    'DOCUMENT_LISTING_SERVICE': listing.db_listing,
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
     "TESTING": True,
@@ -46,9 +50,9 @@ def loaded_db():
     """Loads the testing db"""
     app = create_web_app(**test_config())
     with app.app_context():
-        from browse.services.database import models
+        from arxiv import db
         from . import populate_test_database
-        populate_test_database(True, models)
+        populate_test_database(True, db)
 
 
 @pytest.fixture(scope='session')
@@ -61,7 +65,7 @@ def app_with_db(loaded_db):
     with app.app_context():
         from flask import g
         g.doc_service = documents.db_docs(app.config, g)
-        g.listing_service = db_listing(app.config, g)
+        g.listing_service = listing.db_listing(app.config, g)
 
     return app
 
@@ -119,6 +123,8 @@ def app_with_test_fs(loaded_db):
 
 @pytest.fixture(scope='function')
 def dbclient(app_with_db):
+    print ("DB CLIENT FIXTURE IS GOOD")
+
     """A browse app client with a test DB populated with fresh data.
 
     This is function so each test funciton gets an new app_context."""

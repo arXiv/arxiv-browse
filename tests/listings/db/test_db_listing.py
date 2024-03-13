@@ -5,7 +5,7 @@ from browse.services.database.listings import (
     _metadata_to_listing_item
 )
 from browse.services.listing import get_listing_service, NotModifiedResponse
-from browse.services.database.models import Metadata
+from arxiv.db.models import Metadata
 
 SAMPLE_METADATA1=Metadata(
     metadata_id = 1,

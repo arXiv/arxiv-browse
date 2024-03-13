@@ -3,13 +3,14 @@
 from typing import Any, Dict, Tuple
 from http import HTTPStatus as status
 
-from flask import url_for, escape
+from flask import url_for
+from markupsafe import escape
 from werkzeug.exceptions import BadRequest, NotFound
 
 from arxiv.base import logging
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES_ACTIVE
 
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.services.database import get_sequential_id
 
 

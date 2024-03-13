@@ -3,9 +3,9 @@ import re
 from datetime import date
 from typing import Optional
 
-from browse.domain.category import Category
-from browse.domain.identifier import Identifier
-from browse.domain.metadata import DocMetadata
+from arxiv.taxonomy.category import Category
+from arxiv.identifier import Identifier
+from arxiv.document.metadata import DocMetadata
 
 
 start_of_time = date(1900, 1, 1)

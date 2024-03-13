@@ -5,8 +5,8 @@ from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
-from browse.domain.identifier import Identifier, IdentifierException
-from browse.domain import fileformat
+from arxiv.identifier import Identifier, IdentifierException
+from arxiv.files import fileformat
 from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response, get_pdf_resp
 from browse.controllers import check_supplied_identifier
 

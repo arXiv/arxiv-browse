@@ -4,10 +4,10 @@ import re
 from datetime import datetime, timezone
 from typing import Dict, List, Union
 
-from arxiv.util.authors import parse_author_affil_utf
+from arxiv.authors import parse_author_affil_utf
 from flask import url_for
 
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
 
 
 def meta_tag_metadata(metadata: DocMetadata, truncate: bool = False) -> List:

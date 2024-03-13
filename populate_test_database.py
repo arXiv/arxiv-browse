@@ -6,7 +6,7 @@ from typing import List
 import click
 
 from browse.factory import create_web_app
-from browse.services.database import models
+from arxiv import db
 from tests import populate_test_database as populate_db
 
 app = create_web_app()
@@ -18,7 +18,7 @@ app.app_context().push()
 def populate_test_database(drop_and_create: bool) -> None:
     """Initialize the browse tables."""
     print("Writing to DB at " + app.config["SQLALCHEMY_DATABASE_URI"])
-    populate_db(drop_and_create, models)
+    populate_db(drop_and_create, db)
 
 if __name__ == '__main__':
     populate_test_database()

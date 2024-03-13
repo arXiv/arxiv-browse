@@ -77,7 +77,7 @@ def test_get_yearly_article_counts(app_with_db):
         # 2007 mid id-swap
         # TODO cant test early 2007 data on sqlite
 
-@patch("browse.services.listing.db_listing.get_yearly_article_counts")
+@patch("browse.services.listing.db_listings.get_yearly_article_counts")
 def test_year_page_db(mock, client_with_db_listings):
     client = client_with_db_listings
 

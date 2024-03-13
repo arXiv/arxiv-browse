@@ -11,7 +11,6 @@ from arxiv.base.urls import canonical_url, urlizer
 from arxiv.base.filters import tidy_filesize
 from flask import Flask
 from flask_s3 import FlaskS3
-
 # This gives the error on import
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
 # from arxiv.users.auth import Auth
@@ -19,7 +18,6 @@ from flask_s3 import FlaskS3
 from browse.config import Settings
 from browse.routes import ui, dissemination, src, unimplemented, redirects
 from browse.commands import invalidate, check_paper_formats
-from browse.services.database import models
 from browse.services.check import service_statuses
 from browse.formatting.email import generate_show_email_hash
 from browse.filters import entity_to_utf
@@ -39,7 +37,6 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
                 static_url_path=f'/static/browse/{settings.APP_VERSION}')
     app.config.from_object(settings)
 
-    models.init_app(app)  # type: ignore
     Base(app)
     #Auth(app)
 
@@ -77,12 +74,12 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
     app.jinja_env.filters['tidy_filesize'] = tidy_filesize
 
-    @app.before_first_request
-    def check_services()->None:
+    with app.app_context():
         problems = service_statuses()
         if problems:
             app.logger.error("Problems with services!!!!!")
-            [app.logger.error(prob) for prob in problems]
+            for prob in problems:
+                app.logger.error(prob)
 
     return app
 

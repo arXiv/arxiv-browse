@@ -4,9 +4,9 @@ from flask import Response, make_response, render_template
 from datetime import timezone
 import mimetypes
 
-from browse.domain.identifier import Identifier
-from browse.domain.version import VersionEntry
-from browse.services.object_store import FileObj
+from arxiv.identifier import Identifier
+from arxiv.document.version import VersionEntry
+from arxiv.files import FileObj
 
 
 BUFFER_SIZE = 1024 * 4

@@ -6,10 +6,10 @@ from unittest.mock import Mock, patch
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
 
-from browse.services.database.models import TrackbackPing
+from arxiv.db.models import TrackbackPing
 from browse.services.database import get_sequential_id
 from browse.services import database
-from browse.domain.identifier import Identifier
+from arxiv.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 
@@ -222,9 +222,11 @@ class TestBrowseDatabaseService(TestCase):
             'There is at least one document in the DB.'
         )
 
-    @mock.patch('browse.services.database.models.db.session.query')
-    def test_error_conditions(self, mock_query) -> None:
-        mock_query.side_effect = NoResultFound
+    @mock.patch('arxiv.db.session.execute')
+    @mock.patch('arxiv.db.session.scalar')
+    def test_error_conditions(self, mock_scalar, mock_execute) -> None:
+        mock_execute.side_effect = NoResultFound
+        mock_scalar.side_effect = NoResultFound
         self.assertEqual(
             database.get_institution('10.0.0.1'), None)
         self.assertEqual([],
@@ -239,7 +241,8 @@ class TestBrowseDatabaseService(TestCase):
             database.get_dblp_listing_path('0704.0361'), None)
         self.assertEqual(
             database.get_dblp_authors('0704.0361'), [])
-        mock_query.side_effect = SQLAlchemyError
+        mock_execute.side_effect = SQLAlchemyError
+        mock_scalar.side_effect = SQLAlchemyError
         self.assertRaises(SQLAlchemyError,
                           database.get_institution, '10.0.0.1')
         self.assertRaises(

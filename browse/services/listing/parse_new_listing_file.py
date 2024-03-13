@@ -15,8 +15,8 @@ import re
 from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
 
-from browse.services.object_store import FileObj
-from browse.services.documents.fs_implementation.parse_abs import (
+from arxiv.files import FileObj
+from arxiv.document.parse_abs import (
     parse_abs, parse_abs_top)
 from browse.services.listing import (ListingItem, ListingNew,
                                      gen_expires)
@@ -190,7 +190,7 @@ def _to_item(data: str, ltype: Literal['new', 'cross', 'rep']) -> ListingItem:
                             #TODO bogus time but don't think it is used in listing page.
                             datetime.now(),
                             '')
-        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc)  # type: ignore
+        return ListingItem(doc.arxiv_id, ltype, doc.primary_category, doc) # type: ignore
     else:
         data = _strip_extra(data)
         doc = parse_abs(data,

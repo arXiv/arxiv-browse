@@ -20,13 +20,19 @@ from werkzeug.exceptions import InternalServerError
 from browse.controllers import check_supplied_identifier, biz_tz
 
 from arxiv import taxonomy
-from browse.domain.category import Category
-from browse.domain.identifier import (
+from arxiv.taxonomy import Category
+from arxiv.identifier import (
     Identifier,
     IdentifierException,
     IdentifierIsArchiveException,
 )
-from browse.domain.metadata import DocMetadata
+from arxiv.document.metadata import DocMetadata
+from arxiv.document.exceptions import (
+    AbsDeletedException,
+    AbsException,
+    AbsNotFoundException,
+    AbsVersionNotFoundException,
+)
 from browse.exceptions import AbsNotFound
 from browse.services.database import (
     count_trackback_pings,
@@ -37,7 +43,7 @@ from browse.services.database import (
     get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
-from browse.services.documents.format_codes import formats_from_source_flag
+from arxiv.formats import formats_from_source_flag
 
 from browse.services.dissemination import get_article_store
 from browse.formatting.external_refs_cits import (
@@ -51,12 +57,7 @@ from browse.formatting.external_refs_cits import (
 )
 from browse.formatting.latexml import get_latexml_url
 
-from browse.services.documents.base_documents import (
-    AbsDeletedException,
-    AbsException,
-    AbsNotFoundException,
-    AbsVersionNotFoundException,
-)
+
 from browse.formatting.search_authors import (
     queries_for_authors,
     split_long_author_list,
@@ -66,8 +67,6 @@ from browse.controllers.response_headers import (
     mime_header_date
 )
 from browse.formatting.metatags import meta_tag_metadata
-
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -17,13 +17,18 @@ from browse.services.listing import (
     ListingNew,
     AnnounceTypes
 )
-from browse.services.database.models import NextMail, Metadata, db, DocumentCategory, Document, Updates
-from browse.domain.metadata import DocMetadata, AuthorList
-from browse.domain.category import Category
-from browse.domain.version import VersionEntry, SourceFlag
+from arxiv.db import session
+from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
+from arxiv.document.metadata import DocMetadata, AuthorList
+from arxiv.taxonomy import (
+    Category, 
+    CATEGORIES, 
+    ARCHIVES, 
+    CATEGORY_ALIASES, 
+    ARCHIVES_SUBSUMED
+)
+from arxiv.document.version import VersionEntry, SourceFlag
 
-from arxiv import taxonomy
-from arxiv.taxonomy.definitions import CATEGORIES
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
 from logging import Logger
@@ -39,7 +44,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     category_list=_all_possible_categories(archive_or_cat)
     
     up=aliased(Updates)
-    case_order = case(
+    case_order = case(*
         [
             (up.action == 'new', 0),
             (up.action == 'cross', 1),
@@ -48,9 +53,9 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         else_=3 
     ).label('case_order')
         
-    recent_date=db.session.query(func.max(up.date)).scalar_subquery()   
+    recent_date=session.query(func.max(up.date)).scalar_subquery()   
     doc_ids=(
-        db.session.query(
+        session.query(
             up.document_id,
             up.date,
             up.action
@@ -67,7 +72,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     dc = aliased(DocumentCategory)
     #all listings for the specific category set
     all = (
-        db.session.query(
+        session.query(
             doc_ids.c.document_id, 
             doc_ids.c.action, 
             doc_ids.c.date, 
@@ -80,7 +85,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     )
 
     #sorting and counting by type of listing
-    listing_type = case(
+    listing_type = case(*
         [
             (and_(all.c.action == 'new', all.c.is_primary == 1), 'new'),
             (and_(all.c.action == 'cross', all.c.is_primary == 1), 'no-match'), #removes intra archive crosses
@@ -91,7 +96,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         else_="no_match"
     ).label('listing_type')
 
-    case_order = case(
+    case_order = case(*
         [
             (listing_type == 'new', 0),
             (listing_type == 'cross', 1),
@@ -105,7 +110,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
 
     #how many of each type
     counts = (
-        db.session.query(
+        session.query(
             listing_type,
             func.count().label('type_count')
         )
@@ -129,7 +134,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     #data for listings to be displayed
     meta = aliased(Metadata)
     results = (
-        db.session.query(
+        session.query(
             listing_type,
             meta,
             all.c.date
@@ -153,7 +158,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         items.append(item)
 
     if len(items)==0: #no results to find the last mailing day from
-        mail_date=db.session.query(func.max(up.date)).scalar()
+        mail_date=session.query(func.max(up.date)).scalar()
     else:
         mail_date=results[0][2] 
 
@@ -169,18 +174,18 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     category_list=_all_possible_categories(archive_or_cat)
     up=aliased(Updates)
     dates = (
-        db.session.query(distinct(up.date).label("date"))
+        session.query(distinct(up.date).label("date"))
         .order_by(desc(up.date))
         .limit(5)
         .subquery()
     )
 
     doc_ids=(
-        db.session.query(
+        session.query(
             up.document_id,
             up.date
         )
-        .filter(up.date.in_(dates))
+        .filter(up.date.in_(dates.select()))
         .filter(or_(up.action=="new", up.action=="cross"))
         .filter(up.category.in_(category_list))
         .group_by(up.document_id) #one listing per paper
@@ -188,7 +193,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     )
 
     count_subquery = (
-        db.session.query(
+        session.query(
             dates.c.date,
             func.count(doc_ids.c.document_id).label('count')
         )
@@ -199,7 +204,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     )
 
     counts = (
-        db.session.query(
+        session.query(
             count_subquery.c.date,
             count_subquery.c.count
         )
@@ -208,7 +213,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     dc = aliased(DocumentCategory)
     all = (
-        db.session.query(
+        session.query(
             doc_ids.c.date,
             doc_ids.c.document_id,   
             func.max(dc.is_primary).label('is_primary')
@@ -221,7 +226,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     meta = aliased(Metadata)
     result=(
-        db.session.query(   
+        session.query(   
             all.c.is_primary,
             meta
         )
@@ -258,6 +263,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
         expires=gen_expires()
     )
 
+
 def get_articles_for_month(
     archive_or_cat: str, year: int, month: Optional[int], skip: int, show: int
 ) -> Listing:
@@ -279,7 +285,7 @@ def get_articles_for_month(
     """
 
     #gets document_ids of paper_ids in right time frame
-    starter=db.session.query(doc.document_id)
+    starter=session.query(doc.document_id)
     if month: #for monthly listings
         if year > 2007: #new ids
             doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
@@ -303,7 +309,7 @@ def get_articles_for_month(
             )                     
 
     #filters to only the ones in the right category and records if any of the requested categories are primary
-    cat_query = (db.session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
+    cat_query = (session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
         .where(dc.document_id.in_(doc_ids))
         .where(dc.category.in_(category_list))
         .group_by(dc.document_id)
@@ -311,7 +317,7 @@ def get_articles_for_month(
     )
 
     #gets the metadata for applicable documents
-    main_query=(db.session.query(meta, cat_query.c.is_primary)
+    main_query=(session.query(meta, cat_query.c.is_primary)
         .select_from(
             cat_query.join(meta, meta.document_id==cat_query.c.document_id)
             )
@@ -347,21 +353,21 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     if updated is None and modtime is None:
         modified=datetime(2010,3,6) #some time required, most recent modtime of an article with no updated column
     elif updated is not None and modtime is not None:
-        modified=max(meta.updated,datetime.fromtimestamp(meta.modtime))
-    elif updated is None:
-        modified=datetime.fromtimestamp(meta.modtime)
-    else:
+        modified=max(updated,datetime.fromtimestamp(float(modtime)))
+    elif updated is None and modtime is not None:
+        modified=datetime.fromtimestamp(float(modtime))
+    elif updated is not None and modtime is None:
         modified=updated
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-        title=meta.title,
-        authors=AuthorList(meta.authors),
-        abstract=meta.abstract,
+        title=meta.title, # type: ignore
+        authors=AuthorList(meta.authors), # type: ignore
+        abstract=meta.abstract, # type: ignore
         categories=meta.abs_categories,
-        primary_category=Category(meta.abs_categories.split()[0]),
+        primary_category=Category(meta.abs_categories.split()[0]), # type: ignore
         secondary_categories=[
-            Category(sc) for sc in meta.abs_categories.split()[1:]
+            Category(sc) for sc in meta.abs_categories.split()[1:] # type: ignore
         ],
         comments=meta.comments,
         journal_ref=meta.journal_ref,
@@ -371,8 +377,8 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
                 version=meta.version,
                 raw="",
                 submitted_date=None, # type: ignore
-                size_kilobytes=meta.source_size,
-                source_flag=SourceFlag(meta.source_flags),
+                size_kilobytes=meta.source_size, # type: ignore
+                source_flag=SourceFlag(meta.source_flags), # type: ignore
             )
         ],
         raw_safe="",
@@ -385,7 +391,7 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     item = ListingItem(
         id=meta.paper_id,
         listingType=type,
-        primary=Category(meta.abs_categories.split()[0]).id,
+        primary=Category(meta.abs_categories.split()[0]).id, # type: ignore
         article=doc,
     )
     return item
@@ -418,9 +424,9 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
     takes into account aliases and subsumed archives
     """
-    if archive_or_cat in taxonomy.ARCHIVES: #get all categories for archvie
+    if archive_or_cat in ARCHIVES: #get all categories for archvie
         return get_categories_from_archive(archive_or_cat)
-    elif archive_or_cat in taxonomy.CATEGORIES: #check for alternate names
+    elif archive_or_cat in CATEGORIES: #check for alternate names
         second_name=_check_alternate_name(archive_or_cat)
         if second_name: 
             return [archive_or_cat, second_name]
@@ -448,17 +454,16 @@ def _check_alternate_name(category:str) -> Optional[str]:
     #returns previous name if archive was subsumed
 
     #check for aliases
-    for key, value in taxonomy.CATEGORY_ALIASES.items():
+    for key, value in CATEGORY_ALIASES.items():
         if category == key: #old alias name provided
-            return value # type: ignore
+            return value
         elif category == value: #new alias name provided
-            return key # type: ignore
+            return key
         
     #check for subsumed archives
-    for key, value in taxonomy.ARCHIVES_SUBSUMED.items():
+    for key, value in ARCHIVES_SUBSUMED.items():
         if category == value: #has old archive name
-            return key # type: ignore
-
+            return key
     return None #no alternate names
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
@@ -468,7 +473,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
 
     category_list=_all_possible_categories(archive)
     new_doc_ids=(
-        db.session.query(
+        session.query(
             doc.document_id,
             func.substr(doc.paper_id, 3, 2).label("month"),
         )
@@ -476,7 +481,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
         .subquery()
     )
     old_doc_ids=(
-        db.session.query(
+        session.query(
             doc.document_id,
             func.substring(
                 func.substring_index(doc.paper_id, "/", -1), 3, 2
@@ -491,18 +496,18 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     elif year < 2007: 
         doc_ids=old_doc_ids
     else: #both styles present
-        doc_ids=db.session.query(
+        doc_ids=session.query(
             old_doc_ids.c.document_id.label("document_id"), 
             old_doc_ids.c.month.label("month")
             ).union_all(
-                db.session.query(
+                session.query(
                     new_doc_ids.c.document_id.label("document_id"), 
                     new_doc_ids.c.month.label("month")
                 )
             ).subquery()
-
+         
     subquery=(
-        db.session.query(
+        session.query(
             doc_ids.c.month,
             func.max(dc.is_primary).label("is_primary")
         )
@@ -515,10 +520,10 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     )
 
     query = (
-        db.session.query(
+        session.query(
             subquery.c.month,
-            func.count(case([(subquery.c.is_primary == 1, 1)])).label("count_new"),
-            func.count(case([(subquery.c.is_primary == 0, 1)])).label("count_cross")
+            func.count(case(*[(subquery.c.is_primary == 1, 1)])).label("count_new"),
+            func.count(case(*[(subquery.c.is_primary == 0, 1)])).label("count_cross")
         )
         .group_by(subquery.c.month)
     )
@@ -548,7 +553,7 @@ def _process_yearly_article_counts(query_result: List[Row], year: int) -> YearCo
     return data
 
 def check_service() -> str:
-    query=db.session.query(Metadata).limit(1).all()
+    query=session.query(Metadata).limit(1).all()
     if len(query)==1:
         return "GOOD"
     return "BAD"

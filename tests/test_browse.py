@@ -2,12 +2,12 @@ import os
 import unittest
 import pytest
 
-from arxiv import taxonomy
 from bs4 import BeautifulSoup
-from tests.test_fs_abs_parser import ABS_FILES
+from tests import ABS_FILES
 
-from browse.domain.license import ASSUMED_LICENSE_URI
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
+from arxiv import taxonomy
+from arxiv.license import ASSUMED_LICENSE_URI
+from arxiv.document.parse_abs import parse_abs_file
 
 
 @pytest.mark.usefixtures("unittest_add_fake")

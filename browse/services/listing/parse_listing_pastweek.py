@@ -23,9 +23,9 @@ from datetime import datetime
 from typing import List, Literal, Tuple, Union
 from dataclasses import dataclass
 
-from browse.domain.metadata import DocMetadata
-from browse.services.object_store import FileObj
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_top
+from arxiv.document.metadata import DocMetadata
+from arxiv.files import FileObj
+from arxiv.document.parse_abs import parse_abs_top
 from browse.services.listing import (ListingItem, Listing, gen_expires)
 
 

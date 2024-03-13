@@ -5,7 +5,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 from bs4 import BeautifulSoup
 
 from app import app
-from browse.domain.license import ASSUMED_LICENSE_URI
+from arxiv.license import ASSUMED_LICENSE_URI
 
 
 @unittest.skip('We will move this test and any required test data to arxiv-base in the near future')

@@ -1,15 +1,11 @@
 """Tests for BibTeX citations."""
 from unittest import TestCase
 
-from browse.services.documents.fs_implementation.parse_abs import parse_abs_file
+from arxiv.document.parse_abs import parse_abs_file
 
-from tests import path_of_for_test
+from tests import ABS_FILES
 
 from browse.formatting.cite import arxiv_bibtex
-
-
-ABS_FILES = path_of_for_test('data/abs_files')
-
 
 abs_to_test = \
     [ABS_FILES + '/ftp/arxiv/papers/0705/0705.0001.abs',

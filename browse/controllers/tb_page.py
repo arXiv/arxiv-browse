@@ -11,7 +11,7 @@ from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest, InternalServerError
 
 from browse.controllers import check_supplied_identifier
-from browse.domain.identifier import Identifier, IdentifierException
+from arxiv.identifier import Identifier, IdentifierException
 from browse.exceptions import TrackbackNotFound
 from browse.services.database import (
     get_paper_trackback_pings,
@@ -20,7 +20,7 @@ from browse.services.database import (
 )
 
 from browse.services.documents import get_doc_service
-from browse.services.documents.base_documents import AbsException, \
+from arxiv.document.exceptions import AbsException, \
     AbsNotFoundException
 from browse.formatting.search_authors import queries_for_authors, \
     split_long_author_list
