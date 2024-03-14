@@ -366,12 +366,16 @@ def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
     rows = session.execute(
         a
     ).all()
+    try:
+        logger.warn(f'ROW TYPE: {type(rows[0])}')
+    except Exception as e:
+        logger.warn(f'CAN\'T PRINT ROW TYPE WITH {str(e)}')
     for r in rows:
         if r.access_type == "A":
-            admin_count = r.num_connections
+            admin_count = int(r.num_connections) # This is a decimal.Decimal
         else:
-            normal_count = r.num_connections
-            num_nodes = r.num_nodes
+            normal_count = int(r.num_connections) # This is a decimal.Decimal
+            num_nodes = int(r.num_nodes) # This is an int but want to make sure for mypy
 
     assert isinstance(normal_count, int) and isinstance(admin_count, int) \
         and isinstance(num_nodes, int)
