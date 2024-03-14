@@ -169,6 +169,31 @@
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
     </div>
+    {%- if abs_meta.doi -%}
+    <input type="radio" name="tabs" id="tabfive">
+    <label for="tabfive">Endorsements</label>
+    <div class="tab">
+      <h1>Endorsements</h1>
+      <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="plaudit-toggle"
+                data-script-url="{{ url_for('static', filename='js/plaudit.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-plaudit">
+              <span class="slider"></span>
+              <span class="is-sr-only">Plaudit endorsements toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-plaudit">Plaudit endorsements</span> <em>(<a href="https://labs.arxiv.org/">What is Plaudit?</a>)</em>
+          </div>
+        </div>
+      </div>
+      <div id="plauditContainer" data-doi="{{ abs_meta.doi }}"></div>
+    </div>
+    {% endif %}
 
 
       <input type="radio" name="tabs" id="labstabs-demos-input">
