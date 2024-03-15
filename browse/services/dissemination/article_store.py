@@ -30,7 +30,7 @@ from arxiv.files.key_patterns import (abs_path_current_parent,
                                           ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
 from arxiv.files import FileObj, fileformat
 from .source_store import SourceStore
-from google.cloud import storage
+import google.cloud.storage as storage
 from flask import current_app
 
 logger = logging.getLogger(__file__)
