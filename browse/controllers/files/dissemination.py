@@ -70,7 +70,7 @@ def default_resp_fn(format: Optional[FileFormat],
         # Cloud run needs chunked for large responses
         if request.method == "GET":
             # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
-            resp = make_response(file.open("rb"))
+            resp = make_response(iter(file.open("rb")))
             # but the unit test client doesn't do that so we force it for those
             # see https://github.com/pallets/flask/issues/5424
             resp.headers["Transfer-Encoding"] = "chunked"
