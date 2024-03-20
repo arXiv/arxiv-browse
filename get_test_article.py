@@ -11,11 +11,10 @@ import sys
 import argparse
 from pathlib import Path
 
+from arxiv.files import key_patterns
 from arxiv.identifier import Identifier
 
 from google.cloud import storage
-
-from browse.services import key_patterns
 
 
 def get_article_for_test(bucket, save_base_dir: str, arxiv_id: Identifier):

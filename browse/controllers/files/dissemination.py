@@ -192,9 +192,11 @@ def _html_response(format: FileFormat,
                    arxiv_id: Identifier,
                    docmeta: DocMetadata,
                    version: VersionEntry) -> Response:
-    if docmeta.source_format == 'html':
+    if docmeta.source_format == 'html' or version.source_flag.html:
         if isinstance(file_list, FileObj):
             return _html_source_single_response(file_list, arxiv_id)
+        elif len(file_list) == 1:
+            return _html_source_single_response(file_list[0], arxiv_id)
         else:
             return _html_source_listing_response(file_list, arxiv_id)
     elif isinstance(file_list, FileObj):
