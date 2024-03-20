@@ -16,6 +16,7 @@ from arxiv.files import fileformat
 
 from browse.controllers.files import last_modified, add_time_headers, add_mimetype, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html, not_found, bad_id, cannot_build_pdf
+from browse import config
 
 from arxiv.files import FileObj, FileTransform
 
@@ -112,6 +113,7 @@ def _src_response(format: FileFormat,
     resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
     return resp
 
+
 def pdf_resp_fn(format: FileFormat,
                  file: FileObj,
                     arxiv_id: Identifier,
@@ -133,7 +135,6 @@ def get_pdf_resp(arxiv_id_str: str, archive: Optional[str] = None) -> Response:
 def get_src_resp(arxiv_id_str: str,
                  archive: Optional[str] = None) -> Response:
     return get_dissemination_resp("e-print", arxiv_id_str, archive, _src_response)
-
 
 
 def get_dissemination_resp(format: Acceptable_Format_Requests,
@@ -183,48 +184,48 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
 
     return resp_fn(item_format, file, arxiv_id, docmeta, version) #type: ignore
 
+
 def get_html_response(arxiv_id_str: str,
-                           archive: Optional[str] = None) -> Response:
+                      archive: Optional[str] = None) -> Response:
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, _html_response)
-    
+
+
 def _html_response(format: FileFormat,
                    file_list: Union[List[FileObj],FileObj],
                    arxiv_id: Identifier,
                    docmeta: DocMetadata,
                    version: VersionEntry) -> Response:
     if docmeta.source_format == 'html' or version.source_flag.html:
-        if isinstance(file_list, FileObj):
-            return _html_source_single_response(file_list, arxiv_id)
-        elif len(file_list) == 1:
-            return _html_source_single_response(file_list[0], arxiv_id)
-        else:
-            return _html_source_listing_response(file_list, arxiv_id)
+        return _html_source_listing_response(file_list, arxiv_id)
     elif isinstance(file_list, FileObj):
         return default_resp_fn(format, file_list, arxiv_id, docmeta, version, guess_content_type=True)
     else:
+        # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
         return unavailable(arxiv_id)
 
 
 def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Response:
     """Produces a `Response`for a single file for a paper with HTML source."""
-    if file.name.endswith(".html"):  # do post_processing
+    if _is_html_name(file):  # do post_processing
         return default_resp_fn(fileformat.html, FileTransform(file, post_process_html), arxiv_id)
     else:
         return default_resp_fn(None, file, arxiv_id, guess_content_type=True)
 
 
-def _html_source_listing_response(file_list: List[FileObj], arxiv_id: Identifier) -> Response:
+def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv_id: Identifier) -> Response:
     """Produces a listing `Response` for a paper with HTML source."""
-    if not isinstance(file_list, list):
-        return unavailable(arxiv_id)
+    if isinstance(file_list, FileObj):
+        return _html_source_single_response(file_list, arxiv_id)
 
     html_files = []
     file_names = []
     for file in file_list:
-        if file.name.endswith(".html"):
+        if _is_html_name(file):
             html_files.append(file)
             file_names.append(_get_html_file_name(file.name))
     if len(html_files) < 1:
+        if config.ARXIV_LOG_DATA_INCONSTANCY_ERRORS:
+            logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
         return unavailable(arxiv_id)
     if len(html_files) == 1:  # serve the only html file
         return _html_source_single_response(html_files[0], arxiv_id)
@@ -232,6 +233,7 @@ def _html_source_listing_response(file_list: List[FileObj], arxiv_id: Identifier
         return make_response(render_template("dissemination/multiple_files.html",
                                              arxiv_id=arxiv_id, file_names=file_names), 200,
                              {"Cache-Control": maxage(arxiv_id.has_version)})
+
 
 def _get_html_file_name(name:str) -> str:
     # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes
@@ -241,3 +243,10 @@ def _get_html_file_name(name:str) -> str:
     else:
         result= parts[-1]
     return result
+
+
+def _is_html_name(name: Union[str, FileObj]) -> bool:
+    f_name = name.name if isinstance(name, FileObj) else name
+    return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
+
+

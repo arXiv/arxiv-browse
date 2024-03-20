@@ -1,0 +1,33 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cs/9901011
+From: Barry M. Leiner <name@example.com>
+Date: Sat, 23 Jan 1999 00:37:11 GMT   (83kb,H)
+
+Title: A Brief History of the Internet
+Authors: Barry M. Leiner, Vinton G. Cerf, David D. Clark, Robert E. Kahn,
+  Leonard Kleinrock, Daniel C. Lynch, Jon Postel, Larry G. Roberts, and Stephen
+  Wolf
+Categories: cs.NI
+ACM-class: K.2
+\\
+  The Internet has revolutionized the computer and communications world like
+nothing before. The invention of the telegraph, telephone, radio, and computer
+set the stage for this unprecedented integration of capabilities. The Internet
+is at once a world-wide broadcasting capability, a mechanism for information
+dissemination, and a medium for collaboration and interaction between
+individuals and their computers without regard for geographic location.
+  In this paper, several of us involved in the development and evolution of the
+Internet share our views of its origins and history. This is intended to be a
+brief, necessarily cursory and incomplete history. This history revolves around
+four distinct aspects. There is the technological evolution that began with
+early research on packet switching and the ARPANET (and related technologies),
+and where current research continues to expand the horizons of the
+infrastructure along several dimensions, such as scale, performance, and higher
+level functionality. There is the operations and management aspect of a global
+and complex operational infrastructure. There is the social aspect, which
+resulted in a broad community of Internauts working together to create and
+evolve the technology. And there is the commercialization aspect, resulting in
+an extremely effective transition of research results into a broadly deployed
+and available information infrastructure.
+\\

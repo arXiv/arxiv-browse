@@ -340,6 +340,12 @@ class Settings(arxiv_base.Settings):
     GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
     """
 
+    ARXIV_LOG_DATA_INCONSTANCY_ERRORS: bool = True
+    """It to log error messages during a PDF or other dat request when a paper's metadta does
+    not match what is on the filesystem for data. Ex. a paper version is source type pdf only
+    but there is no pdf file."""
+
+
     def check(self) -> None:
         """A check and fix up of a settings object."""
         if 'sqlite' in self.CLASSIC_DB_URI:
