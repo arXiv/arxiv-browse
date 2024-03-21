@@ -17,7 +17,7 @@ def fs_docs(config: dict, _: Any) -> DocMetadataService:
     """Factory function for file system abstract service."""
     from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
     return FsDocMetadataService(config["DOCUMENT_LATEST_VERSIONS_PATH"],
-                                config["DOCUMENT_ORIGNAL_VERSIONS_PATH"])
+                                config["DOCUMENT_ORIGINAL_VERSIONS_PATH"])
 
 
 def db_docs(config: dict, _: Any) -> DocMetadataService:
