@@ -10,6 +10,8 @@ from arxiv.files import FileObj
 
 
 BUFFER_SIZE = 1024 * 4
+CACHE_AGE_SEC_VERSIONED = 60 * 60 * 24 * 7
+CACHE_AGE_SEC_UNVERSIONED = 60 * 60 * 24
 
 def maxage(versioned: bool=False) -> str:
     """Returns a "max-age=N" `str` for use with "Cache-Control".
@@ -19,7 +21,7 @@ def maxage(versioned: bool=False) -> str:
 
     versioned: if the request was for a versioned paper or the current version.
     """
-    return f'max-age={60 * 30}' if versioned else f'max-age={60 * 15}'  # sec
+    return f'max-age={CACHE_AGE_SEC_VERSIONED}' if versioned else f'max-age={CACHE_AGE_SEC_UNVERSIONED}'  # sec
 
 
 def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
