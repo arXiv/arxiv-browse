@@ -140,9 +140,9 @@ class Settings(arxiv_base.Settings):
     """
 
     ARXIV_LOG_DATA_INCONSTANCY_ERRORS: bool = True
-    """It to log error messages during a PDF or other dat request when a paper's metadata does
-    not match what is on the filesystem for data. Ex. a paper version is source type pdf only
-    but there is no pdf file."""
+    """It to log error messages during a PDF or other data request when a paper's metadata does
+    not match what is on the data filesystem. Ex. a paper version is source type PDF-only
+    but there is no src PDF file."""
 
     """========================= End of Services ========================="""
 
