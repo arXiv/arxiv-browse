@@ -30,6 +30,40 @@ By default, the application will use the directory trees in
 metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
 
+### Note for non-Debian users
+
+In case you are not working on a Debian-based distribution, there are a few things to take note of:
+1. You may not want to install into `/usr/local/bin` to avoid polluting your system state and on some OSes, like NixOS, this may be prohibitively difficult.
+  Use the `BIN_PATH` env var to set a different directory to install binaries, like cloud-sql-proxy, into.
+2. You may not have `apt` available as a package manager on your system and may therefore have to install the mysqlclient lib in a manner appropriate for your OS.
+   Refer to your OS's documentation to install the mysqlclient lib and touch the .prerequisit file in order to allow to satisfy the neccessary prerequisit for `make venv` to continue.
+   ```bash
+   touch .prerequisit
+   ```
+
+   Note that on macOS, `apt` is the [Java relic predating JDK 7](https://docs.oracle.com/javase//7/docs/technotes/guides/apt/GettingStarted.html#deprecated) which definitely can't be used to install packages.
+
+```bash
+# TODO: manually install mysqlclient-dev
+touch .prerequisit
+BIN_PATH=bin make venv
+```
+
+> :warning: Using the `make venv` rule may open you up for some weird state issues on non-Debian platforms that are clang and grpcio related. See https://github.com/grpc/grpc/issues/30723#issuecomment-1231809453 for an example of such an issue and a imperative workaround. For a declarative way to manage your environment, consider the use of the [devenv.sh](#note-for-devenvsh-users) as documented below.
+
+### Note for devenv.sh users
+
+> :bulb: devenv.sh is a Nix-based configuration management tool that allows one to declaratively manage development environements.
+
+In case you don't want to be bothered managing system-level dependencies, feel free to use the [devenv.sh](https://devenv.sh/) config provided in this repo. Refer to https://devenv.sh/getting-started/ to get started with devenv. With devenv set up, the following will automagically happen when entering the project directory (in a terminal):
+1. mysqlproxy will be installed
+2. `BIN_PATH` will be set to a working-directory local path such that the Makefile rules still work for you
+3. cloud-sql-proxy will be installed into your working directory (at the path specified by the `BIN_PATH` env var inside of the devenv.nix file)
+4. a venv will be created in the `.venv` directory local to your working directory
+5.`poetry install` will be executed
+
+> :bulb: The use of the provided devenv config renders the use of `make venv` and `make run` moot. Rely on devenv.sh to manage your venv instead and run `python main.py` directly instead of relying on `make run` (since you don't need to spin up/activate your venv anymore). The use of `make proxy` and `make dev-proxy` should still work due to us having specified the correct `BIN_PATH` in the devenv config.
+
 ### Running Browse with .env file
 
 First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
