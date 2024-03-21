@@ -3,10 +3,7 @@
 import logging
 from pathlib import Path
 from typing import Callable, Optional, Union, List
-import tempfile
 import mimetypes
-from io import BytesIO
-from typing import Generator
 
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.files.fileformat import FileFormat
@@ -14,8 +11,9 @@ from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
 
-from browse.controllers.files import last_modified, add_time_headers, add_mimetype, \
-    download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html, not_found, bad_id, cannot_build_pdf
+from browse.controllers.files import last_modified, add_time_headers, \
+    download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
+    not_found, bad_id, cannot_build_pdf
 from browse import config
 
 from arxiv.files import FileObj, FileTransform
@@ -26,7 +24,7 @@ from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
 
-from flask import Response, abort, make_response, render_template, request
+from flask import Response, abort, make_response, render_template, request, current_app
 from flask_rangerequest import RangeRequest
 
 
@@ -115,11 +113,11 @@ def _src_response(format: FileFormat,
 
 
 def pdf_resp_fn(format: FileFormat,
-                 file: FileObj,
-                    arxiv_id: Identifier,
-                    docmeta: DocMetadata,
-                    version: VersionEntry,
-                    extra: Optional[str] = None) -> Response:
+                file: FileObj,
+                arxiv_id: Identifier,
+                docmeta: DocMetadata,
+                version: VersionEntry,
+                extra: Optional[str] = None) -> Response:
     """function to make a `Response` for a PDF."""
     resp = default_resp_fn(format, file, arxiv_id, docmeta, version)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
@@ -224,7 +222,7 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
             html_files.append(file)
             file_names.append(_get_html_file_name(file.name))
     if len(html_files) < 1:
-        if config.ARXIV_LOG_DATA_INCONSTANCY_ERRORS:
+        if current_app.config["ARXIV_LOG_DATA_INCONSTANCY_ERRORS"]:
             logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
         return unavailable(arxiv_id)
     if len(html_files) == 1:  # serve the only html file
