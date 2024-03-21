@@ -11,7 +11,6 @@ python = "^3.11"
 MarkupSafe = "*"
 sqlalchemy = "^2.0.26" 
 bcrypt = "*"
-cloudpathlib = {extras = ["gs"], version = "*"}
 flask-rangerequest = "^0.0.2"
 flask-s3 = "*"
 flask-wtf = "*"
@@ -36,7 +35,7 @@ types-python-dateutil = "^2.8.19.12"
 pg8000 = "^1.30.1"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "8b3c9cb0b1fc082ad9881f17cc5f942ced80767a"}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "f2b07f5e"}
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
 

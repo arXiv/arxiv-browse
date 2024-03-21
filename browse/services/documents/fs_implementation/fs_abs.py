@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union
 import dataclasses
+from pathlib import Path
 
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.parse_abs import parse_abs_file
@@ -12,11 +13,25 @@ from arxiv.document.exceptions import (
     AbsVersionNotFoundException
 )
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from arxiv.files.anypath import fs_check
-
 from browse.services.documents.base_documents import DocMetadataService
 
 from .legacy_fs_paths import FSDocMetaPaths
+
+
+def fs_check(path: Path, expect_dir:bool=True) -> List[str]:
+    """Checks for a file system for use in `HasStatus.service_status()`"""
+    try:
+        if expect_dir:
+            if not path.is_dir():
+                return [f"{path} does not appear to be a directory"]
+        else:
+            if not path.is_file():
+                return [f"{path} does not appear to be a file"]
+    except Exception as ex:
+        return [f"Could not access due to {ex}"]
+
+    return []
+
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""

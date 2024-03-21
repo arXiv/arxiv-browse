@@ -30,7 +30,7 @@ from arxiv.files.key_patterns import (abs_path_current_parent,
                                           ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
 from arxiv.files import FileObj, fileformat
 from .source_store import SourceStore
-from google.cloud import storage
+import google.cloud.storage as storage
 from flask import current_app
 
 logger = logging.getLogger(__file__)
@@ -447,7 +447,8 @@ class ArticleStore():
 
     def _html(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets the html src as submitted for the arxiv_id. Returns `FileObj` if found, `None` if not."""
-        if docmeta.source_format == 'html': # paper source is html
+        if docmeta.source_format == 'html' or version.source_flag.html: # paper source is html
+            # note: the preprocessed html is expected to exist in the ps_cache
             path = ps_cache_html_path(arxiv_id, version.version)
             if arxiv_id.extra:  # requesting a specific file
                 return self.objstore.to_obj(path + arxiv_id.extra)
