@@ -1,15 +1,15 @@
 """Archive landing page."""
 
 import datetime
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple
 from http import HTTPStatus as status
-
 from arxiv.taxonomy.definitions import (
-    ARCHIVES, 
+    ARCHIVES,
+    ARCHIVES_ACTIVE, 
     ARCHIVES_SUBSUMED, 
     CATEGORIES,
-    tCategory,
-    tArchive
+    Category,
+    Archive
 )
 
 from browse.controllers import biz_tz
@@ -27,40 +27,29 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         return archive_index("list", status_in=status.OK)
 
     archive = ARCHIVES.get(archive_id, None)
+    if not archive: #check if maybe its a category
+        category = CATEGORIES.get(archive_id, None)
+        if category:
+            archive=ARCHIVES[category.id]
     if not archive:
-        _cat_id = CATEGORIES.get(archive_id, None)
-        cat_id = _cat_id.get("in_archive", None) if _cat_id else None
-        archive = ARCHIVES.get(cat_id, None) if cat_id else None
-        if not archive:
-            return archive_index(archive_id,
+        return archive_index(archive_id,
                                  status_in=status.NOT_FOUND)
-        else:
-            archive_id = cat_id # type: ignore
 
     _write_expires_header(response_headers)
 
-    subsumed_by = ARCHIVES_SUBSUMED.get(archive_id, None)
-    if subsumed_by:
-        data["subsumed_id"] = archive_id
-        data["subsumed_category"] = CATEGORIES.get(archive_id, {})
-        data["subsumed_by"] = subsumed_by
-        subsuming_category = CATEGORIES.get(subsumed_by, {}) # type: ignore
+    if archive.is_active==False: #subsumed archives
+        subsuming_category=CATEGORIES[archive.canonical]
+        data["subsumed_id"] = archive.id
         data["subsuming_category"] = subsuming_category
-        archive_id = subsuming_category.get("in_archive", None) # type: ignore
-        archive = ARCHIVES.get(archive_id, None)
-        if not archive:
-            return archive_index(archive_id,
-                                 status_in=status.NOT_FOUND)
+        archive = ARCHIVES[subsuming_category.in_archive]
 
     years = years_operating(archive)
-
     data["years"] = years
     data["months"] = MONTHS
     data["days"] = DAYS
-    data["archive_id"] = archive_id
     data["archive"] = archive
-    data["list_form"] = ByMonthForm(archive_id, archive, years)
-    data["stats_by_year"] = stats_by_year(archive_id, archive, years)
+    data["list_form"] = ByMonthForm(archive, years)
+    data["stats_by_year"] = stats_by_year(archive, years)
     data["category_list"] = category_list(archive_id)
 
     data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
@@ -68,62 +57,34 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     return data, status.OK, response_headers
 
 
-def archive_index(archive_id: str, status_in: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Landing page for when there is no archive specified."""
     data: Dict[str, Any] = {}
-    data["bad_archive"] = archive_id
+    data["bad_archive"] = bad_archive_id
 
     archives = [
-        (id, ARCHIVES[id]["name"])
-        for id in ARCHIVES.keys()
-        if id not in ARCHIVES_SUBSUMED and not id.startswith("test")
+        value 
+        for key,value in ARCHIVES_ACTIVE.items()
+        if not key.startswith("test")
     ]
-    archives.sort(key=lambda tpl: tpl[0])
+    archives.sort(key=lambda x: x.id)
     data["archives"] = archives
 
     defunct = [
-        (id, ARCHIVES[id]["name"], ARCHIVES_SUBSUMED.get(id, ""))
-        for id in ARCHIVES.keys()
-        if "end_date" in ARCHIVES[id]
+        ARCHIVES[id] 
+        for id in ARCHIVES_SUBSUMED.keys()
     ]
-    defunct.sort(key=lambda tpl: tpl[0])
+    defunct.sort(key=lambda x: x.id)
     data["defunct"] = defunct
 
     data["template"] = "archive/archive_list_all.html"
     return data, status_in, {}
 
 
-def subsumed_msg(_: Dict[str, str], subsumed_by: str) -> Dict[str, tCategory | tArchive]:
-    """Adds information about subsuming categories and archives."""
-    unknown_cat: tCategory = {
-        'name': 'unknown category',
-        'in_archive': '',
-        'is_active': False,
-        'is_general': False,
-    }
-    unknown_archive: tArchive = {
-        'name': 'unknown archive',
-        'in_group': '',
-        'start_date': datetime.datetime.min,
-    }
-    sb = CATEGORIES.get(subsumed_by, unknown_cat)
-    sa = ARCHIVES.get(sb.get("in_archive", ''), unknown_archive)
-
-    return {"subsumed_by_cat": sb, "subsumed_by_arch": sa}
-
-
-def category_list(archive_id: str) -> List[Dict[str, str]]:
+def category_list(archive: Archive) -> List[Category]:
     """Retunrs categories for archive."""
-    cats = []
-    for cat_id in CATEGORIES:
-        cat = CATEGORIES[cat_id]
-        if(cat.get("in_archive", "yuck") == archive_id
-           and cat.get("is_active", True)):
-            cats.append({"id": cat_id,
-                         "name": cat.get("name", ""),
-                         "description": cat.get("description", "")})
-
-    cats.sort(key=lambda x: x["name"])
+    cats = [cat for cat in archive.get_categories() if cat.is_active]
+    cats.sort(key=lambda x: x.id)
     return cats
 
 
