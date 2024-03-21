@@ -21,6 +21,7 @@ from datetime import datetime
 import datetime as dt
 from typing import List, Literal, Tuple, Union
 
+from arxiv.taxonomy.definitions import CATEGORIES
 from arxiv.taxonomy.category import Category
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.document.version import VersionEntry, SourceFlag
@@ -319,11 +320,11 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
     if fields.get('Categories',None):
         raw_cats =fields.get('Categories','')
         cats = raw_cats.split()
-        primary_category = cats[0]
-        secondary_categories = cats[1:]
+        primary_category = CATEGORIES[cats[0]]
+        secondary_categories = [CATEGORIES[sc] for sc in cats[1:]]
     else:
         raw_cats=''
-        primary_category = ''
+        primary_category = CATEGORIES['test']
         secondary_categories = []
 
     lai = DocMetadata(
@@ -333,8 +334,8 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         authors=AuthorList(fields.get('Authors','')),
         abstract='',
         categories=raw_cats,
-        primary_category= Category(primary_category),
-        secondary_categories=[Category(sc) for sc in secondary_categories],
+        primary_category= primary_category,
+        secondary_categories=secondary_categories,
         comments=fields.get('Comments',''),
         journal_ref=fields.get('Journal-ref',''),
         version = ver,
@@ -344,8 +345,8 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         raw_safe = '',
         submitter=None,
         arxiv_identifier=None,
-        primary_archive = None,
-        primary_group = None,
+        primary_archive = primary_category.get_archive(),
+        primary_group = primary_category.get_archive().get_group(),
         modified = None,        
     )
 

@@ -20,13 +20,7 @@ from browse.services.listing import (
 from arxiv.db import session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy import (
-    Category, 
-    CATEGORIES, 
-    ARCHIVES, 
-    CATEGORY_ALIASES, 
-    ARCHIVES_SUBSUMED
-)
+from arxiv.taxonomy import (CATEGORIES, ARCHIVES)
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
@@ -358,6 +352,9 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         modified=datetime.fromtimestamp(float(modtime))
     elif updated is not None and modtime is None:
         modified=updated
+
+    primary_cat=CATEGORIES[meta.abs_categories.split()[0]]
+
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
@@ -365,9 +362,9 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         authors=AuthorList(meta.authors), # type: ignore
         abstract=meta.abstract, # type: ignore
         categories=meta.abs_categories,
-        primary_category=Category(meta.abs_categories.split()[0]), # type: ignore
+        primary_category=primary_cat,
         secondary_categories=[
-            Category(sc) for sc in meta.abs_categories.split()[1:] # type: ignore
+            CATEGORIES[sc] for sc in meta.abs_categories.split()[1:]
         ],
         comments=meta.comments,
         journal_ref=meta.journal_ref,
@@ -384,14 +381,14 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         raw_safe="",
         submitter=None, # type: ignore
         arxiv_identifier=None, # type: ignore
-        primary_archive=None, # type: ignore
-        primary_group=None, # type: ignore
+        primary_archive=primary_cat.get_archive(), 
+        primary_group=primary_cat.get_archive().get_group(), 
         modified=modified
     )
     item = ListingItem(
         id=meta.paper_id,
         listingType=type,
-        primary=Category(meta.abs_categories.split()[0]).id, # type: ignore
+        primary=primary_cat.id, 
         article=doc,
     )
     return item
@@ -424,47 +421,24 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
     takes into account aliases and subsumed archives
     """
-    if archive_or_cat in ARCHIVES: #get all categories for archvie
-        return get_categories_from_archive(archive_or_cat)
+    if archive_or_cat in ARCHIVES: #get all categories for archive
+        archive=ARCHIVES[archive_or_cat]
+        all=set()
+        for category in archive.get_categories():
+            all.add(category.id)
+            if category.alt_name:
+                all.add(category.alt_name)
+        return list(all)
+    
     elif archive_or_cat in CATEGORIES: #check for alternate names
-        second_name=_check_alternate_name(archive_or_cat)
-        if second_name: 
-            return [archive_or_cat, second_name]
+        cat=CATEGORIES[archive_or_cat]
+        if cat.alt_name: 
+            return [cat.id, cat.alt_name]
         else:
-            return [archive_or_cat]
+            return [cat.id]
     else:
         raise BadRequest(f'Invalid category: {archive_or_cat}')
 
-def get_categories_from_archive(archive:str) ->List[str]:
-    """returns a list names of all categories under an archive
-    includes older names that make no longer be active
-    """
-    list=[]
-    for category in CATEGORIES.keys():
-        if CATEGORIES[category]["in_archive"] == archive:
-            list.append(category)
-            second_name=_check_alternate_name(category)
-            if second_name:
-                list.append(second_name)
-
-    return list
-
-def _check_alternate_name(category:str) -> Optional[str]:
-    # returns alternate name for aliases
-    #returns previous name if archive was subsumed
-
-    #check for aliases
-    for key, value in CATEGORY_ALIASES.items():
-        if category == key: #old alias name provided
-            return value
-        elif category == value: #new alias name provided
-            return key
-        
-    #check for subsumed archives
-    for key, value in ARCHIVES_SUBSUMED.items():
-        if category == value: #has old archive name
-            return key
-    return None #no alternate names
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
 

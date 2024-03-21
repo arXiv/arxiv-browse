@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 from google.cloud import storage
 
-from arxiv import taxonomy
+from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES
 from arxiv.base.globals import get_application_config
 from browse.services.listing import (Listing, YearCount, MonthCount,
                                      ListingItem, ListingNew, ListingService,
@@ -61,21 +61,21 @@ class FsListingFilesService(ListingService):
         This just formats the string file name and returns a `Path`. It does
         not check if the file exists."""
         categorySuffix = ''
-        archive = ''
-        if archiveOrCategory in taxonomy.ARCHIVES:
+        archive_id = ''
+        if archiveOrCategory in ARCHIVES:
             # Create listing file path with archive as <archive>/new
-            archive = archiveOrCategory
-        elif archiveOrCategory in taxonomy.CATEGORIES:
+            archive_id = archiveOrCategory
+        elif archiveOrCategory in CATEGORIES:
             # Get archive and create path - <archive>/new.<category>
             res = re.match('([^\\.]*)(?P<suffix>\\.[^\\.]*)$', archiveOrCategory)
             if res:
                 suffix = res.group('suffix')
                 categorySuffix = suffix
-            archive = taxonomy.CATEGORIES[archiveOrCategory]['in_archive']
+            archive_id = CATEGORIES[archiveOrCategory].in_archive
         else:
             raise BadRequest(f"Archive or category doesn't exist: {archiveOrCategory}")
 
-        listingRoot = f'{self.listing_files_root}/{archive}/listings/'
+        listingRoot = f'{self.listing_files_root}/{archive_id}/listings/'
         if fileMode == 'month':
             if len(str(year)) >= 4:
                 if year < 2090:

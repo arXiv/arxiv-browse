@@ -132,7 +132,7 @@ def _parse_doc(listing_lines: List[str]) -> Tuple[DocMetadata, str]:
                         #TODO bogus time but don't think it is used in listing page.
                         datetime.now(),
                         '')
-    cross = "(*corss-listing*)" in "\n".join(listing_lines[:3])
+    cross = "(*corss-listing*)" in "\n".join(listing_lines[:3]) #this seems like an old type..? - Erin 2024
     return abs, 'cross' if cross else 'new' # no replacements in pastweek
 
 
