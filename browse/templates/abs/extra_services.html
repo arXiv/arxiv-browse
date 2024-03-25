@@ -33,11 +33,11 @@
   <div id="download-button-info" hidden>
     {% set author_list = abs_meta.authors.raw.split(',') %}
     {%- if author_list|length > 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
     {%- elif author_list|length == 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
     {%- else -%}
-    Download a PDF of the paper titled {{abs_meta.title}}
+    View a PDF of the paper titled {{abs_meta.title}}
     {%- endif -%}
   </div>
 
@@ -49,7 +49,7 @@
   {% else %}
     {%- for format in format_list %}
       {%- if format.startswith('pdf') -%}
-  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
+  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">View PDF</a></li>
       {%- endif -%}
       {%- if format == 'latexml' -%}
   <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
