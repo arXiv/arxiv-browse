@@ -3,14 +3,14 @@
 import datetime
 from typing import Any, Dict, List, Tuple
 from http import HTTPStatus as status
+
 from arxiv.taxonomy.definitions import (
     ARCHIVES,
     ARCHIVES_ACTIVE, 
     ARCHIVES_SUBSUMED, 
-    CATEGORIES,
-    Category,
-    Archive
+    CATEGORIES
 )
+from arxiv.taxonomy.category import Category, Archive
 
 from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm

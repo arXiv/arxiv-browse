@@ -20,7 +20,7 @@ from browse.services.listing import (
 from arxiv.db import session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy import (CATEGORIES, ARCHIVES)
+from arxiv.taxonomy import CATEGORIES, ARCHIVES
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
