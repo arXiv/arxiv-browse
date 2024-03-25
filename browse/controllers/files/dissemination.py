@@ -24,7 +24,7 @@ from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
 
-from flask import Response, abort, make_response, render_template, request, current_app
+from flask import Response, abort, make_response, render_template, request, current_app, stream_with_context
 from flask_rangerequest import RangeRequest
 
 
@@ -69,7 +69,7 @@ def default_resp_fn(format: Optional[FileFormat],
         # Cloud run needs chunked for large responses
         if request.method == "GET":
             # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
-            resp = make_response(iter(file.open("rb")))
+            resp = make_response(stream_with_context(iter(file.open("rb"))))
             # but the unit test client doesn't do that so we force it for those
             # see https://github.com/pallets/flask/issues/5424
             resp.headers["Transfer-Encoding"] = "chunked"

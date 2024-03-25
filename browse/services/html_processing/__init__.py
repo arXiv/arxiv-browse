@@ -15,11 +15,17 @@ logger.setLevel(logging.INFO)
 LAX_ID_REGEX = b'(arXiv:)?([a-z-]+(\.[A-Z][A-Z])?\/\d{7}|\d{4}\.\d{4,5})(v\d+)?'
 
 def post_process_html(byte_line:bytes) -> bytes:
+    """Transformes each `byte_line` with the HTML post processing to
+    add in any ABS or LIST lines.
+
+    If this is run after the app code returns, say with
+    `make_resposne(post_process_html(somefile))` this needs to be used with
+    `flask.stream_with_context`.
+    """
     #line=byte_line.decode('utf-8')
     # Match LIST: or ABS: directives followed by an identifier using regular expressions
     list_match = re.match(b'(LIST|ABS):(' + LAX_ID_REGEX + b')', byte_line, re.I)
     report_no_match = re.match(b'^\s*REPORT-NO:([A-Za-z0-9-\/]+)', byte_line, re.I)
-
     if list_match:
         try:
             cmd = list_match.group(1) #which command to perform
@@ -54,7 +60,7 @@ def post_process_html(byte_line:bytes) -> bytes:
             new_bytes=new_html.encode('utf-8')
         except (arxiv.document.exceptions.AbsException, IdentifierException ) as ee:
             new_bytes = byte_line
-            logger.warning(f"Source of html paper had a problem during post_process_html: {ee}")
+            logger.error(f"Source of html paper had a problem during post_process_html: {ee}")
 
     elif report_no_match: #need to find proceeding to test with
         rn = report_no_match.group(1).decode('utf-8')
