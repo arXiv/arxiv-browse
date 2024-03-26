@@ -318,7 +318,7 @@ class ArticleStore():
 
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
-        if version.source_flag.cannot_pdf:
+        if version.source_flag.cannot_pdf or version.source_format == 'html':
             return "NOT_PDF"
 
         res = self.reasons(arxiv_id.idv, 'pdf')
