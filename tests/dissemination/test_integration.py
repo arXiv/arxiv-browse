@@ -334,7 +334,7 @@ def test_withdrawn(host):
 
 @pytest.mark.integration
 def test_html_src(host):
-    """Submissions with HTML source"""
+    """Submissions with HTML source."""
     # legacy returns 200 with msg: "Unavailable, The author has provided no source to generate PDF, and no PDF."
     resp = requests.get(f"{host}/pdf/cond-mat/9906075v1")
     assert resp.status_code == 404

@@ -203,6 +203,8 @@ Mark integration tests like this:
 @pytest.mark.integration
 def test_something():
   ...
+
+Run this with: `HOST=https://browse.dev.arxiv.org pytset --runintegration tests/dissemination/test_integration.py`
 """
 
 def pytest_addoption(parser):
