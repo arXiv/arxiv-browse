@@ -36,7 +36,7 @@ types-python-dateutil = "^2.8.19.12"
 pg8000 = "^1.30.1"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "39567a77de8458c0f673c09837b07ff5145efd94"}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "554fb86cba3ada30480bdee238b2a82b8438b272"} 
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
 

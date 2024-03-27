@@ -82,8 +82,8 @@ def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], 
 
 
 def category_list(archive: Archive) -> List[Category]:
-    """Retunrs categories for archive."""
-    cats = [cat for cat in archive.get_categories() if cat.is_active]
+    """Returns active categories for archive."""
+    cats = [cat for cat in archive.get_categories()]
     cats.sort(key=lambda x: x.id)
     return cats
 

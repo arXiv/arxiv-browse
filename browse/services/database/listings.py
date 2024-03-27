@@ -20,7 +20,7 @@ from browse.services.listing import (
 from arxiv.db import session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy import CATEGORIES, ARCHIVES
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
@@ -424,7 +424,7 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
     if archive_or_cat in ARCHIVES: #get all categories for archive
         archive=ARCHIVES[archive_or_cat]
         all=set()
-        for category in archive.get_categories():
+        for category in archive.get_categories(True):
             all.add(category.id)
             if category.alt_name:
                 all.add(category.alt_name)

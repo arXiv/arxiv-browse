@@ -36,7 +36,7 @@
   {%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
   <h2 class="accordion-head">{{ group_details.full_name }}</h2>
   <div class="accordion-body">
-    {%- for archive in group_details.get_archives() | sort(attribute='full_name') if archive.is_active -%}
+    {%- for archive in group_details.get_archives() | sort(attribute='full_name') -%}
     <div class="{% if not (loop.first and loop.last) %}physics {% endif %} columns ">
       {%- if not (loop.first and loop.last) -%}
       <div class="column is-one-fifth">
@@ -44,7 +44,7 @@
       </div>
       {%- endif -%}
       <div class="column">
-        {% for category in archive.get_categories()| sort(attribute='id') if category.is_active %}
+        {% for category in archive.get_categories()| sort(attribute='id') %}
         <div class="columns divided">
           <div class="column is-one-fifth">
             <h4>{{ category.id }} <span>({{ category.full_name }})</span></h4>

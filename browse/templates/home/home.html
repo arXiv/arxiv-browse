@@ -78,7 +78,7 @@
   {% set group = groups[group_key]%}
   <h2>{{ group.full_name }}</h2>
   <ul>
-    {%- for archive in group.get_archives() | sort(attribute='full_name') if archive.is_active -%}
+    {%- for archive in group.get_archives() | sort(attribute='full_name') -%}
       {%- set archive_search_url = url_for('search_archive', archive=archive.id) -%}
       {%- set archive_url = url_for('browse.archive', archive=archive.id) if archive.id != 'cs' else 'https://info.arxiv.org/help/cs/index.html' -%}
       {%- set archive_name = archive.full_name if archive.id != 'cs' else 'Computing Research Repository' -%}
@@ -98,7 +98,7 @@
       <br/>includes: (see <a href="{{url_for('help_archive_description', archive=archive.id)}}" id="details-{{ archive.id }}" aria-labelledby="details-{{ archive.id }} main-{{ archive.id }}">detailed description</a>):
       {%- endif -%}
 
-      {% for category in archive.get_categories()| sort(attribute='full_name') if category.is_active %}
+      {% for category in archive.get_categories()| sort(attribute='full_name') %}
       {% if not (loop.first and loop.last and group.id == 'grp_physics') %}<a href="/list/{{ category.id }}/recent" id="{{ category.id }}" aria-labelledby="main-{{ archive.id }} {{ category.id }}">{{ category.full_name}}</a>{% if not loop.last %}; {% endif %}{% endif %}
       {% endfor %}
     </li>
