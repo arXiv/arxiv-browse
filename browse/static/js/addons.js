@@ -49,6 +49,63 @@ let create_header = () => {
     document.body.insertBefore(desktop_header, document.body.firstChild);
 };
 
+let create_toc = () => {
+  let refCount = 0;
+
+  let toc = document.createElement('ol');
+  toc.setAttribute('class', 'ltx_toclist');
+
+  let abs = document.querySelector('.ltx_abstract');
+  if (abs) {
+    refCount++;
+    abs.setAttribute('id', 'abstract');
+    let abs_li = document.createElement('li');
+    abs_li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
+    abs_li.innerHTML = `
+    <a class="ltx_ref" href="${window.location.href + "#abstract"}" title="1 Abstract">
+      <span class="ltx_text ltx_ref_title">
+        <span class="ltx_tag ltx_tag_ref">1</span>
+        Abstract
+      </span>
+    </a>`;
+    toc.appendChild(abs_li);
+  }
+
+  let sections = document.querySelectorAll('.ltx_section');
+  for (const section of sections) {
+    refCount++;
+    let li = document.createElement('li');
+    li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
+    const sectionName = section.children[0].textContent.slice(3);
+    li.innerHTML = `
+    <a class="ltx_ref" href="${window.location.href + "#" + section.getAttribute('id')}" title="${refCount} ${sectionName}">
+      <span class="ltx_text ltx_ref_title">
+        <span class="ltx_tag ltx_tag_ref">${refCount}</span>
+        ${sectionName}
+      </span>
+    </a>`;
+    toc.appendChild(li);
+  }
+
+  let references = document.querySelector('.ltx_bibliography');
+  if (references) {
+    refCount++;
+    let li = document.createElement('li');
+    li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
+    li.innerHTML = `
+    <a class="ltx_ref" href="${window.location.href + "#bib"}" title="${refCount} References">
+      <span class="ltx_text ltx_ref_title">
+        <span class="ltx_tag ltx_tag_ref">${refCount}</span>
+        References
+      </span>
+    </a>`;
+    toc.appendChild(li);
+  }
+
+  return toc;
+
+}
+
 let create_mobile_header = () => {
     let mob_header = document.createElement('header');
     let ABS_URL_BASE = 'https://arxiv.org/abs';
@@ -215,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     unwrap_nav();
     create_header();
     create_mobile_header();
+    create_toc();
 
     delete_footer();
     create_footer();
