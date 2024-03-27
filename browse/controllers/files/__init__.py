@@ -100,7 +100,7 @@ def unavailable(arxiv_id: Identifier) -> Response:
 
 
 def not_pdf(arxiv_id: Identifier) -> Response:
-    return make_response(render_template("dissemination/unavailable.html",
+    return make_response(render_template("dissemination/not_pdf.html",
                                          arxiv_id=arxiv_id), 404, {})
 
 

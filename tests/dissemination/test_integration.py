@@ -11,6 +11,8 @@ import pytest
 import requests
 import os
 
+EXPECTED_WDR_STATUS = 404
+
 @pytest.fixture
 def host():
     return os.environ.get('HOST', 'http://localhost:8080')
@@ -223,21 +225,26 @@ def test_wdr(host):
     """These are some verisons that are withdrawls."""
 
     resp = requests.get(f"{host}/pdf/0911.3270v2")
-    assert resp.status_code == 200 # this version is wdr and in the legacy sytem does a 200 with a message like "paper not available"
+    assert resp.status_code == EXPECTED_WDR_STATUS # this version is wdr and in the legacy sytem does a 200 with a message like "paper not available"
 
     resp = requests.get(f"{host}/pdf/0911.3270v3")
     # paper exists but this version does not exist. The legacy system
     # does something similar to a withdrawn in that it retunrs a 200 and a message like
     # "source to generate pdf for this doesn't exist" but it should be a 404
-    assert resp.status_code == 200
-    assert 'unavailable' in resp.text
+    assert resp.status_code == EXPECTED_WDR_STATUS
+    assert b'unavailable' in resp.content
 
-    resp = requests.get(f"{host}/pdf/2212.03351v1")
+    # paper exists and v2 is wdr, but v1 is still available
+    resp = requests.head(f"{host}/pdf/2212.03351v1")
     assert resp.status_code == 200
+
+    resp = requests.get(f"{host}/abs/2212.03351v1")
+    assert resp.status_code == 200
+    assert b"newer version of this paper has been withdrawn" in resp.content
 
     resp = requests.get(f"{host}/pdf/2212.03351v2")
-    assert resp.status_code == 200
-    assert 'unavailable' in resp.text
+    assert resp.status_code == EXPECTED_WDR_STATUS
+    assert b'unavailable' in resp.content
 
 
 @pytest.mark.integration
@@ -300,15 +307,7 @@ def test_does_not_exist_ps_cache(host):
 
 
 @pytest.mark.integration
-def test_withdrawn(host):
-    """Sample of withdrawn versions"""
-    EXPECTED_WDR_STATUS = 404
-    def integration_test_of_withdrawn(arxiv_id):
-        resp = requests.get(f"{host}/pdf/{arxiv_id}")
-        assert resp.status_code == EXPECTED_WDR_STATUS, f"For withdrawn paper {arxiv_id} HTTP status code should have been {EXPECTED_WDR_STATUS} but was {resp.status_code}"
-        assert "The author has provided no source" in resp.text, f"For withdrawn paper {arxiv_id} the expected message was not found in the response"
-
-    wdr_ids =[
+@pytest.mark.parametrize("arxiv_id", [
         '1501.02398v2',
         '0910.1713v4', '1307.0741v2', '2008.09101v2',
         'cs/0606100v4', '2005.02207v2', '1901.07935v4', '1512.08657v3',
@@ -326,10 +325,13 @@ def test_withdrawn(host):
         '1803.07743v4', 'cs/0612028v2', '1401.1740v2', '1603.06209v2',
         '2112.02249v2', '2207.11705v3', '2208.13435v3',
         '2208.13514v2', '2106.03507v4', '1211.2296v4',
-        'cond-mat/9810209v2', 'cond-mat/0212346v3', '1708.09372v2', ]
+        'cond-mat/9810209v2', 'cond-mat/0212346v3', '1708.09372v2', ])
+def test_withdrawn(host, arxiv_id):
+    """Sample of withdrawn versions"""
+    resp = requests.get(f"{host}/pdf/{arxiv_id}")
+    assert resp.status_code == EXPECTED_WDR_STATUS, f"For withdrawn paper {arxiv_id} HTTP status code should have been {EXPECTED_WDR_STATUS} but was {resp.status_code}"
+    assert "File unavailable" in resp.text, f"For withdrawn paper {arxiv_id} the expected message was not found in the response"
 
-    for arxiv_id in wdr_ids:
-        integration_test_of_withdrawn(arxiv_id)
 
 
 @pytest.mark.integration
@@ -419,3 +421,7 @@ def test_deleted(host):
     # resp = requests.get(f"{host}/pdf/physics/0411006")
     # assert resp.status_code == 404
     # assert msg in resp.text
+
+@pytest.mark.integration
+def test_html(host):
+    pass
