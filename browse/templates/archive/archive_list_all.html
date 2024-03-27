@@ -32,7 +32,7 @@
     {% for archive in defunct %}
     {% set id = archive.id %}
     {% set name = archive.full_name %}
-    {% set sub_to = archive.canonical %}
+    {% set sub_to = archive.canonical_id %}
     <li><a href={{url_for('browse.archive',archive=sub_to)}}>{{name}}</a> ({{id}}, subsumed into {{sub_to}})</li>
     {% endfor %}
   </ul>

@@ -305,7 +305,7 @@ def _prevnext_links(
     ):
         context = request.args["context"]
     elif primary_category:
-        pc = CATEGORIES[primary_category.canonical]
+        pc = primary_category.get_canonical()
         if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id

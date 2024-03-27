@@ -159,7 +159,7 @@ def get_listing(subject_or_category: str,
     if subject_or_category in CATEGORIES:
         list_type = 'category'
         cat=CATEGORIES[subject_or_category]
-        category=CATEGORIES[cat.canonical] #make sure we use the canonical version of the category
+        category=cat.get_canonical() #make sure we use the canonical version of the category
         list_ctx_name = category.full_name
         list_ctx_id = category.id
         list_ctx_in_archive = category.in_archive

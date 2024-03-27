@@ -38,7 +38,7 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     _write_expires_header(response_headers)
 
     if archive.is_active==False: #subsumed archives
-        subsuming_category=CATEGORIES[archive.canonical]
+        subsuming_category=archive.get_canonical()
         data["subsumed_id"] = archive.id
         data["subsuming_category"] = subsuming_category
         archive = ARCHIVES[subsuming_category.in_archive]
