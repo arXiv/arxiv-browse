@@ -1,11 +1,13 @@
 from unittest import TestCase
 from datetime import datetime, date
-import os
 import re
 from werkzeug.exceptions import BadRequest
 
 from tests import path_of_for_test
 LISTING_FILES = path_of_for_test('data/listing_files')
+
+from arxiv.taxonomy.category import Category
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 
 from browse.services.listing.fs_listings import FsListingFilesService
 
@@ -37,7 +39,7 @@ class TestFsListingImplementation(TestCase):
 
         assert resp['listings'][0]['id'] == '2108.01075'
         assert resp['listings'][0]['listingType'] == 'new'
-        assert resp['listings'][0]['primary'] == 'cs.CV'
+        assert resp['listings'][0]['primary'] == CATEGORIES['cs.CV']
 
         # 2 category listing
         archiveOrCategory = "cs.GT"
@@ -303,7 +305,7 @@ class TestFsListingImplementation(TestCase):
 
         assert resp['listings'][0]['id'] == '2108.01075'
         assert resp['listings'][0]['listingType'] == 'new'
-        assert resp['listings'][0]['primary'] == 'cs.CV'
+        assert resp['listings'][0]['primary'] == CATEGORIES['cs.CV']
 
         # Try getting 442 updates in two slices
         skip = 0

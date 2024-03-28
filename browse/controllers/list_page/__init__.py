@@ -46,8 +46,7 @@ from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
 import re
 
-from arxiv import taxonomy
-from arxiv.taxonomy.definitions import CATEGORIES
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES_SUBSUMED, ARCHIVES
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
@@ -154,19 +153,22 @@ def get_listing(subject_or_category: str,
     ):
         raise BadRequest("Listing requires subject and valid time period parameters.") 
 
-    if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
-        subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
+    if subject_or_category in ARCHIVES_SUBSUMED:
+        subject_or_category=ARCHIVES_SUBSUMED[subject_or_category]
 
-    if subject_or_category in taxonomy.CATEGORIES:
+    if subject_or_category in CATEGORIES:
         list_type = 'category'
-        list_ctx_name = taxonomy.CATEGORIES[subject_or_category]['name']
-        list_ctx_id = subject_or_category
-        list_ctx_in_archive = taxonomy.CATEGORIES[subject_or_category]['in_archive']
-    elif subject_or_category in taxonomy.ARCHIVES:
+        cat=CATEGORIES[subject_or_category]
+        category=cat.get_canonical() #make sure we use the canonical version of the category
+        list_ctx_name = category.full_name
+        list_ctx_id = category.id
+        list_ctx_in_archive = category.in_archive
+    elif subject_or_category in ARCHIVES:
         list_type = 'archive'
-        list_ctx_id = subject_or_category
-        list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
-        list_ctx_in_archive = list_ctx_name
+        archive=ARCHIVES[subject_or_category]
+        list_ctx_id = archive.id
+        list_ctx_name = archive.full_name
+        list_ctx_in_archive = archive.id
     else:
         raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
@@ -234,7 +236,7 @@ def get_listing(subject_or_category: str,
                 new_time=f"{list_year:04d}-{list_month:02d}"
             else:
                 new_time=f"{list_year:04d}"
-            new_address=url_for("browse.list_articles", context=subject_or_category, subcontext=new_time)
+            new_address=url_for("browse.list_articles", context=list_ctx_id, subcontext=new_time)
             response_headers["Location"]=new_address
             return {}, status.MOVED_PERMANENTLY, response_headers
         
@@ -299,12 +301,12 @@ def get_listing(subject_or_category: str,
     def author_query(article: DocMetadata, query: str)->str:
         try:
             if article.primary_archive:
-                archive = article.primary_archive.id
+                archive_id = article.primary_archive.id
             else:
-                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+                archive_id = article.primary_category.in_archive
             return str(url_for('search_archive',
                            searchtype='author',
-                           archive=archive,
+                           archive=archive_id,
                            query=query))
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
