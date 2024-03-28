@@ -38,7 +38,6 @@ let create_header = () => {
       <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
       <a class="ar5iv-footer-button hover-effect" target="_blank" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
       ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">Back to Abstract</a>`}
-      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}" target="_blank">Download PDF</a>`}
       <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode">
           <span class="color-scheme-icon"></span>
       </a>
@@ -73,7 +72,7 @@ let create_mobile_header = () => {
         </a>`}
       <!--dark mode-->
       <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
-        title="Toggle dark/light mode">
+      title="Toggle dark/light mode" >
         <span class="color-scheme-icon"></span>
       </a>
       <!--nav-->
@@ -206,18 +205,76 @@ window.addEventListener('load', function() {
     }
   }
 });
+document.addEventListener('DOMContentLoaded', function () {
+  var colorSchemeIcons = document.querySelectorAll('.color-scheme-icon');
+  var colorSchemeIcon = colorSchemeIcons[1];
+  var colorSchemeIcon2 = colorSchemeIcons[0];
+  
+  colorSchemeIcon.addEventListener('mouseover', function() {
+      var currentTheme = localStorage.getItem("ar5iv_theme");
+      //console.log("the current printout is ", currentTheme);
+      switch(currentTheme) {
+          case 'light':
+              this.parentNode.title = 'Current mode is force light mode'; // Change the title of the parent <a> tag
+              break;
+          case 'dark':
+              this.parentNode.title = 'Current mode is force dark mode';
+              break;
+          default: // 'default' theme
+              this.parentNode.title = 'Current mode is default mode';
+              break;
+      }
+  });
+
+  colorSchemeIcon2.addEventListener('mouseover', function() {
+    var currentTheme = localStorage.getItem("ar5iv_theme");
+    //console.log("the current printout is ", currentTheme);
+    switch(currentTheme) {
+        case 'light':
+            this.parentNode.title = 'Current mode is force light mode'; // Change the title of the parent <a> tag
+            break;
+        case 'dark':
+            this.parentNode.title = 'Current mode is force dark mode';
+            break;
+        default: // 'default' theme
+            this.parentNode.title = 'Current mode is default mode';
+            break;
+    }
+});
+
+});
+// function addTooltipListener(element) {
+//   element.addEventListener('mouseover', function() {
+//       var currentTheme = localStorage.getItem("ar5iv_theme");
+//       console.log("the current printout is ", currentTheme);
+//       switch(currentTheme) {
+//           case 'light':
+//               this.parentNode.title = 'Current mode is force light mode';
+//               break;
+//           case 'dark':
+//               this.parentNode.title = 'Current mode is force dark mode';
+//               break;
+//           default: // 'default' theme
+//               this.parentNode.title = 'Current mode is default mode';
+//               break;
+//       }
+//   });
+// }
+// var colorSchemeIcons = document.querySelectorAll('.color-scheme-icon');
+
+// colorSchemeIcons.forEach(addTooltipListener);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.ltx_page_main').id = 'main';
 
-    ref_ArXivFont();
-    create_favicon();
-    unwrap_nav();
-    create_header();
-    create_mobile_header();
+    // ref_ArXivFont();
+    // create_favicon();
+    // unwrap_nav();
+    // create_header();
+    // create_mobile_header();
 
-    delete_footer();
-    create_footer();
+    // delete_footer();
+    // create_footer();
 
     window.addEventListener('resize', function() {
       if (window.innerWidth <=719) {

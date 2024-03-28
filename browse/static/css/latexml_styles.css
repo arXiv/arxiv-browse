@@ -697,12 +697,39 @@ body:after {
   margin: 1em auto;
 }
 
-.color-scheme-icon::before {
+/* .color-scheme-icon::before {
   content: "🌙";
 }
 [data-theme="dark"] .color-scheme-icon::before {
   content: "☀️";
+} */
+/* .color-scheme-icon::before {
+  content: "🌎"; 
+} */
+
+/* Dark Mode */
+[data-theme="dark"][default_mode="false"] .color-scheme-icon::before {
+  content: "🌙"; 
 }
+/* [data-theme="dark"][default_mode="false"] .color-scheme-icon::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='red' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100px; 
+  height: 100px;
+}*/
+
+
+/* Light Mode */
+[data-theme="light"][default_mode="false"] .color-scheme-icon::before {
+  content: "☀️"; 
+}
+[default_mode="true"] .color-scheme-icon::before{
+  content: "🌎"; /* Default Mode */
+}
+
+/* Default Mode */
+
 .ar5iv-toggle-color-scheme {
   text-decoration: none;
   display: block;
