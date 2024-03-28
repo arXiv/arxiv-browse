@@ -5,7 +5,7 @@ import pytest
 from bs4 import BeautifulSoup
 from tests import ABS_FILES
 
-from arxiv import taxonomy
+from arxiv.taxonomy.definitions import GROUPS
 from arxiv.license import ASSUMED_LICENSE_URI
 from arxiv.document.parse_abs import parse_abs_file
 
@@ -20,11 +20,11 @@ class BrowseTest(unittest.TestCase):
         txt = rv.data.decode('utf-8')
         html = BeautifulSoup(txt, 'html.parser')
 
-        for group_key, group_value in taxonomy.definitions.GROUPS.items():
+        for group_key, group in GROUPS.items():
             if group_key == 'grp_test':
                 continue
-            auths_elmt = html.find('h2', string=group_value['name'])
-            self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
+            auths_elmt = html.find('h2', string=group.full_name)
+            self.assertTrue(auths_elmt, f"{group.full_name} in h2 element")
         self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
 
