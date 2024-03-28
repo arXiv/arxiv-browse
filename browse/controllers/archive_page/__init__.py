@@ -30,7 +30,7 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     if not archive: #check if maybe its a category
         category = CATEGORIES.get(archive_id, None)
         if category:
-            archive=ARCHIVES[category.id]
+            archive=category.get_archive()
     if not archive:
         return archive_index(archive_id,
                                  status_in=status.NOT_FOUND)
@@ -41,7 +41,7 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         subsuming_category=archive.get_canonical()
         data["subsumed_id"] = archive.id
         data["subsuming_category"] = subsuming_category
-        archive = ARCHIVES[subsuming_category.in_archive]
+        archive = subsuming_category.get_archive()
 
     years = years_operating(archive)
     data["years"] = years
@@ -50,7 +50,7 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     data["archive"] = archive
     data["list_form"] = ByMonthForm(archive, years)
     data["stats_by_year"] = stats_by_year(archive, years)
-    data["category_list"] = category_list(archive_id)
+    data["category_list"] = category_list(archive)
 
     data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
     data["template"] = "archive/single_archive.html"

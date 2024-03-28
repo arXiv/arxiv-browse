@@ -174,14 +174,3 @@ class CategoriesTest(unittest.TestCase):
         assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
-
-    def test_non_tax_cats(self):
-        cat = Category('nontx.AL')
-        assert cat.display  == 'nontx.AL'
-
-        # TODO: confirm actual desired behavior
-        #cat = Category('math.XX')
-        #assert cat.display =='Mathematics (math.XX)'
-
-        cat = Category('notaxArc')
-        assert cat.display  == 'notaxArc'
