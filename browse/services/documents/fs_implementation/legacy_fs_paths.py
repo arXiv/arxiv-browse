@@ -1,8 +1,7 @@
 """Paths to files in the legacy arXiv FS."""
 
 from typing import Optional, List, Dict
-
-from arxiv.files.anypath import to_anypath, APath
+from pathlib import Path
 
 from arxiv.identifier import Identifier
 
@@ -16,7 +15,7 @@ class FSDocMetaPaths():
                  latest_versions_path: str,
                  original_versions_path: str) -> None:
         """Initialize"""
-        self.latest_versions_path = to_anypath(latest_versions_path).resolve()
+        self.latest_versions_path = Path(latest_versions_path).resolve()
         if not self.latest_versions_path or not self.latest_versions_path.exists():
             raise ValueError('Path to latest .abs versions '
                             f'{latest_versions_path} does not exist')
@@ -24,7 +23,7 @@ class FSDocMetaPaths():
             raise ValueError('Path to latest .abs versions'
                              f' {latest_versions_path} is not a directory')
 
-        self.original_versions_path = to_anypath(original_versions_path).resolve()
+        self.original_versions_path = Path(original_versions_path).resolve()
         if not self.original_versions_path or not self.original_versions_path.exists():
             raise ValueError('Path to original .abs versions '
                                f'"{original_versions_path}" does not exist')
@@ -45,7 +44,7 @@ class FSDocMetaPaths():
 
     def _get_parent_path(self,
                          identifier: Identifier,
-                         version: Optional[int] = None) -> APath:
+                         version: Optional[int] = None) -> Path:
         """Get the Path for FS absolute parent path of the provided identifier.
 
         ex For 1408.0391 v2 -> /data/orig/arxiv/papers/1408/"""

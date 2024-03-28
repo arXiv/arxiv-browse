@@ -1,7 +1,7 @@
 """Service to get PDF and other disseminations of an item."""
 from flask import current_app
 from urllib.parse import urlparse
-from google.cloud import storage
+import google.cloud.storage as storage
 
 from browse.services.documents import get_doc_service
 from arxiv.files.object_store import ObjectStore, GsObjectStore, LocalObjectStore
