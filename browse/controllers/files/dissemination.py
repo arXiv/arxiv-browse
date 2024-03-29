@@ -162,7 +162,6 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
-        breakpoint()
         return unavailable(arxiv_id)
     elif item == "NOT_PDF":
         return not_pdf(arxiv_id)
