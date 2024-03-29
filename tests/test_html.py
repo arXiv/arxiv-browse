@@ -70,3 +70,11 @@ def test_html_paper_multi_html_files(client_with_test_fs):
     resp = client_with_test_fs.get("/html/cs/9904010/graph1.gif")
     assert resp.status_code == 200
     assert "gif" in resp.headers["content-type"]
+
+def test_html_headers(client_with_test_fs):
+    """Test html content type also declares encoding."""
+    resp = client_with_test_fs.head("/abs/2403.10561")
+    assert resp.status_code == 200
+    assert 'Content-Type' in resp.headers
+    content_type = resp.headers.get('Content-Type', '')
+    assert content_type== "text/html; charset=utf-8"

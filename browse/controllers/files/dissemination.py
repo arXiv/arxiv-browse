@@ -91,6 +91,8 @@ def default_resp_fn(format: Optional[FileFormat],
     else:
         if format and isinstance(format, FileFormat):
             resp.headers['Content-Type'] = format.content_type
+    if resp.headers['Content-Type'] == "text/html":
+        resp.headers['Content-Type'] = "text/html; charset=utf-8"
 
     add_time_headers(resp, file, arxiv_id)
     return resp
