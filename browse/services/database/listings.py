@@ -1,6 +1,5 @@
-from datetime import date, datetime
-import time
-from dateutil.tz import gettz, tzutc
+from datetime import  datetime
+from dateutil.tz import gettz
 from typing import List, Optional, Tuple
 
 from sqlalchemy import case, distinct, or_, and_, desc
@@ -20,7 +19,7 @@ from browse.services.listing import (
 from arxiv.db import session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
@@ -425,19 +424,20 @@ def _entries_into_monthly_listing_items(
 def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
     takes into account aliases and subsumed archives
+    should not return newer names for subsumed archives
     """
     if archive_or_cat in ARCHIVES: #get all categories for archive
         archive=ARCHIVES[archive_or_cat]
         all=set()
         for category in archive.get_categories(True):
             all.add(category.id)
-            if category.alt_name:
+            if category.alt_name and category.id not in ARCHIVES_SUBSUMED.keys():
                 all.add(category.alt_name)
         return list(all)
     
     elif archive_or_cat in CATEGORIES: #check for alternate names
         cat=CATEGORIES[archive_or_cat]
-        if cat.alt_name: 
+        if cat.alt_name and cat.id not in ARCHIVES_SUBSUMED.keys(): 
             return [cat.id, cat.alt_name]
         else:
             return [cat.id]
