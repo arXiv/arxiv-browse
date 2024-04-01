@@ -348,30 +348,30 @@ def test_html_src(host):
 @pytest.mark.integration
 def test_reasons(host):
     """Paper in reasons"""
-    msg = "submitter supplied incomplete or corrupted files"
+    msg = b"Incomplete or corrupted files"
     resp = requests.get(f"{host}/pdf/1808.02949v1")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
 
     resp = requests.get(f"{host}/pdf/1310.4962")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
     resp = requests.get(f"{host}/pdf/1310.4962v1")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
     resp = requests.get(f"{host}/pdf/1310.4962v2")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
 
     resp = requests.get(f"{host}/pdf/physics/0411006")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
     resp = requests.get(f"{host}/pdf/physics/0411006")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
     resp = requests.get(f"{host}/pdf/physics/0411006")
     assert resp.status_code == 404
-    assert msg in resp.text
+    assert msg in resp.content
 
 
 @pytest.mark.integration

@@ -13,7 +13,7 @@ from urllib.parse import urlparse
 import requests
 
 from arxiv.identifier import Identifier
-from arxiv.legacy.papers.dissemination.reasons import FORMATS
+from arxiv.legacy.papers.dissemination.reasons import FORMATS, reasons
 from arxiv.document.metadata import DocMetadata, VersionEntry
 from arxiv.document.exceptions import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
@@ -107,9 +107,6 @@ def _is_deleted(id: str) -> Optional[str]:
         return DELETED_PAPERS.get(id, None)
 
 
-def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
-    pass
-
 def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
     """Translates the genpdf-api redirect location for the genpdf object store.
     returns the bucket name and key as a tuple if it is a gcp bucket.
@@ -136,7 +133,7 @@ class ArticleStore():
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
-                 reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
+                 reasons: Callable[[str, FORMATS], Optional[str]] = reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted
                  ):
         self.metadataservice = metaservice
