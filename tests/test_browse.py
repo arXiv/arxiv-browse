@@ -21,13 +21,14 @@ class BrowseTest(unittest.TestCase):
         html = BeautifulSoup(txt, 'html.parser')
 
         for group_key, group in GROUPS.items():
-            if group_key == 'grp_test':
+            if group.is_test:
                 continue
             auths_elmt = html.find('h2', string=group.full_name)
             self.assertTrue(auths_elmt, f"{group.full_name} in h2 element")
         self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
-
+        self.assertFalse(html.find('h2', string='Invalid'),
+                         "'Invalid' group should not be shown on homepage")
         self.assertNotIn('None/login', txt)
 
 

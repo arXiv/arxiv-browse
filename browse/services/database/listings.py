@@ -353,7 +353,10 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     elif updated is not None and modtime is None:
         modified=updated
 
-    primary_cat=CATEGORIES[meta.abs_categories.split()[0]]
+    if meta.abs_categories:
+        primary_cat=CATEGORIES[meta.abs_categories.split()[0]]
+    else:
+        primary_cat=CATEGORIES["bad-arch.bad-cat"]
 
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,

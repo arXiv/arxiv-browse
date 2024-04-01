@@ -317,15 +317,22 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
     else:
         fields = {}
 
+    secondary_categories = []
     if fields.get('Categories',None):
         raw_cats =fields.get('Categories','')
         cats = raw_cats.split()
-        primary_category = CATEGORIES[cats[0]]
-        secondary_categories = [CATEGORIES[sc] for sc in cats[1:]]
+        if cats[0] in CATEGORIES:
+            primary_category = CATEGORIES[cats[0]]
+        else:
+            primary_category = CATEGORIES["bad-arch.bad-cat"] #sometimes really old listing files have invalid keys
+        for sc in cats[1:]:
+            if sc in CATEGORIES:
+                secondary_categories.append(CATEGORIES[sc])
+            else:
+                secondary_categories.append(CATEGORIES["bad-arch.bad-cat"])
     else:
         raw_cats=''
-        primary_category = CATEGORIES['test']
-        secondary_categories = []
+        primary_category = CATEGORIES["bad-arch.bad-cat"]
 
     lai = DocMetadata(
         arxiv_id=id,
