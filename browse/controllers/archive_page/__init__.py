@@ -39,6 +39,9 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
 
     if archive.is_active==False: #subsumed archives
         subsuming_category=archive.get_canonical()
+        if not isinstance(subsuming_category, Category):
+            return archive_index(archive_id,
+                                 status_in=status.NOT_FOUND)
         data["subsumed_id"] = archive.id
         data["subsuming_category"] = subsuming_category
         archive = subsuming_category.get_archive()

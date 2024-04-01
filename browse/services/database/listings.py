@@ -355,8 +355,12 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
 
     if meta.abs_categories:
         primary_cat=CATEGORIES[meta.abs_categories.split()[0]]
+        secondary_cats= [
+            CATEGORIES[sc] for sc in meta.abs_categories.split()[1:]
+        ]
     else:
         primary_cat=CATEGORIES["bad-arch.bad-cat"]
+        secondary_cats=[]
 
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
@@ -366,9 +370,7 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         abstract=meta.abstract, # type: ignore
         categories=meta.abs_categories,
         primary_category=primary_cat,
-        secondary_categories=[
-            CATEGORIES[sc] for sc in meta.abs_categories.split()[1:]
-        ],
+        secondary_categories=secondary_cats,
         comments=meta.comments,
         journal_ref=meta.journal_ref,
         version=meta.version,
