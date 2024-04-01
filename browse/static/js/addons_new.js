@@ -51,7 +51,11 @@ let create_header = () => {
 
 let generate_upper_content_from_metadata = async () => {
   // fetch metadata
-  let response = await fetch (window.location.origin+window.location.pathname+'/__metadata.json');
+  let path = window.location.origin+window.location.pathname;
+  if (path.endsWith('/view')) {
+    path = path.slice(0, -5);
+  }
+  let response = await fetch (path+'/__metadata.json');
 
   if (!response.ok) {
     throw new Error('Failed to retrieve metadata for license, watermark, and missing packages');
@@ -111,17 +115,15 @@ let generate_upper_content_from_metadata = async () => {
 let add_abs_refs_to_toc = () => {
   let toc = document.querySelector('.ltx_toclist');
 
-  const refCount = toc.children.length + 1;
-
   let abs = document.querySelector('.ltx_abstract');
   if (abs) {
     abs.setAttribute('id', 'abstract');
     let abs_li = document.createElement('li');
     abs_li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
     abs_li.innerHTML = `
-    <a class="ltx_ref" href="${window.location.href + "#abstract"}" title="0 Abstract">
+    <a class="ltx_ref" href="${window.location.href + "#abstract"}" title="Abstract">
       <span class="ltx_text ltx_ref_title">
-        <span class="ltx_tag ltx_tag_ref">0</span>
+        <span class="ltx_tag ltx_tag_ref"></span>
         Abstract
       </span>
     </a>`;
@@ -133,9 +135,9 @@ let add_abs_refs_to_toc = () => {
     let li = document.createElement('li');
     li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
     li.innerHTML = `
-    <a class="ltx_ref" href="${window.location.href + "#bib"}" title="${refCount} References">
+    <a class="ltx_ref" href="${window.location.href + "#bib"}" title="References">
       <span class="ltx_text ltx_ref_title">
-        <span class="ltx_tag ltx_tag_ref">${refCount}</span>
+        <span class="ltx_tag ltx_tag_ref"></span>
         References
       </span>
     </a>`;
