@@ -432,7 +432,7 @@ multi_version = [
 
 
 @pytest.mark.integration
-@pytest.mark.parameterize("etag, path", multi_version)
+@pytest.mark.parametrize("etag, path", multi_version)
 def test_multi_version_src(host, etag, path):
     """Test for ARXIVCE-1455."""
     resp = requests.head(f"{host}{path}")
