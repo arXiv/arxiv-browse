@@ -50,16 +50,13 @@ class SourceStore():
 
     def get_src(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
         if is_current:
-            parent = abs_path_current_parent(arxiv_id)
+            pattern = abs_path_current_parent(arxiv_id) + '/' + arxiv_id.id
         else:
             if not arxiv_id.has_version:
                 raise ValueError(f"arxiv_id {arxiv_id} does not have version")
             else:
-                parent = abs_path_orig_parent(arxiv_id)
+                pattern = abs_path_orig_parent(arxiv_id) + '/' + arxiv_id.idv
 
-        if not arxiv_id.filename:
-            return None
-        pattern = parent + '/' + arxiv_id.filename
         items = list(self.objstore.list(pattern))
         if len(items) > MAX_ITEMS_IN_PATTERN_MATCH:
             raise Exception(f"Too many src matches for {pattern}")
