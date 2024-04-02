@@ -887,7 +887,7 @@ p.tagline {
 #abs-outer .leftcolumn {
   margin: 0 0 1em 0;
   padding: 0px;
-  width:calc(100% - 16em);
+  width:calc(100% - 18em);
   float:left;
 }
 #abs-outer .mobile-submission-download {
@@ -897,7 +897,7 @@ p.tagline {
 #abs-outer .extra-services {
   float:right;
   margin:0;
-  width:16em;
+  width:18em;
 }
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;

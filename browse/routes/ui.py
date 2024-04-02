@@ -138,18 +138,6 @@ def institutional_banner() -> Any:
     except Exception as ex:
         return ("", status.INTERNAL_SERVER_ERROR)
 
-@blueprint.route("tb/", defaults={"arxiv_id": ""}, methods=["GET"])
-@blueprint.route("tb/<path:arxiv_id>", methods=["GET"])
-def tb(arxiv_id: str) -> Response:
-    """Get trackbacks associated with an article."""
-    response, code, headers = tb_page.get_tb_page(arxiv_id)
-
-    if code == status.OK:
-        return render_template("tb/tb.html", **response), code, headers  # type: ignore
-    elif code == status.MOVED_PERMANENTLY:
-        return redirect(headers["Location"], code=code)  # type: ignore
-    raise InternalServerError("Unexpected error")
-
 
 @blueprint.route("tb/recent", methods=["GET", "POST"])
 def tb_recent() -> Response:
@@ -175,6 +163,23 @@ def tb_redirect(trackback_id: str, hashed_document_id: str) -> Response:
     if code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)  # type: ignore
     raise InternalServerError("Unexpected error")
+
+
+@blueprint.route("tb/<path:arxiv_id>", methods=["GET"])
+def tb(arxiv_id: str) -> Response:
+    """Get trackbacks associated with an article."""
+    response, code, headers = tb_page.get_tb_page(arxiv_id)
+    if code == status.OK:
+        return render_template("tb/tb.html", **response), code, headers  # type: ignore
+    elif code == status.MOVED_PERMANENTLY:
+        return redirect(headers["Location"], code=code)  # type: ignore
+    raise InternalServerError("Unexpected error")
+
+
+@blueprint.route("tb", strict_slashes=False)
+def tb_nothing() -> Response:
+    """Handle a no data trackback."""
+    raise BadRequest()
 
 
 @blueprint.route("prevnext", methods=["GET", "POST"])

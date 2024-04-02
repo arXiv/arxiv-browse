@@ -1,13 +1,9 @@
-"""Flask configuration.
-
-Docstrings are from the `Flask configuration documentation
-<http://flask.pocoo.org/docs/0.12/config/>`_.
-"""
+"""Flask configuration."""
 import os
 from secrets import token_hex
 import warnings
 
-from typing import Optional, Dict, Any, List
+from typing import Optional
 import logging
 
 import arxiv.config as arxiv_base
@@ -18,6 +14,7 @@ log = logging.getLogger(__name__)
 
 DEFAULT_DB = "sqlite:///tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
+
 
 class Settings(arxiv_base.Settings):
     """Class for settings for arxiv-browse web app."""
@@ -79,7 +76,7 @@ class Settings(arxiv_base.Settings):
     BROWSE_SPECIAL_MESSAGE_ENABLED: bool = bool(int(os.environ.get("BROWSE_SPECIAL_MESSAGE_ENABLED", "0")))
     """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
-    ############################## Services ##############################
+    """"========================= Services ========================="""
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.
 
@@ -97,14 +94,13 @@ class Settings(arxiv_base.Settings):
     This can start with gs:// to use Google Storage.
     Ex gs://arxiv-production-data/ftp."""
 
-
     DOCUMENT_ABSTRACT_SERVICE: PyObject = 'browse.services.documents.fs_docs'  # type: ignore
     """Implementation to use for abstracts.
 
     Accepted values are:
     - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
-       produciton since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
-       DOCUMENT_ORIGNAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
+       production since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
+       DOCUMENT_ORIGINAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
@@ -112,12 +108,12 @@ class Settings(arxiv_base.Settings):
     """Paths to .abs and source files.
 
         This can start with gs:// to use Google Storage."""
-    DOCUMENT_ORIGNAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
+    DOCUMENT_ORIGINAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
     """Paths to .abs and source files.
 
         This can start with gs:// to use Google Storage.
     """
-    DOCUMENT_CACHE_PATH: str =  "tests/data/cache"
+    DOCUMENT_CACHE_PATH: str = "tests/data/cache"
     """Path to cache directory"""
 
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
@@ -130,7 +126,25 @@ class Settings(arxiv_base.Settings):
     `./testing/data/` for testing data. Must end with a /
     """
 
-    ######################### End of Services ###########################
+    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
+    """URL of the genpdf API"""
+
+    GENPDF_API_TIMEOUT: int = 590
+    """Time ouf for the genpdf API access"""
+
+    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/"
+    """Where genpdf stores the PDFs. It is likely the local file system does not work here but
+    it is plausible to match the gs bucket with local file system, esp. for testing.
+    For production, it would be:
+    GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
+    """
+
+    ARXIV_LOG_DATA_INCONSTANCY_ERRORS: bool = True
+    """It to log error messages during a PDF or other data request when a paper's metadata does
+    not match what is on the data filesystem. Ex. a paper version is source type PDF-only
+    but there is no src PDF file."""
+
+    """========================= End of Services ========================="""
 
     SHOW_EMAIL_SECRET: SecretStr = SecretStr(token_hex(10))
     """Used in linking to /show-email.
@@ -165,18 +179,17 @@ class Settings(arxiv_base.Settings):
     CLASSIC_SESSION_HASH: SecretStr = SecretStr(token_hex(10))
     SESSION_DURATION: int = 36000
 
-
     FS_TZ: str = "US/Eastern"
     """
     Timezone of the filesystems used for abs, src and other files.
 
-    This should be stirng that can be used with `zoneinfo.ZoneInfo`.
+    This should be string that can be used with `zoneinfo.ZoneInfo`.
 
-    If this is at a cloud provider is likley to be "UTC". On Cornell VM's it is
+    If this is at a cloud provider is likely to be "UTC". On Cornell VM's it is
     "US/Eastern".
     """
 
-    """XXXXXXXXXXXXXXX Some flask specific configs XXXXXXXXXXXX"""
+    """========================= Some flask specific configs ========================="""
 
     TESTING: bool = True
     """enable/disable testing mode. Enable testing mode. Exceptions are
@@ -191,7 +204,6 @@ class Settings(arxiv_base.Settings):
     automatically. By default the value is None which means that Flask checks
     original file only in debug mode.
     """
-
 
     SESSION_COOKIE_NAME: str = "arxiv_browse"
 
@@ -244,7 +256,6 @@ class Settings(arxiv_base.Settings):
     logging in debug mode, 'production' will only log in production and 'never'
     disables it entirely.
     """
-
 
     APPLICATION_ROOT: Optional[str] = None
     """
@@ -327,19 +338,6 @@ class Settings(arxiv_base.Settings):
     to be loaded.
     """
 
-    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
-    """URL of the genpdf API"""
-
-    GENPDF_API_TIMEOUT: int = 590
-    """Time ouf for the genpdf API access"""
-
-    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/"
-    """Where genpdf stores the PDFs. It is likely the local file system does not work here but
-    it is plausible to match the gs bucket with local file system, esp. for testing.
-    For production, it would be:
-    GENPDF_API_STORAGE_PREFIX: str = "gs://arxiv-production-data"
-    """
-
     def check(self) -> None:
         """A check and fix up of a settings object."""
         if 'sqlite' in self.CLASSIC_DB_URI:
@@ -354,19 +352,19 @@ class Settings(arxiv_base.Settings):
                 "Using sqlite in CLASSIC_DB_URI in production environment"
             )
 
-        if self.DOCUMENT_ORIGNAL_VERSIONS_PATH.startswith("gs://") and \
-           self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://"):
-           self.FS_TZ = "UTC"
-           log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
-                       "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
-           if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
-               log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
-           else:
-               log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
+        if (self.DOCUMENT_ORIGINAL_VERSIONS_PATH.startswith("gs://")
+                and self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://")):
+            self.FS_TZ = "UTC"
+            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
+                        "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
+            if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
+                log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
+            else:
+                log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
 
         if ("fs_docs" in str(type(self.DOCUMENT_ABSTRACT_SERVICE)) and
-            "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
-            self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
-            log.warning(f"Unexpected: using FS listings and abs sevice but FS don't match. "
+                "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
+                self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
+            log.warning(f"Unexpected: using FS listings and abs service but FS don't match. "
                         "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
                         f"but listings at {self.DOCUMENT_LISTING_PATH}")

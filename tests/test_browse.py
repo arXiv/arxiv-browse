@@ -38,7 +38,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 404)
 
         rv = self.client.get('/tb/')
-        self.assertEqual(rv.status_code, 404)
+        self.assertEqual(rv.status_code, 400)
 
         rv = self.client.get('/tb/foo')
         self.assertEqual(rv.status_code, 404)

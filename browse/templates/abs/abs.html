@@ -184,15 +184,15 @@
   {% set author_list = abs_meta.authors.raw.split(',') %}
   <div id="download-button-info" hidden>
     {%- if author_list|length > 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
     {%- elif author_list|length == 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
     {%- else -%}
-    Download a PDF of the paper titled {{abs_meta.title}}
+    View a PDF of the paper titled {{abs_meta.title}}
     {%- endif -%}
   </div>
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a class="mobile-submission-download" href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a class="mobile-submission-download" href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}">View PDF</a>
     {% if 'latexml' in formats %}
     <a class="mobile-submission-download" href="{{ latexml_url }}">HTML (experimental)</a>
     {% endif %}
@@ -354,7 +354,7 @@
           <td class="tablecell label">
             <abbr title="Digital Object Identifier">Related DOI</abbr>:
           </td>
-          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }}
+          <td class="tablecell doi">{{ doi|abs_doi_to_urls|safe }}
 
             <!-- accessible tooltip example -->
             <div class="button-and-tooltip">

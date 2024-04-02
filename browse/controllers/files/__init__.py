@@ -11,6 +11,27 @@ from arxiv.files import FileObj
 
 BUFFER_SIZE = 1024 * 4
 
+CACHE_AGE_SEC_VERSIONED = 60 * 60 * 24 * 7
+"""cache-control max-age for versioned requests.
+
+An example of a versioned request: /pdf/0202.12345v1
+
+This is set long since changes to old versions are infrequent. When old papers
+change, right after the announce process there is a call to purge the paper's
+related URLs from the fastly cache.
+
+"""
+
+CACHE_AGE_SEC_UNVERSIONED = 60 * 60 * 24
+"""cache-control max-age for unversioned requests.
+
+An example of an unversioned request: /pdf/0202.12345
+
+These can change during the next publish. Right after the announce process,
+replacements have all their related URLs invalidated.
+
+"""
+
 def maxage(versioned: bool=False) -> str:
     """Returns a "max-age=N" `str` for use with "Cache-Control".
 
@@ -19,7 +40,7 @@ def maxage(versioned: bool=False) -> str:
 
     versioned: if the request was for a versioned paper or the current version.
     """
-    return f'max-age={60 * 30}' if versioned else f'max-age={60 * 15}'  # sec
+    return f'max-age={CACHE_AGE_SEC_VERSIONED}' if versioned else f'max-age={CACHE_AGE_SEC_UNVERSIONED}'  # sec
 
 
 def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
