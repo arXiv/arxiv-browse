@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{# This is the template that gets shown when the paper and version
+exists, but the source is not PDF and the source cannot build a PDF. Ex HTML source #}
+
+{%- block content -%}
+<h1>{{arxiv_id.ids}} does not build PDF</h1>
+<p>
+  The source for the paper
+  <a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.ids)}}">{{arxiv_id.id}}</a>
+  cannot built to a PDF by our systems.
+</p>
+{%- endblock -%}

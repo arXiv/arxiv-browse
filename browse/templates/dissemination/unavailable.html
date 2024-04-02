@@ -1,10 +1,13 @@
-{% extends "base/base.html" %}
+{% extends "base.html" %}
 
 {# This is the template that gets shown when the paper and version
-exists, but there is no file like a PDF. This is an error condition that should
-not happen but needs to be covered. #}
+exists, but there is no file like a PDF. This can happen when the source is
+HTML. #}
 
 {%- block content -%}
 <h1>file unavailable</h1>
-<p>Our automated source to PDF conversion system has failed to produce PDF for the paper {{arxiv_id.ids}}.</p>
+<p>
+  Our automated source to PDF conversion system has failed to produce PDF for the paper
+  <a href="{{url_for('browse.abstract', arxiv_id=arxiv_id.id)}}">{{arxiv_id.id}}</a>.
+</p>
 {%- endblock -%}
