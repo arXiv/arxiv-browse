@@ -421,7 +421,7 @@ def test_deleted(host):
     # assert msg in resp.text
 
 
-mutli_version = [
+multi_version = [
     ("CO7+7eHNp/ICEAE=", "/src/2006.01705v1"),
     ("CLCsgOj30PUCEAE=", "/src/2006.01705v2"),
     ("CMm22Yi70vsCEAE=", "/src/2006.01705v3"),
@@ -432,7 +432,7 @@ mutli_version = [
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("etag, path", mutli_version)
+@pytest.mark.parameterize("etag, path", multi_version)
 def test_multi_version_src(host, etag, path):
     """Test for ARXIVCE-1455."""
     resp = requests.head(f"{host}{path}")
