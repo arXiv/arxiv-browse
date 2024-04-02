@@ -22,7 +22,7 @@ import datetime as dt
 from typing import List, Literal, Tuple, Union
 
 from arxiv.taxonomy.definitions import CATEGORIES
-from arxiv.taxonomy.category import Category
+from arxiv.taxonomy.category import create_bad_category
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.document.version import VersionEntry, SourceFlag
 from arxiv.files import FileObj
@@ -324,12 +324,14 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         if cats[0] in CATEGORIES:
             primary_category = CATEGORIES[cats[0]]
         else:
-            primary_category = CATEGORIES["bad-arch.bad-cat"] #sometimes really old listing files have invalid keys
+            primary_category =create_bad_category(cats[0]) #sometimes really old listing files have invalid keys
         for sc in cats[1:]:
             if sc in CATEGORIES:
                 secondary_categories.append(CATEGORIES[sc])
             else:
-                secondary_categories.append(CATEGORIES["bad-arch.bad-cat"])
+                secondary_categories.append(
+                   create_bad_category(sc)
+                )
     else:
         raw_cats=''
         primary_category = CATEGORIES["bad-arch.bad-cat"]
