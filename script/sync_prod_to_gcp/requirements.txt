@@ -35,7 +35,7 @@ mypy==0.971
 mypy-extensions==0.4.3
 packaging==21.3
 pathspec==0.11.2
-Pillow==10.1.0
+Pillow==10.3.0
 proto-plus==1.22.1
 protobuf==3.19.6
 pyasn1==0.4.8
