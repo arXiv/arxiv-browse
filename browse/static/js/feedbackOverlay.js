@@ -25,31 +25,41 @@ var bugReportState = {
 };
 
 function detectColorScheme() {
-    var theme = "light";
-    var current_theme = localStorage.getItem("ar5iv_theme");
+    let theme = "light";
+    let current_theme = localStorage.getItem("ar5iv_theme");
+    let colorSchemeToggle = document.querySelector('.ar5iv-toggle-color-scheme');
+    let autoIcon = document.querySelectorAll('#automatic-tog');
+    let lightIcon = document.querySelectorAll('#light-tog');
+    let darkIcon = document.querySelectorAll('#dark-tog');
 
-    if (current_theme) {
-        if (current_theme == "dark") {
+    if (current_theme === "automatic") {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
             theme = "dark";
+        } else {
+            theme = "light";
         }
-    } else if (!window.matchMedia) {
-        return false;
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        colorSchemeToggle.setAttribute('aria-label', 'System preference')
+        autoIcon.forEach(x => x.hidden = false);
+        lightIcon.forEach(x => x.hidden = true);
+        darkIcon.forEach(x => x.hidden = true);
+    } else if (current_theme === "light") {
+        colorSchemeToggle.setAttribute('aria-label', 'Light mode')
+        lightIcon.forEach(x => x.hidden = false);
+        autoIcon.forEach(x => x.hidden = true);
+        darkIcon.forEach(x => x.hidden = true);
+        theme = "light";
+    } else {
+        colorSchemeToggle.setAttribute('aria-label', 'Dark mode')
+        darkIcon.forEach(x => x.hidden = false);
+        autoIcon.forEach(x => x.hidden = true);
+        lightIcon.forEach(x => x.hidden = true);
         theme = "dark";
     }
 
     if (theme == "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
-        const colorSchemeIcon = document.querySelector('.color-scheme-icon');
-        if (colorSchemeIcon) {
-            colorSchemeIcon.setAttribute('aria-label', 'Dark mode');
-        }
     } else {
         document.documentElement.setAttribute("data-theme", "light");
-        const colorSchemeIcon = document.querySelector('.color-scheme-icon');
-        if (colorSchemeIcon) {
-            colorSchemeIcon.setAttribute('aria-label', 'Light mode');
-        }
     }
 }
 
@@ -63,11 +73,13 @@ function toggleColorScheme() {
     if (current_theme) {
         if (current_theme == "light") {
             localStorage.setItem("ar5iv_theme", "dark");
+        } else if (current_theme == "dark") {
+            localStorage.setItem("ar5iv_theme", "automatic");
         } else {
             localStorage.setItem("ar5iv_theme", "light");
         }
     } else {
-        localStorage.setItem("ar5iv_theme", "dark");
+        localStorage.setItem("ar5iv_theme", "automatic");
     }
     detectColorScheme();
 }
@@ -632,8 +644,6 @@ function handleClickMobileTOC(e){
     });
 }
 
-// RUN THIS CODE ON INITIALIZE
-detectColorScheme();
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = addBugReportForm();

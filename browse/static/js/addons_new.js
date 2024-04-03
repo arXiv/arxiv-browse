@@ -39,8 +39,17 @@ let create_header = () => {
       <a class="ar5iv-footer-button hover-effect" target="_blank" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
       ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}">Back to Abstract</a>`}
       ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}" target="_blank">Download PDF</a>`}
-      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle dark/light mode">
-          <span class="color-scheme-icon"></span>
+      <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
+        title="Toggle dark/light mode">
+        <label id="automatic-tog" class="toggle-icon" title="Switch to light mode" for="__palette_3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"></path></svg>
+        </label>
+        <label id="light-tog" class="toggle-icon" title="Switch to dark mode" for="__palette_1" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+        <label id="dark-tog" class="toggle-icon" title="Switch to system preference" for="__palette_2" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
       </a>
     </nav>`;
 
@@ -171,7 +180,15 @@ let create_mobile_header = () => {
       <!--dark mode-->
       <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
         title="Toggle dark/light mode">
-        <span class="color-scheme-icon"></span>
+        <label id="automatic-tog" class="toggle-icon" title="Switch to light mode" for="__palette_3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z"></path></svg>
+        </label>
+        <label id="light-tog" class="toggle-icon" title="Switch to dark mode" for="__palette_1" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
+        <label id="dark-tog" class="toggle-icon" title="Switch to system preference" for="__palette_2" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+        </label>
       </a>
       <!--nav-->
       <button class="navbar-toggler ar5iv-footer-button" type="button" data-bs-theme="dark" data-bs-toggle="collapse" aria-expanded="false"
@@ -197,21 +214,6 @@ let create_footer = () => {
     ltx_page_footer.setAttribute('class', 'ltx_page_footer');
     footer.setAttribute('id', 'footer');
     footer.setAttribute('class', 'ltx_document');
-
-    //killed the footer nav with the following 4 variables, keeping them in case we want to bring them back
-    var night = `
-        <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()" title="Toggle ar5iv color scheme">
-            <span class="color-scheme-icon"></span>
-        </a>`;
-
-    var copyLink = `
-        <a class="ar5iv-footer-button" href="https://arxiv.org/help/license" target="_blank">Copyright</a>`;
-
-    var policyLink = `
-        <a class="ar5iv-footer-button" href="https://arxiv.org/help/policies/privacy_policy" target="_blank">Privacy Policy</a>`;
-
-    var HTMLLink = `
-        <a class="ar5iv-footer-button" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>`;
 
     var TimeLogo = `
         <div class="ltx_page_logo">

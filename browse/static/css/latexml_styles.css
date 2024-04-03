@@ -700,6 +700,18 @@ body:after {
   margin: 1em auto;
 }
 
+.toggle-icon {
+  color: currentColor;
+  cursor: pointer;
+}
+
+.toggle-icon>svg {
+  fill: currentcolor;
+  display: block;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
 .color-scheme-icon::before {
   content: "🌙";
 }
