@@ -69,8 +69,9 @@ let generate_upper_content_from_metadata = async () => {
   target_section.setAttribute('class', 'section');
 
   // Add license
-  let license = document.createElement('div');
+  let license = document.createElement('a');
   license.setAttribute('id', 'license-tr');
+  license.setAttribute('href', 'https://info.arxiv.org/help/license/index.html#licenses-available');
   license.innerText = metadata.license;
   target_section.appendChild(license);
 

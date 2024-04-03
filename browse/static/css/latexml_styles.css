@@ -106,8 +106,11 @@ textarea.form-control{
   position: relative;
 }
 
-#license-tr {
-  margin: 2rem;
+#license-tr, #license-tr:link, #license-tr:visited {
+  display: block;
+  text-decoration: none;
+  margin-top: 1rem;
+  color: var(--secondary-text-color) !important;
 }
 
 #watermark-tr, #license-tr {
