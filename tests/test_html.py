@@ -12,6 +12,10 @@ def test_html_paper(client_with_test_fs):
 
     assert b"LIST:arXiv:2401.00907" in resp.data  # should have at least un-post-processed line
 
+    resp = client_with_test_fs.get("/html/2403.10561/")
+    assert resp.status_code == 200
+    assert b"Human-Centric" in resp.data
+
 def test_html_paper_multi_files(client_with_test_fs):
     """Test a paper with html source."""
     resp = client_with_test_fs.head("/abs/cs/9901011")
