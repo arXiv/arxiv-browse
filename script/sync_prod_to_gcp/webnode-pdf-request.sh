@@ -11,5 +11,5 @@ fi
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python webnode_pdf_requset.py --json-log-dir $JSON_LOG_DIR
+python webnode_pdf_request.py --json-log-dir $JSON_LOG_DIR
 deactivate
