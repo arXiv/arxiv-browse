@@ -106,13 +106,17 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
             message.ack()
             return
 
-        logger.info("kack message - pdf file does not exist: %s", arxiv_id.ids, extra=log_extra)
-        message.nack()
-
         host = CONCURRENCY_PER_WEBNODE[min(len(CONCURRENCY_PER_WEBNODE)-1, max(0, my_tag))]
         url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
         subprocess.call(["/usr/bin/curl", "-X", "GET", url], timeout=request_timeout,
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if pdf_file.exists():
+            logger.info("ack message - pdf file exists: %s", arxiv_id.ids, extra=log_extra)
+            message.ack()
+            return
+        logger.info("kack message - pdf file does not exist: %s", arxiv_id.ids, extra=log_extra)
+        message.nack()
+
 
     subscriber_client = SubscriberClient()
     subscription_path = subscriber_client.subscription_path(project_id, subscription_id)
