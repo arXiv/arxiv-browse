@@ -168,7 +168,7 @@ if __name__ == "__main__":
         logger.setLevel(logging.DEBUG)
 
     if args.json_log_dir and os.path.exists(args.json_log_dir):
-        json_logHandler = logging.handlers.RotatingFileHandler(os.path.join(args.json_log_dir, "submissions.log"),
+        json_logHandler = logging.handlers.RotatingFileHandler(os.path.join(args.json_log_dir, "webnode-pdf.log"),
                                                                maxBytes=4 * 1024 * 1024,
                                                                backupCount=10)
         json_formatter = ArxivSyncJsonFormatter(**LOG_FORMAT_KWARGS)
