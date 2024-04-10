@@ -7,21 +7,23 @@ The request (pub/sub entry) is subsumed when the pdf exists, so this is a pretty
 """
 import argparse
 import signal
+import threading
 import typing
 from time import gmtime, sleep
-from pathlib import Path
-import subprocess
 
 import json
 import os
 import logging.handlers
 import logging
 
+import requests
 from google.cloud.pubsub_v1.subscriber.message import Message
 from google.cloud.pubsub_v1 import SubscriberClient
 
 from identifier import Identifier
-from sync_published_to_gcp import ArxivSyncJsonFormatter, PS_CACHE_PREFIX, CONCURRENCY_PER_WEBNODE
+from sync_published_to_gcp import (
+    ArxivSyncJsonFormatter, PS_CACHE_PREFIX, CONCURRENCY_PER_WEBNODE,
+    ensure_pdf)
 
 logging.basicConfig(level=logging.INFO, format='(%(loglevel)s): (%(timestamp)s) %(message)s')
 logger = logging.getLogger(__file__)
@@ -50,6 +52,18 @@ def signal_handler(_signal: int, _frame: typing.Any):
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
+class ThreadedSession:
+    def __init__(self):
+        self._local = threading.local()
+
+    @property
+    def session(self):
+        if not hasattr(self._local, 'storage'):
+            # Initialize the Storage instance for the current thread
+            self._local.session = requests.Session()
+        return self._local.session
+
+thread_data = ThreadedSession()
 
 def subscribe_published(project_id: str, subscription_id: str, request_timeout: int) -> None:
     """
@@ -98,24 +112,22 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
         arxiv_id = Identifier(arxiv_id_str)
         log_extra["arxiv_id"] = arxiv_id_str
 
-        archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-        pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-
-        if pdf_file.exists():
-            logger.info("ack message - pdf file exists: %s", arxiv_id.ids, extra=log_extra)
-            message.ack()
-            return
-
-        host = CONCURRENCY_PER_WEBNODE[min(len(CONCURRENCY_PER_WEBNODE)-1, max(0, my_tag))]
-        url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
-        subprocess.call(["/usr/bin/curl", "-X", "GET", url], timeout=request_timeout,
-                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if pdf_file.exists():
-            logger.info("ack message - pdf file exists: %s", arxiv_id.ids, extra=log_extra)
-            message.ack()
-            return
-        logger.info("kack message - pdf file does not exist: %s", arxiv_id.ids, extra=log_extra)
+        host, n_para = CONCURRENCY_PER_WEBNODE[min(len(CONCURRENCY_PER_WEBNODE)-1, max(0, my_tag))]
+        try:
+            pdf_file, url, _1, duration_ms = ensure_pdf(thread_data.session, host, arxiv_id)
+            logger.info("nack message - pdf file does not exist: %s",
+                        arxiv_id.ids, extra=log_extra)
+            if pdf_file.exists():
+                logger.info("ack message - pdf file exists: %s", arxiv_id.ids, extra=log_extra)
+                message.ack()
+                return
+        except Exception as _exc:
+            logger.debug("ensure_pdf: %s", arxiv_id.ids, extra=log_extra,
+                         exc_info=True, stack_info=False)
+            pass
+        logger.info("nack message - pdf file does not exist: %s", arxiv_id.ids, extra=log_extra)
         message.nack()
+        return
 
 
     subscriber_client = SubscriberClient()
