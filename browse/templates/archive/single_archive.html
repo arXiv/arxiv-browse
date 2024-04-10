@@ -5,20 +5,20 @@
 <link rel="alternate" type="application/rss+xml" title="{{archive['name']}}" href="/rss/{{archive_id}}"/>
 {% endblock head %}
 
-{% block title %}{{archive.name}}{% endblock %}
+{% block title %}{{archive.full_name}}{% endblock %}
 
 {% block header_h1 %}
-<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a></h1>
+<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">{{archive.id}}</a></h1>
 {% endblock %}
 
 
 {%- block content %}
-  <h1>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
+  <h1>{{archive.full_name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
 
   {% if subsumed_id %}
     <p>The <b>{{subsumed_id}}</b> archive has been subsumed into
-      <span class="primary-subject">{{subsuming_category['name']}} ({{subsumed_by}}).</span></p>
-    <p>{{subsuming_category['name']}} ({{subsumed_by}}) is part of the {{archive['name']}} archive.</p>
+      <span class="primary-subject">{{subsuming_category.full_name}} ({{subsuming_category.id}}).</span></p>
+    <p>{{subsuming_category.full_name}} ({{subsuming_category.id}}) is part of the {{archive.full_name}} archive.</p>
   {% endif %}
 
 
@@ -28,20 +28,20 @@
     <li><b>Browse:</b>
       <ul>
         <li>
-          <a href="{{url_for('.list_articles', context=archive_id, subcontext='new')}}">new</a>
+          <a href="{{url_for('.list_articles', context=archive.id, subcontext='new')}}">new</a>
           (most recent mailing, with abstracts)
         </li>
-        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">recent</a>
+        <li><a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">recent</a>
           (last 5 mailings)
         </li>
-        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
+        <li><a href="{{url_for('.list_articles', context=archive.id, subcontext='current')}}">current month's</a>
           {{archive_id}} listings</li>
           <li>specific year/month:
 
             {# <form action="{{url_for('.list_articles')}}" method="get"> #}
             {# hard coded for legacy /list for now #}
           <form action="/list" method="get">
-            {{ list_form.archive }}
+            {{ list_form.archive.id }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
           </form>
@@ -52,7 +52,7 @@
     <li><b>Catch-up:</b>
       {# hard coded for legacy /catchup for now #}
       <form action="/catchup" method="post">
-        <input name="archive" type="hidden" value="{{archive_id}}"/>
+        <input name="archive" type="hidden" value="{{archive.id}}"/>
         Changes since:
         <select name="sday">
           {% for day in days %}
@@ -83,7 +83,7 @@
         <input type="submit" value="Go"/>
       </form>
     </li>
-    <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>
+    <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive.id) }}">{{archive.id}} archive</a></li>
 
     <li>Article statistics by year:<br>
       {% for url, year in stats_by_year %}
@@ -94,14 +94,16 @@
   </ul>
 
   {% if  category_list|length > 1 %}
-  <h2>Categories within {{archive.name}}</h2>
+  <h2>Categories within {{archive.full_name}}</h2>
   <ul>
     {%  for category in category_list %}
-      <li><b>{{category.id}} - {{category.name}}</b>
+      <li><b>{{category.id}} - {{category.full_name}}</b>
         (<a href="{{url_for('.list_articles', context=category.id, subcontext='new')}}">new</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='recent')}}">recent</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='current')}}">current month</a>)
-       <div class="description">{{category.description}}</div>
+        {% if category.description %}
+          <div class="description">{{category.description}}</div>
+        {% endif %}
     </li>
     {% endfor %}
   </ul>

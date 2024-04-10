@@ -10,17 +10,16 @@ from urllib.parse import urljoin
 
 from http import HTTPStatus as status
 
-from arxiv import taxonomy
 from arxiv.base import logging
 from dateutil import parser
 from dateutil.tz import tzutc
-from flask import request, url_for, current_app
+from flask import request, url_for
 from werkzeug.exceptions import InternalServerError
 
-from browse.controllers import check_supplied_identifier, biz_tz
+from browse.controllers import check_supplied_identifier
 
-from arxiv import taxonomy
-from arxiv.taxonomy import Category
+from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES
+from arxiv.taxonomy.category import Category
 from arxiv.identifier import (
     Identifier,
     IdentifierException,
@@ -43,9 +42,8 @@ from browse.services.database import (
     get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
-from arxiv.formats import formats_from_source_flag
-
 from browse.services.dissemination import get_article_store
+
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -56,16 +54,8 @@ from browse.formatting.external_refs_cits import (
     get_dblp_bibtex_path,
 )
 from browse.formatting.latexml import get_latexml_url
-
-
-from browse.formatting.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
-from browse.controllers.response_headers import (
-    abs_expires_header,
-    mime_header_date
-)
+from browse.formatting.search_authors import queries_for_authors, split_long_author_list
+from browse.controllers.response_headers import mime_header_date
 from browse.formatting.metatags import meta_tag_metadata
 
 logger = logging.getLogger(__name__)
@@ -158,10 +148,8 @@ def get_abs_page(arxiv_id: str) -> Response:
 
     except AbsNotFoundException as ex:
         if (arxiv_identifier.is_old_id
-            and arxiv_identifier.archive in taxonomy.definitions.ARCHIVES):
-            archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive][
-                "name"
-            ]
+            and arxiv_identifier.archive in ARCHIVES):
+            archive_name = ARCHIVES[arxiv_identifier.archive].full_name
             raise AbsNotFound(
                 data={
                     "reason": "old_id_not_found",
@@ -312,19 +300,19 @@ def _prevnext_links(
     context = None
     if "context" in request.args and (
         request.args["context"] == "arxiv"
-        or request.args["context"] in taxonomy.definitions.CATEGORIES
-        or request.args["context"] in taxonomy.definitions.ARCHIVES
+        or request.args["context"] in CATEGORIES
+        or request.args["context"] in ARCHIVES
     ):
         context = request.args["context"]
     elif primary_category:
-        pc = primary_category.canonical or primary_category
+        pc = primary_category.get_canonical()
         if not arxiv_identifier.is_old_id:  # new style IDs
             context = pc.id
         else:  # Old style id
-            if pc.id in taxonomy.definitions.ARCHIVES:
+            if pc.id in ARCHIVES:
                 context = pc.id
             else:
-                if arxiv_identifier.archive in taxonomy.definitions.ARCHIVES:
+                if arxiv_identifier.archive in ARCHIVES:
                     context = arxiv_identifier.archive
 
     response_data["browse_context"] = context

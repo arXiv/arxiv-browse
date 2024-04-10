@@ -1,11 +1,11 @@
 """Form for month selection of list controller."""
-from typing import Any, Dict, List
+from typing import List
 
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, SelectField, SubmitField
 from wtforms.validators import DataRequired
 
-from arxiv.taxonomy.definitions import tArchive
+from arxiv.taxonomy.definitions import Archive
 
 MONTHS = [
     ('all', 'all months'),
@@ -43,9 +43,8 @@ class ByMonthForm(FlaskForm):
     submit = SubmitField('Go')
 
     def __init__(self,
-                 archive_id: str,
-                 archive: tArchive,
+                 archive: Archive,
                  years: List[int]):
         super(ByMonthForm, self).__init__()
         self.year.choices = [(str(ye), str(ye)) for ye in years]
-        self.archive.data = archive_id
+        self.archive.data = archive.id

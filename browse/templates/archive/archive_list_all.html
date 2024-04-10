@@ -18,21 +18,21 @@
 
   <ul>
     {% for archive in archives %}
-    {% set id = archive[0] %}
-    {% set name = archive[1] %}
+    {% set id = archive.id %}
+    {% set name = archive.full_name %}
     <li><a href={{url_for('browse.archive',archive=id)}}>{{name}}</a> ({{id}})</li>
     {% endfor %}
   </ul>
 
   <p>or from one of the following archives which no longer accept submissions
-    (most have been subsumed into the archives listed above)</p>
+    (these have been subsumed into the archives listed above)</p>
 
 
   <ul>
     {% for archive in defunct %}
-    {% set id = archive[0] %}
-    {% set name = archive[1] %}
-    {% set sub_to = archive[2] %}
+    {% set id = archive.id %}
+    {% set name = archive.full_name %}
+    {% set sub_to = archive.canonical_id %}
     <li><a href={{url_for('browse.archive',archive=sub_to)}}>{{name}}</a> ({{id}}, subsumed into {{sub_to}})</li>
     {% endfor %}
   </ul>

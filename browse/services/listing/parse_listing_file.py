@@ -21,7 +21,8 @@ from datetime import datetime
 import datetime as dt
 from typing import List, Literal, Tuple, Union
 
-from arxiv.taxonomy.category import Category
+from arxiv.taxonomy.definitions import CATEGORIES
+from arxiv.taxonomy.category import create_bad_category
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.document.version import VersionEntry, SourceFlag
 from arxiv.files import FileObj
@@ -316,15 +317,24 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
     else:
         fields = {}
 
+    secondary_categories = []
     if fields.get('Categories',None):
         raw_cats =fields.get('Categories','')
         cats = raw_cats.split()
-        primary_category = cats[0]
-        secondary_categories = cats[1:]
+        if cats[0] in CATEGORIES:
+            primary_category = CATEGORIES[cats[0]]
+        else:
+            primary_category =create_bad_category(cats[0]) #sometimes really old listing files have invalid keys
+        for sc in cats[1:]:
+            if sc in CATEGORIES:
+                secondary_categories.append(CATEGORIES[sc])
+            else:
+                secondary_categories.append(
+                   create_bad_category(sc)
+                )
     else:
         raw_cats=''
-        primary_category = ''
-        secondary_categories = []
+        primary_category = CATEGORIES["bad-arch.bad-cat"]
 
     lai = DocMetadata(
         arxiv_id=id,
@@ -333,8 +343,8 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         authors=AuthorList(fields.get('Authors','')),
         abstract='',
         categories=raw_cats,
-        primary_category= Category(primary_category),
-        secondary_categories=[Category(sc) for sc in secondary_categories],
+        primary_category= primary_category,
+        secondary_categories=secondary_categories,
         comments=fields.get('Comments',''),
         journal_ref=fields.get('Journal-ref',''),
         version = ver,
@@ -344,8 +354,8 @@ Title: A search for variable subdwarf B stars in TESS Full Frame Images III. An
         raw_safe = '',
         submitter=None,
         arxiv_identifier=None,
-        primary_archive = None,
-        primary_group = None,
+        primary_archive = primary_category.get_archive(),
+        primary_group = primary_category.get_archive().get_group(),
         modified = None,        
     )
 
