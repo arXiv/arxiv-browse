@@ -9,12 +9,15 @@ import argparse
 import signal
 import threading
 import typing
+from pathlib import Path
 from time import gmtime, sleep
 
 import json
 import os
 import logging.handlers
 import logging
+import gzip
+import tarfile
 
 import requests
 from google.cloud.pubsub_v1.subscriber.message import Message
@@ -22,13 +25,11 @@ from google.cloud.pubsub_v1 import SubscriberClient
 
 from identifier import Identifier
 from sync_published_to_gcp import (
-    ArxivSyncJsonFormatter, PS_CACHE_PREFIX, CONCURRENCY_PER_WEBNODE,
-    ensure_pdf)
+    ArxivSyncJsonFormatter, CONCURRENCY_PER_WEBNODE, ensure_pdf, FTP_PREFIX)
 
 logging.basicConfig(level=logging.INFO, format='(%(loglevel)s): (%(timestamp)s) %(message)s')
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
-
 
 LOG_FORMAT_KWARGS = {
     "fields": {
@@ -103,29 +104,78 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
         #publish_type = data.get('type') # cross | jref | new | rep | wdr
         paper_id = data.get('paper_id')
         version = data.get('version')
+        arxiv_id_str = f'{paper_id}v{version}' if version else paper_id
+        src_ext: typing.Union[str, None] = data.get('src_ext')
+        log_extra["arxiv_id"] = arxiv_id_str
+        log_extra["src_ext"] = str(src_ext)
 
+        # If the message is totally bodus, nothing I can do. Error it out
         if not paper_id:
             logger.error(f"bad data {str(message.message_id)}", extra=log_extra)
             message.nack()
             return
-        arxiv_id_str = f'{paper_id}v{version}' if version else paper_id
+
+        # PDF / HTML submissions - move on
+        if src_ext in [".pdf", ".html.gz"]:
+            logger.info("ack message - not a TeX submission: %s ext %s",
+                        arxiv_id_str, str(src_ext), extra=log_extra)
+            message.ack()
+            return
+
         arxiv_id = Identifier(arxiv_id_str)
-        log_extra["arxiv_id"] = arxiv_id_str
+        archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
+        pdf_source = Path(f"{FTP_PREFIX}/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.pdf")
+        # PDF submissions - move on
+        if pdf_source.exists():
+            logger.info("ack message - PDF submission: %s ext %s",
+                        arxiv_id_str, str(src_ext), extra=log_extra)
+            message.ack()
+            return
+
+        # Ignored submission
+        gz_source = Path(f"{FTP_PREFIX}/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.gz")
+        if gz_source.exists():
+            # Open the gzip file in read mode with text encoding set to ASCII
+            try:
+                with gzip.open(gz_source, 'rt', encoding='ascii') as f:
+                    content = f.read()
+                    if content.startswith("%auto-ignore"):
+                        logger.info("ack message - auto-ignore: %s ext %s",
+                              arxiv_id_str, str(src_ext), extra=log_extra)
+                        message.ack()
+                        return
+            except Exception as _exc:
+                logger.warning("bad .gz: %s ext %s",
+                            arxiv_id_str, str(src_ext), extra=log_extra,
+                               exc_info=True, stack_info=False)
+
+        # Removed submission
+        tgz_source = Path(f"{FTP_PREFIX}/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.tar.gz")
+        if tgz_source.exists():
+            try:
+                with tarfile.open(tgz_source, 'r:gz') as submission:
+                    toplevels = submission.getnames()
+                    if "removed.txt" in toplevels:
+                        logger.info("ack message - removed submission: %s ext %s",
+                              arxiv_id_str, str(src_ext), extra=log_extra)
+                        message.ack()
+                        return
+            except Exception as _exc:
+                logger.warning("bad tgz: %s", arxiv_id.ids, extra=log_extra,
+                               exc_info=True, stack_info=False)
 
         host, n_para = CONCURRENCY_PER_WEBNODE[min(len(CONCURRENCY_PER_WEBNODE)-1, max(0, my_tag))]
         try:
-            pdf_file, url, _1, duration_ms = ensure_pdf(thread_data.session, host, arxiv_id)
-            logger.info("nack message - pdf file does not exist: %s",
-                        arxiv_id.ids, extra=log_extra)
+            pdf_file, url, _1, duration_ms = ensure_pdf(thread_data.session, host, arxiv_id, timeout=30)
             if pdf_file.exists():
                 logger.info("ack message - pdf file exists: %s", arxiv_id.ids, extra=log_extra)
                 message.ack()
                 return
         except Exception as _exc:
-            logger.debug("ensure_pdf: %s", arxiv_id.ids, extra=log_extra,
-                         exc_info=True, stack_info=False)
+            logger.warning("ensure_pdf: %s", arxiv_id.ids, extra=log_extra,
+                           exc_info=True, stack_info=False)
             pass
-        logger.info("nack message - pdf file does not exist: %s", arxiv_id.ids, extra=log_extra)
+        logger.warning("nack message: %s", arxiv_id.ids, extra=log_extra)
         message.nack()
         return
 
