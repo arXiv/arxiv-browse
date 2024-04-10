@@ -5,7 +5,7 @@ from datetime import date
 from typing import Any, Dict, List, Optional, Tuple
 from http import HTTPStatus as status
 
-from arxiv import taxonomy
+from arxiv.taxonomy.definitions import ARCHIVES
 from flask import url_for
 from werkzeug.exceptions import BadRequest, NotFound
 
@@ -68,40 +68,39 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
     if year > thisYear:
         raise NotFound(f"Invalid Year: {year}") #not BadRequest, might be valid in future
 
-    if archive_id not in taxonomy.ARCHIVES:
+    if archive_id not in ARCHIVES:
         raise BadRequest("Unknown archive.")
     else:
-        archive = taxonomy.ARCHIVES[archive_id]
+        archive = ARCHIVES[archive_id]
 
     #check if archive was active
-    start =int(archive["start_date"].year)
+    start= archive.start_date.year
     if year< start:
-        raise BadRequest(f"Invalid year: {year}. {archive['name']} starts in {start}")
+        raise BadRequest(f"Invalid year: {year}. {archive.full_name} starts in {start}")
     
-    if "end_date" in archive: 
-        end=int(archive['end_date'].year)
+    if archive.end_date: 
+        end=archive.end_date.year
         if year>end:
-            raise BadRequest(f"Invalid year: {year}. {archive['name']} ended in {end}")
+            raise BadRequest(f"Invalid year: {year}. {archive.full_name} ended in {end}")
 
     listing_service = get_listing_service()
-    count_listing = listing_service.monthly_counts(archive_id, year)
+    count_listing = listing_service.monthly_counts(archive.id, year)
     month_data = [
         MonthData(
             month_count= month_count,
-            art=ascii_art_month(archive_id, month_count),
+            art=ascii_art_month(archive.id, month_count), 
             yymm= f"{month_count.month:02}",
             my = date(year=int(month_count.year),month=int(month_count.month), day=1).strftime("%b %Y"),
-            url= url_for('browse.list_articles', context=archive_id,
+            url= url_for('browse.list_articles', context=archive.id,
                          subcontext=f"{month_count.year:04}-{month_count.month:02}")) 
         for month_count in count_listing.by_month]
 
     response_data: Dict[str, Any] = {
-        'archive_id': archive_id,
-        'archive': archive,
+        'archive': archive, 
         'month_data': month_data,
         'listing': count_listing,
         'year': str(year),
-        'stats_by_year': stats_by_year(archive_id, archive, years_operating(archive), year)
+        'stats_by_year': stats_by_year( archive, years_operating(archive), year) 
     }
     response_headers: Dict[str, Any] = {}
 

@@ -4,9 +4,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Tuple, Union, Optional
 from http import HTTPStatus as status
-import bcrypt
-import geoip2.database
-from arxiv import taxonomy
+
+from arxiv.taxonomy.definitions import GROUPS
 from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
 from flask import (
@@ -18,7 +17,6 @@ from flask import (
     render_template,
     request,
     send_file,
-    session,
     url_for,
 )
 from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
@@ -122,11 +120,7 @@ def abstract(arxiv_id: str) -> Any:
 @blueprint.route("category_taxonomy", methods=["GET"])
 def category_taxonomy() -> Any:
     """Display the arXiv category taxonomy."""
-    response = {
-        "groups": taxonomy.definitions.GROUPS,
-        "archives": taxonomy.definitions.ARCHIVES_ACTIVE,
-        "categories": taxonomy.definitions.CATEGORIES_ACTIVE,
-    }
+    response = {"groups": GROUPS}
     return (
         render_template("category_taxonomy.html", **response),
         status.OK,

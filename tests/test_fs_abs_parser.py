@@ -136,7 +136,7 @@ ferromagnet superconducting domains is discussed.
         self.assertEqual('adap-org/9303001', m.arxiv_id, 'arxiv_id')
 
         self.assertTrue(m.primary_category)
-        self.assertTrue(m.primary_category.canonical,
+        self.assertTrue(m.primary_category.canonical_id,
                         'subsumed category adap-org should have a canonical')
 
     def test_psi_in_abs(self):

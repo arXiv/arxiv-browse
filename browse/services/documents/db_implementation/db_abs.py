@@ -2,13 +2,12 @@
 from datetime import timezone
 from typing import List, Optional, Union, Tuple
 
-import sqlalchemy
-from arxiv import taxonomy
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
 from arxiv.identifier import Identifier
-from arxiv.taxonomy import Category, Archive, Group
+from arxiv.taxonomy.category import Category, Archive, Group
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.license import License
 from arxiv.document.metadata import DocMetadata, AuthorList, Submitter
 from arxiv.document.exceptions import AbsException
@@ -137,7 +136,7 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
         primary_category = primary_category,
         secondary_categories = secondary_categories,
         primary_archive = primary_archive,
-        primary_group=Group(taxonomy.ARCHIVES[primary_archive.id]['in_group']),
+        primary_group=primary_archive.get_group(),
     )
 
     return this_version
@@ -152,13 +151,13 @@ def _classification_for_metadata(identifier: Identifier, metadata: Metadata) -> 
     secondary_categories = []
     category_list = metadata.abs_categories.split()
     if category_list and len(category_list) > 1:
-        secondary_categories = [Category(x) for x in category_list[1:]]
-    if category_list[0] in taxonomy.CATEGORIES:
-        primary_category = Category(category_list[0])
-        primary_archive = Archive(taxonomy.CATEGORIES[primary_category.id]['in_archive'])
+        secondary_categories = [CATEGORIES[x] for x in category_list[1:]]
+    if category_list[0] in CATEGORIES:
+        primary_category = CATEGORIES[category_list[0]]
+        primary_archive = primary_category.get_archive()
     else:
         archive = metadata.paper_id.split("/")[0]
-        primary_archive = Archive(archive) if archive in taxonomy.ARCHIVES else None
+        primary_archive = primary_archive = ARCHIVES.get(archive, None)
         if not primary_archive:
             raise AbsException(f'Cannot infer archive from identifier {metadata.paper_id}')
 

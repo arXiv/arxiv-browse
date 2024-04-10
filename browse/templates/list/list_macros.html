@@ -137,7 +137,7 @@
 
 
 {%- macro category_line(article) -%}
-  <span class="primary-subject">{{- article.primary_category.unalias().display -}}</span>
+  <span class="primary-subject">{{- article.primary_category.display() -}}</span>
   {%- if article.secondary_categories -%}
     {%- for category in article.display_secondaries() -%}
         ; {{ category }}
