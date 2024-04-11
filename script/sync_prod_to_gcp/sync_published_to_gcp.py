@@ -346,7 +346,7 @@ def get_pdf(session, pdf_url) -> None:
                            "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
 
 
-def ensure_pdf(session, host, arxiv_id):
+def ensure_pdf(session, host, arxiv_id, timeout=None):
     """Ensures PDF exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -361,6 +361,7 @@ def ensure_pdf(session, host, arxiv_id):
 
     This does not check if the arxiv_id is PDF source.
     """
+    timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
     url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
@@ -374,8 +375,8 @@ def ensure_pdf(session, host, arxiv_id):
     get_pdf(session, url)
     start_wait = perf_counter()
     while not pdf_file.exists():
-        if perf_counter() - start_wait > PDF_WAIT_SEC:
-            msg = f"No PDF, waited longer than {PDF_WAIT_SEC} sec {url}"
+        if perf_counter() - start_wait > timeout:
+            msg = f"No PDF, waited longer than {timeout} sec {url}"
             logger.warning(msg,
                            extra={CATEGORY: "download",
                                   "url": url, "pdf_file": str(pdf_file)})
