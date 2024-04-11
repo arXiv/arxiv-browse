@@ -109,7 +109,7 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
         log_extra["arxiv_id"] = arxiv_id_str
         log_extra["src_ext"] = str(src_ext)
 
-        # If the message is totally bodus, nothing I can do. Error it out
+        # If the message is totally bogus, nothing I can do. Error it out
         if not paper_id:
             logger.error(f"bad data {str(message.message_id)}", extra=log_extra)
             message.nack()
