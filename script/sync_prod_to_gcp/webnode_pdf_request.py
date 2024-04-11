@@ -2,8 +2,9 @@
 webnode_pdf_request.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
 and compile the submissions TeX with webnode to generate PDF.
 
-The request (pub/sub entry) is subsumed when the pdf exists, so this is a pretty safe operation.
+This is done using the function ensure_pdf() from sync_published_to_gcp.
 
+The request (pub/sub entry) is subsumed when the pdf exists, so this is a pretty safe operation.
 """
 import argparse
 import signal
@@ -78,7 +79,9 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
     global MESSAGE_COUNT
 
     def ping_callback(message: Message) -> None:
-        """Pub/sub event handler to upload the submission tarball and .abs files to GCP."""
+        """Pub/sub event handler to upload the submission tarball and .abs files to GCP.
+        Note that, this is running in a thread driven by the gcp pub/sub client.
+        """
         global MESSAGE_COUNT
         my_tag = MESSAGE_COUNT
         log_extra = {"service": "ping_webnode", "count": MESSAGE_COUNT}
@@ -217,9 +220,7 @@ if __name__ == "__main__":
                     default='/var/log/e-prints')
     ad.add_argument('--timeout', help='Web node request timeout',
                     default=10, type=int)
-    ad.add_argument('--debug', help='Set logging to debug. Does not invoke testing',
-                    action='store_true')
-    ad.add_argument('--test', help='Test reading the queue but not do anything',
+    ad.add_argument('--debug', help='Set logging to debug.',
                     action='store_true')
     args = ad.parse_args()
 
