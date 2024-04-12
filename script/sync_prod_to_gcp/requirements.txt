@@ -22,7 +22,7 @@ googleapis-common-protos==1.56.3
 grpc-google-iam-v1==0.12.6
 grpcio==1.59.0
 grpcio-status==1.48.2
-idna==3.4
+idna==3.7
 importlib-metadata==4.8.3
 itsdangerous==2.0.1
 Jinja2==3.1.3
