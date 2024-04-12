@@ -88,7 +88,8 @@
       <a id="new-{{ archive.id }}" aria-labelledby="new-{{ archive.id }} {{ archive.id }}" href="/list/{{ archive.id }}/new">new</a>,
       <a id="recent-{{ archive.id }}" aria-labelledby="recent-{{ archive.id }} {{ archive.id }}" href="/list/{{ archive.id }}/recent">recent</a>,
       <a id="search-{{ archive.id }}" aria-labelledby="search-{{ archive.id }} {{ archive.id }}" href="{{ archive_search_url }}">search</a>
-      {% if 0 %},<a href="/catchup?archive={{ archive.id }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{% endif %})
+      {%- if 0 -%},<a href="/catchup?archive={{ archive.id }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{%- endif -%}
+      )
       {%- if group.id == 'grp_physics' and archive.id not in categories  -%}
       <br/>includes:
       {%- elif group.id == 'cs' -%}
