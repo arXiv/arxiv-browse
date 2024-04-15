@@ -185,7 +185,7 @@ class ArticleStore():
         return ('BAD', ' and '.join(msgs))
 
     def get_source(self, arxiv_id: Identifier, docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], DocMetadata, VersionEntry]]:
         """Gets the source for a paper_id and version."""
         return self.dissemination("e-print", arxiv_id, docmeta)
 
@@ -193,7 +193,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -243,9 +243,9 @@ class ArticleStore():
         if not fileobj:
             return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
-            return (fileobj, self.sourcestore.get_return_format(fileobj), docmeta, version) 
+            return (fileobj, docmeta, version) 
         if isinstance(fileobj, List): #html requests return an iterable of files in the folder
-            return (fileobj, format, docmeta, version) #type: ignore
+            return (fileobj, docmeta, version) #type: ignore
         else:
             return fileobj
 

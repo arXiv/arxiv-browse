@@ -5,7 +5,6 @@ import re
 from typing import Optional, List
 
 from arxiv.identifier import Identifier
-from arxiv.files.fileformat import FileFormat, pdf, gz
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import VersionEntry
 from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent
@@ -90,12 +89,6 @@ class SourceStore():
         else:
             return self.get_src(arxiv_id, False)
         
-    def get_return_format(self, src_file: FileObj)->FileFormat:
-        """Gets article's source format as a `FileFormat`."""
-        if src_file.name.endswith(".pdf"):
-            return pdf
-        else:
-            return gz #everything else is returned in a gzip
 
     def get_ancillary_files(self, docmeta: DocMetadata) -> List[dict]:
         """Get list of ancillary file names and sizes.
