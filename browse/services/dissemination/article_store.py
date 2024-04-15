@@ -243,7 +243,7 @@ class ArticleStore():
         if not fileobj:
             return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
-            return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version) #TODO I dont think we want to always return the source format
+            return (fileobj, self.sourcestore.get_return_format(fileobj), docmeta, version) 
         if isinstance(fileobj, List): #html requests return an iterable of files in the folder
             return (fileobj, format, docmeta, version) #type: ignore
         else:
