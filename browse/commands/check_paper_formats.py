@@ -44,7 +44,7 @@ def check_paper_formats(yymm: str) -> None:
             result["src_file_problem"] = ""
             result["source_flag_only_formats"] = formats_from_source_flag(source_flags)
 
-            fileobj, fmt, docmeta, version = src
+            fileobj, docmeta, version = src
             if isinstance(fileobj, FileObj):
                 result["sizes_match"] = source_size == fileobj.size
                 result["fs_size"] = fileobj.size

@@ -71,7 +71,7 @@ def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
     name = filename.name if isinstance(filename, FileObj) else filename
 
     if name.endswith(".gz"):
-        content_type="application/gzip"
+        content_type: str|None="application/gzip"
     else:
         content_type, _ = mimetypes.guess_type(name)    
 

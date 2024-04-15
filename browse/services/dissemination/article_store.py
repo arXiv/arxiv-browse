@@ -245,7 +245,7 @@ class ArticleStore():
         if isinstance(fileobj, FileObj):
             return (fileobj, docmeta, version) 
         if isinstance(fileobj, List): #html requests return an iterable of files in the folder
-            return (fileobj, docmeta, version) #type: ignore
+            return (fileobj, docmeta, version)
         else:
             return fileobj
 
