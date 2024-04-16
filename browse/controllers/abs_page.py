@@ -305,15 +305,10 @@ def _prevnext_links(
     ):
         context = request.args["context"]
     elif primary_category:
-        pc = primary_category.get_canonical()
-        if not arxiv_identifier.is_old_id:  # new style IDs
-            context = pc.id
-        else:  # Old style id
-            if pc.id in ARCHIVES:
-                context = pc.id
-            else:
-                if arxiv_identifier.archive in ARCHIVES:
-                    context = arxiv_identifier.archive
+        context = primary_category.canonical_id
+    elif arxiv_identifier.is_old_id: 
+        if arxiv_identifier.archive in ARCHIVES: #context from old style id
+                    context=ARCHIVES[arxiv_identifier.archive].canonical_id
 
     response_data["browse_context"] = context
     response_data["browse_context_previous_url"] = url_for(

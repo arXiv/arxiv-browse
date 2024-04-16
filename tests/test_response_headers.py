@@ -1,12 +1,10 @@
 """Test utility functions for generating response headers."""
 from datetime import datetime, timedelta
 from unittest import TestCase
+from dateutil.tz import gettz, tzutc
 
 from browse.controllers.response_headers import guess_next_update_utc, \
     mime_header_date, APPROX_PUBLISH_DURATION
-from arxiv.base.globals import get_application_config
-from dateutil.tz import gettz, tzutc
-
 from browse.controllers.response_headers import (
     APPROX_PUBLISH_DURATION,
     guess_next_update_utc,
@@ -115,3 +113,45 @@ class TestResponseHeaderUtils(TestCase):
         dt = datetime(year=2018, month=9, day=14,
                       hour=20, minute=1, tzinfo=tz)
         self.assertEqual(mime_header_date(dt), 'Sat, 15 Sep 2018 00:01:00 GMT')
+
+#Tests for content of response headers
+
+def test_content_type_header( client_with_test_fs) -> None:
+    client=client_with_test_fs
+
+    # single file native html
+    resp = client.head("/html/2403.10561")
+    assert resp.headers.get('Content-Type', '')== "text/html; charset=utf-8"
+
+    #multifile native html
+    resp = client.head("/html/cs/9901011")
+    assert resp.headers.get('Content-Type', '')== "text/html; charset=utf-8"
+
+    resp = client.head("/html/cs/9904010") #this one has multiple html files
+    assert resp.headers.get('Content-Type', '')== "text/html; charset=utf-8"
+    resp = client.head("/html/cs/9904010/report.htm")
+    assert resp.headers.get('Content-Type', '')== "text/html; charset=utf-8"
+    resp = client.head("/html/cs/9904010/graph4.gif")
+    assert resp.headers.get('Content-Type', '')== "image/gif"
+        
+    #pdf path
+    resp = client.head("/pdf/cs/0012007")
+    assert resp.headers.get('Content-Type', '')== "application/pdf"
+
+    #source in .gz
+    resp = client.head("/e-print/cs/0011004")
+    assert resp.headers.get('Content-Type', '')== "application/gzip"
+
+    #source in tar.gz
+    resp = client.head("/e-print/cs/0012007")
+    assert resp.headers.get('Content-Type', '')== "application/gzip"
+    resp = client.head("/pdf/cs/0012007")
+    assert resp.headers.get('Content-Type', '')== "application/pdf"
+
+    #source is pdf
+    resp = client.head("/e-print/cs/0212040")
+    assert resp.headers.get('Content-Type', '')== "application/pdf"
+
+    #source file comes in a gz
+    resp = client.head("/e-print/cond-mat/9805021v1")
+    assert resp.headers.get('Content-Type', '')== "application/gzip"
