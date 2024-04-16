@@ -6,7 +6,6 @@ from typing import Callable, Optional, Union, List
 import mimetypes
 
 from arxiv.identifier import Identifier, IdentifierException
-from arxiv.files.fileformat import FileFormat
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
@@ -42,8 +41,6 @@ def default_resp_fn(file: FileObj,
 
     Parameters
     ----------
-    format : FileFormat
-        `FileFormat` of the `file`
     docmeta : DocMetadata
         article that the response is for.
     file : FileObj
