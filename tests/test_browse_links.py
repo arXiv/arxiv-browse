@@ -29,7 +29,7 @@ def test_older_id(client_with_test_fs):
 
     current_context = html.find('div', 'current')
     assert current_context is not None
-    assert current_context.text == 'ao-sci'
+    assert current_context.text == 'physics.ao-ph'
 
     pn_div = html.find('div', 'prevnext')
     assert pn_div, 'Should have div.prevnext'
@@ -37,10 +37,10 @@ def test_older_id(client_with_test_fs):
     atags = pn_div.find_all('a')
     assert len(atags) >= 1, 'Shold be at least one <a> tags for prev/next'
 
-    assert pn_div.find_all('a')[0]['title'] == 'previous in ao-sci (accesskey p)', 'Should have previous span.arrow subtags with correct category'
+    assert pn_div.find_all('a')[0]['title'] == 'previous in physics.ao-ph (accesskey p)', 'Should have previous span.arrow subtags with correct category'
 
     switches = html.find_all('div', 'switch')
-    assert len(switches) == 0, 'Should be no other contxt to switch to'
+    assert len(switches) == 0, 'Should be no other context to switch to'
 
 def test_older_id_w_canonical(client_with_test_fs):
     rv = client_with_test_fs.get('/abs/physics/9707012')
@@ -55,12 +55,12 @@ def test_older_id_w_canonical(client_with_test_fs):
     assert pn_div, 'Should have div.prevnext'
 
     atags = pn_div.find_all('a')
-    assert len(atags) >= 1, 'Shold be at least one <a> tags for prev/next'
+    assert len(atags) >= 1, 'Should be at least one <a> tags for prev/next'
 
     assert pn_div.find_all('a')[0]['title'] == 'previous in math-ph (accesskey p)', 'Should have previous span.arrow subtags with correct category'
 
     switches = html.find_all('div', 'switch')
-    assert len(switches) == 0, 'Should be no other contxt to switch to'
+    assert len(switches) == 0, 'Should be no other context to switch to'
 
     other_atags = html.find('div','list').find_all('a')
     assert other_atags
