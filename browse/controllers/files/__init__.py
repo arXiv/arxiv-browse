@@ -67,9 +67,18 @@ def stream_gen(file: FileObj) -> Iterator[bytes]:
 
 
 def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
-    content_type, _ = mimetypes.guess_type(filename.name if isinstance(filename, FileObj) else filename)
+    """adds the appropriate content type header to the response based on file name"""
+    name = filename.name if isinstance(filename, FileObj) else filename
+
+    if name.endswith(".gz"):
+        content_type: str|None="application/gzip"
+    else:
+        content_type, _ = mimetypes.guess_type(name)    
+
     if content_type:
         resp.headers["Content-Type"] = content_type
+        if content_type=="text/html":
+            resp.headers['Content-Type'] = "text/html; charset=utf-8" #all our html should be in utf-8
 
 
 def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str]) -> str:
