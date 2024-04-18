@@ -30,7 +30,7 @@
             value ="{{group_key}}"
             data-url="{{url_for('search_archive', archive=group_key[4:])}}"
             {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
-          {{ group_details.name }}
+          {{ group_details.full_name }}
         </option>
         {%- endfor %}
       </select>
