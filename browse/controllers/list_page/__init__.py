@@ -129,7 +129,6 @@ def get_listing(subject_or_category: str,
     show
        Number of articles to show
     """
-    
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
@@ -138,7 +137,8 @@ def get_listing(subject_or_category: str,
         time_period = request.args.get('year')  # type: ignore
         month = request.args.get('month', None)
         if month and month != 'all':
-            time_period = time_period + "-"+request.args.get('month')  # type: ignore
+            #time_period = time_period + "-"+request.args.get('month')  # type: ignore
+            time_period = time_period +month  
 
 
     if (
@@ -327,12 +327,15 @@ def year_month_2_digit(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     
     if len(tp) == 2:  
         year=int(tp) +1900
-        if year<1990:
+        if year<=1990:
             year+=100
         return False, year, None
     
-    if len(tp) == 4:  
-        return False, int(tp), None
+    if len(tp) == 4:
+        year=int(tp[0:2]) +1900
+        if year<1990:
+            year+=100  
+        return False, year, int(tp[2:])
     
     else:
         return None
