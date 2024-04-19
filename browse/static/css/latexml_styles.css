@@ -1181,3 +1181,10 @@ article{
     height: auto;
   }
 }
+
+@media only screen and (min-width: 719px) and (max-width: 980px) {
+  .html-header-nav a {
+      padding: 0px;
+      font-size: 0.8rem;
+  }
+}
