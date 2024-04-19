@@ -12,7 +12,7 @@ or
 
 ```bash
 python --version
-# 3.10.x
+# 3.11.x
 python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry==1.3.2
