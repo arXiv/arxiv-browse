@@ -3,7 +3,7 @@
 
 import ipaddress
 from datetime import date, datetime, timezone
-from typing import Any, Callable, List, Mapping, Optional, Tuple
+from typing import Any, Callable, List, Mapping, Optional, Tuple, Dict
 
 from flask import current_app
 
@@ -13,7 +13,7 @@ from dateutil.tz import gettz, tzutc
 from sqlalchemy import Row, asc, desc, not_, select
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.sql import func, select, Select
+from sqlalchemy.sql import func, select, Select, tuple_
 
 from arxiv.identifier import Identifier
 from arxiv.db.models import (
@@ -495,6 +495,18 @@ def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
     )
+
+@db_handle_error(db_logger=logger, default_return_val={})
+def get_latexml_status_for_listings (listings: List[Any]) -> Dict[Tuple[str, int], int]:
+    if not current_app.config["LATEXML_ENABLED"]:
+        return {}
+    statuses = session.execute(
+        select(DBLaTeXMLDocuments.paper_id, DBLaTeXMLDocuments.document_version, DBLaTeXMLDocuments.conversion_status)
+        .filter(tuple_(DBLaTeXMLDocuments.paper_id, DBLaTeXMLDocuments.document_version).in_(
+            [(l.article.arxiv_id, l.article.highest_version()) for l in listings]
+        ))
+    ).all()
+    return { (i[0], i[1]): i[2] for i in statuses }
 
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:

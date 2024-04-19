@@ -58,7 +58,7 @@ from arxiv.formats import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service, ListingItem)
 
-from browse.formatting.latexml import get_latexml_url
+from browse.formatting.latexml import get_latexml_url, get_latexml_url_for_listings
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
@@ -392,10 +392,9 @@ def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {article.arxiv_id_v: get_latexml_url(article, True)}
 
-def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+def latexml_links_for_articles (listings: List[Any]) -> Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
-    return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
-                for item in listings}
+    return get_latexml_url_for_listings(listings)
 
 def authors_for_article(article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to author links."""
