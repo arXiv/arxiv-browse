@@ -21,11 +21,11 @@ def get_latexml_url (article: DocMetadata, most_recent: bool=False) -> Optional[
     path = f'html/{article.arxiv_id}v{article.version}'
     return f'{LATEXML_URI_BASE}/{path}' if status == 1 else None
 
-def get_latexml_urls_for_articles (listings: Iterable[DocMetadata]) -> Dict[str, Any]:
+def get_latexml_urls_for_articles (listings: Iterable[Optional[DocMetadata]]) -> Dict[str, Any]:
     if not current_app.config['LATEXML_ENABLED']:
         return {}
     LATEXML_URI_BASE = current_app.config['LATEXML_BASE_URL']
-    statuses = get_latexml_statuses_for_listings(listings)
+    statuses = get_latexml_statuses_for_listings(filter(None, listings))
     result: Dict[str, Optional[str]] = {}
     for k, v in statuses.items():
         if v:

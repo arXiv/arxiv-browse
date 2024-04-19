@@ -392,7 +392,7 @@ def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {article.arxiv_id_v: get_latexml_url(article, True)}
 
-def latexml_links_for_articles (articles: List[ListingItem]) -> Dict[str, Any]:
+def latexml_links_for_articles (articles: List[ListingItem]) -> Dict[str, Optional[str]]:
     """Returns a Dict of article id to latexml links"""
     return get_latexml_urls_for_articles(map(lambda x: x.article, articles))
 
