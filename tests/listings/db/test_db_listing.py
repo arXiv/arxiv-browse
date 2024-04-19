@@ -36,6 +36,12 @@ SAMPLE_METADATA1=Metadata(
     is_withdrawn = 0
 )
 
+def test_bad_parameters(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math.MP/recent?show=0")
+    assert rv.status_code == 200
+    rv = client.get("/list/math.MP/recent?skip=9000")
+    assert rv.status_code == 200
 
 def test_possible_categories():
     

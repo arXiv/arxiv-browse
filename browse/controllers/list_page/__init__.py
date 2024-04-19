@@ -70,6 +70,7 @@ show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
+min_show = 1
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 
@@ -185,7 +186,7 @@ def get_listing(subject_or_category: str,
         else:
             shown = default_show
     else:
-        shown = min(int(show), max_show)
+        shown = max(min(int(show), max_show), min_show)
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
