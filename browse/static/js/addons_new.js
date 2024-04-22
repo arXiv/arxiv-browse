@@ -111,15 +111,13 @@ let generate_upper_content_from_metadata = async () => {
               ${missing_package_lis}
           </ul>
       <p>Authors: achieve the best HTML results from your LaTeX submissions by following these <a href="https://info.arxiv.org/help/submit_latex_best_practices.html" target="_blank">best practices</a>.</p>
-    </div>
-
-    <script>
-      function closePopup() {{
-          document.querySelector('.package-alerts').style.display = 'none';
-      }}
-    </script>`
+    </div>`
     );
   }
+}
+
+function closePopup() {
+  document.querySelector('.package-alerts').style.display = 'none';
 }
 
 let add_abs_refs_to_toc = () => {
