@@ -58,7 +58,7 @@ from arxiv.formats import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service, ListingItem)
 
-from browse.formatting.latexml import get_latexml_url
+from browse.formatting.latexml import get_latexml_url, get_latexml_urls_for_articles
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
@@ -70,6 +70,7 @@ show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
+min_show = 1
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 
@@ -185,7 +186,7 @@ def get_listing(subject_or_category: str,
         else:
             shown = default_show
     else:
-        shown = min(int(show), max_show)
+        shown = max(min(int(show), max_show), min_show)
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
@@ -392,10 +393,9 @@ def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {article.arxiv_id_v: get_latexml_url(article, True)}
 
-def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+def latexml_links_for_articles (articles: List[ListingItem]) -> Dict[str, Optional[str]]:
     """Returns a Dict of article id to latexml links"""
-    return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
-                for item in listings}
+    return get_latexml_urls_for_articles(map(lambda x: x.article, articles))
 
 def authors_for_article(article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to author links."""
