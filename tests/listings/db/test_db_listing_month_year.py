@@ -170,7 +170,7 @@ def test_listings_for_year(app_with_db):
 def test_month_listing_page( client_with_db_listings):
     client = client_with_db_listings
 
-    rv = client.get("/list/chao-dyn/1995-10")
+    rv = client.get("/list/chao-dyn/9510")
     assert rv.status_code == 200
     text = rv.text
     #page formatting
@@ -186,7 +186,7 @@ def test_year_listing_page( client_with_db_listings):
     client = client_with_db_listings
 
     #two digit year
-    rv = client.get("/list/chao-dyn/1995")
+    rv = client.get("/list/chao-dyn/95")
     assert rv.status_code == 200
     text = rv.text
     #page formatting

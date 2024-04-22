@@ -130,7 +130,6 @@ def get_listing(subject_or_category: str,
     show
        Number of articles to show
     """
-    
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
@@ -139,7 +138,8 @@ def get_listing(subject_or_category: str,
         time_period = request.args.get('year')  # type: ignore
         month = request.args.get('month', None)
         if month and month != 'all':
-            time_period = time_period + "-"+request.args.get('month')  # type: ignore
+            #time_period = time_period + "-"+request.args.get('month')  # type: ignore
+            time_period = time_period +month  
 
 
     if (
@@ -223,7 +223,7 @@ def get_listing(subject_or_category: str,
         response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
     else:  # current or YYMM or YYYYMM or YY
-        yandm = year_month(time_period)
+        yandm = year_month_2_digit(time_period)
         if yandm is None:
             raise BadRequest(f"Invalid time period: {time_period}") 
         should_redir, list_year, list_month = yandm
@@ -321,6 +321,25 @@ def get_listing(subject_or_category: str,
 
     return response_data, status.OK, response_headers
 
+def year_month_2_digit(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
+    if tp == "current":
+        day = date.today()
+        return False, day.year, day.month
+    
+    if len(tp) == 2:  
+        year=int(tp) +1900
+        if year<=1990:
+            year+=100
+        return False, year, None
+    
+    if len(tp) == 4:
+        year=int(tp[0:2]) +1900
+        if year<1990:
+            year+=100  
+        return False, year, int(tp[2:])
+    
+    else:
+        return None
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""
