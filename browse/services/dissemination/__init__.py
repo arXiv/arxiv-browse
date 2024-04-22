@@ -15,6 +15,8 @@ _object_store: ObjectStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
 _genpdf_store: ObjectStore = None  # type: ignore
 
+_latexml_store: ObjectStore = None
+
 
 def get_global_object_store(path: str, global_name: str) -> ObjectStore:
     """Creates an object store from given path."""
@@ -40,7 +42,8 @@ def get_article_store() -> "ArticleStore":
         _article_store = ArticleStore(
             get_doc_service(),
             get_global_object_store(config["DISSEMINATION_STORAGE_PREFIX"], "_object_store"),
-            get_global_object_store(config["GENPDF_API_STORAGE_PREFIX"], "_genpdf_store")
+            get_global_object_store(config["GENPDF_API_STORAGE_PREFIX"], "_genpdf_store"),
+            get_global_object_store(config["LATEXML_BUCKET"], "_latexml_store")
         )
 
     return _article_store

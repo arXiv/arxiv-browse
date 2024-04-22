@@ -38,7 +38,7 @@ class Settings(arxiv_base.Settings):
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_BUCKET: str = 'latexml_arxiv_id_converted'
+    LATEXML_BUCKET: str = 'gs://latexml_arxiv_id_converted'
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
