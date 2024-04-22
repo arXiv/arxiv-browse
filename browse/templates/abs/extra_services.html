@@ -99,8 +99,10 @@
     <span class="is-hidden-mobile"> | </span>
     <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
     <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
-      {{- abs_meta.arxiv_identifier.yymm -}}</a>
+    {#%- set yyyymm = '%04d-%02d' % (abs_meta.arxiv_identifier.year, abs_meta.arxiv_identifier.month) -%#}
+    {%-set yyyymm= abs_meta.arxiv_identifier.yymm-%}
+    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=yyyymm)}}">
+      {{- yyyymm -}}</a>
   </div>
   {%- endif -%}
 

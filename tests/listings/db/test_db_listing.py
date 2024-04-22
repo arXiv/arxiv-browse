@@ -1,6 +1,5 @@
 from datetime import datetime
 from browse.services.database.listings import (
-    _check_alternate_name,
     _all_possible_categories,
     _metadata_to_listing_item
 )
@@ -37,14 +36,12 @@ SAMPLE_METADATA1=Metadata(
     is_withdrawn = 0
 )
 
-def test_alt_name():
-    #aliases both directions
-    assert "math.MP"==_check_alternate_name("math-ph")
-    assert "math-ph"==_check_alternate_name("math.MP")
-
-    #subsumed only fetches older names
-    assert "cs.CL"!=_check_alternate_name("cmp-lg")
-    assert "cmp-lg"==_check_alternate_name("cs.CL")
+def test_bad_parameters(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math.MP/recent?show=0")
+    assert rv.status_code == 200
+    rv = client.get("/list/math.MP/recent?skip=9000")
+    assert rv.status_code == 200
 
 def test_possible_categories():
     

@@ -46,8 +46,7 @@ from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
 import re
 
-from arxiv import taxonomy
-from arxiv.taxonomy.definitions import CATEGORIES
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES_SUBSUMED, ARCHIVES
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
@@ -59,7 +58,7 @@ from arxiv.formats import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service, ListingItem)
 
-from browse.formatting.latexml import get_latexml_url
+from browse.formatting.latexml import get_latexml_url, get_latexml_urls_for_articles
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
@@ -71,6 +70,7 @@ show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
+min_show = 1
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 
@@ -154,19 +154,22 @@ def get_listing(subject_or_category: str,
     ):
         raise BadRequest("Listing requires subject and valid time period parameters.") 
 
-    if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
-        subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
+    if subject_or_category in ARCHIVES_SUBSUMED:
+        subject_or_category=ARCHIVES_SUBSUMED[subject_or_category]
 
-    if subject_or_category in taxonomy.CATEGORIES:
+    if subject_or_category in CATEGORIES:
         list_type = 'category'
-        list_ctx_name = taxonomy.CATEGORIES[subject_or_category]['name']
-        list_ctx_id = subject_or_category
-        list_ctx_in_archive = taxonomy.CATEGORIES[subject_or_category]['in_archive']
-    elif subject_or_category in taxonomy.ARCHIVES:
+        cat=CATEGORIES[subject_or_category]
+        category=cat.get_canonical() #make sure we use the canonical version of the category
+        list_ctx_name = category.full_name
+        list_ctx_id = category.id
+        list_ctx_in_archive = category.in_archive
+    elif subject_or_category in ARCHIVES:
         list_type = 'archive'
-        list_ctx_id = subject_or_category
-        list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
-        list_ctx_in_archive = list_ctx_name
+        archive=ARCHIVES[subject_or_category]
+        list_ctx_id = archive.id
+        list_ctx_name = archive.full_name
+        list_ctx_in_archive = archive.id
     else:
         raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
@@ -183,7 +186,7 @@ def get_listing(subject_or_category: str,
         else:
             shown = default_show
     else:
-        shown = min(int(show), max_show)
+        shown = max(min(int(show), max_show), min_show)
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
@@ -234,7 +237,7 @@ def get_listing(subject_or_category: str,
                 new_time=f"{list_year:04d}-{list_month:02d}"
             else:
                 new_time=f"{list_year:04d}"
-            new_address=url_for("browse.list_articles", context=subject_or_category, subcontext=new_time)
+            new_address=url_for("browse.list_articles", context=list_ctx_id, subcontext=new_time)
             response_headers["Location"]=new_address
             return {}, status.MOVED_PERMANENTLY, response_headers
         
@@ -299,12 +302,14 @@ def get_listing(subject_or_category: str,
     def author_query(article: DocMetadata, query: str)->str:
         try:
             if article.primary_archive:
-                archive = article.primary_archive.id
+                archive_id = article.primary_archive.id
+            elif article.primary_category:
+                archive_id = article.primary_category.in_archive
             else:
-                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+                archive_id=list_ctx_in_archive 
             return str(url_for('search_archive',
                            searchtype='author',
-                           archive=archive,
+                           archive=archive_id,
                            query=query))
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
@@ -388,10 +393,9 @@ def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {article.arxiv_id_v: get_latexml_url(article, True)}
 
-def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+def latexml_links_for_articles (articles: List[ListingItem]) -> Dict[str, Optional[str]]:
     """Returns a Dict of article id to latexml links"""
-    return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
-                for item in listings}
+    return get_latexml_urls_for_articles(map(lambda x: x.article, articles))
 
 def authors_for_article(article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to author links."""

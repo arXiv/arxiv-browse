@@ -112,7 +112,7 @@
 {%- macro dl_links( article ) -%}
   {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
-  {% set latexml_link = latexml[ article.arxiv_id_v ] %}
+  {% set latexml_link = latexml.get(article.arxiv_id_v) %}
   [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
   {%- if 'ps' in downloads -%}
     , <a href="{{url_for('dissemination.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
@@ -137,7 +137,7 @@
 
 
 {%- macro category_line(article) -%}
-  <span class="primary-subject">{{- article.primary_category.unalias().display -}}</span>
+  <span class="primary-subject">{{- article.primary_category.display() -}}</span>
   {%- if article.secondary_categories -%}
     {%- for category in article.display_secondaries() -%}
         ; {{ category }}

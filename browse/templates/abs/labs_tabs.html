@@ -271,7 +271,7 @@
               <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://core.ac.uk/services/recommender">What is CORE?</a>)</em>
             </div>
           </div>
-          {%- if abs_meta.primary_category and (abs_meta.primary_category in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.startswith('astro-ph') or abs_meta.primary_category.startswith('cond-mat')) %}
+          {%- if abs_meta.primary_category and (abs_meta.primary_category.id in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.id.startswith('astro-ph') or abs_meta.primary_category.id.startswith('cond-mat')) %}
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">

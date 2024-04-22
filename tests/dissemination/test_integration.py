@@ -419,3 +419,21 @@ def test_deleted(host):
     # resp = requests.get(f"{host}/pdf/physics/0411006")
     # assert resp.status_code == 404
     # assert msg in resp.text
+
+
+multi_version = [
+    ("CO7+7eHNp/ICEAE=", "/src/2006.01705v1"),
+    ("CLCsgOj30PUCEAE=", "/src/2006.01705v2"),
+    ("CMm22Yi70vsCEAE=", "/src/2006.01705v3"),
+    ("CPCD+Y3t8YEDEAI=", "/src/2006.01705v4"),
+    ("CKjp75m5gYQDEAI=", "/src/2006.01705v5"),
+    ("CPrJ5Jq5gYQDEAI=", "/src/2006.01705v6"),
+    ]
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("etag, path", multi_version)
+def test_multi_version_src(host, etag, path):
+    """Test for ARXIVCE-1455."""
+    resp = requests.head(f"{host}{path}")
+    assert resp and resp.status_code == 200 and etag in resp.headers["Etag"]
