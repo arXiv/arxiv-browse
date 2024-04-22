@@ -15,7 +15,7 @@ _object_store: ObjectStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
 _genpdf_store: ObjectStore = None  # type: ignore
 
-_latexml_store: ObjectStore = None
+_latexml_store: ObjectStore = None # type: ignore
 
 
 def get_global_object_store(path: str, global_name: str) -> ObjectStore:
