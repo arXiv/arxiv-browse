@@ -460,6 +460,4 @@ class ArticleStore():
         else: # latex to html
             # TODO it may be expensive to recreate the GS Client each time
             file=self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
-            logger.warning(f'FILE: {file}')
-            logger.warning(f'arXiv ID: {arxiv_id}, VERSION: {version}, version.version: {version.version}')
             return file if file.exists() else "NO_HTML"
