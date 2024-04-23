@@ -142,8 +142,8 @@ sphinx = ["sphinx", "sphinx-autodoc-typehints", "sphinxcontrib-websupport"]
 [package.source]
 type = "git"
 url = "https://github.com/arXiv/arxiv-base.git"
-reference = "30d0fdd2a0da2d167dd274a0ef78ec61450fe193"
-resolved_reference = "30d0fdd2a0da2d167dd274a0ef78ec61450fe193"
+reference = "1ccb1ea1f0ad47b40b831fdd6cf1840efebad656"
+resolved_reference = "1ccb1ea1f0ad47b40b831fdd6cf1840efebad656"
 
 [[package]]
 name = "asn1crypto"
@@ -3044,4 +3044,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "607a2a2a651bf4723ad072f1bf829d7d266fcac7e371b52edf758664eefeecd2"
+content-hash = "9d7c04ea3ea0b01f6dcd403b29db9f9a90a80f3a5a10e802abacadb627193c33"
