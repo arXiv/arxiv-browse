@@ -129,6 +129,9 @@ class Settings(arxiv_base.Settings):
     GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
     """URL of the genpdf API"""
 
+    GENPDF_SERVICE_URL: str = "https://genpdf-api.arxiv.org"
+    """URL of the genpdf service URL"""
+
     GENPDF_API_TIMEOUT: int = 590
     """Time ouf for the genpdf API access"""
 

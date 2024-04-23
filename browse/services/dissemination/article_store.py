@@ -32,6 +32,7 @@ from arxiv.files import FileObj, fileformat
 from .source_store import SourceStore
 import google.cloud.storage as storage
 from flask import current_app
+from gcp_service_auth import GcpIdentityToken
 
 logger = logging.getLogger(__file__)
 
@@ -122,7 +123,7 @@ def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
 def is_genpdf_able(_arxiv_id: Identifier) -> bool:
     """Is genpdf api available for this arxiv_id?"""
 
-    return bool(current_app.config.get("GENPDF_API_URL"))
+    return bool(current_app.config.get("GENPDF_API_URL")) and bool(current_app.config.get("GENPDF_SERVICE_URL"))
 
 
 Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
@@ -136,8 +137,9 @@ class ArticleStore():
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
+                 genpdf_service_url: str,
                  reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
-                 is_deleted: Callable[[str], Optional[str]] = _is_deleted
+                 is_deleted: Callable[[str], Optional[str]] = _is_deleted,
                  ):
         self.metadataservice = metaservice
         self.objstore: ObjectStore = objstore
@@ -152,6 +154,8 @@ class ArticleStore():
             fileformat.ps: self._ps,
             fileformat.html: self._html
         }
+        self.service_identity = GcpIdentityToken(genpdf_service_url, logger=logger)
+
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Indicates the health of the service.
@@ -363,7 +367,9 @@ class ArticleStore():
         t_start = time.perf_counter()
         for _ in range(3):  # cannot be infinite loop but 500s are common when the cloud run's service is starting up.
             try:
-                response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
+                response: requests.Response = \
+                    requests.get(url, timeout=timeout, allow_redirects=False,
+                                 headers={"Authorization": f"Bearer {self.service_identity.token}"})
             except ConnectionError as _exc:
                 logger.warning("The HTTP connection is reset. Retrying...")
                 time.sleep(0.1) # just a fraction is enough

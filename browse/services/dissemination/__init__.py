@@ -40,7 +40,8 @@ def get_article_store() -> "ArticleStore":
         _article_store = ArticleStore(
             get_doc_service(),
             get_global_object_store(config["DISSEMINATION_STORAGE_PREFIX"], "_object_store"),
-            get_global_object_store(config["GENPDF_API_STORAGE_PREFIX"], "_genpdf_store")
+            get_global_object_store(config["GENPDF_API_STORAGE_PREFIX"], "_genpdf_store"),
+            config["GENPDF_SERVICE_URL"]
         )
 
     return _article_store
