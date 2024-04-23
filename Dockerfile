@@ -64,7 +64,7 @@ USER e-prints
 # cicd/cloudbuild-master-pr.yaml for how it is used
 
 ENV GUNICORN gunicorn --bind :8080 \
-    --workers 1 --threads 8 --timeout 0 \
+    --workers 4 --threads 8 --timeout 0 \
      "browse.factory:create_web_app()"
 
 CMD exec $GUNICORN
