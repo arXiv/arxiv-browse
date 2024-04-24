@@ -39,14 +39,13 @@ def invalidate_mailings(project: str, cdn: str, mailings: List[str], dry_run: bo
         raise ValueError("mailings values must be like '230130'")
 
     paths: List[str] = []
-    session: scoped_session = session
     for mailing in mailings:
         if v:
             print(f"About to query for {mailing}")
         papers = (session.query(NextMail.paper_id, NextMail.version)
                   .filter(NextMail.mail_id == int(mailing)))
 
-        nn = 0;
+        nn = 0
         for paper_id, version in papers.all():
             paths.append(f"/pdf/{paper_id}.pdf")
             paths.append(f"/pdf/{paper_id}v{version}.pdf")
