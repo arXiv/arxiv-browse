@@ -32,7 +32,7 @@ from arxiv.files import FileObj, fileformat
 from .source_store import SourceStore
 import google.cloud.storage as storage
 from flask import current_app
-from gcp_service_auth import GcpIdentityToken
+from gcp.service_auth.gcp_service_auth import GcpIdentityToken
 
 logger = logging.getLogger(__file__)
 
