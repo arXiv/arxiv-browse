@@ -8,11 +8,11 @@
 [data-theme=light] {
  --main-width:52rem;
  --main-width-margin:54rem;
- --headings-font-family:"Noto Sans","Noto Sans Fallback",sans-serif;
- --text-font-family:"Noto Serif","Noto Serif Fallback",serif;
- --math-font-family:"STIX Two Math","STIX Two Math Fallback","Cambria Math",math;
+ --headings-font-family:"noto-sans",sans-serif;
+ --text-font-family:"noto-serif",serif;
+ --math-font-family:"stix-two-math","Cambria Math",math;
  --math-caligraphic-font-family:"STIX Two Math","STIX Two Math Fallback","Cambria Math",math;
- --code-font-family:"Noto Sans Mono","Noto Sans Mono Fallback",monospace;
+ --code-font-family:"noto-mono",monospace;
  --background-color:white;
  --text-color:#292929;
  --border-color:#292929;
