@@ -33,7 +33,7 @@ let create_header = () => {
         </p>
     </div>`;
 
-    const locationId = encodeURI(`https://arxiv.org/abs/${window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]}`);
+    const locationId = encodeURI(window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]);
     var Links = `
     <nav class="html-header-nav">
       <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
