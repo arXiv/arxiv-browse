@@ -144,7 +144,7 @@ let add_abs_refs_to_toc = () => {
     let li = document.createElement('li');
     li.setAttribute('class', 'ltx_tocentry ltx_tocentry_section');
     li.innerHTML = `
-    <a class="ltx_ref" href="${encodeURI(document.location.href.match(/(^[^#]*)/) + "#bib")}" title="References">
+    <a class="ltx_ref" href="${encodeURI(document.location.href.match(/(^[^#]*)/)[0] + "#bib")}" title="References">
       <span class="ltx_text ltx_ref_title">
         <span class="ltx_tag ltx_tag_ref"></span>
         References
