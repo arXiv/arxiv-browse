@@ -9,6 +9,7 @@ import typing
 from collections.abc import Callable
 from typing import Dict, List, Literal, Optional, Tuple, Union
 from urllib.parse import urlparse
+from google.auth.exceptions import DefaultCredentialsError
 
 import requests
 
@@ -137,7 +138,6 @@ class ArticleStore():
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
-                 genpdf_service_url: str,
                  reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted,
                  ):
@@ -154,8 +154,15 @@ class ArticleStore():
             fileformat.ps: self._ps,
             fileformat.html: self._html
         }
-        self.service_identity = GcpIdentityToken(genpdf_service_url, logger=logger)
-
+        #
+        self.service_identity = None
+        genpdf_api = current_app.config.get("GENPDF_API_URL")
+        genpdf_service_url = current_app.config.get("GENPDF_SERVICE_URL")
+        if genpdf_api and genpdf_service_url:
+            try:
+                self.service_identity = GcpIdentityToken(genpdf_service_url, logger=logger)
+            except DefaultCredentialsError as exc:
+                logger.error("No default SA credentials. If this is development, try setting GOOGLE_APPLICATION_CREDENTIALS")
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Indicates the health of the service.
@@ -357,19 +364,24 @@ class ArticleStore():
 
     def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets a PDF from the genpdf-api."""
-        api = current_app.config.get("GENPDF_API_URL")
-        if not api:
+        genpdf_api = current_app.config.get("GENPDF_API_URL")
+        if not genpdf_api:
             return "UNAVAILABLE"
         # requests.get() cannod have timeout <= 0
         timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
-        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
+        url = f"{genpdf_api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
+        headers = {}
+        if self.service_identity:
+            try:
+                headers["Authorization"] = f"Bearer {self.service_identity.token}"
+            except Exception as exc:
+                logger.warning("Acquiring auth token for genpdf failed. %s", str(exc), exc_info=True)
         logger.debug("genpdf-api request(timeout=%d): %s ", timeout, url)
         t_start = time.perf_counter()
         for _ in range(3):  # cannot be infinite loop but 500s are common when the cloud run's service is starting up.
             try:
                 response: requests.Response = \
-                    requests.get(url, timeout=timeout, allow_redirects=False,
-                                 headers={"Authorization": f"Bearer {self.service_identity.token}"})
+                    requests.get(url, timeout=timeout, allow_redirects=False, headers=headers)
             except ConnectionError as _exc:
                 logger.warning("The HTTP connection is reset. Retrying...")
                 time.sleep(0.1) # just a fraction is enough

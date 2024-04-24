@@ -126,11 +126,11 @@ class Settings(arxiv_base.Settings):
     `./testing/data/` for testing data. Must end with a /
     """
 
-    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
-    """URL of the genpdf API"""
+    GENPDF_API_URL: str = ""
+    """URL of the genpdf API. https://genpdf-api.arxiv.org"""
 
-    GENPDF_SERVICE_URL: str = "https://genpdf-api.arxiv.org"
-    """URL of the genpdf service URL"""
+    GENPDF_SERVICE_URL: str = ""
+    """URL of the genpdf service URL. This is the original service URL on the cloud run."""
 
     GENPDF_API_TIMEOUT: int = 590
     """Time ouf for the genpdf API access"""
