@@ -137,7 +137,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
     item = get_article_store().dissemination(format, arxiv_id)
-    logger. debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
+    logger.debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":

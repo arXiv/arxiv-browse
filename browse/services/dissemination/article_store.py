@@ -138,12 +138,14 @@ class ArticleStore():
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
+                 latexml_store: ObjectStore,
                  reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted,
                  ):
         self.metadataservice = metaservice
         self.objstore: ObjectStore = objstore
         self.genpdf_store: ObjectStore = genpdf_store
+        self.latexml_store: ObjectStore = latexml_store
         self.reasons = reasons
         self.is_deleted = is_deleted
         self.sourcestore = SourceStore(self.objstore)
@@ -475,6 +477,5 @@ class ArticleStore():
                 return file_list if file_list else "NO_SOURCE"
         else: # latex to html
             # TODO it may be expensive to recreate the GS Client each time
-            latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-            file=latex_obj_store.to_obj(latexml_html_path(arxiv_id, version.version))
+            file=self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
             return file if file.exists() else "NO_HTML"
