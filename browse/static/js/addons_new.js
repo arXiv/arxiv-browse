@@ -98,7 +98,7 @@ let generate_upper_content_from_metadata = async () => {
   page_content.prepend(target_section);
 
   if (metadata.missing_packages) {
-    let missing_package_lis = metadata.missing_packages.map(x => `<li>failed: ${x}</li>`);
+    let missing_package_lis = metadata.missing_packages.map(x => `<li>failed: ${x}</li>`).join('');
     target_section.insertAdjacentHTML('beforebegin', 
     `<div class="package-alerts ltx_document" role="status" aria-label="Conversion errors have been found">
       <button aria-label="Dismiss alert" onclick="closePopup()">
