@@ -1,73 +1,45 @@
 from datetime import datetime
 
-from browse.services.database.listings import _entries_into_monthly_listing_items
+from browse.services.database.listings import _entries_into_monthly_listing_items, ListingMetadata
 from browse.services.listing import get_listing_service
 from arxiv.db.models import Metadata
 
-SAMPLE_METADATA1=Metadata(
-    metadata_id = 1,
-    document_id = 1,
-    paper_id = "1234.5678",
-    created = datetime(2008,11,1,15,7,3),
-    updated = datetime(2008,11,1,19,30,20),
-    submitter_id = 7,
-    submitter_name = "Marco",
-    submitter_email = "fake@email.com",
-    source_size = 700,
-    source_format = "tex",
-    source_flags = 1,
-    title = "It's a title",
-    authors = "Not Marco",
-    abs_categories = "cs.CG cs.LO",
-    comments = "comments here",
-    proxy = None,
-    report_num = None,
-    msc_class = None,
-    acm_class = None,
-    journal_ref = "Very Impressive Journal",
-    doi = None,
-    abstract = "Sample text",
-    license = "license",
-    version = 1,
-    modtime = 50,
-    is_current = 1,
-    is_withdrawn = 0
+SAMPLE_METADATA1=(
+    1,
+    "1234.5678",
+    datetime(2008,11,1,19,30,20),
+    1,
+    "It's a title",
+    "Not Marco",
+    "cs.CG cs.LO",
+    "comments here",
+    "Very Impressive Journal",
+    1,
+    50,
+    "Sample text"
 )
 
-SAMPLE_METADATA2=Metadata(
-    metadata_id = 2,
-    document_id = 2,
-    paper_id = "1234.5679",
-    created = datetime(2008,11,1,15,7,3),
-    updated = datetime(2008,11,1,19,30,20),
-    submitter_id = 7,
-    submitter_name = "Marco",
-    submitter_email = "fake@email.com",
-    source_size = 700,
-    source_format = "tex",
-    source_flags = 1,
-    title = "It's a title",
-    authors = "Not Marco",
-    abs_categories = "cs.LO cs.CG",
-    comments = "comments here",
-    proxy = None,
-    report_num = None,
-    msc_class = None,
-    acm_class = None,
-    journal_ref = "Very Impressive Journal",
-    doi = None,
-    abstract = "Sample text",
-    license = "license",
-    version = 1,
-    modtime = 50,
-    is_current = 1,
-    is_withdrawn = 0
+SAMPLE_METADATA2=(
+    2,
+    "1234.5679",
+    datetime(2008,11,1,19,30,20),
+    1,
+    "It's a title",
+    "Not Marco",
+    "cs.LO cs.CG",
+    "comments here",
+    "Very Impressive Journal",
+    1,
+    50,
+    "Sample text"
 )
 
 #month listing tests
 
 def test_transform_into_listing():
-    items=[(SAMPLE_METADATA1,1),(SAMPLE_METADATA2,0)]
+    meta1=SAMPLE_METADATA1+(1,)
+    meta2=SAMPLE_METADATA2+(0,)
+    items=[meta1,meta2]
     new, cross=_entries_into_monthly_listing_items(items)
 
     assert len(new)==1 and len(cross)==1

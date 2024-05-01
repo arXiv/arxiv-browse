@@ -35,14 +35,13 @@ class ListingMetadata:
     document_id: int
     paper_id: str
     updated: Optional[datetime]
-    source_format: Optional[Literal['tex', 'ps', 'html', 'pdf', 'withdrawn', 'pdftex', 'docx']]
     source_flags: Optional[str]
     title: str
     authors: str
     abs_categories: Optional[str]
     comments: Optional[str]
     journal_ref:Optional[str]
-    abstract: str
+    abstract: Optional[str]
     version: int
     modtime: int
 
@@ -144,7 +143,18 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     results = (
         session.query(
             listing_type,
-            meta,
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime,
+            meta.abstract,
             all.c.date
         )
         .join(meta, meta.document_id == all.c.document_id)
@@ -159,7 +169,9 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     #organize results into expected listing
     items=[]
     for row in results:
-        listing_case, metadata, _ = row
+        listing_case=row[0]
+        metadata= _create_listing_metadata(row[1:-1])
+        list_date = row[-1]
         if listing_case=="repcross":
             listing_case="rep"
         item= _metadata_to_listing_item(metadata, listing_case)
@@ -168,7 +180,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     if len(items)==0: #no results to find the last mailing day from
         mail_date=session.query(func.max(up.date)).scalar()
     else:
-        mail_date=results[0][2] 
+        mail_date=list_date
 
     return ListingNew(listings=items, 
                       new_count=new_count, 
@@ -236,7 +248,17 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     result=(
         session.query(   
             all.c.is_primary,
-            meta
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime
         )
         .join(meta, meta.document_id == all.c.document_id)
         .filter(meta.is_current ==1)
@@ -255,7 +277,8 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     items=[]
     for row in result:
-        primary, metadata=row
+        primary=row[0]
+        metadata=_create_listing_metadata(row[1:])
         listing_case: AnnounceTypes
         if primary:
             listing_case="new"
@@ -325,7 +348,21 @@ def get_articles_for_month(
     )
 
     #gets the metadata for applicable documents
-    main_query=(session.query(meta, cat_query.c.is_primary)
+    main_query=(
+        session.query(
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime, 
+            cat_query.c.is_primary
+        )
         .select_from(
             cat_query.join(meta, meta.document_id==cat_query.c.document_id)
             )
@@ -351,7 +388,30 @@ def get_articles_for_month(
         expires=gen_expires(),
     )
 
-def _metadata_to_listing_item(meta: ListingMetadata, type: AnnounceTypes) -> ListingItem:
+
+def _create_listing_metadata(row: Tuple)->ListingMetadata:
+    item=ListingMetadata()
+    item.document_id = row[0]
+    item.paper_id= row[1]
+    item.updated= row[2]
+    item.source_flags= row[3]
+    item.title= row[4]
+    item.authors= row[5]
+    item.abs_categories= row[6]
+    item.comments= row[7]
+    item.journal_ref= row[8]
+    item.version= row[9]
+    item.modtime= row[10]
+    
+    if len(row) >= 12:
+        item.abstract= row[11] 
+        
+    else:
+        item.abstract=None
+    return item
+
+
+def _metadata_to_listing_item(meta: ListingMetadata, an_type: AnnounceTypes) -> ListingItem:
     """"turns rows of document and category into a underfilled version of DocMetadata.
     Underfilled to match the behavior of fs_listings, omits data not needed for listing items
     meta: the metadata for an item 
@@ -376,18 +436,13 @@ def _metadata_to_listing_item(meta: ListingMetadata, type: AnnounceTypes) -> Lis
         primary_cat=CATEGORIES["bad-arch.bad-cat"]
         secondary_cats=[]
 
-    if hasattr(meta, 'source_flags'):
-        src_flag=SourceFlag(meta.source_flags)
-    else:
-        src_flag=SourceFlag("")
-
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-        title= meta.title if hasattr(meta, 'title') else "",
-        authors=AuthorList(meta.authors)if hasattr(meta, 'authors') else AuthorList(""),
-        abstract=meta.abstract if hasattr(meta, 'abstract') else "",
-        categories=meta.abs_categories if hasattr(meta, 'abs_categories') else "",
+        title=  getattr(meta, 'title',''),
+        authors=AuthorList(getattr(meta, 'authors',"")),
+        abstract= getattr(meta, 'abstract','') ,
+        categories= getattr(meta, 'abs_categories',""),
         primary_category=primary_cat,
         secondary_categories=secondary_cats,
         comments=meta.comments,
@@ -399,7 +454,7 @@ def _metadata_to_listing_item(meta: ListingMetadata, type: AnnounceTypes) -> Lis
                 raw="",
                 submitted_date=None, # type: ignore
                 size_kilobytes=0, 
-                source_flag=src_flag,
+                source_flag= SourceFlag(getattr(meta, 'source_flags', ''))
             )
         ],
         raw_safe="",
@@ -411,14 +466,14 @@ def _metadata_to_listing_item(meta: ListingMetadata, type: AnnounceTypes) -> Lis
     )
     item = ListingItem(
         id=meta.paper_id,
-        listingType=type,
+        listingType=an_type,
         primary=primary_cat.id, 
         article=doc,
     )
     return item
 
 def _entries_into_monthly_listing_items(
-    query_result: List[Tuple[ListingMetadata, int]]
+    query_result: List[Tuple[Row, int]]
 ) -> Tuple[List[ListingItem], List[ListingItem]]:
     """ monthly and yearly listings only show new articles, 
     and new articles crosslisted into the category
@@ -426,13 +481,15 @@ def _entries_into_monthly_listing_items(
     new_listings = []
     cross_listings = []
     for entry in query_result:
-        meta, primary = entry
+        meta= _create_listing_metadata(entry[:-1])
+        primary=entry[-1]
+        list_type:AnnounceTypes
         if primary==1:
             list_type="new"
         else:
             list_type="cross"
 
-        item=_metadata_to_listing_item(meta,list_type) #type:ignore
+        item=_metadata_to_listing_item(meta,list_type) 
 
         if primary == 1:  # new listings go before crosslists
             new_listings.append(item)
