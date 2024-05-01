@@ -1,6 +1,6 @@
 from datetime import  datetime
 from dateutil.tz import gettz
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Literal
 
 from sqlalchemy import case, distinct, or_, and_, desc
 from sqlalchemy.sql import func, select
@@ -24,12 +24,27 @@ from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
-from logging import Logger
 from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
 app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
+
+class ListingMetadata:
+    "columns of metadata fetched for listing"
+    document_id: int
+    paper_id: str
+    updated: Optional[datetime]
+    source_format: Optional[Literal['tex', 'ps', 'html', 'pdf', 'withdrawn', 'pdftex', 'docx']]
+    source_flags: Optional[str]
+    title: str
+    authors: str
+    abs_categories: Optional[str]
+    comments: Optional[str]
+    journal_ref:Optional[str]
+    abstract: str
+    version: int
+    modtime: int
 
 def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
@@ -336,7 +351,7 @@ def get_articles_for_month(
         expires=gen_expires(),
     )
 
-def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingItem:
+def _metadata_to_listing_item(meta: ListingMetadata, type: AnnounceTypes) -> ListingItem:
     """"turns rows of document and category into a underfilled version of DocMetadata.
     Underfilled to match the behavior of fs_listings, omits data not needed for listing items
     meta: the metadata for an item 
@@ -361,13 +376,18 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         primary_cat=CATEGORIES["bad-arch.bad-cat"]
         secondary_cats=[]
 
+    if hasattr(meta, 'source_flags'):
+        src_flag=SourceFlag(meta.source_flags)
+    else:
+        src_flag=SourceFlag("")
+
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-        title=meta.title, # type: ignore
-        authors=AuthorList(meta.authors), # type: ignore
-        abstract=meta.abstract, # type: ignore
-        categories=meta.abs_categories,
+        title= meta.title if hasattr(meta, 'title') else "",
+        authors=AuthorList(meta.authors)if hasattr(meta, 'authors') else AuthorList(""),
+        abstract=meta.abstract if hasattr(meta, 'abstract') else "",
+        categories=meta.abs_categories if hasattr(meta, 'abs_categories') else "",
         primary_category=primary_cat,
         secondary_categories=secondary_cats,
         comments=meta.comments,
@@ -378,8 +398,8 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
                 version=meta.version,
                 raw="",
                 submitted_date=None, # type: ignore
-                size_kilobytes=meta.source_size, # type: ignore
-                source_flag=SourceFlag(meta.source_flags), # type: ignore
+                size_kilobytes=0, 
+                source_flag=src_flag,
             )
         ],
         raw_safe="",
@@ -398,7 +418,7 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     return item
 
 def _entries_into_monthly_listing_items(
-    query_result: List[Tuple[Metadata, int]]
+    query_result: List[Tuple[ListingMetadata, int]]
 ) -> Tuple[List[ListingItem], List[ListingItem]]:
     """ monthly and yearly listings only show new articles, 
     and new articles crosslisted into the category
