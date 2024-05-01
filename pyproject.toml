@@ -40,6 +40,7 @@ arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "b789628a16
 
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
+google-cloud-secret-manager = "^2.20.0"
 
 [tool.poetry.dev-dependencies]
 beautifulsoup4 = "*"
