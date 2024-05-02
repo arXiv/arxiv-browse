@@ -35,7 +35,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
 
     category_list=_all_possible_categories(archive_or_cat)
-    
+
     up=aliased(Updates)
     case_order = case(*
         [
@@ -466,6 +466,29 @@ def _entries_into_monthly_listing_items(
             cross_listings.append(item)
 
     return new_listings, cross_listings
+
+def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[str]]:
+    """ list of archives to search if appliable, 
+    list of strings are the categories to check for (possibly in addition to the archive)
+    if a category is received, return the category and possible alternate names
+    if an archive is received return the archive name and a list of all categories that should be included but arent nominally part of the archive 
+    """
+    arch=[]
+    cats=[]
+    if archive_or_cat in ARCHIVES: #get all categories for archive
+        archive=ARCHIVES[archive_or_cat]
+        arch.append(archive_or_cat)
+        for category in archive.get_categories(True):
+            if category.alt_name:
+                cats.append(category.alt_name) if "." in category.alt_name else arch.append(category.alt_name)
+                
+    else: #otherwise its just a category requested
+        category=CATEGORIES[archive_or_cat]
+        cats.append(archive_or_cat)
+        if category.alt_name:
+            cats.append(category.alt_name) if "." in category.alt_name else arch.append(category.alt_name)
+
+    return arch, cats
 
 def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
