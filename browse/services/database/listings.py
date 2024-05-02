@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 from sqlalchemy import case, distinct, or_, and_, desc
 from sqlalchemy.sql import func, select
 from sqlalchemy.engine import Row
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, load_only
 
 from browse.services.listing import (
     MonthCount,
@@ -138,6 +138,21 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         .order_by(case_order, meta.paper_id)
         .offset(skip)
         .limit(show)
+        .options(load_only(
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime,
+            meta.abstract,
+            raiseload= True
+            ))
         .all() 
     )
 
@@ -228,6 +243,20 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
         .order_by(desc(all.c.date), desc(all.c.is_primary), desc(meta.paper_id))
         .offset(skip)
         .limit(show)
+        .options(load_only(
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime,
+            raiseload= True
+            ))
         .all()
     )
 
@@ -240,12 +269,14 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     items=[]
     for row in result:
-        primary, metadata=row
+        primary=row[0]
+        metadata: Metadata=row[1]
         listing_case: AnnounceTypes
         if primary:
             listing_case="new"
         else:
             listing_case="cross"
+        metadata.abstract="" #abstract uneeded but will be referenced
         item= _metadata_to_listing_item(metadata, listing_case)
         items.append(item)
 
@@ -321,6 +352,20 @@ def get_articles_for_month(
         main_query.order_by(cat_query.c.is_primary.desc(), meta.paper_id)
         .offset(skip)
         .limit(show)
+        .options(load_only(
+            meta.document_id,
+            meta.paper_id,
+            meta.updated,
+            meta.source_flags,
+            meta.title,
+            meta.authors,
+            meta.abs_categories,
+            meta.comments,
+            meta.journal_ref,
+            meta.version,
+            meta.modtime,
+            raiseload= True
+            ))
         )
     
     result=rows.all() #get listings to display
@@ -364,10 +409,10 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
-        title=meta.title, # type: ignore
-        authors=AuthorList(meta.authors), # type: ignore
-        abstract=meta.abstract, # type: ignore
-        categories=meta.abs_categories,
+        title=  getattr(meta, 'title',''),
+        authors=AuthorList(getattr(meta, 'authors',"")),
+        abstract= getattr(meta, 'abstract','') ,
+        categories= getattr(meta, 'abs_categories',""),
         primary_category=primary_cat,
         secondary_categories=secondary_cats,
         comments=meta.comments,
@@ -378,8 +423,8 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
                 version=meta.version,
                 raw="",
                 submitted_date=None, # type: ignore
-                size_kilobytes=meta.source_size, # type: ignore
-                source_flag=SourceFlag(meta.source_flags), # type: ignore
+                size_kilobytes=0, 
+                source_flag=SourceFlag(getattr(meta, 'source_flags', ''))
             )
         ],
         raw_safe="",
@@ -407,6 +452,7 @@ def _entries_into_monthly_listing_items(
     cross_listings = []
     for entry in query_result:
         meta, primary = entry
+        meta.abstract="" #protects from a db call to load an unneeded abstract
         if primary==1:
             list_type="new"
         else:
