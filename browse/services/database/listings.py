@@ -17,7 +17,7 @@ from browse.services.listing import (
     AnnounceTypes
 )
 from arxiv.db import session
-from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
+from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
 from arxiv.document.version import VersionEntry, SourceFlag
@@ -297,11 +297,11 @@ def get_articles_for_month(
     Searches for all possible category names that could apply to a particular archive or category
     also retrieves information on if any of the possible categories is the articles primary
     """
-    category_list=_all_possible_categories(archive_or_cat)
-
-    dc = aliased(DocumentCategory)
+    archives, cats=_request_categories(archive_or_cat)
+    
     doc = aliased(Document)
     meta = aliased(Metadata)
+    aic = aliased(t_arXiv_in_category)
 
     """
     retrieves the max value for is_primary over all searched for categories per document
@@ -331,12 +331,18 @@ def get_articles_for_month(
                 (doc.paper_id.startswith(f"{year % 100:02d}"))
                 | (doc.paper_id.like(f"%/{year % 100:02d}%"))
             )                     
-
+  
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     #filters to only the ones in the right category and records if any of the requested categories are primary
-    cat_query = (session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
-        .where(dc.document_id.in_(doc_ids))
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id)
+    cat_query = (session.query(aic.c.document_id, func.max(aic.c.is_primary).label('is_primary'))
+        .where(aic.c.document_id.in_(doc_ids))
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+            )
+        .group_by(aic.c.document_id)
         .subquery()
     )
 
@@ -467,26 +473,33 @@ def _entries_into_monthly_listing_items(
 
     return new_listings, cross_listings
 
-def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[str]]:
+def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[Tuple[str,str]]]:
     """ list of archives to search if appliable, 
-    list of strings are the categories to check for (possibly in addition to the archive)
+    list of tuples are the categories to check for (possibly in addition to the archive) broken into archvie and category parts
     if a category is received, return the category and possible alternate names
     if an archive is received return the archive name and a list of all categories that should be included but arent nominally part of the archive 
     """
     arch=[]
     cats=[]
+
+    def process_alt_name(alt_name: str) -> None:
+        if "." in alt_name:
+            arch_part, cat_part = alt_name.split(".")
+            cats.append((arch_part, cat_part))
+        else:
+            arch.append(alt_name)
+
     if archive_or_cat in ARCHIVES: #get all categories for archive
         archive=ARCHIVES[archive_or_cat]
         arch.append(archive_or_cat)
         for category in archive.get_categories(True):
-            if category.alt_name:
-                cats.append(category.alt_name) if "." in category.alt_name else arch.append(category.alt_name)
+            process_alt_name(category.alt_name) if category.alt_name else None            
                 
     else: #otherwise its just a category requested
         category=CATEGORIES[archive_or_cat]
-        cats.append(archive_or_cat)
+        process_alt_name(archive_or_cat)
         if category.alt_name:
-            cats.append(category.alt_name) if "." in category.alt_name else arch.append(category.alt_name)
+            process_alt_name(category.alt_name) if category.alt_name else None
 
     return arch, cats
 
