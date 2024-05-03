@@ -544,10 +544,11 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
     doc = aliased(Document)
-
-    category_list=_all_possible_categories(archive)
+    archives, cats=_request_categories(archive)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
+   
     new_doc_ids=(
         session.query(
             doc.document_id,
@@ -585,12 +586,17 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     subquery=(
         session.query(
             doc_ids.c.month,
-            func.max(dc.is_primary).label("is_primary")
+            func.max(aic.c.is_primary).label("is_primary")
         )
         .select_from(
-        doc_ids.join(dc, dc.document_id==doc_ids.c.document_id)
+        doc_ids.join(aic, aic.c.document_id==doc_ids.c.document_id)
         )
-        .where(dc.category.in_(category_list))
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
         .group_by(doc_ids.c.document_id)
         .subquery()
     )
