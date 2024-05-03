@@ -513,13 +513,13 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
         all=set()
         for category in archive.get_categories(True):
             all.add(category.id)
-            if category.alt_name and category.id not in ARCHIVES_SUBSUMED.keys():
+            if category.alt_name:
                 all.add(category.alt_name)
         return list(all)
     
     elif archive_or_cat in CATEGORIES: #check for alternate names
         cat=CATEGORIES[archive_or_cat]
-        if cat.alt_name and cat.id not in ARCHIVES_SUBSUMED.keys(): 
+        if cat.alt_name: 
             return [cat.id, cat.alt_name]
         else:
             return [cat.id]

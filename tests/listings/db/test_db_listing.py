@@ -57,7 +57,7 @@ def test_possible_categories():
     assert "math.GM" in _all_possible_categories("math")
     #legacy archive
     assert "comp-gas" in _all_possible_categories("comp-gas")
-    assert "nlin.CG" not in _all_possible_categories("comp-gas")
+    assert "nlin.CG" in _all_possible_categories("comp-gas")
     #archive is category and archive
     assert "astro-ph" in _all_possible_categories("astro-ph")
     assert "astro-ph.EP" in _all_possible_categories("astro-ph")
