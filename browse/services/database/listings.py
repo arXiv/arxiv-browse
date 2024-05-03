@@ -35,6 +35,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
 
     category_list=_all_possible_categories(archive_or_cat)
+    archives, cats=_request_categories(archive_or_cat)
 
     up=aliased(Updates)
     case_order = case(*
@@ -62,18 +63,25 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         .subquery() 
     )
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
+   
     #all listings for the specific category set
     all = (
         session.query(
             doc_ids.c.document_id, 
             doc_ids.c.action, 
             doc_ids.c.date, 
-            func.max(dc.is_primary).label('is_primary')
+            func.max(aic.c.is_primary).label('is_primary')
         )
-        .join(dc, dc.document_id == doc_ids.c.document_id)
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id) 
+        .join(aic, aic.c.document_id == doc_ids.c.document_id)
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
+        .group_by(aic.c.document_id) 
         .subquery() 
     )
 
@@ -180,6 +188,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
 def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     category_list=_all_possible_categories(archive_or_cat)
+    archives, cats=_request_categories(archive_or_cat)
     up=aliased(Updates)
     dates = (
         session.query(distinct(up.date).label("date"))
@@ -219,16 +228,22 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
         .all()
     )
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     all = (
         session.query(
             doc_ids.c.date,
             doc_ids.c.document_id,   
-            func.max(dc.is_primary).label('is_primary')
+            func.max(aic.c.is_primary).label('is_primary')
         )
-        .join(dc, dc.document_id == doc_ids.c.document_id)
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id) 
+        .join(aic, aic.c.document_id == doc_ids.c.document_id)
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+            )
+        .group_by(aic.c.document_id) 
         .subquery() 
     )
 
@@ -341,7 +356,7 @@ def get_articles_for_month(
                 aic.c.archive.in_(archives),
                 or_(*cat_conditions)
             )
-            )
+        )
         .group_by(aic.c.document_id)
         .subquery()
     )
