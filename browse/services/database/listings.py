@@ -17,7 +17,7 @@ from browse.services.listing import (
     AnnounceTypes
 )
 from arxiv.db import session
-from arxiv.db.models import Metadata, DocumentCategory, Document, Updates
+from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
 from arxiv.document.version import VersionEntry, SourceFlag
@@ -35,7 +35,8 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     "gets the most recent day of listings for an archive or category"
 
     category_list=_all_possible_categories(archive_or_cat)
-    
+    archives, cats=_request_categories(archive_or_cat)
+
     up=aliased(Updates)
     case_order = case(*
         [
@@ -62,18 +63,25 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         .subquery() 
     )
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
+   
     #all listings for the specific category set
     all = (
         session.query(
             doc_ids.c.document_id, 
             doc_ids.c.action, 
             doc_ids.c.date, 
-            func.max(dc.is_primary).label('is_primary')
+            func.max(aic.c.is_primary).label('is_primary')
         )
-        .join(dc, dc.document_id == doc_ids.c.document_id)
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id) 
+        .join(aic, aic.c.document_id == doc_ids.c.document_id)
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
+        .group_by(aic.c.document_id) 
         .subquery() 
     )
 
@@ -180,6 +188,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
 def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     category_list=_all_possible_categories(archive_or_cat)
+    archives, cats=_request_categories(archive_or_cat)
     up=aliased(Updates)
     dates = (
         session.query(distinct(up.date).label("date"))
@@ -219,16 +228,22 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
         .all()
     )
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     all = (
         session.query(
             doc_ids.c.date,
             doc_ids.c.document_id,   
-            func.max(dc.is_primary).label('is_primary')
+            func.max(aic.c.is_primary).label('is_primary')
         )
-        .join(dc, dc.document_id == doc_ids.c.document_id)
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id) 
+        .join(aic, aic.c.document_id == doc_ids.c.document_id)
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+            )
+        .group_by(aic.c.document_id) 
         .subquery() 
     )
 
@@ -297,11 +312,11 @@ def get_articles_for_month(
     Searches for all possible category names that could apply to a particular archive or category
     also retrieves information on if any of the possible categories is the articles primary
     """
-    category_list=_all_possible_categories(archive_or_cat)
-
-    dc = aliased(DocumentCategory)
+    archives, cats=_request_categories(archive_or_cat)
+    
     doc = aliased(Document)
     meta = aliased(Metadata)
+    aic = aliased(t_arXiv_in_category)
 
     """
     retrieves the max value for is_primary over all searched for categories per document
@@ -331,12 +346,18 @@ def get_articles_for_month(
                 (doc.paper_id.startswith(f"{year % 100:02d}"))
                 | (doc.paper_id.like(f"%/{year % 100:02d}%"))
             )                     
-
+  
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     #filters to only the ones in the right category and records if any of the requested categories are primary
-    cat_query = (session.query(dc.document_id, func.max(dc.is_primary).label('is_primary'))
-        .where(dc.document_id.in_(doc_ids))
-        .where(dc.category.in_(category_list))
-        .group_by(dc.document_id)
+    cat_query = (session.query(aic.c.document_id, func.max(aic.c.is_primary).label('is_primary'))
+        .where(aic.c.document_id.in_(doc_ids))
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
+        .group_by(aic.c.document_id)
         .subquery()
     )
 
@@ -467,6 +488,36 @@ def _entries_into_monthly_listing_items(
 
     return new_listings, cross_listings
 
+def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[Tuple[str,str]]]:
+    """ list of archives to search if appliable, 
+    list of tuples are the categories to check for (possibly in addition to the archive) broken into archvie and category parts
+    if a category is received, return the category and possible alternate names
+    if an archive is received return the archive name and a list of all categories that should be included but arent nominally part of the archive 
+    """
+    arch=[]
+    cats=[]
+
+    def process_alt_name(alt_name: str) -> None:
+        if "." in alt_name:
+            arch_part, cat_part = alt_name.split(".")
+            cats.append((arch_part, cat_part))
+        else:
+            arch.append(alt_name)
+
+    if archive_or_cat in ARCHIVES: #get all categories for archive
+        archive=ARCHIVES[archive_or_cat]
+        arch.append(archive_or_cat)
+        for category in archive.get_categories(True):
+            process_alt_name(category.alt_name) if category.alt_name else None            
+                
+    else: #otherwise its just a category requested
+        category=CATEGORIES[archive_or_cat]
+        process_alt_name(archive_or_cat)
+        if category.alt_name:
+            process_alt_name(category.alt_name) if category.alt_name else None
+
+    return arch, cats
+
 def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
     takes into account aliases and subsumed archives
@@ -477,13 +528,13 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
         all=set()
         for category in archive.get_categories(True):
             all.add(category.id)
-            if category.alt_name and category.id not in ARCHIVES_SUBSUMED.keys():
+            if category.alt_name:
                 all.add(category.alt_name)
         return list(all)
     
     elif archive_or_cat in CATEGORIES: #check for alternate names
         cat=CATEGORIES[archive_or_cat]
-        if cat.alt_name and cat.id not in ARCHIVES_SUBSUMED.keys(): 
+        if cat.alt_name: 
             return [cat.id, cat.alt_name]
         else:
             return [cat.id]
@@ -493,10 +544,11 @@ def _all_possible_categories(archive_or_cat:str) -> List[str]:
 
 def get_yearly_article_counts(archive: str, year: int) -> YearCount:
 
-    dc = aliased(DocumentCategory)
+    aic = aliased(t_arXiv_in_category)
     doc = aliased(Document)
-
-    category_list=_all_possible_categories(archive)
+    archives, cats=_request_categories(archive)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
+   
     new_doc_ids=(
         session.query(
             doc.document_id,
@@ -534,12 +586,17 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     subquery=(
         session.query(
             doc_ids.c.month,
-            func.max(dc.is_primary).label("is_primary")
+            func.max(aic.c.is_primary).label("is_primary")
         )
         .select_from(
-        doc_ids.join(dc, dc.document_id==doc_ids.c.document_id)
+        doc_ids.join(aic, aic.c.document_id==doc_ids.c.document_id)
         )
-        .where(dc.category.in_(category_list))
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
         .group_by(doc_ids.c.document_id)
         .subquery()
     )

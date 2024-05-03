@@ -117,9 +117,9 @@ def test_listings_for_month(app_with_db):
         items=ls.list_articles_by_month('nlin.CD', 1995, 10, 0,25)
         assert any(item.id=="chao-dyn/9510015" and item.listingType=="new" for item in items.listings)
 
-        #new categories are not found in subsumed archvies
+        #new categories should be found in subsumed archvies
         items=ls.list_articles_by_month("chao-dyn", 2008, 12, 0,25)
-        assert not any(item.id=="0812.4551" for item in items.listings)
+        assert any(item.id=="0812.4551" for item in items.listings)
 
         #old style id
         items=ls.list_articles_by_month("cond-mat.mes-hall", 2005, 1, 0,25)
