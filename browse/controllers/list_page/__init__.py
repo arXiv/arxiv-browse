@@ -65,7 +65,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
 
-show_values = [5, 10, 25, 50, 100, 250, 500, 1000]
+show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
