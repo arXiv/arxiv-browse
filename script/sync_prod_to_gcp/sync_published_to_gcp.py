@@ -401,13 +401,13 @@ def ensure_html(session, host, arxiv_id: Identifier):
     This does not check if the arxiv_id is HTML source.
     """
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-    html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.id}v{arxiv_id.version}/")
+    html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.idv}/")
     url = f"https://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
 
-    def _get_files_for_html (path: str) -> List[str]:
+    def _get_files_for_html () -> List[Path]:
         files = []
-        for root_dir, cur_dir, fs in os.walk(html_path):
-            files.extend(map(lambda file: os.path.join(root_dir, file), fs))
+        for root_dir, _, fs in os.walk(html_path):
+            files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
 
     start = perf_counter()
@@ -441,7 +441,6 @@ def upload_pdf(gs_client, ensure_tuple):
     return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
 
 def upload_html(gs_client, ensure_tuple):
-    ret = []
     for file in ensure_tuple[0]:
         yield upload(gs_client, file, path_to_bucket_key_html(file))
 
