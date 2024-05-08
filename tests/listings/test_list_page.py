@@ -1,5 +1,6 @@
 import pytest
 import re
+from datetime import date
 from unittest.mock import MagicMock
 
 from browse.services.listing import NotModifiedResponse, get_listing_service
@@ -835,4 +836,47 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Mon, 31 Jan 2011") == 2
     assert rv.text.count("Fri, 28 Jan 2011") == 2
 
+
+def test_surrogate_keys(client_with_db_listings):
+    client=client_with_db_listings
+
+    rv = client.get("/list/math/recent?skip=4")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-recent" in head
+    assert "announce" in head
+    assert "list-recent-math" in head
+
+    rv = client.get("/list/cs.SY/new")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-new" in head
+    assert "announce" in head
+    assert "list-new-eess.SY" in head
+    
+    rv = client.get("/list/solv-int/0506")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-ym" in head
+    assert "announce"  not in head
+    assert "list-2005-06-nlin.SI" in head
+
+    rv = client.get("/list/astro-ph/05")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-ym" in head
+    assert "announce"  not in head
+    assert "list-2005-astro-ph" in head
+
+    rv = client.get(f"/list/astro-ph/{date.today().year-2000:02d}")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-ym" in head
+    assert "announce" in head
+
+    rv = client.get(f"/list/astro-ph/current")
+    head=rv.headers["Surrogate-Key"]
+    assert "list" in head
+    assert "list-ym" in head
+    assert "announce" in head
 

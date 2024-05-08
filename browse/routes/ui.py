@@ -29,6 +29,7 @@ from browse.controllers import (
     prevnext,
     stats_page,
     tb_page,
+    add_surrogate_key
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
@@ -231,6 +232,7 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
+    headers.update(add_surrogate_key(headers,["list"]))
     if code == status.OK:
         #if subcontext not in ["new", "recent", "pastweek"]:
             #response=_add_year_url_alert(response)

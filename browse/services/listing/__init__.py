@@ -2,7 +2,8 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from time import mktime
 from typing import Any, List, Literal, Optional, Tuple, Union, cast
 from wsgiref.handlers import format_date_time
@@ -293,9 +294,8 @@ def gen_expires() -> str:
        What is optimal value for the expires value? Next publish?
        RFC 1123 format ex 'Wed, 21 Oct 2015 07:28:00 GMT'
     """
-    now = datetime.now()
-    future = timedelta(days=1)
-    expire = now + future
-    stamp = mktime(expire.timetuple())
-    expires = format_date_time(stamp)
+    now=datetime.now().astimezone(ZoneInfo("US/Eastern"))
+    midnight=now.replace(hour=0, minute=0, second=0, microsecond=0)
+    expire = midnight + timedelta(days=1)
+    expires = format_date_time(expire.timestamp())
     return expires
