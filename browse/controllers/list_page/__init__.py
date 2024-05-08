@@ -195,6 +195,7 @@ def get_listing(subject_or_category: str,
 
     if time_period == 'new':
         list_type = 'new'
+        response_headers.update(add_surrogate_key(response_headers,["list-new", "announce", f"list-new-{list_ctx_id}"]))
         new_resp: Union[ListingNew, NotModifiedResponse] =\
             listing_service.list_new_articles(list_ctx_id, skipn,
                                               shown, if_mod_since)
@@ -212,6 +213,7 @@ def get_listing(subject_or_category: str,
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
+        response_headers.update(add_surrogate_key(response_headers,["list-recent", "announce", f"list-recent-{list_ctx_id}"]))
         rec_resp = listing_service.list_pastweek_articles(
             list_ctx_id, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
@@ -224,6 +226,7 @@ def get_listing(subject_or_category: str,
 
     else:  # current or YYMM or YYYYMM or YY
         yandm = year_month_2_digit(time_period)
+        response_headers.update(add_surrogate_key(response_headers,["list-ym"]))
         if yandm is None:
             raise BadRequest(f"Invalid time period: {time_period}") 
         should_redir, list_year, list_month = yandm
@@ -247,12 +250,17 @@ def get_listing(subject_or_category: str,
             if list_month < 1 or list_month > 12:
                 raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
+            response_headers.update(add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}"]))
+            if date.today().year==list_year and date.today().month==list_month:
+                response_headers.update(add_surrogate_key(response_headers,["announce"]))
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             resp = listing_service.list_articles_by_month(
                 list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
+            response_headers.update(add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}"]))
+            response_headers.update(add_surrogate_key(response_headers,["announce"])) if list_year==date.today().year else None
             resp = listing_service.list_articles_by_year(
                 list_ctx_id, list_year, skipn, shown, if_mod_since)
 
@@ -606,3 +614,9 @@ def _expires_headers(listing_resp:
         return {'Expires': str(listing_resp.expires)}
     else:
         return {}
+
+def add_surrogate_key(headers: Dict[str,str], keys:List[str])-> Dict[str, str]:
+    old_keys=headers.get("Surrogate-Key","")
+    for key in keys:
+        old_keys+=" "+key
+    return{"Surrogate-Key":old_keys.strip()}

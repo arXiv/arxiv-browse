@@ -231,6 +231,7 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
+    headers.update(list_page.add_surrogate_key(headers,["list"]))
     if code == status.OK:
         #if subcontext not in ["new", "recent", "pastweek"]:
             #response=_add_year_url_alert(response)
