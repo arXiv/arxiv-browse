@@ -48,6 +48,7 @@ import re
 
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES_SUBSUMED, ARCHIVES
 
+from browse.controllers import add_surrogate_key
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from arxiv.document.metadata import DocMetadata
@@ -614,9 +615,3 @@ def _expires_headers(listing_resp:
         return {'Expires': str(listing_resp.expires)}
     else:
         return {}
-
-def add_surrogate_key(headers: Dict[str,str], keys:List[str])-> Dict[str, str]:
-    old_keys=headers.get("Surrogate-Key","")
-    for key in keys:
-        old_keys+=" "+key
-    return{"Surrogate-Key":old_keys.strip()}
