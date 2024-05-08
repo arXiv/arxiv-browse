@@ -3,8 +3,7 @@
 Each controller corresponds to a distinct browse feature with its own
 request handling logic.
 """
-from datetime import timezone, datetime, timedelta
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, List
 from zoneinfo import ZoneInfo
 
 from http import HTTPStatus as status
@@ -51,3 +50,10 @@ def biz_tz() -> ZoneInfo:
         return _arxiv_biz_tz
     else:
         return _arxiv_biz_tz
+
+def add_surrogate_key(headers: Dict[str,str], keys:List[str])-> Dict[str, str]:
+    old_keys=f' {headers.get("Surrogate-Key","")} '
+    for key in keys:
+        if f" {key} " not in old_keys:
+            old_keys+=" "+key
+    return{"Surrogate-Key":old_keys.strip()}
