@@ -476,10 +476,5 @@ class ArticleStore():
                 file_list = list(self.objstore.list(path))
                 return file_list if file_list else "NO_SOURCE"
         else: # latex to html
-            try:
-                path = latexml_html_path(arxiv_id, version.version)
-                file = self.latexml_store.to_obj(path)
-            except:
-                logger.debug(f'No blob found for {path}', exc_info=True)
-                file = None
+            file = self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
             return file if (file is not None and file.exists()) else "NO_HTML"
