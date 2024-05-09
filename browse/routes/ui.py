@@ -105,7 +105,7 @@ def bare_abs() -> Any:
 def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
-
+    headers.update(add_surrogate_key(headers,["abs"]))
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw(), mimetype="text/plain")
