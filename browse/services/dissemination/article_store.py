@@ -473,9 +473,13 @@ class ArticleStore():
             if arxiv_id.extra:  # requesting a specific file
                 return self.objstore.to_obj(path + arxiv_id.extra)
             else:  # requesting list of files
-                file_list=list(self.objstore.list(path))
+                file_list = list(self.objstore.list(path))
                 return file_list if file_list else "NO_SOURCE"
         else: # latex to html
-            # TODO it may be expensive to recreate the GS Client each time
-            file=self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
-            return file if file.exists() else "NO_HTML"
+            try:
+                path = latexml_html_path(arxiv_id, version.version)
+                file = self.latexml_store.to_obj(path)
+            except:
+                logger.debug(f'No blob found for {path}', exc_info=True)
+                file = None
+            return file if (file is not None and file.exists()) else "NO_HTML"
