@@ -112,3 +112,22 @@ def test_wdr_current_src(client_with_test_fs):
 
     resp = client_with_test_fs.get("/html/2310.08262")
     assert resp.status_code == 404
+
+
+def test_src_headers(client_with_test_fs):
+    client=client_with_test_fs
+
+    rv=client.head("/src/1601.04345")
+    head=rv.headers["Surrogate-Key"]
+    assert " src " in " "+head+" "
+    assert "src-unversioned" in head
+    assert "src-versioned" not in head
+    assert "paper-id-1601.04345" in head
+
+    rv=client.head("/src/1601.04345v2")
+    head=rv.headers["Surrogate-Key"]
+    assert " src " in " "+head+" "
+    assert "src-unversioned" not in head
+    assert "src-versioned" in head
+    assert "paper-id-1601.04345" in head
+   

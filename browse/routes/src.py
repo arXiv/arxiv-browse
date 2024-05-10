@@ -1,7 +1,9 @@
 """Routes for serving the source of articles. /src /e-prints and ancillary."""
 import logging
-from typing import Optional
+import re
+from typing import Optional, Dict
 
+from browse.controllers import add_surrogate_key
 from browse.controllers.files.dissemination import (get_dissemination_resp,
                                               get_src_resp)
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
@@ -26,10 +28,18 @@ def anc_listing(arxiv_id: str):  #type: ignore
     data['abs_meta'] = docmeta
     data['arxiv_id'] = docmeta.arxiv_identifier
     data['anc_file_list'] = get_article_store().get_ancillary_files(docmeta)
-    if data['anc_file_list']:
-        return render_template("src/listing.html", **data), 200, {}
+
+    headers: Dict[str,str]={}
+    headers.update(add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"]))
+    if re.search(r'\d+v\d+', arxiv_id): #get abs always adds a verion onto the id
+        headers.update(add_surrogate_key(headers,["anc-versioned"]))
     else:
-        return render_template("src/listing_none.html", **data), 404, {}
+        headers.update(add_surrogate_key(headers,["anc-unversioned"]))
+
+    if data['anc_file_list']:
+        return render_template("src/listing.html", **data), 200, headers
+    else:
+        return render_template("src/listing_none.html", **data), 404, headers
 
 
 @blueprint.route("/src/<path:arxiv_id>/anc/<path:file_path>")
@@ -60,7 +70,13 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     form that we store it (.tar.gz, .pdf, etc.). It is used to support the mirrors.
     Before 2024 /src behavior was different than /e-print.
      """
-    return get_src_resp(arxiv_id_str, archive)
+    resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
+    if re.search(r'\d+v\d+', arxiv_id_str): 
+        resp.headers.update(add_surrogate_key(resp.headers,["src","src-versioned"]))
+    else:
+        resp.headers.update(add_surrogate_key(resp.headers,["src","src-unversioned"]))
+        
+    return resp
 
 
 # TODO need test data for src_format ps

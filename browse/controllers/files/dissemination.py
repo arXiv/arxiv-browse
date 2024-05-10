@@ -3,13 +3,13 @@
 import logging
 from pathlib import Path
 from typing import Callable, Optional, Union, List
-import mimetypes
 
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
 
+from browse.controllers import add_surrogate_key
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
     not_found, bad_id, cannot_build_pdf, add_mimetype
@@ -76,6 +76,7 @@ def default_resp_fn(file: FileObj,
 
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers.update(add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"]))
     add_mimetype(resp, file.name)
     add_time_headers(resp, file, arxiv_id)
     return resp
@@ -105,6 +106,10 @@ def pdf_resp_fn(file: FileObj,
     resp = default_resp_fn(file, arxiv_id, docmeta, version)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
+    if arxiv_id.has_version: 
+        resp.headers.update(add_surrogate_key(resp.headers,["pdf","pdf-versioned"]))
+    else:
+        resp.headers.update(add_surrogate_key(resp.headers,["pdf","pdf-unversioned"]))
     return resp
 
 
@@ -176,12 +181,19 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
                    docmeta: DocMetadata,
                    version: VersionEntry) -> Response:
     if docmeta.source_format == 'html' or version.source_flag.html:
-        return _html_source_listing_response(file_list, arxiv_id)
-    elif isinstance(file_list, FileObj):
-        return default_resp_fn(file_list, arxiv_id, docmeta, version)
+        resp= _html_source_listing_response(file_list, arxiv_id)
+    elif isinstance(file_list, FileObj): #converted via latexml
+        resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
+        resp.headers.update(add_surrogate_key(resp.headers,["html-latexml"]))
     else:
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
-        return unavailable(arxiv_id)
+        resp= unavailable(arxiv_id)
+
+    if arxiv_id.has_version: 
+        resp.headers.update(add_surrogate_key(resp.headers,["html","html-versioned"]))
+    else:
+        resp.headers.update(add_surrogate_key(resp.headers,["html","html-unversioned"]))
+    return resp
 
 
 def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Response:
@@ -195,24 +207,27 @@ def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Respons
 def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv_id: Identifier) -> Response:
     """Produces a listing `Response` for a paper with HTML source."""
     if isinstance(file_list, FileObj):
-        return _html_source_single_response(file_list, arxiv_id)
-
-    html_files = []
-    file_names = []
-    for file in file_list:
-        if _is_html_name(file):
-            html_files.append(file)
-            file_names.append(_get_html_file_name(file.name))
-    if len(html_files) < 1:
-        if current_app.config["ARXIV_LOG_DATA_INCONSTANCY_ERRORS"]:
-            logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
-        return unavailable(arxiv_id)
-    if len(html_files) == 1:  # serve the only html file
-        return _html_source_single_response(html_files[0], arxiv_id)
-    else:  # file selector for multiple html files
-        return make_response(render_template("dissemination/multiple_files.html",
-                                             arxiv_id=arxiv_id, file_names=file_names), 200,
-                             {"Cache-Control": maxage(arxiv_id.has_version)})
+        resp= _html_source_single_response(file_list, arxiv_id)
+    else: #for multiple files
+        html_files = []
+        file_names = []
+        for file in file_list:
+            if _is_html_name(file):
+                html_files.append(file)
+                file_names.append(_get_html_file_name(file.name))
+        if len(html_files) < 1:
+            if current_app.config["ARXIV_LOG_DATA_INCONSTANCY_ERRORS"]:
+                logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
+            resp= unavailable(arxiv_id)
+        elif len(html_files) == 1:  # serve the only html file
+            resp= _html_source_single_response(html_files[0], arxiv_id)
+        else:  # file selector for multiple html files
+            resp= make_response(render_template("dissemination/multiple_files.html",
+                                                arxiv_id=arxiv_id, file_names=file_names), 200,
+                                {"Cache-Control": maxage(arxiv_id.has_version)})
+    
+    resp.headers.update(add_surrogate_key(resp.headers,["html-native"]))
+    return resp
 
 
 def _get_html_file_name(name:str) -> str:
