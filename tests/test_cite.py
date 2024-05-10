@@ -1,6 +1,8 @@
 """Tests for BibTeX citations."""
 from unittest import TestCase
+from pathlib import Path
 
+from arxiv.files import LocalFileObj
 from arxiv.document.parse_abs import parse_abs_file
 
 from tests import ABS_FILES
@@ -97,5 +99,5 @@ class TestCite(TestCase):
         """Test cite."""
         
         for fname_path in abs_to_test:                
-            cite=arxiv_bibtex(parse_abs_file(filename=fname_path))
+            cite=arxiv_bibtex(parse_abs_file(LocalFileObj(Path(fname_path))))
             self.assertIsNotNone(cite)
