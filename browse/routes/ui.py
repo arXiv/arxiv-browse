@@ -350,9 +350,6 @@ def form(arxiv_id: str) -> Response:
 @blueprint.route("archive/<archive>", strict_slashes=False)
 def archive(archive: Optional[str] = None):  # type: ignore
     """Landing page for an archive."""
-    if archive is None:
-        return archive_page.archive_index("list", status_in=200)
-
     response, code, headers = archive_page.get_archive(archive)
     if code == status.OK or code == status.NOT_FOUND:
         return render_template(response["template"], **response), code, headers
