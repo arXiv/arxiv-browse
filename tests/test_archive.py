@@ -23,12 +23,23 @@ def test_list(client_with_test_fs):
 
     assert "Astrophysics" in src
     assert "astro-ph" in src
-
     assert "Materials Theory" in src
     assert "mtrl-th" in src
+    assert "No archive 'list'" not in src
 
     rv = client_with_test_fs.get("/archive/bogus-archive")
     assert rv.status_code == 404
+    src = rv.data.decode("utf-8")
+
+    assert "Astrophysics" in src
+    assert "astro-ph" in src
+    assert "Materials Theory" in src
+    assert "mtrl-th" in src
+    assert "No archive 'bogus-archive'" in src
+
+    rv = client_with_test_fs.get("/archive")
+    assert rv.status_code == 200
+
 
 def test_subsumed_archive(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/comp-lg")
