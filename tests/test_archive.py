@@ -85,10 +85,6 @@ def test_surrogate_keys(client_with_db_listings):
     head=rv.headers["Surrogate-Key"]
     assert " archive " in " "+head+" "
 
-    #TODO fix this path
-    """
     rv = client.head("/archive")
     head=rv.headers["Surrogate-Key"]
     assert " archive " in " "+head+" "
-
-    """
