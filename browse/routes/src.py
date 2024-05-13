@@ -3,9 +3,10 @@ import logging
 import re
 from typing import Optional, Dict
 
+from arxiv.identifier import Identifier, IdentifierException
+
 from browse.controllers import add_surrogate_key
-from browse.controllers.files.dissemination import (get_dissemination_resp,
-                                              get_src_resp)
+from browse.controllers.files.dissemination import get_src_resp
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
 from browse.services.dissemination import get_article_store
 from browse.services.documents import get_doc_service
@@ -31,7 +32,7 @@ def anc_listing(arxiv_id: str):  #type: ignore
 
     headers: Dict[str,str]={}
     headers.update(add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"]))
-    if re.search(r'\d+v\d+', arxiv_id): #get abs always adds a verion onto the id
+    if _check_id_for_version(arxiv_id): #get abs always adds a verion onto the id
         headers.update(add_surrogate_key(headers,["anc-versioned"]))
     else:
         headers.update(add_surrogate_key(headers,["anc-unversioned"]))
@@ -71,12 +72,23 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     Before 2024 /src behavior was different than /e-print.
      """
     resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
-    if re.search(r'\d+v\d+', arxiv_id_str): 
+    if _check_id_for_version(arxiv_id_str): 
         resp.headers.update(add_surrogate_key(resp.headers,["src","src-versioned"]))
     else:
         resp.headers.update(add_surrogate_key(resp.headers,["src","src-unversioned"]))
         
     return resp
+
+def _check_id_for_version(arxiv_id_str:str) -> bool:
+    """returns true if the url was asking for a specific paper version, false otherwise"""
+    try:
+        arxiv_id= Identifier(arxiv_id_str)
+        if arxiv_id.has_version:
+            return True
+        else:
+            return False
+    except IdentifierException:
+        return False
 
 
 # TODO need test data for src_format ps
