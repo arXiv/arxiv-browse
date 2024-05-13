@@ -234,8 +234,8 @@ def list_articles(context: str, subcontext: str) -> Response:
     response, code, headers = list_page.get_listing(context, subcontext)
     headers.update(add_surrogate_key(headers,["list"]))
     if code == status.OK:
-        #if subcontext not in ["new", "recent", "pastweek"]:
-            #response=_add_year_url_alert(response)
+        if subcontext not in ["new", "recent", "pastweek"]:
+            response=_add_year_url_alert(response)
 
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore
