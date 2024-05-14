@@ -6,10 +6,12 @@ import html
 import json
 import os
 import pprint
+from pathlib import Path
 
 from tests import path_of_for_test
 
 from arxiv.document.metadata import DocMetadata
+from arxiv.files import LocalFileObj
 from arxiv.document.parse_abs import parse_abs_file
 from browse.formatting.metatags import meta_tag_metadata
 
@@ -44,7 +46,7 @@ def test_same_as_classic(app_with_test_fs):
                 continue
             if not fname_path.endswith('.abs'):
                 continue
-            mm = parse_abs_file(filename=fname_path)
+            mm = parse_abs_file(LocalFileObj(Path(fname_path)))
             if mm.arxiv_id_v in bad_data:
                 continue
             num_files_tested = num_files_tested + 1

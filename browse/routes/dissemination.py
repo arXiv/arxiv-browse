@@ -1,14 +1,13 @@
 """Routes for PDF, source and other downloads."""
-from typing import Optional
+from typing import Optional, Dict
 from flask import Blueprint, redirect, url_for, Response, render_template, request
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.services.documents import get_doc_service
-from browse.services.dissemination import get_article_store
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.files import fileformat
 from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response, get_pdf_resp
-from browse.controllers import check_supplied_identifier
+from browse.controllers import check_supplied_identifier, add_surrogate_key
 
 
 blueprint = Blueprint('dissemination', __name__)
@@ -90,7 +89,13 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     for fmt in formats:
         data[fmt] = True
     # TODO DOCX doesn't seem like the url_for in the template will work correctly with the .docx?
-    return render_template("format.html", **data), 200, {}  # type: ignore
+    headers: Dict[str,str]={}
+    headers.update(add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"]))
+    if arxiv_identifier.has_version: 
+        headers.update(add_surrogate_key(headers,["format-versioned"]))
+    else:
+        headers.update(add_surrogate_key(headers,["format-unversioned"]))
+    return render_template("format.html", **data), 200, headers # type: ignore
 
 
 @blueprint.route("/dvi/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])

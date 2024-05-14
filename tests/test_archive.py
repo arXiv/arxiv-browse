@@ -23,12 +23,29 @@ def test_list(client_with_test_fs):
 
     assert "Astrophysics" in src
     assert "astro-ph" in src
-
     assert "Materials Theory" in src
     assert "mtrl-th" in src
+    assert "No archive 'list'" not in src
 
     rv = client_with_test_fs.get("/archive/bogus-archive")
     assert rv.status_code == 404
+    src = rv.data.decode("utf-8")
+
+    assert "Astrophysics" in src
+    assert "astro-ph" in src
+    assert "Materials Theory" in src
+    assert "mtrl-th" in src
+    assert "No archive 'bogus-archive'" in src
+
+    rv = client_with_test_fs.get("/archive")
+    assert rv.status_code == 200
+    src = rv.data.decode("utf-8")
+    assert "Astrophysics" in src
+    assert "astro-ph" in src
+    assert "Materials Theory" in src
+    assert "mtrl-th" in src
+    assert "No archive '" not in src
+
 
 def test_subsumed_archive(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/comp-lg")
@@ -56,3 +73,18 @@ def test_single_archive(client_with_test_fs):
 def test_301_redirects(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/astro-ph/Astrophysics")
     assert rv.status_code == 301, "/archive/astro-ph/Astrophysics should get a 301 redirect ARXIVNG-2119"
+
+def test_surrogate_keys(client_with_db_listings):
+    client=client_with_db_listings
+
+    rv = client.head("/archive/math")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "
+
+    rv = client.head("/archive/comp-lg")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "
+
+    rv = client.head("/archive")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "

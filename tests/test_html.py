@@ -1,6 +1,6 @@
 def test_html_paper(client_with_test_fs):
     """Test a paper with html source."""
-    resp = client_with_test_fs.head("/abs/2403.10561")
+    resp = client_with_test_fs.head("/html/2403.10561")
     assert resp.status_code == 200
 
     resp = client_with_test_fs.get("/html/2403.10561/shouldnotexist.html")
@@ -18,7 +18,7 @@ def test_html_paper(client_with_test_fs):
 
 def test_html_paper_multi_files(client_with_test_fs):
     """Test a paper with html source."""
-    resp = client_with_test_fs.head("/abs/cs/9901011")
+    resp = client_with_test_fs.head("/html/cs/9901011")
     assert resp.status_code == 200
 
     resp = client_with_test_fs.get("/html/cs/9901011/shouldnotexist.html")
@@ -41,7 +41,7 @@ def test_html_paper_multi_files(client_with_test_fs):
 
 def test_html_paper_multi_html_files(client_with_test_fs):
     """Test a paper with html source."""
-    resp = client_with_test_fs.head("/abs/cs/9904010")
+    resp = client_with_test_fs.head("/html/cs/9904010")
     assert resp.status_code == 200
 
     resp = client_with_test_fs.get("/html/cs/9904010/shouldnotexist.html")
@@ -77,8 +77,27 @@ def test_html_paper_multi_html_files(client_with_test_fs):
 
 def test_html_headers(client_with_test_fs):
     """Test html content type also declares encoding."""
-    resp = client_with_test_fs.head("/abs/2403.10561")
+    resp = client_with_test_fs.head("/html/2403.10561")
     assert resp.status_code == 200
     assert 'Content-Type' in resp.headers
     content_type = resp.headers.get('Content-Type', '')
     assert content_type== "text/html; charset=utf-8"
+
+    #Surrogate Keys
+    rv=client_with_test_fs.head("/html/2403.10561")
+    head=rv.headers["Surrogate-Key"]
+    assert " html " in " "+head+" "
+    assert "html-unversioned" in head
+    assert "html-versioned" not in head
+    assert "paper-id-2403.10561" in head
+    assert "html-native" in head
+    assert "html-latexml" not in head
+
+    rv=client_with_test_fs.head("/html/cs/9904010v1/graph1.gif")
+    head=rv.headers["Surrogate-Key"]
+    assert " html " in " "+head+" "
+    assert "html-unversioned" not in head
+    assert "html-versioned" in head
+    assert "paper-id-cs/9904010" in head
+    assert "html-native" in head
+    assert "html-latexml" not in head
