@@ -522,16 +522,13 @@ def get_latexml_statuses_for_listings (listings: Iterable[DocMetadata]) -> Dict[
 def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
     if not current_app.config["LATEXML_ENABLED"]:
         return None
-    row = session.scalar(
-        select(DBLaTeXMLDocuments)
+    publish_dt = session.scalar(
+        select(DBLaTeXMLDocuments.publish_dt)
         .filter(DBLaTeXMLDocuments.paper_id == paper_id)
         .filter(DBLaTeXMLDocuments.document_version == version)
     )
-    if row and row.publish_dt:
-        dt: datetime = row.publish_dt.replace(tzinfo=timezone.utc)
-        return dt
-    else:
-        return None
+    return publish_dt.replace(tzinfo=timezone.utc) if publish_dt else None
+
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)
