@@ -6,6 +6,8 @@ from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
 from arxiv.identifier import Identifier, IdentifierException
+
+from browse.controllers import add_surrogate_key
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service
@@ -74,7 +76,11 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
             last_modified=src_file.updated,
             size=tarmember.size
     ).make_response()
-
+    resp.headers.update(add_surrogate_key(resp.headers,["anc",f"paper-id-{arxiv_id.id}"]))
+    if arxiv_id.has_version:
+        resp.headers.update(add_surrogate_key(resp.headers,["anc-versioned"]))
+    else:
+        resp.headers.update(add_surrogate_key(resp.headers,["anc-unversioned"]))
     add_mimetype(resp, tarmember.name)
     add_time_headers(resp, src_file, arxiv_id)
     return resp
