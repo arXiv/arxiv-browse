@@ -11,10 +11,12 @@ import traceback
 from functools import partial
 from multiprocessing import Pool
 from typing import Callable, Dict, Iterator, List, Set, Tuple
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 
+from arxiv.files import LocalFileObj
 from arxiv.document.parse_abs import parse_abs_file
 
 from comparison_types import (
@@ -135,7 +137,7 @@ def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
             fname_path = os.path.join(dir_name, fname)
             print(f'looking at {fname_path}')
             if os.stat(fname_path).st_size != 0 and fname_path.endswith('.abs'):
-                aid = parse_abs_file(filename=fname_path).arxiv_id
+                aid = parse_abs_file(LocalFileObj(Path(fname_path))).arxiv_id
                 logging.debug(f'yielding id {aid}')
                 yield aid
 
@@ -150,7 +152,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
                 continue
             if not fname_path.endswith('.abs'):
                 continue
-            aid = parse_abs_file(filename=fname_path).arxiv_id
+            aid = parse_abs_file(LocalFileObj(Path(fname_path))).arxiv_id
             if aid not in excluded:
                 ids.append(aid)
     logging.debug(f'finished getting the ids count:{len(ids)}')

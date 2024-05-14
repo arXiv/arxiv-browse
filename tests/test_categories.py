@@ -4,12 +4,13 @@ from tests.test_fs_abs_parser import ABS_FILES
 from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
 
 from arxiv.taxonomy.category import Category
+from arxiv.files.object_store import LocalObjectStore
 
 
 class CategoriesTest(unittest.TestCase):
 
     def setUp(self):
-        self.absService = FsDocMetadataService(ABS_FILES+'/ftp', ABS_FILES+'/orig')
+        self.absService = FsDocMetadataService(LocalObjectStore(ABS_FILES))
 
     def test_categories_for_0906_3421v1_cats(self):
         (id, primary, secondaries) = ('0906.3421v1', 'Combinatorics (math.CO)',

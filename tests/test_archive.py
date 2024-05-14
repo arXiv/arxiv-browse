@@ -73,3 +73,18 @@ def test_single_archive(client_with_test_fs):
 def test_301_redirects(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/astro-ph/Astrophysics")
     assert rv.status_code == 301, "/archive/astro-ph/Astrophysics should get a 301 redirect ARXIVNG-2119"
+
+def test_surrogate_keys(client_with_db_listings):
+    client=client_with_db_listings
+
+    rv = client.head("/archive/math")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "
+
+    rv = client.head("/archive/comp-lg")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "
+
+    rv = client.head("/archive")
+    head=rv.headers["Surrogate-Key"]
+    assert " archive " in " "+head+" "

@@ -37,3 +37,21 @@ class TestFormats(TestCase):
                              ['html', 'other'])
         self.assertListEqual(formats_from_source_flag('X'),
                              ['pdf', 'other'])
+
+
+def test_format_headers(client_with_test_fs):
+    client=client_with_test_fs
+
+    rv=client.head("/format/1601.04345")
+    head=rv.headers["Surrogate-Key"]
+    assert " format " in " "+head+" "
+    assert "format-unversioned" in head
+    assert "format-versioned" not in head
+    assert "paper-id-1601.04345" in head
+
+    rv=client.head("/format/1601.04345v2")
+    head=rv.headers["Surrogate-Key"]
+    assert " format " in " "+head+" "
+    assert "format-unversioned" not in head
+    assert "format-versioned" in head
+    assert "paper-id-1601.04345" in head
