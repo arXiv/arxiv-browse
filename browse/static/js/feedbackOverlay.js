@@ -676,4 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById('myFormContent').onsubmit = submitBugReport;
+
+    localStorage.setItem('ar5iv_theme') = 'automatic';
+    detectColorScheme();
 });

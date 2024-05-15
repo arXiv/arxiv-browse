@@ -117,3 +117,13 @@ def test_last_modified_no_html (dbclient):
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
 
     assert atag is None
+
+def test_abs_surrogate_keys(dbclient):
+    rv=dbclient.get('/abs/0906.5504')
+    assert "abs" in rv.headers['Surrogate-Key']
+    assert "abs-unversioned" in rv.headers['Surrogate-Key']
+    assert "paper-id-0906.5504" in rv.headers['Surrogate-Key']
+
+    rv=dbclient.get('/abs/0704.0046v1')
+    assert "abs-versioned" in rv.headers['Surrogate-Key']
+    assert "paper-id-0704.0046" in rv.headers['Surrogate-Key']

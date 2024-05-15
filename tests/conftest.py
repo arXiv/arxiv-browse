@@ -110,8 +110,7 @@ def app_with_test_fs(loaded_db):
     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.fs_docs
     conf["DOCUMENT_LISTING_SERVICE"] = listing.fs_listing
     conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
-    conf["DOCUMENT_LATEST_VERSIONS_PATH"] = "tests/data/abs_files/ftp"
-    conf["DOCUMENT_ORIGINAL_VERSIONS_PATH"] = "tests/data/abs_files/orig"
+    conf["ABS_PATH_ROOT"] = "tests/data/abs_files/"
 
     app = create_web_app(**conf)
 
