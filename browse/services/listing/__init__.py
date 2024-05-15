@@ -295,7 +295,10 @@ def gen_expires() -> str:
        RFC 1123 format ex 'Wed, 21 Oct 2015 07:28:00 GMT'
     """
     now=datetime.now().astimezone(ZoneInfo("US/Eastern"))
-    midnight=now.replace(hour=0, minute=0, second=0, microsecond=0)
-    expire = midnight + timedelta(days=1)
+    if now.hour>=20:
+        expire= now+ timedelta(minutes=5)
+    else:
+        midnight=now.replace(hour=0, minute=0, second=0, microsecond=0)
+        expire = midnight + timedelta(days=1)
     expires = format_date_time(expire.timestamp())
     return expires
