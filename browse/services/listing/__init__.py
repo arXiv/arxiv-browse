@@ -298,7 +298,6 @@ def gen_expires() -> str:
     if now.hour>=20:
         expire= now+ timedelta(minutes=5)
     else:
-        midnight=now.replace(hour=0, minute=0, second=0, microsecond=0)
-        expire = midnight + timedelta(days=1)
+        expire=now.replace(hour=20, minute=0, second=0, microsecond=0)
     expires = format_date_time(expire.timestamp())
     return expires
