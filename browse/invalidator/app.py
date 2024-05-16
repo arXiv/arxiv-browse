@@ -1,29 +1,52 @@
+"""Flask app to purge cache at fastly.
+
+ To be run as cloud run listening to changes on gs bucket.
+
+See "Route Cloud Storage events to Cloud Run" at
+ https://cloud.google.com/eventarc/docs/run/route-trigger-cloud-storage
+
+
+To run:
+    cd arxiv-browse  # run from root of project
+    GOOGLE_APPLICATION_CREDENTIALS ~/.config/google-app-credentials.json \
+    FASTLY_PURGE_TOKEN=$(gcloud secrets versions access 1 --secret="fastly_crowdsec_token") \
+    flask --app browse.invalidator.app run --debug --reload
+"""
 import json
 import os
-import time
-from typing import Dict, Tuple, List, Optional
+
+from typing import Dict, Optional
 from google.api_core import retry
 
-from arxiv.identifier import OLD_STYLE, STANDARD, Identifier
+from arxiv.identifier import Identifier
 
 import requests
 from flask import Flask, Response, request
-from google.cloud import secretmanager
 
-PROJECT = os.environ.get('PROJECT')
+# import logging as log
+# import google.cloud.logging as logging
+# logging_client = logging.Client()
+# logging_client.setup_logging()
+import google.auth
+
+from invalidator import _paperid, _purge_urls
+
+# credentials, project_id = google.auth.default()
+# if hasattr(credentials, "service_account_email"):
+#     print(f"Running as {credentials.service_account_email}")
+# else:
+#     print("WARNING: no service account credential. User account credential?")
+
+
+PROJECT = os.environ.get('arxiv-production')
 USE_SOFT_PURGE = os.environ.get('USE_SOFT_PURGE', "0") == "1"
 FASTLY_URL = os.environ.get("FASTLY_URL", "https://api.fastly.com")
 ORIGIN_HOSTNAME = os.environ.get("ORIGIN_HOSTNAME", "arxiv.org")
 
-FASTLY_API_KEY_SECRET_NAME = os.environ.get("FASTLY_API_KEY_SECRET_NAME", "fastly-api-key")
-"Actual secret is in GCP Secret Manager, see `_fastly_secrets()`."
+FASTLY_PURGE_TOKEN = os.environ.get("FASTLY_PURGE_TOKEN")
+"API token to purge at Fastly."
 
-RELOAD_SECRET_SEC = int(os.environ.get("RELOAD_SECRET_SEC", 60 * 15))
 
-_API_KEY = ""
-_API_KEY_TIME: float = time.time()
-
-app = Flask(__name__)
 
 def _log(severity: str, msg: str, paperid: Optional[Identifier] = None) -> None:
     # https://cloud.google.com/run/docs/samples/cloudrun-manual-logging
@@ -41,51 +64,7 @@ def _log(severity: str, msg: str, paperid: Optional[Identifier] = None) -> None:
 
     print(json.dumps(log_fields))
 
-
-def _fastly_secrets() -> str:
-    # get from secret manager
-    global _API_KEY, _API_KEY_TIME
-    if not _API_KEY or time.time() - _API_KEY_TIME > RELOAD_SECRET_SEC:
-        sm = secretmanager.SecretManagerServiceClient()
-        sec = sm.access_secret_version(request={"name": FASTLY_API_KEY_SECRET_NAME})
-        _API_KEY = sec.payload.data.decode("UTF-8")
-        _API_KEY_TIME = time.time()
-
-    return _API_KEY
-
-
-def _paperid(name: str) -> Optional[Identifier]:
-    if match := STANDARD.search(name):
-        return Identifier(match.group("arxiv_id"))
-    if match := OLD_STYLE.search(name):
-        return Identifier(match.group("arxiv_id"))
-    else:
-        return None
-
-
-def _purge_urls(bucket: str, name: str, paperid: Identifier) -> List[str]:
-    # Since it is not clear if this is the current file or an older one
-    # invalidate both the versioned URL and the un-versioned current URL
-    if '/pdf/' in name:
-        return [f"arxiv.org/pdf/{paperid.idv}", f"arxiv.org/pdf/{paperid.id}"]
-    if '/ftp/' in name or '/orig/' in name:
-        if name.endswith(".abs"):
-            return [f"arxiv.org/abs/{paperid.idv}", f"arxiv.org/abs/{paperid.id}"]
-        else:
-            return [f"arxiv.org/e-print/{paperid.idv}", f"arxiv.org/e-print/{paperid.id}",
-                    f"arxiv.org/src/{paperid.idv}", f"arxiv.org/src/{paperid.id}"]
-    if '/html/' in name:
-        # Note this does not invalidate any paths inside the html.tgz
-        return [f"arxiv.org/html/{paperid.idv}", f"arxiv.org/html/{paperid.id}",
-                # Note needs both with and without trailing slash
-                f"arxiv.org/html/{paperid.idv}/", f"arxiv.org/html/{paperid.id}/"]
-    if '/ps/' in name:
-        return [f"arxiv.org/ps/{paperid.idv}", f"arxiv.org/ps/{paperid.id}"]
-    if '/docx/' in name:
-        return [f"arxiv.org/docx/{paperid.idv}", f"arxiv.org/docx/{paperid.id}"]
-
-    _log("INFO", f"No purge found gs://{bucket}/{name}", paperid)
-    return []
+app = Flask(__name__)
 
 
 def _invalidate_at_fastly(bucket: str, name: str) -> None:
@@ -99,8 +78,7 @@ def _invalidate_at_fastly(bucket: str, name: str) -> None:
 
 @retry.Retry()
 def _invalidate(arxiv_url: str, paperid: Identifier) -> None:
-    apikey = _fastly_secrets()
-    headers = {"Fastly-Key": apikey}
+    headers = {"Fastly-Key": FASTLY_PURGE_TOKEN}
     if USE_SOFT_PURGE:
         headers["fastly-soft-purge"] = "1"
     resp = requests.get(f"{FASTLY_URL}/{arxiv_url}", headers=headers)
@@ -128,3 +106,9 @@ def invalidate_on_bucket_change() -> Response:
     bucket = str(data.get("bucket"))
     _invalidate_at_fastly(bucket, name)
     return Response('', 200)
+
+
+fastly = requests.get(f"{FASTLY_URL}/current_customer", headers={"Fastly-Key": FASTLY_PURGE_TOKEN})
+if fastly.status_code != 200:
+    raise RuntimeError(f"Could not access fastly: {fastly.status_code} {fastly.text}")
+
