@@ -1,12 +1,15 @@
 import re
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
-from arxiv.identifier import Identifier, STANDARD as MODERN_ID, OLD_STYLE, _archive, _category
-
+import requests
+from arxiv.identifier import Identifier, STANDARD as MODERN_ID, _archive, _category
+from google.api_core import retry
 
 PS_CACHE_OLD_ID = re.compile(r'(%s)\/[^\/]*\/\d*\/(\d{2}[01]\d{4}(v\d*)?)' % f'{_archive}|{_category}')
 "EX /ps_cache/hep-ph/pdf/0511/0511005v2.pdf"
 
+import logging
+log = logging.getLogger(__name__)
 
 def _paperid(name: str) -> Optional[Identifier]:
     if match := MODERN_ID.search(name):
@@ -17,25 +20,68 @@ def _paperid(name: str) -> Optional[Identifier]:
         return None
 
 
-def _purge_urls(bucket: str, name: str, paperid: Identifier) -> List[str]:
+def purge_urls(key: str) -> Optional[Tuple[Identifier, List[str]]]:
+    """
+
+    Parameters
+    ----------
+    key: GS key should not start with a / ex. `ftp/arxiv/papers/1901/1901.0001.abs`
+
+    paperid: The paper ID this is related to
+
+    Returns
+    -------
+    List of paths to invalidate at fastly. Ex `["arxiv.org/abs/1901.0001"]`
+    """
     # Since it is not clear if this is the current file or an older one
     # invalidate both the versioned URL and the un-versioned current URL
-    if name.startswith('/ftp/') or name.startswith("/orig/"):
-        if name.endswith(".abs"):
-            return [f"arxiv.org/abs/{paperid.idv}", f"arxiv.org/abs/{paperid.id}"]
+    paperid = _paperid(key)
+    if paperid is None:
+        return None
+
+    if key.startswith('/ftp/') or key.startswith("/orig/"):
+        if key.endswith(".abs"):
+            return paperid, [f"arxiv.org/abs/{paperid.idv}", f"arxiv.org/abs/{paperid.id}"]
         else:
-            return [f"arxiv.org/e-print/{paperid.idv}", f"arxiv.org/e-print/{paperid.id}",
+            return paperid, [f"arxiv.org/e-print/{paperid.idv}", f"arxiv.org/e-print/{paperid.id}",
                     f"arxiv.org/src/{paperid.idv}", f"arxiv.org/src/{paperid.id}"]
-    elif "/pdf/" in name:
-        return [f"arxiv.org/pdf/{paperid.idv}", f"arxiv.org/pdf/{paperid.id}"]
-    elif '/html/' in name:
+    elif "/pdf/" in key:
+        return paperid, [f"arxiv.org/pdf/{paperid.idv}", f"arxiv.org/pdf/{paperid.id}"]
+    elif '/html/' in key:
         # Note this does not invalidate any paths inside the html.tgz
-        return [f"arxiv.org/html/{paperid.idv}", f"arxiv.org/html/{paperid.id}",
+        return paperid, [f"arxiv.org/html/{paperid.idv}", f"arxiv.org/html/{paperid.id}",
                 # Note needs both with and without trailing slash
                 f"arxiv.org/html/{paperid.idv}/", f"arxiv.org/html/{paperid.id}/"]
-    elif '/ps/' in name:
-        return [f"arxiv.org/ps/{paperid.idv}", f"arxiv.org/ps/{paperid.id}"]
-    elif '/dvi/' in name:
-        return [f"arxiv.org/dvi/{paperid.idv}", f"arxiv.org/dvi/{paperid.id}"]
+    elif '/ps/' in key:
+        return paperid, [f"arxiv.org/ps/{paperid.idv}", f"arxiv.org/ps/{paperid.id}"]
+    elif '/dvi/' in key:
+        return paperid, [f"arxiv.org/dvi/{paperid.idv}", f"arxiv.org/dvi/{paperid.id}"]
     else:
-        return []
+        return paperid, []
+
+
+class Invalidator:
+    def __init__(self, fastly_url: str, fastly_api_token: str, always_soft_purge: bool=False) -> None:
+        if fastly_url.endswith("/"):
+            self.fastly_url = fastly_url[:-1]
+        else:
+            self.fastly_url = fastly_url
+        self.fastly_api_token = fastly_api_token
+        self.always_soft_purge = always_soft_purge
+
+    @retry.Retry()
+    def invalidate(self, arxiv_url: str, paperid: Identifier, soft_purge: bool=False) -> None:
+        headers = {"Fastly-Key": self.fastly_api_token}
+        if self.always_soft_purge or soft_purge:
+            headers["fastly-soft-purge"] = "1"
+
+        url = f"{self.fastly_url}/{arxiv_url}"
+        resp = requests.get(url, headers=headers)
+        if resp.status_code == 200:
+            log.info(f"Purged {arxiv_url}", paperid)
+            return
+        if 400 <= resp.status_code < 500 and resp.status_code not in [429, 408]:
+            log.error(f"Purge failed. GET req to {url} failed: {resp.status_code} {resp.text}", paperid)
+            return
+        else:
+            resp.raise_for_status()

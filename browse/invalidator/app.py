@@ -1,114 +1,127 @@
-"""Flask app to purge cache at fastly.
+"""Flask app to listen to GS changes and purge cache at fastly.
 
- To be run as cloud run listening to changes on gs bucket.
+ To be run as cloud run listening to changes on GS bucket.
 
 See "Route Cloud Storage events to Cloud Run" at
  https://cloud.google.com/eventarc/docs/run/route-trigger-cloud-storage
-
 
 To run:
     cd arxiv-browse  # run from root of project
     GOOGLE_APPLICATION_CREDENTIALS ~/.config/google-app-credentials.json \
     FASTLY_PURGE_TOKEN=$(gcloud secrets versions access 1 --secret="fastly_crowdsec_token") \
-    flask --app browse.invalidator.app run --debug --reload
+    flask --app browse.invalidator.app run --debug --reload &
+
+    curl --data '{
+    "kind": "storage#object",
+    "id": "arxiv-production-data/txt/test/test.txt/1715976725972877",
+    "selfLink": "https://www.googleapis.com/storage/v1/b/arxiv-production-data/o/txt%2Ftest%2Ftest.txt",
+    "name": "txt/test/test.txt",
+    "bucket": "arxiv-production-data",
+    "generation": "1715976725972877",
+    "metageneration": "1",
+    "contentType": "text/plain",
+    "timeCreated": "2024-05-17T20:12:06.024Z",
+    "updated": "2024-05-17T20:12:06.024Z",
+    "storageClass": "STANDARD",
+    "timeStorageClassUpdated": "2024-05-17T20:12:06.024Z",
+    "size": "56",
+    "md5Hash": "c6Ey9je4h4MN/kI6ONZRYw==",
+    "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/arxiv-production-data/o/txt%2Ftest%2Ftest.txt?generation=1715976725972877&alt=media",
+    "contentLanguage": "en",
+    "crc32c": "boLwHQ==",
+    "etag": "CI2Px7m/lYYDEAE="
+     }' \
+    http://localhost:8080/
+
 """
 import json
 import os
 
 from typing import Dict, Optional
-from google.api_core import retry
 
 from arxiv.identifier import Identifier
 
 import requests
-from flask import Flask, Response, request
+from flask import Flask, Response, request, g, current_app
 
-# import logging as log
-# import google.cloud.logging as logging
-# logging_client = logging.Client()
-# logging_client.setup_logging()
-import google.auth
+try:
+    import google.cloud.logging
+    client = google.cloud.logging.Client()
+    client.setup_logging()
+except EnvironmentError as ex:
+    print(f"Could not import google-cloud-logging: {ex}")
 
-from invalidator import _paperid, _purge_urls
+import logging as log
 
-# credentials, project_id = google.auth.default()
-# if hasattr(credentials, "service_account_email"):
-#     print(f"Running as {credentials.service_account_email}")
-# else:
-#     print("WARNING: no service account credential. User account credential?")
+from invalidator import _paperid, purge_urls, Invalidator
 
+def create_app() -> Flask:
+    app = Flask(__name__)
+    app.config["FASTLY_API_TOKEN"] = os.environ.get("FASTLY_API_TOKEN", "")
 
-PROJECT = os.environ.get('arxiv-production')
-USE_SOFT_PURGE = os.environ.get('USE_SOFT_PURGE', "0") == "1"
-FASTLY_URL = os.environ.get("FASTLY_URL", "https://api.fastly.com")
-ORIGIN_HOSTNAME = os.environ.get("ORIGIN_HOSTNAME", "arxiv.org")
+    app.config["FASTLY_URL"] = os.environ.get("FASTLY_URL", "https://api.fastly.com/purge")
+    app.config["ALWAYS_SOFT_PURGE"] = os.environ.get('ALWAYS_SOFT_PURGE', "0") == "1"
+    app.config["FASTLY_TEST_ON_STARTUP"] = os.environ.get("TEST_FASTLY_ON_STARTUP", "0") == "1"
+    app.config["OPENTELEMETRY"] = os.environ.get("OPENTELEMETRY", "0") == "1"
 
-FASTLY_PURGE_TOKEN = os.environ.get("FASTLY_PURGE_TOKEN")
-"API token to purge at Fastly."
+    if app.config["FASTLY_TEST_ON_STARTUP"]:
+        fastly = requests.get(f"{app.config['FASTLY_URL']}/current_customer",
+                              headers={"Fastly-Key": app.config["FASTLY_PURGE_TOKEN"]})
+        if fastly.status_code != 200:
+            raise RuntimeError(f"Could not access fastly: {fastly.status_code} {fastly.text}")
 
+    if app.config["OPENTELEMETRY"]:
+        from opentelemetry.instrumentation.flask import FlaskInstrumentor
+        from opentelemetry.propagate import set_global_textmap
+        from opentelemetry.propagators.cloud_trace_propagator import (
+            CloudTraceFormatPropagator,
+        )
+        set_global_textmap(CloudTraceFormatPropagator())
+        FlaskInstrumentor().instrument_app(app)
 
+    def get_invalidator() -> Invalidator:
+        if not app.config["FASTLY_API_TOKEN"]:
+            raise RuntimeError("FASTLY_API_TOKEN is not set")
 
-def _log(severity: str, msg: str, paperid: Optional[Identifier] = None) -> None:
-    # https://cloud.google.com/run/docs/samples/cloudrun-manual-logging
-    log_fields = {"severity": severity, "message": msg}
-    if paperid is not None:
-        log_fields["arxivPaperId"] = paperid.idv
+        if "invalidator" not in g or not g.invalidator:
+            g.invalidator = Invalidator(current_app.config['FASTLY_URL'],
+                                           current_app.config['FASTLY_API_TOKEN'],
+                                           current_app.config['ALWAYS_SOFT_PURGE'])
 
-    request_is_defined = "request" in globals() or "request" in locals()
-    if request_is_defined and request:
-        # For special fields see https://cloud.google.com/logging/docs/agent/logging/configuration#special-fields
-        trace_header = request.headers.get("X-Cloud-Trace-Context")
-        if trace_header and PROJECT:
-            trace = trace_header.split("/")
-            log_fields["logging.googleapis.com/trace"] = f"projects/{PROJECT}/traces/{trace[0]}"
+        return g.invalidator  # type: ignore
 
-    print(json.dumps(log_fields))
+    @app.route("/", methods=["POST"])
+    def invalidate_on_bucket_change() -> Response:
+        """
+        Takes in the eventarc trigger payload invalidates any related papers.
 
-app = Flask(__name__)
+        Format of incoming data:
+        https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto
 
+        Returns
+        -------
+        Response
+            Returns a 200 response with no payload
+        """
+        data: Dict[str, str] = request.get_json()
+        name = str(data.get("name"))
+        bucket = str(data.get("bucket"))
+        tt = purge_urls(name)
+        if not tt:
+            log.info("No purge: gs://{bucket}/{name} not related to an arxiv paper id")
+            return Response('', 200)
 
-def _invalidate_at_fastly(bucket: str, name: str) -> None:
-    paperid = _paperid(name)
-    if paperid is None:
-        _log("INFO", "No purge: gs://{bucket}/{name} not related to a paperid")
-        return
-    for url in _purge_urls(bucket, name, paperid):
-        _invalidate(url, paperid)
+        paper_id, paths = tt
+        if not paths:
+            log.info(f"No purge: gs://{bucket}/{name} Related to {paper_id} but no paths")
+            return Response('', 200)
 
+        for path in paths:
+            try:
+                get_invalidator().invalidate(path, paper_id)
+            except Exception as ex:
+                log.error(f"Purge failed: {path} failed {ex}")
 
-@retry.Retry()
-def _invalidate(arxiv_url: str, paperid: Identifier) -> None:
-    headers = {"Fastly-Key": FASTLY_PURGE_TOKEN}
-    if USE_SOFT_PURGE:
-        headers["fastly-soft-purge"] = "1"
-    resp = requests.get(f"{FASTLY_URL}/{arxiv_url}", headers=headers)
-    if resp.status_code != 200:
-        _log("ERROR", f"Could not purge {arxiv_url}: {resp.status_code} {resp.text}", paperid)
-    else:
-        _log("INFO", f"Purged {arxiv_url}", paperid)
+        return Response('', 200)
 
-
-@app.route("/", methods=["POST"])
-def invalidate_on_bucket_change() -> Response:
-    """
-    Takes in the eventarc trigger payload invalidates any related papers.
-
-    Format of incoming data:
-    https://github.com/googleapis/google-cloudevents/blob/main/proto/google/events/cloud/storage/v1/data.proto
-
-    Returns
-    -------
-    Response
-        Returns a 200 response with no payload
-    """
-    data: Dict[str, str] = request.get_json()
-    name = str(data.get("name"))
-    bucket = str(data.get("bucket"))
-    _invalidate_at_fastly(bucket, name)
-    return Response('', 200)
-
-
-fastly = requests.get(f"{FASTLY_URL}/current_customer", headers={"Fastly-Key": FASTLY_PURGE_TOKEN})
-if fastly.status_code != 200:
-    raise RuntimeError(f"Could not access fastly: {fastly.status_code} {fastly.text}")
-
+    return app
