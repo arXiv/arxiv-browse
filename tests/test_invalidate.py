@@ -4,7 +4,7 @@ import pytest
 from arxiv.identifier import Identifier
 from pytest_mock import mocker
 from browse.invalidator import Invalidator, _paperid, purge_urls
-from invalidator.app import create_app
+from browse.invalidator.app import create_app
 
 
 @pytest.mark.parametrize("key, paperid", [
@@ -42,12 +42,12 @@ def test_invalidate(mocker):  # type: ignore
     get = mocker.patch('browse.invalidator.requests.get')
     get.return_value.status_code = 200
     inv = Invalidator("https://example.com", "FAKE_API_TOKEN_abc1234")
-    inv.invalidate("/fake_url", Identifier("1901.0001"))
+    inv.invalidate("fake_url", Identifier("1901.0001"))
     get.assert_called_once_with('https://example.com/fake_url', headers={'Fastly-Key': 'FAKE_API_TOKEN_abc1234'})
 
 
 @pytest.fixture
-def mocked_request_get(mocker):
+def mocked_request_get(mocker):  # type: ignore
     class MockResponse:
         def __init__(self, status_code: int):
             self.status_code = status_code

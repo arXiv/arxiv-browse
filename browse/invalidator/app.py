@@ -25,21 +25,17 @@ To run:
     "storageClass": "STANDARD",
     "timeStorageClassUpdated": "2024-05-17T20:12:06.024Z",
     "size": "56",
-    "md5Hash": "c6Ey9je4h4MN/kI6ONZRYw==",
-    "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/arxiv-production-data/o/txt%2Ftest%2Ftest.txt?generation=1715976725972877&alt=media",
+    "md5Hash": "xyz==",
     "contentLanguage": "en",
     "crc32c": "boLwHQ==",
-    "etag": "CI2Px7m/lYYDEAE="
+    "etag": "xyz="
      }' \
     http://localhost:8080/
 
 """
-import json
 import os
 
-from typing import Dict, Optional
-
-from arxiv.identifier import Identifier
+from typing import Dict, cast
 
 import requests
 from flask import Flask, Response, request, g, current_app
@@ -53,7 +49,24 @@ except EnvironmentError as ex:
 
 import logging as log
 
-from invalidator import _paperid, purge_urls, Invalidator
+from browse.invalidator import purge_urls, Invalidator
+
+
+def invalidate_for_gs_change(bucket: str, key: str, invalidator: Invalidator) -> None:
+    tup = purge_urls(key)
+    if not tup:
+        log.info(f"No purge: gs://{bucket}/{key} not related to an arxiv paper id")
+        return
+    paper_id, paths = tup
+    if not paths:
+        log.info(f"No purge: gs://{bucket}/{key} Related to {paper_id} but no paths")
+        return
+    for path in paths:
+            try:
+                invalidator.invalidate(path, paper_id)
+            except Exception as exc:
+                log.error(f"Purge failed: {path} failed {exc}")
+
 
 def create_app() -> Flask:
     app = Flask(__name__)
@@ -85,10 +98,9 @@ def create_app() -> Flask:
 
         if "invalidator" not in g or not g.invalidator:
             g.invalidator = Invalidator(current_app.config['FASTLY_URL'],
-                                           current_app.config['FASTLY_API_TOKEN'],
-                                           current_app.config['ALWAYS_SOFT_PURGE'])
-
-        return g.invalidator  # type: ignore
+                                        current_app.config['FASTLY_API_TOKEN'],
+                                        current_app.config['ALWAYS_SOFT_PURGE'])
+        return cast(Invalidator, g.invalidator)
 
     @app.route("/", methods=["POST"])
     def invalidate_on_bucket_change() -> Response:
@@ -104,24 +116,7 @@ def create_app() -> Flask:
             Returns a 200 response with no payload
         """
         data: Dict[str, str] = request.get_json()
-        name = str(data.get("name"))
-        bucket = str(data.get("bucket"))
-        tt = purge_urls(name)
-        if not tt:
-            log.info("No purge: gs://{bucket}/{name} not related to an arxiv paper id")
-            return Response('', 200)
-
-        paper_id, paths = tt
-        if not paths:
-            log.info(f"No purge: gs://{bucket}/{name} Related to {paper_id} but no paths")
-            return Response('', 200)
-
-        for path in paths:
-            try:
-                get_invalidator().invalidate(path, paper_id)
-            except Exception as ex:
-                log.error(f"Purge failed: {path} failed {ex}")
-
+        invalidate_for_gs_change(str(data.get("bucket")), str(data.get("name")), get_invalidator())
         return Response('', 200)
 
     return app
