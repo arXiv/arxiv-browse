@@ -46,7 +46,7 @@ python-dateutil==2.8.2
 python-json-logger==2.0.7
 pytz==2022.6
 reportlab==4.0.7
-requests==2.27.1
+requests==2.32.0
 rsa==4.9
 s3transfer==0.5.2
 six==1.16.0
