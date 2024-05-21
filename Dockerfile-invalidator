@@ -58,6 +58,6 @@ USER e-prints
 
 ENV GUNICORN gunicorn --bind :8080 \
     --workers 4 --threads 8 --timeout 0 \
-     "browse.invalidtor:create_web_app()"
+     "browse.invalidator.app:create_app()"
 
 CMD exec $GUNICORN

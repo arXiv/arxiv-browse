@@ -39,6 +39,7 @@ from typing import Dict, cast
 
 import requests
 from flask import Flask, Response, request, g, current_app
+from google.auth.exceptions import DefaultCredentialsError
 
 try:
     import google.cloud.logging
@@ -46,26 +47,14 @@ try:
     client.setup_logging()
 except EnvironmentError as ex:
     print(f"Could not import google-cloud-logging: {ex}")
+except DefaultCredentialsError as ex:
+    print(f"Could not setup default credentials: {ex}")
 
-import logging as log
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-from browse.invalidator import purge_urls, Invalidator
-
-
-def invalidate_for_gs_change(bucket: str, key: str, invalidator: Invalidator) -> None:
-    tup = purge_urls(key)
-    if not tup:
-        log.info(f"No purge: gs://{bucket}/{key} not related to an arxiv paper id")
-        return
-    paper_id, paths = tup
-    if not paths:
-        log.info(f"No purge: gs://{bucket}/{key} Related to {paper_id} but no paths")
-        return
-    for path in paths:
-            try:
-                invalidator.invalidate(path, paper_id)
-            except Exception as exc:
-                log.error(f"Purge failed: {path} failed {exc}")
+from browse.invalidator import Invalidator, invalidate_for_gs_change
 
 
 def create_app() -> Flask:
@@ -76,6 +65,7 @@ def create_app() -> Flask:
     app.config["ALWAYS_SOFT_PURGE"] = os.environ.get('ALWAYS_SOFT_PURGE', "0") == "1"
     app.config["FASTLY_TEST_ON_STARTUP"] = os.environ.get("TEST_FASTLY_ON_STARTUP", "0") == "1"
     app.config["OPENTELEMETRY"] = os.environ.get("OPENTELEMETRY", "0") == "1"
+    app.config["DRY_RUN"] = os.environ.get("DRY_RUN", "0") == "1"
 
     if app.config["FASTLY_TEST_ON_STARTUP"]:
         fastly = requests.get(f"{app.config['FASTLY_URL']}/current_customer",
@@ -93,13 +83,21 @@ def create_app() -> Flask:
         FlaskInstrumentor().instrument_app(app)
 
     def get_invalidator() -> Invalidator:
-        if not app.config["FASTLY_API_TOKEN"]:
-            raise RuntimeError("FASTLY_API_TOKEN is not set")
-
         if "invalidator" not in g or not g.invalidator:
-            g.invalidator = Invalidator(current_app.config['FASTLY_URL'],
-                                        current_app.config['FASTLY_API_TOKEN'],
-                                        current_app.config['ALWAYS_SOFT_PURGE'])
+            if current_app.config["DRY_RUN"]:
+                g.invalidator = Invalidator(current_app.config['FASTLY_URL'] or "https://example.com/FAKE_FASTLY_URL",
+                                        current_app.config['FASTLY_API_TOKEN'] or "FAKE_API_TOKEN",
+                                        current_app.config['ALWAYS_SOFT_PURGE'],
+                                        current_app.config["DRY_RUN"])
+            else:
+                if not app.config["FASTLY_API_TOKEN"]:
+                    raise RuntimeError("FASTLY_API_TOKEN is not set")
+                g.invalidator = Invalidator(current_app.config['FASTLY_URL'],
+                                            current_app.config['FASTLY_API_TOKEN'],
+                                            current_app.config['ALWAYS_SOFT_PURGE'])
+        else:
+            pass
+
         return cast(Invalidator, g.invalidator)
 
     @app.route("/", methods=["POST"])
@@ -116,6 +114,7 @@ def create_app() -> Flask:
             Returns a 200 response with no payload
         """
         data: Dict[str, str] = request.get_json()
+
         invalidate_for_gs_change(str(data.get("bucket")), str(data.get("name")), get_invalidator())
         return Response('', 200)
 

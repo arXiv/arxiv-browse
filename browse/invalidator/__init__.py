@@ -61,13 +61,14 @@ def purge_urls(key: str) -> Optional[Tuple[Identifier, List[str]]]:
 
 
 class Invalidator:
-    def __init__(self, fastly_url: str, fastly_api_token: str, always_soft_purge: bool=False) -> None:
+    def __init__(self, fastly_url: str, fastly_api_token: str, always_soft_purge: bool=False, dry_run: bool=False) -> None:
         if fastly_url.endswith("/"):
             self.fastly_url = fastly_url[:-1]
         else:
             self.fastly_url = fastly_url
         self.fastly_api_token = fastly_api_token
         self.always_soft_purge = always_soft_purge
+        self.dry_run = dry_run
 
     @retry.Retry()
     def invalidate(self, arxiv_url: str, paperid: Identifier, soft_purge: bool=False) -> None:
@@ -76,12 +77,32 @@ class Invalidator:
             headers["fastly-soft-purge"] = "1"
 
         url = f"{self.fastly_url}/{arxiv_url}"
+
+        if self.dry_run:
+            log.info(f"{paperid.idv} DRY_RUN: Would have requested '{url}'")
+            return
+
         resp = requests.get(url, headers=headers)
         if resp.status_code == 200:
-            log.info(f"Purged {arxiv_url}", paperid)
+            log.info(f"{paperid.idv} purged {arxiv_url}", )
             return
-        if 400 <= resp.status_code < 500 and resp.status_code not in [429, 408]:
-            log.error(f"Purge failed. GET req to {url} failed: {resp.status_code} {resp.text}", paperid)
+            log.error(f"{paperid.idv} purge failed. GET req to {url} failed: {resp.status_code} {resp.text}")
             return
         else:
             resp.raise_for_status()
+
+
+def invalidate_for_gs_change(bucket: str, key: str, invalidator: Invalidator) -> None:
+    tup = purge_urls(key)
+    if not tup:
+        log.info(f"No purge: gs://{bucket}/{key} not related to an arxiv paper id")
+        return
+    paper_id, paths = tup
+    if not paths:
+        log.info(f"No purge: gs://{bucket}/{key} Related to {paper_id} but no paths")
+        return
+    for path in paths:
+            try:
+                invalidator.invalidate(path, paper_id)
+            except Exception as exc:
+                log.error(f"Purge failed: {path} failed {exc}")
