@@ -4,8 +4,8 @@ import re
 from typing import Optional, Dict
 
 from arxiv.identifier import Identifier, IdentifierException
+from arxiv.integration.fastly.headers import add_surrogate_key
 
-from browse.controllers import add_surrogate_key
 from browse.controllers.files.dissemination import get_src_resp
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
 from browse.services.dissemination import get_article_store
@@ -31,11 +31,11 @@ def anc_listing(arxiv_id: str):  #type: ignore
     data['anc_file_list'] = get_article_store().get_ancillary_files(docmeta)
 
     headers: Dict[str,str]={}
-    headers.update(add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"]))
+    headers=add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"])
     if _check_id_for_version(arxiv_id): #get abs always adds a verion onto the id
-        headers.update(add_surrogate_key(headers,["anc-versioned"]))
+        headers=add_surrogate_key(headers,["anc-versioned"])
     else:
-        headers.update(add_surrogate_key(headers,["anc-unversioned"]))
+        headers=add_surrogate_key(headers,["anc-unversioned"])
 
     if data['anc_file_list']:
         return render_template("src/listing.html", **data), 200, headers
@@ -73,9 +73,9 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
      """
     resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
     if _check_id_for_version(arxiv_id_str): 
-        resp.headers.update(add_surrogate_key(resp.headers,["src","src-versioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["src","src-versioned"])
     else:
-        resp.headers.update(add_surrogate_key(resp.headers,["src","src-unversioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["src","src-unversioned"])
         
     return resp
 
