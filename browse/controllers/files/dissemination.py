@@ -8,8 +8,8 @@ from arxiv.identifier import Identifier, IdentifierException
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
+from arxiv.integration.fastly.headers import add_surrogate_key
 
-from browse.controllers import add_surrogate_key
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
     not_found, bad_id, cannot_build_pdf, add_mimetype
@@ -76,7 +76,7 @@ def default_resp_fn(file: FileObj,
 
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers.update(add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"]))
+    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
     add_mimetype(resp, file.name)
     add_time_headers(resp, file, arxiv_id)
     return resp
@@ -107,9 +107,9 @@ def pdf_resp_fn(file: FileObj,
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
     if arxiv_id.has_version: 
-        resp.headers.update(add_surrogate_key(resp.headers,["pdf","pdf-versioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["pdf","pdf-versioned"])
     else:
-        resp.headers.update(add_surrogate_key(resp.headers,["pdf","pdf-unversioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["pdf","pdf-unversioned"])
     return resp
 
 
@@ -184,15 +184,15 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         resp= _html_source_listing_response(file_list, arxiv_id)
     elif isinstance(file_list, FileObj): #converted via latexml
         resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
-        resp.headers.update(add_surrogate_key(resp.headers,["html-latexml"]))
+        resp.headers=add_surrogate_key(resp.headers,["html-latexml"])
     else:
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
         resp= unavailable(arxiv_id)
 
     if arxiv_id.has_version: 
-        resp.headers.update(add_surrogate_key(resp.headers,["html","html-versioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["html","html-versioned"])
     else:
-        resp.headers.update(add_surrogate_key(resp.headers,["html","html-unversioned"]))
+        resp.headers=add_surrogate_key(resp.headers,["html","html-unversioned"])
     return resp
 
 
@@ -226,7 +226,7 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
                                                 arxiv_id=arxiv_id, file_names=file_names), 200,
                                 {"Cache-Control": maxage(arxiv_id.has_version)})
     
-    resp.headers.update(add_surrogate_key(resp.headers,["html-native"]))
+    resp.headers=add_surrogate_key(resp.headers,["html-native"])
     return resp
 
 
