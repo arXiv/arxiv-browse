@@ -55,7 +55,8 @@ Conditions = Union[
             "NO_SOURCE",  # Article and version exists but no source exists
             "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
             "NOT_PDF",  # format that doens't serve a pdf
-            "NO_HTML" #not native HTML, no HTML conversion available
+            "NO_HTML", #not native HTML, no HTML conversion available
+            "NOT_PUBLIC" #where the author has decided not to make the source of the paper public
             ],
     Deleted,
     CannotBuildPdf]
@@ -250,6 +251,9 @@ class ArticleStore():
 
         if version.withdrawn_or_ignore:
             return "WITHDRAWN"
+        
+        if version.source_flag.source_encrypted:
+            return "NOT_PUBLIC"
 
         handler_fn = self.format_handlers[format]
         fileobj = handler_fn(arxiv_id, docmeta, version)

@@ -102,6 +102,17 @@ def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Respons
                                          arxiv_id=arxiv_id),
                          404, headers)
 
+def not_public(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
+    """ Returned for pages whose source is encrypted/ made not public by the author.
+    Sets expire to one year, max allowed by RFC 2616"""
+    if had_specific_version:
+        headers = {'Cache-Control': 'max-age=31536000'}
+    else:
+        headers = {'Cache-Control': maxage(False)}
+    return make_response(
+        render_template("dissemination/not_public.html",arxiv_id=arxiv_id), 403, headers
+    )
+
 
 def unavailable(arxiv_id: Identifier) -> Response:
     return make_response(render_template("dissemination/unavailable.html",
