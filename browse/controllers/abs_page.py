@@ -147,6 +147,10 @@ def get_abs_page(arxiv_id: str) -> Response:
                     response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier,
                                                                                          ver.version)
 
+        response_data["encrypted"] = False
+        if abs_meta.version_history[abs_meta.version-1].source_flag.source_encrypted:
+            response_data["encrypted"] = True
+
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
     except AbsNotFoundException as ex:
