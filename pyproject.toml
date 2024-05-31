@@ -41,7 +41,7 @@ arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "0fb6c76991
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 beautifulsoup4 = "*"
 coverage = "*"
 hypothesis = "*"
@@ -55,6 +55,7 @@ pytest-easyread = "*"
 pytest-html = "*"
 pytest-mock = "*"
 types-requests = "^2.31.0.20240125"
+requests-mock = "^1.12.1"
 
 [tool.pytest.ini_options]
 filterwarnings = [
