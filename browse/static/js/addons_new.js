@@ -1,3 +1,14 @@
+let get_metadata = async () => {
+  // fetch metadata
+  let path = window.location.origin+window.location.pathname;
+  if (path.endsWith('/view')) {
+    path = path.slice(0, -5);
+  }
+  let response = await fetch (path.endsWith('/') ? path+'__metadata.json': path+'/__metadata.json');
+
+  return await response.json();
+}
+
 let create_favicon = () => {
   let favicon32 = document.createElement('link');
   favicon32.rel = 'icon';
@@ -15,9 +26,8 @@ let create_favicon = () => {
   document.head.appendChild(favicon32);
 }
 
-let create_header = () => {
+let create_header = (metadata) => {
     let desktop_header = document.createElement('header');
-    let ABS_URL_BASE = 'https://arxiv.org/abs';
     let id = window.location.pathname.split('/')[2];
 
     var LogoBanner = `
@@ -33,13 +43,12 @@ let create_header = () => {
         </p>
     </div>`;
 
-    const locationId = encodeURI(window.location.href.match(/https:\/\/.+\/html\/(.+)/)[1]);
     var Links = `
     <nav class="html-header-nav">
       <a class="ar5iv-footer-button hover-effect" href="https://info.arxiv.org/about/accessible_HTML.html" target="_blank">Why HTML?</a>
       <a class="ar5iv-footer-button hover-effect" target="_blank" href="#myForm" onclick="event.preventDefault(); var modal = document.getElementById('myForm'); modal.style.display = 'block'; bugReportState.setInitiateWay('Header');">Report Issue</a>
-      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${locationId}">Back to Abstract</a>`}
-      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/${locationId}" target="_blank">Download PDF</a>`}
+      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/abs/${metadata.id}">Back to Abstract</a>`}
+      ${id === 'submission' ? '' : `<a class="ar5iv-footer-button hover-effect" href="https://arxiv.org/pdf/${metadata.id}" target="_blank">Download PDF</a>`}
       <a class="ar5iv-toggle-color-scheme" href="javascript:toggleColorScheme()"
         title="Toggle dark/light mode">
         <label id="automatic-tog" class="toggle-icon" title="Switch to light mode" for="__palette_3">
@@ -59,20 +68,7 @@ let create_header = () => {
     document.body.insertBefore(desktop_header, document.body.firstChild);
 };
 
-let generate_upper_content_from_metadata = async () => {
-  // fetch metadata
-  let path = window.location.origin+window.location.pathname;
-  if (path.endsWith('/view')) {
-    path = path.slice(0, -5);
-  }
-  let response = await fetch (path+'/__metadata.json');
-
-  if (!response.ok) {
-    throw new Error('Failed to retrieve metadata for license, watermark, and missing packages');
-  }
-
-  const metadata = await response.json();
-
+let generate_upper_content_from_metadata = (metadata) => {
   // Create target section
   let target_section = document.createElement('div');
   target_section.setAttribute('id', 'target-section');
@@ -305,16 +301,18 @@ window.addEventListener('load', function() {
   }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector('.ltx_page_main').id = 'main';
+
 
     ref_ArXivFont();
     create_favicon();
     add_abs_refs_to_toc();
     unwrap_nav();
-    create_header();
+    let metadata = await get_metadata();
+    create_header(metadata);
     create_mobile_header();
-    generate_upper_content_from_metadata();
+    generate_upper_content_from_metadata(metadata);
 
     delete_footer();
     create_footer();
