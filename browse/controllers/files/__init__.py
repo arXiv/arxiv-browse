@@ -136,7 +136,8 @@ def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
                                          arxiv_id=arxiv_id), 404, {})
 
 
-def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
+def cannot_build_pdf(arxiv_id: Identifier, msg: str, fmt: str) -> Response:
     return make_response(render_template("dissemination/cannot_build_pdf.html",
-                                         err_msg=msg,
+                                         msg=msg,
+                                         fmt=fmt,
                                          arxiv_id=arxiv_id), 404, {})

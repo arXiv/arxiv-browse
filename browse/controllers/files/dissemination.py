@@ -156,7 +156,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
-        return cannot_build_pdf(arxiv_id, item.msg)
+        return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
 
     file, docmeta, version = item
 
