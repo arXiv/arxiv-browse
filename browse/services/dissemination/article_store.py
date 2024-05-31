@@ -348,15 +348,14 @@ class ArticleStore():
             pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
-            if is_genpdf_able(arxiv_id):
-                return self._genpdf(arxiv_id, docmeta, version)
         else:
             # try from the /orig with version number for a pdf only paper
             pdf_file=self.objstore.to_obj(previous_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
-            if is_genpdf_able(arxiv_id):
-                return self._genpdf(arxiv_id, docmeta, version)
+
+        if is_genpdf_able(arxiv_id):
+            return self._genpdf(arxiv_id, docmeta, version)
 
         if not self.sourcestore.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
@@ -385,6 +384,7 @@ class ArticleStore():
             try:
                 response: requests.Response = \
                     requests.get(url, timeout=timeout, allow_redirects=False, headers=headers)
+                break
             except ConnectionError as _exc:
                 logger.warning("The HTTP connection is reset. Retrying...")
                 time.sleep(0.1) # just a fraction is enough
