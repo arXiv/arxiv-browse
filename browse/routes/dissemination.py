@@ -86,6 +86,7 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     data = {"arxiv_id": arxiv_identifier.id,
             "arxiv_idv": arxiv_identifier.idv,
             "abs_meta": abs_meta}
+    data["encrypted"] = abs_meta.version_history[abs_meta.version - 1].source_flag.source_encrypted
 
     formats = data["formats"] = abs_meta.get_requested_version().formats()
     for fmt in formats:
