@@ -6,8 +6,10 @@ from werkzeug.exceptions import InternalServerError, BadRequest
 from browse.services.documents import get_doc_service
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.files import fileformat
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response, get_pdf_resp
-from browse.controllers import check_supplied_identifier, add_surrogate_key
+from browse.controllers import check_supplied_identifier
 
 
 blueprint = Blueprint('dissemination', __name__)
@@ -84,17 +86,18 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     data = {"arxiv_id": arxiv_identifier.id,
             "arxiv_idv": arxiv_identifier.idv,
             "abs_meta": abs_meta}
+    data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
 
     formats = data["formats"] = abs_meta.get_requested_version().formats()
     for fmt in formats:
         data[fmt] = True
     # TODO DOCX doesn't seem like the url_for in the template will work correctly with the .docx?
     headers: Dict[str,str]={}
-    headers.update(add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"]))
+    headers=add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"])
     if arxiv_identifier.has_version: 
-        headers.update(add_surrogate_key(headers,["format-versioned"]))
+        headers=add_surrogate_key(headers,["format-versioned"])
     else:
-        headers.update(add_surrogate_key(headers,["format-unversioned"]))
+        headers=add_surrogate_key(headers,["format-unversioned"])
     return render_template("format.html", **data), 200, headers # type: ignore
 
 

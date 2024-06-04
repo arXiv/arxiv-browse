@@ -1,0 +1,8 @@
+{% extends "base/base.html" %}
+
+{%- block title -%}Not public {{arxiv_id.ids}}{%- endblock -%}
+
+{%- block content -%}
+<h1>Source Not Public for {{ arxiv_id.ids }}</h1>
+<p>Sorry, the source for {{ arxiv_id.ids }} is not publicly available. This was the author's choice.</p>
+{%- endblock -%}

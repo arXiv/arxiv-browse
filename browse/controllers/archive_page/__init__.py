@@ -11,8 +11,9 @@ from arxiv.taxonomy.definitions import (
     CATEGORIES
 )
 from arxiv.taxonomy.category import Category, Archive
+from arxiv.integration.fastly.headers import add_surrogate_key
 
-from browse.controllers import biz_tz, add_surrogate_key
+from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
@@ -22,7 +23,7 @@ def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[st
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
-    response_headers.update(add_surrogate_key(response_headers,["archive"]))
+    response_headers=add_surrogate_key(response_headers,["archive"])
 
     if not archive_id or archive_id == "list":
         return archive_index("list", status_in=status.OK)
@@ -83,7 +84,7 @@ def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], 
 
     data["template"] = "archive/archive_list_all.html"
     headers: Dict[str,str]={}
-    headers.update(add_surrogate_key(headers,["archive"]))
+    headers=add_surrogate_key(headers,["archive"])
     return data, status_in, headers
 
 
