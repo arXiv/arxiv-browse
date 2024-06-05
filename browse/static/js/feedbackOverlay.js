@@ -63,11 +63,6 @@ function detectColorScheme() {
     }
 }
 
-// Make sure the DOM content is loaded before running the script
-document.addEventListener('DOMContentLoaded', function () {
-    detectColorScheme();
-});
-
 function toggleColorScheme() {
     var current_theme = localStorage.getItem("ar5iv_theme");
     if (current_theme) {
@@ -644,6 +639,28 @@ function handleClickMobileTOC(e){
     });
 }
 
+// This is a hack to wait for the toggle, which will now only exist after a fetch
+function waitForToggleExist() {
+    const selector = '.ar5iv-toggle-color-scheme';
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                observer.disconnect();
+                resolve(document.querySelector(selector));
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = addBugReportForm();
@@ -676,4 +693,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById('myFormContent').onsubmit = submitBugReport;
+
+    localStorage.setItem('ar5iv_theme', 'automatic');
+
+    waitForToggleExist().then((_) => {
+        detectColorScheme();
+    })
 });

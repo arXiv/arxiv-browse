@@ -8,7 +8,7 @@ from browse.services.listing import get_listing_service
 
 
 def service_statuses() ->List[str]:
-    """Returns a list of any probelms in all the services."""
+    """Returns a list of any problems in all the services."""
     probs = []
     probs.extend(get_listing_service().service_status())
     probs.extend(get_doc_service().service_status())
