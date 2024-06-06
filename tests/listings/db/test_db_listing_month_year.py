@@ -94,7 +94,7 @@ def test_listings_for_month(app_with_db):
         assert any(item.id=="0906.4150" and item.listingType=="new" for item in items.listings)
 
         #alias still primary
-        items=ls.list_articles_by_month("math.MP", 2008, 6, 0,25) 
+        items=ls.list_articles_by_month("math.MP", 2008, 6, 0,25)
         assert any(item.id=="0806.4129" and item.listingType=="new" for item in items.listings)
         items=ls.list_articles_by_month("eess.SY", 2010, 8, 0,25) 
         assert any(item.id=="1008.3222" and item.listingType=="new" for item in items.listings)

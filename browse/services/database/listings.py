@@ -347,10 +347,11 @@ def get_articles_for_month(
                 | (doc.paper_id.like(f"%/{year % 100:02d}%"))
             )                     
   
+    doc_ids_sub = doc_ids.subquery()
     cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     #filters to only the ones in the right category and records if any of the requested categories are primary
     cat_query = (session.query(aic.c.document_id, func.max(aic.c.is_primary).label('is_primary'))
-        .where(aic.c.document_id.in_(doc_ids))
+        .join(doc_ids_sub, doc_ids_sub.c.document_id == aic.c.document_id)
         .where(
             or_(
                 aic.c.archive.in_(archives),
@@ -362,10 +363,9 @@ def get_articles_for_month(
     )
 
     #gets the metadata for applicable documents
-    main_query=(session.query(meta, cat_query.c.is_primary)
-        .select_from(
-            cat_query.join(meta, meta.document_id==cat_query.c.document_id)
-            )
+    main_query=(
+        session.query(meta, cat_query.c.is_primary)
+        .join(cat_query, meta.document_id==cat_query.c.document_id)
         .filter(meta.is_current == 1)
     )
 
@@ -390,7 +390,7 @@ def get_articles_for_month(
         )
     
     result=rows.all() #get listings to display
-    count=main_query.count() #get total entries 
+    count=len(result) #get total entries 
     new_listings, cross_listings = _entries_into_monthly_listing_items(result)
 
     if not month: month=1 #yearly listings need a month for datetime
