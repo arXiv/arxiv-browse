@@ -50,10 +50,3 @@ def biz_tz() -> ZoneInfo:
         return _arxiv_biz_tz
     else:
         return _arxiv_biz_tz
-
-def add_surrogate_key(headers: Dict[str,str], keys:List[str])-> Dict[str, str]:
-    old_keys=f' {headers.get("Surrogate-Key","")} '
-    for key in keys:
-        if f" {key} " not in old_keys:
-            old_keys+=" "+key
-    return{"Surrogate-Key":old_keys.strip()}

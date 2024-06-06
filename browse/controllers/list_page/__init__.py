@@ -47,8 +47,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import re
 
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES_SUBSUMED, ARCHIVES
+from arxiv.integration.fastly.headers import add_surrogate_key
 
-from browse.controllers import add_surrogate_key
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
 from arxiv.document.metadata import DocMetadata
@@ -139,8 +139,8 @@ def get_listing(subject_or_category: str,
         time_period = request.args.get('year')  # type: ignore
         month = request.args.get('month', None)
         if month and month != 'all':
-            #time_period = time_period + "-"+request.args.get('month')  # type: ignore
-            time_period = time_period +month  
+            time_period = time_period + "-"+request.args.get('month')  # type: ignore
+      
 
 
     if (
@@ -196,7 +196,7 @@ def get_listing(subject_or_category: str,
 
     if time_period == 'new':
         list_type = 'new'
-        response_headers.update(add_surrogate_key(response_headers,["list-new", "announce", f"list-new-{list_ctx_id}"]))
+        response_headers=add_surrogate_key(response_headers,["list-new", "announce", f"list-new-{list_ctx_id}"])
         new_resp: Union[ListingNew, NotModifiedResponse] =\
             listing_service.list_new_articles(list_ctx_id, skipn,
                                               shown, if_mod_since)
@@ -214,7 +214,7 @@ def get_listing(subject_or_category: str,
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
-        response_headers.update(add_surrogate_key(response_headers,["list-recent", "announce", f"list-recent-{list_ctx_id}"]))
+        response_headers=add_surrogate_key(response_headers,["list-recent", "announce", f"list-recent-{list_ctx_id}"])
         rec_resp = listing_service.list_pastweek_articles(
             list_ctx_id, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
@@ -226,8 +226,10 @@ def get_listing(subject_or_category: str,
         response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
     else:  # current or YYMM or YYYYMM or YY
-        yandm = year_month_2_digit(time_period)
-        response_headers.update(add_surrogate_key(response_headers,["list-ym"]))
+
+        yandm = year_month(time_period)
+        response_headers=add_surrogate_key(response_headers,["list-ym"])
+
         if yandm is None:
             raise BadRequest(f"Invalid time period: {time_period}") 
         should_redir, list_year, list_month = yandm
@@ -251,17 +253,18 @@ def get_listing(subject_or_category: str,
             if list_month < 1 or list_month > 12:
                 raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
-            response_headers.update(add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}"]))
+            response_headers=add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}"])
             if date.today().year==list_year and date.today().month==list_month:
-                response_headers.update(add_surrogate_key(response_headers,["announce"]))
+                response_headers=add_surrogate_key(response_headers,["announce"])
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             resp = listing_service.list_articles_by_month(
                 list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
-            response_headers.update(add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}"]))
-            response_headers.update(add_surrogate_key(response_headers,["announce"])) if list_year==date.today().year else None
+            response_headers=add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}"])
+            if list_year==date.today().year: 
+                response_headers=add_surrogate_key(response_headers,["announce"]) 
             resp = listing_service.list_articles_by_year(
                 list_ctx_id, list_year, skipn, shown, if_mod_since)
 
@@ -329,26 +332,6 @@ def get_listing(subject_or_category: str,
     response_data['url_for_author_search'] = author_query
 
     return response_data, status.OK, response_headers
-
-def year_month_2_digit(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
-    if tp == "current":
-        day = date.today()
-        return False, day.year, day.month
-    
-    if len(tp) == 2:  
-        year=int(tp) +1900
-        if year<=1990:
-            year+=100
-        return False, year, None
-    
-    if len(tp) == 4:
-        year=int(tp[0:2]) +1900
-        if year<1990:
-            year+=100  
-        return False, year, int(tp[2:])
-    
-    else:
-        return None
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""

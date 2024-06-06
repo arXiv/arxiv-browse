@@ -9,7 +9,8 @@ from arxiv.taxonomy.definitions import ARCHIVES
 from flask import url_for
 from werkzeug.exceptions import BadRequest, NotFound
 
-from browse.controllers import add_surrogate_key
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.services.listing import MonthCount
@@ -104,9 +105,9 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
         'stats_by_year': stats_by_year( archive, years_operating(archive), year) 
     }
     headers: Dict[str, str] = {}
-    headers.update(add_surrogate_key(headers,["year", f"year-{archive.id}", f"year-{archive.id}-{year:04d}"]))
+    headers=add_surrogate_key(headers,["year", f"year-{archive.id}", f"year-{archive.id}-{year:04d}"])
     if date.today().year==year: 
-        headers.update(add_surrogate_key(headers,["announce"]))
+        headers=add_surrogate_key(headers,["announce"])
 
     response_status = status.OK
 

@@ -8,6 +8,8 @@ from http import HTTPStatus as status
 from arxiv.taxonomy.definitions import GROUPS
 from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from flask import (
     Blueprint,
     Response,
@@ -28,8 +30,7 @@ from browse.controllers import (
     list_page,
     prevnext,
     stats_page,
-    tb_page,
-    add_surrogate_key
+    tb_page
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
@@ -105,7 +106,7 @@ def bare_abs() -> Any:
 def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
-    headers.update(add_surrogate_key(headers,["abs"]))
+    headers=add_surrogate_key(headers,["abs"])
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw(), mimetype="text/plain")
@@ -232,10 +233,10 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
-    headers.update(add_surrogate_key(headers,["list"]))
+    headers=add_surrogate_key(headers,["list"])
     if code == status.OK:
-        #if subcontext not in ["new", "recent", "pastweek"]:
-            #response=_add_year_url_alert(response)
+        if subcontext not in ["new", "recent", "pastweek"]:
+            response=_add_year_url_alert(response)
 
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore
