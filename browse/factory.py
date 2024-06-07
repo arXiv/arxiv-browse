@@ -39,7 +39,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.config.from_object(settings)
 
     Base(app)
-    config_query_timing(0.2, 8)
+    config_query_timing(0.2, 8) # Log long SQL queries
     #Auth(app)
 
     # routes
