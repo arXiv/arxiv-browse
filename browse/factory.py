@@ -9,6 +9,7 @@ from flask.logging import default_handler
 from arxiv.base import Base
 from arxiv.base.urls import canonical_url, urlizer
 from arxiv.base.filters import tidy_filesize
+from arxiv.db import config_query_timing
 from flask import Flask
 from flask_s3 import FlaskS3
 # This gives the error on import
@@ -38,6 +39,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.config.from_object(settings)
 
     Base(app)
+    config_query_timing(0.2, 8)
     #Auth(app)
 
     # routes
