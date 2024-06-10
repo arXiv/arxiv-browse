@@ -43,6 +43,14 @@ def test_bad_parameters(client_with_db_listings):
     rv = client.get("/list/math.MP/recent?skip=9000")
     assert rv.status_code == 200
 
+def test_list_dl_links(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math/recent")
+    assert rv.status_code == 200
+    assert '<a href="/pdf/0906.3421" title="Download PDF" id="pdf-0906.3421" aria-labelledby="pdf-0906.3421">pdf</a>' in rv.text
+    assert '<a href="/format/0906.3421" title="Other formats" id="oth-0906.3421" aria-labelledby="oth-0906.3421">other</a>' in rv.text
+    assert '<a href="/ps/0906.3421" title="Download PostScript" id="ps-0906.3421" aria-labelledby="ps-0906.3421">ps</a>' not in rv.text
+
 def test_possible_categories():
     
     assert ["math.KT"]==_all_possible_categories("math.KT") #single category
