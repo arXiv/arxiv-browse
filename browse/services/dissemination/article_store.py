@@ -224,7 +224,7 @@ class ArticleStore():
 
         `path` is additional data for html and anc requests.
         """
-        print(format)
+        
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
         if format != "e-prints" and format not in self.format_handlers:
