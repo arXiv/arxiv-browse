@@ -224,6 +224,7 @@ class ArticleStore():
 
         `path` is additional data for html and anc requests.
         """
+        print(format)
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
         if format != "e-prints" and format not in self.format_handlers:
@@ -256,8 +257,8 @@ class ArticleStore():
 
         if version.withdrawn_or_ignore:
             return "WITHDRAWN"
-        
-        if version.source_flag.source_encrypted:
+       
+        if version.source_flag.source_encrypted and format!=fileformat.pdf and format!=fileformat.html:
             return "NOT_PUBLIC"
 
         handler_fn = self.format_handlers[format]
