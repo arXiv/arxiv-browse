@@ -10,7 +10,6 @@ python = "^3.11"
 
 MarkupSafe = "*"
 sqlalchemy = "^2.0.26" 
-bcrypt = "*"
 flask-rangerequest = "^0.0.2"
 flask-s3 = "*"
 flask-wtf = "*"
