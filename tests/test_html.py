@@ -87,8 +87,8 @@ def test_html_headers(client_with_test_fs):
     rv=client_with_test_fs.head("/html/2403.10561")
     head=rv.headers["Surrogate-Key"]
     assert " html " in " "+head+" "
-    assert "html-unversioned" in head
-    assert "html-versioned" not in head
+    assert "html-2403.10561-current" in head
+    assert "html-2403.10561v" not in head
     assert "paper-id-2403.10561" in head
     assert "html-native" in head
     assert "html-latexml" not in head
@@ -96,8 +96,8 @@ def test_html_headers(client_with_test_fs):
     rv=client_with_test_fs.head("/html/cs/9904010v1/graph1.gif")
     head=rv.headers["Surrogate-Key"]
     assert " html " in " "+head+" "
-    assert "html-unversioned" not in head
-    assert "html-versioned" in head
+    assert "html-cs/9904010-current" not in head
+    assert "html-cs/9904010v1" in head
     assert "paper-id-cs/9904010" in head
     assert "html-native" in head
     assert "html-latexml" not in head

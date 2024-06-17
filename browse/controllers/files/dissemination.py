@@ -196,9 +196,9 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         resp= unavailable(arxiv_id)
 
     if arxiv_id.has_version: 
-        resp.headers=add_surrogate_key(resp.headers,["html","html-versioned"])
+        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["html","html-unversioned"])
+        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.id}-current"])
     return resp
 
 
