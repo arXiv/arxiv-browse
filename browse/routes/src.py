@@ -73,9 +73,9 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
      """
     resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
     if _check_id_for_version(arxiv_id_str): 
-        resp.headers=add_surrogate_key(resp.headers,["src","src-versioned"])
+        resp.headers=add_surrogate_key(resp.headers,["src",f"paper-id-{arxiv_id_str}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["src","src-unversioned"])
+        resp.headers=add_surrogate_key(resp.headers,["src",f"paper-id-{arxiv_id_str}-current"])
         
     return resp
 
