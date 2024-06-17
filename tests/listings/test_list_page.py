@@ -432,6 +432,14 @@ def test_paging_925(client_with_fake_listings):
     assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
     assert first_index_atag.string == "[926]"
 
+def test_paging_all(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/2009-01?show=25")
+    assert 'show=2000>all</a>' in rv.text.replace('\n', '').replace(' ', '')
+
+    rv = client.get("/list/hep-ph/2009-01?show=2000")
+    assert 'show=2000>all</a>' not in rv.text.replace('\n', '').replace(' ', '')
+
 
 def test_odd_requests(client_with_fake_listings):
     client = client_with_fake_listings
