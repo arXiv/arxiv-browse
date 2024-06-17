@@ -33,9 +33,9 @@ def anc_listing(arxiv_id: str):  #type: ignore
     headers: Dict[str,str]={}
     headers=add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"])
     if _check_id_for_version(arxiv_id): #get abs always adds a verion onto the id
-        headers=add_surrogate_key(headers,["anc-versioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{docmeta.arxiv_identifier.idv}"])
     else:
-        headers=add_surrogate_key(headers,["anc-unversioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{docmeta.arxiv_identifier.id}-current"])
 
     if data['anc_file_list']:
         return render_template("src/listing.html", **data), 200, headers
