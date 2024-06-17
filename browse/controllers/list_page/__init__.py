@@ -375,8 +375,8 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
     rd = {'mf_fewer': next(tup_f, (None, None))[0]}
 
-    if not viewing_all and count < max_show and show < max_show:
-        rd['mf_all'] = count
+    if not viewing_all and count > show and show < max_show:
+        rd['mf_all'] = max_show
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
