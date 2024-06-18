@@ -95,9 +95,9 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     headers: Dict[str,str]={}
     headers=add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"])
     if arxiv_identifier.has_version: 
-        headers=add_surrogate_key(headers,["format-versioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.idv}"])
     else:
-        headers=add_surrogate_key(headers,["format-unversioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.id}-current"])
     return render_template("format.html", **data), 200, headers # type: ignore
 
 

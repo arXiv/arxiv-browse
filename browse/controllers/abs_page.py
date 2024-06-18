@@ -96,11 +96,7 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-        if arxiv_identifier.has_version:
-            response_headers=add_surrogate_key(response_headers,["abs-versioned", f"paper-id-{arxiv_identifier.id}"])
-        else:
-            response_headers=add_surrogate_key(response_headers,["abs-unversioned", f"paper-id-{arxiv_identifier.id}"])
-
+        response_headers=add_surrogate_key(response_headers,[f"abs-{arxiv_identifier.id}", f"paper-id-{arxiv_identifier.id}"])
         redirect = check_supplied_identifier(arxiv_identifier, "browse.abstract")
         if redirect:
             return redirect

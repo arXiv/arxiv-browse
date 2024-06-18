@@ -78,9 +78,9 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
     ).make_response()
     resp.headers=add_surrogate_key(resp.headers,["anc",f"paper-id-{arxiv_id.id}"])
     if arxiv_id.has_version:
-        resp.headers=add_surrogate_key(resp.headers,["anc-versioned"])
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["anc-unversioned"])
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
     add_mimetype(resp, tarmember.name)
     add_time_headers(resp, src_file, arxiv_id)
     return resp
