@@ -12,7 +12,7 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
-    not_found, bad_id, cannot_build_pdf, add_mimetype
+    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public
 
 from arxiv.files import FileObj, FileTransform
 
@@ -147,6 +147,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id, arxiv_id.has_version)
+    elif item == "NOT_PUBLIC":
+        return not_public(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif item == "NOT_PDF":
@@ -156,7 +158,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
-        return cannot_build_pdf(arxiv_id, item.msg)
+        return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
 
     file, docmeta, version = item
 

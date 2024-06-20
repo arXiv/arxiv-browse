@@ -35,12 +35,12 @@ pg8000 = "^1.30.1"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
 
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "5926b21"}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "b673f9c0089b6191205b6143cf64aa7e1e6e0fce"}
 
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 beautifulsoup4 = "*"
 coverage = "*"
 hypothesis = "*"
@@ -54,6 +54,7 @@ pytest-easyread = "*"
 pytest-html = "*"
 pytest-mock = "*"
 types-requests = "^2.31.0.20240125"
+requests-mock = "^1.12.1"
 
 [tool.pytest.ini_options]
 filterwarnings = [

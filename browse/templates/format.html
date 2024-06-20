@@ -105,7 +105,7 @@ to view/edit.
 </dd>
 {% endif %}
 
-{% if src %}
+{% if src and not encrypted %}
 <dt><b>Source</b></dt>
 <dd>
 Delivered as a <b>gzipped tar</b> (.tar.gz) file if there are multiple files,
