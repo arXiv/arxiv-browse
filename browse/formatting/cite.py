@@ -17,7 +17,8 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
     pauths = parse_author_affil_utf(docm.authors.raw)
     auths = _fmt_author_list(pauths)
 
-    pc = docm.primary_category if docm.primary_category else "unknown"
+    pc = docm.primary_category.id if docm.primary_category else "unknown"
+    doi = "     doi={https://doi.org/{docm.doi}\n" if docm.doi else ""
 
     return (
         "@misc{" + _txt_id(docm, pauths, year) + ",\n"
@@ -27,6 +28,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      eprint={" + docm.arxiv_id + "},\n"
         "      archivePrefix={arXiv},\n"
         "      primaryClass={" + str(pc) + "}\n"
+        + doi +
         "}"
     )
 
