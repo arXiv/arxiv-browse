@@ -60,7 +60,7 @@ def _txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
         auth = "unknown"
 
     try:
-        title_words = [word for word in docm.title.split(" ") if word.lower() not in STOPWORDS][:4]
+        title_words = "".join([word for word in docm.title.split(" ") if word.lower() not in STOPWORDS][:4])
     except Exception:
         title_words = "unknown"
 
