@@ -101,3 +101,5 @@ class TestCite(TestCase):
         for fname_path in abs_to_test:                
             cite=arxiv_bibtex(parse_abs_file(LocalFileObj(Path(fname_path))))
             self.assertIsNotNone(cite)
+            self.assertNotIn("is_general", cite)
+            self.assertNotIn("is_active", cite)
