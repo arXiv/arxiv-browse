@@ -1,8 +1,6 @@
 {%- extends "list/base.html" -%}
-{% import "alert_macro.html" as alert with context %}
 
 {% block list_index %}
-{{alert.alert(alert_title, alert_content)}}
 
 <h2>Authors and titles for {{pubmonth.strftime('%Y')}} </h2>
 {% endblock %}
