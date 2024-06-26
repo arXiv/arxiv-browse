@@ -27,7 +27,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      year={" + year + "},\n"
         "      eprint={" + docm.arxiv_id + "},\n"
         "      archivePrefix={arXiv},\n"
-        "      primaryClass={" + str(pc) + "}\n"
+        "      primaryClass={" + str(pc) + "},\n"
         + doi +
         f"      url={{https://arxiv.org/abs/{docm.arxiv_identifier.id}}}, \n"
         "}"
