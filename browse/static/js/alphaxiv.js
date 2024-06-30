@@ -24,47 +24,52 @@
         versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
      }
 
-     const alphaxivApi = `https://dev.alphaxiv.org/api/dev/getpaperinfo/${arxivPaperId}`
+     const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
      let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
+     const alphaXivExploreUrl = `https://alphaxiv.org/explore`
 
      (async () => {
        let response = await fetch(alphaxivApi);
        console.log('response', response);
        if (!response.ok) {
          console.error(`Unable to fetch data from ${alphaxivApi}`)
-         render(0);
+         render(0, false);
          return;
        }
        let result = await response.json();
        if (result.numQuestions && result.numQuestions > 0) {
-          alphaXivUrl = alphaXivUrl + result.returnVersion;
-         render(result.numQuestions);
+          alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
+         render(result.numQuestions, result.hasClaimedAuthorship);
          return;
        }
-       render(0);
+       render(0, false);
      })()
 
      // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-     function render(conversations) {
+     function render(numComments, hasClaimedAuthorship) {
        container.innerHTML = window.DOMPurify.sanitize(`
        <h2 class="alphaxiv-logo">alphaXiv</h2>
-           ${summary(conversations)}
+           ${summary(numComments, hasClaimedAuthorship)}
        `, { ADD_ATTR: ['target'] })
      }
 
-     function summary(conversations) {
-       switch (conversations) {
-         case 0:
-           return `<h3 class="alphaxiv-summary">No comments found for this paper</h3>
-           <p> Leave comments or public reviews at <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
-           break
-         case 1:
-           return `<h3 class="alphaxiv-summary">There is 1 comment on this paper</h3>
-           <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
-           break
-         default:
-          return `<h3 class="alpahxiv-summary">There are ${conversations} comments for this paper on alphaXiv</h3>
-          <p> See more on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
-       }
+     function summary(numComments, hasClaimedAuthorship) {
+        let resultStr = ""
+        if (numComments == 0) {
+            resultStr += `<h3 class="alphaxiv-summary">No comments found for this paper</h3>
+            <p> View recent comments and activity on other papers <a href="${alphaXivExploreUrl}" target="_blank">here</a>.</p>`
+        } else if (numComments == 1) {
+            resultStr += `<h3 class="alphaxiv-summary">There is 1 comment on this paper</h3>
+            <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
+        } else {
+            resultStr += `<h3 class="alpahxiv-summary">There are ${conversations} comments for this paper on alphaXiv</h3>
+            <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
+        }
+        if (hasClaimedAuthorship) {
+            resultStr += `<h3 class="alphaxiv-summary">Author Present On alphaXiv</h3>
+            <p> Author of paper is on alphaXiv and will be notified of yours comments: see <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
+        }
+
+        return resultStr
      }
 })();
