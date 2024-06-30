@@ -26,7 +26,7 @@
 
      const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
      let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
-     const alphaXivExploreUrl = `https://alphaxiv.org/explore`
+    //  const alphaXivExploreUrl = `https://alphaxiv.org/explore`
 
      (async () => {
        let response = await fetch(alphaxivApi);
@@ -57,7 +57,7 @@
         let resultStr = ""
         if (numComments == 0) {
             resultStr += `<h3 class="alphaxiv-summary">No comments found for this paper</h3>
-            <p> View recent comments and activity on other papers <a href="${alphaXivExploreUrl}" target="_blank">here</a>.</p>`
+            <p> View recent comments and activity on other papers <a href="nourl" target="_blank">here</a>.</p>`
         } else if (numComments == 1) {
             resultStr += `<h3 class="alphaxiv-summary">There is 1 comment on this paper</h3>
             <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
