@@ -50,11 +50,11 @@
      function render(numComments, hasClaimedAuthorship) {
        container.innerHTML = window.DOMPurify.sanitize(`
        <h2 class="alphaxiv-logo">alphaXiv</h2>
-           ${summary(numComments, hasClaimedAuthorship)}
+           ${html(numComments, hasClaimedAuthorship)}
        `, { ADD_ATTR: ['target'] })
      }
 
-     function summary(numComments, hasClaimedAuthorship) {
+     function html(numComments, hasClaimedAuthorship) {
         let resultStr = ""
         if (numComments == 0) {
             resultStr += `<h3 class="alphaxiv-summary">Comment on arXiv papers</h3>
@@ -67,7 +67,12 @@
             <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
         }
         if (hasClaimedAuthorship) {
-            resultStr += `<p> For this paper, the author is present on alphaXiv and will be notified of yours comments: see <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
+            resultStr += `<p> For this paper, the author is present on alphaXiv and will be notified of new comments.`
+            if (numComments == 0) {
+                resultStr += `See <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
+            } else {
+                resultStr += `</p>`
+            }
         }
 
         return resultStr
