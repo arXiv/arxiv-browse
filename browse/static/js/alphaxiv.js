@@ -57,8 +57,8 @@
      function html(numComments, hasClaimedAuthorship) {
         let resultStr = ""
         if (numComments == 0) {
-            resultStr += `<h3 class="alphaxiv-summary">Comment on arXiv papers</h3>
-            <p> No comments for this paper. View recent comments <a href="https://alphaxiv.org/explore" target="_blank">on other papers here</a>.</p>`
+            resultStr += `<h3 class="alphaxiv-summary">Comment directly on top of arXiv papers</h3>
+            <p> No comments yet for this paper. View recent comments <a href="https://alphaxiv.org/explore" target="_blank">on other papers here</a>.</p>`
         } else if (numComments == 1) {
             resultStr += `<h3 class="alphaxiv-summary">There is 1 comment on this paper</h3>
             <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a> and add your own!</p>`
