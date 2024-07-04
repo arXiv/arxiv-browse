@@ -66,7 +66,9 @@
             resultStr += `<h3 class="alpahxiv-summary">There are ${numComments} comments for this paper on alphaXiv</h3>
             <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
         }
-        if (hasClaimedAuthorship) {
+        console.log("hasClaimedAuthorship", hasClaimedAuthorship);
+        console.log("numComments", numComments);
+        if (hasClaimedAuthorship == true) {
             resultStr += `<p> For this paper, the author is present on alphaXiv and will be notified of new comments.`
             if (numComments == 0) {
                 resultStr += `See <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
