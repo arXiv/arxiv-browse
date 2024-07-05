@@ -15,7 +15,7 @@
 
      // Get the arXiv paper ID from the URL, e.g. "2103.17249"
      const urlList = window.location.pathname.split('/').reverse()
-     const arxivPaperId = urlList[0]
+     let arxivPaperId = urlList[0]
      if (!arxivPaperId) return
 
     // include the hep-th, math, etc subject tag
