@@ -32,6 +32,8 @@
     const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
     let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
 
+    console.log("alphaxivapi:", alphaxivApi);
+
     (async () => {
        let response = await fetch(alphaxivApi);
        console.log('response', response);
@@ -41,6 +43,7 @@
          return;
        }
        let result = await response.json();
+       console.log("result:", result);
        if (result.numQuestions && result.returnVersion && result.numQuestions > 0) {
           if (result.returnVersion != -1) {
             alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
