@@ -406,13 +406,13 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     def _get_files_for_html () -> List[Path]:
         files = []
-        for root_dir, _, fs in os.walk(html_path):
+        for root_dir, _, fs in os.walk(str(html_path)):
             files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
 
     start = perf_counter()
 
-    files = _get_files_for_html(str(html_path))
+    files = _get_files_for_html()
 
     if len(files) > 0:
         logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
