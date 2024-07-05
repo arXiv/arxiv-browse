@@ -19,19 +19,20 @@
      if (!arxivPaperId) return
 
     // include the hep-th, math, etc subject tag
-    if (urlList.length > 0 && urlList[1] == 'abs') {
-        arxivPaperId += (urlList[1] + "_")   
+    if (urlList.length > 0 && urlList[1] != 'abs') {
+        arxivPaperId = (urlList[1] + "_") + arxivPaperId  
     }
 
+    console.log("final arxiv paper id", arxivPaperId);
     let versionlessPaperId = arxivPaperId;
     if (versionlessPaperId.includes("v")) {
         versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
     }
 
-     const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
-     let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
+    const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
+    let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
 
-     (async () => {
+    (async () => {
        let response = await fetch(alphaxivApi);
        console.log('response', response);
        if (!response.ok) {
@@ -48,7 +49,7 @@
          return;
        }
        render(0, false);
-     })()
+    })()
 
      // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
      function render(numComments, hasClaimedAuthorship) {
