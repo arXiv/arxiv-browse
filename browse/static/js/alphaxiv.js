@@ -14,16 +14,19 @@
      }
 
      // Get the arXiv paper ID from the URL, e.g. "2103.17249"
-     const params = new URLSearchParams(document.location.search)
-     const arxivPaperId = window.location.pathname.split('/').reverse()[0]
+     const urlList = window.location.pathname.split('/').reverse()
+     const arxivPaperId = urlList[0]
      if (!arxivPaperId) return
 
-     console.log(window.location.pathname.split("/").reverse())
-     
-     let versionlessPaperId = arxivPaperId;
-     if (versionlessPaperId.includes("v")) {
+    // include the hep-th, math, etc subject tag
+    if (urlList.length > 0 && urlList[1] == 'abs') {
+        arxivPaperId += (urlList[1] + "_")   
+    }
+
+    let versionlessPaperId = arxivPaperId;
+    if (versionlessPaperId.includes("v")) {
         versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
-     }
+    }
 
      const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
      let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
