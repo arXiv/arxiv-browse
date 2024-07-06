@@ -44,10 +44,8 @@
        }
        let result = await response.json();
        console.log("result:", result);
-       if (result.numQuestions && result.returnVersion > 0) {
-          if (result.returnVersion != -1) {
-            alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
-          }
+       if (result.returnVersion > 0) {
+         alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
          render(result.numQuestions, result.hasClaimedAuthorship);
          return;
        }
@@ -63,6 +61,7 @@
      }
 
      function html(numComments, hasClaimedAuthorship) {
+        console.log("in html:", numComments, "hasClaimed", hasClaimedAuthorship);
         let resultStr = ""
         if (numComments == 0) {
             resultStr += `<h3 class="alphaxiv-summary">Comment directly on top of arXiv papers</h3>
