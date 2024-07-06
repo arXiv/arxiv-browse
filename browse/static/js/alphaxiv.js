@@ -23,7 +23,6 @@
         arxivPaperId = (urlList[1] + "_") + arxivPaperId  
     }
 
-    console.log("final arxiv paper id", arxivPaperId);
     let versionlessPaperId = arxivPaperId;
     if (versionlessPaperId.includes("v")) {
         versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
@@ -32,18 +31,15 @@
     const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
     let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
 
-    console.log("alphaxivapi:", alphaxivApi);
 
     (async () => {
        let response = await fetch(alphaxivApi);
-       console.log('response', response);
        if (!response.ok) {
          console.error(`Unable to fetch data from ${alphaxivApi}`)
          render(0, false);
          return;
        }
        let result = await response.json();
-       console.log("result:", result);
        if (result.returnVersion > 0) {
          alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
          render(result.numQuestions, result.hasClaimedAuthorship);
@@ -61,7 +57,6 @@
      }
 
      function html(numComments, hasClaimedAuthorship) {
-        console.log("in html:", numComments, "hasClaimed", hasClaimedAuthorship);
         let resultStr = ""
         if (numComments == 0) {
             resultStr += `<h3 class="alphaxiv-summary">Comment directly on top of arXiv papers</h3>
@@ -73,12 +68,10 @@
             resultStr += `<h3 class="alpahxiv-summary">There are ${numComments} comments for this paper on alphaXiv</h3>
             <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
         }
-        console.log("hasClaimedAuthorship", hasClaimedAuthorship);
-        console.log("numComments", numComments);
         if (hasClaimedAuthorship == true) {
             resultStr += `<p> For this paper, the author is present on alphaXiv and will be notified of new comments.`
             if (numComments == 0) {
-                resultStr += `See <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
+                resultStr += ` See <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
             } else {
                 resultStr += `</p>`
             }
