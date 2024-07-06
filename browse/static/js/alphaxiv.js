@@ -44,7 +44,7 @@
        }
        let result = await response.json();
        console.log("result:", result);
-       if (result.numQuestions && result.returnVersion && result.numQuestions > 0) {
+       if (result.numQuestions && result.returnVersion > 0) {
           if (result.returnVersion != -1) {
             alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
           }
