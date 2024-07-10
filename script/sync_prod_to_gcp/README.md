@@ -1,8 +1,45 @@
-# Sync publshed PDFs from Cornell to a GS bucket
+# Sync published submissons + PDFs from Cornell to a GS bucket
 
-This is a script to sync the PDFs from a publish cycle to a GS Bucket.
+This is a script to sync the published submissions and PDFs from a publish cycle to a GS Bucket.
 
-# Synopsys
+# History
+
+## Pre 2024-07
+
+Originally, when the daily.sh runs and generates the published log file, the cron job picks it up,
+make the list of files to upload to GCP, ask the web node to generate PDF, and uploads them all.
+
+Since the webnode's pdf generation is limited to certain number of processes, asking to generate
+PDF as a batch job was somewhat unreliable. Because of this, the multiple cron jobs are needed
+to complete the PDF generation and upload. 
+
+When HTML submission put in the GCP queue, it became possible to not only manage the published 
+articles more evenly spread out, it is now capable of retrying the PDF with sensible back off.
+
+The two clients of the queue is created, one to generate PDF so that the cron jobs don't have to
+generate PDFs for most of times, and the syncing of tarballs to GCP is spread out during the
+daily.sh run to make the published list. 
+
+Having 2 services + cron job were working okay but one omission was that, every week another 
+rsync based cron job was running but it was suspected to remove files when the CIT's file server
+mysteriously corrupts or not list a file. 
+
+6 daily cron jobs, one weekly sync, 2 services - one to make PDF, other to sync blobs - was too
+complex and esp. the weekly sync was not only dangerous but unexplainable due to the file server's
+flakyness.
+
+## Post 2024-07
+
+submissions-to-gcp unifies all this and "trashes" the older version of published submissions 
+if it exits on GCP bucket.
+
+## Contributors
+
+* BrianC (bdc34): The original log based sync-to-gcp
+* ntai (nt385): The queue based sync-to-gcp, borrowing the functionality from the original
+* mark (men73): kicked off the pub/sub based publishing  
+
+# Synopsys of sync based on the published log
 
     cd sync_prod_to_gcp
     python --version
@@ -14,6 +51,9 @@ This is a script to sync the PDFs from a publish cycle to a GS Bucket.
     #
     . sync.venv/bin/activate
     python sync_published_to_gcp.py /data/new/logs/publish_221101.log
+
+Although this became obsolete by the use of queue, it is still useful if you have to manually sync
+the published submissions to GCP.
 
 # Development/Testing
 
@@ -62,9 +102,9 @@ permission.
 
 See `Makefile`
 
-# Deployment
+# Obsolete cron-based Deployment
 
-The script is designed to run as a cron job. 
+The script is designed to run as a cron job.
 
 ## cronjob 
 
@@ -75,6 +115,12 @@ Old:
 New:
 
     15 21 * * 0-4 /users/e-prints/arxiv-browse/scrip/sync_prod_to_gcp/sync_published.sh
+
+# Queue-based Deployment
+
+The service runs on the sync node using systemd. See `resouce/systemd/submissons-to-gcp.service`
+
+## submissons_to_gcp.py
 
 ## Logging
 

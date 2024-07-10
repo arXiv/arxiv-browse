@@ -30,6 +30,7 @@ import sys
 import argparse
 import re
 import threading
+import typing
 from threading import Thread
 from queue import Queue, Empty
 import requests
@@ -346,7 +347,7 @@ def get_pdf(session, pdf_url) -> None:
                            "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
 
 
-def ensure_pdf(session, host, arxiv_id, timeout=None):
+def ensure_pdf(session, host, arxiv_id, timeout=None, protocol = "https"):
     """Ensures PDF exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -364,7 +365,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=None):
     timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-    url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
+    url = f"{protocol}://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
     start = perf_counter()
 
     if pdf_file.exists():
@@ -388,7 +389,8 @@ def ensure_pdf(session, host, arxiv_id, timeout=None):
     else:
         raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
     
-def ensure_html(session, host, arxiv_id: Identifier):
+def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "https") -> \
+    typing.Tuple[typing.List[str], str, str, typing.Union[str, None], float]:
     """Ensures HTML exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -400,9 +402,10 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     This does not check if the arxiv_id is HTML source.
     """
+    timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.idv}/")
-    url = f"https://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
+    url = f"{protocol}://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
 
     def _get_files_for_html () -> List[Path]:
         files = []
@@ -412,21 +415,21 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     start = perf_counter()
 
-    files = _get_files_for_html(str(html_path))
+    files = _get_files_for_html()
 
     if len(files) > 0:
         logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
-        return files, url, "already exists", ms_since(start)
+        return files, html_path, url, "already exists", ms_since(start)
 
     start = perf_counter()
     get_html(session, url)
     start_wait = perf_counter()
-    while len(files := _get_files_for_html(str(html_path))) < 1:
-        if perf_counter() - start_wait > PDF_WAIT_SEC: # TODO: Does this need to be different for html?
-            msg = f"No HTML, waited longer than {PDF_WAIT_SEC} sec {url}"
+    while len(files := _get_files_for_html()) < 1:
+        if perf_counter() - start_wait > timeout: # TODO: Does this need to be different for html?
+            msg = f"No HTML, waited longer than {timeout} sec {url}"
             logger.warning(msg,
                            extra={CATEGORY: "download",
-                                  "url": url, "pdf_file": str(html_path)})
+                                  "url": url, "html_file": str(html_path)})
             raise (Exception(msg))
         else:
             sleep(0.2)

@@ -60,7 +60,7 @@ class ThreadedSession:
 
     @property
     def session(self):
-        if not hasattr(self._local, 'storage'):
+        if not hasattr(self._local, 'session'):
             # Initialize the Storage instance for the current thread
             self._local.session = requests.Session()
         return self._local.session
