@@ -239,7 +239,7 @@ body {
 .slider-wrapper .copy-donation.bps-banner {
   width: 70%;
 }
-.slider-wrapper .copy-donation.bps-banner h1 {
+.slider-wrapper .copy-donation.bps-banner h2 {
   color: #f3edbe;
   margin-bottom: 10px;
   margin-top: 20px;
@@ -248,6 +248,7 @@ body {
   color: #f9f7f7;
   text-shadow: none;
   margin-top:5px;
+  padding:0;
 }
 .slider-wrapper .copy-donation.bps-banner p a {
   color: #f5e98e;
@@ -299,8 +300,9 @@ body {
   margin: 22px 32px 20px 15px;
   width: 200px;
 }
-.slider-wrapper.bps-banner.forum .copy-donation.bps-banner h1 {
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner h2 {
   color: #c4d82e;
+  font-size: 1em;
 }
 .slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
   color: #fff;
@@ -313,4 +315,9 @@ body {
 }
 .slider-wrapper.bps-banner.forum .banner-btn-grad {
   box-shadow: 0 0 20px #31533a;
+}
+@media (max-width: 769px) {
+  .slider-wrapper.bps-banner.forum {
+    display:none;
+  }
 }
