@@ -35,6 +35,55 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
+
+
+        {%- if rd_int >= 202407110100 and rd_int <= 202409132330 -%}
+        <!-- /from July 7 at 1:00 AM to Sept 13 at 11:30 PM -->
+        <div class="column banner-minimal forum">
+            {%- if rd_int >= 202407110100 and rd_int <= 202409030100 -%}
+            <p>Grab your spot at the free arXiv Accessibility Forum</p>
+            <a href="https://accessibility2024.arxiv.org/schedule" target="_blank">Forum Schedule</a>
+
+            {%- elif rd_int >= 202409031605 and rd_int <= 202409031730 -%}
+            <p>Happening now: Ask Me Anything</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409041005 and rd_int <= 202409041130 -%}
+            <p>Happening now: AI and Accessibility</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409061205 and rd_int <= 202409061330 -%}
+            <p>Happening now: Deaf Hub at RIT</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409101505 and rd_int <= 202409101630 -%}
+            <p>Happening now: Sonification</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409111105 and rd_int <= 202409111230 -%}
+            <p>Happening now: SciElo</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409122005 and rd_int <= 202409122130 -%}
+            <p>Happening now: HTML papers on arXiv</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- elif rd_int >= 202409131205 and rd_int <= 202409131330 -%}
+            <p>Happening now: Keynote Session</p>
+            <a href="" target="_blank">Join Forum Session</a>
+
+            {%- else -%}
+            <p>This week: the arXiv Accessibility Forum</p>
+            <a href="https://accessibility2024.arxiv.org/schedule" target="_blank">Forum Schedule</a>
+            {%- endif -%}
+        </div>
+        {%- endif -%}
+
+
+
+
+
+
         {%- if rd_int >= 202403120100 and rd_int <= 202403150100 -%}
         <div class="column">
           <p>Pi Day is Giving Day: arXiv depends on donations to operate and keep science open for all.
@@ -42,12 +91,6 @@
               <span style="color:white;text-decoration-line:underline;">Give back to arXiv on 3.14.24!</span>
               </a>
           </p>
-        </div>
-        {%- endif -%}
-
-        {%- if rd_int >= 202311270100 and rd_int <= 202311290100 -%}
-        <div class="column banner-minimal">
-          <p><a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_8wAZvATbZvWU2vc" target="_blank">Take the annual global survey</a></p>
         </div>
         {%- endif -%}
 
