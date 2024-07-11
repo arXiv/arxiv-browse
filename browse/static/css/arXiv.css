@@ -686,6 +686,25 @@ footer .sorry-app-links .a11y-main-link {
 .slider-wrapper.bps-banner.dark {
   background-color: black;
 }
+/*style overrides for forum minimal banner homepage news with forum logo*/
+.columns .column.banner-minimal.forum a {
+  color: #c4d82e;
+}
+.forum-logo {
+	width: 200px;
+	float: right;
+	margin: 1em;
+}
+@media screen and (max-width: 480px) {
+	.forum-logo {
+		width: 70%;
+		margin: 1em auto !important;
+		float: none;
+		display: block;
+	}
+}
+
+
 
 /****************************************
  * Stats pages (/stats)

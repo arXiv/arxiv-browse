@@ -25,6 +25,9 @@ body {
     float: none;
     width: 100%;
 }
+.slider-wrapper .columns {
+  align-items: center;
+}
 .slider-wrapper .amount-donation {
     float: none;
     width: 100%;
@@ -221,6 +224,9 @@ body {
 }
 
 /********** BPS styles **********/
+.slider-wrapper .bps-banner-image {
+  min-width: 200px;
+}
 .slider-wrapper .copy-donation.bps-banner .banner-smileybones-icon {
   float: left;
   margin: 20px 15px;
@@ -281,4 +287,30 @@ body {
   background-position: right center; /* change the direction of the change here */
   color: #fff;
   text-decoration: none;
+}
+
+/*Forum banner style overrides*/
+.slider-wrapper.bps-banner.forum {
+  background-color: #000;
+  color: #ffffff;
+}
+.slider-wrapper.bps-banner.forum .bps-banner-image {
+  float: left;
+  margin: 22px 32px 20px 15px;
+  width: 200px;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner h1 {
+  color: #c4d82e;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
+  color: #fff;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
+  color: #c4d82e;
+  text-shadow: none;
+  text-decoration: underline;
+}
+.slider-wrapper.bps-banner.forum .banner-btn-grad {
+  box-shadow: 0 0 20px #31533a;
 }
