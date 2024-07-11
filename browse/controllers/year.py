@@ -15,6 +15,7 @@ from browse.controllers.list_page import get_listing_service
 from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.services.listing import MonthCount
 
+YEAR_CACHE_TIME= 60*60*24*10 #10 days
 
 @dataclass
 class MonthData:
@@ -53,6 +54,7 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
     if year is None:
         year = thisYear
 
+    headers={}
     #redirect 2 digit years
     if year < 100:
         if year >= 91:
@@ -61,7 +63,9 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
             year = 2000 + year
         
         new_address=url_for("browse.year", archive=archive_id, year=year)
-        return {}, status.MOVED_PERMANENTLY, {"Location":new_address}
+        headers["Cache-Control"]=f"max-age=31536000" # a year
+        headers["Location"]=new_address
+        return {}, status.MOVED_PERMANENTLY, headers
         
     #early years make no sense
     if year<1990:
@@ -104,7 +108,7 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
         'year': str(year),
         'stats_by_year': stats_by_year( archive, years_operating(archive), year) 
     }
-    headers: Dict[str, str] = {}
+    headers["Cache-Control"]=f"max-age={YEAR_CACHE_TIME}"
     headers=add_surrogate_key(headers,["year", f"year-{archive.id}", f"year-{archive.id}-{year:04d}"])
     if date.today().year==year: 
         headers=add_surrogate_key(headers,["announce"])
