@@ -20,7 +20,7 @@ Adding an environment var, so we can enable only on gcp.
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
 {% set BANNER_START = '20240712' %}
-{% set BANNER_END = '20240714' %}
+{% set BANNER_END = '20240914' %}
 
 
 {%- macro content(request_datetime) -%}
@@ -79,7 +79,8 @@ Adding an environment var, so we can enable only on gcp.
     </div>
   </aside>
 
-  {%- elif rd_int >= 202409020100 and rd_int <= 202409140100 -%}
+  {%- elif rd_int >= 202409020100 and rd_int <= 202409131300 -%}
+  <!-- Sept 3 - Sept 13, content filled in via dynamic script -->
   <aside class="slider-wrapper bps-banner forum">
     <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   	<div class="columns">
@@ -110,45 +111,3 @@ Adding an environment var, so we can enable only on gcp.
   <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
 {%- endif -%}
 {%- endmacro -%}
-
-{#################### disabled example banners ####################}
-
-{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
-{# accessibility CTA banner #}
-<aside class="slider-wrapper bps-banner dark" style="display:none">
-  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation bps-banner">
-    <h1>arXiv Forum: How do we make accessible research papers a reality?</h1>
-    <p>If research isn't accessible, can we really call it "Open" Science?
-      In response to the high interest in this event we have expanded our online hosting capacity and re-opened registration. <a href="https://info.arxiv.org/about/accessibility_forum.html">Grab your seat</a>.</p>
-  </div>
-  <div class="amount-donation bps-banner">
-    <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" href="https://info.arxiv.org/about/accessibility_forum.html"><b>Learn More</b></a>
-      </div>
-    </div>
-  </div>
-</aside>#}
-{#{%- endif -%}#}
-
-{# donation banner #}
-{#<aside class="slider-wrapper bps-banner" style="display:none">
-  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation bps-banner">
-    <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Global Survey</h1>
-    <p>In just 3 minutes help us understand <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}" target="_blank">how you see arXiv</a>.</p>
-  </div>
-  <div class="amount-donation bps-banner">
-    <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}"><b>TAKE SURVEY</b></a>
-      </div>
-    </div>
-  </div>
-</aside>#}
-
-{# downtime #}
-{#<aside class="slider-wrapper" style="display:none">
-  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
-</aside>#}
