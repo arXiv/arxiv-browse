@@ -24,8 +24,8 @@ Adding an environment var, so we can enable only on gcp.
 
 
 {%- macro content(request_datetime) -%}
+{%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 {%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
-
   {%- if rd_int >= 202407220100 and rd_int <= 202407290100 -%}
   <!-- July 22 - 29 -->
   <aside class="slider-wrapper bps-banner forum">
@@ -80,7 +80,22 @@ Adding an environment var, so we can enable only on gcp.
   </aside>
 
   {%- elif rd_int >= 202409020100 and rd_int <= 202409140100 -%}
-  <!-- replace with script -->
+  <aside class="slider-wrapper bps-banner forum">
+    <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+  	<div class="columns">
+      <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/events/arxiv-forum-logotype-title.png') }}" alt="arXiv Accessibility Forum 2024">
+      <div class="copy-donation bps-banner">
+        <h2 id="forum-session-title"></h2>
+        <p id="forum-session-link-small"></p>
+      </div>
+      <div class="amount-donation bps-banner">
+        <div class="wrapper">
+          <div id="forum-session-link-box" class="donate-cta"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <script src="{{ url_for('static', filename='js/rotate_forum_info.js')}}" type="text/javascript"></script>
   {%- endif -%}
 
 {%- endif -%}
