@@ -10,7 +10,7 @@ def test_should_be_db_abs(dbclient):
 def test_basic_db_abs(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires') or rt.headers.get('Surrogate-Control')
+    assert rt.headers.get('Surrogate-Control')
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
 
     subjects = html.select_one('.subjects')
@@ -44,7 +44,7 @@ def test_db_abs_history(dbclient):
 def test_db_abs_comment(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires') or rt.headers.get('Surrogate-Control')
+    assert rt.headers.get('Surrogate-Control')
     assert '21 pages' in rt.data.decode('utf-8')
 
 
