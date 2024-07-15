@@ -16,7 +16,7 @@ from typing import (
 
 from flask import current_app
 
-from arxiv.db import session, engine
+from arxiv.db import session
 from arxiv.base.globals import get_application_config
 from arxiv.document.metadata import DocMetadata
 from dateutil.tz import gettz, tzutc
@@ -41,9 +41,9 @@ from arxiv.db.models import (
     OrcidIds,
     AuthorIds,
     TapirUser,
+    PaperOwner,
     t_arXiv_in_category,
     t_arXiv_stats_hourly,
-    t_arXiv_paper_owners,
     Metadata
 )
 from browse.services.listing import ListingItem
@@ -569,11 +569,11 @@ def get_orcid_by_user_id(user_id: int) -> Optional[str]:
 @db_handle_error(db_logger=logger, default_return_val=[])
 def get_articles_for_author(user_id: int) -> List[ListingItem]:
     rows = session.execute(
-        select(Document, t_arXiv_paper_owners)
-        .filter(Document.document_id == t_arXiv_paper_owners.c.document_id)
-        .filter(t_arXiv_paper_owners.c.user_id == user_id)
-        .filter(t_arXiv_paper_owners.c.flag_author == 1)
-        .filter(t_arXiv_paper_owners.c.valid == 1)
+        select(Document, PaperOwner)
+        .filter(Document.document_id == PaperOwner.document_id)
+        .filter(PaperOwner.user_id == user_id)
+        .filter(PaperOwner.flag_author == 1)
+        .filter(PaperOwner.valid == 1)
         .filter(Document.paper_id.notlike('test%'))
         .order_by(Document.dated.desc())
     ).scalars().all()

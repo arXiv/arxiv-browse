@@ -52,7 +52,7 @@ def loaded_db():
     with app.app_context():
         from arxiv import db
         from . import populate_test_database
-        populate_test_database(True, db)
+        populate_test_database(True, db, app.engine, app.latexml_engine) # type: ignore
 
 
 @pytest.fixture(scope='session')

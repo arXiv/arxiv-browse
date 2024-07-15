@@ -595,6 +595,6 @@ def _expires_headers(listing_resp:
                      Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
-        return {'Expires': str(listing_resp.expires)}
+        return {'Surrogate-Control': f'max-age={listing_resp.expires}'}
     else:
         return {}
