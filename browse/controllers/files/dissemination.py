@@ -230,7 +230,7 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
         else:  # file selector for multiple html files
             resp= make_response(render_template("dissemination/multiple_files.html",
                                                 arxiv_id=arxiv_id, file_names=file_names), 200,
-                                {"Cache-Control": maxage(arxiv_id.has_version)})
+                                {"Surrogate-Control": maxage(arxiv_id.has_version)})
     
     resp.headers=add_surrogate_key(resp.headers,["html-native"])
     return resp
