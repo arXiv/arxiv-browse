@@ -289,12 +289,5 @@ class ListingService(ABC, HasStatus):
 
 
 def gen_expires() -> str:
-    """Generate expires in RFC 1123 format.
-
-       What is optimal value for the expires value? Next publish?
-       RFC 1123 format ex 'Wed, 21 Oct 2015 07:28:00 GMT'
-    """
-    now=datetime.now().astimezone(ZoneInfo("US/Eastern"))
-    expire = now + timedelta(weeks=1)
-    expires = format_date_time(expire.timestamp())
-    return expires
+    """Sets listing max-age to one week """
+    return str(60*60*24*7)
