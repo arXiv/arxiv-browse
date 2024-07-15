@@ -11,39 +11,39 @@ def test_basic_lists(client_with_fake_listings):
     client = client_with_fake_listings
     rv = client.get("/list/hep-ph/2009-01")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/2009")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/new")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/current")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/pastweek")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/recent")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/2009-01?skip=925&show=25")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/astro-ph/2004")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/math/1992")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/math/1992-01")
     assert rv.status_code == 200
