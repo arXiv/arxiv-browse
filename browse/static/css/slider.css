@@ -33,7 +33,7 @@ body {
     width: 100%;
 }
 .slider-wrapper h1 {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     font-size: 20px;
     padding: 0 20px;
@@ -45,10 +45,10 @@ body {
     text-shadow: 1px 1px #000;
 }
 .slider-wrapper a {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     text-decoration: none;
-    //text-shadow: 1px 1px #000;
+    /* text-shadow: 1px 1px #000; */
 }
 .slider-wrapper a:hover {
     color: #78797c;
@@ -102,11 +102,11 @@ body {
     width: 155px;
 }
 .slider-wrapper .donate-cta a {
-    //background-color: #fe9600;
+    /* background-color: #fe9600; */
     background-color: #F5A623;
     border: 0 solid #9e9fa1;
     border-radius: 5px;
-    //color: #fff;
+    /* color: #fff; */
     color: #4C2F00;
     display: inline-block;
     font-size: 20px;
