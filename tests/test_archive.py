@@ -3,7 +3,7 @@
 def test_astroph_archive(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/astro-ph")
     assert rv.status_code == 200
-    assert 'Expires' in rv.headers, 'Should have expires header'
+    assert 'Surrogate-Control' in rv.headers, 'Should have Surrogate-Control header'
 
     rv = client_with_test_fs.get("/archive/astro-ph/")
     assert rv.status_code == 200, 'Trailing slash should be allowed'
