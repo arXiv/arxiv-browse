@@ -39,7 +39,7 @@ const displayCurrentData = () => {
                 join_link_box.innerHTML = '<a class="banner_link banner-btn-grad" target="_blank" href="https://accessibility2024.arxiv.org/schedule"><b>View Schedule</b></a>';
                 set = true;
             }
-            else if (now > start_time && start_time < new Date(start_time.getTime() + (55 * 60 * 1000))) {
+            else if (now > start_time && now < new Date(start_time.getTime() + (55 * 60 * 1000))) {
                 title_node.textContent = `Happening now: ${title} at ${getFormattedDate(start_time)}`;
                 join_link_small.innerHTML = `<a href="${link}" target="_blank">Click here to join the session</a>. No registration required.`;
                 join_link_box.innerHTML = `<a class="banner_link banner-btn-grad" target="_blank" href="${link}"><b>Join Session</b></a>`;
