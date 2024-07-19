@@ -224,9 +224,6 @@ body {
 }
 
 /********** BPS styles **********/
-.slider-wrapper .bps-banner-image {
-  min-width: 200px;
-}
 .slider-wrapper .copy-donation.bps-banner .banner-smileybones-icon {
   float: left;
   margin: 20px 15px;
@@ -298,7 +295,8 @@ body {
 .slider-wrapper.bps-banner.forum .bps-banner-image {
   float: left;
   margin: 22px 32px 20px 15px;
-  width: 200px;
+  height: 50px;
+  width: auto;
 }
 .slider-wrapper.bps-banner.forum .copy-donation.bps-banner h2 {
   color: #c4d82e;
