@@ -664,7 +664,7 @@ footer .sorry-app-links .a11y-main-link {
   justify-content:center;
 }
 .banner-minimal a {
-  -webkit-box-shadow: 0px 3px 6px 0px #000000);
+  -webkit-box-shadow: 0px 3px 6px 0px #000000;
   -moz-box-shadow: 0px 3px 6px 0px #000000;
   box-shadow: 0px 3px 6px 0px #000000;
   display: inline-block;
@@ -672,13 +672,13 @@ footer .sorry-app-links .a11y-main-link {
   border-radius: .3em;
   font-size: 2em;
   background-color: #1c1a17;
-  border: 2px solid #6b6459;;
+  border: 2px solid #6b6459;
   color: #fb595a;
   text-decoration: none;
   transition: all .5s ease-in-out;
 }
 .banner-minimal a:hover {
-  background-color: #;
+  background-color: #1c1a17;
   border-color: #dbc6c6;
   color: #f9f7f7;
 }
@@ -686,6 +686,25 @@ footer .sorry-app-links .a11y-main-link {
 .slider-wrapper.bps-banner.dark {
   background-color: black;
 }
+/*style overrides for forum minimal banner homepage news with forum logo*/
+.columns .column.banner-minimal.forum a {
+  color: #c4d82e;
+}
+.forum-logo {
+	width: 200px;
+	float: right;
+	margin: 1em;
+}
+@media screen and (max-width: 480px) {
+	.forum-logo {
+		width: 70%;
+		margin: 1em auto !important;
+		float: none;
+		display: block;
+	}
+}
+
+
 
 /****************************************
  * Stats pages (/stats)
