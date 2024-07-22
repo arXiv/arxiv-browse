@@ -1,5 +1,5 @@
 function setCookie(){   
-    var delay_days = 1;
+    var delay_days = 14;
     var date = new Date();
     date.setTime(date.getTime()+(delay_days*3600*24*1000));
     var expires = "; expires="+date.toGMTString();    
@@ -14,12 +14,12 @@ $(document).ready(
     function() {
 
       if( hasCookie() ){
-        $("#cu-identity, #header").slideDown();
+        $("#cu-identity").slideDown();
         $(".slider-wrapper").slideUp();
        }   
       
       $(".close-slider").click(function() {
-        $("#cu-identity, #header").slideDown();
+        $("#cu-identity").slideDown();
         $(".slider-wrapper").slideUp();
         setCookie();       
       });
@@ -27,7 +27,7 @@ $(document).ready(
       $(function() {        
         if( !hasCookie() ){
             $(".slider-wrapper").delay(1000).slideDown();
-            $("#cu-identity, #header").delay(1000).slideUp();
+            $("#cu-identity").delay(1000).slideUp();
         }
       });
 
