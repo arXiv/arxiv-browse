@@ -1,3 +1,4 @@
+//version 1.1
 function setCookie(){   
     var delay_days = 14;
     var date = new Date();
@@ -25,7 +26,7 @@ $(document).ready(
       });
 
       $(function() {        
-        if( !hasCookie() ){
+        if( !hasCookie() && window.innerWidth > 769 ){
             $(".slider-wrapper").delay(1000).slideDown();
             $("#cu-identity").delay(1000).slideUp();
         }
