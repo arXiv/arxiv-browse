@@ -56,8 +56,16 @@ app_config = get_application_config()
 tz = gettz(app_config.get("ARXIV_BUSINESS_TZ"))
 
 
-def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
-    """Handle operational database errors via decorator."""
+def db_handle_error(db_logger: Logger, default_return_val: Any, ignore_errors: bool = False) -> Any:
+    """Handle operational database errors via decorator.
+
+    Parameters
+    ----------
+    db_logger
+    default_return_val: return value in the case of an `NoResultFound`, `OperationalError` or `DBAPIError` of the inner fn.
+    ignore_errors: By default, False. If True, all errors will get the `default_return_val`.
+
+    """
 
     def decorator(func_to_wrap: Callable) -> Any:
         def wrapper(*args, **kwargs):  # type: ignore
@@ -78,7 +86,10 @@ def db_handle_error(db_logger: Logger, default_return_val: Any) -> Any:
             except Exception as ex:
                 if db_logger:
                     db_logger.warning(f"Unknown exception in {func_to_wrap.__name__}: {ex}")
-                raise
+                if ignore_errors:
+                    return default_return_val
+                else:
+                    raise
 
         return wrapper
 
@@ -495,7 +506,7 @@ def service_status()->List[str]:
     return []
 
 
-@db_handle_error(db_logger=logger, default_return_val=None)
+@db_handle_error(db_logger=logger, default_return_val=None, ignore_errors=True)
 def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional[int]:
     """Get latexml conversion status for a given paper_id and version"""
     if not current_app.config["LATEXML_ENABLED"]:
@@ -506,7 +517,8 @@ def get_latexml_status_for_document(paper_id: str, version: int = 1) -> Optional
         .filter(DBLaTeXMLDocuments.document_version == version)
     )
 
-@db_handle_error(db_logger=logger, default_return_val={})
+
+@db_handle_error(db_logger=logger, default_return_val={}, ignore_errors=True)
 def get_latexml_statuses_for_listings (listings: Iterable[DocMetadata]) -> Dict[Tuple[str, int], int]:
     if not current_app.config["LATEXML_ENABLED"]:
         return {}
@@ -518,8 +530,14 @@ def get_latexml_statuses_for_listings (listings: Iterable[DocMetadata]) -> Dict[
     ).all()
     return { (i[0], i[1]): i[2] for i in statuses }
 
-@db_handle_error(db_logger=logger, default_return_val=None)
+
+def _inside_get_latexml_publish_dt() -> None:
+    """Just to enable patching."""
+    pass
+
+@db_handle_error(db_logger=logger, default_return_val=None, ignore_errors=True)
 def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetime]:
+    _inside_get_latexml_publish_dt()
     if not current_app.config["LATEXML_ENABLED"]:
         return None
     publish_dt = session.scalar(
@@ -528,7 +546,6 @@ def get_latexml_publish_dt (paper_id: str, version: int = 1) -> Optional[datetim
         .filter(DBLaTeXMLDocuments.document_version == version)
     )
     return publish_dt.replace(tzinfo=timezone.utc) if publish_dt else None
-
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)
