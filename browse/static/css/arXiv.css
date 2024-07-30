@@ -641,6 +641,19 @@ footer .sorry-app-links .a11y-main-link {
   background-color: #595959;
   color: #ffffff;
 }
+.message-special.green {
+  border: 2px solid #c4d82e;
+  background-color: #f3f6dd;
+  color: #000;
+  margin-right: 0;
+}
+.message-special.green a {
+  color: #1b7cac;
+}
+.message-special.green span.label {
+  background-color: #c4d82e;
+  color: #000;
+}
 .homepage-news-title {
   margin-bottom: .25em;
 }
@@ -688,7 +701,17 @@ footer .sorry-app-links .a11y-main-link {
 }
 /*style overrides for forum minimal banner homepage news with forum logo*/
 .columns .column.banner-minimal.forum a {
+  border-color: #c4d82e;
+  background-color: #000;
   color: #c4d82e;
+}
+.columns .column.banner-minimal.forum a:hover {
+  border-color: #c4d82e;
+  background-color: #f3f6dd;
+  color: #000;
+}
+.columns .column.banner-minimal.forum p {
+  font-size: 1.25em;
 }
 .forum-logo {
 	width: 200px;
