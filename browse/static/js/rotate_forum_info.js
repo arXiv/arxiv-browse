@@ -1,12 +1,12 @@
 const timeZoneOffset = -4;
 const forumSessionData = [
-    ['Ask Me Anything', 'LINK HERE', new Date(Date.UTC(2024, 8, 3, 16 + timeZoneOffset, 5, 0))],
-    ['AI and Accessibility', 'LINK HERE', new Date(Date.UTC(2024, 8, 4, 10 + timeZoneOffset, 5, 0))],
-    ['Deaf Hub at RIT', 'LINK HERE', new Date(Date.UTC(2024, 8, 6, 12 + timeZoneOffset, 5, 0))],
-    ['Sonification', 'LINK HERE', new Date(Date.UTC(2024, 8, 10, 15 + timeZoneOffset, 5, 0))],
-    ['SciELO y Accessibilidad', 'LINK HERE', new Date(Date.UTC(2024, 8, 11, 11 + timeZoneOffset, 5, 0))], // 17 CEST is 11 EST right?
-    ['HTML Papers on arXiv', 'LINK HERE', new Date(Date.UTC(2024, 8, 12, 20 + timeZoneOffset, 5, 0))],
-    ['Disability Models', 'LINK HERE', new Date(Date.UTC(2024, 8, 13, 12 + timeZoneOffset, 5, 0))],
+    ['Ask Me Anything', 'https://cornell.zoom.us/j/98545128980?pwd=nTqDO00SOxW6ThtbYPFRSbbA57aWYM.1', new Date(Date.UTC(2024, 8, 3, 16 + timeZoneOffset, 5, 0))],
+    ['AI and Accessibility', 'https://cornell.zoom.us/j/93724730382?pwd=qealqZFZRu1qdVzEFFYbUl94fPiamw.1', new Date(Date.UTC(2024, 8, 4, 10 + timeZoneOffset, 5, 0))],
+    ['Deaf Hub at RIT', 'https://cornell.zoom.us/j/95831073771?pwd=Abdx2xsJanNwGS7UL4dxQVn9sQpojr.1', new Date(Date.UTC(2024, 8, 6, 12 + timeZoneOffset, 5, 0))],
+    ['Sonification', 'https://cornell.zoom.us/j/95303704836?pwd=bnIanuPLl7mJvdHGIq5VDsdiEhhuYT.1', new Date(Date.UTC(2024, 8, 10, 15 + timeZoneOffset, 5, 0))],
+    ['SciELO y Accessibilidad', 'https://cornell.zoom.us/j/95978099995?pwd=TLFRHtobdTSpwJLDInZ8GNgVEFWUPB.1', new Date(Date.UTC(2024, 8, 11, 11 + timeZoneOffset, 5, 0))], // 17 CEST is 11 EST right?
+    ['HTML Papers on arXiv', 'https://cornell.zoom.us/j/92772646280?pwd=nN9qJXOPnDZ9kdFUsVYDciuL5M4oXA.1', new Date(Date.UTC(2024, 8, 12, 20 + timeZoneOffset, 5, 0))],
+    ['Disability Models', 'https://cornell.zoom.us/j/94263795591?pwd=2cni3kKjJiYHykTfAooNCIyYxTPB2p.1', new Date(Date.UTC(2024, 8, 13, 12 + timeZoneOffset, 5, 0))],
 ];
 
 const getFormattedDate = (date) => {

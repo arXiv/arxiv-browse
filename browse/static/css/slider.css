@@ -1,3 +1,5 @@
+/* latest update: 7/30/2024 */
+
 body {
     margin: 0;
     padding: 0;
@@ -308,6 +310,33 @@ body {
 }
 .slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
   color: #c4d82e;
+  text-shadow: none;
+  text-decoration: underline;
+}
+.slider-wrapper.bps-banner.forum .banner-btn-grad {
+  box-shadow: 0 0 20px #31533a;
+}
+/*green banner variation */
+.slider-wrapper.bps-banner.forum.green {
+  background-color: #c4d82e;
+  color: #000;
+}
+.slider-wrapper.bps-banner.forum.green .bps-banner-image {
+  margin: 8px 32px 8px 15px;
+  height: 70px;
+}
+.slider-wrapper.bps-banner.forum.green .copy-donation.bps-banner h2 {
+  color: #000;
+  font-size: 1.35em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
+  color: #000;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
+  color: #1B7CB0;
   text-shadow: none;
   text-decoration: underline;
 }
