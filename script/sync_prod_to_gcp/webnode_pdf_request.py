@@ -192,6 +192,7 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
                                exc_info=True, stack_info=False)
 
         host, n_para = CONCURRENCY_PER_WEBNODE[min(len(CONCURRENCY_PER_WEBNODE)-1, max(0, my_tag))]
+        log_extra['web_node'] = host
         try:
             pdf_file, url, _1, duration_ms = ensure_pdf(thread_data.session, host, arxiv_id, timeout=30)
             if pdf_file.exists():
