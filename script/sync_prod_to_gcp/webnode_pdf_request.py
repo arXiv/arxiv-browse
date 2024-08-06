@@ -141,11 +141,11 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
                 mail.communicate(mail_body, timeout=60)
                 if mail.returncode == 0:
                     message.ack()
-                    logging.warning(f"Alart mail sent: {subject}", extra=log_extra)
+                    logger.warning(f"Alart mail sent: {subject}", extra=log_extra)
                 else:
-                    logging.error("Failed to send mail: %s", shlex.join(cmd), extra=log_extra)
+                    logger.error("Failed to send mail: %s", shlex.join(cmd), extra=log_extra)
             except Exception as exc:
-                logging.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
+                logger.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
                 pass
             pass
 
