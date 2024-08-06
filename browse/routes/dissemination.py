@@ -57,6 +57,9 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
+
+    if request.query_string: # redirect to strip off any useless query strings
+        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive, _external=True), 301)
     return get_pdf_resp(arxiv_id, archive)
 
 
