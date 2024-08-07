@@ -328,9 +328,9 @@
           <td class="tablecell label">&nbsp;</td>
           <td class="tablecell arxivdoi">
             {%- if datacite_doi %}
-              <a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a>
+              <a href="https://doi.org/{{ datacite_doi }}"  id="arxiv-doi-link">https://doi.org/{{ datacite_doi }}</a>
             {%- else %}
-              <a href="https://doi.org/10.48550/arXiv.{{ arxiv_id }}">https://doi.org/10.48550/arXiv.{{ arxiv_id }}</a>
+              <a href="https://doi.org/10.48550/arXiv.{{ arxiv_id }}" id="arxiv-doi-link">https://doi.org/10.48550/arXiv.{{ arxiv_id }}</a>
             {%- endif -%}
             <div class="button-and-tooltip">
               <button class="more-info" aria-describedby="more-info-desc-1">
