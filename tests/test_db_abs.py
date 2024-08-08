@@ -70,6 +70,19 @@ def test_db_abs_null_source_size(dbclient):
     download_button_html = html.select_one(".download-html")
     assert download_button_html is None
 
+
+def test_db_abs_pdf_only(dbclient):
+    """Tests a paper where the arxiv_metadata.source_format is pdf ARXIVCE-1745."""
+    rt = dbclient.get('/abs/0904.2711')
+    assert rt.status_code == 200
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html is None
+    assert html.select_one(".download-eprint") is None
+
+
 def test_html_conversion_dissemination (dbclient):
     rt = dbclient.get('/abs/0906.2112')
 
