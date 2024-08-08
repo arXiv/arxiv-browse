@@ -57,15 +57,10 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
+
+    if request.query_string: # redirect to strip off any useless query strings
+        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive, _external=True), 301)
     return get_pdf_resp(arxiv_id, archive)
-
-@blueprint.route("/pdf_test/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf_test/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-def pdf_test(arxiv_id: str, archive=None):  # type: ignore
-    """Path to test pdf via fastly.
-
-    Can be removed when no longer needed."""
-    return get_dissemination_resp(fileformat.pdf, arxiv_id, archive)
 
 
 @blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -95,9 +90,9 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     headers: Dict[str,str]={}
     headers=add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"])
     if arxiv_identifier.has_version: 
-        headers=add_surrogate_key(headers,["format-versioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.idv}"])
     else:
-        headers=add_surrogate_key(headers,["format-unversioned"])
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.id}-current"])
     return render_template("format.html", **data), 200, headers # type: ignore
 
 

@@ -1,33 +1,34 @@
+//version 1.11
 function setCookie(){   
-    var delay_days = 1;
+    var delay_days = 5;
     var date = new Date();
     date.setTime(date.getTime()+(delay_days*3600*24*1000));
     var expires = "; expires="+date.toGMTString();    
-    document.cookie = 'seenDonateBanner=1' + expires + '; path=/; domain=' + window.location.hostname + ';';
+    document.cookie = 'seentheDonateBanner=1' + expires + '; path=/; domain=' + window.location.hostname + ';';
 }
 
 function hasCookie(){
-    return document.cookie.indexOf('seenDonateBanner=') != -1;
+    return document.cookie.indexOf('seentheDonateBanner=') != -1;
 }
 
 $(document).ready(
     function() {
 
       if( hasCookie() ){
-        $("#cu-identity, #header").slideDown();
+        $("#cu-identity").slideDown();
         $(".slider-wrapper").slideUp();
        }   
       
       $(".close-slider").click(function() {
-        $("#cu-identity, #header").slideDown();
+        $("#cu-identity").slideDown();
         $(".slider-wrapper").slideUp();
         setCookie();       
       });
 
       $(function() {        
-        if( !hasCookie() ){
+        if( !hasCookie() && window.innerWidth > 769 ){
             $(".slider-wrapper").delay(1000).slideDown();
-            $("#cu-identity, #header").delay(1000).slideUp();
+            $("#cu-identity").delay(1000).slideUp();
         }
       });
 

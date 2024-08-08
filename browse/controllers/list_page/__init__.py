@@ -375,8 +375,8 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
     rd = {'mf_fewer': next(tup_f, (None, None))[0]}
 
-    if not viewing_all and count < max_show and show < max_show:
-        rd['mf_all'] = count
+    if not viewing_all and count > show and show < max_show:
+        rd['mf_all'] = max_show
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
@@ -595,6 +595,6 @@ def _expires_headers(listing_resp:
                      Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
-        return {'Expires': str(listing_resp.expires)}
+        return {'Surrogate-Control': f'max-age={listing_resp.expires}'}
     else:
         return {}

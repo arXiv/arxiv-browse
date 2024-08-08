@@ -62,9 +62,9 @@ def foreign_key_check(engine, check_on:bool ):
             with engine.connect() as conn:
                 conn.execute(text('SET FOREIGN_KEY_CHECKS = 0;'))
 
-def _populate_latexml_test_data (db):
-    db.LaTeXMLBase.metadata.drop_all(bind=db.latexml_engine)
-    db.LaTeXMLBase.metadata.create_all(bind=db.latexml_engine)
+def _populate_latexml_test_data (db, latexml_engine: Engine):
+    db.LaTeXMLBase.metadata.drop_all(bind=latexml_engine)
+    db.LaTeXMLBase.metadata.create_all(bind=latexml_engine)
     db.session.commit()
 
     dt = datetime(2024, 1, 30, 15, 0, 0)
@@ -116,14 +116,14 @@ def _populate_latexml_test_data (db):
         db.session.add(db.models.DBLaTeXMLDocuments(**doc))
     db.session.commit()
 
-def populate_test_database(drop_and_create: bool, db):
+def populate_test_database(drop_and_create: bool, db, engine: Engine, latexml_engine: Engine):
     """Initialize the browse tables."""
     if drop_and_create:
-        foreign_key_check(db.engine, False)
-        db.metadata.drop_all(bind=db.engine)
+        foreign_key_check(engine, False)
+        db.metadata.drop_all(bind=engine)
         db.session.commit()
-        foreign_key_check(db.engine, True)
-        db.metadata.create_all(bind=db.engine)
+        foreign_key_check(engine, True)
+        db.metadata.create_all(bind=engine)
         db.session.commit()
 
     # Member institution data
@@ -185,13 +185,13 @@ def populate_test_database(drop_and_create: bool, db):
     db.session.add(inst_other_ip)
 
     sql_files: List[str] = glob.glob('./tests/data/db/sql/*.sql')
-    foreign_key_check(db.engine, False)
-    execute_sql_files(sql_files, db.engine)
+    foreign_key_check(engine, False)
+    execute_sql_files(sql_files, engine)
     db.session.commit()
 
     print ("FIRST METADATA:")
     print (db.session.query(Metadata).first())
 
-    _populate_latexml_test_data(db)
+    _populate_latexml_test_data(db, latexml_engine)
 
 ABS_FILES = path_of_for_test('data/abs_files')

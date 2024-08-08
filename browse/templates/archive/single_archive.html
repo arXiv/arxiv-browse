@@ -38,10 +38,8 @@
           {{archive_id}} listings</li>
           <li>specific year/month:
 
-            {# <form action="{{url_for('.list_articles')}}" method="get"> #}
-            {# hard coded for legacy /list for now #}
-          <form action="/list" method="get">
-            {{ list_form.archive.id }}
+            <form action="{{url_for('.list_articles')}}" method="get">
+            {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
           </form>

@@ -3,7 +3,7 @@
 def test_astroph_archive(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/astro-ph")
     assert rv.status_code == 200
-    assert 'Expires' in rv.headers, 'Should have expires header'
+    assert 'Surrogate-Control' in rv.headers, 'Should have Surrogate-Control header'
 
     rv = client_with_test_fs.get("/archive/astro-ph/")
     assert rv.status_code == 200, 'Trailing slash should be allowed'
@@ -46,6 +46,13 @@ def test_list(client_with_test_fs):
     assert "mtrl-th" in src
     assert "No archive '" not in src
 
+def test_browse_form(client_with_test_fs):
+    rv = client_with_test_fs.get("/archive/astro-ph")
+    assert rv.status_code == 200
+    assert '<input id="archive" name="archive" required type="hidden" value="astro-ph">' in rv.text
+    assert '<select id="year" name="year" required>' in rv.text
+    assert '<select id="month" name="month" required>' in rv.text
+    assert '<input id="submit" name="submit" type="submit" value="Go">' in rv.text
 
 def test_subsumed_archive(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/comp-lg")

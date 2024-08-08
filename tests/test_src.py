@@ -119,15 +119,15 @@ def test_src_headers(client_with_test_fs):
 
     rv=client.head("/src/1601.04345")
     head=rv.headers["Surrogate-Key"]
-    assert " src " in " "+head+" "
-    assert "src-unversioned" in head
-    assert "src-versioned" not in head
-    assert "paper-id-1601.04345" in head
+    assert "src" in head
+    assert "paper-id-1601.04345-current" in head
+    assert "paper-id-1601.04345v" not in head
+    assert "paper-id-1601.04345 " in head+" "
 
     rv=client.head("/src/1601.04345v2")
     head=rv.headers["Surrogate-Key"]
-    assert " src " in " "+head+" "
-    assert "src-unversioned" not in head
-    assert "src-versioned" in head
-    assert "paper-id-1601.04345" in head
+    assert "src" in head
+    assert "paper-id-1601.04345-current" not in head
+    assert "paper-id-1601.04345v2" in head
+    assert "paper-id-1601.04345 " in head+" "
    

@@ -1,3 +1,5 @@
+/* latest update: 7/30/2024 */
+
 body {
     margin: 0;
     padding: 0;
@@ -25,12 +27,15 @@ body {
     float: none;
     width: 100%;
 }
+.slider-wrapper .columns {
+  align-items: center;
+}
 .slider-wrapper .amount-donation {
     float: none;
     width: 100%;
 }
 .slider-wrapper h1 {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     font-size: 20px;
     padding: 0 20px;
@@ -42,10 +47,10 @@ body {
     text-shadow: 1px 1px #000;
 }
 .slider-wrapper a {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     text-decoration: none;
-    //text-shadow: 1px 1px #000;
+    /* text-shadow: 1px 1px #000; */
 }
 .slider-wrapper a:hover {
     color: #78797c;
@@ -99,11 +104,11 @@ body {
     width: 155px;
 }
 .slider-wrapper .donate-cta a {
-    //background-color: #fe9600;
+    /* background-color: #fe9600; */
     background-color: #F5A623;
     border: 0 solid #9e9fa1;
     border-radius: 5px;
-    //color: #fff;
+    /* color: #fff; */
     color: #4C2F00;
     display: inline-block;
     font-size: 20px;
@@ -233,7 +238,7 @@ body {
 .slider-wrapper .copy-donation.bps-banner {
   width: 70%;
 }
-.slider-wrapper .copy-donation.bps-banner h1 {
+.slider-wrapper .copy-donation.bps-banner h2 {
   color: #f3edbe;
   margin-bottom: 10px;
   margin-top: 20px;
@@ -242,6 +247,7 @@ body {
   color: #f9f7f7;
   text-shadow: none;
   margin-top:5px;
+  padding:0;
 }
 .slider-wrapper .copy-donation.bps-banner p a {
   color: #f5e98e;
@@ -281,4 +287,64 @@ body {
   background-position: right center; /* change the direction of the change here */
   color: #fff;
   text-decoration: none;
+}
+
+/*Forum banner style overrides*/
+.slider-wrapper.bps-banner.forum {
+  background-color: #000;
+  color: #ffffff;
+}
+.slider-wrapper.bps-banner.forum .bps-banner-image {
+  float: left;
+  margin: 22px 32px 20px 15px;
+  height: 50px;
+  width: auto;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner h2 {
+  color: #c4d82e;
+  font-size: 1em;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
+  color: #fff;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
+  color: #c4d82e;
+  text-shadow: none;
+  text-decoration: underline;
+}
+.slider-wrapper.bps-banner.forum .banner-btn-grad {
+  box-shadow: 0 0 20px #31533a;
+}
+/*green banner variation */
+.slider-wrapper.bps-banner.forum.green {
+  background-color: #c4d82e;
+  color: #000;
+}
+.slider-wrapper.bps-banner.forum.green .bps-banner-image {
+  margin: 8px 32px 8px 15px;
+  height: 70px;
+}
+.slider-wrapper.bps-banner.forum.green .copy-donation.bps-banner h2 {
+  color: #000;
+  font-size: 1.35em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
+  color: #000;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
+  color: #1B7CB0;
+  text-shadow: none;
+  text-decoration: underline;
+}
+.slider-wrapper.bps-banner.forum .banner-btn-grad {
+  box-shadow: 0 0 20px #31533a;
+}
+@media (max-width: 769px) {
+  .slider-wrapper.bps-banner.forum {
+    display:none;
+  }
 }
