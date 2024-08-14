@@ -362,6 +362,9 @@ body {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p {
+  color: #000000;
+}
 .slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p a {
   color: #0000FF;
 }
