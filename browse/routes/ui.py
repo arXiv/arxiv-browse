@@ -30,7 +30,8 @@ from browse.controllers import (
     list_page,
     prevnext,
     stats_page,
-    tb_page
+    tb_page,
+    catchup_page
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
@@ -128,6 +129,14 @@ def category_taxonomy() -> Any:
         status.OK,
         None,
     )
+
+@blueprint.route("catchup", methods=["GET"])
+def catchup() -> Response:
+    response, code, headers = catchup_page.get_catchup_page()
+    headers=add_surrogate_key(headers,["catchup"])
+    if code == status.OK:
+        return render_template("catchup", **response), code, headers  # type: ignore
+    return response, code, headers  # type: ignore
 
 @blueprint.route("institutional_banner", methods=["GET"])
 def institutional_banner() -> Any:
