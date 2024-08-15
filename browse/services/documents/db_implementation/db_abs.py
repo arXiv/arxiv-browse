@@ -12,7 +12,7 @@ from arxiv.license import License
 from arxiv.document.metadata import DocMetadata, AuthorList, Submitter
 from arxiv.document.exceptions import AbsException
 from arxiv.document.version import SourceFlag, VersionEntry
-from arxiv.db import session
+from arxiv.db import Session
 from arxiv.db.models import Metadata
 from arxiv.document.exceptions import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
@@ -40,7 +40,7 @@ class DbDocMetadataService(DocMetadataService):
         if identifier.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[identifier.id])
 
-        all_versions: List[Metadata] = (session.query(Metadata).filter(Metadata.paper_id == identifier.id)).all()
+        all_versions: List[Metadata] = (Session.query(Metadata).filter(Metadata.paper_id == identifier.id)).all()
         if not all_versions:
             raise AbsNotFoundException(identifier.id)
 
@@ -57,7 +57,7 @@ class DbDocMetadataService(DocMetadataService):
 
     def service_status(self) -> List[str]:
         try:
-            res = session.query(Metadata).limit(1).first()
+            res = Session.query(Metadata).limit(1).first()
             if not res:
                 return [f"{__name__}: Nothing in arXiv_metadata table"]
             if not hasattr(res, 'document_id'):
