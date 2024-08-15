@@ -1,5 +1,5 @@
 """
-subscribe_submissions.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
+submissions_to_gcp.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
 check the files exist on CIT and uploads them to GCP bucket.
 
 The "upload to GCP bucket" part is from existing sync_published_to_gcp.
@@ -64,6 +64,10 @@ class MissingGeneratedFile(Exception):
 
 class InvalidVersion(Exception):
     """Version string is invalid"""
+    pass
+
+class BrokenSubmission(Exception):
+    """Something is very wrong"""
     pass
 
 class ThreadLocalData:
@@ -200,7 +204,8 @@ src_ext_to_source_format = {
 
 
 class SubmissionFilesState:
-    """Given the paper ID, version, publish type and would-be src_ext, generate the desired
+    """
+    Given the paper ID, version, publish type and would-be src_ext, generate the desired
     file state for the submission.
     This includes the published, and (version - 1) state if it's appropriate.
 
@@ -225,6 +230,8 @@ class SubmissionFilesState:
 
     _top_levels: dict
 
+    _extras: typing.List[dict]
+
     def __init__(self, arxiv_id_str: str, version: str, publish_type: str, src_ext: str,
                  source_format: str, log_extra: dict):
         try:
@@ -232,8 +239,9 @@ class SubmissionFilesState:
                 raise InvalidVersion(f"{version} is invalid")
         except:
             raise InvalidVersion(f"{version} is invalid")
-        self.xid = Identifier(arxiv_id_str)
-        self.version = version
+        self.xid = Identifier(arxiv_id_str)  # arXiv paper ID (xid)
+        self.version = version               # submission version
+        # versioned ID (Versioned XID)
         self.vxid = self.xid if self.xid.has_version else Identifier(f"{arxiv_id_str}v{version}")
         self.publish_type = publish_type
         self.src_ext = src_ext
@@ -241,6 +249,7 @@ class SubmissionFilesState:
         self.source_format = source_format
         self.source_flags = ""
         self.single_source = False
+        self._extras = []
 
         self.ext_candidates = SubmissionFilesState.submission_exts.copy()
         if src_ext:
@@ -273,12 +282,17 @@ class SubmissionFilesState:
 
     @property
     def ps_cache_pdf_file(self):
-        return f"{PS_CACHE_PREFIX}{self.archive}/pdf/{self.xid.yymm}/{self.vxid.idv}.pdf"
+        return f"{PS_CACHE_PREFIX}{self.vxid.archive}/pdf/{self.vxid.yymm}/{os.path.basename(self.vxid.idv)}.pdf"
 
-
-    def html_file(self, files: typing.List[str]):
+    @property
+    def html_root_dir(self):
         # cannot ues self
-        return f"{PS_CACHE_PREFIX}{self.archive}/html/{self.xid.yymm}/{self.vxid.idv}/"
+        return f"{PS_CACHE_PREFIX}{self.vxid.archive}/html/{self.vxid.yymm}/{os.path.basename(self.vxid.idv)}"
+
+    def html_files(self, files: typing.List[str]):
+        # cannot ues self
+        root_dir = self.html_root_dir
+        return [os.path.join(root_dir, filename) for filename in files]
 
     @property
     def latest_dir(self):
@@ -320,12 +334,16 @@ class SubmissionFilesState:
                             break
                         if sline.startswith("Date"):
                             dates.append(sline)
-            except FileNotFoundError:
-                logger.warning("abs file %s does not exist", abs_path)
-                pass
-            except:
-                logger.warning("Error with %s", abs_path, exc_info=True)
-                pass
+
+            except FileNotFoundError as exc:
+                msg = f"abs file {abs_path} does not exist"
+                logger.warning(msg)
+                raise BrokenSubmission(msg) from exc
+
+            except Exception as exc:
+                msg = f"Error with {abs_path}"
+                logger.warning(msg, exc_info=True)
+                raise BrokenSubmission(msg) from exc
 
             if dates:
                 parsed = RE_DATE_COMPONENTS.match(dates[-1])
@@ -336,12 +354,14 @@ class SubmissionFilesState:
                             self.source_format = flag_to_source_format[source_flag]
                             continue
                         if source_flag in "SAB":
-                            self.source_flags.append(source_flag)
+                            self.source_flags = self.source_flags + source_flag
                             continue
 
+            # is this a single source submission?
             self.single_source = self.src_ext != ".tar.gz"
 
             if not self.single_source:
+                # It the source format isn't decided, it's probably tex submission
                 if not self.source_format:
                     self.source_format = "tex"
             else:
@@ -357,19 +377,24 @@ class SubmissionFilesState:
                         self.source_format = maybe_source_format
 
     @property
-    def is_tex_submission(self):
+    def is_tex_submission(self) -> bool:
+        """is a tex submssion"""
         assert(self.src_ext)
         assert(self.source_format)
         return self.source_format in ["tex", "pdftex"]
 
     @property
-    def is_html_submission(self):
+    def is_html_submission(self) -> bool:
+        """is a HTML submission"""
         assert(self.src_ext)
         assert(self.source_format)
         return self.source_format == "html"
 
 
     def get_tgz_top_levels(self) -> dict:
+        """
+        Retrieve the top-level files in the tar.gz file
+        """
         if not self._top_levels:
             tgz_source = Path(self.tgz_source)
             if tgz_source.exists():
@@ -383,17 +408,19 @@ class SubmissionFilesState:
 
 
     def get_expected_files(self):
-        # The source may not have a consistent .tar.gz name.
-        # Some other possibilities:
-        #
-        # {paperidv}.pdf pdf only submission
-        # {paperidv}.gz single file submisison
-        # {paperidv}.html.gz html source submission
-        #
-        # NOTE: This cannot handle this special case.
-        # I think there is one case in the system where there is a submission with two source files
-        # that the admins manually crafted. It would have: {paperidv}.pdf and {paperidv}.tar.gz
-        # This was to get a pdf only submission with ancillary files.
+        """
+        The source may not have a consistent .tar.gz name.
+        Some other possibilities:
+
+        {paperidv}.pdf pdf only submission
+        {paperidv}.gz single file submisison
+        {paperidv}.html.gz html source submission
+
+        NOTE: This cannot handle this special case.
+        I think there is one case in the system where there is a submission with two source files
+        that the admins manually crafted. It would have: {paperidv}.pdf and {paperidv}.tar.gz
+        This was to get a pdf only submission with ancillary files.
+        """
 
         def current(t, cit): # macro!? It's just easier to read code being here
             return {"type": t, "cit": cit, "status": "current"}
@@ -414,7 +441,10 @@ class SubmissionFilesState:
             if self.is_tex_submission:
                 files.append(current("pdf-cache", self.ps_cache_pdf_file))
             elif self.is_html_submission:
-                files.append(current("html-cache", self.html_file))
+                # Since this is a root dir of HTML submission, no need to "upload".
+                # This is just a "marker" to initiate the html file expand.
+                files.append(current("html-cache", self.html_root_dir))
+                pass
             pass
 
 
@@ -435,9 +465,28 @@ class SubmissionFilesState:
         for file_entry in files:
             file_entry["gcp"] = path_to_bucket_key(file_entry["cit"])
 
-        return files
+        return files + self._extras
+
+    def register_files(self,
+                       file_type: str,
+                       files: typing.List[Path] | typing.List[str]) -> None:
+        """
+        Used for HTML submission. The actual files uploaded to the gcp bucket is unknown until
+        webnode untars it. When ensure_html gets the file list, register them for the upload.
+        """
+        for filename in files:
+            self._extras.append( {
+                'type': file_type,
+                'cit': str(filename),
+                'gcp': path_to_bucket_key(str(filename)),
+                'status': "current",
+            } )
 
     def is_ignored(self) -> bool:
+        """Is this a ignored file?
+
+        when the gzipped source has %auto-ignored, it is an ignored.
+        """
         # Ignored submission
         gz_source = Path(self.gz_source)
         if gz_source.exists():
@@ -458,7 +507,10 @@ class SubmissionFilesState:
 
 
     def is_removed(self) -> bool:
-        """Is this a removed submission?"""
+        """Is this a removed submission?
+        This is done by the tar.gz toplevels and if it has the removed.txt in it, this is a
+        removed submission.
+        """
         # Removed submission
         return "removed.txt" in self.get_tgz_top_levels()
 
@@ -501,6 +553,10 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     try:
                         _pdf_file, _url, _1, _duration_ms = \
                             ensure_pdf(thread_data.session, host, file_state.vxid, timeout=2, protocol=protocol)
+
+                    except sync_published_to_gcp.WebnodeException as _exc:
+                        raise MissingGeneratedFile("Failed to generate %s", pdf_path) from _exc
+
                     except Exception as _exc:
                         logger.warning("ensure_pdf: %s", file_state.vxid.ids, extra=log_extra,
                                        exc_info=True, stack_info=False)
@@ -511,15 +567,24 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                 pass
 
             if entry["type"] == "html-cache":
-                html_path = Path(entry["cit"])
+                html_path: Path = Path(entry["cit"])
                 if not html_path.exists():
                     n_webnodes = len(CONCURRENCY_PER_WEBNODE)
                     WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
                     host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
                     protocol = "http" if host.startswith("localhost:") else "https"
                     try:
-                        _pdf_file, _url, _1, _duration_ms = \
+                        html_files, html_root, url, outcome, duration_ms = \
                             ensure_html(thread_data.session, host, file_state.vxid, timeout=2, protocol=protocol)
+                        logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
+                                    str(outcome), float(duration_ms) / 1000.0,
+                                    html_root, len(html_files), url,
+                                    extra=log_extra)
+                        file_state.register_files('html-files', html_files)
+
+                    except sync_published_to_gcp.WebnodeException as _exc:
+                        raise MissingGeneratedFile("Failed to generate %s", html_path) from _exc
+
                     except Exception as _exc:
                         logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
                                        exc_info=True, stack_info=False)
@@ -533,6 +598,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
 
 
 def decode_message(message: Message) -> typing.Union[dict, None]:
+    """Decodes the GCP pub/sub message"""
     log_extra = {"message_id": str(message.message_id), "app": "pubsub-test"}
     try:
         json_str = message.data.decode('utf-8')
@@ -551,6 +617,9 @@ def decode_message(message: Message) -> typing.Union[dict, None]:
 
 @STORAGE_RETRY
 def list_bucket_objects(gs_client, gcp_path) -> typing.List[str]:
+    """
+    List the objects in the gcp bucket
+    """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
     blobs = bucket.list_blobs(prefix=str(gcp_path))
@@ -562,13 +631,19 @@ def list_bucket_objects(gs_client, gcp_path) -> typing.List[str]:
 
 @STORAGE_RETRY
 def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
+    """
+    Move the bucket objects to trash - just like Unix "mv", this is nothing more than changing
+    the pathname.
+
+    When this happens, the log is made to remember that the file is "trashed".
+    """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
     for obj in objects:
         trashed_blob = "/".join(['trash'] + obj.split('/'))
         blob = bucket.blob(obj)
         bucket.rename_blob(blob, trashed_blob)
-        logger.info("%s is moved to %s", obj, trashed_blob, extra=log_extra)
+        logger.warning("%s is moved to %s", obj, trashed_blob, extra=log_extra)
     return
 
 
@@ -629,13 +704,19 @@ def submission_callback(message: Message) -> None:
 
 
 def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
+    """
+    From the submission file state, copy the ones that should bu uploaded.
+
+    If the /ftp's submission contains extra files, rename them with /trash prefix so the
+    object is no longer under /ftp but under /trash/ftp.
+    """
     gs_client = thread_data.storage
     desired_state = state.get_expected_files()
     xid = state.xid
     log_extra["arxiv_id"] = xid.ids
     logger.info("Processing %s", xid.ids, extra=log_extra)
 
-    # Existing blods on GCP
+    # Existing blobs on GCP
     cit_source_root_path = state.source_path("")
     bucket_objects: typing.List[str] = \
         list_bucket_objects(gs_client, path_to_bucket_key(cit_source_root_path))
@@ -644,9 +725,18 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
     for entry in desired_state:
         local = entry["cit"]
         remote = entry["gcp"]
-        logger.debug("uploading: %s -> %s", local, remote, extra=log_extra)
+        entry_type = entry['type']
+
+        if entry_type == "html-cache":
+            # "html-cache" is needed on CIT as it is the root dir of HTML submission, but
+            # it is NOT a bucket object, and nothing to upload. Subsequent object copy becomes
+            # effectively creating the "directory" on GCP.
+            logger.debug("Skipping [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
+            continue
+
+        logger.debug("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
         upload(gs_client, Path(local), remote, upload_logger=logger)
-        # Uploaded files are good ones.
+        # Uploaded files are good ones. Subtract the valid one from the bucket objects
         if remote in bucket_objects:
             bucket_objects.remove(remote)
 

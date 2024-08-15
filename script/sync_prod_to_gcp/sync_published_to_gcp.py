@@ -68,6 +68,15 @@ class Overloaded503Exception(Exception):
     """Raised when the response to /pdf is a 503, indicating a need to slow down calls to server."""
     pass
 
+class WebnodeException(Exception):
+    """raised when webnode returns non-200"""
+    status_code: int
+
+    def __init__(self, *args, **kwargs) -> None:
+        self.status_code = kwargs.pop("status_code")
+        super().__init__(*args, **kwargs)
+    pass
+
 
 PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
 HTML_RETRY_EXCEPTIONS = PDF_RETRY_EXCEPTIONS
@@ -313,7 +322,7 @@ def get_html(session, html_url) -> None:
         logger.warning(msg,
                        extra={CATEGORY: "download",
                               "url": html_url, "status_code": resp.status_code, "ms": html_ms})
-        raise (Exception(msg))
+        raise WebnodeException(msg, status_code=resp.status_code)
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {html_url}",
                     extra={CATEGORY: "download",
@@ -340,14 +349,23 @@ def get_pdf(session, pdf_url) -> None:
         logger.warning(msg,
                        extra={CATEGORY: "download",
                               "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
-        raise (Exception(msg))
+        raise WebnodeException(msg, status_code=resp.status_code)
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
                     extra={CATEGORY: "download",
                            "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
 
 
-def ensure_pdf(session, host, arxiv_id, timeout=None, protocol = "https"):
+def is_cache_valid(cache_file: Path, timestamp: int) -> bool:
+    """
+    Checks the cache file exists, and newer than the timestamp
+    """
+    if not cache_file.exists():
+        return False
+    return cache_file.stat().st_mtime >= timestamp
+
+
+def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mtime=0):
     """Ensures PDF exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -375,7 +393,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=None, protocol = "https"):
     start = perf_counter()
     get_pdf(session, url)
     start_wait = perf_counter()
-    while not pdf_file.exists():
+    while not is_cache_valid(pdf_file, source_mtime):
         if perf_counter() - start_wait > timeout:
             msg = f"No PDF, waited longer than {timeout} sec {url}"
             logger.warning(msg,
@@ -389,7 +407,8 @@ def ensure_pdf(session, host, arxiv_id, timeout=None, protocol = "https"):
     else:
         raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
     
-def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "https") -> \
+def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "https",
+                source_mtime = 0) -> \
     typing.Tuple[typing.List[str], str, str, typing.Union[str, None], float]:
     """Ensures HTML exists for arxiv_id.
 
@@ -415,7 +434,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
 
     start = perf_counter()
 
-    files = _get_files_for_html()
+    files = [html_file for html_file in _get_files_for_html() if is_cache_valid(html_file, source_mtime)]
 
     if len(files) > 0:
         logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")

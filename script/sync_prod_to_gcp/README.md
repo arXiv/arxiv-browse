@@ -4,7 +4,7 @@ This is a script to sync the published submissions and PDFs from a publish cycle
 
 # History
 
-## Pre 2024-07
+## Pre 2024-08
 
 Originally, when the daily.sh runs and generates the published log file, the cron job picks it up,
 make the list of files to upload to GCP, ask the web node to generate PDF, and uploads them all.
@@ -28,10 +28,12 @@ mysteriously corrupts or not list a file.
 complex and esp. the weekly sync was not only dangerous but unexplainable due to the file server's
 flakyness.
 
-## Post 2024-07
+## Post 2024-08
 
 submissions-to-gcp unifies all this and "trashes" the older version of published submissions 
 if it exits on GCP bucket.
+
+See [submissions-to-gcp-service](#submissions-to-gcp-service)
 
 ## Contributors
 
@@ -77,6 +79,7 @@ the item exists in the bucket.
 ## GCP
 
 In arxiv-development, a bucket is created for the test. "arxiv-sync-test-01" is the name.
+The pytest tests uses the dev bucket heavily. 
 
 To access the bucket, a service account "sync_test_admen" is created. The account has the storage read/write 
 permission.
@@ -104,9 +107,11 @@ See `Makefile`
 
 # Obsolete cron-based Deployment
 
-The script is designed to run as a cron job.
+The script is designed to run as a cron job. With the use of pub/sub, the unit of work management
+is done by the queue. Therefore, there is no reason to run the cron jobs for multiple retry just
+to finish the job.
 
-## cronjob 
+## cronjob (obsolete) 
 
 Old:
 
@@ -120,7 +125,6 @@ New:
 
 The service runs on the sync node using systemd. See `resouce/systemd/submissons-to-gcp.service`
 
-## submissons_to_gcp.py
 
 ## Logging
 
@@ -144,7 +148,6 @@ Note that, the JSON logger does log rotation. You do not need to set up the log 
 OTOH, because of this, it is rather important for Stanza to be running.
 Currently, the max file size is set to 4MiB, with 10 log files. It should be fine for a few days.
 
-
 # Submissions to GCP service
 
 ## General
@@ -152,6 +155,8 @@ Currently, the max file size is set to 4MiB, with 10 log files. It should be fin
 A systemd service "submssions-to-gcp" subscribes to GCP pub/sub queue for published and 
 copy the submission tarball and abstract file to GCP bucket.
 
+This unifies the existing two services, one is to sync, the other is to ask webnode to generate
+PDF and HTML.
 
 ## Service setup
 
@@ -167,3 +172,4 @@ This instantiate the service for sync-node.arxiv.org.
 The topic is already set up as [`submission-published`](https://console.cloud.google.com/cloudpubsub/topic/detail/submission-published?project=arxiv-production)
 This is used by HTML generation. 2nd subscriber is added for [this](https://console.cloud.google.com/cloudpubsub/subscription/detail/sync-submission-from-cit-to-gcp?project=arxiv-production).
 
+### sync_published_to_gcp.py
