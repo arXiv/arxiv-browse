@@ -227,6 +227,7 @@ class SubmissionFilesState:
     publish_type: str
     version: str
     log_extra: dict
+    submission_source: typing.Optional[dict]
 
     _top_levels: dict
 
@@ -248,6 +249,7 @@ class SubmissionFilesState:
         self.log_extra = log_extra
         self.source_format = source_format
         self.source_flags = ""
+        self.submission_source = None
         self.single_source = False
         self._extras = []
 
@@ -436,7 +438,8 @@ class SubmissionFilesState:
         else:
             # Live submission
             self.maybe_update_metadata()
-            files.append(current("submission", self.source_path(self.src_ext)))
+            self.submission_source = self.source_path(self.src_ext)
+            files.append(current("submission", self.submission_source))
 
             if self.is_tex_submission:
                 files.append(current("pdf-cache", self.ps_cache_pdf_file))
@@ -446,7 +449,6 @@ class SubmissionFilesState:
                 files.append(current("html-cache", self.html_root_dir))
                 pass
             pass
-
 
         if self.publish_type in ["rep", "wdr"]:
             def obsolete(t, cit):
@@ -518,6 +520,13 @@ class SubmissionFilesState:
     def to_payloads(self):
         return [(entry["cit"], entry["gcp"]) for entry in self.get_expected_files()]
 
+    def get_submission_mtime(self) -> int:
+        """
+        Get the mtime of the submission.
+        """
+        if self.submission_source:
+            return Path(self.submission_source).stat().st_mtime
+        return 0
 
 def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True) -> SubmissionFilesState:
     """
@@ -552,7 +561,9 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     protocol = "http" if host.startswith("localhost:") else "https"
                     try:
                         _pdf_file, _url, _1, _duration_ms = \
-                            ensure_pdf(thread_data.session, host, file_state.vxid, timeout=2, protocol=protocol)
+                            ensure_pdf(thread_data.session, host, file_state.vxid, timeout=2,
+                                       protocol=protocol,
+                                       source_mtime=file_state.get_submission_mtime())
 
                     except sync_published_to_gcp.WebnodeException as _exc:
                         raise MissingGeneratedFile("Failed to generate %s", pdf_path) from _exc
@@ -575,7 +586,9 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     protocol = "http" if host.startswith("localhost:") else "https"
                     try:
                         html_files, html_root, url, outcome, duration_ms = \
-                            ensure_html(thread_data.session, host, file_state.vxid, timeout=2, protocol=protocol)
+                            ensure_html(thread_data.session, host, file_state.vxid, timeout=2,
+                                        protocol=protocol,
+                                        source_mtime=file_state.get_submission_mtime())
                         logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
                                     str(outcome), float(duration_ms) / 1000.0,
                                     html_root, len(html_files), url,

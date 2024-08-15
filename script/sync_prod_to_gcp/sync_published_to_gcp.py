@@ -393,7 +393,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
     start = perf_counter()
     get_pdf(session, url)
     start_wait = perf_counter()
-    while not is_cache_valid(pdf_file, source_mtime):
+    while not pdf_file.exists():
         if perf_counter() - start_wait > timeout:
             msg = f"No PDF, waited longer than {timeout} sec {url}"
             logger.warning(msg,
@@ -403,6 +403,12 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
         else:
             sleep(0.2)
     if pdf_file.exists():
+        if pdf_file.stat().st_mtime < source_mtime:
+            # This probably means something funky happened on the file server, or someone
+            # mokeypatched the tarball.
+            logger.error(f"PDF mtime is {pdf_file.stat().st_mtime} < than source {source_mtime}",
+                           extra={CATEGORY: "webnode",
+                                  "url": url, "pdf_file": str(pdf_file)})
         return pdf_file, url, None, ms_since(start)
     else:
         raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
@@ -434,7 +440,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
 
     start = perf_counter()
 
-    files = [html_file for html_file in _get_files_for_html() if is_cache_valid(html_file, source_mtime)]
+    files = _get_files_for_html()
 
     if len(files) > 0:
         logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
@@ -443,6 +449,12 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
     start = perf_counter()
     get_html(session, url)
     start_wait = perf_counter()
+    # I think, this does have a race condition. When you check "any" file made from the tarball,
+    # this may not be "all" files made.
+    #
+    # The right thing to do is to get the source and expand it rather than asking web node to make
+    # the files, as when someone else makes the "all" files, there is no way of knowing the
+    # untaring is complete.
     while len(files := _get_files_for_html()) < 1:
         if perf_counter() - start_wait > timeout: # TODO: Does this need to be different for html?
             msg = f"No HTML, waited longer than {timeout} sec {url}"
