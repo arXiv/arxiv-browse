@@ -25,10 +25,10 @@ Adding an environment var, so we can enable only on gcp.
 {# August 1 - 13 #}
 {% set BANNER_START_5 = 202408010100 %}
 {% set BANNER_END_5 = 202408140100 %}
-{# August 14 - 22 #}
+{# August 14 - 23 #}
 {% set BANNER_START_2 = 202408140100 %}
 {% set BANNER_END_2 = 202408240100 %}
-{# Aug 28 - Sept 2 #}
+{# Aug 24 - Sept 1 #}
 {% set BANNER_START_3 = 202408240100 %}
 {% set BANNER_END_3 = 202409020100 %}
 {# Sept 2 - Sept 13 #}
@@ -131,7 +131,7 @@ Adding an environment var, so we can enable only on gcp.
     ((BANNER_START_4|int <= now) and (BANNER_END_4|int > now)) -%}
     {# only run this script while a banner is active #}
 
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.13" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.14" />
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=1.11"></script>
   {%- endif -%}
