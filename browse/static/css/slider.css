@@ -1,4 +1,4 @@
-/* latest update: 8/14/2024 */
+/* latest update: 8/15/2024 v1.14*/
 
 body {
     margin: 0;
@@ -361,6 +361,9 @@ body {
   font-size: 1.35em;
   margin-top: 8px;
   margin-bottom: 8px;
+}
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p {
+  color: #000000;
 }
 .slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p a {
   color: #0000FF;
