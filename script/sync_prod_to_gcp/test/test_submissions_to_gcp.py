@@ -1,4 +1,5 @@
 import os
+import time
 import unittest
 import sync_published_to_gcp
 sync_published_to_gcp.GS_BUCKET = "arxiv-sync-test-01"
@@ -13,7 +14,7 @@ TEST_PORT = 12721
 sync_published_to_gcp.CONCURRENCY_PER_WEBNODE = [(f'localhost:{TEST_PORT}', 1)]
 
 from submissions_to_gcp import submission_message_to_file_state, sync_to_gcp, logger, MissingGeneratedFile, \
-    SubmissionFilesState
+    SubmissionFilesState, BrokenSubmission, TIMEOUTS
 import subprocess
 import shutil
 
@@ -22,12 +23,16 @@ import threading
 import re
 from identifier import Identifier as ArxivId
 
+TIMEOUTS["PDF_TIMEOUT"] = 3
+TIMEOUTS["HTML_TIMEOUT"] = 3
 
 class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     """the handler gets the pdf request, and copy the dummy PDF to the destination.
     if it's html request, unpack the html and put it under /ps_cache
 
     When asking PDF, if the version is 99, the 404 returned.
+    When asking PDF, if the version is 98, the 404 returned after 120 seconds wait - to test the
+    timeout.
     """
     def do_GET(self):
         pdf_req = re.match(r'^/pdf/(\d{4}\.\d{5}v\d+)(.pdf|)$', self.path)
@@ -35,6 +40,14 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             paper_id = ArxivId(pdf_req.group(1))
             if paper_id.has_version:
                 if paper_id.version == 99:
+                    self.send_response(404)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(b"<html> <body> <h1>Hello, world!</h1> </body> </html>")
+                    return
+                if paper_id.version == 98:
+                    #
+                    time.sleep(200)
                     self.send_response(404)
                     self.send_header("Content-type", "text/html")
                     self.end_headers()
@@ -306,6 +319,52 @@ class TestSubmissionsToGCP(unittest.TestCase):
         # New submissions
         self.assertEqual("2643", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+
+
+    def test_ask_pdf_timeout(self):
+        """
+        The source does not exist and therefore the pdf cannot be made.
+        The test should end with HTTP returnin 404, times out.
+        """
+        paper_id = "2308.99999"
+        data = {
+            "type": "new",
+            "paper_id": paper_id,
+            "version": "98",  # version 98 gets 404 reply after 120 seconds
+            "src_ext": ".tar.gz"
+        }
+
+        pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "pdf", "2308",
+                                f"{paper_id}v{data['version']}.pdf")
+        if os.path.exists(pdf_path):
+            os.unlink(pdf_path)
+
+        log_extra = {"paper_id": paper_id}
+
+        try:
+            state = submission_message_to_file_state(data, log_extra, ask_webnode=True)
+            desired_state = state.get_expected_files()
+            if not desired_state:
+                self.fail("Desired state must not be none")
+
+        except sync_published_to_gcp.WebnodeException as webn_exc:
+            # The exception is replaced with missing generated file
+            self.fail("PDF should not be created and end with the exception, but this is not the expected exception.")
+            pass
+
+        except MissingGeneratedFile as _exc:
+            print("PDF should not be created and end with the exception - this test passed")
+            return
+
+        except BrokenSubmission as _exc:
+            self.fail("Morally correct but a test bug nonetheless")
+            return
+
+        except Exception as _exc:
+            self.fail("all other exceptions are bad")
+            return
+
+        self.fail("PDF should not be created and end with the exception")
 
 
     def test_ask_pdf_then_fail(self):

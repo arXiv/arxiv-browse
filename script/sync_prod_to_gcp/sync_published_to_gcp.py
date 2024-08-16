@@ -73,12 +73,19 @@ class WebnodeException(Exception):
     status_code: int
 
     def __init__(self, *args, **kwargs) -> None:
-        self.status_code = kwargs.pop("status_code")
+        if "status_code" in kwargs:
+            self.status_code = kwargs.pop("status_code")
+        else:
+            self.status_code = 0
         super().__init__(*args, **kwargs)
     pass
 
 
-PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
+# PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
+# take out the timeout - make timeout shorter
+# This is okay as the queue based submission upload retries aftre backoff so no need to
+# wait long. It will come back in a 30-40 seconds
+PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError]
 HTML_RETRY_EXCEPTIONS = PDF_RETRY_EXCEPTIONS
 CATEGORY = "category"
 
@@ -330,11 +337,11 @@ def get_html(session, html_url) -> None:
 
 
 @retry.Retry(predicate=retry.if_exception_type(*PDF_RETRY_EXCEPTIONS))
-def get_pdf(session, pdf_url) -> None:
+def get_pdf(session, pdf_url, timeout=0) -> None:
     start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}
     logger.debug("Getting %s", pdf_url)
-    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY, timeout=timeout)
     # noinspection PyStatementEffect
     [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
     pdf_ms: int = ms_since(start)
@@ -391,7 +398,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
         return pdf_file, url, "already exists", ms_since(start)
 
     start = perf_counter()
-    get_pdf(session, url)
+    get_pdf(session, url, timeout=timeout)
     start_wait = perf_counter()
     while not pdf_file.exists():
         if perf_counter() - start_wait > timeout:
@@ -399,7 +406,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
             logger.warning(msg,
                            extra={CATEGORY: "download",
                                   "url": url, "pdf_file": str(pdf_file)})
-            raise (Exception(msg))
+            raise WebnodeException(msg)
         else:
             sleep(0.2)
     if pdf_file.exists():
@@ -411,8 +418,9 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
                                   "url": url, "pdf_file": str(pdf_file)})
         return pdf_file, url, None, ms_since(start)
     else:
-        raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
-    
+        raise WebnodeException(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms")
+
+
 def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "https",
                 source_mtime = 0) -> \
     typing.Tuple[typing.List[str], str, str, typing.Union[str, None], float]:
@@ -438,36 +446,24 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
             files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
 
-    start = perf_counter()
-
-    files = _get_files_for_html()
-
-    if len(files) > 0:
-        logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
-        return files, html_path, url, "already exists", ms_since(start)
-
-    start = perf_counter()
+    # get_html raises WebnodeException when the response is NOT 200.
+    # Web node gets to gate-keep, IOW.
     get_html(session, url)
+
     start_wait = perf_counter()
-    # I think, this does have a race condition. When you check "any" file made from the tarball,
-    # this may not be "all" files made.
-    #
-    # The right thing to do is to get the source and expand it rather than asking web node to make
-    # the files, as when someone else makes the "all" files, there is no way of knowing the
-    # untaring is complete.
     while len(files := _get_files_for_html()) < 1:
         if perf_counter() - start_wait > timeout: # TODO: Does this need to be different for html?
             msg = f"No HTML, waited longer than {timeout} sec {url}"
             logger.warning(msg,
                            extra={CATEGORY: "download",
                                   "url": url, "html_file": str(html_path)})
-            raise (Exception(msg))
+            raise WebnodeException(msg)
         else:
             sleep(0.2)
     if len(files) > 0:
-        return files, html_path, url, None, ms_since(start)
+        return files, html_path, url, None, ms_since(start_wait)
     else:
-        raise (Exception(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start)} ms"))
+        raise WebnodeException(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start_wait)} ms")
 
 
 def upload_pdf(gs_client, ensure_tuple):
