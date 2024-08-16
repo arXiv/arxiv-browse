@@ -154,7 +154,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 pytest tests
 ```
 
-### Settinp up pytest in PyCharm
+### Setting up pytest in PyCharm
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 
