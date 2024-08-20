@@ -14,8 +14,15 @@ for the whole test run session. The default scope is 'function' which
 means that the fixture will be re-run for each test function.
 
 """
+import shutil
+import tempfile
+
 import pytest
 from pathlib import Path
+
+from arxiv.auth.legacy import util
+from sqlalchemy import create_engine
+
 from browse.factory import create_web_app
 from arxiv.config import Settings
 
@@ -45,14 +52,43 @@ TESTING_CONFIG = {
 def test_config():
     return TESTING_CONFIG.copy()
 
+
 @pytest.fixture(scope='session')
-def loaded_db():
+def test_dir():
+    db_path = tempfile.mkdtemp()
+    yield db_path
+    shutil.rmtree(db_path)
+
+
+@pytest.fixture(scope='session')
+def classic_db_engine(test_dir):
+    uri = f'sqlite:///{test_dir}/test_classic.db'
+    engine = create_engine(uri)
+    util.create_all(engine)
+    yield engine
+
+
+@pytest.fixture(scope='session')
+def latexml_db_engine(test_dir):
+    uri = f'sqlite:///{test_dir}/test_latexml.db'
+    engine = create_engine(uri)
+    util.create_all(engine)
+    yield engine
+
+
+@pytest.fixture(scope='session')
+def loaded_db(classic_db_engine, latexml_db_engine):
     """Loads the testing db"""
+
     app = create_web_app(**test_config())
     with app.app_context():
         from arxiv import db
+        db._classic_engine = classic_db_engine
+        db._latexml_engine = latexml_db_engine
+        from arxiv.db import models
+        models. configure_db_engine(db._classic_engine, db._latexml_engine)
         from . import populate_test_database
-        populate_test_database(True, db, app.engine, app.latexml_engine) # type: ignore
+        populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
 
 
 @pytest.fixture(scope='session')
