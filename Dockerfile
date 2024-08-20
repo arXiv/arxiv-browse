@@ -4,10 +4,11 @@
 # UIs for browse.
 
 FROM python:3.11.8-bookworm
-RUN apt-get update && apt-get -y upgrade
+
+# Do not update+upgrade. The base image is kept up to date.  Also destroys
+# ability to cache.
 
 ARG git_commit
-
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
@@ -16,13 +17,10 @@ ENV PYTHONFAULTHANDLER=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
     POETRY_VERSION=1.3.2 \
-    TRACE=1 \
     LC_ALL=en_US.utf8 \
-    LANG=en_US.utf8 \
-    APP_HOME=/app
+    LANG=en_US.utf8
 
 WORKDIR /app
-
 
 RUN apt-get -y install default-libmysqlclient-dev
 
@@ -33,30 +31,22 @@ RUN pip install -U pip "poetry==$POETRY_VERSION"
 
 COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
-
-RUN pip install "gunicorn==20.1.0"
+    poetry install --no-interaction --no-ansi \
+    --without dev
 
 ADD app.py /app/
 
 ENV PATH "/app:${PATH}"
 
 ADD browse /app/browse
-ADD tests /app/tests
 ADD wsgi.py /app/
 
 RUN echo $git_commit > /git-commit.txt
 
 EXPOSE 8080
-ENV LC_ALL en_US.utf8
-ENV LANG en_US.utf8
 ENV LOGLEVEL 40
-ENV FLASK_DEBUG 1
-ENV FLASK_APP /opt/arxiv/app.py
 
 RUN useradd e-prints
-RUN chown e-prints:e-prints /app/tests/data/
-RUN chmod 775 /app/tests/data/
 USER e-prints
 
 # Why is this command in an env var and not just run in CMD?  So it can be used

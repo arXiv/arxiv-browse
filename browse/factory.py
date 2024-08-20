@@ -9,8 +9,7 @@ from flask.logging import default_handler
 from arxiv.base import Base
 from arxiv.base.urls import canonical_url, urlizer
 from arxiv.base.filters import tidy_filesize
-from arxiv.db import config_query_timing
-from arxiv.db.models import configure_db
+from arxiv.db import config_query_timing, configure_db
 from flask import Flask
 from flask_s3 import FlaskS3
 # This gives the error on import
