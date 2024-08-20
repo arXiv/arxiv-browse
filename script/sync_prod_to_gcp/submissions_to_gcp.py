@@ -2,6 +2,14 @@
 submissions_to_gcp.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
 check the files exist on CIT and uploads them to GCP bucket.
 
+For each announced paper ID it will:
+  * sync the /ftp files and ensure only current version files exist
+    - if /ftp for the paper ID has any obsolete submission, it is moved to /trash
+  * sync the abs and source files to /orig if needed
+    - If TeX source it will build the PDF on a CIT web node and sync those to ps_cache
+    - If HTML source it will build the HTML and sync those to the ps_cache
+
+
 The "upload to GCP bucket" part is from existing sync_published_to_gcp.
 
 As a matter of fact, this borrows the most of heavy lifting part from sync_published_to_gcp.py.
@@ -458,6 +466,8 @@ class SubmissionFilesState:
             elif self.is_html_submission:
                 # Since this is a root dir of HTML submission, no need to "upload".
                 # This is just a "marker" to initiate the html file expand.
+                # Later (in submission_message_to_file_state()), this triggers to ask a web node
+                # for the html, and it populates the files under the self.html_root_dir
                 files.append(current("html-cache", self.html_root_dir))
                 pass
             pass
@@ -599,34 +609,38 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                 pass
 
             if entry["type"] == "html-cache":
+                # When the submission is html, web node needs to okay. ensure_html() talks to
+                # a web node, and when it gets 200, it returns the list of files in it.
+                # The file state (self here) registers files for upload.
                 html_path: Path = Path(entry["cit"])
-                if not html_path.exists():
-                    n_webnodes = len(CONCURRENCY_PER_WEBNODE)
-                    WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
-                    host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
-                    protocol = "http" if host.startswith("localhost:") else "https"
-                    try:
-                        html_files, html_root, url, outcome, duration_ms = \
-                            ensure_html(thread_data.session, host, file_state.vxid, timeout=HTML_TIMEOUT(),
-                                        protocol=protocol,
-                                        source_mtime=file_state.get_submission_mtime())
-                        logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
-                                    str(outcome), float(duration_ms) / 1000.0,
-                                    html_root, len(html_files), url,
-                                    extra=log_extra)
-                        file_state.register_files('html-files', html_files)
+                n_webnodes = len(CONCURRENCY_PER_WEBNODE)
+                WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
+                host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
+                protocol = "http" if host.startswith("localhost:") else "https"
+                try:
+                    html_files, html_root, url, outcome, duration_ms = \
+                        ensure_html(thread_data.session, host, file_state.vxid, timeout=HTML_TIMEOUT(),
+                                    protocol=protocol,
+                                    source_mtime=file_state.get_submission_mtime())
+                    logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
+                                str(outcome), float(duration_ms) / 1000.0,
+                                html_root, len(html_files), url,
+                                extra=log_extra)
+                    file_state.register_files('html-files', html_files)
 
-                    except sync_published_to_gcp.WebnodeException as _exc:
-                        raise MissingGeneratedFile("Failed to generate %s", html_path) from _exc
+                except sync_published_to_gcp.WebnodeException as _exc:
+                    raise MissingGeneratedFile("Failed to generate %s", html_path) from _exc
 
-                    except Exception as _exc:
-                        logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
-                                       exc_info=True, stack_info=False)
-                        raise
+                except Exception as _exc:
+                    logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
+                                   exc_info=True, stack_info=False)
+                    raise
 
                 if not html_path.exists():
                     raise MissingGeneratedFile(f"{file_state.ps_cache_pdf_file} does not exist")
                 pass
+    else:
+        logger.info("Not asking web node means, you are not getting PDF or HTML populated, only good for development.")
 
     return file_state
 
