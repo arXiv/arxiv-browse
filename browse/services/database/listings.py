@@ -16,7 +16,7 @@ from browse.services.listing import (
     ListingNew,
     AnnounceTypes
 )
-from arxiv.db import session
+from arxiv.db import Session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
@@ -47,9 +47,9 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         else_=3 
     ).label('case_order')
         
-    recent_date=session.query(func.max(up.date)).scalar_subquery()   
+    recent_date=Session.query(func.max(up.date)).scalar_subquery()
     doc_ids=(
-        session.query(
+        Session.query(
             up.document_id,
             up.date,
             up.action
@@ -68,7 +68,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
    
     #all listings for the specific category set
     all = (
-        session.query(
+        Session.query(
             doc_ids.c.document_id, 
             doc_ids.c.action, 
             doc_ids.c.date, 
@@ -111,7 +111,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
 
     #how many of each type
     counts = (
-        session.query(
+        Session.query(
             listing_type,
             func.count().label('type_count')
         )
@@ -135,7 +135,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
     #data for listings to be displayed
     meta = aliased(Metadata)
     results = (
-        session.query(
+        Session.query(
             listing_type,
             meta,
             all.c.date
@@ -174,7 +174,7 @@ def get_new_listing(archive_or_cat: str,skip: int, show: int) -> ListingNew:
         items.append(item)
 
     if len(items)==0: #no results to find the last mailing day from
-        mail_date=session.query(func.max(up.date)).scalar()
+        mail_date=Session.query(func.max(up.date)).scalar()
     else:
         mail_date=results[0][2] 
 
@@ -191,14 +191,14 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     archives, cats=_request_categories(archive_or_cat)
     up=aliased(Updates)
     dates = (
-        session.query(distinct(up.date).label("date"))
+        Session.query(distinct(up.date).label("date"))
         .order_by(desc(up.date))
         .limit(5)
         .subquery()
     )
 
     doc_ids=(
-        session.query(
+        Session.query(
             up.document_id,
             up.date
         )
@@ -210,7 +210,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     )
 
     count_subquery = (
-        session.query(
+        Session.query(
             dates.c.date,
             func.count(doc_ids.c.document_id).label('count')
         )
@@ -221,7 +221,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     )
 
     counts = (
-        session.query(
+        Session.query(
             count_subquery.c.date,
             count_subquery.c.count
         )
@@ -231,7 +231,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
     aic = aliased(t_arXiv_in_category)
     cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     all = (
-        session.query(
+        Session.query(
             doc_ids.c.date,
             doc_ids.c.document_id,   
             func.max(aic.c.is_primary).label('is_primary')
@@ -249,7 +249,7 @@ def get_recent_listing(archive_or_cat: str,skip: int, show: int) -> Listing:
 
     meta = aliased(Metadata)
     result=(
-        session.query(   
+        Session.query(
             all.c.is_primary,
             meta
         )
@@ -324,7 +324,7 @@ def get_articles_for_month(
     """
 
     #gets document_ids of paper_ids in right time frame
-    starter=session.query(doc.document_id)
+    starter=Session.query(doc.document_id)
     if month: #for monthly listings
         if year > 2007: #new ids
             doc_ids=starter.filter(doc.paper_id.startswith(f"{year % 100:02d}{month:02d}"))
@@ -349,7 +349,7 @@ def get_articles_for_month(
   
     cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
     #filters to only the ones in the right category and records if any of the requested categories are primary
-    cat_query = (session.query(aic.c.document_id, func.max(aic.c.is_primary).label('is_primary'))
+    cat_query = (Session.query(aic.c.document_id, func.max(aic.c.is_primary).label('is_primary'))
         .where(aic.c.document_id.in_(doc_ids))
         .where(
             or_(
@@ -362,7 +362,7 @@ def get_articles_for_month(
     )
 
     #gets the metadata for applicable documents
-    main_query=(session.query(meta, cat_query.c.is_primary)
+    main_query=(Session.query(meta, cat_query.c.is_primary)
         .select_from(
             cat_query.join(meta, meta.document_id==cat_query.c.document_id)
             )
@@ -550,7 +550,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in cats]
    
     new_doc_ids=(
-        session.query(
+        Session.query(
             doc.document_id,
             func.substr(doc.paper_id, 3, 2).label("month"),
         )
@@ -558,7 +558,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
         .subquery()
     )
     old_doc_ids=(
-        session.query(
+        Session.query(
             doc.document_id,
             func.substring(
                 func.substring_index(doc.paper_id, "/", -1), 3, 2
@@ -573,18 +573,18 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     elif year < 2007: 
         doc_ids=old_doc_ids
     else: #both styles present
-        doc_ids=session.query(
+        doc_ids=Session.query(
             old_doc_ids.c.document_id.label("document_id"), 
             old_doc_ids.c.month.label("month")
             ).union_all(
-                session.query(
+                Session.query(
                     new_doc_ids.c.document_id.label("document_id"), 
                     new_doc_ids.c.month.label("month")
                 )
             ).subquery()
          
     subquery=(
-        session.query(
+        Session.query(
             doc_ids.c.month,
             func.max(aic.c.is_primary).label("is_primary")
         )
@@ -602,7 +602,7 @@ def get_yearly_article_counts(archive: str, year: int) -> YearCount:
     )
 
     query = (
-        session.query(
+        Session.query(
             subquery.c.month,
             func.count(case(*[(subquery.c.is_primary == 1, 1)])).label("count_new"),
             func.count(case(*[(subquery.c.is_primary == 0, 1)])).label("count_cross")
@@ -635,7 +635,7 @@ def _process_yearly_article_counts(query_result: List[Row], year: int) -> YearCo
     return data
 
 def check_service() -> str:
-    query=session.query(Metadata).limit(1).all()
+    query=Session.query(Metadata).limit(1).all()
     if len(query)==1:
         return "GOOD"
     return "BAD"

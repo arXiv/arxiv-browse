@@ -110,6 +110,10 @@ def pdf_resp_fn(file: FileObj,
     resp = default_resp_fn(file, arxiv_id, docmeta, version)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
+    if arxiv_id.has_version:
+        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.idv}>; rel='canonical'"
+    else:
+        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.id}>; rel='canonical'"
     if arxiv_id.has_version: 
         resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.idv}"])
     else:
@@ -230,7 +234,7 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
         else:  # file selector for multiple html files
             resp= make_response(render_template("dissemination/multiple_files.html",
                                                 arxiv_id=arxiv_id, file_names=file_names), 200,
-                                {"Cache-Control": maxage(arxiv_id.has_version)})
+                                {"Surrogate-Control": maxage(arxiv_id.has_version)})
     
     resp.headers=add_surrogate_key(resp.headers,["html-native"])
     return resp

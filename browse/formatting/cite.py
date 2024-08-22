@@ -17,8 +17,9 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
     pauths = parse_author_affil_utf(docm.authors.raw)
     auths = _fmt_author_list(pauths)
 
-    pc = docm.primary_category if docm.primary_category else "unknown"
-
+    pc = docm.primary_category.id if docm.primary_category else "unknown"
+    doi = f"      doi={{https://doi.org/{docm.doi}}},\n" if docm.doi else ""
+    
     return (
         "@misc{" + _txt_id(docm, pauths, year) + ",\n"
         "      title={" + title + "}, \n"
@@ -26,7 +27,9 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
         "      year={" + year + "},\n"
         "      eprint={" + docm.arxiv_id + "},\n"
         "      archivePrefix={arXiv},\n"
-        "      primaryClass={" + str(pc) + "}\n"
+        "      primaryClass={" + str(pc) + "},\n"
+        + doi +
+        f"      url={{https://arxiv.org/abs/{docm.arxiv_identifier.id}}}, \n"
         "}"
     )
 
@@ -57,14 +60,12 @@ def _txt_id(docm: DocMetadata, auths: List[str], year: str) -> str:
         auth = "unknown"
 
     try:
-        title_word = next(
-            (word for word in docm.title.split(" ") if word.lower() not in STOPWORDS)
-        )
+        title_words = "".join([word for word in docm.title.split(" ") if word.lower() not in STOPWORDS][:4])
     except Exception:
-        title_word = "unknown"
+        title_words = "unknown"
 
     txt_year = year if year else "unknown"
-    return _chars_only(f"{auth}{txt_year}{title_word}").lower()
+    return _chars_only(f"{auth}{txt_year}{title_words}").lower()
 
 
 STOPWORDS = frozenset(
