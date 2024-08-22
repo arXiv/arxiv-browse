@@ -1,38 +1,58 @@
 """Abs page comparison tests."""
 import argparse
+import gzip
 import itertools
-import sys
-import traceback
+import json
+import logging
 import os
 import re
+import sys
+import traceback
 from functools import partial
 from multiprocessing import Pool
-from typing import Callable, Iterator, List, Set, Tuple, Dict
-import gzip
-import logging
-import json
+from typing import Callable, Dict, Iterator, List, Set, Tuple
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
+
+from arxiv.files import LocalFileObj
+from arxiv.document.parse_abs import parse_abs_file
+
+from comparison_types import (
+    BadResult,
+    html_arg_dict,
+    html_comparison_fn,
+    res_arg_dict,
+    res_comparison_fn,
+    text_arg_dict,
+    text_comparison_fn,
+)
+from html_comparisons import (
+    ancillary_similarity,
+    author_similarity,
+    bookmarks_similarity,
+    comments_similarity,
+    dateline_similarity,
+    dblp_similarity,
+    extra_full_text_similarity,
+    extra_general_similarity,
+    extra_ref_cite_similarity,
+    head_similarity,
+    history_similarity,
+    subject_similarity,
+    title_similarity,
+)
+from response_comparisons import compare_status
+from text_comparisons import text_similarity
+
 
 # BDC34: some how I need this under pipenv to get to browse, not sure why
 sys.path.append('')
 sys.setrecursionlimit(10000)
 
-from comparison_types import res_comparison_fn, \
-    text_comparison_fn, html_comparison_fn, res_arg_dict, text_arg_dict, \
-    html_arg_dict, BadResult
-from html_comparisons import author_similarity, \
-    dateline_similarity, history_similarity,\
-    title_similarity, subject_similarity, comments_similarity, \
-    head_similarity, extra_full_text_similarity, \
-    ancillary_similarity, extra_ref_cite_similarity, extra_general_similarity, \
-    dblp_similarity, bookmarks_similarity
 
-from response_comparisons import compare_status
-from text_comparisons import text_similarity
 
-from browse.services.document.metadata import AbsMetaSession
 
 
 """ Script to compare abs pages from NG and beta.arxiv.org
@@ -117,7 +137,7 @@ def paperid_generator(path: str, excluded: List[str]) -> Iterator[str]:
             fname_path = os.path.join(dir_name, fname)
             print(f'looking at {fname_path}')
             if os.stat(fname_path).st_size != 0 and fname_path.endswith('.abs'):
-                aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+                aid = parse_abs_file(LocalFileObj(Path(fname_path))).arxiv_id
                 logging.debug(f'yielding id {aid}')
                 yield aid
 
@@ -132,7 +152,7 @@ def paperid_iterator(path: str, excluded: List[str]) -> List[str]:
                 continue
             if not fname_path.endswith('.abs'):
                 continue
-            aid = AbsMetaSession.parse_abs_file(filename=fname_path).arxiv_id
+            aid = parse_abs_file(LocalFileObj(Path(fname_path))).arxiv_id
             if aid not in excluded:
                 ids.append(aid)
     logging.debug(f'finished getting the ids count:{len(ids)}')

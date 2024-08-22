@@ -1,5 +1,5 @@
 -- SET FOREIGN_KEY_CHECKS = 0;
-PRAGMA foreign_keys = OFF; -- for newer versions of sqlite3
+-- PRAGMA foreign_keys = OFF; -- for newer versions of sqlite3
 
 -- 0704.0361
 INSERT INTO `arXiv_dblp` VALUES (422353,'db/journals/corr/corr0704.html#abs-0704-0361');

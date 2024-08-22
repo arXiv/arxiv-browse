@@ -1,37 +1,25 @@
 """test cookies"""
-import unittest
-
-#from bs4 import BeautifulSoup
-
-from app import app
 
 
-class CookiesPageTest(unittest.TestCase):
 
-    def setUp(self):
-        app.testing = True
-        app.config['APPLICATION_ROOT'] = ''
-        self.app = app.test_client()
+def test_cookies_with_no_params(client_with_test_fs):
+    """Test the cookies page."""
+    rv = client_with_test_fs.get('/cookies')
+    assert rv.status_code == 200
+    html = rv.data.decode('utf-8')
+    assert 'Select preferred download format' in html
+    assert 'show additional debugging information' in html, 'should have SHOW debugging link'
 
+def test_cookies_with_debug(client_with_test_fs):
+    """Test the cookies page."""
+    rv = client_with_test_fs.get('/cookies?debug=1')
+    assert rv.status_code == 200
+    html = rv.data.decode('utf-8')
+    assert 'Select preferred download format' in html
+    assert 'hide debugging information' in html, 'should have HIDE debugging link'
 
-    def test_cookies_with_no_params(self):
-        """Test the cookies page."""
-        rv = self.app.get('/cookies')
-        self.assertEqual(rv.status_code, 200)
-        html = rv.data.decode('utf-8')
-        self.assertIn('Select preferred download format', html)
-        self.assertIn('show additional debugging information', html, 'should have SHOW debugging link')
-
-    def test_cookies_with_debug(self):
-        """Test the cookies page."""
-        rv = self.app.get('/cookies?debug=1')
-        self.assertEqual(rv.status_code, 200)
-        html = rv.data.decode('utf-8')
-        self.assertIn('Select preferred download format', html)
-        self.assertIn('hide debugging information', html, 'should have HIDE debugging link')
-
-    def test_post_to_cookies(self):
-        rv = self.app.post('/cookies/set?debug=1', data={'ps':'pdf'})
-        self.assertEqual(rv.status_code, 302)
-        cookies =  map(lambda kv: kv[1], filter(lambda kv : kv[0]=='Set-Cookie', rv.headers.items()))
-        self.assertIn('xxx-ps-defaults=pdf; Path=/', cookies)
+def test_post_to_cookies(client_with_test_fs):
+    rv = client_with_test_fs.post('/cookies/set?debug=1', data={'ps':'pdf'})
+    assert rv.status_code == 302
+    cookies =  map(lambda kv: kv[1], filter(lambda kv : kv[0]=='Set-Cookie', rv.headers.items()))
+    assert 'xxx-ps-defaults=pdf; Path=/' in cookies

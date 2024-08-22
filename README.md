@@ -1,83 +1,128 @@
 # arxiv-browse
 
-### Running Browse with the Flask development server
+## Running Browse with the Flask development server
 
-You can run the browse app directly. Using pipenv:
+You can run the browse app directly.
+
+```bash
+make venv
+````
+
+or 
 
 ```bash
 python --version
-3.6.15
-python -m venv venv
-venv/bin/activate
-pip install pipenv==2022.4.8
-pipenv install
-pipenv run python main.py
+# 3.10.x
+python -m venv ./venv
+source ./venv/bin/activate
+pip install poetry==1.3.2
+poetry install
+python main.py
 ```
+Then go to http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and restart the server.
 Unfortunately static files and templates are not monitored, so you'll have to
 manually restart to see those changes take effect.
 
-If all goes well, http://127.0.0.1:5000/abs/0906.5132 should render the basic
-abs page.
-
 By default, the application will use the directory trees in
-`tests/data/abs_files` and `tests/data/cache` and when looking for the
-document metadata and cache files, respectively. These paths can be
-overridden via environment variables (see `browse/config.py`).
+`tests/data/abs_files` and `tests/data/cache` and when looking for the document
+metadata and PDF files. These paths can be overridden via environment variables
+(see `browse/config.py`).
 
-### Pipfile Edits for Development
-```
-arxiv-base = { editable = true, path = "../arxiv-base" }
-arxiv-base = {editable = true, git = "https://github.com/arXiv/arxiv-base.git", ref = "ARXIVNG-3824-bootstrap"}
-```
+### Running Browse with .env file
 
-### Rebuilding the test database
+First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
 
-The default app configuration uses a test SQLite database in
-``tests/data/browse.db``; it has been pre-populated with a small set of test
-data.
+    export GOOGLE_APPLICATION_CREDENTIALS=<Your SA credential>
+    export BROWSE_SQLALCHEMY_DATABASE_URI="mysql://browse:<BROWSE_PASSWORD>@127.0.0.1:1234/arXiv"
+    export DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
+    export ABS_PATH_ROOT=gs://arxiv-production-data
+    export DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
+    export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
+    export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
+    export LATEXML_ENABLED=True
+    export LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
+    export LATEXML_BASE_URL=https://browse.arxiv.org/latexml
+    export FLASKS3_ACTIVE=1
 
-To rebuild the test database, run the following script:
+You need a SA cred to access the db, and the cloud-sql-proxy running.
+For LATEXML_INSTANCE_CONNECTION_NAME, you may need to ask someone who knows the db.
+(This is obviously a production DB.)
+
+You can find the browse password here:
+https://console.cloud.google.com/security/secret-manager/secret/browse-sqlalchemy-db-uri/versions?project=arxiv-production
+
+If you have a PyCharm,
+script: main.py
+Enable env files
+   Add tests/.env
+
+![docs/development/pycharm-run-setting.png](docs/development/pycharm-run-setting.png)
+
+### SA Credentials
+
+Your SA needs followings:
+
+* Cloud SQL Client
+* Secret Manager Secret Accessor
+* Storage Object Viewer
+
+Save the private key somewhere on your local machine. Optionally save it in 1password.
+
+### Running cloud-sql-proxy
+
+Once you have the google SA private key, you can run the cloud-sql-proxy.
 
 ```bash
-FLASK_APP=app.py pipenv run python populate_test_database.py --drop_and_create
+main proxy
+``` 
+
+NOTE: cloud_sql_proxy and cloud-sql-proxy (new) have different options.
+In this, only describes the new as you probably don't have the old one.
+
+	cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4
+
+If the proxy is working, you can use mysql client to connect to the db.
+
+```bash
+mysql -u browse -p --host 127.0.0.1 --port 1234 arXiv
+Enter password: 
+...
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables;
++------------------------------------------+
+| Tables_in_arXiv                          |
++------------------------------------------+
+| Subscription_UniversalInstitution        |
+````
+
+### Test suite
+
+Run the main test suite with the following command:
+
+```bash
+pytest tests
 ```
 
 ### Running Browse in Docker
-You can also run the browse app in Docker. The following commands will build
-and run browse using defaults for the configuration parameters and will use
-the test data from `tests/data`.
-
-Install [Docker](https://docs.docker.com/get-docker/) if you haven't already, then run the following:
+You can also run the browse app in Docker. The following commands will build and
+run browse using defaults for the configuration parameters and will use the test
+data from `tests/data`. Install [Docker](https://docs.docker.com/get-docker/) if
+you haven't already, then run the following:
 
 ```bash
 script/start
 ```
 
-This command will build the docker image and run it.
-
-If all goes well, http://localhost:8000/ will render the home page.
+This command will build the docker image and run it. If all goes well,
+http://localhost:8000/ will render the home page.
 
 ### Configuration Parameters
 
-Configuration parameters (and defaults) are defined in `browse/config.py`.
-Any of these can be overridden on the command line when testing the application.
-
-Below are some examples of some application-specific parameters:
-
-Database URI:
-* `SQLALCHEMY_DATABASE_URI``
-
-Paths to .abs and source files:
-* `DOCUMENT_LATEST_VERSIONS_PATH`
-* `DOCUMENT_ORIGNAL_VERSIONS_PATH`
-
-Path to cache directory:
-* `DOCUMENT_CACHE_PATH`
-
-arXiv Labs options:
-* `LABS_BIBEXPLORER_ENABLED`
+See `browse/config.py` for configuration parameters and defaults). Any of these
+can be overridden with environment variables.
 
 ### Serving static files on S3
 
@@ -98,48 +143,19 @@ and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
 
 It may be help to use a web browser's inspect->network to find the active release version.
 
+### Tests and linting for PRs
+There is a github action that runs on PRs that merge to develop. PRs for which
+these tests fail will be blocked. It is the equivalent of running:
 
-### Test suite
+```
+# if there are Python syntax errors or undefined names
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-Before running the test suite, install the dev packages:
-
-```bash
-pipenv install --dev
+pytest tests
 ```
 
-Run the main test suite with the following command:
+### Setting up pytest in PyCharm
 
-```bash
-pipenv run nose2 --with-coverage
-```
+![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 
-### Static checking
-Goal: zero errors/warnings.
 
-Use `# type: ignore` to disable mypy messages that do not reveal actual
-programming errors, and that are impractical to fix. If ignoring without
-verifying, insert a `# TODO: recheck`.
-
-If there is an active `mypy` GitHub issue (i.e. it's a bug/limitation in mypy)
-relevant to missed check, link that for later follow-up.
-
-```bash
-pipenv run mypy -p browse | grep -v "test.*" | grep -v "defined here"
-```
-
-Note that we filter out messages about test modules, and messages about a known
-limitation of mypy related to ``dataclasses`` support.
-
-### Documentation style
-Goal: zero errors/warnings.
-
-```bash
-pipenv run pydocstyle --convention=numpy --add-ignore=D401 browse
-```
-
-### Linting
-Goal: 9/10 or better.
-
-```bash
-pipenv run pylint browse
-```

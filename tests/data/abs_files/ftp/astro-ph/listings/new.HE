@@ -1,0 +1,721 @@
+Date: Fri,  3 Mar 23 01:36:02 GMT
+Subject: astro-ph.HE daily Subj-class mailing
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+Send any comments regarding submissions directly to submitter.
+------------------------------------------------------------------------------
+Archives at http://arxiv.org/
+To unsubscribe, e-mail To: physics@arXiv.org, Subject: cancel
+------------------------------------------------------------------------------
+ Submissions to:
+High Energy Astrophysical Phenomena
+ received from  Wed  1 Mar 23 19:00:00 GMT  to  Thu  2 Mar 23 19:00:00 GMT
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00765
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (1726kb,D)
+
+Title: Nucleosynthesis in outflows of compact objects and detection prospects
+  of associated kilonovae
+Authors: Nick Ekanger, Mukul Bhattacharya, Shunsaku Horiuchi
+Categories: astro-ph.HE
+Comments: 14 pages, 5+3 figures, 1 table. Comments welcome
+\\
+  We perform a comparative analysis of nucleosynthesis yields from binary
+neutron star (BNS) mergers, black hole-neutron star (BHNS) mergers, and
+core-collapse supernovae (CCSNe) with the goal of determining which are the
+most dominant sources of r-process enrichment observed in stars. We find that
+BNS and BHNS binaries may eject similar mass distributions of robust r-process
+nuclei post merger (up to 3rd peak and actinides, $A\sim200-240$), after
+accounting for the volumetric event rates. Magnetorotational (MR) CCSNe likely
+undergo a weak r-process (up to $A\sim140$) and contribute to the production of
+light element primary process (LEPP) nuclei, whereas typical thermal,
+neutrino-driven CCSNe only synthesize up to 1st r-process peak nuclei
+($A\sim80-90$). We also find that the upper limit to the rate of MR CCSNe is
+$\lesssim1\%$ the rate of typical thermal CCSNe; if the rate was higher, then
+weak r-process nuclei would be overproduced. Although the largest uncertainty
+is from the volumetric event rate, the prospects are encouraging for confirming
+these rates in the next few years with upcoming surveys. Using a simple model
+to estimate the resulting kilonova light curve from mergers and our set of
+fiducial merger parameters, we predict that $\sim7$ BNS and $\sim2$ BHNS events
+will be detectable per year by the Vera C. Rubin Observatory (LSST), with prior
+gravitational wave (GW) triggers.
+\\ ( https://arxiv.org/abs/2303.00765 ,  1726kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00898
+Date: Thu, 2 Mar 2023 01:43:40 GMT   (2491kb,D)
+
+Title: Synchrotron Radiation Dominates the Extremely Bright GRB 221009A
+Authors: Jun Yang, Xiao-Hong Zhao, Zhenyu Yan, Xiangyu I. Wang, Yan-Qiu Zhang,
+  Zheng-Hua An, Ce Cai, Xin-Qiao Li, Zihan Li, Jia-Cong Liu, Zi-Ke Liu, Xiang
+  Ma, Yan-Zhi Meng, Wen-Xi Peng, Rui Qiao, Lang Shao, Li-Ming Song, Wen-Jun
+  Tan, Ping Wang, Chen-Wei Wang, Xiang-Yang Wen, Shuo Xiao, Wang-Chen Xue,
+  Yu-han Yang, Yihan Yin, Bing Zhang, Fan Zhang, Shuai Zhang, Shuang-Nan Zhang,
+  Chao Zheng, Shi-Jie Zheng, Shao-Lin Xiong, Bin-Bin Zhang
+Categories: astro-ph.HE
+Comments: 11 pages, 6 figures, 2 tables
+\\
+  The brightest Gamma-ray burst, GRB 221009A, has spurred numerous theoretical
+investigations, with particular attention paid to the origins of ultra-high
+energy TeV photons during the prompt phase. However, analyzing the mechanism of
+radiation of photons in the $\sim$MeV range has been difficult because the high
+flux causes pile-up and saturation effects in most GRB detectors. In this
+letter, we present systematic modeling of the time-resolved spectra of the GRB
+using unsaturated data obtained from Fermi/GBM (precursor) and
+SATech-01/GECAM-C (main emission and flare). Our approach incorporates the
+synchrotron radiation model, which assumes an expanding emission region with
+relativistic speed and a global magnetic field that decays with radius, and
+successfully fits such a model to the observational data. Our results indicate
+that the spectra of the burst are fully in accordance with a synchrotron origin
+from relativistic electrons accelerated at a large emission radius. The lack of
+thermal emission in the prompt emission spectra supports a
+Poynting-flux-dominated jet composition.
+\\ ( https://arxiv.org/abs/2303.00898 ,  2491kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01014
+Date: Thu, 2 Mar 2023 07:03:13 GMT   (11666kb,D)
+
+Title: Spectral analysis of a parsec-scale jet in M87: Observational constraint
+  on the magnetic field strengths in the jet
+Authors: Hyunwook Ro, Motoki Kino, Bong Won Sohn, Kazuhiro Hada, Jongho Park,
+  Masanori Nakamura, Yuzhu Cui, Kunwoo Yi, Aeree Chung, Jeffrey Hodgson,
+  Tomohisa Kawashima, Tao An, Sascha Trippe, Juan-Carlos Algaba, Jae-Young Kim,
+  Satoko Sawada-Satoh, Kiyoaki Wajima, Zhiqiang Shen, Xiaopeng Cheng, Ilje Cho,
+  Wu Jiang, Taehyun Jung, Jee-Won Lee, Kotaro Niinuma, Junghwan Oh, Fumie
+  Tazaki, Guang-Yao Zhao, Kazunori Akiyama, Mareki Honma, Jeong Ae Lee, Rusen
+  Lu, Yingkang Zhang, Keiichi Asada, Lang Cui, Yoshiaki Hagiwara, Tomoya
+  Hirota, Noriyuki Kawaguchi, Shoko Koyama, Sang-Sung Lee, Se-Jin Oh, Koichiro
+  Sugiyama, Mieko Takamura, Xuezheng Wang, Ju-Yeon Hwang, Dong-Kyu Jung,
+  Hyo-Ryoung Kim, Jeong-Sook Kim, Hideyuki Kobayashi, Chung-Sik Oh, Tomoaki
+  Oyama, Duk-Gyoo Roh, Jae-Hwan Yeom
+Categories: astro-ph.HE astro-ph.CO
+Comments: 16 pages, 9 figures. Accepted for publication in Astronomy &
+  Astrophysics
+\\
+  Because of its proximity and the large size of its black hole, M87 is one of
+the best targets for studying the launching mechanism of active galactic
+nucleus jets. Currently, magnetic fields are considered to be an essential
+factor in the launching and accelerating of the jet. However, current
+observational estimates of the magnetic field strength of the M87 jet are
+limited to the innermost part of the jet or to HST-1. No attempt has yet been
+made to measure the magnetic field strength in between. We aim to infer the
+magnetic field strength of the M87 jet out to a distance of several thousand
+$r_s$ by tracking the distance-dependent changes in the synchrotron spectrum of
+the jet from high-resolution very long baseline interferometry observations. In
+order to obtain high-quality spectral index maps, quasi-simultaneous
+observations at 22 and 43 GHz were conducted using the KVN and VERA Array
+(KaVA) and the VLBA. We compared the spectral index distributions obtained from
+the observations with a model and placed limits on the magnetic field strengths
+as a function of distance. The overall spectral morphology is broadly
+consistent over the course of these observations. The observed synchrotron
+spectrum rapidly steepens from $\alpha_{22-43 GHz}$ ~ -0.7 at ~ 2 mas to
+$\alpha_{22-43 GHz}$ ~ -2.5 at ~ 6 mas. A spectral index model in which
+nonthermal electron injections inside the jet decrease with distance can
+adequately reproduce the observed trend. This suggests the magnetic field
+strength of the jet at a distance of 2 - 10 mas (~ 900 $r_s$ - ~ 4500 $r_s$ in
+the deprojected distance) has a range of $B=(0.3 - 1.0 G)(z/2 mas)^{-0.73}$.
+Extrapolating to the EHT scale yields consistent results, suggesting that the
+majority of the magnetic flux of the jet near the black hole is preserved out
+to ~ 4500 $r_s$ without significant dissipation.
+\\ ( https://arxiv.org/abs/2303.01014 ,  11666kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01048
+Date: Thu, 2 Mar 2023 08:02:59 GMT   (676kb,D)
+
+Title: Super-Resolved Image of M87 Observed with East Asian VLBI Network
+Authors: Fumie Tazaki, Yuzhu Cui, Kazuhiro Hada, Motoki Kino, Ilje Cho,
+  Guang-Yao Zhao, Kazunori Akiyama, Yosuke Mizuno, Hyunwook Ro, Mareki Honma,
+  Ru-Sen Lu, Zhi-Qiang Shen, Lang Cui, and Yoshinori Yonekura
+Categories: astro-ph.HE astro-ph.IM
+Comments: 9 pages, 5 figures, published in Galaxies
+Journal-ref: Galaxies 2023, 11(2), 39
+DOI: 10.3390/galaxies11020039
+\\
+  Obtaining high-resolution images at centimeter-or-longer wavelengths is vital
+for understanding the physics of jets. We reconstructed images from the M87 22
+GHz data observed with the East Asian VLBI Network (EAVN) by using the
+regularized maximum likelihood (RML) method, which is different from the
+conventional imaging method CLEAN. Consequently, a bright core and jet
+extending about 30 mas to the northwest were detected with a higher resolution
+than in the CLEAN image. The width of the jet was 0.5 mas at 0.3 mas from the
+core, consistent with the width measured in the 86 GHz image in the previous
+study. In addition, three ridges were able to be detected at around 8 mas from
+the core, even though the peak-to-peak separation was only 1.0 mas. This
+indicates that the RML image's spatial resolution is at least 30% higher than
+that of the CLEAN image. This study is an important step for future
+multi-frequency and high-cadence observations of the EAVN to discuss the more
+detailed structure of the jet and its time variability.
+\\ ( https://arxiv.org/abs/2303.01048 ,  676kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01059
+Date: Thu, 2 Mar 2023 08:31:05 GMT   (4621kb,D)
+
+Title: An Observationally-Derived Kick Distribution for Neutron Stars in Binary
+  Systems
+Authors: Tyrone N. O'Doherty, Arash Bahramian, James C. A. Miller-Jones, Adelle
+  J. Goodwin, Ilya Mandel, Reinhold Willcox, Pikky Atri, Jay Strader
+Categories: astro-ph.HE
+Comments: Accepted for publication in MNRAS. 28 pages, 19 figures, 8 tables
+\\
+  Understanding the natal kicks received by neutron stars (NSs) during
+formation is a critical component of modelling the evolution of massive
+binaries. Natal kicks are an integral input parameter for population synthesis
+codes, and have implications for the formation of double NS systems and their
+subsequent merger rates. However, many of the standard observational kick
+distributions that are used are obtained from samples created only from
+isolated NSs. Kick distributions derived in this way overestimate the intrinsic
+NS kick distribution. For NSs in binaries, we can only directly estimate the
+effect of the natal kick on the binary system, instead of the natal kick
+received by the NS itself. Here, for the first time, we present a binary kick
+distribution for NSs with low-mass companions. We compile a catalogue of 145
+NSs in low-mass binaries with the best available constraints on proper motion,
+distance, and systemic radial velocity. For each binary, we use a
+three-dimensional approach to estimate its binary kick. We discuss the
+implications of these kicks on system formation, and provide a parametric model
+for the overall binary kick distribution, for use in future theoretical
+modelling work. We compare our results with other work on isolated NSs and NSs
+in binaries, finding that the NS kick distributions fit using only isolated
+pulsars underestimate the fraction of NSs that receive low kicks. We discuss
+the implications of our results on modelling double NS systems, and provide
+suggestions on how to use our results in future theoretical works.
+\\ ( https://arxiv.org/abs/2303.01059 ,  4621kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01106
+Date: Thu, 2 Mar 2023 09:39:10 GMT   (9367kb,D)
+
+Title: Transverse Oscillations of the M87 Jet Revealed by KaVA Observations
+Authors: Hyunwook Ro, Kunwoo Yi, Yuzhu Cui, Motoki Kino, Kazuhiro Hada,
+  Tomohisa Kawashima, Yosuke Mizuno, Bong Won Sohn, Fumie Tazaki
+Categories: astro-ph.HE astro-ph.SR
+Comments: 14 pages, 6 figures. Contribution to the Galaxies Special Issue
+  "Challenges in Understanding Black Hole Powered Jets with VLBI"
+Journal-ref: Galaxies 2023, 11(1), 33
+DOI: 10.3390/galaxies11010033
+\\
+  Recent VLBI monitoring has found transverse motions of the M87 jet. However,
+due to the limited cadence of previous observations, details of the transverse
+motion have not been fully revealed yet. We have regularly monitored the M87
+jet at KVN and VERA Array (KaVA) 22 GHz from December 2013 to June 2016. The
+average time interval of the observation is ~ 0.1 year, which is suitable for
+tracking short-term structural changes. From these observations, the M87 jet is
+well represented by double ridge lines in the region 2 - 12 mas from the core.
+We found that the ridge lines exhibit transverse oscillations in all observed
+regions with an average period of $0.94\pm0.12$ years. When the sinusoidal fit
+is performed, we found that the amplitude of this oscillation is an order of
+$\sim0.1$ mas, and the oscillations in the northern and southern limbs are
+almost in phase. Considering the amplitude, it does not originate from Earth's
+parallax. We propose possible scenarios of the transverse oscillation, such as
+the propagation of jet instabilities or magneto-hydrodynamic (MHD) waves or
+perturbed mass injection around magnetically dominated accretion flows.
+\\ ( https://arxiv.org/abs/2303.01106 ,  9367kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01174
+Date: Thu, 2 Mar 2023 11:37:30 GMT   (2059kb,D)
+
+Title: Astronomical puzzle Cyg X-3 is a hidden Galactic ultraluminous X-ray
+  source
+Authors: Alexandra Veledina, Fabio Muleri, Juri Poutanen, Jakub Podgorn\'y,
+  Michal Dov\v{c}iak, Fiamma Capitanio, Eugene Churazov, Alessandra De Rosa,
+  Alessandro Di Marco, Sofia Forsblom, Philip Kaaret, Henric Krawczynski, Fabio
+  La Monaca, Vladislav Loktev, Alexander A. Lutovinov, Sergey V. Molkov,
+  Alexander A. Mushtukov, Ajay Ratheesh, Nicole Rodriguez Cavero, James F.
+  Steiner, Rashid A. Sunyaev, Sergey S. Tsygankov, Andrzej A. Zdziarski,
+  Stefano Bianchi, Joe S. Bright, Nikolaj Bursov, Enrico Costa, Elise Egron,
+  Javier A. Garcia, David A. Green, Mark Gurwell, Adam Ingram, Jari J. E.
+  Kajava, Ruta Kale, Alex Kraus, Denys Malyshev, Fr\'ed\'eric Marin, Giorgio
+  Matt, Michael McCollough, Ilia A. Mereminskiy, Nikolaj Nizhelsky, Giovanni
+  Piano, Maura Pilia, Carlotta Pittori, Ramprasad Rao, Simona Righini, et al.
+  (84 additional authors not shown)
+Categories: astro-ph.HE astro-ph.SR
+Comments: 52 pages, 18 figures, 4 tables
+\\
+  How black holes consume and eject matter has been the subject of intense
+studies for more than 60 years. The luminosity of these systems are often
+compared to the Eddington limit, the border at which the spherical accretion is
+inhibited by the radiation pressure of photons it produces. The discovery of
+ultraluminous X-ray sources (ULXs) showed that accretion can proceed even when
+the apparent luminosity exceeds the Eddington limit (Kaaret et al. 2017). High
+apparent luminosity might be produced by the beaming of the incident radiation
+by a thick collimated outflow or by a truly super-Eddington accretion flow.
+However, possibilities to study these outflows in detail are limited, as ULXs
+are typically found in distant galaxies. Using the Imaging X-ray Polarimetry
+Explorer (IXPE, Weisskopf et al. 2022), we made the first measurement of X-ray
+polarization in Galactic X-ray binary Cyg X-3. The detection of high,
+$\approx$25\%, nearly energy-independent linear polarization, orthogonal to the
+direction of the radio ejections, unambiguously indicates the primary source is
+obscured and the observer on Earth only sees reflected and scattered light.
+Modelling shows there is an optically thick envelope with a narrow funnel
+around the primary X-ray source in the system. We derive an upper limit on the
+opening angle of the funnel that implies a lower limit on the beamed luminosity
+exceeding the Eddington value. We show that Cyg X-3 is viewed as a ULX to an
+extragalactic observer located along the axis of the funnel. Our findings
+reveal this unique persistent source as an ideal laboratory for the study of
+the inner workings of ULX central engines.
+\\ ( https://arxiv.org/abs/2303.01174 ,  2059kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01203
+Date: Thu, 2 Mar 2023 12:38:35 GMT   (17826kb,D)
+
+Title: Insight-HXMT and GECAM-C observations of the brightest-of-all-time GRB
+  221009A
+Authors: Zheng-Hua An, S. Antier, Xing-Zi Bi, Qing-Cui Bu, Ce Cai, Xue-Lei Cao,
+  Anna-Elisa Camisasca, Zhi Chang, Gang Chen, Li Chen, Tian-Xiang Chen, Wen
+  Chen, Yi-Bao Chen, Yong Chen, Yu-Peng Chen, Michael W. Coughlin, Wei-Wei Cui,
+  Zi-Gao Dai, T. Hussenot-Desenonges, Yan-Qi Du, Yuan-Yuan Du, Yun-Fei Du,
+  Cheng-Cheng Fan, Filippo Frontera, He Gao, Min Gao, Ming-Yu Ge, Ke Gong,
+  Yu-Dong Gu, Ju Guan, Dong-Ya Guo, Zhi-Wei Guo, Cristiano Guidorzi, Da-Wei
+  Han, Jian-Jian He, Jun-Wang He, Dong-Jie Hou, Yue Huang, Jia Huo, Zhen Ji,
+  Shu-Mei Jia, Wei-Chun Jiang, David Alexander Kann, A. Klotz, Ling-Da Kong,
+  Lin Lan, An Li, Bing Li, Chao-Yang Li, Cheng-Kui Li, Gang Li, Mao-Shun Li,
+  Ti-Pei Li, Wei Li, Xiao-Bo Li, Xin-Qiao Li, Xu-Fang Li, Yan-Guo Li, Zheng-Wei
+  Li, Jing Liang, Xiao-Hua Liang, Jin-Yuan Liao, Lin Lin, et al. (115
+  additional authors not shown)
+Categories: astro-ph.HE
+Comments: Submitted to National Science Review. This paper is under press
+  embargo, contact the corresponding author for details
+\\
+  GRB 221009A is the brightest gamma-ray burst ever detected since the
+discovery of this kind of energetic explosions. However, an accurate
+measurement of the prompt emission properties of this burst is very challenging
+due to its exceptional brightness. With joint observations of
+\textit{Insight}-HXMT and GECAM-C, we made an unprecedentedly accurate
+measurement of the emission during the first $\sim$1800 s of GRB 221009A,
+including its precursor, main emission (ME, which dominates the burst in flux),
+flaring emission and early afterglow, in the hard X-ray to soft gamma-ray band
+from $\sim$ 10 keV to $\sim$ 6 MeV. Based on the GECAM-C unsaturated data of
+the ME, we measure a record-breaking isotropic equivalent energy ($E_{\rm
+iso}$) of $\bf \sim 1.5 \times 10^{55}$ erg, which is about eight times the
+total rest-mass energy of the Sun. The early afterglow data require a
+significant jet break between 650 s and 1100 s, most likely at $\sim950$ s from
+the afterglow starting time $T_{AG}$, which corresponds to a jet opening angle
+of $\sim {0.7^\circ} \ (\eta_\gamma n)^{1/8}$, where $n$ is the ambient medium
+density in units of $\rm cm^{-3}$ and $\eta_\gamma$ is the ratio between
+$\gamma$-ray energy and afterglow kinetic energy. The beaming-corrected total
+$\gamma$-ray energy $E_{\gamma}$ is $\sim 1.15 \times10^{51} \ (\eta_\gamma
+n)^{1/4}$ erg, which is typical for long GRBs. These results suggest that this
+GRB may have a special central engine, which could launch and collimate a very
+narrowly beamed jet with an ordinary energy budget, leading to exceptionally
+luminous gamma-ray radiation per unit solid angle. Alternatively, more GRBs
+might have such a narrow and bright beam, which are missed by an unfavorable
+viewing angle or have been detected without distance measurement.
+\\ ( https://arxiv.org/abs/2303.01203 ,  17826kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01349
+Date: Thu, 2 Mar 2023 15:28:37 GMT   (105kb,D)
+
+Title: No Need for an Extreme Jet Energy in the Black-Hole X-Ray Binary MAXI
+  J1348--630
+Authors: Andrzej A. Zdziarski, Marek Sikora, Michal Szanecki and Markus
+  Boettcher
+Categories: astro-ph.HE
+Comments: submitted to ApJ
+\\
+  We model interaction with the surrounding medium of the main discrete jet
+ejection in the accreting black-hole binary MAXI J1348--630. The kinetic energy
+in the ejection of that jet was estimated before to be $>10^{46}$ erg. That
+energy requires that the jet power was about two orders of magnitude above the
+limit corresponding to a magnetically arrested accretion onto a maximally
+rotating black hole. That estimate was obtained by considering the initial
+ballistic jet propagation in a surrounding cavity followed by a sudden
+deceleration in the interstellar medium under the assumption of its standard
+density of $\sim$1 cm$^{-3}$. Such densities are likely in the surrounding of
+this source given its location in the Galactic Plane. Here, we show that the
+estimate of the kinetic energy can be reduced to realistic values of $\sim\!
+10^{44}$ erg by considering the presence of a transition layer with an
+exponential density growth separating the cavity and the interstellar medium.
+In that case, the jet is found to decelerate mostly in the transition layer, in
+regions with the densities $\ll$1 cm$^{-3}$, which strongly reduces the energy
+requirement. Still, the required jet masses are large, ruling out the presence
+of a significant number of electron-positron pairs.
+\\ ( https://arxiv.org/abs/2303.01349 ,  105kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01382
+Date: Thu, 2 Mar 2023 16:06:51 GMT   (990kb,D)
+
+Title: Expected polarization properties of non-magnetized CCOs
+Authors: Valery F. Suleimanov, Juri Poutanen, Victor Doroshenko, and Klaus
+  Werner
+Categories: astro-ph.HE astro-ph.SR
+Comments: 10 pages, 16 figures. accepted to be published by A&A
+\\
+  Central Compact Objects (CCOs) are neutron stars found close to the centers
+of some supernova remnants. Some of them are presumably covered by carbon
+envelopes. Their unpulsed thermal X-ray emission can originate either from the
+entire surface covered by a carbon atmosphere or a non-uniformly emitting
+hydrogen atmosphere as an alternative. However, the latter scenario appears
+unlikely given the available upper limits on the amplitude of pulsations. Here
+we explore a possibility to further discriminate between the two scenarios
+using X-ray polarimetric observations. We compute the polarization degree (PD)
+for non-magnetized pure carbon and pure hydrogen atmospheres with effective
+temperatures between 1 and 6 MK and find that it can reach up to 25% and 40%
+for hydrogen and carbon atmospheres, respectively, in the photon energy band
+1-10 keV. However, given the available constraints on possible inhomogeneities
+of the temperature distribution deduced from modeling of the X-ray spectrum of
+the CCO in HESS J1731-347, the integrated PD appears to be very low both for
+carbon (<0.25%) and hydrogen (a few %) compositions in the energy band of 2-8
+keV covered by the recently launched Imaging X-ray Polarimetry Explorer. We
+conclude, therefore, that polarization from CCOs is not expected to be
+detectable by current facilities, but future detection would strongly support
+non-uniform hydrogen composition models.
+\\ ( https://arxiv.org/abs/2303.01382 ,  990kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01438
+Date: Thu, 2 Mar 2023 17:51:53 GMT   (361kb,D)
+
+Title: Radio detections of two unusual cataclysmic variables in the VLA Sky
+  Survey
+Authors: Margaret E Ridder, Craig O Heinke, Gregory R Sivakoff, Andrew K Hughes
+Categories: astro-ph.HE
+Journal-ref: MNRAS 519 (2023) 5922-5930
+DOI: 10.1093/mnras/stad038
+\\
+  We report two new radio detections of cataclysmic variables (CVs), and place
+them in context with radio and X-ray detections of other CVs. We detected QS
+Vir, a low accretion-rate CV; V2400 Oph, a diskless intermediate polar (IP);
+and recovered the polar AM Her in the Very Large Array Sky Survey (VLASS) 2-4
+GHz radio images. The radio luminosities of these systems are higher than
+typically expected from coronal emission from stars of similar spectral types,
+and neither system is expected to produce jets, leaving the origin of the radio
+emission a puzzle. The radio emission mechanism for these two CVs may be
+electron-cyclotron maser emission, synchrotron radiation, or a more exotic
+process. We compile published radio detections of CVs, and X-ray measurements
+of these CVs, to illustrate their locations in the radio - X-ray luminosity
+plane, a diagnostic tool often used for X-ray binaries, active galactic nuclei,
+and radio stars. Several radio-emitting CVs, including these two newly detected
+CVs, seem to lie near the principal radio/X-ray track followed by black hole
+X-ray binaries (BHXBs) at low luminosity, suggesting additional complexity in
+classifying unknown systems using their radio and X-ray luminosities alone.
+\\ ( https://arxiv.org/abs/2303.01438 ,  361kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01463
+Date: Thu, 2 Mar 2023 18:26:11 GMT   (3906kb,D)
+
+Title: VARAHA: A Fast Non-Markovian sampler for estimating Gravitational-Wave
+  posteriors
+Authors: Vaibhav Tiwari, Charlie Hoy, Stephen Fairhurst and Duncan MacLeod
+Categories: astro-ph.HE
+\\
+  This article introduces VARAHA, an open-source, fast, non-Markovian sampler
+for estimating gravitational-wave posteriors. VARAHA differs from existing
+Nested sampling algorithms by gradually discarding regions of low likelihood,
+rather than gradually sampling regions of high likelihood. This alternative
+mindset enables VARAHA to freely draw samples from anywhere within the
+high-likelihood region of the parameter space, allowing for analyses to
+complete in significantly fewer cycles. This means that VARAHA can
+significantly reduce both the wall and CPU time of all analyses. VARAHA offers
+many benefits, particularly for gravitational-wave astronomy where Bayesian
+inference can take many days, if not weeks, to complete. For instance, VARAHA
+can be used to estimate accurate sky locations, astrophysical probabilities and
+source classifications within minutes, which is particularly useful for
+multi-messenger follow-up of binary neutron star observations; VARAHA localises
+GW170817 $\sim 30$ times faster than LALInference. Although only aligned-spin,
+dominant multipole waveform models can be used for gravitational-wave analyses,
+it is trivial to extend this algorithm to include additional physics without
+hindering performance. We envision VARAHA being used for gravitational-wave
+studies, particularly estimating parameters using expensive waveform models,
+analysing subthreshold gravitational-wave candidates, generating simulated data
+for population studies, and rapid posterior estimation for binary neutron star
+mergers.
+\\ ( https://arxiv.org/abs/2303.01463 ,  3906kb)
+%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00766 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:00:02 GMT   (1799kb,D)
+
+Title: Black hole mergers as tracers of spinning massive black hole and galaxy
+  populations in the Obelisk simulation
+Authors: C. A. Dong-P\'aez, M. Volonteri, R. S. Beckmann, Y. Dubois, M.
+  Trebitsch, A. Mangiagli, S. Vergani, N. Webb
+Categories: astro-ph.GA astro-ph.HE
+Comments: 13 pages, 9 figures, submitted to A&A
+\\
+  Massive black hole (BH) mergers will be key targets of future gravitational
+wave and electromagnetic observational facilities. In order to constrain BH
+evolution with the information extracted from BH mergers, one must take into
+account the complex relationship between the population of merging BHs and the
+global BH population. We analyse the high-resolution cosmological
+radiation-hydrodynamics simulation Obelisk, run to redshift $z=3.5$, to study
+the properties of the merging BH population, and its differences with the
+underlying global BH population in terms of BH and galaxy properties. We
+calculate in post-processing dynamical delays between the merger in the
+simulation at the resolution limit and the actual coalescence well below the
+resolution scale. We find that merging BHs are hosted in relatively massive
+galaxies with stellar mass $M_\ast\gtrsim10^9\,M_\odot$. Given that galaxy mass
+is correlated with other BH and galaxy properties, BH mergers tend to also have
+higher total BH mass and higher BH accretion rates than the global population
+of main BHs. These differences generally disappear if the merger population is
+compared with a BH population sampled with the same galaxy mass distribution as
+merger hosts. Galaxy mergers can temporarily boost the BH accretion rate and
+the host's star formation rate, which can remain active at the BH merger if
+sub-resolution delays are not taken into account. When dynamical delays are
+taken into account the burst has generally faded by the time the BHs merge. BH
+spins are followed self-consistently in the simulation, under the effect of
+accretion and BH mergers. We find that merging BHs have higher spins than the
+global population, but similar or somewhat lower spins compared to a
+mass-matched sample. For our sample, mergers tend to decrease the spin of the
+final BH remnant.
+\\ ( https://arxiv.org/abs/2303.00766 ,  1799kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00782 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:09:15 GMT   (3263kb,D)
+
+Title: Discovery of Extended Fe Ka Complex X-ray Emission in NGC 5728
+Authors: Anna Trindade Falcao, G. Fabbiano, M. Elvis, A. Paggi, W. P. Maksym
+Categories: astro-ph.GA astro-ph.HE
+\\
+  We present Chandra ACIS imaging spectroscopy results for the extended
+(1.5$''$-8$''$) hard X-ray emission of the Compton thick (CT) Seyfert NGC 5728.
+We find spectrally and spatially-resolved features in the Fe K$\alpha$ complex
+(5.5-7.2 keV), redward and blueward of the neutral 6.4 keV line in the extended
+bicone. The [red, blue] features have [6.5$\sigma$, 5.3$\sigma$] significance,
+with an equivalent width = [1.76 keV, 2.60 keV], much higher than in the
+nuclear spectrum. Hence these red and blue wings are extended in a few
+arcsecond scale, as confirmed by narrow-band X-ray imaging. These energies
+imply line-of-sight velocities of [$\sim$19,000-42,000, $\sim$ 28,000] km
+s$^{-1}$, if the emission is due to neutral Fe K$\alpha$.
+\\ ( https://arxiv.org/abs/2303.00782 ,  3263kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00787 (*cross-listing*)
+Date: Wed, 1 Mar 2023 19:20:51 GMT   (1419kb,D)
+
+Title: A flash of polarized optical light points to an aspherical "cow"
+Authors: J.R. Maund, P.A. Hoeflich, I.A. Steele, Y. Yang, K. Wiersema, S.
+  Kobayashi, N. Jordana-Mitjans, C. Mundell, A. Gomboc, C. Guidorzi and R. J.
+  Smith
+Categories: astro-ph.SR astro-ph.HE
+Comments: MNRAS Accepted, 10 pages, 8 figures
+\\
+  The astronomical transient AT2018cow is the closest example of the new class
+of luminous, fast blue optical transients (FBOTs). Liverpool Telescope RINGO3
+observations of AT2018cow are reported here, which constitute the earliest
+polarimetric observations of an FBOT. At 5.7 days post-explosion, the optical
+emission of AT2018cow exhibited a chromatic polarization spike that reached ~7%
+at red wavelengths. This is the highest intrinsic polarization recorded for a
+non-relativistic explosive transient, and is observed in multiple bands and at
+multiple epochs over the first night of observations, before rapidly declining.
+The apparent wavelength dependence of the polarization may arise through
+depolarization or dilution of the polarized flux, due to conditions in
+AT~2018cow at early times. A second ``bump" in the polarization is observed at
+blue wavelengths at ~12 days. Such a high polarization requires an extremely
+aspherical geometry that is only apparent for a brief period (<1 day), such as
+shock breakout through an optically thick disk. For a disk-like configuration,
+the ratio of the thickness to radial extent must be ~10%.
+\\ ( https://arxiv.org/abs/2303.00787 ,  1419kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01033 (*cross-listing*)
+Date: Thu, 2 Mar 2023 07:43:30 GMT   (1508kb,D)
+
+Title: Diving into the magnetosphere of the Of?p star HD108
+Authors: Gregor Rauw, Ya\"el Naz\'e, Asif ud-Doula, Coralie Neiner
+Categories: astro-ph.SR astro-ph.HE
+Comments: Accepted for publication in MNRAS
+\\
+  We analyse optical and X-ray spectroscopy of the Of?p star HD108, known for
+its strong dipolar magnetic field and its optical line profile variability with
+a timescale of $54 \pm 3$ yrs, interpreted as the stellar rotation period.
+Optical emission lines have now recovered from their minimum emission state
+reached in 2007 - 2008. The variations of the equivalent width of the H$\alpha$
+emission provide constraints on the inclination of the rotation axis ($i$) and
+the obliquity of the magnetic axis ($\beta$). The best agreement between model
+and observations is found for ($i$, $\beta$) pairs with $i + \beta \simeq
+85^{\circ}$ and $i \in [30^{\circ},55^{\circ}]$. The Balmer emission lines
+display stochastic variability at the $\sim 5$ % level on timescales of a few
+days. TESS photometry unveils transient modulations on similar timescales in
+addition to prominent red noise variations. A Chandra X-ray observation of
+December 2021, when the star was at a higher emission level, indicates a slight
+increase of the flux and a spectral hardening compared to the August 2002
+XMM-Newton observation, taken near minimum emission state. Magnetohydrodynamic
+simulations are used to compute synthetic X-ray spectra. With our current best
+estimate of the $\dot{M}_{B=0}$ mass-loss rate, the simulated X-ray luminosity
+and spectral energy distribution agree very well with the observations.
+Finally, the radial velocities vary on a period of 8.5 years with a
+peak-to-peak amplitude of 10 - 11 km s$^{-1}$, suggesting orbital motion with
+an unseen companion of at least 4 M$_{\odot}$.
+\\ ( https://arxiv.org/abs/2303.01033 ,  1508kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01299 (*cross-listing*)
+Date: Thu, 2 Mar 2023 14:25:10 GMT   (335kb)
+
+Title: Excitation of Langmuir waves in the magnetospheres of AGN
+Authors: Z.N. Osmanov
+Categories: astro-ph.GA astro-ph.HE physics.plasm-ph
+Comments: 6 pages, 4 figures
+\\
+  In the paper we study the process of excitation of Langmuir waves in the
+magnetospheres of active galactic nuclei (AGN), by taking a
+general-relativistic expression of the Goldreich-Julian density into account.
+We considered the linearised set of equations which describe dynamics of the
+studied mechanism: the Euler equation, the continuity equation and the Poisson
+equation. After solving the dispersion relation and obtaining the instability
+growth rate, we explored it versus several physical parameters: electron's and
+proton's relativistic factors and the mass and luminosity of AGN, which are
+supposed to be Kerr black holes. We showed that the parametric process of
+energy pumping into the Langmuir waves is very efficient and the electrostatic
+field's amplitude will be exponentially amplifying, which might account for
+pair creation, particle acceleration and plasma heating processes in the nearby
+regions of AGN.
+\\ ( https://arxiv.org/abs/2303.01299 ,  335kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.01398 (*cross-listing*)
+Date: Thu, 2 Mar 2023 16:33:10 GMT   (66kb,D)
+
+Title: Eccentricity-tide coupling: impact on binary neutron stars and extreme
+  mass-ratio inspirals
+Authors: John Paul Bernaldez and Sayak Datta
+Categories: gr-qc astro-ph.HE
+\\
+  We study the effect of tidal interaction between two compact bodies in an
+eccentric orbit. We assume the tidal fields to be static. Therefore, we ignore
+the dynamic tides and resonant excitations. Using the results, we find the
+analytical expression for the phase shift of the emitted gravitational wave. In
+the process, we find that in the leading order, the initial eccentricity $e_0$
+and the dimensionless tidal deformability $\Lambda$ couple as $\sim
+e_0^n\Lambda$, where $n$ is a positive number. We only focus on the dominant
+contribution, i.e., $e_0^2\Lambda$. We also compute the accumulated dephasing
+for binary neutron star systems. We find that for optimistic values of
+eccentricities $e_0 \sim .05$ and $\Lambda \sim 600$, the accumulated dephasing
+is $\mathcal{O}(10^{-4})$ radian, requiring a signal-to-noise ratio $\sim 7000$
+to be observable. Therefore, these effects can be measured in binary neutron
+star systems with large eccentricities if the signal-to-noise ratios of the
+systems are also very large. Hence, in third-generation detectors, it may have
+an observable impact if the systems have large eccentricities. We also explore
+the impact of this effect on extreme mass-ratio inspirals (EMRIs). We find that
+even for supermassive bodies with small values of $\Lambda \sim 10^{-3}$, this
+effect has large dephasing in EMRIs $\sim \mathcal{O}(10)$ radian. Therefore,
+this effect will help in probing the nature of the supermassive bodies in an
+EMRI.
+\\ ( https://arxiv.org/abs/2303.01398 ,  66kb)
+%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%--%%
+------------------------------------------------------------------------------
+\\
+arXiv:2207.05189
+replaced with revised version Thu, 2 Mar 2023 18:44:36 GMT   (12275kb,D)
+
+Title: Kinetic Turbulence in Collisionless High-Beta Plasmas
+Authors: Lev Arzamasskiy (1), Matthew W. Kunz (2,3), Jonathan Squire (4), Eliot
+  Quataert (2), Alexander A. Schekochihin (5) ((1) IAS, (2) Princeton, (3)
+  PPPL, (4) Otago, (5) Oxford)
+Categories: astro-ph.HE astro-ph.SR physics.plasm-ph
+Comments: 34 pages, 19 figures, accepted to PRX
+\\ ( https://arxiv.org/abs/2207.05189 ,  12275kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2210.08358
+replaced with revised version Wed, 1 Mar 2023 20:58:31 GMT   (4603kb,D)
+
+Title: Particle Injection and Nonthermal Particle Acceleration in Relativistic
+  Magnetic Reconnection
+Authors: Omar French, Fan Guo, Qile Zhang, and Dmitri Uzdensky
+Categories: astro-ph.HE physics.plasm-ph
+Comments: 27 pages, 15 figures, accepted for publication to The Astrophysical
+  Journal
+\\ ( https://arxiv.org/abs/2210.08358 ,  4603kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2211.11150
+replaced with revised version Thu, 2 Mar 2023 11:59:41 GMT   (300kb)
+
+Title: Comparing hierarchical black hole mergers in star clusters and active
+  galactic nuclei
+Authors: Guo-Peng Li, Da-Bin Lin, and Yong Yuan
+Categories: astro-ph.HE astro-ph.GA
+Comments: 12 pages, 5 figures, 2 tables, accepted for publication in PHYS. REV.
+  D; v2. add Figs. 4 and 5, showing mass-ratios and effective precession
+  parameters, respectively; v3. delete an additional free parameter (maximum
+  generation, $N_{\rm max}^{\rm G}$), replot Fig. 3 using the mergers detected
+  by LIGO-Virgo, and add Yong Yuan as the third author of this manuscript; v4.
+  add more details for SNR
+\\ ( https://arxiv.org/abs/2211.11150 ,  300kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2303.00370
+replaced with revised version Thu, 2 Mar 2023 17:32:08 GMT   (16430kb,D)
+
+Title: Application of Deep Learning Methods for Distinguishing Gamma-Ray Bursts
+  from Fermi/GBM TTE Data
+Authors: Peng Zhang, Bing Li, RenZhou Gui, Shaolin Xiong, Ze-Cheng Zou,
+  Xianggao Wang, Xiaobo Li, Ce Cai, Yi Zhao, Yanqiu Zhang, Wangchen Xue, Chao
+  Zheng, Hongyu Zhao
+Categories: astro-ph.HE astro-ph.IM
+Comments: 42 pages,12 figures
+\\ ( https://arxiv.org/abs/2303.00370 ,  16430kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2203.08478
+replaced with revised version Thu, 2 Mar 2023 09:41:12 GMT   (1034kb,D)
+
+Title: A binary origin for the first isolated stellar-mass black hole detected
+  with astrometric microlensing
+Authors: Alejandro Vigna-G\'omez and Enrico Ramirez-Ruiz
+Categories: astro-ph.GA astro-ph.HE astro-ph.SR
+Comments: 13 pages, 8 figures, 1 table. Accepted for publication in ApJL
+\\ ( https://arxiv.org/abs/2203.08478 ,  1034kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2206.06142 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 04:06:32 GMT   (229kb,D)
+
+Title: Correlation length of the angular mode for an approximate $U(1)$
+  symmetry during inflation
+Authors: Chengcheng Han
+Categories: hep-ph astro-ph.HE hep-th
+Comments: 15 pages, 2 figures, version accepted by Physics Letter B
+\\ ( https://arxiv.org/abs/2206.06142 ,  229kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2207.13034 (*cross-listing*)
+replaced with revised version Thu, 2 Mar 2023 17:56:57 GMT   (119kb,D)
+
+Title: Cosmic neutrino flux and spin flavor oscillations in intergalactic
+  medium
+Authors: Ashutosh Kumar Alok, Neetu Raj Singh Chundawat and Arindam Mandal
+Categories: hep-ph astro-ph.HE hep-ex
+Comments: 16 pages, 3 figures; Published version
+Journal-ref: Phys. Lett. B 839 (2023) 137791
+DOI: 10.1016/j.physletb.2023.137791
+\\ ( https://arxiv.org/abs/2207.13034 ,  119kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2209.05283
+replaced with revised version Thu, 2 Mar 2023 12:12:22 GMT   (1658kb,D)
+
+Title: A UV census of the environments of stripped-envelope supernovae
+Authors: Ning-Chen Sun, Justyn R. Maund and Paul A. Crowther
+Categories: astro-ph.SR astro-ph.GA astro-ph.HE
+Comments: 15 pages, 9 figures, accepted for publication in MNRAS
+\\ ( https://arxiv.org/abs/2209.05283 ,  1658kb)
+------------------------------------------------------------------------------
+\\
+arXiv:2301.04273
+replaced with revised version Wed, 1 Mar 2023 21:19:49 GMT   (4312kb,D)
+
+Title: Heat transport and convective velocities in compositionally-driven
+  convection in neutron star and white dwarf interiors
+Authors: J. R. Fuentes, A. Cumming, M. Castro-Tapia, and E. H. Anders
+Categories: astro-ph.SR astro-ph.EP astro-ph.HE physics.flu-dyn
+Comments: New version with changes suggested by referee (ApJ)
+\\ ( https://arxiv.org/abs/2301.04273 ,  4312kb)
+%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---%%%---
+For subscribe options to combined physics archives,
+e-mail To: physics@arxiv.org, Subject: subscribe
+-----------------------------------------------------------------------------
+For help on viewing and making submissions, see http://arxiv.org/help/

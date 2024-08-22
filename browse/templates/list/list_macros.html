@@ -1,0 +1,143 @@
+{%- macro page_divs() -%}
+  {% if count > 0 %}
+    <div class='paging'>Total of {{count}} entries {{ pages() }}
+    </div>
+    <div class='morefewer'>Showing up to {{shown}} entries per page:
+      {{ show_link('fewer',mf_fewer) }} |
+      {{ show_link('more', mf_more)  }} |
+      {{ show_link('all',  mf_all)   }}
+    </div>
+  {% endif %}
+{%- endmacro -%}
+
+
+{% macro item_list(items, heading) %}
+<dl id='articles'>
+  {% if heading %}
+    <h3>{{heading}}</h3>
+  {% endif %}
+
+  {% if items | length == 0 %}
+    <p>No updates for this time period.</p>
+  {% endif %}
+
+  {% for item in items %}
+    {% set article = item.article %}
+    {% set ids = article.arxiv_id %}
+    {% set listing_index = item.list_index %}
+    <dt>
+      <a name='item{{listing_index}}'>[{{listing_index}}]</a>
+      <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
+        arXiv:{{ article.arxiv_id }}
+      </a>
+      {{ type_info( item ) }}
+      {{ dl_links( article ) }}
+    </dt>
+    <dd>
+      <div class='meta'>
+        <div class='list-title mathjax'><span class='descriptor'>Title:</span>
+          {{article.title}}
+        </div>
+        <div class='list-authors'>
+          {{- do_author_list( article ) -}}
+        </div>
+
+        {% if article.comments %}
+        <div class='list-comments mathjax'><span class='descriptor'>Comments:</span>
+          {{article.comments|tex2utf|urlize|safe}}
+        </div>
+        {% endif %}
+
+        {% if article.journal_ref %}
+        <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
+          {{article.journal_ref}}
+        </div>
+        {% endif %}
+
+        <div class='list-subjects'><span class='descriptor'>Subjects:</span>
+          {{category_line(article)}}
+        </div>
+
+        {% if list_type == 'new' %}
+        <p class='mathjax'>
+          {{ article.abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
+        </p>
+        {% endif %}
+      </div>
+    </dd>
+  {% endfor %}
+</dl>
+{% endmacro %}
+
+
+{%- macro do_author_list(article) -%}
+  {% set au_list_tup = author_links[article.arxiv_id_v] %}
+  {%- if not au_list_tup or not au_list_tup[0] -%}
+    (author list is unavailable)
+  {%- else -%}
+    {%- for part in au_list_tup[0] -%}
+      {%- if part is string -%}
+        {{- part|arxiv_urlize -}}
+      {%- else -%}
+        <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
+      {%- endif -%}
+    {% endfor %}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{%- macro pages() -%}
+{% if pg|length != 0 or not viewing_all %}
+:
+  {%- for pg in paging -%}
+    {% if pg.nolink is defined %}
+      <span>{{pg.nolink}}</span>
+    {% else %}
+      <a href={{pg.url}}>{{pg.txt}}</a>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{%- endmacro -%}
+
+
+{%- macro show_link( txt, to_show ) %}
+  {% if to_show %}
+    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
+      {{txt}}</a>
+  {% else %}
+    <span style="color: #454545">{{txt}}</span>
+  {% endif %}
+{%- endmacro -%}
+
+{%- macro dl_links( article ) -%}
+  {% set id = article.arxiv_id %}
+  {% set downloads = downloads[ article.arxiv_id_v ] %}
+  {% set latexml_link = latexml.get(article.arxiv_id_v) %}
+  [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
+  {%- if latexml_link -%}
+    , <a href="{{ latexml_link }}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
+  {%- endif -%}
+  {%- if 'other' in downloads -%}
+    , <a href="{{url_for('dissemination.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
+  {%- endif -%}
+  ]
+{%- endmacro -%}
+
+{% macro type_info( item ) %}
+  {% if item['listingType'] == 'cross' %}
+    (cross-list from {{item['primary']}})
+  {% endif %}
+  {% if item['listingType'] == 'rep' %}
+    (replaced)
+  {% endif %}
+{% endmacro %}
+
+
+{%- macro category_line(article) -%}
+  <span class="primary-subject">{{- article.primary_category.display() -}}</span>
+  {%- if article.secondary_categories -%}
+    {%- for category in article.display_secondaries() -%}
+        ; {{ category }}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}

@@ -1,11 +1,13 @@
 """Tests for BibTeX citations."""
 from unittest import TestCase
-from browse.services.document.metadata import AbsMetaSession
-from browse.services.cite import arxiv_bibtex
-from tests import path_of_for_test
+from pathlib import Path
 
-ABS_FILES = path_of_for_test('data/abs_files')
+from arxiv.files import LocalFileObj
+from arxiv.document.parse_abs import parse_abs_file
 
+from tests import ABS_FILES
+
+from browse.formatting.cite import arxiv_bibtex
 
 abs_to_test = \
     [ABS_FILES + '/ftp/arxiv/papers/0705/0705.0001.abs',
@@ -97,5 +99,7 @@ class TestCite(TestCase):
         """Test cite."""
         
         for fname_path in abs_to_test:                
-            cite=arxiv_bibtex(AbsMetaSession.parse_abs_file(filename=fname_path))
+            cite=arxiv_bibtex(parse_abs_file(LocalFileObj(Path(fname_path))))
             self.assertIsNotNone(cite)
+            self.assertNotIn("is_general", cite)
+            self.assertNotIn("is_active", cite)

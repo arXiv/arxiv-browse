@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2020/07/27 $
+ *  $Date: 2024/07/30 $
  *****************************************/
 /****************************************
  *   General rules
@@ -177,17 +177,36 @@ em.boxed {
   font-weight: normal;
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   color: #fff;
-  width: 380px;
+  display:flex;
+  align-items:center;
+  gap: 1em;
 }
-
-#support-ack a {
+#support-ack-url {
+  max-width: 400px;
+  float:right;
+  display: block;
+}
+#support-ack-url a {
   color: #fff;
-  text-decoration: none;
   border: none;
+  text-decoration: underline;
 }
-
-#support-ack a:hover {
-  background: #444;
+#support-ack-url a:hover {
+  color: #1e8bc3;
+}
+#support-ack .btn-header-donate {
+  background-color: white;
+  border: 1px solid #b31b1b;
+  padding: .2em 1em 0 1em;
+  border-radius: .5em;
+  color: #b31b1b;
+  height: 1.5em;
+  font-size: 1.25em;
+  transition: all .5s ease-in-out;
+}
+#support-ack .btn-header-donate:hover {
+  background-color: #fb595a;
+  color: black;
 }
 
 /*
@@ -639,6 +658,19 @@ footer .sorry-app-links .a11y-main-link {
   background-color: #595959;
   color: #ffffff;
 }
+.message-special.green {
+  border: 2px solid #c4d82e;
+  background-color: #f3f6dd;
+  color: #000;
+  margin-right: 0;
+}
+.message-special.green a {
+  color: #1b7cac;
+}
+.message-special.green span.label {
+  background-color: #c4d82e;
+  color: #000;
+}
 .homepage-news-title {
   margin-bottom: .25em;
 }
@@ -662,7 +694,7 @@ footer .sorry-app-links .a11y-main-link {
   justify-content:center;
 }
 .banner-minimal a {
-  -webkit-box-shadow: 0px 3px 6px 0px #000000);
+  -webkit-box-shadow: 0px 3px 6px 0px #000000;
   -moz-box-shadow: 0px 3px 6px 0px #000000;
   box-shadow: 0px 3px 6px 0px #000000;
   display: inline-block;
@@ -670,13 +702,13 @@ footer .sorry-app-links .a11y-main-link {
   border-radius: .3em;
   font-size: 2em;
   background-color: #1c1a17;
-  border: 2px solid #6b6459;;
+  border: 2px solid #6b6459;
   color: #fb595a;
   text-decoration: none;
   transition: all .5s ease-in-out;
 }
 .banner-minimal a:hover {
-  background-color: #;
+  background-color: #1c1a17;
   border-color: #dbc6c6;
   color: #f9f7f7;
 }
@@ -684,6 +716,50 @@ footer .sorry-app-links .a11y-main-link {
 .slider-wrapper.bps-banner.dark {
   background-color: black;
 }
+/*style overrides for forum minimal banner homepage news with forum logo*/
+.columns .column.banner-minimal.forum {
+  border: 1px solid grey;
+  border-radius: 1em;
+  padding: .5em;
+  margin: 1em;
+}
+.columns .column.banner-minimal.forum a {
+  border-color: transparent;
+  background-color: transparent;
+  color: #c4d82e;
+  font-size: 1.35em;
+  text-decoration: underline;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+.columns .column.banner-minimal.forum a:hover {
+  border-color: transparent;
+  background-color: transparent;
+  color: #fff;
+  text-decoration: none;
+}
+.columns .column.banner-minimal.forum p {
+  font-size: 1.25em;
+  margin: 0;
+  font-style: italic;
+  color: #ababab;
+}
+.forum-logo {
+	width: 200px;
+	float: right;
+	margin: 1em;
+}
+@media screen and (max-width: 480px) {
+	.forum-logo {
+		width: 70%;
+		margin: 1em auto !important;
+		float: none;
+		display: block;
+	}
+}
+
+
 
 /****************************************
  * Stats pages (/stats)
@@ -885,7 +961,7 @@ p.tagline {
 #abs-outer .leftcolumn {
   margin: 0 0 1em 0;
   padding: 0px;
-  width:calc(100% - 16em);
+  width:calc(100% - 18em);
   float:left;
 }
 #abs-outer .mobile-submission-download {
@@ -895,7 +971,7 @@ p.tagline {
 #abs-outer .extra-services {
   float:right;
   margin:0;
-  width:16em;
+  width:18em;
 }
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
@@ -1006,6 +1082,27 @@ p.tagline {
   margin-bottom: 15px;
 }
 
+/* Added by CatalyzeX */
+
+#catalyzex-output {
+  padding: 7px;
+  margin-bottom: 10px;
+}
+
+#catalyzex-output .cx-icon {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  top: 5px;
+  margin-left: 3px;
+  margin-right: 6px;
+}
+
+ #catalyzex-output svg#cx-logo {
+  top: 7px;
+  margin-left: 6px;
+  margin-right: 3px;
+}
 
 /* Papers with Code **Datasets** specific section */
 
@@ -1149,6 +1246,18 @@ p.tagline {
 }
 
 /*END ScienceCast CSS*/
+
+/*BEGIN Gotit.pub CSS*/
+
+.gotitpub-logo {
+  margin-left: 0pt;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 100%;
+  font-family: "EB Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/*END Gotit.pub CSS*/
 
 /*BEGIN Spaces CSS*/
 
@@ -1690,6 +1799,10 @@ div#long-author-list {
     padding: .25em 1em;
     margin: .75em .5em 0 0;
   }
+  .beta-link {
+    font-size:x-small;
+    color:#b31b1b;
+  }
   .abs-button-grey {
     border: 1px solid #666666;
     color: #666666 !important;
@@ -2167,6 +2280,12 @@ div#long-dc-list {
 .abs-license {
   font-size: xx-small;
   padding-top: 0.3em;
+}
+
+.abs-license .has_license {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 /****************************************
@@ -2691,6 +2810,9 @@ body#front.with-cu-identity #header #search {
   flex-shrink: 1;
   padding: 0.75rem;
 }
+#cu-identity .banner-minimal {
+  text-align: center;
+}
 .columns.is-mobile > .column.is-full {
   flex: none;
   width: 100%;
@@ -2731,7 +2853,7 @@ body#front.with-cu-identity #header #search {
   flex: none;
   width: 80%;
 }
-.columns. .column.is-full {
+.columns .column.is-full {
   flex: none;
   width: 100%;
 }
@@ -3133,4 +3255,32 @@ a:hover .icon.filter-grey,
 a:hover .icon.filter-blue,
 a:hover .icon.filter-red {
     fill: #ffffff;
+}
+
+/****************************************
+ * alert styles
+ ****************************************/
+ .alert {
+  display: block;
+  background-color: #fff5f5;
+  border: 1px solid #cd0200;
+  color: #970503;
+  border-radius: 1em;
+  font-size: 1em;
+  line-height: 1.5;
+  padding: .3em 1em;
+}
+
+.alert svg {
+  fill: #970503;
+}
+
+.alert button {
+  float: right;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  padding: 0.5em;
 }

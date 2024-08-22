@@ -1,6 +1,13 @@
 {%- extends "base.html" -%}
+{% import "list/list_macros.html" as list_macros with context %}
 
 {% block title %}{{list_ctx_name}} {{list_month_name}} {{list_year}}{% endblock %}
+
+{% block head %}
+  {{super()-}}
+  <script src="{{ url_for('static', filename='js/mathjaxToggle.min.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" language="javascript">mathjaxToggle();</script>
+{% endblock head %}
 
 {% block header_h1 %}
 <div class="header-breadcrumbs">
@@ -15,141 +22,22 @@
   <h1>{{list_ctx_name}}</h1>
 
   {% block list_index %}
-    {# list index is empty by default #}
+    {# empty by default and intended to be overridden in your templates #}
   {% endblock %}
 
-  {{ page_divs() }}
+  {{ list_macros.page_divs() }}
+
+  {% block pre_items %}
+    {# empty by default and intended to be overridden in your templates #}
+  {% endblock %}
 
   {% block items %}
-    {{ item_list( listings, '' ) }}
+    {{ list_macros.item_list( listings, '' ) }}
   {% endblock %}
 
-  {{ page_divs() }}
+  {{ list_macros.page_divs() }}
 </div>
 </div>
 {%- endblock %}
 
 
-{%- macro page_divs() -%}
-<div class='paging'>[ total of {{count}} entries
- {{ pages() }}
-  ]
-</div>
-<div class='morefewer'>[ showing {{shown}} entries per page:
-  {{ show_link('fewer',mf_fewer) }} |
-  {{ show_link('more', mf_more)  }} |
-  {{ show_link('all',  mf_all)   }} ]
-</div>
-{%- endmacro -%}
-
-
-{% macro item_list(items, heading) %}
-<dl id='articles'>
-  {% if heading %}
-    <h3>{{heading}}</h3>
-  {% endif %}
-
-  {% for item in items %}
-  {% set article = item['article'] %}
-  {% set ids = article.arxiv_identifier.ids %}
-  {% set listing_index = item['list_index'] %}
-    <dt>
-      <a name='item{{listing_index}}'>[{{listing_index}}]</a>
-      <a href ="{{url_for('.abstract', arxiv_id=ids)}}" title="Abstract" id="{{ids}}">
-        arXiv:{{ article.arxiv_identifier.ids }}
-      </a>
-      {{ type_info( item ) }}
-      {{ dl_links( article ) }}
-    </dt>
-    <dd>
-      <div class='meta'>
-        <div class='list-title mathjax'><span class='descriptor'>Title:</span>
-          {{article.title}}
-        </div>
-        <div class='list-authors'>
-          {{- do_author_list( article ) -}}
-        </div>
-
-        {% if article.comments %}
-          <div class='list-comments mathjax''><span class='descriptor'>Comments:</span>
-            {{article.comments|arxiv_urlize}}
-          </div>
-        {% endif %}
-
-        {% if article.journal_ref %}
-          <div class='list-journal-ref'><span class='descriptor'>Journal-ref:</span>
-            {{article.journal_ref}}
-          </div>
-        {% endif %}
-
-        <div class='list-subjects'><span class='descriptor'>Subjects:</span>
-          <span class='primary-subject'>{{article.primary_category.display}}</span>
-        </div>
-
-      </div>
-    </dd>
-  {% endfor %}
-</dl>
-{% endmacro %}
-
-
-{%- macro do_author_list(article) -%}
-  {% set au_list_tup = author_links[article.arxiv_id_v] %}
-  {%- if not au_list_tup or not au_list_tup[0] -%}
-    (author list is unavailable)
-  {%- else -%}
-    {%- for part in au_list_tup[0] -%}
-      {%- if part is string -%}
-        {{- part|arxiv_urlize -}}
-      {%- else -%}
-        <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
-      {%- endif -%}
-    {% endfor %}
-  {%- endif -%}
-{%- endmacro -%}
-
-
-{%- macro pages() -%}
-{% if pg|length != 0 or not viewing_all %}
-:
-  {%- for pg in paging -%}
-    {% if pg.nolink is defined %}
-      <span>{{pg.nolink}}</span>
-    {% else %}
-      <a href={{pg.url}}>{{pg.txt}}</a>
-    {% endif %}
-  {% endfor %}
-{% endif %}
-{%- endmacro -%}
-
-
-{%- macro show_link( txt, to_show ) %}
-  {% if to_show %}
-    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
-      {{txt}}</a>
-  {% else %}
-    <span style="color: #454545">{{txt}}</span>
-  {% endif %}
-{%- endmacro -%}
-
-{%- macro dl_links( article ) -%}
-  {% set id = article.arxiv_id %}
-  {% set downloads = downloads[ article.arxiv_id_v ] %}
-  [<a href="{{url_for('.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
-  {%- if 'ps' in downloads -%}
-    , <a href="{{url_for('.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
-  {%- endif -%}
-  {%- if 'other' in downloads -%}
-    , <a href="{{url_for('.format', arxiv_id=id)}}" title="Other formats" id="oth-{{id}}" aria-labelledby="oth-{{id}}">other</a>
-  {%- endif -%}
-  ]
-{%- endmacro -%}
-
-{% macro type_info( item ) %}
-  {% if item['listingType'] == 'cross' %}
-    (cross-list from {{item['primary']}})
-  {% endif %}
-  {% if item['listingType'] == 'rep' %}
-    (replaced)
-  {% endif %}
-{% endmacro %}

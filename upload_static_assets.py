@@ -1,7 +1,9 @@
 """Use this to upload static content to S3."""
 
 import flask_s3
+
 from browse.factory import create_web_app
+
 
 app = create_web_app()
 

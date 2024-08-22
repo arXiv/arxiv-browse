@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+\\
+arXiv:cs/0012007
+From: Yasuhiro Ajiro <ya@example.com>
+Date: Wed, 13 Dec 2000 08:48:06 GMT   (349kb)
+Date (revised v2): Thu, 4 Jan 2001 13:28:06 GMT   (362kb)
+
+Title: Kima - an Automated Error Correction System for Concurrent Logic
+  Programs
+Authors: Yasuhiro Ajiro and Kazunori Ueda
+Comments: In M. Ducasse (ed), proceedings of the Fourth International Workshop
+  on Automated Debugging (AADEBUG 2000), August 2000, Munich. cs.SE/0010035
+ACM-class: D.2.5
+\\
+  We have implemented Kima, an automated error correction system for concurrent
+logic programs. Kima corrects near-misses such as wrong variable occurrences in
+the absence of explicit declarations of program properties. Strong
+moding/typing and constraint-based analysis are turning to play fundamental
+roles in debugging concurrent logic programs as well as in establishing the
+consistency of communication protocols and data types. Mode/type analysis of
+Moded Flat GHC is a constraint satisfaction problem with many simple mode/type
+constraints, and can be solved efficiently. We proposed a simple and efficient
+technique which, given a non-well-moded/typed program, diagnoses the
+``reasons'' of inconsistency by finding minimal inconsistent subsets of
+mode/type constraints. Since each constraint keeps track of the symbol
+occurrence in the program, a minimal subset also tells possible sources of
+program errors. Kima realizes automated correction by replacing symbol
+occurrences around the possible sources and recalculating modes and types of
+the rewritten programs systematically. As long as bugs are near-misses, Kima
+proposes a rather small number of alternatives that include an intended
+program.
+\\

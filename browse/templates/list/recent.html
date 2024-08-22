@@ -1,24 +1,26 @@
 {%- extends "list/base.html" -%}
 
-{% block list_index %}
-<h2>Authors and titles for recent submissions</h2>
+{%- block list_index -%}
+  <h2>Authors and titles for recent submissions</h2>
+  <ul>
+    {% set cumulative = namespace(total=0) %}
+    {%- for pdate in pubdates -%}
+      {%- set skipfordate = cumulative.total -%}
+      {%- set cumulative.total = cumulative.total + pdate[1] -%}
+      <li>
+        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
+          {{ pdate[0].strftime('%a, %-d %b %Y') }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+  <p>See today's <a id="new-{{ context }}" aria-labelledby="new-{{ context }}" href="/list/{{ context }}/new">new</a> changes</p>
+{%- endblock -%}
 
-<ul>
-  {% for pdate in pubdates %}
-  {% set skipfordate = pdate[1] %}
-  <li>
-    <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
-      {{ pdate[0].strftime('%A, %-d %B %Y') }}
-    </a>
-  </li>
+{% block items %}
+  {% for sec in sub_sections_for_types %}
+    {%if sec.visible%}
+      {{ list_macros.item_list(sec.items, sec.heading) }}
+    {% endif %}
   {% endfor %}
-</ul>
 {% endblock %}
-
-
-{% macro listdate() %}
-  {% if announced %}
-    <div class="list-dateline">Submissions announced {{ announced.strftime('%A, %-d %B %Y') }}
-    </div>
-  {% endif %}
-{% endmacro %}

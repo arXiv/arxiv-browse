@@ -1,0 +1,47 @@
+# File: arxiv_sync2gcp_log.yaml
+# Desc: Send sync cronjob message to GCP
+version: 0.1.0
+title: arXiv sync to GCP logs
+description: Log the file sync cron job output to GCP
+parameters:
+  - name: log_path
+    label: Log Path
+    description: Path to the sync to GCP log
+    type: string
+    default: "/opt_arxiv/e-prints/logs/sync/*"
+    required: true
+  - name: start_at
+    label: Start At
+    description: Start reading file from 'beginning' or 'end'
+    type: enum
+    valid_values:
+     - beginning
+     - end
+    default: end
+
+# Set Defaults
+#{{$log_path := default "/opt_arxiv/logs/sync/*" .log_path}}
+#{{$start_at := default "end" .start_at}}
+
+pipeline:
+  - id: log_reader
+    type: file_input
+    include:
+      - {{ $log_path }}
+    start_at: {{ $start_at }}
+    labels:
+      log_type: 'arxiv_sync2gcp_log'
+      plugin_id: {{ .id }}
+    output: parse_sync2gcp
+  - id: parse_sync2gcp
+    type: json_parser
+    timestamp:
+      parse_from: $record.timestamp
+      layout: "%Y-%m-%dT%H:%M:%SZ"
+    severity:
+      parse_from: $record.level
+      mapping:
+        debug: DEBUG
+        info: INFO
+        warning: WARNING
+        error: ERROR

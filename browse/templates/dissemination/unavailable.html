@@ -1,0 +1,10 @@
+{% extends "base/base.html" %}
+
+{# This is the template that gets shown when the paper and version
+exists, but there is no file like a PDF. This is an error condition that should
+not happen but needs to be covered. #}
+
+{%- block content -%}
+<h1>file unavailable</h1>
+<p>Our automated source to PDF conversion system has failed to produce PDF for the paper {{arxiv_id.ids}}.</p>
+{%- endblock -%}

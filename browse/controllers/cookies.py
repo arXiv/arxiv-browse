@@ -1,12 +1,11 @@
 """Handle requests to set cookies."""
 
-from typing import Any, Dict, List
 import copy
+from typing import Any, Dict, List
 
 import flask
-from flask import url_for, request
+from flask import request, url_for
 
-from arxiv import status
 
 # Taken from legacy /users/e-prints/httpd/bin/Databases/mirrors
 mirrors = [
@@ -51,8 +50,6 @@ cookies_config = [
 ]
 
 
-# TODO implement debug parameter
-
 def get_cookies_page(is_debug: bool) -> Any:
     """
     Render the cookies page.
@@ -75,7 +72,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     debug = {'debug': '1'} if is_debug else {
     }  # want to propogate debug to form URL
     response_data = {
-        'form_url': url_for('browse.cookies', set='set', **debug),
+        'form_url': url_for('browse.cookies', set='set', **debug), # type: ignore
         # Note deep copy
         'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),
         'debug': is_debug,
@@ -83,7 +80,7 @@ def get_cookies_page(is_debug: bool) -> Any:
     }
     response_headers = {'Expires': '0',
                         'Pragma': 'no-cache'}
-    return response_data, status.HTTP_200_OK, response_headers
+    return response_data, 200, response_headers
 
 
 def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -93,19 +90,19 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[st
         request_value = cookies.get(cc['name'], None)
         matching_opt = next((opt for opt in cc['options']
                              if opt[0] == request_value), None)
-        if(matching_opt is not None):
+        if matching_opt is not None:
             matching_opt[2] = 1
     return configs
 
 
-def cookies_to_set(request: flask.Request) -> List[Dict[str, object]]:
+def cookies_to_set(req: flask.Request) -> List[Dict[str, object]]:
     """Get cookies from the form and return them as a list of tuples."""
     cts = []
-    for (id, value) in request.form.items():
+    for (id, value) in req.form.items():
         matching_conf = next(
             (conf for conf in cookies_config if conf['id'] == id), None)
         if matching_conf is not None:
-            ctoset = {'key': matching_conf['name']}
+            ctoset:Dict = {'key': matching_conf['name']}
             cts.append(ctoset)
             if value is None or value == '' or value == 'default':
                 ctoset['max_age'] = 0

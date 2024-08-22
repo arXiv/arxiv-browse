@@ -18,7 +18,7 @@
     {% if loop.index == cutoff and anc_file_list|length > cutoff %}
 </ul><div id="long-anc-list"><ul>
     {% endif %}
-  <li><a href="{{url_for('.src',arxiv_id=abs_meta.arxiv_id_v,file_name=anc_file['name'])}}" class="anc-file-name">{{ anc_file['name'] }}</a></li>
+  <li><a href="{{url_for('src.anc',arxiv_id=abs_meta.arxiv_id_v,file_path=anc_file['name'])}}" class="anc-file-name">{{ anc_file['name'] }}</a></li>
   {%- endfor -%}
   {% if anc_file_list|length > cutoff %}
     {%- set num_files_not_shown = anc_file_list|length - cutoff + 1 -%}
@@ -30,48 +30,37 @@
 
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
-  {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
-  {%- if format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
-  <li>Unavailable</li>
-  {%- elif withdrawn -%}
-  <li>Withdrawn</li>
-  {% else %}
-    {#- We have to skip the 'src' format unless we're viewing the current version of the article -#}
-    {%- for format in format_list if not (format == 'src' and not current) %}
-  <li>
-    {%- if format == 'src' -%}
-    <a href="{{url_for('.eprint', arxiv_id=requested_id)}}" class="abs-button download-eprint">Source</a>
-    {%- elif format.startswith('ps') -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button download-ps">PostScript{% if format.endswith('(400)') %} (400 dpi){% elif format.endswith('(600)') %} (600 dpi){% elif format.endswith('(cm)') %} (Type I cm){% elif format.endswith('(CM)') %} (Type I CM){% endif %}</a>
-    {%- elif format.startswith('pdf') -%}
-    <div id="download-button-info" hidden>
-      {% set author_list = abs_meta.authors.raw.split(',') %}
-      {%- if author_list|length > 1 -%}
-      Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
-      {%- elif author_list|length == 1 -%}
-      Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
-      {%- else -%}
-      Download a PDF of the paper titled {{abs_meta.title}}
-      {%- endif -%}
-    </div>
-    <a href="{{url_for('.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">PDF{% if format.endswith('only') %} only{% endif %}</a>
-    {%- elif format == 'dvi' -%}
-    <a href="{{url_for('.dvi', arxiv_id=requested_id)}}" class="abs-button download-dvi">{{ format.upper() }}</a>
-    {%- elif format == 'html' -%}
-    <a href="{{url_for('.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a>
-    {%- elif format == 'other' -%}
-    <a href="{{url_for('.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other formats</a>
-    {%- elif format == 'nops' -%}
-    <a href="{{url_for('.ps', arxiv_id=requested_id)}}" class="abs-button-grey">(PostScript unavailable)</a>
-    {%- elif format == 'sciencewise_pdf' -%}
-    {#- TODO: consider this format for deprecation -#}
-    {#- TODO: create clickthrough link from sciencewise link -#}
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">Tagged PDF</a>
-    <a href="http://sciencewise.info/media/pdf/{{ abs_meta.arxiv_id_v }}.pdf" title="Tagged PDF on ScienceWISE.info" class="abs-button tag-sciencewise">
-      <img src="https://arxiv.org/icons/sciencewise75x32.png" height="16" width="38" alt="ScienceWISE" />
-    </a>
+  <div id="download-button-info" hidden>
+    {% set author_list = abs_meta.authors.raw.split(',') %}
+    {%- if author_list|length > 1 -%}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    {%- elif author_list|length == 1 -%}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    {%- else -%}
+    View a PDF of the paper titled {{abs_meta.title}}
     {%- endif -%}
-  </li>
+  </div>
+
+  {%- set current = abs_meta.version == abs_meta.version_history[-1].version -%}
+  {%- if withdrawn -%}
+  <li>Withdrawn</li>
+  {%- elif format_list|length == 0 or ( not current and format_list|length == 1 and format_list[0] == 'src' ) -%}
+  <li>Unavailable</li>
+  {% else %}
+    {%- for format in format_list %}
+      {%- if format.startswith('pdf') -%}
+  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">View PDF</a></li>
+      {%- endif -%}
+      {%- if format == 'latexml' -%}
+  <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
+      {%- endif -%}
+      {%- if format == 'src' and current and not encrypted-%}
+  <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
+      {%- elif format == 'html' -%}
+  <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
+      {%- elif format == 'other' -%}
+  <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other Formats</a></li>
+      {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 </ul>
@@ -110,8 +99,9 @@
     <span class="is-hidden-mobile"> | </span>
     <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
     <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
-      {{- abs_meta.arxiv_identifier.yymm -}}</a>
+    {%- set yyyymm = '%04d-%02d' % (abs_meta.arxiv_identifier.year, abs_meta.arxiv_identifier.month) -%}
+    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=yyyymm)}}">
+      {{- yyyymm -}}</a>
   </div>
   {%- endif -%}
 
@@ -158,7 +148,6 @@
 {#- TODO: check whether anything but the ancillary files section uses this -#}
 {%- if ancillary_files %}
     <script type="text/javascript">
-    <!--
      function toggleList(whichLayer,toggleThis)
      {
         var elem, vis;
@@ -183,21 +172,23 @@
           document.getElementById('toggle').title = "Show complete list";
         }
      }
-     //-->
     </script>
 {% endif %}
     <div class="full-text">
       <a name="other"></a>
       <span class="descriptor">Full-text links:</span>
-      <h2>Download:</h2>
+      <h2>Access Paper:</h2>
       {{ generate_download_links(format_list=formats) }}
       <div class="abs-license">
         {%- if withdrawn -%}
         <div hidden>No license for this version due to withdrawn</div>
         {%- elif abs_meta.license.icon_uri_path -%}
-        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article"><img src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/></a>
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article" class="has_license">
+          <img alt="license icon" role="presentation" src="https://arxiv.org{{ abs_meta.license.icon_uri_path }}"/>
+          <span>view license</span>
+        </a>
         {%- else -%}
-        (<a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">license</a>)
+        <a href="{{abs_meta.license.effective_uri}}" title="Rights to this article">view license</a>
         {%- endif -%}
       </div>
     </div>
@@ -206,7 +197,7 @@
 {%- if ancillary_files %}
   <div class="ancillary">
     <span class="descriptor">Ancillary-file links:</span>
-    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="/src/{{ abs_meta.arxiv_id_v }}/anc">details</a>)</span>:</h2>
+    <h2>Ancillary files <span style="font-size:75%;font-weight:normal">(<a href="{{url_for('src.anc_listing', arxiv_id=abs_meta.arxiv_id_v)}}">details</a>)</span>:</h2>
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}
@@ -219,7 +210,7 @@
       <ul>
         {% if include_inspire_link %}
         <li>
-          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/literature?q=find%20eprint%20{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
         </li>
         {% endif %}
         <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>

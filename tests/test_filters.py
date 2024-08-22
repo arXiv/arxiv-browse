@@ -1,14 +1,15 @@
 import unittest
 from functools import partial
 
-from jinja2 import escape, Markup, Environment
-
-from flask import appcontext_pushed, url_for
-from app import app
-
-from arxiv.base.urls import links, urlizer, urlize
 from arxiv.base.filters import abstract_lf_to_br, f_tex2utf
+from arxiv.base.urls import links, urlize, urlizer
+from flask import appcontext_pushed, url_for
+from jinja2 import Environment
+from markupsafe import Markup, escape
+
+from app import app
 from browse.filters import entity_to_utf
+
 
 @unittest.skip("These test features implemented in arxiv-base so move these tests to arxiv-base")
 class Jinja_Custom_Filters_Test(unittest.TestCase):

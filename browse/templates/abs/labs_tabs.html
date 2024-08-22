@@ -83,6 +83,22 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
+              <input        
+                id="catalyzex-toggle"
+                data-script-url="{{ url_for('static', filename='js/catalyzex.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-cx">
+              <span class="slider"></span>
+              <span class="is-sr-only">Links to Code Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-cx">CatalyzeX Code Finder for Papers</span> <em>(<a href="https://www.catalyzex.com" target="_blank">What is CatalyzeX?</a>)</em>
+          </div>
+        </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
               <input
                 id="dagshub-toggle"
                 data-script-url="{{ url_for('static', filename='js/dagshub.js') }}"
@@ -95,6 +111,23 @@
             <span id="label-for-dagshub">DagsHub</span> <em>(<a href="https://dagshub.com/" target="_blank">What is DagsHub?</a>)</em>
           </div>
         </div>
+  
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="gotitpub-toggle"
+                data-script-url="{{ url_for('static', filename='js/gotitpub.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-gotitpub">
+              <span class="slider"></span>
+              <span class="is-sr-only">GotitPub Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-gotitpub">Gotit.pub</span> <em>(<a href="http://gotit.pub/faq" target="_blank">What is GotitPub?</a>)</em>
+          </div>
+        </div>
+
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -127,9 +160,11 @@
             <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/welcome" target="_blank">What is ScienceCast?</a>)</em>
           </div>
         </div>
-
       </div>
+
+      <div id="catalyzex-output" style="display:none"></div>
       <div id="dagshub-output" style="display:none"></div>
+      <div id="gotitpub-output" style="display:none"></div>
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
@@ -171,10 +206,25 @@
               <span id="label-for-spaces">Hugging Face Spaces</span> <em>(<a href="https://huggingface.co/docs/hub/spaces" target="_blank">What is Spaces?</a>)</em>
             </div>
           </div>
-
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
+                <input
+                  id="txyz-toggle"
+                  data-script-url="{{ url_for('static', filename='js/txyz.js') }}"
+                  type="checkbox" class="lab-toggle" aria-labelledby="label-for-txyz">
+                <span class="slider"></span>
+                <span class="is-sr-only">Spaces Toggle</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+              <span id="label-for-txyz">TXYZ.AI</span> <em>(<a href="https://txyz.ai" target="_blank">What is TXYZ.AI?</a>)</em>
+            </div>
+          </div>
         </div>
         <div id="replicate-output"></div>
         <div id="spaces-output"></div>
+        <div id="txyz-output"></div>
       </div>
       <input type="radio" name="tabs" id="tabfour">
       <label for="tabfour">Related Papers</label>
@@ -221,7 +271,7 @@
               <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://core.ac.uk/services/recommender">What is CORE?</a>)</em>
             </div>
           </div>
-          {%- if abs_meta.primary_category and (abs_meta.primary_category in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.startswith('astro-ph') or abs_meta.primary_category.startswith('cond-mat')) %}
+          {%- if abs_meta.primary_category and (abs_meta.primary_category.id in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.id.startswith('astro-ph') or abs_meta.primary_category.id.startswith('cond-mat')) %}
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">

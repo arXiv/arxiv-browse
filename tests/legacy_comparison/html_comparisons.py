@@ -1,13 +1,12 @@
 """HTML comparison functions."""
+import re
 from functools import partial, update_wrapper
 from typing import Callable, List
 
-import re
+from bs4 import BeautifulSoup, element
 
 from abstract_comparisons import lev_similarity
-from comparison_types import html_arg_dict, BadResult
-
-from bs4 import BeautifulSoup, element
+from comparison_types import BadResult, html_arg_dict
 
 
 def html_similarity(html_arg: html_arg_dict) -> BadResult:

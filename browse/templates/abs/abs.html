@@ -18,7 +18,7 @@
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20221129" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20230622" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
   {{- generate_scholar_tags() }}
@@ -41,7 +41,7 @@
 
   <div class="leftcolumn">
     <div class="subheader">
-      <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.name }} > {% endif %}{{ abs_meta.primary_category.name }}</h1>
+      <h1>{% if abs_meta.primary_archive.id != abs_meta.primary_category.id %}{{ abs_meta.primary_archive.full_name }} > {% endif %}{{ abs_meta.primary_category.full_name }}</h1>
     </div>
 
     <div class="header-breadcrumbs-mobile">
@@ -60,7 +60,7 @@
         display_authors_with_links(abs_meta, author_links),
         abs_meta.abstract,
         abs_meta.get_datetime_of_version(abs_meta.version),
-        abs_meta.primary_category.id,
+        abs_meta.primary_category,
         comments = abs_meta.comments,
         msc_class = abs_meta.msc_class,
         acm_class = abs_meta.acm_class,
@@ -159,7 +159,7 @@
 {%- endmacro -%}
 
 {%- macro category_line() -%}
-  <span class="primary-subject">{{- abs_meta.primary_category.unalias().display -}}</span>
+  <span class="primary-subject">{{- abs_meta.primary_category.display() -}}</span>
   {%- if abs_meta.secondary_categories -%}
     {%- for category in abs_meta.display_secondaries() -%}
         ; {{ category }}
@@ -184,15 +184,18 @@
   {% set author_list = abs_meta.authors.raw.split(',') %}
   <div id="download-button-info" hidden>
     {%- if author_list|length > 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
     {%- elif author_list|length == 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
     {%- else -%}
-    Download a PDF of the paper titled {{abs_meta.title}}
+    View a PDF of the paper titled {{abs_meta.title}}
     {%- endif -%}
   </div>
   {% if formats|length > 0 and ('pdf' in formats or 'pdfonly' in formats) %}
-    <a aria-describedby="download-button-info" class="mobile-submission-download" href="{{url_for('.pdf', arxiv_id=requested_id)}}">Download PDF</a>
+    <a class="mobile-submission-download" href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}">View PDF</a>
+    {% if 'latexml' in formats %}
+    <a class="mobile-submission-download" href="{{ latexml_url }}">HTML (experimental)</a>
+    {% endif %}
   {% else %}
     <a aria-describedby="download-button-info" class="mobile-submission-download mobile-download-grey" href="#other">No PDF available, click to view other formats</a>
   {% endif %}
@@ -288,8 +291,8 @@
         <tr>
           <td class="tablecell label">Subjects:</td>
           <td class="tablecell subjects">
-            <span class="primary-subject">{{ primary_category|get_category_display }}</span>
-            {%- for category in secondary_categories|sort(attribute='id') -%}; {{ category|get_category_display }}{%- endfor -%}
+            <span class="primary-subject">{{ primary_category.display() }}</span>
+            {%- for category in secondary_categories|sort(attribute='id') -%}; {{ category.display() }}{%- endfor -%}
           </td>
         </tr>
         {%- if msc_class %}
@@ -321,11 +324,14 @@
               {{ base_macros.version_atag(arxiv_id, version, primary_category) }}</span> for this version)
           </td>
         </tr>
-        {%- if datacite_doi %}
         <tr>
           <td class="tablecell label">&nbsp;</td>
           <td class="tablecell arxivdoi">
-            <a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a>
+            {%- if datacite_doi %}
+              <a href="https://doi.org/{{ datacite_doi }}"  id="arxiv-doi-link">https://doi.org/{{ datacite_doi }}</a>
+            {%- else %}
+              <a href="https://doi.org/10.48550/arXiv.{{ arxiv_id }}" id="arxiv-doi-link">https://doi.org/10.48550/arXiv.{{ arxiv_id }}</a>
+            {%- endif -%}
             <div class="button-and-tooltip">
               <button class="more-info" aria-describedby="more-info-desc-1">
                 <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
@@ -334,12 +340,15 @@
               <!-- tooltip description -->
               <div role="tooltip" id="more-info-desc-1">
                 <span class="left-corner"></span>
-                arXiv-issued DOI via DataCite
+                {%- if datacite_doi %}
+                  arXiv-issued DOI via DataCite
+                {%- else %}
+                  arXiv-issued DOI via DataCite (pending registration)
+                {%- endif -%}
               </div>
             </div>
           </td>
         </tr>
-        {%- endif -%}
         {%- if journal_ref %}
         <tr>
           <td class="tablecell label">Journal&nbsp;reference:</td>
@@ -351,7 +360,7 @@
           <td class="tablecell label">
             <abbr title="Digital Object Identifier">Related DOI</abbr>:
           </td>
-          <td class="tablecell doi">{{ doi|escape|abs_doi_to_urls|safe }}
+          <td class="tablecell doi">{{ doi|abs_doi_to_urls|safe }}
 
             <!-- accessible tooltip example -->
             <div class="button-and-tooltip">

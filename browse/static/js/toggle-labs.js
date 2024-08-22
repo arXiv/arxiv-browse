@@ -13,8 +13,10 @@ $(document).ready(function() {
 
   var scripts = {
     "paperwithcode": $('#paperwithcode-toggle').data('script-url') + "?20210727",
+    "catalyzex": $('#catalyzex-toggle').data('script-url'),
     "replicate": $('#replicate-toggle').data('script-url'),
     "spaces": $('#spaces-toggle').data('script-url'),
+    "txyz": $('#txyz-toggle').data('script-url'),
     "dagshub": $('#dagshub-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
@@ -22,6 +24,7 @@ $(document).ready(function() {
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
+    "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "bibex": {
       "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
       "container": "#bib-main"
@@ -64,6 +67,10 @@ $(document).ready(function() {
           $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
+        } else if (key === "catalyzex-toggle") {
+          $.cachedScript(scripts["catalyzex"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
         } else if (key === "paperwithcode-toggle") {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -80,7 +87,14 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load spaces script (on cookie check)", arguments)
           });
-        } else if (key === "connectedpapers-toggle") {
+        } else if (key === "txyz-toggle") {
+          $.cachedScript(scripts["txyz"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load txyz script (on cookie check)", arguments)
+          });
+        }
+         else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
@@ -100,7 +114,13 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load DagsHub script (on cookie check)", arguments)
           });
-       }
+        } else if (key === "gotitpub-toggle") {
+          $.cachedScript(scripts["gotitpub"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load gotitpub script (on cookie check)", arguments)
+          });
+        }
       }
     }
   } else {
@@ -151,6 +171,10 @@ $(document).ready(function() {
       });
     } else if ($(this).attr("id") == "core-recommender-toggle" && $(this).hasClass("enabled")) {
         $.cachedScript(scripts["core-recommender"]["url"]).done(function(script, textStatus) {});
+    } else if ($(this).attr("id") == "catalyzex-toggle") {
+      $.cachedScript(scripts["catalyzex"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      });
     } else if ($(this).attr("id") == "paperwithcode-toggle") {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
@@ -166,6 +190,11 @@ $(document).ready(function() {
         // console.log(textStatus, "spaces (on lab toggle)");
       }).fail(function() {
         console.error("failed to load spaces script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "txyz-toggle") {
+      $.cachedScript(scripts["txyz"]).done(function(script, textStatus) {
+      }).fail(function() {
+        console.error("failed to load txyz script (on lab toggle)", arguments)
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
@@ -187,7 +216,13 @@ $(document).ready(function() {
       }).fail(function() {
         console.error("failed to load dagshub script (on lab toggle)", arguments)
       });
-   }
+    } else if ($(this).attr("id") == "gotitpub-toggle") {
+      $.cachedScript(scripts["gotitpub"]).done(function(script, textStatus) {
+        console.log(textStatus, "gotitpub (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load gotitpub script (on lab toggle)", arguments)
+      });
+    }
   
 
     // TODO: clean this up

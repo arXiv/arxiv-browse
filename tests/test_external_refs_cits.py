@@ -1,13 +1,14 @@
 """Tests for external reference and citation configuration and utilities."""
 from unittest import TestCase, mock
-from datetime import date
 
-from arxiv.taxonomy import CATEGORIES, ARCHIVES
-from browse.domain.metadata import Category, Archive
-from browse.domain.identifier import Identifier
-from browse.services.document.config.external_refs_cits \
+from arxiv.identifier import Identifier
+from arxiv.document.metadata import DocMetadata
+from arxiv.taxonomy.category import Category, Archive
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
+
+from browse.formatting.external_refs_cits \
     import INSPIRE_REF_CIT_CATEGORIES, DBLP_ARCHIVES
-from browse.services.util.external_refs_cits import include_inspire_link,\
+from browse.formatting.external_refs_cits import include_inspire_link,\
     get_dblp_bibtex_path, include_dblp_section, get_computed_dblp_listing_path
 
 
@@ -19,27 +20,27 @@ class TestExternalReferencesCitations(TestCase):
         for category in INSPIRE_REF_CIT_CATEGORIES:
             self.assertIn(category, CATEGORIES)
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
-    def test_include_inspire_link(self, mock_docmeta):
+    @mock.patch('arxiv.document.metadata.DocMetadata')
+    def test_include_inspire_link(self, mock_docmeta: DocMetadata):
         """Tests for the include_inspire_link function."""
         mock_docmeta.arxiv_identifier = Identifier('1201.0001')
-        mock_docmeta.primary_category = Category('hep-th')
+        mock_docmeta.primary_category = CATEGORIES['hep-th']
         self.assertTrue(include_inspire_link(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1212.0001')
-        mock_docmeta.primary_category = Category('astro-ph.CO')
+        mock_docmeta.primary_category = CATEGORIES['astro-ph.CO']
         self.assertFalse(include_inspire_link(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1301.0001')
-        mock_docmeta.primary_category = Category('astro-ph.CO')
+        mock_docmeta.primary_category = CATEGORIES['astro-ph.CO']
         self.assertTrue(include_inspire_link(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1806.01234')
-        mock_docmeta.primary_category = Category('physics.ins-det')
+        mock_docmeta.primary_category = CATEGORIES['physics.ins-det']
         self.assertTrue(include_inspire_link(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1212.0002')
-        mock_docmeta.primary_category = Category('physics.gen-ph')
+        mock_docmeta.primary_category =CATEGORIES['physics.gen-ph']
         self.assertFalse(include_inspire_link(mock_docmeta))
 
     def test_dblp_config(self):
@@ -63,26 +64,26 @@ class TestExternalReferencesCitations(TestCase):
         listing_url = 'db/foo/aadebug/aadebug2000.html#Herranz-NievaM00'
         self.assertIsNone(get_dblp_bibtex_path(listing_url))
 
-    @mock.patch('browse.domain.metadata.DocMetadata')
-    def test_include_dblp_section(self, mock_docmeta):
+    @mock.patch('arxiv.document.metadata.DocMetadata')
+    def test_include_dblp_section(self, mock_docmeta: DocMetadata):
         """Tests for the include_dblp_section fallback (from DB) function."""
         mock_docmeta.arxiv_identifier = Identifier('1806.00001')
-        mock_docmeta.primary_archive = Archive('cs')
+        mock_docmeta.primary_archive = ARCHIVES['cs']
         self.assertTrue(include_dblp_section(mock_docmeta))
         self.assertEqual(get_computed_dblp_listing_path(mock_docmeta),
                          'db/journals/corr/corr1806.html#abs-1806-00001')
 
         mock_docmeta.arxiv_identifier = Identifier('cs/0501001')
-        mock_docmeta.primary_archive = Archive('cs')
+        mock_docmeta.primary_archive = ARCHIVES['cs']
         self.assertTrue(include_dblp_section(mock_docmeta))
         self.assertEqual(get_computed_dblp_listing_path(mock_docmeta),
                          'db/journals/corr/corr0501.html#abs-cs-0501001')
 
         mock_docmeta.arxiv_identifier = Identifier('cs/0412001')
-        mock_docmeta.primary_archive = Archive('cs')
+        mock_docmeta.primary_archive = ARCHIVES['cs']
         self.assertTrue(include_dblp_section(mock_docmeta))
         self.assertIsNone(get_computed_dblp_listing_path(mock_docmeta))
 
         mock_docmeta.arxiv_identifier = Identifier('1806.00002')
-        mock_docmeta.primary_archive = Archive('math')
+        mock_docmeta.primary_archive = ARCHIVES['math']
         self.assertFalse(include_dblp_section(mock_docmeta))
