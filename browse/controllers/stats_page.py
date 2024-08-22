@@ -48,12 +48,10 @@ def get_hourly_stats_page(business_tz: str, requested_date_str: Optional[str] = 
             response_data['requested_dt'] = requested_dt
         except (TypeError, ValueError) as ex:
             raise BadRequest from ex
-    try:
-        normal_count, admin_count, num_nodes = get_hourly_stats_count(
-            stats_date=requested_dt.date()
-        )
-    except Exception as ex:
-        raise InternalServerError from ex
+
+    normal_count, admin_count, num_nodes = get_hourly_stats_count(
+        stats_date=requested_dt.date()
+    )
 
     response_data["normal_count"] = normal_count
     response_data["admin_count"] = admin_count
