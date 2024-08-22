@@ -33,7 +33,7 @@ replacements have all their related URLs invalidated.
 """
 
 def maxage(versioned: bool=False) -> str:
-    """Returns a "max-age=N" `str` for use with "Cache-Control".
+    """Returns a "max-age=N" `str` for use with "Surrogate-Control".
 
     This could cause a version to stay in a CDN on delete. That might require
     manual cache invalidation.
@@ -46,7 +46,7 @@ def maxage(versioned: bool=False) -> str:
 def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
     """Adds time headers to `resp` given the `file` and `arxiv_id`."""
     resp.headers["Last-Modified"] = last_modified(file)
-    resp.headers['Cache-Control'] = maxage(arxiv_id.has_version)
+    resp.headers['Surrogate-Control'] = maxage(arxiv_id.has_version)
 
 
 def last_modified(fileobj: FileObj) -> str:
@@ -95,12 +95,23 @@ def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str
 def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
     """Sets expire to one year, max allowed by RFC 2616"""
     if had_specific_version:
-        headers = {'Cache-Control': 'max-age=31536000'}
+        headers = {'Surrogate-Control': 'max-age=31536000'}
     else:
-        headers = {'Cache-Control': maxage(False)}
+        headers = {'Surrogate-Control': maxage(False)}
     return make_response(render_template("dissemination/withdrawn.html",
                                          arxiv_id=arxiv_id),
                          404, headers)
+
+def not_public(arxiv_id: Identifier, had_specific_version: bool=False) -> Response:
+    """ Returned for pages whose source is encrypted/ made not public by the author.
+    Sets expire to one year, max allowed by RFC 2616"""
+    if had_specific_version:
+        headers = {'Surrogate-Control': 'max-age=31536000'}
+    else:
+        headers = {'Surrogate-Control': maxage(False)}
+    return make_response(
+        render_template("dissemination/not_public.html",arxiv_id=arxiv_id), 403, headers
+    )
 
 
 def unavailable(arxiv_id: Identifier) -> Response:
@@ -119,13 +130,13 @@ def no_html(arxiv_id: Identifier) -> Response:
 
 
 def not_found(arxiv_id: Identifier) -> Response:
-    headers = {'Cache-Control': maxage(arxiv_id.has_version)}
+    headers = {'Surrogate-Control': maxage(arxiv_id.has_version)}
     return make_response(render_template("dissemination/not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
 
 def not_found_anc(arxiv_id: Identifier) -> Response:
-    headers = {'Cache-Control':  maxage(arxiv_id.has_version)}
+    headers = {'Surrogate-Control':  maxage(arxiv_id.has_version)}
     return make_response(render_template("src/anc_not_found.html",
                                          arxiv_id=arxiv_id), 404, headers)
 
@@ -136,7 +147,8 @@ def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
                                          arxiv_id=arxiv_id), 404, {})
 
 
-def cannot_build_pdf(arxiv_id: Identifier, msg: str) -> Response:
+def cannot_build_pdf(arxiv_id: Identifier, msg: str, fmt: str) -> Response:
     return make_response(render_template("dissemination/cannot_build_pdf.html",
-                                         err_msg=msg,
+                                         msg=msg,
+                                         fmt=fmt,
                                          arxiv_id=arxiv_id), 404, {})

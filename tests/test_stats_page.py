@@ -54,68 +54,6 @@ class TestStatsPageControllers(TestCase):
         self.assertIn("csv", response_data, "csv is in response data")
         self.assertEqual(response_data["csv"], "hour,node1\n")
 
-        # test response with mock data, when no date option is provided
-        test_td = datetime(2019, 3, 19)
-        mock_get_hourly_stats.return_value = [
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=4, access_type="N", connections=4123
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=3, access_type="N", connections=3124
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=2, access_type="N", connections=2124
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=1, access_type="N", connections=1234
-            ),
-        ]
-        expected_response = (
-            "hour,node1,node2,node3,node4\n"
-            "2019-03-19T00:00:00Z,1234,2124,3124,4123\n"
-        )
-
-        # test response with mock data, when date option is provided
-        response_data, code, headers = stats_page.get_hourly_stats_csv(
-            requested_date_str="2019-03-19"
-        )
-        mock_get_hourly_stats.assert_called_once_with(stats_date=date(2019, 3, 19))
-        self.assertEqual(code, status.OK)
-        self.assertEqual(response_data["csv"], expected_response)
-
-        mock_get_hourly_stats.return_value = [
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=2, access_type="N", connections=2120
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=4, access_type="N", connections=4120
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=1, access_type="N", connections=1230
-            ),
-            mock.Mock(
-                ymd=test_td, hour=0, node_num=3, access_type="N", connections=3120
-            ),
-            mock.Mock(
-                ymd=test_td, hour=1, node_num=1, access_type="N", connections=1241
-            ),
-            mock.Mock(
-                ymd=test_td, hour=1, node_num=4, access_type="N", connections=4121
-            ),
-            mock.Mock(
-                ymd=test_td, hour=1, node_num=3, access_type="N", connections=3231
-            ),
-        ]
-        expected_response = (
-            "hour,node1,node2,node3,node4\n"
-            "2019-03-19T00:00:00Z,1230,2120,3120,4120\n"
-            "2019-03-19T01:00:00Z,1241,0,3231,4121\n"
-        )
-
-        response_data, code, headers = stats_page.get_hourly_stats_csv()
-        self.assertEqual(code, status.OK)
-        self.assertEqual(response_data["csv"], expected_response)
-
     @mock.patch("browse.controllers.stats_page.get_max_download_stats_dt")
     @mock.patch("browse.controllers.stats_page.get_monthly_download_count")
     def test_get_monthly_downloads_page(

@@ -67,4 +67,4 @@ def test_older_id_w_canonical(client_with_test_fs):
     assert len(other_atags) >= 3, "should be at least 3 a tags in list"
     assert other_atags[0]['href'] == '/list/math-ph/new'
     assert other_atags[1]['href'] == '/list/math-ph/recent'
-    assert other_atags[2]['href'] == '/list/math-ph/9707'
+    assert other_atags[2]['href'] == '/list/math-ph/1997-07'

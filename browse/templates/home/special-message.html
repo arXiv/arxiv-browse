@@ -5,19 +5,30 @@
 
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
+
+{%- if rd_int >= 202407120100 and rd_int <= 202409020100 -%}
+<div class="message-special green column">
+  <span class="label">arXiv News</span>
+  <a href="https://accessibility2024.arxiv.org/" target="_blank"><img role="presentation" class="forum-logo" src="{{ url_for('static', filename='images/events/arxiv-forum-logo-full-2024.png') }}" alt="The arXiv Accessibility Forum" /></a>
+  <h2>arXiv Accessibility Forum</h2>
+  <p>Accessibility means access regardless of disability. Join arXiv and global experts this <strong>September</strong> at the Forum focused on accessibility of scientific research. <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
+</div>
+{%- elif rd_int >= 202409020101 and rd_int <= 202409140100 -%}
+<div class="message-special green column">
+  <span class="label">arXiv News</span>
+  <img role="presentation" class="forum-logo" src="{{ url_for('static', filename='images/events/arxiv-forum-logo-full-2024.png') }}" alt="The arXiv Accessibility Forum" />
+  <h2>arXiv Accessibility Forum</h2>
+  <p>The Accessibility Forum is here! Taking place the first two weeks of September, it is free, fully remote, and open to all. <a href="https://accessibility2024.arxiv.org/schedule" target="_blank">See the calendar</a> and <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">signup</a> now to get notified ahead of each event.</p>
+</div>
+{%- elif rd_int >= 202409140101 and rd_int <= 202410010100 -%}
 <div class="message-special dark column">
   <span class="label">arXiv News</span>
-  <p>Stay up to date with what is happening at arXiv on our blog.</p>
-  <p><a href="https://blog.arxiv.org/">Latest news</a></p>
-</div>
-
-{%- if rd_int >= 202311270100 and rd_int <= 202311290100 -%}
-<div class="message-special column">
-  <span class="label">Global survey</span>
-  <p>Each year, arXiv takes the pulse of how we are serving the global community. In just 4 minutes help us understand how you see arXiv.</p>
-  <p><a class="btn-slim" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_8wAZvATbZvWU2vc">Take survey</a></p>
+  <img role="presentation" class="forum-logo" src="{{ url_for('static', filename='images/events/arxiv-forum-logo-full-2024.png') }}" alt="The arXiv Accessibility Forum" />
+  <h2>arXiv Accessibility Forum</h2>
+  <p>The 2024 Forum has ended! Thank you for your support. <a href="https://accessibility2024.arxiv.org" target="_blank">Check the website</a> or <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">signup</a> to be notified when recordings are available.</p>
 </div>
 {%- endif -%}
+
 
 {%- if config['BROWSE_SPECIAL_MESSAGE_ENABLED'] and rd_int >= 202210010100 and rd_int <= 202212300100 -%}
 <div class="message-special dark column">

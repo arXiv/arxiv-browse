@@ -10,8 +10,8 @@
  --main-width-margin:54rem;
  --headings-font-family:"noto-sans",sans-serif;
  --text-font-family:"noto-serif",serif;
- --math-font-family:"stix-two-math","Cambria Math",math;
- --math-caligraphic-font-family:"stix-two-math","Cambria Math",math;
+ --math-font-family:"STIX Two Math","STIX Two Math Fallback","Cambria Math",math;
+ --math-caligraphic-font-family:"STIX Two Math","STIX Two Math Fallback","Cambria Math",math;
  --code-font-family:"noto-mono",monospace;
  --background-color:white;
  --text-color:#292929;

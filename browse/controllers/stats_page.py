@@ -48,16 +48,14 @@ def get_hourly_stats_page(business_tz: str, requested_date_str: Optional[str] = 
             response_data['requested_dt'] = requested_dt
         except (TypeError, ValueError) as ex:
             raise BadRequest from ex
-    try:
-        normal_count, admin_count, num_nodes = get_hourly_stats_count(
-            stats_date=requested_dt.date()
-        )
-    except Exception as ex:
-        raise InternalServerError from ex
+
+    normal_count, admin_count, num_nodes = get_hourly_stats_count(
+        stats_date=requested_dt.date()
+    )
 
     response_data["normal_count"] = normal_count
     response_data["admin_count"] = admin_count
-    response_data["num_nodes"] = num_nodes
+    response_data["num_nodes"] = 1
     return response_data, status.OK, {}
 
 
@@ -86,11 +84,11 @@ def get_hourly_stats_csv(requested_date_str: Optional[str] = None) -> Response:
         hourly_stats[hour_dt][r.node_num] = r.connections
         if r.node_num > max_node:
             max_node = r.node_num
-    csv_head = "hour" + "".join(f",node{i}" for i in range(1, max_node + 1)) + "\n"
+    csv_head = "hour,node1\n"
     csv_data = ""
     for hour in sorted(hourly_stats):
         csv_data = csv_data + hour
-        for node in range(1, max_node + 1):
+        for node in [0]:
             count = hourly_stats[hour][node] if node in hourly_stats[hour] else 0
             csv_data = csv_data + f",{count}"
         csv_data = csv_data + "\n"

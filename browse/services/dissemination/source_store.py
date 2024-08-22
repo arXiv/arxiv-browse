@@ -105,6 +105,7 @@ class SourceStore():
         """
         version = docmeta.version
         source_type = docmeta.version_history[version - 1].source_flag
+        anc_files: List[dict] = []
         if not source_type.includes_ancillary_files:
-            return []
+            return anc_files
         return list_ancillary_files(self.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta))

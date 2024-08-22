@@ -54,7 +54,7 @@
       {%- if format == 'latexml' -%}
   <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
       {%- endif -%}
-      {%- if format == 'src' and current-%}
+      {%- if format == 'src' and current and not encrypted-%}
   <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
@@ -99,8 +99,7 @@
     <span class="is-hidden-mobile"> | </span>
     <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
     <span class="is-hidden-mobile"> | </span>
-    {#%- set yyyymm = '%04d-%02d' % (abs_meta.arxiv_identifier.year, abs_meta.arxiv_identifier.month) -%#}
-    {%-set yyyymm= abs_meta.arxiv_identifier.yymm-%}
+    {%- set yyyymm = '%04d-%02d' % (abs_meta.arxiv_identifier.year, abs_meta.arxiv_identifier.month) -%}
     <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=yyyymm)}}">
       {{- yyyymm -}}</a>
   </div>

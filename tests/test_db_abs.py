@@ -10,7 +10,7 @@ def test_should_be_db_abs(dbclient):
 def test_basic_db_abs(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires') or rt.headers.get('Cache-Control')
+    assert rt.headers.get('Surrogate-Control')
     html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
 
     subjects = html.select_one('.subjects')
@@ -44,7 +44,7 @@ def test_db_abs_history(dbclient):
 def test_db_abs_comment(dbclient):
     rt = dbclient.get('/abs/0906.2112')
     assert rt.status_code == 200
-    assert rt.headers.get('Expires') or rt.headers.get('Cache-Control')
+    assert rt.headers.get('Surrogate-Control')
     assert '21 pages' in rt.data.decode('utf-8')
 
 
@@ -117,3 +117,49 @@ def test_last_modified_no_html (dbclient):
     atag = html.select_one('.extra-services').find('a', {'id': 'latexml-download-link'})
 
     assert atag is None
+
+def test_abs_surrogate_keys(dbclient):
+    rv=dbclient.get('/abs/0906.5504')
+    assert "abs" in rv.headers['Surrogate-Key']
+    assert "abs-0906.5504" in rv.headers['Surrogate-Key']
+    assert "paper-id-0906.5504" in rv.headers['Surrogate-Key']
+
+    rv=dbclient.get('/abs/0704.0046v1')
+    assert "abs-0704.0046" in rv.headers['Surrogate-Key']
+    assert "paper-id-0704.0046" in rv.headers['Surrogate-Key']
+
+
+def test_guess_DOI(dbclient):
+    #if no DOI in table, should still guess and display DOI value
+    rt = dbclient.get('/abs/0906.2112')
+    assert rt.status_code == 200
+    assert rt.headers.get('Surrogate-Control')
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+
+    metatable = html.select_one('.metatable')
+    assert metatable
+    text= metatable.get_text()
+    assert 'https://doi.org/10.48550/arXiv.' in text
+    assert 'arXiv-issued DOI via DataCite' in text
+    assert 'arXiv-issued DOI via DataCite (pending registration)' in text
+
+    atag=metatable.find('a', {'id': 'arxiv-doi-link'})
+    assert atag
+    assert atag.text=='https://doi.org/10.48550/arXiv.0906.2112'
+    assert atag.get('href')=='https://doi.org/10.48550/arXiv.0906.2112' 
+
+    #proper format for old ids
+    rt = dbclient.get('/abs/math/0510544')
+    assert rt.status_code == 200
+    assert rt.headers.get('Surrogate-Control')
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+
+    metatable = html.select_one('.metatable')
+    assert metatable
+    text= metatable.get_text()
+    assert 'arXiv-issued DOI via DataCite (pending registration)' in text
+
+    atag=metatable.find('a', {'id': 'arxiv-doi-link'})
+    assert atag
+    assert atag.text=='https://doi.org/10.48550/arXiv.math/0510544'
+    assert atag.get('href')=='https://doi.org/10.48550/arXiv.math/0510544' 
