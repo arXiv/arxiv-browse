@@ -1,6 +1,7 @@
 """handles requests to the catchup page.
 Allows users to access something equivalent to the /new page for up to 90 days back
 """
+import re
 from typing import Tuple, Union
 from datetime import date, datetime, timedelta
 
@@ -71,6 +72,8 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
     date_str=request.args.get("date")
     if not date_str:
         raise BadRequest("Start date required. format: ?date=YYYY-MM-DD")
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", date_str): #enforce two digit days and months
+        raise BadRequest(f"Invalid date format. Use format: ?date=YYYY-MM-DD")
     try:
         start_day= datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
@@ -98,6 +101,8 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
     if page_str.isdigit():
         page=int(page_str)
     else:
-        raise BadRequest(f"Invalid page value. Page value should be an integer like ?page=3")
+        raise BadRequest(f"Invalid page value. Page value should be a positive integer like ?page=3")
+    if page<1:
+        raise BadRequest(f"Invalid page value. Page value should be a positive integer like ?page=3")
 
     return subject, start_day, include_abs, page
