@@ -26,17 +26,13 @@ RUN apt-get -y install default-libmysqlclient-dev
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV PATH="/app:$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -U pip "poetry==$POETRY_VERSION"
 
 COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi \
     --without dev
-
-ADD app.py /app/
-
-ENV PATH "/app:${PATH}"
 
 ADD browse /app/browse
 ADD wsgi.py /app/
