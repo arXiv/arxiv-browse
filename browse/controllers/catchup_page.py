@@ -9,9 +9,11 @@ from http import HTTPStatus
 from flask import Response, request, redirect, url_for
 from werkzeug.exceptions import BadRequest
 
+from arxiv.integration.fastly.headers import add_surrogate_key
 from arxiv.taxonomy.category import Group, Archive, Category
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
 
+from browse.services.database.catchup import get_catchup_data
 
 def get_catchup_page()-> Response:
     """get the catchup page for a given set of request parameters 
@@ -27,8 +29,10 @@ def get_catchup_page()-> Response:
                     page=page,
                     abs=include_abs), 
             HTTPStatus.MOVED_PERMANENTLY)
-
+    headers={}
+    headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-f{subject.id}"])
     #get data
+    get_catchup_data(subject, start_day, include_abs, page)
 
     #format data
 
@@ -106,3 +110,4 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
         raise BadRequest(f"Invalid page value. Page value should be a positive integer like ?page=3")
 
     return subject, start_day, include_abs, page
+
