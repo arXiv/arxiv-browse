@@ -7,20 +7,25 @@
 {%- block content %}
 <h1>Your cookie configuration for arXiv</h1>
 
-<p>You can use this form to set preferences that will apply to all arXiv.org sites for this
-and future sessions when access from the same machine. Cookies are snippets of information
+<p> Cookies are snippets of information
 stored on your machine and returned to our site with each request you make (click
-show additional debugging information below to see what is stored).
-This facility will not work if you have disabled cookies or on browsers that do not
-support cookies.</p>
+show additional debugging information below to see what is stored). These are stored locally
+by whatever browser you're using. If you switch browsers, or use a different computer, your cookies won't follow you.</p>
 
-<p>For information about the full-text formats available, consult the
-<a href="{{ url_for('help') }}/view">viewing help</a>.
-If the cookies are set successfully, then abstract and listing
-pages will automatically link to the appropriate versions of each
-paper. You may have to reload previously-visited abstract/listing
-pages to update the format links (Shift+Reload in many browsers), because
-the old versions of the pages will be cached by your browser.</p>
+arXiv uses cookies to
+<ul>
+  <li>Save information about your account, iff you've logged into your arXiv account</li>
+  <li>Save preferences you may have set for your use of arXiv. This includes, but is not limited to:</li>
+  <ul>
+    <li>That you have dismissed a banner we may have shown you.</li>
+    <li>Which Labs integrations you want to see on each abstract page.</li>
+    <li>Whether you want MathJax to be used when rendering article abstracts. (set on this page.)</li>
+  </ul>
+</ul>
+
+We do not use cookies to track your use of arXiv, or to customize the content we show you (that is, we don't do ads).
+The cookes we do use are considered "essential" cookies, which allows us to avoid showing pop-up consent banners in those
+juristictions that might perscribe such measures for non-essential cookies.
 <hr />
 
 <form action="{{form_url}}" method="post">
@@ -30,7 +35,7 @@ the old versions of the pages will be cached by your browser.</p>
     {% set name = cc['name'] %}
     {% set options = cc['options'] %}
 
-    <p>{{label}}<select name="{{id}}">
+    <br>{{label}}<select name="{{id}}">
         {% for opt in options %}
           {% set value = opt[0] %}
           {% set opt_label = opt[1] %}
@@ -39,9 +44,9 @@ the old versions of the pages will be cached by your browser.</p>
                   {% if selected %}selected="selected"{% endif %}
                   >{{opt_label}}</option>
         {% endfor %}
-    </select></p>
+    </select>
   {% endfor %}
-  <input type="submit" name="set" value="Set Cookies" />
+  <input type="submit" name="set" value="Set" />
 </form>
 
 <hr />
@@ -62,6 +67,11 @@ the old versions of the pages will be cached by your browser.</p>
     {% endfor %}
 </table>
 
+<p>Only those cookies shown <em>emphasized</em> in the table above are controlled
+  by this interface. arXiv uses other cookies such as <code>browser</code> and
+  <code>tapir_permanent</code> to maintain session and permanent login settings.
+  You can, if you want, clear all cookies using the controls in your browser.</p>
+
 <h2>Debugging information: dump of http request headers</h2>
 <table cellpadding="4" style="background: #666666; border: 0; padding: 5;"><tr>
     <th align="left" >Name</th><th align="left">Value</th></tr>
@@ -72,11 +82,6 @@ the old versions of the pages will be cached by your browser.</p>
     </tr>
     {% endfor %}
 </table>
-
-<p>Only those cookies shown <em>emphasized</em> in the table above are controlled
-by this interface. arXiv uses other cookies such as <code>browser</code> and
-<code>tapir_permanent</code> to maintain session and permanent login settings.
-You can, if you want, clear all cookies using the controls in your browser.</p>
 
 <p><small>(<a href="{{url_for('browse.cookies')}}">hide debugging information</a>)</small></p>
 {% else %}
