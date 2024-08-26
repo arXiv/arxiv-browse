@@ -8,26 +8,39 @@ from flask import request, url_for
 
 
 # Taken from legacy /users/e-prints/httpd/bin/Databases/mirrors
-# mirrors = [
-#     'de.arxiv.org',
-#     'es.arxiv.org',
-#     'in.arxiv.org',
-#     'cn.arxiv.org',
-#     'lanl.arxiv.org',
-#     'vanguard.math.ucdavis.edu:81',
-# ]
+mirrors = [
+    'de.arxiv.org',
+    'es.arxiv.org',
+    'in.arxiv.org',
+    'cn.arxiv.org',
+    'lanl.arxiv.org',
+    'vanguard.math.ucdavis.edu:81',
+]
 
-# mirror_config = {
-#     'id': 'mirror',
-#     'name': 'xxx-mirror',
-#     'label': 'Select download site:',
-#     'options': [['default', 'always local site (default)', 1]]
-# }
+mirror_config = {
+    'id': 'mirror',
+    'name': 'xxx-mirror',
+    'label': 'Select download site:',
+    'options': [['default', 'always local site (default)', 1]]
+}
 
-# for mirror in mirrors:
-#     mirror_config['options'].append([mirror, mirror, 0])  # type: ignore
+for mirror in mirrors:
+    mirror_config['options'].append([mirror, mirror, 0])  # type: ignore
 
 cookies_config = [
+    {'id': 'ps',
+     'name': 'xxx-ps-defaults',
+     'label': 'Select preferred download format:',
+     'options': [
+         ['default', 'PostScript (600 dpi), PDF (default)', 1],
+         ['dpi=300%26font=bitmapped', 'PostScript (300 dpi)', 0],
+         ['fname=cm%26font=TypeI', 'PostScript (Type I cm)', 0],
+         ['pdf', 'PDF', 0],
+         ['dvi', 'DVI', 0],
+         ['src', 'Source', 0]
+     ],
+     },
+    mirror_config,
     {'id': 'mj',
      'name': 'arxiv_mathjax',
      'label': 'Select MathJax configuration: ',
@@ -35,6 +48,7 @@ cookies_config = [
                  ['disabled', 'disabled', 0]]
      }
 ]
+
 
 def get_cookies_page(is_debug: bool) -> Any:
     """

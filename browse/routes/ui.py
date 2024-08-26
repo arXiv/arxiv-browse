@@ -132,11 +132,7 @@ def category_taxonomy() -> Any:
 @blueprint.route("institutional_banner", methods=["GET"])
 def institutional_banner() -> Any:
     try:
-        # In case this request came through a CDN, try to get the original IP
-        # address, rathern than the IP address of the CDN node
-        result = request.headers['X-Forwarded-For']
-        if result is None:
-            result = get_institution(request.remote_addr)
+        result = get_institution(request.remote_addr)
         if result:
             return (result, status.OK)
         else:
