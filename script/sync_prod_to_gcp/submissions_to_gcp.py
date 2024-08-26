@@ -4,7 +4,7 @@ check the files exist on CIT and uploads them to GCP bucket.
 
 For each announced paper ID it will:
   * sync the /ftp files and ensure only current version files exist
-    - if /ftp for the paper ID has any obsolete submission, it is moved to /trash
+    - if /ftp for the paper ID has any obsolete submission, it is removed.
   * sync the abs and source files to /orig if needed
     - If TeX source it will build the PDF on a CIT web node and sync those to ps_cache
     - If HTML source it will build the HTML and sync those to the ps_cache
@@ -680,18 +680,15 @@ def list_bucket_objects(gs_client, gcp_path) -> typing.List[str]:
 @STORAGE_RETRY
 def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
     """
-    Move the bucket objects to trash - just like Unix "mv", this is nothing more than changing
-    the pathname.
-
-    When this happens, the log is made to remember that the file is "trashed".
+    Delete the bucket objects.
     """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
     for obj in objects:
-        trashed_blob = "/".join(['trash'] + obj.split('/'))
         blob = bucket.blob(obj)
-        bucket.rename_blob(blob, trashed_blob)
-        logger.warning("%s is moved to %s", obj, trashed_blob, extra=log_extra)
+        logger.debug("%s is being deleted", obj, extra=log_extra)
+        blob.delete()
+        logger.info("%s is deleted", obj, extra=log_extra)
     return
 
 
@@ -791,8 +788,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
     """
     From the submission file state, copy the ones that should bu uploaded.
 
-    If the /ftp's submission contains extra files, rename them with /trash prefix so the
-    object is no longer under /ftp but under /trash/ftp.
+    If the /ftp's submission contains extra files, they are removed.
     """
     gs_client = thread_data.storage
     desired_state = state.get_expected_files()
@@ -824,8 +820,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
         if remote in bucket_objects:
             bucket_objects.remove(remote)
 
-    # If extra exists, needs to move them to trash
-    # At some point, we'd need to decide what to do with the trashed blobs but I suspect
+    # If extra exists, they are removed.
     if bucket_objects:
         trash_bucket_objects(gs_client, bucket_objects, log_extra)
 

@@ -81,7 +81,7 @@ the item exists in the bucket.
 In arxiv-development, a bucket is created for the test. "arxiv-sync-test-01" is the name.
 The pytest tests uses the dev bucket heavily. 
 
-To access the bucket, a service account "sync_test_admen" is created. The account has the storage read/write 
+To access the bucket, a service account "sync_test_admin" is created. The account has the storage read/write 
 permission.
 
     # Create the test admin role that has the storage I/O.

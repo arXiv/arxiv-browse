@@ -162,9 +162,6 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16188v2.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16190v1.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/2308.99990v1/2308.99990v1.html",
-                    "gs://arxiv-sync-test-01/trash/ftp/arxiv/papers/2308/2308.16188.pdf",
-                    "gs://arxiv-sync-test-01/trash/ftp/arxiv/papers/2308/2308.16188.pdf",
-                    "gs://arxiv-sync-test-01/trash/ftp/arxiv/papers/1907/1907.07431.gz",
                     ]
         subprocess.call(rm_items + droplets,
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -235,7 +232,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
     def test_sync_op(self):
         # The set up copies a PDF to  ftp/arxiv/papers/2308/2308.16188.pdf
         # When sync happens, the .tar.gz, .abs in ftp and pdf in ps_cache are synced and the
-        # pdf in the ftp is renamed to trash/ftp/arxiv/papers/2308/2308.16188.pdf
+        # pdf in the ftp is removed.
         paper_id = "2308.16188"
         data = {
             "type": "new",
@@ -244,6 +241,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
             "src_ext": ".tar.gz"
         }
         log_extra = {"paper_id": paper_id}
+
+        self.assertTrue(bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
 
         try:
             state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
@@ -270,8 +269,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
             self.fail("Any exception is a bad test. Fix the test")
             pass
 
-        # The existing file is moved to trash
-        self.assertEqual("1115014", get_file_size(f"gs://arxiv-sync-test-01/trash/ftp/arxiv/papers/2308/{paper_id}.pdf"))
+        # The existing file is deleted
+        self.assertFalse(bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
 
         # New submissions
         self.assertEqual( "2642", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
@@ -487,26 +486,23 @@ so the correct file state of /ftp is
     * gs://arxiv-production-data/ftp/arxiv/papers/1907/1907.07431.abs
     * gs://arxiv-production-data/ftp/arxiv/papers/1907/1907.07431.tar.gz
 """
+        # Double check to copy the pieces
         subprocess.call(["gsutil", "cp", "test/data/orig/arxiv/papers/1907/1907.07431v2.abs",
                          "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.abs"],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         obsolete = "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"
-        trashed = "gs://arxiv-sync-test-01/trash/ftp/arxiv/papers/1907/1907.07431.gz"
-
         subprocess.call(["gsutil", "cp", "test/data/ftp/arxiv/papers/1907/1907.07431.gz",
                         obsolete],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        # double cheke it is there.
+        # double check it is there.
         # This created the obsolete file is in /ftp
         self.assertEqual("36", get_file_size(obsolete))
-        # Trashed file does not exist yet
-        self.assertFalse(bucket_object_exists(trashed))
 
         test_data = {"paper_id": "1907.07431", "version": "3", "src_ext": ".tar.gz"}
 
-        # This should ask webnode to make the PDF file
+        # This should ask webnode (well, local http server for this test) to make the PDF file
         file_state = submission_message_to_file_state(test_data, {}, ask_webnode=True)
         # Trim off the source's leading test dir so the test expected is more readable
         payloads = [(entry[0][len(test_dir):], entry[1]) for entry in file_state.to_payloads()]
@@ -524,7 +520,5 @@ so the correct file state of /ftp is
             self.fail("Any exception is a bad test. Fix the test")
             pass
 
-        # Now the trashed object is there
-        self.assertEqual("36", get_file_size(trashed))
-        # because the obsolete file is moved to the trash.
+        # because the obsolete file is deleted
         self.assertFalse(bucket_object_exists(obsolete))
