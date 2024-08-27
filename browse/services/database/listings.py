@@ -3,7 +3,7 @@ from dateutil.tz import gettz
 from typing import List, Optional, Tuple
 
 from sqlalchemy import case, distinct, or_, and_, desc
-from sqlalchemy.sql import func, select
+from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased, load_only
 
@@ -16,6 +16,8 @@ from browse.services.listing import (
     ListingNew,
     AnnounceTypes
 )
+from browse.services.database.catchup import process_requested_subject
+
 from arxiv.db import Session
 from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
@@ -494,29 +496,12 @@ def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[Tuple[str,st
     if a category is received, return the category and possible alternate names
     if an archive is received return the archive name and a list of all categories that should be included but arent nominally part of the archive 
     """
-    arch=[]
-    cats=[]
-
-    def process_alt_name(alt_name: str) -> None:
-        if "." in alt_name:
-            arch_part, cat_part = alt_name.split(".")
-            cats.append((arch_part, cat_part))
-        else:
-            arch.append(alt_name)
-
-    if archive_or_cat in ARCHIVES: #get all categories for archive
-        archive=ARCHIVES[archive_or_cat]
-        arch.append(archive_or_cat)
-        for category in archive.get_categories(True):
-            process_alt_name(category.alt_name) if category.alt_name else None            
-                
-    else: #otherwise its just a category requested
-        category=CATEGORIES[archive_or_cat]
-        process_alt_name(archive_or_cat)
-        if category.alt_name:
-            process_alt_name(category.alt_name) if category.alt_name else None
-
-    return arch, cats
+    if archive_or_cat in ARCHIVES:
+        arch, cats=process_requested_subject(ARCHIVES[archive_or_cat])
+    elif archive_or_cat in CATEGORIES:
+        arch, cats=process_requested_subject(CATEGORIES[archive_or_cat])
+ 
+    return list(arch), list(cats)
 
 def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories
