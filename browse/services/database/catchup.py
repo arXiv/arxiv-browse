@@ -58,7 +58,7 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
         .subquery()
     )
 
-    #sort and limit
+    #categorize by type of listing
     listing_type = case(*
         [
             (and_(all_items.c.type == 'new', all_items.c.is_primary == 1), 'new'),
@@ -81,19 +81,40 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
     ).label('case_order')
 
     valid_types=["new", "cross", 'rep','repcross']
-    selected_items=(
+
+    meta = aliased(Metadata)
+    load_fields = [
+        meta.document_id,
+        meta.paper_id,
+        meta.updated,
+        meta.source_flags,
+        meta.title,
+        meta.authors,
+        meta.abs_categories,
+        meta.comments,
+        meta.journal_ref,
+        meta.version,
+        meta.modtime,
+    ]
+    if include_abs:
+        load_fields.append(meta.abstract)
+
+    #sort, limit and fetch
+    results=(
         Session.query(
-            all_items.c.document_id, 
-            listing_type
+            listing_type,
+            meta
         )
+        .join(meta, meta.document_id == all_items.c.document_id)
         .filter(listing_type.label('case_order').in_(valid_types))
-        .order_by(case_order)
+        .filter(meta.is_current ==1)
+        .order_by(case_order, meta.paper_id)
         .offset(offset)
-        .limit(CATCHUP_LIMIT)
-        .subquery()
+        .limit(10)
+        .options(load_only(*load_fields, raiseload=True))
+        .all()
     )
-    
-    #fetch the data
+
     return
 
 
