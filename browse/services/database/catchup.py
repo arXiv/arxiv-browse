@@ -64,14 +64,10 @@ def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[
         #splits category name into parts and adds it
         if "." in name:
             arch_part, cat_part = name.split(".")
-            cats.add((arch_part, cat_part))
-        else:
+            if arch_part not in archs:
+                cats.add((arch_part, cat_part))
+        elif name not in archs:
             archs.add(name)
-
-    def process_archive(arch: Archive) -> None:
-        archs.add(arch.id)
-        for category in arch.get_categories(True):
-            process_cat_name(category.alt_name) if category.alt_name else None 
 
     #handle category request
     if isinstance(subject, Category):
@@ -80,10 +76,15 @@ def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[
             process_cat_name(subject.alt_name)
 
     elif isinstance(subject, Archive):
-        process_archive(subject)
+        archs.add(subject.id)
+        for category in subject.get_categories(True):
+            process_cat_name(category.alt_name) if category.alt_name else None 
 
     elif isinstance(subject, Group):
         for arch in subject.get_archives(True):
-            process_archive(arch)
+            archs.add(arch.id)
+        for arch in subject.get_archives(True): #twice to avoid adding cateogires covered by archives
+            for category in subject.get_archives(True):
+                process_cat_name(category.alt_name) if category.alt_name else None 
 
     return archs, cats
