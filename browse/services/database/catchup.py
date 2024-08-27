@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple, Set
+from typing import Union, Tuple, Set
 from datetime import date
 
 from sqlalchemy import or_, and_, case
@@ -6,12 +6,15 @@ from sqlalchemy.orm import aliased, load_only
 from sqlalchemy.sql import func
 
 from arxiv.db import Session
-from arxiv.db.models import Metadata, DocumentCategory, Document, NextMail, t_arXiv_in_category 
+from arxiv.db.models import Metadata, NextMail, t_arXiv_in_category 
 from arxiv.taxonomy.category import Group, Archive, Category
+
+from browse.services.database.listings import _metadata_to_listing_item, process_requested_subject
+from browse.services.listing import ListingNew, gen_expires
 
 CATCHUP_LIMIT=2000
 
-def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include_abs:bool, page_num:int):
+def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include_abs:bool, page_num:int)-> ListingNew:
     """
     parameters should already be verified (only canonical subjects, date acceptable)
     """
@@ -82,6 +85,30 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
 
     valid_types=["new", "cross", 'rep','repcross']
 
+    #counts
+    counts = (
+        Session.query(
+            listing_type,
+            func.count().label('type_count')
+        )
+        .filter(listing_type.label('case_order').in_(valid_types))
+        .group_by(listing_type)
+        .order_by(case_order)
+        .all() 
+    )
+
+    new_count=0
+    cross_count=0
+    rep_count=0
+    for name, number in counts:
+        if name =="new":
+            new_count+=number
+        elif name=="cross":
+            cross_count+=number
+        else: #rep and repcross
+            rep_count+=number
+
+    #data
     meta = aliased(Metadata)
     load_fields = [
         meta.document_id,
@@ -115,44 +142,18 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
         .all()
     )
 
-    return
+    #process similar to listings
+    items=[]
+    for row in results:
+        listing_case, metadata = row
+        if listing_case=="repcross":
+            listing_case="rep"
+        item= _metadata_to_listing_item(metadata, listing_case)
+        items.append(item)
 
-
-def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[Set[str], Set[Tuple[str,str]]]:
-    """ 
-    set of archives to search if appliable, 
-    set of tuples are the categories to check for in addition to the archive broken into archive and category parts
-    only categories not contained by the set of archives will be returned seperately to work with the archive in category table
-    """
-    archs=set()
-    cats=set()
-
-    #utility functions
-    def process_cat_name(name: str) -> None:
-        #splits category name into parts and adds it
-        if "." in name:
-            arch_part, cat_part = name.split(".")
-            if arch_part not in archs:
-                cats.add((arch_part, cat_part))
-        elif name not in archs:
-            archs.add(name)
-
-    #handle category request
-    if isinstance(subject, Category):
-        process_cat_name(subject.id)
-        if subject.alt_name:
-            process_cat_name(subject.alt_name)
-
-    elif isinstance(subject, Archive):
-        archs.add(subject.id)
-        for category in subject.get_categories(True):
-            process_cat_name(category.alt_name) if category.alt_name else None 
-
-    elif isinstance(subject, Group):
-        for arch in subject.get_archives(True):
-            archs.add(arch.id)
-        for arch in subject.get_archives(True): #twice to avoid adding cateogires covered by archives
-            for category in subject.get_archives(True):
-                process_cat_name(category.alt_name) if category.alt_name else None 
-
-    return archs, cats
+    return ListingNew(listings=items, 
+                      new_count=new_count, 
+                      cross_count=cross_count, 
+                      rep_count=rep_count, 
+                      announced=day,
+                      expires=gen_expires())

@@ -29,16 +29,17 @@ def get_catchup_page()-> Response:
                     page=page,
                     abs=include_abs), 
             HTTPStatus.MOVED_PERMANENTLY)
+    
     headers={}
     headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-f{subject.id}"])
     #get data
-    get_catchup_data(subject, start_day, include_abs, page)
+    data=get_catchup_data(subject, start_day, include_abs, page)
 
     #format data
+ 
 
     response={}
     code=200
-    headers={}
     return response, code, headers
 
 
@@ -63,6 +64,7 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
     subject_str= request.args.get("subject")
     if not subject_str:
         raise BadRequest("Subject required. format: ?subject=subject_here")
+    subject: Union[Group, Archive, Category]
     if subject_str == "grp_physics":
         subject=GROUPS["grp_physics"]
     elif subject_str in ARCHIVES:

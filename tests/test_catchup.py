@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import patch
-from datetime import datetime, timedelta, date
-from flask import Flask, request
+from datetime import datetime,  date
+from flask import Flask
 from werkzeug.exceptions import BadRequest
 
 from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES
-from browse.services.database.catchup import process_requested_subject
+from browse.services.database.listings import process_requested_subject
 
 
 #PARAMETER TEST SECTION
@@ -198,4 +198,3 @@ def test_category_subject_processing():
     expected_cats={('math','DG')}
     assert result_archs==expected_archs
     assert result_cats==expected_cats
-    

@@ -1,6 +1,6 @@
 from datetime import  datetime
 from dateutil.tz import gettz
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Set, Union
 
 from sqlalchemy import case, distinct, or_, and_, desc
 from sqlalchemy.sql import func
@@ -16,17 +16,16 @@ from browse.services.listing import (
     ListingNew,
     AnnounceTypes
 )
-from browse.services.database.catchup import process_requested_subject
 
 from arxiv.db import Session
-from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
+from arxiv.db.models import Metadata, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
+from arxiv.taxonomy.category import Group, Archive, Category
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
-from logging import Logger
 from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
@@ -489,6 +488,47 @@ def _entries_into_monthly_listing_items(
             cross_listings.append(item)
 
     return new_listings, cross_listings
+
+
+def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[Set[str], Set[Tuple[str,str]]]:
+    """ 
+    set of archives to search if appliable, 
+    set of tuples are the categories to check for in addition to the archive broken into archive and category parts
+    only categories not contained by the set of archives will be returned seperately to work with the archive in category table
+    """
+    archs=set()
+    cats=set()
+
+    #utility functions
+    def process_cat_name(name: str) -> None:
+        #splits category name into parts and adds it
+        if "." in name:
+            arch_part, cat_part = name.split(".")
+            if arch_part not in archs:
+                cats.add((arch_part, cat_part))
+        elif name not in archs:
+            archs.add(name)
+
+    #handle category request
+    if isinstance(subject, Category):
+        process_cat_name(subject.id)
+        if subject.alt_name:
+            process_cat_name(subject.alt_name)
+
+    elif isinstance(subject, Archive):
+        archs.add(subject.id)
+        for category in subject.get_categories(True):
+            process_cat_name(category.alt_name) if category.alt_name else None 
+
+    elif isinstance(subject, Group):
+        for arch in subject.get_archives(True):
+            archs.add(arch.id)
+        for arch in subject.get_archives(True): #twice to avoid adding cateogires covered by archives
+            for category in arch.get_categories(True):
+                process_cat_name(category.alt_name) if category.alt_name else None 
+
+    return archs, cats
+
 
 def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[Tuple[str,str]]]:
     """ list of archives to search if appliable, 
