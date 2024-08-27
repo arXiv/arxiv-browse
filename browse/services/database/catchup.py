@@ -1,8 +1,9 @@
 from typing import Union, List, Tuple, Set
 from datetime import date
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_, case
 from sqlalchemy.orm import aliased, load_only
+from sqlalchemy.sql import func
 
 from arxiv.db import Session
 from arxiv.db.models import Metadata, DocumentCategory, Document, NextMail, t_arXiv_in_category 
@@ -14,6 +15,7 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
     """
     parameters should already be verified (only canonical subjects, date acceptable)
     """
+    offset=(page_num-1)*CATCHUP_LIMIT
 
     mail_id=f"{(day.year-2000):02d}{day.month:02d}{day.day:02d}" #will need to be changed in 3000 ;)
     #get document ids
@@ -21,8 +23,7 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
         Session.query(
             NextMail.document_id,
             NextMail.version,
-            NextMail.type,
-            NextMail.extra
+            NextMail.type
         )
         .filter(NextMail.mail_id==mail_id)
         .filter(NextMail.type!="jref")
@@ -32,22 +33,68 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
                 NextMail.version <= 5
             )
         )
-        .limit(10) #TODO
         .subquery()
     )
 
     #filter by subject
-    archives, categories=process_requested_subject(subject)
-
     aic = aliased(t_arXiv_in_category)
+    archives, categories=process_requested_subject(subject)
+    cat_conditions = [and_(aic.c.archive == arch_part, aic.c.subject_class == subj_part) for arch_part, subj_part in categories]
+
     all_items=(
         Session.query(
             doc_ids.c.document_id, 
             doc_ids.c.type,
-            doc_ids.c.extra
+            func.max(aic.c.is_primary).label('is_primary')
         )
         .join(aic, aic.c.document_id == doc_ids.c.document_id)
+        .where(
+            or_(
+                aic.c.archive.in_(archives),
+                or_(*cat_conditions)
+            )
+        )
+        .group_by(aic.c.document_id)
+        .subquery()
     )
+
+    #sort and limit
+    listing_type = case(*
+        [
+            (and_(all_items.c.type == 'new', all_items.c.is_primary == 1), 'new'),
+            (and_(all_items.c.type == 'cross', all_items.c.is_primary == 1), 'no-match'), #removes intra archive crosses
+            (or_(all_items.c.type == 'new', all_items.c.type == 'cross'), 'cross'),
+            (and_(all_items.c.type == 'rep', all_items.c.is_primary == 1), 'rep'),
+            (all_items.c.type == 'rep', 'repcross')
+        ],
+        else_="no_match"
+    ).label('listing_type')
+
+    case_order = case(*
+        [
+            (listing_type == 'new', 0),
+            (listing_type == 'cross', 1),
+            (listing_type == 'rep', 2),
+            (listing_type == 'repcross', 3),
+        ],
+        else_=4 
+    ).label('case_order')
+
+    valid_types=["new", "cross", 'rep','repcross']
+    selected_items=(
+        Session.query(
+            all_items.c.document_id, 
+            listing_type
+        )
+        .filter(listing_type.label('case_order').in_(valid_types))
+        .order_by(case_order)
+        .offset(offset)
+        .limit(CATCHUP_LIMIT)
+        .subquery()
+    )
+    
+    #fetch the data
+    return
 
 
 def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[Set[str], Set[Tuple[str,str]]]:
