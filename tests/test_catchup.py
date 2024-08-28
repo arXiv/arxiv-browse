@@ -5,7 +5,10 @@ from flask import Flask
 from werkzeug.exceptions import BadRequest
 
 from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES
+from browse.services.database.catchup import get_catchup_data
 from browse.services.database.listings import process_requested_subject
+from browse.services.listing import  get_listing_service
+from tests.listings.db.test_db_listing_new import validate_new_listing
 
 
 #PARAMETER TEST SECTION
@@ -198,3 +201,66 @@ def test_category_subject_processing():
     expected_cats={('math','DG')}
     assert result_archs==expected_archs
     assert result_cats==expected_cats
+
+def test_get_catchup_data_basic(app_with_db):
+    test_date=date(year=2011, month=2, day=3)
+    app = app_with_db
+    with app.app_context():
+        listing=get_catchup_data(ARCHIVES['math'], test_date, True, 0)
+    validate_new_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==2
+    assert listing.announced == date(2011,2,3)
+    assert any(
+        item.id == "math/0510544" and item.listingType == "rep" and item.primary == "math.RT"
+        for item in listing.listings
+    )
+
+def test_get_catchup_data_include_alias(app_with_db):
+    test_date=date(year=2011, month=2, day=3)
+    app = app_with_db
+    with app.app_context():
+        listing=get_catchup_data(ARCHIVES['math'], test_date, False, 0)
+    validate_new_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==2
+    assert listing.announced == date(2011,2,3)
+    assert any(
+        item.id == "0806.4129" and item.listingType == "rep" and item.primary == "math-ph"
+        for item in listing.listings
+    )
+    assert all(item.id!='0712.3217' for item in listing.listings) #dont include jref entry
+
+def test_get_catchup_no_data(app_with_db):
+    test_date=date(year=2011, month=2, day=4)
+    app = app_with_db
+    with app.app_context():
+        listing=get_catchup_data(ARCHIVES['math'], test_date, False, 0)
+    validate_new_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==0
+    assert listing.announced == date(2011,2,4)
+    assert len(listing.listings)==0
+
+def test_get_catchup_data_grp_physics(app_with_db):
+    test_date=date(year=2011, month=2, day=3)
+    app = app_with_db
+    with app.app_context():
+        listing=get_catchup_data(GROUPS['grp_physics'], test_date, False, 0)
+    validate_new_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==4
+    assert listing.announced == date(2011,2,3)
+    assert any(
+        item.id == "hep-th/0703166" and item.listingType == "rep" and item.primary == "hep-th"
+        for item in listing.listings
+    )
+
+def test_get_catchup_data_wdr(app_with_db):
+    test_date=date(year=2011, month=2, day=3)
+    app = app_with_db
+    with app.app_context():
+        listing=get_catchup_data(CATEGORIES['cond-mat.str-el'], test_date, True, 0)
+    validate_new_listing(listing.listings)
+    assert listing.new_count==0 and listing.cross_count==0 and listing.rep_count==1
+    assert listing.announced == date(2011,2,3)
+    assert any(
+        item.id == "cond-mat/0703772" and item.listingType == "rep" and item.primary == "cond-mat.str-el"
+        for item in listing.listings
+    )

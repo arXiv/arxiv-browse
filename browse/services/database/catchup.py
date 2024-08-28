@@ -67,8 +67,8 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
             (and_(all_items.c.type == 'new', all_items.c.is_primary == 1), 'new'),
             (and_(all_items.c.type == 'cross', all_items.c.is_primary == 1), 'no-match'), #removes intra archive crosses
             (or_(all_items.c.type == 'new', all_items.c.type == 'cross'), 'cross'),
-            (and_(all_items.c.type == 'rep', all_items.c.is_primary == 1), 'rep'),
-            (all_items.c.type == 'rep', 'repcross')
+            (and_(or_(all_items.c.type == 'rep', all_items.c.type == 'wdr'), all_items.c.is_primary == 1), 'rep'),
+            (or_(all_items.c.type == 'rep', all_items.c.type == 'wdr'), 'repcross')
         ],
         else_="no_match"
     ).label('listing_type')
@@ -137,7 +137,7 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
         .filter(meta.is_current ==1)
         .order_by(case_order, meta.paper_id)
         .offset(offset)
-        .limit(10)
+        .limit(CATCHUP_LIMIT)
         .options(load_only(*load_fields, raiseload=True))
         .all()
     )

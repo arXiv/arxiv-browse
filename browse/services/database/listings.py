@@ -3,6 +3,7 @@ from dateutil.tz import gettz
 from typing import List, Optional, Tuple, Set, Union
 
 from sqlalchemy import case, distinct, or_, and_, desc
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased, load_only
@@ -428,12 +429,17 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         primary_cat=CATEGORIES["bad-arch.bad-cat"]
         secondary_cats=[]
 
+    try: #incase abstract wasnt loaded
+        abstract=getattr(meta, 'abstract','') 
+    except InvalidRequestError:
+        abstract=''
+
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
         title=  getattr(meta, 'title',''),
         authors=AuthorList(getattr(meta, 'authors',"")),
-        abstract= getattr(meta, 'abstract','') ,
+        abstract= abstract,
         categories= getattr(meta, 'abs_categories',""),
         primary_category=primary_cat,
         secondary_categories=secondary_cats,
