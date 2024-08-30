@@ -1,4 +1,4 @@
-from typing import Union, Tuple, Set
+from typing import Union, Optional
 from datetime import date
 
 from sqlalchemy import or_, and_, case
@@ -20,7 +20,7 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
     """
     offset=(page_num-1)*CATCHUP_LIMIT
 
-    mail_id=f"{(day.year-2000):02d}{day.month:02d}{day.day:02d}" #will need to be changed in 3000 ;)
+    mail_id=date_to_mail_id(day)
     #get document ids
     doc_ids=(
         Session.query(
@@ -157,3 +157,33 @@ def get_catchup_data(subject: Union[Group, Archive, Category], day:date, include
                       rep_count=rep_count, 
                       announced=day,
                       expires=gen_expires())
+
+def get_next_announce_day(day: date)->Optional[date]:
+    """returns the next day with announcements after the parameter day
+        returns None if the input data was the most recent mailing date and there are no mailings past then
+    """
+    mail_id=date_to_mail_id(day)
+    next_day = (
+        Session.query(NextMail.mail_id)
+        .filter(NextMail.mail_id > mail_id) 
+        .filter(NextMail.is_written ==1) 
+        .order_by(NextMail.mail_id.asc())
+        .first()  
+    )
+    if not next_day:
+        return None
+
+    return mail_id_to_date(next_day[0])
+
+def date_to_mail_id(day:date)->str:
+    """converts a date to the mail_id it would have"""
+    return f"{(day.year-2000):02d}{day.month:02d}{day.day:02d}"
+
+def mail_id_to_date(mail_id:str)->date:
+    "converts an arxiv mailid into a date"
+    year=int(mail_id[0:2])+1900
+    if year <1990:
+        year+=100
+    month=int(mail_id[2:4])
+    day=int(mail_id[4:6])
+    return date(year=year, month=month, day=day)

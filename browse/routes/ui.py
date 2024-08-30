@@ -135,7 +135,7 @@ def catchup() -> Response:
     response, code, headers = catchup_page.get_catchup_page()
     headers=add_surrogate_key(headers,["catchup"])
     if code == status.OK:
-        return render_template("catchup", **response), code, headers  # type: ignore
+        return render_template("catchup.html", **response), code, headers  # type: ignore
     return response, code, headers  # type: ignore
 
 @blueprint.route("institutional_banner", methods=["GET"])
