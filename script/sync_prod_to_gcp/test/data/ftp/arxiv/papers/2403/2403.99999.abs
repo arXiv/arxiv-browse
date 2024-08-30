@@ -1,14 +1,10 @@
 ------------------------------------------------------------------------------
 \\
-arXiv:2308.07874
+arXiv:2308.99999
 From: Naoyuki Tai <ntai@arxiv.org>
-Date: Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v94): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v95): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v96): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v97): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v98): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
-Date (revised v99): Sat, 1 June 2023 00:00:00 GMT   (8332kb,D)
+Date: Sat, 1 June 2023 00:00:00 GMT   (24kb)
+Date (revised v2): Sat, 1 June 2023 00:00:00 GMT   (25kb)
+Date (revised v3): Sat, 1 June 2023 00:00:00 GMT   (8332kb,A)
 
 Title: Recovering GCP access secret from the /secrets/hello.txt
 Authors: Naoyuki Tai

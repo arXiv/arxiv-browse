@@ -1,7 +1,10 @@
+import logging
 import os
 import time
 import unittest
+
 import sync_published_to_gcp
+
 sync_published_to_gcp.GS_BUCKET = "arxiv-sync-test-01"
 # Adjest to local testing
 test_dir = os.path.dirname(os.path.abspath(__file__))
@@ -13,8 +16,9 @@ sync_published_to_gcp.DATA_PREFIX = os.path.join(test_dir, 'data', '')
 TEST_PORT = 12721
 sync_published_to_gcp.CONCURRENCY_PER_WEBNODE = [(f'localhost:{TEST_PORT}', 1)]
 
-from submissions_to_gcp import submission_message_to_file_state, sync_to_gcp, logger, MissingGeneratedFile, \
-    SubmissionFilesState, BrokenSubmission, TIMEOUTS
+from submissions_to_gcp import submission_message_to_file_state, sync_to_gcp, logger, \
+    MissingGeneratedFile, \
+    BrokenSubmission, TIMEOUTS
 import subprocess
 import shutil
 
@@ -26,6 +30,12 @@ from identifier import Identifier as ArxivId
 TIMEOUTS["PDF_TIMEOUT"] = 3
 TIMEOUTS["HTML_TIMEOUT"] = 3
 
+def trim_test_dir(fileset):
+    for idx in range(len(fileset)):
+        fileset[idx]['cit'] = fileset[idx]['cit'][len(test_dir):]
+    return fileset
+
+
 class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     """the handler gets the pdf request, and copy the dummy PDF to the destination.
     if it's html request, unpack the html and put it under /ps_cache
@@ -34,6 +44,7 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     When asking PDF, if the version is 98, the 404 returned after 120 seconds wait - to test the
     timeout.
     """
+
     def do_GET(self):
         pdf_req = re.match(r'^/pdf/(\d{4}\.\d{5}v\d+)(.pdf|)$', self.path)
         if pdf_req:
@@ -55,7 +66,8 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                     return
 
             x_path = os.path.join(test_dir, "data", "x.pdf")
-            pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "pdf", paper_id.yymm, f"{paper_id.idv}.pdf")
+            pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "pdf",
+                                    paper_id.yymm, f"{paper_id.idv}.pdf")
             if not os.path.exists(pdf_path):
                 os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
                 shutil.copy(x_path, pdf_path)
@@ -74,12 +86,12 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             for suffix in [".html.gz", ".tar.gz"]:
                 if paper_id.has_version:
                     source_path = os.path.join(test_dir, "data", "orig", "arxiv", "papers",
-                                              paper_id.yymm,
-                                              f"{paper_id.idv}{suffix}")
+                                               paper_id.yymm,
+                                               f"{paper_id.idv}{suffix}")
                 else:
                     source_path = os.path.join(test_dir, "data", "ftp", "arxiv", "papers",
-                                              paper_id.yymm,
-                                              f"{paper_id.id}{suffix}")
+                                               paper_id.yymm,
+                                               f"{paper_id.id}{suffix}")
                 if os.path.exists(source_path):
                     break
             else:
@@ -108,16 +120,20 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-def start_http_server(server_class=http.server.HTTPServer, handler_class=SimpleHTTPRequestHandler, port=TEST_PORT):
+def start_http_server(server_class=http.server.HTTPServer, handler_class=SimpleHTTPRequestHandler,
+                      port=TEST_PORT):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 
+
 def run_server_in_thread(port):
-    thread = threading.Thread(target=start_http_server, args=(http.server.HTTPServer, SimpleHTTPRequestHandler, port))
+    thread = threading.Thread(target=start_http_server,
+                              args=(http.server.HTTPServer, SimpleHTTPRequestHandler, port))
     thread.daemon = True
     thread.start()
     return thread
+
 
 def get_file_size(obj: str):
     out = subprocess.check_output(["gsutil", "ls", "-l", obj]).decode("utf-8")
@@ -136,6 +152,8 @@ def bucket_object_exists(obj: str) -> bool:
         raise  # Re-raise the exception if it's not the expected error
 
 
+arxivce_1756_obsolete = "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"
+
 class TestSubmissionsToGCP(unittest.TestCase):
 
     @classmethod
@@ -149,6 +167,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
         cls.server_thread.join(0)
 
     def setUp(self) -> None:
+        logger.setLevel(logging.DEBUG)
         # This isn't a goog idea, you know.
         if os.path.exists("test/test-output"):
             shutil.rmtree("test/test-output")
@@ -162,6 +181,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16188v2.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16190v1.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/2308.99990v1/2308.99990v1.html",
+                    "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.abs",
+                    "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.gz",
                     ]
         subprocess.call(rm_items + droplets,
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -179,12 +200,19 @@ class TestSubmissionsToGCP(unittest.TestCase):
 
         paper_id = "2308.99990v1"
         html_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "html", "2308",
-                                paper_id)
+                                 paper_id)
         if os.path.exists(html_path):
             shutil.rmtree(html_path)
 
+        # test_arxivce_1756
+        # Thess are the v2 abs, and .gz as being replaced, and copied under /ftp
+        subprocess.call(["gsutil", "cp", "test/data/orig/arxiv/papers/1907/1907.07431v2.abs",
+                         "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.abs"],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.call(["gsutil", "cp", "test/data/ftp/arxiv/papers/1907/1907.07431.gz",
+                        "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         pass
-
 
     def tearDown(self) -> None:
         paper_id = "2308.16190"
@@ -194,55 +222,21 @@ class TestSubmissionsToGCP(unittest.TestCase):
             os.remove(pdf_path)
         pass
 
-
-    def test_submission_message_to_payloads(self):
-
-        def make_payloads(test_data: dict):
-            file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
-            # The local contains the test_dir, so remove it and normalize for test
-            return [(entry[0][len(test_dir):], entry[1]) for entry in file_state.to_payloads()]
-
-        payloads = make_payloads({"paper_id": "physics/0106051", "version": "5", "src_ext": ".gz"})
-
-        self.assertEqual([('/data/ftp/physics/papers/0106/0106051.abs', 'ftp/physics/papers/0106/0106051.abs'),
-                          ('/data/ftp/physics/papers/0106/0106051.gz', 'ftp/physics/papers/0106/0106051.gz'),
-                          # To unify the PDF generation to sync, it now includes the PDF in syncing files
-                          ('/cache/ps_cache/physics/pdf/0106/0106051v5.pdf', 'ps_cache/physics/pdf/0106/0106051v5.pdf')
-                          ], payloads)
-
-
-        payloads = make_payloads({"type": "rep", "paper_id": "physics/0106051", "version": 5, "src_ext": ".gz"})
-
-        self.assertEqual([('/data/ftp/physics/papers/0106/0106051.abs', 'ftp/physics/papers/0106/0106051.abs'),
-                          ('/data/ftp/physics/papers/0106/0106051.gz', 'ftp/physics/papers/0106/0106051.gz'),
-
-                          # To unify the PDF generation to sync, it now includes the PDF in syncing files
-                          ('/cache/ps_cache/physics/pdf/0106/0106051v5.pdf', 'ps_cache/physics/pdf/0106/0106051v5.pdf'),
-
-                          ('/data/orig/physics/papers/0106/0106051v4.abs', 'orig/physics/papers/0106/0106051v4.abs'),
-                          ('/data/orig/physics/papers/0106/0106051v4.gz', 'orig/physics/papers/0106/0106051v4.gz')], payloads)
-
-        payloads = make_payloads({"type": "rep", "paper_id": "2403.07874", "version": 3, "src_ext": ".tar.gz"})
-        self.assertEqual([('/data/ftp/arxiv/papers/2403/2403.07874.abs', 'ftp/arxiv/papers/2403/2403.07874.abs'),
-                          ('/data/ftp/arxiv/papers/2403/2403.07874.tar.gz', 'ftp/arxiv/papers/2403/2403.07874.tar.gz'),
-                          ('/cache/ps_cache/arxiv/pdf/2403/2403.07874v3.pdf', 'ps_cache/arxiv/pdf/2403/2403.07874v3.pdf'), # ditto
-                          ('/data/orig/arxiv/papers/2403/2403.07874v2.abs', 'orig/arxiv/papers/2403/2403.07874v2.abs'),
-                          ('/data/orig/arxiv/papers/2403/2403.07874v2.tar.gz', 'orig/arxiv/papers/2403/2403.07874v2.tar.gz')], payloads)
-
     def test_sync_op(self):
         # The set up copies a PDF to  ftp/arxiv/papers/2308/2308.16188.pdf
         # When sync happens, the .tar.gz, .abs in ftp and pdf in ps_cache are synced and the
         # pdf in the ftp is removed.
         paper_id = "2308.16188"
         data = {
-            "type": "new",
+            "type": "rep",
             "paper_id": paper_id,
             "version": "2",
             "src_ext": ".tar.gz"
         }
         log_extra = {"paper_id": paper_id}
 
-        self.assertTrue(bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
+        self.assertTrue(
+            bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
 
         try:
             state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
@@ -269,13 +263,15 @@ class TestSubmissionsToGCP(unittest.TestCase):
             self.fail("Any exception is a bad test. Fix the test")
             pass
 
-        # The existing file is deleted
-        self.assertFalse(bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
+        # The PDF still there. In the real life, this is the new published PDF in /ftp
+        self.assertTrue(
+            bucket_object_exists(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.pdf"))
 
         # New submissions
-        self.assertEqual( "2642", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
-        self.assertEqual( "141", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
-
+        self.assertEqual("2642", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
+        self.assertEqual("141", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
 
     def test_ask_pdf(self):
         paper_id = "2308.16190"
@@ -313,12 +309,14 @@ class TestSubmissionsToGCP(unittest.TestCase):
             pass
 
         # Fake PDF is created.
-        self.assertEqual("1115014", get_file_size(f"gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/{paper_id}v1.pdf"))
+        self.assertEqual("1115014", get_file_size(
+            f"gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/{paper_id}v1.pdf"))
 
         # New submissions
-        self.assertEqual("2643", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
-        self.assertEqual("141", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
-
+        self.assertEqual("2643", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
+        self.assertEqual("141", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
 
     def test_ask_pdf_timeout(self):
         """
@@ -348,7 +346,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
 
         except sync_published_to_gcp.WebnodeException as webn_exc:
             # The exception is replaced with missing generated file
-            self.fail("PDF should not be created and end with the exception, but this is not the expected exception.")
+            self.fail(
+                "PDF should not be created and end with the exception, but this is not the expected exception.")
             pass
 
         except MissingGeneratedFile as _exc:
@@ -364,7 +363,6 @@ class TestSubmissionsToGCP(unittest.TestCase):
             return
 
         self.fail("PDF should not be created and end with the exception")
-
 
     def test_ask_pdf_then_fail(self):
         """
@@ -395,7 +393,6 @@ class TestSubmissionsToGCP(unittest.TestCase):
             return
 
         self.fail("PDF should not be created and end with the exception")
-
 
     def test_ask_html(self):
         """
@@ -438,11 +435,12 @@ class TestSubmissionsToGCP(unittest.TestCase):
             pass
 
         # Fake HTML file is created.
-        self.assertEqual("84", get_file_size(f"gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/{paper_id}v1/{paper_id}v1.html"))
+        self.assertEqual("84", get_file_size(
+            f"gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/{paper_id}v1/{paper_id}v1.html"))
 
         # New submissions
-        self.assertEqual("1055", get_file_size(f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
-
+        self.assertEqual("1055", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
 
     def test_arxivce_1756(self):
         """
@@ -486,31 +484,47 @@ so the correct file state of /ftp is
     * gs://arxiv-production-data/ftp/arxiv/papers/1907/1907.07431.abs
     * gs://arxiv-production-data/ftp/arxiv/papers/1907/1907.07431.tar.gz
 """
-        # Double check to copy the pieces
-        subprocess.call(["gsutil", "cp", "test/data/orig/arxiv/papers/1907/1907.07431v2.abs",
-                         "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.abs"],
-                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-        obsolete = "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"
-        subprocess.call(["gsutil", "cp", "test/data/ftp/arxiv/papers/1907/1907.07431.gz",
-                        obsolete],
-                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
+        # set up
         # double check it is there.
         # This created the obsolete file is in /ftp
-        self.assertEqual("36", get_file_size(obsolete))
+        self.assertEqual("36", get_file_size(arxivce_1756_obsolete))
 
-        test_data = {"paper_id": "1907.07431", "version": "3", "src_ext": ".tar.gz"}
+        test_data = {"type": "rep", "paper_id": "1907.07431", "version": "3", "src_ext": ".tar.gz"}
 
         # This should ask webnode (well, local http server for this test) to make the PDF file
         file_state = submission_message_to_file_state(test_data, {}, ask_webnode=True)
-        # Trim off the source's leading test dir so the test expected is more readable
-        payloads = [(entry[0][len(test_dir):], entry[1]) for entry in file_state.to_payloads()]
+
+        expected = trim_test_dir(file_state.get_expected_files())
+        # I know this is tested in other one but, you know, ask_webnode is different.
         self.assertEqual(
-            [('/data/ftp/arxiv/papers/1907/1907.07431.abs', 'ftp/arxiv/papers/1907/1907.07431.abs'),
-                  ('/data/ftp/arxiv/papers/1907/1907.07431.tar.gz','ftp/arxiv/papers/1907/1907.07431.tar.gz'),
-                  ('/cache/ps_cache/arxiv/pdf/1907/1907.07431v3.pdf', 'ps_cache/arxiv/pdf/1907/1907.07431v3.pdf')],
-            payloads)
+            [{'cit': '/data/ftp/arxiv/papers/1907/1907.07431.abs',
+              'gcp': 'ftp/arxiv/papers/1907/1907.07431.abs',
+              'status': 'current',
+              'type': 'abstract'},
+             {'cit': '/data/ftp/arxiv/papers/1907/1907.07431.tar.gz',
+              'gcp': 'ftp/arxiv/papers/1907/1907.07431.tar.gz',
+              'status': 'current',
+              'type': 'submission'},
+             {'cit': '/cache/ps_cache/arxiv/pdf/1907/1907.07431v3.pdf',
+              'gcp': 'ps_cache/arxiv/pdf/1907/1907.07431v3.pdf',
+              'status': 'current',
+              'type': 'pdf-cache'},
+             {'cit': '/data/orig/arxiv/papers/1907/1907.07431v2.abs',
+              'gcp': 'orig/arxiv/papers/1907/1907.07431v2.abs',
+              'obsoleted': 'ftp/arxiv/papers/1907/1907.07431.abs',
+              'original': 'orig/arxiv/papers/1907/1907.07431v2.abs',
+              'status': 'obsolete',
+              'type': 'abstract',
+              'version': 2},
+             {'cit':       '/data/orig/arxiv/papers/1907/1907.07431v2.gz',
+              'gcp':       'orig/arxiv/papers/1907/1907.07431v2.gz',
+              'obsoleted': 'ftp/arxiv/papers/1907/1907.07431.gz',
+              'original':  'orig/arxiv/papers/1907/1907.07431v2.gz',
+              'status': 'obsolete',
+              'type': 'submission',
+              'version': 2}],
+            expected)
+
         log_extra = {}
         try:
             sync_to_gcp(file_state, log_extra)
@@ -520,5 +534,224 @@ so the correct file state of /ftp is
             self.fail("Any exception is a bad test. Fix the test")
             pass
 
+        for entry in expected:
+            gcp = "gs://arxiv-sync-test-01/" + entry['gcp']
+            should_be_true = bucket_object_exists(gcp)
+            if not should_be_true:
+                logger.error(f"{gcp} <-- should exist but not there")
+            self.assertEqual(gcp, gcp if should_be_true else "")
+
         # because the obsolete file is deleted
-        self.assertFalse(bucket_object_exists(obsolete))
+        self.assertFalse(bucket_object_exists("gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"))
+
+
+class TestPayloadToMeta(unittest.TestCase):
+
+    def test_new(self):
+        test_data = {"type": "new", "paper_id": "2308.99991", "version": "1", "src_ext": ".tar.gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99991.abs',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99991.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99991.tar.gz',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99991.tar.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/pdf/2308/2308.99991v1.pdf',
+             'gcp': 'ps_cache/arxiv/pdf/2308/2308.99991v1.pdf',
+             'status': 'current',
+             'type': 'pdf-cache'}
+            ], expected)
+
+
+    def test_wdr(self):
+        # withdrawal -
+        # the v2 abs is populated, but v1 .abs, .tar.gz are retired
+        # v2 .tar.gz is not made
+        test_data = {"type": "wdr", "paper_id": "2308.99992", "version": "2", "src_ext": ".tar.gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99992.abs',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99992.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/orig/arxiv/papers/2308/2308.99992v1.abs',
+             'gcp': 'orig/arxiv/papers/2308/2308.99992v1.abs',
+             'obsoleted': 'ftp/arxiv/papers/2308/2308.99992.abs',
+             'original': 'orig/arxiv/papers/2308/2308.99992v1.abs',
+             'status': 'obsolete',
+             'type': 'abstract',
+             'version': 1},
+            {'cit': '/data/orig/arxiv/papers/2308/2308.99992v1.tar.gz',
+             'gcp': 'orig/arxiv/papers/2308/2308.99992v1.tar.gz',
+             'obsoleted': 'ftp/arxiv/papers/2308/2308.99992.tar.gz',
+             'original': 'orig/arxiv/papers/2308/2308.99992v1.tar.gz',
+             'status': 'obsolete',
+             'type': 'submission',
+             'version': 1}
+            ], expected)
+
+    def test_jref(self):
+        test_data = {"type": "jref", "paper_id": "2308.99994", "version": "2", "src_ext": ".pdf"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99994.abs',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99994.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99994.pdf',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99994.pdf',
+             'status': 'current',
+             'type': 'submission'}
+            ], expected)
+
+    def test_cross(self):
+        test_data = {"type": "cross", "paper_id": "2308.99995", "version": "2", "src_ext": ".tar.gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99995.abs',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99995.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99995.tar.gz',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99995.tar.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/html/2308/2308.99995v2',
+             'gcp': 'ps_cache/arxiv/html/2308/2308.99995v2',
+             'status': 'current',
+             'type': 'html-cache'}
+            ], expected)
+
+
+    def test_submission_message_to_payloads(self):
+        test_data = {"type": "rep", "paper_id": "physics/0106051", "version": "3", "src_ext": ".gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        payloads = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual(
+            [
+                {'cit': '/data/ftp/physics/papers/0106/0106051.abs',
+                 'gcp': 'ftp/physics/papers/0106/0106051.abs',
+                 'status': 'current',
+                 'type': 'abstract'},
+                {'cit': '/data/ftp/physics/papers/0106/0106051.gz',
+                 'gcp': 'ftp/physics/papers/0106/0106051.gz',
+                 'status': 'current',
+                 'type': 'submission'},
+                {'cit': '/cache/ps_cache/physics/pdf/0106/0106051v3.pdf',
+                 'gcp': 'ps_cache/physics/pdf/0106/0106051v3.pdf',
+                 'status': 'current',
+                 'type': 'pdf-cache'},
+                {'cit': '/data/orig/physics/papers/0106/0106051v2.abs',
+                 'gcp': 'orig/physics/papers/0106/0106051v2.abs',
+                 'obsoleted': 'ftp/physics/papers/0106/0106051.abs',
+                 'original': 'orig/physics/papers/0106/0106051v2.abs',
+                 'status': 'obsolete',
+                 'type': 'abstract',
+                 'version': 2},
+                {'cit': '/data/orig/physics/papers/0106/0106051v2.gz',
+                 'gcp': 'orig/physics/papers/0106/0106051v2.gz',
+                 'obsoleted': 'ftp/physics/papers/0106/0106051.gz',
+                 'original': 'orig/physics/papers/0106/0106051v2.gz',
+                 'status': 'obsolete',
+                 'type': 'submission',
+                 'version': 2}
+             ], payloads)
+
+        test_data = {"type": "rep", "paper_id": "physics/0106051", "version": 3, "src_ext": ".gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        payloads = trim_test_dir(file_state.get_expected_files())
+
+        self.assertEqual(
+            [
+                {'cit': '/data/ftp/physics/papers/0106/0106051.abs',
+                 'gcp': 'ftp/physics/papers/0106/0106051.abs',
+                 'status': 'current',
+                 'type': 'abstract'},
+                {'cit': '/data/ftp/physics/papers/0106/0106051.gz',
+                 'gcp': 'ftp/physics/papers/0106/0106051.gz',
+                 'status': 'current',
+                 'type': 'submission'},
+                {'cit': '/cache/ps_cache/physics/pdf/0106/0106051v3.pdf',
+                 'gcp': 'ps_cache/physics/pdf/0106/0106051v3.pdf',
+                 'status': 'current',
+                 'type': 'pdf-cache'},
+                {'cit': '/data/orig/physics/papers/0106/0106051v2.abs',
+                 'gcp': 'orig/physics/papers/0106/0106051v2.abs',
+                 'obsoleted': 'ftp/physics/papers/0106/0106051.abs',
+                 'original': 'orig/physics/papers/0106/0106051v2.abs',
+                 'status': 'obsolete',
+                 'type': 'abstract',
+                 'version': 2},
+                {'cit': '/data/orig/physics/papers/0106/0106051v2.gz',
+                 'gcp': 'orig/physics/papers/0106/0106051v2.gz',
+                 'obsoleted': 'ftp/physics/papers/0106/0106051.gz',
+                 'original': 'orig/physics/papers/0106/0106051v2.gz',
+                 'status': 'obsolete',
+                 'type': 'submission',
+                 'version': 2}
+             ],
+            payloads)
+
+    def test_arxivce_1756(self):
+        test_data = {"type": "rep", "paper_id": "1907.07431", "version": "3", "src_ext": ".tar.gz"}
+
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual(
+            [{'cit': '/data/ftp/arxiv/papers/1907/1907.07431.abs',
+              'gcp': 'ftp/arxiv/papers/1907/1907.07431.abs',
+              'status': 'current',
+              'type': 'abstract'},
+             {'cit': '/data/ftp/arxiv/papers/1907/1907.07431.tar.gz',
+              'gcp': 'ftp/arxiv/papers/1907/1907.07431.tar.gz',
+              'status': 'current',
+              'type': 'submission'},
+             {'cit': '/cache/ps_cache/arxiv/pdf/1907/1907.07431v3.pdf',
+              'gcp': 'ps_cache/arxiv/pdf/1907/1907.07431v3.pdf',
+              'status': 'current',
+              'type': 'pdf-cache'},
+             {'cit': '/data/orig/arxiv/papers/1907/1907.07431v2.abs',
+              'gcp': 'orig/arxiv/papers/1907/1907.07431v2.abs',
+              'obsoleted': 'ftp/arxiv/papers/1907/1907.07431.abs',
+              'original': 'orig/arxiv/papers/1907/1907.07431v2.abs',
+              'status': 'obsolete',
+              'type': 'abstract',
+              'version': 2},
+             {'cit': '/data/orig/arxiv/papers/1907/1907.07431v2.gz',
+              'gcp': 'orig/arxiv/papers/1907/1907.07431v2.gz',
+              'obsoleted': 'ftp/arxiv/papers/1907/1907.07431.gz',
+              'original': 'orig/arxiv/papers/1907/1907.07431v2.gz',
+              'status': 'obsolete',
+              'type': 'submission',
+              'version': 2}],
+            expected)
+
+    def test_source_format_change(self):
+        file_state = submission_message_to_file_state(
+            {"type": "rep", "paper_id": "2403.99999", "version": 3, "src_ext": ".tar.gz"}, {},
+            ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'type': 'abstract', 'cit': '/data/ftp/arxiv/papers/2403/2403.99999.abs',
+             'status': 'current', 'gcp': 'ftp/arxiv/papers/2403/2403.99999.abs'},
+            {'type': 'submission', 'cit': '/data/ftp/arxiv/papers/2403/2403.99999.tar.gz',
+             'status': 'current', 'gcp': 'ftp/arxiv/papers/2403/2403.99999.tar.gz'},
+            {'type': 'pdf-cache', 'cit': '/cache/ps_cache/arxiv/pdf/2403/2403.99999v3.pdf',
+             'status': 'current', 'gcp': 'ps_cache/arxiv/pdf/2403/2403.99999v3.pdf'},
+            {'type': 'abstract', 'cit': '/data/orig/arxiv/papers/2403/2403.99999v2.abs',
+             'status': 'obsolete', 'version': 2,
+             'obsoleted': 'ftp/arxiv/papers/2403/2403.99999.abs',
+             'original': 'orig/arxiv/papers/2403/2403.99999v2.abs',
+             'gcp': 'orig/arxiv/papers/2403/2403.99999v2.abs'},
+            {'type': 'submission', 'cit': '/data/orig/arxiv/papers/2403/2403.99999v2.gz',
+             'status': 'obsolete', 'version': 2, 'obsoleted': 'ftp/arxiv/papers/2403/2403.99999.gz',
+             'original': 'orig/arxiv/papers/2403/2403.99999v2.gz',
+             'gcp': 'orig/arxiv/papers/2403/2403.99999v2.gz'}
+        ], expected)

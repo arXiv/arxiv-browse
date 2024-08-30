@@ -2,13 +2,49 @@
 submissions_to_gcp.py is an app that gets the published arxiv ID from the pub/sub queue on GCP,
 check the files exist on CIT and uploads them to GCP bucket.
 
-For each announced paper ID it will:
+
+publish_types = [ cross | jref | new | rep | wdr ]
+See https://arxiv-org.atlassian.net/wiki/spaces/AD/pages/608403503/arXiv+Announce+Types
+for the description of each type.
+
+gist:
+
+  * new: new published
+  * rep: Version added to the published
+  * wdr: The version is withdrawn
+  * cross: This is how a paper is announced in its secondary categories.
+  * jref: metadata update
+
+New publish "new":
+  * sync the /ftp files and ensure only current version files exist
+    - if /ftp exists, this is a problem... Version should be 1, and there is no previous files.
+      It there is any file (object) exists, the request is rejected.
+      Human needs to decide what to do with the object under /ftp.
+
+Replacement - "rep"
+  For each announced paper ID it will:
+  * All of files in /ftp - paper ID are moved to /orig prior to copying new version.
   * sync the /ftp files and ensure only current version files exist
     - if /ftp for the paper ID has any obsolete submission, it is removed.
   * sync the abs and source files to /orig if needed
     - If TeX source it will build the PDF on a CIT web node and sync those to ps_cache
     - If HTML source it will build the HTML and sync those to the ps_cache
+  As the /ftp objects moved to /orig, it *should* NOT be copied as this behavior is same as the
+  current publishing process.
 
+Withdraw - "wdr":
+  For each announced paper ID it will:
+  * All of files in /ftp - paper ID are moved to /orig.
+  * No sync from the /ftp.
+  * sync the abs and source files to /orig if needed
+    - If TeX source it will build the PDF on a CIT web node and sync those to ps_cache
+    - If HTML source it will build the HTML and sync those to the ps_cache
+  As the /ftp objects moved to /orig, it *should* NOT be copied as this behavior is same as the
+  current publishing process.
+
+Metadata update - "jref":
+  For each announced paper ID it will:
+  * /ftp - .abs gets updated (other files too?)
 
 The "upload to GCP bucket" part is from existing sync_published_to_gcp.
 
@@ -118,6 +154,60 @@ thread_data = ThreadLocalData()
 RE_DATE_COMPONENTS = re.compile(
     r'^Date\s*(?::|\(revised\s*(?P<version>.*?)\):)\s*(?P<date>.*?)'
     r'(?:\s+\((?P<size_kilobytes>\d+)kb,?(?P<source_type>.*)\))?$')
+
+
+def parse_publish_date(dateline: str) -> dict:
+    """Pick off the publish metadata and return it as a dict."""
+    parsed = RE_DATE_COMPONENTS.match(dateline)
+    if parsed:
+        version_string = parsed.group('version')
+        return {
+            "version": int(version_string[1:]) if version_string else 1,
+            "date": parsed.group('date'),
+            "size_kilobytes": parsed.group('size_kilobytes'),
+            "source_type":  parsed.group('source_type')
+        }
+    return {}
+
+
+def md5_sum(file_path: str) -> str:
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(file_path)
+    md5_value = subprocess.run(['md5sum', file_path], stdout=subprocess.PIPE)
+    return md5_value.stdout.decode('utf-8').strip()
+
+#
+# source_flags in database
+# null
+# ''
+# 1
+# S
+# 1S
+# S1
+# A
+# 1B
+# B
+# AS
+#
+# source_format in database
+# null
+# ''
+# pdftex
+# tex
+# pdf
+# withdrawn
+# docx
+# invalid
+# ps
+# html
+#
+
+# abs source flags
+# D -> pdftex
+# H -> html
+# I -> withdrawn
+# P -> PS
+# X -> docx
 
 
 @dataclass
@@ -245,9 +335,10 @@ class SubmissionFilesState:
     single_source: bool
     archive: str         # old-style
     publish_type: str
-    version: str
+    version: str         # from the publish event
     log_extra: dict
     submission_source: typing.Optional[dict]
+    published_versions: typing.List[dict]
 
     _top_levels: dict
 
@@ -261,7 +352,12 @@ class SubmissionFilesState:
         except:
             raise InvalidVersion(f"{version} is invalid")
         self.xid = Identifier(arxiv_id_str)  # arXiv paper ID (xid)
-        self.version = version               # submission version
+        # since I can pick up the latest version from .abs, I may not need to set this at all.
+        self.version = 1
+        try:
+            self.version = int(version)  # published submission version from event
+        except ValueError:
+            pass
         # versioned ID (Versioned XID)
         self.vxid = self.xid if self.xid.has_version else Identifier(f"{arxiv_id_str}v{version}")
         self.publish_type = publish_type
@@ -272,6 +368,7 @@ class SubmissionFilesState:
         self.submission_source = None
         self.single_source = False
         self._extras = []
+        self.published_versions = []  # This is the versions from existing .abs on file system
 
         self.ext_candidates = SubmissionFilesState.submission_exts.copy()
         if src_ext:
@@ -330,9 +427,18 @@ class SubmissionFilesState:
     def prev_source_path(self, dotext: str):
         return f"{self.versioned_parent}/{self.xid.filename}v{self.prev_version}{dotext}"
 
-    def maybe_update_metadata(self):
-        """If the source format for the submission is not given, scan the directory and decide
-        the submission format.
+    def set_published_versions(self, datelines: typing.List[str]):
+        self.published_versions = [parse_publish_date(dateline) for dateline in datelines]
+
+    def get_version_metadata(self, version: typing.Union[str, int]) -> dict:
+        if isinstance(version, str):
+            version = int(version)
+        published = [entry for entry in self.published_versions if entry["version"] == version]
+        return published[0] if published else {}
+
+    def update_metadata(self):
+        """
+        Read the .abs file and update the metadata.
 
         The way source_format, source_flags are used is chaotic.
         """
@@ -345,58 +451,61 @@ class SubmissionFilesState:
                     self.src_ext = ext
                     break
 
-        if not self.source_format:
-            abs_path = self.source_path(".abs")
-            dates = []
-            try:
-                with open(abs_path, "r", encoding="utf-8") as abs_fd:
-                    for line in abs_fd.readlines():
-                        sline = line.strip()
-                        if sline == "":
-                            break
-                        if sline.startswith("Date"):
-                            dates.append(sline)
+        abs_path = self.source_path(".abs")
+        dates = []
+        try:
+            with open(abs_path, "r", encoding="utf-8") as abs_fd:
+                for line in abs_fd.readlines():
+                    sline = line.strip()
+                    if sline == "":
+                        break
+                    if sline.startswith("Date"):
+                        dates.append(sline)
 
-            except FileNotFoundError as exc:
-                msg = f"abs file {abs_path} does not exist"
-                logger.warning(msg)
-                raise BrokenSubmission(msg) from exc
+        except FileNotFoundError as exc:
+            msg = f"abs file {abs_path} does not exist"
+            logger.warning(msg)
+            raise BrokenSubmission(msg) from exc
 
-            except Exception as exc:
-                msg = f"Error with {abs_path}"
-                logger.warning(msg, exc_info=True)
-                raise BrokenSubmission(msg) from exc
+        except Exception as exc:
+            msg = f"Error with {abs_path}"
+            logger.warning(msg, exc_info=True)
+            raise BrokenSubmission(msg) from exc
 
-            if dates:
-                parsed = RE_DATE_COMPONENTS.match(dates[-1])
-                if parsed:
-                    source_type = parsed.group('source_type')
-                    for source_flag in source_type:
-                        if source_flag in flag_to_source_format:
-                            self.source_format = flag_to_source_format[source_flag]
-                            continue
-                        if source_flag in "SAB":
-                            self.source_flags = self.source_flags + source_flag
-                            continue
+        if dates:
+            self.set_published_versions(dates)
 
-            # is this a single source submission?
-            self.single_source = self.src_ext != ".tar.gz"
+            published = self.get_version_metadata(self.version)
+            # The published abs is the source of truce.
+            if published:
+                source_type = published["source_type"]
+                self.source_flags = ""
+                for source_flag in source_type:
+                    if source_flag in flag_to_source_format:
+                        self.source_format = flag_to_source_format[source_flag]
+                        continue
+                    if source_flag in "SAB":
+                        self.source_flags = self.source_flags + source_flag
+                        continue
 
-            if not self.single_source:
-                # It the source format isn't decided, it's probably tex submission
-                if not self.source_format:
-                    self.source_format = "tex"
-            else:
-                if self.src_ext in src_ext_to_source_format:
-                    maybe_source_format = src_ext_to_source_format[self.src_ext]
-                    if isinstance(maybe_source_format, dict):
-                        source_format = maybe_source_format.get(self.source_format)
-                        if source_format is None:
-                            self.source_format = maybe_source_format[None]
-                        else:
-                            self.source_format = source_format
+        # is this a single source submission?
+        self.single_source = self.src_ext != ".tar.gz"
+
+        if not self.single_source:
+            # It the source format isn't decided, it's probably tex submission
+            if not self.source_format:
+                self.source_format = "tex"
+        else:
+            if self.src_ext in src_ext_to_source_format:
+                maybe_source_format = src_ext_to_source_format[self.src_ext]
+                if isinstance(maybe_source_format, dict):
+                    source_format = maybe_source_format.get(self.source_format)
+                    if source_format is None:
+                        self.source_format = maybe_source_format[None]
                     else:
-                        self.source_format = maybe_source_format
+                        self.source_format = source_format
+                else:
+                    self.source_format = maybe_source_format
 
     @property
     def is_tex_submission(self) -> bool:
@@ -444,6 +553,13 @@ class SubmissionFilesState:
         This was to get a pdf only submission with ancillary files.
         """
 
+        self.update_metadata()
+        metadata = self.get_version_metadata(self.version)
+        if not metadata:
+            # This means - the publishing - daily.sh posted the event, but .abs not on the CIT
+            # disk. .abs must be created for it ond sitting on the SFS so it's a bad situation.
+            logger.warning("no metadata found.", extra=self.log_extra)
+
         def current(t, cit): # macro!? It's just easier to read code being here
             return {"type": t, "cit": cit, "status": "current"}
 
@@ -455,9 +571,11 @@ class SubmissionFilesState:
         elif self.is_ignored():
             # When a submission is ignored, .abs, and the "removed" marker should be in ftp/
             files.append(current("submission", self.gz_source))
+        elif self.publish_type == "wdr":
+            # no new file uploaded. (well, .abs is uploaded)
+            pass
         else:
-            # Live submission
-            self.maybe_update_metadata()
+            # Live submission - the latest uploaded
             self.submission_source = self.source_path(self.src_ext)
             files.append(current("submission", self.submission_source))
 
@@ -473,18 +591,64 @@ class SubmissionFilesState:
             pass
 
         if self.publish_type in ["rep", "wdr"]:
-            def obsolete(t, cit):
-                return {"type": t, "cit": cit, "status": "obsolete"}
+            # For these, version-1 needs to move around
+            def obsolete(t, cit, obsolete_obj_on_gcp, original):
+                return {"type": t, "cit": cit,
+                        "status": "obsolete",
+                        "version": self.prev_version,
+                        "obsoleted": obsolete_obj_on_gcp, # This is the current announced.
+                        "original": original  # The value should be the same as "gcp" in the end
+                        }
 
-            files.append(obsolete("abstract", self.prev_source_path(".abs")))
+            files.append(obsolete("abstract",
+                                  self.prev_source_path(".abs"),
+                                  path_to_bucket_key(self.source_path(".abs")),
+                                  path_to_bucket_key(self.prev_source_path(".abs"))))
 
             for dotext in self.submission_exts:
                 prev_source_path = self.prev_source_path(dotext)
                 if os.path.exists(prev_source_path):
-                    files.append(obsolete("submission", self.prev_source_path(dotext)))
+                    files.append(obsolete("submission",
+                                          self.prev_source_path(dotext),
+                                          path_to_bucket_key(self.source_path(dotext)),
+                                          path_to_bucket_key(self.prev_source_path(dotext))))
                     break
             else:
-                files.append(obsolete("submission", self.prev_source_path(self.src_ext)))
+                # I'm in a bind here. I have to take a guess...
+                # There is some chance that it may not exist to begin with?
+                # fortunately, I can assume that if the source type doesn't change, I can
+                # use the same source file extent.
+                this_meta = self.get_version_metadata(self.version)
+                prev_meta = self.get_version_metadata(self.prev_version)
+                prev_src_ext = self.src_ext
+                if prev_meta.get("source_type") != this_meta.get("source_type"):
+                    prev_src_ext = ".gz"
+                    single = False
+                    for flag in prev_meta.get("source_type", ""):
+                        if flag in ["A", "D"]:
+                            prev_src_ext = ".tar.gz"
+                            break
+                        elif flag == "X":
+                            prev_src_ext = ".docx.gz"
+                        elif flag == "P":
+                            prev_src_ext = ".ps.gz"
+                        elif flag == "H":
+                            prev_src_ext = ".html.gz"
+                        elif flag == "I":
+                            prev_src_ext = None
+                        elif flag == "1":
+                            single = True
+                        else:
+                            logger.error("unknown source flag: %s", flag, extra=self.log_extra)
+
+                if prev_src_ext is not None:
+                    if single:
+                        if prev_src_ext == ".tar.gz":
+                            prev_src_ext = ".gz"
+                    files.append(obsolete("submission",
+                                          self.prev_source_path(prev_src_ext),
+                                          path_to_bucket_key(self.source_path(prev_src_ext)),
+                                          path_to_bucket_key(self.prev_source_path(prev_src_ext))))
 
         for file_entry in files:
             file_entry["gcp"] = path_to_bucket_key(file_entry["cit"])
@@ -688,7 +852,36 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
         blob = bucket.blob(obj)
         logger.debug("%s is being deleted", obj, extra=log_extra)
         blob.delete()
-        logger.info("%s is deleted", obj, extra=log_extra)
+        logger.warning("%s is deleted", obj, extra=log_extra)
+    return
+
+
+@STORAGE_RETRY
+def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], log_extra: dict):
+    """
+    Move object - apparently, you have to copy blob
+    """
+    from sync_published_to_gcp import GS_BUCKET
+    bucket: Bucket = gs_client.bucket(GS_BUCKET)
+    for from_obj, to_obj, obj_type in objects:
+        logger.debug("%s: %s is being renamed to %s", obj_type, from_obj, to_obj, extra=log_extra)
+        from_blob: Blob = bucket.blob(from_obj)
+        if not from_blob.exists():
+            logger.warning("%s: FROM %s does not exist", obj_type, from_obj, extra=log_extra)
+            continue
+        to_blob: Blob = bucket.blob(to_obj)
+        if to_blob.exists():
+            if to_blob.md5_hash == from_blob.md5_hash:
+                # The object is already in the orig, and should not be in /ftp
+                from_blob.delete()
+                logger.warning("%s: %s <---> %s are identical - moved md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
+                continue
+            else:
+                logger.warning("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
+        copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
+        logger.debug("%s: %s is copied to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
+        from_blob.delete()
+        logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
     return
 
 
@@ -801,8 +994,29 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
     bucket_objects: typing.List[str] = \
         list_bucket_objects(gs_client, path_to_bucket_key(cit_source_root_path))
 
+    # Obsolete blobs are moved to /orig first
+    retired = []
+    for entry in desired_state:
+        if entry["status"] != "obsolete":
+            continue
+        obsoleted = entry["obsoleted"]
+        original = entry["original"]
+        entry_type = entry['type']
+        retired.append((obsoleted, original, entry_type))
+
+    if retired:
+        # Move blobs from /ftp to /orig
+        move_bucket_objects(gs_client, retired, log_extra)
+        # Obsoleted objects are gone
+        for obsoleted, _original, _entry_type in retired:
+            if obsoleted in bucket_objects:
+                bucket_objects.remove(obsoleted)
+
     # Objects synced to GCP
     for entry in desired_state:
+        if entry["status"] == "obsolete":
+            continue
+
         local = entry["cit"]
         remote = entry["gcp"]
         entry_type = entry['type']
@@ -815,15 +1029,24 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
             continue
 
         logger.debug("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
-        upload(gs_client, Path(local), remote, upload_logger=logger)
+        local_path = Path(local)
+        if local_path.exists() and local_path.is_file():
+            upload(gs_client, local_path, remote, upload_logger=logger)
+        else:
+            logger.warning("No local file for uploading [%s]: %s -> %s",
+                           entry_type, local, remote, extra=log_extra)
+
         # Uploaded files are good ones. Subtract the valid one from the bucket objects
         if remote in bucket_objects:
             bucket_objects.remove(remote)
 
     # If extra exists, they are removed.
     if bucket_objects:
-        trash_bucket_objects(gs_client, bucket_objects, log_extra)
-
+        # If the obsoleting is working correctly, this warning should not trigger.
+        # It may be a good idea to tie this to paging
+        for gcp_obj in bucket_objects:
+           logger.warning("Extra bucket object %s. You should rename/remove it",
+                          gcp_obj, extra=log_extra)
 
 def test_callback(message: Message) -> None:
     """Stand in callback to handle the pub/sub message. gets used for --test."""
