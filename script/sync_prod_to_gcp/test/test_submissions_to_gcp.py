@@ -595,7 +595,7 @@ class TestPayloadToMeta(unittest.TestCase):
              'version': 1}
             ], expected)
 
-    def test_jref(self):
+    def test_jref_1(self):
         test_data = {"type": "jref", "paper_id": "2308.99994", "version": "2", "src_ext": ".pdf"}
         file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
         expected = trim_test_dir(file_state.get_expected_files())
@@ -627,6 +627,25 @@ class TestPayloadToMeta(unittest.TestCase):
              'gcp': 'ps_cache/arxiv/html/2308/2308.99995v2',
              'status': 'current',
              'type': 'html-cache'}
+            ], expected)
+
+    def test_jref_2(self):
+        test_data = {"type": "jref", "paper_id": "2308.99996", "version": "2", "src_ext": ".tar.gz"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99996.abs',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99996.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2308/2308.99996.tar.gz',
+             'gcp': 'ftp/arxiv/papers/2308/2308.99996.tar.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/pdf/2308/2308.99996v2.pdf',
+             'gcp': 'ps_cache/arxiv/pdf/2308/2308.99996v2.pdf',
+             'status': 'current',
+             'type': 'pdf-cache'}
             ], expected)
 
 

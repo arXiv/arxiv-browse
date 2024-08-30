@@ -42,9 +42,13 @@ Withdraw - "wdr":
   As the /ftp objects moved to /orig, it *should* NOT be copied as this behavior is same as the
   current publishing process.
 
-Metadata update - "jref":
+Metadata update and category chanege- "jref", "cross":
   For each announced paper ID it will:
-  * /ftp - .abs gets updated (other files too?)
+  * /ftp - .abs, submmission gets updated
+  * /ps_cache gets update
+  
+  In some sense, this is similar to "new" except it applies to the last version 
+
 
 The "upload to GCP bucket" part is from existing sync_published_to_gcp.
 
@@ -52,6 +56,8 @@ As a matter of fact, this borrows the most of heavy lifting part from sync_publi
 
 The published submission queue provides the submission source file extension which is used to
 upload the legacy system submissions to the GCP bucket.
+
+See test/test_submissions_to_gcp.py for the inner working.
 """
 from __future__ import annotations
 import argparse
@@ -476,7 +482,7 @@ class SubmissionFilesState:
             self.set_published_versions(dates)
 
             published = self.get_version_metadata(self.version)
-            # The published abs is the source of truce.
+            # The published abs is the source of truth.
             if published:
                 source_type = published["source_type"]
                 self.source_flags = ""
