@@ -130,9 +130,18 @@ def category_taxonomy() -> Any:
         None,
     )
 
-@blueprint.route("catchup", methods=["GET"])
-def catchup() -> Response:
-    response, code, headers = catchup_page.get_catchup_page()
+@blueprint.route("catchup", methods=["GET"], endpoint="catchup_form")
+def catchup_form() -> Response:
+    #TODO route to catchup form
+    response, code, headers = {}, 200, {} # type: ignore
+    headers=add_surrogate_key(headers,["catchup"])
+    if code == status.OK:
+        return render_template("catchup.html", **response), code, headers  # type: ignore
+    return response, code, headers  # type: ignore
+
+@blueprint.route("catchup/<subject>/<date>", methods=["GET"])
+def catchup(subject:str, date:str) -> Response:
+    response, code, headers = catchup_page.get_catchup_page(subject, date)
     headers=add_surrogate_key(headers,["catchup"])
     if code == status.OK:
         return render_template("catchup.html", **response), code, headers  # type: ignore

@@ -12,7 +12,7 @@
 {% block header_h1 %}
 <div class="header-breadcrumbs">
   <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
-  <a href="{{url_for('.catchup',)}}">catchup</a>
+  <a href="{{url_for('.catchup_form',)}}">catchup</a>
   </div>
 {% endblock %}
 
@@ -31,12 +31,14 @@
   {% endblock %}
 
   {% block pre_items %}
-    Total of {{count}} entries 
-    {{catchup_pages()}}
-    <br>
-    {% if next_day is not none %}
-      <a href="{{url_for('.catchup', subject=subject.id, date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
-    {% endif %}
+    <div>
+      Total of {{count}} entries 
+      {{catchup_pages()}}
+      <br>
+      {% if next_day is not none %}
+        <a href="{{url_for('.catchup', subject=subject.id, date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
+      {% endif %}
+    </div>
   {% endblock %}
 
   {% block items %}
@@ -48,27 +50,32 @@
     {% endfor %}
 
     {% if not (sub_sections_for_types[0].visible or sub_sections_for_types[1].visible or sub_sections_for_types[2].visible) %}
+      <br>
       {% if page > 1 %}
-        <p>No further updates for {{date.strftime("%a, %d %b %Y")}}</p>
-        <a href="{{url_for('.catchup', subject=subject.id, date=date.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Go to page 1</a>
+        <div>
+          No further updates for {{date.strftime("%a, %d %b %Y")}}
+          <br>
+          <a href="{{url_for('.catchup', subject=subject.id, date=date.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Go to page 1</a>
+        </div>
       {% else %}
-        <p>No updates for {{date.strftime("%a, %d %b %Y")}}</p>
+        <div>
+          <p>No updates for {{date.strftime("%a, %d %b %Y")}}</p>
+        </div>
       {% endif %}
-
-      {% if next_day is not none %}
-        <a href="{{url_for('.catchup', subject=subject.id, date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
-      {% endif %}
+      <br>
     {% endif %}
 
   {% endblock %}
 
   {% block post_items %}
-    Total of {{count}} entries 
-    {{catchup_pages()}}
-    <br>
-    {% if next_day is not none %}
-      <a href="{{url_for('.catchup', subject=subject.id,  date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
-    {% endif %}
+    <div></div>
+      Total of {{count}} entries 
+      {{catchup_pages()}}
+      <br>
+      {% if next_day is not none %}
+        <a href="{{url_for('.catchup', subject=subject.id,  date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
+      {% endif %}
+    </div>
   {% endblock %}
 
 </div>

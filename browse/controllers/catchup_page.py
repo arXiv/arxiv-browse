@@ -17,11 +17,11 @@ from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
 from browse.controllers.list_page import latexml_links_for_articles, dl_for_articles, authors_for_articles, sub_sections_for_types, Response
 from browse.services.database.catchup import get_catchup_data, CATCHUP_LIMIT, get_next_announce_day
 
-def get_catchup_page()-> Response:
+def get_catchup_page(subject_str:str, date:str)-> Response:
     """get the catchup page for a given set of request parameters 
     see process_catchup_params for details on parameters
     """
-    subject, start_day, include_abs, page=_process_catchup_params()
+    subject, start_day, include_abs, page=_process_catchup_params(subject_str, date)
     #check for redirects for noncanon subjects
     if subject.id != subject.canonical_id:
         return redirect(
@@ -91,7 +91,7 @@ def get_catchup_page()-> Response:
     return response_data, 200, headers
 
 
-def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool, int]:
+def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, Archive, Category], date, bool, int]:
     """processes the request parameters to the catchup page
     raises an error or returns usable values
 
@@ -103,15 +103,12 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
     """
 
     #check for valid arguments
-    ALLOWED_PARAMS={"abs", "subject", "page", "date"}
+    ALLOWED_PARAMS={"abs", "page"}
     unexpected_params = request.args.keys() - ALLOWED_PARAMS
     if unexpected_params:
-        raise BadRequest(f"Unexpected parameters. Only accepted parameters are: 'subject', 'date', 'page', and 'abs'")
+        raise BadRequest(f"Unexpected parameters. Only accepted parameters are: 'page', and 'abs'")
         
     #subject validation
-    subject_str= request.args.get("subject")
-    if not subject_str:
-        raise BadRequest("Subject required. format: ?subject=subject_here")
     subject: Union[Group, Archive, Category]
     if subject_str == "grp_physics":
         subject=GROUPS["grp_physics"]
@@ -123,15 +120,12 @@ def _process_catchup_params()->Tuple[Union[Group, Archive, Category], date, bool
         raise BadRequest("Invalid subject. Subject must be an archive, category or 'grp_physics'")
     
     #date validation
-    date_str=request.args.get("date")
-    if not date_str:
-        raise BadRequest("Start date required. format: ?date=YYYY-MM-DD")
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date_str): #enforce two digit days and months
-        raise BadRequest(f"Invalid date format. Use format: ?date=YYYY-MM-DD")
+        raise BadRequest(f"Invalid date format. Use format: YYYY-MM-DD")
     try:
         start_day= datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
-        raise BadRequest(f"Invalid date format. Use format: ?date=YYYY-MM-DD")
+        raise BadRequest(f"Invalid date format. Use format: YYYY-MM-DD")
     #only allow dates within the last 90 days (91 just in case time zone differences)
     today=datetime.now().date()
     earliest_allowed=today - timedelta(days=91)
@@ -192,7 +186,7 @@ def catchup_paging(subject: Union[Group, Archive, Category], day:date, include_a
 
 def catchup_index_for_types(new_count:int, cross_count:int, rep_count:int,  subject: Union[Group, Archive, Category], day:date, include_abs:bool, page: int) ->Dict[str, Any]:
     """Creates index for types for catchup papers. 
-    Math gets a little messy because page count starts at 1 but item index starts at 0
+    page count and index both start at 1
     """
     ift = []
 
@@ -207,7 +201,7 @@ def catchup_index_for_types(new_count:int, cross_count:int, rep_count:int,  subj
     if cross_count > 0:
         cross_start = new_count + 1
         cross_start_page=(cross_start-1)//CATCHUP_LIMIT +1 #item 2000 is on page 1, 2001 is on page 2
-        cross_index=cross_start-(cross_start_page-1)*CATCHUP_LIMIT-1 
+        cross_index=cross_start-(cross_start_page-1)*CATCHUP_LIMIT 
 
         if page==cross_start_page:
             ift.append(('Cross-lists', '', cross_index))
@@ -219,7 +213,7 @@ def catchup_index_for_types(new_count:int, cross_count:int, rep_count:int,  subj
     if rep_count > 0:
         rep_start = new_count + cross_count+ 1
         rep_start_page=(rep_start-1)//CATCHUP_LIMIT +1 #item 2000 is on page 1, 2001 is on page 2
-        rep_index=rep_start-(rep_start_page-1)*CATCHUP_LIMIT-1 
+        rep_index=rep_start-(rep_start_page-1)*CATCHUP_LIMIT 
 
         if page==rep_start_page:
             ift.append(('Replacements', '', rep_index))
