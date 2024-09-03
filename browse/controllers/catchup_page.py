@@ -194,9 +194,9 @@ def catchup_index_for_types(new_count:int, cross_count:int, rep_count:int,  subj
         if page != 1:
             ift.append(('New submissions',
                         url_for('.catchup', subject=subject.id, date=day.strftime('%Y-%m-%d'), abs=include_abs, page=1),
-                        0))
+                        1))
         else:
-            ift.append(('New submissions', '', 0)) #first item is index 0
+            ift.append(('New submissions', '', 1)) 
 
     if cross_count > 0:
         cross_start = new_count + 1

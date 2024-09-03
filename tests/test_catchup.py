@@ -1,13 +1,12 @@
 import pytest
 from unittest.mock import patch
 from datetime import datetime,  date
-from flask import Flask
+from flask import Flask, url_for
 from werkzeug.exceptions import BadRequest
 
-from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES
+from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES, catchup_index_for_types
 from browse.services.database.catchup import get_catchup_data
 from browse.services.database.listings import process_requested_subject
-from browse.services.listing import  get_listing_service
 from tests.listings.db.test_db_listing_new import validate_new_listing
 
 
@@ -255,3 +254,55 @@ def test_get_catchup_data_wdr(app_with_db):
         item.id == "cond-mat/0703772" and item.listingType == "rep" and item.primary == "cond-mat.str-el"
         for item in listing.listings
     )
+
+#TESTS FOR THE CONTROLLER PAGE
+
+def test_catchup_index_for_types(app_with_db):
+    app = app_with_db
+    subj= ARCHIVES['math']
+    day=date(year=2024, month=3, day=9)
+    base_url='/catchup/math/2024-03-09?abs=False&page='
+
+    #nothing
+    result=catchup_index_for_types(0,0,0, subj, day, False, 1 )
+    expected=[]
+    assert expected ==result['index_for_types']
+
+    #normal all on one page
+    result=catchup_index_for_types(5,3,1, subj, day, False, 1 )
+    expected=[
+        ('New submissions', '', 1),
+        ('Cross-lists', '', 6),
+        ('Replacements', '', 9),
+    ]
+    assert expected ==result['index_for_types']
+
+    #all on different page
+    with app.test_request_context('/'):
+        result=catchup_index_for_types(5,3,1, subj, day, False, 2 )
+    expected=[
+        ('New submissions', base_url+"1", 1),
+        ('Cross-lists', base_url+"1", 6),
+        ('Replacements', base_url+"1", 9),
+    ]
+    assert expected ==result['index_for_types']
+    
+    #between many pages
+    with app.test_request_context('/'):
+        result=catchup_index_for_types(2003,2007,2001, subj, day, False, 2 )
+    expected=[
+        ('New submissions', base_url+"1", 1),
+        ('Cross-lists', "", 4),
+        ('Replacements', base_url+"3", 11),
+    ]
+    assert expected ==result['index_for_types']
+
+    #missing a section
+    with app.test_request_context('/'):
+        result=catchup_index_for_types(2003,0,2001, subj, day, False, 1 )
+    expected=[
+        ('New submissions', '', 1),
+        ('Replacements', base_url+"2", 4),
+    ]
+    assert expected ==result['index_for_types']
+
