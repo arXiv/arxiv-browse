@@ -4,7 +4,7 @@ from datetime import datetime,  date
 from flask import Flask, url_for
 from werkzeug.exceptions import BadRequest
 
-from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES, catchup_index_for_types
+from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES, catchup_index_for_types, catchup_paging
 from browse.services.database.catchup import get_catchup_data
 from browse.services.database.listings import process_requested_subject
 from tests.listings.db.test_db_listing_new import validate_new_listing
@@ -306,3 +306,81 @@ def test_catchup_index_for_types(app_with_db):
     ]
     assert expected ==result['index_for_types']
 
+def tests_catchup_paging(app_with_db):
+    app = app_with_db
+    subj=CATEGORIES['math.NA']
+    day=date(year=2024, month=3, day=9)
+    base_url='/catchup/math.NA/2024-03-09?abs=False&page='
+
+    #1 page
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 1, 6)
+    expected=[]
+    assert result==expected
+
+    #3 page page first
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 1, 4060)
+    expected=[
+        ('1', 'no-link'),
+        ('2', base_url+'2'),
+        ('3', base_url+'3')
+    ]
+    assert result==expected
+
+    #6 page page last
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 6, 10003)
+    expected=[
+        ('1', base_url+'1'),
+        ('2', base_url+'2'),
+        ('3', base_url+'3'),
+        ('4', base_url+'4'),
+        ('5', base_url+'5'),
+        ('6', 'no-link')
+    ]
+    assert result==expected
+
+    #way too many pages at page 1
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 1, 40000)
+    expected=[
+        ('1', 'no-link'),
+        ('...', 'no-link'),
+        ('21', base_url+'21')
+    ]
+    assert result==expected
+
+    #way too many pages at page 2
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 2, 40000)
+    expected=[
+        ('1', base_url+'1'),
+        ('2', 'no-link'),
+        ('...', 'no-link'),
+        ('21', base_url+'21')
+    ]
+    assert result==expected
+
+    #way too many pages at page 3
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 3, 40000)
+    expected=[
+        ('1', base_url+'1'),
+        ('...', 'no-link'),
+        ('3', 'no-link'),
+        ('...', 'no-link'),
+        ('21', base_url+'21')
+    ]
+    assert result==expected
+
+    #way too many pages at page seccond to last
+    with app.test_request_context('/'):
+        result=catchup_paging(subj, day, False, 20, 40000)
+    expected=[
+        ('1', base_url+'1'),
+        ('...', 'no-link'),
+        ('20', 'no-link'),
+        ('21', base_url+'21')
+    ]
+    assert result==expected
