@@ -62,6 +62,17 @@ the old versions of the pages will be cached by your browser.</p>
     {% endfor %}
 </table>
 
+<h2>Debugging information: dump of http request headers</h2>
+<table cellpadding="4" style="background: #666666; border: 0; padding: 5;"><tr>
+    <th align="left" >Name</th><th align="left">Value</th></tr>
+  {% for headername in request.headers.keys() %}
+    <tr bgcolor="#EEEEEE">
+      <td><code>{{headername}}</code></td>
+      <td><code>{{ request.headers[headername] }}</code></td>
+    </tr>
+    {% endfor %}
+</table>
+
 <p>Only those cookies shown <em>emphasized</em> in the table above are controlled
 by this interface. arXiv uses other cookies such as <code>browser</code> and
 <code>tapir_permanent</code> to maintain session and permanent login settings.
