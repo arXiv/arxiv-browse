@@ -1,3 +1,5 @@
+//version 1.1 last modified 9/3/2024
+
 const timeZoneOffset = -4;
 const forumSessionData = [
     ['Ask Me Anything', 'https://cornell.zoom.us/j/98545128980?pwd=nTqDO00SOxW6ThtbYPFRSbbA57aWYM.1', new Date(Date.UTC(2024, 8, 3, 16 - timeZoneOffset, 0, 0))],
