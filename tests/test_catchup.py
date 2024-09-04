@@ -20,6 +20,15 @@ def app():
         mock_datetime.strptime = datetime.strptime   
         yield app
 
+@pytest.fixture
+def app_w_db(dbclient):
+    app = Flask(__name__)
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2023, 8, 22)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime   
+        yield app
+
 #tests for proccessing parameters
 def test_valid_params(app):
     with app.test_request_context('/catchup/math/2023-08-10?abs=True&page=2'):
@@ -386,7 +395,6 @@ def test_catchup_paging(app_with_db):
     assert result==expected
 
 def test_catchup_cacheing(dbclient):
-
     #category
     resp = dbclient.get("/catchup/math.NA/2024-09-04") 
     assert resp.status_code ==200
@@ -426,3 +434,73 @@ def test_catchup_cacheing(dbclient):
     header= resp.headers['Surrogate-Key'] 
     assert " catchup " in " "+header+" "
     assert " list-2024-09-grp_physics " in " "+header+" "
+
+def test_catchup_continue(dbclient):
+    #continue link when it should be
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math.NA/2011-02-01") 
+      
+    assert "Continue catchup on" in resp.text
+
+    #continue link not present on last day
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math.NA/2011-02-03") 
+      
+    assert "Continue catchup on" not in resp.text
+
+
+    #correct continue link
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math.NA/2011-02-01") 
+      
+    assert '<a href="/catchup/math.NA/2011-02-03?abs=False&amp;page=1">Continue catchup on Thu, 03 Feb 2011</a>' in resp.text
+    
+    #correct no updates text
+    assert 'No updates for Tue, 01 Feb 2011' in resp.text
+
+    #correct page too far text
+   
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math.NA/2011-02-03?page=2") 
+      
+    assert 'No further updates for Thu, 03 Feb 2011' in resp.text
+
+def test_catchup_items(dbclient):
+
+    #basic, no abs
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math/2011-02-03") 
+      
+    assert 'Replacement submissions for Thursday, 3 February 2011 (showing 2 of 2 entries )' in resp.text
+    assert 'arXiv:0806.4129' in resp.text
+    assert 'arXiv:math/0510544' in resp.text
+    assert 'The structure of Lie algebras, Lie superalgebras and Leibniz algebras' not in resp.text
+
+    #basic, with abs
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math/2011-02-03?abs=True") 
+      
+    assert 'Replacement submissions for Thursday, 3 February 2011 (showing 2 of 2 entries )' in resp.text
+    assert 'arXiv:0806.4129' in resp.text
+    assert 'arXiv:math/0510544' in resp.text
+    assert 'The structure of Lie algebras, Lie superalgebras and Leibniz algebras' in resp.text
+
+
