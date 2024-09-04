@@ -306,7 +306,7 @@ def test_catchup_index_for_types(app_with_db):
     ]
     assert expected ==result['index_for_types']
 
-def tests_catchup_paging(app_with_db):
+def test_catchup_paging(app_with_db):
     app = app_with_db
     subj=CATEGORIES['math.NA']
     day=date(year=2024, month=3, day=9)
@@ -384,3 +384,45 @@ def tests_catchup_paging(app_with_db):
         ('21', base_url+'21')
     ]
     assert result==expected
+
+def test_catchup_cacheing(dbclient):
+
+    #category
+    resp = dbclient.get("/catchup/math.NA/2024-09-04") 
+    assert resp.status_code ==200
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=604800'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " list-2024-09-math.NA " in " "+header+" "
+
+    #archive
+    resp = dbclient.get("/catchup/physics/2024-09-04") 
+    assert resp.status_code ==200
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=604800'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " list-2024-09-physics " in " "+header+" "
+
+    #physics group
+    resp = dbclient.get("/catchup/grp_physics/2024-09-04") 
+    assert resp.status_code ==200
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=604800'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " list-2024-09-grp_physics " in " "+header+" "
+
+    #okay with parameters
+    resp = dbclient.get("/catchup/grp_physics/2024-09-04?abs=True&page=3") 
+    assert resp.status_code ==200
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=604800'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " list-2024-09-grp_physics " in " "+header+" "

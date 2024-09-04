@@ -33,7 +33,7 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
             HTTPStatus.MOVED_PERMANENTLY) #type: ignore
     
     headers: Dict[str,str]={}
-    headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-f{subject.id}"])
+    headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-{subject.id}"])
     #get data
     listing=get_catchup_data(subject, start_day, include_abs, page)
     next_announce_day=get_next_announce_day(start_day)
