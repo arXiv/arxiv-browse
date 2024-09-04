@@ -88,9 +88,9 @@ class BrowseTest(unittest.TestCase):
     def test_stats_today(self):
         """Test the /stats/today page."""
         rv = self.client.get('/stats/today')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(200, rv.status_code)
         rv = self.client.get('/stats/today?date=20190102')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(200, rv.status_code)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
         csv_dl_elmt = html.find(
