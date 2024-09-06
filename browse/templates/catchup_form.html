@@ -10,7 +10,7 @@
 
 {%- block content %}
   Catchup on:
-  <form action="{{ url_for('.catchup_form') }}" method="get" >
+  <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate()">
     Subject:
     <select name="subject">
       <option value="math">math</option>
@@ -20,13 +20,42 @@
 
     Changes since:
 
-    <select name="date">
-      <option value="2024-08-26">a</option>
-      <option value="2024-08-03">b</option>
-      <option value="2024-09-03">c</option>
+    <select id="day">
+      {% for day in days %}
+          <option value="{{ day }}">{{ day }}</option>
+      {% endfor %}
     </select>
+    <select id="month">
+        {% for val, name in months %}
+            <option value="{{ val }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+    <select id="year">
+        {% for year in years %}
+            <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" id="date" name="date" />
     
+    , view results 
+    <select name="include_abs">
+      <option value="True">with</option>
+      <option value="False" selected>without</option>
+    </select>
+     abstracts
+
     <input type="submit" value="Go"/>
   </form>
+
+  <script>
+    function combineDate() {
+        var day = document.getElementById('day').value.padStart(2, '0'); 
+        var month = document.getElementById('month').value.padStart(2, '0'); 
+        var year = document.getElementById('year').value;
+        var combinedDate = `${year}-${month}-${day}`;
+        
+        document.getElementById('date').value = combinedDate;
+    }
+</script>
 
 {%- endblock %}

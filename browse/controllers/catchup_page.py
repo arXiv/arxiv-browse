@@ -14,6 +14,7 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 from arxiv.taxonomy.category import Group, Archive, Category
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
 
+from browse.controllers.archive_page.by_month_form import MONTHS
 from browse.controllers.list_page import latexml_links_for_articles, dl_for_articles, authors_for_articles, sub_sections_for_types, Response
 from browse.services.database.catchup import get_catchup_data, CATCHUP_LIMIT, get_next_announce_day
 
@@ -89,6 +90,27 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
     response_data['url_for_author_search'] = author_query
 
     return response_data, 200, headers
+
+def get_catchup_form() -> Response:
+    #check for form/parameter requests
+    subject = request.args.get('subject')  
+    date = request.args.get('date') 
+    include_abs = request.args.get('include_abs') 
+    if subject and date:
+        if include_abs:
+            new_address= url_for('.catchup', subject=subject, date=date, abs=include_abs)
+        else:
+            new_address=url_for('.catchup', subject=subject, date=date)
+        return {}, 302, {'Location':new_address}
+    
+    #otherwise create catchup form
+    response_data={}
+    response_data['years']= [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
+    response_data['months']= MONTHS[1:]
+    response_data['days']= [str(day).zfill(2) for day in range(1, 32)]
+
+    print('aaad')
+    return response_data, 200, {}
 
 
 def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, Archive, Category], date, bool, int]:
