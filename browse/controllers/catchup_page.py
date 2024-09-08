@@ -107,6 +107,7 @@ def get_catchup_form() -> Response:
     response_data={}
     response_data['years']= [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
     response_data['months']= MONTHS[1:]
+    response_data['current_month']=datetime.now().strftime('%m')
     response_data['days']= [str(day).zfill(2) for day in range(1, 32)]
     response_data['groups']= GROUPS
 

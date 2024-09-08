@@ -10,10 +10,10 @@
 
 {%- block content %}
   Catchup on:
-  <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate()">
+  <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate(), selectSubject()">
     Subject: <br>
     Group:
-    <select name="group" id="group" onchange="updateArchive()">
+    <select id="group" onchange="updateArchive()">
       <option value="" selected disabled>Select a group</option>
       {% for group in groups.values() %}
         {% if group.is_active and not group.is_test %}
@@ -21,10 +21,10 @@
         {% endif %}
       {% endfor %}
     </select>
-
+    <br>
     Archive:
-    <select name="archive" id="archive">
-      <option value="" selected disabled>Select an archive</option>
+    <select id="archive" onchange="updateCategories()">
+      <option value="" selected>Select an archive</option>
       {% for group in groups.values() %}
         {% if group.is_active and not group.is_test %}
           {% for archive in group.get_archives() %}
@@ -35,10 +35,11 @@
         {% endif %}
       {% endfor %}
     </select>
+    <br>
 
     Category:
-    <select name="category" id="category">
-      <option value="" selected disabled>Select a category</option>
+    <select  id="category">
+      <option value="" selected>(Optional) Select a category</option>
       {% for group in groups.values() %}
         {% if group.is_active and not group.is_test %}
           {% for archive in group.get_archives() %}
@@ -52,6 +53,8 @@
       {% endfor %}
     </select>
 
+    <input type="hidden" id="subject" name="subject" />
+
     <br>
     Changes since:
 
@@ -62,7 +65,7 @@
     </select>
     <select id="month">
         {% for val, name in months %}
-            <option value="{{ val }}">{{ name }}</option>
+            <option value="{{ val }}" {% if val == current_month %}selected{% endif %} >{{ name }}</option>
         {% endfor %}
     </select>
     <select id="year">
@@ -70,6 +73,7 @@
             <option value="{{ year }}">{{ year }}</option>
         {% endfor %}
     </select>
+
     <input type="hidden" id="date" name="date" />
     
     , view results 
@@ -90,6 +94,23 @@
         var combinedDate = `${year}-${month}-${day}`;
         
         document.getElementById('date').value = combinedDate;
+    }
+
+    function selectSubject() {
+      var group = document.getElementById('group').value
+      var archive = document.getElementById('archive').value
+      var category = document.getElementById('category').value
+
+      var subject;
+      if (category && category !== "") {
+        subject = category; 
+      } else if (archive && archive !== "") {
+        subject = archive; 
+      } else {
+        subject = group; 
+      }
+
+      document.getElementById('subject').value = subject
     }
 
     function updateArchive() {
