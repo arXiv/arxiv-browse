@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest
 from arxiv.document.metadata import DocMetadata
 from arxiv.integration.fastly.headers import add_surrogate_key
 from arxiv.taxonomy.category import Group, Archive, Category
-from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS, ARCHIVES_ACTIVE
 
 from browse.controllers.archive_page.by_month_form import MONTHS
 from browse.controllers.list_page import latexml_links_for_articles, dl_for_articles, authors_for_articles, sub_sections_for_types, Response
@@ -108,8 +108,8 @@ def get_catchup_form() -> Response:
     response_data['years']= [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
     response_data['months']= MONTHS[1:]
     response_data['days']= [str(day).zfill(2) for day in range(1, 32)]
+    response_data['groups']= GROUPS
 
-    print('aaad')
     return response_data, 200, {}
 
 

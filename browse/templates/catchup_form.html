@@ -11,13 +11,34 @@
 {%- block content %}
   Catchup on:
   <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate()">
-    Subject:
-    <select name="subject">
-      <option value="math">math</option>
-      <option value="math.NA">math.NA</option>
-      <option value="grp_physics">grp_physics</option>
+    Subject: <br>
+    Group:
+    <select name="group" id="group" onchange="updateArchive()">
+      <option value="" selected disabled>Select an option</option>
+      {% for group in groups.values() %}
+        {% if group.is_active and not group.is_test %}
+          <option value="{{ group.id }}">{{ group.full_name }}</option>
+        {% endif %}
+      {% endfor %}
     </select>
 
+    Archive:
+    <select name="archive" id="archive">
+      <option value="" selected disabled>Select an archive</option>
+      {% for group in groups.values() %}
+        {% if group.is_active and not group.is_test %}
+          {% for archive in group.get_archives() %}
+            <option class="archive-option archive-{{ group.id }}" value="{{ archive.id }}" style="display: none;">
+              {{ archive.full_name }}
+            </option>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </select>
+
+    Category:
+
+    <br>
     Changes since:
 
     <select id="day">
@@ -56,6 +77,29 @@
         
         document.getElementById('date').value = combinedDate;
     }
+
+    function updateArchive() {
+      const selectedGroupId = document.getElementById("group").value;
+      const archiveDropdown = document.getElementById("archive");
+      const archiveOptions = document.querySelectorAll('.archive-option');
+  
+      archiveDropdown.value = ""; 
+
+      archiveOptions.forEach(option => {
+        option.style.display = 'none';
+      });
+  
+      // Show only the options that match the selected group
+      const relevantArchives = document.querySelectorAll('.archive-' + selectedGroupId);
+      relevantArchives.forEach(option => {
+        option.style.display = 'block';
+      });
+
+      if (relevantArchives.length === 1) {
+        archiveDropdown.value = relevantArchives[0].value;  // Automatically select the only option
+      }
+    }
+
 </script>
 
 {%- endblock %}
