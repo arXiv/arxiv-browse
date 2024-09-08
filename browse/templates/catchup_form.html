@@ -14,7 +14,7 @@
     Subject: <br>
     Group:
     <select name="group" id="group" onchange="updateArchive()">
-      <option value="" selected disabled>Select an option</option>
+      <option value="" selected disabled>Select a group</option>
       {% for group in groups.values() %}
         {% if group.is_active and not group.is_test %}
           <option value="{{ group.id }}">{{ group.full_name }}</option>
@@ -37,6 +37,20 @@
     </select>
 
     Category:
+    <select name="category" id="category">
+      <option value="" selected disabled>Select a category</option>
+      {% for group in groups.values() %}
+        {% if group.is_active and not group.is_test %}
+          {% for archive in group.get_archives() %}
+            {% for category in archive.get_categories() %}
+              <option class="category-option category-{{ archive.id }}" value="{{ category.id }}" style="display: none;">
+                {{ category.full_name }}
+              </option>
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </select>
 
     <br>
     Changes since:
@@ -83,8 +97,9 @@
       const archiveDropdown = document.getElementById("archive");
       const archiveOptions = document.querySelectorAll('.archive-option');
   
+      //reset values
       archiveDropdown.value = ""; 
-
+      updateCategories()
       archiveOptions.forEach(option => {
         option.style.display = 'none';
       });
@@ -97,6 +112,29 @@
 
       if (relevantArchives.length === 1) {
         archiveDropdown.value = relevantArchives[0].value;  // Automatically select the only option
+        updateCategories()
+      }
+    }
+
+    function updateCategories() {
+      const selectedArchiveId = document.getElementById("archive").value;
+      const categoryDropdown = document.getElementById("category");
+      const categoryOptions = document.querySelectorAll('.category-option');
+    
+      //reset
+      categoryDropdown.value = ""; 
+      categoryOptions.forEach(option => {
+        option.style.display = 'none';
+      });
+    
+      //show relevant
+      const relevantCategories = document.querySelectorAll('.category-' + selectedArchiveId);
+      relevantCategories.forEach(option => {
+        option.style.display = 'block';
+      });
+    
+      if (relevantCategories.length === 1) {
+        categoryDropdown.value = relevantCategories[0].value; 
       }
     }
 
