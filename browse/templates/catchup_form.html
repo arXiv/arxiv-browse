@@ -4,84 +4,96 @@
 
 {% block header_h1 %}
 <div class="header-breadcrumbs">
-  <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span>
+  <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> 
+  <span>&gt;</span>
+  <span>catchup</span>
 </div>
 {% endblock %}
 
 {%- block content %}
-  Catchup on:
+  <h1>Catchup on:</h1>
+
   <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate(), selectSubject()">
-    Subject: <br>
-    Group:
-    <select id="group" onchange="updateArchive()">
-      <option value="" selected disabled>Select a group</option>
-      {% for group in groups.values() %}
-        {% if group.is_active and not group.is_test %}
-          <option value="{{ group.id }}">{{ group.full_name }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    <br>
-    Archive:
-    <select id="archive" onchange="updateCategories()">
-      <option value="" selected>Select an archive</option>
-      {% for group in groups.values() %}
-        {% if group.is_active and not group.is_test %}
-          {% for archive in group.get_archives() %}
-            <option class="archive-option archive-{{ group.id }}" value="{{ archive.id }}" style="display: none;">
-              {{ archive.full_name }}
-            </option>
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-    </select>
-    <br>
+    <div role="group" aria-labelledby="subject_header">
+      <h3 id="subject_header" >Subject:</h3>
 
-    Category:
-    <select  id="category">
-      <option value="" selected>(Optional) Select a category</option>
-      {% for group in groups.values() %}
-        {% if group.is_active and not group.is_test %}
-          {% for archive in group.get_archives() %}
-            {% for category in archive.get_categories() %}
-              <option class="category-option category-{{ archive.id }}" value="{{ category.id }}" style="display: none;">
-                {{ category.full_name }}
-              </option>
-            {% endfor %}
+      <div>
+        <label for="group">Group:</label>    
+        <select id="group" onchange="updateArchive()">
+          <option value="" selected disabled>Select a group</option>
+          {% for group in groups.values() %}
+            {% if group.is_active and not group.is_test %}
+              <option value="{{ group.id }}">{{ group.full_name }}</option>
+            {% endif %}
           {% endfor %}
-        {% endif %}
-      {% endfor %}
-    </select>
+        </select>
+      </div>
 
+      <div>
+        <label for="archive">Archive:</label>
+        <select id="archive" onchange="updateCategories()">
+          <option value="" selected>Select an archive</option>
+          {% for group in groups.values() %}
+            {% if group.is_active and not group.is_test %}
+              {% for archive in group.get_archives() %}
+                <option class="archive-option archive-{{ group.id }}" value="{{ archive.id }}" style="display: none;">
+                  {{ archive.full_name }}
+                </option>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="category">Category:</label>
+        <select  id="category">
+          <option value="" selected>(Optional) Select a category</option>
+          {% for group in groups.values() %}
+            {% if group.is_active and not group.is_test %}
+              {% for archive in group.get_archives() %}
+                {% for category in archive.get_categories() %}
+                  <option class="category-option category-{{ archive.id }}" value="{{ category.id }}" style="display: none;">
+                    {{ category.full_name }}
+                  </option>
+                {% endfor %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
     <input type="hidden" id="subject" name="subject" />
 
+    <div role="group" aria-labelledby="date_header">
+      <h3 id="date_header" >Changes Since:</h3>
+
+      <select id="day">
+        {% for day in days %}
+            <option value="{{ day }}">{{ day }}</option>
+        {% endfor %}
+      </select>
+      <select id="month">
+          {% for val, name in months %}
+              <option value="{{ val }}" {% if val == current_month %}selected{% endif %} >{{ name }}</option>
+          {% endfor %}
+      </select>
+      <select id="year">
+          {% for year in years %}
+              <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+      </select>
+
+      <input type="hidden" id="date" name="date" />
+    </div>
+
     <br>
-    Changes since:
-
-    <select id="day">
-      {% for day in days %}
-          <option value="{{ day }}">{{ day }}</option>
-      {% endfor %}
-    </select>
-    <select id="month">
-        {% for val, name in months %}
-            <option value="{{ val }}" {% if val == current_month %}selected{% endif %} >{{ name }}</option>
-        {% endfor %}
-    </select>
-    <select id="year">
-        {% for year in years %}
-            <option value="{{ year }}">{{ year }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="hidden" id="date" name="date" />
-    
-    , view results 
-    <select name="include_abs">
-      <option value="True">with</option>
-      <option value="False" selected>without</option>
-    </select>
-     abstracts
+    <div>
+      <label for="include_abstracts"><strong>Include abstracts: </strong></label>
+      <input type="hidden" name="include_abs" value="False">
+      <input type="checkbox" name="include_abs" id="include_abstracts" value="True">
+    </div>
+    <br>
 
     <input type="submit" value="Go"/>
   </form>
