@@ -877,7 +877,7 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], log_ex
             continue
         to_blob: Blob = bucket.blob(to_obj)
         if to_blob.exists():
-            if to_blob.md5_hash == from_blob.md5_hash:
+            if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()
                 logger.warning("%s: %s <---> %s are identical - moved md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
