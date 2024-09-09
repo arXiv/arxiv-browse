@@ -441,7 +441,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
     url = f"{protocol}://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
 
     def _get_files_for_html () -> List[Path]:
-        files = []
+        files: List[Path] = []
         for root_dir, _, fs in os.walk(html_path):
             files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
@@ -461,7 +461,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
         else:
             sleep(0.2)
     if len(files) > 0:
-        return files, html_path, url, None, ms_since(start_wait)
+        return [onefile.as_posix() for onefile in files], html_path.as_posix(), url, None, round(ms_since(start_wait))
     else:
         raise WebnodeException(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start_wait)} ms")
 
