@@ -67,7 +67,7 @@ import signal
 import subprocess
 import sys
 import typing
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from urllib.parse import unquote
 from time import gmtime, sleep
 from pathlib import Path
@@ -692,6 +692,10 @@ class SubmissionFilesState:
                     if content.startswith(needle):
                         return True
 
+            except UnicodeDecodeError:
+                logger.info("Unparsable source, but no worries. if it's more than auto-ignore, it should not be ignored.: %s ext %s",
+                               self.xid.ids, str(self.src_ext), extra=self.log_extra)
+                return False
             except Exception as _exc:
                 logger.warning("bad .gz: %s ext %s",
                                self.xid.ids, str(self.src_ext), extra=self.log_extra,
@@ -915,7 +919,7 @@ def submission_callback(message: Message) -> None:
         "publish_type": str(publish_type), "arxiv_id": str(paper_id), "version": str(version)
     }
 
-    message_age: timedelta = datetime.utcnow() - message.publish_time
+    message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
 
     try:
