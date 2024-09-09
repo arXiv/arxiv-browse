@@ -1,6 +1,6 @@
 """Archive landing page."""
 
-import datetime
+from datetime import datetime
 from typing import Any, Dict, List, Tuple, Optional
 from http import HTTPStatus as status
 
@@ -48,15 +48,14 @@ def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[st
         archive = subsuming_category.get_archive()
 
     years = years_operating(archive)
-    data["years"] = years
+    data["years"] = [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
     data["months"] = MONTHS
     data["days"] = DAYS
     data["archive"] = archive
     data["list_form"] = ByMonthForm(archive, years)
     data["stats_by_year"] = stats_by_year(archive, years)
     data["category_list"] = category_list(archive)
-
-    data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
+    data["current_month"] = datetime.now().strftime('%m')
     data["template"] = "archive/single_archive.html"
     return data, status.OK, response_headers
 
