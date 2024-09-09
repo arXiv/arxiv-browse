@@ -132,12 +132,7 @@ def category_taxonomy() -> Any:
 
 @blueprint.route("catchup", methods=["GET"], endpoint="catchup_form")
 def catchup_form() -> Response:
-    response, code, headers = catchup_page.get_catchup_form() # type: ignore
-    if code == status.MOVED_PERMANENTLY: #redirects to the catchup page
-        return redirect(headers["Location"], code=code)
-    
-    #basic form response
-    headers=add_surrogate_key(headers,["catchup", "catchup_form"])
+    response, code, headers = catchup_page.get_catchup_form() 
     if code == status.OK:
         return render_template("catchup_form.html", **response), code, headers  # type: ignore
     return response, code, headers  # type: ignore

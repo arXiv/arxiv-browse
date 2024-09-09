@@ -1,8 +1,9 @@
 import pytest
 from unittest.mock import patch
 from datetime import datetime,  date
-from flask import Flask, url_for
+from flask import Flask
 from werkzeug.exceptions import BadRequest
+from bs4 import BeautifulSoup
 
 from browse.controllers.catchup_page import _process_catchup_params, GROUPS, ARCHIVES, CATEGORIES, catchup_index_for_types, catchup_paging
 from browse.services.database.catchup import get_catchup_data
@@ -504,3 +505,48 @@ def test_catchup_items(dbclient):
     assert 'The structure of Lie algebras, Lie superalgebras and Leibniz algebras' in resp.text
 
 
+def test_catchup_form(dbclient):
+    resp = dbclient.get("/catchup") 
+
+    #page headers
+    assert resp.status_code ==200
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=604800'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " catchup-form " in " "+header+" "
+
+    #form feilds
+    soup = BeautifulSoup(resp.data, 'html.parser')
+    form = soup.find('form', id='catchup-form')
+    assert form is not None
+
+    # hidden fields
+    assert soup.find('input', {'type': 'hidden', 'id': 'subject', 'name': 'subject'}) is not None
+    assert soup.find('input', {'type': 'hidden', 'id': 'date', 'name': 'date'}) is not None
+
+    #subsection fields 
+    assert form.find('select', {'id': 'day'}) is not None
+    assert form.find('select', {'id': 'month'}) is not None
+    assert form.find('select', {'id': 'year'}) is not None
+
+    assert form.find('select', {'id': 'archive'}) is not None
+    assert form.find('select', {'id': 'category'}) is not None
+    assert form.find('select', {'id': 'group'}) is not None
+  
+    assert form.find('input', {'name': 'include_abs', 'type': 'checkbox'})  is not None
+
+
+def test_catchup_form_redirect(dbclient):
+    resp = dbclient.get("/catchup?subject=cs&date=2024-09-03" , follow_redirects=False) 
+    assert resp.status_code ==301
+    redirect_location = resp.headers.get("Location")
+    assert redirect_location == "/catchup/cs/2024-09-03"
+
+    assert 'Surrogate-Control' in resp.headers
+    assert resp.headers['Surrogate-Control'] =='max-age=2600000'
+    assert 'Surrogate-Key' in resp.headers
+    header= resp.headers['Surrogate-Key'] 
+    assert " catchup " in " "+header+" "
+    assert " catchup-redirect " in " "+header+" "

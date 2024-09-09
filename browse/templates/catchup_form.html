@@ -13,7 +13,7 @@
 {%- block content %}
   <h1>Catchup on:</h1>
 
-  <form action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate(), selectSubject()">
+  <form id="catchup-form" action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate(), selectSubject()">
     <div role="group" aria-labelledby="subject_header">
       <h3 id="subject_header" >Subject:</h3>
 

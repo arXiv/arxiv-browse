@@ -92,6 +92,9 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
     return response_data, 200, headers
 
 def get_catchup_form() -> Response:
+    headers: Dict[str,str]={}
+    headers=add_surrogate_key(headers,["catchup"])
+
     #check for form/parameter requests
     subject = request.args.get('subject')  
     date = request.args.get('date') 
@@ -101,17 +104,22 @@ def get_catchup_form() -> Response:
             new_address= url_for('.catchup', subject=subject, date=date, abs=include_abs)
         else:
             new_address=url_for('.catchup', subject=subject, date=date)
-        return {}, 302, {'Location':new_address}
+        headers.update({'Location':new_address})
+        headers.update({'Surrogate-Control': f'max-age=2600000'}) #one month, url construction should never change
+        headers=add_surrogate_key(headers,["catchup-redirect"])
+        return {}, 301, headers
     
     #otherwise create catchup form
-    response_data={}
+    response_data: Dict[str, Any]= {}
     response_data['years']= [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
     response_data['months']= MONTHS[1:]
     response_data['current_month']=datetime.now().strftime('%m')
     response_data['days']= [str(day).zfill(2) for day in range(1, 32)]
     response_data['groups']= GROUPS
 
-    return response_data, 200, {}
+    headers=add_surrogate_key(headers,["catchup-form"])
+    headers.update({'Surrogate-Control': f'max-age=604800'}) #one week, form never changes except for autoselecting currently month
+    return response_data, 200, headers
 
 
 def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, Archive, Category], date, bool, int]:
