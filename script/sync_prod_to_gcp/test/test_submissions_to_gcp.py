@@ -84,7 +84,8 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
             # PosixPath('/home/ntai/arxiv/arxiv-browse/script/sync_prod_to_gcp/test/cache/ps_cache/arxiv/html/2308/2308.99990v1')
             for suffix in [".html.gz", ".tar.gz"]:
-                if paper_id.has_version:
+                # 2409.03427 is under /ftp
+                if paper_id.has_version and paper_id.id != "2409.03427":
                     source_path = os.path.join(test_dir, "data", "orig", "arxiv", "papers",
                                                paper_id.yymm,
                                                f"{paper_id.idv}{suffix}")
@@ -204,6 +205,11 @@ class TestSubmissionsToGCP(unittest.TestCase):
         if os.path.exists(html_path):
             shutil.rmtree(html_path)
 
+        html_path_2409_03427v1 = os.path.join(
+            sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "html", "2409", "2409.03427v1")
+        if os.path.exists(html_path_2409_03427v1):
+            shutil.rmtree(html_path_2409_03427v1)
+
         # test_arxivce_1756
         # Thess are the v2 abs, and .gz as being replaced, and copied under /ftp
         subprocess.call(["gsutil", "cp", "test/data/orig/arxiv/papers/1907/1907.07431v2.abs",
@@ -272,6 +278,32 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+
+
+    def test_html_submission_2409_03427(self):
+        file_state = submission_message_to_file_state(
+            {"type": "new", "paper_id": "2409.03427", "version": 1, "src_ext": ".html.gz"}, {},
+            ask_webnode=True)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2409/2409.03427.abs',
+             'gcp': 'ftp/arxiv/papers/2409/2409.03427.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2409/2409.03427.html.gz',
+             'gcp': 'ftp/arxiv/papers/2409/2409.03427.html.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/html/2409/2409.03427v1',
+             'gcp': 'ps_cache/arxiv/html/2409/2409.03427v1',
+             'status': 'current',
+             'type': 'html-cache'},
+            {'cit': '/cache/ps_cache/arxiv/html/2409/2409.03427v1/2409.03427.html',
+             'gcp': 'ps_cache/arxiv/html/2409/2409.03427v1/2409.03427.html',
+             'status': 'current',
+             'type': 'html-files'}
+        ], expected)
+
 
     def test_ask_pdf(self):
         paper_id = "2308.16190"
@@ -774,3 +806,4 @@ class TestPayloadToMeta(unittest.TestCase):
              'original': 'orig/arxiv/papers/2403/2403.99999v2.gz',
              'gcp': 'orig/arxiv/papers/2403/2403.99999v2.gz'}
         ], expected)
+
