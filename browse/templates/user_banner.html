@@ -22,11 +22,14 @@ Adding an environment var, so we can enable only on gcp.
 {# July 22 - 29 #}
 {% set BANNER_START_1 = 202407220100 %}
 {% set BANNER_END_1 = 202407290100 %}
-{# August 14 - 22 #}
+{# August 1 - 13 #}
+{% set BANNER_START_5 = 202408010100 %}
+{% set BANNER_END_5 = 202408140100 %}
+{# August 14 - 23 #}
 {% set BANNER_START_2 = 202408140100 %}
-{% set BANNER_END_2 = 202408220100 %}
-{# Aug 28 - Sept 2 #}
-{% set BANNER_START_3 = 202408280100 %}
+{% set BANNER_END_2 = 202408240100 %}
+{# Aug 24 - Sept 1 #}
+{% set BANNER_START_3 = 202408240100 %}
 {% set BANNER_END_3 = 202409020100 %}
 {# Sept 2 - Sept 13 #}
 {% set BANNER_START_4 = 202409020100 %}
@@ -49,41 +52,58 @@ Adding an environment var, so we can enable only on gcp.
         </div>
       </div>
     </aside>
+    {%- elif now >= BANNER_START_5 and now < BANNER_END_5 -%}
+      {#  August 1 - 14 #}
+      <aside class="slider-wrapper bps-banner forum green">
+        <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+        <div class="columns">
+          <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
+          <div class="copy-donation bps-banner">
+            <h2>Grab your spot!</h2>
+            <p>Want to support truly open science and create access to research, regardless of disability? Sign up for the <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">arXiv Accessibility Forum</a> in September and <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
+          </div>
+          <div class="amount-donation bps-banner">
+            <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Sign Up</b></a></div>
+          </div>
+        </div>
+      </aside>
+
   {%- elif now >= BANNER_START_2 and now < BANNER_END_2 -%}
     {#  August 14 - 22 #}
-    <aside class="slider-wrapper bps-banner forum">
+    <aside class="slider-wrapper bps-banner forum blue">
       <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
       <div class="columns">
-        <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/events/arxiv-forum-logotype-title.png') }}" alt="arXiv Accessibility Forum 2024">
+        <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
         <div class="copy-donation bps-banner">
-          <h2>The arXiv Accessibility Forum begins September 3<sup>rd</sup></h2>
-          <p>Free, fully remote and open to all. Because science is only open if it is accessible. <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>. Because without accessibility Open Science is not truly open</p>
+          <h2>The Accessibility Forum is back!</h2>
+          <p>Coming this September, the Forum is free, virtual, and open to all. <a target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y">Sign Up</a> and <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
         </div>
         <div class="amount-donation bps-banner">
-          <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://accessibility2024.arxiv.org/schedule"><b>View Schedule</b></a></div>
+          <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Sign Up</b></a></div>
         </div>
       </div>
     </aside>
 
   {%- elif now >= BANNER_START_3 and now < BANNER_END_3 -%}
   {# Aug 28 - Sept 2 #}
-  <aside class="slider-wrapper bps-banner forum">
+  <aside class="slider-wrapper bps-banner forum green">
     <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  	<div class="columns">
-      <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv Accessibility Forum 2024">
+    <div class="columns">
+      <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
       <div class="copy-donation bps-banner">
-        <p>Join global leaders making scientific research more accessible. Free, fully remote and open to all. <a href="https://accessibility2024.arxiv.org/schedule" target="_blank">View the schedule</a> and <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">signup</a>.</p>
+        <h2>The countdown begins!</h2>
+        <p>The <a href="https://accessibility2024.arxiv.org/" target="_blank">Accessibility Forum</a> starts next week! <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">Sign up</a> and join us in September.</p>
       </div>
       <div class="amount-donation bps-banner">
-        <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Signup</b></a></div>
+        <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Sign Up</b></a></div>
       </div>
     </div>
   </aside>
 
   {%- elif now >= BANNER_START_4 and now < BANNER_END_4 -%}
   {# Sept 2 - Sept 13, content filled in via dynamic script #}
-   
-  <aside class="slider-wrapper bps-banner forum">
+
+  <aside class="slider-wrapper bps-banner forum grey">
     <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
   	<div class="columns">
       <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/events/arxiv-forum-logotype-title.png') }}" alt="arXiv Accessibility Forum 2024">
@@ -96,7 +116,7 @@ Adding an environment var, so we can enable only on gcp.
       </div>
     </div>
   </aside>
-  <script src="{{ url_for('static', filename='js/rotate_forum_info.js')}}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/rotate_forum_info.js', v='1.1')}}" type="text/javascript"></script>
   {%- endif -%}
 {%- endmacro -%}
 
@@ -105,13 +125,14 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro script(request_datetime) -%}
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if ((BANNER_START_1|int <= now) and (BANNER_END_1|int > now)) or
+    ((BANNER_START_5|int <= now) and (BANNER_END_5|int > now)) or
     ((BANNER_START_2|int <= now) and (BANNER_END_2|int > now)) or
     ((BANNER_START_3|int <= now) and (BANNER_END_3|int > now)) or
     ((BANNER_START_4|int <= now) and (BANNER_END_4|int > now)) -%}
     {# only run this script while a banner is active #}
 
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.11" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.14" />
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=1.1"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=1.11"></script>
   {%- endif -%}
 {%- endmacro -%}

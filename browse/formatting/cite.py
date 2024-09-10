@@ -19,7 +19,7 @@ def arxiv_bibtex(docm: DocMetadata) -> str:
 
     pc = docm.primary_category.id if docm.primary_category else "unknown"
     doi = f"      doi={{https://doi.org/{docm.doi}}},\n" if docm.doi else ""
-    
+
     return (
         "@misc{" + _txt_id(docm, pauths, year) + ",\n"
         "      title={" + title + "}, \n"

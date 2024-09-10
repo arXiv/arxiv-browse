@@ -8,7 +8,7 @@ import json
 import click
 
 from arxiv.identifier import Identifier
-from arxiv.db import session
+from arxiv.db import Session
 from arxiv.db.models import Metadata
 from browse.services.dissemination import get_article_store, ArticleStore
 from arxiv.formats import formats_from_source_flag
@@ -19,7 +19,7 @@ bp = Blueprint("check", __name__)
 @click.argument("yymm")
 def check_paper_formats(yymm: str) -> None:
     """Checks formats for yymm."""
-    query = (session.query(Metadata.paper_id, Metadata.version,
+    query = (Session.query(Metadata.paper_id, Metadata.version,
                             Metadata.source_format,
                             Metadata.source_flags, Metadata.source_size)
                 .filter(or_(Metadata.paper_id.like(f"%/{yymm}%"),

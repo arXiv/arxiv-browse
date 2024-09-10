@@ -1,20 +1,20 @@
 {#- Special messages appear in a column to the side of the website intro/news section,
   each in their own column. Always apply the style "message-special" to the column.
   You can also apply the style "dark" to override the red styles and add a message with a black background instead.
-  There can be just one, never more than two. -#}
+  There should preferably be just one, never more than two. -#}
 
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
 
 {%- if rd_int >= 202407120100 and rd_int <= 202409020100 -%}
-<div class="message-special dark column">
+<div class="message-special green column">
   <span class="label">arXiv News</span>
   <a href="https://accessibility2024.arxiv.org/" target="_blank"><img role="presentation" class="forum-logo" src="{{ url_for('static', filename='images/events/arxiv-forum-logo-full-2024.png') }}" alt="The arXiv Accessibility Forum" /></a>
   <h2>arXiv Accessibility Forum</h2>
   <p>Accessibility means access regardless of disability. Join arXiv and global experts this <strong>September</strong> at the Forum focused on accessibility of scientific research. <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
 </div>
 {%- elif rd_int >= 202409020101 and rd_int <= 202409140100 -%}
-<div class="message-special dark column">
+<div class="message-special green column">
   <span class="label">arXiv News</span>
   <img role="presentation" class="forum-logo" src="{{ url_for('static', filename='images/events/arxiv-forum-logo-full-2024.png') }}" alt="The arXiv Accessibility Forum" />
   <h2>arXiv Accessibility Forum</h2>

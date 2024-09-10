@@ -9,7 +9,7 @@ from google.api_core import retry
 from google.cloud import compute_v1
 from sqlalchemy.orm import scoped_session
 
-from arxiv.db import session
+from arxiv.db import Session
 from arxiv.db.models import NextMail
 
 bp = Blueprint("invalidate", __name__)
@@ -42,7 +42,7 @@ def invalidate_mailings(project: str, cdn: str, mailings: List[str], dry_run: bo
     for mailing in mailings:
         if v:
             print(f"About to query for {mailing}")
-        papers = (session.query(NextMail.paper_id, NextMail.version)
+        papers = (Session.query(NextMail.paper_id, NextMail.version)
                   .filter(NextMail.mail_id == int(mailing)))
 
         nn = 0

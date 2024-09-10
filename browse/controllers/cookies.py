@@ -77,6 +77,7 @@ def get_cookies_page(is_debug: bool) -> Any:
         'cookies_config': selected_options_from_request(copy.deepcopy(cookies_config)),
         'debug': is_debug,
         'controlled_cookies': [cc['name'] for cc in cookies_config],
+        'headers': (request.headers)
     }
     response_headers = {'Expires': '0',
                         'Pragma': 'no-cache'}
@@ -93,7 +94,6 @@ def selected_options_from_request(configs: List[Dict[str, Any]]) -> List[Dict[st
         if matching_opt is not None:
             matching_opt[2] = 1
     return configs
-
 
 def cookies_to_set(req: flask.Request) -> List[Dict[str, object]]:
     """Get cookies from the form and return them as a list of tuples."""
