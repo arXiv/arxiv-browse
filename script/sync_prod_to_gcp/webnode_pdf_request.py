@@ -112,6 +112,8 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
         version = data.get('version')
         arxiv_id_str = f'{paper_id}v{version}' if version else paper_id
         src_ext: typing.Union[str, None] = data.get('src_ext')
+        if src_ext and len(src_ext) > 0 and src_ext[0] != ".":
+            src_ext = "." + src_ext
         log_extra["arxiv_id"] = arxiv_id_str
         log_extra["src_ext"] = str(src_ext)
 

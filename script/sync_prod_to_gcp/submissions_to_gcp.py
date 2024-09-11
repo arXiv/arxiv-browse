@@ -738,6 +738,8 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
     paper_id = data.get('paper_id')
     version = data.get('version')
     src_ext = data.get('src_ext')
+    if src_ext and len(src_ext) > 0 and src_ext[0] != ".":
+        src_ext = "." + src_ext
     source_format = data.get('source_format', '')
 
     logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
