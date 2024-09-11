@@ -143,8 +143,8 @@ sphinx = ["sphinx", "sphinx-autodoc-typehints", "sphinxcontrib-websupport"]
 [package.source]
 type = "git"
 url = "https://github.com/arXiv/arxiv-base.git"
-reference = "f8a4cc4"
-resolved_reference = "f8a4cc49487266045d66a2782b3ad0c11bd9e55b"
+reference = "b673f9c0089b6191205b6143cf64aa7e1e6e0fce"
+resolved_reference = "b673f9c0089b6191205b6143cf64aa7e1e6e0fce"
 
 [[package]]
 name = "asn1crypto"
