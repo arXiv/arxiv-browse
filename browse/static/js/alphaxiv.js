@@ -28,7 +28,7 @@
         versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
     }
 
-    const alphaxivApi = `https://alphaxiv.org/api/prod/getpaperinfo/${arxivPaperId}`
+    const alphaxivApi = `https://api.alphaxiv.org/v1/papers/getpaperinfo/${arxivPaperId}`
     let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
 
 
