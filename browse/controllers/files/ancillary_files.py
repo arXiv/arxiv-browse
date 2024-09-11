@@ -47,7 +47,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),
-            404, {'Cache-Control': f"max-age={cache_sec}"})
+            404, {'Surrogate-Control': f"max-age={cache_sec}"})
 
     dis_res = get_article_store().dissemination('e-print', arxiv_id, doc)
 
@@ -66,7 +66,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"File not in ancillary files for {arxiv_id.idv}"),
-            404, {"ETag": src_file.etag, "Cache-Control": f"max-age={cache_sec}"})
+            404, {"ETag": src_file.etag, "Surrogate-Control": f"max-age={cache_sec}"})
 
     """RangeRequest does a seek and that seems odd with gzip and tarfile but both of
     those support seek."""

@@ -23,6 +23,7 @@ def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[st
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
+    response_headers["Surrogate-Control"]="max-age=86400" #one day
     response_headers=add_surrogate_key(response_headers,["archive"])
 
     if not archive_id or archive_id == "list":
@@ -36,8 +37,6 @@ def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[st
     if not archive:
         return archive_index(archive_id,
                                  status_in=status.NOT_FOUND)
-
-    _write_expires_header(response_headers)
 
     if archive.is_active==False: #subsumed archives
         subsuming_category=archive.get_canonical()
