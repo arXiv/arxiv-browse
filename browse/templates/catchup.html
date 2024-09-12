@@ -32,12 +32,14 @@
 
   {% block pre_items %}
     <div>
-      Total of {{count}} entries 
-      {{catchup_pages()}}
-      <br>
       {% if next_day is not none %}
-        <a href="{{url_for('.catchup', subject=subject.id, date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
+        <a href="{{url_for('.catchup', subject=subject.id, date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue to the next day</a>
+        <br><br>
       {% endif %}
+      
+      Total of {{count}} entries for {{date.strftime("%a, %d %b %Y")}}
+      {{catchup_pages()}}
+
     </div>
   {% endblock %}
 
@@ -59,7 +61,7 @@
         </div>
       {% else %}
         <div>
-          <p>No updates for {{date.strftime("%a, %d %b %Y")}}</p>
+          <p>No updates for {{date.strftime("%a, %d %b %Y")}}. There was either no announcement for this day, or no updates within the requested subject.</p>
         </div>
       {% endif %}
       <br>
@@ -69,11 +71,12 @@
 
   {% block post_items %}
     <div></div>
-      Total of {{count}} entries 
+    Total of {{count}} entries for {{date.strftime("%a, %d %b %Y")}}
       {{catchup_pages()}}
-      <br>
+      
       {% if next_day is not none %}
-        <a href="{{url_for('.catchup', subject=subject.id,  date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue catchup on {{next_day.strftime("%a, %d %b %Y")}}</a>
+        <br> <br>
+        <a href="{{url_for('.catchup', subject=subject.id,  date=next_day.strftime('%Y-%m-%d'), abs=include_abs, page=1 )}}">Continue to the next day</a>
       {% endif %}
     </div>
   {% endblock %}

@@ -444,7 +444,7 @@ def test_catchup_continue(dbclient):
         mock_datetime.strptime = datetime.strptime  
         resp = dbclient.get("/catchup/math.NA/2011-02-01") 
       
-    assert "Continue catchup on" in resp.text
+    assert "Continue to the next day" in resp.text
 
     #continue link not present on last day
     with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
@@ -453,7 +453,7 @@ def test_catchup_continue(dbclient):
         mock_datetime.strptime = datetime.strptime  
         resp = dbclient.get("/catchup/math.NA/2011-02-03") 
       
-    assert "Continue catchup on" not in resp.text
+    assert "Continue to the next day" not in resp.text
 
 
     #correct continue link
@@ -463,7 +463,7 @@ def test_catchup_continue(dbclient):
         mock_datetime.strptime = datetime.strptime  
         resp = dbclient.get("/catchup/math.NA/2011-02-01") 
       
-    assert '<a href="/catchup/math.NA/2011-02-03?abs=False&amp;page=1">Continue catchup on Thu, 03 Feb 2011</a>' in resp.text
+    assert '<a href="/catchup/math.NA/2011-02-03?abs=False&amp;page=1">Continue to the next day</a>' in resp.text
     
     #correct no updates text
     assert 'No updates for Tue, 01 Feb 2011' in resp.text
