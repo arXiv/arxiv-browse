@@ -582,7 +582,7 @@ def sub_sections_for_types(
                 showing = showing + 'last '
         if not sec.last and not sec.continued:
             showing = showing + 'first '
-        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries )'
+        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries)'
 
     return {'sub_sections_for_types': secs}
 

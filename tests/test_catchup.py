@@ -487,7 +487,7 @@ def test_catchup_items(dbclient):
         mock_datetime.strptime = datetime.strptime  
         resp = dbclient.get("/catchup/math/2011-02-03") 
       
-    assert 'Replacement submissions (showing 2 of 2 entries )' in resp.text
+    assert 'Replacement submissions (showing 2 of 2 entries)' in resp.text
     assert 'arXiv:0806.4129' in resp.text
     assert 'arXiv:math/0510544' in resp.text
     assert 'The structure of Lie algebras, Lie superalgebras and Leibniz algebras' not in resp.text
@@ -499,7 +499,7 @@ def test_catchup_items(dbclient):
         mock_datetime.strptime = datetime.strptime  
         resp = dbclient.get("/catchup/math/2011-02-03?abs=True") 
       
-    assert 'Replacement submissions (showing 2 of 2 entries )' in resp.text
+    assert 'Replacement submissions (showing 2 of 2 entries)' in resp.text
     assert 'arXiv:0806.4129' in resp.text
     assert 'arXiv:math/0510544' in resp.text
     assert 'The structure of Lie algebras, Lie superalgebras and Leibniz algebras' in resp.text
