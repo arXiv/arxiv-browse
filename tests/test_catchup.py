@@ -531,8 +531,10 @@ def test_catchup_form(dbclient):
     assert form.find('select', {'id': 'month'}) is not None
     assert form.find('select', {'id': 'year'}) is not None
 
-    assert form.find('select', {'id': 'archive'}) is not None
-    assert form.find('select', {'id': 'category'}) is not None
+    assert form.find('select', {'id': 'default-archives'}) is not None
+    assert form.find('select', {'id': 'grp_math-archives'}) is not None
+    assert form.find('select', {'id': 'default-categories'}) is not None
+    assert form.find('select', {'id': 'hep-lat-categories'}) is not None
     assert form.find('select', {'id': 'group'}) is not None
   
     assert form.find('input', {'name': 'include_abs', 'type': 'checkbox'})  is not None

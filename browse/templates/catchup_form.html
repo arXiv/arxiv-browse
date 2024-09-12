@@ -31,36 +31,46 @@
 
       <div>
         <label for="archive">Archive:</label>
-        <select id="archive" onchange="updateCategories()">
+
+        <select id="default-archives" class="archive-dropdown" onchange="updateCategories()">
           <option value="" selected>Select an archive</option>
-          {% for group in groups.values() %}
-            {% if group.is_active and not group.is_test %}
-              {% for archive in group.get_archives() %}
-                <option class="archive-option archive-{{ group.id }}" value="{{ archive.id }}" style="display: none;">
-                  {{ archive.full_name }}
-                </option>
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
         </select>
+
+        {% for group in groups.values() %}
+          {% if group.is_active and not group.is_test %}
+
+            <select id="{{group.id}}-archives" class="archive-dropdown" style="display: none;" onchange="updateCategories()">
+              <option value="" selected {% if group.id !="grp_physics" %} disabled {% endif %}>Select an archive</option>
+              {% for archive in group.get_archives() %}
+                <option value="{{ archive.id }}">{{ archive.full_name }}</option>
+              {% endfor %}
+            </select>
+
+          {% endif %}
+        {% endfor %}
       </div>
 
       <div>
         <label for="category">Category:</label>
-        <select  id="category">
-          <option value="" selected>(Optional) Select a category</option>
-          {% for group in groups.values() %}
-            {% if group.is_active and not group.is_test %}
-              {% for archive in group.get_archives() %}
-                {% for category in archive.get_categories() %}
-                  <option class="category-option category-{{ archive.id }}" value="{{ category.id }}" style="display: none;">
-                    {{ category.full_name }}
-                  </option>
-                {% endfor %}
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
+
+        <select id="default-categories" class="category-dropdown" >
+          <option value="" selected>Select a category</option>
         </select>
+
+        {% for group in groups.values() %}
+          {% if group.is_active and not group.is_test %}
+            {% for archive in group.get_archives() %}
+
+              <select id="{{archive.id}}-categories" class="category-dropdown" style="display: none;" >
+                <option value="" selected>(Optional) Select a category</option>
+                {% for category in archive.get_categories() %}
+                  <option  value="{{ category.id }}" >{{ category.full_name }}</option>
+                {% endfor %}
+              </select>
+
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
     <input type="hidden" id="subject" name="subject" />
@@ -109,17 +119,20 @@
     }
 
     function selectSubject() {
-      var group = document.getElementById('group').value
-      var archive = document.getElementById('archive').value
-      var category = document.getElementById('category').value
-
+      const selectedGroupId = document.getElementById("group").value;
+      const selectedArchiveId = document.getElementById(selectedGroupId+'-archives').value;
       var subject;
-      if (category && category !== "") {
-        subject = category; 
-      } else if (archive && archive !== "") {
-        subject = archive; 
-      } else {
-        subject = group; 
+      if (selectedArchiveId == ""){
+        subject=selectedGroupId
+      }
+      else{
+        const selectedCatId = document.getElementById(selectedArchiveId+'-categories').value;
+        if (selectedCatId == ""){
+          subject=selectedArchiveId
+        }
+        else{
+          subject=selectedCatId
+        }
       }
 
       document.getElementById('subject').value = subject
@@ -127,48 +140,43 @@
 
     function updateArchive() {
       const selectedGroupId = document.getElementById("group").value;
-      const archiveDropdown = document.getElementById("archive");
-      const archiveOptions = document.querySelectorAll('.archive-option');
-  
-      //reset values
-      archiveDropdown.value = ""; 
-      updateCategories()
-      archiveOptions.forEach(option => {
-        option.style.display = 'none';
-      });
-  
-      // Show only the options that match the selected group
-      const relevantArchives = document.querySelectorAll('.archive-' + selectedGroupId);
-      relevantArchives.forEach(option => {
-        option.style.display = 'block';
-      });
+      const archiveDropdown = document.getElementById(selectedGroupId+'-archives');
 
-      if (relevantArchives.length === 1) {
-        archiveDropdown.value = relevantArchives[0].value;  // Automatically select the only option
-        updateCategories()
-      }
+      //only show selected dropdown
+      const allArchiveDropdowns = document.querySelectorAll('.archive-dropdown');
+      allArchiveDropdowns.forEach(dropdown => {dropdown.style.display = 'none';});
+
+      archiveDropdown.style.display = 'inline-block';
+      archiveDropdown.selectedIndex = 0;
+
+      //auto select if only one option
+      const options = archiveDropdown.querySelectorAll('option');
+      if (options.length === 2) { archiveDropdown.selectedIndex = 1; } //select an archive is the first option
+
+      updateCategories(); 
     }
-
+    
     function updateCategories() {
-      const selectedArchiveId = document.getElementById("archive").value;
-      const categoryDropdown = document.getElementById("category");
-      const categoryOptions = document.querySelectorAll('.category-option');
-    
-      //reset
-      categoryDropdown.value = ""; 
-      categoryOptions.forEach(option => {
-        option.style.display = 'none';
-      });
-    
-      //show relevant
-      const relevantCategories = document.querySelectorAll('.category-' + selectedArchiveId);
-      relevantCategories.forEach(option => {
-        option.style.display = 'block';
-      });
-    
-      if (relevantCategories.length === 1) {
-        categoryDropdown.value = relevantCategories[0].value; 
+      const selectedGroupId = document.getElementById("group").value;
+      const selectedArchiveId = document.getElementById(selectedGroupId+'-archives').value;
+      let categoryDropdown;
+      if (selectedArchiveId == ""){
+        categoryDropdown = document.getElementById('default-categories');
       }
+      else{
+        categoryDropdown = document.getElementById(selectedArchiveId+'-categories');
+      }
+
+      //only show selected dropdown
+      const allCategoryDropdowns = document.querySelectorAll('.category-dropdown');
+      allCategoryDropdowns.forEach(dropdown => {dropdown.style.display = 'none';});
+
+      categoryDropdown.style.display = 'inline-block';
+      categoryDropdown.selectedIndex = 0;
+
+      //auto select if only one option
+      const options = categoryDropdown.querySelectorAll('option');
+      if (options.length === 2) { categoryDropdown.selectedIndex = 1;}
     }
 
 </script>
