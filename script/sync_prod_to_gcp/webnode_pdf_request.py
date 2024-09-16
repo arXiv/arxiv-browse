@@ -12,7 +12,7 @@ import signal
 import subprocess
 import threading
 import typing
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from time import gmtime, sleep
 
