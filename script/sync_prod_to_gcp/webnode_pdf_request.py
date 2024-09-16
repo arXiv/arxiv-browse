@@ -130,7 +130,7 @@ def subscribe_published(project_id: str, subscription_id: str, request_timeout: 
             message.ack()
             return
 
-        message_age: timedelta = datetime.utcnow() - message.publish_time
+        message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
         compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
         if message_age > timedelta(minutes=compilation_timeout):
             help_needed = os.environ.get("TEX_COMPILATION_RECIPIENT", "help@arxiv.org")
