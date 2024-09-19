@@ -30,6 +30,7 @@ from identifier import Identifier as ArxivId
 TIMEOUTS["PDF_TIMEOUT"] = 3
 TIMEOUTS["HTML_TIMEOUT"] = 3
 
+
 def trim_test_dir(fileset):
     for idx in range(len(fileset)):
         fileset[idx]['cit'] = fileset[idx]['cit'][len(test_dir):]
@@ -84,7 +85,8 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
             # PosixPath('/home/ntai/arxiv/arxiv-browse/script/sync_prod_to_gcp/test/cache/ps_cache/arxiv/html/2308/2308.99990v1')
             for suffix in [".html.gz", ".tar.gz"]:
-                if paper_id.has_version:
+                # 2409.03427 is under /ftp
+                if paper_id.has_version and paper_id.id != "2409.03427":
                     source_path = os.path.join(test_dir, "data", "orig", "arxiv", "papers",
                                                paper_id.yymm,
                                                f"{paper_id.idv}{suffix}")
@@ -154,6 +156,7 @@ def bucket_object_exists(obj: str) -> bool:
 
 arxivce_1756_obsolete = "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"
 
+
 class TestSubmissionsToGCP(unittest.TestCase):
 
     @classmethod
@@ -183,6 +186,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/2308.99990v1/2308.99990v1.html",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.abs",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.gz",
+                    "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2409/2409.10667v1.pdf"
                     ]
         subprocess.call(rm_items + droplets,
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -204,13 +208,18 @@ class TestSubmissionsToGCP(unittest.TestCase):
         if os.path.exists(html_path):
             shutil.rmtree(html_path)
 
+        html_path_2409_03427v1 = os.path.join(
+            sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "html", "2409", "2409.03427v1")
+        if os.path.exists(html_path_2409_03427v1):
+            shutil.rmtree(html_path_2409_03427v1)
+
         # test_arxivce_1756
         # Thess are the v2 abs, and .gz as being replaced, and copied under /ftp
         subprocess.call(["gsutil", "cp", "test/data/orig/arxiv/papers/1907/1907.07431v2.abs",
                          "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.abs"],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.call(["gsutil", "cp", "test/data/ftp/arxiv/papers/1907/1907.07431.gz",
-                        "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"],
+                         "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         pass
 
@@ -272,6 +281,30 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+
+    def test_html_submission_2409_03427(self):
+        file_state = submission_message_to_file_state(
+            {"type": "new", "paper_id": "2409.03427", "version": 1, "src_ext": ".html.gz"}, {},
+            ask_webnode=True)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/2409/2409.03427.abs',
+             'gcp': 'ftp/arxiv/papers/2409/2409.03427.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/2409/2409.03427.html.gz',
+             'gcp': 'ftp/arxiv/papers/2409/2409.03427.html.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/html/2409/2409.03427v1',
+             'gcp': 'ps_cache/arxiv/html/2409/2409.03427v1',
+             'status': 'current',
+             'type': 'html-cache'},
+            {'cit': '/cache/ps_cache/arxiv/html/2409/2409.03427v1/2409.03427.html',
+             'gcp': 'ps_cache/arxiv/html/2409/2409.03427v1/2409.03427.html',
+             'status': 'current',
+             'type': 'html-files'}
+        ], expected)
 
     def test_ask_pdf(self):
         paper_id = "2308.16190"
@@ -516,10 +549,10 @@ so the correct file state of /ftp is
               'status': 'obsolete',
               'type': 'abstract',
               'version': 2},
-             {'cit':       '/data/orig/arxiv/papers/1907/1907.07431v2.gz',
-              'gcp':       'orig/arxiv/papers/1907/1907.07431v2.gz',
+             {'cit': '/data/orig/arxiv/papers/1907/1907.07431v2.gz',
+              'gcp': 'orig/arxiv/papers/1907/1907.07431v2.gz',
               'obsoleted': 'ftp/arxiv/papers/1907/1907.07431.gz',
-              'original':  'orig/arxiv/papers/1907/1907.07431v2.gz',
+              'original': 'orig/arxiv/papers/1907/1907.07431v2.gz',
               'status': 'obsolete',
               'type': 'submission',
               'version': 2}],
@@ -544,6 +577,25 @@ so the correct file state of /ftp is
         # because the obsolete file is deleted
         self.assertFalse(bucket_object_exists("gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"))
 
+    def test_new_pdf(self):
+        paper_id = "2409.10667"
+        test_data = {"type": "new", "paper_id": paper_id, "version": "1", "src_ext": ".pdf"}
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=True)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': f'/data/ftp/arxiv/papers/2409/{paper_id}.abs',
+             'gcp': f'ftp/arxiv/papers/2409/{paper_id}.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': f'/data/ftp/arxiv/papers/2409/{paper_id}.pdf',
+             'gcp': f'ftp/arxiv/papers/2409/{paper_id}.pdf',
+             'status': 'current',
+             'type': 'submission'}
+        ], expected)
+        # This should not be created
+        self.assertFalse(bucket_object_exists(
+            f"gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2409/{paper_id}v1/{paper_id}v1.pdf"))
+
 
 class TestPayloadToMeta(unittest.TestCase):
 
@@ -564,8 +616,7 @@ class TestPayloadToMeta(unittest.TestCase):
              'gcp': 'ps_cache/arxiv/pdf/2308/2308.99991v1.pdf',
              'status': 'current',
              'type': 'pdf-cache'}
-            ], expected)
-
+        ], expected)
 
     def test_wdr(self):
         # withdrawal -
@@ -593,7 +644,7 @@ class TestPayloadToMeta(unittest.TestCase):
              'status': 'obsolete',
              'type': 'submission',
              'version': 1}
-            ], expected)
+        ], expected)
 
     def test_jref_1(self):
         test_data = {"type": "jref", "paper_id": "2308.99994", "version": "2", "src_ext": ".pdf"}
@@ -627,7 +678,7 @@ class TestPayloadToMeta(unittest.TestCase):
              'gcp': 'ps_cache/arxiv/html/2308/2308.99995v2',
              'status': 'current',
              'type': 'html-cache'}
-            ], expected)
+        ], expected)
 
     def test_jref_2(self):
         test_data = {"type": "jref", "paper_id": "2308.99996", "version": "2", "src_ext": ".tar.gz"}
@@ -646,8 +697,7 @@ class TestPayloadToMeta(unittest.TestCase):
              'gcp': 'ps_cache/arxiv/pdf/2308/2308.99996v2.pdf',
              'status': 'current',
              'type': 'pdf-cache'}
-            ], expected)
-
+        ], expected)
 
     def test_submission_message_to_payloads(self):
         test_data = {"type": "rep", "paper_id": "physics/0106051", "version": "3", "src_ext": ".gz"}
@@ -681,7 +731,7 @@ class TestPayloadToMeta(unittest.TestCase):
                  'status': 'obsolete',
                  'type': 'submission',
                  'version': 2}
-             ], payloads)
+            ], payloads)
 
         test_data = {"type": "rep", "paper_id": "physics/0106051", "version": 3, "src_ext": ".gz"}
         file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
@@ -715,7 +765,7 @@ class TestPayloadToMeta(unittest.TestCase):
                  'status': 'obsolete',
                  'type': 'submission',
                  'version': 2}
-             ],
+            ],
             payloads)
 
     def test_arxivce_1756(self):

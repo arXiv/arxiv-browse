@@ -67,7 +67,7 @@ import signal
 import subprocess
 import sys
 import typing
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from urllib.parse import unquote
 from time import gmtime, sleep
 from pathlib import Path
@@ -692,6 +692,10 @@ class SubmissionFilesState:
                     if content.startswith(needle):
                         return True
 
+            except UnicodeDecodeError:
+                logger.info("Unparsable source, but no worries. if it's more than auto-ignore, it should not be ignored.: %s ext %s",
+                               self.xid.ids, str(self.src_ext), extra=self.log_extra)
+                return False
             except Exception as _exc:
                 logger.warning("bad .gz: %s ext %s",
                                self.xid.ids, str(self.src_ext), extra=self.log_extra,
@@ -734,6 +738,8 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
     paper_id = data.get('paper_id')
     version = data.get('version')
     src_ext = data.get('src_ext')
+    if src_ext and len(src_ext) > 0 and src_ext[0] != ".":
+        src_ext = "." + src_ext
     source_format = data.get('source_format', '')
 
     logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
@@ -858,7 +864,7 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
         blob = bucket.blob(obj)
         logger.debug("%s is being deleted", obj, extra=log_extra)
         blob.delete()
-        logger.warning("%s is deleted", obj, extra=log_extra)
+        logger.info("%s is deleted", obj, extra=log_extra)
     return
 
 
@@ -915,7 +921,7 @@ def submission_callback(message: Message) -> None:
         "publish_type": str(publish_type), "arxiv_id": str(paper_id), "version": str(version)
     }
 
-    message_age: timedelta = datetime.utcnow() - message.publish_time
+    message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
 
     try:
@@ -1034,7 +1040,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
             logger.debug("Skipping [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
             continue
 
-        logger.debug("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
+        logger.info("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
         local_path = Path(local)
         if local_path.exists() and local_path.is_file():
             upload(gs_client, local_path, remote, upload_logger=logger)
