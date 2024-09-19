@@ -30,6 +30,7 @@ import sys
 import argparse
 import re
 import threading
+import typing
 from threading import Thread
 from queue import Queue, Empty
 import requests
@@ -67,8 +68,24 @@ class Overloaded503Exception(Exception):
     """Raised when the response to /pdf is a 503, indicating a need to slow down calls to server."""
     pass
 
+class WebnodeException(Exception):
+    """raised when webnode returns non-200"""
+    status_code: int
 
-PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
+    def __init__(self, *args, **kwargs) -> None:
+        if "status_code" in kwargs:
+            self.status_code = kwargs.pop("status_code")
+        else:
+            self.status_code = 0
+        super().__init__(*args, **kwargs)
+    pass
+
+
+# PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError, requests.exceptions.Timeout]
+# take out the timeout - make timeout shorter
+# This is okay as the queue based submission upload retries aftre backoff so no need to
+# wait long. It will come back in a 30-40 seconds
+PDF_RETRY_EXCEPTIONS = [Overloaded503Exception, requests.exceptions.ConnectionError]
 HTML_RETRY_EXCEPTIONS = PDF_RETRY_EXCEPTIONS
 CATEGORY = "category"
 
@@ -292,7 +309,7 @@ def path_to_bucket_key_html(html) -> str:
         logging.error(f"path_to_bucket_key: {html} does not start with {CACHE_PREFIX} or {DATA_PREFIX}")
         raise ValueError(f"Cannot convert PDF path {html} to a GS key")
 
-@retry.Retry(predicate=retry.if_exception_type(HTML_RETRY_EXCEPTIONS))
+@retry.Retry(predicate=retry.if_exception_type(*HTML_RETRY_EXCEPTIONS))
 def get_html(session, html_url) -> None:
     start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}
@@ -312,19 +329,19 @@ def get_html(session, html_url) -> None:
         logger.warning(msg,
                        extra={CATEGORY: "download",
                               "url": html_url, "status_code": resp.status_code, "ms": html_ms})
-        raise (Exception(msg))
+        raise WebnodeException(msg, status_code=resp.status_code)
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {html_url}",
                     extra={CATEGORY: "download",
                            "url": html_url, "status_code": resp.status_code, "ms": html_ms})
 
 
-@retry.Retry(predicate=retry.if_exception_type(PDF_RETRY_EXCEPTIONS))
-def get_pdf(session, pdf_url) -> None:
+@retry.Retry(predicate=retry.if_exception_type(*PDF_RETRY_EXCEPTIONS))
+def get_pdf(session, pdf_url, timeout=0) -> None:
     start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}
     logger.debug("Getting %s", pdf_url)
-    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY)
+    resp = session.get(pdf_url, headers=headers, stream=True, verify=ENSURE_CERT_VERIFY, timeout=timeout)
     # noinspection PyStatementEffect
     [line for line in resp.iter_lines()]  # Consume resp in hopes of keeping alive session
     pdf_ms: int = ms_since(start)
@@ -339,14 +356,23 @@ def get_pdf(session, pdf_url) -> None:
         logger.warning(msg,
                        extra={CATEGORY: "download",
                               "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
-        raise (Exception(msg))
+        raise WebnodeException(msg, status_code=resp.status_code)
     else:
         logger.info(f"ensure_pdf: Success GET status {resp.status_code} {pdf_url}",
                     extra={CATEGORY: "download",
                            "url": pdf_url, "status_code": resp.status_code, "ms": pdf_ms})
 
 
-def ensure_pdf(session, host, arxiv_id, timeout=None):
+def is_cache_valid(cache_file: Path, timestamp: int) -> bool:
+    """
+    Checks the cache file exists, and newer than the timestamp
+    """
+    if not cache_file.exists():
+        return False
+    return cache_file.stat().st_mtime >= timestamp
+
+
+def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mtime=0):
     """Ensures PDF exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -364,7 +390,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=None):
     timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-    url = f"https://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
+    url = f"{protocol}://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
     start = perf_counter()
 
     if pdf_file.exists():
@@ -372,7 +398,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=None):
         return pdf_file, url, "already exists", ms_since(start)
 
     start = perf_counter()
-    get_pdf(session, url)
+    get_pdf(session, url, timeout=timeout)
     start_wait = perf_counter()
     while not pdf_file.exists():
         if perf_counter() - start_wait > timeout:
@@ -380,15 +406,24 @@ def ensure_pdf(session, host, arxiv_id, timeout=None):
             logger.warning(msg,
                            extra={CATEGORY: "download",
                                   "url": url, "pdf_file": str(pdf_file)})
-            raise (Exception(msg))
+            raise WebnodeException(msg)
         else:
             sleep(0.2)
     if pdf_file.exists():
+        if pdf_file.stat().st_mtime < source_mtime:
+            # This probably means something funky happened on the file server, or someone
+            # mokeypatched the tarball.
+            logger.error(f"PDF mtime is {pdf_file.stat().st_mtime} < than source {source_mtime}",
+                           extra={CATEGORY: "webnode",
+                                  "url": url, "pdf_file": str(pdf_file)})
         return pdf_file, url, None, ms_since(start)
     else:
-        raise (Exception(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms"))
-    
-def ensure_html(session, host, arxiv_id: Identifier):
+        raise WebnodeException(f"ensure_pdf: Could not create {pdf_file}. {url} {ms_since(start)} ms")
+
+
+def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "https",
+                source_mtime = 0) -> \
+    typing.Tuple[typing.List[str], str, str, typing.Union[str, None], float]:
     """Ensures HTML exists for arxiv_id.
 
     Check on the ps_cache.  If it does not exist, request it and wait
@@ -400,40 +435,35 @@ def ensure_html(session, host, arxiv_id: Identifier):
 
     This does not check if the arxiv_id is HTML source.
     """
+    timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
-    html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.id}v{arxiv_id.version}/")
-    url = f"https://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
+    html_path = Path(f"{PS_CACHE_PREFIX}/{archive}/html/{arxiv_id.yymm}/{arxiv_id.idv}/")
+    url = f"{protocol}://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
 
-    def _get_files_for_html (path: str) -> List[str]:
-        files = []
-        for root_dir, cur_dir, fs in os.walk(html_path):
-            files.extend(map(lambda file: os.path.join(root_dir, file), fs))
+    def _get_files_for_html () -> List[Path]:
+        files: List[Path] = []
+        for root_dir, _, fs in os.walk(html_path):
+            files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
 
-    start = perf_counter()
-
-    files = _get_files_for_html(str(html_path))
-
-    if len(files) > 0:
-        logger.debug(f"ensure_file_url_exists: {str(html_path)} has files")
-        return files, url, "already exists", ms_since(start)
-
-    start = perf_counter()
+    # get_html raises WebnodeException when the response is NOT 200.
+    # Web node gets to gate-keep, IOW.
     get_html(session, url)
+
     start_wait = perf_counter()
-    while len(files := _get_files_for_html(str(html_path))) < 1:
-        if perf_counter() - start_wait > PDF_WAIT_SEC: # TODO: Does this need to be different for html?
-            msg = f"No HTML, waited longer than {PDF_WAIT_SEC} sec {url}"
+    while len(files := _get_files_for_html()) < 1:
+        if perf_counter() - start_wait > timeout: # TODO: Does this need to be different for html?
+            msg = f"No HTML, waited longer than {timeout} sec {url}"
             logger.warning(msg,
                            extra={CATEGORY: "download",
-                                  "url": url, "pdf_file": str(html_path)})
-            raise (Exception(msg))
+                                  "url": url, "html_file": str(html_path)})
+            raise WebnodeException(msg)
         else:
             sleep(0.2)
     if len(files) > 0:
-        return files, html_path, url, None, ms_since(start)
+        return [onefile.as_posix() for onefile in files], html_path.as_posix(), url, None, round(ms_since(start_wait))
     else:
-        raise (Exception(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start)} ms"))
+        raise WebnodeException(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start_wait)} ms")
 
 
 def upload_pdf(gs_client, ensure_tuple):
@@ -441,7 +471,6 @@ def upload_pdf(gs_client, ensure_tuple):
     return upload(gs_client, ensure_tuple[0], path_to_bucket_key(ensure_tuple[0])) + ensure_tuple
 
 def upload_html(gs_client, ensure_tuple):
-    ret = []
     for file in ensure_tuple[0]:
         yield upload(gs_client, file, path_to_bucket_key_html(file))
 

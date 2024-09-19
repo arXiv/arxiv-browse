@@ -6,6 +6,8 @@ from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
 from arxiv.identifier import Identifier, IdentifierException
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service
@@ -45,7 +47,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),
-            404, {'Cache-Control': f"max-age={cache_sec}"})
+            404, {'Surrogate-Control': f"max-age={cache_sec}"})
 
     dis_res = get_article_store().dissemination('e-print', arxiv_id, doc)
 
@@ -64,7 +66,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"File not in ancillary files for {arxiv_id.idv}"),
-            404, {"ETag": src_file.etag, "Cache-Control": f"max-age={cache_sec}"})
+            404, {"ETag": src_file.etag, "Surrogate-Control": f"max-age={cache_sec}"})
 
     """RangeRequest does a seek and that seems odd with gzip and tarfile but both of
     those support seek."""
@@ -74,7 +76,11 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
             last_modified=src_file.updated,
             size=tarmember.size
     ).make_response()
-
+    resp.headers=add_surrogate_key(resp.headers,["anc",f"paper-id-{arxiv_id.id}"])
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
     add_mimetype(resp, tarmember.name)
     add_time_headers(resp, src_file, arxiv_id)
     return resp

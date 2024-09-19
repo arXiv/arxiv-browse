@@ -38,7 +38,7 @@ class Settings(arxiv_base.Settings):
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_BUCKET: str = 'latexml_arxiv_id_converted'
+    LATEXML_BUCKET: str = './test/data'
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
@@ -99,20 +99,14 @@ class Settings(arxiv_base.Settings):
 
     Accepted values are:
     - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
-       production since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
-       DOCUMENT_ORIGINAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
+       production since 2019. If set ABS_PATH_ROOT needs to be set.
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
-    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
+    ABS_PATH_ROOT: str = "tests/data/abs_files/"
     """Paths to .abs and source files.
 
-        This can start with gs:// to use Google Storage."""
-    DOCUMENT_ORIGINAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
-    """Paths to .abs and source files.
-
-        This can start with gs:// to use Google Storage.
-    """
+       This can start with gs:// to use Google Storage."""
     DOCUMENT_CACHE_PATH: str = "tests/data/cache"
     """Path to cache directory"""
 
@@ -126,13 +120,16 @@ class Settings(arxiv_base.Settings):
     `./testing/data/` for testing data. Must end with a /
     """
 
-    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
-    """URL of the genpdf API"""
+    GENPDF_API_URL: str = ""
+    """URL of the genpdf API. https://genpdf-api.arxiv.org"""
+
+    GENPDF_SERVICE_URL: str = ""
+    """URL of the genpdf service URL. This is the original service URL on the cloud run."""
 
     GENPDF_API_TIMEOUT: int = 590
     """Time ouf for the genpdf API access"""
 
-    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/"
+    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/abs_files"
     """Where genpdf stores the PDFs. It is likely the local file system does not work here but
     it is plausible to match the gs bucket with local file system, esp. for testing.
     For production, it would be:
@@ -352,19 +349,10 @@ class Settings(arxiv_base.Settings):
                 "Using sqlite in CLASSIC_DB_URI in production environment"
             )
 
-        if (self.DOCUMENT_ORIGINAL_VERSIONS_PATH.startswith("gs://")
-                and self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://")):
+        if self.ABS_PATH_ROOT.startswith("gs://"):
             self.FS_TZ = "UTC"
-            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
-                        "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
+            log.warning("Switching FS_TZ to UTC since ABS_PATH_ROOT is Google Storage")
             if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
                 log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
             else:
                 log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
-
-        if ("fs_docs" in str(type(self.DOCUMENT_ABSTRACT_SERVICE)) and
-                "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
-                self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
-            log.warning(f"Unexpected: using FS listings and abs service but FS don't match. "
-                        "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
-                        f"but listings at {self.DOCUMENT_LISTING_PATH}")

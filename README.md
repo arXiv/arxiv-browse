@@ -8,17 +8,21 @@ You can run the browse app directly.
 make venv
 ````
 
+(the make rarely works)
+
 or 
 
 ```bash
 python --version
-# 3.10.x
+# 3.11.x
 python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry==1.3.2
 poetry install
 python main.py
 ```
+Note -- make sure you have python dev installed befoore doing the above steps, or the `poetry install` will fail trying to build the mySQL library dependency. E.g.: `sudo apt-get install python3.11-dev`
+
 Then go to http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and restart the server.
@@ -37,8 +41,7 @@ First, you'd need to create the '.env' file somewhere. Using tests/.env is sugge
     export GOOGLE_APPLICATION_CREDENTIALS=<Your SA credential>
     export BROWSE_SQLALCHEMY_DATABASE_URI="mysql://browse:<BROWSE_PASSWORD>@127.0.0.1:1234/arXiv"
     export DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
-    export DOCUMENT_LATEST_VERSIONS_PATH=gs://arxiv-production-data/ftp
-    export DOCUMENT_ORIGINAL_VERSIONS_PATH=gs://arxiv-production-data/orig
+    export ABS_PATH_ROOT=gs://arxiv-production-data
     export DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
     export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
     export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
@@ -155,7 +158,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 pytest tests
 ```
 
-### Settinp up pytest in PyCharm
+### Setting up pytest in PyCharm
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 

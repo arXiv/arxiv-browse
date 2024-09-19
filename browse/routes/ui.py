@@ -8,6 +8,8 @@ from http import HTTPStatus as status
 from arxiv.taxonomy.definitions import GROUPS
 from arxiv.base import logging
 from arxiv.base.urls.clickthrough import is_hash_valid
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from flask import (
     Blueprint,
     Response,
@@ -28,7 +30,7 @@ from browse.controllers import (
     list_page,
     prevnext,
     stats_page,
-    tb_page,
+    tb_page
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
 from browse.controllers.cookies import get_cookies_page, cookies_to_set
@@ -104,7 +106,7 @@ def bare_abs() -> Any:
 def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
-
+    headers=add_surrogate_key(headers,["abs"])
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw(), mimetype="text/plain")
@@ -231,9 +233,8 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
+    headers=add_surrogate_key(headers,["list"])
     if code == status.OK:
-        if subcontext not in ["new", "recent", "pastweek"]:
-            response=_add_year_url_alert(response)
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore
     elif code == status.MOVED_PERMANENTLY:
@@ -347,9 +348,6 @@ def form(arxiv_id: str) -> Response:
 @blueprint.route("archive/<archive>", strict_slashes=False)
 def archive(archive: Optional[str] = None):  # type: ignore
     """Landing page for an archive."""
-    if archive is None:
-        return archive_page.archive_index("list", status_in=200)
-
     response, code, headers = archive_page.get_archive(archive)
     if code == status.OK or code == status.NOT_FOUND:
         return render_template(response["template"], **response), code, headers
@@ -380,7 +378,6 @@ def year_default(archive: str):  # type: ignore
         return "", code, headers
     elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code) 
-    response=_add_year_url_alert(response)
     return render_template("year.html", **response), code, headers
 
 
@@ -393,7 +390,6 @@ def year(archive: str, year: int):  # type: ignore
         return "", code, headers
     elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code) 
-    response=_add_year_url_alert(response)
     return render_template("year.html", **response), code, headers
 
 
@@ -454,9 +450,9 @@ def a (id: str, ext: str):  # type: ignore
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
 
-def _add_year_url_alert(data: Dict[str, Any]) -> Dict[str, Any]:
-    alert_title = "Change to 4 digit year in URLs"
-    alert_content = "ArXiv is updating URLs for the /list and /year paths to use 4 digit years: /YYYY for years and /YYYY-MM for months. Old paths will be redirected to the new correct forms where possible. Caution: /2002 no longer represents Feb 2020; it now represents the year 2002."
+def _add_an_alert(data: Dict[str, Any]) -> Dict[str, Any]:
+    alert_title = "Title here"
+    alert_content = "Content here"
 
     data['alert_title'] = alert_title
     data['alert_content'] = alert_content

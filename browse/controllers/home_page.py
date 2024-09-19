@@ -37,7 +37,7 @@ def get_home_page() -> Response:
 
     response_data['groups'] = GROUPS
     response_data['categories'] = CATEGORIES
-    response_headers['Cache-Control'] = "max-age: 3600"
+    response_headers['Surrogate-Control'] = "max-age: 3600"
     return response_data, status.OK, response_headers
 
 

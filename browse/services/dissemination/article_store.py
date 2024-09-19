@@ -5,36 +5,40 @@ import http
 import logging
 import re
 import time
-import typing
 from collections.abc import Callable
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union, get_args
 from urllib.parse import urlparse
 
 import requests
-
-from arxiv.identifier import Identifier
-from arxiv.legacy.papers.dissemination.reasons import FORMATS
-from arxiv.document.metadata import DocMetadata, VersionEntry
 from arxiv.document.exceptions import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
-from browse.services.documents.base_documents import DocMetadataService
-from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from arxiv.files.object_store import ObjectStore, GsObjectStore
+from arxiv.document.metadata import DocMetadata, VersionEntry
+from arxiv.files import FileObj, fileformat
+from arxiv.files.key_patterns import (current_pdf_path, previous_pdf_path,
+                                      ps_cache_pdf_path,
+                                      current_ps_path, previous_ps_path,
+                                      ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
+from arxiv.files.object_store import ObjectStore
 from arxiv.formats import (
     formats_from_source_file_name, formats_from_source_flag)
-from arxiv.files.key_patterns import (abs_path_current_parent,
-                                          abs_path_orig_parent,
-                                          current_pdf_path, previous_pdf_path,
-                                          ps_cache_pdf_path,
-                                          current_ps_path, previous_ps_path,
-                                          ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
-from arxiv.files import FileObj, fileformat
-from .source_store import SourceStore
-import google.cloud.storage as storage
+from arxiv.identifier import Identifier
+from arxiv.legacy.papers.dissemination.reasons import FORMATS, reasons, get_reasons_data
 from flask import current_app
+from gcp.service_auth.gcp_service_auth import GcpIdentityToken
+from google.auth.exceptions import DefaultCredentialsError
+
+from browse.services.documents.base_documents import DocMetadataService
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
+from .source_store import SourceStore
 
 logger = logging.getLogger(__file__)
 
+
+Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
+"""Possible formats to request from the `ArticleStore`.
+
+The format `e-print` is a reqeust to get the article's original source data.
+"""
 
 class Deleted():
     def __init__(self, msg: str):
@@ -42,8 +46,12 @@ class Deleted():
 
 
 class CannotBuildPdf():
-    def __init__(self, msg: str):
+    def __init__(self, msg: str, fmt: Acceptable_Format_Requests):
         self.msg = msg
+        if isinstance(fmt, str):
+            self.fmt = str(fmt)
+        else:
+            self.fmt = fmt.id
 
 
 Conditions = Union[
@@ -53,7 +61,8 @@ Conditions = Union[
             "NO_SOURCE",  # Article and version exists but no source exists
             "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
             "NOT_PDF",  # format that doens't serve a pdf
-            "NO_HTML" #not native HTML, no HTML conversion available
+            "NO_HTML", #not native HTML, no HTML conversion available
+            "NOT_PUBLIC" #where the author has decided not to make the source of the paper public
             ],
     Deleted,
     CannotBuildPdf]
@@ -110,7 +119,7 @@ def _is_deleted(id: str) -> Optional[str]:
 def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
     pass
 
-def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
+def from_genpdf_location(location: str) -> Tuple[str, str]:
     """Translates the genpdf-api redirect location for the genpdf object store.
     returns the bucket name and key as a tuple if it is a gcp bucket.
     """
@@ -122,29 +131,25 @@ def from_genpdf_location(location: str) -> typing.Tuple[str, str]:
 def is_genpdf_able(_arxiv_id: Identifier) -> bool:
     """Is genpdf api available for this arxiv_id?"""
 
-    return bool(current_app.config.get("GENPDF_API_URL"))
+    return bool(current_app.config.get("GENPDF_API_URL")) and bool(current_app.config.get("GENPDF_SERVICE_URL"))
 
-
-Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
-"""Possible formats to request from the `ArticleStore`.
-
-The format `e-print` is a reqeust to get the article's original source data.
-"""
 
 class ArticleStore():
     def __init__(self,
                  metaservice: DocMetadataService,
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
-                 reasons: Callable[[str, FORMATS], Optional[str]] = _unset_reasons,
-                 is_deleted: Callable[[str], Optional[str]] = _is_deleted
+                 latexml_store: ObjectStore,
+                 is_deleted: Callable[[str], Optional[str]] = _is_deleted,
                  ):
         self.metadataservice = metaservice
         self.objstore: ObjectStore = objstore
         self.genpdf_store: ObjectStore = genpdf_store
-        self.reasons = reasons
+        self.latexml_store: ObjectStore = latexml_store
         self.is_deleted = is_deleted
         self.sourcestore = SourceStore(self.objstore)
+        # gets the resaon data from the same bucket as the pdfs
+        self.reasons_data = get_reasons_data(self.objstore.to_obj("reasons.json"))
 
         self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
             fileformat.pdf: self._pdf,
@@ -152,6 +157,16 @@ class ArticleStore():
             fileformat.ps: self._ps,
             fileformat.html: self._html
         }
+
+        self.service_identity = None
+        genpdf_api = current_app.config.get("GENPDF_API_URL")
+        genpdf_api
+        genpdf_service_url = current_app.config.get("GENPDF_SERVICE_URL")
+        if genpdf_api and genpdf_service_url:
+            try:
+                self.service_identity = GcpIdentityToken(genpdf_service_url, logger=logger)
+            except DefaultCredentialsError:
+                logger.error("No default SA credentials. If this is development, try setting GOOGLE_APPLICATION_CREDENTIALS")
 
     def status(self) -> Tuple[Literal["GOOD", "BAD"], str]:
         """Indicates the health of the service.
@@ -161,12 +176,13 @@ class ArticleStore():
         The human readable message might be displayed publicly so do
         not put sensitive information in it.
         """
+        
         stats: List[Tuple[str, Literal["GOOD", "BAD"], str]] = []
         osstat, osmsg = self.objstore.status()
         stats.append((str(type(self.objstore)), osstat, osmsg))
 
         try:
-            self.reasons('bogusid', 'pdf')
+            reasons(self.reasons_data, 'bogusid', 'pdf')
             stats.append(('pdf_reasons', 'GOOD', ''))
         except Exception as ex:
             stats.append(('pdf_reasons', 'BAD', str(ex)))
@@ -185,7 +201,7 @@ class ArticleStore():
         return ('BAD', ' and '.join(msgs))
 
     def get_source(self, arxiv_id: Identifier, docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], DocMetadata, VersionEntry]]:
         """Gets the source for a paper_id and version."""
         return self.dissemination("e-print", arxiv_id, docmeta)
 
@@ -193,7 +209,7 @@ class ArticleStore():
                       format: Acceptable_Format_Requests,
                       arxiv_id: Identifier,
                       docmeta: Optional[DocMetadata] = None) \
-            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], fileformat.FileFormat, DocMetadata, VersionEntry]]:
+            -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], DocMetadata, VersionEntry]]:
         """Gets a `FileObj` for a `Format` for an `arxiv_id`.
 
         If `docmeta` is not passed it will be looked up. When the `docmeta` is
@@ -208,6 +224,7 @@ class ArticleStore():
 
         `path` is additional data for html and anc requests.
         """
+        
         if not format or not arxiv_id:
             raise ValueError("Must pass a format and arxiv_id")
         if format != "e-prints" and format not in self.format_handlers:
@@ -216,6 +233,9 @@ class ArticleStore():
         deleted = self.is_deleted(arxiv_id.id)
         if deleted:
             return Deleted(deleted)
+
+        if reason := self.reasons(arxiv_id, format):
+            return CannotBuildPdf(reason, format)
 
         try:
             if docmeta is None:
@@ -237,15 +257,18 @@ class ArticleStore():
 
         if version.withdrawn_or_ignore:
             return "WITHDRAWN"
+       
+        if version.source_flag.source_encrypted and format!=fileformat.pdf and format!=fileformat.html:
+            return "NOT_PUBLIC"
 
         handler_fn = self.format_handlers[format]
         fileobj = handler_fn(arxiv_id, docmeta, version)
         if not fileobj:
             return "UNAVAILABLE"
         if isinstance(fileobj, FileObj):
-            return (fileobj, self.sourcestore.get_src_format(docmeta, fileobj), docmeta, version) #TODO I dont think we want to always return the source format
+            return (fileobj, docmeta, version) 
         if isinstance(fileobj, List): #html requests return an iterable of files in the folder
-            return (fileobj, format, docmeta, version) #type: ignore
+            return (fileobj, docmeta, version)
         else:
             return fileobj
 
@@ -321,10 +344,6 @@ class ArticleStore():
         if version.source_flag.cannot_pdf:
             return "NOT_PDF"
 
-        res = self.reasons(arxiv_id.idv, 'pdf')
-        if res:
-            return CannotBuildPdf(res)
-
         ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(arxiv_id, version.version))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
@@ -334,15 +353,14 @@ class ArticleStore():
             pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
-            if is_genpdf_able(arxiv_id):
-                return self._genpdf(arxiv_id, docmeta, version)
         else:
             # try from the /orig with version number for a pdf only paper
             pdf_file=self.objstore.to_obj(previous_pdf_path(arxiv_id))
             if pdf_file.exists():
                 return pdf_file
-            if is_genpdf_able(arxiv_id):
-                return self._genpdf(arxiv_id, docmeta, version)
+
+        if is_genpdf_able(arxiv_id):
+            return self._genpdf(arxiv_id, docmeta, version)
 
         if not self.sourcestore.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
@@ -353,17 +371,25 @@ class ArticleStore():
 
     def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets a PDF from the genpdf-api."""
-        api = current_app.config.get("GENPDF_API_URL")
-        if not api:
+        genpdf_api = current_app.config.get("GENPDF_API_URL")
+        if not genpdf_api:
             return "UNAVAILABLE"
         # requests.get() cannod have timeout <= 0
         timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
-        url = f"{api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
+        url = f"{genpdf_api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
+        headers = {}
+        if self.service_identity:
+            try:
+                headers["Authorization"] = f"Bearer {self.service_identity.token}"
+            except Exception as exc:
+                logger.warning("Acquiring auth token for genpdf failed. %s", str(exc), exc_info=True)
         logger.debug("genpdf-api request(timeout=%d): %s ", timeout, url)
         t_start = time.perf_counter()
         for _ in range(3):  # cannot be infinite loop but 500s are common when the cloud run's service is starting up.
             try:
-                response: requests.Response = requests.get(url, timeout=timeout, allow_redirects=False)
+                response: requests.Response = \
+                    requests.get(url, timeout=timeout, allow_redirects=False, headers=headers)
+                break
             except ConnectionError as _exc:
                 logger.warning("The HTTP connection is reset. Retrying...")
                 time.sleep(0.1) # just a fraction is enough
@@ -407,10 +433,6 @@ class ArticleStore():
                 return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
-        res = self.reasons(arxiv_id.idv, 'ps')
-        if res:
-            return CannotBuildPdf(res)
-
         cached_ps = self.objstore.to_obj(ps_cache_ps_path(arxiv_id, version.version))
         if cached_ps:
             return cached_ps
@@ -453,10 +475,18 @@ class ArticleStore():
             if arxiv_id.extra:  # requesting a specific file
                 return self.objstore.to_obj(path + arxiv_id.extra)
             else:  # requesting list of files
-                file_list=list(self.objstore.list(path))
+                file_list = list(self.objstore.list(path))
                 return file_list if file_list else "NO_SOURCE"
         else: # latex to html
-            # TODO it may be expensive to recreate the GS Client each time
-            latex_obj_store = GsObjectStore(storage.Client().bucket(current_app.config['LATEXML_BUCKET']))
-            file=latex_obj_store.to_obj(latexml_html_path(arxiv_id, version.version))
-            return file if file.exists() else "NO_HTML"
+            file = self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
+            return file if (file is not None and file.exists()) else "NO_HTML"
+
+    def reasons(self, arxiv_id: Identifier, format: Acceptable_Format_Requests) -> Optional[str]:
+        if not arxiv_id or not format or isinstance(format, str):
+            return None
+        fmt = format.id
+        if fmt in get_args(FORMATS):
+            return reasons(self.reasons_data, arxiv_id.idv, fmt)  # type: ignore
+        else:
+            return None
+        

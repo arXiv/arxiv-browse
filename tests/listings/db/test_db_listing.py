@@ -36,6 +36,20 @@ SAMPLE_METADATA1=Metadata(
     is_withdrawn = 0
 )
 
+def test_bad_parameters(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math.MP/recent?show=0")
+    assert rv.status_code == 200
+    rv = client.get("/list/math.MP/recent?skip=9000")
+    assert rv.status_code == 200
+
+def test_list_dl_links(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math/recent")
+    assert rv.status_code == 200
+    assert '<a href="/pdf/0906.3421" title="Download PDF" id="pdf-0906.3421" aria-labelledby="pdf-0906.3421">pdf</a>' in rv.text
+    assert '<a href="/format/0906.3421" title="Other formats" id="oth-0906.3421" aria-labelledby="oth-0906.3421">other</a>' in rv.text
+    assert '<a href="/ps/0906.3421" title="Download PostScript" id="ps-0906.3421" aria-labelledby="ps-0906.3421">ps</a>' not in rv.text
 
 def test_possible_categories():
     
@@ -51,7 +65,7 @@ def test_possible_categories():
     assert "math.GM" in _all_possible_categories("math")
     #legacy archive
     assert "comp-gas" in _all_possible_categories("comp-gas")
-    assert "nlin.CG" not in _all_possible_categories("comp-gas")
+    assert "nlin.CG" in _all_possible_categories("comp-gas")
     #archive is category and archive
     assert "astro-ph" in _all_possible_categories("astro-ph")
     assert "astro-ph.EP" in _all_possible_categories("astro-ph")

@@ -30,7 +30,7 @@
             value ="{{group_key}}"
             data-url="{{url_for('search_archive', archive=group_key[4:])}}"
             {% if group_key == 'grp_physics' %}selected="selected"{% endif %}>
-          {{ group_details.name }}
+          {{ group_details.full_name }}
         </option>
         {%- endfor %}
       </select>
@@ -87,17 +87,15 @@
       (<strong id="{{ archive.id }}">{{ archive.id if archive.id != 'cs' else 'CoRR' }}</strong>
       <a id="new-{{ archive.id }}" aria-labelledby="new-{{ archive.id }} {{ archive.id }}" href="/list/{{ archive.id }}/new">new</a>,
       <a id="recent-{{ archive.id }}" aria-labelledby="recent-{{ archive.id }} {{ archive.id }}" href="/list/{{ archive.id }}/recent">recent</a>,
-      <a id="search-{{ archive.id }}" aria-labelledby="search-{{ archive.id }} {{ archive.id }}" href="{{ archive_search_url }}">search</a>
-      {%- if 0 -%},<a href="/catchup?archive={{ archive.id }}&amp;sdaysback=30&amp;num=2000&amp;order=reverse&amp;method=without">last month</a>{%- endif -%}
-      )
-      {%- if group.id == 'grp_physics' and archive.id not in categories  -%}
-      <br/>includes:
-      {%- elif group.id == 'cs' -%}
+      <a id="search-{{ archive.id }}" aria-labelledby="search-{{ archive.id }} {{ archive.id }}" href="{{ archive_search_url }}">search</a>)
+      {% if group.id == 'grp_physics' and archive.id not in categories  %}
+      <br/> includes:
+      {% elif group.id == 'cs' %}
       <br/>includes:
       (see <a href="{{url_for('archive', archive=archive.id)}}" id="details-{{ archive.id }}" aria-labelledby="details-{{ archive.id }} main-{{ archive.id }}">detailed description</a>):
-      {%- elif group.id != 'grp_physics' -%}
+      {% elif group.id != 'grp_physics' %}
       <br/>includes: (see <a href="{{url_for('help_archive_description', archive=archive.id)}}" id="details-{{ archive.id }}" aria-labelledby="details-{{ archive.id }} main-{{ archive.id }}">detailed description</a>):
-      {%- endif -%}
+      {% endif %}
 
       {% for category in archive.get_categories()| sort(attribute='full_name') %}
       {% if not (loop.first and loop.last and group.id == 'grp_physics') %}<a href="/list/{{ category.id }}/recent" id="{{ category.id }}" aria-labelledby="main-{{ archive.id }} {{ category.id }}">{{ category.full_name}}</a>{% if not loop.last %}; {% endif %}{% endif %}

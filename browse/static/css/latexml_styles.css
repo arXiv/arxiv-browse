@@ -103,11 +103,15 @@ textarea.form-control{
 }
 
 #target-section {
+  padding-top: 5px;
   position: relative;
 }
 
-#license-tr {
-  margin: 1rem;
+#license-tr, #license-tr:link, #license-tr:visited {
+  display: block;
+  text-decoration: none;
+  margin-top: 1rem;
+  color: var(--secondary-text-color) !important;
 }
 
 #watermark-tr, #license-tr {
@@ -695,6 +699,18 @@ body:after {
   padding: 1em;
   border-radius: .5em;
   margin: 1em auto;
+}
+
+.toggle-icon {
+  color: currentColor;
+  cursor: pointer;
+}
+
+.toggle-icon>svg {
+  fill: currentcolor;
+  display: block;
+  height: 1.2rem;
+  width: 1.2rem;
 }
 
 .color-scheme-icon::before {

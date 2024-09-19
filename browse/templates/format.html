@@ -94,7 +94,7 @@ Delivered as a <b>gzipped DVI</b> (.dvi.gz) file or as a <b>gzipped tar</b>
 {% if docx %}
 <dt><b>DOCX</b></dt>
 <dd>
-<form action="/e-print/$id_str.docx" method="get">
+<form action="{{url_for('src.src', arxiv_id_str=arxiv_idv)}}" method="get">
 <input type="submit" value="Download DOCX" /><br />
 Requires Word 2007 or earlier versions of Word with
 <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=941B3470-3AE9-4AEE-8F43-C6BB74CD1466&displaylang=en">Microsoft
@@ -105,7 +105,7 @@ to view/edit.
 </dd>
 {% endif %}
 
-{% if src %}
+{% if src and not encrypted %}
 <dt><b>Source</b></dt>
 <dd>
 Delivered as a <b>gzipped tar</b> (.tar.gz) file if there are multiple files,

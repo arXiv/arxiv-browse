@@ -3,23 +3,20 @@
 import logging
 from pathlib import Path
 from typing import Callable, Optional, Union, List
-import mimetypes
 
 from arxiv.identifier import Identifier, IdentifierException
-from arxiv.files.fileformat import FileFormat
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
+from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
-    not_found, bad_id, cannot_build_pdf
-from browse import config
+    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public
 
 from arxiv.files import FileObj, FileTransform
 
 from browse.services.html_processing import post_process_html
-
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, CannotBuildPdf, Deleted)
@@ -32,22 +29,18 @@ logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
 
-Resp_Fn_Sig = Callable[[FileFormat, FileObj, Identifier, DocMetadata,
+Resp_Fn_Sig = Callable[[FileObj, Identifier, DocMetadata,
                         VersionEntry], Response]
 
 
-def default_resp_fn(format: Optional[FileFormat],
-                    file: FileObj,
+def default_resp_fn(file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: Optional[DocMetadata] = None,
-                    version: Optional[VersionEntry] = None,
-                    guess_content_type: Optional[bool] = False) -> Response:
+                    version: Optional[VersionEntry] = None) -> Response:
     """Creates a response with appropriate headers for the `file`.
 
     Parameters
     ----------
-    format : FileFormat
-        `FileFormat` of the `file`
     docmeta : DocMetadata
         article that the response is for.
     file : FileObj
@@ -83,29 +76,23 @@ def default_resp_fn(format: Optional[FileFormat],
 
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    if guess_content_type:
-        content_type, _ = mimetypes.guess_type(file.name)
-        if content_type:
-            resp.headers["Content-Type"] = content_type
+    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
+    if arxiv_id.has_version: 
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
     else:
-        if format and isinstance(format, FileFormat):
-            resp.headers['Content-Type'] = format.content_type
-    if resp.headers['Content-Type'] == "text/html":
-        resp.headers['Content-Type'] = "text/html; charset=utf-8"
-
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
+    add_mimetype(resp, file.name)
     add_time_headers(resp, file, arxiv_id)
     return resp
 
 
-def _src_response(format: FileFormat,
-                  file: FileObj,
+def _src_response(file: FileObj,
                   arxiv_id: Identifier,
                   docmeta: DocMetadata,
                   version: VersionEntry,
                   extra: Optional[str] = None) -> Response:
     """Download source"""
-    resp = default_resp_fn(format, file, arxiv_id, docmeta, version)
+    resp = default_resp_fn(file, arxiv_id, docmeta, version)
     suffixes = Path(file.name).suffixes
     if not arxiv_id.is_old_id:
         suffixes.pop(0)  # get rid of .12345
@@ -114,16 +101,23 @@ def _src_response(format: FileFormat,
     return resp
 
 
-def pdf_resp_fn(format: FileFormat,
-                file: FileObj,
+def pdf_resp_fn(file: FileObj,
                 arxiv_id: Identifier,
                 docmeta: DocMetadata,
                 version: VersionEntry,
                 extra: Optional[str] = None) -> Response:
     """function to make a `Response` for a PDF."""
-    resp = default_resp_fn(format, file, arxiv_id, docmeta, version)
+    resp = default_resp_fn(file, arxiv_id, docmeta, version)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
+    if arxiv_id.has_version:
+        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.idv}>; rel='canonical'"
+    else:
+        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.id}>; rel='canonical'"
+    if arxiv_id.has_version: 
+        resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.id}-current"])
     return resp
 
 
@@ -156,11 +150,13 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
     item = get_article_store().dissemination(format, arxiv_id)
-    logger. debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
+    logger.debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
     elif item == "WITHDRAWN" or item == "NO_SOURCE":
         return withdrawn(arxiv_id, arxiv_id.has_version)
+    elif item == "NOT_PUBLIC":
+        return not_public(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
         return unavailable(arxiv_id)
     elif item == "NOT_PDF":
@@ -170,9 +166,9 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
     elif isinstance(item, CannotBuildPdf):
-        return cannot_build_pdf(arxiv_id, item.msg)
+        return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
 
-    file, item_format, docmeta, version = item
+    file, docmeta, version = item
 
     # check for existence
     if not isinstance(file, List): # single file
@@ -182,7 +178,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         if not file[0].exists():
             return not_found(arxiv_id)
 
-    return resp_fn(item_format, file, arxiv_id, docmeta, version) #type: ignore
+    return resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
 
 def get_html_response(arxiv_id_str: str,
@@ -190,49 +186,58 @@ def get_html_response(arxiv_id_str: str,
     return get_dissemination_resp(fileformat.html, arxiv_id_str, archive, _html_response)
 
 
-def _html_response(format: FileFormat,
-                   file_list: Union[List[FileObj],FileObj],
+def _html_response(file_list: Union[List[FileObj],FileObj],
                    arxiv_id: Identifier,
                    docmeta: DocMetadata,
                    version: VersionEntry) -> Response:
     if docmeta.source_format == 'html' or version.source_flag.html:
-        return _html_source_listing_response(file_list, arxiv_id)
-    elif isinstance(file_list, FileObj):
-        return default_resp_fn(format, file_list, arxiv_id, docmeta, version, guess_content_type=True)
+        resp= _html_source_listing_response(file_list, arxiv_id)
+    elif isinstance(file_list, FileObj): #converted via latexml
+        resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
+        resp.headers=add_surrogate_key(resp.headers,["html-latexml"])
     else:
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
-        return unavailable(arxiv_id)
+        resp= unavailable(arxiv_id)
+
+    if arxiv_id.has_version: 
+        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.id}-current"])
+    return resp
 
 
 def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Response:
     """Produces a `Response`for a single file for a paper with HTML source."""
     if _is_html_name(file):  # do post_processing
-        return default_resp_fn(fileformat.html, FileTransform(file, post_process_html), arxiv_id)
+        return default_resp_fn( FileTransform(file, post_process_html), arxiv_id)
     else:
-        return default_resp_fn(None, file, arxiv_id, guess_content_type=True)
+        return default_resp_fn( file, arxiv_id)
 
 
 def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv_id: Identifier) -> Response:
     """Produces a listing `Response` for a paper with HTML source."""
     if isinstance(file_list, FileObj):
-        return _html_source_single_response(file_list, arxiv_id)
-
-    html_files = []
-    file_names = []
-    for file in file_list:
-        if _is_html_name(file):
-            html_files.append(file)
-            file_names.append(_get_html_file_name(file.name))
-    if len(html_files) < 1:
-        if current_app.config["ARXIV_LOG_DATA_INCONSTANCY_ERRORS"]:
-            logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
-        return unavailable(arxiv_id)
-    if len(html_files) == 1:  # serve the only html file
-        return _html_source_single_response(html_files[0], arxiv_id)
-    else:  # file selector for multiple html files
-        return make_response(render_template("dissemination/multiple_files.html",
-                                             arxiv_id=arxiv_id, file_names=file_names), 200,
-                             {"Cache-Control": maxage(arxiv_id.has_version)})
+        resp= _html_source_single_response(file_list, arxiv_id)
+    else: #for multiple files
+        html_files = []
+        file_names = []
+        for file in file_list:
+            if _is_html_name(file):
+                html_files.append(file)
+                file_names.append(_get_html_file_name(file.name))
+        if len(html_files) < 1:
+            if current_app.config["ARXIV_LOG_DATA_INCONSTANCY_ERRORS"]:
+                logger.error(f"No source HTML files found for arxiv_id: {arxiv_id}")
+            resp= unavailable(arxiv_id)
+        elif len(html_files) == 1:  # serve the only html file
+            resp= _html_source_single_response(html_files[0], arxiv_id)
+        else:  # file selector for multiple html files
+            resp= make_response(render_template("dissemination/multiple_files.html",
+                                                arxiv_id=arxiv_id, file_names=file_names), 200,
+                                {"Surrogate-Control": maxage(arxiv_id.has_version)})
+    
+    resp.headers=add_surrogate_key(resp.headers,["html-native"])
+    return resp
 
 
 def _get_html_file_name(name:str) -> str:
