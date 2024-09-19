@@ -864,7 +864,7 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
         blob = bucket.blob(obj)
         logger.debug("%s is being deleted", obj, extra=log_extra)
         blob.delete()
-        logger.warning("%s is deleted", obj, extra=log_extra)
+        logger.info("%s is deleted", obj, extra=log_extra)
     return
 
 
@@ -1040,7 +1040,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
             logger.debug("Skipping [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
             continue
 
-        logger.debug("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
+        logger.info("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
         local_path = Path(local)
         if local_path.exists() and local_path.is_file():
             upload(gs_client, local_path, remote, upload_logger=logger)
