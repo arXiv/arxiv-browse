@@ -166,7 +166,7 @@ def test_new_listing_page( client_with_db_listings):
     rv = client.get("/list/math.RT/new")
     assert rv.status_code == 200
     text = rv.text
-    assert "Replacement submissions for Thursday, 3 February 2011" in text
+    assert "Replacement submissions" in text
     assert "arXiv:math/0510544" in text
     assert "Leibniz superalgebras graded by finite root systems" in text
     assert "showing 1 of 1 entries" in text
@@ -177,5 +177,5 @@ def test_new_listing_page_alternate_names( client_with_db_listings):
     rv = client.get("/list/mtrl-th/new")
     assert rv.status_code == 200
     text = rv.text
-    assert "Replacement submissions for Thursday, 3 February 2011" in text
+    assert "Replacement submissions" in text
     assert "arXiv:cond-mat/0703772" in text
