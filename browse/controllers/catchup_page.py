@@ -25,14 +25,13 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
     subject, start_day, include_abs, page=_process_catchup_params(subject_str, date)
     #check for redirects for noncanon subjects
     if subject.id != subject.canonical_id:
-        return redirect(
-            url_for('catchup', 
+        new_address=url_for('browse.catchup', 
                     subject=subject.canonical_id, 
                     date=start_day, 
                     page=page,
-                    abs=include_abs), 
-            HTTPStatus.MOVED_PERMANENTLY) #type: ignore
-    
+                    abs=include_abs)
+        return {}, HTTPStatus.MOVED_PERMANENTLY, {"Location":new_address}
+
     headers: Dict[str,str]={}
     headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-{subject.id}"])
     #get data
