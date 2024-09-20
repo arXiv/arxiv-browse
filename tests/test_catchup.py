@@ -552,3 +552,13 @@ def test_catchup_form_redirect(dbclient):
     header= resp.headers['Surrogate-Key'] 
     assert " catchup " in " "+header+" "
     assert " catchup-redirect " in " "+header+" "
+
+def test_catchup_alias_redirect(dbclient):
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2011, 2, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        resp = dbclient.get("/catchup/math.MP/2011-02-03?page=1") 
+    assert resp.status_code ==301
+    redirect_location = resp.headers.get("Location")
+    assert redirect_location == "/catchup/math-ph/2011-02-03?page=1&abs=False"
