@@ -460,13 +460,18 @@ class SubmissionFilesState:
         abs_path = self.source_path(".abs")
         dates = []
         try:
-            with open(abs_path, "r", encoding="utf-8") as abs_fd:
-                for line in abs_fd.readlines():
-                    sline = line.strip()
-                    if sline == "":
-                        break
-                    if sline.startswith("Date"):
-                        dates.append(sline)
+            with open(abs_path, "rb") as abs_fd:
+                abstract = abs_fd.read()
+                for line in abstract.split(b'\n'):
+                    try:
+                        sline = line.decode('utf-8')
+                        if sline == "":
+                            break
+                        if sline.startswith("Date"):
+                            dates.append(sline)
+                    except UnicodeDecodeError:
+                        # Don't care the non- uft-8 lines as date line is a generated text.
+                        pass
 
         except FileNotFoundError as exc:
             msg = f"abs file {abs_path} does not exist"

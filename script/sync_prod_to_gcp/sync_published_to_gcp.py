@@ -494,9 +494,8 @@ def upload(gs_client, localpath, key, upload_logger=None):
     if blob is None or blob.size != localpath.stat().st_size or key in REUPLOADS:
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
-
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
-            upload_logger.debug(
+            upload_logger.info(
                 f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
         try:
             destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath)}
@@ -505,7 +504,7 @@ def upload(gs_client, localpath, key, upload_logger=None):
             upload_logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
         return "upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size
     else:
-        upload_logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        upload_logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
         return "upload", localpath, key, "already_on_gs", ms_since(start), 0
 
 
@@ -545,7 +544,7 @@ def sync_to_gcp(todo_q, host):
 
                 if action != 'build_html+upload':
                     summary_q.put((job['paper_id'], ms_since(start)) + res)
-                logger.debug("success uploading %s", job['paper_id'], extra=extra)
+                logger.info("success uploading %s", job['paper_id'], extra=extra)
                 sleep(0.5)
             except Exception as ex:
                 extra.update({CATEGORY: "upload"})
