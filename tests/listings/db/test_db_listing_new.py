@@ -167,6 +167,7 @@ def test_new_listing_page( client_with_db_listings):
     assert rv.status_code == 200
     text = rv.text
     assert "Replacement submissions" in text
+    assert "Showing new listings for Thursday, 3 February 2011" in text
     assert "arXiv:math/0510544" in text
     assert "Leibniz superalgebras graded by finite root systems" in text
     assert "showing 1 of 1 entries" in text
