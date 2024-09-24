@@ -48,39 +48,53 @@
     </li>
 
     <li><b>Catch-up:</b>
-      {# hard coded for legacy /catchup for now #}
-      <form action="/catchup" method="post">
-        <input name="archive" type="hidden" value="{{archive.id}}"/>
+      <form id="catchup-form" action="{{ url_for('.catchup_form') }}" method="get" onsubmit="catchupParamSelection('{{ archive.id }}')">
+
+        <input id="catchup_archive" type="hidden" value="{{archive.id}}"/>
+        <input type="hidden" id="subject" name="subject" />
+        {% set categories = archive.get_categories() %}
+        {% if categories|length > 1 %}
+          <label for="catchup_category">Categories:</label>
+          <select name="catchup_category" id="catchup_category">
+              <option value="" selected>All</option>
+              {% for category in categories %}
+                  <option value="{{ category.id }}">
+                      {{ category.full_name }}
+                  </option>
+              {% endfor %}
+          </select>
+          <br>
+        {% endif %}
+
         Changes since:
-        <select name="sday">
+        <select id="catchup_day">
           {% for day in days %}
-            <option {% if day == catchup_to.strftime('%d') %}selected="true"{% endif %}>{{day}}</option>
+              <option value="{{ day }}">{{ day }}</option>
           {% endfor %}
         </select>
-        <select name="smonth">
-          {% for val, name in months %}
-            <option value="{{val}}"
-                    {% if day == catchup_to.strftime('%m') %}selected="true"{% endif %}>
-                    {{name}}</option>
-          {% endfor %}
+        <select id="catchup_month">
+            {% for val, name in months %}
+                <option value="{{ val }}" {% if val == current_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
         </select>
-        <select name="syear">
-          {% for year in years %}
-            <option {% if year == catchup_to.strftime('%Y')%} selected="true"{% endif %}>{{year}}</option>
-          {% endfor %}
+        <select id="catchup_year">
+            {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
         </select>
-        , view results <select name="method">
-        <option selected="selected">
-          without
-        </option>
-        <option>
-          with
-        </option>
+        <input type="hidden" id="date" name="date" />
+
+        , view results 
+        <select name="include_abs">
+          <option value="False" selected> without </option>
+          <option value="True" > with </option>
         </select>
         abstracts
+
         <input type="submit" value="Go"/>
       </form>
     </li>
+
     <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive.id) }}">{{archive.id}} archive</a></li>
 
     <li>Article statistics by year:<br>
@@ -106,4 +120,26 @@
     {% endfor %}
   </ul>
   {% endif %}
+
+  <script>
+    function catchupParamSelection(archive) {
+      var day = document.getElementById('catchup_day').value.padStart(2, '0'); 
+      var month = document.getElementById('catchup_month').value.padStart(2, '0'); 
+      var year = document.getElementById('catchup_year').value;
+      var combinedDate = `${year}-${month}-${day}`;
+      document.getElementById('date').value = combinedDate;
+  
+      var categoryElement = document.getElementById('catchup_category');
+      var category = categoryElement ? categoryElement.value : "";
+      var subject;
+      if (category && category !== "") {
+        subject = category; 
+      } else {
+        subject = archive; 
+      } 
+      document.getElementById('subject').value = subject
+    }
+  </script>
 {%- endblock %}
+
+

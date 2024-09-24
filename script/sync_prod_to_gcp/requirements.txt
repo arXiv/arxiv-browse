@@ -30,7 +30,7 @@ jmespath==0.10.0
 jsonschema==4.0.0
 lmdb==1.4.1
 logging-json==0.4.0
-MarkupSafe==2.0.1
+MarkupSafe>=2.0.1
 mypy==0.971
 mypy-extensions==0.4.3
 packaging==21.3

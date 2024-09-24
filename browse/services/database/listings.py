@@ -1,9 +1,10 @@
 from datetime import  datetime
 from dateutil.tz import gettz
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Set, Union
 
 from sqlalchemy import case, distinct, or_, and_, desc
-from sqlalchemy.sql import func, select
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.sql import func
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import aliased, load_only
 
@@ -16,15 +17,16 @@ from browse.services.listing import (
     ListingNew,
     AnnounceTypes
 )
+
 from arxiv.db import Session
-from arxiv.db.models import Metadata, DocumentCategory, Document, Updates, t_arXiv_in_category 
+from arxiv.db.models import Metadata, Document, Updates, t_arXiv_in_category 
 from arxiv.document.metadata import DocMetadata, AuthorList
-from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, ARCHIVES_SUBSUMED
+from arxiv.taxonomy.category import Group, Archive, Category
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.document.version import VersionEntry, SourceFlag
 
 from arxiv.base.globals import get_application_config
 from arxiv.base import logging
-from logging import Logger
 from werkzeug.exceptions import BadRequest
 
 logger = logging.getLogger(__name__)
@@ -427,12 +429,17 @@ def _metadata_to_listing_item(meta: Metadata, type: AnnounceTypes) -> ListingIte
         primary_cat=CATEGORIES["bad-arch.bad-cat"]
         secondary_cats=[]
 
+    try: #incase abstract wasnt loaded
+        abstract=getattr(meta, 'abstract','') 
+    except InvalidRequestError:
+        abstract=''
+
     doc = DocMetadata(  
         arxiv_id=meta.paper_id,
         arxiv_id_v=f"{meta.paper_id}v{meta.version}",
         title=  getattr(meta, 'title',''),
         authors=AuthorList(getattr(meta, 'authors',"")),
-        abstract= getattr(meta, 'abstract','') ,
+        abstract= abstract,
         categories= getattr(meta, 'abs_categories',""),
         primary_category=primary_cat,
         secondary_categories=secondary_cats,
@@ -488,35 +495,59 @@ def _entries_into_monthly_listing_items(
 
     return new_listings, cross_listings
 
+
+def process_requested_subject(subject: Union[Group, Archive, Category])-> Tuple[Set[str], Set[Tuple[str,str]]]:
+    """ 
+    set of archives to search if appliable, 
+    set of tuples are the categories to check for in addition to the archive broken into archive and category parts
+    only categories not contained by the set of archives will be returned seperately to work with the archive in category table
+    """
+    archs=set()
+    cats=set()
+
+    #utility functions
+    def process_cat_name(name: str) -> None:
+        #splits category name into parts and adds it
+        if "." in name:
+            arch_part, cat_part = name.split(".")
+            if arch_part not in archs:
+                cats.add((arch_part, cat_part))
+        elif name not in archs:
+            archs.add(name)
+
+    #handle category request
+    if isinstance(subject, Category):
+        process_cat_name(subject.id)
+        if subject.alt_name:
+            process_cat_name(subject.alt_name)
+
+    elif isinstance(subject, Archive):
+        archs.add(subject.id)
+        for category in subject.get_categories(True):
+            process_cat_name(category.alt_name) if category.alt_name else None 
+
+    elif isinstance(subject, Group):
+        for arch in subject.get_archives(True):
+            archs.add(arch.id)
+        for arch in subject.get_archives(True): #twice to avoid adding cateogires covered by archives
+            for category in arch.get_categories(True):
+                process_cat_name(category.alt_name) if category.alt_name else None 
+
+    return archs, cats
+
+
 def _request_categories(archive_or_cat:str) -> Tuple[List[str],List[Tuple[str,str]]]:
     """ list of archives to search if appliable, 
     list of tuples are the categories to check for (possibly in addition to the archive) broken into archvie and category parts
     if a category is received, return the category and possible alternate names
     if an archive is received return the archive name and a list of all categories that should be included but arent nominally part of the archive 
     """
-    arch=[]
-    cats=[]
-
-    def process_alt_name(alt_name: str) -> None:
-        if "." in alt_name:
-            arch_part, cat_part = alt_name.split(".")
-            cats.append((arch_part, cat_part))
-        else:
-            arch.append(alt_name)
-
-    if archive_or_cat in ARCHIVES: #get all categories for archive
-        archive=ARCHIVES[archive_or_cat]
-        arch.append(archive_or_cat)
-        for category in archive.get_categories(True):
-            process_alt_name(category.alt_name) if category.alt_name else None            
-                
-    else: #otherwise its just a category requested
-        category=CATEGORIES[archive_or_cat]
-        process_alt_name(archive_or_cat)
-        if category.alt_name:
-            process_alt_name(category.alt_name) if category.alt_name else None
-
-    return arch, cats
+    if archive_or_cat in ARCHIVES:
+        arch, cats=process_requested_subject(ARCHIVES[archive_or_cat])
+    elif archive_or_cat in CATEGORIES:
+        arch, cats=process_requested_subject(CATEGORIES[archive_or_cat])
+ 
+    return list(arch), list(cats)
 
 def _all_possible_categories(archive_or_cat:str) -> List[str]:
     """returns a list of all categories in an archive, or all possible alternate names for categories

@@ -441,7 +441,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
     url = f"{protocol}://{host}/html/{arxiv_id.id}v{arxiv_id.version}"
 
     def _get_files_for_html () -> List[Path]:
-        files = []
+        files: List[Path] = []
         for root_dir, _, fs in os.walk(html_path):
             files.extend(map(lambda file: Path(os.path.join(root_dir, file)), fs))
         return files
@@ -461,7 +461,7 @@ def ensure_html(session, host, arxiv_id: Identifier, timeout=None, protocol = "h
         else:
             sleep(0.2)
     if len(files) > 0:
-        return files, html_path, url, None, ms_since(start_wait)
+        return [onefile.as_posix() for onefile in files], html_path.as_posix(), url, None, round(ms_since(start_wait))
     else:
         raise WebnodeException(f"ensure_pdf: Could not create {html_path}. {url} {ms_since(start_wait)} ms")
 
@@ -494,9 +494,8 @@ def upload(gs_client, localpath, key, upload_logger=None):
     if blob is None or blob.size != localpath.stat().st_size or key in REUPLOADS:
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
-
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
-            upload_logger.debug(
+            upload_logger.info(
                 f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
         try:
             destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath)}
@@ -505,7 +504,7 @@ def upload(gs_client, localpath, key, upload_logger=None):
             upload_logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
         return "upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size
     else:
-        upload_logger.debug(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        upload_logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
         return "upload", localpath, key, "already_on_gs", ms_since(start), 0
 
 
@@ -545,7 +544,7 @@ def sync_to_gcp(todo_q, host):
 
                 if action != 'build_html+upload':
                     summary_q.put((job['paper_id'], ms_since(start)) + res)
-                logger.debug("success uploading %s", job['paper_id'], extra=extra)
+                logger.info("success uploading %s", job['paper_id'], extra=extra)
                 sleep(0.5)
             except Exception as ex:
                 extra.update({CATEGORY: "upload"})
