@@ -99,7 +99,7 @@ def test_src_version_not_found(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=604800"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-2101.10016v10", "paper-id-2101.10016", "not-found", "src"]
+    expected_keys=["paper-unavailable","unavailable-2101.10016v10", "paper-id-2101.10016v10", "paper-id-2101.10016", "not-found", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
 def test_wdr_current_src(client_with_test_fs):
@@ -113,7 +113,7 @@ def test_wdr_current_src(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=86400"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "withdrawn", "paper-id-2101.10016", "paper-id-2101.10016-current", "src"]
+    expected_keys=["paper-unavailable", "unavailable-2101.10016-current", "withdrawn", "paper-id-2101.10016", "paper-id-2101.10016-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     # .html.gz only one version and it is wdr
@@ -122,7 +122,7 @@ def test_wdr_current_src(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=86400"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "withdrawn", "paper-id-2310.08262", "paper-id-2310.08262-current", "src"]
+    expected_keys=["paper-unavailable", "unavailable-2310.08262-current", "withdrawn", "paper-id-2310.08262", "paper-id-2310.08262-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     resp = client_with_test_fs.get("/html/2310.08262")
