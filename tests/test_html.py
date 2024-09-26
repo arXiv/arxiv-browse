@@ -2,9 +2,19 @@ def test_html_paper(client_with_test_fs):
     """Test a paper with html source."""
     resp = client_with_test_fs.head("/html/2403.10561")
     assert resp.status_code == 200
+    headers= resp.headers
+    assert headers["Surrogate-Control"]== "max-age=86400"
+    keys= " "+headers["Surrogate-Key"]+" "
+    expected_keys=["html", "paper-id-2403.10561", "paper-id-2403.10561-current", "html-native", "html-2403.10561-current"]
+    assert all(" "+item+" " in keys for item in expected_keys)
 
     resp = client_with_test_fs.get("/html/2403.10561/shouldnotexist.html")
     assert resp.status_code == 404
+    headers= resp.headers
+    assert headers["Surrogate-Control"]== "max-age=86400"
+    keys= " "+headers["Surrogate-Key"]+" "
+    expected_keys=["paper-unavailable", "paper-id-2403.10561", "paper-id-2403.10561-current", "not-found"]
+    assert all(" "+item+" " in keys for item in expected_keys)
 
     resp = client_with_test_fs.get("/html/2403.10561")
     assert resp.status_code == 200
