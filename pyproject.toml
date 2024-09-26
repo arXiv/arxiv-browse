@@ -34,7 +34,7 @@ types-python-dateutil = "^2.8.19.12"
 lxml = "^4.9.2"
 xmltodict = "^0.13.0"
 
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "f8a4cc4"}
+arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "eb587e2"}
 
 flask = "^3.0.2"
 google-cloud-compute = "^1.14.1"
