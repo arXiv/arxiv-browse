@@ -13,7 +13,7 @@ def test_html_paper(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=86400"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-2403.10561", "paper-id-2403.10561-current", "not-found"]
+    expected_keys=["paper-unavailable", "unavailable-2403.10561-current", "paper-id-2403.10561", "paper-id-2403.10561-current", "not-found"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     resp = client_with_test_fs.get("/html/2403.10561")

@@ -181,10 +181,12 @@ def _unavailable_headers(arxiv_id: Identifier, other_tags: List[str]) -> Dict[st
 
     if arxiv_id.has_version: 
         keys.append(f"paper-id-{arxiv_id.idv}")
+        keys.append(f"unavailable-{arxiv_id.idv}")
         for tag in other_tags:
             keys.append(f"{tag}-{arxiv_id.idv}")
     else:
         keys.append(f"paper-id-{arxiv_id.id}-current")
+        keys.append(f"unavailable-{arxiv_id.id}-current")
         for tag in other_tags:
             keys.append(f"{tag}-{arxiv_id.id}-current")
 

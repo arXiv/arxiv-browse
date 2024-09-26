@@ -9,7 +9,7 @@ def test_no_src_access(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=86400"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-0704.0380", "not-public", "paper-id-0704.0380-current", "src"]
+    expected_keys=["paper-unavailable","unavailable-0704.0380-current", "paper-id-0704.0380", "not-public", "paper-id-0704.0380-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     #specific version that isnt public will stay that way
@@ -19,7 +19,7 @@ def test_no_src_access(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=31536000"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-0704.0945", "not-public", "paper-id-0704.0945v2", "src"]
+    expected_keys=["paper-unavailable", "unavailable-0704.0945v2", "paper-id-0704.0945", "not-public", "paper-id-0704.0945v2", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     #eprint path also blocks
@@ -28,7 +28,7 @@ def test_no_src_access(client_with_test_fs):
     assert 'Source Not Public' in resp.text
     assert headers["Surrogate-Control"]== 'max-age=31536000'
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-0704.0945", "not-public", "paper-id-0704.0945v2", "src"]
+    expected_keys=["paper-unavailable", "unavailable-0704.0945v2", "paper-id-0704.0945", "not-public", "paper-id-0704.0945v2", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
     #version that does not yet exist of encrypted papaer does not show as not public
@@ -37,7 +37,7 @@ def test_no_src_access(client_with_test_fs):
     headers= resp.headers
     assert headers["Surrogate-Control"]== "max-age=604800"
     keys= " "+headers["Surrogate-Key"]+" "
-    expected_keys=["paper-unavailable", "paper-id-0704.0945", "paper-id-0704.0945v3", "src", "not-found"]
+    expected_keys=["paper-unavailable", "unavailable-0704.0945v3", "paper-id-0704.0945", "paper-id-0704.0945v3", "src", "not-found"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
 def test_still_read_article(client_with_test_fs):
