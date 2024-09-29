@@ -26,8 +26,8 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
         {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-    <div><h3 style="text-align: center">🚨2024-09-29: <a href="https://blog.arxiv.org/2024/09/29/arxiv-has-been-set-to-read-only-while-we-investigate-a-db-replication-issue/">
-    arxiv.org is experience DB issues. Some features are not available right now.🚨</a>
+    <div><h3 style="text-align: center">🚨2024-09-29: <a href="https://https://status.arxiv.org">
+    arxiv.org is experience DB issues. The announce tonight will be 3 hours later than usual.</a>🚨
     </h3></div>
     {%- endif -%}
 {%- endmacro -%}
