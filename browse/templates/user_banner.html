@@ -26,7 +26,7 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
         {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-    <div><h3 style="text-align: center">🚨2024-09-29: <a href="https://status.arxiv.org">arxiv.org is experiencing DB issues.</a>🚨</h3></div>
+    <div><h3 style="text-align: center">✅2024-10-01: <a href="https://status.arxiv.org">arxiv.org is back to normal.</a>✅</h3></div>
     {%- endif -%}
 {%- endmacro -%}
 
