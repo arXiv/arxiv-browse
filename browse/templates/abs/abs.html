@@ -6,7 +6,8 @@
 
 {% block head %}
   {{ super() -}}
-  <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
+  <link rel="canonical" href="{{ canonical_url(abs_meta.arxiv_id) }}"/>
+  <meta name="description" content="Abstract page for arXiv paper {{ requested_id }}: {{ abs_meta.title|tex2utf }}">
   {{- generate_social_media_tags() }}
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
