@@ -20,12 +20,12 @@ Adding an environment var, so we can enable only on gcp.
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
 {% set BANNER_START_1 = 202409280100 %}
-{% set BANNER_END_1 = 202410290100 %}
+{% set BANNER_END_1 = 202409290100 %}
 {% set SLIDE = False %}
 
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
-        {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
+    {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
     <div><h3 style="text-align: center">✅2024-10-01: <a href="https://status.arxiv.org">arxiv.org is back to normal.</a>✅</h3></div>
     {%- endif -%}
 {%- endmacro -%}
