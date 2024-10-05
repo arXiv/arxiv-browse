@@ -23,6 +23,20 @@ def test_basic_db_abs(dbclient):
     assert 'Number Theory' in subjects.get_text()
     assert 'math.NT' in subjects.get_text()
 
+def test_abs_head(dbclient):
+    rt = dbclient.get('/abs/0906.2112')
+    assert rt.status_code == 200
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    head = html.head
+    canonical_link = head.find('link', {'rel': 'canonical'})
+    assert canonical_link is not None
+    assert canonical_link['href'] == "https://arxiv.org/abs/0906.2112"
+
+    meta_description = head.find('meta', {'name': 'description'})
+    assert meta_description is not None
+    assert meta_description['content'] == "Abstract page for arXiv paper 0906.2112: Symmetric roots and admissible pairing"
+
 
 def test_db_abs_history(dbclient):
     rt = dbclient.get('/abs/0906.2112')
