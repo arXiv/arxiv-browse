@@ -23,7 +23,7 @@
 
     const huggingfaceApiHost = "https://huggingface.co/api";
     const huggingfaceRepo = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
-    const huggingfacePaperApi = `${huggingfaceApiHost}/papers/${arxivPaperId}?field=comments`;
+    const huggingfacePaperApi = `${huggingfaceApiHost}/papers/${arxivPaperId}`;
 
     const MAX_TAGS = 5; // You can adjust this value as needed
 
