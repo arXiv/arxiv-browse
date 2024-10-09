@@ -25,7 +25,7 @@
     const huggingfaceRepo = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
     const huggingfacePaperApi = `${huggingfaceApiHost}/papers/${arxivPaperId}`;
 
-    const MAX_TAGS = 5; // You can adjust this value as needed
+    const MAX_TAGS = 5; // maximum number of tags to show
 
     // Search the HF API for demos that cite this paper
     (async () => {
