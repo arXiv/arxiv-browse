@@ -132,6 +132,22 @@
           <div class="column lab-switch">
             <label class="switch">
               <input
+                id="huggingface-toggle"
+                data-script-url="{{ url_for('static', filename='js/huggingface.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-huggingface">
+              <span class="slider"></span>
+              <span class="is-sr-only">Huggingface Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-huggingface">Hugging Face</span> <em>(<a href="https://huggingface.co/huggingface" target="_blank">What is Huggingface?</a>)</em>
+          </div>
+        </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
@@ -168,6 +184,7 @@
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
+      <div id="huggingface-output" style="display:none"></div>
     </div>
 
 
