@@ -36,9 +36,14 @@
       </select>
       <input id="adv-search-btn" type="button" value="Search">
       <input type="submit" name="/form" value="Form Interface">
-      <input type="submit" name="/catchup" value="Catchup">
+      <input id="catchup-btn" type="submit" name="/catchup" value="Catchup">
     </form>
     <script type="text/javascript">
+      //catchup no long hosted from multi
+      document.getElementById('catchup-btn').addEventListener('click', function(event) {
+        document.querySelector('form[name="home-adv-search"]').action = "{{ url_for('browse.catchup_form') }}";
+      });
+
      function doAdvSearchBtn(event) {
          sel = document.querySelector('select[name="group"]')
          if(sel && sel.options && sel.options[sel.selectedIndex].dataset.url ){

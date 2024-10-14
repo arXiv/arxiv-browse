@@ -549,7 +549,7 @@ def sub_sections_for_types(
         continued=skipn > 0,
         last=skipn >= new_count - shown,
         visible=len(news)>0,
-        heading=f'New submissions for {date} ' 
+        heading=f'New submissions ' 
     )
 
     sec_cross=ListingSection(
@@ -559,7 +559,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > cross_start,
         last=skipn >= rep_start - shown,
         visible=len(crosses)>0,
-        heading=f'Cross submissions for {date} '
+        heading=f'Cross submissions '
     )
 
     sec_rep=ListingSection(
@@ -569,7 +569,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > rep_start,
         last=last_shown >= new_count + cross_count + rep_count,
         visible=len(reps)>0,
-        heading=f'Replacement submissions for {date} '
+        heading=f'Replacement submissions '
     )
 
     secs=[sec_new, sec_cross, sec_rep]
@@ -582,7 +582,7 @@ def sub_sections_for_types(
                 showing = showing + 'last '
         if not sec.last and not sec.continued:
             showing = showing + 'first '
-        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries )'
+        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries)'
 
     return {'sub_sections_for_types': secs}
 

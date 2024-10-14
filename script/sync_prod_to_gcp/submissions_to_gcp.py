@@ -67,7 +67,7 @@ import signal
 import subprocess
 import sys
 import typing
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from urllib.parse import unquote
 from time import gmtime, sleep
 from pathlib import Path
@@ -343,7 +343,7 @@ class SubmissionFilesState:
     publish_type: str
     version: str         # from the publish event
     log_extra: dict
-    submission_source: typing.Optional[dict]
+    submission_source: typing.Optional[str]
     published_versions: typing.List[dict]
 
     _top_levels: dict
@@ -460,13 +460,18 @@ class SubmissionFilesState:
         abs_path = self.source_path(".abs")
         dates = []
         try:
-            with open(abs_path, "r", encoding="utf-8") as abs_fd:
-                for line in abs_fd.readlines():
-                    sline = line.strip()
-                    if sline == "":
-                        break
-                    if sline.startswith("Date"):
-                        dates.append(sline)
+            with open(abs_path, "rb") as abs_fd:
+                abstract = abs_fd.read()
+                for line in abstract.split(b'\n'):
+                    try:
+                        sline = line.decode('utf-8')
+                        if sline == "":
+                            break
+                        if sline.startswith("Date"):
+                            dates.append(sline)
+                    except UnicodeDecodeError:
+                        # Don't care the non- uft-8 lines as date line is a generated text.
+                        pass
 
         except FileNotFoundError as exc:
             msg = f"abs file {abs_path} does not exist"
@@ -692,6 +697,10 @@ class SubmissionFilesState:
                     if content.startswith(needle):
                         return True
 
+            except UnicodeDecodeError:
+                logger.info("Unparsable source, but no worries. if it's more than auto-ignore, it should not be ignored.: %s ext %s",
+                               self.xid.ids, str(self.src_ext), extra=self.log_extra)
+                return False
             except Exception as _exc:
                 logger.warning("bad .gz: %s ext %s",
                                self.xid.ids, str(self.src_ext), extra=self.log_extra,
@@ -734,6 +743,8 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
     paper_id = data.get('paper_id')
     version = data.get('version')
     src_ext = data.get('src_ext')
+    if src_ext and len(src_ext) > 0 and src_ext[0] != ".":
+        src_ext = "." + src_ext
     source_format = data.get('source_format', '')
 
     logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
@@ -759,7 +770,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                                        source_mtime=file_state.get_submission_mtime())
 
                     except sync_published_to_gcp.WebnodeException as exc:
-                        raise MissingGeneratedFile("Failed to generate %s", pdf_path) from exc
+                        raise MissingGeneratedFile("Failed to generate %s" % pdf_path) from exc
 
                     except ReadTimeout as exc:
                         # This happens when failed to talk to webnode
@@ -799,7 +810,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     file_state.register_files('html-files', html_files)
 
                 except sync_published_to_gcp.WebnodeException as _exc:
-                    raise MissingGeneratedFile("Failed to generate %s", html_path) from _exc
+                    raise MissingGeneratedFile("Failed to generate %s" % html_path) from _exc
 
                 except Exception as _exc:
                     logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
@@ -858,7 +869,7 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
         blob = bucket.blob(obj)
         logger.debug("%s is being deleted", obj, extra=log_extra)
         blob.delete()
-        logger.warning("%s is deleted", obj, extra=log_extra)
+        logger.info("%s is deleted", obj, extra=log_extra)
     return
 
 
@@ -915,7 +926,7 @@ def submission_callback(message: Message) -> None:
         "publish_type": str(publish_type), "arxiv_id": str(paper_id), "version": str(version)
     }
 
-    message_age: timedelta = datetime.utcnow() - message.publish_time
+    message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
 
     try:
@@ -944,10 +955,22 @@ def submission_callback(message: Message) -> None:
             help_needed = os.environ.get("TEX_COMPILATION_RECIPIENT", "help@arxiv.org")
             subject = f"Uploading of {paper_id}v{version} failed"
             mail_body = f"Hello EUST,\nSubmission uploading for {paper_id}v{version} has failed. Please resolve the issue.\n\nThis message is generated by a bot on arxiv-sync.serverfarm.cornell.edu.\n"
-            cmd = ["/usr/bin/mail", "-r", "developers@arxiv.org", "-s", subject, help_needed]
+            SENDER = os.environ.get("SENDER", "developers@arxiv.org")
+            SMTP_SERVER = os.environ.get("SMTP_SERVER", "mail.arxiv.org")
+            SMTP_PORT = os.environ.get("SMTP_PORT", "25")
+            cmd = ["/usr/local/bin/arxiv-mail",
+                   "-t", help_needed,
+                   "-f", SENDER,
+                   "-m", SMTP_SERVER,
+                   "-p", SMTP_PORT,
+                   "-s", subject,
+                   ]
+            # using sendmail
+            # cmd = ["/usr/bin/mail", "-r", "developers@arxiv.org", "-s", subject, help_needed]
+
             mail = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             try:
-                mail.communicate(mail_body, timeout=60)
+                mail.communicate(mail_body.encode('utf-8'), timeout=60)
                 if mail.returncode == 0:
                     # Once the email message is sent, done here.
                     message.ack()
@@ -983,7 +1006,7 @@ def submission_callback(message: Message) -> None:
 
 
 
-def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
+def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> None:
     """
     From the submission file state, copy the ones that should bu uploaded.
 
@@ -1034,7 +1057,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> bool:
             logger.debug("Skipping [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
             continue
 
-        logger.debug("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
+        logger.info("uploading [%s]: %s -> %s", entry_type, local, remote, extra=log_extra)
         local_path = Path(local)
         if local_path.exists() and local_path.is_file():
             upload(gs_client, local_path, remote, upload_logger=logger)
