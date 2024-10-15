@@ -1,7 +1,7 @@
 :root,[data-theme=light] {
   --headings-font-family: "rival-sans";
   --text-font-family: "rival-sans";
-  --toc-font-family: "rival-sans-narrow";
+  --toc-font-family: "rival-sans";
   --other-font-family: "rival-sans";
   --code-font-family:"ibm-plex-mono", monospace;
   --note-highlight-color: #f9f7f7; /* warm wash */
@@ -1114,9 +1114,6 @@ article{
       padding-bottom: 1em;
       max-height: 60vh;
       height: auto;
-    }
-    .ltx_page_main >.ltx_TOC.mobile:not(.show) {
-
     }
 
     [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{
