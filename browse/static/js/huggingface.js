@@ -23,7 +23,7 @@
 
     const huggingfaceApiHost = "https://huggingface.co/api";
     const huggingfaceRepo = `${huggingfaceApiHost}/arxiv/${arxivPaperId}/repos`;
-    const huggingfacePaperApi = `${huggingfaceApiHost}/papers/${arxivPaperId}`;
+    const huggingfacePaperApi = `${huggingfaceApiHost}/papers/${arxivPaperId}?field=comments`;
 
     const MAX_TAGS = 5; // maximum number of tags to show
 
@@ -34,7 +34,7 @@
             let response = await fetch(huggingfacePaperApi);
             if (!response.ok) {
                 console.error(`Unable to fetch data from ${huggingfacePaperApi}`);
-                render(0, [], []);
+                render(0, null, [], []);
                 return;
             }
 
@@ -42,14 +42,14 @@
 
             if (paper_data.hasOwnProperty("error")) {
                 console.error(`Arxiv id has no paper associated`);
-                render(0, [], []);
+                render(0, null, [], []);
                 return;
             } else {
                 // Fetch repository data
                 let repoResponse = await fetch(huggingfaceRepo);
                 if (!repoResponse.ok) {
                     console.error(`Unable to fetch data from ${huggingfaceRepo}`);
-                    render(0, [], []);
+                    render(0, paper_data, [], []);
                     return;
                 }
 
@@ -63,42 +63,70 @@
                 if (repo_data.hasOwnProperty("datasets")) {
                     datasets = repo_data.datasets;
                 }
-                render(1, models, datasets);
+                render(1, paper_data, models, datasets);
             }
         } catch (error) {
             console.error(`Error fetching data: ${error}`);
-            render(0, [], []);
+            render(0, null, [], []);
         }
     })();
 
     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-    function render(status, models, datasets) {
-        container.innerHTML = window.DOMPurify.sanitize(`
-            ${summary(status)}
-            ${renderModels(models, datasets)}
-        `);
+    function render(status, paperData, models, datasets) {
+    container.innerHTML = window.DOMPurify.sanitize(`
+        ${summary(status, paperData)}
+        ${renderModels(models, datasets)}
+    `);
     }
 
-    function summary(status) {
-        let message = '';
-        switch (status) {
-            case 0:
-                message = `The 🤗 paper page does not exist for this article. You can <a href="https://huggingface.co/papers/index?arxivId=${arxivPaperId}">index it here</a>.`;
-                break;
-            case 1:
-                message = `The 🤗 paper page for this article is available <a href="https://huggingface.co/papers/${arxivPaperId}">here</a>.`;
-                break;
-            default:
-                message = `The 🤗 paper page does not exist for this article. You can <a href="https://huggingface.co/papers/index?arxivId=${arxivPaperId}">index it here</a>.`;
-                break;
+    function summary(status, paperData) {
+        if (status == 1 && paperData) {
+            return `
+            <div class="huggingface-section">
+                <h3>Paper</h3>
+                <div class="huggingface-items">
+                    ${renderPaper(paperData)}
+                </div>
+            </div>
+            `;
+        } else {
+            let message = '';
+            message = `The 🤗 paper page does not exist for this article. You can <a href="https://huggingface.co/papers/index?arxivId=${arxivPaperId}">index it here</a>.`;
+            return `<div class="paper-summary">
+                        <div class="huggingface-section">
+                            <h3>Paper</h3>
+                            <p>${message}</p>
+                        </div>
+                    </div>`;
         }
-        // Wrapped the message in a div for better control over styling
-        return `<div class="paper-summary">
-                    <div class="huggingface-section">
-                        <h3>Paper</h3>
-                        <p>${message}</p>
-                    </div>
-                </div>`;
+    }
+
+    // Function to render the paper card
+    function renderPaper(paperData) {
+        // Extract the data we need
+        const title = paperData.title || '';
+        const paperLink = `https://huggingface.co/papers/${paperData.id}`;
+        const arxivLink = `https://arxiv.org/abs/${paperData.id}`;
+        const authors = paperData.authors || [];
+        const publishedAt = formatDate(paperData.publishedAt);
+        const summary = paperData.summary || '';
+        const upvotes = paperData.upvotes || 0;
+        const comments = paperData.comments || [];
+        const numComments = comments.length;
+
+        // Build the authors string
+        const authorNames = authors.map(author => author.name).join(', ');
+
+        return `
+        <div class="huggingface-item">
+            <div class="hf-item-content">
+                <h4><a href="${paperLink}" target="_blank">${title}</a></h4>
+                <p><strong>Authors:</strong> ${authorNames}</p>
+                <p><strong>Published:</strong> ${publishedAt}</p>
+                <p>👍 ${upvotes} | 💬 ${numComments} | <a href="${paperLink}" target="_blank">View on Hugging Face</a></p>
+            </div>
+        </div>
+        `;
     }
 
     function renderModels(models, datasets) {
