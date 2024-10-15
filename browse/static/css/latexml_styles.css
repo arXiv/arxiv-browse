@@ -1,3 +1,9 @@
+@font-face {
+  font-family: STIX Two Math;
+  src: local('STIXTwoMath-Regular'),
+    url('/static/browse/0.3.4/fonts/STIXTwoMath-Regular.woff2');
+}
+
 :root,[data-theme=light] {
   --headings-font-family: "rival-sans";
   --text-font-family: "rival-sans";
