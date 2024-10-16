@@ -66,7 +66,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
 
-show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
+show_values = [25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
@@ -75,7 +75,7 @@ min_show = 1
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 
-default_show = show_values[2]
+default_show = show_values[1]
 """Default value for show."""
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
