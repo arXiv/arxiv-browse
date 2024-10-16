@@ -8,7 +8,7 @@
       {%- set skipfordate = cumulative.total -%}
       {%- set cumulative.total = cumulative.total + pdate[1] -%}
       <li>
-        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}" rel="nofollow">
+        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
           {{ pdate[0].strftime('%a, %-d %b %Y') }}
         </a>
       </li>

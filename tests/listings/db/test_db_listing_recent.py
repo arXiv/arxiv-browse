@@ -184,17 +184,17 @@ def test_recent_page_links( client_with_db_listings):
     rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/list/math/recent?skip=4&amp;show=2" rel="nofollow">\n          Fri, 28 Jan 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=3&amp;show=2" rel="nofollow">\n          Tue, 1 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=2&amp;show=2" rel="nofollow">\n          Wed, 2 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=0&amp;show=2" rel="nofollow">\n          Thu, 3 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=4&amp;show=2">\n          Fri, 28 Jan 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=3&amp;show=2">\n          Tue, 1 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=2&amp;show=2">\n          Wed, 2 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=0&amp;show=2">\n          Thu, 3 Feb 2011\n        </a>' in text
 
 def test_minimum_pagination( client_with_db_listings):
     client = client_with_db_listings
     rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/list/math/recent?skip=4&amp;show=25" rel="nofollow">\n          Fri, 28 Jan 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=3&amp;show=25" rel="nofollow">\n          Tue, 1 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=2&amp;show=25" rel="nofollow">\n          Wed, 2 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=0&amp;show=25" rel="nofollow">\n          Thu, 3 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=4&amp;show=25">\n          Fri, 28 Jan 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=3&amp;show=25">\n          Tue, 1 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=2&amp;show=25">\n          Wed, 2 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=0&amp;show=25">\n          Thu, 3 Feb 2011\n        </a>' in text

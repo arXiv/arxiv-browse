@@ -179,7 +179,7 @@ def test_month_listing_page( client_with_db_listings):
     #listing item dispalyed properly
     assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text 
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
-    assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B" rel="nofollow">Melvin Leok Boon Tiong</a>' in text
+    assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
 
 def test_year_listing_page( client_with_db_listings):
     client = client_with_db_listings
@@ -194,4 +194,4 @@ def test_year_listing_page( client_with_db_listings):
     #listing item dispalyed properly
     assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text 
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
-    assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B" rel="nofollow">Melvin Leok Boon Tiong</a>' in text
+    assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
