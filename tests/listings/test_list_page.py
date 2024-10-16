@@ -2,6 +2,9 @@ import pytest
 import re
 from datetime import date
 from unittest.mock import MagicMock
+from unittest import mock
+
+from browse.controllers import list_page
 
 from browse.services.listing import NotModifiedResponse, get_listing_service
 from bs4 import BeautifulSoup
@@ -162,16 +165,16 @@ def test_paging_first(client_with_fake_listings):
     assert len(tgs) == 6
 
     assert tgs[0].name == "span"
-    assert tgs[0].get_text() == "1-25"
+    assert tgs[0].get_text() == "1-50"
 
     assert tgs[1].name == "a"
-    assert tgs[1].get_text() == "26-50"
+    assert tgs[1].get_text() == "51-100"
 
     assert tgs[2].name == "a"
-    assert tgs[2].get_text() == "51-75"
+    assert tgs[2].get_text() == "101-150"
 
     assert tgs[3].name == "a"
-    assert tgs[3].get_text() == "76-100"
+    assert tgs[3].get_text() == "151-200"
 
     assert tgs[4].name == "span"
     assert tgs[4].get_text() == "..."
@@ -435,10 +438,10 @@ def test_paging_925(client_with_fake_listings):
 def test_paging_all(client_with_fake_listings):
     client = client_with_fake_listings
     rv = client.get("/list/hep-ph/2009-01?show=25")
-    assert 'show=2000>all</a>' in rv.text.replace('\n', '').replace(' ', '')
+    assert 'show=2000rel="nofollow">all</a>' in rv.text.replace('\n', '').replace(' ', '')
 
     rv = client.get("/list/hep-ph/2009-01?show=2000")
-    assert 'show=2000>all</a>' not in rv.text.replace('\n', '').replace(' ', '')
+    assert 'show=2000rel="nofollow">all</a>' not in rv.text.replace('\n', '').replace(' ', '')
 
 
 def test_odd_requests(client_with_fake_listings):
@@ -623,7 +626,7 @@ def test_astro_ph_recent(client_with_test_fs):
     text = rv.text
     assert "Fri, 3 Mar 2023" in text
     assert "Total of 320 entries :" in text
-    assert "Thu, 2 Mar 2023 (showing first 25 of 57 entries )" in text
+    assert "Thu, 2 Mar 2023 (showing first 50 of 57 entries )" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.CO/recent")
@@ -784,6 +787,7 @@ def test_no_listings_new(client_with_db_listings):
 
 
 #also tests sectioning visibility
+@mock.patch.object(list_page, 'min_show', 1)
 def test_no_listings_recent(client_with_db_listings):
     client = client_with_db_listings
     expected_string = "No updates for this time period."
