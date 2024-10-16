@@ -71,7 +71,7 @@ show_values = [25, 50, 100, 250, 500, 1000, 2000]
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
-min_show = 1
+min_show = 25
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 

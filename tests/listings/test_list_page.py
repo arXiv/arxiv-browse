@@ -2,6 +2,9 @@ import pytest
 import re
 from datetime import date
 from unittest.mock import MagicMock
+from unittest import mock
+
+from browse.controllers import list_page
 
 from browse.services.listing import NotModifiedResponse, get_listing_service
 from bs4 import BeautifulSoup
@@ -784,6 +787,7 @@ def test_no_listings_new(client_with_db_listings):
 
 
 #also tests sectioning visibility
+@mock.patch.object(list_page, 'min_show', 1)
 def test_no_listings_recent(client_with_db_listings):
     client = client_with_db_listings
     expected_string = "No updates for this time period."
