@@ -79,7 +79,7 @@
       {%- if part is string -%}
         {{- part|arxiv_urlize -}}
       {%- else -%}
-        <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
+        <a href="{{url_for_author_search(article, part[1])}}" rel="nofollow">{{part[0]}}</a>
       {%- endif -%}
     {% endfor %}
   {%- endif -%}
@@ -93,7 +93,7 @@
     {% if pg.nolink is defined %}
       <span>{{pg.nolink}}</span>
     {% else %}
-      <a href={{pg.url}}>{{pg.txt}}</a>
+      <a href={{pg.url}} rel="nofollow">{{pg.txt}}</a>
     {% endif %}
   {% endfor %}
 {% endif %}
@@ -102,7 +102,7 @@
 
 {%- macro show_link( txt, to_show ) %}
   {% if to_show %}
-    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
+    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}} rel="nofollow">
       {{txt}}</a>
   {% else %}
     <span style="color: #454545">{{txt}}</span>

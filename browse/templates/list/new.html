@@ -10,7 +10,7 @@ It needs to do headings for the new/cross/rep sections.
 {% block list_index %}
 <ul>
   {% for ityp in index_for_types %}
-  <li><a href="{{ityp[1]}}#item{{ityp[2]}}">{{ityp[0]}}</a></li>
+  <li><a href="{{ityp[1]}}#item{{ityp[2]}}" rel="nofollow">{{ityp[0]}}</a></li>
   {% endfor %}
 </ul>
 
