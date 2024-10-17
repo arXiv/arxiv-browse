@@ -1,6 +1,8 @@
 from datetime import date
 from typing import List
+from unittest import mock
 
+from browse.controllers import list_page
 from browse.services.listing import get_listing_service, ListingItem
 
 #recent listing tests
@@ -150,7 +152,8 @@ def test_recent_pagination(app_with_db):
     first_id=listing1.listings[0].id
     assert all(item.id !=first_id for item in listing2.listings)
     
-def test_recent_listing_page_pagination( client_with_db_listings):
+@mock.patch.object(list_page, 'min_show', 1)
+def test_recent_listing_page_pagination(client_with_db_listings):
     client = client_with_db_listings
     rv = client.get("/list/math/recent?show=1")
     assert rv.status_code == 200
@@ -166,6 +169,16 @@ def test_recent_listing_page_pagination( client_with_db_listings):
     assert "0704.0046" in text
     assert "Tue, 1 Feb 2011 (showing 1 of 1 entries )" in text
 
+def test_minimum_show(client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math/recent?show=1")
+    assert rv.status_code == 200
+    text = rv.text
+    assert "Thu, 3 Feb 2011 (showing 2 of 2 entries )" in text
+    assert "Wed, 2 Feb 2011 (showing" in text
+    assert "0704.0046" in text
+
+@mock.patch.object(list_page, 'min_show', 1)
 def test_recent_page_links( client_with_db_listings):
     client = client_with_db_listings
     rv = client.get("/list/math/recent?show=2")
@@ -176,3 +189,12 @@ def test_recent_page_links( client_with_db_listings):
     assert '<a href="/list/math/recent?skip=2&amp;show=2">\n          Wed, 2 Feb 2011\n        </a>' in text
     assert '<a href="/list/math/recent?skip=0&amp;show=2">\n          Thu, 3 Feb 2011\n        </a>' in text
 
+def test_minimum_pagination( client_with_db_listings):
+    client = client_with_db_listings
+    rv = client.get("/list/math/recent?show=2")
+    assert rv.status_code == 200
+    text = rv.text
+    assert '<a href="/list/math/recent?skip=4&amp;show=25">\n          Fri, 28 Jan 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=3&amp;show=25">\n          Tue, 1 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=2&amp;show=25">\n          Wed, 2 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=0&amp;show=25">\n          Thu, 3 Feb 2011\n        </a>' in text
