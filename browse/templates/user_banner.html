@@ -19,15 +19,15 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202410210100 %}
-{% set BANNER_END_1 = 202410270100 %}
+{% set BANNER_START_1 = 202410210000 %}
+{% set BANNER_END_1 = 202410272359 %}
 {% set SLIDE = True %}
 
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
     {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-      {#  October 10 - October 27 #}
+      {#  October 21 - October 27 #}
       <aside class="slider-wrapper bps-banner forum blue">
         <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
         <div class="columns">
