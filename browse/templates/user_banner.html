@@ -19,15 +19,30 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202409280100 %}
-{% set BANNER_END_1 = 202409290100 %}
-{% set SLIDE = False %}
+{% set BANNER_START_1 = 202410210100 %}
+{% set BANNER_END_1 = 202410270100 %}
+{% set SLIDE = True %}
 
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+
     {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-    <div><h3 style="text-align: center">✅2024-10-01: <a href="https://status.arxiv.org">arxiv.org is back to normal.</a>✅</h3></div>
+      {#  October 10 - October 27 #}
+      <aside class="slider-wrapper bps-banner forum blue">
+        <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+        <div class="columns">
+          <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Smilely Bones">
+          <div class="copy-donation bps-banner">
+            <h2>Happy Open Access Week from arXiv!</h2>
+            <p>Open access is only possible with YOUR support. Give to arXiv this week to help keep science open for all.</p>
+          </div>
+          <div class="amount-donation bps-banner">
+            <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://securelb.imodules.com/s/1717/giving/interior.aspx?sid=1717&gid=2&pgid=22315&cid=35778&dids=276&bledit=1&sort=1"><b>Donate!</b></a></div>
+          </div>
+        </div>
+      </aside>
     {%- endif -%}
+
 {%- endmacro -%}
 
 
@@ -42,3 +57,22 @@ Adding an environment var, so we can enable only on gcp.
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=1.11"></script>
   {%- endif -%}
 {%- endmacro -%}
+
+
+<!-- example banner setup
+
+    <aside class="slider-wrapper bps-banner forum blue">
+      <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+      <div class="columns">
+        <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
+        <div class="copy-donation bps-banner">
+          <h2>The Accessibility Forum is back!</h2>
+          <p>Coming this September, the Forum is free, virtual, and open to all. <a target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y">Sign Up</a> and <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
+        </div>
+        <div class="amount-donation bps-banner">
+          <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Sign Up</b></a></div>
+        </div>
+      </div>
+    </aside>
+
+  -->
