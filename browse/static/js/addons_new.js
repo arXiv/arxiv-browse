@@ -288,7 +288,7 @@ let unwrap_nav = () => {
 function ref_ArXivFont(){
   var link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = "https://use.typekit.net/rwr5zpx.css";
+  link.href = "https://use.typekit.net/utz6mli.css";
   document.head.appendChild(link);
 }
 
