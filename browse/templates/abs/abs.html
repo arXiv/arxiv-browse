@@ -88,7 +88,9 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-  {% include "abs/labs_tabs.html" %}
+  {% if show_labs %}
+    {% include "abs/labs_tabs.html" %}
+  {% endif %}
 
   <div class="endorsers">
     <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |
