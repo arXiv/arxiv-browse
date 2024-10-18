@@ -32,6 +32,23 @@
           </div>
         </div>
         {% endif %}
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="connectedpapers-toggle"
+                type="checkbox"
+                class="lab-toggle"
+                data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
+                aria-labelledby="label-for-connected-papers">
+              <span class="slider"></span>
+              <span class="is-sr-only">Connected Papers Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-connected-papers">Connected Papers</span> <em>(<a href="https://www.connectedpapers.com/about" target="_blank">What is Connected Papers?</a>)</em>
+          </div>
+        </div>
         {%- if rd_int >= 202106171600 -%}
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
@@ -70,6 +87,7 @@
         </div>
       </div>
         <div class="labs-content-placeholder labs-display" style="display: none;"></div>
+        <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div style="min-height: 15px" id="litmaps-open-in"></div>
         <div style="min-height: 15px" id="scite-open-in"></div>
     </div>
@@ -282,20 +300,6 @@
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
-                <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
-                       data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
-                       aria-labelledby="label-for-connected-papers" >
-                <span class="slider"></span>
-                <span class="is-sr-only">Connected Papers Toggle</span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              <span id="label-for-connected-papers">Connected Papers</span> <em>(<a href="https://www.connectedpapers.com/about" target="_blank">What is Connected Papers?</a>)</em>
-            </div>
-          </div>
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
                 <input id="core-recommender-toggle" type="checkbox" class="lab-toggle" aria-labelledby="label-for-core">
                 <span class="slider"></span>
                 <span class="is-sr-only">Core recommender toggle</span>
@@ -340,7 +344,6 @@
             <div class="tab-flower" id="tab-topic"><svg id="flower-graph-topic"></svg></div>
           </div>
         </div>
-        <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div id="coreRecommenderOutput"></div>
         <div id="iarxivOutput"></div>
       </div>
