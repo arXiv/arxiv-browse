@@ -144,7 +144,8 @@ def get_abs_page(arxiv_id: str) -> Response:
                                                                                          ver.version)
 
         response_data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
-
+        response_data["show_refs_cites"] = _show_refs_cites(arxiv_identifier)
+        response_data["show_labs"] = _show_labs(arxiv_identifier)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
@@ -381,3 +382,21 @@ def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str
         return abs_meta.submitter.name or None
     except:
         return None
+
+def _show_refs_cites(arxiv_id: Identifier) -> bool:
+    NO_REFS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_REFS_IDS:
+        return False
+    else:
+        return True
+    
+def _show_labs(arxiv_id: Identifier) -> bool:
+    NO_LABS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_LABS_IDS:
+        return False
+    else:
+        return True
