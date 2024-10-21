@@ -1,4 +1,9 @@
 
+def test_nonsense_identifier(dbclient):
+    resp = dbclient.get("/abs/abcde")
+    assert resp.status_code == 404
+    assert "Invalid article identifier" in resp.text
+
 def test_encrypted_source_fs(client_with_test_fs):
     """Tests that there is no link for source files on the abs page if the file is encrypted"""
     resp = client_with_test_fs.get("/abs/0704.0380")
