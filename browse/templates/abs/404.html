@@ -3,16 +3,16 @@
 {%- block title -%}
   {%- if reason -%}
     {%- if (reason=='not_found' or reason=='version_not_found') and arxiv_id -%}
-[{{arxiv_id}}] Article not found
+      [{{arxiv_id}}] Article not found
     {% elif reason=='deleted' and arxiv_id_latest %}
-[{{arxiv_id_latest}}] Article not found
+      [{{arxiv_id_latest}}] Article not found
     {% elif reason=='is_archive' and arxiv_id and archive_name %}
-[{{arxiv_id}}] Incomplete article identifier
+      [{{arxiv_id}}] Incomplete article identifier
     {%- endif -%}
   {%- elif arxiv_id -%}
-[{{arxiv_id}}] Article identifier not recognized
+    [{{arxiv_id}}] Article identifier not recognized
   {%- else -%}
-  No article identifier specified
+    No article identifier specified
   {%- endif -%}
 {%- endblock -%}
 
@@ -22,67 +22,77 @@
 
 {% block content %}
 
-{% if reason %}
-  {% if (reason=='not_found' or reason=='version_not_found') and arxiv_id %}
-  <h1>Article {{ arxiv_id }} not found</h1>
-  <p>There is no record of an article with identifier '{{ arxiv_id }}'.
-  You might instead {% if reason=='version_not_found' %}look at the latest version of
-  this article: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>',
-  or {% endif %}try to <a href="{{url_for('search_box')}}">search for articles</a>.</p>
-  {{ identifier_help() }}
+  {% if reason %}
+    {% if (reason=='not_found' or reason=='version_not_found') and arxiv_id %}
+      <h1>Article {{ arxiv_id }} not found</h1>
+      <p>There is no record of an article with identifier '{{ arxiv_id }}'.
+      You might instead {% if reason=='version_not_found' %}look at the latest version of
+      this article: '<a href="{{ url_for('browse.abstract', arxiv_id=arxiv_id_latest ) }}">arXiv:{{ arxiv_id_latest }}</a>',
+      or {% endif %}try to <a href="{{url_for('search_box')}}">search for articles</a>.</p>
+      {{ identifier_help() }}
 
-  {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
-  <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive not found</h1>
-  {#- TODO: will need to support papernum param in this route if we want to support this -#}
-  <form action="{{ url_for('browse.abstract', arxiv_id=archive_id) }}" method="get">
-    <p>To view the abstract of a particular article in the {{ archive_name }}
-    archive, enter an article number: {{ archive_id }} / <input name="papernum" type="text" size="7"></p>
-  </form>
+      {% elif reason=='old_id_not_found' and arxiv_id and archive_id and archive_name %}
+      <h1>Article {{ arxiv_id }} in the {{ archive_name }} archive not found</h1>
+      {#- TODO: will need to support papernum param in this route if we want to support this -#}
+      <form action="{{ url_for('browse.abstract', arxiv_id=archive_id) }}" method="get">
+        <p>To view the abstract of a particular article in the {{ archive_name }}
+        archive, enter an article number: {{ archive_id }} / <input name="papernum" type="text" size="7"></p>
+      </form>
 
-  {% elif reason=='deleted' and arxiv_id_latest %}
-  <h1>Article {{ arxiv_id_latest }} not found</h1>
-  <p><b>The article <i>{{ arxiv_id_latest }}</i> is recorded as having been
-  deleted from arXiv. The reason recorded is <i>"{{ message }}"</i>.</b></p>
-  {{ identifier_help() }}
+    {% elif reason=='deleted' and arxiv_id_latest %}
+      <h1>Article {{ arxiv_id_latest }} not found</h1>
+      <p><b>The article <i>{{ arxiv_id_latest }}</i> is recorded as having been
+      deleted from arXiv. The reason recorded is <i>"{{ message }}"</i>.</b></p>
+      {{ identifier_help() }}
 
-  {% elif reason=='is_archive' and arxiv_id and archive_name %}
-  <h1>Incomplete article identifer '{{ arxiv_id }}'</h1>
-  <p>If you are looking for an article in the {{ archive_name }} ({{ arxiv_id }}) archive then
-  please enter the complete article ID in the search box in the top right of this page. You can use this
-  search box from most arXiv pages. Articles submitted after 1 April 2007 have identifiers of the form
-  <code>YYMM.NNNN</code> (e.g. <code>0704.1234</code>, there is no {{ arxiv_id }}/ prefix), or
-  <code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no {{ arxiv_id }}/ prefix),
-  whereas articles submitted
-  before then have identifier of the form <code>{{ arxiv_id }}/YYMMNNN</code> (e.g. <code>{{ arxiv_id }}/0701001</code>).</p>
+    {% elif reason=='is_archive' and arxiv_id and archive_name %}
+      <h1>Incomplete article identifer '{{ arxiv_id }}'</h1>
+      <p>If you are looking for an article in the {{ archive_name }} ({{ arxiv_id }}) archive then
+      please enter the complete article ID in the search box in the top right of this page. You can use this
+      search box from most arXiv pages. Articles submitted after 1 April 2007 have identifiers of the form
+      <code>YYMM.NNNN</code> (e.g. <code>0704.1234</code>, there is no {{ arxiv_id }}/ prefix), or
+      <code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no {{ arxiv_id }}/ prefix),
+      whereas articles submitted
+      before then have identifier of the form <code>{{ arxiv_id }}/YYMMNNN</code> (e.g. <code>{{ arxiv_id }}/0701001</code>).</p>
+
+    {% elif reason=='poorly formatted paper id' %}
+      <h1>Invalid article identifier</h1>
+      <p>Please request an article with the proper identifier format</p>
+      {{ identifier_help() }}
+
+    {% else %}
+        <h1>Could not find article</h1>
+        <p>Reason: {{reason}}</p>
+        {{ identifier_help() }}
+    {% endif %}
+
+  {% elif arxiv_id %}
+    <h1>Article identifier '{{ arxiv_id}}' not recognized</h1>
+    <p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
+    title or author information.</p>
+    <p>For additional help on arXiv identifiers, see
+    <a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
+
+  {% else %}
+    <h1>No article identifier specified</h1>
+    <p>If you know the article identifier then
+    please enter it in the search box in the top right of this page. You can use this
+    search box from most arXiv pages. Articles submitted after 1 April 2007 have identifiers of the form
+    <code>YYMM.NNNN</code> (e.g. <code>0704.12345</code>, there is no archive/ prefix), or
+    <code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no archive/ prefix), whereas articles submitted
+    before then have identifier of the form <code>archive/YYMMNNN</code> (e.g. <code>archive/0701001</code>).</p>
+    <p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
+    title or author information.</p>
+    <p>For additional help on arXiv identifiers, see
+    <a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
   {% endif %}
-
-{% elif arxiv_id %}
-<h1>Article identifier '{{ arxiv_id}}' not recognized</h1>
-<p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
-title or author information.</p>
-<p>For additional help on arXiv identifiers, see
-<a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
-
-{% else %}
-<h1>No article identifier specified</h1>
-<p>If you know the article identifier then
-please enter it in the search box in the top right of this page. You can use this
-search box from most arXiv pages. Articles submitted after 1 April 2007 have identifiers of the form
-<code>YYMM.NNNN</code> (e.g. <code>0704.12345</code>, there is no archive/ prefix), or
-<code>YYMM.NNNNN</code> (e.g. <code>1507.00123</code>, there is no archive/ prefix), whereas articles submitted
-before then have identifier of the form <code>archive/YYMMNNN</code> (e.g. <code>archive/0701001</code>).</p>
-<p>You might instead try to <a href="{{url_for('search_box')}}">search for articles</a> using
-title or author information.</p>
-<p>For additional help on arXiv identifiers, see
-<a href="{{url_for('help_identifier')}}">understanding the arXiv identifier</a>.</p>
-{% endif %}
 
 {% endblock content %}
 
 {% macro identifier_help() -%}
-<p>Identifiers for arXiv articles have the form YYMM.NNNNN, e.g. 1507.00123,
-YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older articles,
-e.g. hep-th/9901001. To access an article simply enter the identifier in the
-search box. The web address for access to the abstract is constructed by
-prepending <code>{{url_for('browse.abstract', _external=True, _scheme='https')}}</code>.</p>
+  <p>Identifiers for arXiv articles have the form YYMM.NNNNN, e.g. 1507.00123,
+  YYMM.NNNN, e.g. 0704.0001, or arch-ive/YYMMNNN for older articles,
+  e.g. hep-th/9901001. To access an article simply enter the identifier in the
+  search box. The web address for access to the abstract is constructed by
+  prepending <code>{{url_for('browse.abstract', _external=True, _scheme='https')}}</code>.</p>
 {%- endmacro %}
