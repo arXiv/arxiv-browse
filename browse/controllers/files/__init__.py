@@ -1,6 +1,6 @@
 from typing import Iterator, Union, Dict, List
 from email.utils import format_datetime
-from flask import Response, make_response, render_template
+from flask import Response, make_response, render_template, current_app
 from datetime import timezone
 import mimetypes
 
@@ -11,26 +11,7 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 
 BUFFER_SIZE = 1024 * 4
 
-CACHE_AGE_SEC_VERSIONED = 60 * 60 * 24 * 7
-"""cache-control max-age for versioned requests.
-
-An example of a versioned request: /pdf/0202.12345v1
-
-This is set long since changes to old versions are infrequent. When old papers
-change, right after the announce process there is a call to purge the paper's
-related URLs from the fastly cache.
-
-"""
-
-CACHE_AGE_SEC_UNVERSIONED = 60 * 60 * 24
-"""cache-control max-age for unversioned requests.
-
-An example of an unversioned request: /pdf/0202.12345
-
-These can change during the next publish. Right after the announce process,
-replacements have all their related URLs invalidated.
-
-"""
+VERY_LONG = 60* 60* 24 * 365 # sec
 
 def maxage(versioned: bool=False) -> str:
     """Returns a "max-age=N" `str` for use with "Surrogate-Control".
@@ -40,8 +21,7 @@ def maxage(versioned: bool=False) -> str:
 
     versioned: if the request was for a versioned paper or the current version.
     """
-    return f'max-age={CACHE_AGE_SEC_VERSIONED}' if versioned else f'max-age={CACHE_AGE_SEC_UNVERSIONED}'  # sec
-
+    return f"max-age={current_app.config.get('FILE_CACHE_MAX_AGE')}"
 
 def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> None:
     """Adds time headers to `resp` given the `file` and `arxiv_id`."""
@@ -95,10 +75,10 @@ def no_source(arxiv_id: Identifier, had_specific_version: bool=False) -> Respons
     """Sets expire to one year, max allowed by RFC 2616"""
     headers= _unavailable_headers(arxiv_id, ["no-source"])
     if had_specific_version:
-        headers['Surrogate-Control']= 'max-age=31536000'
+        headers['Surrogate-Control']= f'max-age={VERY_LONG}'
     else:
         headers['Surrogate-Control']= maxage(False)
-    return make_response(render_template("dissemination/withdrawn.html",
+    return make_response(render_template("dissemination/no_source.html",
                                          arxiv_id=arxiv_id),
                          404, headers)
 
@@ -106,7 +86,7 @@ def withdrawn(arxiv_id: Identifier, had_specific_version: bool=False) -> Respons
     """Sets expire to one year, max allowed by RFC 2616"""
     headers= _unavailable_headers(arxiv_id, ["withdrawn"])
     if had_specific_version:
-        headers['Surrogate-Control']= 'max-age=31536000'
+        headers['Surrogate-Control']= f'max-age={VERY_LONG}'
     else:
         headers['Surrogate-Control']= maxage(False)
     return make_response(render_template("dissemination/withdrawn.html",
@@ -118,7 +98,7 @@ def not_public(arxiv_id: Identifier, had_specific_version: bool=False) -> Respon
     Sets expire to one year, max allowed by RFC 2616"""
     headers= _unavailable_headers(arxiv_id, ["not-public"])
     if had_specific_version:
-        headers['Surrogate-Control']= 'max-age=31536000'
+        headers['Surrogate-Control']= f'max-age={VERY_LONG}'
     else:
         headers['Surrogate-Control']= maxage(False)
     return make_response(
