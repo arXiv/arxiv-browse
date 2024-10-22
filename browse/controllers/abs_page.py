@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from http import HTTPStatus as status
 from dateutil import parser
 from dateutil.tz import tzutc
-from flask import request, url_for
+from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
 from arxiv.base import logging
@@ -238,12 +238,10 @@ def _check_request_headers(
         last_mod_dt = response_data["trackback_ping_latest"]
 
     resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
-
-    #resp_headers["Expires"] = abs_expires_header(biz_tz())
-    # Above we had a Expires: based on publish time but admins wanted shorter when
-    # handling service tickets.
-    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
-    resp_headers["Cache-Control"] = "max-age=3600"
+    # surrogate-control is used by caching servers like fastly. Caching services may strip this
+    resp_headers["Surrogate-Control"] = f"max-age={current_app.config.get('ABS_CACHE_MAX_AGE')}"
+    # cache-control is used by browsers, set shorter so refreshes happen on browsers
+    resp_headers["Cache-Control"] = f"max-age=3600"
 
     mod_since_dt = _time_header_parse("If-Modified-Since")
     return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))

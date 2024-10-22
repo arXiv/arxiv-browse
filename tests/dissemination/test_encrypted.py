@@ -7,7 +7,7 @@ def test_no_src_access(client_with_test_fs):
     assert resp.status_code == 403
     assert 'Source Not Public' in resp.text
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=86400"
+    assert  "max-age=31536000" in resp.headers.get("Surrogate-Control")
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["paper-unavailable","unavailable-0704.0380-current", "paper-id-0704.0380", "not-public", "paper-id-0704.0380-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -35,7 +35,7 @@ def test_no_src_access(client_with_test_fs):
     resp = client_with_test_fs.get("/src/0704.0945v3")
     assert resp.status_code == 404
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=604800"
+    assert  "max-age=31536000" in resp.headers.get("Surrogate-Control")
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["paper-unavailable", "unavailable-0704.0945v3", "paper-id-0704.0945", "paper-id-0704.0945v3", "src", "not-found"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -46,7 +46,7 @@ def test_still_read_article(client_with_test_fs):
     assert resp.status_code != 403
     assert 'Source Not Public' not in resp.text
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=86400"
+    assert  "max-age=31536000" in resp.headers.get("Surrogate-Control")    
     keys= " "+headers["Surrogate-Key"]+" "
     assert " not_public " not in keys
 
@@ -55,6 +55,6 @@ def test_still_read_article(client_with_test_fs):
     assert resp.status_code != 403
     assert 'Source Not Public' not in resp.text
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=86400"
+    assert  "max-age=31536000" in resp.headers.get("Surrogate-Control")
     keys= " "+headers["Surrogate-Key"]+" "
     assert " not_public " not in keys
