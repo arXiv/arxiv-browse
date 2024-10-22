@@ -95,8 +95,7 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load txyz script (on cookie check)", arguments)
           });
-        }
-         else if (key === "connectedpapers-toggle") {
+        } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
@@ -127,6 +126,7 @@ $(document).ready(function() {
             console.log(textStatus);
           }).fail(function() {
             console.error("failed to load alphaxiv script (on cookie check)", arguments)
+          });
         } else if (key === "huggingface-toggle") {
           $.cachedScript(scripts["huggingface"]).done(function(script, textStatus) {
             console.log(textStatus);
@@ -240,6 +240,7 @@ $(document).ready(function() {
         console.log(textStatus, "alphaxiv (on lab toggle)");
       }).fail(function() {
         console.error("failed to load alphaxiv script (on lab toggle)", arguments)
+      });
     } else if ($(this).attr("id") == "huggingface-toggle") {
       $.cachedScript(scripts["huggingface"]).done(function(script, textStatus) {
         console.log(textStatus, "huggingface (on lab toggle)");
