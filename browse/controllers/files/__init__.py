@@ -98,7 +98,7 @@ def no_source(arxiv_id: Identifier, had_specific_version: bool=False) -> Respons
         headers['Surrogate-Control']= 'max-age=31536000'
     else:
         headers['Surrogate-Control']= maxage(False)
-    return make_response(render_template("dissemination/withdrawn.html",
+    return make_response(render_template("dissemination/no_source.html",
                                          arxiv_id=arxiv_id),
                          404, headers)
 
