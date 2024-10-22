@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 DEFAULT_DB = "sqlite:///tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
+DAY = 60 * 60 * 24 # one day of seconds
 
 class Settings(arxiv_base.Settings):
     """Class for settings for arxiv-browse web app."""
@@ -76,6 +77,17 @@ class Settings(arxiv_base.Settings):
     BROWSE_SPECIAL_MESSAGE_ENABLED: bool = bool(int(os.environ.get("BROWSE_SPECIAL_MESSAGE_ENABLED", "0")))
     """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
+    ABS_CACHE_MAX_AGE: int = 365 * DAY
+    """Abs page cache in seconds.
+
+    The cache-control: max-age to set for /abs pages. Max for this in the RFC is one year."""
+
+    FILE_CACHE_MAX_AGE: int = 365 * DAY
+    """PDF, src, e-print cache in seconds.
+
+    The cache-control: max-age to set for /pdf /src /e-print /html pages. Max
+    for this in the RFC is one year.
+    """
     """"========================= Services ========================="""
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.

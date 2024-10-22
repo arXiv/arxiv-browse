@@ -72,6 +72,7 @@ def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     assert "v" in resp.headers["Content-Disposition"]  # want the v in both current and v requests
     assert "/" not in resp.headers["Content-Disposition"]  # nobody wants a slash in their file name
     assert parsedate_to_datetime(resp.headers["Last-Modified"])  # just check that it parses
+    assert  "max-age=31536000" in resp.headers.get("Surrogate-Control")
 
     resp = client.head(path + paperid)
     assert resp
@@ -83,6 +84,7 @@ def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     assert parsedate_to_datetime(resp.headers["Last-Modified"])  # just check that it parses
     #different than get:
     assert "Content-Length" in resp.headers
+    assert "max-age=31536000" in resp.headers.get("Surrogate-Control")
 
     resp = client.get(path + paperid, headers={"Range": "0-1"})
     assert resp
@@ -97,7 +99,7 @@ def test_src_version_not_found(client_with_test_fs):
     resp = client_with_test_fs.get("/src/2101.10016v10")
     assert resp.status_code == 404
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=604800"
+    assert headers["Surrogate-Control"]== "max-age=31536000"
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["paper-unavailable","unavailable-2101.10016v10", "paper-id-2101.10016v10", "paper-id-2101.10016", "not-found", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -111,7 +113,7 @@ def test_wdr_current_src(client_with_test_fs):
     resp = client_with_test_fs.get("/src/2101.10016")
     assert resp.status_code == 404
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=86400"
+    assert headers["Surrogate-Control"]== "max-age=31536000"
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["paper-unavailable", "unavailable-2101.10016-current", "withdrawn", "paper-id-2101.10016", "paper-id-2101.10016-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -120,7 +122,7 @@ def test_wdr_current_src(client_with_test_fs):
     resp = client_with_test_fs.get("/src/2310.08262")
     assert resp.status_code == 404
     headers= resp.headers
-    assert headers["Surrogate-Control"]== "max-age=86400"
+    assert headers["Surrogate-Control"]== "max-age=31536000"
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["paper-unavailable", "unavailable-2310.08262-current", "withdrawn", "paper-id-2310.08262", "paper-id-2310.08262-current", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -138,6 +140,7 @@ def test_src_headers(client_with_test_fs):
     assert "paper-id-1601.04345-current" in head
     assert "paper-id-1601.04345v" not in head
     assert "paper-id-1601.04345 " in head+" "
+    assert "max-age=31536000" in rv.headers.get("Surrogate-Control")
 
     rv=client.head("/src/1601.04345v2")
     head=rv.headers["Surrogate-Key"]
@@ -145,4 +148,6 @@ def test_src_headers(client_with_test_fs):
     assert "paper-id-1601.04345-current" not in head
     assert "paper-id-1601.04345v2" in head
     assert "paper-id-1601.04345 " in head+" "
+    assert "max-age=31536000" in rv.headers.get("Surrogate-Control")
+
    
