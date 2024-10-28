@@ -136,7 +136,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     """
-    Returns a `Flask` response ojbject for a given `arxiv_id` and `FileFormat`.
+    Returns a `Flask` response object for a given `arxiv_id` and `FileFormat`.
 
     The response will include headers and may do a range response.
     """
@@ -146,6 +146,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             abort(400)
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
+        if arxiv_id_str.endswith("/"):
+            arxiv_id_str = arxiv_id_str[:-1]
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))

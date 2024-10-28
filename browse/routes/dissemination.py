@@ -107,7 +107,7 @@ def dvi(arxiv_id: str) -> Response:
 @blueprint.route("/html/<string:arxiv_id>/", methods=['GET', 'HEAD'])
 def html(arxiv_id: str, archive=None):  # type: ignore
     """get html for article"""
-    return get_html_response(arxiv_id,archive)
+    return get_html_response(arxiv_id, archive)
 
 
 @blueprint.route("/ps/<arxiv_id>")
