@@ -1,8 +1,15 @@
+@font-face {
+  font-family: STIX Two Math;
+  src: local('STIXTwoMath-Regular'),
+    url('/static/browse/0.3.4/fonts/STIXTwoMath-Regular.woff2');
+}
+
 :root,[data-theme=light] {
-  --headings-font-family: "freight-text-pro";
-  --text-font-family: "freight-sans-pro";
-  --toc-font-family: "ibm-plex-sans-condensed";
-  --other-font-family: "freight-sans-pro";
+  --headings-font-family: "rival-sans";
+  --text-font-family: "rival-sans";
+  --toc-font-family: "rival-sans";
+  --other-font-family: "rival-sans";
+  --code-font-family:"ibm-plex-mono", monospace;
   --note-highlight-color: #f9f7f7; /* warm wash */
   --toc-text-highlight-color: #b31b1b; /* Cornell Red */
   --inpage-text-highlight-color: #1f5e96; /* Archival Blue */
@@ -60,7 +67,7 @@ a:hover, a.ltx_ref:hover {
 /* Overwrite font color*/
 
 .btn {
-  font: var(--other-font-family);
+  font-family: var(--other-font-family);
 }
 
 .ltx_TOC>h6, .ltx_title_abstract {
@@ -76,7 +83,7 @@ a:hover, a.ltx_ref:hover {
 }
 
 .form-text{
-  font: var(--other-font-family);
+  font-family: var(--other-font-family);
 }
 
 .ltx_cite>.ltx_ref{
@@ -89,13 +96,9 @@ a:hover, a.ltx_ref:hover {
   border-bottom: none;
 }
 
-.freight-text-pro {
-  font-family: "freight-text-pro";
-}
-
 .modal-title,
 textarea.form-control{
-  font: var(--other-font-family);
+  font-family: var(--other-font-family);
 }
 
 .mob_header{
@@ -731,7 +734,7 @@ body:after {
 
 .ar5iv-footer-button {
   color: var(--link-text-color);
-  font: var(--other-font-family);
+  font-family: var(--other-font-family);
   padding: 0.5rem;
   display: inline-block;
   text-decoration: none;
@@ -739,7 +742,12 @@ body:after {
 }
 
 /* Update: For toc */
-.ltx_page_main >.ltx_TOC {
+/* careful, we need a specific selector, because
+   the innermost .ltx_text spans have a defined font-family. */
+nav.ltx_TOC .ltx_text {
+  font-family: var(--toc-font-family);
+}
+nav.ltx_TOC {
   position: sticky;
   top:0;
   height: 100vh;
@@ -748,14 +756,13 @@ body:after {
   overflow-y: auto;
   user-select: none;
   color: var(--text-color);
-  font: var(--toc-font-family);
 }
-.ltx_page_main >.ltx_TOC.active {
+nav.ltx_TOC.active {
   min-width: 18em;
   max-width:20%;
   background-image: var(--TOC-gradient);
 }
-.ltx_page_main > .ltx_TOC:not(.active) {
+nav.ltx_TOC:not(.active) {
   margin-right: -40px;
 }
 .ltx_page_main ol.ltx_toclist {
@@ -1113,9 +1120,6 @@ article{
       padding-bottom: 1em;
       max-height: 60vh;
       height: auto;
-    }
-    .ltx_page_main >.ltx_TOC.mobile:not(.show) {
-
     }
 
     [data-theme=dark] .ltx_page_main >.ltx_TOC.mobile{

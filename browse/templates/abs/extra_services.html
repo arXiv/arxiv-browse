@@ -204,22 +204,23 @@
     <div class="browse">
     {{ generate_browse_context() }}
     </div>
-
-    <div class="extra-ref-cite">
-      <h3>References &amp; Citations</h3>
-      <ul>
-        {% if include_inspire_link %}
-        <li>
-          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-        </li>
-        {% endif %}
-        <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
-        {#- This was previously injected by Bibliographic Explorer -#}
-        <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
-        <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
-      </ul>
-      <div style="clear:both;"></div>
-    </div>
+    {% if show_refs_cites %}
+      <div class="extra-ref-cite">
+        <h3>References &amp; Citations</h3>
+        <ul>
+          {% if include_inspire_link %}
+            <li>
+              <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+            </li>
+          {% endif %}
+          <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
+          {#- This was previously injected by Bibliographic Explorer -#}
+          <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
+          <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
+        </ul>
+        <div style="clear:both;"></div>
+      </div>
+    {% endif %}
 
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">

@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 from http import HTTPStatus as status
 from dateutil import parser
 from dateutil.tz import tzutc
-from flask import request, url_for
+from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
 from arxiv.base import logging
@@ -144,7 +144,8 @@ def get_abs_page(arxiv_id: str) -> Response:
                                                                                          ver.version)
 
         response_data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
-
+        response_data["show_refs_cites"] = _show_refs_cites(arxiv_identifier)
+        response_data["show_labs"] = _show_labs(arxiv_identifier)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
@@ -237,12 +238,10 @@ def _check_request_headers(
         last_mod_dt = response_data["trackback_ping_latest"]
 
     resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
-
-    #resp_headers["Expires"] = abs_expires_header(biz_tz())
-    # Above we had a Expires: based on publish time but admins wanted shorter when
-    # handling service tickets.
-    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
-    resp_headers["Cache-Control"] = "max-age=3600"
+    # surrogate-control is used by caching servers like fastly. Caching services may strip this
+    resp_headers["Surrogate-Control"] = f"max-age={current_app.config.get('ABS_CACHE_MAX_AGE')}"
+    # cache-control is used by browsers, set shorter so refreshes happen on browsers
+    resp_headers["Cache-Control"] = f"max-age=3600"
 
     mod_since_dt = _time_header_parse("If-Modified-Since")
     return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
@@ -381,3 +380,21 @@ def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str
         return abs_meta.submitter.name or None
     except:
         return None
+
+def _show_refs_cites(arxiv_id: Identifier) -> bool:
+    NO_REFS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_REFS_IDS:
+        return False
+    else:
+        return True
+    
+def _show_labs(arxiv_id: Identifier) -> bool:
+    NO_LABS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_LABS_IDS:
+        return False
+    else:
+        return True

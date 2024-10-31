@@ -6,7 +6,8 @@
 
 {% block head %}
   {{ super() -}}
-  <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
+  <link rel="canonical" href="{{ canonical_url(abs_meta.arxiv_id) }}"/>
+  <meta name="description" content="Abstract page for arXiv paper {{ requested_id }}: {{ abs_meta.title|tex2utf }}">
   {{- generate_social_media_tags() }}
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
@@ -18,7 +19,7 @@
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20230622" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20241022" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
   {{- generate_scholar_tags() }}
@@ -87,7 +88,9 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-  {% include "abs/labs_tabs.html" %}
+  {% if show_labs %}
+    {% include "abs/labs_tabs.html" %}
+  {% endif %}
 
   <div class="endorsers">
     <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |

@@ -23,6 +23,20 @@ def test_basic_db_abs(dbclient):
     assert 'Number Theory' in subjects.get_text()
     assert 'math.NT' in subjects.get_text()
 
+def test_abs_head(dbclient):
+    rt = dbclient.get('/abs/0906.2112')
+    assert rt.status_code == 200
+
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    head = html.head
+    canonical_link = head.find('link', {'rel': 'canonical'})
+    assert canonical_link is not None
+    assert canonical_link['href'] == "https://arxiv.org/abs/0906.2112"
+
+    meta_description = head.find('meta', {'name': 'description'})
+    assert meta_description is not None
+    assert meta_description['content'] == "Abstract page for arXiv paper 0906.2112: Symmetric roots and admissible pairing"
+
 
 def test_db_abs_history(dbclient):
     rt = dbclient.get('/abs/0906.2112')
@@ -69,6 +83,19 @@ def test_db_abs_null_source_size(dbclient):
     assert download_button_pdf is None
     download_button_html = html.select_one(".download-html")
     assert download_button_html is None
+
+
+def test_db_abs_pdf_only(dbclient):
+    """Tests a paper where the arxiv_metadata.source_format is pdf ARXIVCE-1745."""
+    rt = dbclient.get('/abs/0904.2711')
+    assert rt.status_code == 200
+    html = BeautifulSoup(rt.data.decode('utf-8'), 'html.parser')
+    download_button_pdf = html.select_one(".download-pdf")
+    assert download_button_pdf
+    download_button_html = html.select_one(".download-html")
+    assert download_button_html is None
+    assert html.select_one(".download-eprint") is None
+
 
 def test_html_conversion_dissemination (dbclient):
     rt = dbclient.get('/abs/0906.2112')

@@ -8,17 +8,21 @@ You can run the browse app directly.
 make venv
 ````
 
+(the make rarely works)
+
 or 
 
 ```bash
 python --version
-# 3.10.x
+# 3.11.x
 python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry==1.3.2
 poetry install
 python main.py
 ```
+Note -- make sure you have python dev installed befoore doing the above steps, or the `poetry install` will fail trying to build the mySQL library dependency. E.g.: `sudo apt-get install python3.11-dev`
+
 Then go to http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and restart the server.
@@ -154,7 +158,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 pytest tests
 ```
 
-### Settinp up pytest in PyCharm
+### Setting up pytest in PyCharm
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 

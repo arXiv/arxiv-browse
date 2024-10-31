@@ -12,7 +12,7 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
-    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public
+    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public, no_source
 
 from arxiv.files import FileObj, FileTransform
 
@@ -136,7 +136,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
                            archive: Optional[str] = None,
                            resp_fn: Resp_Fn_Sig = default_resp_fn) -> Response:
     """
-    Returns a `Flask` response ojbject for a given `arxiv_id` and `FileFormat`.
+    Returns a `Flask` response object for a given `arxiv_id` and `FileFormat`.
 
     The response will include headers and may do a range response.
     """
@@ -146,6 +146,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             abort(400)
         if arxiv_id_str.startswith('arxiv/'):
             abort(400, description="do not prefix non-legacy ids with arxiv/")
+        if arxiv_id_str.endswith("/"):
+            arxiv_id_str = arxiv_id_str[:-1]
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
@@ -153,8 +155,10 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     logger.debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
-    elif item == "WITHDRAWN" or item == "NO_SOURCE":
+    elif item == "WITHDRAWN":
         return withdrawn(arxiv_id, arxiv_id.has_version)
+    elif item == "NO_SOURCE":
+        return no_source(arxiv_id, arxiv_id.has_version)
     elif item == "NOT_PUBLIC":
         return not_public(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":

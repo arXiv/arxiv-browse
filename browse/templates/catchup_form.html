@@ -1,0 +1,183 @@
+{%- extends "base.html" -%}
+
+{% block title %}Catchup{% endblock %}
+
+{% block header_h1 %}
+<div class="header-breadcrumbs">
+  <a href="{{ url_for('.home') }}"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> 
+  <span>&gt;</span>
+  <span>catchup</span>
+</div>
+{% endblock %}
+
+{%- block content %}
+  <h1>Catchup on:</h1>
+
+  <form id="catchup-form" action="{{ url_for('.catchup_form') }}" method="get" onsubmit="combineDate(), selectSubject()">
+    <div role="group" aria-labelledby="subject_header">
+      <h3 id="subject_header" >Subject:</h3>
+
+      <div>
+        <label for="group">Group:</label>    
+        <select id="group" onchange="updateArchive()">
+          <option value="" selected disabled>Select a group</option>
+          {% for group in groups.values() %}
+            {% if group.is_active and not group.is_test %}
+              <option value="{{ group.id }}">{{ group.full_name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="archive">Archive:</label>
+
+        <select id="default-archives" class="archive-dropdown" onchange="updateCategories()">
+          <option value="" selected>Select an archive</option>
+        </select>
+
+        {% for group in groups.values() %}
+          {% if group.is_active and not group.is_test %}
+
+            <select id="{{group.id}}-archives" class="archive-dropdown" style="display: none;" onchange="updateCategories()">
+              <option value="" selected {% if group.id !="grp_physics" %} disabled {% endif %}>Select an archive</option>
+              {% for archive in group.get_archives() %}
+                <option value="{{ archive.id }}">{{ archive.full_name }}</option>
+              {% endfor %}
+            </select>
+
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div>
+        <label for="category">Category:</label>
+
+        <select id="default-categories" class="category-dropdown" >
+          <option value="" selected>Select a category</option>
+        </select>
+
+        {% for group in groups.values() %}
+          {% if group.is_active and not group.is_test %}
+            {% for archive in group.get_archives() %}
+
+              <select id="{{archive.id}}-categories" class="category-dropdown" style="display: none;" >
+                <option value="" selected>(Optional) Select a category</option>
+                {% for category in archive.get_categories() %}
+                  <option  value="{{ category.id }}" >{{ category.full_name }}</option>
+                {% endfor %}
+              </select>
+
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <input type="hidden" id="subject" name="subject" />
+
+    <div role="group" aria-labelledby="date_header">
+      <h3 id="date_header" >Changes Since:</h3>
+
+      <select id="day">
+        {% for day in days %}
+            <option value="{{ day }}">{{ day }}</option>
+        {% endfor %}
+      </select>
+      <select id="month">
+          {% for val, name in months %}
+              <option value="{{ val }}" {% if val == current_month %}selected{% endif %} >{{ name }}</option>
+          {% endfor %}
+      </select>
+      <select id="year">
+          {% for year in years %}
+              <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+      </select>
+
+      <input type="hidden" id="date" name="date" />
+    </div>
+
+    <br>
+    <div>
+      <label for="include_abstracts"><strong>Include abstracts: </strong></label>
+      <input type="checkbox" name="include_abs" id="include_abstracts" value="True">
+    </div>
+    <br>
+
+    <input type="submit" value="Go"/>
+  </form>
+
+  <script>
+    function combineDate() {
+        var day = document.getElementById('day').value.padStart(2, '0'); 
+        var month = document.getElementById('month').value.padStart(2, '0'); 
+        var year = document.getElementById('year').value;
+        var combinedDate = `${year}-${month}-${day}`;
+        
+        document.getElementById('date').value = combinedDate;
+    }
+
+    function selectSubject() {
+      const selectedGroupId = document.getElementById("group").value;
+      const selectedArchiveId = document.getElementById(selectedGroupId+'-archives').value;
+      var subject;
+      if (selectedArchiveId == ""){
+        subject=selectedGroupId
+      }
+      else{
+        const selectedCatId = document.getElementById(selectedArchiveId+'-categories').value;
+        if (selectedCatId == ""){
+          subject=selectedArchiveId
+        }
+        else{
+          subject=selectedCatId
+        }
+      }
+
+      document.getElementById('subject').value = subject
+    }
+
+    function updateArchive() {
+      const selectedGroupId = document.getElementById("group").value;
+      const archiveDropdown = document.getElementById(selectedGroupId+'-archives');
+
+      //only show selected dropdown
+      const allArchiveDropdowns = document.querySelectorAll('.archive-dropdown');
+      allArchiveDropdowns.forEach(dropdown => {dropdown.style.display = 'none';});
+
+      archiveDropdown.style.display = 'inline-block';
+      archiveDropdown.selectedIndex = 0;
+
+      //auto select if only one option
+      const options = archiveDropdown.querySelectorAll('option');
+      if (options.length === 2) { archiveDropdown.selectedIndex = 1; } //select an archive is the first option
+
+      updateCategories(); 
+    }
+    
+    function updateCategories() {
+      const selectedGroupId = document.getElementById("group").value;
+      const selectedArchiveId = document.getElementById(selectedGroupId+'-archives').value;
+      let categoryDropdown;
+      if (selectedArchiveId == ""){
+        categoryDropdown = document.getElementById('default-categories');
+      }
+      else{
+        categoryDropdown = document.getElementById(selectedArchiveId+'-categories');
+      }
+
+      //only show selected dropdown
+      const allCategoryDropdowns = document.querySelectorAll('.category-dropdown');
+      allCategoryDropdowns.forEach(dropdown => {dropdown.style.display = 'none';});
+
+      categoryDropdown.style.display = 'inline-block';
+      categoryDropdown.selectedIndex = 0;
+
+      //auto select if only one option
+      const options = categoryDropdown.querySelectorAll('option');
+      if (options.length === 2) { categoryDropdown.selectedIndex = 1;}
+    }
+
+</script>
+
+{%- endblock %}

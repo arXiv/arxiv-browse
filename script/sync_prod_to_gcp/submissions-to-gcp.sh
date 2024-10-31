@@ -14,5 +14,5 @@ fi
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
-python subscribe_submissions.py $S2G_DEBUG_FLAGS --json-log-dir $JSON_LOG_DIR
+python submissions_to_gcp.py $S2G_DEBUG_FLAGS --json-log-dir $JSON_LOG_DIR
 deactivate

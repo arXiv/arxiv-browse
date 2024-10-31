@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2024/07/30 $
+ *  $Date: 2024/08/22 $
  *****************************************/
 /****************************************
  *   General rules
@@ -177,6 +177,10 @@ em.boxed {
   font-weight: normal;
   font-family: 'Lucida Grande', helvetica, arial, verdana, sans-serif;
   color: #fff;
+  display:flex;
+  align-items:center;
+  gap: 1em;
+  justify-content: right;
 }
 #support-ack-url {
   max-width: 400px;
@@ -190,6 +194,20 @@ em.boxed {
 }
 #support-ack-url a:hover {
   color: #1e8bc3;
+}
+#support-ack .btn-header-donate {
+  background-color: white;
+  border: 1px solid #b31b1b;
+  padding: .2em 1em 0 1em;
+  border-radius: .5em;
+  color: #b31b1b;
+  height: 1.5em;
+  font-size: 1.25em;
+  transition: all .5s ease-in-out;
+}
+#support-ack .btn-header-donate:hover {
+  background-color: #fb595a;
+  color: black;
 }
 
 /*
@@ -700,18 +718,33 @@ footer .sorry-app-links .a11y-main-link {
   background-color: black;
 }
 /*style overrides for forum minimal banner homepage news with forum logo*/
+.columns .column.banner-minimal.forum {
+  border: 1px solid grey;
+  border-radius: 1em;
+  padding: .5em;
+  margin: 1em;
+}
 .columns .column.banner-minimal.forum a {
-  border-color: #c4d82e;
-  background-color: #000;
+  border-color: transparent;
+  background-color: transparent;
   color: #c4d82e;
+  font-size: 1.35em;
+  text-decoration: underline;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
 }
 .columns .column.banner-minimal.forum a:hover {
-  border-color: #c4d82e;
-  background-color: #f3f6dd;
-  color: #000;
+  border-color: transparent;
+  background-color: transparent;
+  color: #fff;
+  text-decoration: none;
 }
 .columns .column.banner-minimal.forum p {
   font-size: 1.25em;
+  margin: 0;
+  font-style: italic;
+  color: #ababab;
 }
 .forum-logo {
 	width: 200px;
@@ -1226,6 +1259,16 @@ p.tagline {
 }
 
 /*END Gotit.pub CSS*/
+
+/*BEGIN alphaXiv CSS*/
+.alphaXiv-logo {
+  margin-left: 0pt;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 100%;
+  font-family: "EB Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+/*END alphaXiv CSS*/
 
 /*BEGIN Spaces CSS*/
 
