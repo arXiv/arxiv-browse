@@ -3,7 +3,7 @@
         {%- if part is string -%}
             {{- part -}}
         {%- else -%}
-            <a href="{{ url_for('search_archive', searchtype='author', archive=abs_meta.primary_archive.id, query=part[1]) }}">{{ part[0] }}</a>
+            <a href="{{ url_for('search_archive', searchtype='author', archive=abs_meta.primary_archive.id, query=part[1]) }}" rel="nofollow">{{ part[0] }}</a>
         {%- endif -%}
     {% endfor %}
 {%- endmacro -%}
