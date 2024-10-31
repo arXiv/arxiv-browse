@@ -19,7 +19,7 @@
   $output.html(htmlPrefix + loadingHtml);
 
 
-  const REST_ADDR = 'https://rest.connectedpapers.com/';
+  const REST_ADDR = 'https://rest.prod.connectedpapers.com/';
   const CONNECTED_PAPERS_ADDR = 'https://www.connectedpapers.com/';
   const ARXIV_THUMBNAILS_ADDR = CONNECTED_PAPERS_ADDR + 'arxiv_thumbnails/';
   const NUMBER_OF_THUMBNAILS = 18;

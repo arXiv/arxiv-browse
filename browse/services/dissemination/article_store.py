@@ -473,7 +473,7 @@ class ArticleStore():
             # note: the preprocessed html is expected to exist in the ps_cache
             path = ps_cache_html_path(arxiv_id, version.version)
             if arxiv_id.extra:  # requesting a specific file
-                return self.objstore.to_obj(path + arxiv_id.extra)
+                return self.objstore.to_obj(path + arxiv_id.extra.removeprefix("/"))
             else:  # requesting list of files
                 file_list = list(self.objstore.list(path))
                 return file_list if file_list else "NO_SOURCE"

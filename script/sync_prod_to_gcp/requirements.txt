@@ -53,8 +53,8 @@ six==1.16.0
 tomli==1.2.3
 typed-ast==1.5.4
 typing_extensions==4.1.1
-urllib3==1.26.12
+urllib3==1.26.19
 uWSGI==2.0.21
 webencodings==0.5.1
-Werkzeug==3.0.3
+Werkzeug==3.0.6
 zipp==3.19.1
