@@ -180,12 +180,12 @@ em.boxed {
   display:flex;
   align-items:center;
   gap: 1em;
+  justify-content: right;
 }
 #support-ack-url {
   max-width: 400px;
   float:right;
   display: block;
-  justify-content: right;
 }
 #support-ack-url a {
   color: #fff;
