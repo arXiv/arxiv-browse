@@ -824,3 +824,24 @@ class TestPayloadToMeta(unittest.TestCase):
              'original': 'orig/arxiv/papers/2403/2403.99999v2.gz',
              'gcp': 'orig/arxiv/papers/2403/2403.99999v2.gz'}
         ], expected)
+
+    def test_arxivce_2763(self):
+        test_data = {"type": "jref", "paper_id": "1008.9000", "version": "1", "src_ext": ""}
+
+        file_state = submission_message_to_file_state(test_data, {}, ask_webnode=False)
+        expected = trim_test_dir(file_state.get_expected_files())
+        self.assertEqual([
+            {'cit': '/data/ftp/arxiv/papers/1008/1008.9000.abs',
+             'gcp': 'ftp/arxiv/papers/1008/1008.9000.abs',
+             'status': 'current',
+             'type': 'abstract'},
+            {'cit': '/data/ftp/arxiv/papers/1008/1008.9000.ps.gz',
+             'gcp': 'ftp/arxiv/papers/1008/1008.9000.ps.gz',
+             'status': 'current',
+             'type': 'submission'},
+            {'cit': '/cache/ps_cache/arxiv/pdf/1008/1008.9000v1.pdf',
+             'gcp': 'ps_cache/arxiv/pdf/1008/1008.9000v1.pdf',
+             'status': 'current',
+             'type': 'pdf-cache'},
+        ],
+        expected)

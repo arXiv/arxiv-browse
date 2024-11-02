@@ -3,6 +3,7 @@
 TAG := arxiv-browse
 NAME := arxiv-browse
 DOCKERPORT := 8080
+PROD_DB_PROXY_PORT := 2021
 LOCALPORT := 6200
 DBPROXYPORT := 6201
 BROWSE_DOCKER_RUN := docker run --cpus 2 --rm -p ${LOCALPORT}:${DOCKERPORT} -e PORT=${DOCKERPORT} -v  ${HOME}/arxiv/arxiv-browse/tests:/tests  --name ${NAME} --env-file "${PWD}/tests/docker.env"  --security-opt="no-new-privileges=true" 
@@ -29,7 +30,7 @@ run:	venv
 	. venv/bin/activate && python main.py
 
 proxy:
-	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4 > /dev/null 2>&1 &
+	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port ${PROD_DB_PROXY_PORT} arxiv-production:us-central1:arxiv-production-rep9 > /dev/null 2>&1 &
 
 dev-proxy:
 	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port ${DBPROXYPORT} arxiv-development:us-east4:arxiv-db-dev > /dev/null 2>&1 &
