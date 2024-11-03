@@ -534,7 +534,7 @@ class SubmissionFilesState:
 
     @property
     def is_ps_submission(self) -> bool:
-        """is a HTML submission"""
+        """is a PostScript submission"""
         assert(self.src_ext)
         assert(self.source_format)
         return self.source_format == "ps"
