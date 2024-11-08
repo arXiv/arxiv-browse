@@ -1,20 +1,20 @@
 """Service to get PDF and other disseminations of an item."""
+from typing import Dict
+from urllib.parse import urlparse
+
+from arxiv.legacy.papers.dissemination.reasons import get_reasons_data
 from flask import current_app
+import logging
 
 from browse.services.documents import get_doc_service
-from browse.services.global_object_store import get_global_object_store
-from arxiv.files.object_store import ObjectStore
+from browse.services.global_object_store import get_global_object_store, one_time_file
+
+logger = logging.getLogger(__name__)
 
 from .article_store import ArticleStore
 
 _article_store: ArticleStore = None  # type: ignore
 # This works because it is thread safe and not bound to the app context.
-
-_object_store: ObjectStore = None  # type: ignore
-
-_genpdf_store: ObjectStore = None  # type: ignore
-
-_latexml_store: ObjectStore = None # type: ignore
 
 
 def get_article_store() -> "ArticleStore":
@@ -24,11 +24,20 @@ def get_article_store() -> "ArticleStore":
     global _article_store
     if _article_store is None:
         config = current_app.config
+
+        dsp_os = get_global_object_store(config["DISSEMINATION_STORAGE_PREFIX"], "_object_store")
+        if config["REASONS_FILE_PATH"] == "DEFAULT":
+            reason_file = dsp_os.to_obj("reasons.json")
+        else:
+            logger.info("Loading reasons file from %s", config["REASONS_FILE_PATH"])
+            reason_file = one_time_file(config["REASONS_FILE_PATH"])
+
         _article_store = ArticleStore(
             get_doc_service(),
-            get_global_object_store(config["DISSEMINATION_STORAGE_PREFIX"], "_object_store"),
+            dsp_os,
             get_global_object_store(config["GENPDF_API_STORAGE_PREFIX"], "_genpdf_store"),
-            get_global_object_store(config["LATEXML_BUCKET"], "_latexml_store")
+            get_global_object_store(config["LATEXML_BUCKET"], "_latexml_store"),
+            get_reasons_data(reason_file),
         )
 
     return _article_store
