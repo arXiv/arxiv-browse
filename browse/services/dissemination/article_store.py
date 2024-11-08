@@ -105,19 +105,13 @@ def _path_to_version(path: FileObj) -> int:
         return 0
 
 
-def _is_deleted(id: str) -> Optional[str]:
+def _is_deleted(arxiv_id: str) -> Optional[str]:
     """Checks if an id is for a deleted paper.
 
-    Expects a ID without a version such as quant-ph/0411165 or 0901.4014 or 1203.23434.
+    Expects an arxiv ID without a version such as quant-ph/0411165 or 0901.4014 or 1203.23434.
     """
-    if not id:
-        return None
-    else:
-        return DELETED_PAPERS.get(id, None)
+    return arxiv_id and DELETED_PAPERS.get(arxiv_id, "")
 
-
-def _unset_reasons(str: str, fmt:FORMATS) -> Optional[str]:
-    pass
 
 def from_genpdf_location(location: str) -> Tuple[str, str]:
     """Translates the genpdf-api redirect location for the genpdf object store.
@@ -140,6 +134,7 @@ class ArticleStore():
                  objstore: ObjectStore,
                  genpdf_store: ObjectStore,
                  latexml_store: ObjectStore,
+                 reasons_data: Dict[str, str] = {},
                  is_deleted: Callable[[str], Optional[str]] = _is_deleted,
                  ):
         self.metadataservice = metaservice
@@ -148,8 +143,7 @@ class ArticleStore():
         self.latexml_store: ObjectStore = latexml_store
         self.is_deleted = is_deleted
         self.sourcestore = SourceStore(self.objstore)
-        # gets the resaon data from the same bucket as the pdfs
-        self.reasons_data = get_reasons_data(self.objstore.to_obj("reasons.json"))
+        self.reasons_data = reasons_data
 
         self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
             fileformat.pdf: self._pdf,
