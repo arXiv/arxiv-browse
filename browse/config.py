@@ -132,6 +132,13 @@ class Settings(arxiv_base.Settings):
     `./testing/data/` for testing data. Must end with a /
     """
 
+    REASONS_FILE_PATH: str = "DEFAULT"
+    """Full path to `reasons.json` file.
+
+    This can be a gs object like `gs://arxiv-production-data/reasons.json`.
+    It can also be a local file like `tests/data/reasons.json`.
+    This can be the special value "DEFAULT" which will look for `DISSEMINATION_STORAGE_PREFIX/reasons.json`."""
+
     GENPDF_API_URL: str = ""
     """URL of the genpdf API. https://genpdf-api.arxiv.org"""
 

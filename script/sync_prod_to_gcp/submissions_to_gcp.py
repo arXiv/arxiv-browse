@@ -330,7 +330,7 @@ class SubmissionFilesState:
     Once the expectation is decided, it then maps the CIT file path to the GCP blob path.
     """
     tex_submisson_exts: typing.List[str] = [".tar.gz", ".gz"]
-    submission_exts: typing.List[str] = [".tar.gz", ".gz", ".pdf", ".html.gz"]
+    submission_exts: typing.List[str] = [".ps.gz", ".tar.gz", ".gz", ".pdf", ".html.gz"]
 
 
     xid: Identifier      # paper id (aka arXiv ID)
@@ -532,6 +532,12 @@ class SubmissionFilesState:
         assert(self.source_format)
         return self.source_format == "html"
 
+    @property
+    def is_ps_submission(self) -> bool:
+        """is a PostScript submission"""
+        assert(self.src_ext)
+        assert(self.source_format)
+        return self.source_format == "ps"
 
     def get_tgz_top_levels(self) -> dict:
         """
@@ -599,6 +605,10 @@ class SubmissionFilesState:
                 # for the html, and it populates the files under the self.html_root_dir
                 files.append(current("html-cache", self.html_root_dir))
                 pass
+            elif self.is_ps_submission:
+                # Turn PS into PDF
+                files.append(current("pdf-cache", self.ps_cache_pdf_file))
+
             pass
 
         if self.publish_type in ["rep", "wdr"]:
