@@ -7,7 +7,8 @@ from typing import Optional, List
 from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import VersionEntry
-from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent
+from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent, current_pdf_path, previous_pdf_path, \
+    previous_ps_path, current_ps_path
 from arxiv.files.object_store import ObjectStore
 from arxiv.files import FileObj
 from arxiv.formats import list_ancillary_files
@@ -70,6 +71,36 @@ class SourceStore():
 
         return next((item for item in items if src_regex.match(item.name)), None)
 
+    def get_src_pdf(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
+        """Try to get the PDF file as if paper is a pdf-only source paper."""
+        if is_current or not arxiv_id.has_version:
+            # try from the /ftp with no number for current ver of pdf only paper
+            pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
+            if pdf_file.exists():
+                return pdf_file
+        else:
+            # try from the /orig with version number for a pdf only paper
+            pdf_file = self.objstore.to_obj(previous_pdf_path(arxiv_id))
+            if pdf_file.exists():
+                return pdf_file
+
+        return None
+
+    def get_src_ps(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
+        """Try to get the PS file as if paper is a PS-only source paper."""
+        if is_current or not arxiv_id.has_version:
+            # try from the /ftp with no number for current ver of pdf only paper
+            ps_file = self.objstore.to_obj(current_ps_path(arxiv_id))
+            if ps_file.exists():
+                return ps_file
+        else:
+            # try from the /orig with version number for a pdf only paper
+            ps_file = self.objstore.to_obj(previous_ps_path(arxiv_id))
+            if ps_file.exists():
+                return ps_file
+
+        return None
+
 
     def get_src_for_version(self, arxiv_id: Identifier, version: VersionEntry) -> Optional[FileObj]:
         return self.get_src(arxiv_id, version.is_current)
@@ -96,7 +127,7 @@ class SourceStore():
         Parameters
         ----------
         docmeta : DocMetadata
-            DocMetadata to get the ancillary files for.
+            Item to get the ancillary files for.
 
         Returns
         -------
