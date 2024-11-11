@@ -116,11 +116,17 @@ class Settings(arxiv_base.Settings):
     """
 
     ABS_PATH_ROOT: str = "tests/data/abs_files/"
-    """Paths to .abs and source files.
+    """Paths to .abs files.
 
-       This can start with gs:// to use Google Storage."""
-    DOCUMENT_CACHE_PATH: str = "tests/data/cache"
-    """Path to cache directory"""
+    This can start with gs:// to use Google Storage.
+    """
+
+    SOURCE_STORAGE_PREFIX: str = "tests/data/abs_files/"
+    """Paths to source files.
+    
+    This can start with gs:// to use Google Storage. Ex
+    `gs://arxiv-production-data`. Use with `/data/` for a file system.
+    """
 
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data

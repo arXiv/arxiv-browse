@@ -105,7 +105,7 @@ def _path_to_version(path: FileObj) -> int:
         return 0
 
 
-def _is_deleted(arxiv_id: str) -> Optional[str]:
+def _is_deleted(arxiv_id: str) -> str:
     """Checks if an id is for a deleted paper.
 
     Expects an arxiv ID without a version such as quant-ph/0411165 or 0901.4014 or 1203.23434.
@@ -131,18 +131,37 @@ def is_genpdf_able(_arxiv_id: Identifier) -> bool:
 class ArticleStore():
     def __init__(self,
                  metaservice: DocMetadataService,
-                 objstore: ObjectStore,
+                 cache_store: ObjectStore,
+                 src_store: ObjectStore,
                  genpdf_store: ObjectStore,
                  latexml_store: ObjectStore,
                  reasons_data: Dict[str, str] = {},
-                 is_deleted: Callable[[str], Optional[str]] = _is_deleted,
+                 is_deleted: Callable[[str], str] = _is_deleted,
                  ):
+        """
+
+        Parameters
+        ----------
+        metaservice: A DocMetadataService instance to get metadata about papers.
+
+        cache_store: cache of PDF, PS and HTML
+
+        src_store: store for PDF from papers with PDF only source.
+
+        genpdf_store: ObjectStore setup to point to the genpdf storage.
+
+        latexml_store: ObjectStore setup to point to the latexml storage.
+
+        reasons_data: Dict of reasons for lack of specific paper's PDFs.
+
+        is_deleted: Dict of Paper ids that are deleted.
+        """
         self.metadataservice = metaservice
-        self.objstore: ObjectStore = objstore
+        self.cache_store: ObjectStore = cache_store
         self.genpdf_store: ObjectStore = genpdf_store
         self.latexml_store: ObjectStore = latexml_store
         self.is_deleted = is_deleted
-        self.sourcestore = SourceStore(self.objstore)
+        self.source_store = SourceStore(src_store)
         self.reasons_data = reasons_data
 
         self.format_handlers: Dict[Acceptable_Format_Requests, FHANDLER] = {
@@ -172,8 +191,8 @@ class ArticleStore():
         """
         
         stats: List[Tuple[str, Literal["GOOD", "BAD"], str]] = []
-        osstat, osmsg = self.objstore.status()
-        stats.append((str(type(self.objstore)), osstat, osmsg))
+        osstat, osmsg = self.cache_store.status()
+        stats.append((str(type(self.cache_store)), osstat, osmsg))
 
         try:
             reasons(self.reasons_data, 'bogusid', 'pdf')
@@ -188,11 +207,11 @@ class ArticleStore():
             stats.append(('is_deleted', 'BAD', str(ex)))
 
         if all([stat[1] == 'GOOD' for stat in stats]):
-            return ('GOOD', '')
+            return 'GOOD', ''
 
         msgs = [f"{styp} bad due to \"{msg}\"" for styp, stat, msg in stats
                 if stat != 'GOOD']
-        return ('BAD', ' and '.join(msgs))
+        return 'BAD', ' and '.join(msgs)
 
     def get_source(self, arxiv_id: Identifier, docmeta: Optional[DocMetadata] = None) \
             -> Union[Conditions, Tuple[Union[FileObj,List[FileObj]], DocMetadata, VersionEntry]]:
@@ -298,7 +317,7 @@ class ArticleStore():
 
         # first, get possible list of formats based on available source file
         if src_file is None:
-            src_file = self.sourcestore.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta)
+            src_file = self.source_store.get_src_for_docmeta(docmeta.arxiv_identifier, docmeta)
 
         source_file_formats: List[str] = []
         if src_file is not None:
@@ -331,32 +350,26 @@ class ArticleStore():
         List[Dict]
             List of Dict where each dict is a file name and size.
         """
-        return self.sourcestore.get_ancillary_files(docmeta)
+        return self.source_store.get_ancillary_files(docmeta)
 
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
         if version.source_flag.cannot_pdf:
             return "NOT_PDF"
 
-        ps_cache_pdf = self.objstore.to_obj(ps_cache_pdf_path(arxiv_id, version.version))
+        ps_cache_pdf = self.cache_store.to_obj(ps_cache_pdf_path(arxiv_id, version.version))
         if ps_cache_pdf.exists():
             return ps_cache_pdf
 
-        if not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version():
-            # try from the /ftp with no number for current ver of pdf only paper
-            pdf_file = self.objstore.to_obj(current_pdf_path(arxiv_id))
-            if pdf_file.exists():
-                return pdf_file
-        else:
-            # try from the /orig with version number for a pdf only paper
-            pdf_file=self.objstore.to_obj(previous_pdf_path(arxiv_id))
-            if pdf_file.exists():
-                return pdf_file
+        current = version.is_current or not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version()
+        pdf_file = self.source_store.get_src_pdf(arxiv_id, current)
+        if pdf_file and pdf_file.exists():
+            return pdf_file
 
         if is_genpdf_able(arxiv_id):
             return self._genpdf(arxiv_id, docmeta, version)
 
-        if not self.sourcestore.source_exists(arxiv_id, docmeta):
+        if not self.source_store.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
 
         logger.debug("No PDF found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
@@ -415,38 +428,31 @@ class ArticleStore():
                 return "UNAVAILABLE"
 
             case http.HTTPStatus.NOT_FOUND:
-                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                if not self.source_store.source_exists(arxiv_id, docmeta):
                     return "NO_SOURCE"
                 logger.error("genpdf-api returned 404")
                 return "UNAVAILABLE"
 
             case _:  # catch all
                 logger.error("genpdf-api returned %s", str(response.status_code))
-                if not self.sourcestore.source_exists(arxiv_id, docmeta):
+                if not self.source_store.source_exists(arxiv_id, docmeta):
                     return "NO_SOURCE"
                 return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
-        cached_ps = self.objstore.to_obj(ps_cache_ps_path(arxiv_id, version.version))
+        cached_ps = self.cache_store.to_obj(ps_cache_ps_path(arxiv_id, version.version))
         if cached_ps:
             return cached_ps
 
-        if not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version():
-            # try from the /ftp with no number for current ver of ps only paper
-            ps_file = self.objstore.to_obj(current_ps_path(arxiv_id))
-            if ps_file.exists():
-                return ps_file
-        else:
-            # try from the /orig with version number for a ps only paper
-            ps_file=self.objstore.to_obj(previous_ps_path(arxiv_id))
-            if ps_file.exists():
-                return ps_file
+        current = version.is_current or not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version()
+        src_ps = self.source_store.get_src_ps(arxiv_id, current)
+        if src_ps and src_ps.exists():
+            return src_ps
 
-        if not self.sourcestore.source_exists(arxiv_id, docmeta):
+        if not self.source_store.source_exists(arxiv_id, docmeta):
             return "NO_SOURCE"
 
-        logger.debug("No PS found for %s, source exists and is not WDR, tried %s", arxiv_id.idv,
-                     [str(cached_ps), str(ps_file)])
+        logger.debug("No PS found for %s, source exists and is not WDR", arxiv_id.idv)
         return "UNAVAILABLE"
 
     def _e_print(self,
@@ -457,7 +463,7 @@ class ArticleStore():
         Lists through possible extensions to find source file.
 
         Returns `FileObj` if found, `None` if not."""
-        src = self.sourcestore.get_src_for_docmeta(arxiv_id, docmeta)
+        src = self.source_store.get_src_for_docmeta(arxiv_id, docmeta)
         return src if src is not None else "NO_SOURCE"
 
 
@@ -467,9 +473,9 @@ class ArticleStore():
             # note: the preprocessed html is expected to exist in the ps_cache
             path = ps_cache_html_path(arxiv_id, version.version)
             if arxiv_id.extra:  # requesting a specific file
-                return self.objstore.to_obj(path + arxiv_id.extra.removeprefix("/"))
+                return self.cache_store.to_obj(path + arxiv_id.extra.removeprefix("/"))
             else:  # requesting list of files
-                file_list = list(self.objstore.list(path))
+                file_list = list(self.cache_store.list(path))
                 return file_list if file_list else "NO_SOURCE"
         else: # latex to html
             file = self.latexml_store.to_obj(latexml_html_path(arxiv_id, version.version))
