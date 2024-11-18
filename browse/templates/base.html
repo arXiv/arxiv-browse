@@ -84,7 +84,7 @@
       <div id="header" class="is-hidden-mobile">
         {% block header %}
         {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
-        <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
+        <a aria-hidden="true" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
         {% block login_link %}{% endblock %}
         {{ base_macros.compactsearch() }}
