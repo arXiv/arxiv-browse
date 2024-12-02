@@ -28,7 +28,7 @@ $(document).ready(function() {
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
     "bibex": {
-      "url": "https://static.arxiv.org/js/bibex/bibex.js?20210223",
+      "url": "https://static.arxiv.org/js/bibex/bibex.js?20241202",
       "container": "#bib-main"
     },
     "core-recommender": {
