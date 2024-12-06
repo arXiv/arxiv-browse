@@ -150,7 +150,7 @@ def institutional_banner() -> Any:
     try:
         forwarded_ips = request.headers.getlist("X-Forwarded-For")
         if len(forwarded_ips)>0:
-            ip = forwarded_ips[0]
+            ip = str(forwarded_ips[0]).split(',')[0]
         else:
             ip = request.remote_addr
         result = get_institution(ip)
