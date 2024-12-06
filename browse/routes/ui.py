@@ -148,7 +148,13 @@ def catchup(subject:str, date:str) -> Response:
 @blueprint.route("institutional_banner", methods=["GET"])
 def institutional_banner() -> Any:
     try:
-        result = get_institution(request.remote_addr)
+        forwarded_ips = request.headers.getlist("X-Forwarded-For")
+        if len(forwarded_ips)>0:
+            ip = str(forwarded_ips[0]).split(',')[0]
+            ip = ip.strip()
+        else:
+            ip = request.remote_addr
+        result = get_institution(ip)
         if result:
             return (result, status.OK)
         else:
