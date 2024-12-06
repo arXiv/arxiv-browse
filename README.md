@@ -34,28 +34,44 @@ By default, the application will use the directory trees in
 metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
 
-### Running Browse with .env file
+This method will only give you access to minimal data in the built-in test
+dataset. For full (read-only) access to the production database, the following
+steps are necessary:
+
+## Running with access to the production database
+
+Prerequisites:
+you are logged into gcloud and have default application credentials. This
+can be achieved by calling `gcloud auth login --update-adc --force` and
+logging into your @arxiv.org account.
+
+Next, **all** the following steps have to be done:
+
+### Create a .env file
 
 First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
 
-    export GOOGLE_APPLICATION_CREDENTIALS=<Your SA credential>
-    export BROWSE_SQLALCHEMY_DATABASE_URI="mysql://browse:<BROWSE_PASSWORD>@127.0.0.1:1234/arXiv"
-    export DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
-    export ABS_PATH_ROOT=gs://arxiv-production-data
-    export DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
-    export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
-    export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
-    export LATEXML_ENABLED=True
-    export LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
-    export LATEXML_BASE_URL=https://browse.arxiv.org/latexml
-    export FLASKS3_ACTIVE=1
+```
+DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
+ABS_PATH_ROOT=gs://arxiv-production-data
+DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
+DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
+DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
+LATEXML_ENABLED=False
+LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
+LATEXML_BASE_URL=https://browse.arxiv.org/latexml
+FLASKS3_ACTIVE=1
+CLASSIC_DB_URI=" SEE BELOW "
+```
 
-You need a SA cred to access the db, and the cloud-sql-proxy running.
-For LATEXML_INSTANCE_CONNECTION_NAME, you may need to ask someone who knows the db.
-(This is obviously a production DB.)
+The value of `CLASSIC_DB_URI` one can obtain by
+```
+SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=readonly-arxiv-db-uri)
+echo $SECRET | sed -e "s#/arXiv.*#127.0.0.1:$PORT/arXiv#"
+```
+The value `3301` for the port is arbitrary, but we need to use the same port
+number in the next step when running the cloud-sql-proxy!
 
-You can find the browse password here:
-https://console.cloud.google.com/security/secret-manager/secret/browse-sqlalchemy-db-uri/versions?project=arxiv-production
 
 If you have a PyCharm,
 script: main.py
@@ -64,33 +80,30 @@ Enable env files
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-run-setting.png)
 
-### SA Credentials
-
-Your SA needs followings:
-
-* Cloud SQL Client
-* Secret Manager Secret Accessor
-* Storage Object Viewer
-
-Save the private key somewhere on your local machine. Optionally save it in 1password.
 
 ### Running cloud-sql-proxy
 
-Once you have the google SA private key, you can run the cloud-sql-proxy.
+You can obtain the database name `DATABASE_NAME` from the same `$SECRET` as in the previous step:
+```
+DATABASE_NAME=$(echo $SECRET | sed -e "s#^.*unix_socket=/cloudsql/##")
+```
 
-```bash
-main proxy
-``` 
+NOTE: `cloud_sql_proxy` and `cloud-sql-proxy` (new) have different options.
 
-NOTE: cloud_sql_proxy and cloud-sql-proxy (new) have different options.
-In this, only describes the new as you probably don't have the old one.
+```
+cloud-sql-proxy --address 0.0.0.0 --port 3301 ${DATABASE_NAME}
+```
 
-	cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4
+For the old version
+```
+cloud_sql_proxy --instances=${DESTDB}=tcp:3301
+```
+
 
 If the proxy is working, you can use mysql client to connect to the db.
 
 ```bash
-mysql -u browse -p --host 127.0.0.1 --port 1234 arXiv
+mysql -u browse -p --host 127.0.0.1 --port 3301 arXiv
 Enter password: 
 ...
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
@@ -101,6 +114,15 @@ mysql> show tables;
 +------------------------------------------+
 | Subscription_UniversalInstitution        |
 ````
+
+### Run the main server
+
+Run
+```
+python main.py`
+```
+should start up and run 
+
 
 ### Test suite
 
