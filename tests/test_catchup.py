@@ -396,45 +396,50 @@ def test_catchup_paging(app_with_db):
     assert result==expected
 
 def test_catchup_cacheing(dbclient):
-    #category
-    resp = dbclient.get("/catchup/math.NA/2024-09-04") 
-    assert resp.status_code ==200
-    assert 'Surrogate-Control' in resp.headers
-    assert resp.headers['Surrogate-Control'] =='max-age=604800'
-    assert 'Surrogate-Key' in resp.headers
-    header= resp.headers['Surrogate-Key'] 
-    assert " catchup " in " "+header+" "
-    assert " list-2024-09-math.NA " in " "+header+" "
+    with patch('browse.controllers.catchup_page.datetime') as mock_datetime:
+        mock_datetime.now.return_value = datetime(2024, 10, 15)  
+        mock_datetime.date = datetime.date 
+        mock_datetime.strptime = datetime.strptime  
+        
+        #category
+        resp = dbclient.get("/catchup/math.NA/2024-09-04") 
+        assert resp.status_code ==200
+        assert 'Surrogate-Control' in resp.headers
+        assert resp.headers['Surrogate-Control'] =='max-age=604800'
+        assert 'Surrogate-Key' in resp.headers
+        header= resp.headers['Surrogate-Key'] 
+        assert " catchup " in " "+header+" "
+        assert " list-2024-09-math.NA " in " "+header+" "
 
-    #archive
-    resp = dbclient.get("/catchup/physics/2024-09-04") 
-    assert resp.status_code ==200
-    assert 'Surrogate-Control' in resp.headers
-    assert resp.headers['Surrogate-Control'] =='max-age=604800'
-    assert 'Surrogate-Key' in resp.headers
-    header= resp.headers['Surrogate-Key'] 
-    assert " catchup " in " "+header+" "
-    assert " list-2024-09-physics " in " "+header+" "
+        #archive
+        resp = dbclient.get("/catchup/physics/2024-09-04") 
+        assert resp.status_code ==200
+        assert 'Surrogate-Control' in resp.headers
+        assert resp.headers['Surrogate-Control'] =='max-age=604800'
+        assert 'Surrogate-Key' in resp.headers
+        header= resp.headers['Surrogate-Key'] 
+        assert " catchup " in " "+header+" "
+        assert " list-2024-09-physics " in " "+header+" "
 
-    #physics group
-    resp = dbclient.get("/catchup/grp_physics/2024-09-04") 
-    assert resp.status_code ==200
-    assert 'Surrogate-Control' in resp.headers
-    assert resp.headers['Surrogate-Control'] =='max-age=604800'
-    assert 'Surrogate-Key' in resp.headers
-    header= resp.headers['Surrogate-Key'] 
-    assert " catchup " in " "+header+" "
-    assert " list-2024-09-grp_physics " in " "+header+" "
+        #physics group
+        resp = dbclient.get("/catchup/grp_physics/2024-09-04") 
+        assert resp.status_code ==200
+        assert 'Surrogate-Control' in resp.headers
+        assert resp.headers['Surrogate-Control'] =='max-age=604800'
+        assert 'Surrogate-Key' in resp.headers
+        header= resp.headers['Surrogate-Key'] 
+        assert " catchup " in " "+header+" "
+        assert " list-2024-09-grp_physics " in " "+header+" "
 
-    #okay with parameters
-    resp = dbclient.get("/catchup/grp_physics/2024-09-04?abs=True&page=3") 
-    assert resp.status_code ==200
-    assert 'Surrogate-Control' in resp.headers
-    assert resp.headers['Surrogate-Control'] =='max-age=604800'
-    assert 'Surrogate-Key' in resp.headers
-    header= resp.headers['Surrogate-Key'] 
-    assert " catchup " in " "+header+" "
-    assert " list-2024-09-grp_physics " in " "+header+" "
+        #okay with parameters
+        resp = dbclient.get("/catchup/grp_physics/2024-09-04?abs=True&page=3") 
+        assert resp.status_code ==200
+        assert 'Surrogate-Control' in resp.headers
+        assert resp.headers['Surrogate-Control'] =='max-age=604800'
+        assert 'Surrogate-Key' in resp.headers
+        header= resp.headers['Surrogate-Key'] 
+        assert " catchup " in " "+header+" "
+        assert " list-2024-09-grp_physics " in " "+header+" "
 
 def test_catchup_continue(dbclient):
     #continue link when it should be
