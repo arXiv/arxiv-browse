@@ -235,6 +235,7 @@ body {
   color: #ffffff;
 }
 .slider-wrapper .copy-donation.bps-banner {
+  margin-left:15px;
   width: 70%;
 }
 .slider-wrapper .copy-donation.bps-banner h2 {
@@ -290,7 +291,11 @@ body {
 
 
 
-/*Forum banner style overrides*/
+/*banner style overrides*/
+.slider-wrapper.bps-banner.special-color {
+  background-color: #000;
+  color: #ffffff;
+}
 .slider-wrapper.bps-banner.forum {
   background-color: #000;
   color: #ffffff;

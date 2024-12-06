@@ -1,14 +1,14 @@
-//version 1.11
+//last update 12/06/24
 function setCookie(){   
-    var delay_days = 5;
+    var delay_days = 30;
     var date = new Date();
     date.setTime(date.getTime()+(delay_days*3600*24*1000));
     var expires = "; expires="+date.toGMTString();    
-    document.cookie = 'seentheDonateBanner=1' + expires + '; path=/; domain=' + window.location.hostname + ';';
+    document.cookie = 'seenthePrivacyBanner=1' + expires + '; path=/; domain=' + window.location.hostname + ';';
 }
 
 function hasCookie(){
-    return document.cookie.indexOf('seentheDonateBanner=') != -1;
+    return document.cookie.indexOf('seenthePrivacyBanner=') != -1;
 }
 
 $(document).ready(
@@ -19,7 +19,7 @@ $(document).ready(
         $(".slider-wrapper").slideUp();
        }   
       
-      $(".close-slider").click(function() {
+      $(".do-close-slider").click(function() {
         $("#cu-identity").slideDown();
         $(".slider-wrapper").slideUp();
         setCookie();       
