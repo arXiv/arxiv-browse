@@ -45,7 +45,14 @@ you are logged into gcloud and have default application credentials. This
 can be achieved by calling `gcloud auth login --update-adc --force` and
 logging into your @arxiv.org account.
 
-Next, **all** the following steps have to be done:
+Next, **all** the following steps have to be done.
+
+Also, in the following we assume that you two port variable set in the environment:
+```
+MAIN_DB_PORT=3301
+LATEXML_DB_PORT=3302
+```
+(the numbers are not important, but must be different)
 
 ### Create a .env file
 
@@ -57,20 +64,26 @@ ABS_PATH_ROOT=gs://arxiv-production-data
 DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
 DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
 DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
-LATEXML_ENABLED=False
-LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
+LATEXML_ENABLED=True
 LATEXML_BASE_URL=https://browse.arxiv.org/latexml
 FLASKS3_ACTIVE=1
 CLASSIC_DB_URI=" SEE BELOW "
+LATEXML_DB_URI=" SEE BELOW "
 ```
 
 The value of `CLASSIC_DB_URI` one can obtain by
 ```
-SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=readonly-arxiv-db-uri)
-echo $SECRET | sed -e "s#/arXiv.*#127.0.0.1:$PORT/arXiv#"
+MAIN_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=readonly-arxiv-db-uri)
+echo $MAIN_SECRET | sed -e "s#/arXiv.*#127.0.0.1:${MAIN_DB_PORT}/arXiv#"
 ```
-The value `3301` for the port is arbitrary, but we need to use the same port
-number in the next step when running the cloud-sql-proxy!
+
+The value of `LATEXML_DB_URI` one can obtain by
+```
+LATEXML_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=latexml_db_uri_psycopg2)
+echo $LATEXML_SECRET | sed -e "s#/latexmldb.*#127.0.0.1:${LATEXML_DB_PORT}/latexmldb#"
+```
+
+
 
 
 If you have a PyCharm,
@@ -83,27 +96,35 @@ Enable env files
 
 ### Running cloud-sql-proxy
 
-You can obtain the database name `DATABASE_NAME` from the same `$SECRET` as in the previous step:
+You can obtain the database name `MAIN_DB_NAME` from the same `$SECRET` as in the previous step:
 ```
-DATABASE_NAME=$(echo $SECRET | sed -e "s#^.*unix_socket=/cloudsql/##")
+MAIN_DB_NAME=$(echo $MAIN_SECRET | sed -e "s#^.*unix_socket=/cloudsql/##")
 ```
+
+Similar, for the `LATEXML_DB_NAME` one needs to do
+```
+LATEXML_DB_NAME=$(echo $LATEXML_SECRET | sed -e "s#^.*host=/cloudsql/##")
+```
+
 
 NOTE: `cloud_sql_proxy` and `cloud-sql-proxy` (new) have different options.
 
 ```
-cloud-sql-proxy --address 0.0.0.0 --port 3301 ${DATABASE_NAME}
+cloud-sql-proxy --address 0.0.0.0 --port ${MAIN_DB_PORT} ${MAIN_DB_NAME}
+cloud-sql-proxy --address 0.0.0.0 --port ${LATEXML_DB_PORT} ${LATEXML_DB_NAME}
 ```
 
 For the old version
 ```
-cloud_sql_proxy --instances=${DESTDB}=tcp:3301
+cloud_sql_proxy --instances=${MAIN_DB_NAME}=tcp:${MAIN_DB_PORT}
+cloud_sql_proxy --instances=${LATEXML_DB_NAME}=tcp:${LATEXML_DB_PORT}
 ```
 
 
 If the proxy is working, you can use mysql client to connect to the db.
 
 ```bash
-mysql -u browse -p --host 127.0.0.1 --port 3301 arXiv
+mysql -u browse -p --host 127.0.0.1 --port ${MAIN_DB_PORT} arXiv
 Enter password: 
 ...
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
