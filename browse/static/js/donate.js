@@ -1,6 +1,6 @@
-//last update 12/06/24
+//last update 12/11/24
 function setCookie(){   
-    var delay_days = 30;
+    var delay_days = 40;
     var date = new Date();
     date.setTime(date.getTime()+(delay_days*3600*24*1000));
     var expires = "; expires="+date.toGMTString();    
