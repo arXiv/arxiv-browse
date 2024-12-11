@@ -139,7 +139,7 @@ body {
     padding-left: 0;
     text-align: center;
 }
-@media (min-width: 900px) {
+@media (min-width: 769px) {
     .slider-wrapper .copy-donation {
         float: left;
         width: 65%;
@@ -176,21 +176,29 @@ body {
 @media (min-width: 1090px) {
     .slider-wrapper .copy-donation {
         float: left;
-        width: 80%;
+        width: 70%;
     }
     .slider-wrapper .amount-donation {
         float: right;
-        width: 18%;
+        width: 28%;
     }
 }
-@media (min-width: 1200px) {
-    .slider-wrapper {
-        margin: 0 auto;
-    }
-    .slider-donation {
-        background-color: #4d4f53;
-        width: 100%;
-    }
+@media (min-width: 1235px) {
+  .slider-wrapper {
+      margin: 0 auto;
+  }
+  .slider-donation {
+      background-color: #4d4f53;
+      width: 100%;
+  }
+  .slider-wrapper .copy-donation {
+    float: left;
+    width: 80%;
+  }
+  .slider-wrapper .amount-donation {
+      float: right;
+      width: 18%;
+  }
 }
 
 .survey-results {
