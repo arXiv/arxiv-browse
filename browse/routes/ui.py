@@ -393,17 +393,10 @@ def year(archive: str, year: int):  # type: ignore
     return render_template("year.html", **response), code, headers
 
 
-@blueprint.route("cookies", defaults={"set": ""})
-@blueprint.route("cookies/<set>", methods=["POST", "GET"])
-def cookies(set):  # type: ignore
+@blueprint.route("cookies")
+def cookies():  # type: ignore
     """Cookies landing page and setter."""
     is_debug = request.args.get("debug", None) is not None
-    if request.method == "POST":
-        debug = {"debug": "1"} if is_debug else {}
-        resp = redirect(url_for("browse.cookies", **debug)) # type: ignore
-        for ctoset in cookies_to_set(request):
-            resp.set_cookie(**ctoset) # type: ignore
-        return resp
     response, code, headers = get_cookies_page(is_debug)
     return render_template("cookies.html", **response), code, headers
 
