@@ -24,8 +24,8 @@ for your use of arXiv. They include:</p>
 
 <ul>
   <li>That you have dismissed a banner we may have shown you.</li>
-  <li>Which Labs integrations you want to see on each abstract page (<a href="/abs/1410.6579">set at example abstract</a>).</li>
-  <li>Whether you want MathJax to be used when rendering article abstracts. (set on this page.)</li>
+  <li>Which Labs integrations you want to see on any abstract page (<a href="/abs/1410.6579">set at example abstract</a>).</li>
+  <li>Whether you want MathJax to be used when rendering article abstracts,set on any abstract page. <a href="/abs/1410.6579">scroll to the bottom, under the labs tabs</li>
   <li>Search preferences, such as the sorting order of the results (<a href="/search/advanced">set at advanced search</a>). </li>
 
 </ul>
@@ -44,33 +44,6 @@ on arXiv.org; if you do not wish to permit cookies, you can modify the
 settings in your web browser, but you will not be able to login or set
 preferences.
 </p>
-
-<form action="{{form_url}}" method="post">
-  <table>
-    <thead><tr><th>Configure global preference cookies</th></tr></thead>
-    <tbody>
-  {% for cc in cookies_config %}
-    {% set id = cc['id'] %}
-    {% set label = cc['label'] %}
-    {% set name = cc['name'] %}
-    {% set options = cc['options'] %}
-
-    <tr><td>{{label}}</td><td><select name="{{id}}">
-        {% for opt in options %}
-          {% set value = opt[0] %}
-          {% set opt_label = opt[1] %}
-          {% set selected = opt[2] %}
-          <option value="{{value}}"
-                  {% if selected %}selected="selected"{% endif %}
-                  >{{opt_label}}</option>
-        {% endfor %}
-    </select></td>
-    </tr>
-  {% endfor %}
-    </tbody>
-  </table>
-  <input type="submit" name="set" value="Set" />
-</form>
 
 <hr />
 
