@@ -236,12 +236,12 @@ body {
 }
 .slider-wrapper .copy-donation.bps-banner {
   margin-left:15px;
-  width: 70%;
 }
 .slider-wrapper .copy-donation.bps-banner h2 {
-  color: #f3edbe;
+  color: #ffffff;
   margin-bottom: 10px;
   margin-top: 20px;
+  font-size: 1.1em;
 }
 .slider-wrapper .copy-donation.bps-banner p {
   color: #f9f7f7;
@@ -253,13 +253,12 @@ body {
   color: #f5e98e;
   text-shadow: 1px 1px #831212;
 }
-.slider-wrapper .amount-donation.bps-banner {
-  width: 25%;
-}
+
 .slider-wrapper .amount-donation.bps-banner .donate-cta a {
   background-color: #b31b1b;
   margin: 10px 5px;
   color: #000000;
+  font-size: 1em;
 }
 .slider-wrapper .amount-donation.bps-banner .donate-cta a:hover {
   opacity: 1;
@@ -289,6 +288,19 @@ body {
   text-decoration: none;
 }
 
+@media (max-width: 768px) { 
+  .slider-wrapper .amount-donation{
+    display: flex;
+    justify-content: center;
+  }
+  .slider-wrapper .donate-cta {
+    float: none;
+ }
+  .slider-wrapper .copy-donation.bps-banner {
+    width: 90%;
+    text-align: center;
+ }
+}
 
 
 /*banner style overrides*/
