@@ -1,6 +1,6 @@
 /****************************************
  *  arXiv.org Cascading Style Sheet
- *  $Date: 2024/08/22 $
+ *  $Date: 2024/12/06 $
  *****************************************/
 /****************************************
  *   General rules
@@ -1634,7 +1634,12 @@ div#long-author-list {
 
 #abs .arxividv {}
 
-#abs .jref {}
+#abs .jref {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+}
 
 #abs .error {
     border: 2px solid #B31B1B;
