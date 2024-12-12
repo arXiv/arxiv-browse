@@ -166,8 +166,8 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
     # TODO: ps format? It doesn't seem like this is possible in the arXiv-NG implementation
     entry['formats'] = {
         'html': metadata.canonical_url(),
-        'pdf': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True)
-    }
+        'pdf': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True, _scheme='https')
+}
 
     # 'id' field
     # TODO: This seems to be redundant with entry['formats']['html'] right above
@@ -247,7 +247,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
 
     SubElement(entry, 'link', attrib={
         'title': 'pdf',
-        'href': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True),
+        'href': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True, _scheme='https'),
         'rel': 'alternate', 
         'type': 'application/pdf'
     })
