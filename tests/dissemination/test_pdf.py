@@ -17,7 +17,7 @@ def test_pdf_headers(client_with_test_fs):
     assert "pdf-cs/0011004v1" in head
     assert "paper-id-cs/0011004" in head
 
-    assert rv.headers["Link"] == "<https://arxiv.org/pdf/cs/0011004v1>; rel='canonical'", "should not have version"
+    assert rv.headers["Link"] == "<https://arxiv.org/pdf/cs/0011004>; rel='canonical'", "should not have version"
 
 
 def test_pdf_redirect(client_with_test_fs):
