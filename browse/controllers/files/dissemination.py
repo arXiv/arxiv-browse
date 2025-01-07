@@ -193,7 +193,7 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
                    version: VersionEntry) -> Response:
     if docmeta.source_format == 'html' or version.source_flag.html:
         resp= _html_source_listing_response(file_list, arxiv_id)
-    elif issubclass(type(file_list), FileObj): #converted via latexml
+    elif isinstance(file_list, FileObj): #converted via latexml
         resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
         resp.headers=add_surrogate_key(resp.headers,["html-latexml"])
     else:
