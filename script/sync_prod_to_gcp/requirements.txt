@@ -25,7 +25,7 @@ grpcio-status==1.48.2
 idna==3.7
 importlib-metadata==4.8.3
 itsdangerous==2.0.1
-Jinja2==3.1.4
+Jinja2==3.1.5
 jmespath==0.10.0
 jsonschema==4.0.0
 lmdb==1.4.1
