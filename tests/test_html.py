@@ -4,6 +4,8 @@ def test_html_paper(client_with_test_fs):
     assert resp.status_code == 200
     headers= resp.headers
     assert "max-age=31536000" in resp.headers.get("Surrogate-Control")
+    assert resp.headers.get('Link','') == "<https://arxiv.org/html/2403.10561>; rel='canonical'", "versionless canonical header"
+
     keys= " "+headers["Surrogate-Key"]+" "
     expected_keys=["html", "paper-id-2403.10561", "paper-id-2403.10561-current", "html-native", "html-2403.10561-current"]
     assert all(" "+item+" " in keys for item in expected_keys)
@@ -23,12 +25,16 @@ def test_html_paper(client_with_test_fs):
 
     resp = client_with_test_fs.get("/html/2403.10561/")
     assert resp.status_code == 200 and b"Human-Centric" in resp.data
+    assert resp.headers.get('Link','') == "<https://arxiv.org/html/2403.10561>; rel='canonical'", "versionless canonical header"
 
     resp = client_with_test_fs.get("/html/2403.10561v1")
     assert resp.status_code == 200 and b"Human-Centric" in resp.data
+    assert resp.headers.get('Link','') == "<https://arxiv.org/html/2403.10561>; rel='canonical'", "versionless canonical header"
 
     resp = client_with_test_fs.get("/html/2403.10561v1/")
     assert resp.status_code == 200 and b"Human-Centric" in resp.data
+    assert resp.headers.get('Link','') == "<https://arxiv.org/html/2403.10561>; rel='canonical'", "versionless canonical header"
+    
 
 def test_html_icon(client_with_test_fs):
     resp = client_with_test_fs.get("/html/2403.10561")
@@ -36,6 +42,7 @@ def test_html_icon(client_with_test_fs):
 
     resp = client_with_test_fs.get("/html/2403.10561/icon.png")
     assert resp.status_code == 200 and resp.headers.get("Content-Type") == "image/png"
+    assert not("Link" in resp.headers), "assets of html articles don't have a canonical header (yet?)"
 
 
 def test_html_paper_multi_files(client_with_test_fs):
@@ -113,6 +120,7 @@ def test_html_headers(client_with_test_fs):
     assert 'Content-Type' in resp.headers
     content_type = resp.headers.get('Content-Type', '')
     assert content_type== "text/html; charset=utf-8"
+    assert resp.headers.get('Link', '') == "<https://arxiv.org/html/2403.10561>; rel='canonical'", "versionless canonical header"
 
     #Surrogate Keys
     rv=client_with_test_fs.head("/html/2403.10561")
@@ -125,6 +133,7 @@ def test_html_headers(client_with_test_fs):
     assert "html-latexml" not in head
 
     rv=client_with_test_fs.head("/html/cs/9904010v1/graph1.gif")
+    assert not('Link' in rv.headers), "HTML assets do not have a canonical header (yet?)"
     head=rv.headers["Surrogate-Key"]
     assert " html " in " "+head+" "
     assert "html-cs/9904010-current" not in head

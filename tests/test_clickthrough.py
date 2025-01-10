@@ -17,7 +17,7 @@ def test_clickthrough(app_with_fake):
     assert resp.status_code == 404
 
     resp = client.get("/ct?url=http%3A%2F%2Fwww.example.com&v=bogus")
-    assert resp.status_code == 400
+    assert resp.status_code == 404
 
     url = "https://example.com/something?whereis=thecheese"
     hash = create_hash(app_with_fake.config["CLICKTHROUGH_SECRET"], url)

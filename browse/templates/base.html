@@ -1,9 +1,8 @@
 {%- import 'base/macros.html' as base_macros -%}
 {%- import 'user_banner.html' as user_banner -%}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
   {%- block head -%}
@@ -16,7 +15,7 @@
   <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20240822" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20241206" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
@@ -83,8 +82,9 @@
 
       <div id="header" class="is-hidden-mobile">
         {% block header %}
-        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
-        <a aria-hidden="true" href="/IgnoreMe"></a>
+        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt.
+            aria-hidden prevents screenreaders from being caught, and tabindex prevents it from being selectable via the tab key. -#}
+        <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
         {% block login_link %}{% endblock %}
         {{ base_macros.compactsearch() }}

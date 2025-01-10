@@ -22,7 +22,8 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input id="bibex-toggle" type="checkbox" class="lab-toggle">
+              <input id="bibex-toggle" type="checkbox" class="lab-toggle"
+                     data-script-url="{{ url_for('static', filename='bibex/bibex.js') }}?20241202">
               <span class="slider"></span>
               <span class="is-sr-only">Bibliographic Explorer Toggle</span>
             </label>

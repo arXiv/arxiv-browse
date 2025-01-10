@@ -1,4 +1,4 @@
-/* latest update: 8/15/2024 v1.14*/
+/* latest update: 12/11/2024*/
 
 body {
     margin: 0;
@@ -139,7 +139,7 @@ body {
     padding-left: 0;
     text-align: center;
 }
-@media (min-width: 900px) {
+@media (min-width: 769px) {
     .slider-wrapper .copy-donation {
         float: left;
         width: 65%;
@@ -159,7 +159,8 @@ body {
         float: left;
     }
     .slider-wrapper .donate-cta {
-        float: left;
+        float: right;
+        margin-right: 15%;
     }
 }
 @media (min-width: 983px) {
@@ -175,21 +176,29 @@ body {
 @media (min-width: 1090px) {
     .slider-wrapper .copy-donation {
         float: left;
-        width: 80%;
+        width: 70%;
     }
     .slider-wrapper .amount-donation {
         float: right;
-        width: 18%;
+        width: 28%;
     }
 }
-@media (min-width: 1200px) {
-    .slider-wrapper {
-        margin: 0 auto;
-    }
-    .slider-donation {
-        background-color: #4d4f53;
-        width: 100%;
-    }
+@media (min-width: 1235px) {
+  .slider-wrapper {
+      margin: 0 auto;
+  }
+  .slider-donation {
+      background-color: #4d4f53;
+      width: 100%;
+  }
+  .slider-wrapper .copy-donation {
+    float: left;
+    width: 80%;
+  }
+  .slider-wrapper .amount-donation {
+      float: right;
+      width: 18%;
+  }
 }
 
 .survey-results {
@@ -234,12 +243,13 @@ body {
   color: #ffffff;
 }
 .slider-wrapper .copy-donation.bps-banner {
-  width: 70%;
+  margin-left:15px;
 }
 .slider-wrapper .copy-donation.bps-banner h2 {
-  color: #f3edbe;
+  color: #ffffff;
   margin-bottom: 10px;
   margin-top: 20px;
+  font-size: 1.1em;
 }
 .slider-wrapper .copy-donation.bps-banner p {
   color: #f9f7f7;
@@ -251,13 +261,12 @@ body {
   color: #f5e98e;
   text-shadow: 1px 1px #831212;
 }
-.slider-wrapper .amount-donation.bps-banner {
-  width: 25%;
-}
+
 .slider-wrapper .amount-donation.bps-banner .donate-cta a {
   background-color: #b31b1b;
   margin: 10px 5px;
   color: #000000;
+  font-size: 1em;
 }
 .slider-wrapper .amount-donation.bps-banner .donate-cta a:hover {
   opacity: 1;
@@ -287,9 +296,26 @@ body {
   text-decoration: none;
 }
 
+@media (max-width: 768px) { 
+  .slider-wrapper .amount-donation{
+    display: flex;
+    justify-content: center;
+  }
+  .slider-wrapper .donate-cta {
+    float: none;
+ }
+  .slider-wrapper .copy-donation.bps-banner {
+    width: 90%;
+    text-align: center;
+ }
+}
 
 
-/*Forum banner style overrides*/
+/*banner style overrides*/
+.slider-wrapper.bps-banner.special-color {
+  background-color: #000;
+  color: #ffffff;
+}
 .slider-wrapper.bps-banner.forum {
   background-color: #000;
   color: #ffffff;
