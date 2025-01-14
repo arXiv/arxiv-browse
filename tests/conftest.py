@@ -162,7 +162,7 @@ def dbclient(app_with_db):
 
     """A browse app client with a test DB populated with fresh data.
 
-    This is function so each test funciton gets an new app_context."""
+    This is function so each test function gets an new app_context."""
     with app_with_db.app_context():
         yield app_with_db.test_client() # yield so the tests already have the app_context
 

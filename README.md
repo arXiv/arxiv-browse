@@ -2,16 +2,6 @@
 
 ## Running Browse with the Flask development server
 
-You can run the browse app directly.
-
-```bash
-make venv
-````
-
-(the make rarely works)
-
-or 
-
 ```bash
 python --version
 # 3.11.x
@@ -21,7 +11,6 @@ pip install poetry==1.3.2
 poetry install
 python main.py
 ```
-Note -- make sure you have python dev installed befoore doing the above steps, or the `poetry install` will fail trying to build the mySQL library dependency. E.g.: `sudo apt-get install python3.11-dev`
 
 Then go to http://127.0.0.1:8080/abs/0906.5132
 
@@ -34,11 +23,20 @@ By default, the application will use the directory trees in
 metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
 
-This method will only give you access to minimal data in the built-in test
-dataset. For full (read-only) access to the production database, the following
-steps are necessary:
+
+### Test suite
+
+Run the main test suite with the following command:
+
+```bash
+pytest tests
+```
 
 ## Running with access to the production database
+
+The above method will only give you access to minimal data in the built-in test
+dataset. For full (read-only) access to the production database, the following
+steps are necessary:
 
 Prerequisites:
 you are logged into gcloud and have default application credentials. This
@@ -56,7 +54,7 @@ LATEXML_DB_PORT=3302
 
 ### Create a .env file
 
-First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
+Create the '.env' file somewhere. Using tests/.env is suggested.
 
 ```
 DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
@@ -83,9 +81,6 @@ The value of `LATEXML_DB_URI` one can obtain by
 LATEXML_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=latexml_db_uri_psycopg2)
 echo $LATEXML_SECRET | sed -e "s#/latexmldb.*#127.0.0.1:${LATEXML_DB_PORT}/latexmldb#"
 ```
-
-
-
 
 If you have a PyCharm,
 script: main.py
@@ -137,23 +132,6 @@ mysql> show tables;
 | Subscription_UniversalInstitution        |
 ````
 
-### Run the main server
-
-Run
-```
-python main.py`
-```
-should start up and run 
-
-
-### Test suite
-
-Run the main test suite with the following command:
-
-```bash
-pytest tests
-```
-
 ### Running Browse in Docker
 You can also run the browse app in Docker. The following commands will build and
 run browse using defaults for the configuration parameters and will use the test
@@ -172,25 +150,6 @@ http://localhost:8000/ will render the home page.
 See `browse/config.py` for configuration parameters and defaults). Any of these
 can be overridden with environment variables.
 
-### Serving static files on S3
-
-We use [Flask-S3](https://flask-s3.readthedocs.io/en/latest/) to serve static
-files via S3.
-
-After looking up the AWS keys and region and bucket:
-```bash
-cd arxiv-browse
-git pull
-AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x \
- AWS_REGION=us-east-1 FLASKS3_BUCKET_NAME=arxiv-web-static1 \
- pipenv run python upload_static_assets.py
-```
-
-In AWS -> CloudFront, select the static.arxiv.org distribution, -> Invalidations -> Create invalidation,
-and enter a list of url file paths, eg: /static/browse/0.3.4/css/arXiv.css.
-
-It may be help to use a web browser's inspect->network to find the active release version.
-
 ### Tests and linting for PRs
 There is a github action that runs on PRs that merge to develop. PRs for which
 these tests fail will be blocked. It is the equivalent of running:
@@ -207,3 +166,10 @@ pytest tests
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 
 
+### Makefile
+
+There is a make file form running the app and other tasks.
+
+```bash
+make venv
+````
