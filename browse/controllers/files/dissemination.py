@@ -110,10 +110,7 @@ def pdf_resp_fn(file: FileObj,
     resp = default_resp_fn(file, arxiv_id, docmeta, version)
     filename = f"{arxiv_id.filename}v{version.version}.pdf"
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
-    if arxiv_id.has_version:
-        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.idv}>; rel='canonical'"
-    else:
-        resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.id}>; rel='canonical'"
+    resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.id}>; rel='canonical'"
     if arxiv_id.has_version: 
         resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.idv}"])
     else:
@@ -203,7 +200,7 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
         resp= unavailable(arxiv_id)
 
-    if arxiv_id.has_version: 
+    if arxiv_id.has_version:
         resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.idv}"])
     else:
         resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.id}-current"])
@@ -213,7 +210,9 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
 def _html_source_single_response(file: FileObj, arxiv_id: Identifier) -> Response:
     """Produces a `Response`for a single file for a paper with HTML source."""
     if _is_html_name(file):  # do post_processing
-        return default_resp_fn( FileTransform(file, post_process_html), arxiv_id)
+        resp = default_resp_fn( FileTransform(file, post_process_html), arxiv_id)
+        resp.headers["Link"] = f"<https://arxiv.org/html/{arxiv_id.id}>; rel='canonical'"
+        return resp
     else:
         return default_resp_fn( file, arxiv_id)
 
