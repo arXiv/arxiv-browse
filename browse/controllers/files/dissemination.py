@@ -197,6 +197,7 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
         resp.headers=add_surrogate_key(resp.headers,["html-latexml"])
         if _is_html_name(file_list):
+            resp.headers['X-Robots-Tag'] = 'nofollow'
             resp.headers["Link"] = f"<https://arxiv.org/html/{arxiv_id.id}>; rel='canonical'"
     else:
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
