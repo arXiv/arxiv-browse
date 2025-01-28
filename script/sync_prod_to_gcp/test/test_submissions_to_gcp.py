@@ -189,6 +189,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16188v2.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2308/2308.16190v1.pdf",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/2308.99990v1/2308.99990v1.html",
+                    "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.tar.gz",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.abs",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.gz",
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2409/2409.10667v1.pdf",
@@ -214,6 +215,12 @@ class TestSubmissionsToGCP(unittest.TestCase):
         if os.path.exists(html_path):
             shutil.rmtree(html_path)
 
+        archive = "physics"
+        xid = "0106051v3"
+        pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, archive, "pdf", xid[0:4], xid + ".pdf")
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+
         html_path_2409_03427v1 = os.path.join(
             sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "html", "2409", "2409.03427v1")
         if os.path.exists(html_path_2409_03427v1):
@@ -225,7 +232,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
                          "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.abs"],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.call(["gsutil", "cp", "test/data/ftp/arxiv/papers/1907/1907.07431.gz",
-                         "gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"],
+                        arxivce_1756_obsolete],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         pass
 
