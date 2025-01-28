@@ -7,3 +7,4 @@ test/stanza.db
 /test/cache/ps_cache/arxiv/pdf/1907/*.pdf
 /test/arxiv-development_sync-test.json
 arxiv-development-38ce4ed90aae.json
+/test/cache/ps_cache/physics/pdf/0106/0106051v3.pdf

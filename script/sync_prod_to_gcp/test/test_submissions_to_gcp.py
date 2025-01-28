@@ -47,7 +47,11 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     """
 
     def do_GET(self):
-        pdf_req = re.match(r'^/pdf/(\d{4}\.\d{5}v\d+)(.pdf|)$', self.path)
+        for pattern in [r'^/pdf/(\d{4}\.\d{5}v\d+)(.pdf|)$', r'^/pdf/([a-z\-]+/\d{7}v\d+)(.pdf|)$']:
+            pdf_req = re.match(pattern, self.path)
+            if pdf_req:
+                break
+
         if pdf_req:
             paper_id = ArxivId(pdf_req.group(1))
             if paper_id.has_version:
@@ -67,8 +71,9 @@ class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                     return
 
             x_path = os.path.join(test_dir, "data", "x.pdf")
-            pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "pdf",
-                                    paper_id.yymm, f"{paper_id.idv}.pdf")
+            archive = paper_id.archive if paper_id.is_old_id else "arxiv"
+            pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, archive, "pdf",
+                                    paper_id.yymm, f"{paper_id.filename}v{paper_id.version}.pdf")
             if not os.path.exists(pdf_path):
                 os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
                 shutil.copy(x_path, pdf_path)
@@ -186,7 +191,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     "gs://arxiv-sync-test-01/ps_cache/arxiv/html/2308/2308.99990v1/2308.99990v1.html",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.abs",
                     "gs://arxiv-sync-test-01/orig/arxiv/papers/1907/1907.07431v2.gz",
-                    "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2409/2409.10667v1.pdf"
+                    "gs://arxiv-sync-test-01/ps_cache/arxiv/pdf/2409/2409.10667v1.pdf",
+                    "gs://arxiv-sync-test-01/ps_cache/physics/pdf/0106/0106051v1.pdf",
                     ]
         subprocess.call(rm_items + droplets,
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -307,6 +313,7 @@ class TestSubmissionsToGCP(unittest.TestCase):
         ], expected)
 
     def test_ask_pdf(self):
+        """Get the PDF for modern arXiv ID, create PDF and send to GCP"""
         paper_id = "2308.16190"
         data = {
             "type": "new",
@@ -350,6 +357,56 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+
+    def test_ask_pdf_for_old_arxiv_id(self):
+        """Get the PDF for old arXiv ID, create PDF and send to GCP"""
+        xid = "0106051"
+        yymm = xid[0:4]
+        archive = "physics"
+        paper_id = f"{archive}/{xid}"
+        version = "3"
+        data = {
+            "type": "new",
+            "paper_id": paper_id,
+            "version": version,
+            "src_ext": ".tar.gz"
+        }
+        log_extra = {"paper_id": paper_id}
+
+        try:
+            state = submission_message_to_file_state(data, log_extra, ask_webnode=True)
+            desired_state = state.get_expected_files()
+            if not desired_state:
+                self.fail("Desired state must not be none")
+
+        except MissingGeneratedFile as exc:
+            logger.info(str(exc), extra=log_extra)
+            self.fail("PDF should exist in the test")
+
+        except Exception as _exc:
+            logger.warning(
+                f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
+            self.fail("Any exception is a bad test. Fix the test")
+
+        try:
+            sync_to_gcp(state, log_extra)
+            # Acknowledge the message so it is not re-sent
+            logger.info("ack message: %s", state.xid.ids, extra=log_extra)
+
+        except Exception as _exc:
+            logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
+            self.fail("Any exception is a bad test. Fix the test")
+            pass
+
+        # Fake PDF is created.
+        self.assertEqual("1115014", get_file_size(
+            f"gs://arxiv-sync-test-01/ps_cache/{archive}/pdf/{yymm}/{xid}v{version}.pdf"))
+
+        # New submissions
+        self.assertEqual("515", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/{archive}/papers/{yymm}/{xid}.abs"))
+        self.assertEqual("141", get_file_size(
+            f"gs://arxiv-sync-test-01/ftp/{archive}/papers/{yymm}/{xid}.tar.gz"))
 
     def test_ask_pdf_timeout(self):
         """

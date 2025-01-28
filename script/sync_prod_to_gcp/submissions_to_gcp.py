@@ -773,6 +773,8 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
                     host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
                     protocol = "http" if host.startswith("localhost:") else "https"
+                    log_extra['webnode'] = host
+                    log_extra['paper_id'] = file_state.vxid
                     try:
                         _pdf_file, _url, _1, _duration_ms = \
                             ensure_pdf(thread_data.session, host, file_state.vxid, timeout=PDF_TIMEOUT(),
@@ -780,19 +782,22 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                                        source_mtime=file_state.get_submission_mtime())
 
                     except sync_published_to_gcp.WebnodeException as exc:
+                        logger.warning("Webnode exception: %s", exc, extra=log_extra)
                         raise MissingGeneratedFile("Failed to generate %s" % pdf_path) from exc
 
                     except ReadTimeout as exc:
                         # This happens when failed to talk to webnode
+                        logger.info("Timeout for %s", pdf_path,extra=log_extra)
                         raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
 
                     except RetryError as exc:
                         # This happens when failed to talk to webnode
+                        logger.info("Retry for %s", pdf_path,extra=log_extra)
                         raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
 
                     except Exception as _exc:
-                        logger.warning("ensure_pdf: %s", file_state.vxid.ids, extra=log_extra,
-                                       exc_info=True, stack_info=False)
+                        logger.warning("ensure_pdf: %s - %s", file_state.vxid.ids, str(_exc),
+                                       extra=log_extra, exc_info=True, stack_info=False)
                         raise
 
                 if not pdf_path.exists():
