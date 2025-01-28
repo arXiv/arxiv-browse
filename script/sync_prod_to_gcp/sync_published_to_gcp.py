@@ -390,7 +390,7 @@ def ensure_pdf(session, host, arxiv_id, timeout=0, protocol = "https", source_mt
     timeout = PDF_WAIT_SEC if not timeout else timeout
     archive = ('arxiv' if not arxiv_id.is_old_id else arxiv_id.archive)
     pdf_file = Path(f"{PS_CACHE_PREFIX}/{archive}/pdf/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.pdf")
-    url = f"{protocol}://{host}/pdf/{arxiv_id.filename}v{arxiv_id.version}.pdf"
+    url = f"{protocol}://{host}/pdf/{arxiv_id.idv}.pdf"
     start = perf_counter()
 
     if pdf_file.exists():
