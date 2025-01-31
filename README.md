@@ -24,14 +24,6 @@ metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
 
 
-### Test suite
-
-Run the main test suite with the following command:
-
-```bash
-pytest tests
-```
-
 ## Running with access to the production database
 
 The above method will only give you access to minimal data in the built-in test
