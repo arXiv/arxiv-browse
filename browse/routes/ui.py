@@ -40,6 +40,7 @@ from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
 from browse.controllers.list_page import author
+from browse.controllers import audio
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -467,6 +468,11 @@ def a (id: str, ext: str):  # type: ignore
 
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
+
+@blueprint.route('audio/<path:arxivid>', methods=['GET'])
+def audio_landing_page(arxivid: str):
+    return audio.audio_landing_page(arxivid)
+
 
 def _add_an_alert(data: Dict[str, Any]) -> Dict[str, Any]:
     alert_title = "Title here"

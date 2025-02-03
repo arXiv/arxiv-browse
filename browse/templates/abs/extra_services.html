@@ -62,6 +62,9 @@
   <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other Formats</a></li>
       {%- endif -%}
     {%- endfor -%}
+    {%- if has_audio -%}
+  <li><a href="{{url_for('browse.audio_landing_page', arxivid=requested_id)}}" class="abs-button download-audio">Audio <b>(New)</b></a></li>
+    {% endif %}
   {%- endif -%}
 </ul>
 {%- endmacro -%}

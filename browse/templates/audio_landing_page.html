@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Audio for {{arxiv_idv}}{% endblock %}
+
+{% block header_h1 %}
+<h1>
+<a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
+<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_idv}}</a> &gt audo
+</h1>
+{% endblock %}
+
+{% block content %}
+{% if 'sciencecast' in audio_urls %}
+   Sciencecast:
+    {% if audio_urls['sciencecast'].url %}
+        <a href="{{audio_urls['sciencecast'].url}}">Audio summary of {{arxiv_idv}}</a>
+    {% elif audio_urls['sciencecast'].not_available_reason %}
+        {{audio_urls['sciencecast'].not_available_reason}}
+    {% else %}
+        Paper not available from sciencecast yet.
+    {% endif %}
+{% endif %}
+
+{% endblock %}
