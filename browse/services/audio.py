@@ -21,7 +21,7 @@ class AudioLink(BaseModel):
 
 
 def get_audio_urls(metadata: DocMetadata) -> Dict[str, AudioLink]:
-    if metadata.primary_category and metadata.primary_category.in_archive == "astro-ph":
+    if metadata.primary_category and metadata.primary_category.id == "astro-ph.HE":
         return {AudioProvider.SCIENCECAST:
                     AudioLink(service=AudioProvider.SCIENCECAST,
                           url=f"https://sciencecast.org/papers/{DOI_PREFIX}/arXiv.{metadata.arxiv_id}",
@@ -32,7 +32,7 @@ def get_audio_urls(metadata: DocMetadata) -> Dict[str, AudioLink]:
                     AudioLink(service=AudioProvider.SCIENCECAST,
                           url=None,
                           not_available_reason="This paper's area is not yet supported. "
-                                               "Sciencecast only supports astro-ph. ")}
+                                               "Sciencecast currently only supports astro-ph.HE ")}
 
 
 def has_audio(metadata: DocMetadata) -> bool:

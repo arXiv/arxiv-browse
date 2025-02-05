@@ -15,15 +15,19 @@
         <h1>Audio Options for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_id}}</a></h1>
 
         {% if 'sciencecast' in audio_urls %}
-           <h2>Sciencecast</h2>
-            {% if audio_urls['sciencecast'].url %}
-                <a href="{{audio_urls['sciencecast'].url}}">Access</a>
-            {% elif audio_urls['sciencecast'].not_available_reason %}
-                {{audio_urls['sciencecast'].not_available_reason}}
-            {% else %}
-                Paper not yet available from Sciencecast.
-            {% endif %}
-            <p>60-second AI generated audio summary. Note: audio summaries are generated upon paper submission.</p>
+            <div>
+                <h2>ScienceCast</h2>
+                60-second AI generated audio summary. <br>Note: audio summaries are generated upon paper submission.
+                <p>
+                    {% if audio_urls['sciencecast'].url %}
+                        <a href="{{audio_urls['sciencecast'].url}}">Visit ScienceCast to listen</a>
+                    {% elif audio_urls['sciencecast'].not_available_reason %}
+                        {{audio_urls['sciencecast'].not_available_reason}}
+                    {% else %}
+                        Paper not yet available from Sciencecast.
+                    {% endif %}
+                </p>
+            </div>
         {% endif %}
 
         {% if not audio_urls %}
