@@ -1,5 +1,5 @@
 """Controller for audio page."""
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 
 from arxiv.identifier import Identifier
 from arxiv.integration.fastly.headers import add_surrogate_key
@@ -10,7 +10,7 @@ from browse.services.audio import get_audio_urls
 from browse.services.documents import get_doc_service
 
 
-def audio_landing_page(arxiv_id: str):
+def audio_landing_page(arxiv_id: str) -> Tuple:
     headers: Dict[str, str] = {}
     if not Identifier.is_mostly_safe(arxiv_id):
         raise AbsNotFound(data={"reason": "poorly formatted paper id"})

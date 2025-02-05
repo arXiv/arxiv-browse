@@ -470,7 +470,7 @@ def a (id: str, ext: str):  # type: ignore
     return render_template('list/author.html', **response), code, headers
 
 @blueprint.route('audio/<path:arxivid>', methods=['GET'])
-def audio_landing_page(arxivid: str):
+def audio_landing_page(arxivid: str):  # type: ignore
     return audio.audio_landing_page(arxivid)
 
 
