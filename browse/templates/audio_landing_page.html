@@ -5,20 +5,31 @@
 {% block header_h1 %}
 <h1>
 <a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
-<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_idv}}</a> &gt audo
+<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_idv}}</a> &gt audio
 </h1>
 {% endblock %}
 
 {% block content %}
-{% if 'sciencecast' in audio_urls %}
-   Sciencecast:
-    {% if audio_urls['sciencecast'].url %}
-        <a href="{{audio_urls['sciencecast'].url}}">Audio summary of {{arxiv_idv}}</a>
-    {% elif audio_urls['sciencecast'].not_available_reason %}
-        {{audio_urls['sciencecast'].not_available_reason}}
-    {% else %}
-        Paper not available from sciencecast yet.
-    {% endif %}
-{% endif %}
+<div>
+    <div>
+        <h1>Audio Options for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_id}}</a></h1>
 
+        {% if 'sciencecast' in audio_urls %}
+           <h2>Sciencecast</h2>
+            {% if audio_urls['sciencecast'].url %}
+                <a href="{{audio_urls['sciencecast'].url}}">Access</a>
+            {% elif audio_urls['sciencecast'].not_available_reason %}
+                {{audio_urls['sciencecast'].not_available_reason}}
+            {% else %}
+                Paper not yet available from Sciencecast.
+            {% endif %}
+            <p>60-second AI generated audio summary. Note: audio summaries are generated upon paper submission.</p>
+        {% endif %}
+
+        {% if not audio_urls %}
+            <div>No audio links for {{arxiv_id}}.</div>
+        {% endif %}
+    </div>
+
+</div>
 {% endblock %}

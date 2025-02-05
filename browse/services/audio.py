@@ -5,6 +5,9 @@ from typing import Optional, List, Dict
 from arxiv.document.metadata import DocMetadata
 from pydantic import BaseModel
 
+DOI_PREFIX = "10.48550"
+"""arXiv's DOI_PREFIX."""
+
 class AudioProvider(StrEnum):
     """Ids for audio provider services."""
     SCIENCECAST = "sciencecast"
@@ -21,7 +24,7 @@ def get_audio_urls(metadata: DocMetadata) -> Dict[str, AudioLink]:
     if metadata.primary_category and metadata.primary_category.in_archive == "astro-ph":
         return {AudioProvider.SCIENCECAST:
                     AudioLink(service=AudioProvider.SCIENCECAST,
-                          url=f"https://sciencecast.ai/arxiv/{metadata.arxiv_id_v}",
+                          url=f"https://sciencecast.org/papers/{DOI_PREFIX}/arXiv.{metadata.arxiv_id}",
                           )
                 }
     else:
