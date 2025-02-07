@@ -36,7 +36,7 @@
     <dd>
       <div class='meta'>
         <div class='list-title mathjax'><span class='descriptor'>Title:</span>
-          {{article.title}}
+          {{article.title|tex2utf}}
         </div>
         <div class='list-authors'>
           {{- do_author_list( article ) -}}
