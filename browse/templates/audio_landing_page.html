@@ -5,19 +5,19 @@
 {% block header_h1 %}
 <h1>
 <a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
-<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_idv}}</a> &gt audio
+<a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">{{abs_meta.arxiv_id_v}}</a> &gt audio
 </h1>
 {% endblock %}
 
 {% block content %}
 <div>
     <div>
-        <h1>Audio Options for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_id}}</a></h1>
-
+        <h1>Audio for {{abs_meta.arxiv_id}}: {{abs_meta.title}}</h1>
+        <a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">< Return to abstract page</a>
         {% if 'sciencecast' in audio_urls %}
             <div>
-                <h2>ScienceCast</h2>
-                60-second AI generated audio summary. <br>Note: audio summaries are generated upon paper submission.
+                <h2>ScienceCast Audio Summary</h2>
+                60-second AI-generated audio summary created during paper submission process. <a href="https://sciencecast.org/">Learn more about ScienceCast.</a>
                 <p>
                     {% if audio_urls['sciencecast'].url %}
                         <a href="{{audio_urls['sciencecast'].url}}">Visit ScienceCast to listen</a>
@@ -31,7 +31,7 @@
         {% endif %}
 
         {% if not audio_urls %}
-            <div>No audio links for {{arxiv_id}}.</div>
+            <div>No audio links for {{abs_meta.arxiv_id}}.</div>
         {% endif %}
     </div>
 

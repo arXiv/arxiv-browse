@@ -19,7 +19,6 @@ def audio_landing_page(arxiv_id: str) -> Tuple:
     headers = add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.id}", "audio-landing"])
     abs_meta = get_doc_service().get_abs(arxiv_identifier)
     data = {'audio_urls': get_audio_urls(abs_meta),
-            "arxiv_idv": abs_meta.arxiv_id_v,
-            "arxiv_id": abs_meta.arxiv_id,
+            "abs_meta": abs_meta
             }
     return render_template('audio_landing_page.html', **data), 200, headers
