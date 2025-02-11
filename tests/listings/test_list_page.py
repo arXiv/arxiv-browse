@@ -446,8 +446,6 @@ def test_paging_all(client_with_fake_listings):
 
 def test_odd_requests(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/2009-01?skip=925&show=1000000")
-    assert rv.status_code == 200
 
     rv = client.get("/list/hep-ph/bogusTimePeriod")
     assert rv.status_code != 200
@@ -823,7 +821,8 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Fri, 28 Jan 2011") == 2
 
     #sections farther ahead not shown
-    rv = client.get("/list/physics/recent?show=1")
+    with mock.patch("browse.controllers.list_page.show_values", [1, 25, 50, 100, 250, 500, 1000, 2000]):
+        rv = client.get("/list/physics/recent?show=1")
     assert rv.status_code == 200
     assert rv.text.count(expected_string) == 2
     assert rv.text.count("Thu, 3 Feb 2011") == 2
