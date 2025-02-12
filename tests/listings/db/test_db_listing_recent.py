@@ -155,7 +155,8 @@ def test_recent_pagination(app_with_db):
 @mock.patch.object(list_page, 'min_show', 1)
 def test_recent_listing_page_pagination(client_with_db_listings):
     client = client_with_db_listings
-    rv = client.get("/list/math/recent?show=1")
+    with mock.patch("browse.controllers.list_page.show_values", [1, 25, 50, 100, 250, 500, 1000, 2000]):
+        rv = client.get("/list/math/recent?show=1")
     assert rv.status_code == 200
     text = rv.text
     assert "Thu, 3 Feb 2011 (showing first 1 of 2 entries )" in text
@@ -171,7 +172,7 @@ def test_recent_listing_page_pagination(client_with_db_listings):
 
 def test_minimum_show(client_with_db_listings):
     client = client_with_db_listings
-    rv = client.get("/list/math/recent?show=1")
+    rv = client.get("/list/math/recent?show=25")
     assert rv.status_code == 200
     text = rv.text
     assert "Thu, 3 Feb 2011 (showing 2 of 2 entries )" in text
@@ -181,7 +182,8 @@ def test_minimum_show(client_with_db_listings):
 @mock.patch.object(list_page, 'min_show', 1)
 def test_recent_page_links( client_with_db_listings):
     client = client_with_db_listings
-    rv = client.get("/list/math/recent?show=2")
+    with mock.patch("browse.controllers.list_page.show_values", [2, 25, 50, 100, 250, 500, 1000, 2000]):
+        rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text
     assert '<a href="/list/math/recent?skip=4&amp;show=2">\n          Fri, 28 Jan 2011\n        </a>' in text
@@ -189,12 +191,14 @@ def test_recent_page_links( client_with_db_listings):
     assert '<a href="/list/math/recent?skip=2&amp;show=2">\n          Wed, 2 Feb 2011\n        </a>' in text
     assert '<a href="/list/math/recent?skip=0&amp;show=2">\n          Thu, 3 Feb 2011\n        </a>' in text
 
-def test_minimum_pagination( client_with_db_listings):
+def test_bad_pagination( client_with_db_listings):
     client = client_with_db_listings
     rv = client.get("/list/math/recent?show=2")
-    assert rv.status_code == 200
-    text = rv.text
-    assert '<a href="/list/math/recent?skip=4&amp;show=25">\n          Fri, 28 Jan 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=3&amp;show=25">\n          Tue, 1 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=2&amp;show=25">\n          Wed, 2 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=0&amp;show=25">\n          Thu, 3 Feb 2011\n        </a>' in text
+    assert rv.status_code == 400
+    assert 'Invalid show value.' in rv.text
+    rv = client.get("/list/math/recent?show=3000")
+    assert rv.status_code == 400
+    assert 'Invalid show value.' in rv.text
+    rv = client.get("/list/math/recent?show=247")
+    assert rv.status_code == 400
+    assert 'Invalid show value.' in rv.text

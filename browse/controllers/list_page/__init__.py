@@ -181,13 +181,17 @@ def get_listing(subject_or_category: str,
     else:
         skipn = int(skip)
 
-    if not show or not show.isdigit():
+    if show:
+        if show.isdigit() and int(show) in show_values:
+            shown=int(show)
+        else:
+            raise BadRequest(f"Invalid show value. Valid values: {', '.join(map(str, show_values))}")
+    else:
         if time_period == 'new':
             shown = max_show
         else:
             shown = default_show
-    else:
-        shown = max(min(int(show), max_show), min_show)
+
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
