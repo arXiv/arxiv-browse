@@ -1,3 +1,5 @@
+from datetime import date
+
 
 from browse.services.database.listings import (
     _process_yearly_article_counts,
@@ -158,3 +160,29 @@ def test_finds_archives_with_no_categories(app_with_db):
         assert year1 == get_yearly_article_counts(
             "gr-qc", 2009
         )  
+
+
+def test_surrogate_keys(client_with_db_listings):
+    client=client_with_db_listings
+    this_year=date.today().year
+
+    rv = client.head("/year/math")
+    head=rv.headers["Surrogate-Key"]
+    assert " year " in " "+head+" "
+    assert "year-math" in head
+    assert "announce" in head
+    assert f"year-math-{this_year}" in head
+
+    rv = client.head("/year/hep-lat/2023")
+    head=rv.headers["Surrogate-Key"]
+    assert " year " in " "+head+" "
+    assert "year-hep-lat" in head
+    assert "announce" not in head
+    assert "year-hep-lat-2023" in head
+    
+    rv = client.head(f"/year/astro-ph/{this_year}")
+    head=rv.headers["Surrogate-Key"]
+    assert " year " in " "+head+" "
+    assert "year-astro-ph" in head
+    assert "announce" in head
+    assert f"year-astro-ph-{this_year}" in head

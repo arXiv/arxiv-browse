@@ -1,9 +1,8 @@
 {%- import 'base/macros.html' as base_macros -%}
 {%- import 'user_banner.html' as user_banner -%}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
   {%- block head -%}
@@ -16,7 +15,7 @@
   <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20230622" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20241206" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
@@ -35,6 +34,28 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
+
+
+        {%- if rd_int >= 202407110100 and rd_int <= 202409132330 -%}
+        <div class="column banner-minimal forum">
+            <!-- /from July 7 at 1:00 AM to Sept 2 at 1:00 AM -->
+            {%- if rd_int >= 202407110100 and rd_int <= 202409020100 -%}
+            <p>arXiv's Accessibility Forum starts next month!</p>
+            <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y" target="_blank">Sign Up</a>
+
+            <!-- /from Sept 2 at 1:00 AM to Sept 13 at 11:30PM -->
+            {%- elif rd_int > 202409020100 and rd_int <= 202409132330 -%}
+            <p>This week: the arXiv Accessibility Forum</p>
+            <a href="https://accessibility2024.arxiv.org/schedule" target="_blank">Forum Schedule</a>
+            {%- endif -%}
+        </div>
+        {%- endif -%}
+
+
+
+
+
+
         {%- if rd_int >= 202403120100 and rd_int <= 202403150100 -%}
         <div class="column">
           <p>Pi Day is Giving Day: arXiv depends on donations to operate and keep science open for all.
@@ -45,12 +66,6 @@
         </div>
         {%- endif -%}
 
-        {%- if rd_int >= 202311270100 and rd_int <= 202311290100 -%}
-        <div class="column banner-minimal">
-          <p><a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_8wAZvATbZvWU2vc" target="_blank">Take the annual global survey</a></p>
-        </div>
-        {%- endif -%}
-
         {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
         <div class="column">
             <a href="https://info.arxiv.org/help/cloud.html"><span style="color:white;text-decoration-line:underline;">
@@ -58,16 +73,23 @@
             </span></a>
         </div>
         {%- endif -%}
-
+        {%- if rd_int >= 202501160100 and rd_int <= 202502040100 -%}
+          <div class="column banner-minimal">
+            <p>In just 3 minutes help us improve arXiv:</p>
+            <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_6m22mbqW9GQ3pQO" target="_blank">Annual Global Survey</a>
+          </div>
+        {%- endif -%}
         <div class="column" id="support-ack">
-          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors. <a href="https://info.arxiv.org/about/donate.html">Donate</a></span>
+          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors.</span>
+          <a href="https://info.arxiv.org/about/donate.html" class="btn-header-donate">Donate</a>
         </div>
       </div>
 
       <div id="header" class="is-hidden-mobile">
         {% block header %}
-        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt. aria-hidden prevents screenreaders from being caught. -#}
-        <a aria-hidden="true" href="{url_path('ignore_me')}"></a>
+        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt.
+            aria-hidden prevents screenreaders from being caught, and tabindex prevents it from being selectable via the tab key. -#}
+        <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
         {% block login_link %}{% endblock %}
         {{ base_macros.compactsearch() }}

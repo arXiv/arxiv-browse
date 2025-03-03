@@ -37,3 +37,33 @@ class TestFormats(TestCase):
                              ['html', 'other'])
         self.assertListEqual(formats_from_source_flag('X'),
                              ['pdf', 'other'])
+
+def test_encrypted(client_with_test_fs):
+    """Tests when there is no dissemination file for an existing tex version"""
+    resp = client_with_test_fs.get("/format/0704.0380")
+    assert resp.status_code == 200
+    assert 'Download Source' not in resp.text
+    assert '/src/0704.0380' not in resp.text
+
+    resp = client_with_test_fs.get("/format/0704.0945v2")
+    assert resp.status_code == 200
+    assert 'Download Source' not in resp.text
+    assert '/src/0704.0945v2' not in resp.text
+
+
+def test_format_headers(client_with_test_fs):
+    client=client_with_test_fs
+
+    rv=client.head("/format/1601.04345")
+    head=rv.headers["Surrogate-Key"]
+    assert " format " in " "+head+" "
+    assert "paper-id-1601.04345-current" in head
+    assert "paper-id-1601.04345v" not in head
+    assert "paper-id-1601.04345 " in head+" "
+
+    rv=client.head("/format/1601.04345v2")
+    head=rv.headers["Surrogate-Key"]
+    assert " format " in " "+head+" "
+    assert "paper-id-1601.04345-current" not in head
+    assert "paper-id-1601.04345v2" in head
+    assert "paper-id-1601.04345 " in head+" "

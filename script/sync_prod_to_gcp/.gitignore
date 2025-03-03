@@ -2,3 +2,10 @@ sync.venv
 test/test-output/
 test/arxiv-development_arxiv-stanza.json
 test/stanza.db
+/sync-test.json
+/test/cache/ps_cache/arxiv/pdf/2308/*.pdf
+/test/cache/ps_cache/arxiv/pdf/1907/*.pdf
+/test/arxiv-development_sync-test.json
+arxiv-development-38ce4ed90aae.json
+/test/cache/ps_cache/physics/pdf/0106/0106051v3.pdf
+/test/cache/ps_cache/arxiv/pdf/0106/physics/0106051v3.pdf

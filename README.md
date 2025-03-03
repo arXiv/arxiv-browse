@@ -8,17 +8,21 @@ You can run the browse app directly.
 make venv
 ````
 
+(the make rarely works)
+
 or 
 
 ```bash
 python --version
-# 3.10.x
+# 3.11.x
 python -m venv ./venv
 source ./venv/bin/activate
 pip install poetry==1.3.2
 poetry install
 python main.py
 ```
+Note -- make sure you have python dev installed befoore doing the above steps, or the `poetry install` will fail trying to build the mySQL library dependency. E.g.: `sudo apt-get install python3.11-dev`
+
 Then go to http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and restart the server.
@@ -30,29 +34,58 @@ By default, the application will use the directory trees in
 metadata and PDF files. These paths can be overridden via environment variables
 (see `browse/config.py`).
 
-### Running Browse with .env file
+This method will only give you access to minimal data in the built-in test
+dataset. For full (read-only) access to the production database, the following
+steps are necessary:
+
+## Running with access to the production database
+
+Prerequisites:
+you are logged into gcloud and have default application credentials. This
+can be achieved by calling `gcloud auth login --update-adc --force` and
+logging into your @arxiv.org account.
+
+Next, **all** the following steps have to be done.
+
+Also, in the following we assume that you two port variable set in the environment:
+```
+MAIN_DB_PORT=3301
+LATEXML_DB_PORT=3302
+```
+(the numbers are not important, but must be different)
+
+### Create a .env file
 
 First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
 
-    export GOOGLE_APPLICATION_CREDENTIALS=<Your SA credential>
-    export BROWSE_SQLALCHEMY_DATABASE_URI="mysql://browse:<BROWSE_PASSWORD>@127.0.0.1:1234/arXiv"
-    export DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
-    export DOCUMENT_LATEST_VERSIONS_PATH=gs://arxiv-production-data/ftp
-    export DOCUMENT_ORIGINAL_VERSIONS_PATH=gs://arxiv-production-data/orig
-    export DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
-    export DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
-    export DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
-    export LATEXML_ENABLED=True
-    export LATEXML_INSTANCE_CONNECTION_NAME=arxiv-production:us-central1:latexml-db
-    export LATEXML_BASE_URL=https://browse.arxiv.org/latexml
-    export FLASKS3_ACTIVE=1
+```
+DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
+ABS_PATH_ROOT=gs://arxiv-production-data
+DOCUMENT_CACHE_PATH=gs://arxiv-production-data/ps_cache
+DOCUMENT_LISTING_PATH=gs://arxiv-production-data/ftp
+DISSEMINATION_STORAGE_PREFIX=gs://arxiv-production-data
+LATEXML_ENABLED=True
+LATEXML_BUCKET="gs://latexml_document_conversions"
+LATEXML_BASE_URL=//127.0.0.1:8080
+FLASKS3_ACTIVE=1
+CLASSIC_DB_URI=" SEE BELOW "
+LATEXML_DB_URI=" SEE BELOW "
+```
 
-You need a SA cred to access the db, and the cloud-sql-proxy running.
-For LATEXML_INSTANCE_CONNECTION_NAME, you may need to ask someone who knows the db.
-(This is obviously a production DB.)
+The value of `CLASSIC_DB_URI` one can obtain by
+```
+MAIN_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=readonly-arxiv-db-uri)
+echo $MAIN_SECRET | sed -e "s#/arXiv.*#127.0.0.1:${MAIN_DB_PORT}/arXiv#"
+```
 
-You can find the browse password here:
-https://console.cloud.google.com/security/secret-manager/secret/browse-sqlalchemy-db-uri/versions?project=arxiv-production
+The value of `LATEXML_DB_URI` one can obtain by
+```
+LATEXML_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=latexml_db_uri_psycopg2)
+echo $LATEXML_SECRET | sed -e "s#/latexmldb.*#127.0.0.1:${LATEXML_DB_PORT}/latexmldb#"
+```
+
+
+
 
 If you have a PyCharm,
 script: main.py
@@ -61,33 +94,38 @@ Enable env files
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-run-setting.png)
 
-### SA Credentials
-
-Your SA needs followings:
-
-* Cloud SQL Client
-* Secret Manager Secret Accessor
-* Storage Object Viewer
-
-Save the private key somewhere on your local machine. Optionally save it in 1password.
 
 ### Running cloud-sql-proxy
 
-Once you have the google SA private key, you can run the cloud-sql-proxy.
+You can obtain the database name `MAIN_DB_NAME` from the same `$SECRET` as in the previous step:
+```
+MAIN_DB_NAME=$(echo $MAIN_SECRET | sed -e "s#^.*unix_socket=/cloudsql/##")
+```
 
-```bash
-main proxy
-``` 
+Similar, for the `LATEXML_DB_NAME` one needs to do
+```
+LATEXML_DB_NAME=$(echo $LATEXML_SECRET | sed -e "s#^.*host=/cloudsql/##")
+```
 
-NOTE: cloud_sql_proxy and cloud-sql-proxy (new) have different options.
-In this, only describes the new as you probably don't have the old one.
 
-	cloud-sql-proxy --address 0.0.0.0 --port 1234 arxiv-production:us-east4:arxiv-production-rep4
+NOTE: `cloud_sql_proxy` and `cloud-sql-proxy` (new) have different options.
+
+```
+cloud-sql-proxy --address 0.0.0.0 --port ${MAIN_DB_PORT} ${MAIN_DB_NAME}
+cloud-sql-proxy --address 0.0.0.0 --port ${LATEXML_DB_PORT} ${LATEXML_DB_NAME}
+```
+
+For the old version
+```
+cloud_sql_proxy --instances=${MAIN_DB_NAME}=tcp:${MAIN_DB_PORT}
+cloud_sql_proxy --instances=${LATEXML_DB_NAME}=tcp:${LATEXML_DB_PORT}
+```
+
 
 If the proxy is working, you can use mysql client to connect to the db.
 
 ```bash
-mysql -u browse -p --host 127.0.0.1 --port 1234 arXiv
+mysql -u browse -p --host 127.0.0.1 --port ${MAIN_DB_PORT} arXiv
 Enter password: 
 ...
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
@@ -98,6 +136,15 @@ mysql> show tables;
 +------------------------------------------+
 | Subscription_UniversalInstitution        |
 ````
+
+### Run the main server
+
+Run
+```
+python main.py`
+```
+should start up and run 
+
 
 ### Test suite
 
@@ -155,7 +202,7 @@ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 pytest tests
 ```
 
-### Settinp up pytest in PyCharm
+### Setting up pytest in PyCharm
 
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 

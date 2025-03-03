@@ -1,7 +1,7 @@
 """Archive landing page."""
 
-import datetime
-from typing import Any, Dict, List, Tuple
+from datetime import datetime
+from typing import Any, Dict, List, Tuple, Optional
 from http import HTTPStatus as status
 
 from arxiv.taxonomy.definitions import (
@@ -11,6 +11,7 @@ from arxiv.taxonomy.definitions import (
     CATEGORIES
 )
 from arxiv.taxonomy.category import Category, Archive
+from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm
@@ -18,10 +19,12 @@ from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
 
 
-def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
+    response_headers["Surrogate-Control"]="max-age=86400" #one day
+    response_headers=add_surrogate_key(response_headers,["archive"])
 
     if not archive_id or archive_id == "list":
         return archive_index("list", status_in=status.OK)
@@ -35,8 +38,6 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         return archive_index(archive_id,
                                  status_in=status.NOT_FOUND)
 
-    _write_expires_header(response_headers)
-
     if archive.is_active==False: #subsumed archives
         subsuming_category=archive.get_canonical()
         if not isinstance(subsuming_category, Category):
@@ -47,15 +48,14 @@ def get_archive(archive_id: str) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
         archive = subsuming_category.get_archive()
 
     years = years_operating(archive)
-    data["years"] = years
+    data["years"] = [datetime.now().year, datetime.now().year-1] #only last 90 days allowed anyways
     data["months"] = MONTHS
     data["days"] = DAYS
     data["archive"] = archive
     data["list_form"] = ByMonthForm(archive, years)
     data["stats_by_year"] = stats_by_year(archive, years)
     data["category_list"] = category_list(archive)
-
-    data["catchup_to"] = datetime.date.today() - datetime.timedelta(days=7)
+    data["current_month"] = datetime.now().strftime('%m')
     data["template"] = "archive/single_archive.html"
     return data, status.OK, response_headers
 
@@ -81,7 +81,9 @@ def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], 
     data["defunct"] = defunct
 
     data["template"] = "archive/archive_list_all.html"
-    return data, status_in, {}
+    headers: Dict[str,str]={}
+    headers=add_surrogate_key(headers,["archive"])
+    return data, status_in, headers
 
 
 def category_list(archive: Archive) -> List[Category]:

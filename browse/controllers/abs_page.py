@@ -9,15 +9,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
 from http import HTTPStatus as status
-
-from arxiv.base import logging
 from dateutil import parser
 from dateutil.tz import tzutc
-from flask import request, url_for
+from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
-from browse.controllers import check_supplied_identifier
-
+from arxiv.base import logging
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES
 from arxiv.taxonomy.category import Category
 from arxiv.identifier import (
@@ -32,6 +29,8 @@ from arxiv.document.exceptions import (
     AbsNotFoundException,
     AbsVersionNotFoundException,
 )
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.exceptions import AbsNotFound
 from browse.services.database import (
     count_trackback_pings,
@@ -43,7 +42,7 @@ from browse.services.database import (
 )
 from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
-
+from browse.controllers import check_supplied_identifier
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -97,7 +96,7 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-
+        response_headers=add_surrogate_key(response_headers,[f"abs-{arxiv_identifier.id}", f"paper-id-{arxiv_identifier.id}"])
         redirect = check_supplied_identifier(arxiv_identifier, "browse.abstract")
         if redirect:
             return redirect
@@ -143,6 +142,10 @@ def get_abs_page(arxiv_id: str) -> Response:
                     response_data["higher_version_withdrawn"] = True
                     response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier,
                                                                                          ver.version)
+
+        response_data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
+        response_data["show_refs_cites"] = _show_refs_cites(arxiv_identifier)
+        response_data["show_labs"] = _show_labs(arxiv_identifier)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
@@ -235,12 +238,10 @@ def _check_request_headers(
         last_mod_dt = response_data["trackback_ping_latest"]
 
     resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
-
-    #resp_headers["Expires"] = abs_expires_header(biz_tz())
-    # Above we had a Expires: based on publish time but admins wanted shorter when
-    # handling service tickets.
-    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
-    resp_headers["Cache-Control"] = "max-age=3600"
+    # surrogate-control is used by caching servers like fastly. Caching services may strip this
+    resp_headers["Surrogate-Control"] = f"max-age={current_app.config.get('ABS_CACHE_MAX_AGE')}"
+    # cache-control is used by browsers, set shorter so refreshes happen on browsers
+    resp_headers["Cache-Control"] = f"max-age=3600"
 
     mod_since_dt = _time_header_parse("If-Modified-Since")
     return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
@@ -305,15 +306,10 @@ def _prevnext_links(
     ):
         context = request.args["context"]
     elif primary_category:
-        pc = primary_category.get_canonical()
-        if not arxiv_identifier.is_old_id:  # new style IDs
-            context = pc.id
-        else:  # Old style id
-            if pc.id in ARCHIVES:
-                context = pc.id
-            else:
-                if arxiv_identifier.archive in ARCHIVES:
-                    context = arxiv_identifier.archive
+        context = primary_category.canonical_id
+    elif arxiv_identifier.is_old_id: 
+        if arxiv_identifier.archive in ARCHIVES: #context from old style id
+                    context=ARCHIVES[arxiv_identifier.archive].canonical_id
 
     response_data["browse_context"] = context
     response_data["browse_context_previous_url"] = url_for(
@@ -384,3 +380,21 @@ def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str
         return abs_meta.submitter.name or None
     except:
         return None
+
+def _show_refs_cites(arxiv_id: Identifier) -> bool:
+    NO_REFS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_REFS_IDS:
+        return False
+    else:
+        return True
+    
+def _show_labs(arxiv_id: Identifier) -> bool:
+    NO_LABS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_LABS_IDS:
+        return False
+    else:
+        return True

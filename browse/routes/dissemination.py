@@ -1,12 +1,13 @@
 """Routes for PDF, source and other downloads."""
-from typing import Optional
+from typing import Optional, Dict
 from flask import Blueprint, redirect, url_for, Response, render_template, request
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.services.documents import get_doc_service
-from browse.services.dissemination import get_article_store
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.files import fileformat
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.controllers.files.dissemination import get_dissemination_resp, get_html_response, get_pdf_resp
 from browse.controllers import check_supplied_identifier
 
@@ -56,15 +57,10 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
 
     Does a 404 if the key for the ID does not exist on the bucket.
     """
+
+    if request.query_string: # redirect to strip off any useless query strings
+        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive, _external=True), 301)
     return get_pdf_resp(arxiv_id, archive)
-
-@blueprint.route("/pdf_test/<string:archive>/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-@blueprint.route("/pdf_test/<string:arxiv_id>.pdf", methods=['GET', 'HEAD'])
-def pdf_test(arxiv_id: str, archive=None):  # type: ignore
-    """Path to test pdf via fastly.
-
-    Can be removed when no longer needed."""
-    return get_dissemination_resp(fileformat.pdf, arxiv_id, archive)
 
 
 @blueprint.route("/format/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -85,12 +81,19 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     data = {"arxiv_id": arxiv_identifier.id,
             "arxiv_idv": arxiv_identifier.idv,
             "abs_meta": abs_meta}
+    data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
 
     formats = data["formats"] = abs_meta.get_requested_version().formats()
     for fmt in formats:
         data[fmt] = True
     # TODO DOCX doesn't seem like the url_for in the template will work correctly with the .docx?
-    return render_template("format.html", **data), 200, {}  # type: ignore
+    headers: Dict[str,str]={}
+    headers=add_surrogate_key(headers,["format", f"paper-id-{arxiv_identifier.id}"])
+    if arxiv_identifier.has_version: 
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.idv}"])
+    else:
+        headers=add_surrogate_key(headers,[f"paper-id-{arxiv_identifier.id}-current"])
+    return render_template("format.html", **data), 200, headers # type: ignore
 
 
 @blueprint.route("/dvi/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -104,7 +107,7 @@ def dvi(arxiv_id: str) -> Response:
 @blueprint.route("/html/<string:arxiv_id>/", methods=['GET', 'HEAD'])
 def html(arxiv_id: str, archive=None):  # type: ignore
     """get html for article"""
-    return get_html_response(arxiv_id,archive)
+    return get_html_response(arxiv_id, archive)
 
 
 @blueprint.route("/ps/<arxiv_id>")

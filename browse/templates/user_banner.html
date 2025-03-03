@@ -19,80 +19,58 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START = '20240314' %}
-{% set BANNER_END = '20240315' %}
-
+{% set BANNER_START_1 = 202412120000 %}
+{% set BANNER_END_1 = 202412312359 %}
+{% set SLIDE = True %}
 
 {%- macro content(request_datetime) -%}
-{%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
-<aside class="slider-wrapper bps-banner">
-  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation bps-banner">
-    <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Happy π Day!</h1>
-    <p>Pi Day is finally here – and so is Giving Day for arXiv!
-      <a href="https://givingday.cornell.edu/campaigns/arxiv" target="_blank">Donate today</a>
-      to directly support arXiv initiatives and help keep open science open.
-      <br/><b>Infinite decimals. Infinite new ideas to discover. Infinite reasons to give.</b>
-    </p>
-  </div>
-  <div class="amount-donation bps-banner">
-    <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank"
-           href="https://givingday.cornell.edu/campaigns/arxiv"><b>Donate</b></a>
-      </div>
-    </div>
-  </div>
-</aside>
-{%- endif -%}
+    {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+
+    {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
+      {#  Dec 12 - Dec 31 #}
+      <aside class="slider-wrapper bps-banner special-color">
+       <div class="columns">
+          <div class="copy-donation bps-banner">
+            <h2>Change to arXiv's privacy policy</h2>
+            <p>The <a target="_blank" href="https://info.arxiv.org/help/policies/privacy_policy.html">arXiv Privacy Policy</a> has changed. By continuing to use arxiv.org, you are agreeing to the privacy policy.</p>
+          </div>
+          <div class="amount-donation bps-banner">
+            <div class="donate-cta"><a class="banner_link banner-btn-grad do-close-slider" href="#"><b>I Understand</b></a></div>
+          </div>
+        </div>
+      </aside>
+    {%- endif -%}
+
 {%- endmacro -%}
+
+
 
 {%- macro script(request_datetime) -%}
-{%- if (BANNER_START <= request_datetime.strftime('%Y%m%d')) and (BANNER_END > request_datetime.strftime('%Y%m%d')) %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=1.1" />
-  <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}"></script>
-{%- endif -%}
+
+  {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+  {%- if (SLIDE and (BANNER_START_1|int <= now) and (BANNER_END_1|int > now)) -%}
+    {# only run this script while a banner is active #}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20241211" />
+    <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=121124"></script>
+  {%- endif -%}
 {%- endmacro -%}
 
-{#################### disabled example banners ####################}
 
-{#{%- if BANNER_START <= request_datetime.strftime('%Y%m%d') and BANNER_END > request_datetime.strftime('%Y%m%d') %}
-{# accessibility CTA banner #}
-<aside class="slider-wrapper bps-banner dark" style="display:none">
-  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation bps-banner">
-    <h1>arXiv Forum: How do we make accessible research papers a reality?</h1>
-    <p>If research isn't accessible, can we really call it "Open" Science?
-      In response to the high interest in this event we have expanded our online hosting capacity and re-opened registration. <a href="https://info.arxiv.org/about/accessibility_forum.html">Grab your seat</a>.</p>
-  </div>
-  <div class="amount-donation bps-banner">
-    <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" href="https://info.arxiv.org/about/accessibility_forum.html"><b>Learn More</b></a>
+<!-- example banner setup
+
+    <aside class="slider-wrapper bps-banner forum blue">
+      <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+      <div class="columns">
+        <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
+        <div class="copy-donation bps-banner">
+          <h2>The Accessibility Forum is back!</h2>
+          <p>Coming this September, the Forum is free, virtual, and open to all. <a target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y">Sign Up</a> and <a href="https://accessibility2024.arxiv.org/" target="_blank">Learn more</a>.</p>
+        </div>
+        <div class="amount-donation bps-banner">
+          <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_eEZ1d27LF2fVM7Y"><b>Sign Up</b></a></div>
+        </div>
       </div>
-    </div>
-  </div>
-</aside>#}
-{#{%- endif -%}#}
+    </aside>
 
-{# donation banner #}
-{#<aside class="slider-wrapper bps-banner" style="display:none">
-  <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <div class="copy-donation bps-banner">
-    <img role="presentation" class="banner-smileybones-icon" width="50" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones icon" />
-    <h1>Global Survey</h1>
-    <p>In just 3 minutes help us understand <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}" target="_blank">how you see arXiv</a>.</p>
-  </div>
-  <div class="amount-donation bps-banner">
-    <div class="wrapper">
-      <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://cornell.ca1.qualtrics.com/jfe/form/SV_9BJDfYPfmvvSAGq?continent={{ session['continent']['name'] if ('continent' in session and session['continent'] != None) else '' }}"><b>TAKE SURVEY</b></a>
-      </div>
-    </div>
-  </div>
-</aside>#}
-
-{# downtime #}
-{#<aside class="slider-wrapper" style="display:none">
-  <a class="close-slider" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
-  <p><strong>Attention Users</strong>: at 8AM ET / 12PM UTC on Friday, June 21, the submission system will be unavailable for approximately 30 minutes for routine maintenance.</p>
-</aside>#}
+  -->

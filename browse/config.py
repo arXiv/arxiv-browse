@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 DEFAULT_DB = "sqlite:///tests/data/browse.db"
 TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
+DAY = 60 * 60 * 24 # one day of seconds
 
 class Settings(arxiv_base.Settings):
     """Class for settings for arxiv-browse web app."""
@@ -38,7 +39,7 @@ class Settings(arxiv_base.Settings):
     LATEXML_BASE_URL: str = ''
     """Base GS bucket URL to find the HTML."""
 
-    LATEXML_BUCKET: str = 'latexml_arxiv_id_converted'
+    LATEXML_BUCKET: str = './test/data'
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
@@ -76,6 +77,17 @@ class Settings(arxiv_base.Settings):
     BROWSE_SPECIAL_MESSAGE_ENABLED: bool = bool(int(os.environ.get("BROWSE_SPECIAL_MESSAGE_ENABLED", "0")))
     """Enable/disable the cloud list item, in the arXiv News section, in home/special-message.html"""
 
+    ABS_CACHE_MAX_AGE: int = 365 * DAY
+    """Abs page cache in seconds.
+
+    The cache-control: max-age to set for /abs pages. Max for this in the RFC is one year."""
+
+    FILE_CACHE_MAX_AGE: int = 365 * DAY
+    """PDF, src, e-print cache in seconds.
+
+    The cache-control: max-age to set for /pdf /src /e-print /html pages. Max
+    for this in the RFC is one year.
+    """
     """"========================= Services ========================="""
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.
@@ -99,22 +111,22 @@ class Settings(arxiv_base.Settings):
 
     Accepted values are:
     - `browse.services.documents.fs_docs`: DocMetadata using .abs files. Used in
-       production since 2019. If set DOCUMENT_LATEST_VERSIONS_PATH,
-       DOCUMENT_ORIGINAL_VERSIONS_PATH and DOCUMENT_CACHE_PATH need to be set.
+       production since 2019. If set ABS_PATH_ROOT needs to be set.
     - `browse.services.documents.db_docs`: DocMetadata using the database.
     """
 
-    DOCUMENT_LATEST_VERSIONS_PATH: str = "tests/data/abs_files/ftp"
-    """Paths to .abs and source files.
+    ABS_PATH_ROOT: str = "tests/data/abs_files/"
+    """Paths to .abs files.
 
-        This can start with gs:// to use Google Storage."""
-    DOCUMENT_ORIGINAL_VERSIONS_PATH: str = "tests/data/abs_files/orig"
-    """Paths to .abs and source files.
-
-        This can start with gs:// to use Google Storage.
+    This can start with gs:// to use Google Storage.
     """
-    DOCUMENT_CACHE_PATH: str = "tests/data/cache"
-    """Path to cache directory"""
+
+    SOURCE_STORAGE_PREFIX: str = "tests/data/abs_files/"
+    """Paths to source files.
+    
+    This can start with gs:// to use Google Storage. Ex
+    `gs://arxiv-production-data`. Use with `/data/` for a file system.
+    """
 
     DISSEMINATION_STORAGE_PREFIX: str = "./tests/data/abs_files/"
     """Storage prefix to use. Ex gs://arxiv-production-data
@@ -126,13 +138,23 @@ class Settings(arxiv_base.Settings):
     `./testing/data/` for testing data. Must end with a /
     """
 
-    GENPDF_API_URL: str = "https://genpdf-api.arxiv.org"
-    """URL of the genpdf API"""
+    REASONS_FILE_PATH: str = "DEFAULT"
+    """Full path to `reasons.json` file.
+
+    This can be a gs object like `gs://arxiv-production-data/reasons.json`.
+    It can also be a local file like `tests/data/reasons.json`.
+    This can be the special value "DEFAULT" which will look for `DISSEMINATION_STORAGE_PREFIX/reasons.json`."""
+
+    GENPDF_API_URL: str = ""
+    """URL of the genpdf API. https://genpdf-api.arxiv.org"""
+
+    GENPDF_SERVICE_URL: str = ""
+    """URL of the genpdf service URL. This is the original service URL on the cloud run."""
 
     GENPDF_API_TIMEOUT: int = 590
     """Time ouf for the genpdf API access"""
 
-    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/"
+    GENPDF_API_STORAGE_PREFIX: str = "./tests/data/abs_files"
     """Where genpdf stores the PDFs. It is likely the local file system does not work here but
     it is plausible to match the gs bucket with local file system, esp. for testing.
     For production, it would be:
@@ -352,19 +374,10 @@ class Settings(arxiv_base.Settings):
                 "Using sqlite in CLASSIC_DB_URI in production environment"
             )
 
-        if (self.DOCUMENT_ORIGINAL_VERSIONS_PATH.startswith("gs://")
-                and self.DOCUMENT_LATEST_VERSIONS_PATH.startswith("gs://")):
+        if self.ABS_PATH_ROOT.startswith("gs://"):
             self.FS_TZ = "UTC"
-            log.warning("Switching FS_TZ to UTC since DOCUMENT_LATEST_VERSIONS_PATH "
-                        "and DOCUMENT_ORIGINAL_VERSIONS_PATH are Google Storage")
+            log.warning("Switching FS_TZ to UTC since ABS_PATH_ROOT is Google Storage")
             if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', ''):
                 log.warning("GOOGLE_APPLICATION_CREDENTIALS is set")
             else:
                 log.warning("GOOGLE_APPLICATION_CREDENTIALS is not set")
-
-        if ("fs_docs" in str(type(self.DOCUMENT_ABSTRACT_SERVICE)) and
-                "fs_listing" in str(type(self.DOCUMENT_LISTING_PATH)) and
-                self.DOCUMENT_LATEST_VERSIONS_PATH != self.DOCUMENT_LISTING_PATH):
-            log.warning(f"Unexpected: using FS listings and abs service but FS don't match. "
-                        "latest abs at {self.DOCUMENT_LATEST_VERSIONS_PATH} "
-                        f"but listings at {self.DOCUMENT_LISTING_PATH}")

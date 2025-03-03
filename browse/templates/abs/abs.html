@@ -6,7 +6,8 @@
 
 {% block head %}
   {{ super() -}}
-  <link rel="canonical" href="{{ url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id) }}"/>
+  <link rel="canonical" href="{{ canonical_url(abs_meta.arxiv_id) }}"/>
+  <meta name="description" content="Abstract page for arXiv paper {{ requested_id }}: {{ abs_meta.title|tex2utf }}">
   {{- generate_social_media_tags() }}
   <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/tooltip.css') }}"/>
   {%- if config['LABS_ENABLED'] and config['LABS_BIBEXPLORER_ENABLED'] -%}
@@ -18,7 +19,7 @@
   <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
   <script src="//cdn.jsdelivr.net/npm/dompurify@2.3.5/dist/purify.min.js"></script>
-  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20230622" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='js/toggle-labs.js') }}?20241022" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='js/cite.js') }}" type="text/javascript"></script>
   {%- endif %}
   {{- generate_scholar_tags() }}
@@ -75,7 +76,7 @@
       )
     }}
     <div class="submission-history">
-      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}">view email</a>]
+      <h2>Submission history</h2> From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }} [<a href="/show-email/{{ abs_meta.arxiv_id|show_email_hash }}/{{ abs_meta.arxiv_id }}" rel="nofollow">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
       {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
@@ -87,10 +88,12 @@
   </div>
   <!--end leftcolumn-->
   {% include "abs/extra_services.html" %}
-  {% include "abs/labs_tabs.html" %}
+  {% if show_labs %}
+    {% include "abs/labs_tabs.html" %}
+  {% endif %}
 
   <div class="endorsers">
-    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who">Which authors of this paper are endorsers?</a> |
+    <a href="{{ url_for('.show_endorsers',arxiv_id=abs_meta.arxiv_id) }}" class="endorser-who" rel="nofollow">Which authors of this paper are endorsers?</a> |
     <a id="mathjax_toggle" href="javascript:setMathjaxCookie()">Disable MathJax</a> (<a href="{{ url_for('help_mathjax') }}">What is MathJax?</a>)
     <span class="help" style="font-style: normal; float: right; margin-top: 0; margin-right: 1em;"></span>
   </div>
@@ -112,7 +115,7 @@
     {%- if version_entry.version == this_version -%}
         <strong>[v{{ version_entry.version }}]</strong>
     {% else %}
-        <strong><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}">[v{{ version_entry.version }}]</a></strong>
+        <strong><a href="{{ url_for('.abstract', arxiv_id='{}v{}'.format(abs_meta.arxiv_id, version_entry.version)) }}" rel="nofollow">[v{{ version_entry.version }}]</a></strong>
     {% endif %}
 {%- endmacro -%}
 
@@ -324,11 +327,14 @@
               {{ base_macros.version_atag(arxiv_id, version, primary_category) }}</span> for this version)
           </td>
         </tr>
-        {%- if datacite_doi %}
         <tr>
           <td class="tablecell label">&nbsp;</td>
           <td class="tablecell arxivdoi">
-            <a href="https://doi.org/{{ datacite_doi }}">https://doi.org/{{ datacite_doi }}</a>
+            {%- if datacite_doi %}
+              <a href="https://doi.org/{{ datacite_doi }}"  id="arxiv-doi-link">https://doi.org/{{ datacite_doi }}</a>
+            {%- else %}
+              <a href="https://doi.org/10.48550/arXiv.{{ arxiv_id }}" id="arxiv-doi-link">https://doi.org/10.48550/arXiv.{{ arxiv_id }}</a>
+            {%- endif -%}
             <div class="button-and-tooltip">
               <button class="more-info" aria-describedby="more-info-desc-1">
                 <svg height="15" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
@@ -337,12 +343,15 @@
               <!-- tooltip description -->
               <div role="tooltip" id="more-info-desc-1">
                 <span class="left-corner"></span>
-                arXiv-issued DOI via DataCite
+                {%- if datacite_doi %}
+                  arXiv-issued DOI via DataCite
+                {%- else %}
+                  arXiv-issued DOI via DataCite (pending registration)
+                {%- endif -%}
               </div>
             </div>
           </td>
         </tr>
-        {%- endif -%}
         {%- if journal_ref %}
         <tr>
           <td class="tablecell label">Journal&nbsp;reference:</td>

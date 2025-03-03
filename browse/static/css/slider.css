@@ -1,3 +1,5 @@
+/* latest update: 12/11/2024*/
+
 body {
     margin: 0;
     padding: 0;
@@ -25,12 +27,15 @@ body {
     float: none;
     width: 100%;
 }
+.slider-wrapper .columns {
+  align-items: center;
+}
 .slider-wrapper .amount-donation {
     float: none;
     width: 100%;
 }
 .slider-wrapper h1 {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     font-size: 20px;
     padding: 0 20px;
@@ -42,10 +47,10 @@ body {
     text-shadow: 1px 1px #000;
 }
 .slider-wrapper a {
-    //color: #fe9600;
+    /* color: #fe9600; */
     color: #F7BB59;
     text-decoration: none;
-    //text-shadow: 1px 1px #000;
+    /* text-shadow: 1px 1px #000; */
 }
 .slider-wrapper a:hover {
     color: #78797c;
@@ -99,11 +104,9 @@ body {
     width: 155px;
 }
 .slider-wrapper .donate-cta a {
-    //background-color: #fe9600;
     background-color: #F5A623;
     border: 0 solid #9e9fa1;
     border-radius: 5px;
-    //color: #fff;
     color: #4C2F00;
     display: inline-block;
     font-size: 20px;
@@ -136,7 +139,7 @@ body {
     padding-left: 0;
     text-align: center;
 }
-@media (min-width: 900px) {
+@media (min-width: 769px) {
     .slider-wrapper .copy-donation {
         float: left;
         width: 65%;
@@ -156,7 +159,8 @@ body {
         float: left;
     }
     .slider-wrapper .donate-cta {
-        float: left;
+        float: right;
+        margin-right: 15%;
     }
 }
 @media (min-width: 983px) {
@@ -172,21 +176,29 @@ body {
 @media (min-width: 1090px) {
     .slider-wrapper .copy-donation {
         float: left;
-        width: 80%;
+        width: 70%;
     }
     .slider-wrapper .amount-donation {
         float: right;
-        width: 18%;
+        width: 28%;
     }
 }
-@media (min-width: 1200px) {
-    .slider-wrapper {
-        margin: 0 auto;
-    }
-    .slider-donation {
-        background-color: #4d4f53;
-        width: 100%;
-    }
+@media (min-width: 1235px) {
+  .slider-wrapper {
+      margin: 0 auto;
+  }
+  .slider-donation {
+      background-color: #4d4f53;
+      width: 100%;
+  }
+  .slider-wrapper .copy-donation {
+    float: left;
+    width: 80%;
+  }
+  .slider-wrapper .amount-donation {
+      float: right;
+      width: 18%;
+  }
 }
 
 .survey-results {
@@ -231,29 +243,30 @@ body {
   color: #ffffff;
 }
 .slider-wrapper .copy-donation.bps-banner {
-  width: 70%;
+  margin-left:15px;
 }
-.slider-wrapper .copy-donation.bps-banner h1 {
-  color: #f3edbe;
+.slider-wrapper .copy-donation.bps-banner h2 {
+  color: #ffffff;
   margin-bottom: 10px;
   margin-top: 20px;
+  font-size: 1.1em;
 }
 .slider-wrapper .copy-donation.bps-banner p {
   color: #f9f7f7;
   text-shadow: none;
   margin-top:5px;
+  padding:0;
 }
 .slider-wrapper .copy-donation.bps-banner p a {
   color: #f5e98e;
   text-shadow: 1px 1px #831212;
 }
-.slider-wrapper .amount-donation.bps-banner {
-  width: 25%;
-}
+
 .slider-wrapper .amount-donation.bps-banner .donate-cta a {
   background-color: #b31b1b;
   margin: 10px 5px;
   color: #000000;
+  font-size: 1em;
 }
 .slider-wrapper .amount-donation.bps-banner .donate-cta a:hover {
   opacity: 1;
@@ -282,3 +295,153 @@ body {
   color: #fff;
   text-decoration: none;
 }
+
+@media (max-width: 768px) { 
+  .slider-wrapper .amount-donation{
+    display: flex;
+    justify-content: center;
+  }
+  .slider-wrapper .donate-cta {
+    float: none;
+ }
+  .slider-wrapper .copy-donation.bps-banner {
+    width: 90%;
+    text-align: center;
+ }
+}
+
+
+/*banner style overrides*/
+.slider-wrapper.bps-banner.special-color {
+  background-color: #000;
+  color: #ffffff;
+}
+.slider-wrapper.bps-banner.forum {
+  background-color: #000;
+  color: #ffffff;
+}
+.slider-wrapper.bps-banner.forum .bps-banner-image {
+  float: left;
+  margin: 22px 32px 20px 15px;
+  height: 50px;
+  width: auto;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner h2 {
+  color: #c4d82e;
+  font-size: 1em;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p {
+  color: #fff;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum .copy-donation.bps-banner p a {
+  color: #c4d82e;
+  text-shadow: none;
+  text-decoration: underline;
+}
+.slider-wrapper.bps-banner.forum .banner-btn-grad {
+  box-shadow: 0 0 20px #31533a;
+}
+@media (max-width: 769px) {
+  .slider-wrapper.bps-banner.forum {
+    display:none;
+  }
+}
+
+/*green banner variation */
+.slider-wrapper.bps-banner.forum.green {
+  background-color: #c4d82e;
+  color: #000;
+}
+.slider-wrapper.bps-banner.forum.green .bps-banner-image {
+  margin: 8px 32px 8px 15px;
+  height: 70px;
+}
+.slider-wrapper.bps-banner.forum.green .copy-donation.bps-banner h2 {
+  color: #000;
+  font-size: 1.35em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.slider-wrapper.bps-banner.forum.green .copy-donation.bps-banner p {
+  color: #000;
+  text-shadow: none;
+}
+.slider-wrapper.bps-banner.forum.green .copy-donation.bps-banner p a {
+  color: blue;
+  text-shadow: none;
+  text-decoration: underline;
+}
+
+/*blue banner variation*/
+.slider-wrapper.bps-banner.forum.blue {
+  background-color: #a5d6fe;
+  color: #000;
+}
+.slider-wrapper.bps-banner.forum.blue .bps-banner-image {
+  margin: 8px 32px 8px 15px;
+  height: 70px;
+}
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner h2 {
+  color: #1f5e96;
+  font-size: 1.35em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p {
+  color: #000000;
+}
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p a {
+  color: #0000FF;
+}
+.slider-wrapper.bps-banner.forum.blue .copy-donation.bps-banner p a:hover {
+  color: #000000;
+}
+.slider-wrapper.bps-banner.forum.blue .amount-donation.bps-banner .donate-cta a {
+  color: white;
+}
+.slider-wrapper.bps-banner.forum.blue .amount-donation.bps-banner .donate-cta .banner-btn-grad {
+  background-image: linear-gradient(to right, #062c4f 0%, #1f5e96  51%, #062c4f  100%);
+}
+
+/*grey banner variation*/
+.slider-wrapper.bps-banner.forum.grey {
+    background-color: #e1e1e1;
+    color: #000;
+}
+.slider-wrapper.bps-banner.forum.grey .columns {
+    margin: 7px 12px;
+}
+.slider-wrapper.bps-banner.forum.grey .copy-donation.bps-banner {
+  border: 1px solid grey;
+  background-color: white;
+  padding: 2px 10px;
+  margin: 5px 15px 5px 5px;
+  font-family: monospace;
+  border-radius: 8px;
+}
+.slider-wrapper.bps-banner.forum.grey .bps-banner-image {
+  height: 50px;
+}
+.slider-wrapper.bps-banner.forum.grey .copy-donation.bps-banner h2 {
+  color: #000;
+  font-size: 1em;
+  margin: 8px 0px;
+}
+.slider-wrapper.bps-banner.forum.grey .copy-donation.bps-banner p {
+  font-size: 1em;
+  color:#000;
+}
+.slider-wrapper.bps-banner.forum.grey .copy-donation.bps-banner p a {
+  color:blue;
+}
+.slider-wrapper.bps-banner.forum.grey .copy-donation.bps-banner p a:hover {
+
+}
+.slider-wrapper.bps-banner.forum.grey .amount-donation.bps-banner .donate-cta .banner-btn-grad {
+  background-image: linear-gradient(to right, #b3bf35 0%, #dee68f 51%, #c1cf35 100%);
+  font-size: 16px;
+  padding: 10px 15px;
+}
+
+/*END banner variations*/
