@@ -62,9 +62,6 @@
   <li><a href="{{url_for('dissemination.format', arxiv_id=requested_id)}}" class="abs-button download-format">Other Formats</a></li>
       {%- endif -%}
     {%- endfor -%}
-    {%- if has_audio -%}
-  <li><a href="{{url_for('browse.audio_landing_page', arxivid=requested_id)}}" class="abs-button download-audio">Audio (experimental)</a></li>
-    {% endif %}
   {%- endif -%}
 </ul>
 {%- endmacro -%}
@@ -204,6 +201,14 @@
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}
+    {% if has_audio %}
+    <div class="extra-third-party">
+      <h3>Extra</h3>
+      <ul>
+        <li><a href="{{url_for('browse.audio_landing_page', arxivid=requested_id)}}" class="abs-button download-audio">Audio</a></li>
+      </ul>
+    </div>
+    {% endif %}
     <div class="browse">
     {{ generate_browse_context() }}
     </div>
