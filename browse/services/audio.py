@@ -40,13 +40,19 @@ def check_scienceCast(metadata: DocMetadata) -> AudioLink:
     scienceCast_cats=["astro-ph.HE"]
     not_available=AudioLink(service=AudioProvider.SCIENCECAST,
                 url=None,
-                not_available_reason=f"This paper's area is not yet supported for this paper. Sciencecast currently only supports categories {', '.join(scienceCast_cats)} for papers announced after {scienceCast_start.strftime('%Y-%m-%d')}")
+                not_available_reason=f"Not yet supported for this paper. " \
+            "Sciencecast currently only supports papers " \
+            "in categories {', '.join(scienceCast_cats)} " \
+            "and announced after {scienceCast_start.strftime('%Y-%m-%d')}" \
+            "and with tex source.")
 
     if not metadata.primary_category or metadata.arxiv_identifier.year is None or metadata.arxiv_identifier.month is None:
         return not_available
 
     paper_month=datetime(year=metadata.arxiv_identifier.year, month=metadata.arxiv_identifier.month, day=2)
-    if paper_month>scienceCast_start and metadata.primary_category.id in scienceCast_cats:
+    if (paper_month>scienceCast_start
+        and metadata.primary_category.id in scienceCast_cats
+        and metadata.source_format in ['tex', 'pdftex']):
         return AudioLink(service=AudioProvider.SCIENCECAST,
                     url=f"https://sciencecast.org/papers/{DOI_PREFIX}/arXiv.{metadata.arxiv_identifier.id}",
                     )
