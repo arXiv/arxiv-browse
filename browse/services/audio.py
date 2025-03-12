@@ -40,10 +40,10 @@ def check_scienceCast(metadata: DocMetadata) -> AudioLink:
     scienceCast_cats=["astro-ph.HE"]
     not_available=AudioLink(service=AudioProvider.SCIENCECAST,
                 url=None,
-                not_available_reason=f"Not yet supported for this paper. " \
+                not_available_reason="Not yet supported for this paper. " \
             "Sciencecast currently only supports papers " \
-            "in categories {', '.join(scienceCast_cats)} " \
-            "and announced after {scienceCast_start.strftime('%Y-%m-%d')}" \
+            f"in categories {', '.join(scienceCast_cats)} " \
+            f"and announced after {scienceCast_start.strftime('%Y-%m-%d')}" \
             "and with tex source.")
 
     if not metadata.primary_category or metadata.arxiv_identifier.year is None or metadata.arxiv_identifier.month is None:

@@ -2,6 +2,12 @@
 
 {% block title %}Audio for {{arxiv_idv}}{% endblock %}
 
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/abs_audio.css') }}"/>
+{% endblock head %}
+
+
 {% block header_h1 %}
 <h1>
 <a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
@@ -15,12 +21,12 @@
         <h1>Audio for {{abs_meta.arxiv_id}}: {{abs_meta.title}}</h1>
         <a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">< Return to abstract page</a>
         {% if 'sciencecast' in audio_urls %}
-            <div>
+            <div class="item-audio">
                 <h2>ScienceCast Audio Summary</h2>
-                60-second AI-generated audio summary created during paper submission process. <a href="https://sciencecast.org/">Learn more about ScienceCast.</a>
+                <p>60-second AI-generated audio summary created during paper submission process. <a href="https://sciencecast.org/">Learn more about ScienceCast.</a></p>
                 <p>
                     {% if audio_urls['sciencecast'].url %}
-                        <a href="{{audio_urls['sciencecast'].url}}">Visit ScienceCast to listen</a>
+                        <a class="button-audio" href="{{audio_urls['sciencecast'].url}}">Visit ScienceCast to listen</a>
                     {% elif audio_urls['sciencecast'].not_available_reason %}
                         {{audio_urls['sciencecast'].not_available_reason}}
                     {% else %}
