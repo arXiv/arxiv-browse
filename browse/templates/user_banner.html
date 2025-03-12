@@ -19,23 +19,24 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202412120000 %}
-{% set BANNER_END_1 = 202412312359 %}
+{% set BANNER_START_1 = 202503130000 %}
+{% set BANNER_END_1 = 202503132359 %}
 {% set SLIDE = True %}
 
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
     {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-      {#  Dec 12 - Dec 31 #}
-      <aside class="slider-wrapper bps-banner special-color">
+      {#  3/13 - 3/13 #}
+      <aside class="slider-wrapper bps-banner forum blue">
        <div class="columns">
+          <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/HF-Smiley-Bones-Banner.png') }}" alt="arXiv smile and hugging face">
           <div class="copy-donation bps-banner">
-            <h2>Change to arXiv's privacy policy</h2>
-            <p>The <a target="_blank" href="https://info.arxiv.org/help/policies/privacy_policy.html">arXiv Privacy Policy</a> has changed. By continuing to use arxiv.org, you are agreeing to the privacy policy.</p>
+            <h2>Support arXiv on Giving Day with Hugging Face!</h2>
+            <p>Today Hugging Face is TRIPLING your donation to arXiv with a 2:1 match! Give today to keep science open for all.</p>
           </div>
           <div class="amount-donation bps-banner">
-            <div class="donate-cta"><a class="banner_link banner-btn-grad do-close-slider" href="#"><b>I Understand</b></a></div>
+            <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://givingday.cornell.edu/campaigns/arxiv"><b>Donate!</b></a></div>
           </div>
         </div>
       </aside>
@@ -50,7 +51,7 @@ Adding an environment var, so we can enable only on gcp.
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if (SLIDE and (BANNER_START_1|int <= now) and (BANNER_END_1|int > now)) -%}
     {# only run this script while a banner is active #}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20241211" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20250312" />
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=121124"></script>
   {%- endif -%}
