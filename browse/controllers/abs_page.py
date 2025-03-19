@@ -56,6 +56,7 @@ from browse.formatting.latexml import get_latexml_url
 from browse.formatting.search_authors import queries_for_authors, split_long_author_list
 from browse.controllers.response_headers import mime_header_date
 from browse.formatting.metatags import meta_tag_metadata
+from browse.services.audio import has_audio
 
 logger = logging.getLogger(__name__)
 
@@ -214,9 +215,8 @@ def _non_critical_abs_data(
     _prevnext_links(arxiv_identifier, abs_meta.primary_category, response_data)
 
     response_data["is_covid_match"] = _is_covid_match(abs_meta)
-    response_data["datacite_doi"] = get_datacite_doi(
-        paper_id=abs_meta.arxiv_id
-    )
+    response_data["datacite_doi"] = get_datacite_doi(paper_id=abs_meta.arxiv_id)
+    response_data["has_audio"] = has_audio(abs_meta)
 
 
 def _check_request_headers(

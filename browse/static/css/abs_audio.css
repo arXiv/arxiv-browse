@@ -1,0 +1,15 @@
+/* css for the /audio/{paper_id} pages */
+.item-audio {
+    border:1px solid #cecece;
+    margin-top:1em;
+    padding: .5em 1em;
+}
+.button-audio {
+    background-color: #086db1;
+    border-radius: .5em;
+    color: white !important;
+    padding:.5em
+}
+.button-audio:hover {
+    background-color: #075b94;
+}
