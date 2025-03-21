@@ -149,24 +149,24 @@ def catchup(subject:str, date:str) -> Response:
 @blueprint.route("institutional_banner", methods=["GET"])
 def institutional_banner() -> Any:
     # ARXIVCE-3387, do not store the response in cache, as it is IP-specific
-    headers = {"Cache-Control": "no-store"}
+    response_headers = {"Cache-Control": "no-store", 'Content-Type': 'application/json'}
     try:
         forwarded_ips = request.headers.getlist("X-Forwarded-For")
         if len(forwarded_ips)>0:
             ip = str(forwarded_ips[0]).split(',')[0]
             ip = ip.strip()
         elif request.remote_addr is None:
-            return ("{}", status.OK, headers)
+            return ("{}", status.OK, response_headers)
         else:
             ip = str(request.remote_addr)
 
         result = get_institution(ip)
         if result:
-            return (result, status.OK, headers)
+            return (result, status.OK, response_headers)
         else:
-            return ("{}", status.OK, headers)
+            return ("{}", status.OK, response_headers)
     except Exception as ex:
-        return ("", status.INTERNAL_SERVER_ERROR, headers)
+        return ("", status.INTERNAL_SERVER_ERROR, response_headers)
 
 
 @blueprint.route("tb/recent", methods=["GET", "POST"])
