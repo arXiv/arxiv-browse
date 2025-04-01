@@ -12,9 +12,6 @@ from pydantic import SecretStr, PyObject
 log = logging.getLogger(__name__)
 
 
-DEFAULT_DB = "sqlite:///tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
-
 DAY = 60 * 60 * 24 # one day of seconds
 
 class Settings(arxiv_base.Settings):
