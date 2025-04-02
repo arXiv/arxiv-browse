@@ -67,3 +67,12 @@ def test_format_headers(client_with_test_fs):
     assert "paper-id-1601.04345-current" not in head
     assert "paper-id-1601.04345v2" in head
     assert "paper-id-1601.04345 " in head+" "
+
+
+def test_pdflatex(dbclient):
+    """ARXIVCE-3376 pdflatex must not have ps downloads."""
+    client = dbclient
+    rv = client.get("/format/1810.04805")
+    assert "/pdf/1810.04805" in rv.text
+    assert "/src/1810.04805" in rv.text
+    assert "/ps/1810.04805" not in rv.text
