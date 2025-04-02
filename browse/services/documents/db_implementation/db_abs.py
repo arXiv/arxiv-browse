@@ -90,7 +90,7 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
                              size_kilobytes=size_kilobytes,
                              submitted_date=ver.created.replace(tzinfo=timezone.utc),  # type: ignore
                              # ^verified as UTC in DB
-                             source_flag=SourceFlag(ver.source_flags), # type: ignore
+                             source_flag=SourceFlag(ver.source_flags or ''),
                              source_format=ver.source_format,
                              is_withdrawn=bool(ver.is_withdrawn) or ver.source_format == "withdrawn"
                                           or ver.source_size == 0,

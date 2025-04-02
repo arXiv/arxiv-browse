@@ -13,9 +13,6 @@ from arxiv.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 
-
-DATABASE_URL = 'sqlite:///:memory:'
-
 import pytest
 
 
