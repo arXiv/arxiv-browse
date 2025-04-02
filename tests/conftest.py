@@ -31,17 +31,10 @@ from tests import path_of_for_test
 import browse.services.documents as documents
 import browse.services.listing as listing
 
-DEFAULT_DB = "sqlite:///tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
-
-ARXIV_BASE_SETTINGS = Settings(
-    
-)
+ARXIV_BASE_SETTINGS = Settings()
 
 TESTING_CONFIG = {
-    "CLASSIC_DB_URI": DEFAULT_DB,
-    "LATEXML_DB_URI": TESTING_LATEXML_DB,
     'DOCUMENT_LISTING_SERVICE': listing.db_listing,
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
@@ -57,7 +50,7 @@ def test_config():
 def test_dir():
     db_path = tempfile.mkdtemp()
     yield db_path
-    shutil.rmtree(db_path)
+    #shutil.rmtree(db_path)
 
 
 @pytest.fixture(scope='session')
@@ -86,7 +79,7 @@ def loaded_db(classic_db_engine, latexml_db_engine):
         db._classic_engine = classic_db_engine
         db._latexml_engine = latexml_db_engine
         from arxiv.db import models
-        models. configure_db_engine(db._classic_engine, db._latexml_engine)
+        models.configure_db_engine(db._classic_engine, db._latexml_engine)
         from . import populate_test_database
         populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
 
@@ -158,13 +151,11 @@ def app_with_test_fs(loaded_db):
 
 @pytest.fixture(scope='function')
 def dbclient(app_with_db):
-    print ("DB CLIENT FIXTURE IS GOOD")
-
     """A browse app client with a test DB populated with fresh data.
 
-    This is function so each test funciton gets an new app_context."""
+    This is function so each test function gets a new app_context."""
     with app_with_db.app_context():
-        yield app_with_db.test_client() # yield so the tests already have the app_context
+        yield app_with_db.test_client()  # yield so the tests already have the app_context
 
 
 @pytest.fixture(scope='function')
