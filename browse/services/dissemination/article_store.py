@@ -40,12 +40,13 @@ Acceptable_Format_Requests = Union[fileformat.FileFormat, Literal["e-print"]]
 The format `e-print` is a reqeust to get the article's original source data.
 """
 
-class Deleted():
+class Deleted:
     def __init__(self, msg: str):
         self.msg = msg
 
 
-class CannotBuildPdf():
+class KnownReason:
+    """Only uses this for paper ids in the reasons file."""
     def __init__(self, msg: str, fmt: Acceptable_Format_Requests):
         self.msg = msg
         if isinstance(fmt, str):
@@ -59,13 +60,14 @@ Conditions = Union[
             "ARTICLE_NOT_FOUND",  # Where there is no article
             "VERSION_NOT_FOUND",  # Where article exists but not version
             "NO_SOURCE",  # Article and version exists but no source exists
-            "UNAVAILABLE",  # Where the PDF unexpectedly does not exist
-            "NOT_PDF",  # format that doens't serve a pdf
-            "NO_HTML", #not native HTML, no HTML conversion available
-            "NOT_PUBLIC" #where the author has decided not to make the source of the paper public
+            "UNAVAILABLE",  # Where the PDF unexpectedly does not exist. ONLY return this when there is source, and it
+            # should be able to be built, but it unexpectedly cannot be built
+            "NOT_PDF",  # format that doesn't serve a pdf
+            "NO_HTML",  # not native HTML, no HTML conversion available
+            "NOT_PUBLIC"  # where the author has decided not to make the source of the paper public
             ],
     Deleted,
-    CannotBuildPdf]
+    KnownReason]
 """Return conditions for the result of `dissemination()`.
 
 The intent of using a `Union` instead of raising exceptions is that they can be
@@ -122,13 +124,14 @@ def from_genpdf_location(location: str) -> Tuple[str, str]:
         return uri.netloc, uri.path if uri.path[0] != '/' else uri.path[1:]
     return ("", uri.path)
 
+
 def is_genpdf_able(_arxiv_id: Identifier) -> bool:
     """Is genpdf api available for this arxiv_id?"""
 
     return bool(current_app.config.get("GENPDF_API_URL")) and bool(current_app.config.get("GENPDF_SERVICE_URL"))
 
 
-class ArticleStore():
+class ArticleStore:
     def __init__(self,
                  metaservice: DocMetadataService,
                  cache_store: ObjectStore,
@@ -248,7 +251,7 @@ class ArticleStore():
             return Deleted(deleted)
 
         if reason := self.reasons(arxiv_id, format):
-            return CannotBuildPdf(reason, format)
+            return KnownReason(reason, format)
 
         try:
             if docmeta is None:
@@ -379,9 +382,7 @@ class ArticleStore():
     def _genpdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Gets a PDF from the genpdf-api."""
         genpdf_api = current_app.config.get("GENPDF_API_URL")
-        if not genpdf_api:
-            return "UNAVAILABLE"
-        # requests.get() cannod have timeout <= 0
+        # requests.get() cannot have timeout <= 0
         timeout = max(1, current_app.config.get("GENPDF_API_TIMEOUT", 60))
         url = f"{genpdf_api}/pdf/{arxiv_id.ids}?timeout={timeout}&download=false"
         headers = {}
