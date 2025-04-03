@@ -357,7 +357,7 @@ class ArticleStore:
 
     def _pdf(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
         """Handles getting the `FielObj` for a PDF request."""
-        if version.source_flag.cannot_pdf:
+        if version.source_flag.cannot_pdf or version.source_format == "html":
             return "NOT_PDF"
 
         ps_cache_pdf = self.cache_store.to_obj(ps_cache_pdf_path(arxiv_id, version.version))
