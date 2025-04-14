@@ -951,7 +951,8 @@ def submission_callback(message: Message) -> None:
 
     # Sync the originals without PDF/HTML. Eat up all of exceptions
     # This unfortunately make the logging a bit noisier as it checks the bucket objects twice per event.
-    # I can imagine to "not check the originals" in the 2nd part but
+    # I can imagine to "not check the originals" in the 2nd part but that would make computing of file state
+    # more complex. I think I'd take the noisy logging over more complex code.
     try:
         state_without_cache = submission_message_to_file_state(data, log_extra, cache_upload=False)
         if state_without_cache.get_expected_files():
