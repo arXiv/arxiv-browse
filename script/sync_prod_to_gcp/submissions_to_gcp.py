@@ -345,13 +345,14 @@ class SubmissionFilesState:
     log_extra: dict
     submission_source: typing.Optional[str]
     published_versions: typing.List[dict]
+    cache_upload: bool
 
     _top_levels: dict
 
     _extras: typing.List[dict]
 
     def __init__(self, arxiv_id_str: str, version: str, publish_type: str, src_ext: str,
-                 source_format: str, log_extra: dict):
+                 source_format: str, log_extra: dict, cache_upload=True):
         try:
             if int(version) <= 0:
                 raise InvalidVersion(f"{version} is invalid")
@@ -375,6 +376,7 @@ class SubmissionFilesState:
         self.single_source = False
         self._extras = []
         self.published_versions = []  # This is the versions from existing .abs on file system
+        self.cache_upload = cache_upload
 
         self.ext_candidates = SubmissionFilesState.submission_exts.copy()
         if src_ext:
@@ -597,17 +599,20 @@ class SubmissionFilesState:
             files.append(current("submission", self.submission_source))
 
             if self.is_tex_submission:
-                files.append(current("pdf-cache", self.ps_cache_pdf_file))
+                if self.cache_upload:
+                    files.append(current("pdf-cache", self.ps_cache_pdf_file))
             elif self.is_html_submission:
                 # Since this is a root dir of HTML submission, no need to "upload".
                 # This is just a "marker" to initiate the html file expand.
                 # Later (in submission_message_to_file_state()), this triggers to ask a web node
                 # for the html, and it populates the files under the self.html_root_dir
-                files.append(current("html-cache", self.html_root_dir))
+                if self.cache_upload:
+                    files.append(current("html-cache", self.html_root_dir))
                 pass
             elif self.is_ps_submission:
                 # Turn PS into PDF
-                files.append(current("pdf-cache", self.ps_cache_pdf_file))
+                if self.cache_upload:
+                    files.append(current("pdf-cache", self.ps_cache_pdf_file))
 
             pass
 
@@ -740,7 +745,7 @@ class SubmissionFilesState:
             return source.stat().st_mtime if source.exists() else 0
         return 0
 
-def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True) -> SubmissionFilesState:
+def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True, cache_upload=True) -> SubmissionFilesState:
     """
     Parse the submission_published message, map it to CIT files and returns the list of files.
     The schema is
@@ -759,9 +764,9 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
 
     logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
 
-    file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra)
+    file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra, cache_upload=cache_upload)
 
-    if ask_webnode:
+    if ask_webnode or (not cache_upload):
         # If asked for PDF, make sure it exits on web node, or else signal NoPDF
         for entry in file_state.get_expected_files():
             if entry["type"] == "pdf-cache":
@@ -836,7 +841,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
                     raise MissingGeneratedFile(f"{file_state.ps_cache_pdf_file} does not exist")
                 pass
     else:
-        logger.info("Not asking web node means, you are not getting PDF or HTML populated, only good for development.")
+        logger.debug("Not asking web node means, you are not getting PDF or HTML populated.", extra=log_extra)
 
     return file_state
 
@@ -898,18 +903,21 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], log_ex
     for from_obj, to_obj, obj_type in objects:
         logger.debug("%s: %s is being renamed to %s", obj_type, from_obj, to_obj, extra=log_extra)
         from_blob: Blob = bucket.blob(from_obj)
-        if not from_blob.exists():
-            logger.warning("%s: FROM %s does not exist", obj_type, from_obj, extra=log_extra)
-            continue
         to_blob: Blob = bucket.blob(to_obj)
+        if not from_blob.exists():
+            if to_blob.exists():
+                logger.info("%s: FROM %s does not exist, and TO %s exists.", obj_type, from_obj, to_obj, extra=log_extra)
+            else:
+                logger.warning("%s: FROM %s does not exist", obj_type, from_obj, extra=log_extra)
+            continue
         if to_blob.exists():
             if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()
-                logger.warning("%s: %s <---> %s are identical - moved md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
+                logger.warning("%s: from: %s  <---> to: %s are identical - md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
                 continue
             else:
-                logger.warning("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
+                logger.info("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
         copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
         logger.debug("%s: %s is copied to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
         from_blob.delete()
@@ -996,6 +1004,14 @@ def submission_callback(message: Message) -> None:
             except Exception as exc:
                 logger.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
                 pass
+            pass
+
+        # Sync the originals without PDF/HTML. Eat up all of exceptions
+        try:
+            state_without_cache = submission_message_to_file_state(data, log_extra, cache_upload=False)
+            if state_without_cache.get_expected_files():
+                sync_to_gcp(state_without_cache, log_extra)
+        except Exception as _exc:
             pass
 
         message.nack()

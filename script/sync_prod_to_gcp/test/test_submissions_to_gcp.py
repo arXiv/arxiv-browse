@@ -365,6 +365,44 @@ class TestSubmissionsToGCP(unittest.TestCase):
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
 
+    def test_not_ask_pdf(self):
+        """Get the PDF for modern arXiv ID, create PDF and send to GCP"""
+        paper_id = "2308.16190"
+        log_extra = {"paper_id": paper_id}
+        abs_obj = f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"
+        if bucket_object_exists(abs_obj):
+            subprocess.run(["gsutil", "rm", "-a", "-f", abs_obj])
+
+        for idx in range(3):
+            try:
+                state = submission_message_to_file_state(data, log_extra, cache_upload=False)
+                desired_state = state.get_expected_files()
+                if not desired_state:
+                    self.fail("Desired state must not be none")
+
+            except MissingGeneratedFile as exc:
+                logger.info(str(exc), extra=log_extra)
+                self.fail("This exception should not happen")
+
+            except Exception as _exc:
+                logger.warning(
+                    f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
+                self.fail("Any exception is a bad test. Fix the test")
+
+            try:
+                sync_to_gcp(state, log_extra)
+                # Acknowledge the message so it is not re-sent
+                logger.info("ack message: %s", state.xid.ids, extra=log_extra)
+
+            except Exception as _exc:
+                logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
+                self.fail("Any exception is a bad test. Fix the test")
+                pass
+
+            if bucket_object_exists(abs_obj):
+                self.fail("obj %s did not copy?" % abs_obj)
+
+
     def test_ask_pdf_for_old_arxiv_id(self):
         """Get the PDF for old arXiv ID, create PDF and send to GCP"""
         xid = "0106051"
