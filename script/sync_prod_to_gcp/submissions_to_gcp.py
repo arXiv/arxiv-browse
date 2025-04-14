@@ -949,6 +949,18 @@ def submission_callback(message: Message) -> None:
         "publish_type": str(publish_type), "arxiv_id": str(paper_id), "version": str(version)
     }
 
+    # Sync the originals without PDF/HTML. Eat up all of exceptions
+    # This unfortunately make the logging a bit noisier as it checks the bucket objects twice per event.
+    # I can imagine to "not check the originals" in the 2nd part but
+    try:
+        state_without_cache = submission_message_to_file_state(data, log_extra, cache_upload=False)
+        if state_without_cache.get_expected_files():
+            sync_to_gcp(state_without_cache, log_extra)
+    except Exception as exc:
+        logger.warning(f"Source upload had some issues. %s", str(exc),
+                       extra=log_extra, exc_info=exc)
+        pass
+
     message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
 
@@ -1004,14 +1016,6 @@ def submission_callback(message: Message) -> None:
             except Exception as exc:
                 logger.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
                 pass
-            pass
-
-        # Sync the originals without PDF/HTML. Eat up all of exceptions
-        try:
-            state_without_cache = submission_message_to_file_state(data, log_extra, cache_upload=False)
-            if state_without_cache.get_expected_files():
-                sync_to_gcp(state_without_cache, log_extra)
-        except Exception as _exc:
             pass
 
         message.nack()
