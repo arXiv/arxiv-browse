@@ -766,7 +766,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
 
     file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra, cache_upload=cache_upload)
 
-    if ask_webnode or (not cache_upload):
+    if ask_webnode:
         # If asked for PDF, make sure it exits on web node, or else signal NoPDF
         for entry in file_state.get_expected_files():
             if entry["type"] == "pdf-cache":
