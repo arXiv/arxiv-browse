@@ -1,12 +1,15 @@
+import datetime
+import json
 import logging
 import os
 import time
 import unittest
+from datetime import timezone
 
 import sync_published_to_gcp
 
 sync_published_to_gcp.GS_BUCKET = "arxiv-sync-test-01"
-# Adjest to local testing
+# Adjust to local testing
 test_dir = os.path.dirname(os.path.abspath(__file__))
 sync_published_to_gcp.CACHE_PREFIX = os.path.join(test_dir, 'cache', '')
 sync_published_to_gcp.PS_CACHE_PREFIX = os.path.join(test_dir, 'cache', 'ps_cache', '')
@@ -18,7 +21,7 @@ sync_published_to_gcp.CONCURRENCY_PER_WEBNODE = [(f'localhost:{TEST_PORT}', 1)]
 
 from submissions_to_gcp import submission_message_to_file_state, sync_to_gcp, logger, \
     MissingGeneratedFile, \
-    BrokenSubmission, TIMEOUTS
+    BrokenSubmission, TIMEOUTS, SyncVerdict, submission_callback, TIMEOUTS
 import subprocess
 import shutil
 
@@ -26,6 +29,9 @@ import http.server
 import threading
 import re
 from identifier import Identifier as ArxivId
+
+from unittest.mock import MagicMock
+
 
 TIMEOUTS["PDF_TIMEOUT"] = 3
 TIMEOUTS["HTML_TIMEOUT"] = 3
@@ -275,15 +281,16 @@ class TestSubmissionsToGCP(unittest.TestCase):
                 f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
             self.fail("Any exception is a bad test. Fix the test")
 
+        verdict = SyncVerdict()
+
         try:
-            sync_to_gcp(state, log_extra)
+            sync_to_gcp(state, verdict, log_extra)
             # Acknowledge the message so it is not re-sent
             logger.info("ack message: %s", state.xid.ids, extra=log_extra)
 
         except Exception as _exc:
             logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
             self.fail("Any exception is a bad test. Fix the test")
-            pass
 
         # The PDF still there. In the real life, this is the new published PDF in /ftp
         self.assertTrue(
@@ -294,6 +301,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+        self.assertTrue(verdict.good())
+
 
     def test_html_submission_2409_03427(self):
         file_state = submission_message_to_file_state(
@@ -345,15 +354,15 @@ class TestSubmissionsToGCP(unittest.TestCase):
                 f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
             self.fail("Any exception is a bad test. Fix the test")
 
+        verdict = SyncVerdict()
         try:
-            sync_to_gcp(state, log_extra)
+            sync_to_gcp(state, verdict, log_extra)
             # Acknowledge the message so it is not re-sent
             logger.info("ack message: %s", state.xid.ids, extra=log_extra)
 
         except Exception as _exc:
             logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
             self.fail("Any exception is a bad test. Fix the test")
-            pass
 
         # Fake PDF is created.
         self.assertEqual("1115014", get_file_size(
@@ -364,10 +373,18 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.tar.gz"))
+        self.assertTrue(verdict.good())
+
 
     def test_not_ask_pdf(self):
         """Get the PDF for modern arXiv ID, create PDF and send to GCP"""
         paper_id = "2308.16190"
+        data = {
+            "type": "new",
+            "paper_id": paper_id,
+            "version": "1",
+            "src_ext": ".tar.gz"
+        }
         log_extra = {"paper_id": paper_id}
         abs_obj = f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"
         if bucket_object_exists(abs_obj):
@@ -389,18 +406,20 @@ class TestSubmissionsToGCP(unittest.TestCase):
                     f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
                 self.fail("Any exception is a bad test. Fix the test")
 
+            verdict = SyncVerdict()
             try:
-                sync_to_gcp(state, log_extra)
+                sync_to_gcp(state, verdict, log_extra)
                 # Acknowledge the message so it is not re-sent
-                logger.info("ack message: %s", state.xid.ids, extra=log_extra)
+                logger.info("Sync success: %s", state.xid.ids, extra=log_extra)
 
             except Exception as _exc:
                 logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
                 self.fail("Any exception is a bad test. Fix the test")
-                pass
 
-            if bucket_object_exists(abs_obj):
+            if not bucket_object_exists(abs_obj):
                 self.fail("obj %s did not copy?" % abs_obj)
+
+            self.assertTrue(verdict.good(), "Verdict not okay ")
 
 
     def test_ask_pdf_for_old_arxiv_id(self):
@@ -433,8 +452,11 @@ class TestSubmissionsToGCP(unittest.TestCase):
                 f"Unknown error xid: {paper_id}", extra=log_extra, exc_info=True, stack_info=False)
             self.fail("Any exception is a bad test. Fix the test")
 
+
+        verdict = SyncVerdict()
+
         try:
-            sync_to_gcp(state, log_extra)
+            sync_to_gcp(state, verdict, log_extra)
             # Acknowledge the message so it is not re-sent
             logger.info("ack message: %s", state.xid.ids, extra=log_extra)
 
@@ -452,6 +474,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
             f"gs://arxiv-sync-test-01/ftp/{archive}/papers/{yymm}/{xid}.abs"))
         self.assertEqual("141", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/{archive}/papers/{yymm}/{xid}.tar.gz"))
+
+        self.assertTrue(verdict.good(), "Verdict not okay ")
 
     def test_ask_pdf_timeout(self):
         """
@@ -525,7 +549,6 @@ class TestSubmissionsToGCP(unittest.TestCase):
 
         except Exception as _exc:
             self.fail("all other exceptions are bad")
-            return
 
         self.fail("PDF should not be created and end with the exception")
 
@@ -559,8 +582,9 @@ class TestSubmissionsToGCP(unittest.TestCase):
                 f"There is no associated files? xid: {state.xid.ids}",
                 extra=log_extra)
 
+        verdict = SyncVerdict()
         try:
-            sync_to_gcp(state, log_extra)
+            sync_to_gcp(state, verdict, log_extra)
             # Acknowledge the message so it is not re-sent
             logger.info("ack message: %s", state.xid.ids, extra=log_extra)
 
@@ -576,6 +600,8 @@ class TestSubmissionsToGCP(unittest.TestCase):
         # New submissions
         self.assertEqual("1055", get_file_size(
             f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"))
+        self.assertTrue(verdict.good(), "Verdict not okay ")
+
 
     def test_arxivce_1756(self):
         """
@@ -661,13 +687,14 @@ so the correct file state of /ftp is
             expected)
 
         log_extra = {}
+        verdict = SyncVerdict()
+
         try:
-            sync_to_gcp(file_state, log_extra)
+            sync_to_gcp(file_state, verdict, log_extra)
 
         except Exception as _exc:
             logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
             self.fail("Any exception is a bad test. Fix the test")
-            pass
 
         for entry in expected:
             gcp = "gs://arxiv-sync-test-01/" + entry['gcp']
@@ -678,6 +705,9 @@ so the correct file state of /ftp is
 
         # because the obsolete file is deleted
         self.assertFalse(bucket_object_exists("gs://arxiv-sync-test-01/ftp/arxiv/papers/1907/1907.07431.gz"))
+
+        self.assertTrue(verdict.good(), "Verdict not okay ")
+
 
     def test_new_pdf(self):
         paper_id = "2409.10667"
@@ -947,3 +977,48 @@ class TestPayloadToMeta(unittest.TestCase):
              'type': 'pdf-cache'},
         ],
         expected)
+
+
+    def test_pdf_timeout(self):
+        """
+        The source does not exist and therefore the pdf cannot be made.
+        The test should end with HTTP returnin 404, times out.
+        """
+        paper_id = "2308.99999"
+        data = {
+            "type": "new",
+            "paper_id": paper_id,
+            "version": "98",  # version 98 gets 404 reply after 120 seconds
+            "src_ext": ".tar.gz"
+        }
+
+        pdf_path = os.path.join(sync_published_to_gcp.PS_CACHE_PREFIX, "arxiv", "pdf", "2308",
+                                f"{paper_id}v{data['version']}.pdf")
+        if os.path.exists(pdf_path):
+            os.unlink(pdf_path)
+
+        abs_obj = f"gs://arxiv-sync-test-01/ftp/arxiv/papers/2308/{paper_id}.abs"
+        if bucket_object_exists(abs_obj):
+            subprocess.run(["gsutil", "rm", "-a", "-f", abs_obj])
+
+        mock_message = MagicMock()
+        mock_message.data = json.dumps(data).encode('utf-8')
+        mock_message.attributes = {}
+        mock_message.message_id = "12345"
+        mock_message.publish_time = datetime.datetime.now(timezone.utc)
+
+        TIMEOUTS["PDF_TIMEOUT"] = 1
+        TIMEOUTS["HTML_TIMEOUT"] = 1
+
+        try:
+            submission_callback(mock_message)
+
+        except Exception as _exc:
+            logging.exception(_exc)
+            pass
+
+        # the abs is copied. (did not exist before, and exists now in the bucket)
+        self.assertTrue(bucket_object_exists(abs_obj))
+
+        # message.nack() called once
+        mock_message.nack.assert_called_once()
