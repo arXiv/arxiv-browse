@@ -1,13 +1,15 @@
 import os
 import unittest
 import pytest
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 from tests import ABS_FILES
 
-from arxiv import taxonomy
+from arxiv.taxonomy.definitions import GROUPS
 from arxiv.license import ASSUMED_LICENSE_URI
 from arxiv.document.parse_abs import parse_abs_file
+from arxiv.files import LocalFileObj
 
 
 @pytest.mark.usefixtures("unittest_add_fake")
@@ -20,14 +22,15 @@ class BrowseTest(unittest.TestCase):
         txt = rv.data.decode('utf-8')
         html = BeautifulSoup(txt, 'html.parser')
 
-        for group_key, group_value in taxonomy.definitions.GROUPS.items():
-            if group_key == 'grp_test':
+        for group_key, group in GROUPS.items():
+            if group.is_test:
                 continue
-            auths_elmt = html.find('h2', string=group_value['name'])
-            self.assertTrue(auths_elmt, f"{group_value['name']} in h2 element")
+            auths_elmt = html.find('h2', string=group.full_name)
+            self.assertTrue(auths_elmt, f"{group.full_name} in h2 element")
         self.assertFalse(html.find('h2', string='Test'),
                          "'Test' group should not be shown on homepage")
-
+        self.assertFalse(html.find('h2', string='Invalid'),
+                         "'Invalid' group should not be shown on homepage")
         self.assertNotIn('None/login', txt)
 
 
@@ -37,7 +40,7 @@ class BrowseTest(unittest.TestCase):
         self.assertEqual(rv.status_code, 404)
 
         rv = self.client.get('/tb/')
-        self.assertEqual(rv.status_code, 404)
+        self.assertEqual(rv.status_code, 400)
 
         rv = self.client.get('/tb/foo')
         self.assertEqual(rv.status_code, 404)
@@ -85,9 +88,9 @@ class BrowseTest(unittest.TestCase):
     def test_stats_today(self):
         """Test the /stats/today page."""
         rv = self.client.get('/stats/today')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(200, rv.status_code)
         rv = self.client.get('/stats/today?date=20190102')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(200, rv.status_code)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
 
         csv_dl_elmt = html.find(
@@ -118,7 +121,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_without_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0001.abs'
-        m = parse_abs_file(filename=f1)
+        m = parse_abs_file(LocalFileObj(Path(f1)))
 
         rv = self.client.get('/abs/0704.0001')
         self.assertEqual(rv.status_code, 200)
@@ -131,7 +134,7 @@ class BrowseTest(unittest.TestCase):
 
     def test_abs_with_license_field(self):
         f1 = ABS_FILES + '/ftp/arxiv/papers/0704/0704.0600.abs'
-        m = parse_abs_file(filename=f1)
+        m = parse_abs_file(LocalFileObj(Path(f1)))
 
         self.assertNotEqual(m.license, None)
         self.assertNotEqual(m.license.recorded_uri, None)
@@ -163,7 +166,7 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                m = parse_abs_file(filename=fname_path)
+                m = parse_abs_file(LocalFileObj(Path(fname_path)))
                 rv = self.client.get(f'/abs/{m.arxiv_id}')
                 self.assertEqual(rv.status_code, 200)
 
@@ -507,7 +510,7 @@ class BrowseTest(unittest.TestCase):
                 fname_path = os.path.join(dir_name, fname)
                 if os.stat(fname_path).st_size == 0 or not fname_path.endswith('.abs'):
                     continue
-                dm = parse_abs_file(filename=fname_path)
+                dm = parse_abs_file(LocalFileObj(Path(fname_path)))
                 rv = self.client.get(f'/bibtex/{dm.arxiv_id}')
                 self.assertEqual(rv.status_code, 200, f'checking /bibtex for {dm.arxiv_id}')
 

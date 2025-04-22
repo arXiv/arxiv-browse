@@ -1,6 +1,10 @@
 import pytest
 import re
+from datetime import date
 from unittest.mock import MagicMock
+from unittest import mock
+
+from browse.controllers import list_page
 
 from browse.services.listing import NotModifiedResponse, get_listing_service
 from bs4 import BeautifulSoup
@@ -10,39 +14,39 @@ def test_basic_lists(client_with_fake_listings):
     client = client_with_fake_listings
     rv = client.get("/list/hep-ph/2009-01")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/2009")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/new")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/current")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/pastweek")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/recent")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/hep-ph/2009-01?skip=925&show=25")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/astro-ph/2004")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/math/1992")
     assert rv.status_code == 200
-    assert rv.headers.get("Expires", None) != None
+    assert rv.headers.get("Surrogate-Control", None) != None
 
     rv = client.get("/list/math/1992-01")
     assert rv.status_code == 200
@@ -89,7 +93,7 @@ def test_basic_lists(client_with_fake_listings):
     rv = client.get("/list/math/2018")
     assert rv.status_code == 200
 
-    rv = client.get("/list/math/2020")  # year 2020
+    rv = client.get("/list/math/2020")  
     assert rv.status_code == 200
 
     rv = client.get("/list/math/2001-01")
@@ -161,16 +165,16 @@ def test_paging_first(client_with_fake_listings):
     assert len(tgs) == 6
 
     assert tgs[0].name == "span"
-    assert tgs[0].get_text() == "1-25"
+    assert tgs[0].get_text() == "1-50"
 
     assert tgs[1].name == "a"
-    assert tgs[1].get_text() == "26-50"
+    assert tgs[1].get_text() == "51-100"
 
     assert tgs[2].name == "a"
-    assert tgs[2].get_text() == "51-75"
+    assert tgs[2].get_text() == "101-150"
 
     assert tgs[3].name == "a"
-    assert tgs[3].get_text() == "76-100"
+    assert tgs[3].get_text() == "151-200"
 
     assert tgs[4].name == "span"
     assert tgs[4].get_text() == "..."
@@ -431,11 +435,17 @@ def test_paging_925(client_with_fake_listings):
     assert first_index_atag["name"] != "item1"  # 'first item index should not be 1'
     assert first_index_atag.string == "[926]"
 
+def test_paging_all(client_with_fake_listings):
+    client = client_with_fake_listings
+    rv = client.get("/list/hep-ph/2009-01?show=25")
+    assert 'show=2000rel="nofollow">all</a>' in rv.text.replace('\n', '').replace(' ', '')
+
+    rv = client.get("/list/hep-ph/2009-01?show=2000")
+    assert 'show=2000rel="nofollow">all</a>' not in rv.text.replace('\n', '').replace(' ', '')
+
 
 def test_odd_requests(client_with_fake_listings):
     client = client_with_fake_listings
-    rv = client.get("/list/hep-ph/2009-01?skip=925&show=1000000")
-    assert rv.status_code == 200
 
     rv = client.get("/list/hep-ph/bogusTimePeriod")
     assert rv.status_code != 200
@@ -450,9 +460,6 @@ def test_odd_requests(client_with_fake_listings):
     assert rv.status_code != 200
 
     rv = client.get("/list/math/2001-13")
-    assert rv.status_code != 200
-
-    rv = client.get("/list/math/2001-99")
     assert rv.status_code != 200
 
     rv = client.get("/list/math/2001-99")
@@ -617,7 +624,7 @@ def test_astro_ph_recent(client_with_test_fs):
     text = rv.text
     assert "Fri, 3 Mar 2023" in text
     assert "Total of 320 entries :" in text
-    assert "Thu, 2 Mar 2023 (showing first 25 of 57 entries )" in text
+    assert "Thu, 2 Mar 2023 (showing first 50 of 57 entries )" in text
 
     client = client_with_test_fs
     rv = client.get(f"/list/astro-ph.CO/recent")
@@ -778,6 +785,7 @@ def test_no_listings_new(client_with_db_listings):
 
 
 #also tests sectioning visibility
+@mock.patch.object(list_page, 'min_show', 1)
 def test_no_listings_recent(client_with_db_listings):
     client = client_with_db_listings
     expected_string = "No updates for this time period."
@@ -813,7 +821,8 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Fri, 28 Jan 2011") == 2
 
     #sections farther ahead not shown
-    rv = client.get("/list/physics/recent?show=1")
+    with mock.patch("browse.controllers.list_page.show_values", [1, 25, 50, 100, 250, 500, 1000, 2000]):
+        rv = client.get("/list/physics/recent?show=1")
     assert rv.status_code == 200
     assert rv.text.count(expected_string) == 2
     assert rv.text.count("Thu, 3 Feb 2011") == 2
@@ -832,4 +841,47 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Mon, 31 Jan 2011") == 2
     assert rv.text.count("Fri, 28 Jan 2011") == 2
 
+
+def test_surrogate_keys(client_with_db_listings):
+    client=client_with_db_listings
+
+    rv = client.get("/list/math/recent?skip=4")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-recent" in head
+    assert "announce" in head
+    assert "list-recent-math" in head
+
+    rv = client.get("/list/cs.SY/new")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-new" in head
+    assert "announce" in head
+    assert "list-new-eess.SY" in head
+    
+    rv = client.get("/list/solv-int/2005-06")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-ym" in head
+    assert "announce"  not in head
+    assert "list-2005-06-nlin.SI" in head
+
+    rv = client.get("/list/astro-ph/2005")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-ym" in head
+    assert "announce"  not in head
+    assert "list-2005-astro-ph" in head
+
+    rv = client.get(f"/list/astro-ph/{date.today().year:04d}")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-ym" in head
+    assert "announce" in head
+
+    rv = client.get(f"/list/astro-ph/current")
+    head=rv.headers["Surrogate-Key"]
+    assert " list " in " "+head+" "
+    assert "list-ym" in head
+    assert "announce" in head
 

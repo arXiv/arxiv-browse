@@ -3,7 +3,13 @@ from typing import Any, cast
 
 from flask import g, current_app
 
-from .base_documents import DocMetadataService
+from arxiv.files.object_store import ObjectStore
+
+from browse.services.documents.base_documents import DocMetadataService
+from browse.services.global_object_store import get_global_object_store
+
+_doc_latest_versions_store: ObjectStore = None # type: ignore
+_doc_original_versions_store: ObjectStore = None # type: ignore
 
 def get_doc_service() -> DocMetadataService:
     """Gets the documents service configured for this app context."""
@@ -16,8 +22,9 @@ def get_doc_service() -> DocMetadataService:
 def fs_docs(config: dict, _: Any) -> DocMetadataService:
     """Factory function for file system abstract service."""
     from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
-    return FsDocMetadataService(config["DOCUMENT_LATEST_VERSIONS_PATH"],
-                                config["DOCUMENT_ORIGNAL_VERSIONS_PATH"])
+    return FsDocMetadataService(
+        get_global_object_store(config["ABS_PATH_ROOT"], '_doc_latest_versions_store'),
+    )
 
 
 def db_docs(config: dict, _: Any) -> DocMetadataService:

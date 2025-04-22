@@ -33,11 +33,11 @@
   <div id="download-button-info" hidden>
     {% set author_list = abs_meta.authors.raw.split(',') %}
     {%- if author_list|length > 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}} and {{author_list|length - 1}} other authors
     {%- elif author_list|length == 1 -%}
-    Download a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
+    View a PDF of the paper titled {{abs_meta.title}}, by {{author_list[0]}}
     {%- else -%}
-    Download a PDF of the paper titled {{abs_meta.title}}
+    View a PDF of the paper titled {{abs_meta.title}}
     {%- endif -%}
   </div>
 
@@ -49,12 +49,12 @@
   {% else %}
     {%- for format in format_list %}
       {%- if format.startswith('pdf') -%}
-  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">Download PDF</a></li>
+  <li><a href="{{url_for('dissemination.pdf', arxiv_id=requested_id)}}" aria-describedby="download-button-info" accesskey="f" class="abs-button download-pdf">View PDF</a></li>
       {%- endif -%}
       {%- if format == 'latexml' -%}
   <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
       {%- endif -%}
-      {%- if format == 'src' and current-%}
+      {%- if format == 'src' and current and not encrypted-%}
   <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
@@ -73,7 +73,7 @@
     {% if browse_context_previous_url -%}
     <span class="arrow">
       <a class="abs-button prev-url" href="{{browse_context_previous_url }}"
-         accesskey="p" title="previous in {{ browse_context }} (accesskey p)">&lt;&nbsp;prev</a>
+         accesskey="p" title="previous in {{ browse_context }} (accesskey p)" rel="nofollow">&lt;&nbsp;prev</a>
     </span>
     <span class="is-hidden-mobile">&nbsp; | &nbsp;</span>
     {%- else -%}
@@ -84,7 +84,7 @@
     {% if browse_context_next_url %}
     <span class="arrow">
       <a class="abs-button next-url" href="{{browse_context_next_url}}" accesskey="n"
-         title="next in {{ browse_context }} (accesskey n)">next&nbsp;&gt;</a>
+         title="next in {{ browse_context }} (accesskey n)"  rel="nofollow">next&nbsp;&gt;</a>
     </span>
     {%- else -%}
     <span class="abs-button next-url" class="nolink">next article&nbsp;&gt;</span>
@@ -95,12 +95,13 @@
   {%- if browse_context != 'arxiv' -%}
   {#- This fixes a bug in the classic UI logic -#}
   <div class="list">
-    <a class="abs-button abs-button-grey abs-button-small context-new" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}">new</a>
+    <a class="abs-button abs-button-grey abs-button-small context-new" href="{{url_for('.list_articles',context=browse_context, subcontext='new')}}"  rel="nofollow">new</a>
     <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}">recent</a>
+    <a class="abs-button abs-button-grey abs-button-small context-recent" href="{{url_for('.list_articles',context=browse_context, subcontext='recent')}}" rel="nofollow">recent</a>
     <span class="is-hidden-mobile"> | </span>
-    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=abs_meta.arxiv_identifier.yymm)}}">
-      {{- abs_meta.arxiv_identifier.yymm -}}</a>
+    {%- set yyyymm = '%04d-%02d' % (abs_meta.arxiv_identifier.year, abs_meta.arxiv_identifier.month) -%}
+    <a class="abs-button abs-button-grey abs-button-small context-id" href="{{url_for('.list_articles',context=browse_context, subcontext=yyyymm)}}" rel="nofollow">
+      {{- yyyymm -}}</a>
   </div>
   {%- endif -%}
 
@@ -111,9 +112,9 @@
       {% for category in abs_meta.get_browse_context_list() if not (browse_context==category) %}
         {%- set switch_url = url_for('browse.abstract', arxiv_id=abs_meta.arxiv_identifier.id, context=category) -%}
         {% if '.' in category %}
-        <a class="subclass" href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        <a class="subclass" href="{{ switch_url}}" rel="nofollow">{{ category }}</a><br class="is-hidden-mobile">
         {% else %}
-        <a href="{{ switch_url}}">{{ category }}</a><br class="is-hidden-mobile">
+        <a href="{{ switch_url}}" rel="nofollow">{{ category }}</a><br class="is-hidden-mobile">
         {% endif %}
       {% endfor %}
     </div>
@@ -200,25 +201,34 @@
     {{ generate_ancillary_file_list(ancillary_files)}}
   </div><!--end ancillary-->
 {% endif %}
+    {% if has_audio %}
+    <div class="extra-third-party">
+      <h3>Additional Features</h3>
+      <ul>
+        <li><a href="{{url_for('browse.audio_landing_page', arxivid=requested_id)}}" class="abs-button download-audio">Audio Summary</a></li>
+      </ul>
+    </div>
+    {% endif %}
     <div class="browse">
     {{ generate_browse_context() }}
     </div>
-
-    <div class="extra-ref-cite">
-      <h3>References &amp; Citations</h3>
-      <ul>
-        {% if include_inspire_link %}
-        <li>
-          <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
-        </li>
-        {% endif %}
-        <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
-        {#- This was previously injected by Bibliographic Explorer -#}
-        <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
-        <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
-      </ul>
-      <div style="clear:both;"></div>
-    </div>
+    {% if show_refs_cites %}
+      <div class="extra-ref-cite">
+        <h3>References &amp; Citations</h3>
+        <ul>
+          {% if include_inspire_link %}
+            <li>
+              <a class="abs-button abs-button-small cite-inspire" href="https://inspirehep.net/arxiv/{{ abs_meta.arxiv_id }}">INSPIRE HEP</a><br/>
+            </li>
+          {% endif %}
+          <li><a  class="abs-button abs-button-small cite-ads" href="https://ui.adsabs.harvard.edu/abs/arXiv:{{ abs_meta.arxiv_id|replace('/','%2F') }}">NASA ADS</a></li>
+          {#- This was previously injected by Bibliographic Explorer -#}
+          <li>{{- google_scholar_link(abs_meta, author_links) -}}</li>
+          <li><a  class="abs-button abs-button-small cite-semantic-scholar" href="https://api.semanticscholar.org/arXiv:{{ abs_meta.arxiv_id }}" target="_blank" rel="noopener">Semantic Scholar</a></li>
+        </ul>
+        <div style="clear:both;"></div>
+      </div>
+    {% endif %}
 
     {% if trackback_ping_count and trackback_ping_count > 0 %}
     <div class="extra-general">

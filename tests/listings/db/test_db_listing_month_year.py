@@ -117,9 +117,9 @@ def test_listings_for_month(app_with_db):
         items=ls.list_articles_by_month('nlin.CD', 1995, 10, 0,25)
         assert any(item.id=="chao-dyn/9510015" and item.listingType=="new" for item in items.listings)
 
-        #new categories are not found in subsumed archvies
+        #new categories should be found in subsumed archvies
         items=ls.list_articles_by_month("chao-dyn", 2008, 12, 0,25)
-        assert not any(item.id=="0812.4551" for item in items.listings)
+        assert any(item.id=="0812.4551" for item in items.listings)
 
         #old style id
         items=ls.list_articles_by_month("cond-mat.mes-hall", 2005, 1, 0,25)
@@ -177,8 +177,7 @@ def test_month_listing_page( client_with_db_listings):
     assert 'Chaotic Dynamics' in text
     assert 'Authors and titles for October 1995' in text
     #listing item dispalyed properly
-    assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text #TODO change this back to 4 digit year when all of listings is running on browse
-    #print(text)
+    assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text 
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
 
@@ -193,7 +192,6 @@ def test_year_listing_page( client_with_db_listings):
     assert 'Chaotic Dynamics' in text
     assert 'Authors and titles for 1995' in text
     #listing item dispalyed properly
-    assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text #TODO change this back to 4 digit year when all of listings is running on browse
-    #print(text)
+    assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text 
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text

@@ -36,7 +36,7 @@
     <dd>
       <div class='meta'>
         <div class='list-title mathjax'><span class='descriptor'>Title:</span>
-          {{article.title}}
+          {{article.title|tex2utf}}
         </div>
         <div class='list-authors'>
           {{- do_author_list( article ) -}}
@@ -102,7 +102,7 @@
 
 {%- macro show_link( txt, to_show ) %}
   {% if to_show %}
-    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}}>
+    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}} rel="nofollow">
       {{txt}}</a>
   {% else %}
     <span style="color: #454545">{{txt}}</span>
@@ -112,11 +112,8 @@
 {%- macro dl_links( article ) -%}
   {% set id = article.arxiv_id %}
   {% set downloads = downloads[ article.arxiv_id_v ] %}
-  {% set latexml_link = latexml[ article.arxiv_id_v ] %}
+  {% set latexml_link = latexml.get(article.arxiv_id_v) %}
   [<a href="{{url_for('dissemination.pdf', arxiv_id=id)}}" title="Download PDF" id="pdf-{{id}}" aria-labelledby="pdf-{{id}}">pdf</a>
-  {%- if 'ps' in downloads -%}
-    , <a href="{{url_for('dissemination.ps', arxiv_id=id)}}" title="Download PostScript" id="ps-{{id}}" aria-labelledby="ps-{{id}}">ps</a>
-  {%- endif -%}
   {%- if latexml_link -%}
     , <a href="{{ latexml_link }}" title="View HTML" id="html-{{id}}" aria-labelledby="html-{{id}}" rel="noopener noreferrer" target="_blank">html</a>
   {%- endif -%}
@@ -137,7 +134,7 @@
 
 
 {%- macro category_line(article) -%}
-  <span class="primary-subject">{{- article.primary_category.unalias().display -}}</span>
+  <span class="primary-subject">{{- article.primary_category.display() -}}</span>
   {%- if article.secondary_categories -%}
     {%- for category in article.display_secondaries() -%}
         ; {{ category }}

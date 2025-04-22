@@ -4,7 +4,6 @@ import re
 from datetime import datetime, time
 from lxml.etree import Element, SubElement, tostring, QName
 from datetime import timezone
-import xmltodict
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
@@ -12,7 +11,7 @@ from werkzeug.exceptions import BadRequest
 from arxiv.document.metadata import DocMetadata
 
 from arxiv.authors import parse_author_affil
-from arxiv.taxonomy import Category
+from arxiv.taxonomy.category import Category
 
 from ...services.database import (
     get_user_id_by_author_id, 
@@ -151,9 +150,9 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
     # 'categories' field
     all_categories = []
     if metadata.primary_category:
-        all_categories.append(metadata.primary_category.display)
+        all_categories.append(metadata.primary_category.display())
         if metadata.secondary_categories:
-            all_categories.extend(map(lambda cat: cat.display, metadata.secondary_categories))
+            all_categories.extend(map(lambda cat: cat.display(), metadata.secondary_categories))
     entry['categories'] = ', '.join(all_categories)
 
     # 'comment' field
@@ -185,7 +184,7 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
 
     # 'subject' field
     if metadata.primary_category:
-        entry['subject'] = metadata.primary_category.display
+        entry['subject'] = metadata.primary_category.display()
 
     # 'summary' field
     entry['summary'] = re.sub(r'\n+', ' ', metadata.abstract.strip())
@@ -255,7 +254,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
 
     #TODO: ps link
 
-    all_categories = []
+    all_categories: List[Category] = []
     if metadata.primary_category:
         all_categories.append(metadata.primary_category)
     else:
@@ -266,7 +265,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     SubElement(entry, QName(ARXIV_SCHEMA_URI, 'primary_category'), attrib={
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
-        'label': metadata.primary_category.display
+        'label': metadata.primary_category.display()
     }, nsmap={
         'arxiv': ARXIV_SCHEMA_URI
     })
@@ -275,7 +274,7 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
         SubElement(entry, 'category', attrib={
             'term': category.id,
             'scheme': ARXIV_SCHEMA_URI,
-            'label': category.display
+            'label': category.display()
         })
     
 

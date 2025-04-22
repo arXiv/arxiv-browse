@@ -9,18 +9,14 @@ from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urljoin
 
 from http import HTTPStatus as status
-
-from arxiv import taxonomy
-from arxiv.base import logging
 from dateutil import parser
 from dateutil.tz import tzutc
 from flask import request, url_for, current_app
 from werkzeug.exceptions import InternalServerError
 
-from browse.controllers import check_supplied_identifier, biz_tz
-
-from arxiv import taxonomy
-from arxiv.taxonomy import Category
+from arxiv.base import logging
+from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES
+from arxiv.taxonomy.category import Category
 from arxiv.identifier import (
     Identifier,
     IdentifierException,
@@ -33,6 +29,8 @@ from arxiv.document.exceptions import (
     AbsNotFoundException,
     AbsVersionNotFoundException,
 )
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.exceptions import AbsNotFound
 from browse.services.database import (
     count_trackback_pings,
@@ -43,9 +41,8 @@ from browse.services.database import (
     get_latexml_publish_dt,
 )
 from browse.services.documents import get_doc_service
-from arxiv.formats import formats_from_source_flag
-
 from browse.services.dissemination import get_article_store
+from browse.controllers import check_supplied_identifier
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -56,17 +53,10 @@ from browse.formatting.external_refs_cits import (
     get_dblp_bibtex_path,
 )
 from browse.formatting.latexml import get_latexml_url
-
-
-from browse.formatting.search_authors import (
-    queries_for_authors,
-    split_long_author_list,
-)
-from browse.controllers.response_headers import (
-    abs_expires_header,
-    mime_header_date
-)
+from browse.formatting.search_authors import queries_for_authors, split_long_author_list
+from browse.controllers.response_headers import mime_header_date
 from browse.formatting.metatags import meta_tag_metadata
+from browse.services.audio import has_audio
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +97,7 @@ def get_abs_page(arxiv_id: str) -> Response:
 
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-
+        response_headers=add_surrogate_key(response_headers,[f"abs-{arxiv_identifier.id}", f"paper-id-{arxiv_identifier.id}"])
         redirect = check_supplied_identifier(arxiv_identifier, "browse.abstract")
         if redirect:
             return redirect
@@ -154,14 +144,16 @@ def get_abs_page(arxiv_id: str) -> Response:
                     response_data["higher_version_withdrawn_submitter"] = _get_submitter(abs_meta.arxiv_identifier,
                                                                                          ver.version)
 
+        response_data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
+        response_data["show_refs_cites"] = _show_refs_cites(arxiv_identifier)
+        response_data["show_labs"] = _show_labs(arxiv_identifier)
+
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
     except AbsNotFoundException as ex:
         if (arxiv_identifier.is_old_id
-            and arxiv_identifier.archive in taxonomy.definitions.ARCHIVES):
-            archive_name = taxonomy.definitions.ARCHIVES[arxiv_identifier.archive][
-                "name"
-            ]
+            and arxiv_identifier.archive in ARCHIVES):
+            archive_name = ARCHIVES[arxiv_identifier.archive].full_name
             raise AbsNotFound(
                 data={
                     "reason": "old_id_not_found",
@@ -223,9 +215,8 @@ def _non_critical_abs_data(
     _prevnext_links(arxiv_identifier, abs_meta.primary_category, response_data)
 
     response_data["is_covid_match"] = _is_covid_match(abs_meta)
-    response_data["datacite_doi"] = get_datacite_doi(
-        paper_id=abs_meta.arxiv_id
-    )
+    response_data["datacite_doi"] = get_datacite_doi(paper_id=abs_meta.arxiv_id)
+    response_data["has_audio"] = has_audio(abs_meta)
 
 
 def _check_request_headers(
@@ -247,12 +238,10 @@ def _check_request_headers(
         last_mod_dt = response_data["trackback_ping_latest"]
 
     resp_headers["Last-Modified"] = mime_header_date(last_mod_dt)
-
-    #resp_headers["Expires"] = abs_expires_header(biz_tz())
-    # Above we had a Expires: based on publish time but admins wanted shorter when
-    # handling service tickets.
-    resp_headers["Surrogate-Control"] = "max-age=3600"  # caching services may strip this
-    resp_headers["Cache-Control"] = "max-age=3600"
+    # surrogate-control is used by caching servers like fastly. Caching services may strip this
+    resp_headers["Surrogate-Control"] = f"max-age={current_app.config.get('ABS_CACHE_MAX_AGE')}"
+    # cache-control is used by browsers, set shorter so refreshes happen on browsers
+    resp_headers["Cache-Control"] = f"max-age=3600"
 
     mod_since_dt = _time_header_parse("If-Modified-Since")
     return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
@@ -312,20 +301,15 @@ def _prevnext_links(
     context = None
     if "context" in request.args and (
         request.args["context"] == "arxiv"
-        or request.args["context"] in taxonomy.definitions.CATEGORIES
-        or request.args["context"] in taxonomy.definitions.ARCHIVES
+        or request.args["context"] in CATEGORIES
+        or request.args["context"] in ARCHIVES
     ):
         context = request.args["context"]
     elif primary_category:
-        pc = primary_category.canonical or primary_category
-        if not arxiv_identifier.is_old_id:  # new style IDs
-            context = pc.id
-        else:  # Old style id
-            if pc.id in taxonomy.definitions.ARCHIVES:
-                context = pc.id
-            else:
-                if arxiv_identifier.archive in taxonomy.definitions.ARCHIVES:
-                    context = arxiv_identifier.archive
+        context = primary_category.canonical_id
+    elif arxiv_identifier.is_old_id: 
+        if arxiv_identifier.archive in ARCHIVES: #context from old style id
+                    context=ARCHIVES[arxiv_identifier.archive].canonical_id
 
     response_data["browse_context"] = context
     response_data["browse_context_previous_url"] = url_for(
@@ -396,3 +380,21 @@ def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str
         return abs_meta.submitter.name or None
     except:
         return None
+
+def _show_refs_cites(arxiv_id: Identifier) -> bool:
+    NO_REFS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_REFS_IDS:
+        return False
+    else:
+        return True
+    
+def _show_labs(arxiv_id: Identifier) -> bool:
+    NO_LABS_IDS=[
+        "2307.10651" #ARXIVCE-2683
+        ]
+    if arxiv_id.id in NO_LABS_IDS:
+        return False
+    else:
+        return True

@@ -14,8 +14,15 @@ for the whole test run session. The default scope is 'function' which
 means that the fixture will be re-run for each test function.
 
 """
+import shutil
+import tempfile
+
 import pytest
 from pathlib import Path
+
+from arxiv.auth.legacy import util
+from sqlalchemy import create_engine
+
 from browse.factory import create_web_app
 from arxiv.config import Settings
 
@@ -24,17 +31,10 @@ from tests import path_of_for_test
 import browse.services.documents as documents
 import browse.services.listing as listing
 
-DEFAULT_DB = "sqlite:///tests/data/browse.db"
-TESTING_LATEXML_DB = 'sqlite:///tests/data/latexmldb.db'
 
-
-ARXIV_BASE_SETTINGS = Settings(
-    
-)
+ARXIV_BASE_SETTINGS = Settings()
 
 TESTING_CONFIG = {
-    "CLASSIC_DB_URI": DEFAULT_DB,
-    "LATEXML_DB_URI": TESTING_LATEXML_DB,
     'DOCUMENT_LISTING_SERVICE': listing.db_listing,
     'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs,
     "APPLICATION_ROOT": "",
@@ -45,14 +45,43 @@ TESTING_CONFIG = {
 def test_config():
     return TESTING_CONFIG.copy()
 
+
 @pytest.fixture(scope='session')
-def loaded_db():
+def test_dir():
+    db_path = tempfile.mkdtemp()
+    yield db_path
+    #shutil.rmtree(db_path)
+
+
+@pytest.fixture(scope='session')
+def classic_db_engine(test_dir):
+    uri = f'sqlite:///{test_dir}/test_classic.db'
+    engine = create_engine(uri)
+    util.create_all(engine)
+    yield engine
+
+
+@pytest.fixture(scope='session')
+def latexml_db_engine(test_dir):
+    uri = f'sqlite:///{test_dir}/test_latexml.db'
+    engine = create_engine(uri)
+    util.create_all(engine)
+    yield engine
+
+
+@pytest.fixture(scope='session')
+def loaded_db(classic_db_engine, latexml_db_engine):
     """Loads the testing db"""
+
     app = create_web_app(**test_config())
     with app.app_context():
         from arxiv import db
+        db._classic_engine = classic_db_engine
+        db._latexml_engine = latexml_db_engine
+        from arxiv.db import models
+        models.configure_db_engine(db._classic_engine, db._latexml_engine)
         from . import populate_test_database
-        populate_test_database(True, db)
+        populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
 
 
 @pytest.fixture(scope='session')
@@ -110,8 +139,7 @@ def app_with_test_fs(loaded_db):
     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.fs_docs
     conf["DOCUMENT_LISTING_SERVICE"] = listing.fs_listing
     conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
-    conf["DOCUMENT_LATEST_VERSIONS_PATH"] = "tests/data/abs_files/ftp"
-    conf["DOCUMENT_ORIGNAL_VERSIONS_PATH"] = "tests/data/abs_files/orig"
+    conf["ABS_PATH_ROOT"] = "tests/data/abs_files/"
 
     app = create_web_app(**conf)
 
@@ -123,13 +151,11 @@ def app_with_test_fs(loaded_db):
 
 @pytest.fixture(scope='function')
 def dbclient(app_with_db):
-    print ("DB CLIENT FIXTURE IS GOOD")
-
     """A browse app client with a test DB populated with fresh data.
 
-    This is function so each test funciton gets an new app_context."""
+    This is function so each test function gets a new app_context."""
     with app_with_db.app_context():
-        yield app_with_db.test_client() # yield so the tests already have the app_context
+        yield app_with_db.test_client()  # yield so the tests already have the app_context
 
 
 @pytest.fixture(scope='function')

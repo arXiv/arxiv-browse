@@ -3,8 +3,7 @@
 Each controller corresponds to a distinct browse feature with its own
 request handling logic.
 """
-from datetime import timezone, datetime, timedelta
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, List
 from zoneinfo import ZoneInfo
 
 from http import HTTPStatus as status
@@ -51,21 +50,3 @@ def biz_tz() -> ZoneInfo:
         return _arxiv_biz_tz
     else:
         return _arxiv_biz_tz
-
-
-def next_publish(now: Optional[datetime] = None) -> datetime:
-    """Guesses the next publish but knows nothing about holidays.
-
-    Returns a `datetime` with a `timezone` from `biz_tz()`."""
-    if now is None:
-        now = datetime.now(tz=biz_tz())
-
-    if now.weekday() == 4:
-        return (now + timedelta(days=2)).replace(hour=20)
-    if now.weekday() == 5:
-        return (now + timedelta(days=2)).replace(hour=20)
-
-    if now.hour > 21:
-        return next_publish((now + timedelta(days=1)).replace(hour=12))
-    else:
-        return now.replace(hour=20)

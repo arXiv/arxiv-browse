@@ -7,9 +7,8 @@ from typing import Any, Dict, Optional, Tuple
 from http import HTTPStatus as status
 
 from flask import current_app
-from werkzeug.exceptions import InternalServerError
 
-from arxiv import taxonomy
+from arxiv.taxonomy.definitions import GROUPS, CATEGORIES
 from arxiv.base import logging
 from arxiv.base.globals import get_application_config
 
@@ -36,10 +35,9 @@ def get_home_page() -> Response:
     # except Exception as ex:
     #     raise InternalServerError from ex
 
-    response_data['groups'] = taxonomy.definitions.GROUPS
-    response_data['archives'] = taxonomy.definitions.ARCHIVES_ACTIVE
-    response_data['categories'] = taxonomy.definitions.CATEGORIES_ACTIVE
-    response_headers['Cache-Control'] = "max-age: 3600"
+    response_data['groups'] = GROUPS
+    response_data['categories'] = CATEGORIES
+    response_headers['Surrogate-Control'] = "max-age: 3600"
     return response_data, status.OK, response_headers
 
 

@@ -2,6 +2,9 @@
 
 from typing import List, Optional, Union
 import dataclasses
+from pathlib import Path
+
+from google.cloud.storage import Client
 
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.parse_abs import parse_abs_file
@@ -11,22 +14,33 @@ from arxiv.document.exceptions import (
     AbsNotFoundException,
     AbsVersionNotFoundException
 )
+from arxiv.files.object_store import ObjectStore
+from arxiv.files.key_patterns import (
+    abs_path_orig,
+    abs_path_current
+)
 from browse.services.documents.config.deleted_papers import DELETED_PAPERS
-from arxiv.files.anypath import fs_check
-
 from browse.services.documents.base_documents import DocMetadataService
 
-from .legacy_fs_paths import FSDocMetaPaths
+
+def fs_check(abs_store: ObjectStore) -> List[str]:
+    """Checks for a file system for use in `HasStatus.service_status()`"""
+    try:
+        status, message = abs_store.status()
+        if status == 'BAD':
+            return [f"{abs_store} status is BAD: {message}"]
+    except Exception as ex:
+        return [f"Object store status check failed due to {ex}"]
+
+    return []
+
 
 class FsDocMetadataService(DocMetadataService):
     """Class for arXiv document metadata service."""
-    fs_paths: FSDocMetaPaths
 
-    def __init__(self,
-                 latest_versions_path: str,
-                 original_versions_path: str) -> None:
+    def __init__(self, abs_store: ObjectStore) -> None:
         """Initialize the FS document metadata service."""
-        self.fs_paths = FSDocMetaPaths(latest_versions_path, original_versions_path)
+        self.abs_store = abs_store
 
     def get_abs(self, arxiv_id: Union[str, Identifier]) -> DocMetadata:
         """Get the .abs metadata for the specified arXiv paper identifier.
@@ -57,11 +71,10 @@ class FsDocMetadataService(DocMetadataService):
 
         try:
             this_version = self._abs_for_version(identifier=paper_id,
-                                                 version=paper_id.version)
+                                                 is_latest=False)
         except AbsNotFoundException as e:
             if paper_id.is_old_id:
                 raise
-
             raise AbsVersionNotFoundException(e) from e
 
         # Several fields need to reflect the latest version's data
@@ -78,17 +91,15 @@ class FsDocMetadataService(DocMetadataService):
 
         return combined_version
 
-    def _abs_for_version(self, identifier: Identifier,
-                         version: Optional[int] = None) -> DocMetadata:
+    def _abs_for_version(self, identifier: Identifier, is_latest: bool = True) -> DocMetadata:
         """Get a specific version of a paper's abstract metadata.
 
         if version is None then get the latest version."""        
-        path = self.fs_paths.get_abs_file(identifier, version)
-        return parse_abs_file(filename=path)
-
+        obj = self.abs_store.to_obj(abs_path_current(identifier)) if is_latest \
+            else self.abs_store.to_obj(abs_path_orig(identifier))
+        return parse_abs_file(obj)
 
 
     def service_status(self)->List[str]:
-        probs = fs_check(self.fs_paths.latest_versions_path)
-        probs.extend(fs_check(self.fs_paths.original_versions_path))
-        return ["FsDocMetadataService: {prob}" for prob in probs]
+        probs = fs_check(self.abs_store)
+        return [f"FsDocMetadataService: {prob}" for prob in probs]

@@ -91,3 +91,8 @@ def test_arguments(mock_trackback_ping, app_with_test_fs) -> None:  # type: igno
         trackback_id='2', hashed_document_id='f005ba11')
     assert code == 301, 'Expect redirect for matching hashed_document_id'
     assert headers['Location'] == mtb.url, 'Redirect location header matches trackback URL'
+
+
+def test_tb_bad_data(dbclient):
+    resp = dbclient.get("/tb?uid=%27%22%20teste=efx-802&vid=%27%22%")
+    assert resp.status_code == 400

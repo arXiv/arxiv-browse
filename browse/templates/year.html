@@ -1,23 +1,21 @@
 {% extends "base.html" %}
-{% import "alert_macro.html" as alert with context %}
 
-{% block title %}{{archive.name}}{% endblock %}
+{% block title %}{{archive.full_name}}{% endblock %}
 
 
 {% block header_h1 %}
 <h1>
-<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a> > {{year}}
+<a href="{{ url_for('.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt; <a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">{{archive.id}}</a> > {{year}}
 </h1>
 {% endblock %}
 
 
 {% block content %}
-{{alert.alert(alert_title, alert_content)}}
 
-<h1>{{archive.name}}</h1>
+<h1>{{archive.full_name}}</h1>
 <h2>Article statistics for {{year}}</h2>
-<p>Available montly lists with counts of <b>{{archive_id}} articles</b> +
-<i>cross-listings to {{archive_id}}</i> in {{year}}
+<p>Available montly lists with counts of <b>{{archive.id}} articles</b> +
+<i>cross-listings to {{archive.id}}</i> in {{year}}
 (each '|' represents 20 articles):</p>
 
 <ul>

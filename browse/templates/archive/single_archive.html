@@ -5,20 +5,20 @@
 <link rel="alternate" type="application/rss+xml" title="{{archive['name']}}" href="/rss/{{archive_id}}"/>
 {% endblock head %}
 
-{% block title %}{{archive.name}}{% endblock %}
+{% block title %}{{archive.full_name}}{% endblock %}
 
 {% block header_h1 %}
-<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">{{archive_id}}</a></h1>
+<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">{{archive.id}}</a></h1>
 {% endblock %}
 
 
 {%- block content %}
-  <h1>{{archive.name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
+  <h1>{{archive.full_name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
 
   {% if subsumed_id %}
     <p>The <b>{{subsumed_id}}</b> archive has been subsumed into
-      <span class="primary-subject">{{subsuming_category['name']}} ({{subsumed_by}}).</span></p>
-    <p>{{subsuming_category['name']}} ({{subsumed_by}}) is part of the {{archive['name']}} archive.</p>
+      <span class="primary-subject">{{subsuming_category.full_name}} ({{subsuming_category.id}}).</span></p>
+    <p>{{subsuming_category.full_name}} ({{subsuming_category.id}}) is part of the {{archive.full_name}} archive.</p>
   {% endif %}
 
 
@@ -28,19 +28,17 @@
     <li><b>Browse:</b>
       <ul>
         <li>
-          <a href="{{url_for('.list_articles', context=archive_id, subcontext='new')}}">new</a>
+          <a href="{{url_for('.list_articles', context=archive.id, subcontext='new')}}">new</a>
           (most recent mailing, with abstracts)
         </li>
-        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='recent')}}">recent</a>
+        <li><a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">recent</a>
           (last 5 mailings)
         </li>
-        <li><a href="{{url_for('.list_articles', context=archive_id, subcontext='current')}}">current month's</a>
+        <li><a href="{{url_for('.list_articles', context=archive.id, subcontext='current')}}">current month's</a>
           {{archive_id}} listings</li>
           <li>specific year/month:
 
-            {# <form action="{{url_for('.list_articles')}}" method="get"> #}
-            {# hard coded for legacy /list for now #}
-          <form action="/list" method="get">
+            <form action="{{url_for('.list_articles')}}" method="get">
             {{ list_form.archive }}
             {{ list_form.year}} {{ list_form.month}}
             {{list_form.submit}}
@@ -50,40 +48,54 @@
     </li>
 
     <li><b>Catch-up:</b>
-      {# hard coded for legacy /catchup for now #}
-      <form action="/catchup" method="post">
-        <input name="archive" type="hidden" value="{{archive_id}}"/>
+      <form id="catchup-form" action="{{ url_for('.catchup_form') }}" method="get" onsubmit="catchupParamSelection('{{ archive.id }}')">
+
+        <input id="catchup_archive" type="hidden" value="{{archive.id}}"/>
+        <input type="hidden" id="subject" name="subject" />
+        {% set categories = archive.get_categories() %}
+        {% if categories|length > 1 %}
+          <label for="catchup_category">Categories:</label>
+          <select name="catchup_category" id="catchup_category">
+              <option value="" selected>All</option>
+              {% for category in categories %}
+                  <option value="{{ category.id }}">
+                      {{ category.full_name }}
+                  </option>
+              {% endfor %}
+          </select>
+          <br>
+        {% endif %}
+
         Changes since:
-        <select name="sday">
+        <select id="catchup_day">
           {% for day in days %}
-            <option {% if day == catchup_to.strftime('%d') %}selected="true"{% endif %}>{{day}}</option>
+              <option value="{{ day }}">{{ day }}</option>
           {% endfor %}
         </select>
-        <select name="smonth">
-          {% for val, name in months %}
-            <option value="{{val}}"
-                    {% if day == catchup_to.strftime('%m') %}selected="true"{% endif %}>
-                    {{name}}</option>
-          {% endfor %}
+        <select id="catchup_month">
+            {% for val, name in months %}
+                <option value="{{ val }}" {% if val == current_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
         </select>
-        <select name="syear">
-          {% for year in years %}
-            <option {% if year == catchup_to.strftime('%Y')%} selected="true"{% endif %}>{{year}}</option>
-          {% endfor %}
+        <select id="catchup_year">
+            {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
         </select>
-        , view results <select name="method">
-        <option selected="selected">
-          without
-        </option>
-        <option>
-          with
-        </option>
+        <input type="hidden" id="date" name="date" />
+
+        , view results 
+        <select name="include_abs">
+          <option value="False" selected> without </option>
+          <option value="True" > with </option>
         </select>
         abstracts
+
         <input type="submit" value="Go"/>
       </form>
     </li>
-    <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive_id) }}">{{archive_id}} archive</a></li>
+
+    <li><b>Search</b> within the <a href="{{ url_for('search_archive', archive=archive.id) }}">{{archive.id}} archive</a></li>
 
     <li>Article statistics by year:<br>
       {% for url, year in stats_by_year %}
@@ -94,16 +106,40 @@
   </ul>
 
   {% if  category_list|length > 1 %}
-  <h2>Categories within {{archive.name}}</h2>
+  <h2>Categories within {{archive.full_name}}</h2>
   <ul>
     {%  for category in category_list %}
-      <li><b>{{category.id}} - {{category.name}}</b>
+      <li><b>{{category.id}} - {{category.full_name}}</b>
         (<a href="{{url_for('.list_articles', context=category.id, subcontext='new')}}">new</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='recent')}}">recent</a>,
         <a href="{{url_for('.list_articles', context=category.id, subcontext='current')}}">current month</a>)
-       <div class="description">{{category.description}}</div>
+        {% if category.description %}
+          <div class="description">{{category.description}}</div>
+        {% endif %}
     </li>
     {% endfor %}
   </ul>
   {% endif %}
+
+  <script>
+    function catchupParamSelection(archive) {
+      var day = document.getElementById('catchup_day').value.padStart(2, '0'); 
+      var month = document.getElementById('catchup_month').value.padStart(2, '0'); 
+      var year = document.getElementById('catchup_year').value;
+      var combinedDate = `${year}-${month}-${day}`;
+      document.getElementById('date').value = combinedDate;
+  
+      var categoryElement = document.getElementById('catchup_category');
+      var category = categoryElement ? categoryElement.value : "";
+      var subject;
+      if (category && category !== "") {
+        subject = category; 
+      } else {
+        subject = archive; 
+      } 
+      document.getElementById('subject').value = subject
+    }
+  </script>
 {%- endblock %}
+
+

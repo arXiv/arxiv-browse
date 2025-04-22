@@ -9,6 +9,7 @@ from flask.logging import default_handler
 from arxiv.base import Base
 from arxiv.base.urls import canonical_url, urlizer
 from arxiv.base.filters import tidy_filesize
+from arxiv.db import config_query_timing, configure_db
 from flask import Flask
 from flask_s3 import FlaskS3
 # This gives the error on import
@@ -37,7 +38,12 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
                 static_url_path=f'/static/browse/{settings.APP_VERSION}')
     app.config.from_object(settings)
 
+    app.engine, app.latexml_engine  = configure_db(settings) # type: ignore
+
     Base(app)
+
+    # Log long SQL queries
+    config_query_timing(app.engine, 0.2, 8) # type: ignore
     #Auth(app)
 
     # routes

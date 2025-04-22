@@ -13,9 +13,6 @@ from arxiv.identifier import Identifier
 
 from tests import grep_f_count, execute_sql_files, path_of_for_test
 
-
-DATABASE_URL = 'sqlite:///:memory:'
-
 import pytest
 
 
@@ -222,8 +219,8 @@ class TestBrowseDatabaseService(TestCase):
             'There is at least one document in the DB.'
         )
 
-    @mock.patch('arxiv.db.session.execute')
-    @mock.patch('arxiv.db.session.scalar')
+    @mock.patch('arxiv.db.Session.execute')
+    @mock.patch('arxiv.db.Session.scalar')
     def test_error_conditions(self, mock_scalar, mock_execute) -> None:
         mock_execute.side_effect = NoResultFound
         mock_scalar.side_effect = NoResultFound

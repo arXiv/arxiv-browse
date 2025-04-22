@@ -46,8 +46,8 @@ from http import HTTPStatus as status
 from typing import Any, Dict, List, Optional, Tuple, Union
 import re
 
-from arxiv import taxonomy
-from arxiv.taxonomy.definitions import CATEGORIES
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES_SUBSUMED, ARCHIVES
+from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.abs_page import truncate_author_list_size
 from browse.controllers.list_page.paging import paging
@@ -59,22 +59,23 @@ from arxiv.formats import formats_from_source_flag
 from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
                                      get_listing_service, ListingItem)
 
-from browse.formatting.latexml import get_latexml_url
+from browse.formatting.latexml import get_latexml_url, get_latexml_urls_for_articles
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
 
-show_values = [5, 10, 25, 50, 100, 250, 500, 1000, 2000]
+show_values = [25, 50, 100, 250, 500, 1000, 2000]
 """" Values of $show for more/fewer/all."""
 
 year_month_pattern = re.compile(r'^\d{4}-\d{1,2}$')
 
+min_show = 25
 max_show = show_values[-1]
 """Max value for show that controller respects."""
 
-default_show = show_values[2]
+default_show = show_values[1]
 """Default value for show."""
 
 Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
@@ -130,7 +131,6 @@ def get_listing(subject_or_category: str,
     show
        Number of articles to show
     """
-    
     skip = skip or request.args.get('skip', '0')
     show = show or request.args.get('show', '')
     if request.args.get('archive', None) is not None:
@@ -140,6 +140,7 @@ def get_listing(subject_or_category: str,
         month = request.args.get('month', None)
         if month and month != 'all':
             time_period = time_period + "-"+request.args.get('month')  # type: ignore
+      
 
 
     if (
@@ -154,19 +155,22 @@ def get_listing(subject_or_category: str,
     ):
         raise BadRequest("Listing requires subject and valid time period parameters.") 
 
-    if subject_or_category in taxonomy.ARCHIVES_SUBSUMED:
-        subject_or_category=taxonomy.ARCHIVES_SUBSUMED[subject_or_category]
+    if subject_or_category in ARCHIVES_SUBSUMED:
+        subject_or_category=ARCHIVES_SUBSUMED[subject_or_category]
 
-    if subject_or_category in taxonomy.CATEGORIES:
+    if subject_or_category in CATEGORIES:
         list_type = 'category'
-        list_ctx_name = taxonomy.CATEGORIES[subject_or_category]['name']
-        list_ctx_id = subject_or_category
-        list_ctx_in_archive = taxonomy.CATEGORIES[subject_or_category]['in_archive']
-    elif subject_or_category in taxonomy.ARCHIVES:
+        cat=CATEGORIES[subject_or_category]
+        category=cat.get_canonical() #make sure we use the canonical version of the category
+        list_ctx_name = category.full_name
+        list_ctx_id = category.id
+        list_ctx_in_archive = category.in_archive
+    elif subject_or_category in ARCHIVES:
         list_type = 'archive'
-        list_ctx_id = subject_or_category
-        list_ctx_name = taxonomy.ARCHIVES[subject_or_category]['name']
-        list_ctx_in_archive = list_ctx_name
+        archive=ARCHIVES[subject_or_category]
+        list_ctx_id = archive.id
+        list_ctx_name = archive.full_name
+        list_ctx_in_archive = archive.id
     else:
         raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
@@ -177,13 +181,17 @@ def get_listing(subject_or_category: str,
     else:
         skipn = int(skip)
 
-    if not show or not show.isdigit():
+    if show:
+        if show.isdigit() and int(show) in show_values:
+            shown=int(show)
+        else:
+            raise BadRequest(f"Invalid show value. Valid values: {', '.join(map(str, show_values))}")
+    else:
         if time_period == 'new':
             shown = max_show
         else:
             shown = default_show
-    else:
-        shown = min(int(show), max_show)
+
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
@@ -192,6 +200,7 @@ def get_listing(subject_or_category: str,
 
     if time_period == 'new':
         list_type = 'new'
+        response_headers=add_surrogate_key(response_headers,["list-new", "announce", f"list-new-{list_ctx_id}"])
         new_resp: Union[ListingNew, NotModifiedResponse] =\
             listing_service.list_new_articles(list_ctx_id, skipn,
                                               shown, if_mod_since)
@@ -209,6 +218,7 @@ def get_listing(subject_or_category: str,
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
+        response_headers=add_surrogate_key(response_headers,["list-recent", "announce", f"list-recent-{list_ctx_id}"])
         rec_resp = listing_service.list_pastweek_articles(
             list_ctx_id, skipn, shown, if_mod_since)
         response_headers.update(_expires_headers(rec_resp))
@@ -220,7 +230,10 @@ def get_listing(subject_or_category: str,
         response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
     else:  # current or YYMM or YYYYMM or YY
+
         yandm = year_month(time_period)
+        response_headers=add_surrogate_key(response_headers,["list-ym"])
+
         if yandm is None:
             raise BadRequest(f"Invalid time period: {time_period}") 
         should_redir, list_year, list_month = yandm
@@ -234,7 +247,7 @@ def get_listing(subject_or_category: str,
                 new_time=f"{list_year:04d}-{list_month:02d}"
             else:
                 new_time=f"{list_year:04d}"
-            new_address=url_for("browse.list_articles", context=subject_or_category, subcontext=new_time)
+            new_address=url_for("browse.list_articles", context=list_ctx_id, subcontext=new_time)
             response_headers["Location"]=new_address
             return {}, status.MOVED_PERMANENTLY, response_headers
         
@@ -244,12 +257,18 @@ def get_listing(subject_or_category: str,
             if list_month < 1 or list_month > 12:
                 raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
+            response_headers=add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}"])
+            if date.today().year==list_year and date.today().month==list_month:
+                response_headers=add_surrogate_key(response_headers,["announce"])
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
             resp = listing_service.list_articles_by_month(
                 list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
+            response_headers=add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}"])
+            if list_year==date.today().year: 
+                response_headers=add_surrogate_key(response_headers,["announce"]) 
             resp = listing_service.list_articles_by_year(
                 list_ctx_id, list_year, skipn, shown, if_mod_since)
 
@@ -299,12 +318,14 @@ def get_listing(subject_or_category: str,
     def author_query(article: DocMetadata, query: str)->str:
         try:
             if article.primary_archive:
-                archive = article.primary_archive.id
+                archive_id = article.primary_archive.id
+            elif article.primary_category:
+                archive_id = article.primary_category.in_archive
             else:
-                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+                archive_id=list_ctx_in_archive 
             return str(url_for('search_archive',
                            searchtype='author',
-                           archive=archive,
+                           archive=archive_id,
                            query=query))
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
@@ -315,7 +336,6 @@ def get_listing(subject_or_category: str,
     response_data['url_for_author_search'] = author_query
 
     return response_data, status.OK, response_headers
-
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""
@@ -359,8 +379,8 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
     tup_f = filter(lambda nt: nt[0] < show and nt[1] >= show, n_n1_tups)
     rd = {'mf_fewer': next(tup_f, (None, None))[0]}
 
-    if not viewing_all and count < max_show and show < max_show:
-        rd['mf_all'] = count
+    if not viewing_all and count > show and show < max_show:
+        rd['mf_all'] = max_show
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
@@ -388,10 +408,9 @@ def latexml_links_for_article (article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to latexml links"""
     return {article.arxiv_id_v: get_latexml_url(article, True)}
 
-def latexml_links_for_articles (listings: List[Any])->Dict[str, Any]:
+def latexml_links_for_articles (articles: List[ListingItem]) -> Dict[str, Optional[str]]:
     """Returns a Dict of article id to latexml links"""
-    return {item.article.arxiv_id_v: get_latexml_url(item.article, True)
-                for item in listings}
+    return get_latexml_urls_for_articles(map(lambda x: x.article, articles))
 
 def authors_for_article(article: DocMetadata)->Dict[str, Any]:
     """Returns a Dict of article id to author links."""
@@ -534,7 +553,7 @@ def sub_sections_for_types(
         continued=skipn > 0,
         last=skipn >= new_count - shown,
         visible=len(news)>0,
-        heading=f'New submissions for {date} ' 
+        heading=f'New submissions ' 
     )
 
     sec_cross=ListingSection(
@@ -544,7 +563,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > cross_start,
         last=skipn >= rep_start - shown,
         visible=len(crosses)>0,
-        heading=f'Cross submissions for {date} '
+        heading=f'Cross submissions '
     )
 
     sec_rep=ListingSection(
@@ -554,7 +573,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > rep_start,
         last=last_shown >= new_count + cross_count + rep_count,
         visible=len(reps)>0,
-        heading=f'Replacement submissions for {date} '
+        heading=f'Replacement submissions '
     )
 
     secs=[sec_new, sec_cross, sec_rep]
@@ -567,7 +586,7 @@ def sub_sections_for_types(
                 showing = showing + 'last '
         if not sec.last and not sec.continued:
             showing = showing + 'first '
-        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries )'
+        sec.heading += f'({showing}{len(sec.items)} of {sec.total} entries)'
 
     return {'sub_sections_for_types': secs}
 
@@ -580,6 +599,6 @@ def _expires_headers(listing_resp:
                      Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
-        return {'Expires': str(listing_resp.expires)}
+        return {'Surrogate-Control': f'max-age={listing_resp.expires}'}
     else:
         return {}

@@ -3,13 +3,12 @@
 {% block header_h1 %}
 <h1>
 <a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
-<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}"/>{{arxiv_idv}}</a> &gt format
+<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}">{{arxiv_idv}}</a> &gt format
 </h1>
 {% endblock %}
 
 {% block content %}
 <h1>Format selector for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}">{{arxiv_idv}}</a></h1>
-<p><b>Set cookies</b>: if your browser supports cookies you can <a href="{{url_for('browse.cookies')}}">configure your default format</a>.</p>
 
 <dl>
 
@@ -94,7 +93,7 @@ Delivered as a <b>gzipped DVI</b> (.dvi.gz) file or as a <b>gzipped tar</b>
 {% if docx %}
 <dt><b>DOCX</b></dt>
 <dd>
-<form action="/e-print/$id_str.docx" method="get">
+<form action="{{url_for('src.src', arxiv_id_str=arxiv_idv)}}" method="get">
 <input type="submit" value="Download DOCX" /><br />
 Requires Word 2007 or earlier versions of Word with
 <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=941B3470-3AE9-4AEE-8F43-C6BB74CD1466&displaylang=en">Microsoft
@@ -105,7 +104,7 @@ to view/edit.
 </dd>
 {% endif %}
 
-{% if src %}
+{% if src and not encrypted %}
 <dt><b>Source</b></dt>
 <dd>
 Delivered as a <b>gzipped tar</b> (.tar.gz) file if there are multiple files,
@@ -122,8 +121,6 @@ otherwise as a <b>PDF</b> file, or a <b>gzipped TeX, DVI, PostScript or HTML</b>
 (<code>Content-Encoding: x-gzip</code>). Your browser may silently uncompress
 after downloading so the files you see saved may appear uncompressed.</p>
 
-<p>Please report any problems to <a href="https://info.arxiv.org/help/contact">arXiv admins</a>, being
-certain to state the paper identifier, explicit options you've selected and that
-you're using $THIS_SITE.</p>
+<p>Please report any problems to <a href="https://arxiv-org.atlassian.net/servicedesk/customer/portal/1">arXiv technical support</a> and include the paper identifier.</p>
 
 {% endblock %}

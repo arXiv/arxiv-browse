@@ -22,7 +22,8 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input id="bibex-toggle" type="checkbox" class="lab-toggle">
+              <input id="bibex-toggle" type="checkbox" class="lab-toggle"
+                     data-script-url="{{ url_for('static', filename='bibex/bibex.js') }}?20241202">
               <span class="slider"></span>
               <span class="is-sr-only">Bibliographic Explorer Toggle</span>
             </label>
@@ -32,6 +33,23 @@
           </div>
         </div>
         {% endif %}
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="connectedpapers-toggle"
+                type="checkbox"
+                class="lab-toggle"
+                data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
+                aria-labelledby="label-for-connected-papers">
+              <span class="slider"></span>
+              <span class="is-sr-only">Connected Papers Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-connected-papers">Connected Papers</span> <em>(<a href="https://www.connectedpapers.com/about" target="_blank">What is Connected Papers?</a>)</em>
+          </div>
+        </div>
         {%- if rd_int >= 202106171600 -%}
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
@@ -70,6 +88,7 @@
         </div>
       </div>
         <div class="labs-content-placeholder labs-display" style="display: none;"></div>
+        <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div style="min-height: 15px" id="litmaps-open-in"></div>
         <div style="min-height: 15px" id="scite-open-in"></div>
     </div>
@@ -80,6 +99,22 @@
     <div class="tab">
       <h1>Code, Data and Media Associated with this Article</h1>
       <div class="toggle">
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="alphaxiv-toggle"
+                data-script-url="{{ url_for('static', filename='js/alphaxiv.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-alphaxiv">
+              <span class="slider"></span>
+              <span class="is-sr-only">alphaXiv Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-alphaxiv">alphaXiv</span> <em>(<a href="https://alphaxiv.org/" target="_blank">What is alphaXiv?</a>)</em>
+          </div>
+        </div>
+
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -132,6 +167,22 @@
           <div class="column lab-switch">
             <label class="switch">
               <input
+                id="huggingface-toggle"
+                data-script-url="{{ url_for('static', filename='js/huggingface.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-huggingface">
+              <span class="slider"></span>
+              <span class="is-sr-only">Huggingface Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-huggingface">Hugging Face</span> <em>(<a href="https://huggingface.co/huggingface" target="_blank">What is Huggingface?</a>)</em>
+          </div>
+        </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
@@ -162,12 +213,14 @@
         </div>
       </div>
 
+      <div id="alphaxiv-output" style="display:none"></div>
       <div id="catalyzex-output" style="display:none"></div>
       <div id="dagshub-output" style="display:none"></div>
       <div id="gotitpub-output" style="display:none"></div>
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
+      <div id="huggingface-output" style="display:none"></div>
     </div>
     {%- if abs_meta.doi -%}
     <input type="radio" name="tabs" id="tabfive">
@@ -273,20 +326,6 @@
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
-                <input id="connectedpapers-toggle" type="checkbox" class="lab-toggle"
-                       data-script-url="{{ url_for('static', filename='js/connectedpapers.js') }}"
-                       aria-labelledby="label-for-connected-papers" >
-                <span class="slider"></span>
-                <span class="is-sr-only">Connected Papers Toggle</span>
-              </label>
-            </div>
-            <div class="column lab-name">
-              <span id="label-for-connected-papers">Connected Papers</span> <em>(<a href="https://www.connectedpapers.com/about" target="_blank">What is Connected Papers?</a>)</em>
-            </div>
-          </div>
-          <div class="columns is-mobile lab-row">
-            <div class="column lab-switch">
-              <label class="switch">
                 <input id="core-recommender-toggle" type="checkbox" class="lab-toggle" aria-labelledby="label-for-core">
                 <span class="slider"></span>
                 <span class="is-sr-only">Core recommender toggle</span>
@@ -296,7 +335,7 @@
               <span id="label-for-core">CORE Recommender</span> <em>(<a href="https://core.ac.uk/services/recommender">What is CORE?</a>)</em>
             </div>
           </div>
-          {%- if abs_meta.primary_category and (abs_meta.primary_category in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.startswith('astro-ph') or abs_meta.primary_category.startswith('cond-mat')) %}
+          {%- if abs_meta.primary_category and (abs_meta.primary_category.id in ['cs.LG', 'gr-qc', 'hep-ph', 'hep-th'] or abs_meta.primary_category.id.startswith('astro-ph') or abs_meta.primary_category.id.startswith('cond-mat')) %}
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
@@ -331,7 +370,6 @@
             <div class="tab-flower" id="tab-topic"><svg id="flower-graph-topic"></svg></div>
           </div>
         </div>
-        <div style="min-height: 15px" id="connectedpapers-output"></div>
         <div id="coreRecommenderOutput"></div>
         <div id="iarxivOutput"></div>
       </div>

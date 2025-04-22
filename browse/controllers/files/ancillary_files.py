@@ -6,13 +6,15 @@ from flask import Response, abort, make_response, render_template
 from flask_rangerequest import RangeRequest
 
 from arxiv.identifier import Identifier, IdentifierException
+from arxiv.integration.fastly.headers import add_surrogate_key
+
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import Deleted
 from browse.services.documents import get_doc_service
 from arxiv.files import FileObj
 from arxiv.files import FileFromTar
 
-from . import last_modified, add_time_headers, add_mimetype
+from . import last_modified, add_time_headers, add_mimetype, maxage
 
 
 def get_extracted_src_file_resp(arxiv_id_str: str,
@@ -44,7 +46,7 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"No ancillary files for {arxiv_id.idv}"),
-            404, {'Cache-Control': f"max-age={60*60}"})
+            404, {'Surrogate-Control': maxage(arxiv_id.has_version)})
 
     dis_res = get_article_store().dissemination('e-print', arxiv_id, doc)
 
@@ -63,7 +65,8 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
         return make_response(
             render_template("src/anc_not_found.html",
                             reason=f"File not in ancillary files for {arxiv_id.idv}"),
-            404, {"ETag": src_file.etag})
+            404, {"ETag": src_file.etag,
+                  "Surrogate-Control": f"max-age={maxage(arxiv_id.has_version)}"})
 
     """RangeRequest does a seek and that seems odd with gzip and tarfile but both of
     those support seek."""
@@ -73,7 +76,11 @@ def get_extracted_src_file_resp(arxiv_id_str: str,
             last_modified=src_file.updated,
             size=tarmember.size
     ).make_response()
-
+    resp.headers=add_surrogate_key(resp.headers,["anc",f"paper-id-{arxiv_id.id}"])
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
     add_mimetype(resp, tarmember.name)
     add_time_headers(resp, src_file, arxiv_id)
     return resp

@@ -94,3 +94,35 @@ def test_1601_04345_anc_range_request_bytes(client_with_test_fs, start, end, byt
                                    headers={"Range": f"bytes={int(start,16)}-{int(end,16)}"})
     assert resp.status_code == 206
     assert resp.data == bytes
+
+
+def test_anc_headers(client_with_test_fs):
+    client = client_with_test_fs
+
+    rv = client.get('/src/1601.04345/anc')
+    head=rv.headers["Surrogate-Key"]
+    assert "anc" in head
+    assert "paper-id-1601.04345-current" in head
+    assert "paper-id-1601.04345v" not in head
+    assert "paper-id-1601.04345" in head
+
+    rv = client.get('/src/1601.04345v2/anc')
+    head=rv.headers["Surrogate-Key"]
+    assert "anc" in head
+    assert "paper-id-1601.04345-current" not in head
+    assert "paper-id-1601.04345v2" in head
+    assert "paper-id-1601.04345" in head
+
+    rv = client.get('/src/1601.04345/anc/Integration_Example_System.m')
+    head=rv.headers["Surrogate-Key"]
+    assert "anc" in head
+    assert "paper-id-1601.04345-current" in head
+    assert "paper-id-1601.04345v" not in head
+    assert "paper-id-1601.04345" in head
+
+    rv = client.get('/src/1601.04345v2/anc/Integration_Example_System.m')
+    head=rv.headers["Surrogate-Key"]
+    assert "anc" in head
+    assert "paper-id-1601.04345-current" not in head
+    assert "paper-id-1601.04345v2" in head
+    assert "paper-id-1601.04345" in head

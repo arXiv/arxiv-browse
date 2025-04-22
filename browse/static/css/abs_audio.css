@@ -1,0 +1,67 @@
+/* css for the /audio/{paper_id} pages */
+.item-audio {
+    border:1px solid #cecece;
+    margin-top:1em;
+    padding: .5em 1em;
+}
+.button-audio {
+    background-color: #086db1;
+    border-radius: .5em;
+    color: white !important;
+    padding:.5em
+}
+.button-audio:hover {
+    background-color: #075b94;
+}
+
+
+/* Public Tester feedback button:
+   We override the Atlassian template - hence !important */
+   .atlwdg-trigger.atlwdg-SUBTLE {
+    width: 16rem !important;
+    text-align: center !important;
+    height: 2rem !important;
+    line-height: 2rem !important;
+    position: fixed !important;
+    z-index: 99 !important;
+    bottom: 5rem !important;
+    right: 0.5rem !important;
+    font-size: 1.25rem !important;
+    box-shadow: -3px -3px 8px 0 #000000 !important;
+    border: 1px solid #cdcdcd !important;
+    border-bottom: 0px !important;
+    background-color: #fb595a !important;
+    color: #444 !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
+    border-radius: .25rem !important;
+    padding: .5rem 2rem !important;
+    margin: 0 auto !important;
+    font-weight: bold !important;
+  }
+  .atlwdg-trigger.atlwdg-SUBTLE:hover {
+    background-color: #b31b1b !important;
+    color: #f9f7f7 !important;
+  }
+  
+  a#atlwdg-trigger::after,
+  a#atlwdg-trigger:hover::after {
+    display: block;
+    position: relative;
+    width: 18rem;
+    margin-top:0.6rem;
+    margin-left: -2.1rem;
+    padding:.5rem 1rem 0.5rem 1rem;
+    background-color: #fff;
+    border: 1px solid #cdcdcd !important;
+    border-radius: .25rem !important;
+    z-index: 99 !important;
+    color:#000 !important;
+    word-wrap: break-word;
+    white-space: normal;
+    font-weight: normal;
+    font-size: 0.85rem;
+    line-height: 1.2rem;
+    text-align: center;
+    content: "Share your experience with audio summaries." !important;
+  }

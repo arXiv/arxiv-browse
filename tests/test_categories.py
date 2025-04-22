@@ -4,19 +4,20 @@ from tests.test_fs_abs_parser import ABS_FILES
 from browse.services.documents.fs_implementation.fs_abs import FsDocMetadataService
 
 from arxiv.taxonomy.category import Category
+from arxiv.files.object_store import LocalObjectStore
 
 
 class CategoriesTest(unittest.TestCase):
 
     def setUp(self):
-        self.absService = FsDocMetadataService(ABS_FILES+'/ftp', ABS_FILES+'/orig')
+        self.absService = FsDocMetadataService(LocalObjectStore(ABS_FILES))
 
     def test_categories_for_0906_3421v1_cats(self):
         (id, primary, secondaries) = ('0906.3421v1', 'Combinatorics (math.CO)',
                                       ['Statistical Mechanics (cond-mat.stat-mech)', 'Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0906_3421_cats(self):
@@ -24,7 +25,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Statistical Mechanics (cond-mat.stat-mech)', 'Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0129_cats(self):
@@ -32,7 +33,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)', 'Analysis of PDEs (math.AP)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0914_cats(self):
@@ -40,7 +41,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)', 'Optics (physics.optics)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0582_cats(self):
@@ -48,7 +49,7 @@ class CategoriesTest(unittest.TestCase):
                                       'Probability (math.PR)', ['Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0495_cats(self):
@@ -56,7 +57,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0681_cats(self):
@@ -64,7 +65,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Statistical Mechanics (cond-mat.stat-mech)', 'Instrumentation and Detectors (physics.ins-det)', 'Optics (physics.optics)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0761_cats(self):
@@ -72,7 +73,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Soft Condensed Matter (cond-mat.soft)', 'Chemical Physics (physics.chem-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0528_cats(self):
@@ -80,7 +81,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Information Theory (cs.IT)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0869_cats(self):
@@ -88,7 +89,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0796_cats(self):
@@ -96,7 +97,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Astrophysics (astro-ph)', 'Statistical Mechanics (cond-mat.stat-mech)', 'High Energy Physics - Phenomenology (hep-ph)', 'Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0046_cats(self):
@@ -104,7 +105,7 @@ class CategoriesTest(unittest.TestCase):
                                       'Quantum Physics (quant-ph)', ['Information Theory (cs.IT)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0976_cats(self):
@@ -113,7 +114,7 @@ class CategoriesTest(unittest.TestCase):
                                        'Chaotic Dynamics (nlin.CD)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0041_cats(self):
@@ -121,7 +122,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0918_cats(self):
@@ -129,7 +130,7 @@ class CategoriesTest(unittest.TestCase):
                                       'Algebraic Geometry (math.AG)', ['Statistics Theory (math.ST)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0123_cats(self):
@@ -137,7 +138,7 @@ class CategoriesTest(unittest.TestCase):
                                       ['Other Condensed Matter (cond-mat.other)', 'Optics (physics.optics)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0520_cats(self):
@@ -146,7 +147,7 @@ class CategoriesTest(unittest.TestCase):
                                        'Atomic Physics (physics.atom-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0084_cats(self):
@@ -155,7 +156,7 @@ class CategoriesTest(unittest.TestCase):
                                        'Fluid Dynamics (physics.flu-dyn)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0588_cats(self):
@@ -163,7 +164,7 @@ class CategoriesTest(unittest.TestCase):
                                       'Probability (math.PR)', ['Statistics Theory (math.ST)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
     def test_categories_for_0704_0687_cats(self):
@@ -171,17 +172,6 @@ class CategoriesTest(unittest.TestCase):
                                       ['Mathematical Physics (math-ph)'])
         doc = self.absService.get_abs(id)
         self.assertIsNotNone(doc)
-        assert doc.primary_category.display == primary
+        assert doc.primary_category.display() == primary
         assert doc.display_secondaries() == secondaries
 
-
-    def test_non_tax_cats(self):
-        cat = Category('nontx.AL')
-        assert cat.display  == 'nontx.AL'
-
-        # TODO: confirm actual desired behavior
-        #cat = Category('math.XX')
-        #assert cat.display =='Mathematics (math.XX)'
-
-        cat = Category('notaxArc')
-        assert cat.display  == 'notaxArc'
