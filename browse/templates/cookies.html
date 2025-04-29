@@ -45,8 +45,7 @@ settings in your web browser, but you will not be able to login or set
 preferences.
 </p>
 
-<hr />
-
+<hr>
 {% if debug %}
 <h2>Debugging information: dump of current cookie data</h2>
 <table cellpadding="4" style="background: #666666; border: 0; padding: 5;"><tr>
@@ -82,5 +81,50 @@ preferences.
 {% else %}
 <p><small>(<a href="{{url_for('browse.cookies', debug=1)}}">show additional debugging information</a>)</small></p>
 {% endif %}
+
+<hr>
+
+<h2>Opt-in Data Collection for Research (Cornell University)</h2>
+
+<p>ArXiv and Cornell University researchers are in the process of developing privacy-preserving 
+  recommendation systems for ArXiv. By clicking on the "Opt In" link below, you consent to your reading 
+  data to be collected, retained, and processed by ArXiv and Cornell University researchers.<br>
+  No other researchers or institutions will have access to this data, and reading data 
+  will never be shared publicly or otherwise incorporated into public systems in 
+  a personally identifiable format.</p>
+
+<p>Contribute my reading data to research:&nbsp;<a id="opt-in-registration" href="#"><strong>CLICK HERE TO OPT IN</strong></a>
+  <span id="opt-in-enrolled" style="display:none;"><strong>ENROLLED</strong>&nbsp;<a id="opt-out" href="#">(OPT OUT?)</a></span></p>
+
+
+<script>
+  function checkOptInParticipation() {
+    if (document.cookie.indexOf('opt-in-tracking') !== -1) {
+      document.getElementById('opt-in-registration').style.display = 'none';
+      document.getElementById('opt-in-enrolled').style.display = 'inline';
+
+      // If enrolled, include the tracking script.
+
+    } else {
+      document.getElementById('opt-in-registration').style.display = 'inline';
+      document.getElementById('opt-in-enrolled').style.display = 'none';
+    }
+  }
+  checkOptInParticipation();
+  
+  // const optInRegistrationURL = 'https://services.arxiv.org/opt-in-tracking/register';
+  const optInRegistrationURL = 'http://127.0.0.1:8081/register';
+  document.getElementById('opt-in-registration').addEventListener('click', event => {
+    event.preventDefault();
+    fetch(optInRegistrationURL, {method: "POST", credentials: 'include'}).catch(console.error)
+      .finally(checkOptInParticipation);
+  });
+
+  document.getElementById('opt-out').addEventListener('click', event => {
+    event.preventDefault();
+    document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    checkOptInParticipation();
+  });
+</script>
 
 {% endblock content %}
