@@ -47,7 +47,7 @@ $(document).ready(function() {
         doi = metadoi ? metadoi.content: ''
 
         if(!setup){
-            $('.bib-modal-close').click(function(){$('#bib-cite-modal').hide()})
+            $('#bib-cite-modal-close').click(function(){$('#bib-cite-modal').hide()})
             $('<link>').appendTo('head').attr({type:'text/css',rel: 'stylesheet',href: $('#bib-cite-css').attr('href')})
             setup = 1
         }
