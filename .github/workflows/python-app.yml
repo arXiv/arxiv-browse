@@ -29,6 +29,7 @@ jobs:
         poetry install
     - name: Run ruff
       run: |
+        pip install ruff
         ruff check --output-format=github browse
     - name: Test with pytest
       run: |
