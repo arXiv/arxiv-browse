@@ -6,13 +6,13 @@ from typing import Tuple, Union, Dict, Any, List
 from datetime import date, datetime, timedelta
 
 from http import HTTPStatus
-from flask import request, redirect, url_for
+from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
 from arxiv.document.metadata import DocMetadata
 from arxiv.integration.fastly.headers import add_surrogate_key
 from arxiv.taxonomy.category import Group, Archive, Category
-from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS, ARCHIVES_ACTIVE
+from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
 
 from browse.controllers.archive_page.by_month_form import MONTHS
 from browse.controllers.list_page import latexml_links_for_articles, dl_for_articles, authors_for_articles, sub_sections_for_types, Response
@@ -104,7 +104,7 @@ def get_catchup_form() -> Response:
         else:
             new_address=url_for('.catchup', subject=subject, date=date)
         headers.update({'Location':new_address})
-        headers.update({'Surrogate-Control': f'max-age=2600000'}) #one month, url construction should never change
+        headers.update({'Surrogate-Control': 'max-age=2600000'}) #one month, url construction should never change
         headers=add_surrogate_key(headers,["catchup-redirect"])
         return {}, 301, headers
     
@@ -117,7 +117,7 @@ def get_catchup_form() -> Response:
     response_data['groups']= GROUPS
 
     headers=add_surrogate_key(headers,["catchup-form"])
-    headers.update({'Surrogate-Control': f'max-age=604800'}) #one week, form never changes except for autoselecting currently month
+    headers.update({'Surrogate-Control': 'max-age=604800'}) #one week, form never changes except for autoselecting currently month
     return response_data, 200, headers
 
 
@@ -136,7 +136,7 @@ def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, A
     ALLOWED_PARAMS={"abs", "page"}
     unexpected_params = request.args.keys() - ALLOWED_PARAMS
     if unexpected_params:
-        raise BadRequest(f"Unexpected parameters. Only accepted parameters are: 'page', and 'abs'")
+        raise BadRequest("Unexpected parameters. Only accepted parameters are: 'page', and 'abs'")
         
     #subject validation
     subject: Union[Group, Archive, Category]
@@ -151,11 +151,11 @@ def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, A
     
     #date validation
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date_str): #enforce two digit days and months
-        raise BadRequest(f"Invalid date format. Use format: YYYY-MM-DD")
+        raise BadRequest("Invalid date format. Use format: YYYY-MM-DD")
     try:
         start_day= datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
-        raise BadRequest(f"Invalid date format. Use format: YYYY-MM-DD")
+        raise BadRequest("Invalid date format. Use format: YYYY-MM-DD")
     #only allow dates within the last 90 days (91 just in case time zone differences)
     today=datetime.now().date()
     earliest_allowed=today - timedelta(days=91)
@@ -172,16 +172,16 @@ def _process_catchup_params(subject_str:str, date_str:str)->Tuple[Union[Group, A
     elif abs_str == "False":
         include_abs=False
     else:
-        raise BadRequest(f"Invalid abs value. Use ?abs=True to include abstracts or ?abs=False to not")
+        raise BadRequest("Invalid abs value. Use ?abs=True to include abstracts or ?abs=False to not")
 
     #select page number (each page has 2000 items)
     page_str = request.args.get("page", "1") #page defaults to 1
     if page_str.isdigit():
         page=int(page_str)
     else:
-        raise BadRequest(f"Invalid page value. Page value should be a positive integer like ?page=3")
+        raise BadRequest("Invalid page value. Page value should be a positive integer like ?page=3")
     if page<1:
-        raise BadRequest(f"Invalid page value. Page value should be a positive integer like ?page=3")
+        raise BadRequest("Invalid page value. Page value should be a positive integer like ?page=3")
 
     return subject, start_day, include_abs, page
 
@@ -203,7 +203,7 @@ def catchup_paging(subject: Union[Group, Archive, Category], day:date, include_a
     
     else: #shouldnt happen but its handled
         if page !=1:
-            page_links.append(('1',url_base+f'&page=1'))
+            page_links.append(('1',url_base+'&page=1'))
         if page >2:
             page_links.append(('...','no-link'))
         page_links.append((str(page),'no-link'))

@@ -27,7 +27,7 @@ def check_paper_formats(yymm: str) -> None:
 
     rows = query.all()
     if not rows:
-        print(f"No rows found.")
+        print("No rows found.")
     a_store: ArticleStore = get_article_store()
     results = {}
     for row in rows:

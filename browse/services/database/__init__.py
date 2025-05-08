@@ -20,7 +20,7 @@ from arxiv.db import Session
 from arxiv.base.globals import get_application_config
 from arxiv.document.metadata import DocMetadata
 from dateutil.tz import gettz, tzutc
-from sqlalchemy import Row, asc, desc, not_, select
+from sqlalchemy import Row, asc, desc, not_
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import func, select, Select, tuple_
@@ -43,11 +43,9 @@ from arxiv.db.models import (
     TapirUser,
     PaperOwner,
     t_arXiv_in_category,
-    t_arXiv_stats_hourly,
-    Metadata
+    t_arXiv_stats_hourly
 )
 from browse.services.listing import ListingItem
-from browse.services.listing import MonthCount, YearCount
 from arxiv.base import logging
 from logging import Logger
 

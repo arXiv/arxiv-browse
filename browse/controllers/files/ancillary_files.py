@@ -14,7 +14,7 @@ from browse.services.documents import get_doc_service
 from arxiv.files import FileObj
 from arxiv.files import FileFromTar
 
-from . import last_modified, add_time_headers, add_mimetype, maxage
+from . import add_time_headers, add_mimetype, maxage
 
 
 def get_extracted_src_file_resp(arxiv_id_str: str,

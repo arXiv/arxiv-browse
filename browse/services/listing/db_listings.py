@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, List, Union, Any
+from typing import Optional, List, Union
 from datetime import datetime
 
 from browse.services.listing import YearCount, Listing, ListingNew, ListingItem, NotModifiedResponse, gen_expires, ListingService

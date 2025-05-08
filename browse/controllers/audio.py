@@ -1,5 +1,5 @@
 """Controller for audio page."""
-from typing import Dict, Any, Tuple
+from typing import Dict, Tuple
 
 from arxiv.identifier import Identifier
 from arxiv.integration.fastly.headers import add_surrogate_key
