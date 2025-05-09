@@ -63,7 +63,7 @@ def year_page(archive_id: str, year: Optional[int]) -> Any:
             year = 2000 + year
         
         new_address=url_for("browse.year", archive=archive_id, year=year)
-        headers["Surrogate-Control"]=f"max-age=31536000" # a year
+        headers["Surrogate-Control"]="max-age=31536000" # a year
         headers["Location"]=new_address
         return {}, status.MOVED_PERMANENTLY, headers
         

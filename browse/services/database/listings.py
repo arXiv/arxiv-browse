@@ -395,7 +395,8 @@ def get_articles_for_month(
     count=main_query.count() #get total entries 
     new_listings, cross_listings = _entries_into_monthly_listing_items(result)
 
-    if not month: month=1 #yearly listings need a month for datetime
+    if not month:
+        month=1 #yearly listings need a month for datetime
 
     return Listing(
         listings=new_listings + cross_listings,

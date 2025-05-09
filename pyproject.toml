@@ -56,6 +56,7 @@ pytest-html = "*"
 pytest-mock = "*"
 types-requests = "^2.31.0.20240125"
 requests-mock = "^1.12.1"
+ruff = "^0.11.8"
 
 [tool.pytest.ini_options]
 filterwarnings = [

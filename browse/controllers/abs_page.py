@@ -241,7 +241,7 @@ def _check_request_headers(
     # surrogate-control is used by caching servers like fastly. Caching services may strip this
     resp_headers["Surrogate-Control"] = f"max-age={current_app.config.get('ABS_CACHE_MAX_AGE')}"
     # cache-control is used by browsers, set shorter so refreshes happen on browsers
-    resp_headers["Cache-Control"] = f"max-age=3600"
+    resp_headers["Cache-Control"] = "max-age=3600"
 
     mod_since_dt = _time_header_parse("If-Modified-Since")
     return bool(mod_since_dt and mod_since_dt.replace(microsecond=0) >= last_mod_dt.replace(microsecond=0))
@@ -378,7 +378,7 @@ def _get_submitter(arxiv_id: Identifier, ver:Optional[int]=None) -> Optional[str
     try:
         abs_meta = get_doc_service().get_abs(f"{arxiv_id.id}v{ver}")
         return abs_meta.submitter.name or None
-    except:
+    except BaseException:
         return None
 
 def _show_refs_cites(arxiv_id: Identifier) -> bool:

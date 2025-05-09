@@ -1,6 +1,5 @@
 """Routes for serving the source of articles. /src /e-prints and ancillary."""
 import logging
-import re
 from typing import Optional, Dict
 
 from arxiv.identifier import Identifier, IdentifierException

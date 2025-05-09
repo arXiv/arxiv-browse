@@ -2,9 +2,7 @@ from typing import Dict, Tuple, Any
 from werkzeug.datastructures import ImmutableMultiDict
 
 from flask import request
-import re
 
-from datetime import timedelta
 
 COOKIE_NAME = 'user-OpenURL'
 COOKIE_PATH = '/'

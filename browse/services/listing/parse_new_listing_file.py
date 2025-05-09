@@ -79,8 +79,6 @@ def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
 
     # new
     announce_date: Optional[date] = None
-    submit_start_date: Optional[date] = None
-    submit_end_date: Optional[date] = None
 
     with listingFilePath.open('rb') as fh:
         rawdata = fh.read()
@@ -113,10 +111,6 @@ def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
         date_short_from_to = re.sub(r'\s+\d\d:\d\d:\d\d\s+\w\w\w', '', date_from_to)
         extras['date_from_to'] = date_from_to
         extras['date_short_from_to'] = date_short_from_to
-        res = re.match(r'(.*)\s+to\s+(.*)$', date_short_from_to)
-        if res:
-            submit_start_date = datetime.strptime(res.group(1), '%a %d %b %y ')
-            submit_end_date = datetime.strptime(res.group(2), '%a %d %b %y')
 
     # advance to "\\" just before first listing
     rules_to_pop = 5

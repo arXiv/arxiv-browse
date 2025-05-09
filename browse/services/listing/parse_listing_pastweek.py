@@ -20,7 +20,7 @@ that indicate the date.
 import codecs
 import re
 from datetime import datetime
-from typing import List, Literal, Tuple, Union
+from typing import List, Literal, Tuple
 from dataclasses import dataclass
 
 from arxiv.document.metadata import DocMetadata

@@ -1,5 +1,4 @@
 """Application factory for browse service components."""
-import os
 from functools import partial
 
 import logging

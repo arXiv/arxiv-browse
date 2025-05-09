@@ -1,10 +1,8 @@
 """File system backed core metadata service."""
 
-from typing import List, Optional, Union
+from typing import List, Union
 import dataclasses
-from pathlib import Path
 
-from google.cloud.storage import Client
 
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.parse_abs import parse_abs_file

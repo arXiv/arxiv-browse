@@ -2,7 +2,6 @@ import arxiv.document.exceptions
 from flask import render_template, url_for
 from arxiv.identifier import Identifier, IdentifierException
 import re
-from io import BytesIO
 import urllib.parse
 from arxiv.document.metadata import DocMetadata
 from browse.services.documents import get_doc_service

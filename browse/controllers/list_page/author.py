@@ -2,6 +2,8 @@ from typing import Optional, Dict, Any, Tuple, List
 from urllib.parse import unquote
 import re
 from datetime import datetime, time
+
+from arxiv.taxonomy.definitions import CATEGORIES
 from lxml.etree import Element, SubElement, tostring, QName
 from datetime import timezone
 
@@ -87,12 +89,12 @@ def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, st
     response_data['latexml'] = latexml_links_for_articles(listings)
     response_data['author_links'] = authors_for_articles(listings)
 
-    def author_query(article: DocMetadata, query: str)->str:
+    def author_query(article: DocMetadata, query: str) -> str:
         try:
             if article.primary_archive:
                 archive = article.primary_archive.id
             else:
-                archive = CATEGORIES[article.primary_category.id]['in_archive'] # type: ignore
+                archive = CATEGORIES[article.primary_category.id].in_archive  # type: ignore
             return str(url_for('search_archive',
                            searchtype='author',
                            archive=archive,
@@ -100,7 +102,7 @@ def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, st
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
                                searchtype='author',
-                               archive=None, # TODO: This should be handled somehow
+                               archive=None,  # TODO: This should be handled somehow
                                query=query))
     
     response_data['url_for_author_search'] = author_query
