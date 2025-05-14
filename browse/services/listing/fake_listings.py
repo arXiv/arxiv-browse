@@ -5,8 +5,8 @@
 import datetime
 from typing import List, Optional
 
-from . import (Listing, ListingCountResponse, ListingItem, ListingNew,
-               ListingService, MonthTotal, YearCount, MonthCount)
+from . import (Listing, ListingItem, ListingNew,
+               ListingService, YearCount, MonthCount)
 
 
 class FakeListingFilesService(ListingService):

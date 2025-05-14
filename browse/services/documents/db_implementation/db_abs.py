@@ -6,7 +6,7 @@ from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
 from arxiv.identifier import Identifier
-from arxiv.taxonomy.category import Category, Archive, Group
+from arxiv.taxonomy.category import Category, Archive
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.license import License
 from arxiv.document.metadata import DocMetadata, AuthorList, Submitter

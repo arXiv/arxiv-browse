@@ -1,7 +1,4 @@
 """Service to get PDF and other disseminations of an item."""
-from typing import Dict
-from urllib.parse import urlparse
-
 from arxiv.legacy.papers.dissemination.reasons import get_reasons_data
 from flask import current_app
 import logging

@@ -14,15 +14,13 @@ from arxiv.document.exceptions import (
     AbsDeletedException, AbsNotFoundException, AbsVersionNotFoundException)
 from arxiv.document.metadata import DocMetadata, VersionEntry
 from arxiv.files import FileObj, fileformat
-from arxiv.files.key_patterns import (current_pdf_path, previous_pdf_path,
-                                      ps_cache_pdf_path,
-                                      current_ps_path, previous_ps_path,
+from arxiv.files.key_patterns import (ps_cache_pdf_path,
                                       ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
 from arxiv.files.object_store import ObjectStore
 from arxiv.formats import (
     formats_from_source_file_name, formats_from_source_flag)
 from arxiv.identifier import Identifier
-from arxiv.legacy.papers.dissemination.reasons import FORMATS, reasons, get_reasons_data
+from arxiv.legacy.papers.dissemination.reasons import FORMATS, reasons
 from flask import current_app
 from gcp.service_auth.gcp_service_auth import GcpIdentityToken
 from google.auth.exceptions import DefaultCredentialsError

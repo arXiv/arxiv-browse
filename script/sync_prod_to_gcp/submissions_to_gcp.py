@@ -73,6 +73,7 @@ from time import gmtime, sleep
 from pathlib import Path
 import requests
 from dataclasses import dataclass
+from functools import reduce
 
 import json
 import os
@@ -345,13 +346,14 @@ class SubmissionFilesState:
     log_extra: dict
     submission_source: typing.Optional[str]
     published_versions: typing.List[dict]
+    cache_upload: bool
 
     _top_levels: dict
 
     _extras: typing.List[dict]
 
     def __init__(self, arxiv_id_str: str, version: str, publish_type: str, src_ext: str,
-                 source_format: str, log_extra: dict):
+                 source_format: str, log_extra: dict, cache_upload=True):
         try:
             if int(version) <= 0:
                 raise InvalidVersion(f"{version} is invalid")
@@ -375,6 +377,7 @@ class SubmissionFilesState:
         self.single_source = False
         self._extras = []
         self.published_versions = []  # This is the versions from existing .abs on file system
+        self.cache_upload = cache_upload
 
         self.ext_candidates = SubmissionFilesState.submission_exts.copy()
         if src_ext:
@@ -597,17 +600,20 @@ class SubmissionFilesState:
             files.append(current("submission", self.submission_source))
 
             if self.is_tex_submission:
-                files.append(current("pdf-cache", self.ps_cache_pdf_file))
+                if self.cache_upload:
+                    files.append(current("pdf-cache", self.ps_cache_pdf_file))
             elif self.is_html_submission:
                 # Since this is a root dir of HTML submission, no need to "upload".
                 # This is just a "marker" to initiate the html file expand.
                 # Later (in submission_message_to_file_state()), this triggers to ask a web node
                 # for the html, and it populates the files under the self.html_root_dir
-                files.append(current("html-cache", self.html_root_dir))
+                if self.cache_upload:
+                    files.append(current("html-cache", self.html_root_dir))
                 pass
             elif self.is_ps_submission:
                 # Turn PS into PDF
-                files.append(current("pdf-cache", self.ps_cache_pdf_file))
+                if self.cache_upload:
+                    files.append(current("pdf-cache", self.ps_cache_pdf_file))
 
             pass
 
@@ -740,15 +746,14 @@ class SubmissionFilesState:
             return source.stat().st_mtime if source.exists() else 0
         return 0
 
-def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True) -> SubmissionFilesState:
+
+def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True, cache_upload=True) -> SubmissionFilesState:
     """
     Parse the submission_published message, map it to CIT files and returns the list of files.
     The schema is
     https://console.cloud.google.com/cloudpubsub/schema/detail/submission-publication?project=arxiv-production
     however, this only cares paper_id and version.
     """
-    global WEBNODE_REQUEST_COUNT
-    my_tag = WEBNODE_REQUEST_COUNT
     publish_type = data.get('type') # cross | jref | new | rep | wdr
     paper_id = data.get('paper_id')
     version = data.get('version')
@@ -759,86 +764,93 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
 
     logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
 
-    file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra)
+    file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra, cache_upload=cache_upload)
 
     if ask_webnode:
-        # If asked for PDF, make sure it exits on web node, or else signal NoPDF
-        for entry in file_state.get_expected_files():
-            if entry["type"] == "pdf-cache":
-                # If the submission needs a PDF generated, make sure it exists at CIT
-                # If not, raise NoPDF
-                pdf_path = Path(entry["cit"])
-                if not pdf_path.exists():
-                    n_webnodes = len(CONCURRENCY_PER_WEBNODE)
-                    WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
-                    host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
-                    protocol = "http" if host.startswith("localhost:") else "https"
-                    log_extra['webnode'] = host
-                    log_extra['paper_id'] = file_state.vxid
-                    try:
-                        _pdf_file, _url, _1, _duration_ms = \
-                            ensure_pdf(thread_data.session, host, file_state.vxid, timeout=PDF_TIMEOUT(),
-                                       protocol=protocol,
-                                       source_mtime=file_state.get_submission_mtime())
+        ask_caches_to_webnode(file_state, log_extra)
+    else:
+        logger.debug("Not asking web node means, you are not getting PDF or HTML populated.", extra=log_extra)
 
-                    except sync_published_to_gcp.WebnodeException as exc:
-                        logger.warning("Webnode exception: %s", exc, extra=log_extra)
-                        raise MissingGeneratedFile("Failed to generate %s" % pdf_path) from exc
+    return file_state
 
-                    except ReadTimeout as exc:
-                        # This happens when failed to talk to webnode
-                        logger.info("Timeout for %s", pdf_path,extra=log_extra)
-                        raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
 
-                    except RetryError as exc:
-                        # This happens when failed to talk to webnode
-                        logger.info("Retry for %s", pdf_path,extra=log_extra)
-                        raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
+def ask_caches_to_webnode(file_state: SubmissionFilesState, log_extra: typing.Dict[str, typing.Any]) -> None:
+    global WEBNODE_REQUEST_COUNT
+    my_tag = WEBNODE_REQUEST_COUNT
 
-                    except Exception as _exc:
-                        logger.warning("ensure_pdf: %s - %s", file_state.vxid.ids, str(_exc),
-                                       extra=log_extra, exc_info=True, stack_info=False)
-                        raise
-
-                if not pdf_path.exists():
-                    raise MissingGeneratedFile(f"GDF: {file_state.ps_cache_pdf_file} does not exist")
-                pass
-
-            if entry["type"] == "html-cache":
-                # When the submission is html, web node needs to okay. ensure_html() talks to
-                # a web node, and when it gets 200, it returns the list of files in it.
-                # The file state (self here) registers files for upload.
-                html_path: Path = Path(entry["cit"])
+    # If asked for PDF, make sure it exits on web node, or else signal NoPDF
+    for entry in file_state.get_expected_files():
+        if entry["type"] == "pdf-cache":
+            # If the submission needs a PDF generated, make sure it exists at CIT
+            # If not, raise NoPDF
+            pdf_path = Path(entry["cit"])
+            if not pdf_path.exists():
                 n_webnodes = len(CONCURRENCY_PER_WEBNODE)
                 WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
                 host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
                 protocol = "http" if host.startswith("localhost:") else "https"
+                log_extra['webnode'] = host
+                log_extra['paper_id'] = file_state.vxid
                 try:
-                    html_files, html_root, url, outcome, duration_ms = \
-                        ensure_html(thread_data.session, host, file_state.vxid, timeout=HTML_TIMEOUT(),
-                                    protocol=protocol,
-                                    source_mtime=file_state.get_submission_mtime())
-                    logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
-                                str(outcome), float(duration_ms) / 1000.0,
-                                html_root, len(html_files), url,
-                                extra=log_extra)
-                    file_state.register_files('html-files', html_files)
+                    _pdf_file, _url, _1, _duration_ms = \
+                        ensure_pdf(thread_data.session, host, file_state.vxid, timeout=PDF_TIMEOUT(),
+                                   protocol=protocol,
+                                   source_mtime=file_state.get_submission_mtime())
 
-                except sync_published_to_gcp.WebnodeException as _exc:
-                    raise MissingGeneratedFile("Failed to generate %s" % html_path) from _exc
+                except sync_published_to_gcp.WebnodeException as exc:
+                    logger.warning("Webnode exception: %s", exc, extra=log_extra)
+                    raise MissingGeneratedFile("Failed to generate %s" % pdf_path) from exc
+
+                except ReadTimeout as exc:
+                    # This happens when failed to talk to webnode
+                    logger.info("Timeout for %s", pdf_path, extra=log_extra)
+                    raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
+
+                except RetryError as exc:
+                    # This happens when failed to talk to webnode
+                    logger.info("Retry for %s", pdf_path, extra=log_extra)
+                    raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
 
                 except Exception as _exc:
-                    logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
-                                   exc_info=True, stack_info=False)
+                    logger.warning("ensure_pdf: %s - %s", file_state.vxid.ids, str(_exc),
+                                   extra=log_extra, exc_info=True, stack_info=False)
                     raise
 
-                if not html_path.exists():
-                    raise MissingGeneratedFile(f"{file_state.ps_cache_pdf_file} does not exist")
-                pass
-    else:
-        logger.info("Not asking web node means, you are not getting PDF or HTML populated, only good for development.")
+            if not pdf_path.exists():
+                raise MissingGeneratedFile(f"GDF: {file_state.ps_cache_pdf_file} does not exist")
+            pass
 
-    return file_state
+        if entry["type"] == "html-cache":
+            # When the submission is html, web node needs to okay. ensure_html() talks to
+            # a web node, and when it gets 200, it returns the list of files in it.
+            # The file state (self here) registers files for upload.
+            html_path: Path = Path(entry["cit"])
+            n_webnodes = len(CONCURRENCY_PER_WEBNODE)
+            WEBNODE_REQUEST_COUNT = (WEBNODE_REQUEST_COUNT + 1) % n_webnodes
+            host, n_para = CONCURRENCY_PER_WEBNODE[min(n_webnodes - 1, max(0, my_tag))]
+            protocol = "http" if host.startswith("localhost:") else "https"
+            try:
+                html_files, html_root, url, outcome, duration_ms = \
+                    ensure_html(thread_data.session, host, file_state.vxid, timeout=HTML_TIMEOUT(),
+                                protocol=protocol,
+                                source_mtime=file_state.get_submission_mtime())
+                logger.info("ensure_html %s / %s: [%1.2f sec] %s (%d) -> %s", file_state.vxid.ids,
+                            str(outcome), float(duration_ms) / 1000.0,
+                            html_root, len(html_files), url,
+                            extra=log_extra)
+                file_state.register_files('html-files', html_files)
+
+            except sync_published_to_gcp.WebnodeException as _exc:
+                raise MissingGeneratedFile("Failed to generate %s" % html_path) from _exc
+
+            except Exception as _exc:
+                logger.warning("ensure_html: %s", file_state.vxid.ids, extra=log_extra,
+                               exc_info=True, stack_info=False)
+                raise
+
+            if not html_path.exists():
+                raise MissingGeneratedFile(f"{file_state.ps_cache_pdf_file} does not exist")
+            pass
 
 
 def decode_message(message: Message) -> typing.Union[dict, None]:
@@ -857,6 +869,21 @@ def decode_message(message: Message) -> typing.Union[dict, None]:
         return None
 
     return data
+
+
+class SyncVerdict:
+
+    def __init__(self) -> None:
+        self.verdicts = []
+
+    def add_verdict(self, decision: bool, reason: str, copying: dict) -> None:
+        self.verdicts.append((decision, reason, copying))
+        pass
+
+    def good(self) -> bool:
+        return reduce(lambda result, verdict: result and verdict[0],  self.verdicts, True)
+
+    pass
 
 
 @STORAGE_RETRY
@@ -889,7 +916,7 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
 
 
 @STORAGE_RETRY
-def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], log_extra: dict):
+def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdict: SyncVerdict, log_extra: dict):
     """
     Move object - apparently, you have to copy blob
     """
@@ -898,22 +925,44 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], log_ex
     for from_obj, to_obj, obj_type in objects:
         logger.debug("%s: %s is being renamed to %s", obj_type, from_obj, to_obj, extra=log_extra)
         from_blob: Blob = bucket.blob(from_obj)
+        to_blob: Blob = bucket.blob(to_obj)
         if not from_blob.exists():
             logger.warning("%s: FROM %s does not exist", obj_type, from_obj, extra=log_extra)
+            if to_blob.exists():
+                verdict.add_verdict(True, "Destination Exists", (from_obj, to_blob, obj_type))
+            else:
+                verdict.add_verdict(True, "None Exists", (from_obj, to_blob, obj_type))
             continue
-        to_blob: Blob = bucket.blob(to_obj)
+
         if to_blob.exists():
             if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()
-                logger.warning("%s: %s <---> %s are identical - moved md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
+                logger.warning("%s: from: %s  <---> to: %s are identical - md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
+                verdict.add_verdict(True, "Both Exists", (from_obj, to_blob, obj_type))
                 continue
             else:
-                logger.warning("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
-        copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
-        logger.debug("%s: %s is copied to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
-        from_blob.delete()
-        logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
+                logger.info("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
+
+        try:
+            copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
+            logger.debug("%s: %s is copied to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
+            try:
+                from_blob.delete()
+                verdict.add_verdict(True, "Object moved successfully", (from_obj, to_blob, obj_type))
+                logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
+                            extra=log_extra)
+            except Exception as _exc:
+                verdict.add_verdict(True, "Object moved but source remains", (from_obj, to_blob, obj_type))
+                logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
+                            extra=log_extra)
+                pass
+        except:
+            verdict.add_verdict(False, "Object copy failed", (from_obj, to_blob, obj_type))
+            logger.warning("%s: %s failed to copy to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
+                        extra=log_extra)
+            pass
+
     return
 
 
@@ -925,11 +974,20 @@ def submission_callback(message: Message) -> None:
     may or may not happen.
 
     """
-    # Create a thread-local object
+    # Make sure the message is legible
     data = decode_message(message)
     if data is None:
         message.nack()
         return
+
+    # The action has 5 distinct parts
+    # 1 - Plan
+    # 2 - Prep
+    # 3 - Execution
+    # 4 - Verdict
+    # 5 - Missing Deadline
+
+    # Plan - Figure out what to copy to GCP
 
     global WEBNODE_REQUEST_COUNT
 
@@ -942,86 +1000,105 @@ def submission_callback(message: Message) -> None:
     }
 
     message_age: timedelta = datetime.utcnow().replace(tzinfo=timezone.utc) - message.publish_time
+    if not isinstance(message_age, timedelta):
+        # sanity check
+        raise ValueError
+
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
 
+    file_state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
+    desired_state = file_state.get_expected_files()
+    if not desired_state:
+        # No plan? Weird
+        logger.warning(f"There is no associated files? xid: {file_state.xid.ids}, mid: {str(message.message_id)}",
+                       extra=log_extra)
+        message.nack()
+        return
+
+    # Prep
+    #
+    # Now we have the plan. Ask web node to make/prep the caches (PDF and HTML)
+    # Ignore the prep error. The status will be captured in the execution verdict
+    #
     try:
-        state = submission_message_to_file_state(data, log_extra)
-        desired_state = state.get_expected_files()
-        if not desired_state:
-            logger.warning(f"There is no associated files? xid: {state.xid.ids}, mid: {str(message.message_id)}", extra=log_extra)
-            message.nack()
-            return
+        ask_caches_to_webnode(file_state, log_extra)
 
     except MissingGeneratedFile as exc:
         logger.info(str(exc), extra=log_extra)
-
-        if message_age > timedelta(minutes=compilation_timeout):
-            id = f"{paper_id}v{version}"
-            try:
-                slacking = subprocess.call(
-                    ['/users/e-prints/bin/tex-compilation-problem-notification',
-                     id], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                if slacking.returncode != 0:
-                    logger.error("Failed to send notification: %s", id, extra=log_extra)
-            except:
-                logger.error('Slacking for %s did not work', id)
-                pass
-
-            help_needed = os.environ.get("TEX_COMPILATION_RECIPIENT", "help@arxiv.org")
-            subject = f"Uploading of {paper_id}v{version} failed"
-            mail_body = f"Hello EUST,\nSubmission uploading for {paper_id}v{version} has failed. Please resolve the issue.\n\nThis message is generated by a bot on arxiv-sync.serverfarm.cornell.edu.\n"
-            SENDER = os.environ.get("SENDER", "developers@arxiv.org")
-            SMTP_SERVER = os.environ.get("SMTP_SERVER", "mail.arxiv.org")
-            SMTP_PORT = os.environ.get("SMTP_PORT", "25")
-            cmd = ["/usr/local/bin/arxiv-mail",
-                   "-t", help_needed,
-                   "-f", SENDER,
-                   "-m", SMTP_SERVER,
-                   "-p", SMTP_PORT,
-                   "-s", subject,
-                   ]
-            # using sendmail
-            # cmd = ["/usr/bin/mail", "-r", "developers@arxiv.org", "-s", subject, help_needed]
-
-            mail = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            try:
-                mail.communicate(mail_body.encode('utf-8'), timeout=60)
-                if mail.returncode == 0:
-                    # Once the email message is sent, done here.
-                    message.ack()
-                    logger.warning(f"Alart mail sent: {subject}", extra=log_extra)
-                    return
-                else:
-                    logger.error("Failed to send mail: %s", shlex.join(cmd), extra=log_extra)
-            except Exception as exc:
-                logger.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
-                pass
-            pass
-
-        message.nack()
-        return
+        pass
 
     except Exception as _exc:
         logger.warning(
             f"Unknown error xid: {paper_id}, mid: {str(message.message_id)}",
             extra=log_extra, exc_info=True, stack_info=False)
-        message.nack()
-        return
 
+    # Execute
+    #  With the plan, copy everything in the file state.
+    #  Rather than burf and die, keep going to copy and record the result in the verdict
+    verdict = SyncVerdict()
     try:
-        sync_to_gcp(state, log_extra)
-        message.ack()
-        # Acknowledge the message so it is not re-sent
-        logger.info("ack message: %s", state.xid.ids, extra=log_extra)
+        sync_to_gcp(file_state, verdict, log_extra)
+        logger.info("ack message: %s", file_state.xid.ids, extra=log_extra)
 
     except Exception as _exc:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
-        message.nack()
-        pass
+
+    # Verdict
+    #  If good, ack message and we are done.
+    if verdict.good():
+        message.ack()
+        logger.info(f"Sync complete.  ack message", extra=log_extra)
+        return
+
+    # Deadline exceeded?
+    if message_age > timedelta(minutes=compilation_timeout):
+        id = f"{paper_id}v{version}"
+        try:
+            slacking = subprocess.call(
+                ['/users/e-prints/bin/tex-compilation-problem-notification',
+                 id], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if slacking.returncode != 0:
+                logger.error("Failed to send notification: %s", id, extra=log_extra)
+        except:
+            logger.error('Slacking for %s did not work', id)
+            pass
+
+        help_needed = os.environ.get("TEX_COMPILATION_RECIPIENT", "help@arxiv.org")
+        subject = f"Uploading of {paper_id}v{version} failed"
+        mail_body = f"Hello EUST,\nSubmission uploading for {paper_id}v{version} has failed. Please resolve the issue.\n\nThis message is generated by a bot on arxiv-sync.serverfarm.cornell.edu.\n"
+        SENDER = os.environ.get("SENDER", "developers@arxiv.org")
+        SMTP_SERVER = os.environ.get("SMTP_SERVER", "mail.arxiv.org")
+        SMTP_PORT = os.environ.get("SMTP_PORT", "25")
+        cmd = ["/usr/local/bin/arxiv-mail",
+               "-t", help_needed,
+               "-f", SENDER,
+               "-m", SMTP_SERVER,
+               "-p", SMTP_PORT,
+               "-s", subject,
+               ]
+        # using sendmail
+        # cmd = ["/usr/bin/mail", "-r", "developers@arxiv.org", "-s", subject, help_needed]
+
+        mail = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            mail.communicate(mail_body.encode('utf-8'), timeout=60)
+            if mail.returncode == 0:
+                # Once the email message is sent, done here.
+                message.ack()
+                logger.warning(f"Alart mail sent: {subject}", extra=log_extra)
+                return
+            else:
+                logger.error("Failed to send mail: %s", shlex.join(cmd), extra=log_extra)
+        except Exception as exc:
+            logger.error(f"Failed: %s", shlex.join(cmd), extra=log_extra, exc_info=True)
+            pass
+
+    # Did not complete the sync. Nack and retry later.
+    message.nack()
+    return
 
 
-
-def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> None:
+def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: dict) -> None:
     """
     From the submission file state, copy the ones that should bu uploaded.
 
@@ -1050,7 +1127,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> None:
 
     if retired:
         # Move blobs from /ftp to /orig
-        move_bucket_objects(gs_client, retired, log_extra)
+        move_bucket_objects(gs_client, retired, verdict, log_extra)
         # Obsoleted objects are gone
         for obsoleted, _original, _entry_type in retired:
             if obsoleted in bucket_objects:
@@ -1076,7 +1153,9 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> None:
         local_path = Path(local)
         if local_path.exists() and local_path.is_file():
             upload(gs_client, local_path, remote, upload_logger=logger)
+            verdict.add_verdict(True, "Uploaded", entry)
         else:
+            verdict.add_verdict(False, "No local file to copy", entry)
             logger.warning("No local file for uploading [%s]: %s -> %s",
                            entry_type, local, remote, extra=log_extra)
 
@@ -1091,6 +1170,7 @@ def sync_to_gcp(state: SubmissionFilesState, log_extra: dict) -> None:
         for gcp_obj in bucket_objects:
            logger.warning("Extra bucket object %s. You should rename/remove it",
                           gcp_obj, extra=log_extra)
+
 
 def test_callback(message: Message) -> None:
     """Stand in callback to handle the pub/sub message. gets used for --test."""

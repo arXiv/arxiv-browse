@@ -34,7 +34,7 @@ from browse.controllers import (
     catchup_page
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
-from browse.controllers.cookies import get_cookies_page, cookies_to_set
+from browse.controllers.cookies import get_cookies_page
 from browse.exceptions import AbsNotFound # TODO: BASE
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
@@ -167,7 +167,7 @@ def institutional_banner() -> Any:
             return (result, status.OK, response_headers)
         else:
             return ("{}", status.OK, response_headers)
-    except Exception as ex:
+    except Exception:
         return ("", status.INTERNAL_SERVER_ERROR, response_headers)
 
 
