@@ -1072,7 +1072,6 @@ def submission_callback(message: Message) -> None:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
 
     id_v = f"{paper_id}v{version}"
-    os.makedirs("/tmp/sync-to-gcp", exist_ok=True)
     error_state_file = ErrorStateFile(id_v)
 
     # Verdict
