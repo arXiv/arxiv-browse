@@ -112,6 +112,13 @@ from sync_published_to_gcp import ORIG_PREFIX, FTP_PREFIX, PS_CACHE_PREFIX, uplo
     path_to_bucket_key, ArxivSyncJsonFormatter, CONCURRENCY_PER_WEBNODE, ensure_pdf, \
     LOG_FORMAT_KWARGS, ensure_html
 
+ERROR_STATE_DIR = "/tmp/sync-to-gcp"
+
+try:
+    os.makedirs(ERROR_STATE_DIR, exist_ok=True)
+except:
+    pass
+
 
 class IgnoredSubmission(Exception):
     """Signal for ignored submissions"""
@@ -423,10 +430,6 @@ class SubmissionFilesState:
         return [os.path.join(root_dir, filename) for filename in files]
 
     @property
-    def latest_dir(self):
-        return f"{FTP_PREFIX}{self.archive}/papers/{self.xid.yymm}"
-
-    @property
     def versioned_parent(self):
         return f"{ORIG_PREFIX}{self.archive}/papers/{self.xid.yymm}"
 
@@ -648,9 +651,9 @@ class SubmissionFilesState:
                 this_meta = self.get_version_metadata(self.version)
                 prev_meta = self.get_version_metadata(self.prev_version)
                 prev_src_ext = self.src_ext
+                single = False
                 if prev_meta.get("source_type") != this_meta.get("source_type"):
                     prev_src_ext = ".gz"
-                    single = False
                     for flag in prev_meta.get("source_type", ""):
                         if flag in ["A", "D"]:
                             prev_src_ext = ".tar.gz"
@@ -737,7 +740,7 @@ class SubmissionFilesState:
     def to_payloads(self):
         return [(entry["cit"], entry["gcp"]) for entry in self.get_expected_files()]
 
-    def get_submission_mtime(self) -> int:
+    def get_submission_mtime(self) -> float:
         """
         Get the mtime of the submission.
         """
@@ -745,6 +748,30 @@ class SubmissionFilesState:
             source = Path(self.submission_source)
             return source.stat().st_mtime if source.exists() else 0
         return 0
+
+
+class ErrorStateFile:
+    def __init__(self, paper_id: str):
+        self.paper_id = paper_id
+
+    @property
+    def error_state_filename(self):
+        return os.path.join(ERROR_STATE_DIR, self.paper_id)
+
+    def error_reported(self) -> bool:
+        return os.path.exists(self.error_state_filename)
+
+    def report(self):
+        if not os.path.exists(self.error_state_filename):
+            with open(self.error_state_filename, "w", encoding="utf-8") as fd:
+                fd.write(str(self.paper_id))
+
+    def clear(self):
+        try:
+            if os.path.exists(self.error_state_filename):
+                os.remove(self.error_state_filename)
+        except:
+            pass
 
 
 def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: bool = True, cache_upload=True) -> SubmissionFilesState:
@@ -1004,7 +1031,8 @@ def submission_callback(message: Message) -> None:
         # sanity check
         raise ValueError
 
-    compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "30"))
+    compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "720"))
+    first_notification_time = int(os.environ.get("TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME", "30"))
 
     file_state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
     desired_state = file_state.get_expected_files()
@@ -1043,24 +1071,43 @@ def submission_callback(message: Message) -> None:
     except Exception as _exc:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
 
+    id_v = f"{paper_id}v{version}"
+    os.makedirs("/tmp/sync-to-gcp", exist_ok=True)
+    error_state_file = ErrorStateFile(id_v)
+
     # Verdict
     #  If good, ack message and we are done.
     if verdict.good():
+        error_state_file.clear()
         message.ack()
         logger.info(f"Sync complete.  ack message", extra=log_extra)
         return
 
+    # Report error to slack if it's not there
+    if message_age > timedelta(minutes=first_notification_time):
+        if not error_state_file.error_reported():
+            try:
+                slacking = subprocess.call(
+                    ['/users/e-prints/bin/tex-compilation-problem-notification',
+                     id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if slacking.returncode != 0:
+                    logger.warning("Failed to send notification: %s", id_v, extra=log_extra)
+            except:
+                logger.warning('Slacking for %s did not work', id_v)
+                pass
+            error_state_file.report()
+
+
     # Deadline exceeded?
     if message_age > timedelta(minutes=compilation_timeout):
-        id = f"{paper_id}v{version}"
         try:
             slacking = subprocess.call(
                 ['/users/e-prints/bin/tex-compilation-problem-notification',
-                 id], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                 id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if slacking.returncode != 0:
-                logger.error("Failed to send notification: %s", id, extra=log_extra)
+                logger.error("Failed to send notification: %s", id_v, extra=log_extra)
         except:
-            logger.error('Slacking for %s did not work', id)
+            logger.error('Slacking for %s did not work', id_v)
             pass
 
         help_needed = os.environ.get("TEX_COMPILATION_RECIPIENT", "help@arxiv.org")
@@ -1084,6 +1131,7 @@ def submission_callback(message: Message) -> None:
             mail.communicate(mail_body.encode('utf-8'), timeout=60)
             if mail.returncode == 0:
                 # Once the email message is sent, done here.
+                error_state_file.clear()
                 message.ack()
                 logger.warning(f"Alart mail sent: {subject}", extra=log_extra)
                 return
