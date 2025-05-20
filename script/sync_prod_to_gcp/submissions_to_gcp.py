@@ -763,8 +763,12 @@ class ErrorStateFile:
 
     def report(self):
         if not os.path.exists(self.error_state_filename):
-            with open(self.error_state_filename, "w", encoding="utf-8") as fd:
-                fd.write(str(self.paper_id))
+            # touch
+            try:
+                with open(self.error_state_filename, "w", encoding="utf-8") as fd:
+                    fd.write(str(self.paper_id))
+            except:
+                pass
 
     def clear(self):
         try:
