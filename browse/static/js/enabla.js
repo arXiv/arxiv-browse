@@ -38,7 +38,7 @@
     const arxivPaperId = params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
     if (!arxivPaperId) return
 
-    const baseUrl = "https://enabla.com/";
+    const baseUrl = "https://enabla.com";
     const submitUrl = `${baseUrl}/submit`;
     const publicationsUrl = `${baseUrl}/publications`;
     const enablaApiBase = `${baseUrl}/api/v1`;
