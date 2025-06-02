@@ -19,7 +19,7 @@ from arxiv.files import FileObj, FileTransform
 from browse.services.html_processing import post_process_html
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
-    Acceptable_Format_Requests, CannotBuildPdf, Deleted)
+    Acceptable_Format_Requests, KnownReason, Deleted)
 
 from flask import Response, abort, make_response, render_template, request, current_app, stream_with_context
 from flask_rangerequest import RangeRequest
@@ -149,7 +149,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
     except IdentifierException as ex:
         return bad_id(arxiv_id_str, str(ex))
     item = get_article_store().dissemination(format, arxiv_id)
-    logger.debug(f"dissemination_for_id(%s) was %s", arxiv_id.idv, item)
+    logger.debug("dissemination_for_id(%s) was %s", arxiv_id.idv, item)
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
         return not_found(arxiv_id)
     elif item == "WITHDRAWN":
@@ -166,7 +166,7 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         return no_html(arxiv_id)
     elif isinstance(item, Deleted):
         return bad_id(arxiv_id, item.msg)
-    elif isinstance(item, CannotBuildPdf):
+    elif isinstance(item, KnownReason):
         return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
 
     file, docmeta, version = item

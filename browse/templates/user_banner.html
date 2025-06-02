@@ -19,23 +19,24 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202412120000 %}
-{% set BANNER_END_1 = 202412312359 %}
+{% set BANNER_START_1 = 202505130000 %} {#  5/14  start of day#}
+{% set BANNER_END_1 = 202505282140 %}{#  5/28 end of day#}
 {% set SLIDE = True %}
 
 {%- macro content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
     {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
-      {#  Dec 12 - Dec 31 #}
-      <aside class="slider-wrapper bps-banner special-color">
+      <aside class="slider-wrapper bps-banner forum green">
+        <a class="close-slider do-close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
        <div class="columns">
+          <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones">
           <div class="copy-donation bps-banner">
-            <h2>Change to arXiv's privacy policy</h2>
-            <p>The <a target="_blank" href="https://info.arxiv.org/help/policies/privacy_policy.html">arXiv Privacy Policy</a> has changed. By continuing to use arxiv.org, you are agreeing to the privacy policy.</p>
+            <h2>arXiv Is Hiring a DevOps Engineer</h2>
+            <p>Work on one of the world's most important websites and make an impact on open science.</p>
           </div>
           <div class="amount-donation bps-banner">
-            <div class="donate-cta"><a class="banner_link banner-btn-grad do-close-slider" href="#"><b>I Understand</b></a></div>
+            <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="https://info.arxiv.org/hiring/index.html"><b>View Jobs</b></a></div>
           </div>
         </div>
       </aside>
@@ -50,9 +51,9 @@ Adding an environment var, so we can enable only on gcp.
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if (SLIDE and (BANNER_START_1|int <= now) and (BANNER_END_1|int > now)) -%}
     {# only run this script while a banner is active #}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20241211" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20250312" />
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=121124"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=040725"></script>
   {%- endif -%}
 {%- endmacro -%}
 
@@ -60,7 +61,7 @@ Adding an environment var, so we can enable only on gcp.
 <!-- example banner setup
 
     <aside class="slider-wrapper bps-banner forum blue">
-      <a class="close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
+      <a class="do-close-slider close-slider bps-banner" href="#"><img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message"></a>
       <div class="columns">
         <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-infinity-large.png') }}" alt="arXiv Accessibility Forum 2024">
         <div class="copy-donation bps-banner">

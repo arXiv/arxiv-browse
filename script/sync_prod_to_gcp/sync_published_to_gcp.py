@@ -309,7 +309,7 @@ def path_to_bucket_key_html(html) -> str:
         logging.error(f"path_to_bucket_key: {html} does not start with {CACHE_PREFIX} or {DATA_PREFIX}")
         raise ValueError(f"Cannot convert PDF path {html} to a GS key")
 
-@retry.Retry(predicate=retry.if_exception_type(*HTML_RETRY_EXCEPTIONS))
+@retry.Retry(predicate=retry.if_exception_type(*HTML_RETRY_EXCEPTIONS), initial=2, maximum=4, deadline=10)
 def get_html(session, html_url) -> None:
     start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}
@@ -336,7 +336,7 @@ def get_html(session, html_url) -> None:
                            "url": html_url, "status_code": resp.status_code, "ms": html_ms})
 
 
-@retry.Retry(predicate=retry.if_exception_type(*PDF_RETRY_EXCEPTIONS))
+@retry.Retry(predicate=retry.if_exception_type(*PDF_RETRY_EXCEPTIONS), initial=2, maximum=4, deadline=10)
 def get_pdf(session, pdf_url, timeout=0) -> None:
     start = perf_counter()
     headers = {'User-Agent': ENSURE_UA}

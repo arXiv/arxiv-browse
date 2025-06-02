@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Audio for {{abs_meta.arxiv_id_v}}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" media="screen" type="text/css" href="{{ url_for('static', filename='css/abs_audio.css') }}"/>
+{% endblock head %}
+
+
+{% block header_h1 %}
+<h1>
+<a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
+<a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">{{abs_meta.arxiv_id_v}}</a> &gt audio
+</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <h1>Audio for {{abs_meta.arxiv_id}}: {{abs_meta.title}}</h1>
+        <a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">< Return to abstract page</a>
+        {% if 'sciencecast' in audio_urls %}
+            <div class="item-audio">
+                <h2>ScienceCast Audio Summary</h2>
+                <p>60-second AI-generated audio summary created during paper submission process. <a href="https://sciencecast.org/">Learn more about ScienceCast.</a></p>
+                <p>
+                    {% if audio_urls['sciencecast'].url %}
+                        <a class="button-audio" href="{{audio_urls['sciencecast'].url}}">Visit ScienceCast to listen</a>
+                    {% elif audio_urls['sciencecast'].not_available_reason %}
+                        {{audio_urls['sciencecast'].not_available_reason}}
+                    {% else %}
+                        Paper not yet available from Sciencecast.
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+
+        {% if not audio_urls %}
+            <div>No audio links for {{abs_meta.arxiv_id}}.</div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script type="text/javascript" src="https://arxiv-org.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/xghl7j/b/0/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=3f0251b5"></script>
+{% endblock %}

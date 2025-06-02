@@ -6,7 +6,7 @@ from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
 from arxiv.identifier import Identifier
-from arxiv.taxonomy.category import Category, Archive, Group
+from arxiv.taxonomy.category import Category, Archive
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES
 from arxiv.license import License
 from arxiv.document.metadata import DocMetadata, AuthorList, Submitter
@@ -90,7 +90,7 @@ def _to_docmeta(all_versions: List[Metadata], latest: Metadata, ver_of_interest:
                              size_kilobytes=size_kilobytes,
                              submitted_date=ver.created.replace(tzinfo=timezone.utc),  # type: ignore
                              # ^verified as UTC in DB
-                             source_flag=SourceFlag(ver.source_flags), # type: ignore
+                             source_flag=SourceFlag(ver.source_flags or ''),
                              source_format=ver.source_format,
                              is_withdrawn=bool(ver.is_withdrawn) or ver.source_format == "withdrawn"
                                           or ver.source_size == 0,

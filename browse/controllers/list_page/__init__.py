@@ -553,7 +553,7 @@ def sub_sections_for_types(
         continued=skipn > 0,
         last=skipn >= new_count - shown,
         visible=len(news)>0,
-        heading=f'New submissions ' 
+        heading='New submissions ' 
     )
 
     sec_cross=ListingSection(
@@ -563,7 +563,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > cross_start,
         last=skipn >= rep_start - shown,
         visible=len(crosses)>0,
-        heading=f'Cross submissions '
+        heading='Cross submissions '
     )
 
     sec_rep=ListingSection(
@@ -573,7 +573,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > rep_start,
         last=last_shown >= new_count + cross_count + rep_count,
         visible=len(reps)>0,
-        heading=f'Replacement submissions '
+        heading='Replacement submissions '
     )
 
     secs=[sec_new, sec_cross, sec_rep]
