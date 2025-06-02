@@ -38,15 +38,16 @@
     const arxivPaperId = params.get("override_paper_id") || window.location.pathname.split('/').reverse()[0]
     if (!arxivPaperId) return
 
-    const submitUrl = "https://enabla.com/submit"
-    const publicationsUrl = "https://enabla.com/publications"
-    const enablaApiBase = "https://enabla.xyz/api/v1";
+    const baseUrl = "https://enabla.com/";
+    const submitUrl = `${baseUrl}/submit`;
+    const publicationsUrl = `${baseUrl}/publications`;
+    const enablaApiBase = `${baseUrl}/api/v1`;
     const enablaLecturesApiUrl = `${enablaApiBase}/arxiv/lectures/list?arxivId=${arxivPaperId}`;
 
     // Fetch linked lectures
     (async () => {
         try {
-            let response = await fetch(enablaLecturesApiUrl);
+            const response = await fetch(enablaLecturesApiUrl);
             if (!response.ok) {
                 console.error(`Unable to fetch Enabla data from ${enablaLecturesApiUrl}`)
                 render(null);
@@ -57,6 +58,7 @@
              * {
              *   "lectureUrls": string[],
              *   "courseUrl": string | null,
+             *   "searchUrl": string | null,
              *   "hasVideo": boolean,
              *   "hasText": boolean,
              *   "thumbnail": string | null,
@@ -66,14 +68,16 @@
              *    }
              *  }
              */
-            let lectures = await response.json();
-            if (lectures.lectureUrls.length === 0) {
+            const lectures = await response.json();
+
+            if (!lectures.lectureUrls || lectures.lectureUrls.length === 0) {
                 render(null);
                 return;
             }
             render(lectures);
         } catch (error) {
-            console.error(`Unable to handle the Enabla data : `, error)
+            console.error(`Unable to handle the Enabla data from ${enablaLecturesApiUrl}: `, error)
+            render(null);
         }
     })()
 
@@ -85,12 +89,13 @@
     }
 
     function preprintUrl(lectures) {
-        if (lectures.courseUrl) {
+        if (lectures.searchUrl){
+            return lectures.searchUrl
+        } else if (lectures.courseUrl) {
             return lectures.courseUrl
         } else if (lectures.lectureUrls.length === 1) {
             return lectures.lectureUrls[0]
         } else {
-            // TODO (AleksandrSl 02/03/2025): Can we return the filter query?
             return lectures.lectureUrls[0]
         }
     }
@@ -98,7 +103,6 @@
     function summary(lectures) {
         const header = `<h3 class="enabla-header">${brandIcon} Enabla: video recordings, HTML papers, and open discussions</h3>`
         let content = ""
-        const preprintChunk = `<a href="${preprintUrl(lectures)}" target="_blank">this preprint on Enabla</a>`
         // == is on purpose to catch undefined case
         if (lectures == null) {
             content = `<p>No Enabla publication found for this preprint yet. 
@@ -107,31 +111,35 @@
            <a href="${publicationsUrl}" target="_blank">other works</a> 
            to benefit the arXiv community.
            </p>`
-        } else if (lectures.hasVideo && lectures.hasText) {
-            if (lectures.activity.commentsCount > 0) {
-                content = `<p>
-Explore the related video and${comments(lectures.activity.commentsCount)}to ${preprintChunk}. Read the preprint in HTML and join the conversation.
+        } else {
+          const preprintChunk = `<a href="${preprintUrl(lectures)}" target="_blank">this preprint on Enabla</a>`
+          const commentsCount = lectures.activity.commentsCount || 0
+          if (lectures.hasVideo && lectures.hasText) {
+            if (commentsCount > 0) {
+              content = `<p>
+Explore the related video and${comments(commentsCount)}to ${preprintChunk}. Read the preprint in HTML and join the conversation.
 ${thumbnail(lectures.thumbnail)}
 </p>`
             } else {
-                content = `<p>
+              content = `<p>
 Watch the related video, read the HTML version, and discuss ${preprintChunk} to delve deeper and connect with peers.
 ${thumbnail(lectures.thumbnail)}
 </p>`
             }
-        } else if (lectures.hasText) {
+          } else if (lectures.hasText) {
             const video = `If you have a related video, feel free to <a href="${submitUrl}" target="_blank">upload it</a> and enhance the learning process.`
-            if (lectures.activity.commentsCount > 0) {
-                content = `<p>There are${comments(lectures.activity.commentsCount)}to ${preprintChunk}; join the discussion(s) or start new ones. ${video}</p>`
+            if (commentsCount > 0) {
+              content = `<p>There ${commentsCount > 1 ? "are" : "is"}${comments(commentsCount)}to ${preprintChunk}; join the discussion(s) or start new ones. ${video}</p>`
             } else {
-                content = `<p>Ask your questions or discuss ${preprintChunk}. ${video}</p>`
+              content = `<p>Ask your questions or discuss ${preprintChunk}. ${video}</p>`
             }
-        } else if (lectures.hasVideo) {
-            const commentsChunk = lectures.activity.commentsCount > 0 ? `${comments(lectures.activity.commentsCount)}to` : ` discuss`
+          } else if (lectures.hasVideo) {
+            const commentsChunk = commentsCount > 0 ? `${comments(commentsCount)}to` : ` discuss`
             content = `<p>
 Explore the related video and${commentsChunk} ${preprintChunk}. If you have the LaTeX sources, feel free to <a href="${submitUrl}" target="_blank">upload them</a> and enhance the learning process.
 ${thumbnail(lectures.thumbnail)}
 </p>`
+          }
         }
         return `<div class="enabla-content">
 ${header}
@@ -140,7 +148,7 @@ ${content}
     }
 
     function comments(count) {
-        return `<span class="enabla-comments">${commentsIcon} ${count} open comments</span>`
+        return `<span class="enabla-comments">${commentsIcon} ${count} open comment${count > 1 ? "s" : ""}</span>`
     }
 
     function thumbnail(src) {
