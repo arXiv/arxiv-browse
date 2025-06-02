@@ -27,6 +27,10 @@ $(document).ready(function() {
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
+<<<<<<< HEAD
+=======
+    "summarizepaper": $('#summarizepaper-toggle').data('script-url'),
+>>>>>>> Update SummarizePaper toggle functionality and improve UX across project
     "bibex": {
       "url": $('#bibex-toggle').data('script-url'),
       "container": "#bib-main"
@@ -133,6 +137,15 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load huggingface script (on cookie check)", arguments)
           });
+<<<<<<< HEAD
+=======
+        } else if (key === "summarizepaper-toggle") {
+          $.cachedScript(scripts["summarizepaper"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load summarizepaper script (on cookie check)", arguments)
+          });
+>>>>>>> Update SummarizePaper toggle functionality and improve UX across project
         }
       }
     }
@@ -247,6 +260,14 @@ $(document).ready(function() {
       }).fail(function() {
         console.error("failed to load huggingface script (on lab toggle)", arguments)
       });
+<<<<<<< HEAD
+=======
+    } else if ($(this).attr("id") == "summarizepaper-toggle") {
+      $.cachedScript(scripts["summarizepaper"]).done(function(script, textStatus) {
+      }).fail(function() {
+        console.error("failed to load summarizepaper script (on lab toggle)", arguments)
+      });
+>>>>>>> Update SummarizePaper toggle functionality and improve UX across project
     }
   
 
