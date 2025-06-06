@@ -687,7 +687,7 @@ class SubmissionFilesState:
 
     def register_files(self,
                        file_type: str,
-                       files: typing.List[Path] | typing.List[str]) -> None:
+                       files: typing.Union[typing.List[Path], typing.List[str]]) -> None:
         """
         Used for HTML submission. The actual files uploaded to the gcp bucket is unknown until
         webnode untars it. When ensure_html gets the file list, register them for the upload.
@@ -756,7 +756,8 @@ class ErrorStateFile:
 
     @property
     def error_state_filename(self):
-        return os.path.join(ERROR_STATE_DIR, self.paper_id)
+        # squish "/" in pater ID.
+        return os.path.join(ERROR_STATE_DIR, self.paper_id.replace('/', '__'))
 
     def error_reported(self) -> bool:
         return os.path.exists(self.error_state_filename)
@@ -997,6 +998,11 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdic
     return
 
 
+def list_missing_cit_files(file_state: SubmissionFilesState) -> typing.List[str]:
+    missing_cit_files = [entry["cit"] for entry in file_state.get_expected_files() if not os.path.exists(entry["cit"])]
+    return missing_cit_files
+
+
 def submission_callback(message: Message) -> None:
     """Pub/sub event handler to upload the submission tarball and .abs files to GCP.
 
@@ -1035,8 +1041,16 @@ def submission_callback(message: Message) -> None:
         # sanity check
         raise ValueError
 
+    message_total_seconds = int(message_age.total_seconds())
+    message_hours, message_remainder = divmod(message_total_seconds, 3600)
+    message_minutes, _ = divmod(message_remainder, 60)
+    if message_hours > 0:
+        message_age_text = f"{message_hours} hour{'s' if message_hours != 1 else ''}, {message_minutes} minute{'s' if message_minutes != 1 else ''}"
+    else:
+        message_age_text = f"{message_minutes} minute{'s' if message_minutes != 1 else ''}"
+
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "720"))
-    first_notification_time = int(os.environ.get("TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME", "30"))
+    first_notification_time = int(os.environ.get("TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME", "90"))
 
     file_state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
     desired_state = file_state.get_expected_files()
@@ -1070,7 +1084,7 @@ def submission_callback(message: Message) -> None:
     verdict = SyncVerdict()
     try:
         sync_to_gcp(file_state, verdict, log_extra)
-        logger.info("ack message: %s", file_state.xid.ids, extra=log_extra)
+        logger.info("sync_to_gcp finished: %s", file_state.xid.ids, extra=log_extra)
 
     except Exception as _exc:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
@@ -1090,24 +1104,30 @@ def submission_callback(message: Message) -> None:
     if message_age > timedelta(minutes=first_notification_time):
         if not error_state_file.error_reported():
             try:
-                slacking = subprocess.call(
+                missing_files = repr(list_missing_cit_files(file_state))
+                id_v_message = "Notification at %s. Following file(s) missing: %s" % (
+                    message_age_text, missing_files)
+
+                returncode = subprocess.call(
                     ['/users/e-prints/bin/tex-compilation-problem-notification',
-                     id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                if slacking.returncode != 0:
+                     id_v, id_v_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if returncode != 0:
                     logger.warning("Failed to send notification: %s", id_v, extra=log_extra)
             except:
                 logger.warning('Slacking for %s did not work', id_v)
                 pass
             error_state_file.report()
 
-
     # Deadline exceeded?
     if message_age > timedelta(minutes=compilation_timeout):
         try:
-            slacking = subprocess.call(
+            missing_files = repr(list_missing_cit_files(file_state))
+            id_v_message = "Notification at %s. Following file(s) missing: %s" % (
+                message_age_text, missing_files)
+            returncode = subprocess.call(
                 ['/users/e-prints/bin/tex-compilation-problem-notification',
-                 id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if slacking.returncode != 0:
+                 id_v, id_v_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if returncode != 0:
                 logger.error("Failed to send notification: %s", id_v, extra=log_extra)
         except:
             logger.error('Slacking for %s did not work', id_v)

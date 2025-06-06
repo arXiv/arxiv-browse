@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <paper_id>"
+  exit 1
+fi
+
+PAPER_ID=$1
+MESSAGE=$2
+
+# This is the "TeX compilation is stuck" workflow
+
+WEBHOOK_URL="https://hooks.slack.com/triggers/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"
+
+PAYLOAD=$(jq -n --arg paper_id "$PAPER_ID" --arg message "$MESSAGE" '{paper_id: $paper_id, message: $message}')
+
+curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" $WEBHOOK_URL
+exit 0
