@@ -756,6 +756,7 @@ class ErrorStateFile:
 
     @property
     def error_state_filename(self):
+        # squish "/" in pater ID.
         return os.path.join(ERROR_STATE_DIR, self.paper_id.replace('/', '__'))
 
     def error_reported(self) -> bool:
@@ -763,10 +764,6 @@ class ErrorStateFile:
 
     def report(self):
         if not os.path.exists(self.error_state_filename):
-            # Double make sure the dir exists.
-            # This gets over the old style paper ID (eg math/000000)
-            #dirname = os.path.dirname(self.error_state_filename)
-            #os.makedirs(dirname, exist_ok=True)
             # touch
             try:
                 with open(self.error_state_filename, "w", encoding="utf-8") as fd:
