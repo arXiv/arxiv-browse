@@ -1270,6 +1270,66 @@ p.tagline {
 }
 /*END alphaXiv CSS*/
 
+/*BEGIN Ploutos CSS*/
+.ploutos-section {
+  margin-bottom: 2rem;
+}
+.ploutos-title {
+  display: flex;
+  gap: 5px;
+}
+.ploutos-summary {
+  text-transform: capitalize;
+  text-align: center;
+}
+.ploutos-objects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ploutos-object {
+  background: linear-gradient(rgb(54, 43, 85) 0%, rgb(52, 37, 73) 100%);
+  color: rgb(195, 181, 221);
+  border-radius: 5px;
+  padding: 0 15px;
+  width: 200px;
+}
+.ploutos-object h4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: white;
+  line-height: 25px;
+}
+.ploutos-object .icon {
+  width: 100%;
+  height: 60px;
+  object-fit: scale-down;
+}
+.ploutos-object p {
+  line-height: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.ploutos-section a:visited, .ploutos-section a:link, .ploutos-section a:hover {
+  color: unset !important;
+  text-decoration: none !important;
+}
+.ploutos-section a.cta {
+  text-decoration: none;
+  background: linear-gradient(266.45deg,#dc70b5,#9d2d70 105.59%);
+  border: 0;
+  border-radius: 7.5px;
+  transition: none;
+  color: #fff !important;
+  padding: 4px 15px
+}
+/*END Ploutos CSS*/
+
 /*BEGIN Spaces CSS*/
 
 .spaces-summary {
