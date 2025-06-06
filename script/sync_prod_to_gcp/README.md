@@ -278,3 +278,58 @@ If the events get stuck, someone needs to take a look at the failuer.
 GCP logging gives some clue, and def. you can know the paper ID. 
 Alart is set up on GCP so pay some attention to it.
 
+
+## Deployment
+
+
+0. Check out arxiv-browse repo (or link)
+   at /opt_arxiv/e-prints/arxiv/arxiv-browse
+
+1. Create Log Directory - `/opt_arxiv/e-prints/logs/sync/` with e-prints:e-prints
+    sudo mkdir -p /opt_arxiv/e-prints/logs/sync/
+	sudo chown e-prints:e-prints /opt_arxiv/e-prints/logs/sync/
+
+2. Install stanza pulgin
+    cd /opt_arxiv/e-prints/arxiv/arxiv-browse/script/sync_prod_to_gcp/stanza/plugins
+	sudo install -m 444 arxiv_sync2gcp_log.yaml /opt/observiq/stanza/plugins
+
+3. Add following to /opt/observiq/stanza/config.yaml (adjust leading spaces)
+
+    - type: arxiv_sync2gcp_log
+      log_path: "/opt_arxiv/e-prints/logs/sync/*"
+      output: host_metadata
+
+4. Restart stanza
+
+5. Prepare the credentials to subscribe the pub/sub event and send files to GCP
+
+As e-prints user
+
+get arxiv-production-39d850b0221d.json (ask Brian C or Tai if you don't know where)
+have it ~/arxiv-production-39d850b0221d.json as e-prints user
+
+    cd
+    ls -l arxiv-production-39d850b0221d.json
+    ln -s arxiv-production-cred.json  arxiv-production-39d850b0221d.json
+
+
+6. Install systemd service
+
+    sudo install -m 444 /opt_arxiv/e-prints/arxiv/arxiv-browse/script/sync_prod_to_gcp/resource/systemd/submissions-to-gcp.service /etc/systemd/system
+	sudo systemctl daemon-reload
+	sudo systemctl enable submissions-to-gcp.service
+	sudo systemctl start submissions-to-gcp.service
+
+7. Install /usr/local/bin/arxiv-mail
+
+    sudo install -m 755 -u e-prints /opt_arxiv/e-prints/arxiv/arxiv-browse/script/sync_prod_to_gcp/resources/bin/arxiv-mail /usr/local/bin
+
+8. Install ~e-prints/bin/tex-compilation-problem-notification
+
+    sudo install -m 755 -u e-prints /opt_arxiv/e-prints/arxiv/arxiv-browse/script/sync_prod_to_gcp/resources/bin/tex-compilation-problem-notification ~e-prints/bin
+
+9. Make temp dir 
+
+    mkdir /tmp/sync-to-gcp
+	sudo chown e-prints /tmp/sync-to-gcp
+	
