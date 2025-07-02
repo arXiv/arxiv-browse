@@ -12,6 +12,7 @@ sync.venv:
 	-[[ -x /opt/rh/rh-python38/root/bin/python3.8 ]] && /opt/rh/rh-python38/root/bin/python3.8 -m venv sync.venv
 	-[[ -d sync.venv ]] || [[ -x /usr/local/bin/python3.8 ]] && /usr/local/bin/python3.8 -m venv sync.venv
 	-[[ -d sync.venv ]] || [[ -x /usr/bin/python3.8 ]] && /usr/bin/python3.8 -m venv sync.venv
+	-[[ -d sync.venv ]] || [[ -x /usr/bin/python3.9 ]] && /usr/bin/python3.9 -m venv sync.venv
 
 sync.venv/bin/uwsgi: sync.venv 
 	. sync.venv/bin/activate && pip install --upgrade pip

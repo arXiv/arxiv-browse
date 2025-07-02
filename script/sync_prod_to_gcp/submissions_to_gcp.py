@@ -768,7 +768,8 @@ class ErrorStateFile:
             try:
                 with open(self.error_state_filename, "w", encoding="utf-8") as fd:
                     fd.write(str(self.paper_id))
-            except:
+            except Exception as exc:
+                logger.warning("Report flag file %s is not made with %s", (self.error_state_filename, str(exc)))
                 pass
 
     def clear(self):

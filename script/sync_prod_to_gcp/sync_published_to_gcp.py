@@ -36,7 +36,7 @@ from queue import Queue, Empty
 import requests
 from time import sleep, perf_counter, gmtime, strftime as time_strftime
 
-from datetime import datetime
+from datetime import datetime, timezone
 import signal
 import json
 from typing import List, Tuple
@@ -62,6 +62,8 @@ logger = logging.getLogger(__file__)
 logger.setLevel(logging.WARNING)
 
 import logging_json
+import hashlib
+import base64
 
 
 class Overloaded503Exception(Exception):
@@ -104,7 +106,6 @@ ENSURE_UA = 'periodic-rebuild'
 CONCURRENCY_PER_WEBNODE = [
     ('web5.arxiv.org', 1),
     ('web6.arxiv.org', 1),
-    ('web7.arxiv.org', 1),
     ('web8.arxiv.org', 1),
     ('web9.arxiv.org', 1),
 ]
@@ -474,37 +475,81 @@ def upload_html(gs_client, ensure_tuple):
     for file in ensure_tuple[0]:
         yield upload(gs_client, file, path_to_bucket_key_html(file))
 
+
+# Thread-local storage for read buffer
+_thread_local = threading.local()
+
+def get_read_buffer(size=8192):
+    """Get thread-local read buffer to avoid repeated allocations"""
+    if not hasattr(_thread_local, 'read_buffer') or len(_thread_local.read_buffer) != size:
+        _thread_local.read_buffer = bytearray(size)
+    return _thread_local.read_buffer
+
 @STORAGE_RETRY
 def upload(gs_client, localpath, key, upload_logger=None):
     """Upload a file to GS_BUCKET"""
     if upload_logger is None:
         upload_logger = logger
-
+    
     def mime_from_fname(filepath):
         return {
             '.pdf': 'application/pdf',
             '.gz': 'application/gzip',
             '.abs': 'text/plain'
         }.get(filepath.suffix, '')
+    
+    def get_file_info(filepath):
+        """Get file size and MD5 hash by reading the file"""
+        md5_hash = hashlib.md5()
+        file_size = 0
+        buffer = get_read_buffer(8192)
+        
+        with open(filepath, 'rb') as f:
+            while True:
+                bytes_read = f.readinto(buffer)
+                if bytes_read == 0:
+                    break
+                md5_hash.update(buffer[:bytes_read])
+                file_size += bytes_read
+        
+        # https://cloud.google.com/storage/docs/json_api/v1/objects
+        # MD5 hash of the data, encoded using base64
+        return file_size, base64.b64encode(md5_hash.digest()).decode('ascii')
 
     start = perf_counter()
-
     bucket = gs_client.bucket(GS_BUCKET)
     blob = bucket.get_blob(key)
-    if blob is None or blob.size != localpath.stat().st_size or key in REUPLOADS:
+    
+    local_size, local_md5 = get_file_info(localpath)
+    
+    timestamp_utc = datetime.now(timezone.utc).isoformat()
+    metadata = {
+        "localpath": str(localpath),
+        "local_md5": local_md5,
+        "mtime": get_file_mtime(localpath),
+        "timestamp_utc": timestamp_utc
+    }            
+
+    should_upload =  blob is None or blob.md5_hash != local_md5 or key in REUPLOADS
+    if should_upload:
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
             upload_logger.info(
-                f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of size {localpath.stat().st_size}")
+                f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of md5 {local_md5}, size {local_size}",
+                extra=metadata)
         try:
-            destination.metadata = {"localpath": localpath, "mtime": get_file_mtime(localpath)}
+            destination.metadata = {"localpath": str(localpath), "mtime": get_file_mtime(localpath)}
+            destination.metadata = metadata
             destination.update()
         except BaseException:
-            upload_logger.error(f"upload: could not set time on GS object gs://{GS_BUCKET}/{key}", exc_info=True)
-        return "upload", localpath, key, "uploaded", ms_since(start), localpath.stat().st_size
+            upload_logger.error(f"upload: could not set metadata on GS object gs://{GS_BUCKET}/{key}",
+                                extra=metadata,
+                                exc_info=True)
+        return "upload", localpath, key, "uploaded", ms_since(start), local_size
     else:
-        upload_logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs")
+        upload_logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs",
+                           extra=metadata)
         return "upload", localpath, key, "already_on_gs", ms_since(start), 0
 
 
