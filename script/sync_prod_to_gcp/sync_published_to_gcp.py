@@ -36,7 +36,7 @@ from queue import Queue, Empty
 import requests
 from time import sleep, perf_counter, gmtime, strftime as time_strftime
 
-from datetime import datetime
+from datetime import datetime, timezone
 import signal
 import json
 from typing import List, Tuple
@@ -62,8 +62,8 @@ logger = logging.getLogger(__file__)
 logger.setLevel(logging.WARNING)
 
 import logging_json
-import threading
 import hashlib
+import base64
 
 
 class Overloaded503Exception(Exception):
@@ -512,8 +512,10 @@ def upload(gs_client, localpath, key, upload_logger=None):
                 md5_hash.update(buffer[:bytes_read])
                 file_size += bytes_read
         
-        return file_size, md5_hash.hexdigest()
-    
+        # https://cloud.google.com/storage/docs/json_api/v1/objects
+        # MD5 hash of the data, encoded using base64
+        return file_size, base64.b64encode(md5_hash.digest()).decode('ascii')
+
     start = perf_counter()
     bucket = gs_client.bucket(GS_BUCKET)
     blob = bucket.get_blob(key)
@@ -528,7 +530,7 @@ def upload(gs_client, localpath, key, upload_logger=None):
         "timestamp_utc": timestamp_utc
     }            
 
-    should_upload =  blob is None or blob.md5_hash != local_md5) key in REUPLOADS
+    should_upload =  blob is None or blob.md5_hash != local_md5 or key in REUPLOADS
     if should_upload:
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
@@ -549,6 +551,7 @@ def upload(gs_client, localpath, key, upload_logger=None):
         upload_logger.info(f"upload: Not uploading {localpath}, gs://{GS_BUCKET}/{key} already on gs",
                            extra=metadata)
         return "upload", localpath, key, "already_on_gs", ms_since(start), 0
+
 
 def sync_to_gcp(todo_q, host):
     """Target for theads that gets jobs off of the todo queue and does job actions."""
