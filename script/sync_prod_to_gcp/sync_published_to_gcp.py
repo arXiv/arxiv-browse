@@ -485,6 +485,29 @@ def get_read_buffer(size=8192):
         _thread_local.read_buffer = bytearray(size)
     return _thread_local.read_buffer
 
+
+def get_existing_blob(bucket, key, logger):
+    """Get existing blob using both get_blob() and exists() methods"""
+    try:
+        # First try the standard get_blob approach
+        blob = bucket.get_blob(key)
+        if blob is not None:
+            return blob
+        
+        # If get_blob returns None, try the exists() method
+        # This calls HEAD and may get to blob better
+        blob = bucket.blob(key)
+        if blob.exists():
+            blob.reload()  # Populate blob props
+            return blob
+            
+        return None
+        
+    except Exception as exc:
+        logger.warning(f"Error checking blob {key} existence: {exc}")
+        return None
+
+
 @STORAGE_RETRY
 def upload(gs_client, localpath, key, upload_logger=None):
     """Upload a file to GS_BUCKET"""
@@ -518,7 +541,7 @@ def upload(gs_client, localpath, key, upload_logger=None):
 
     start = perf_counter()
     bucket = gs_client.bucket(GS_BUCKET)
-    blob = bucket.get_blob(key)
+    blob = get_existing_blob(bucket, key, upload_logger)
     
     local_size, local_md5 = get_file_info(localpath)
     
@@ -532,12 +555,13 @@ def upload(gs_client, localpath, key, upload_logger=None):
 
     should_upload =  blob is None or blob.md5_hash != local_md5 or key in REUPLOADS
     if should_upload:
+        blob_md5 = blob.md5_hash if blob else "No blob"
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
-            upload_logger.info(
-                f"upload: completed upload of {localpath} to gs://{GS_BUCKET}/{key} of md5 {local_md5}, size {local_size}",
-                extra=metadata)
+        upload_logger.info(
+            f"upload: completed upload of {localpath} to 'gs://{GS_BUCKET}/{key}' blob md5 {blob_md5} / local md5 {local_md5}, size {local_size}",
+            extra=metadata)
         try:
             destination.metadata = {"localpath": str(localpath), "mtime": get_file_mtime(localpath)}
             destination.metadata = metadata
