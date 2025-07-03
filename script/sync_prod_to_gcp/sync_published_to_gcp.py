@@ -498,7 +498,7 @@ def get_existing_blob(bucket, key, logger):
         # This calls HEAD and may get to blob better
         blob = bucket.blob(key)
         if blob.exists():
-            blob.reload()  # Populate blob propss
+            blob.reload()  # Populate blob props
             return blob
             
         return None
