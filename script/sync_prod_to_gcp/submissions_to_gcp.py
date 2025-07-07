@@ -967,7 +967,10 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdic
                 verdict.add_verdict(True, "None Exists", (from_obj, to_blob, obj_type))
             continue
 
+        from_blob.reload(projection='full')
         if to_blob.exists():
+            to_blob.reload(projection='full')
+
             if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()

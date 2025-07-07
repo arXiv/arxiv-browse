@@ -45,6 +45,7 @@ from pathlib import Path
 
 from google.api_core import retry
 from google.cloud.storage.retry import DEFAULT_RETRY as STORAGE_RETRY
+from jmespath.ast import projection
 
 from identifier import Identifier
 
@@ -489,27 +490,36 @@ def get_read_buffer(size=8192):
 def get_existing_blob(bucket, key, logger):
     """Get existing blob using both get_blob() and exists() methods"""
     try:
-        # First try the standard get_blob approach
+        logger.debug(f"Attempting get_blob for key: {key}")
         blob = bucket.get_blob(key)
         if blob is not None:
+            logger.debug(f"get_blob returned existing blob for key: {key}. MD5: {blob.md5_hash}, CRC32C: {blob.crc32c}")
             return blob
-        
-        # If get_blob returns None, try the exists() method
-        # This calls HEAD and may get to blob better
+
+        logger.debug(f"get_blob returned None for key: {key}, trying exists()")
         blob = bucket.blob(key)
         if blob.exists():
-            blob.reload()  # Populate blob props
-            return blob
-            
+            logger.debug(f"blob.exists() is True for key: {key}, reloading...")
+            try:
+                blob.reload(projection='full')
+                logger.debug(f"Blob reloaded for key: {key}. MD5: {blob.md5_hash}, CRC32C: {blob.crc32c}")
+                # Return the blob even if MD5 is missing, we'll check CRC32C later
+                return blob
+            except Exception as reload_exc:
+                logger.warning(f"Error reloading blob {key} properties: {reload_exc}", exc_info=True)
+                return None
+        else:
+            logger.debug(f"blob.exists() is False for key: {key}")
         return None
-        
+
     except Exception as exc:
-        logger.warning(f"Error checking blob {key} existence: {exc}")
+        logger.warning(f"Outer error checking blob {key} existence: {exc}", exc_info=True)
         return None
+
 
 
 @STORAGE_RETRY
-def upload(gs_client, localpath, key, upload_logger=None):
+def upload(gs_client, localpath, key, upload_logger=None, dry_run=False):
     """Upload a file to GS_BUCKET"""
     if upload_logger is None:
         upload_logger = logger
@@ -555,7 +565,10 @@ def upload(gs_client, localpath, key, upload_logger=None):
 
     should_upload =  blob is None or blob.md5_hash != local_md5 or key in REUPLOADS
     if should_upload:
-        blob_md5 = blob.md5_hash if blob else "No blob"
+        blob_md5 = blob.md5_hash if blob else "No Blob"
+        if dry_run:
+            return "upload", localpath, key, "dry_run", ms_since(start), local_size
+
         destination = bucket.blob(key)
         with open(localpath, 'rb') as fh:
             destination.upload_from_file(fh, content_type=mime_from_fname(localpath))
