@@ -105,8 +105,6 @@ REUPLOADS = {}
 ENSURE_UA = 'periodic-rebuild'
 
 CONCURRENCY_PER_WEBNODE = [
-    ('web5.arxiv.org', 1),
-    ('web6.arxiv.org', 1),
     ('web8.arxiv.org', 1),
     ('web9.arxiv.org', 1),
 ]
