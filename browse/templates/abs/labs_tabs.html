@@ -118,7 +118,7 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input        
+              <input
                 id="catalyzex-toggle"
                 data-script-url="{{ url_for('static', filename='js/catalyzex.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-cx">
@@ -146,7 +146,23 @@
             <span id="label-for-dagshub">DagsHub</span> <em>(<a href="https://dagshub.com/" target="_blank">What is DagsHub?</a>)</em>
           </div>
         </div>
-  
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="emergentmind-toggle"
+                data-script-url="{{ url_for('static', filename='js/emergentmind.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-emergentmind">
+              <span class="slider"></span>
+              <span class="is-sr-only">Emergent Mind Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-emergentmind">Emergent Mind</span> <em>(<a href="https://www.emergentmind.com/" target="_blank">What is Emergent Mind?</a>)</em>
+          </div>
+        </div>
+
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -216,6 +232,7 @@
       <div id="alphaxiv-output" style="display:none"></div>
       <div id="catalyzex-output" style="display:none"></div>
       <div id="dagshub-output" style="display:none"></div>
+      <div id="emergentmind-output" style="display:none"></div>
       <div id="gotitpub-output" style="display:none"></div>
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
