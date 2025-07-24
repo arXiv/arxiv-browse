@@ -119,6 +119,7 @@ function closePopup() {
 
 let add_abs_refs_to_toc = () => {
   let toc = document.querySelector('.ltx_toclist');
+  if (!toc) { return; }
 
   let abs = document.querySelector('.ltx_abstract');
   if (abs) {
@@ -253,6 +254,7 @@ let unwrap_nav = () => {
     nav.remove();
 
     let toc = document.querySelector('.ltx_TOC');
+    if (!toc) { return; }
     let toc_header = document.createElement('h2');
     toc_header.innerText = 'Table of Contents';
     toc_header.id = 'toc_header';
@@ -261,7 +263,8 @@ let unwrap_nav = () => {
     toc.setAttribute('aria-labelledby', 'toc_header');
 
     const olElement = document.querySelector('.ltx_toclist');
-    const listIconHTML = `
+    if (olElement) {
+      const listIconHTML = `
       <div id="listIcon" type="button" class='hide'>
           <svg width='17px' height='17px' viewBox="0 0 512 512" style="pointer-events: none;">
           <path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/>
@@ -274,7 +277,8 @@ let unwrap_nav = () => {
           <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
           </svg>
       </div>`;
-    olElement.insertAdjacentHTML('beforebegin', listIconHTML + arrowIconHTML);
+      olElement.insertAdjacentHTML('beforebegin', listIconHTML + arrowIconHTML);
+    }
 
     if(window.innerWidth <=719){
       toc.classList.add('mobile');
@@ -320,9 +324,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.addEventListener('resize', function() {
       if (window.innerWidth <=719) {
         const toc= document.querySelector('.ltx_page_main>.ltx_TOC');
-        toc.classList.add('mobile');
-        toc.classList.add('collapse');
-        toc.classList.remove('active');
+        if (toc) {
+          toc.classList.add('mobile');
+          toc.classList.add('collapse');
+          toc.classList.remove('active');
+        }
       }
       else{
         //TOC is shown
@@ -389,3 +395,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     });
   });
+  
