@@ -977,15 +977,16 @@ def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verd
                 logger.warning("%s: from: %s  <---> to: %s are identical - md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
                 verdict.add_verdict(True, "Both Exists", (from_obj, to_blob, obj_type))
             else:
-                logger.info("%s (%s) --> %s exists (NOT COPIED). FROM %s / %s --> TO %s / %s",
-                            from_obj,
-                            obj_type,
-                            to_obj,
-                            from_blob.size,
-                            from_blob.md5_hash,
-                            to_blob.size,
-                            to_blob.md5_hash,
-                            extra=log_extra)
+                logger.warning("%s (%s) --> %s exists (NOT COPIED). FROM %s / %s --> TO %s / %s",
+                               from_obj,
+                               obj_type,
+                               to_obj,
+                               from_blob.size,
+                               from_blob.md5_hash,
+                               to_blob.size,
+                               to_blob.md5_hash,
+                               extra=log_extra)
+                verdict.add_verdict(True, "Both exists but contents not the same!", (from_obj, to_blob, obj_type))
             continue
 
         try:
