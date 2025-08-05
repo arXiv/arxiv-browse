@@ -36,7 +36,7 @@ def redirect_pdf(arxiv_id: str, archive=None):  # type: ignore
 
     """
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
-    return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
+    return redirect(url_for('.pdf', arxiv_id=arxiv_id), 301)
 
 
 @blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -57,7 +57,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     """
 
     if request.query_string:  # redirect to strip off any useless query strings
-        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive, _external=True), 301)
+        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive), 301)
     return get_pdf_resp(arxiv_id, archive)
 
 
