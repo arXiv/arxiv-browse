@@ -23,8 +23,8 @@ def test_pdf_headers(client_with_test_fs):
 def test_pdf_redirect(client_with_test_fs):
     rv=client_with_test_fs.head("/pdf/cs/0011004v1?crazy_query_string=notgood")
     assert rv.status_code == 301
-    assert rv.headers["Location"] == "http://localhost/pdf/cs/0011004v1"
+    assert rv.headers["Location"] == "/pdf/cs/0011004v1"
 
     rv = client_with_test_fs.head("/pdf/2201.0001?crazy_query_string=notgood")
     assert rv.status_code == 301
-    assert rv.headers["Location"] == "http://localhost/pdf/2201.0001"
+    assert rv.headers["Location"] == "/pdf/2201.0001"
