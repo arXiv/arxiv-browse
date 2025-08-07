@@ -1,0 +1,92 @@
+# https://github.com/observIQ/stanza/blob/main/docs/operators/README.md
+# https://github.com/observIQ/stanza/blob/main/docs/types/expression.md
+# https://github.com/antonmedv/expr/blob/master/docs/Language-Definition.md
+
+# https://github.com/observIQ/stanza/blob/main/docs/pipeline.md
+pipeline:
+
+  ############################################
+  # Use operators (or plugins) to load and logs files.
+  # Use parsers to clean up the data.
+  # The "id" and "output" keys define the graph of how data flows.
+  #   "id" defaults to the value of "type".
+  #   "output" defaults to the "id" of the next item in the pipeline.
+  ############################################
+
+  # https://github.com/observIQ/stanza/blob/master/docs/operators/file_input.md
+  #- type: file_input
+
+  # https://github.com/observIQ/stanza-plugins/blob/main/docs/plugins/apache_combined.md
+  # https://github.com/observIQ/stanza-plugins/blob/main/docs/plugins/apache_common.md
+  #- type: arxiv_access_log
+  #  start_at: end
+  #  log_path: /users/e-prints/httpd/logs/web9_access_log
+  #  output: host_metadata
+
+  #- type: arxiv_error_log
+  #  #start_at: beginning
+  #  log_path: /users/e-prints/httpd/logs/ssl_error_log
+  #  output: host_metadata
+
+  - type: arxiv_stats_log
+    log_path: /opt_arxiv/e-prints/logs/stats.log
+    output: host_metadata
+
+  - type: nginx
+    source: file
+    access_log_path: /var/log/nginx/access.log
+    error_log_path: /var/log/nginx/error.log
+    output: host_metadata
+
+  - id: nginx-mod
+    type: nginx
+    source: file
+    access_log_path: /opt_arxiv/logs/nginx/mod.access.log
+    error_log_path: /opt_arxiv/logs/nginx/mod.error.log
+    output: host_metadata
+
+  - id: nginx-mod-beta
+    type: nginx
+    source: file
+    access_log_path: /opt_arxiv/logs/nginx/mod.beta.access.log
+    error_log_path: /opt_arxiv/logs/nginx/mod.beta.error.log
+    output: host_metadata
+
+  - id: nginx-modapi
+    type: nginx
+    source: file
+    access_log_path: /opt_arxiv/logs/nginx/modapi.access.log
+    error_log_path: /opt_arxiv/logs/nginx/modapi.error.log
+    output: host_metadata
+
+  - id: nginx-modapi-beta
+    type: nginx
+    source: file
+    access_log_path: /opt_arxiv/logs/nginx/modapi.beta.access.log
+    error_log_path: /opt_arxiv/logs/nginx/modapi.beta.error.log
+    output: host_metadata
+
+  # Looks like this logfile is rotated, so editing to point to the main one:
+  - type: arxiv_sync2gcp_log
+    log_path: "/opt_arxiv/e-prints/logs/sync/submissions.log"
+    output: host_metadata
+
+  #######################################
+  # Below is intended for all log streams
+  #######################################
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/host_metadata.md
+  - type: host_metadata
+
+  # https://github.com/observIQ/stanza/blob/main/docs/operators/metadata.md
+  - type: metadata
+    resource:
+      nicename: web40
+
+  ############################################
+  # Send to google logging or test with stdout
+  ############################################
+
+  # https://github.com/observIQ/stanza/blob/master/docs/operators/google_cloud_output.md
+  - type: google_cloud_output
+    credentials_file: /opt/observiq/stanza/arxiv-production_arxiv-stanza.json
