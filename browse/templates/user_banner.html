@@ -6,9 +6,9 @@ The content() elements will be added at the start of the <body> above the
 header in base.html.
 
 The script() elements will be added to the <head> in the base.html. This has
-additonal CSS and JS files for the banner slide in and out effects.
+additional CSS and JS files for the banner slide in and out effects.
 
-In those macros are responsable for all checks of the start and end times. Make
+In those macros are responsible for all checks of the start and end times. Make
 sure to use the same date conditionals in the user_banner.content() macro and
 the user_banner.script() macro.
 
@@ -28,9 +28,14 @@ Adding an environment var, so we can enable only on gcp.
 {% set BANNER_1_BUTTON_TEXT = "Give a gift!" %}
 {% set BANNER_1_BUTTON_LINK = "https://info.arxiv.org/about/donate.html" %}
 
+{% set BANNER_2_NAME = "opt-in" %}
+{# Set these variables to a string of YYYYMMDD of the start and end date #}
+{% set BANNER_START_2 = 202508170000 %} {#  8/18  start of day#}
+{% set BANNER_END_2 = 202508192350 %}{#  8/19 end of day#}
+
 {% set SLIDE = True %}
 
-{%- macro content(request_datetime) -%}
+{%- macro banner_1_content(request_datetime) -%}
     {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
 
     {%- if now >= BANNER_START_1 and now < BANNER_END_1 -%}
@@ -51,9 +56,37 @@ Adding an environment var, so we can enable only on gcp.
 
 {%- endmacro -%}
 
+{%- macro banner_2_content(request_datetime) -%}
+  {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+  {%- if now >= BANNER_START_2 and now < BANNER_END_2 -%}
+    <aside class="slider-wrapper bps-banner forum green">
+      <a class="close-slider do-close-slider bps-banner" href="#">
+        <img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message">
+      </a>
+      <div class="columns">
+        <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones">
+        <div class="copy-donation bps-banner">
+          <h2>Opt-in to Research</h2>
+          <p>Help Cornell researchers improve arXiv by contributing anonymized reading data.</p>
+          <p>
+            <a id="opt-in-registration" href="#"><strong>CLICK HERE TO OPT IN</strong></a>
+            <span id="opt-in-enrolled" style="display:none;">
+              <strong>ENROLLED</strong> <a id="opt-out" href="#">(OPT OUT?)</a>
+            </span>
+          </p>
+        </div>
+      </div>
+    </aside>
+  {%- endif -%}
+{%- endmacro -%}
 
+{# Wrapper content macro #}
+{%- macro content(request_datetime) -%}
+  {{ banner_1_content(request_datetime) }}
+  {{ banner_2_content(request_datetime) }}
+{%- endmacro -%}
 
-{%- macro script(request_datetime) -%}
+{%- macro banner_1_script(request_datetime) -%}
 
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if (SLIDE and (BANNER_START_1|int <= now) and (BANNER_END_1|int > now)) -%}
@@ -70,6 +103,58 @@ Adding an environment var, so we can enable only on gcp.
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=20250813"></script>
   {%- endif -%}
+{%- endmacro -%}
+
+{%- macro banner_2_script(request_datetime) -%}
+
+  {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+  {%- if (SLIDE and (BANNER_START_2|int <= now) and (BANNER_END_2|int > now)) -%}
+
+    {# to pass config data to the js #}
+    <div
+      id="banner-config"
+      data-banner-name="{{ BANNER_2_NAME }}"
+      data-banner-end="{{ BANNER_END_2 }}">
+    </div>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20250312" />
+    <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=040725"></script>
+    <script>
+      function checkOptInParticipation() {
+        if (document.cookie.indexOf('opt-in-tracking') !== -1) {
+          document.getElementById('opt-in-registration').style.display = 'none';
+          document.getElementById('opt-in-enrolled').style.display = 'inline';
+        } else {
+          document.getElementById('opt-in-registration').style.display = 'inline';
+          document.getElementById('opt-in-enrolled').style.display = 'none';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        checkOptInParticipation();
+
+        document.getElementById('opt-in-registration').addEventListener('click', function (event) {
+          event.preventDefault();
+          const uuid = crypto.randomUUID();
+          document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
+          checkOptInParticipation();
+        });
+
+        document.getElementById('opt-out').addEventListener('click', function (event) {
+          event.preventDefault();
+          document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          checkOptInParticipation();
+        });
+      });
+    </script>
+  {%- endif -%}
+{%- endmacro -%}
+
+{# Wrapper script macro #}
+{%- macro script(request_datetime) -%}
+  {{ banner_1_script(request_datetime) }}
+  {{ banner_2_script(request_datetime) }}
 {%- endmacro -%}
 
 
