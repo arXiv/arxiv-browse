@@ -136,6 +136,42 @@ Adding an environment var, so we can enable only on gcp.
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=040725"></script>
     <script>
       function checkOptInParticipation() {
+        const cookies = document.cookie;
+        const optedIn = cookies.includes('opt-in-tracking');
+        const optedOut = cookies.includes('opt-out-tracking');
+        const dismissed = cookies.includes('seenBanner_opt-in');
+
+
+        const banner = document.querySelector('.bps-banner.forum.green');
+        const message = banner?.querySelector('.copy-donation p');
+
+        {#
+           When the user opts in or out we want to hide the banner and replace
+           with some clickable button or icon that will 1) indicate the user's
+           opt in status and 2) allow user to change their choice
+           (This might also apply to dismissed state)
+           # if (banner) banner.style.display = 'none';
+        #}
+
+        {# Temporary - until we decide on UI after opt-in selection #}
+        if (optedIn) {
+          if (message) {
+            message.innerHTML = "Thank you for agreeing to participate in "
+            + "research by allowing researchers to collect anonymized usage"
+            + " data. Your preferences have been saved.";
+          }
+        }
+
+        {# Temporary - until we decide on UI after opt-out selection #}
+        if (optedOut) {
+          if (message) {
+            message.innerHTML = "Thank you for your response. Your preferences"
+            + " have been saved. Click 'I agree' below if you decide to "
+            + "participate at a later time.";
+          }
+        }
+
+        {# Control the opt-in and opt-out actions #}
         if (document.cookie.indexOf('opt-in-tracking') !== -1) {
           document.getElementById('opt-in-registration').style.display = 'none';
           document.getElementById('opt-in-enrolled').style.display = 'inline';
@@ -152,12 +188,18 @@ Adding an environment var, so we can enable only on gcp.
           event.preventDefault();
           const uuid = crypto.randomUUID();
           document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
+          {# Clear opt-in cookie #}
+          document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           checkOptInParticipation();
         });
 
         document.getElementById('opt-out').addEventListener('click', function (event) {
           event.preventDefault();
+          {# Clear opt-in cookie #}
           document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          {# Set a cookie to indicate the user opted out of data collection. #}
+          document.cookie = 'opt-out-tracking=true; Path=/; Max-Age=2592000';
+
           checkOptInParticipation();
         });
       });
