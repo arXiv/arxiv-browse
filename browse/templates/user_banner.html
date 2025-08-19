@@ -67,7 +67,7 @@ Adding an environment var, so we can enable only on gcp.
         <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones">
         <div class="copy-donation bps-banner">
           <h2>Opt-in to Data Collection for Research</h2>
-          <p>arXiv is working with academic researchers to investigate ways to
+          <p id="opt-in-message">arXiv is working with academic researchers to investigate ways to
             improve the service for our users. This requires a rich dataset to
             better inform the research. Users who wish to contribute to the
             future of arXiv may opt in to allow arXiv to use their reading
@@ -139,11 +139,14 @@ Adding an environment var, so we can enable only on gcp.
         const cookies = document.cookie;
         const optedIn = cookies.includes('opt-in-tracking');
         const optedOut = cookies.includes('opt-out-tracking');
-        const dismissed = cookies.includes('seenBanner_opt-in');
-
+        const userDismissedBanner = cookies.includes('seenBanner_opt-in');
+        const optInDismissed = cookies.includes('opt-in-dismissed');
 
         const banner = document.querySelector('.bps-banner.forum.green');
-        const message = banner?.querySelector('.copy-donation p');
+        {# const message = banner?.querySelector('.copy-donation p');#}
+        const message = document.getElementById('opt-in-message');
+        const optInBtn = document.getElementById('opt-in-registration');
+        const enrolledMsg = document.getElementById('opt-in-enrolled');
 
         {#
            When the user opts in or out we want to hide the banner and replace
@@ -153,25 +156,59 @@ Adding an environment var, so we can enable only on gcp.
            # if (banner) banner.style.display = 'none';
         #}
 
+        {# This is a hack so we can see ALL states in the banner until
+           we come up with a way to display state.
+        #}
+        {# Add a cookie to record the user's dismissal of the banner, so we
+           can void the donate.js dismissal cookie and display OTHER states
+           in the banner area for debugging purposes.
+
+           We will add '&& !optInDismissed' to hide banner on repeat dismissal.
+           We will add && !optedIn && !optedOut to hide banner when user made a selection.
+           # if (userDismissedBanner && !optedIn && !optedOut) {
+         #}
+        {# Always show banner - for initial selection, then DEBUGGING #}
+        if (userDismissedBanner) {
+          {# Set our own tracking cookie #}
+          document.cookie = 'opt-in-dismissed=true; Path=/; Max-Age=2592000';
+          {# Clear seenBanner_opt-in cookie - to make banner redisplay (debugging) #}
+          document.cookie = 'seenBanner_opt-in=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
         {# Temporary - until we decide on UI after opt-in selection #}
         if (optedIn) {
           if (message) {
             message.innerHTML = "Thank you for agreeing to participate in "
             + "research by allowing researchers to collect anonymized usage"
-            + " data. Your preferences have been saved.";
+            + " data. Your preferences have been saved."
+            + "<p>DEBUG: USER OPTED IN: THIS STATE WILL APPEAR AS SEPARATE BUTTON TBD</p>";
           }
         }
-
         {# Temporary - until we decide on UI after opt-out selection #}
-        if (optedOut) {
+        else if (optedOut) {
           if (message) {
-            message.innerHTML = "Thank you for your response. Your preferences"
-            + " have been saved. Click 'I agree' below if you decide to "
-            + "participate at a later time.";
+            message.innerHTML = "Thank you for your response. Your preference"
+              + " not to participate has been saved. Click 'I agree' below if you later decide to "
+              + "participate."
+              + "<p>DEBUG: USER OPTED OUT: THIS STATE WILL APPEAR AS SEPARATE BUTTON TBD</p>";
+          }
+        }
+        {# Show modified message if dismissed but not opted in or out #}
+        else if (optInDismissed && !optedIn && !optedOut) {
+          if (message) {
+            message.innerHTML = "You've previously dismissed this banner. You "
+              + "can still opt in by clicking 'I Agree' below."
+              + "<p>DEBUG: USER DISMISSED BANNER: THIS STATE WILL APPEAR AS SEPARATE BUTTON TBD!</p>";
+          }
+        }
+        {# Otherwise we display the default Opt In invitation message #}
+        else {
+          if (message) {
+            {# message.innerHTML = "OVERRIDE DEFAULT MESSAGE."; #}
           }
         }
 
-        {# Control the opt-in and opt-out actions #}
+        {# Control the opt-in and opt-out actions buttons area #}
         if (document.cookie.indexOf('opt-in-tracking') !== -1) {
           document.getElementById('opt-in-registration').style.display = 'none';
           document.getElementById('opt-in-enrolled').style.display = 'inline';
@@ -190,6 +227,8 @@ Adding an environment var, so we can enable only on gcp.
           document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
           {# Clear opt-in cookie #}
           document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          {# Mark as dismissed when opted in #}
+          document.cookie = 'opt-in-dismissed=true; Path=/; Max-Age=2592000';
           checkOptInParticipation();
         });
 
@@ -199,7 +238,8 @@ Adding an environment var, so we can enable only on gcp.
           document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           {# Set a cookie to indicate the user opted out of data collection. #}
           document.cookie = 'opt-out-tracking=true; Path=/; Max-Age=2592000';
-
+          {# Mark as dismissed when opted out #}
+          document.cookie = 'opt-in-dismissed=true; Path=/; Max-Age=2592000';
           checkOptInParticipation();
         });
       });
