@@ -124,13 +124,12 @@ Adding an environment var, so we can enable only on gcp.
   {%- if (SLIDE and (BANNER_START_2|int <= now) and (BANNER_END_2|int > now)) -%}
 
     {# to pass config data to the js #}
-    <div
+    <meta
       id="banner-config"
       data-banner-name="{{ BANNER_2_NAME }}"
       data-banner-end="{{ BANNER_END_2 }}">
-    </div>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20250312" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/slider.css') }}?v=20250312">
     <script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/donate.js') }}?v=040725"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/optin.js') }}?v=20250819"></script>
