@@ -3318,3 +3318,12 @@ a:hover .icon.filter-red {
   border-radius: 4px;
   padding: 0.5em;
 }
+
+
+#opt-in-status-button-container {
+  margin-left: 1rem;
+}
+.opt-in-status-wrapper {
+  text-align: right;
+  padding-right: 1rem;
+}
