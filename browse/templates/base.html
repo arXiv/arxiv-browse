@@ -85,7 +85,10 @@
             aria-hidden prevents screenreaders from being caught, and tabindex prevents it from being selectable via the tab key. -#}
         <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
-        {% block login_link %}{% endblock %}
+        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
+          {% block opt_in_button %}{% endblock %}
+          {% block login_link %}{% endblock %}
+        </div>
         {{ base_macros.compactsearch() }}
        {% endblock header %}
      </div><!-- /end desktop header -->
