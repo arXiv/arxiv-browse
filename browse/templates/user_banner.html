@@ -18,7 +18,7 @@ production.
 Adding an environment var, so we can enable only on gcp.
 -#}
 
-{# Banner varaibles - if you just want a default banner #}
+{# Banner variables - if you just want a default banner #}
 {% set BANNER_1_NAME = "birthday" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
 {% set BANNER_START_1 = 202508140000 %} {#  8/14  start of day#}
@@ -30,8 +30,8 @@ Adding an environment var, so we can enable only on gcp.
 
 {% set BANNER_2_NAME = "opt-in" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_2 = 202508210000 %} {#  8/22  start of day#}
-{% set BANNER_END_2 = 202508262350 %}{#  8/26 end of day#}
+{% set BANNER_START_2 = 202509010000 %} {#  8/22  start of day#}
+{% set BANNER_END_2 = 202509102350 %}{#  8/26 end of day#}
 
 {% set SLIDE = True %}
 
@@ -59,7 +59,7 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro banner_2_content(request_datetime) -%}
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if now >= BANNER_START_2 and now < BANNER_END_2 -%}
-    <aside class="slider-wrapper bps-banner forum">
+    <aside id="opt-in-banner" class="slider-wrapper bps-banner forum ">
       <a class="close-slider do-close-slider bps-banner" href="#">
         <img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message">
       </a>
