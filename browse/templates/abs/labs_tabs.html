@@ -211,6 +211,22 @@
             <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/welcome" target="_blank">What is ScienceCast?</a>)</em>
           </div>
         </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="ploutos-toggle"
+                data-script-url="{{ url_for('static', filename='js/ploutos.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-ploutos">
+              <span class="slider"></span>
+              <span class="is-sr-only">Ploutos World Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-ploutos">Ploutos World</span> <em>(<a href="https://world.ploutos.dev" target="_blank">What is Ploutos?</a>)</em>
+          </div>
+        </div>
       </div>
 
       <div id="alphaxiv-output" style="display:none"></div>
@@ -221,6 +237,7 @@
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
       <div id="huggingface-output" style="display:none"></div>
+      <div id="ploutos-output" style="display:none"></div>
     </div>
 
 
