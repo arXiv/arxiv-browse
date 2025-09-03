@@ -1,6 +1,6 @@
 // Support Opt-In banner and associated buttons
 function checkOptInParticipation() {
-  const banner = document.querySelector('.slider-wrapper.bps-banner.forum:not(.blue)');
+  const banner = document.getElementById('opt-in-banner');
   const cookies = document.cookie;
   // User opted in
   const optedIn = cookies.includes('opt-in-tracking');
@@ -17,7 +17,7 @@ function checkOptInParticipation() {
 
   // Hide the banner after user makes a choice
   if ((optedIn || optedOut || optInDismissed) && banner) {
-    console.log("Hiding banner due to user choice (checkOptIn)");
+    console.log("Hiding banner due to user choice (checkOptInParticipation)");
     banner.style.display = 'none';
     banner.style.setProperty('display', 'none', 'important');
   }
@@ -73,12 +73,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.cookie = 'opt-in-dismissed=true; Path=/; Max-Age=2592000';
 
-    const banner = document.querySelector('.slider-wrapper.bps-banner.forum:not(.blue');
+    const banner = document.getElementById('opt-in-banner');
     if (banner) {
-        console.log("Hiding banner due to user choice (Opt In event)");
-        banner.style.display = 'none'
+        console.log("Hiding banner due to user choice (Opt In/Out event)");
         // Disable banner on refresh after user has made selection
-        document.cookie = 'seenBanner_opt-in=; Path=/; Max-Age=2592000';
+        banner.style.display = 'none'
     }
 
     checkOptInParticipation();
@@ -90,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.cookie = 'opt-out-tracking=true; Path=/; Max-Age=2592000';
     document.cookie = 'opt-in-dismissed=true; Path=/; Max-Age=2592000';
 
-    const banner = document.querySelector('.slider-wrapper.bps-banner.forum:not(.blue)');
+    const banner = document.getElementById('opt-in-banner');
     if (banner) {
         console.log("Hiding banner due to user choice (Opt Out event)");
         banner.style.display = 'none';
