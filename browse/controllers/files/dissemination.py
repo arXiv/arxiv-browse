@@ -147,39 +147,47 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             arxiv_id_str = arxiv_id_str[:-1]
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
+        # no additional surrogate keys since this id could be any junk from the client
         return bad_id(arxiv_id_str, str(ex))
     item = get_article_store().dissemination(format, arxiv_id)
     logger.debug("dissemination_for_id(%s) was %s", arxiv_id.idv, item)
+
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
-        return not_found(arxiv_id)
+        resp=not_found(arxiv_id)
     elif item == "WITHDRAWN":
-        return withdrawn(arxiv_id, arxiv_id.has_version)
+        resp=withdrawn(arxiv_id, arxiv_id.has_version)
     elif item == "NO_SOURCE":
-        return no_source(arxiv_id, arxiv_id.has_version)
+        resp=no_source(arxiv_id, arxiv_id.has_version)
     elif item == "NOT_PUBLIC":
-        return not_public(arxiv_id, arxiv_id.has_version)
+        resp=not_public(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
-        return unavailable(arxiv_id)
+        resp=unavailable(arxiv_id)
     elif item == "NOT_PDF":
-        return not_pdf(arxiv_id)
+        resp=not_pdf(arxiv_id)
     elif item == "NO_HTML":
-        return no_html(arxiv_id)
+        resp=no_html(arxiv_id)
     elif isinstance(item, Deleted):
-        return bad_id(arxiv_id, item.msg)
+        resp=bad_id(arxiv_id, item.msg)
     elif isinstance(item, KnownReason):
-        return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
+        resp=cannot_build_pdf(arxiv_id, item.msg, item.fmt)
+    else:
+        file, docmeta, version = item
+        # check for existence
+        if not isinstance(file, List) and not file.exists(): # single file
+            resp=not_found(arxiv_id)
+        elif isinstance(file, List) and not file[0].exists(): # potential list of files
+            resp=not_found(arxiv_id)
+        else:
+            resp=resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
-    file, docmeta, version = item
+    # add the surrogate key headers for all cases where the arxiv id parsed
+    resp.headers=add_surrogate_key(resp.headers,["paper-id-{arxiv_id.id}"])
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,["paper-id-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id_str}-current"])
+    return resp
 
-    # check for existence
-    if not isinstance(file, List): # single file
-        if not file.exists():
-            return not_found(arxiv_id)
-    else: # potential list of files
-        if not file[0].exists():
-            return not_found(arxiv_id)
-
-    return resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
 
 def get_html_response(arxiv_id_str: str,

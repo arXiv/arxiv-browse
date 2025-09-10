@@ -9,7 +9,7 @@ from browse.controllers.files.dissemination import get_src_resp
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
 from browse.services.dissemination import get_article_store
 from browse.services.documents import get_doc_service
-from flask import Blueprint, render_template
+from flask import Blueprint, Response, make_response, render_template
 from opentelemetry import trace
 
 logger = logging.getLogger(__file__)
@@ -29,17 +29,15 @@ def anc_listing(arxiv_id: str):  #type: ignore
     data['arxiv_id'] = docmeta.arxiv_identifier
     data['anc_file_list'] = get_article_store().get_ancillary_files(docmeta)
 
-    headers: Dict[str,str]={}
-    headers=add_surrogate_key(headers,["anc",f"paper-id-{docmeta.arxiv_identifier.id}"])
-    if _check_id_for_version(arxiv_id): #get abs always adds a verion onto the id
-        headers=add_surrogate_key(headers,[f"paper-id-{docmeta.arxiv_identifier.idv}"])
-    else:
-        headers=add_surrogate_key(headers,[f"paper-id-{docmeta.arxiv_identifier.id}-current"])
-
     if data['anc_file_list']:
-        return render_template("src/listing.html", **data), 200, headers
+        resp=make_response(render_template("src/listing.html", **data))
+        _add_surrogate_keys(resp, arxiv_id, True)
+        return resp
     else:
-        return render_template("src/listing_none.html", **data), 404, headers
+        resp=make_response(render_template("src/listing_none.html", **data))
+        _add_surrogate_keys(resp, arxiv_id, True)
+        resp.status_code=404
+        return resp
 
 
 @blueprint.route("/src/<path:arxiv_id>/anc/<path:file_path>")
@@ -53,7 +51,9 @@ def anc(arxiv_id: str, file_path:str):  # type: ignore
     ex https://arxiv.org/src/1911.08265v1/anc
     ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
     """
-    return get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
+    resp=get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
+    _add_surrogate_keys(resp, arxiv_id, True)
+    return resp
 
 
 @blueprint.route("/e-print/<string:arxiv_id_str>")
@@ -71,12 +71,26 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     Before 2024 /src behavior was different than /e-print.
      """
     resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
-    if _check_id_for_version(arxiv_id_str): 
-        resp.headers=add_surrogate_key(resp.headers,["src",f"paper-id-{arxiv_id_str}"])
-    else:
-        resp.headers=add_surrogate_key(resp.headers,["src",f"paper-id-{arxiv_id_str}-current"])
-        
+    _add_surrogate_keys(resp, arxiv_id_str)
     return resp
+
+
+def _add_surrogate_keys(resp: Response, arxiv_id_str: str, anc:bool=False) -> None:
+    resp.headers=add_surrogate_key(resp.headers,["src"])
+    if _check_id_for_version(arxiv_id_str):
+        resp.headers=add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}",
+                                                     f"paper-id-{arxiv_id_str}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}-current",
+                                                     f"paper-id-{arxiv_id_str}-current"])
+
+    if anc:
+        resp.headers=add_surrogate_key(resp.headers,["anc"])
+        if _check_id_for_version(arxiv_id_str):
+            resp.headers=add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}"])
+        else:
+            resp.headers=add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}-current"])
+
 
 def _check_id_for_version(arxiv_id_str:str) -> bool:
     """returns true if the url was asking for a specific paper version, false otherwise"""
@@ -88,21 +102,3 @@ def _check_id_for_version(arxiv_id_str:str) -> bool:
             return False
     except IdentifierException:
         return False
-
-
-# TODO need test data for src_format ps
-# tests/data/abs_files/orig/cond-mat/papers/9805/9805021v1.ps.gz
-
-
-# TODO need test data for src_format html
-# TODO need test data for src_format tex
-# TODO need test data for src_format pdftex
-# TODO need test data for src_format docx
-# TODO need test data for src_format odf
-# TODO need test data for is_single_file (1)
-# TODO need test data for src_format is_encrypted (S)
-# TODO need test data for src_format has_ancillary_files (A)
-# ex. https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
-# TODO need test data for src_format has_pilot_data (B)
-
-# TODO need to do /src/id/file
