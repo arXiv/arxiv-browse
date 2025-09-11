@@ -1,6 +1,6 @@
 """Routes for serving the source of articles. /src /e-prints and ancillary."""
 import logging
-from typing import Optional, Dict
+from typing import Optional
 
 from arxiv.identifier import Identifier, IdentifierException
 from arxiv.integration.fastly.headers import add_surrogate_key
@@ -31,11 +31,11 @@ def anc_listing(arxiv_id: str):  #type: ignore
 
     if data['anc_file_list']:
         resp=make_response(render_template("src/listing.html", **data))
-        _add_surrogate_keys(resp, arxiv_id, True)
+        _src_surrogate_keys(resp, arxiv_id, True)
         return resp
     else:
         resp=make_response(render_template("src/listing_none.html", **data))
-        _add_surrogate_keys(resp, arxiv_id, True)
+        _src_surrogate_keys(resp, arxiv_id, True)
         resp.status_code=404
         return resp
 
@@ -52,7 +52,7 @@ def anc(arxiv_id: str, file_path:str):  # type: ignore
     ex https://arxiv.org/src/1911.08265v1/anc/pseudocode.py
     """
     resp=get_extracted_src_file_resp(arxiv_id, f"anc/{file_path}", 'anc')
-    _add_surrogate_keys(resp, arxiv_id, True)
+    _src_surrogate_keys(resp, arxiv_id, True)
     return resp
 
 
@@ -71,11 +71,11 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
     Before 2024 /src behavior was different than /e-print.
      """
     resp=get_src_resp(arxiv_id_str, archive) #always adds a verion onto the id
-    _add_surrogate_keys(resp, arxiv_id_str)
+    _src_surrogate_keys(resp, arxiv_id_str)
     return resp
 
 
-def _add_surrogate_keys(resp: Response, arxiv_id_str: str, anc:bool=False) -> None:
+def _src_surrogate_keys(resp: Response, arxiv_id_str: str, anc:bool=False) -> None:
     resp.headers=add_surrogate_key(resp.headers,["src"])
     if _check_id_for_version(arxiv_id_str):
         resp.headers=add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}",
