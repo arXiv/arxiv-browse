@@ -18,7 +18,8 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20241206" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
@@ -34,6 +35,11 @@
           <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
         </div>
 
+        {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
+        <div class="column">
+        {% block opt_in_modal %}{% endblock %}
+        </div>
+        {%- endif -%}
 
         <!-- /from April 7 at 1:00 AM to May 29 at 21:40 -->
         {%- if rd_int >= 202504070100 and rd_int <= 202505282140 -%}
@@ -44,7 +50,7 @@
         {%- endif -%}
 
         <!-- /from May 2 at 1:00 AM to May 5 at 9:45 AM -->
-        {%- if rd_int >= 202505020100 and rd_int <= 202505050945 -%}
+        {%- if rd_int >= 202505020100 and rd_int <= 202405050945 -%}
         <div class="column banner-minimal forum">
           <h3 style="color:#b31b1b;"><b>Monday, May 5:</b> arXiv will be READ ONLY at 9:00AM EST for approximately 30 minutes. We apologize for any inconvenience.</h3>
         </div>
@@ -85,7 +91,12 @@
             aria-hidden prevents screenreaders from being caught, and tabindex prevents it from being selectable via the tab key. -#}
         <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
-        {% block login_link %}{% endblock %}
+
+        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
+          {% block opt_in_button %}{% endblock %}
+          {% block login_link %}{% endblock %}
+        </div>
+
         {{ base_macros.compactsearch() }}
        {% endblock header %}
      </div><!-- /end desktop header -->

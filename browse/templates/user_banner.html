@@ -18,20 +18,20 @@ production.
 Adding an environment var, so we can enable only on gcp.
 -#}
 
-{# Banner varaibles - if you just want a default banner #}
-{% set BANNER_1_NAME = "birthday" %}
+{# Banner variables - if you just want a default banner #}
+{% set BANNER_1_NAME = "mysqlupgrade" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202508140000 %} {#  8/14  start of day#}
-{% set BANNER_END_1 = 202508142350 %}{#  8/14 end of day#}
-{% set BANNER_1_TITLE = "Happy Birthday to arXiv!" %}
-{% set BANNER_1_TEXT = "It's our birthday — woohoo! On August 14th, 1991, the very first paper was submitted to arXiv. That's 34 years of open science! Give today and help support arXiv for many birthdays to come." %}
-{% set BANNER_1_BUTTON_TEXT = "Give a gift!" %}
-{% set BANNER_1_BUTTON_LINK = "https://info.arxiv.org/about/donate.html" %}
+{% set BANNER_START_1 = 202509150000 %} {#  8/15 now #}
+{% set BANNER_END_1   = 202509170000 %} {#  8/17 end of day#}
+{% set BANNER_1_TITLE = "Planned Database Maintenance 2025-09-17 11am-1pm UTC " %}
+{% set BANNER_1_TEXT = "" %}
+{% set BANNER_1_BUTTON_TEXT = "Blog post" %}
+{% set BANNER_1_BUTTON_LINK = "https://blog.arxiv.org/2025/09/16/arxiv-org-maintenance-sep-17-2025" %}
 
 {% set BANNER_2_NAME = "opt-in" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_2 = 202508170000 %} {#  8/18  start of day#}
-{% set BANNER_END_2 = 202508222350 %}{#  8/22 end of day#}
+{% set BANNER_START_2 = 202009120000 %} {#  9/12  start of day,    disabled by #}
+{% set BANNER_END_2 = 202009302350 %}   {#  9/30 end of day,       editing to year 2020 #}
 
 {% set SLIDE = True %}
 
@@ -45,6 +45,11 @@ Adding an environment var, so we can enable only on gcp.
           <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones">
           <div class="copy-donation bps-banner">
             <h2>{{BANNER_1_TITLE}}</h2>
+            <ul>
+            <li>Submission, registration, and all other functions that require login will be temporarily unavailable.</li>
+            <li>Browsing, viewing and searching papers will be unaffected.</li>
+            <li>See <a href=”https://blog.arxiv.org/2025/09/16/arxiv-org-maintenance-sep-17-2025/”>our blog</a> for more information.</li>
+            </ul>
             <p>{{BANNER_1_TEXT}}</p>
           </div>
           <div class="amount-donation bps-banner">
@@ -59,7 +64,7 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro banner_2_content(request_datetime) -%}
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if now >= BANNER_START_2 and now < BANNER_END_2 -%}
-    <aside class="slider-wrapper bps-banner forum">
+    <aside id="opt-in-banner" class="slider-wrapper bps-banner forum ">
       <a class="close-slider do-close-slider bps-banner" href="#">
         <img src="{{ url_for('static', filename='images/icons/close-slider.png') }}" alt="close this message">
       </a>
