@@ -21,8 +21,8 @@ Adding an environment var, so we can enable only on gcp.
 {# Banner variables - if you just want a default banner #}
 {% set BANNER_1_NAME = "mysqlupgrade" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202509150000 %} {#  8/14  start of day#}
-{% set BANNER_END_1   = 202509180000 %} {#  8/14 end of day#}
+{% set BANNER_START_1 = 202509150000 %} {#  8/15 now #}
+{% set BANNER_END_1   = 202509170000 %} {#  8/17 end of day#}
 {% set BANNER_1_TITLE = "Planned Database Maintenance 2025-09-17 11am-1pm UTC " %}
 {% set BANNER_1_TEXT = "" %}
 {% set BANNER_1_BUTTON_TEXT = "Blog post" %}
@@ -30,8 +30,8 @@ Adding an environment var, so we can enable only on gcp.
 
 {% set BANNER_2_NAME = "opt-in" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_2 = 202509120000 %} {#  9/12  start of day#}
-{% set BANNER_END_2 = 202509302350 %}{#  9/30 end of day#}
+{% set BANNER_START_2 = 202009120000 %} {#  9/12  start of day,    disabled by #}
+{% set BANNER_END_2 = 202009302350 %}   {#  9/30 end of day,       editing to year 2020 #}
 
 {% set SLIDE = True %}
 
