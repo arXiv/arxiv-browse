@@ -3,7 +3,12 @@
 {% block head %}
   {{ super() -}}
 {% endblock head %}
-{% block opt_in_button %}{% include 'opt_in_button.html' %}{% endblock %}
+{% block opt_in_popup %}
+ {% include 'opt_in_popup.html' %}
+{% endblock %}
+{% block opt_in_button %}
+ {% include 'opt_in_button.html' %}
+{% endblock %}
 {% block login_link %}{% include 'login.html' %}{% endblock %}
 {% block body_id %}id="front"{% endblock %}
 
