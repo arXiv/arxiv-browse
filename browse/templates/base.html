@@ -18,7 +18,8 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20241206" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" /></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
+  <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
@@ -36,7 +37,7 @@
 
         {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
         <div class="column">
-        {% block opt_in_popup %}{% endblock %}
+        {% block opt_in_modal %}{% endblock %}
         </div>
         {%- endif -%}
 
