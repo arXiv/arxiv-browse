@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Hiding banner due to user choice (Opt In/Out event)");
         // Disable banner on refresh after user has made selection
         banner.style.display = 'none'
+        document.cookie = 'seenBanner_opt-in=; Path=/; Max-Age=2592000';
     }
 
     checkOptInParticipation();
@@ -111,8 +112,9 @@ function updateStatusButton(state) {
   container.style.display = 'block';
 
   if (state === 'optedIn') {
-    button.textContent = 'Opt Out';
-    button.title = 'You are currently opted in. Click to opt out.';
+    //button.textContent = 'Opt Out';
+    button.textContent = 'Thank you for contributing your reading data for research. Click here to pause data collection.';
+    button.title = 'Thank you for contributing your reading data for research. Click here to pause data collection.';
     button.onclick = function () {
       document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       document.cookie = 'opt-out-tracking=true; Path=/; Max-Age=2592000';
@@ -120,8 +122,9 @@ function updateStatusButton(state) {
       checkOptInParticipation();
     };
   } else if (state === 'optedOut') {
-    button.textContent = 'Opt In';
-    button.title = 'You are currently opted out. Click to opt in.';
+    //button.textContent = 'Opt In';
+    button.textContent = 'Contribute my reading data to research. Click to agree.';
+    button.title = 'Contribute my reading data to research. Click to agree.';
     button.onclick = function () {
       const uuid = crypto.randomUUID();
       document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`;
