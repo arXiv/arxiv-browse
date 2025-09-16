@@ -1,0 +1,82 @@
+
+<!-- Opt-in Trigger Button -->
+ <script type="text/javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
+<button id="optin-trigger" class="optin-button" aria-haspopup="dialog">
+  Contribute my reading data to research
+</button>
+
+<!-- Modal Dialog -->
+<div id="optin-modal" class="optin-modal hidden" role="dialog" aria-modal="true" aria-labelledby="optin-title">
+  <div class="optin-modal-content">
+    <h2 id="optin-title">Help Improve arXiv</h2>
+    <p>
+      arXiv is working with academic researchers to investigate ways to improve the service for our users.
+      This requires a rich dataset to better inform the research. Users who wish to contribute to the future
+      of arXiv may opt in to allow arXiv to use their reading data for research purposes. By clicking ‘I agree’ below,
+      you consent to your reading data being collected, retained, and processed by arXiv and shared with researchers
+      conducting research in the public interest. Reading data will never be shared publicly or otherwise incorporated
+      into public systems in a personally identifiable format. Research use cases include developing privacy-preserving
+      recommendation systems for arXiv.
+    </p>
+    <p>
+      For more information, see the <a href="https://info.arxiv.org/help/policies/privacy_policy.html" target="_blank">arXiv Privacy Policy</a>.
+    </p>
+    <div class="optin-modal-actions">
+      <button id="optin-agree">I Agree</button>
+      <button id="optin-optout">Opt Out</button>
+      <button id="optin-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- OptIn Styling - Move to CSS file if approved-->
+<style>
+.optin-button {
+  background-color: #0055aa;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.optin-modal.hidden {
+  display: none;
+}
+
+.optin-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  /* align-items: center; */
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.optin-modal-content {
+  background: white;
+  color: black;
+  padding: 2em;
+  border-radius: 8px;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.optin-modal-actions {
+  margin-top: 1.5em;
+  text-align: right;
+}
+
+.optin-modal-actions button {
+  margin-left: 1em;
+  padding: 0.5em 1em;
+  font-size: 1em;
+}
+</style>
+
+
