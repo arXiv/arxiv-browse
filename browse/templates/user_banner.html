@@ -19,14 +19,14 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Banner variables - if you just want a default banner #}
-{% set BANNER_1_NAME = "birthday" %}
+{% set BANNER_1_NAME = "mysqlupgrade" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202508140000 %} {#  8/14  start of day#}
-{% set BANNER_END_1 = 202508142350 %}{#  8/14 end of day#}
-{% set BANNER_1_TITLE = "Happy Birthday to arXiv!" %}
-{% set BANNER_1_TEXT = "It's our birthday — woohoo! On August 14th, 1991, the very first paper was submitted to arXiv. That's 34 years of open science! Give today and help support arXiv for many birthdays to come." %}
-{% set BANNER_1_BUTTON_TEXT = "Give a gift!" %}
-{% set BANNER_1_BUTTON_LINK = "https://info.arxiv.org/about/donate.html" %}
+{% set BANNER_START_1 = 202509150000 %} {#  8/14  start of day#}
+{% set BANNER_END_1   = 202509180000 %} {#  8/14 end of day#}
+{% set BANNER_1_TITLE = "Planned Database Maintenance 2025-09-17 11am-1pm UTC " %}
+{% set BANNER_1_TEXT = "" %}
+{% set BANNER_1_BUTTON_TEXT = "Blog post" %}
+{% set BANNER_1_BUTTON_LINK = "https://blog.arxiv.org/2025/09/16/arxiv-org-maintenance-sep-17-2025" %}
 
 {% set BANNER_2_NAME = "opt-in" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
@@ -46,6 +46,10 @@ Adding an environment var, so we can enable only on gcp.
           <div class="copy-donation bps-banner">
             <h2>{{BANNER_1_TITLE}}</h2>
             <p>{{BANNER_1_TEXT}}</p>
+            <li>Submission, registration, and all other functions that require login will be temporarily unavailable.</li>
+            <li>Browsing, viewing and searching papers will be unaffected.</li>
+            <li>See <a href=”https://blog.arxiv.org/2025/09/16/arxiv-org-maintenance-sep-17-2025/”>our blog</a> for more information.</li>
+
           </div>
           <div class="amount-donation bps-banner">
             <div class="donate-cta"><a class="banner_link banner-btn-grad" target="_blank" href="{{BANNER_1_BUTTON_LINK}}"><b>{{BANNER_1_BUTTON_TEXT}}</b></a></div>
