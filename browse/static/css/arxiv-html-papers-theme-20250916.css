@@ -10,7 +10,7 @@
   --math-font-family: "STIX Two Math", "Cambria Math", math;
   /* Should we do anything special for caligraphic?
      e.g. "Lucida Calligraphy","Zapf Chancery","URW Chancery L", TeX Gyre Termes...*/
-  --math-font-family: var(--math-font-family);
+  --math-caligraphic-font-family: var(--math-font-family);
   --toc-font-family: "rival-sans";
   --other-font-family: "rival-sans";
   --code-font-family:"ibm-plex-mono", monospace;
