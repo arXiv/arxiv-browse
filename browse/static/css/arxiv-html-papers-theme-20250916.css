@@ -45,6 +45,14 @@
   --error-link-color: #176992; /* darker blue, passes color contrast */
   --error-text-color: #970503; /* dark red */
 }
+/* Special hand-crafted case: \color{black} is the most common use, so hand-curate to match
+   the main foreground color in dark mode.
+   TODO: This color should be a design token name eventually. Without that we have to copy
+   the full selector rule from ar5iv.css: */
+[data-theme="dark"] [style*="--ltx-fg-color:#000000;"] {
+  --text-color: #f9f7f7; /* warm wash */
+  color: var(--text-color);
+}
 
 #modal-submit {
   background-color: #b31b1b;
