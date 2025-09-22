@@ -133,7 +133,7 @@ function updateStatusButton(state) {
       checkOptInParticipation();
     };
   } else if (state === 'dismissed') {
-    button.textContent = 'Opt In';
+    button.textContent = 'You previously dismissed the banner. Click to opt in.';
     button.title = 'You previously dismissed the banner. Click to opt in.';
     button.onclick = function () {
       const uuid = crypto.randomUUID();
