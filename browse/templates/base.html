@@ -92,10 +92,8 @@
         <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
         {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
 
-        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
-          {% block opt_in_button %}{% endblock %}
-          {% block login_link %}{% endblock %}
-        </div>
+        {% block opt_in_button %}{% endblock %}
+        {% block login_link %}{% endblock %}
 
         {{ base_macros.compactsearch() }}
        {% endblock header %}
