@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('optin-optout').addEventListener('click', function() {
     document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    alert("You have opted out.");
     document.getElementById('optin-modal').classList.add('hidden');
   });
 });
