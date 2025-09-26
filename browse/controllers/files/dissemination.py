@@ -269,3 +269,6 @@ def _is_html_name(name: Union[str, FileObj]) -> bool:
     return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
 
 
+def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
+    return get_dissemination_resp(fileformat.ps, arxiv_id_str, archive)
+

@@ -59,7 +59,7 @@ Now includes fonts, see our <a href="https://info.arxiv.org/help/psvariants.html
 {% if ps %}
 <dt><b>Author supplied PostScript</b></dt>
 <dd>
-<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}})" method="get">
+<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
 Delivered via an additional HTML page if there are multiple files,
 otherwise as a <b>gzipped PostScript</b> (.ps.gz) file.
 <input type="submit" value="Download PostScript" />

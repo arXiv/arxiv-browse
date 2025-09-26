@@ -439,20 +439,23 @@ class ArticleStore:
                 return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
-        cached_ps = self.cache_store.to_obj(ps_cache_ps_path(arxiv_id, version.version))
-        if cached_ps:
-            return cached_ps
-
-        current = version.is_current or not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version()
-        src_ps = self.source_store.get_src_ps(arxiv_id, current)
-        if src_ps and src_ps.exists():
-            return src_ps
-
-        if not self.source_store.source_exists(arxiv_id, docmeta):
-            return "NO_SOURCE"
-
-        logger.debug("No PS found for %s, source exists and is not WDR", arxiv_id.idv)
-        return "UNAVAILABLE"
+        if version.source_format == "ps":
+            src_ps = self.source_store.get_src_ps(arxiv_id,
+                                                  version.is_current or
+                                                  not arxiv_id.has_version or
+                                                  arxiv_id.version == docmeta.highest_version())
+            if src_ps and src_ps.exists():
+                return src_ps
+            elif not self.source_store.source_exists(arxiv_id, docmeta):
+                return "NO_SOURCE"
+            else:
+                return "UNAVAILABLE"
+        else:
+            cached_ps = self.cache_store.to_obj(ps_cache_ps_path(arxiv_id, version.version))
+            if cached_ps:
+                return cached_ps
+            else:
+                return "UNAVAILABLE"
 
     def _e_print(self,
                  arxiv_id: Identifier,

@@ -88,7 +88,7 @@ class SourceStore():
 
     def get_src_ps(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
         """Try to get the PS file as if paper is a PS-only source paper."""
-        if is_current or not arxiv_id.has_version:
+        if is_current:
             # try from the /ftp with no number for current ver of pdf only paper
             ps_file = self.objstore.to_obj(current_ps_path(arxiv_id))
             if ps_file.exists():

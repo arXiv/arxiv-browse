@@ -82,15 +82,18 @@ def loaded_db(classic_db_engine, latexml_db_engine):
         models.configure_db_engine(db._classic_engine, db._latexml_engine)
         from . import populate_test_database
         populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
+        return db._classic_engine.url, db._latexml_engine.url
 
 
 @pytest.fixture(scope='session')
 def app_with_db(loaded_db):
     """App setup with DB backends and listing service."""
-
     conf = test_config()
+    conf.update({"CLASSIC_DB_URI": str(loaded_db[0])})
+    conf.update({"LATEXML_DB_URI": str(loaded_db[1])})
+    conf.update({'DOCUMENT_LISTING_SERVICE': listing.db_listing})
+    conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
     app = create_web_app(**conf)
-
     with app.app_context():
         from flask import g
         g.doc_service = documents.db_docs(app.config, g)
