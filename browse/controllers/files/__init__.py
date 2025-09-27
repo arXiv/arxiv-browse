@@ -61,7 +61,7 @@ def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
             resp.headers['Content-Type'] = "text/html; charset=utf-8" #all our html should be in utf-8
 
 
-def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str]) -> str:
+def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry, int, str]) -> str:
     """Returns a `str` to use for a downloaded filename.
 
     It will always have a version so that if the user has a download directory full of

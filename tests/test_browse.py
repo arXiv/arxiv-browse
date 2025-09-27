@@ -649,8 +649,6 @@ class BrowseTest(unittest.TestCase):
         txt = rv.data.decode('utf-8').lower()
         self.assertIn("download pdf", txt)
         self.assertIn("download source", txt)
-        self.assertIn("download postscript", txt)
-        self.assertIn("dpi bitmapped fonts", txt)
 
     def test_withdrawn_then_new_version(self):
         """Test where v2 is withdrawn but then there is a non-withdrawn v3."""

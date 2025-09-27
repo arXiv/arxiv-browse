@@ -126,7 +126,14 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data['latexml_url'] = get_latexml_url(abs_meta)
 
         # Dissemination formats for download links
-        response_data["formats"] = abs_meta.get_requested_version().formats()
+        source_format = abs_meta.get_requested_version().source_format
+        response_data["source_format"] = source_format
+        formats = abs_meta.get_requested_version().formats()
+        formats = [fmt for fmt in formats if fmt != "other"] # other is redundent
+        if source_format in ["ps", "html", "docx", "tex"] and "src" not in formats:
+            formats.append("src")
+
+        response_data["formats"] = formats
 
         if response_data['latexml_url'] is not None:
             response_data['formats'].insert(1, 'latexml')

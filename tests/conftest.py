@@ -14,7 +14,11 @@ for the whole test run session. The default scope is 'function' which
 means that the fixture will be re-run for each test function.
 
 """
+import importlib
+import pkgutil
+import random
 import shutil
+import sys
 import tempfile
 
 import pytest
@@ -50,7 +54,7 @@ def test_config():
 def test_dir():
     db_path = tempfile.mkdtemp()
     yield db_path
-    #shutil.rmtree(db_path)
+    shutil.rmtree(db_path)
 
 
 @pytest.fixture(scope='session')
@@ -70,27 +74,90 @@ def latexml_db_engine(test_dir):
 
 
 @pytest.fixture(scope='session')
-def loaded_db(classic_db_engine, latexml_db_engine):
+def loaded_db(test_dir):
     """Loads the testing db"""
 
     app = create_web_app(**test_config())
     with app.app_context():
         from arxiv import db
-        db._classic_engine = classic_db_engine
-        db._latexml_engine = latexml_db_engine
+        uri = f'sqlite:///{test_dir}/test_latexml.db'
+        db._latexml_engine = create_engine(uri)
+        util.create_all(db._latexml_engine)
+        uri = f'sqlite:///{test_dir}/test_classic.db'
+        db._classic_engine = create_engine(uri)
+        util.create_all(db._classic_engine)
+
         from arxiv.db import models
         models.configure_db_engine(db._classic_engine, db._latexml_engine)
         from . import populate_test_database
         populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
-        return db._classic_engine.url, db._latexml_engine.url
+        db._classic_engine = None
+        db._latexml_engine = None
+        return Path(test_dir) / "test_classic.db", Path(test_dir) / "test_latexml.db"
+
+@pytest.fixture(scope='function')
+def loaded_db_copy(test_dir, loaded_db):
+    classic_db, latex_db = loaded_db
+    prefix = random.randint(1,100)
+    fn_classic_db_file = Path(test_dir)/ f"{prefix}_function_scoped_classic.db"
+    shutil.copyfile(classic_db, fn_classic_db_file)
+    fn_latex_db_file = Path(test_dir)/ f"{prefix}_function_scoped_latex.db"
+    shutil.copyfile(latex_db, fn_latex_db_file)
+    yield(f"sqlite:///{fn_classic_db_file}", f"sqlite:///{fn_latex_db_file}")
+    fn_latex_db_file.unlink()
+    fn_classic_db_file.unlink()
 
 
-@pytest.fixture(scope='session')
-def app_with_db(loaded_db):
+def get_all_modules_in_package(package_name):
+    """
+    Lists all modules (including subpackages) within a specified package.
+    """
+    try:
+        package = __import__(package_name, fromlist=["dummy"])
+        package_path = package.__path__
+    except ImportError:
+        print(f"Error: Package '{package_name}' not found.")
+        return []
+
+    modules = []
+    for importer, modname, ispkg in pkgutil.walk_packages(path=package_path, prefix=package.__name__ + '.'):
+        modules.append(modname)
+    return modules
+
+
+def _modules(package_name):
+    package = __import__(package_name, fromlist=["dummy"])
+    package_path = package.__path__
+    modules = []
+    for importer, modname, ispkg in pkgutil.walk_packages(path=package_path, prefix=package.__name__ + '.'):
+        modules.append(modname)
+
+    return modules
+
+
+
+@pytest.fixture
+def reset_packages():
+    from browse.services import global_object_store
+    global_object_store._stores = {}
+
+    from browse.services import dissemination
+    dissemination._article_store = None
+    # for module in _modules("arxiv") + _modules("browse"):
+    #     try:
+    #         mm = __import__(module, fromlist=["dummy"])
+    #         importlib.reload(mm)
+    #     except Exception as e:
+    #         print(f"Failed to reload {module}: {e}")
+
+
+
+@pytest.fixture
+def app_with_db(loaded_db_copy, reset_packages):
     """App setup with DB backends and listing service."""
     conf = test_config()
-    conf.update({"CLASSIC_DB_URI": str(loaded_db[0])})
-    conf.update({"LATEXML_DB_URI": str(loaded_db[1])})
+    conf.update({"CLASSIC_DB_URI": loaded_db_copy[0]})
+    conf.update({"LATEXML_DB_URI": loaded_db_copy[1]})
     conf.update({'DOCUMENT_LISTING_SERVICE': listing.db_listing})
     conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.db_docs})
     app = create_web_app(**conf)
@@ -101,8 +168,8 @@ def app_with_db(loaded_db):
 
     return app
 
-@pytest.fixture(scope='function')
-def app_with_fake(loaded_db):
+@pytest.fixture
+def app_with_fake(loaded_db_copy, reset_packages):
     """A browser client with fake listings and FS abs documents"""
 
     # This depends on loaded_db becasue the services.database needs the DB
@@ -110,11 +177,11 @@ def app_with_fake(loaded_db):
 
     import browse.services.documents as documents
     import browse.services.listing as listing
-
     conf = test_config()
+    conf.update({"CLASSIC_DB_URI": loaded_db_copy[0]})
+    conf.update({"LATEXML_DB_URI": loaded_db_copy[1]})
     conf.update({'DOCUMENT_LISTING_SERVICE': listing.fake})
     conf.update({'DOCUMENT_ABSTRACT_SERVICE': documents.fs_docs})
-
     app = create_web_app(**conf)
     with app.app_context():
         from flask import g
@@ -127,25 +194,23 @@ def app_with_fake(loaded_db):
 def storage_prefix():
     return './tests/data/abs_files/'
 
-
-@pytest.fixture(scope='function')
-def app_with_test_fs(loaded_db):
+@pytest.fixture
+def app_with_test_fs(loaded_db_copy, reset_packages):
     """A browser client with FS abs documents and listings"""
 
     # This depends on loaded_db becasue the services.database needs the DB
     # to be loaded eventhough listings and abs are done via FS.
 
     import browse.services.listing as listing
-
     conf = test_config()
+    conf.update({"CLASSIC_DB_URI": loaded_db_copy[0]})
+    conf.update({"LATEXML_DB_URI": loaded_db_copy[1]})
     conf["DISSEMINATION_STORAGE_PREFIX"] = './tests/data/abs_files/'
     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.fs_docs
     conf["DOCUMENT_LISTING_SERVICE"] = listing.fs_listing
     conf["DOCUMENT_LISTING_PATH"] = "tests/data/abs_files/ftp"
     conf["ABS_PATH_ROOT"] = "tests/data/abs_files/"
-
     app = create_web_app(**conf)
-
     with app.app_context():
         from flask import g
         g.doc_service = documents.fs_docs(app.config, g)
@@ -208,17 +273,15 @@ def abs_path() -> Path:
 
 
 #NOT A FIXTURE
-def _app_with_db():
-    import browse.services.documents as documents
+# def _app_with_db():
+#     import browse.services.documents as documents
+#     conf = test_conf()
+#     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
+#     conf["DOCUMENT_LISTING_SERVICE"] = db_listing
 
 
-    conf = test_conf()
-    conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
-    conf["DOCUMENT_LISTING_SERVICE"] = db_listing
 
-    app = create_web_app(**conf)
-
-    return app
+#     return app
 
 
 

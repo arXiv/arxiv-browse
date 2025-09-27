@@ -444,7 +444,7 @@ class ArticleStore:
                                                   version.is_current or
                                                   not arxiv_id.has_version or
                                                   arxiv_id.version == docmeta.highest_version())
-            if src_ps and src_ps.exists():
+            if src_ps:
                 return src_ps
             elif not self.source_store.source_exists(arxiv_id, docmeta):
                 return "NO_SOURCE"

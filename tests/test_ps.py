@@ -2,14 +2,18 @@ from email.utils import parsedate_to_datetime
 import pytest
 
 cases = [
-    ["cond-mat/9805021v1", "cond-mat9805021v1.ps.gz"],
+
 ]
 
 
-@pytest.mark.parametrize("paperid,expectedfile", cases)
-def test_ps(dbclient, paperid, expectedfile):
+def test_ps(dbclient):
+
     path = "/ps/"
     client = dbclient
+    paperid, expectedfile = "cond-mat/9805021v1", "cond-mat9805021v1.ps"
+    resp = client.get("/abs/" + paperid)
+    assert resp.status_code == 200 and "PS Source" in resp.text
+
     resp = client.get(path + paperid)
     assert resp
     assert resp.status_code == 200
@@ -34,3 +38,13 @@ def test_ps(dbclient, paperid, expectedfile):
     resp = client.get(path + paperid, headers={"Range": "0-1"})
     assert resp
     assert resp.status_code == 206 or resp.status_code == 416
+
+def test_non_ps(dbclient):
+    path = "/ps/cond-mat/9805021v2"
+    client = dbclient
+    resp = client.get(path)
+    assert resp and resp.status_code == 404
+    resp = client.head(path)
+    assert resp and resp.status_code == 404
+    resp = client.get(path, headers={"Range": "0-1"})
+    assert resp and resp.status_code == 404

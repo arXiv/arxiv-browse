@@ -269,6 +269,17 @@ def _is_html_name(name: Union[str, FileObj]) -> bool:
     return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
 
 
-def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
-    return get_dissemination_resp(fileformat.ps, arxiv_id_str, archive)
+def _ps_response(file: FileObj,
+                  arxiv_id: Identifier,
+                  docmeta: DocMetadata,
+                  version: VersionEntry,
+                  extra: Optional[str] = None) -> Response:
+    """Download ps"""
+    resp = default_resp_fn(file, arxiv_id, docmeta, version)
+    filename = download_file_base(arxiv_id, version) + ".ps"
+    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
+    resp.headers["Content-Encoding"] = "gzip"  # the file is a gzip on disk
+    return resp
 
+def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
+    return get_dissemination_resp(fileformat.ps, arxiv_id_str, archive, _ps_response)
