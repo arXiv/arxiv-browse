@@ -108,48 +108,13 @@ def loaded_db_copy(test_dir, loaded_db):
     fn_classic_db_file.unlink()
 
 
-def get_all_modules_in_package(package_name):
-    """
-    Lists all modules (including subpackages) within a specified package.
-    """
-    try:
-        package = __import__(package_name, fromlist=["dummy"])
-        package_path = package.__path__
-    except ImportError:
-        print(f"Error: Package '{package_name}' not found.")
-        return []
-
-    modules = []
-    for importer, modname, ispkg in pkgutil.walk_packages(path=package_path, prefix=package.__name__ + '.'):
-        modules.append(modname)
-    return modules
-
-
-def _modules(package_name):
-    package = __import__(package_name, fromlist=["dummy"])
-    package_path = package.__path__
-    modules = []
-    for importer, modname, ispkg in pkgutil.walk_packages(path=package_path, prefix=package.__name__ + '.'):
-        modules.append(modname)
-
-    return modules
-
-
-
 @pytest.fixture
 def reset_packages():
+    """Resets some package varables to avoid behavior setup in earlier tests."""
     from browse.services import global_object_store
     global_object_store._stores = {}
-
     from browse.services import dissemination
     dissemination._article_store = None
-    # for module in _modules("arxiv") + _modules("browse"):
-    #     try:
-    #         mm = __import__(module, fromlist=["dummy"])
-    #         importlib.reload(mm)
-    #     except Exception as e:
-    #         print(f"Failed to reload {module}: {e}")
-
 
 
 @pytest.fixture
