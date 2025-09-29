@@ -7,8 +7,7 @@ from typing import Optional, List
 from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import VersionEntry
-from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent, current_pdf_path, previous_pdf_path, \
-    previous_ps_path, current_ps_path
+from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent, current_pdf_path, previous_pdf_path
 from arxiv.files.object_store import ObjectStore
 from arxiv.files import FileObj
 from arxiv.formats import list_ancillary_files
