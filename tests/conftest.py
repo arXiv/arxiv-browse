@@ -272,19 +272,6 @@ def abs_path() -> Path:
     return Path(path_of_for_test('data/abs_files'))
 
 
-#NOT A FIXTURE
-# def _app_with_db():
-#     import browse.services.documents as documents
-#     conf = test_conf()
-#     conf["DOCUMENT_ABSTRACT_SERVICE"] = documents.db_docs
-#     conf["DOCUMENT_LISTING_SERVICE"] = db_listing
-
-
-
-#     return app
-
-
-
 # #################### Integration test marker ####################
 """
 Setup to mark integration tests.
