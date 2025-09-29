@@ -18,3 +18,4 @@ INSERT INTO 'arXiv_metadata' VALUES (601988, 422229,'0704.0248','2007-04-02 17:4
 INSERT INTO 'arXiv_document_category' VALUES (422229,'math-ph',0);
 INSERT INTO 'arXiv_document_category' VALUES (422229,'math.MP',0);
 INSERT INTO 'arXiv_document_category' VALUES (422229,'physics.optics',1);
+INSERT INTO 'arXiv_document_category' VALUES (93828,'cond-mat.soft',1);
