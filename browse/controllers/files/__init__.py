@@ -118,6 +118,12 @@ def not_pdf(arxiv_id: Identifier) -> Response:
                                          arxiv_id=arxiv_id), 404, headers)
 
 
+def not_ps(arxiv_id: Identifier) -> Response:
+    headers= _unavailable_headers(arxiv_id, ["ps"])
+    return make_response(render_template("dissemination/unavailable.html",
+                                         arxiv_id=arxiv_id), 404, headers)
+
+
 def no_html(arxiv_id: Identifier) -> Response:
     headers= _unavailable_headers(arxiv_id, ["html"])
     return make_response(render_template("dissemination/no_html.html",

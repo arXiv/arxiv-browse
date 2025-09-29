@@ -61,6 +61,7 @@ Conditions = Union[
             "UNAVAILABLE",  # Where the PDF unexpectedly does not exist. ONLY return this when there is source, and it
             # should be able to be built, but it unexpectedly cannot be built
             "NOT_PDF",  # format that doesn't serve a pdf
+            "NOT_PS",  # format that doesn't serve a ps
             "NO_HTML",  # not native HTML, no HTML conversion available
             "NOT_PUBLIC"  # where the author has decided not to make the source of the paper public
             ],
@@ -451,11 +452,7 @@ class ArticleStore:
             else:
                 return "UNAVAILABLE"
         else:
-            cached_ps = self.cache_store.to_obj(ps_cache_ps_path(arxiv_id, version.version))
-            if cached_ps:
-                return cached_ps
-            else:
-                return "UNAVAILABLE"
+           return "NOT_PS"
 
     def _e_print(self,
                  arxiv_id: Identifier,
