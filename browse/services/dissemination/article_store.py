@@ -15,7 +15,7 @@ from arxiv.document.exceptions import (
 from arxiv.document.metadata import DocMetadata, VersionEntry
 from arxiv.files import FileObj, fileformat
 from arxiv.files.key_patterns import (ps_cache_pdf_path,
-                                      ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
+                                      ps_cache_html_path, latexml_html_path)
 from arxiv.files.object_store import ObjectStore
 from arxiv.formats import (
     formats_from_source_file_name, formats_from_source_flag)
