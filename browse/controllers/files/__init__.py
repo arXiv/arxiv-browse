@@ -61,7 +61,7 @@ def add_mimetype(resp: Response, filename: Union[str|FileObj]) -> None:
             resp.headers['Content-Type'] = "text/html; charset=utf-8" #all our html should be in utf-8
 
 
-def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry|int|str]) -> str:
+def download_file_base(arxiv_id: Identifier, version: Union[VersionEntry, int, str]) -> str:
     """Returns a `str` to use for a downloaded filename.
 
     It will always have a version so that if the user has a download directory full of
@@ -114,6 +114,12 @@ def unavailable(arxiv_id: Identifier) -> Response:
 
 def not_pdf(arxiv_id: Identifier) -> Response:
     headers= _unavailable_headers(arxiv_id, ["pdf"])
+    return make_response(render_template("dissemination/unavailable.html",
+                                         arxiv_id=arxiv_id), 404, headers)
+
+
+def not_ps(arxiv_id: Identifier) -> Response:
+    headers= _unavailable_headers(arxiv_id, ["ps"])
     return make_response(render_template("dissemination/unavailable.html",
                                          arxiv_id=arxiv_id), 404, headers)
 

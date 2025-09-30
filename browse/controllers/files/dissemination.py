@@ -12,7 +12,8 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
-    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public, no_source
+    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public, no_source, \
+    not_ps
 
 from arxiv.files import FileObj, FileTransform
 
@@ -164,6 +165,8 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
         resp=unavailable(arxiv_id)
     elif item == "NOT_PDF":
         resp=not_pdf(arxiv_id)
+    elif item == "NOT_PS":
+        resp=not_ps(arxiv_id)
     elif item == "NO_HTML":
         resp=no_html(arxiv_id)
     elif isinstance(item, Deleted):
@@ -181,9 +184,9 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             resp=resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
     # add the surrogate key headers for all cases where the arxiv id parsed
-    resp.headers=add_surrogate_key(resp.headers,["paper-id-{arxiv_id.id}"])
+    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
     if arxiv_id.has_version:
-        resp.headers=add_surrogate_key(resp.headers,["paper-id-{arxiv_id.idv}"])
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
     else:
         resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id_str}-current"])
     return resp
@@ -269,3 +272,21 @@ def _is_html_name(name: Union[str, FileObj]) -> bool:
     return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
 
 
+def _ps_response(file: FileObj,
+                  arxiv_id: Identifier,
+                  docmeta: DocMetadata,
+                  version: VersionEntry,
+                  extra: Optional[str] = None) -> Response:
+    """Download ps"""
+    resp = default_resp_fn(file, arxiv_id, docmeta, version)
+    filename = download_file_base(arxiv_id, version) + ".ps"
+    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
+    resp.headers["Content-Encoding"] = "gzip"  # the file is a gzip on disk
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.id}-current"])
+    return resp
+
+def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
+    return get_dissemination_resp(fileformat.ps, arxiv_id_str, archive, _ps_response)
