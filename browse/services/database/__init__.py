@@ -252,7 +252,7 @@ def count_all_trackback_pings() -> int:
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     url = Session.scalar(
-        select(DBLP.url)
+        select(DBLP.url).join(Document)
         .filter(Document.paper_id == paper_id)
     )
     return url

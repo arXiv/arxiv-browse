@@ -7,8 +7,7 @@ from http import HTTPStatus as status
 
 from arxiv.taxonomy.definitions import GROUPS
 from arxiv.base import logging
-from arxiv.base.urls.clickthrough import is_hash_valid
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 
 from flask import (
     Blueprint,
@@ -108,7 +107,7 @@ def bare_abs() -> Any:
 def abstract(arxiv_id: str) -> Any:
     """Abstract (abs) page view."""
     response, code, headers = abs_page.get_abs_page(arxiv_id)
-    headers=add_surrogate_key(headers,["abs"])
+    headers=b_add_surrogate_key(headers,["abs"])
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw(), mimetype="text/plain")
@@ -141,7 +140,7 @@ def catchup_form() -> Response:
 @blueprint.route("catchup/<subject>/<date>", methods=["GET"])
 def catchup(subject:str, date:str) -> Response:
     response, code, headers = catchup_page.get_catchup_page(subject, date)
-    headers=add_surrogate_key(headers,["catchup"])
+    headers=b_add_surrogate_key(headers,["catchup"])
     if code == status.OK:
         return render_template("catchup.html", **response), code, headers  # type: ignore
     return response, code, headers  # type: ignore
@@ -251,7 +250,7 @@ def list_articles(context: str, subcontext: str) -> Response:
     'recent', 'new' or a string of format YYMM.
     """
     response, code, headers = list_page.get_listing(context, subcontext)
-    headers=add_surrogate_key(headers,["list"])
+    headers=b_add_surrogate_key(headers,["list"])
     if code == status.OK:
         # TODO if it is a HEAD request we don't want to render the template
         return render_template(response["template"], **response), code, headers  # type: ignore

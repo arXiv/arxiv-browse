@@ -1,7 +1,7 @@
 """Archive landing page."""
 
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Optional
 from http import HTTPStatus as status
 
 from arxiv.taxonomy.definitions import (
@@ -11,20 +11,20 @@ from arxiv.taxonomy.definitions import (
     CATEGORIES
 )
 from arxiv.taxonomy.category import Category, Archive
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 
 from browse.controllers import biz_tz
 from browse.controllers.archive_page.by_month_form import ByMonthForm
 from browse.controllers.years_operating import stats_by_year, years_operating
 from browse.controllers.response_headers import abs_expires_header
+from browse.controllers import Response
 
-
-def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def get_archive(archive_id: Optional[str]) -> Response:
     """Gets archive page."""
     data: Dict[str, Any] = {}
     response_headers: Dict[str, Any] = {}
     response_headers["Surrogate-Control"]="max-age=86400" #one day
-    response_headers=add_surrogate_key(response_headers,["archive"])
+    response_headers=b_add_surrogate_key(response_headers,["archive"])
 
     if not archive_id or archive_id == "list":
         return archive_index("list", status_in=status.OK)
@@ -60,7 +60,7 @@ def get_archive(archive_id: Optional[str]) -> Tuple[Dict[str, Any], int, Dict[st
     return data, status.OK, response_headers
 
 
-def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], int, Dict[str, Any]]:
+def archive_index(bad_archive_id: str, status_in: int) -> Response:
     """Landing page for when there is no archive specified."""
     data: Dict[str, Any] = {}
     data["bad_archive"] = bad_archive_id
@@ -82,7 +82,7 @@ def archive_index(bad_archive_id: str, status_in: int) -> Tuple[Dict[str, Any], 
 
     data["template"] = "archive/archive_list_all.html"
     headers: Dict[str,str]={}
-    headers=add_surrogate_key(headers,["archive"])
+    headers=b_add_surrogate_key(headers,["archive"])
     return data, status_in, headers
 
 
