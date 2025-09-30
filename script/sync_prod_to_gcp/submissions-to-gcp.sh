@@ -14,5 +14,7 @@ fi
 
 . sync.venv/bin/activate
 export GOOGLE_APPLICATION_CREDENTIALS=~/arxiv-production-cred.json
+export TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME=180
+export TEX_COMPILATION_TIMEOUT_MINUTES=1020
 python submissions_to_gcp.py $S2G_DEBUG_FLAGS --json-log-dir $JSON_LOG_DIR
 deactivate

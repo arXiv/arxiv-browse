@@ -181,13 +181,17 @@ def get_listing(subject_or_category: str,
     else:
         skipn = int(skip)
 
-    if not show or not show.isdigit():
+    if show:
+        if show.isdigit() and int(show) in show_values:
+            shown=int(show)
+        else:
+            raise BadRequest(f"Invalid show value. Valid values: {', '.join(map(str, show_values))}")
+    else:
         if time_period == 'new':
             shown = max_show
         else:
             shown = default_show
-    else:
-        shown = max(min(int(show), max_show), min_show)
+
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
@@ -549,7 +553,7 @@ def sub_sections_for_types(
         continued=skipn > 0,
         last=skipn >= new_count - shown,
         visible=len(news)>0,
-        heading=f'New submissions ' 
+        heading='New submissions ' 
     )
 
     sec_cross=ListingSection(
@@ -559,7 +563,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > cross_start,
         last=skipn >= rep_start - shown,
         visible=len(crosses)>0,
-        heading=f'Cross submissions '
+        heading='Cross submissions '
     )
 
     sec_rep=ListingSection(
@@ -569,7 +573,7 @@ def sub_sections_for_types(
         continued=skipn + 1 > rep_start,
         last=last_shown >= new_count + cross_count + rep_count,
         visible=len(reps)>0,
-        heading=f'Replacement submissions '
+        heading='Replacement submissions '
     )
 
     secs=[sec_new, sec_cross, sec_rep]

@@ -1,13 +1,12 @@
 """Invalidates pages in the CDN."""
 import re
-from typing import Optional, Iterable, List
+from typing import List
 
 import click
 from flask import Blueprint
 from google.api_core import retry
 
 from google.cloud import compute_v1
-from sqlalchemy.orm import scoped_session
 
 from arxiv.db import Session
 from arxiv.db.models import NextMail

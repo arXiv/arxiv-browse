@@ -75,7 +75,8 @@ def meta_tag_metadata(metadata: DocMetadata, truncate: bool = False) -> List:
     if cod:
         meta_tags.append(_mtag("citation_online_date", cod))
 
-    pdfurl=url_for("dissemination.pdf", arxiv_id=metadata.arxiv_id, _external=True)
+    """_external=True is used here to force ab absolute URL with https schema."""
+    pdfurl=url_for("dissemination.pdf", arxiv_id=metadata.arxiv_id, _external=True, _scheme="https")
     meta_tags.append(_mtag("citation_pdf_url",pdfurl))
 
     meta_tags.append(_mtag("citation_arxiv_id", str(metadata.arxiv_id)))

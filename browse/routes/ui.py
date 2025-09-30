@@ -34,12 +34,13 @@ from browse.controllers import (
     catchup_page
 )
 from browse.controllers.openurl_cookie import make_openurl_cookie, get_openurl_page
-from browse.controllers.cookies import get_cookies_page, cookies_to_set
+from browse.controllers.cookies import get_cookies_page
 from browse.exceptions import AbsNotFound # TODO: BASE
 from browse.services.database import get_institution
 from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
 from browse.controllers.list_page import author
+from browse.controllers import audio
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -147,23 +148,27 @@ def catchup(subject:str, date:str) -> Response:
 
 @blueprint.route("institutional_banner", methods=["GET"])
 def institutional_banner() -> Any:
+    # ARXIVCE-3387, do not store the response in cache, as it is IP-specific
+    response_headers = {
+        "Cache-Control": "no-cache, no-store, private, max-age=0, max-stale=0",
+        'Content-Type': 'application/json'}
     try:
         forwarded_ips = request.headers.getlist("X-Forwarded-For")
         if len(forwarded_ips)>0:
             ip = str(forwarded_ips[0]).split(',')[0]
             ip = ip.strip()
         elif request.remote_addr is None:
-            return ("{}", status.OK)
+            return ("{}", status.OK, response_headers)
         else:
             ip = str(request.remote_addr)
 
         result = get_institution(ip)
         if result:
-            return (result, status.OK)
+            return (result, status.OK, response_headers)
         else:
-            return ("{}", status.OK)
-    except Exception as ex:
-        return ("", status.INTERNAL_SERVER_ERROR)
+            return ("{}", status.OK, response_headers)
+    except Exception:
+        return ("", status.INTERNAL_SERVER_ERROR, response_headers)
 
 
 @blueprint.route("tb/recent", methods=["GET", "POST"])
@@ -455,6 +460,11 @@ def a (id: str, ext: str):  # type: ignore
 
     response, code, headers = author.get_html_page(id)
     return render_template('list/author.html', **response), code, headers
+
+@blueprint.route('audio/<path:arxivid>', methods=['GET'])
+def audio_landing_page(arxivid: str):  # type: ignore
+    return audio.audio_landing_page(arxivid)
+
 
 def _add_an_alert(data: Dict[str, Any]) -> Dict[str, Any]:
     alert_title = "Title here"

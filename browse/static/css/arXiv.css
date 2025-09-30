@@ -1846,6 +1846,9 @@ div#long-author-list {
     padding: .25em 0;
     margin: 0;
   }
+  .bib-sidebar-authors{
+    list-style-type: none;
+  }
   #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
     margin: 1em 0
   }
@@ -2160,6 +2163,7 @@ div#long-author-list {
 .full-text ul {
   margin: .3em 0 0 1em;
   padding: 0;
+  list-style-type: none;
 }
 
 .ancillary {
@@ -2206,6 +2210,19 @@ div#long-dc-list {
   border-left: .35em solid #ddd;
 }
 
+.extra-third-party {
+  margin: 0;
+  padding:.5em 1em .5em 1em;
+  font-size: 90%;
+  border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
+}
+.extra-third-party ul {
+  margin: .3em 0 0 1em;
+  padding: 0;
+  list-style-type: none;
+}
+
 .extra-ref-cite {
   margin: 0;
   padding: 0 1em 0 1em;
@@ -2219,6 +2236,7 @@ div#long-dc-list {
   margin: 0.3em 0 0 20px;
   padding-left: 0;
   padding-bottom: 0.3em;
+  list-style-type: none;
 }
 
 .browse {
@@ -3299,4 +3317,13 @@ a:hover .icon.filter-red {
   background-color: transparent;
   border-radius: 4px;
   padding: 0.5em;
+}
+
+
+#opt-in-status-button-container {
+  margin-left: 1rem;
+}
+.opt-in-status-wrapper {
+  text-align: right;
+  padding-right: 1rem;
 }

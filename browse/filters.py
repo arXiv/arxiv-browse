@@ -2,7 +2,6 @@
 import html
 import re
 from typing import Union
-import html
 
 from markupsafe import Markup
 

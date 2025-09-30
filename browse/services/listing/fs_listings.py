@@ -7,12 +7,10 @@ import logging
 import re
 from datetime import date, datetime
 from typing import List, Literal, Optional, Tuple, Union
-from zoneinfo import ZoneInfo
 
 import google.cloud.storage as storage
 
 from arxiv.taxonomy.definitions import ARCHIVES, CATEGORIES
-from arxiv.base.globals import get_application_config
 from browse.services.listing import (Listing, YearCount, MonthCount,
                                      ListingItem, ListingNew, ListingService,
                                      MonthTotal, NotModifiedResponse,
