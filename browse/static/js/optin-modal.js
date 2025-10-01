@@ -20,18 +20,31 @@ document.addEventListener('DOMContentLoaded', function () {
       paragraphs[1].style.display = "none"; // hide privacy policy link
       agreeBtn.style.display = "none";
       optoutBtn.style.display = "inline-block";
+      document.getElementById('optin-trigger').textContent = 'You opted in to help arXiv';
     } else {
       title.textContent = "Help Improve arXiv";
       paragraphs[0].textContent = "arXiv is working with academic researchers to investigate ways to improve the service for our users. This requires a rich dataset to better inform the research. Users who wish to contribute to the future of arXiv may opt in to allow arXiv to use their reading data for research purposes. By clicking ‘I agree’ below, you consent to your reading data being collected, retained, and processed by arXiv and shared with researchers conducting research in the public interest. Reading data will never be shared publicly or otherwise incorporated into public systems in a personally identifiable format. Research use cases include developing privacy-preserving recommendation systems for arXiv.";
       paragraphs[1].style.display = "block";
       agreeBtn.style.display = "inline-block";
       optoutBtn.style.display = "none";
+      document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
     }
 
     modal.classList.remove('hidden');
   }
 
   document.getElementById('optin-trigger').addEventListener('click', showModal);
+
+  const hasOptedIn = getCookie('opt-in-tracking');
+  const hasOptedOut = getCookie('opt-out-tracking');
+  if (!hasOptedIn && !hasOptedOut) {
+    showModal();
+  }
+
+  if (hasOptedIn) {
+    document.getElementById('optin-trigger').textContent = 'You opted in to help arXiv';
+  }
+
 
   document.getElementById('optin-close').addEventListener('click', function() {
     document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -42,11 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const uuid = crypto.randomUUID();
     document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`;
     document.getElementById('optin-modal').classList.add('hidden');
+    document.getElementById('optin-trigger').textContent = 'You opted in to help arXiv';
   });
 
   document.getElementById('optin-optout').addEventListener('click', function() {
     document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.getElementById('optin-modal').classList.add('hidden');
+    document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
   });
 });
 
