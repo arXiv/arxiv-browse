@@ -8,6 +8,7 @@ from http import HTTPStatus as status
 from werkzeug.exceptions import BadRequest
 
 from browse.controllers import stats_page
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS
 
 
 class TestStatsPageControllers(TestCase):
@@ -130,7 +131,7 @@ class TestStatsPageControllers(TestCase):
         mock_get_monthly_submission_count.assert_called_once()
         self.assertEqual(code, status.OK)
         self.assertEqual(response_data["num_migrated"], 501)
-        self.assertEqual(response_data["num_submissions"], 1123301)
+        self.assertEqual(response_data["num_submissions"], 1123456 - len(DELETED_PAPERS))
         expected_submissions_adjusted = (
             response_data["num_submissions"] + response_data["num_migrated"]
         )
