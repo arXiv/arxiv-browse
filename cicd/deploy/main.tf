@@ -8,7 +8,7 @@ terraform {
   }
   
   backend "gcs" {
-    bucket = "a003-browse"
+    bucket = "a006-mg"
     prefix = "browse/state"
   }
 }
@@ -186,15 +186,16 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
     }
 
-    service_account = var.service_account_email != "" ? var.service_account_email : null
+    service_account = var.service_account_email != "" ? var.service_account_email : "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 
-    dynamic "vpc_access" {
-      for_each = var.vpc_connector != "" ? [1] : []
-      content {
-        connector = var.vpc_connector
-        egress    = "PRIVATE_RANGES_ONLY"
-      }
-    }
+    # VPC connector disabled for now - can be enabled later if needed
+    # dynamic "vpc_access" {
+    #   for_each = var.vpc_connector != "" ? [1] : []
+    #   content {
+    #     connector = var.vpc_connector
+    #     egress    = "PRIVATE_RANGES_ONLY"
+    #   }
+    # }
 
     execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
   }
@@ -247,22 +248,10 @@ resource "google_project_iam_member" "storage_reader" {
   member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
 }
 
-# Check if secrets exist in the target project
-data "google_secret_manager_secret" "classic_db_uri_existing" {
-  count     = 1
-  secret_id = var.classic_db_uri_secret_name
-  project   = var.project_name
-}
-
-data "google_secret_manager_secret" "latexml_db_uri_existing" {
-  count     = 1
-  secret_id = var.latexml_db_uri_secret_name
-  project   = var.project_name
-}
-
-# Create secrets in the target project only if they don't exist
+# Create secrets in the target project (only when copying secrets)
+# Terraform will handle the case where secrets already exist
 resource "google_secret_manager_secret" "classic_db_uri" {
-  count     = length(data.google_secret_manager_secret.classic_db_uri_existing) == 0 ? 1 : 0
+  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
   secret_id = var.classic_db_uri_secret_name
   project   = var.project_name
 
@@ -271,10 +260,14 @@ resource "google_secret_manager_secret" "classic_db_uri" {
   }
 
   depends_on = [google_project_service.secretmanager]
+  
+  lifecycle {
+    ignore_changes = [labels, replication]
+  }
 }
 
 resource "google_secret_manager_secret" "latexml_db_uri" {
-  count     = length(data.google_secret_manager_secret.latexml_db_uri_existing) == 0 ? 1 : 0
+  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
   secret_id = var.latexml_db_uri_secret_name
   project   = var.project_name
 
@@ -283,6 +276,10 @@ resource "google_secret_manager_secret" "latexml_db_uri" {
   }
 
   depends_on = [google_project_service.secretmanager]
+  
+  lifecycle {
+    ignore_changes = [labels, replication]
+  }
 }
 
 # Copy secret values from arxiv-development project (if accessible)
@@ -306,27 +303,23 @@ data "google_secret_manager_secret_version" "latexml_db_uri_source" {
   ]
 }
 
-# Use existing secret or create new one
-locals {
-  classic_db_uri_secret_id = length(data.google_secret_manager_secret.classic_db_uri_existing) > 0 ? data.google_secret_manager_secret.classic_db_uri_existing[0].id : google_secret_manager_secret.classic_db_uri[0].id
-  latexml_db_uri_secret_id = length(data.google_secret_manager_secret.latexml_db_uri_existing) > 0 ? data.google_secret_manager_secret.latexml_db_uri_existing[0].id : google_secret_manager_secret.latexml_db_uri[0].id
-}
 
 resource "google_secret_manager_secret_version" "classic_db_uri_version" {
   count       = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret      = local.classic_db_uri_secret_id
+  secret      = google_secret_manager_secret.classic_db_uri[0].id
   secret_data = data.google_secret_manager_secret_version.classic_db_uri_source[0].secret_data
 }
 
 resource "google_secret_manager_secret_version" "latexml_db_uri_version" {
   count       = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret      = local.latexml_db_uri_secret_id
+  secret      = google_secret_manager_secret.latexml_db_uri[0].id
   secret_data = data.google_secret_manager_secret_version.latexml_db_uri_source[0].secret_data
 }
 
 # IAM binding for the service account to access secrets
 # Grant access to the default Compute Engine service account when no specific service account is provided
 resource "google_secret_manager_secret_iam_binding" "classic_db_uri" {
+  project   = var.project_name
   secret_id = var.classic_db_uri_secret_name
   role      = "roles/secretmanager.secretAccessor"
   members = var.service_account_email != "" ? [
@@ -337,6 +330,7 @@ resource "google_secret_manager_secret_iam_binding" "classic_db_uri" {
 }
 
 resource "google_secret_manager_secret_iam_binding" "latexml_db_uri" {
+  project   = var.project_name
   secret_id = var.latexml_db_uri_secret_name
   role      = "roles/secretmanager.secretAccessor"
   members = var.service_account_email != "" ? [

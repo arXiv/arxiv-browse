@@ -59,6 +59,171 @@ echo "If you encounter permission errors, ensure the project was created with ar
 echo "or manually grant the required permissions in arxiv-development project."
 echo ""
 
+# Create and configure the deployment service account
+DEPLOYMENT_SERVICE_ACCOUNT="deployment-sa@${PROJECT_NAME}.iam.gserviceaccount.com"
+echo "Setting up deployment service account: $DEPLOYMENT_SERVICE_ACCOUNT"
+
+# Check if service account exists
+echo "Checking if service account exists..."
+if gcloud iam service-accounts describe "$DEPLOYMENT_SERVICE_ACCOUNT" --project="$PROJECT_NAME" >/dev/null 2>&1; then
+  echo "✅ Service account already exists: $DEPLOYMENT_SERVICE_ACCOUNT"
+else
+  echo "Creating service account: $DEPLOYMENT_SERVICE_ACCOUNT"
+  gcloud iam service-accounts create deployment-sa \
+    --display-name="Deployment Service Account" \
+    --description="Service account for arxiv-browse deployment" \
+    --project="$PROJECT_NAME"
+  
+  if [ $? -eq 0 ]; then
+    echo "✅ Service account created successfully"
+  else
+    echo "❌ Failed to create service account. Please check your permissions."
+    exit 1
+  fi
+fi
+
+# Check if we're authenticated as a service account and switch back to user if needed
+CURRENT_ACCOUNT=$(gcloud auth list --filter=status:ACTIVE --format="value(account)" | head -1)
+if [[ "$CURRENT_ACCOUNT" == *"@${PROJECT_NAME}.iam.gserviceaccount.com" ]]; then
+  echo "Currently authenticated as service account, switching back to user account..."
+  # Switch to the user account (mike@arxiv.org)
+  gcloud config set account mike@arxiv.org
+  echo "Switched to user account for permission granting"
+fi
+
+# Grant necessary permissions to the service account
+echo "Granting permissions to service account..."
+
+# Grant Cloud Run permissions
+echo "Granting Cloud Run permissions..."
+gcloud projects add-iam-policy-binding "$PROJECT_NAME" \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/run.admin" \
+  --quiet
+
+gcloud projects add-iam-policy-binding "$PROJECT_NAME" \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/iam.serviceAccountUser" \
+  --quiet
+
+# Grant Secret Manager permissions
+echo "Granting Secret Manager permissions..."
+gcloud projects add-iam-policy-binding "$PROJECT_NAME" \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/secretmanager.admin" \
+  --quiet
+
+# Grant Storage permissions for Terraform state
+echo "Granting Storage permissions..."
+gcloud projects add-iam-policy-binding "$PROJECT_NAME" \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/storage.admin" \
+  --quiet
+
+# Grant cross-project permissions for arxiv-development
+echo "Granting cross-project permissions for arxiv-development..."
+gcloud projects add-iam-policy-binding arxiv-development \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/storage.objectViewer" \
+  --condition=None \
+  --quiet
+
+gcloud projects add-iam-policy-binding arxiv-development \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/artifactregistry.reader" \
+  --condition=None \
+  --quiet
+
+gcloud projects add-iam-policy-binding arxiv-development \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/secretmanager.secretAccessor" \
+  --condition=None \
+  --quiet
+
+gcloud projects add-iam-policy-binding arxiv-development \
+  --member="serviceAccount:$DEPLOYMENT_SERVICE_ACCOUNT" \
+  --role="roles/secretmanager.viewer" \
+  --condition=None \
+  --quiet
+
+# Note: Cloud Run service account will be created automatically when the service is deployed
+echo "Cloud Run service account will be created automatically during deployment"
+
+# Check if we're already authenticated as the service account (pipeline scenario)
+CURRENT_ACCOUNT=$(gcloud auth list --filter=status:ACTIVE --format="value(account)" | head -1)
+if [[ "$CURRENT_ACCOUNT" == *"@${PROJECT_NAME}.iam.gserviceaccount.com" ]]; then
+  echo "✅ Already authenticated as service account: $CURRENT_ACCOUNT"
+  echo "✅ Service account setup complete"
+  echo ""
+else
+  # Development scenario: Use service account impersonation
+  echo "Setting up service account impersonation for development..."
+  echo "Granting impersonation permission to current user..."
+  CURRENT_USER=$(gcloud auth list --filter=status:ACTIVE --format="value(account)" | head -1)
+  if [ -n "$CURRENT_USER" ]; then
+    echo "Granting impersonation permission to: $CURRENT_USER"
+    gcloud projects add-iam-policy-binding "$PROJECT_NAME" \
+      --member="user:$CURRENT_USER" \
+      --role="roles/iam.serviceAccountTokenCreator" \
+      --condition=None \
+      --quiet
+    
+    if [ $? -eq 0 ]; then
+      echo "✅ Successfully granted impersonation permission to $CURRENT_USER"
+      echo "Waiting 30 seconds for permission propagation..."
+      sleep 30
+    else
+      echo "❌ Failed to grant impersonation permission. Please run this command manually:"
+      echo "   gcloud projects add-iam-policy-binding $PROJECT_NAME \\"
+      echo "     --member=\"user:$CURRENT_USER\" \\"
+      echo "     --role=\"roles/iam.serviceAccountTokenCreator\" \\"
+      echo "     --condition=None"
+      echo ""
+      echo "Then re-run this script."
+      exit 1
+    fi
+  else
+    echo "❌ Could not determine current user for impersonation permission."
+    exit 1
+  fi
+
+  echo "✅ Service account setup complete"
+  echo ""
+
+  # Set up service account impersonation for the deployment
+  echo "Setting up service account impersonation..."
+  export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT="$DEPLOYMENT_SERVICE_ACCOUNT"
+  echo "Environment variable set: GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=$GOOGLE_IMPERSONATE_SERVICE_ACCOUNT"
+
+  # Verify authentication and impersonation
+  echo "Verifying authentication..."
+  if [ -z "$CURRENT_ACCOUNT" ]; then
+    echo "Error: No active authentication found. Please authenticate first."
+    echo "Run: gcloud auth login"
+    exit 1
+  fi
+
+  echo "Currently authenticated as: $CURRENT_ACCOUNT"
+  echo "Will impersonate: $DEPLOYMENT_SERVICE_ACCOUNT"
+
+  # Test if impersonation works
+  echo "Testing service account impersonation..."
+  if gcloud auth list --impersonate-service-account="$DEPLOYMENT_SERVICE_ACCOUNT" --filter=status:ACTIVE --format="value(account)" >/dev/null 2>&1; then
+    echo "✅ Service account impersonation is working"
+  else
+    echo "❌ Service account impersonation failed. This might be due to:"
+    echo "   1. Permission not yet propagated (wait a few minutes and try again)"
+    echo "   2. Insufficient permissions"
+    echo "   3. Service account doesn't exist"
+    echo ""
+    echo "Please wait a few minutes for permissions to propagate, then re-run this script."
+    exit 1
+  fi
+
+  echo "✅ Authentication setup complete"
+  echo ""
+fi
+
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
@@ -80,11 +245,8 @@ echo "Creating backup of original main.tf..."
 cp main.tf main.tf.original
 echo "Backup created."
 
-# Comment out backend configuration for initial deployment
-echo "Commenting out backend configuration for initial deployment..."
-sed -i.bak '/^  backend "gcs" {/,/^  }/ s/^/  # /' main.tf
-rm -f main.tf.bak
-echo "Backend configuration reset to commented state."
+# For existing state, we'll use the remote backend directly
+# For new deployments, we'll start with local state and migrate
 
 # Copy variables.tfvars.orig to variables.tfvars if it doesn't exist
 if [[ ! -f "variables.tfvars" ]]; then
@@ -92,34 +254,38 @@ if [[ ! -f "variables.tfvars" ]]; then
   cp variables.tfvars.orig variables.tfvars
 fi
 
-# Update project_name, region, and container_image in variables.tfvars
-echo "Updating variables.tfvars with project_name=$PROJECT_NAME, region=$REGION, and container_image=$CONTAINER_IMAGE"
+# Update project_name, region, container_image, and ensure secret copying is enabled
+echo "Updating variables.tfvars with project_name=$PROJECT_NAME, region=$REGION, container_image=$CONTAINER_IMAGE, and enabling secret copying"
 sed -i.bak "s/project_name = \".*\"/project_name = \"$PROJECT_NAME\"/" variables.tfvars
 sed -i.bak "s/region = \".*\"/region = \"$REGION\"/" variables.tfvars
 # Use a different delimiter for sed to avoid issues with special characters
 sed -i.bak "s|container_image = \".*\"|container_image = \"$CONTAINER_IMAGE\"|" variables.tfvars
+# Ensure secret copying from arxiv-development is enabled
+sed -i.bak "s/copy_secrets_from_arxiv_development = .*/copy_secrets_from_arxiv_development = true/" variables.tfvars
+
+# Note: We're using service account key file instead of impersonation for Terraform
 
 # Clean up backup file
 rm -f variables.tfvars.bak
 
 # Determine bucket name (same as project name, sanitized)
 STATE_BUCKET_NAME=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9-]/ /g' -e 's/  */-/g' -e 's/^-*//' -e 's/-*$//')
-# Check for existing state in env/state (from arxiv-env script)
-EXISTING_STATE_PATH="env/state/default.tfstate"
-# New state will be stored in browse/state
-NEW_STATE_PATH="browse/state/default.tfstate"
+# State will be stored in browse/state folder
+STATE_PATH="browse/state/default.tfstate"
 
 echo "Using bucket name: $STATE_BUCKET_NAME"
-echo "Checking for existing state at: gs://$STATE_BUCKET_NAME/$EXISTING_STATE_PATH"
-echo "New state will be stored at: gs://$STATE_BUCKET_NAME/$NEW_STATE_PATH"
+echo "State will be stored at: gs://$STATE_BUCKET_NAME/$STATE_PATH"
 
 # Check for existing browse state file
 echo "Checking for existing browse state file..."
-if gsutil ls gs://$STATE_BUCKET_NAME/$NEW_STATE_PATH >/dev/null 2>&1; then
+if gsutil ls gs://$STATE_BUCKET_NAME/$STATE_PATH >/dev/null 2>&1; then
   echo "Found existing browse state file in bucket $STATE_BUCKET_NAME"
   echo "This deployment will update the existing Cloud Run service."
+  STATE_EXISTS=true
 else
   echo "No existing browse state file found, proceeding with new Cloud Run deployment"
+  echo "State file will be created at: gs://$STATE_BUCKET_NAME/$STATE_PATH"
+  STATE_EXISTS=false
 fi
 
 # Configure remote backend
@@ -128,8 +294,6 @@ echo "Backend configuration:"
 echo "  bucket = \"$STATE_BUCKET_NAME\""
 echo "  prefix = \"browse/state\""
 
-# Restore the original main.tf with backend configuration
-cp main.tf.original main.tf
 # Update the backend configuration with the correct bucket and prefix
 sed -i.bak "s/bucket = \"project-id\"/bucket = \"$STATE_BUCKET_NAME\"/" main.tf
 sed -i.bak 's/prefix = "browse\/state"/prefix = "browse\/state"/' main.tf
@@ -139,9 +303,39 @@ rm -f main.tf.bak
 echo "Setting gcloud project to: $PROJECT_NAME"
 gcloud config set project "$PROJECT_NAME"
 
+# Test GCS access with impersonation before running Terraform
+echo "Testing GCS access with service account impersonation..."
+if gsutil ls gs://$STATE_BUCKET_NAME/ >/dev/null 2>&1; then
+  echo "✅ GCS access test successful"
+else
+  echo "❌ GCS access test failed. This might indicate impersonation issues."
+  echo "   Trying to access bucket: gs://$STATE_BUCKET_NAME/"
+  echo "   With impersonation: $GOOGLE_IMPERSONATE_SERVICE_ACCOUNT"
+  exit 1
+fi
+
+# Use user account for Terraform (since cross-project permissions are already set up)
+echo "Using user account for Terraform (cross-project permissions already configured)..."
+# Clear any service account key environment variables
+unset GOOGLE_APPLICATION_CREDENTIALS
+unset GOOGLE_IMPERSONATE_SERVICE_ACCOUNT
+echo "Using user account: $(gcloud auth list --filter=status:ACTIVE --format="value(account)" | head -1)"
+
 # Initialize Terraform with remote backend
 echo "Running terraform init with remote backend..."
+echo "Using user account authentication"
 terraform init
+
+# Migrate state to remote backend if this is the first deployment
+if [[ "$STATE_EXISTS" == "false" ]]; then
+  echo "Migrating state to remote backend..."
+  terraform init -migrate-state
+  if [ $? -ne 0 ]; then
+    echo "Warning: State migration failed, but continuing with deployment."
+  else
+    echo "✅ State successfully migrated to remote backend."
+  fi
+fi
 
 # Cross-project IAM permissions are now handled by the arxiv-env script
 # when the project is created, so we don't need to grant them here.
@@ -154,44 +348,49 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Ask for confirmation
-read -p "Do you want to apply these changes? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  echo "Running terraform apply (creating/updating Cloud Run service)..."
-  terraform apply -var-file="variables.tfvars"
-  if [ $? -ne 0 ]; then
-    echo "Terraform apply failed. Please check your configuration and authentication. Exiting."
-    exit 1
-  fi
-  
-  echo "--- Deployment Complete! ---"
-  echo "Your project ID is: $PROJECT_NAME"
-  echo "Your region is: $REGION"
-  echo "Your state bucket is: $STATE_BUCKET_NAME"
-  echo "State location: gs://$STATE_BUCKET_NAME/browse/state"
-  
-  # Show Terraform outputs
-  echo "--- Showing Terraform Outputs ---"
-  echo "Running terraform output to display all created resources..."
-  terraform output
-  if [ $? -ne 0 ]; then
-    echo "Warning: Failed to retrieve terraform outputs, but deployment was successful."
-    echo "You can manually run 'terraform output' to see the outputs."
-  fi
-  
-  # Clean up temporary files created during deployment
-  echo ""
-  echo "--- Cleaning up temporary files ---"
-  rm -f main.tf.original
-  rm -f variables.tfvars
-  echo "✅ Cleanup complete."
-else
-  echo "Deployment cancelled."
-  # Still clean up temporary files even if deployment was cancelled
-  echo "Cleaning up temporary files..."
-  rm -f main.tf.original
-  rm -f variables.tfvars
-  echo "✅ Cleanup complete."
-  exit 0
+# Automatically apply changes
+echo "Running terraform apply (creating/updating Cloud Run service)..."
+terraform apply -var-file="variables.tfvars" -auto-approve
+if [ $? -ne 0 ]; then
+  echo "Terraform apply failed. Please check your configuration and authentication. Exiting."
+  exit 1
 fi
+  
+echo "--- Deployment Complete! ---"
+echo "Your project ID is: $PROJECT_NAME"
+echo "Your region is: $REGION"
+echo "Your state bucket is: $STATE_BUCKET_NAME"
+echo "State location: gs://$STATE_BUCKET_NAME/browse/state"
+
+# Ensure state is saved to remote backend
+echo "Ensuring state is saved to remote backend..."
+terraform init -reconfigure
+if [ $? -eq 0 ]; then
+  echo "✅ State successfully saved to remote backend."
+else
+  echo "⚠️  Warning: Could not reconfigure remote backend, but deployment was successful."
+fi
+
+# Show Terraform outputs
+echo "--- Showing Terraform Outputs ---"
+echo "Running terraform output to display all created resources..."
+terraform output
+if [ $? -ne 0 ]; then
+  echo "Warning: Failed to retrieve terraform outputs, but deployment was successful."
+  echo "You can manually run 'terraform output' to see the outputs."
+fi
+
+# Clean up temporary files created during deployment
+echo ""
+echo "--- Cleaning up temporary files ---"
+rm -f main.tf.original
+rm -f variables.tfvars
+echo "✅ Cleanup complete."
+
+# Clean up environment variables and temporary files
+unset GOOGLE_IMPERSONATE_SERVICE_ACCOUNT
+if [ -f "/tmp/terraform-key.json" ]; then
+  rm -f /tmp/terraform-key.json
+  echo "✅ Temporary service account key cleaned up"
+fi
+echo "✅ Environment variables cleaned up."

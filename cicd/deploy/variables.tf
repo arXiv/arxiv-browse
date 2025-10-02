@@ -177,3 +177,9 @@ variable "copy_secrets_from_arxiv_development" {
   type        = bool
   default     = false
 }
+
+variable "impersonate_service_account" {
+  description = "Service account to impersonate (for development)"
+  type        = string
+  default     = ""
+}
