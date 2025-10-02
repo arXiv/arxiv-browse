@@ -266,7 +266,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "--- Cleaning up temporary files ---"
   rm -f main.tf.original
   rm -f variables.tfvars
-  echo "✅ Cleanup complete. Ready for check-in."
+  echo "✅ Cleanup complete."
 else
   echo "Deployment cancelled."
   # Still clean up temporary files even if deployment was cancelled
