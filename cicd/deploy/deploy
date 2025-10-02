@@ -233,6 +233,7 @@ echo "Cleaning up temporary files..."
 rm -f main.tf.original
 rm -f main.tf.bak
 rm -f variables.tfvars.bak
+rm -rf .terrafor*
 
 # exit 1
 

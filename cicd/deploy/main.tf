@@ -139,22 +139,28 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
         value = var.source_storage_prefix
       }
 
-      env {
-        name  = "CLASSIC_DB_URI"
-        value_source {
-          secret_key_ref {
-            secret  = "projects/${var.project_name}/secrets/${var.classic_db_uri_secret_name}"
-            version = "latest"
+      dynamic "env" {
+        for_each = var.copy_secrets_from_arxiv_development ? [1] : []
+        content {
+          name  = "CLASSIC_DB_URI"
+          value_source {
+            secret_key_ref {
+              secret  = "projects/${var.project_name}/secrets/${var.classic_db_uri_secret_name}"
+              version = "latest"
+            }
           }
         }
       }
 
-      env {
-        name  = "LATEXML_DB_URI"
-        value_source {
-          secret_key_ref {
-            secret  = "projects/${var.project_name}/secrets/${var.latexml_db_uri_secret_name}"
-            version = "latest"
+      dynamic "env" {
+        for_each = var.copy_secrets_from_arxiv_development ? [1] : []
+        content {
+          name  = "LATEXML_DB_URI"
+          value_source {
+            secret_key_ref {
+              secret  = "projects/${var.project_name}/secrets/${var.latexml_db_uri_secret_name}"
+              version = "latest"
+            }
           }
         }
       }
@@ -320,6 +326,7 @@ resource "google_secret_manager_secret_version" "latexml_db_uri_version" {
 # IAM binding for the service account to access secrets
 # Grant access to the default Compute Engine service account when no specific service account is provided
 resource "google_secret_manager_secret_iam_binding" "classic_db_uri" {
+  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
   project   = var.project_name
   secret_id = var.classic_db_uri_secret_name
   role      = "roles/secretmanager.secretAccessor"
@@ -328,9 +335,12 @@ resource "google_secret_manager_secret_iam_binding" "classic_db_uri" {
   ] : [
     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
   ]
+  
+  depends_on = [google_secret_manager_secret.classic_db_uri]
 }
 
 resource "google_secret_manager_secret_iam_binding" "latexml_db_uri" {
+  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
   project   = var.project_name
   secret_id = var.latexml_db_uri_secret_name
   role      = "roles/secretmanager.secretAccessor"
@@ -339,6 +349,8 @@ resource "google_secret_manager_secret_iam_binding" "latexml_db_uri" {
   ] : [
     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
   ]
+  
+  depends_on = [google_secret_manager_secret.latexml_db_uri]
 }
 
 # Enable Secret Manager API
