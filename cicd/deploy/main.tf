@@ -7,10 +7,11 @@ terraform {
     }
   }
   
-  backend "gcs" {
-    bucket = "a006-mg"
-    prefix = "browse/state"
-  }
+  # Backend configuration will be added dynamically by the script
+  # backend "gcs" {
+  #   bucket = "project-id"
+  #   prefix = "browse/state"
+  # }
 }
 
 provider "google" {
@@ -142,7 +143,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
         name  = "CLASSIC_DB_URI"
         value_source {
           secret_key_ref {
-            secret  = var.classic_db_uri_secret_name
+            secret  = "projects/${var.project_name}/secrets/${var.classic_db_uri_secret_name}"
             version = "latest"
           }
         }
@@ -152,7 +153,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
         name  = "LATEXML_DB_URI"
         value_source {
           secret_key_ref {
-            secret  = var.latexml_db_uri_secret_name
+            secret  = "projects/${var.project_name}/secrets/${var.latexml_db_uri_secret_name}"
             version = "latest"
           }
         }

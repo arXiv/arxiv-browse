@@ -228,12 +228,8 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Clean up existing Terraform state files and configuration
-echo "Cleaning up existing Terraform state files and configuration..."
-rm -f *.tfstat*
-rm -rf .terraform*
-rm -f .terraform.lock.hcl
-rm -f variables.tfvars
+# Clean up only temporary files, preserve Terraform state
+echo "Cleaning up temporary files..."
 rm -f main.tf.original
 rm -f main.tf.bak
 rm -f variables.tfvars.bak
@@ -268,23 +264,22 @@ sed -i.bak "s/copy_secrets_from_arxiv_development = .*/copy_secrets_from_arxiv_d
 # Clean up backup file
 rm -f variables.tfvars.bak
 
-# Determine bucket name (same as project name, sanitized)
-STATE_BUCKET_NAME=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^a-z0-9-]/ /g' -e 's/  */-/g' -e 's/^-*//' -e 's/-*$//')
-# State will be stored in browse/state folder
-STATE_PATH="browse/state/default.tfstate"
+# Determine bucket name (project name IS the bucket name)
+STATE_BUCKET_NAME="${PROJECT_NAME}"
+STATE_FILE_PATH="browse/state/default.tfstate"
 
 echo "Using bucket name: $STATE_BUCKET_NAME"
-echo "State will be stored at: gs://$STATE_BUCKET_NAME/$STATE_PATH"
+echo "State will be stored at: gs://$STATE_BUCKET_NAME/$STATE_FILE_PATH"
 
-# Check for existing browse state file
-echo "Checking for existing browse state file..."
-if gsutil ls gs://$STATE_BUCKET_NAME/$STATE_PATH >/dev/null 2>&1; then
-  echo "Found existing browse state file in bucket $STATE_BUCKET_NAME"
+# Check for existing state file
+echo "Checking for existing state file..."
+if gsutil ls gs://$STATE_BUCKET_NAME/$STATE_FILE_PATH >/dev/null 2>&1; then
+  echo "Found existing state file in bucket $STATE_BUCKET_NAME"
   echo "This deployment will update the existing Cloud Run service."
   STATE_EXISTS=true
 else
-  echo "No existing browse state file found, proceeding with new Cloud Run deployment"
-  echo "State file will be created at: gs://$STATE_BUCKET_NAME/$STATE_PATH"
+  echo "No existing state file found, proceeding with new Cloud Run deployment"
+  echo "State file will be created at: gs://$STATE_BUCKET_NAME/$STATE_FILE_PATH"
   STATE_EXISTS=false
 fi
 
@@ -294,9 +289,12 @@ echo "Backend configuration:"
 echo "  bucket = \"$STATE_BUCKET_NAME\""
 echo "  prefix = \"browse/state\""
 
-# Update the backend configuration with the correct bucket and prefix
-sed -i.bak "s/bucket = \"project-id\"/bucket = \"$STATE_BUCKET_NAME\"/" main.tf
-sed -i.bak 's/prefix = "browse\/state"/prefix = "browse\/state"/' main.tf
+# Enable the backend block and update the configuration
+echo "Enabling remote backend in main.tf..."
+sed -i.bak 's/^  # backend "gcs" {/  backend "gcs" {/' main.tf
+sed -i.bak 's/^  #   bucket = "project-id"/    bucket = "'"$STATE_BUCKET_NAME"'"/' main.tf
+sed -i.bak 's/^  #   prefix = "browse\/state"/    prefix = "browse\/state"/' main.tf
+sed -i.bak 's/^  # }/  }/' main.tf
 rm -f main.tf.bak
 
 # Set the gcloud project to the correct project ID
@@ -323,19 +321,10 @@ echo "Using user account: $(gcloud auth list --filter=status:ACTIVE --format="va
 
 # Initialize Terraform with remote backend
 echo "Running terraform init with remote backend..."
-echo "Using user account authentication"
+echo "Using service account key file authentication"
 terraform init
 
-# Migrate state to remote backend if this is the first deployment
-if [[ "$STATE_EXISTS" == "false" ]]; then
-  echo "Migrating state to remote backend..."
-  terraform init -migrate-state
-  if [ $? -ne 0 ]; then
-    echo "Warning: State migration failed, but continuing with deployment."
-  else
-    echo "✅ State successfully migrated to remote backend."
-  fi
-fi
+# No state migration needed - we're using remote backend directly
 
 # Cross-project IAM permissions are now handled by the arxiv-env script
 # when the project is created, so we don't need to grant them here.
@@ -360,16 +349,9 @@ echo "--- Deployment Complete! ---"
 echo "Your project ID is: $PROJECT_NAME"
 echo "Your region is: $REGION"
 echo "Your state bucket is: $STATE_BUCKET_NAME"
-echo "State location: gs://$STATE_BUCKET_NAME/browse/state"
+echo "State location: gs://$STATE_BUCKET_NAME/browse/state/${PROJECT_NAME}"
 
-# Ensure state is saved to remote backend
-echo "Ensuring state is saved to remote backend..."
-terraform init -reconfigure
-if [ $? -eq 0 ]; then
-  echo "✅ State successfully saved to remote backend."
-else
-  echo "⚠️  Warning: Could not reconfigure remote backend, but deployment was successful."
-fi
+# State is already managed by remote backend, no need to reconfigure
 
 # Show Terraform outputs
 echo "--- Showing Terraform Outputs ---"
@@ -378,6 +360,16 @@ terraform output
 if [ $? -ne 0 ]; then
   echo "Warning: Failed to retrieve terraform outputs, but deployment was successful."
   echo "You can manually run 'terraform output' to see the outputs."
+fi
+
+# Restore original main.tf file
+echo ""
+echo "--- Restoring original main.tf file ---"
+if [ -f "main.tf.original" ]; then
+  cp main.tf.original main.tf
+  echo "✅ Original main.tf file restored"
+else
+  echo "⚠️  Warning: main.tf.original not found, skipping restoration"
 fi
 
 # Clean up temporary files created during deployment
