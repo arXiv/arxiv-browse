@@ -12,6 +12,11 @@ def no_werkzeug_log():
     wlog = logging.getLogger('werkzeug')
     wlog.disabled = True
 
+@pytest.fixture()
+def add_blank_delete():
+    DELETED_PAPERS["astro-ph/9311999"] = ""
+    yield
+    del DELETED_PAPERS["astro-ph/9311999"]
 
 def test_404(client_with_fake_listings, no_werkzeug_log):
     """A 404 response should be returned."""
@@ -36,9 +41,8 @@ def test_410_deleted_paper(client_with_fake_listings, no_werkzeug_log):
     assert response.status_code == status.GONE \
         and b'was a duplicate of astro-ph/0110255' in response.data
 
-def test_410_deleted_paper_no_reason(client_with_fake_listings, no_werkzeug_log):
+def test_410_deleted_paper_no_reason(client_with_fake_listings, no_werkzeug_log, add_blank_delete):
     'should get 410 for known deleted paper and no reason message'
-    DELETED_PAPERS["astro-ph/9311999"] = ""
     response = client_with_fake_listings.get('/abs/astro-ph/9311999')
     assert response.status_code == status.GONE \
         and b'The reason recorded is' not in response.data
