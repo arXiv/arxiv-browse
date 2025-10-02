@@ -53,10 +53,10 @@ CONTAINER_IMAGE="${IMAGE_REGISTRY}:${IMAGE_TAG}"
 
 echo "Deploying arxiv-browse to project: $PROJECT_NAME, region: $REGION, image: $CONTAINER_IMAGE"
 echo ""
-echo "NOTE: This deployment will copy secret values from arxiv-development project."
-echo "If you get permission errors, you may need to grant the following permissions:"
-echo "  - roles/secretmanager.secretAccessor on arxiv-development project"
-echo "  - roles/storage.objectViewer on arxiv-development project (for image access)"
+echo "NOTE: This deployment assumes the project was created using arxiv-env script"
+echo "which should have already granted the necessary cross-project IAM permissions."
+echo "If you encounter permission errors, ensure the project was created with arxiv-env"
+echo "or manually grant the required permissions in arxiv-development project."
 echo ""
 
 # Get the directory where this script is located
@@ -143,89 +143,8 @@ gcloud config set project "$PROJECT_NAME"
 echo "Running terraform init with remote backend..."
 terraform init
 
-# Grant cross-project permissions for image access
-echo "Setting up cross-project permissions for image access..."
-echo "Granting Cloud Run service agent access to arxiv-development GCR registry..."
-
-# Get the Cloud Run service agent for the target project
-CLOUD_RUN_SERVICE_AGENT="service-$(gcloud projects describe $PROJECT_NAME --format='value(projectNumber)')@serverless-robot-prod.iam.gserviceaccount.com"
-
-echo "Cloud Run service agent: $CLOUD_RUN_SERVICE_AGENT"
-
-# Grant the necessary permissions for cross-project image access
-echo "Granting permissions for cross-project image access..."
-
-# Grant storage.objectViewer role (for GCR access)
-echo "Granting storage.objectViewer role to Cloud Run service agent in arxiv-development project..."
-gcloud projects add-iam-policy-binding arxiv-development \
-    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
-    --role="roles/storage.objectViewer" \
-    --condition=None \
-    --quiet
-
-if [ $? -eq 0 ]; then
-  echo "✅ Successfully granted storage.objectViewer role"
-else
-  echo "⚠️  Warning: Failed to grant storage.objectViewer role automatically."
-  echo "   This may be because you don't have IAM admin permissions in arxiv-development project."
-  echo "   Please run this command manually in the arxiv-development project:"
-  echo "   gcloud projects add-iam-policy-binding arxiv-development \\"
-  echo "     --member=\"serviceAccount:$CLOUD_RUN_SERVICE_AGENT\" \\"
-  echo "     --role=\"roles/storage.objectViewer\" \\"
-  echo "     --condition=None"
-  echo ""
-  echo "   Or ask someone with IAM admin access to run it for you."
-  echo "   Then re-run this deployment script."
-  exit 1
-fi
-
-# Also try to grant Artifact Registry Reader role (for the specific permission needed)
-echo "Granting artifactregistry.reader role to Cloud Run service agent in arxiv-development project..."
-gcloud projects add-iam-policy-binding arxiv-development \
-    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
-    --role="roles/artifactregistry.reader" \
-    --condition=None \
-    --quiet
-
-if [ $? -eq 0 ]; then
-  echo "✅ Successfully granted artifactregistry.reader role"
-else
-  echo "⚠️  Warning: Failed to grant artifactregistry.reader role automatically."
-  echo "   This may be because you don't have IAM admin permissions in arxiv-development project."
-  echo "   Please run this command manually in the arxiv-development project:"
-  echo "   gcloud projects add-iam-policy-binding arxiv-development \\"
-  echo "     --member=\"serviceAccount:$CLOUD_RUN_SERVICE_AGENT\" \\"
-  echo "     --role=\"roles/artifactregistry.reader\" \\"
-  echo "     --condition=None"
-  echo ""
-  echo "   Or ask someone with IAM admin access to run it for you."
-  echo "   Then re-run this deployment script."
-  exit 1
-fi
-
-# Grant VPC Access Connector usage permission
-echo "Granting VPC Access Connector usage permission to Cloud Run service agent in arxiv-development project..."
-gcloud projects add-iam-policy-binding arxiv-development \
-    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
-    --role="roles/vpcaccess.user" \
-    --condition=None \
-    --quiet
-
-if [ $? -eq 0 ]; then
-  echo "✅ Successfully granted vpcaccess.user role"
-else
-  echo "⚠️  Warning: Failed to grant vpcaccess.user role automatically."
-  echo "   This may be because you don't have IAM admin permissions in arxiv-development project."
-  echo "   Please run this command manually in the arxiv-development project:"
-  echo "   gcloud projects add-iam-policy-binding arxiv-development \\"
-  echo "     --member=\"serviceAccount:$CLOUD_RUN_SERVICE_AGENT\" \\"
-  echo "     --role=\"roles/vpcaccess.user\" \\"
-  echo "     --condition=None"
-  echo ""
-  echo "   Or ask someone with IAM admin access to run it for you."
-  echo "   Then re-run this deployment script."
-  exit 1
-fi
+# Cross-project IAM permissions are now handled by the arxiv-env script
+# when the project is created, so we don't need to grant them here.
 
 # Plan the deployment
 echo "Planning Terraform deployment..."

@@ -14,7 +14,8 @@ The project creates and manages:
 1. **Google Cloud SDK**: Install and configure `gcloud` CLI
 2. **Terraform**: Install Terraform >= 1.0
 3. **Authentication**: Ensure you have proper GCP authentication set up
-4. **Service Account**: The service account specified in variables must exist and have necessary permissions
+4. **Project Setup**: The target project should be created using the `arxiv-env` script, which automatically grants the necessary cross-project IAM permissions
+5. **Service Account**: The service account specified in variables must exist and have necessary permissions
 
 ## Files
 
@@ -26,6 +27,20 @@ The project creates and manages:
 - `cloudrun.yaml` - Original Cloud Run configuration (for reference)
 
 ## Usage
+
+### Workflow
+
+1. **Create a new project** using the `arxiv-env` script (this automatically grants cross-project permissions):
+   ```bash
+   cd /path/to/arxiv-iac/arxiv-env
+   ./arxiv-env -project_name your-project-name
+   ```
+
+2. **Deploy the arxiv-browse service** to the created project:
+   ```bash
+   cd /path/to/arxiv-browse/cicd/deploy
+   ./deploy.sh -project_name your-project-name
+   ```
 
 ### Quick Start
 
@@ -151,6 +166,35 @@ The service account needs:
 - `roles/run.admin` - To manage Cloud Run services
 - `roles/secretmanager.secretAccessor` - To access secrets
 - `roles/iam.serviceAccountUser` - To use the service account
+
+### Cross-Project Permission Issues
+If you encounter permission errors related to:
+- Docker image pulling from `gcr.io/arxiv-development/arxiv-browse`
+- VPC connector access
+- Secret access from `arxiv-development` project
+
+**Solution**: Ensure the project was created using the `arxiv-env` script, which automatically grants these permissions. If the project was created manually, you need to grant the following permissions in the `arxiv-development` project:
+
+```bash
+# Get the Cloud Run service agent for your project
+CLOUD_RUN_SERVICE_AGENT="service-$(gcloud projects describe YOUR_PROJECT_ID --format='value(projectNumber)')@serverless-robot-prod.iam.gserviceaccount.com"
+
+# Grant the required permissions
+gcloud projects add-iam-policy-binding arxiv-development \
+    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
+    --role="roles/storage.objectViewer" \
+    --condition=None
+
+gcloud projects add-iam-policy-binding arxiv-development \
+    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
+    --role="roles/artifactregistry.reader" \
+    --condition=None
+
+gcloud projects add-iam-policy-binding arxiv-development \
+    --member="serviceAccount:$CLOUD_RUN_SERVICE_AGENT" \
+    --role="roles/vpcaccess.user" \
+    --condition=None
+```
 
 ## Security Notes
 
