@@ -52,22 +52,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
-          service_account: ${{ vars.SERVICE_ACCOUNT }}
-
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v3
-
-      - name: Set up terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Check version
-        run: terraform --version
-
       - name: Set environment variables
         run: |
           ENV_NAME="${{ inputs.env }}"
@@ -88,6 +72,22 @@ jobs:
             echo "TERRAFORM_BUCKET=$ENV_NAME" >> $GITHUB_ENV
             echo "Custom environment '$ENV_NAME' detected, using '$ENV_NAME' as project name and bucket"
           fi
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
+          service_account: ${{ vars.SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_NAME }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Check version
+        run: terraform --version
 
       - name: Configure terraform
         run: |
