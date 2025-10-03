@@ -183,3 +183,9 @@ variable "impersonate_service_account" {
   type        = string
   default     = ""
 }
+
+variable "commit_sha" {
+  description = "Git commit SHA for deployment tracking"
+  type        = string
+  default     = ""
+}

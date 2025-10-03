@@ -8,10 +8,10 @@ terraform {
   }
   
   # Backend configuration will be added dynamically by the script
-  # backend "gcs" {
-  #   bucket = "project-id"
-  #   prefix = "browse/state"
-  # }
+  backend "gcs" {
+    bucket = var.bucket
+    prefix = "browse/state"
+  }
 }
 
 provider "google" {
@@ -37,7 +37,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 
     containers {
       name  = "arxiv-browse"
-      image = var.container_image
+      image = var.commit_sha != "" ? "${split(":", var.container_image)[0]}:${var.commit_sha}" : var.container_image
 
       ports {
         name           = "http1"
