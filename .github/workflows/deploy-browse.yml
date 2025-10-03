@@ -19,6 +19,11 @@ on:
         required: false
         type: string
         default: "latest"
+  push:
+    branches:
+      - terraform-workflow
+    paths:
+      - ".github/workflows/deploy-browse.yml"
 
 permissions:
   contents: read
