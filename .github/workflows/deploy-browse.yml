@@ -1,15 +1,6 @@
 name: Format check and deploy arxiv-browse
 
 on:
-  # push:
-  #   branches:
-  #     - terraform-workflow
-  #   paths:
-  #     - "**"
-  # pull_request:
-  #   branches: [ main ]
-  #   paths:
-  #     - "**"
   workflow_dispatch:
     inputs:
       env:
