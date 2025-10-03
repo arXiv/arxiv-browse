@@ -67,7 +67,7 @@ jobs:
             echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
             echo "TERRAFORM_BUCKET=arxiv-terraform-state-dev" >> $GITHUB_ENV
           else
-            # For custom environments, use the environment name as project name and bucket
+            # For custom environments, use the environment name as project name but shared bucket
             echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
             echo "TERRAFORM_BUCKET=$ENV_NAME" >> $GITHUB_ENV
             echo "Custom environment '$ENV_NAME' detected, using '$ENV_NAME' as project name and bucket"
