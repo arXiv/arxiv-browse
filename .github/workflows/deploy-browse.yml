@@ -1,10 +1,11 @@
+---
 name: Format check and deploy arxiv-browse
 
 on:
   workflow_dispatch:
     inputs:
       env:
-        description: "Environment (e.g., development, production, staging, custom-env)"
+        description: "Environment (e.g., development, production, staging)"
         required: true
         type: string
         default: ""
@@ -72,7 +73,7 @@ jobs:
           REGION="${{ inputs.region || 'us-central1' }}"
           echo "ENVIRONMENT=$ENV_NAME" >> $GITHUB_ENV
           echo "REGION=$REGION" >> $GITHUB_ENV
-          
+
           # Set project name based on environment
           if [ "$ENV_NAME" = "production" ]; then
             echo "PROJECT_NAME=arxiv-production" >> $GITHUB_ENV
@@ -100,9 +101,18 @@ jobs:
         working-directory: cicd/deploy
 
       - name: Plan
-        run: terraform plan -var="project_name=${{ env.PROJECT_NAME }}" -var="region=${{ env.REGION }}" -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+        run: |
+          terraform plan \
+            -var="project_name=${{ env.PROJECT_NAME }}" \
+            -var="region=${{ env.REGION }}" \
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}"
         working-directory: cicd/deploy
 
       - name: Apply
-        run: terraform apply -var="project_name=${{ env.PROJECT_NAME }}" -var="region=${{ env.REGION }}" -var="commit_sha=${{ inputs.image_tag || github.sha }}" -auto-approve
+        run: |
+          terraform apply \
+            -var="project_name=${{ env.PROJECT_NAME }}" \
+            -var="region=${{ env.REGION }}" \
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
+            -auto-approve
         working-directory: cicd/deploy
