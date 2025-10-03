@@ -55,8 +55,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
-          service_account: ${{ vars.SERVICE_ACCOUNT }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
@@ -74,18 +73,18 @@ jobs:
           echo "ENVIRONMENT=$ENV_NAME" >> $GITHUB_ENV
           echo "REGION=$REGION" >> $GITHUB_ENV
 
-          # Set project name based on environment
+          # Set project name and terraform bucket based on environment
           if [ "$ENV_NAME" = "production" ]; then
             echo "PROJECT_NAME=arxiv-production" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=${{ vars.PROD_TERRAFORM_BUCKET }}" >> $GITHUB_ENV
+            echo "TERRAFORM_BUCKET=arxiv-terraform-state-prod" >> $GITHUB_ENV
           elif [ "$ENV_NAME" = "development" ]; then
             echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=${{ vars.DEV_TERRAFORM_BUCKET }}" >> $GITHUB_ENV
+            echo "TERRAFORM_BUCKET=arxiv-terraform-state-dev" >> $GITHUB_ENV
           else
-            # For custom environments, use the environment name as project name
+            # For custom environments, use the environment name as project name and bucket
             echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=${{ vars.DEV_TERRAFORM_BUCKET }}" >> $GITHUB_ENV
-            echo "Custom environment '$ENV_NAME' detected, using '$ENV_NAME' as project name"
+            echo "TERRAFORM_BUCKET=arxiv-terraform-state-$ENV_NAME" >> $GITHUB_ENV
+            echo "Custom environment '$ENV_NAME' detected, using '$ENV_NAME' as project name and bucket"
           fi
 
       - name: Configure terraform
