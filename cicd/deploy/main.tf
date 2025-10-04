@@ -238,19 +238,19 @@ locals {
 }
 
 resource "google_project_iam_member" "secret_reader" {
-  project = "arxiv-development"
+  project = var.project_name
   role    = "roles/secretmanager.secretAccessor"
   member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
 }
 
 resource "google_project_iam_member" "secret_version_reader" {
-  project = "arxiv-development"
+  project = var.project_name
   role    = "roles/secretmanager.viewer"
   member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
 }
 
 resource "google_project_iam_member" "storage_reader" {
-  project = "arxiv-development"
+  project = var.project_name
   role    = "roles/storage.objectViewer"
   member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
 }
