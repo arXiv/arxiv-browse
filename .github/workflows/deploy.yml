@@ -45,7 +45,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env || 'development' }}
-    # if: github.ref == 'refs/heads/main'
     needs: format-check
 
     steps:
