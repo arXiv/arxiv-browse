@@ -1,5 +1,5 @@
 ---
-name: Format check and deploy
+name: Deploy
 
 on:
   workflow_dispatch:
