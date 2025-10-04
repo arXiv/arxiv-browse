@@ -1,5 +1,5 @@
 ---
-name: Format check and deploy arxiv-browse
+name: Format check and deploy
 
 on:
   workflow_dispatch:
@@ -65,7 +65,7 @@ jobs:
             echo "TERRAFORM_BUCKET=arxiv-production" >> $GITHUB_ENV
           elif [ "$ENV_NAME" = "development" ]; then
             echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=arxiv-terraform-state-dev" >> $GITHUB_ENV
+            echo "TERRAFORM_BUCKET=arxiv-development" >> $GITHUB_ENV
           else
             # For custom environments, use the environment name as project name but shared bucket
             echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
