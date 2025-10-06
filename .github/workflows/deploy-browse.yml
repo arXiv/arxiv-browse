@@ -72,11 +72,52 @@ jobs:
             echo "Custom environment detected, using $ENV_NAME as project name"
           fi
 
+      - name: Authenticate to Google Cloud (Initial)
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_NAME }}
+
+      - name: Set workload identity values
+        run: |
+          ENV_NAME="${{ inputs.env }}"
+          PROJECT_NAME="${{ env.PROJECT_NAME }}"
+          
+          echo "Looking up workload identity values for project: $PROJECT_NAME"
+          
+          # Get the project number dynamically
+          PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" 2>/dev/null)
+          
+          if [ -z "$PROJECT_NUMBER" ]; then
+            echo "❌ Could not get project number for: $PROJECT_NAME"
+            echo "Make sure the project exists and you have access to it"
+            exit 1
+          fi
+          
+          echo "✅ Project number: $PROJECT_NUMBER"
+          
+          # Construct values based on the arxiv-env Terraform configuration naming patterns
+          # The arxiv-env creates:
+          # - Workload identity pool: "github" 
+          # - Provider: "github-actions-provider"
+          # - Service account: "github-actions-sa"
+          
+          PROVIDER_NAME="projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/github/providers/github-actions-provider"
+          SERVICE_ACCOUNT="github-actions-sa@${PROJECT_NAME}.iam.gserviceaccount.com"
+          
+          echo "✅ Constructed workload identity values:"
+          echo "   Provider: $PROVIDER_NAME"
+          echo "   Service Account: $SERVICE_ACCOUNT"
+          
+          # Set environment variables for the auth step
+          echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
+          echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
-          service_account: ${{ vars.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
           project_id: ${{ env.PROJECT_NAME }}
 
       - name: Set up Google Cloud SDK
