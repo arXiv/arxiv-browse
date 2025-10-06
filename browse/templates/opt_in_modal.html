@@ -32,66 +32,66 @@
 <!-- OptIn Styling - Move to CSS file if approved-->
 <style>
 .optin-button {
-  background-color: #0055aa;
-  color: white;
-  border: none;
-  padding: 0.5em 1em;
-  margin: 0.5em;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1em;
+    background-color: #F7FAFC;
+    color: #1e8bc3;
+    border: 2px solid #1f5e96;
+    padding: 0.35em 0.8em;
+    margin: 0.5em;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    transition: all 0.5s;
 }
-
-.optin-modal.hidden {
-  display: none;
-}
-
-.optin-old-modal {
-  position: absolute;
-  bottom: 2em;
-  left: 2em;
-  /* top: 0; left: 0;
-   width: 100%; height: 100%;
-   background: rgba(0,0,0,0.5);
-   display: flex;
-   align-items: center;
-   align-items: flex-start;
-   justify-content: center;
-   z-index: 1000; */
-}
-
-
 .optin-modal {
-  position: fixed;
-  bottom: 2em;
-  left: 2em;
-  z-index: 1000;
-  background: white;
-  padding: 2em;
-  border-radius: 8px;
-  max-width: 600px;
-  width: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    position: fixed;
+    bottom: 2em;
+    left: 2em;
+    z-index: 1000;
+    background: white;
+    padding: 0;
+    border-radius: 8px;
+    max-width: 600px;
+    width: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-
 .optin-modal-content {
-  background: none;
-  color: black;
-  padding: 2em;
-  border-radius: 0;
-  max-width: 600px;
-  box-shadow: none;
+    color: black;
+    padding: 0.5em 1.5em;
 }
-
-.optin-modal-actions {
-  margin-top: 1.5em;
-  text-align: right;
+.optin-modal-content H2 {
+    font-size: 1.2em;
 }
-
+.optin-modal-content p {
+    font-size: 0.9em;
+}
+#header .optin-modal-content p a {
+    color: #1e8bc3;
+}
 .optin-modal-actions button {
-  margin-left: 1em;
-  padding: 0.5em 1em;
-  font-size: 1em;
+    margin-left: 1em;
+    background-color: #F7FAFC;
+    color: #1e8bc3;
+    border: 1px solid #1f5e96;
+    padding: 0.35em 0.8em;
+    margin: 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    transition: all 0.5s;
+}
+.optin-modal-actions button#optin-agree {
+}
+.optin-modal-actions button#optin-optout {
+}
+.optin-modal-actions button#optin-close {
+    background-color: #cecece;
+}
+.optin-modal-actions button:hover, .optin-button:hover {
+    box-shadow: rgb(107, 100, 89) 0px 3px 6px 0.0383048px;
+    background-color: #a5d6fe;
+    color: black;
 }
 </style>
 
