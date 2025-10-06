@@ -75,18 +75,24 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
-      - name: Download service account key
-        run: |
-          echo "Downloading service account key from gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json..."
-          gsutil cp gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json /tmp/gcp-sa-key.json
-          echo 'GCP_SA_KEY<<EOF' >> $GITHUB_ENV
-          cat /tmp/gcp-sa-key.json >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-
-      - name: Authenticate with service account key
+      - name: Authenticate with arxiv-development service account
         uses: google-github-actions/auth@v3
         with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.ARXIV_DEVELOPMENT_SA_KEY }}
+          project_id: arxiv-development
+
+      - name: Download target project service account key
+        run: |
+          echo "Downloading service account key from gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json..."
+          gsutil cp gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json /tmp/target-project-sa-key.json
+          echo 'TARGET_PROJECT_SA_KEY<<EOF' >> $GITHUB_ENV
+          cat /tmp/target-project-sa-key.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Authenticate with target project service account
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ env.TARGET_PROJECT_SA_KEY }}
           project_id: ${{ env.PROJECT_NAME }}
 
       - name: Set workload identity values
@@ -96,7 +102,7 @@ jobs:
           
           echo "Setting workload identity values for project: $PROJECT_NAME"
           
-          # Get project number using gcloud (now authenticated)
+          # Get project number using gcloud (now authenticated with target project)
           echo "Fetching project number for $PROJECT_NAME..."
           PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" --no-user-output-enabled 2>/dev/null)
           
@@ -124,6 +130,13 @@ jobs:
           # Set environment variables for the auth step
           echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
           echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
+
+      - name: Authenticate with Workload Identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_NAME }}
 
 
       - name: Set up terraform
