@@ -75,67 +75,11 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
-      - name: Authenticate with arxiv-development service account
-        uses: google-github-actions/auth@v3
-        with:
-          credentials_json: ${{ secrets.ARXIV_DEVELOPMENT_SA_KEY }}
-          project_id: arxiv-development
-
-      - name: Download target project service account key
-        run: |
-          echo "Downloading service account key from gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json..."
-          gsutil cp gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json /tmp/target-project-sa-key.json
-          echo 'TARGET_PROJECT_SA_KEY<<EOF' >> $GITHUB_ENV
-          cat /tmp/target-project-sa-key.json >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-
-      - name: Authenticate with target project service account
-        uses: google-github-actions/auth@v3
-        with:
-          credentials_json: ${{ env.TARGET_PROJECT_SA_KEY }}
-          project_id: ${{ env.PROJECT_NAME }}
-
-      - name: Set workload identity values
-        run: |
-          ENV_NAME="${{ inputs.env }}"
-          PROJECT_NAME="${{ env.PROJECT_NAME }}"
-          
-          echo "Setting workload identity values for project: $PROJECT_NAME"
-          
-          # Get project number using gcloud (now authenticated with target project)
-          echo "Fetching project number for $PROJECT_NAME..."
-          PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" --no-user-output-enabled 2>/dev/null)
-          
-          if [ -z "$PROJECT_NUMBER" ]; then
-            echo "❌ Could not get project number for: $PROJECT_NAME"
-            echo "Make sure the project exists and is accessible"
-            exit 1
-          fi
-          
-          echo "✅ Project number: $PROJECT_NUMBER"
-          
-          # Construct values based on the arxiv-env Terraform configuration naming patterns
-          # The arxiv-env creates:
-          # - Workload identity pool: "github"
-          # - Provider: "github-actions-provider"
-          # - Service account: "github-actions-sa"
-          
-          PROVIDER_NAME="projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/github/providers/github-actions-provider"
-          SERVICE_ACCOUNT="github-actions-sa@${PROJECT_NAME}.iam.gserviceaccount.com"
-          
-          echo "✅ Constructed workload identity values:"
-          echo "   Provider: $PROVIDER_NAME"
-          echo "   Service Account: $SERVICE_ACCOUNT"
-          
-          # Set environment variables for the auth step
-          echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
-          echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
-
       - name: Authenticate with Workload Identity
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
+          service_account: ${{ vars.SERVICE_ACCOUNT }}
           project_id: ${{ env.PROJECT_NAME }}
 
 
