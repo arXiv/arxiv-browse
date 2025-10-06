@@ -72,25 +72,22 @@ jobs:
             echo "Custom environment detected, using $ENV_NAME as project name"
           fi
 
-      - name: Authenticate to Google Cloud (Initial)
-        uses: google-github-actions/auth@v3
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ env.PROJECT_NAME }}
-
       - name: Set workload identity values
         run: |
           ENV_NAME="${{ inputs.env }}"
           PROJECT_NAME="${{ env.PROJECT_NAME }}"
           
-          echo "Looking up workload identity values for project: $PROJECT_NAME"
+          echo "Setting workload identity values for project: $PROJECT_NAME"
           
-          # Get the project number dynamically
-          PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" 2>/dev/null)
+          # Get project number using Google Cloud REST API (no auth required for basic project info)
+          echo "Fetching project number for $PROJECT_NAME..."
+          PROJECT_RESPONSE=$(curl -s "https://cloudresourcemanager.googleapis.com/v1/projects/$PROJECT_NAME")
+          PROJECT_NUMBER=$(echo "$PROJECT_RESPONSE" | grep -o '"projectNumber":"[^"]*"' | cut -d'"' -f4)
           
           if [ -z "$PROJECT_NUMBER" ]; then
             echo "❌ Could not get project number for: $PROJECT_NAME"
-            echo "Make sure the project exists and you have access to it"
+            echo "Response: $PROJECT_RESPONSE"
+            echo "Make sure the project exists and is accessible"
             exit 1
           fi
           
