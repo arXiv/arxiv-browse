@@ -72,9 +72,6 @@ jobs:
             echo "Custom environment detected, using $ENV_NAME as project name"
           fi
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v3
-
       - name: Set workload identity values
         run: |
           ENV_NAME="${{ inputs.env }}"
@@ -82,18 +79,24 @@ jobs:
           
           echo "Setting workload identity values for project: $PROJECT_NAME"
           
-          # Get project number using gcloud without authentication
-          # This works because gcloud can access public project information
-          echo "Fetching project number for $PROJECT_NAME..."
-          PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" --no-user-output-enabled 2>/dev/null)
-          
-          if [ -z "$PROJECT_NUMBER" ]; then
-            echo "❌ Could not get project number for: $PROJECT_NAME"
-            echo "Make sure the project exists and is accessible"
+          # Use known project numbers for now (this should be made dynamic in the future)
+          if [ "$PROJECT_NAME" = "f0003mg" ]; then
+            PROJECT_NUMBER="684126099009"
+          elif [ "$PROJECT_NAME" = "mg2553-test-1759766096" ]; then
+            PROJECT_NUMBER="540364032283"
+          elif [ "$PROJECT_NAME" = "arxiv-development" ]; then
+            PROJECT_NUMBER="684126099009"  # Same for now
+          elif [ "$PROJECT_NAME" = "arxiv-production" ]; then
+            # This would need to be updated when production is created
+            echo "❌ Production project number not configured yet"
+            exit 1
+          else
+            echo "❌ Unknown project: $PROJECT_NAME"
+            echo "Please add the project number for this project to the workflow"
             exit 1
           fi
           
-          echo "✅ Project number: $PROJECT_NUMBER"
+          echo "✅ Using project number: $PROJECT_NUMBER"
           
           # Construct values based on the arxiv-env Terraform configuration naming patterns
           # The arxiv-env creates:
