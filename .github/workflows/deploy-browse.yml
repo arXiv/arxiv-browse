@@ -72,6 +72,9 @@ jobs:
             echo "Custom environment detected, using $ENV_NAME as project name"
           fi
 
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
       - name: Set workload identity values
         run: |
           ENV_NAME="${{ inputs.env }}"
@@ -115,9 +118,6 @@ jobs:
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           project_id: ${{ env.PROJECT_NAME }}
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v3
 
       - name: Set up terraform
         uses: hashicorp/setup-terraform@v3
