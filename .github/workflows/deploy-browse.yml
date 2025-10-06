@@ -75,6 +75,20 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
+      - name: Download service account key
+        run: |
+          echo "Downloading service account key from gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json..."
+          gsutil cp gs://${{ env.TERRAFORM_BUCKET }}/secrets/gcp-sa-key.json /tmp/gcp-sa-key.json
+          echo 'GCP_SA_KEY<<EOF' >> $GITHUB_ENV
+          cat /tmp/gcp-sa-key.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Authenticate with service account key
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ env.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_NAME }}
+
       - name: Set workload identity values
         run: |
           ENV_NAME="${{ inputs.env }}"
@@ -82,8 +96,7 @@ jobs:
           
           echo "Setting workload identity values for project: $PROJECT_NAME"
           
-          # Get project number using gcloud without authentication
-          # This works because gcloud can access public project information
+          # Get project number using gcloud (now authenticated)
           echo "Fetching project number for $PROJECT_NAME..."
           PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_NAME" --format="value(projectNumber)" --no-user-output-enabled 2>/dev/null)
           
@@ -112,12 +125,6 @@ jobs:
           echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
           echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          project_id: ${{ env.PROJECT_NAME }}
 
       - name: Set up terraform
         uses: hashicorp/setup-terraform@v3
