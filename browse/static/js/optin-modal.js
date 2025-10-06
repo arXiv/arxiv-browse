@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
       agreeBtn.style.display = "inline-block";
       optoutBtn.style.display = "none";
       document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
+      document.getElementById('optin-trigger').textContent = 'Help improve arXiv by contributing my reading data';
     }
 
     modal.classList.remove('hidden');
