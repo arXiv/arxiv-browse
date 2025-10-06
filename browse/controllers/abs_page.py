@@ -183,6 +183,7 @@ def get_abs_page(arxiv_id: str) -> Response:
             data={
                 "reason": "deleted",
                 "arxiv_id_latest": arxiv_identifier.id,
+                "arxiv_id": arxiv_identifier.id,
                 "message": ex,
             }
         ) from ex

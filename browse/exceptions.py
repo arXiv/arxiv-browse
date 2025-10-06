@@ -24,10 +24,13 @@ class AbsNotFound(HTTPException):
 
 @handler(AbsNotFound)
 def handle_abs_not_found(error: AbsNotFound) -> Response:
-    """Render the base 404 error page for abs."""
+    """Render the base not found error page for abs."""
     rendered = render_template('abs/404.html', **error.data)
     response: Response = make_response(rendered)
-    response.status_code = status.NOT_FOUND
+    if error.data.get("reason", "unknown") == "deleted":
+        response.status_code = status.GONE
+    else:
+        response.status_code = status.NOT_FOUND
     return response
 
 
