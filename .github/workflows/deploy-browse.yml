@@ -97,11 +97,20 @@ jobs:
             exit 1
           fi
 
-      - name: Re-authenticate with project-specific Workload Identity
+      - name: Authenticate with project-specific Workload Identity
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
+
+      - name: Impersonate project service account for deployment
+        run: |
+          # Set the project service account for deployment
+          PROJECT_SA="deployment-sa@${{ env.PROJECT_NAME }}.iam.gserviceaccount.com"
+          echo "Impersonating project service account: $PROJECT_SA"
+          
+          # Activate the project service account for deployment
+          gcloud config set auth/impersonate_service_account $PROJECT_SA
 
 
       - name: Set up terraform
