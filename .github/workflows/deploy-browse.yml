@@ -97,6 +97,12 @@ jobs:
             exit 1
           fi
 
+      - name: Authenticate with project-specific Workload Identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+
       - name: Pre-create secrets if they don't exist
         run: |
           echo "Checking and creating secrets if they don't exist..."
@@ -113,12 +119,6 @@ jobs:
               echo "✅ Secret already exists: $secret"
             fi
           done
-
-      - name: Authenticate with project-specific Workload Identity
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - name: Impersonate project service account for deployment
         run: |
