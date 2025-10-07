@@ -223,6 +223,11 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 # the necessary permissions to pull images from gcr.io/arxiv-development/arxiv-browse
 # These permissions are typically granted at the project level in arxiv-development
 
+# Get current project info for default service account
+data "google_project" "current" {
+  project_id = var.project_name
+}
+
 # Note: IAM permissions for the deployment service account are managed by arxiv-env script
 # The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
 # - roles/secretmanager.admin (includes secretAccessor and viewer)
@@ -271,9 +276,8 @@ data "google_secret_manager_secret_version" "classic_db_uri_source" {
   project = "arxiv-development"
   secret  = var.classic_db_uri_secret_name
   
-  depends_on = [
-    google_project_iam_member.secret_reader
-  ]
+  # Note: IAM permissions are managed by arxiv-env script
+  # depends_on removed since google_project_iam_member.secret_reader no longer exists
 }
 
 data "google_secret_manager_secret_version" "latexml_db_uri_source" {
@@ -281,9 +285,8 @@ data "google_secret_manager_secret_version" "latexml_db_uri_source" {
   project = "arxiv-development"
   secret  = var.latexml_db_uri_secret_name
   
-  depends_on = [
-    google_project_iam_member.secret_reader
-  ]
+  # Note: IAM permissions are managed by arxiv-env script
+  # depends_on removed since google_project_iam_member.secret_reader no longer exists
 }
 
 
