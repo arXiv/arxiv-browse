@@ -77,7 +77,8 @@ jobs:
       - name: Authenticate with arxiv-development for bucket access
         uses: google-github-actions/auth@v3
         with:
-          credentials_json: ${{ secrets.ARXIV_DEVELOPMENT_SA_KEY }}
+          workload_identity_provider: ${{ vars.PROVIDER_NAME }}
+          service_account: ${{ vars.SERVICE_ACCOUNT }}
 
       - name: Fetch project-specific credentials from bucket
         run: |
@@ -113,7 +114,7 @@ jobs:
             exit 1
           fi
 
-      - name: Authenticate with Workload Identity
+      - name: Re-authenticate with project-specific service account
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
