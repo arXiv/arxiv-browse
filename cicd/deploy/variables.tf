@@ -160,23 +160,24 @@ variable "source_storage_prefix" {
   default     = "gs://arxiv-production-data"
 }
 
-variable "classic_db_uri_secret_name" {
-  description = "Classic DB URI secret name"
-  type        = string
-  default     = "browse-sqlalchemy-db-uri"
+variable "secrets_to_copy" {
+  description = "List of secrets to copy from arxiv-development if they don't exist in target project"
+  type = list(object({
+    name = string
+    description = string
+  }))
+  default = [
+    {
+      name = "browse-sqlalchemy-db-uri"
+      description = "Classic DB URI"
+    },
+    {
+      name = "latexml_db_uri_psycog2"
+      description = "LaTeXML DB URI"
+    }
+  ]
 }
 
-variable "latexml_db_uri_secret_name" {
-  description = "LaTeXML DB URI secret name"
-  type        = string
-  default     = "latexml_db_uri_psycog2"
-}
-
-variable "copy_secrets_from_arxiv_development" {
-  description = "Whether to copy secret values from arxiv-development project"
-  type        = bool
-  default     = false
-}
 
 variable "impersonate_service_account" {
   description = "Service account to impersonate (for development)"

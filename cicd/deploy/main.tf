@@ -140,25 +140,12 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
 
       dynamic "env" {
-        for_each = var.copy_secrets_from_arxiv_development ? [1] : []
+        for_each = { for secret in var.secrets_to_copy : secret.name => secret }
         content {
-          name  = "CLASSIC_DB_URI"
+          name = upper(replace(each.value.name, "-", "_"))
           value_source {
             secret_key_ref {
-              secret  = "projects/${var.project_name}/secrets/${var.classic_db_uri_secret_name}"
-              version = "latest"
-            }
-          }
-        }
-      }
-
-      dynamic "env" {
-        for_each = var.copy_secrets_from_arxiv_development ? [1] : []
-        content {
-          name  = "LATEXML_DB_URI"
-          value_source {
-            secret_key_ref {
-              secret  = "projects/${var.project_name}/secrets/${var.latexml_db_uri_secret_name}"
+              secret  = "projects/${var.project_name}/secrets/${each.value.name}"
               version = "latest"
             }
           }
@@ -236,11 +223,25 @@ data "google_project" "current" {
 # - roles/serviceusage.serviceUsageAdmin
 # - roles/run.developer
 
-# Create secrets in the target project (only when copying secrets)
-# Terraform will handle the case where secrets already exist
-resource "google_secret_manager_secret" "classic_db_uri" {
-  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret_id = var.classic_db_uri_secret_name
+# Check if secrets exist in target project
+data "google_secret_manager_secret" "existing_secrets" {
+  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
+  project  = var.project_name
+  secret_id = each.value.name
+}
+
+# Determine which secrets need to be copied (only if they don't exist in target)
+locals {
+  secrets_to_create = {
+    for secret in var.secrets_to_copy : secret.name => secret
+    if !contains(keys(data.google_secret_manager_secret.existing_secrets), secret.name)
+  }
+}
+
+# Create secrets in target project (only if they don't exist)
+resource "google_secret_manager_secret" "secrets" {
+  for_each = local.secrets_to_create
+  secret_id = each.value.name
   project   = var.project_name
 
   replication {
@@ -254,82 +255,35 @@ resource "google_secret_manager_secret" "classic_db_uri" {
   }
 }
 
-resource "google_secret_manager_secret" "latexml_db_uri" {
-  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret_id = var.latexml_db_uri_secret_name
-  project   = var.project_name
+# Get secret values from arxiv-development (only for secrets we're creating)
+data "google_secret_manager_secret_version" "source_secrets" {
+  for_each = local.secrets_to_create
+  project  = "arxiv-development"
+  secret   = each.value.name
+}
 
-  replication {
-    auto {}
-  }
-
-  depends_on = [google_project_service.secretmanager]
+# Copy secret values to target project
+resource "google_secret_manager_secret_version" "secret_versions" {
+  for_each = local.secrets_to_create
+  secret   = google_secret_manager_secret.secrets[each.key].id
+  secret_data = data.google_secret_manager_secret_version.source_secrets[each.key].secret_data
   
   lifecycle {
-    ignore_changes = [labels, replication]
+    ignore_changes = [secret_data]
   }
 }
 
-# Copy secret values from arxiv-development project (if accessible)
-data "google_secret_manager_secret_version" "classic_db_uri_source" {
-  count   = var.copy_secrets_from_arxiv_development ? 1 : 0
-  project = "arxiv-development"
-  secret  = var.classic_db_uri_secret_name
-  
-  # Note: IAM permissions are managed by arxiv-env script
-  # depends_on removed since google_project_iam_member.secret_reader no longer exists
-}
-
-data "google_secret_manager_secret_version" "latexml_db_uri_source" {
-  count   = var.copy_secrets_from_arxiv_development ? 1 : 0
-  project = "arxiv-development"
-  secret  = var.latexml_db_uri_secret_name
-  
-  # Note: IAM permissions are managed by arxiv-env script
-  # depends_on removed since google_project_iam_member.secret_reader no longer exists
-}
-
-
-resource "google_secret_manager_secret_version" "classic_db_uri_version" {
-  count       = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret      = google_secret_manager_secret.classic_db_uri[0].id
-  secret_data = data.google_secret_manager_secret_version.classic_db_uri_source[0].secret_data
-}
-
-resource "google_secret_manager_secret_version" "latexml_db_uri_version" {
-  count       = var.copy_secrets_from_arxiv_development ? 1 : 0
-  secret      = google_secret_manager_secret.latexml_db_uri[0].id
-  secret_data = data.google_secret_manager_secret_version.latexml_db_uri_source[0].secret_data
-}
-
-# IAM binding for the service account to access secrets
-# Grant access to the default Compute Engine service account when no specific service account is provided
-resource "google_secret_manager_secret_iam_binding" "classic_db_uri" {
-  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
-  project   = var.project_name
-  secret_id = var.classic_db_uri_secret_name
-  role      = "roles/secretmanager.secretAccessor"
+# IAM bindings for all secrets (both existing and newly created)
+resource "google_secret_manager_secret_iam_binding" "secret_access" {
+  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
+  project  = var.project_name
+  secret_id = each.value.name
+  role     = "roles/secretmanager.secretAccessor"
   members = var.service_account_email != "" ? [
     "serviceAccount:${var.service_account_email}",
   ] : [
     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
   ]
-  
-  depends_on = [google_secret_manager_secret.classic_db_uri]
-}
-
-resource "google_secret_manager_secret_iam_binding" "latexml_db_uri" {
-  count     = var.copy_secrets_from_arxiv_development ? 1 : 0
-  project   = var.project_name
-  secret_id = var.latexml_db_uri_secret_name
-  role      = "roles/secretmanager.secretAccessor"
-  members = var.service_account_email != "" ? [
-    "serviceAccount:${var.service_account_email}",
-  ] : [
-    "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
-  ]
-  
-  depends_on = [google_secret_manager_secret.latexml_db_uri]
 }
 
 # Enable Secret Manager API
