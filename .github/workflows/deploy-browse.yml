@@ -106,8 +106,16 @@ jobs:
       - name: Get secret values from arxiv-development
         run: |
           echo "Getting secret values from arxiv-development..."
+          echo "Current authentication:"
+          gcloud auth list
+          echo ""
+          echo "Current project:"
+          gcloud config get-value project
+          echo ""
+          
           # Switch to arxiv-development project to read secrets
           gcloud config set project arxiv-development
+          echo "Switched to arxiv-development project"
           
           # Read secret names from Terraform variables file - extract only the actual secret names
           SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | grep -v 'name = string' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
