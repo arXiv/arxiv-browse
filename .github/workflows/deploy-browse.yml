@@ -97,7 +97,26 @@ jobs:
             exit 1
           fi
 
-      - name: Get secret values from arxiv-development (using default auth)
+      - name: Authenticate with project-specific Workload Identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+
+      - name: Grant cross-project access to arxiv-development
+        run: |
+          echo "Granting cross-project access to arxiv-development..."
+          # Get the current service account
+          CURRENT_SA=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
+          echo "Current service account: $CURRENT_SA"
+          
+          # Grant the service account access to arxiv-development secrets
+          gcloud projects add-iam-policy-binding arxiv-development \
+            --member="serviceAccount:$CURRENT_SA" \
+            --role="roles/secretmanager.secretAccessor"
+          echo "✅ Granted secret access to arxiv-development"
+
+      - name: Get secret values from arxiv-development
         run: |
           echo "Getting secret values from arxiv-development..."
           echo "Current authentication:"
@@ -122,12 +141,6 @@ jobs:
             echo "SECRET_${secret//-/_}_VALUE=$SECRET_VALUE" >> $GITHUB_ENV
             echo "✅ Retrieved secret value: $secret"
           done
-
-      - name: Authenticate with project-specific Workload Identity
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - name: Impersonate project service account for deployment
         run: |
