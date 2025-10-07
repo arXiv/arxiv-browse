@@ -88,7 +88,10 @@ jobs:
 
       - name: Activate service account
         run: |
-          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+          # Set the application default credentials
+          export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
+          # Test authentication
+          gcloud auth print-access-token
 
       - name: Fetch project-specific credentials from bucket
         run: |
