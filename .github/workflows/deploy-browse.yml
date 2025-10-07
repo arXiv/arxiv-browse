@@ -125,8 +125,8 @@ jobs:
       - name: Copy secrets from arxiv-development
         run: |
           echo "Copying secrets from arxiv-development to target project..."
-          # Read secret names from Terraform variables file
-          SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
+          # Read secret names from Terraform variables file - extract only the actual secret names
+          SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | grep -v 'name = string' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
           echo "Found secrets to copy: $SECRETS"
           for secret in $SECRETS; do
             echo "Processing secret: $secret"
