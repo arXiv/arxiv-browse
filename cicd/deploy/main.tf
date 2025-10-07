@@ -223,36 +223,33 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 # the necessary permissions to pull images from gcr.io/arxiv-development/arxiv-browse
 # These permissions are typically granted at the project level in arxiv-development
 
-# Grant current user/service account access to read secrets from arxiv-development
-data "google_client_openid_userinfo" "me" {}
-
 # Get current project info for default service account
 data "google_project" "current" {
   project_id = var.project_name
 }
 
-# Determine if the current user is a service account or regular user
+# Use the project-specific service account for IAM bindings
+# This service account was created by arxiv-env and has the necessary permissions
 locals {
-  is_service_account = can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", data.google_client_openid_userinfo.me.email))
-  member_prefix = local.is_service_account ? "serviceAccount" : "user"
+  project_specific_service_account = "github-actions-sa@${var.project_name}.iam.gserviceaccount.com"
 }
 
 resource "google_project_iam_member" "secret_reader" {
   project = var.project_name
   role    = "roles/secretmanager.secretAccessor"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
+  member  = "serviceAccount:${local.project_specific_service_account}"
 }
 
 resource "google_project_iam_member" "secret_version_reader" {
   project = var.project_name
   role    = "roles/secretmanager.viewer"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
+  member  = "serviceAccount:${local.project_specific_service_account}"
 }
 
 resource "google_project_iam_member" "storage_reader" {
   project = var.project_name
   role    = "roles/storage.objectViewer"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
+  member  = "serviceAccount:${local.project_specific_service_account}"
 }
 
 # Create secrets in the target project (only when copying secrets)

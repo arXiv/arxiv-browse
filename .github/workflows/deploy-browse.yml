@@ -74,26 +74,42 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
-      - name: Check for GitHub environment variables
+      - name: Authenticate with arxiv-development for bucket access
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: arxiv-development
+
+      - name: Fetch project-specific credentials from bucket
         run: |
-          echo "Checking for GitHub environment variables..."
+          echo "Fetching project-specific credentials from bucket..."
           
-          # Check if GitHub environment variables are available
-          if [ -n "${{ vars.PROVIDER_NAME }}" ] && [ -n "${{ vars.SERVICE_ACCOUNT }}" ]; then
-            echo "PROVIDER_NAME=${{ vars.PROVIDER_NAME }}" >> $GITHUB_ENV
-            echo "SERVICE_ACCOUNT=${{ vars.SERVICE_ACCOUNT }}" >> $GITHUB_ENV
-            echo "✅ Using GitHub environment variables"
+          # Download credentials from the project bucket
+          if gsutil cp gs://${{ env.PROJECT_NAME }}/github-credentials.json /tmp/github-credentials.json; then
+            echo "✅ Successfully downloaded credentials from gs://${{ env.PROJECT_NAME }}/github-credentials.json"
+            
+            # Extract PROVIDER_NAME and SERVICE_ACCOUNT from JSON
+            PROVIDER_NAME=$(cat /tmp/github-credentials.json | jq -r '.PROVIDER_NAME')
+            SERVICE_ACCOUNT=$(cat /tmp/github-credentials.json | jq -r '.SERVICE_ACCOUNT')
+            
+            if [ "$PROVIDER_NAME" != "null" ] && [ "$SERVICE_ACCOUNT" != "null" ]; then
+              echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
+              echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
+              echo "✅ Project-specific credentials extracted successfully"
+            else
+              echo "❌ Error: Invalid credentials format in JSON file"
+              exit 1
+            fi
+            
+            # Clean up
+            rm -f /tmp/github-credentials.json
           else
-            echo "❌ Error: No GitHub environment variables found"
+            echo "❌ Error: Failed to download credentials from gs://${{ env.PROJECT_NAME }}/github-credentials.json"
+            echo "This might mean:"
+            echo "1. The project was not created using arxiv-env script"
+            echo "2. The credentials file doesn't exist in the bucket"
+            echo "3. You don't have access to the project bucket"
             echo ""
-            echo "To set up credentials for this project:"
-            echo "1. Create the project using: cd /path/to/arxiv-iac/arxiv-env && ./arxiv-env -project_name ${{ env.PROJECT_NAME }}"
-            echo "2. Copy the PROVIDER_NAME and SERVICE_ACCOUNT values from the output"
-            echo "3. Go to repository Settings → Secrets and variables → Actions"
-            echo "4. Add PROVIDER_NAME and SERVICE_ACCOUNT as repository variables"
-            echo ""
-            echo "The arxiv-env script will automatically store credentials in the project bucket"
-            echo "and grant the necessary permissions for automated deployment."
+            echo "Please ensure the project was created using the arxiv-env script"
             exit 1
           fi
 
