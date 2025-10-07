@@ -122,6 +122,22 @@ jobs:
           echo "Testing impersonation:"
           gcloud auth print-access-token
 
+      - name: Pre-create secrets if they don't exist
+        run: |
+          echo "Checking and creating secrets if they don't exist..."
+          # Read secret names from Terraform variables file
+          SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
+          echo "Found secrets to check: $SECRETS"
+          for secret in $SECRETS; do
+            echo "Checking secret: $secret"
+            if ! gcloud secrets describe "$secret" --project="${{ env.PROJECT_NAME }}" >/dev/null 2>&1; then
+              echo "Creating secret: $secret"
+              gcloud secrets create "$secret" --project="${{ env.PROJECT_NAME }}" --replication-policy="automatic"
+              echo "✅ Created secret: $secret"
+            else
+              echo "✅ Secret already exists: $secret"
+            fi
+          done
 
       - name: Set up terraform
         uses: hashicorp/setup-terraform@v3

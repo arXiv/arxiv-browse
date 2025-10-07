@@ -142,10 +142,10 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       dynamic "env" {
         for_each = { for secret in var.secrets_to_copy : secret.name => secret }
         content {
-          name = upper(replace(each.value.name, "-", "_"))
+          name = upper(replace(each.key, "-", "_"))
           value_source {
             secret_key_ref {
-              secret  = "projects/${var.project_name}/secrets/${each.value.name}"
+              secret  = "projects/${var.project_name}/secrets/${each.key}"
               version = "latest"
             }
           }
@@ -223,24 +223,9 @@ data "google_project" "current" {
 # - roles/serviceusage.serviceUsageAdmin
 # - roles/run.developer
 
-# Check if secrets exist in target project
-data "google_secret_manager_secret" "existing_secrets" {
-  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-  project  = var.project_name
-  secret_id = each.value.name
-}
-
-# Determine which secrets need to be copied (only if they don't exist in target)
-locals {
-  secrets_to_create = {
-    for secret in var.secrets_to_copy : secret.name => secret
-    if !contains(keys(data.google_secret_manager_secret.existing_secrets), secret.name)
-  }
-}
-
 # Create secrets in target project (only if they don't exist)
 resource "google_secret_manager_secret" "secrets" {
-  for_each = local.secrets_to_create
+  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
   secret_id = each.value.name
   project   = var.project_name
 
@@ -257,14 +242,14 @@ resource "google_secret_manager_secret" "secrets" {
 
 # Get secret values from arxiv-development (only for secrets we're creating)
 data "google_secret_manager_secret_version" "source_secrets" {
-  for_each = local.secrets_to_create
+  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
   project  = "arxiv-development"
   secret   = each.value.name
 }
 
 # Copy secret values to target project
 resource "google_secret_manager_secret_version" "secret_versions" {
-  for_each = local.secrets_to_create
+  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
   secret   = google_secret_manager_secret.secrets[each.key].id
   secret_data = data.google_secret_manager_secret_version.source_secrets[each.key].secret_data
   
