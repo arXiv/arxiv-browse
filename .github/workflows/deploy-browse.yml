@@ -85,6 +85,17 @@ jobs:
         run: |
           echo "Fetching project-specific credentials from bucket..."
           
+          # Debug: Check current authentication
+          echo "Current authentication:"
+          gcloud auth list
+          echo ""
+          echo "Current project:"
+          gcloud config get-value project
+          echo ""
+          echo "Testing bucket access:"
+          gsutil ls gs://${{ env.PROJECT_NAME }}/
+          echo ""
+          
           # Download credentials from the project bucket using the authenticated arxiv-development service account
           gsutil cp gs://${{ env.PROJECT_NAME }}/github-credentials.json /tmp/github-credentials.json
           
