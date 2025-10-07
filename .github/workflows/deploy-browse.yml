@@ -88,21 +88,10 @@ jobs:
 
       - name: Activate service account
         run: |
-          # Debug: Check the credentials file
-          echo "Credentials file path: $GOOGLE_APPLICATION_CREDENTIALS"
-          echo "Credentials file exists: $(ls -la $GOOGLE_APPLICATION_CREDENTIALS)"
-          echo "First 200 chars of credentials file:"
-          head -c 200 $GOOGLE_APPLICATION_CREDENTIALS
-          echo ""
-          echo "File type:"
-          file $GOOGLE_APPLICATION_CREDENTIALS
-          echo ""
-          
           # Set the application default credentials
           export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
-          
-          # Try to authenticate with the credentials file
-          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS --project=arxiv-development
+          # Test authentication
+          gcloud auth print-access-token
 
       - name: Fetch project-specific credentials from bucket
         run: |
