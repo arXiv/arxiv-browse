@@ -39,12 +39,12 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       name  = "arxiv-browse"
       image = var.commit_sha != "" ? "${split(":", var.container_image)[0]}:${var.commit_sha}" : var.container_image
 
-      # Add startup command to log secret values
-      command = ["/bin/sh"]
-      args = [
-        "-c",
-        "echo '=== SECRET VALUES ON STARTUP ===' && echo 'BROWSE_SQLALCHEMY_DB_URI: ' && echo \"$BROWSE_SQLALCHEMY_DB_URI\" && echo 'LATEXML_DB_URI_PSYCOG2: ' && echo \"$LATEXML_DB_URI_PSYCOG2\" && echo '=== END SECRET VALUES ===' && exec python -m browse.app"
-      ]
+      # # Add startup command to log secret values
+      # command = ["/bin/sh"]
+      # args = [
+      #   "-c",
+      #   "echo '=== SECRET VALUES ON STARTUP ===' && echo 'BROWSE_SQLALCHEMY_DB_URI: ' && echo \"$BROWSE_SQLALCHEMY_DB_URI\" && echo 'LATEXML_DB_URI_PSYCOG2: ' && echo \"$LATEXML_DB_URI_PSYCOG2\" && echo '=== END SECRET VALUES ===' && exec python -m browse.app"
+      # ]
 
       ports {
         name           = "http1"
