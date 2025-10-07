@@ -78,8 +78,8 @@ jobs:
         uses: google-github-actions/auth@v3
         with:
           project_id: arxiv-development
-          workload_identity_provider: ${{ vars.ARXIV_DEVELOPMENT_PROVIDER_NAME }}
-          service_account: ${{ vars.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.ARXIV_DEVELOPMENT_WIF_PROVIDER }}
+          service_account: ${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT }}
 
       - name: Fetch project-specific credentials from bucket
         run: |
