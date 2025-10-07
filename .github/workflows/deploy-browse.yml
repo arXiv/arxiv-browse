@@ -86,6 +86,10 @@ jobs:
           workload_identity_provider: ${{ vars.ARXIV_DEVELOPMENT_PROVIDER_NAME }}
           service_account: ${{ vars.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT }}
 
+      - name: Activate service account
+        run: |
+          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+
       - name: Fetch project-specific credentials from bucket
         run: |
           echo "Fetching project-specific credentials from bucket..."
