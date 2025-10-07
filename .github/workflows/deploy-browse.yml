@@ -74,6 +74,13 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
+      - name: Authenticate with arxiv-development for bucket access
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.ARXIV_DEVELOPMENT_PROVIDER_NAME }}
+          service_account: ${{ vars.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT }}
+          project_id: arxiv-development
+
       - name: Fetch GitHub Actions credentials from project bucket
         run: |
           echo "Fetching GitHub Actions credentials from project bucket..."
@@ -89,7 +96,7 @@ jobs:
             if [ "$PROVIDER_NAME" != "null" ] && [ "$SERVICE_ACCOUNT" != "null" ]; then
               echo "PROVIDER_NAME=$PROVIDER_NAME" >> $GITHUB_ENV
               echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT" >> $GITHUB_ENV
-              echo "✅ Credentials extracted successfully"
+              echo "✅ Credentials extracted successfully from bucket"
             else
               echo "❌ Error: Invalid credentials format in JSON file"
               exit 1
