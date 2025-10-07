@@ -79,6 +79,7 @@ jobs:
         with:
           workload_identity_provider: ${{ vars.PROVIDER_NAME }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
+          project_id: arxiv-development
 
       - name: Fetch project-specific credentials from bucket
         run: |
