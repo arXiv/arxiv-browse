@@ -97,13 +97,7 @@ jobs:
             exit 1
           fi
 
-      - name: Authenticate with project-specific Workload Identity
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-
-      - name: Get secret values from arxiv-development
+      - name: Get secret values from arxiv-development (using default auth)
         run: |
           echo "Getting secret values from arxiv-development..."
           echo "Current authentication:"
@@ -128,6 +122,12 @@ jobs:
             echo "SECRET_${secret//-/_}_VALUE=$SECRET_VALUE" >> $GITHUB_ENV
             echo "✅ Retrieved secret value: $secret"
           done
+
+      - name: Authenticate with project-specific Workload Identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.PROVIDER_NAME }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - name: Impersonate project service account for deployment
         run: |
