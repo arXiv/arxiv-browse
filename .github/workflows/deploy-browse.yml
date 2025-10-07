@@ -103,18 +103,10 @@ jobs:
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
 
-      - name: Grant cross-project access to arxiv-development
+      - name: Show service account being used
         run: |
-          echo "Granting cross-project access to arxiv-development..."
-          # Get the current service account
-          CURRENT_SA=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
-          echo "Current service account: $CURRENT_SA"
-          
-          # Grant the service account access to arxiv-development secrets
-          gcloud projects add-iam-policy-binding arxiv-development \
-            --member="serviceAccount:$CURRENT_SA" \
-            --role="roles/secretmanager.secretAccessor"
-          echo "✅ Granted secret access to arxiv-development"
+          echo "Service account being used: ${{ env.SERVICE_ACCOUNT }}"
+          echo "This is the account that needs access to arxiv-development secrets"
 
       - name: Get secret values from arxiv-development
         run: |
