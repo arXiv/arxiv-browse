@@ -43,7 +43,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       command = ["/bin/sh"]
       args = [
         "-c",
-        "echo '=== SECRET VALUES ON STARTUP ===' && echo 'BROWSE_SQLALCHEMY_DB_URI: '$${BROWSE_SQLALCHEMY_DB_URI}' && echo 'LATEXML_DB_URI_PSYCOG2: '$${LATEXML_DB_URI_PSYCOG2}' && echo '=== END SECRET VALUES ===' && exec python -m browse.app"
+        "echo '=== SECRET VALUES ON STARTUP ===' && echo 'BROWSE_SQLALCHEMY_DB_URI:' && echo $$BROWSE_SQLALCHEMY_DB_URI && echo 'LATEXML_DB_URI_PSYCOG2:' && echo $$LATEXML_DB_URI_PSYCOG2 && echo '=== END SECRET VALUES ===' && exec python -m browse.app"
       ]
 
       ports {
