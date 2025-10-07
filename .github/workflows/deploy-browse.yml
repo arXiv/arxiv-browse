@@ -109,8 +109,18 @@ jobs:
           PROJECT_SA="deployment-sa@${{ env.PROJECT_NAME }}.iam.gserviceaccount.com"
           echo "Impersonating project service account: $PROJECT_SA"
           
-          # Activate the project service account for deployment
+          # Set impersonation for all gcloud commands
+          echo "GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=$PROJECT_SA" >> $GITHUB_ENV
+          
+          # Also set it in gcloud config
           gcloud config set auth/impersonate_service_account $PROJECT_SA
+          
+          # Verify impersonation is working
+          echo "Current authenticated account:"
+          gcloud auth list
+          echo ""
+          echo "Testing impersonation:"
+          gcloud auth print-access-token
 
 
       - name: Set up terraform
