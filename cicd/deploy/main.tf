@@ -142,10 +142,10 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       dynamic "env" {
         for_each = { for secret in var.secrets_to_copy : secret.name => secret }
         content {
-          name = upper(replace(each.key, "-", "_"))
+          name = upper(replace(env.key, "-", "_"))
           value_source {
             secret_key_ref {
-              secret  = "projects/${var.project_name}/secrets/${each.key}"
+              secret  = "projects/${var.project_name}/secrets/${env.key}"
               version = "latest"
             }
           }
