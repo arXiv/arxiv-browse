@@ -106,6 +106,9 @@ jobs:
       - name: Get secret values from arxiv-development
         run: |
           echo "Getting secret values from arxiv-development..."
+          # Switch to arxiv-development project to read secrets
+          gcloud config set project arxiv-development
+          
           # Read secret names from Terraform variables file - extract only the actual secret names
           SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | grep -v 'name = string' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
           echo "Found secrets to get: $SECRETS"
@@ -129,6 +132,9 @@ jobs:
           
           # Also set it in gcloud config
           gcloud config set auth/impersonate_service_account $PROJECT_SA
+          
+          # Switch back to target project
+          gcloud config set project ${{ env.PROJECT_NAME }}
           
           # Verify impersonation is working
           echo "Current authenticated account:"
