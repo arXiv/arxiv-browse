@@ -223,42 +223,7 @@ data "google_project" "current" {
 # - roles/serviceusage.serviceUsageAdmin
 # - roles/run.developer
 
-# Create secrets in target project (only if they don't exist)
-resource "google_secret_manager_secret" "secrets" {
-  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-  secret_id = each.value.name
-  project   = var.project_name
-
-  replication {
-    auto {}
-  }
-
-  depends_on = [google_project_service.secretmanager]
-  
-  lifecycle {
-    ignore_changes = [labels, replication]
-  }
-}
-
-# Get secret values from arxiv-development (only for secrets we're creating)
-data "google_secret_manager_secret_version" "source_secrets" {
-  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-  project  = "arxiv-development"
-  secret   = each.value.name
-}
-
-# Copy secret values to target project
-resource "google_secret_manager_secret_version" "secret_versions" {
-  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-  secret   = google_secret_manager_secret.secrets[each.key].id
-  secret_data = data.google_secret_manager_secret_version.source_secrets[each.key].secret_data
-  
-  lifecycle {
-    ignore_changes = [secret_data]
-  }
-}
-
-# IAM bindings for all secrets (both existing and newly created)
+# IAM bindings for secrets (secrets are created by the workflow)
 resource "google_secret_manager_secret_iam_binding" "secret_access" {
   for_each = { for secret in var.secrets_to_copy : secret.name => secret }
   project  = var.project_name
