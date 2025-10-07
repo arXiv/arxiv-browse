@@ -223,37 +223,13 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 # the necessary permissions to pull images from gcr.io/arxiv-development/arxiv-browse
 # These permissions are typically granted at the project level in arxiv-development
 
-# Grant current user/service account access to read secrets from arxiv-development
-data "google_client_openid_userinfo" "me" {}
-
-# Get current project info for default service account
-data "google_project" "current" {
-  project_id = var.project_name
-}
-
-# Determine if the current user is a service account or regular user
-locals {
-  is_service_account = can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", data.google_client_openid_userinfo.me.email))
-  member_prefix = local.is_service_account ? "serviceAccount" : "user"
-}
-
-resource "google_project_iam_member" "secret_reader" {
-  project = var.project_name
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
-}
-
-resource "google_project_iam_member" "secret_version_reader" {
-  project = var.project_name
-  role    = "roles/secretmanager.viewer"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
-}
-
-resource "google_project_iam_member" "storage_reader" {
-  project = var.project_name
-  role    = "roles/storage.objectViewer"
-  member  = "${local.member_prefix}:${data.google_client_openid_userinfo.me.email}"
-}
+# Note: IAM permissions for the deployment service account are managed by arxiv-env script
+# The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
+# - roles/secretmanager.admin (includes secretAccessor and viewer)
+# - roles/storage.objectViewer
+# - roles/resourcemanager.projectIamAdmin
+# - roles/serviceusage.serviceUsageAdmin
+# - roles/run.developer
 
 # Create secrets in the target project (only when copying secrets)
 # Terraform will handle the case where secrets already exist
