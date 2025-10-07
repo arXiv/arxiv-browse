@@ -85,6 +85,9 @@ jobs:
         run: |
           echo "Fetching project-specific credentials from bucket..."
           
+          # Set the project context to the target project for bucket access
+          gcloud config set project ${{ env.PROJECT_NAME }}
+          
           # Download credentials from the project bucket
           if gsutil cp gs://${{ env.PROJECT_NAME }}/github-credentials.json /tmp/github-credentials.json; then
             echo "✅ Successfully downloaded credentials from gs://${{ env.PROJECT_NAME }}/github-credentials.json"
