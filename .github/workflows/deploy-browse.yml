@@ -74,23 +74,23 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
-      - name: Check for GitHub environment variables
+      - name: Check for GitHub secrets
         run: |
-          echo "Checking for GitHub environment variables..."
+          echo "Checking for GitHub secrets..."
           
-          # Check if GitHub environment variables are available
-          if [ -n "${{ vars.PROVIDER_NAME }}" ] && [ -n "${{ vars.SERVICE_ACCOUNT }}" ]; then
-            echo "PROVIDER_NAME=${{ vars.PROVIDER_NAME }}" >> $GITHUB_ENV
-            echo "SERVICE_ACCOUNT=${{ vars.SERVICE_ACCOUNT }}" >> $GITHUB_ENV
-            echo "✅ Using GitHub environment variables"
+          # Check if GitHub secrets are available
+          if [ -n "${{ secrets.ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET }}" ] && [ -n "${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET }}" ]; then
+            echo "PROVIDER_NAME=${{ secrets.ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET }}" >> $GITHUB_ENV
+            echo "SERVICE_ACCOUNT=${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET }}" >> $GITHUB_ENV
+            echo "✅ Using GitHub secrets"
           else
-            echo "❌ Error: No GitHub environment variables found"
+            echo "❌ Error: No GitHub secrets found"
             echo ""
             echo "To set up credentials for this project:"
             echo "1. Create the project using: cd /path/to/arxiv-iac/arxiv-env && ./arxiv-env -project_name ${{ env.PROJECT_NAME }}"
             echo "2. Copy the PROVIDER_NAME and SERVICE_ACCOUNT values from the output"
             echo "3. Go to repository Settings → Secrets and variables → Actions"
-            echo "4. Add PROVIDER_NAME and SERVICE_ACCOUNT as repository variables"
+            echo "4. Add ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET and ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET as repository secrets"
             echo ""
             echo "The arxiv-env script will automatically store credentials in the project bucket"
             echo "and grant the necessary permissions for automated deployment."
