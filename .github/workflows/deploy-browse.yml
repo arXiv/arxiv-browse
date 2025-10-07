@@ -103,23 +103,6 @@ jobs:
           workload_identity_provider: ${{ env.PROVIDER_NAME }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
 
-      - name: Pre-create secrets if they don't exist
-        run: |
-          echo "Checking and creating secrets if they don't exist..."
-          # Read secret names from Terraform variables file
-          SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
-          echo "Found secrets to check: $SECRETS"
-          for secret in $SECRETS; do
-            echo "Checking secret: $secret"
-            if ! gcloud secrets describe "$secret" --project="${{ env.PROJECT_NAME }}" >/dev/null 2>&1; then
-              echo "Creating secret: $secret"
-              gcloud secrets create "$secret" --project="${{ env.PROJECT_NAME }}" --replication-policy="automatic"
-              echo "✅ Created secret: $secret"
-            else
-              echo "✅ Secret already exists: $secret"
-            fi
-          done
-
       - name: Impersonate project service account for deployment
         run: |
           # Set the project service account for deployment
@@ -138,6 +121,27 @@ jobs:
           echo ""
           echo "Testing impersonation:"
           gcloud auth print-access-token
+
+      - name: Copy secrets from arxiv-development
+        run: |
+          echo "Copying secrets from arxiv-development to target project..."
+          # Read secret names from Terraform variables file
+          SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
+          echo "Found secrets to copy: $SECRETS"
+          for secret in $SECRETS; do
+            echo "Processing secret: $secret"
+            # Check if secret exists in target project
+            if ! gcloud secrets describe "$secret" --project="${{ env.PROJECT_NAME }}" >/dev/null 2>&1; then
+              echo "Secret doesn't exist in target project, creating it..."
+              # Get the secret value from arxiv-development
+              SECRET_VALUE=$(gcloud secrets versions access latest --secret="$secret" --project="arxiv-development")
+              # Create the secret in target project with the actual value
+              echo "$SECRET_VALUE" | gcloud secrets create "$secret" --project="${{ env.PROJECT_NAME }}" --replication-policy="automatic" --data-file=-
+              echo "✅ Created and populated secret: $secret"
+            else
+              echo "✅ Secret already exists in target project: $secret"
+            fi
+          done
 
       - name: Set up terraform
         uses: hashicorp/setup-terraform@v3
