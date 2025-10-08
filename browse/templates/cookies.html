@@ -83,7 +83,7 @@ preferences.
 {% endif %}
 
 <hr>
-
+{% if optin %}
 <h2>Opt-in Data Collection for Research (Cornell University)</h2>
 
 <p>arXiv is working with academic researchers to investigate ways to improve
@@ -133,5 +133,6 @@ preferences.
     checkOptInParticipation();
   });
 </script>
+{% endif %}
 
 {% endblock content %}
