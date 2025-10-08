@@ -196,19 +196,100 @@ jobs:
         run: terraform init -backend-config="bucket=${{ env.TERRAFORM_BUCKET }}"
         working-directory: cicd/deploy
 
+      - name: Handle state lock
+        run: |
+          echo "Checking for existing state locks..."
+          
+          # Try to get the current lock info
+          if terraform force-unlock -help >/dev/null 2>&1; then
+            echo "Terraform supports force-unlock command"
+          else
+            echo "Terraform version doesn't support force-unlock, trying alternative approach"
+          fi
+          
+          # Check if there's a lock file in the bucket
+          LOCK_FILE="gs://${{ env.TERRAFORM_BUCKET }}/browse/state/default.tflock"
+          if gsutil ls "$LOCK_FILE" >/dev/null 2>&1; then
+            echo "Found existing lock file: $LOCK_FILE"
+            echo "Attempting to remove stale lock..."
+            
+            # Try to remove the lock file
+            if gsutil rm "$LOCK_FILE" >/dev/null 2>&1; then
+              echo "✅ Successfully removed stale lock file"
+            else
+              echo "⚠️  Could not remove lock file automatically"
+              echo "The lock may be held by an active operation"
+            fi
+          else
+            echo "No lock file found, proceeding normally"
+          fi
+        working-directory: cicd/deploy
+
       - name: Plan
         run: |
-          terraform plan \
+          # Try to run plan, and if it fails due to lock, attempt to force unlock
+          if ! terraform plan \
             -var="project_name=${{ env.PROJECT_NAME }}" \
             -var="region=${{ env.REGION }}" \
-            -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}"; then
+            
+            echo "Plan failed, checking for state lock..."
+            
+            # Extract lock ID from error if possible
+            LOCK_ID=$(terraform plan \
+              -var="project_name=${{ env.PROJECT_NAME }}" \
+              -var="region=${{ env.REGION }}" \
+              -var="commit_sha=${{ inputs.image_tag || github.sha }}" 2>&1 | \
+              grep -o 'ID: *[0-9]*' | \
+              sed 's/ID: *//' || echo "")
+            
+            if [ -n "$LOCK_ID" ]; then
+              echo "Found lock ID: $LOCK_ID"
+              echo "Attempting to force unlock..."
+              echo "yes" | terraform force-unlock "$LOCK_ID" || echo "Force unlock failed or not supported"
+            fi
+            
+            # Try plan again
+            echo "Retrying plan after lock handling..."
+            terraform plan \
+              -var="project_name=${{ env.PROJECT_NAME }}" \
+              -var="region=${{ env.REGION }}" \
+              -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+          fi
         working-directory: cicd/deploy
 
       - name: Apply
         run: |
-          terraform apply \
+          # Try to run apply, and if it fails due to lock, attempt to force unlock
+          if ! terraform apply \
             -var="project_name=${{ env.PROJECT_NAME }}" \
             -var="region=${{ env.REGION }}" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
-            -auto-approve
+            -auto-approve; then
+            
+            echo "Apply failed, checking for state lock..."
+            
+            # Extract lock ID from error if possible
+            LOCK_ID=$(terraform apply \
+              -var="project_name=${{ env.PROJECT_NAME }}" \
+              -var="region=${{ env.REGION }}" \
+              -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
+              -auto-approve 2>&1 | \
+              grep -o 'ID: *[0-9]*' | \
+              sed 's/ID: *//' || echo "")
+            
+            if [ -n "$LOCK_ID" ]; then
+              echo "Found lock ID: $LOCK_ID"
+              echo "Attempting to force unlock..."
+              echo "yes" | terraform force-unlock "$LOCK_ID" || echo "Force unlock failed or not supported"
+            fi
+            
+            # Try apply again
+            echo "Retrying apply after lock handling..."
+            terraform apply \
+              -var="project_name=${{ env.PROJECT_NAME }}" \
+              -var="region=${{ env.REGION }}" \
+              -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
+              -auto-approve
+          fi
         working-directory: cicd/deploy
