@@ -22,13 +22,12 @@ document.addEventListener('DOMContentLoaded', function () {
       optoutBtn.style.display = "inline-block";
       document.getElementById('optin-trigger').textContent = 'You opted in to help arXiv';
     } else {
-      title.textContent = "Help Improve arXiv";
+      title.textContent = "Contribute your reading data to improve arXiv";
       paragraphs[0].textContent = "arXiv is working with academic researchers to investigate ways to improve the service for our users. This requires a rich dataset to better inform the research. Users who wish to contribute to the future of arXiv may opt in to allow arXiv to use their reading data for research purposes. By clicking ‘I agree’ below, you consent to your reading data being collected, retained, and processed by arXiv and shared with researchers conducting research in the public interest. Reading data will never be shared publicly or otherwise incorporated into public systems in a personally identifiable format. Research use cases include developing privacy-preserving recommendation systems for arXiv.";
       paragraphs[1].style.display = "block";
       agreeBtn.style.display = "inline-block";
       optoutBtn.style.display = "none";
       document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
-      document.getElementById('optin-trigger').textContent = 'Help improve arXiv by contributing my reading data';
     }
 
     modal.classList.remove('hidden');
