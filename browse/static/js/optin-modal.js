@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
       paragraphs[1].style.display = "block";
       agreeBtn.style.display = "inline-block";
       optoutBtn.style.display = "none";
-      document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
+      document.getElementById('optin-trigger').textContent = 'Help improve arXiv by contributing reading data';
     }
 
     modal.classList.remove('hidden');
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('optin-optout').addEventListener('click', function() {
     document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.getElementById('optin-modal').classList.add('hidden');
-    document.getElementById('optin-trigger').textContent = 'Contribute my reading data to research';
+    document.getElementById('optin-trigger').textContent = 'Help improve arXiv by contributing reading data';
   });
 });
 
