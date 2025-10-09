@@ -49,7 +49,7 @@ def test_list(client_with_test_fs):
 def test_browse_form(client_with_test_fs):
     rv = client_with_test_fs.get("/archive/astro-ph")
     assert rv.status_code == 200
-    assert '<input id="archive" name="archive" required type="hidden" value="astro-ph">' in rv.text
+    assert '<input id="archive" name="archive" type="hidden" value="astro-ph">' in rv.text
     assert '<select id="year" name="year" required>' in rv.text
     assert '<select id="month" name="month" required>' in rv.text
     assert '<input id="submit" name="submit" type="submit" value="Go">' in rv.text

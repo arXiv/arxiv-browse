@@ -8,7 +8,7 @@ from arxiv.identifier import Identifier, IdentifierException
 from arxiv.document.version import VersionEntry
 from arxiv.document.metadata import DocMetadata
 from arxiv.files import fileformat
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
@@ -77,11 +77,11 @@ def default_resp_fn(file: FileObj,
 
 
     resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
+    resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
     if arxiv_id.has_version: 
-        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
+        resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
+        resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}-current"])
     add_mimetype(resp, file.name)
     add_time_headers(resp, file, arxiv_id)
     return resp
@@ -113,9 +113,9 @@ def pdf_resp_fn(file: FileObj,
     resp.headers["Content-Disposition"] = f"inline; filename=\"{filename}\""
     resp.headers["Link"] = f"<https://arxiv.org/pdf/{arxiv_id.id}>; rel='canonical'"
     if arxiv_id.has_version: 
-        resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.idv}"])
+        resp.headers=b_add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.id}-current"])
+        resp.headers=b_add_surrogate_key(resp.headers,["pdf",f"pdf-{arxiv_id.id}-current"])
     return resp
 
 
@@ -184,11 +184,11 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             resp=resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
     # add the surrogate key headers for all cases where the arxiv id parsed
-    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
+    resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
     if arxiv_id.has_version:
-        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
+        resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id_str}-current"])
+        resp.headers=b_add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id_str}-current"])
     return resp
 
 
@@ -206,7 +206,7 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         resp= _html_source_listing_response(file_list, arxiv_id)
     elif isinstance(file_list, FileObj): #converted via latexml
         resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
-        resp.headers=add_surrogate_key(resp.headers,["html-latexml"])
+        resp.headers=b_add_surrogate_key(resp.headers,["html-latexml"])
         if _is_html_name(file_list):
             resp.headers['X-Robots-Tag'] = 'nofollow'
             resp.headers["Link"] = f"<https://arxiv.org/html/{arxiv_id.id}>; rel='canonical'"
@@ -215,9 +215,9 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         resp= unavailable(arxiv_id)
 
     if arxiv_id.has_version:
-        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.idv}"])
+        resp.headers=b_add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.id}-current"])
+        resp.headers=b_add_surrogate_key(resp.headers,["html",f"html-{arxiv_id.id}-current"])
     return resp
 
 
@@ -253,7 +253,7 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
                                                 arxiv_id=arxiv_id, file_names=file_names), 200,
                                 {"Surrogate-Control": maxage(arxiv_id.has_version)})
     
-    resp.headers=add_surrogate_key(resp.headers,["html-native"])
+    resp.headers=b_add_surrogate_key(resp.headers,["html-native"])
     return resp
 
 
@@ -283,9 +283,9 @@ def _ps_response(file: FileObj,
     resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
     resp.headers["Content-Encoding"] = "gzip"  # the file is a gzip on disk
     if arxiv_id.has_version:
-        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.idv}"])
+        resp.headers=b_add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.idv}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.id}-current"])
+        resp.headers=b_add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.id}-current"])
     return resp
 
 def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
