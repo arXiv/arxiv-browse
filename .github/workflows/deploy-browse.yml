@@ -149,12 +149,12 @@ jobs:
           # Switch back to target project
           gcloud config set project ${{ env.PROJECT_NAME }}
           
-          # Verify impersonation is working
-          echo "Current authenticated account:"
-          gcloud auth list
-          echo ""
-          echo "Testing impersonation:"
-          gcloud auth print-access-token
+          # # Verify impersonation is working
+          # echo "Current authenticated account:"
+          # gcloud auth list
+          # echo ""
+          # echo "Testing impersonation:"
+          # gcloud auth print-access-token
 
       - name: Create secrets in target project
         run: |
