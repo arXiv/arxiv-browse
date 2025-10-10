@@ -6,6 +6,7 @@ from arxiv.files import FileObj
 
 from arxiv.files.object_store import ObjectStore, GsObjectStore, LocalObjectStore
 
+_stores: dict[str, ObjectStore] = {}
 
 def _path_to_store(path: str) -> ObjectStore:
     uri = urlparse(path)
@@ -32,8 +33,9 @@ def one_time_file(path:str) -> FileObj:
 
 def get_global_object_store(path: str, global_name: str) -> ObjectStore:
     """Creates an object store from given path."""
-    store = globals().get(global_name)
+    global _stores
+    store = _stores.get(global_name, None)
     if store is None:
         store = _path_to_store(path)
-        globals()[global_name] = store
+        _stores[global_name] = store
     return store

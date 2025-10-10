@@ -7,7 +7,7 @@ from flask import Blueprint, redirect, url_for, Response, render_template, reque
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.controllers import check_supplied_identifier
-from browse.controllers.files.dissemination import get_html_response, get_pdf_resp
+from browse.controllers.files.dissemination import get_html_response, get_pdf_resp, get_ps_response
 from browse.services.documents import get_doc_service
 
 blueprint = Blueprint('dissemination', __name__)
@@ -36,7 +36,7 @@ def redirect_pdf(arxiv_id: str, archive=None):  # type: ignore
 
     """
     arxiv_id = f"{archive}/{arxiv_id}" if archive else arxiv_id
-    return redirect(url_for('.pdf', arxiv_id=arxiv_id, _external=True), 301)
+    return redirect(url_for('.pdf', arxiv_id=arxiv_id), 301)
 
 
 @blueprint.route("/pdf/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
@@ -57,7 +57,7 @@ def pdf(arxiv_id: str, archive=None):  # type: ignore
     """
 
     if request.query_string:  # redirect to strip off any useless query strings
-        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive, _external=True), 301)
+        return redirect(url_for('.pdf', arxiv_id=arxiv_id, archive=archive), 301)
     return get_pdf_resp(arxiv_id, archive)
 
 
@@ -106,12 +106,13 @@ def dvi(arxiv_id: str) -> Response:
 @blueprint.route("/html/<string:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/html/<string:archive>/<path:arxiv_id>", methods=['GET', 'HEAD'])
 @blueprint.route("/html/<string:arxiv_id>/", methods=['GET', 'HEAD'])
-def html(arxiv_id: str, archive=None):  # type: ignore
+def html(arxiv_id: str, archive: Optional[str] = None):  # type: ignore
     """get html for article"""
     return get_html_response(arxiv_id, archive)
 
 
-@blueprint.route("/ps/<arxiv_id>")
-def ps(arxiv_id: str) -> Response:
+@blueprint.route("/ps/<string:archive>/<string:arxiv_id>", methods=['GET', 'HEAD'])
+@blueprint.route("/ps/<string:arxiv_id>", methods=['GET', 'HEAD'])
+def ps(arxiv_id: str, archive: Optional[str] = None) -> Response:
     """Get ps for article."""
-    raise InternalServerError(f"Not yet implemented {arxiv_id}")
+    return get_ps_response(arxiv_id, archive)

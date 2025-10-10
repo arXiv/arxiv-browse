@@ -15,7 +15,7 @@ from arxiv.document.exceptions import (
 from arxiv.document.metadata import DocMetadata, VersionEntry
 from arxiv.files import FileObj, fileformat
 from arxiv.files.key_patterns import (ps_cache_pdf_path,
-                                      ps_cache_ps_path, ps_cache_html_path, latexml_html_path)
+                                      ps_cache_html_path, latexml_html_path)
 from arxiv.files.object_store import ObjectStore
 from arxiv.formats import (
     formats_from_source_file_name, formats_from_source_flag)
@@ -61,6 +61,7 @@ Conditions = Union[
             "UNAVAILABLE",  # Where the PDF unexpectedly does not exist. ONLY return this when there is source, and it
             # should be able to be built, but it unexpectedly cannot be built
             "NOT_PDF",  # format that doesn't serve a pdf
+            "NOT_PS",  # format that doesn't serve a ps
             "NO_HTML",  # not native HTML, no HTML conversion available
             "NOT_PUBLIC"  # where the author has decided not to make the source of the paper public
             ],
@@ -439,20 +440,19 @@ class ArticleStore:
                 return "UNAVAILABLE"
 
     def _ps(self, arxiv_id: Identifier, docmeta: DocMetadata, version: VersionEntry) -> FormatHandlerReturn:
-        cached_ps = self.cache_store.to_obj(ps_cache_ps_path(arxiv_id, version.version))
-        if cached_ps:
-            return cached_ps
-
-        current = version.is_current or not arxiv_id.has_version or arxiv_id.version == docmeta.highest_version()
-        src_ps = self.source_store.get_src_ps(arxiv_id, current)
-        if src_ps and src_ps.exists():
-            return src_ps
-
-        if not self.source_store.source_exists(arxiv_id, docmeta):
-            return "NO_SOURCE"
-
-        logger.debug("No PS found for %s, source exists and is not WDR", arxiv_id.idv)
-        return "UNAVAILABLE"
+        if version.source_format == "ps":
+            src_ps = self.source_store.get_src_ps(arxiv_id,
+                                                  version.is_current or
+                                                  not arxiv_id.has_version or
+                                                  arxiv_id.version == docmeta.highest_version())
+            if src_ps:
+                return src_ps
+            elif not self.source_store.source_exists(arxiv_id, docmeta):
+                return "NO_SOURCE"
+            else:
+                return "UNAVAILABLE"
+        else:
+           return "NOT_PS"
 
     def _e_print(self,
                  arxiv_id: Identifier,

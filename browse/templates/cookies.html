@@ -83,15 +83,21 @@ preferences.
 {% endif %}
 
 <hr>
-
+{% if optin %}
 <h2>Opt-in Data Collection for Research (Cornell University)</h2>
 
-<p>ArXiv and Cornell University researchers are in the process of developing privacy-preserving 
-  recommendation systems for ArXiv. By clicking on the "Opt In" link below, you consent to your reading 
-  data to be collected, retained, and processed by ArXiv and Cornell University researchers.<br>
-  No other researchers or institutions will have access to this data, and reading data 
-  will never be shared publicly or otherwise incorporated into public systems in 
-  a personally identifiable format.</p>
+<p>arXiv is working with academic researchers to investigate ways to improve
+  the service for our users. This requires a rich dataset to better inform
+  the research. Users who wish to contribute to the future of arXiv may opt
+  in to allow arXiv to use their reading data for research purposes. By clicking
+  ‘I agree’ below, you consent to your reading data being collected, retained,
+  and processed by arXiv and shared with researchers conducting research in
+  the public interest. Reading data will never be shared publicly or otherwise
+  incorporated into public systems in a personally identifiable format.
+  Research use cases include developing privacy-preserving recommendation
+  systems for arXiv. For more information, see the arXiv Privacy Policy
+  <a target="_blank" href="https://info.arxiv.org/help/policies/privacy_policy.html">arXiv Privacy Policy</a>.
+</p>
 
 <p>Contribute my reading data to research:&nbsp;<a id="opt-in-registration" href="#"><strong>CLICK HERE TO OPT IN</strong></a>
   <span id="opt-in-enrolled" style="display:none;"><strong>ENROLLED</strong>&nbsp;<a id="opt-out" href="#">(OPT OUT?)</a></span></p>
@@ -127,5 +133,6 @@ preferences.
     checkOptInParticipation();
   });
 </script>
+{% endif %}
 
 {% endblock content %}

@@ -28,6 +28,20 @@
   {% endif %}
 {%- endmacro -%}
 
+{% macro source_format_str(source_format="") %}
+{% if source_format=="tex" or source_format == "pdftex"%}
+TeX Source
+{% elif source_format == "ps" %}
+PS Source
+{% elif source_format == "html" %}
+HTML Source
+{% elif source_format == "docx" %}
+DOCX Source
+{% else %}
+Source
+{% endif %}
+{% endmacro %}
+
 {%- macro generate_download_links(format_list=[]) -%}
 <ul>
   <div id="download-button-info" hidden>
@@ -54,8 +68,8 @@
       {%- if format == 'latexml' -%}
   <li><a href="{{ latexml_url }}" class="abs-button" id="latexml-download-link">HTML (experimental)</a></li>
       {%- endif -%}
-      {%- if format == 'src' and current and not encrypted-%}
-  <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">TeX Source</a></li>
+      {%- if format == 'src' and not withdrawn and not encrypted-%}
+  <li><a href="{{url_for('src.src', arxiv_id_str=requested_id)}}" class="abs-button download-eprint">{{source_format_str(source_format)}} </a></li>
       {%- elif format == 'html' -%}
   <li><a href="{{url_for('dissemination.html', arxiv_id=requested_id)}}" accesskey="f" class="abs-button download-html">{{ format.upper() }}</a></li>
       {%- elif format == 'other' -%}

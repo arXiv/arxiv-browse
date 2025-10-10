@@ -58,6 +58,7 @@ cases = [
     ["cs/0012007", "cs0012007v3.tar.gz", ""],
     # ["cs/0011004", "cs-0011004"], # single file gz paper but bad gzip file
     # ["cs/0011004v1", "cs-0011004v1"],  # single file gz paper but bad gzip file
+    ["2403.10561", "arXiv-2403.10561v1.html.gz", "html source"],
 ]
 
 @pytest.mark.parametrize("path,paperid,expected_file,desc", [ ["/src/"]+c for c in cases] )
@@ -138,7 +139,9 @@ def test_src_headers(client_with_test_fs):
     head=rv.headers["Surrogate-Key"]
     assert "src" in head
     assert "paper-id-1601.04345-current" in head
+    assert "src-1601.04345-current" in head
     assert "paper-id-1601.04345v" not in head
+    assert "src-1601.04345v" not in head
     assert "paper-id-1601.04345 " in head+" "
     assert "max-age=31536000" in rv.headers.get("Surrogate-Control")
 
@@ -146,7 +149,9 @@ def test_src_headers(client_with_test_fs):
     head=rv.headers["Surrogate-Key"]
     assert "src" in head
     assert "paper-id-1601.04345-current" not in head
+    assert "src-1601.04345-current" not in head
     assert "paper-id-1601.04345v2" in head
+    assert "src-1601.04345v2" in head
     assert "paper-id-1601.04345 " in head+" "
     assert "max-age=31536000" in rv.headers.get("Surrogate-Control")
 

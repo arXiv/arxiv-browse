@@ -24,44 +24,11 @@ Now includes fonts, see our <a href="https://info.arxiv.org/help/pdf">PDF help</
 {% endif %}
 
 {% if ps %}
-<dt><b>PostScript using Bitmapped Fonts</b></dt>
-
-<dd><b>Select resolution:</b>
-
-<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
-Use <select name="dpi">
-  <option selected="selected">600</option>
-  <option>300</option>
-</select>
-
-<input type="hidden" name="font" value="bitmapped" />
-dpi Bitmapped Fonts:
-<input type="submit" value="Download PostScript" />
-</form>
-
-Note: a resolution other than the default 600dpi will
-occasionally require new fonts to be created.  This can take a while
-<br /><br />
-</dd>
-
-<dt><b>PostScript using Type I Fonts</b></dt>
-<dd>
-<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
-Now includes fonts, see our <a href="https://info.arxiv.org/help/pstypeI.html">Type I help</a>.
-<input type="hidden" name="fname" value="cm" /><!-- remove this when only cm used -->
-<input type="hidden" name="font" value="TypeI" />
-<input type="submit" value="Download PostScript" />
-</form>
-<br />
-</dd>
-{% endif %}
-
-{% if ps %}
 <dt><b>Author supplied PostScript</b></dt>
 <dd>
-<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}})" method="get">
+<form action="{{url_for('dissemination.ps', arxiv_id=arxiv_idv)}}" method="get">
 Delivered via an additional HTML page if there are multiple files,
-otherwise as a <b>gzipped PostScript</b> (.ps.gz) file.
+otherwise as a <b>PostScript</b> (.ps) file.
 <input type="submit" value="Download PostScript" />
 </form>
 <br />
