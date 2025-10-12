@@ -12,7 +12,8 @@ from arxiv.integration.fastly.headers import add_surrogate_key
 
 from browse.controllers.files import last_modified, add_time_headers, \
     download_file_base, maxage, withdrawn, unavailable, not_pdf, no_html,\
-    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public, no_source
+    not_found, bad_id, cannot_build_pdf, add_mimetype, not_public, no_source, \
+    not_ps
 
 from arxiv.files import FileObj, FileTransform
 
@@ -147,39 +148,49 @@ def get_dissemination_resp(format: Acceptable_Format_Requests,
             arxiv_id_str = arxiv_id_str[:-1]
         arxiv_id = Identifier(arxiv_id_str)
     except IdentifierException as ex:
+        # no additional surrogate keys since this id could be any junk from the client
         return bad_id(arxiv_id_str, str(ex))
     item = get_article_store().dissemination(format, arxiv_id)
     logger.debug("dissemination_for_id(%s) was %s", arxiv_id.idv, item)
+
     if not item or item == "VERSION_NOT_FOUND" or item == "ARTICLE_NOT_FOUND":
-        return not_found(arxiv_id)
+        resp=not_found(arxiv_id)
     elif item == "WITHDRAWN":
-        return withdrawn(arxiv_id, arxiv_id.has_version)
+        resp=withdrawn(arxiv_id, arxiv_id.has_version)
     elif item == "NO_SOURCE":
-        return no_source(arxiv_id, arxiv_id.has_version)
+        resp=no_source(arxiv_id, arxiv_id.has_version)
     elif item == "NOT_PUBLIC":
-        return not_public(arxiv_id, arxiv_id.has_version)
+        resp=not_public(arxiv_id, arxiv_id.has_version)
     elif item == "UNAVAILABLE":
-        return unavailable(arxiv_id)
+        resp=unavailable(arxiv_id)
     elif item == "NOT_PDF":
-        return not_pdf(arxiv_id)
+        resp=not_pdf(arxiv_id)
+    elif item == "NOT_PS":
+        resp=not_ps(arxiv_id)
     elif item == "NO_HTML":
-        return no_html(arxiv_id)
+        resp=no_html(arxiv_id)
     elif isinstance(item, Deleted):
-        return bad_id(arxiv_id, item.msg)
+        resp=bad_id(arxiv_id, item.msg)
     elif isinstance(item, KnownReason):
-        return cannot_build_pdf(arxiv_id, item.msg, item.fmt)
+        resp=cannot_build_pdf(arxiv_id, item.msg, item.fmt)
+    else:
+        file, docmeta, version = item
+        # check for existence
+        if not isinstance(file, List) and not file.exists(): # single file
+            resp=not_found(arxiv_id)
+        elif isinstance(file, List) and not file[0].exists(): # potential list of files
+            resp=not_found(arxiv_id)
+        else:
+            resp=resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
-    file, docmeta, version = item
+    # add the surrogate key headers for all cases where the arxiv id parsed
+    resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.id}"])
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,[f"paper-id-{arxiv_id_str}-current"])
+    return resp
 
-    # check for existence
-    if not isinstance(file, List): # single file
-        if not file.exists():
-            return not_found(arxiv_id)
-    else: # potential list of files
-        if not file[0].exists():
-            return not_found(arxiv_id)
-
-    return resp_fn(file, arxiv_id, docmeta, version) #type: ignore
 
 
 def get_html_response(arxiv_id_str: str,
@@ -261,3 +272,21 @@ def _is_html_name(name: Union[str, FileObj]) -> bool:
     return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
 
 
+def _ps_response(file: FileObj,
+                  arxiv_id: Identifier,
+                  docmeta: DocMetadata,
+                  version: VersionEntry,
+                  extra: Optional[str] = None) -> Response:
+    """Download ps"""
+    resp = default_resp_fn(file, arxiv_id, docmeta, version)
+    filename = download_file_base(arxiv_id, version) + ".ps"
+    resp.headers["Content-Disposition"] = f"attachment; filename=\"{filename}\""
+    resp.headers["Content-Encoding"] = "gzip"  # the file is a gzip on disk
+    if arxiv_id.has_version:
+        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.idv}"])
+    else:
+        resp.headers=add_surrogate_key(resp.headers,["ps",f"ps-{arxiv_id.id}-current"])
+    return resp
+
+def get_ps_response(arxiv_id_str: str, archive: Optional[str]=None) -> Response:
+    return get_dissemination_resp(fileformat.ps, arxiv_id_str, archive, _ps_response)

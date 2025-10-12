@@ -7,8 +7,7 @@ from typing import Optional, List
 from arxiv.identifier import Identifier
 from arxiv.document.metadata import DocMetadata
 from arxiv.document.version import VersionEntry
-from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent, current_pdf_path, previous_pdf_path, \
-    previous_ps_path, current_ps_path
+from arxiv.files.key_patterns import abs_path_current_parent, abs_path_orig_parent, current_pdf_path, previous_pdf_path
 from arxiv.files.object_store import ObjectStore
 from arxiv.files import FileObj
 from arxiv.formats import list_ancillary_files
@@ -88,14 +87,22 @@ class SourceStore():
 
     def get_src_ps(self, arxiv_id: Identifier, is_current: bool) -> Optional[FileObj]:
         """Try to get the PS file as if paper is a PS-only source paper."""
-        if is_current or not arxiv_id.has_version:
+        if is_current:
             # try from the /ftp with no number for current ver of pdf only paper
-            ps_file = self.objstore.to_obj(current_ps_path(arxiv_id))
+            # TODO: this should use current_ps_path() from arxiv-base but we
+            # need this fixed and updgrading arxiv-base is going to be a bit of work
+            archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
+            path = f"ftp/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.ps.gz"
+            ps_file = self.objstore.to_obj(path)
             if ps_file.exists():
                 return ps_file
         else:
             # try from the /orig with version number for a pdf only paper
-            ps_file = self.objstore.to_obj(previous_ps_path(arxiv_id))
+            # TODO: this should use previous_ps_path() from arxiv-base but we
+            # need this fixed and updgrading arxiv-base is going to be a bit of work
+            archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
+            path = f"orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.ps.gz"
+            ps_file = self.objstore.to_obj(path)
             if ps_file.exists():
                 return ps_file
 

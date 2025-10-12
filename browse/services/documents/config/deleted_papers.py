@@ -1,6 +1,10 @@
 """Configuration for deleted papers and their reasons for deletion."""
 
 skipped_msg = 'this identifier erroneously skipped during software upgrade'
+
+intentionally_blank = ''
+"""Blank reasons will cause a 404 like any other not found paper"""
+
 DELETED_PAPERS = {
     # document_id: reasons
     'alg-geom/9311009': 'was a duplicate of alg-geom/9311003',
@@ -159,4 +163,5 @@ DELETED_PAPERS = {
     '1105.2365': 'was a duplicate of cs/9402103',
     '1105.2519': 'was a duplicate of cs/9412102',
     '1105.2536': 'was a duplicate of cs/9610101',
+    '2307.10651': intentionally_blank,
 }

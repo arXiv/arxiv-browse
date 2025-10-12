@@ -687,7 +687,7 @@ class SubmissionFilesState:
 
     def register_files(self,
                        file_type: str,
-                       files: typing.List[Path] | typing.List[str]) -> None:
+                       files: typing.Union[typing.List[Path], typing.List[str]]) -> None:
         """
         Used for HTML submission. The actual files uploaded to the gcp bucket is unknown until
         webnode untars it. When ensure_html gets the file list, register them for the upload.
@@ -756,7 +756,8 @@ class ErrorStateFile:
 
     @property
     def error_state_filename(self):
-        return os.path.join(ERROR_STATE_DIR, self.paper_id)
+        # squish "/" in pater ID.
+        return os.path.join(ERROR_STATE_DIR, self.paper_id.replace('/', '__'))
 
     def error_reported(self) -> bool:
         return os.path.exists(self.error_state_filename)
@@ -767,7 +768,8 @@ class ErrorStateFile:
             try:
                 with open(self.error_state_filename, "w", encoding="utf-8") as fd:
                     fd.write(str(self.paper_id))
-            except:
+            except Exception as exc:
+                logger.warning("Report flag file %s is not made with %s", (self.error_state_filename, str(exc)))
                 pass
 
     def clear(self):
@@ -793,7 +795,7 @@ def submission_message_to_file_state(data: dict, log_extra: dict, ask_webnode: b
         src_ext = "." + src_ext
     source_format = data.get('source_format', '')
 
-    logger.info("Processing %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
+    logger.info("submission_message_to_file_state: %s.v%s:%s", paper_id, str(version), str(src_ext), extra=log_extra)
 
     file_state = SubmissionFilesState(paper_id, version, publish_type, src_ext, source_format, log_extra, cache_upload=cache_upload)
 
@@ -947,9 +949,9 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
 
 
 @STORAGE_RETRY
-def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdict: SyncVerdict, log_extra: dict):
+def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdict: SyncVerdict, log_extra: dict):
     """
-    Move object - apparently, you have to copy blob
+    Retire object - apparently, you have to copy blob
     """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
@@ -966,14 +968,26 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdic
             continue
 
         if to_blob.exists():
+            # When the destination of retired object exists, you do nothing.
+            # IOW, You cannot retire object twice.
+            to_blob.reload(projection='full')
             if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()
                 logger.warning("%s: from: %s  <---> to: %s are identical - md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
                 verdict.add_verdict(True, "Both Exists", (from_obj, to_blob, obj_type))
-                continue
             else:
-                logger.info("%s: TO %s exists", obj_type, to_obj, extra=log_extra)
+                logger.warning("%s (%s) --> %s exists (NOT COPIED). FROM %s / %s --> TO %s / %s",
+                               from_obj,
+                               obj_type,
+                               to_obj,
+                               from_blob.size,
+                               from_blob.md5_hash,
+                               to_blob.size,
+                               to_blob.md5_hash,
+                               extra=log_extra)
+                verdict.add_verdict(True, "Both exists but contents not the same!", (from_obj, to_blob, obj_type))
+            continue
 
         try:
             copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
@@ -995,6 +1009,11 @@ def move_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdic
             pass
 
     return
+
+
+def list_missing_cit_files(file_state: SubmissionFilesState) -> typing.List[str]:
+    missing_cit_files = [entry["cit"] for entry in file_state.get_expected_files() if not os.path.exists(entry["cit"])]
+    return missing_cit_files
 
 
 def submission_callback(message: Message) -> None:
@@ -1035,8 +1054,16 @@ def submission_callback(message: Message) -> None:
         # sanity check
         raise ValueError
 
+    message_total_seconds = int(message_age.total_seconds())
+    message_hours, message_remainder = divmod(message_total_seconds, 3600)
+    message_minutes, _ = divmod(message_remainder, 60)
+    if message_hours > 0:
+        message_age_text = f"{message_hours} hour{'s' if message_hours != 1 else ''}, {message_minutes} minute{'s' if message_minutes != 1 else ''}"
+    else:
+        message_age_text = f"{message_minutes} minute{'s' if message_minutes != 1 else ''}"
+
     compilation_timeout = int(os.environ.get("TEX_COMPILATION_TIMEOUT_MINUTES", "720"))
-    first_notification_time = int(os.environ.get("TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME", "30"))
+    first_notification_time = int(os.environ.get("TEX_COMPILATION_FAILURE_FIRST_NOTIFICATION_TIME", "90"))
 
     file_state = submission_message_to_file_state(data, log_extra, ask_webnode=False)
     desired_state = file_state.get_expected_files()
@@ -1070,7 +1097,7 @@ def submission_callback(message: Message) -> None:
     verdict = SyncVerdict()
     try:
         sync_to_gcp(file_state, verdict, log_extra)
-        logger.info("ack message: %s", file_state.xid.ids, extra=log_extra)
+        logger.info("sync_to_gcp finished: %s", file_state.xid.ids, extra=log_extra)
 
     except Exception as _exc:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
@@ -1090,24 +1117,30 @@ def submission_callback(message: Message) -> None:
     if message_age > timedelta(minutes=first_notification_time):
         if not error_state_file.error_reported():
             try:
-                slacking = subprocess.call(
+                missing_files = repr(list_missing_cit_files(file_state))
+                id_v_message = "Notification at %s. Following file(s) missing: %s" % (
+                    message_age_text, missing_files)
+
+                returncode = subprocess.call(
                     ['/users/e-prints/bin/tex-compilation-problem-notification',
-                     id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                if slacking.returncode != 0:
+                     id_v, id_v_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if returncode != 0:
                     logger.warning("Failed to send notification: %s", id_v, extra=log_extra)
             except:
                 logger.warning('Slacking for %s did not work', id_v)
                 pass
             error_state_file.report()
 
-
     # Deadline exceeded?
     if message_age > timedelta(minutes=compilation_timeout):
         try:
-            slacking = subprocess.call(
+            missing_files = repr(list_missing_cit_files(file_state))
+            id_v_message = "Notification at %s. Following file(s) missing: %s" % (
+                message_age_text, missing_files)
+            returncode = subprocess.call(
                 ['/users/e-prints/bin/tex-compilation-problem-notification',
-                 id_v], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if slacking.returncode != 0:
+                 id_v, id_v_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if returncode != 0:
                 logger.error("Failed to send notification: %s", id_v, extra=log_extra)
         except:
             logger.error('Slacking for %s did not work', id_v)
@@ -1152,6 +1185,7 @@ def submission_callback(message: Message) -> None:
 def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: dict) -> None:
     """
     From the submission file state, copy the ones that should bu uploaded.
+    When you come here, PDF/HTML files are already made. (by ask_caches_to_webnode)
 
     If the /ftp's submission contains extra files, they are removed.
     """
@@ -1159,7 +1193,16 @@ def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: di
     desired_state = state.get_expected_files()
     xid = state.xid
     log_extra["arxiv_id"] = xid.ids
-    logger.info("Processing %s", xid.ids, extra=log_extra)
+    logger.info("sync_to_gcp: Processing %s", xid.idv, extra=log_extra)
+
+    # Are all the ducks in place? (except obsolete ones.)
+    for entry in desired_state:
+        if entry["status"] == "obsolete":
+            continue
+        local = entry["cit"]
+        local_path = Path(local)
+        if not local_path.exists():
+            return verdict.add_verdict(False, "Missing file", entry)
 
     # Existing blobs on GCP
     cit_source_root_path = state.source_path("")
@@ -1178,7 +1221,7 @@ def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: di
 
     if retired:
         # Move blobs from /ftp to /orig
-        move_bucket_objects(gs_client, retired, verdict, log_extra)
+        retire_bucket_objects(gs_client, retired, verdict, log_extra)
         # Obsoleted objects are gone
         for obsoleted, _original, _entry_type in retired:
             if obsoleted in bucket_objects:
