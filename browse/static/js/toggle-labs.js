@@ -27,6 +27,7 @@ $(document).ready(function() {
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
+    "emergentmind": $('#emergentmind-toggle').data('script-url'),
     "bibex": {
       "url": $('#bibex-toggle').data('script-url'),
       "container": "#bib-main"
@@ -132,6 +133,12 @@ $(document).ready(function() {
             console.log(textStatus);
           }).fail(function() {
             console.error("failed to load huggingface script (on cookie check)", arguments)
+          });
+        } else if (key === "emergentmind-toggle") {
+          $.cachedScript(scripts["emergentmind"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load emergentmind script (on cookie check)", arguments)
           });
         }
       }
@@ -247,8 +254,14 @@ $(document).ready(function() {
       }).fail(function() {
         console.error("failed to load huggingface script (on lab toggle)", arguments)
       });
+    } else if ($(this).attr("id") == "emergentmind-toggle") {
+      $.cachedScript(scripts["emergentmind"]).done(function(script, textStatus) {
+        console.log(textStatus, "emergentmind (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load emergentmind script (on lab toggle)", arguments)
+      });
     }
-  
+
 
     // TODO: clean this up
     if (cookie_val == 'disabled') {
