@@ -19,14 +19,14 @@ Adding an environment var, so we can enable only on gcp.
 -#}
 
 {# Banner variables - if you just want a default banner #}
-{% set BANNER_1_NAME = "mysqlupgrade" %}
+{% set BANNER_1_NAME = "openaccessweek2025" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
-{% set BANNER_START_1 = 202509150000 %} {#  8/15 now #}
-{% set BANNER_END_1   = 202509172350 %} {#  8/17 end of day#}
-{% set BANNER_1_TITLE = "The Scheduled Database Maintenance 2025-09-17 11am-1pm UTC has been completed" %}
-{% set BANNER_1_TEXT = "" %}
-{% set BANNER_1_BUTTON_TEXT = "Blog post" %}
-{% set BANNER_1_BUTTON_LINK = "https://blog.arxiv.org/2025/09/16/arxiv-org-maintenance-sep-17-2025" %}
+{% set BANNER_START_1 = 202509150000 %} {#  9/15 now #}
+{% set BANNER_END_1   = 202510262350 %} {#  10/26 end of day#}
+{% set BANNER_1_TITLE = "Happy Open Access Week from arXiv!" %}
+{% set BANNER_1_TEXT = "YOU make open access possible! Tell us why you support #openaccess and give to arXiv this week to help keep science open for all." %}
+{% set BANNER_1_BUTTON_TEXT = "Donate!" %}
+{% set BANNER_1_BUTTON_LINK = "https://arxiv.salsalabs.org/arXivOAWeek2025" %}
 
 {% set BANNER_2_NAME = "opt-in" %}
 {# Set these variables to a string of YYYYMMDD of the start and end date #}
@@ -45,10 +45,6 @@ Adding an environment var, so we can enable only on gcp.
           <img role="presentation" class="bps-banner-image" src="{{ url_for('static', filename='images/icons/smileybones-pixel.png') }}" alt="arXiv smileybones">
           <div class="copy-donation bps-banner">
             <h2>{{BANNER_1_TITLE}}</h2>
-            <ul>
-            <li>The scheduled database maintenance has been completed.</li>
-            <li>We recommend that all users <a href="https://arxiv.org/logout">logout</a> and login again..</li>
-            </ul>
             <p>{{BANNER_1_TEXT}}</p>
           </div>
           <div class="amount-donation bps-banner">
@@ -75,7 +71,7 @@ Adding an environment var, so we can enable only on gcp.
             improve the service for our users. This requires a rich dataset to
             better inform the research. Users who wish to contribute to the
             future of arXiv may opt in to allow arXiv to use their reading
-            data for research purposes. By clicking ‘I agree’ below, you
+            data for research purposes. By clicking 'I agree' below, you
             consent to your reading data being collected, retained, and
             processed by arXiv and shared with researchers conducting
             research in the public interest. Reading data will never be
