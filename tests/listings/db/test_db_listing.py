@@ -1,9 +1,10 @@
 from datetime import datetime
 from browse.services.database.listings import (
     _all_possible_categories,
-    _metadata_to_listing_item
+    _metadata_to_listing_item,
+    _without_deleted
 )
-from browse.services.listing import get_listing_service, NotModifiedResponse
+from browse.services.listing import ListingItem, get_listing_service, NotModifiedResponse
 from arxiv.db.models import Metadata
 
 SAMPLE_METADATA1=Metadata(
@@ -90,3 +91,21 @@ def test_metadata_to_listing_item():
     meta.modtime=None
     result=_metadata_to_listing_item(meta, "new")
     assert result.article.modified is not None
+
+def test_listings_without_deleted():
+    """ARXIVCE-4060"""
+    orig_items = [ListingItem('2307.10650', "new", "cheese"),
+                  ListingItem('2307.10651', "new", "cheese"),
+                  ListingItem('2307.10652', "new", "cheese")]
+    filtered_items = _without_deleted(orig_items)
+    assert "2307.10651" not in [item.id for item in filtered_items]
+    assert "2307.10650" in [item.id for item in filtered_items]
+    assert "2307.10652" in [item.id for item in filtered_items]
+
+    orig_items2 = [ListingItem('1005.0836', "new", "cheese"),
+                   ListingItem('1005.0837', "new", "cheese"),
+                   ListingItem('1005.0838', "new", "cheese")]
+    filtered_items2 = _without_deleted(orig_items2)
+    assert "1005.0836" not in [item.id for item in filtered_items2]
+    assert "1005.0837" in [item.id for item in filtered_items2]
+    assert "1005.0838" in [item.id for item in filtered_items2]
