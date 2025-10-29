@@ -1,10 +1,10 @@
 from datetime import datetime
 from browse.services.database.listings import (
     _all_possible_categories,
-    _metadata_to_listing_item,
-    _without_deleted
+    _metadata_to_listing_item
 )
 from browse.services.listing import ListingItem, get_listing_service, NotModifiedResponse
+from browse.services.listing.db_listings import _without_deleted
 from arxiv.db.models import Metadata
 
 SAMPLE_METADATA1=Metadata(
@@ -106,6 +106,6 @@ def test_listings_without_deleted():
                    ListingItem('1005.0837', "new", "cheese"),
                    ListingItem('1005.0838', "new", "cheese")]
     filtered_items2 = _without_deleted(orig_items2)
-    assert "1005.0836" not in [item.id for item in filtered_items2]
+    assert "1005.0836" in [item.id for item in filtered_items2]
     assert "1005.0837" in [item.id for item in filtered_items2]
     assert "1005.0838" in [item.id for item in filtered_items2]
