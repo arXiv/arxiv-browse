@@ -63,6 +63,7 @@ from __future__ import annotations
 import argparse
 import re
 import shlex
+import shutil
 import signal
 import subprocess
 import sys
@@ -1073,6 +1074,24 @@ def submission_callback(message: Message) -> None:
                        extra=log_extra)
         message.nack()
         return
+
+    #
+    # Purge caches if requested
+    #
+    regenerate_caches = data.get("regenerate_caches", "")
+    if regenerate_caches:
+        logger.info("Regenerate cache: %s", regenerate_caches)
+        for entry in desired_state:
+            if "pdf-cache" in regenerate_caches:
+                if entry["type"] == "pdf-cache":
+                    pdf_path = Path(entry["cit"])
+                    if pdf_path.exists():
+                        pdf_path.unlink()
+            if "html-cache" in regenerate_caches:
+                if entry["type"] == "html-cache":
+                    html_path = Path(entry["cit"])
+                    if html_path.exists():
+                        shutil.rmtree(html_path, ignore_errors=True)
 
     # Prep
     #
