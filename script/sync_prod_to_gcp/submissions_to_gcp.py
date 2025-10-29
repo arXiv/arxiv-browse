@@ -1082,16 +1082,13 @@ def submission_callback(message: Message) -> None:
     if regenerate_caches:
         logger.info("Regenerate cache: %s", regenerate_caches)
         for entry in desired_state:
-            if "pdf-cache" in regenerate_caches:
-                if entry["type"] == "pdf-cache":
-                    pdf_path = Path(entry["cit"])
-                    if pdf_path.exists():
-                        pdf_path.unlink()
-            if "html-cache" in regenerate_caches:
-                if entry["type"] == "html-cache":
-                    html_path = Path(entry["cit"])
-                    if html_path.exists():
-                        shutil.rmtree(html_path, ignore_errors=True)
+            if entry["type"] in regenerate_caches:
+                cit_path = Path(entry["cit"])
+                if cit_path.exists():
+                    if "pdf-cache" == entry["type"]:
+                        cit_path.unlink()
+                    if "html-cache" == entry["type"]:
+                        shutil.rmtree(cit_path.as_posix(), ignore_errors=True)
 
     # Prep
     #
