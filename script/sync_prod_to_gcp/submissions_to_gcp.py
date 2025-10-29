@@ -1085,10 +1085,18 @@ def submission_callback(message: Message) -> None:
             if entry["type"] in regenerate_caches:
                 cit_path = Path(entry["cit"])
                 if cit_path.exists():
-                    if "pdf-cache" == entry["type"]:
-                        cit_path.unlink()
-                    if "html-cache" == entry["type"]:
-                        shutil.rmtree(cit_path.as_posix(), ignore_errors=True)
+                    try:
+                        if "pdf-cache" == entry["type"]:
+                            cit_path.unlink()
+                        if "html-cache" == entry["type"]:
+                            shutil.rmtree(cit_path.as_posix(), ignore_errors=True)
+                    except Exception as exc:
+                        logger.warning("Failed to purge cache %s: %s", str(cit_path), str(exc))
+                        pass
+                    pass
+                pass
+            pass
+        pass
 
     # Prep
     #
