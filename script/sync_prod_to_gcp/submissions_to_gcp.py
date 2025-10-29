@@ -1088,8 +1088,13 @@ def submission_callback(message: Message) -> None:
                     try:
                         if "pdf-cache" == entry["type"]:
                             cit_path.unlink()
-                        if "html-cache" == entry["type"]:
+                            logger.info("Purged a PDF cache %s", str(cit_path))
+                        elif "html-cache" == entry["type"]:
                             shutil.rmtree(cit_path.as_posix(), ignore_errors=True)
+                            logger.info("Purged a HTML cache %s", str(cit_path))
+                        else:
+                            logger.warning("Unknown cache type: %s", entry["type"])
+                            pass
                     except Exception as exc:
                         logger.warning("Failed to purge cache %s: %s", str(cit_path), str(exc))
                         pass
