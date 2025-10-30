@@ -1079,7 +1079,7 @@ def submission_callback(message: Message) -> None:
     # Purge caches if requested
     #
     regenerate_caches = data.get("regenerate_caches", "")
-    if regenerate_caches:
+    if regenerate_caches and len(regenerate_caches) > 0:
         logger.info("Regenerate cache: %s", regenerate_caches)
         for entry in desired_state:
             if entry["type"] in regenerate_caches:
@@ -1101,7 +1101,9 @@ def submission_callback(message: Message) -> None:
                     pass
                 pass
             pass
-        pass
+        message.ack()
+        logger.info("Purge cache %s - ack", regenerate_caches)
+        return
 
     # Prep
     #
