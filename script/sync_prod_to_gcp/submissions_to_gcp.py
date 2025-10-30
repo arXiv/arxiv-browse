@@ -1025,6 +1025,9 @@ def submission_callback(message: Message) -> None:
     may or may not happen.
 
     """
+    #
+    delivery_attempt = message.delivery_attempt
+
     # Make sure the message is legible
     data = decode_message(message)
     if data is None:
@@ -1076,10 +1079,10 @@ def submission_callback(message: Message) -> None:
         return
 
     #
-    # Purge caches if requested
+    # Purge caches if requested - only purge the cache for the first attempt
     #
     regenerate_caches = data.get("regenerate_caches", "")
-    if regenerate_caches and len(regenerate_caches) > 0:
+    if delivery_attempt == 1 and regenerate_caches and len(regenerate_caches) > 0:
         logger.info("Regenerate cache: %s", regenerate_caches)
         for entry in desired_state:
             if entry["type"] in regenerate_caches:
@@ -1101,9 +1104,7 @@ def submission_callback(message: Message) -> None:
                     pass
                 pass
             pass
-        message.ack()
-        logger.info("Purge cache %s - ack", regenerate_caches)
-        return
+        pass
 
     # Prep
     #
