@@ -120,7 +120,7 @@ preferences.
   // Generate UUID
   const regBtn = document.getElementById('opt-in-registration');
   if (regBtn) {
-    document.getElementById('opt-in-registration').addEventListener('click', event => {
+    regBtn.addEventListener('click', event => {
     event.preventDefault();
     const uuid = crypto.randomUUID(); // Generate a unique ID
     document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
@@ -130,7 +130,7 @@ preferences.
 
   const optOutBtn = document.getElementById('opt-out');
   if (optOutBtn) {
-      document.getElementById('opt-out').addEventListener('click', event => {
+      optOutBtn.addEventListener('click', event => {
         event.preventDefault();
         document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         checkOptInParticipation();
