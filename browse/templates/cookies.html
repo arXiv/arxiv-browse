@@ -102,7 +102,6 @@ preferences.
 <p>Contribute my reading data to research:&nbsp;<a id="opt-in-registration" href="#"><strong>CLICK HERE TO OPT IN</strong></a>
   <span id="opt-in-enrolled" style="display:none;"><strong>ENROLLED</strong>&nbsp;<a id="opt-out" href="#">(OPT OUT?)</a></span></p>
 
-
 <script>
   function checkOptInParticipation() {
     if (document.cookie.indexOf('opt-in-tracking') !== -1) {
@@ -119,19 +118,24 @@ preferences.
   checkOptInParticipation();
 
   // Generate UUID
-  document.getElementById('opt-in-registration').addEventListener('click', event => {
-  event.preventDefault();
-  const uuid = crypto.randomUUID(); // Generate a unique ID
-  document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
-  checkOptInParticipation(); // Update UI
-  });
-
-
-  document.getElementById('opt-out').addEventListener('click', event => {
+  const regBtn = document.getElementById('opt-in-registration');
+  if (regBtn) {
+    document.getElementById('opt-in-registration').addEventListener('click', event => {
     event.preventDefault();
-    document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    checkOptInParticipation();
-  });
+    const uuid = crypto.randomUUID(); // Generate a unique ID
+    document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`; // 1 year
+    checkOptInParticipation(); // Update UI
+    });
+  }
+
+  const optOutBtn = document.getElementById('opt-out');
+  if (optOutBtn) {
+      document.getElementById('opt-out').addEventListener('click', event => {
+        event.preventDefault();
+        document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        checkOptInParticipation();
+      });
+  }
 </script>
 {% endif %}
 
