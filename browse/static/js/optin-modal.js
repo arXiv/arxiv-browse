@@ -1,5 +1,28 @@
 // Support for Opt-In modal
 document.addEventListener('DOMContentLoaded', function () {
+  const trigger = document.getElementById('optin-trigger');
+  const modal = document.getElementById('optin-modal');
+  const agreeBtn = document.getElementById('optin-agree');
+  const optOutBtn = document.getElementById('optin-optout');
+  const closeBtn = document.getElementById('optin-close');
+
+  const modalContent = {
+    optedIn: {
+      title: "You're Already Enrolled",
+      message: "You’ve already opted in...",
+      showAgree: false,
+      showOptOut: true,
+      showPrivacy: false
+    },
+    notOptedIn: {
+      title: "Help Improve arXiv",
+      message: "arXiv is working with academic researchers...",
+      showAgree: true,
+      showOptOut: false,
+      showPrivacy: true
+    }
+  };
+
   function getCookie(name) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? match[2] : null;
@@ -8,47 +31,44 @@ document.addEventListener('DOMContentLoaded', function () {
   function showModal() {
     // User opted in
     const optedIn = getCookie('opt-in-tracking');
-    const modal = document.getElementById('optin-modal');
     const title = document.getElementById('optin-title');
     const paragraphs = modal.querySelectorAll('p');
-    const agreeBtn = document.getElementById('optin-agree');
-    const optoutBtn = document.getElementById('optin-optout');
 
-    if (optedIn) {
-      title.textContent = "You're Already Enrolled";
-      paragraphs[0].textContent = "You’ve already opted in to contribute your reading data to research. If you’d like to opt out, click below.";
-      paragraphs[1].style.display = "none"; // hide privacy policy link
-      agreeBtn.style.display = "none";
-      optoutBtn.style.display = "inline-block";
-    } else {
-      title.textContent = "Help Improve arXiv";
-      paragraphs[0].textContent = "arXiv is working with academic researchers to investigate ways to improve the service for our users. This requires a rich dataset to better inform the research. Users who wish to contribute to the future of arXiv may opt in to allow arXiv to use their reading data for research purposes. By clicking ‘I agree’ below, you consent to your reading data being collected, retained, and processed by arXiv and shared with researchers conducting research in the public interest. Reading data will never be shared publicly or otherwise incorporated into public systems in a personally identifiable format. Research use cases include developing privacy-preserving recommendation systems for arXiv.";
-      paragraphs[1].style.display = "block";
-      agreeBtn.style.display = "inline-block";
-      optoutBtn.style.display = "none";
-    }
+    // Moved state to const above
+    const state = optedIn ? modalContent.optedIn : modalContent.notOptedIn;
+    title.textContent = state.title;
+    paragraphs[0].textContent = state.message;
+    paragraphs[1].style.display = state.showPrivacy ? "block" : "none";
+    agreeBtn.style.display = state.showAgree ? "inline-block" : "none";
+    optOutBtn.style.display = state.showOptOut ? "inline-block" : "none";
 
     modal.classList.remove('hidden');
   }
 
-  document.getElementById('optin-trigger').addEventListener('click', showModal);
 
-  document.getElementById('optin-close').addEventListener('click', function() {
-    document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.getElementById('optin-modal').classList.add('hidden');
-  });
-
-  document.getElementById('optin-agree').addEventListener('click', function() {
-    const uuid = crypto.randomUUID();
-    document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`;
-    document.getElementById('optin-modal').classList.add('hidden');
-  });
-
-  document.getElementById('optin-optout').addEventListener('click', function() {
-    document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    alert("You have opted out.");
-    document.getElementById('optin-modal').classList.add('hidden');
-  });
+  if (trigger) {
+    trigger.addEventListener('click', showModal);
+  }
+  if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        document.cookie = 'opt-out-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        if (modal) modal.classList.add('hidden');
+      });
+  }
+  if (agreeBtn) {
+      agreeBtn.addEventListener('click', function() {
+        const uuid = crypto.randomUUID();
+        document.cookie = `opt-in-tracking=${uuid}; Path=/; Max-Age=31536000`;
+        if (modal) modal.classList.add('hidden');
+      });
+  }
+  if (optOutBtn) {
+      optOutBtn.addEventListener('click', function() {
+        document.cookie = 'opt-in-tracking=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        alert("You have opted out.");
+        if (modal) modal.classList.add('hidden');
+      });
+  }
 });
 
 
