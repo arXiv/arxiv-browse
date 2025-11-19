@@ -26,15 +26,15 @@ overridden via environment variables, see `browse/config.py`.
 
 ## Test suite
 
-Run the main test suite with the following command:
 
     pytest tests
 
-## Running with access to a GCP database
+The above method will only give you access to minimal data in the built-in test
+dataset. For full (read-only) access to the production database, the following
+steps are necessary:
 
-### Step 1 setup gcloud and env vars
-
-Log into gcloud and have default application credentials. This
+Prerequisites:
+you are logged into gcloud and have default application credentials. This
 can be achieved by calling `gcloud auth login --update-adc --force` and
 logging into your @arxiv.org account.
 
@@ -45,7 +45,7 @@ Set these two port variable in the environment (two unused and different ports):
 
 ### Step 2 Create a .env file
 
-First, you'd need to create the '.env' file somewhere. Using tests/.env is suggested.
+Create the '.env' file somewhere. Using tests/.env is suggested.
 
 ``` bash
 MAIN_DB_PORT=3301
@@ -76,7 +76,7 @@ LATEXML_DB_URI=$LATEXML_DB_URI
 EOF
 
 ```
-    
+
 ### Step 3 pycharm (optional)
 
 If you have a PyCharm,
@@ -145,3 +145,10 @@ these tests fail will be blocked. It is the equivalent of running:
 ![docs/development/pycharm-run-setting.png](docs/development/pycharm-pytest.png)
 
 
+### Makefile
+
+There is a make file form running the app and other tasks.
+
+```bash
+make venv
+````

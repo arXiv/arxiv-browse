@@ -2,7 +2,7 @@
 from typing import Dict, Tuple
 
 from arxiv.identifier import Identifier
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 from flask import render_template
 
 from browse.exceptions import AbsNotFound
@@ -16,7 +16,7 @@ def audio_landing_page(arxiv_id: str) -> Tuple:
         raise AbsNotFound(data={"reason": "poorly formatted paper id"})
 
     arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-    headers = add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.id}", "audio-landing"])
+    headers = b_add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.id}", "audio-landing"])
     abs_meta = get_doc_service().get_abs(arxiv_identifier)
     data = {'audio_urls': get_audio_urls(abs_meta),
             "abs_meta": abs_meta
