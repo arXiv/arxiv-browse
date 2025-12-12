@@ -66,7 +66,7 @@ def check_scienceCast(metadata: DocMetadata) -> AudioLink:
 def check_alphaXiv(metadata: DocMetadata) -> AudioLink:
     """check if alphaXiv should have an audio summary for the paper"""
     
-    alphaXiv_cats=["cs.LG", "cs.AI", "cs.CL", "cs.CV"]
+    alphaXiv_cats=["cs.HC"]
     not_available=AudioLink(
         service=AudioProvider.ALPHAXIV,
         url=None,
