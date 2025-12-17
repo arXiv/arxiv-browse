@@ -446,10 +446,10 @@ span.ltx_personname > .ltx_break + .ltx_break {
    it applies to all of the authors. Ideally latexml's schema should evolve to handle this
    via differently organized markup. 
 
-   Tested with 2201.00244, 1109.5581
+   Tested with 2201.00244, 1109.5581, 2510.11037
 */
-.ltx_authors:not(:has(> *:not(:last-child) .ltx_role_address)) :last-child.ltx_role_address,
-.ltx_authors:not(:has(> *:not(:last-child) .ltx_role_affiliation)) :last-child.ltx_role_affiliation {
+.ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_address)) :last-child.ltx_role_address,
+.ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_affiliation)) :last-child.ltx_role_affiliation {
     position: absolute;
     display: block;
     margin: 2rem auto;
@@ -457,8 +457,8 @@ span.ltx_personname > .ltx_break + .ltx_break {
     width: var(--main-width);
     left: calc((100vw - var(--main-width)) / 2);
 }
-.ltx_authors:not(:has(> *:not(:last-child) .ltx_role_address)):has( :last-child.ltx_role_address),
-.ltx_authors:not(:has(> *:not(:last-child) .ltx_role_affiliation)):has( :last-child.ltx_role_affiliation) {
+.ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_address)):has( :last-child.ltx_role_address),
+.ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_affiliation)):has( :last-child.ltx_role_affiliation) {
   margin-bottom: 4rem;
 }
 
@@ -1697,14 +1697,14 @@ svg .ltx_foreignobject_content {
   text-align: left; }
 foreignObject {
   /* translate: 0 0.1em; */
-  --fo_width: 100%;
+  --ltx-fo-width: 100%;
 }
 /* Use flex to vertically center foreignObject,
    to accommodate potentially tall line-box */
 svg foreignObject > .ltx_foreignobject_container {
   display: flex;
   align-items: end; /* see examples from latexml PR #2541 */
-  width: clamp(calc(0.1 * var(--main-width)), var(--fo_width), 100%);
+  width: clamp(calc(0.1 * var(--main-width)), var(--ltx-fo-width, var(--fo_width)), 100%);
   height: 100%;
 }
 svg foreignObject > .ltx_foreignobject_container {
@@ -1718,7 +1718,7 @@ svg foreignObject > .ltx_foreignobject_container {
   /* If multiple children, give more space to avoid unexpected line breaks
    due to font differences. */
   &:has(> .ltx_foreignobject_content > :not(:only-child)) {
-    width: calc(1.1 * var(--fo_width));
+    width: calc(1.1 * var(--ltx-fo-width, var(--fo_width)));
   }
   & > .ltx_foreignobject_content {
     display: block;
