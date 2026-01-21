@@ -24,16 +24,16 @@ This method will only give you access to minimal data in the directories in
 metadata and PDF files. Listings don't work in this mode. These paths can be
 overridden via environment variables, see `browse/config.py`.
 
-## Test suite
+## To run test suite
 
+    pytest tests --cov=browse
 
-    pytest tests
-
+## Running with access to a GCP database
 The above method will only give you access to minimal data in the built-in test
 dataset. For full (read-only) access to the production database, the following
 steps are necessary:
 
-Prerequisites:
+## Step 1 Prerequisites
 you are logged into gcloud and have default application credentials. This
 can be achieved by calling `gcloud auth login --update-adc --force` and
 logging into your @arxiv.org account.
