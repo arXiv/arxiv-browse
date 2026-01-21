@@ -385,7 +385,9 @@ def more_fewer(show: int, count: int, viewing_all: bool) -> Dict[str, Any]:
 
     # python lacks a find(labmda x:...) ?
     rd['mf_more'] = next(
-        filter(lambda x: x > show and x < count, show_values), None)
+        (x for x in show_values if show < x < count),
+        None
+    )
 
     return rd
 

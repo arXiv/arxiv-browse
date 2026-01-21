@@ -7,4 +7,4 @@ from werkzeug.datastructures import Headers
 
 def b_add_surrogate_key(headers: dict[str,str]|Headers, keys: list[str]) -> Headers:
     # Fix for the type. Adds `Headers` to acceptable args. Probability should put in arxiv-base
-    return add_surrogate_key(headers, keys)  # type: ignore
+    return add_surrogate_key(headers, keys)
