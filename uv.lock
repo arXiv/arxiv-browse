@@ -274,13 +274,11 @@ dependencies = [
     { name = "flask-rangerequest" },
     { name = "flask-s3" },
     { name = "flask-wtf" },
-    { name = "geoip2" },
     { name = "google-cloud-compute" },
     { name = "google-cloud-logging" },
     { name = "google-cloud-storage" },
     { name = "gunicorn" },
     { name = "logging-json" },
-    { name = "lxml" },
     { name = "markupsafe" },
     { name = "mysqlclient" },
     { name = "opentelemetry-api" },
@@ -295,7 +293,6 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "types-python-dateutil" },
     { name = "validators" },
-    { name = "xmltodict" },
 ]
 
 [package.dev-dependencies]
@@ -325,13 +322,11 @@ requires-dist = [
     { name = "flask-rangerequest", specifier = ">=0.0.2,<0.0.3" },
     { name = "flask-s3" },
     { name = "flask-wtf" },
-    { name = "geoip2" },
     { name = "google-cloud-compute", specifier = ">=1.14.1,<2" },
     { name = "google-cloud-logging", specifier = ">=3.2.5,<4" },
     { name = "google-cloud-storage", specifier = ">=3.4.1,<4" },
     { name = "gunicorn", specifier = ">=23.0.0,<24" },
     { name = "logging-json" },
-    { name = "lxml", specifier = ">=4.9.2,<5" },
     { name = "markupsafe" },
     { name = "mysqlclient", specifier = ">=2.1" },
     { name = "opentelemetry-api", specifier = ">=1.13.0,<2" },
@@ -346,7 +341,6 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0.26,<3" },
     { name = "types-python-dateutil", specifier = ">=2.8.19.12,<3" },
     { name = "validators" },
-    { name = "xmltodict", specifier = ">=0.13.0,<0.14" },
 ]
 
 [package.metadata.requires-dev]
@@ -950,20 +944,6 @@ wheels = [
 ]
 
 [[package]]
-name = "geoip2"
-version = "5.2.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "aiohttp" },
-    { name = "maxminddb" },
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/18/70/3d9e87289f79713aaf0fea9df4aa8e68776640fe59beb6299bb214610cfd/geoip2-5.2.0.tar.gz", hash = "sha256:6c9ded1953f8eb16043ed0a8ea20e6e9524ea7b65eb745724e12490aca44ef00", size = 176498, upload-time = "2025-11-20T18:21:08.874Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/d2/d55df737199a52b9d06e742ed2a608c525f0677e40375951372e65714fbd/geoip2-5.2.0-py3-none-any.whl", hash = "sha256:3d1546fd4eb7cad20445d027d2d9e81d3a71c074e019383f30db5d45e2c23320", size = 28991, upload-time = "2025-11-20T18:21:07.178Z" },
-]
-
-[[package]]
 name = "google-api-core"
 version = "2.25.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1503,31 +1483,6 @@ wheels = [
 ]
 
 [[package]]
-name = "lxml"
-version = "4.9.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/84/14/c2070b5e37c650198de8328467dd3d1681e80986f81ba0fea04fc4ec9883/lxml-4.9.4.tar.gz", hash = "sha256:b1541e50b78e15fa06a2670157a1962ef06591d4c998b998047fff5e3236880e", size = 3576664, upload-time = "2023-12-19T19:37:24.296Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/af/c008644e292aaf12f823c6a1a74bda427ab6a59e292f31ffe8614d752765/lxml-4.9.4-cp311-cp311-macosx_11_0_universal2.whl", hash = "sha256:359a8b09d712df27849e0bcb62c6a3404e780b274b0b7e4c39a88826d1926c28", size = 8629333, upload-time = "2023-12-19T18:43:45.864Z" },
-    { url = "https://files.pythonhosted.org/packages/85/a4/e0bc143506866e6f153210241bbb6fda445ae611aacdd7d4875cc8a1dae3/lxml-4.9.4-cp311-cp311-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_24_i686.whl", hash = "sha256:43498ea734ccdfb92e1886dfedaebeb81178a241d39a79d5351ba2b671bff2b2", size = 7166850, upload-time = "2023-12-19T18:43:51.155Z" },
-    { url = "https://files.pythonhosted.org/packages/3b/6f/186bd26f9cb644970d120514467c50a5acfd9eb43437f64e5525951a8c93/lxml-4.9.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_24_aarch64.whl", hash = "sha256:4855161013dfb2b762e02b3f4d4a21cc7c6aec13c69e3bffbf5022b3e708dd97", size = 6761974, upload-time = "2023-12-19T18:43:55.094Z" },
-    { url = "https://files.pythonhosted.org/packages/49/b9/7f9a881e7f46e95207c596732d2067f30fc49b7518637381630c39bb48d4/lxml-4.9.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl", hash = "sha256:c71b5b860c5215fdbaa56f715bc218e45a98477f816b46cfde4a84d25b13274e", size = 7088938, upload-time = "2023-12-19T18:43:59.356Z" },
-    { url = "https://files.pythonhosted.org/packages/85/95/60d86f2737f6f68554d2f1023fb8312c011a0960cf8aad0581e4a72cc11f/lxml-4.9.4-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:9a2b5915c333e4364367140443b59f09feae42184459b913f0f41b9fed55794a", size = 7635991, upload-time = "2023-12-19T18:44:03.361Z" },
-    { url = "https://files.pythonhosted.org/packages/be/2b/c240b9d4b1daf80573adbca0b6e3e3d69bb3838bebd9cb4c7d51ed315189/lxml-4.9.4-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:d82411dbf4d3127b6cde7da0f9373e37ad3a43e89ef374965465928f01c2b979", size = 7897968, upload-time = "2023-12-19T18:44:07.228Z" },
-    { url = "https://files.pythonhosted.org/packages/98/0a/cf0fa269ebc015adb50119be2f02a327ce9e36e6cdb6a0f8dd1869198ee3/lxml-4.9.4-cp311-cp311-musllinux_1_1_aarch64.whl", hash = "sha256:273473d34462ae6e97c0f4e517bd1bf9588aa67a1d47d93f760a1282640e24ac", size = 7500340, upload-time = "2023-12-19T18:44:11.46Z" },
-    { url = "https://files.pythonhosted.org/packages/5e/54/7acd7c63796bffb89443729d95aaa6b8d81a79aa942f8fdd105f5a51bf13/lxml-4.9.4-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:389d2b2e543b27962990ab529ac6720c3dded588cc6d0f6557eec153305a3622", size = 7699448, upload-time = "2023-12-19T18:44:15.252Z" },
-    { url = "https://files.pythonhosted.org/packages/57/74/b1b96f5bb47fae62b9a49a0df5f394f507f89cb55c4d534258924f4c0dc5/lxml-4.9.4-cp311-cp311-win32.whl", hash = "sha256:8aecb5a7f6f7f8fe9cac0bcadd39efaca8bbf8d1bf242e9f175cbe4c925116c3", size = 3455682, upload-time = "2023-12-19T19:00:33.365Z" },
-    { url = "https://files.pythonhosted.org/packages/00/c3/0e6e18ac7fbf9687440c7d54fb2f39055d61ade32545ab305e7e3186be73/lxml-4.9.4-cp311-cp311-win_amd64.whl", hash = "sha256:c7721a3ef41591341388bb2265395ce522aba52f969d33dacd822da8f018aff8", size = 3770258, upload-time = "2023-12-19T19:00:56.027Z" },
-    { url = "https://files.pythonhosted.org/packages/5c/ac/0abe4b25cae50247c5130539d0f45a201dbfe0ba69d3dd844411f90c9930/lxml-4.9.4-cp312-cp312-macosx_11_0_universal2.whl", hash = "sha256:dbcb2dc07308453db428a95a4d03259bd8caea97d7f0776842299f2d00c72fc8", size = 8624172, upload-time = "2023-12-19T19:01:37.711Z" },
-    { url = "https://files.pythonhosted.org/packages/33/e6/47c4675f0c58398c924915379eee8458bf7954644a7907ad8fbc1c42a380/lxml-4.9.4-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:01bf1df1db327e748dcb152d17389cf6d0a8c5d533ef9bab781e9d5037619229", size = 7674086, upload-time = "2023-12-19T19:02:17.492Z" },
-    { url = "https://files.pythonhosted.org/packages/be/9e/5d88b189e91fae65140dc29904946297b3d9cfdf5449d4bc6e657a3ffc2d/lxml-4.9.4-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:e8f9f93a23634cfafbad6e46ad7d09e0f4a25a2400e4a64b1b7b7c0fbaa06d9d", size = 8026189, upload-time = "2023-12-19T19:02:58.387Z" },
-    { url = "https://files.pythonhosted.org/packages/ea/08/ab6c2a803a5d5dce1fbbb32f5c133bbd0ebfe69476ab1eb5ffa3490b0b51/lxml-4.9.4-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:3f3f00a9061605725df1816f5713d10cd94636347ed651abdbc75828df302b20", size = 7516933, upload-time = "2023-12-19T19:03:41.465Z" },
-    { url = "https://files.pythonhosted.org/packages/43/52/b0d387577620af767c73b8b20f28986e5aad70b44053ee296f8a472a12b1/lxml-4.9.4-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:953dd5481bd6252bd480d6ec431f61d7d87fdcbbb71b0d2bdcfc6ae00bb6fb10", size = 7815609, upload-time = "2023-12-19T19:04:12.53Z" },
-    { url = "https://files.pythonhosted.org/packages/be/13/18230c0d567ed282a3d7b61395323e2ef8fc9ad64096fdd3d1b384fa3e3c/lxml-4.9.4-cp312-cp312-win32.whl", hash = "sha256:266f655d1baff9c47b52f529b5f6bec33f66042f65f7c56adde3fcf2ed62ae8b", size = 3460500, upload-time = "2023-12-21T10:40:00.312Z" },
-    { url = "https://files.pythonhosted.org/packages/5f/df/6d15cc415e04724ba4c141051cf43709e09bbcdd9868a6c2e7a7073ef498/lxml-4.9.4-cp312-cp312-win_amd64.whl", hash = "sha256:f1faee2a831fe249e1bae9cbc68d3cd8a30f7e37851deee4d7962b17c410dd56", size = 3773977, upload-time = "2023-12-19T19:04:34.053Z" },
-]
-
-[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1599,77 +1554,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/df/5bd7a48c256faecd1d36edc13133e51397e41b73bb77e1a69deab746ebac/markupsafe-3.0.3-cp314-cp314t-win32.whl", hash = "sha256:915c04ba3851909ce68ccc2b8e2cd691618c4dc4c4232fb7982bca3f41fd8c3d", size = 14819, upload-time = "2025-09-27T18:37:26.285Z" },
     { url = "https://files.pythonhosted.org/packages/1a/8a/0402ba61a2f16038b48b39bccca271134be00c5c9f0f623208399333c448/markupsafe-3.0.3-cp314-cp314t-win_amd64.whl", hash = "sha256:4faffd047e07c38848ce017e8725090413cd80cbc23d86e55c587bf979e579c9", size = 15426, upload-time = "2025-09-27T18:37:27.316Z" },
     { url = "https://files.pythonhosted.org/packages/70/bc/6f1c2f612465f5fa89b95bead1f44dcb607670fd42891d8fdcd5d039f4f4/markupsafe-3.0.3-cp314-cp314t-win_arm64.whl", hash = "sha256:32001d6a8fc98c8cb5c947787c5d08b0a50663d139f1305bac5885d98d9b40fa", size = 14146, upload-time = "2025-09-27T18:37:28.327Z" },
-]
-
-[[package]]
-name = "maxminddb"
-version = "3.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b2/6e/6adbb0b2280a853e8b3344737fea5167e8a2a2ff67168555589b7278e2e8/maxminddb-3.0.0.tar.gz", hash = "sha256:9792b19625945dff146e2e3187f9e470b82330a912f7cea5581b8bd5af30da8b", size = 199784, upload-time = "2025-10-15T20:50:07.283Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a9/15/a3c156c609b59342799fd1c0e60e4a6f6e096e2a18107d88b61a39c76ab5/maxminddb-3.0.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:8e34a0cd9a67f446a6b425b857ac7b63254b5ce64d0b38e013d0e531588b7a66", size = 53857, upload-time = "2025-10-15T20:48:38.447Z" },
-    { url = "https://files.pythonhosted.org/packages/fa/42/8e367bfa2a9c8ffbe0f0b60a904d35b7cb9d6a0d3a3c8fd803a932b3226e/maxminddb-3.0.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:4e1791a30ac50ec2bdd2203276bcb9da25ff1115fd6f152548b5110993297d14", size = 36118, upload-time = "2025-10-15T20:48:39.551Z" },
-    { url = "https://files.pythonhosted.org/packages/47/83/367902eb1e01955d491251812af2226a7d2b2fa3893c1099b5690119ac44/maxminddb-3.0.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:722d4e5c5735f5ae2dcb0ccf972e890c41bccd15476fafe8c2a991f72c4a28d2", size = 36044, upload-time = "2025-10-15T20:48:40.927Z" },
-    { url = "https://files.pythonhosted.org/packages/1d/3b/ae5ead6809bc26bd61bab0548d08983a7b2955159df092305eaa45909f6f/maxminddb-3.0.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8c71ec72fdbec8be4d1e9b53294d59f04c7ae73ede6273efce7516995bcb5468", size = 99409, upload-time = "2025-10-15T20:48:42.775Z" },
-    { url = "https://files.pythonhosted.org/packages/84/0e/3f4bd90ba3def4b490594866641585b93e3deeef4a09aacde921e223629a/maxminddb-3.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f62b55d15f796d14a58c84a853a8ae6d2728546f5c81a15a61aa45082afc21c8", size = 97114, upload-time = "2025-10-15T20:48:44.378Z" },
-    { url = "https://files.pythonhosted.org/packages/2e/3d/49dea88a0931b5764e582e628a55ac2d5a64a8d97ece1853bf751cb43fd3/maxminddb-3.0.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:78ab0b386ab51ea21d54ca42dee379dfd976d5e650ae0435848278b2aaf9d0fb", size = 96833, upload-time = "2025-10-15T20:48:45.916Z" },
-    { url = "https://files.pythonhosted.org/packages/f0/ec/4419c88774ae183bdfb386882796c85675767339eddc41d86ec3df68f61f/maxminddb-3.0.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:9167c80dac8a524af24af22b2093c819cb2ea11c2abe986b6b29be7fa7f6c88f", size = 95065, upload-time = "2025-10-15T20:48:47.096Z" },
-    { url = "https://files.pythonhosted.org/packages/56/40/31fcbe0052848292d8ea17bc3779a8a5f83fd090338a83aeb8c71057ad97/maxminddb-3.0.0-cp311-cp311-win32.whl", hash = "sha256:deb2e6bc068db799eac025ab9d1cbf96cd9fbf636a3414a79518e05fe57ae5a3", size = 35341, upload-time = "2025-10-15T20:48:48.232Z" },
-    { url = "https://files.pythonhosted.org/packages/26/53/48e939bc13be41337aa23c30a3b45122e610a8fa8419af44265ff309dfa2/maxminddb-3.0.0-cp311-cp311-win_amd64.whl", hash = "sha256:87062aec30c57af1a6e1c007391f20f1af836a459486801f169af44bc244c9e7", size = 37132, upload-time = "2025-10-15T20:48:49.324Z" },
-    { url = "https://files.pythonhosted.org/packages/ef/f0/df860ee2b8db38332416ceab8756a36d5b5ed82d3f1cccc8978cc716548a/maxminddb-3.0.0-cp311-cp311-win_arm64.whl", hash = "sha256:612497302bf77d7c90586fc3a19b941e0c78b47f92df035e80550f044a849c96", size = 34258, upload-time = "2025-10-15T20:48:50.404Z" },
-    { url = "https://files.pythonhosted.org/packages/31/df/dec231686a814f9e279afb39f3e27091770d970964bb94e7bfc1fdf01428/maxminddb-3.0.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:bcf83c60a44ec5dfab9e5d3a0c2347ee429d31fa89f88aa283d8551fd5e2c37a", size = 54352, upload-time = "2025-10-15T20:48:51.488Z" },
-    { url = "https://files.pythonhosted.org/packages/14/e3/efb6d621a8940371ecbf393f84fde01f0521116bc281c40124292a593198/maxminddb-3.0.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:56856d0fadab323fb5dc3fa69bc4cb975242133cab1df2c710779738dadda75d", size = 36328, upload-time = "2025-10-15T20:48:52.85Z" },
-    { url = "https://files.pythonhosted.org/packages/51/e8/17cbe454829befb32fec83745141bb6f9ef0b593d53c4e333e938d83ed26/maxminddb-3.0.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:1bd05d919787719fc1026d53b0e7462cf0c389534620e407676ecf61c2d289bb", size = 36174, upload-time = "2025-10-15T20:48:53.874Z" },
-    { url = "https://files.pythonhosted.org/packages/ae/1d/5492205210570d851d5a74f5c9c01022993edc74296eb792c890318eff25/maxminddb-3.0.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:29515dc3606d1d8fffdb4025dccf01c93d16651683e9c6d8611892a4c9f2566d", size = 101153, upload-time = "2025-10-15T20:48:55.013Z" },
-    { url = "https://files.pythonhosted.org/packages/a6/07/f96b5e4fdfdd2cc7a9724f3fa40b6bc282c9d9bdcf85b1920a0dee50c00b/maxminddb-3.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:52b5edc32894643c93279de2d889c0b98906277e7e91cbba709bc55f5500ecca", size = 99465, upload-time = "2025-10-15T20:48:56.198Z" },
-    { url = "https://files.pythonhosted.org/packages/d7/30/ef2c167277292ce360bcd2a11e0fa9fe2e4e67e7c7b49fff2eab7caae787/maxminddb-3.0.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:0a095ce04e404315f9d47a186a7d96b11a283430d811ba6b0530167233100b95", size = 98395, upload-time = "2025-10-15T20:48:57.489Z" },
-    { url = "https://files.pythonhosted.org/packages/04/c9/71ce286a4ba12ec74b094d1a627d57a306349f4f23ce66d3ec2eca045e9f/maxminddb-3.0.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:1d3645a44c392d9ffdea4d2252d70b2910eee47d56b8305da0c0923a63e895d6", size = 97320, upload-time = "2025-10-15T20:48:58.7Z" },
-    { url = "https://files.pythonhosted.org/packages/da/4a/3e3f24f876242dd53a8a95250669e2f08b8cd8bc4640e947c982efcdaca6/maxminddb-3.0.0-cp312-cp312-win32.whl", hash = "sha256:c0e6d54da5d85d38e674fee9b04b1ad9212c38cb57adcc7c86bb4ed71b2b6555", size = 35481, upload-time = "2025-10-15T20:49:00.755Z" },
-    { url = "https://files.pythonhosted.org/packages/71/de/56feda63d5d8d896c2dcfa6ef9754a429fa2c5353fa5f0c32ed1f46fa004/maxminddb-3.0.0-cp312-cp312-win_amd64.whl", hash = "sha256:4931ee0cbba030e1b729599e485aca438b668432ccd1eb73770c93bbc38f2b60", size = 37295, upload-time = "2025-10-15T20:49:01.993Z" },
-    { url = "https://files.pythonhosted.org/packages/87/4a/87c86516dee431a9e6cdded7eb865b5b7fc7c73b17262a50c75e2da5c9b6/maxminddb-3.0.0-cp312-cp312-win_arm64.whl", hash = "sha256:f55fb5c607dc4ddab7eba67da92d75921ef7d8e682ab47d21935566dc6990021", size = 34263, upload-time = "2025-10-15T20:49:03.237Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/4e/9c97eaea080d450ab63197a20ead71cc652f99f5ecb1e68fc0896db33ac8/maxminddb-3.0.0-cp313-cp313-android_21_arm64_v8a.whl", hash = "sha256:f2162e6bee9643d86647518c891756ef5091afb1c2d522fc206d7c26187862eb", size = 37615, upload-time = "2025-10-15T20:49:04.728Z" },
-    { url = "https://files.pythonhosted.org/packages/b4/a1/900f105a1562667e22566bbbfa3ca8ca6ea2b2e7e31ff30673459809be74/maxminddb-3.0.0-cp313-cp313-android_21_x86_64.whl", hash = "sha256:eace3ccb184546287d27fce54852751e935c00f9ba7b66fece09e7761503cd13", size = 38070, upload-time = "2025-10-15T20:49:06.138Z" },
-    { url = "https://files.pythonhosted.org/packages/39/6b/247ef29d080be9b57efba90e33445e2cc028f8cf09beb5e697e5132c95dd/maxminddb-3.0.0-cp313-cp313-ios_13_0_arm64_iphoneos.whl", hash = "sha256:babf6c600361e5f9bc3e3873b900ab044f6cdc7c0f15c086e0b52d2e005ab949", size = 35365, upload-time = "2025-10-15T20:49:07.233Z" },
-    { url = "https://files.pythonhosted.org/packages/7d/dd/ca6c4929e1a634507a99e8143c81ecc3f3f913e1a0c47b656b5a006538ec/maxminddb-3.0.0-cp313-cp313-ios_13_0_arm64_iphonesimulator.whl", hash = "sha256:024221e821f3385dd41f13e2d0ac5afca569b69a6d7755c8c960edaf31c0e47f", size = 35919, upload-time = "2025-10-15T20:49:08.3Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/41/a7faaf244114d47994fef85accd06dd906832cdcc5465ad27b48e0f11f2d/maxminddb-3.0.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:bc838d9060e6e623b4bd055d498a2159a072d43beb3eeaefde5af39ac1b1b249", size = 54354, upload-time = "2025-10-15T20:49:09.417Z" },
-    { url = "https://files.pythonhosted.org/packages/d6/c8/76b3c0ea1f180209496cb401892a4ad197ee23ac1f370da578fffa466418/maxminddb-3.0.0-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:29fd164067b2765752d5970aaef823a51d262a484c59e866c20dbf99f45453ac", size = 36312, upload-time = "2025-10-15T20:49:10.713Z" },
-    { url = "https://files.pythonhosted.org/packages/b6/96/b2d5ab37458ec892d7d52b6a9e6aa9992354d61df20b9978bae60e35d17a/maxminddb-3.0.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:6008ecba67b7024b80e3f28e276b736f2f984795cd4a6922ddffaba8038d6a60", size = 36174, upload-time = "2025-10-15T20:49:12.232Z" },
-    { url = "https://files.pythonhosted.org/packages/ec/3d/c22a117c1c6ca42a62be9473f12d113e2eab72ac28c032a290d0fbbd488e/maxminddb-3.0.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:684fec138b463d1fc6fa88fd2967e25b3af0629eb0b5e6f3bbc017e64e2f68c6", size = 101205, upload-time = "2025-10-15T20:49:13.342Z" },
-    { url = "https://files.pythonhosted.org/packages/df/e6/a170e6ae3492d8e334a6ce9e39668f2b8d0cb0a158804460b5d851315230/maxminddb-3.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e2dd94deb1baa19f9fd17968b90b7c03589078a3000972948e3aecfa723300d1", size = 99495, upload-time = "2025-10-15T20:49:14.65Z" },
-    { url = "https://files.pythonhosted.org/packages/7b/8b/a18aba0838a85bf9ff30f165d3cb5f52967858e89e54aa8a7509a674f253/maxminddb-3.0.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:880e233c00a4403bb6dd5e406f156be3c6a5a5b37b472102928014ab21c12b4b", size = 98402, upload-time = "2025-10-15T20:49:15.864Z" },
-    { url = "https://files.pythonhosted.org/packages/2e/24/85d15613b6dbf2b683a5b9817640c3baac1931edf59a7465c54e0ad92084/maxminddb-3.0.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:8e8031353eaece26ee634bcba2cba3bb91092f52a69e5f5dbc5931d59f84b2de", size = 97303, upload-time = "2025-10-15T20:49:17.121Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/fb/23883b82abf92d0613375a9a9f4a4412ff8cc0596d124070832bf7f783a6/maxminddb-3.0.0-cp313-cp313-win32.whl", hash = "sha256:2d325fcdbf1ba356ac47304ba3fc8605b21b9bd09d0818b24f43ebecc71c5e29", size = 35481, upload-time = "2025-10-15T20:49:18.266Z" },
-    { url = "https://files.pythonhosted.org/packages/4b/19/a498bf14a86e98475d4ca994988e8f072dccfd407d026403ad95725321de/maxminddb-3.0.0-cp313-cp313-win_amd64.whl", hash = "sha256:3ad60671645bf88b853f126999cafd0e61ad668f210176ea24a8b5e99dd3e049", size = 37299, upload-time = "2025-10-15T20:49:19.488Z" },
-    { url = "https://files.pythonhosted.org/packages/34/ca/36fecfbed3ef0175b569b07f968fb56d591a6effdaeda81f1247dc8034a4/maxminddb-3.0.0-cp313-cp313-win_arm64.whl", hash = "sha256:4ca8989b0e389404f268c8650aeeadda34417f87baa405325b051a511f56c382", size = 34254, upload-time = "2025-10-15T20:49:20.533Z" },
-    { url = "https://files.pythonhosted.org/packages/96/cb/eed553828b6bcd1bb8c3eb74818aee471c63aba6612128d73c20da122921/maxminddb-3.0.0-cp314-cp314-android_24_arm64_v8a.whl", hash = "sha256:1a89feae4b7296f24a76467788dad73578bbf51e4cf9672e61ef1be1320dd3d6", size = 37412, upload-time = "2025-10-15T20:49:21.649Z" },
-    { url = "https://files.pythonhosted.org/packages/65/3b/0dba6d1d078e2a0523bc0a89c0060b1366a2f9ee8f72f47c33a107e56fab/maxminddb-3.0.0-cp314-cp314-android_24_x86_64.whl", hash = "sha256:e874238be93b6e6b3c6589795015edb9b935d2638806439ee65c66669e399b2d", size = 37876, upload-time = "2025-10-15T20:49:23.165Z" },
-    { url = "https://files.pythonhosted.org/packages/a3/49/d4b0636aec3671c3aedf97013b24b6b310de62d6ab373b775a3a8dd594a9/maxminddb-3.0.0-cp314-cp314-ios_13_0_arm64_iphoneos.whl", hash = "sha256:a45fc20423952f84a73c008d40ea5b1d8c343a3c58d229a45d78a20093817a6f", size = 35334, upload-time = "2025-10-15T20:49:24.554Z" },
-    { url = "https://files.pythonhosted.org/packages/37/d7/6ff7c7386365f639cff20fb1d0f4b6533b12706b4a0ae05cfdaf0b41f768/maxminddb-3.0.0-cp314-cp314-ios_13_0_arm64_iphonesimulator.whl", hash = "sha256:d3796460179976fea3f99855bd75811af74f5659699584d4b7e80a7c66b52893", size = 35887, upload-time = "2025-10-15T20:49:25.614Z" },
-    { url = "https://files.pythonhosted.org/packages/bb/ee/e7d8942bbdf06a2082611d52e89ece4e6064195ddb18a7158b5f53e76bc7/maxminddb-3.0.0-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:7997f0b1ed0210b0790a1885e9bc38bed53fdcaaf37141cf8dd1a97894c8fa1b", size = 54335, upload-time = "2025-10-15T20:49:26.728Z" },
-    { url = "https://files.pythonhosted.org/packages/77/e1/bd16679264463d2c340940b5b320cc97cd240a3a0b6c1811c88b82d292db/maxminddb-3.0.0-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:21f9d0c164f7c058f419cd9b1105f01606b2abf77b456e8d201700804667686f", size = 36528, upload-time = "2025-10-15T20:49:27.842Z" },
-    { url = "https://files.pythonhosted.org/packages/6f/41/cf8a5ca1ede1fcd1b306d504a3949d52fd87124fcc2c2180afbcf714ff54/maxminddb-3.0.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:e7fe7a2a6b2275736fd090d98e081146a1b81abf475d6d2dfd1b106d3792b208", size = 36147, upload-time = "2025-10-15T20:49:28.935Z" },
-    { url = "https://files.pythonhosted.org/packages/4a/e0/cd48d467c34ac108fcee9e444dd537e27f04a945d787acd5614f1127dbe5/maxminddb-3.0.0-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:5aaa656d5cb2ea60f4e845669be6a759a25aa1f0cd67fbfef0e64759af28dbb7", size = 101010, upload-time = "2025-10-15T20:49:30.122Z" },
-    { url = "https://files.pythonhosted.org/packages/4f/4b/323ec8abe811702bcea537a0aa5e83442f48f1974084bdb048b75424536c/maxminddb-3.0.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c6b86dedb1ae681376bcc31bec37d7d674c86ff05687738ab333f18988f17c3a", size = 99249, upload-time = "2025-10-15T20:49:31.332Z" },
-    { url = "https://files.pythonhosted.org/packages/d7/1a/520fcb6ad4185857fbba74cb1ee42b580492049c3730ce0687ac54dbe731/maxminddb-3.0.0-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:fde874c2af4dd4488c423b4f4bc2ec9931e5e992f382feb43d07dc4e8dda5e24", size = 98418, upload-time = "2025-10-15T20:49:32.879Z" },
-    { url = "https://files.pythonhosted.org/packages/af/20/8650798c8e0806a07e2534c562acf1e3d735ac7aaee0abab370f80c56977/maxminddb-3.0.0-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:397a90b6db4563abe6d5fb08e112afd4481b8354fa64d289625c2e941b787860", size = 97092, upload-time = "2025-10-15T20:49:34.529Z" },
-    { url = "https://files.pythonhosted.org/packages/97/c8/0b89ba3651519c021cf2258a5d0c1af306245f2f5e3e05618f28200270d2/maxminddb-3.0.0-cp314-cp314-win32.whl", hash = "sha256:38ba5ce9efb19f1bf5915f9dca8495f5eb63677cf7760ba7038850d3dcde6572", size = 36144, upload-time = "2025-10-15T20:49:35.702Z" },
-    { url = "https://files.pythonhosted.org/packages/9e/9f/06b232bb67f13580ae36aa15ddac85d4b38203363801cdd72d70aaba1b56/maxminddb-3.0.0-cp314-cp314-win_amd64.whl", hash = "sha256:9c8c62de3b10d1940abd0c18ed57879b6618e26b78a17ab4a576ac30f96a0e83", size = 38069, upload-time = "2025-10-15T20:49:37.141Z" },
-    { url = "https://files.pythonhosted.org/packages/70/dd/a76d5b755bdbe24dd1e03f2ce1951d8d9e70fca80abc7498abbec4441f71/maxminddb-3.0.0-cp314-cp314-win_arm64.whl", hash = "sha256:f0bfd8326a012cb2c8a282531ce900e6535dfc3e50d99c04e64453f782201bd0", size = 34804, upload-time = "2025-10-15T20:49:38.44Z" },
-    { url = "https://files.pythonhosted.org/packages/f3/02/512f13edf16e8bf3e01cff958d58bcf023c9ab3ba3d5cda92e011a57f34e/maxminddb-3.0.0-cp314-cp314t-macosx_10_15_universal2.whl", hash = "sha256:6a4330999ab1987f82d32ad969fddcace596dbf8a5c075104e88568f0c326f94", size = 58264, upload-time = "2025-10-15T20:49:39.891Z" },
-    { url = "https://files.pythonhosted.org/packages/10/3a/0e8551e0a254489769ab5336bddf5898bead7f6dad17645f85473922a01d/maxminddb-3.0.0-cp314-cp314t-macosx_10_15_x86_64.whl", hash = "sha256:7d22b9706c96872b5ee08a1085af9af986832e52c9cc399aa445f4d3d52f2475", size = 38622, upload-time = "2025-10-15T20:49:41.88Z" },
-    { url = "https://files.pythonhosted.org/packages/46/85/1ee105d2870c62df68aa2c6c2b886910de8936d9a67d261e55b0dfc9be53/maxminddb-3.0.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:758f1b656c8bf7b5308d23bbcfe61918f1dd57394331e4300402fd2814e748f4", size = 38028, upload-time = "2025-10-15T20:49:43.326Z" },
-    { url = "https://files.pythonhosted.org/packages/2c/5f/b01340be810e8a846db21e839a5d80305628765803fabb45aab31d4c96f6/maxminddb-3.0.0-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1efe051b84bd90c86571ae7e02479d09dcf6f84925702c2abe870f8cec4a443c", size = 117895, upload-time = "2025-10-15T20:49:45.209Z" },
-    { url = "https://files.pythonhosted.org/packages/3e/34/06c029169335d3557904749f15e4a03361471869655693c8b83d4b64dd29/maxminddb-3.0.0-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:3a87b1d0409aea9903a5f9f2700abb798c46a115941f28ac23b7905fc3ce3967", size = 114609, upload-time = "2025-10-15T20:49:46.59Z" },
-    { url = "https://files.pythonhosted.org/packages/18/e1/3dc1c8742e552be3f074943a6fc2e27a6cdaef559613f03b5158833994a4/maxminddb-3.0.0-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:029fce189a447d0c0a5729685ae1af3793de364f7301391cde5604282901c52f", size = 113977, upload-time = "2025-10-15T20:49:47.817Z" },
-    { url = "https://files.pythonhosted.org/packages/96/f3/566927372c444dc35f54d17a3a608939586c9b3e5ce9d1282a27ed0e1dde/maxminddb-3.0.0-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:0652a3858c6c6f70e94df1eb3e4755087b8278c4280c473fb533280ff2a4d281", size = 111818, upload-time = "2025-10-15T20:49:49.217Z" },
-    { url = "https://files.pythonhosted.org/packages/c9/b6/6f97bbb6535cbf0e57cbfff3cde75d3b419d0e192b38d6f33050d6f97ec3/maxminddb-3.0.0-cp314-cp314t-win32.whl", hash = "sha256:b240375d51a91f98d050f3f4f1ed164c0c7e4fb7c55ef7767242ef3d56147853", size = 37395, upload-time = "2025-10-15T20:49:50.401Z" },
-    { url = "https://files.pythonhosted.org/packages/96/41/5296294d494cfc111d000d2e85367a89abe5756f86d2669453c6e1a39334/maxminddb-3.0.0-cp314-cp314t-win_amd64.whl", hash = "sha256:b23e77eaa343dccdf85aad422ac16b65ed2181abdc7678945d07e89187a0b15b", size = 39553, upload-time = "2025-10-15T20:49:51.464Z" },
-    { url = "https://files.pythonhosted.org/packages/8c/34/7910eff964987e82ffa78b94a59e943e52cd2e51f40a1ffede0e9e6ecf86/maxminddb-3.0.0-cp314-cp314t-win_arm64.whl", hash = "sha256:d2306c0a50eeafc882fcfce0c99b44400ae95b9283187902236248c2cf904d2a", size = 35418, upload-time = "2025-10-15T20:49:52.528Z" },
-    { url = "https://files.pythonhosted.org/packages/8c/d9/fe6243736aed22a7fa877e4bce7f0a5d45e07115fc0da2b5c261d2d8dc19/maxminddb-3.0.0-pp311-pypy311_pp73-macosx_10_15_x86_64.whl", hash = "sha256:aca2e80a32749e0484e8f0e885014efe0c43218acb6f44c6ca4cd8daa90c8f98", size = 34992, upload-time = "2025-10-15T20:50:00.902Z" },
-    { url = "https://files.pythonhosted.org/packages/70/a6/1719d8e980edd735f2ad10e47fe0345a4598cb20658b53b8649e7adecec3/maxminddb-3.0.0-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:0ea42502167190cc52e11ec9c26ff642ee276418f557304d1773b888563feb3f", size = 34643, upload-time = "2025-10-15T20:50:01.985Z" },
-    { url = "https://files.pythonhosted.org/packages/93/01/fef9105639a0abedf2891b2492399417f4e2a166a1bad4f7aa6d262254b9/maxminddb-3.0.0-pp311-pypy311_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:71db302b3eafab7d421d482fcaa977bf94d696dde4db6aab9a9ffd3f4ea3c186", size = 39163, upload-time = "2025-10-15T20:50:03.074Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/88/dd27d7834a5db56e7ac6dca93fd5c4c5f2abd3be3eab0dae2c07023dcb20/maxminddb-3.0.0-pp311-pypy311_pp73-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:98eb4bd49301a9066c6ed5817867b8289af3dc41f60a59e29ee2460d80e348da", size = 37988, upload-time = "2025-10-15T20:50:04.499Z" },
-    { url = "https://files.pythonhosted.org/packages/02/c5/fa52785a18300a0a5dfa36d4d640bbaf6dc7f41db102f86293156101bdd0/maxminddb-3.0.0-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:2de7f8255157107e3ed03690d9dc0c278fd5da108b2f36b8b161e21c67175940", size = 37219, upload-time = "2025-10-15T20:50:05.667Z" },
 ]
 
 [[package]]
@@ -3041,15 +2925,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/01/e4/633d080897e769ed5712dcfad626e55dbd6cf45db0ff4d9884315c6a82da/wtforms-3.2.1.tar.gz", hash = "sha256:df3e6b70f3192e92623128123ec8dca3067df9cfadd43d59681e210cfb8d4682", size = 137801, upload-time = "2024-10-21T11:34:00.108Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/c9/2088fb5645cd289c99ebe0d4cdcc723922a1d8e1beaefb0f6f76dff9b21c/wtforms-3.2.1-py3-none-any.whl", hash = "sha256:583bad77ba1dd7286463f21e11aa3043ca4869d03575921d1a1698d0715e0fd4", size = 152454, upload-time = "2024-10-21T11:33:58.44Z" },
-]
-
-[[package]]
-name = "xmltodict"
-version = "0.13.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/39/0d/40df5be1e684bbaecdb9d1e0e40d5d482465de6b00cbb92b84ee5d243c7f/xmltodict-0.13.0.tar.gz", hash = "sha256:341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56", size = 33813, upload-time = "2022-05-08T07:00:04.916Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/db/fd0326e331726f07ff7f40675cd86aa804bfd2e5016c727fa761c934990e/xmltodict-0.13.0-py2.py3-none-any.whl", hash = "sha256:aa89e8fd76320154a40d19a0df04a4695fb9dc5ba977cbb68ab3e4eb225e7852", size = 9971, upload-time = "2022-05-08T07:00:02.898Z" },
 ]
 
 [[package]]

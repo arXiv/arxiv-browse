@@ -6,15 +6,8 @@ Flask app for /abs and /list pages.
 
 You can run the browse app with minimal test data from this repo:
 
-
-    python --version
-    # 3.11.x
-    python -m venv ./venv
-    source ./venv/bin/activate
-    pip install poetry==1.3.2
-    poetry install
-
-    python main.py
+    uv sync
+    uv run python main.py
     google-chrome http://127.0.0.1:8080/abs/0906.5132
 
 This will monitor for any changes to the Python code and templates and restart the server.
@@ -33,7 +26,7 @@ The above method will only give you access to minimal data in the built-in test
 dataset. For full (read-only) access to the production database, the following
 steps are necessary:
 
-## Step 1 Prerequisites
+### Step 1 Prerequisites
 you are logged into gcloud and have default application credentials. This
 can be achieved by calling `gcloud auth login --update-adc --force` and
 logging into your @arxiv.org account.
