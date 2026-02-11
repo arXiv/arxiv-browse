@@ -23,11 +23,6 @@ jobs:
       with:
         python-version-file: "pyproject.toml"
 
-    - name: install debian packages
-      run:  |
-        sudo apt-get update
-        sudo apt-get install build-dep python3-lxml
-
     - name: Install uv
       uses: astral-sh/setup-uv@v6
 
