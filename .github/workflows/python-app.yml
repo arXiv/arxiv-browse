@@ -18,10 +18,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version-file: "pyproject.toml"
 
     - name: Install uv
       uses: astral-sh/setup-uv@v6
@@ -35,5 +31,5 @@ jobs:
 
     - name: Ruff lint check
       run: |
-        pip install ruff
-        ruff check --output-format=github browse
+        uv pip install ruff
+        uv run ruff check --output-format=github browse
