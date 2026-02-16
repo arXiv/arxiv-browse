@@ -76,24 +76,21 @@ def latexml_db_engine(test_dir):
 @pytest.fixture(scope='session')
 def loaded_db(test_dir):
     """Loads the testing db"""
+    from arxiv import db
+    uri = f'sqlite:///{test_dir}/test_latexml.db'
+    db._latexml_engine = create_engine(uri)
+    util.create_all(db._latexml_engine)
+    uri = f'sqlite:///{test_dir}/test_classic.db'
+    db._classic_engine = create_engine(uri)
+    util.create_all(db._classic_engine)
 
-    app = create_web_app(**test_config())
-    with app.app_context():
-        from arxiv import db
-        uri = f'sqlite:///{test_dir}/test_latexml.db'
-        db._latexml_engine = create_engine(uri)
-        util.create_all(db._latexml_engine)
-        uri = f'sqlite:///{test_dir}/test_classic.db'
-        db._classic_engine = create_engine(uri)
-        util.create_all(db._classic_engine)
-
-        from arxiv.db import models
-        models.configure_db_engine(db._classic_engine, db._latexml_engine)
-        from . import populate_test_database
-        populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
-        db._classic_engine = None
-        db._latexml_engine = None
-        return Path(test_dir) / "test_classic.db", Path(test_dir) / "test_latexml.db"
+    from arxiv.db import models
+    models.configure_db_engine(db._classic_engine, db._latexml_engine)
+    from . import populate_test_database
+    populate_test_database(True, db, db._classic_engine, db._latexml_engine) # type: ignore
+    db._classic_engine = None
+    db._latexml_engine = None
+    return Path(test_dir) / "test_classic.db", Path(test_dir) / "test_latexml.db"
 
 @pytest.fixture(scope='function')
 def loaded_db_copy(test_dir, loaded_db):

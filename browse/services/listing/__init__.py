@@ -56,7 +56,7 @@ class ListingItem:
 
     def __init__(self, id: str,
                  listingType: AnnounceTypes,
-                 primary: str,
+                 primary: str | None,
                  article: Optional[DocMetadata] = None):
         self.id = id
         self.listingType = listingType

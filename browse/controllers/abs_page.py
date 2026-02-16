@@ -5,13 +5,14 @@ handles GET requests to the abs endpoint.
 """
 import re
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 from http import HTTPStatus as status
 from dateutil import parser
 from dateutil.tz import tzutc
 from flask import request, url_for, current_app
+from werkzeug.datastructures import Headers
 from werkzeug.exceptions import InternalServerError
 
 from arxiv.base import logging
@@ -29,7 +30,7 @@ from arxiv.document.exceptions import (
     AbsNotFoundException,
     AbsVersionNotFoundException,
 )
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 
 from browse.exceptions import AbsNotFound
 from browse.services.database import (
@@ -42,7 +43,7 @@ from browse.services.database import (
 )
 from browse.services.documents import get_doc_service
 from browse.services.dissemination import get_article_store
-from browse.controllers import check_supplied_identifier
+from browse.controllers import Response, check_supplied_identifier
 from browse.formatting.external_refs_cits import (
     DBLP_BASE_URL,
     DBLP_BIBTEX_PATH,
@@ -60,7 +61,6 @@ from browse.services.audio import has_audio
 
 logger = logging.getLogger(__name__)
 
-Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 
 truncate_author_list_size = 100
 
@@ -90,14 +90,14 @@ def get_abs_page(arxiv_id: str) -> Response:
         Raised when there was an unexpected problem executing the query.
     """
     response_data: Dict[str, Any] = {}
-    response_headers: Dict[str, Any] = {}
+    response_headers: Headers = Headers()
     try:
         if not Identifier.is_mostly_safe(arxiv_id):
             raise AbsNotFound(data={"reason": "poorly formatted paper id"})
 
         arxiv_id = _check_legacy_id_params(arxiv_id)
         arxiv_identifier = Identifier(arxiv_id=arxiv_id)
-        response_headers=add_surrogate_key(response_headers,[f"abs-{arxiv_identifier.id}", f"paper-id-{arxiv_identifier.id}"])
+        response_headers=b_add_surrogate_key(response_headers,[f"abs-{arxiv_identifier.id}", f"paper-id-{arxiv_identifier.id}"])
         redirect = check_supplied_identifier(arxiv_identifier, "browse.abstract")
         if redirect:
             return redirect
@@ -228,7 +228,7 @@ def _non_critical_abs_data(
 
 
 def _check_request_headers(
-    docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Dict[str, Any]
+    docmeta: DocMetadata, response_data: Dict[str, Any], resp_headers: Headers
 ) -> bool:
     """Check the request headers, update the response headers accordingly."""
     version = docmeta.get_version()

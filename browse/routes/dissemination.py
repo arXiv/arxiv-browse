@@ -2,8 +2,9 @@
 from typing import Optional, Dict
 
 from arxiv.identifier import Identifier, IdentifierException
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 from flask import Blueprint, redirect, url_for, Response, render_template, request
+from werkzeug.datastructures import Headers
 from werkzeug.exceptions import InternalServerError, BadRequest
 
 from browse.controllers import check_supplied_identifier
@@ -87,12 +88,12 @@ def format(arxiv_id: str, archive: Optional[str] = None) -> Response:
     for fmt in formats:
         data[fmt] = True
     # TODO DOCX doesn't seem like the url_for in the template will work correctly with the .docx?
-    headers: Dict[str, str] = {}
-    headers = add_surrogate_key(headers, ["format", f"paper-id-{arxiv_identifier.id}"])
+    headers: Headers | Dict[str, str] = {}
+    headers = b_add_surrogate_key(headers, ["format", f"paper-id-{arxiv_identifier.id}"])
     if arxiv_identifier.has_version:
-        headers = add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.idv}"])
+        headers = b_add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.idv}"])
     else:
-        headers = add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.id}-current"])
+        headers = b_add_surrogate_key(headers, [f"paper-id-{arxiv_identifier.id}-current"])
     return render_template("format.html", **data), 200, headers  # type: ignore
 
 
