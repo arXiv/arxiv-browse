@@ -23,22 +23,24 @@ WORKDIR /app
 
 RUN apt-get -y install default-libmysqlclient-dev
 
-ENV VIRTUAL_ENV=/opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install -U pip uv
-
-COPY uv.lock pyproject.toml ./
-RUN uv sync --frozen --no-dev --no-install-project
+COPY README.md uv.lock pyproject.toml ./
 
 ADD app.py /app/
-
-ENV PATH "/app:${PATH}"
 
 ADD browse /app/browse
 ADD wsgi.py /app/
 
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install -U pip uv
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+RUN uv sync --frozen --no-dev
+
 RUN echo $git_commit > /git-commit.txt
+
+ENV PATH "/app:${PATH}"
 
 EXPOSE 8080
 ENV LOGLEVEL 40
