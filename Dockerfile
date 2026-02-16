@@ -16,7 +16,6 @@ ENV PYTHONFAULTHANDLER=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.3.2 \
     LC_ALL=en_US.utf8 \
     LANG=en_US.utf8
 
@@ -27,12 +26,10 @@ RUN apt-get -y install default-libmysqlclient-dev
 ENV VIRTUAL_ENV=/opt/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install -U pip "poetry==$POETRY_VERSION"
+RUN pip install -U pip uv
 
-COPY poetry.lock pyproject.toml ./
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi \
-    --without dev
+COPY uv.lock pyproject.toml ./
+RUN uv sync --frozen --no-dev --no-install-project
 
 ADD app.py /app/
 
