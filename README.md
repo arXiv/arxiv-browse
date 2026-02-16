@@ -19,7 +19,7 @@ overridden via environment variables, see `browse/config.py`.
 
 ## To run test suite
 
-    pytest tests --cov=browse
+    uv run pytest tests --cov=browse
 
 ## Running with access to a GCP database
 The above method will only give you access to minimal data in the built-in test
