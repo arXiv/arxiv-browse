@@ -209,7 +209,7 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
     elif isinstance(file_list, FileObj): #converted via latexml
         if file_list.name.endswith('.html'):  # only transform HTML
             resp = default_resp_fn(HTMLFileTransform(file_list, render_branded_html_paper, \
-                scaffold_metadata_from_published(docmeta)), arxiv_id, docmeta, version)
+                scaffold_metadata_from_published(docmeta, version)), arxiv_id, docmeta, version)
         else: # PNGs and other assets served as-is
             resp = default_resp_fn(file_list, arxiv_id, docmeta, version)
         resp.headers=b_add_surrogate_key(resp.headers,["html-latexml"])
