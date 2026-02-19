@@ -53,6 +53,7 @@
     --form-border-width: 1px;
     --form-border-color: var(--text-color);
     --form-border-radius: 4px;
+    --modal-submit-btn-color: var(--header-text-color);
     --modal-submit-btn-background-color: var(--header-background-color);
     --modal-submit-btn-border-color: #690604;
   }
@@ -424,6 +425,7 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
       border-radius: var(--form-border-radius);
       margin: 8rem auto 0 auto;
       width: calc(min(var(--main-width), 100%) - 2rem);
+      font-family: var(--text-font-family);
       color: var(--text-color);
       background-color: var(--background-color);
 
@@ -484,7 +486,7 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
     display: block;
     cursor: pointer;
     font-family: var(--other-font-family);
-    color: var(--text-color);
+    color: var(--modal-submit-btn-color);
     background-color: var(--modal-submit-btn-background-color);
     border-color: var(--modal-submit-btn-border-color);
     margin: 0.625rem 0;
