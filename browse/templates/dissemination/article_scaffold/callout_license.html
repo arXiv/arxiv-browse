@@ -1,0 +1,10 @@
+<div id="infobox" class="infobox">
+  <a id="license-tr" href="https://info.arxiv.org/help/license/index.html#licenses-available">
+    {{meta.license}}
+  </a>
+  <div id="watermark-tr">
+    {% if meta.published%}arXiv:{{ meta.page_id }}{%
+       else %}submission/{{ meta.page_id }}{% endif %}{#
+    #}{{ meta.primary_category and '['+meta.primary_category + ']' }} {#
+    #}{{ meta.date_of_version }}</div>
+</div>

@@ -18,6 +18,8 @@ from browse.controllers.files import last_modified, add_time_headers, \
 from arxiv.files import FileObj, FileTransform
 
 from browse.services.html_processing import post_process_html
+from browse.services.html_processing.scaffold import render_branded_html_paper, HTMLFileTransform
+from browse.services.html_processing.scaffold_builder import scaffold_metadata_from_published
 from browse.services.dissemination import get_article_store
 from browse.services.dissemination.article_store import (
     Acceptable_Format_Requests, KnownReason, Deleted)
@@ -205,7 +207,11 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
     if docmeta.source_format == 'html' or version.source_flag.html:
         resp= _html_source_listing_response(file_list, arxiv_id)
     elif isinstance(file_list, FileObj): #converted via latexml
-        resp= default_resp_fn(file_list, arxiv_id, docmeta, version)
+        if file_list.name.endswith('.html'):  # only transform HTML
+            resp = default_resp_fn(HTMLFileTransform(file_list, render_branded_html_paper, \
+                scaffold_metadata_from_published(docmeta)), arxiv_id, docmeta, version)
+        else: # PNGs and other assets served as-is
+            resp = default_resp_fn(file_list, arxiv_id, docmeta, version)
         resp.headers=b_add_surrogate_key(resp.headers,["html-latexml"])
         if _is_html_name(file_list):
             resp.headers['X-Robots-Tag'] = 'nofollow'
@@ -255,7 +261,6 @@ def _html_source_listing_response(file_list: Union[List[FileObj],FileObj], arxiv
     
     resp.headers=b_add_surrogate_key(resp.headers,["html-native"])
     return resp
-
 
 def _get_html_file_name(name:str) -> str:
     # file paths should be of form "ps_cache/cs/html/0003/0003064v1/HTTPFS-Paper.html" with a minimum of 5 slashes

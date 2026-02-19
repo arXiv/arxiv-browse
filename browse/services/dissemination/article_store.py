@@ -254,7 +254,7 @@ class ArticleStore:
 
         try:
             if docmeta is None:
-                docmeta = self.metadataservice.get_abs(arxiv_id.id)
+                docmeta = self.metadataservice.get_abs(arxiv_id)
         # Not excepting AbsParsingException or AbsException since that is bad data that we want to know about and fix.
         except AbsNotFoundException:
             return "ARTICLE_NOT_FOUND"
