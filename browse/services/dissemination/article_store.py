@@ -254,6 +254,8 @@ class ArticleStore:
 
         try:
             if docmeta is None:
+                # Pass `arxiv_id` directly, so that if a version is provided it will be used.
+                # This ensures docmeta.license will be the one for the specific version.
                 docmeta = self.metadataservice.get_abs(arxiv_id)
         # Not excepting AbsParsingException or AbsException since that is bad data that we want to know about and fix.
         except AbsNotFoundException:
