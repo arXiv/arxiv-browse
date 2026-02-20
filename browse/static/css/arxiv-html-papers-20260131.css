@@ -1,0 +1,3 @@
+@import "/static/browse/0.3.4/css/ar5iv.0.8.4.css" layer(ar5iv);
+@import "/static/browse/0.3.4/css/arxiv-html-papers-theme-20250131.css" layer(arxiv-theme);
+@layer ar5iv, arxiv-theme;

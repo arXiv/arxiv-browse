@@ -1,0 +1,805 @@
+@font-face {
+  font-family: STIX Two Math;
+  font-display: auto;
+  src: local('STIXTwoMath-Regular'),
+    url('/static/browse/0.3.4/fonts/STIXTwoMath-Regular.woff2');
+}
+
+@layer tokens, ar5iv-patches, print, header, infobox, footer, nav-toc, ui-report-issue, ui-back-reference, responsive-layout;
+
+/* Design tokens for light and dark mode */
+@layer tokens {
+  :root,
+  [data-theme=light] {
+    --headings-font-family: "rival-sans", sans-serif;
+    --text-font-family: "rival-sans", sans-serif;
+    --math-font-family: "STIX Two Math", "Cambria Math", math;
+    /* Should we do anything special for caligraphic?
+      e.g. "Lucida Calligraphy","Zapf Chancery","URW Chancery L", TeX Gyre Termes...*/
+    --math-caligraphic-font-family: var(--math-font-family);
+    --toc-font-family: var(--text-font-family);
+    --other-font-family: var(--text-font-family);
+    --code-font-family: "ibm-plex-mono", monospace;
+    /* warm wash */
+    --note-highlight-color: #f9f7f7;
+    /* Cornell Red */
+    --header-background-color: #b31b1b;
+    --toc-text-highlight-color: #b31b1b;
+    /* Archival Blue */
+    --inpage-text-highlight-color: #1f5e96;
+    /* Publishing Pink */
+    --report-btn-hover-bg-color: #fb595a;
+    --report-btn-hover-fg-color: black;
+    --text-color: black;
+    /* blue, passes color contrast with white bg*/
+    --link-text-color: #1b7cac;
+    --link-hover-color: #6b6459;
+    --background-color: #ffffff;
+    /* warm wash */
+    --header-text-color: #f9f7f7;
+    --header-hover-color: black;
+    /* lighter Library Grey */
+    --secondary-text-color: #7D7568;
+    /*warm wash to white*/
+    --TOC-gradient: linear-gradient(#f9f7f7, #ffffff);
+    /* light red */
+    --error-background-color: #fff5f5;
+    /* darker blue, passes color contrast*/
+    --error-link-color: #1a78a8;
+    /* dark red */
+    --error-text-color: #970503;
+    --nav-width: minmax(14rem, 25rem);
+
+    --form-border-width: 1px;
+    --form-border-color: var(--text-color);
+    --form-border-radius: 4px;
+    --modal-submit-btn-color: var(--header-text-color);
+    --modal-submit-btn-background-color: var(--header-background-color);
+    --modal-submit-btn-border-color: #690604;
+  }
+
+  [data-theme=dark] {
+    /* warm grey */
+    --note-highlight-color: #6b6459;
+    /* Cornell Red */
+    --header-background-color: #b31b1b;
+    /* Open Blue */
+    --toc-text-highlight-color: #a5d6fe;
+    --inpage-text-highlight-color: #a5d6fe;
+    /* warm wash */
+    --text-color: #f9f7f7;
+    /* blue, passes color contrast with dark bg */
+    --link-text-color: #2198d4;
+    --link-hover-color: #a5d6fe;
+    --background-color: #282623;
+    /* Publishing Pink */
+    --report-btn-hover-bg-color: #fb595a;
+    --report-btn-hover-fg-color: black;
+    /* warm wash */
+    --header-text-color: #f9f7f7;
+    --header-hover-color: black;
+    /* darker warm wash */
+    --secondary-text-color: #ADA4A4;
+    /*darker shade to background*/
+    --TOC-gradient: linear-gradient(#110C03, #282623);
+    /* tan */
+    --error-background-color: #eee0cb;
+    /* darker blue, passes color contrast */
+    --error-link-color: #176992;
+    /* dark red */
+    --error-text-color: #970503;
+
+    --form-input-color: #c9d1d9;
+    --form-input-background-color: #0d1117;
+
+  }
+
+  /* Special hand-crafted case: \color{black} is the most common use, so hand-curate to match
+    the main foreground color in dark mode.
+    TODO: This color should be a design token name eventually. Without that we have to copy
+    the full selector rule from ar5iv.css: */
+  [data-theme="dark"] [style*="--ltx-fg-color:#000000;"] {
+    /* warm wash */
+    --text-color: #f9f7f7;
+    color: var(--text-color);
+  }
+}
+
+/* Styling the branded arXiv header */
+@layer header {
+  header.arxiv-html-header {
+    top: 0;
+    position: sticky;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--header-background-color);
+    user-select: none;
+    z-index: 2;
+  }
+  [data-reading-mode=enabled] header.arxiv-html-header {
+    display: none;
+  }
+  @media only screen and (min-width: 1280px) {
+    header.arxiv-html-header {
+      padding: .5rem 4rem;
+    }
+  }
+  @media only screen and (max-width: 1279px) {
+    header.arxiv-html-header {
+      padding: 0 3rem 0 3rem;
+      gap: .75rem;
+    }
+  }
+
+  .arxiv-html-header a:hover {
+    text-decoration: none;
+  }
+
+  svg.icon,
+  [data-theme=dark] svg.icon,
+  .arxiv-html-header svg {
+    background-color: transparent;
+    z-index: 1;
+    margin-left: 2px;
+  }
+
+  /*BETA corner banner*/
+  #beta-badge {
+    content: "beta";
+    position: fixed;
+    z-index: 2;
+    color: var(--header-text-color);
+    background: var(--report-btn-hover-bg-color);
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  [data-reading-mode=enabled] #beta-badge {
+    display: none;
+  }
+  @media only screen and (min-width: 1280px) {
+    #beta-badge {
+      width: 5rem;
+      height: 1.5rem;
+      top: 0.5rem;
+      left: -1.25rem;
+      line-height: 1.75rem;
+    }
+  }
+  @media only screen and (max-width: 1279px) {
+    #beta-badge {
+      width: 4.2rem;
+      height: 1rem;
+      top: 0.5rem;
+      left: -1rem;
+      line-height: 1.2rem;
+    }
+  }
+
+  /*will display to screen readers, but not be visible to sighted users*/
+  .sr-only {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  /* Build for header */
+  .html-header-logo .logo,
+  .html-header-logo .logomark {
+    background-color: transparent;
+    /*overrides ar5iv translucent style in dark mode*/
+    filter: brightness(1);
+  }
+  .logomark {
+    max-height: 2.5em;
+    display: none;
+  }
+
+  .logo {
+    background-color: transparent;
+    max-height: 2em;
+  }
+
+
+  .html-header-nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .html-header-nav a {
+    text-decoration: none;
+    color: var(--header-text-color);
+  }
+
+  .html-header-nav a:hover {
+    text-decoration: none;
+    color: var(--header-hover-color);
+  }
+
+  .html-header-nav a span {
+    text-shadow: 0 0 0 var(--header-text-color);
+    color: transparent;
+  }
+
+  .html-header-nav a span:hover {
+    text-shadow: 0 0 0 #000000;
+    color: transparent;
+  }
+
+  .html-header-nav svg {
+    fill: var(--header-text-color);
+    background: transparent;
+  }
+
+  .html-header-nav svg:hover {
+    fill: var(--header-hover-color);
+    text-decoration: none;
+  }
+
+  #back-arrow {
+    background-color: transparent;
+  }
+
+  .color-tog {
+    text-decoration: none;
+    color: transparent;
+    text-shadow: 0 0 0 var(--header-text-color);
+  }
+  .automatic-tog {
+    display: block;
+  }
+  .light-tog, .dark-tog {
+    display: none;
+  }
+
+}
+
+/* Styling the branded arXiv footer */
+@layer footer {
+  .arxiv-html-footer {
+    display: block;
+    user-select: none;
+    margin: 2rem auto 8vh auto;
+    font-family: var(--other-font-family);
+    max-width: var(--main-width);
+    margin-bottom: 8vh;
+    text-rendering: optimizeLegibility;
+  }
+
+  .arxiv-html-footer h2 {
+    font-size: 1.5em;
+  }
+
+  .arxiv-html-footer p,
+  .arxiv-html-footer ul {
+    font-size: 0.9em;
+  }
+
+  .arxiv-html-footer .keyboard-glossary {
+    margin-bottom: 3em;
+  }
+  [data-reading-mode=enabled] .arxiv-html-footer {
+    display: none;
+  }
+}
+
+/* Navigation table of contents:
+On wide displays, shown as sticky in the left sidebar, unless hidden via the dropdown menu.
+On narrow displays, hidden, until requested via the dropdown menu.
+Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC fits neatly.
+*/
+
+@layer nav-toc {
+  [data-toc-display=block] .ltx_page_navbar>nav.ltx_TOC {
+    display: block;
+  }
+  [data-toc-display=none] .ltx_page_navbar>nav.ltx_TOC {
+    display: none;
+  }
+
+  @media only screen and (min-width: 1280px) {
+    .ltx_page_navbar {
+      position: sticky;
+      top: 10vh;
+      height: 90vh;
+      margin-right: 1rem;
+      user-select: none;
+    }
+    .ltx_page_navbar>nav.ltx_TOC {
+      display: block;
+      position: sticky;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      color: var(--text-color);
+    }
+  }
+  @media only screen and (max-width: 1279px) {
+    .ltx_page_navbar {
+      z-index: 2;
+      position: fixed;
+      top: 2.8rem;
+      margin-top: 0;
+      right: 0;
+      min-width: 20rem;
+      max-width: 40rem;
+      height: 90vh;
+      user-select: none;
+    }
+    .ltx_page_navbar>nav.ltx_TOC {
+      display: none;
+      width: 100%;
+      margin-top: 0;
+      margin-right: 1rem;
+      overflow-y: auto;
+      color: var(--text-color);
+      background-color: var(--background-color);
+      border: solid var(--header-background-color) 1px;
+      max-height: 90vh;
+    }
+    .ltx_toclist {
+      margin-left: 0;
+      padding-inline-start: 0;
+    }
+    .ltx_tocentry {
+      padding-bottom: 1rem;
+    }
+  }
+
+  /* We want to hide the main ToC, in favour of the navigational sidebar ToC, but...
+  /* See arXiv:2410.14453v1 for a ToC inside a section that should remain visible,
+       to avoid leaving an awkward gap in the main article content. */
+  :not(.ltx_page_navbar)>nav.ltx_TOC {
+    display: none;
+  }
+
+  /* keep nav compact, avoid fine-grained entries */
+  .ltx_TOC .ltx_tocentry.ltx_tocentry_subsection {
+    display: none;
+  }
+  .ltx_TOC .ltx_tag_ref {
+    margin-right: 0;
+    padding: 0;
+  }
+
+  .ltx_tocentry > a.ltx_ref {
+    color: var(--secondary-text-color);
+    font-family: var(--toc-font-family);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: none;
+  }
+
+  .ltx_tocentry > a.ltx_ref:hover {
+    color: var(--toc-text-highlight-color);
+    text-decoration: none;
+    border: none;
+  }
+  .ltx_tocentry {
+    margin-bottom: 0.3rem;
+    margin-left: 1.5rem;
+  }
+  /* A (topl evel) tocentry without tags should still have an equivalent padding to align well */
+  .ltx_toclist > .ltx_tocentry_abstract, 
+  .ltx_toclist > .ltx_tocentry_acknowledgements, 
+  .ltx_toclist > .ltx_tocentry_bibliography {
+    margin-left: 3rem;
+  }
+
+
+  .ltx_toclist a.active {
+    font-weight: bold;
+    /* You can apply any styling you want to indicate the active link */
+    background-color: var(--note-highlight-color);
+  }
+
+  .toggle-icon {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    margin-top: 0.2rem;
+  }
+
+  :target {
+    scroll-margin-top: 4rem;
+  }
+}
+
+/* Styling related to the "report issue" feature */
+@layer ui-report-issue {
+  #modal-form {
+      border: var(--form-border-width) solid var(--form-border-color);
+      border-radius: var(--form-border-radius);
+      margin: 8rem auto 0 auto;
+      width: calc(min(var(--main-width), 100%) - 2rem);
+      font-family: var(--text-font-family);
+      color: var(--text-color);
+      background-color: var(--background-color);
+
+      &::backdrop {
+        background-color: color-mix(in srgb, var(--background-color), transparent 20%);
+        backdrop-filter: blur(0.1rem); /* This makes the background content blurry */
+      }
+
+      /* Target the modal only when it's open */
+      &:modal {
+          animation: fadeIn 0.3s ease-out;
+      }
+  }
+
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding-left: 1rem;
+  }
+
+  .form-text,
+  .modal-title,
+  .form-control {
+    font-family: var(--other-font-family);
+  }
+  .modal-title {
+    font-size: 1.25rem;
+    display: inline-block;
+    margin-top: .25rem;
+  }
+
+  .form-control {
+    display: block;
+    width: calc(100% - 1.75rem);
+    padding: .375rem .75rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    appearance: none;
+    color: var(--form-input-color);
+    background-color: var(--form-input-background-color);
+    background-clip: padding-box;
+    border: var(--form-border-width) solid var(--form-border-color);
+    border-radius: var(--form-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  }
+  .form-control::placeholder {
+    color: var(--form-input-color);
+    background-color: var(--form-input-background-color);
+  }
+
+  /* Submit button */
+  .modal-submit {
+    display: block;
+    cursor: pointer;
+    font-family: var(--other-font-family);
+    color: var(--modal-submit-btn-color);
+    background-color: var(--modal-submit-btn-background-color);
+    border-color: var(--modal-submit-btn-border-color);
+    margin: 0.625rem 0;
+    padding: 0.625rem;
+    border: none;
+    border-radius: 0.1875rem;
+    box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-submit:hover {
+    background-color: var(--header-background-color);
+    background-color: var(--report-btn-hover-bg-color);
+    color: var(--report-btn-hover-fg-color);
+    text-decoration: none;
+  }
+  .modal-footer {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1rem 0 1rem;
+  }
+
+  /* Modal Content/Box */
+  .modal-body {
+    padding: 1rem;
+    border-top: var(--form-border-size) solid var(--form-border-color);
+    border-bottom: var(--form-border-size) solid var(--form-border-color);
+  }
+  .modal-body label {
+    margin-bottom: 0.25rem;
+    display: inline-block;
+  }
+
+  /* Close button */
+  .modal-close {
+    --bs-btn-close-color: var(--text-color);
+    --bs-btn-close-bg: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e);
+    --bs-btn-close-opacity: 0.5;
+    --bs-btn-close-hover-opacity: 0.75;
+    --bs-btn-close-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    --bs-btn-close-focus-opacity: 1;
+    --bs-btn-close-disabled-opacity: 0.25;
+    --bs-btn-close-white-filter: invert(1) grayscale(100%) brightness(200%);
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    padding: .25em .25em;
+    color: var(--bs-btn-close-color);
+    background: transparent var(--bs-btn-close-bg) center / 1em auto no-repeat;
+    border: 0;
+    border-radius: .375rem;
+    opacity: var(--bs-btn-close-opacity);
+
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .modal-close:hover,
+  .modal-close:focus {
+    color: var(--link-hover-color);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .header-button {
+    font-size: 1rem;
+    font-family: var(--other-font-family);
+    padding: 0.5rem;
+    display: block;
+    text-decoration: none;
+  }
+  #disable-reading-mode-btn {
+    display: none;
+    z-index: 2;
+    fill: var(--text-color);
+    background: var(--note-highlight-color);
+    border: var(--form-border-width) solid var(--form-border-color);
+    padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+  }
+  [data-reading-mode=enabled] #disable-reading-mode-btn {
+    display: block;
+  }
+  @media (min-width: 1280px) { 
+    #disable-reading-mode-btn {
+      position: fixed;
+      top: 0.75rem;
+      right: 7.5rem;
+    }
+    .header-button {
+      margin-right: 1rem;
+    }
+  }
+  @media (max-width: 1279px) {
+    #disable-reading-mode-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .header-button {
+      margin-right: .6rem;
+    }
+  }
+}
+
+/* Overrides to main content decisions from ar5iv.css */
+@layer ar5iv-patches {
+  .ltx_page_content {
+    margin: 1rem;
+  }
+  .ltx_ref:hover {
+    text-decoration: none;
+    color: var(--inpage-text-highlight-color);
+  }
+
+  .ltx_ref {
+    text-decoration: underline;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: from-font;
+    border: none;
+  }
+
+  .ltx_tag_bibitem:active~*,
+  .ltx_tag_bibitem:hover~*,
+  .ltx_tag_bibitem~:active,
+  .ltx_tag_bibitem~:hover {
+    /* do nothing */
+    background-color: var(--background-color);
+  }
+
+  .ltx_bibitem {
+    padding-left: 10px;
+  }
+
+  .ltx_text {
+    white-space: normal;
+  }
+
+  .ltx_listingline {
+    white-space: normal;
+  }
+
+  .ltx_bibblock {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+}
+
+/* Styling the infobox containing license, date and other arXiv metadata.  */
+@layer infobox {
+  #infobox {
+    padding-top: 0.5rem;
+    margin:auto;
+  }
+
+  #license-tr,
+  #license-tr:link,
+  #license-tr:visited {
+    display: block;
+    text-decoration: none;
+    margin-top: 1rem;
+    color: var(--secondary-text-color) !important;
+  }
+
+  #watermark-tr,
+  #license-tr {
+    text-align: center;
+    color: var(--secondary-text-color);
+    font-family: var(--toc-font-family);
+  }
+}
+
+/* Styling related to the "back from reference" feature */
+@layer ui-back-reference {
+  .back-to-reference-btn {
+    /* background-color: #FFFFFF; */
+    background-color: var(--background-color);
+    display: block;
+    color: var(--border-color);
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    /* color: #111827; */
+    font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: .25rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .back-to-reference-btn:hover {
+    color: var(--background-color);
+    background-color: var(--inpage-text-highlight-color);
+  }
+
+  .back-to-reference-btn:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  .back-to-reference-btn:focus-visible {
+    box-shadow: none;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .collapse.show {
+    display: block !important;
+  }
+}
+
+@layer responsive-layout {
+  @media (min-width: 1280px) {
+    .mobile-only {
+      display: none;
+    }
+    .desktop-only {
+      display: block;
+    }
+
+    html { margin: 0; }
+    body {
+      width: 100%;
+      margin: 0;
+      display: grid;
+      grid-template-columns:
+          1fr
+          var(--nav-width)
+          var(--main-width)
+          var(--nav-width)
+          1fr;
+
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header header  header  header header"
+        ".      nav     article .      ."
+        "footer footer  footer  footer footer";
+
+      justify-content: normal;
+    }
+    body > header.arxiv-html-header { grid-area: header;  contain: layout; }
+    body > nav.ltx_page_navbar      { grid-area: nav;     contain: layout; }
+    body > div.ltx_page_main        { grid-area: article; contain: layout; }
+    body > footer.arxiv-html-footer { grid-area: footer;  contain: layout; } 
+  }
+
+  /*mobile*/
+  @media only screen and (max-width: 1279px) {
+    .mobile-only {
+      display: initial;
+    }
+    .desktop-only {
+      display: none;
+    }
+    .ltx_note>.ltx_note_mark {
+      font-size: 1.2em;
+      padding: 0.5rem;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .logomark {
+      display: inline-flex;
+    }
+
+    #listIcon,
+    #arrowIcon {
+      display: none;
+    }
+
+  }
+}
+
+/* Styles for printing an HTML Paper page */
+@layer print {
+  @media print {
+
+    /* All your print styles go here */
+    header,
+    nav,
+    footer,
+    #beta-badge,
+    .ltx_page_footer,
+    .back-to-reference-btn {
+      display: none;
+    }
+
+    /*problem*/
+    .ltx_page_main {
+      display: block;
+      width: 95%;
+    }
+
+    header.arxiv-html-header {
+      padding: 1em;
+    }
+
+    .ltx_para {
+      overflow: scroll;
+    }
+  }
+
+}
