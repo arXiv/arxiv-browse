@@ -338,6 +338,13 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
       height: 90vh;
       user-select: none;
     }
+    /* the entire navbar should be hidden in narrow viewports, not just the inner ToC */
+    /* also: reading mode has no navbar in narrow viewports */
+    [data-reading-mode=enabled] .ltx_page_navbar,
+    [data-toc-display=none] .ltx_page_navbar {
+      display: none;
+    }
+
     .ltx_page_navbar>nav.ltx_TOC {
       display: none;
       width: 100%;
