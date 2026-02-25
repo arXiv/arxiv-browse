@@ -338,6 +338,11 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
       height: 90vh;
       user-select: none;
     }
+    /* the entire sidebar should be toggled off in narrow viewports */
+    [data-toc-display=none] .ltx_page_navbar {
+      display: none;
+    }
+
     .ltx_page_navbar>nav.ltx_TOC {
       display: none;
       width: 100%;
