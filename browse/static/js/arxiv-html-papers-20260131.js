@@ -91,7 +91,16 @@ function toggleNavTOC() {
         localStorage.setItem('arxiv_html_paper_toc_display', tocDisplay);
     }
 }
+function hideNavTOC() {
+    const toc = document.querySelectorAll('.ltx_page_navbar>nav.ltx_TOC');
+    if (toc.length > 0) {
+        document.documentElement.setAttribute("data-toc-display", 'none');
+        localStorage.setItem('arxiv_html_paper_toc_display', 'none');
+    }
+}
 
+// in sync with our CSS @media breakpoints for ToC and header
+const narrowViewport = window.matchMedia("(max-width: 1279px)").matches;
 // Toggles header and footer
 function toggleReadingMode() {
     const header = document.querySelectorAll('.arxiv-html-header');
@@ -99,6 +108,11 @@ function toggleReadingMode() {
     if (header.length > 0 && collapseIcon) {
         const style = window.getComputedStyle(header[0]);
         let readingMode = (style.display === 'none') ? 'disabled' : 'enabled';
+        if (narrowViewport && readingMode === 'enabled') {
+            // In narrow viewports, the header logically owns the ToC UI,
+            // thus a header hide should also hide the ToC.
+            hideNavTOC();
+        }
         document.documentElement.setAttribute("data-reading-mode", readingMode);
         localStorage.setItem('arxiv_html_paper_reading_mode', readingMode);
     }
