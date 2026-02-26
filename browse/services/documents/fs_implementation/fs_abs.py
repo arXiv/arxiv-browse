@@ -56,7 +56,6 @@ class FsDocMetadataService(DocMetadataService):
             paper_id = arxiv_id
         else:
             paper_id = Identifier(arxiv_id=arxiv_id)
-
         if paper_id.id in DELETED_PAPERS:
             raise AbsDeletedException(DELETED_PAPERS[paper_id.id])
 

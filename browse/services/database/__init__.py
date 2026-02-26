@@ -252,7 +252,7 @@ def count_all_trackback_pings() -> int:
 def get_dblp_listing_path(paper_id: str) -> Optional[str]:
     """Get the DBLP Bibliography URL for a given document (paper_id)."""
     url = Session.scalar(
-        select(DBLP.url)
+        select(DBLP.url).join(Document)
         .filter(Document.paper_id == paper_id)
     )
     return url
@@ -592,5 +592,5 @@ def get_articles_for_author(user_id: int) -> List[ListingItem]:
         .filter(Document.paper_id.notlike('test%'))
         .order_by(Document.dated.desc())
     ).scalars().all()
-    return [ListingItem(row[0].paper_id, 'new', row[0].primary_subject_class)
-            for row in rows]
+    return [ListingItem(doc.paper_id, 'new', doc.primary_subject_class)
+            for doc in rows]
