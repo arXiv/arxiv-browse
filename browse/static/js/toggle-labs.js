@@ -25,6 +25,7 @@ $(document).ready(function() {
     "connectedpapers": $('#connectedpapers-toggle').data('script-url'),
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
+    "enabla": $('#enabla-toggle').data('script-url'),
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
     "bibex": {
@@ -109,6 +110,12 @@ $(document).ready(function() {
            }).fail(function() {
              console.error("failed to load sciencecast script (on cookie check)", arguments)
            });
+        } else if (key === "enabla-toggle") {
+          $.cachedScript(scripts["enabla"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load enabla script (on cookie check)", arguments)
+          });
         } else if (key === "dagshub-toggle") {
           $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
             console.log("DagsHub load: ", textStatus);
@@ -223,6 +230,12 @@ $(document).ready(function() {
        }).fail(function() {
          console.error("failed to load sciencecast script (on lab toggle)", arguments)
        });
+    } else if ($(this).attr("id") == "enabla-toggle") {
+      $.cachedScript(scripts["enabla"]).done(function(script, textStatus) {
+        console.log(textStatus, "enabla (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load enable script (on lab toggle)", arguments)
+      });
     } else if ($(this).attr("id") == "dagshub-toggle") {
       $.cachedScript(scripts["dagshub"]).done(function(script, textStatus) {
         console.log(textStatus, "dagshub (on lab toggle)");
@@ -248,7 +261,7 @@ $(document).ready(function() {
         console.error("failed to load huggingface script (on lab toggle)", arguments)
       });
     }
-  
+
 
     // TODO: clean this up
     if (cookie_val == 'disabled') {

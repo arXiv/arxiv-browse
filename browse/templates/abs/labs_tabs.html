@@ -118,7 +118,7 @@
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
-              <input        
+              <input
                 id="catalyzex-toggle"
                 data-script-url="{{ url_for('static', filename='js/catalyzex.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-cx">
@@ -146,7 +146,7 @@
             <span id="label-for-dagshub">DagsHub</span> <em>(<a href="https://dagshub.com/" target="_blank">What is DagsHub?</a>)</em>
           </div>
         </div>
-  
+
         <div class="columns is-mobile lab-row">
           <div class="column lab-switch">
             <label class="switch">
@@ -211,6 +211,22 @@
             <span id="label-for-sciencecast">ScienceCast</span> <em>(<a href="https://sciencecast.org/welcome" target="_blank">What is ScienceCast?</a>)</em>
           </div>
         </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
+                id="enabla-toggle"
+                data-script-url="{{ url_for('static', filename='js/enabla.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-enabla">
+              <span class="slider"></span>
+              <span class="is-sr-only">Enabla Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-enabla">Enabla: video recordings, HTML papers, and open discussions</span> <em>(<a href="https://enabla.com/" target="_blank">What is Enabla?</a>)</em>
+          </div>
+        </div>
       </div>
 
       <div id="alphaxiv-output" style="display:none"></div>
@@ -220,6 +236,7 @@
       <div id="pwc-output" style="display:none"></div>
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
+      <div id="enabla-output" style="display:none"></div>
       <div id="huggingface-output" style="display:none"></div>
     </div>
 

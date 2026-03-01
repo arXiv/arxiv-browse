@@ -1248,6 +1248,46 @@ p.tagline {
 
 /*END ScienceCast CSS*/
 
+/*BEGIN Enabla CSS*/
+
+.enabla-header {
+  font-weight: 600;
+  font-size: 1.375rem;
+  line-height: 1.625rem;
+  margin-block-end: 1.125rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.enabla-content a {
+  font-weight: 600;
+}
+
+.enabla-content {
+  font-weight: 500;
+}
+
+.enabla-comments {
+  display: inline-flex;
+  vertical-align: middle;
+  gap: .25rem;
+  border: 1px solid #DADADA;
+  border-radius: 1.25rem;
+  padding: .375rem .5rem;
+  margin-inline: .5rem;
+}
+
+.enabla-thumbnail {
+  margin-block-start: 1.25rem;
+  border-radius: 1.25rem;
+  object-fit: cover;
+  max-width: 100%;
+  display: block;
+}
+
+/*END Enabla CSS*/
+
 /*BEGIN Gotit.pub CSS*/
 
 .gotitpub-logo {
