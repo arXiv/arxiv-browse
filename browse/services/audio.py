@@ -12,6 +12,7 @@ DOI_PREFIX = "10.48550"
 class AudioProvider(StrEnum):
     """Ids for audio provider services."""
     SCIENCECAST = "sciencecast"
+    ALPHAXIV = "alphaxiv"
 
 
 class AudioLink(BaseModel):
@@ -27,6 +28,9 @@ def get_audio_urls(metadata: DocMetadata) -> Dict[str, AudioLink]:
 
     #scienceCast check
     audio_links[AudioProvider.SCIENCECAST]=check_scienceCast(metadata)
+    
+    #alphaXiv check
+    audio_links[AudioProvider.ALPHAXIV]=check_alphaXiv(metadata)
 
     #other audio providers here
     return audio_links
@@ -56,6 +60,27 @@ def check_scienceCast(metadata: DocMetadata) -> AudioLink:
         return AudioLink(service=AudioProvider.SCIENCECAST,
                     url=f"https://sciencecast.org/papers/{DOI_PREFIX}/arXiv.{metadata.arxiv_identifier.id}",
                     )
+    else: 
+        return not_available
+  
+def check_alphaXiv(metadata: DocMetadata) -> AudioLink:
+    """check if alphaXiv should have an audio summary for the paper"""
+    
+    alphaXiv_cats=["cs.HC"]
+    not_available=AudioLink(
+        service=AudioProvider.ALPHAXIV,
+        url=None,
+        not_available_reason=f"The audio pilot for alphaXiv is currently only rolled out in following categories: {', '.join(alphaXiv_cats)}"
+    )
+
+    if not metadata.primary_category:
+        return not_available
+
+    if (metadata.primary_category.id in alphaXiv_cats):
+        return AudioLink(
+            service=AudioProvider.ALPHAXIV,
+            url=f"https://alphaxiv.org/audio/{metadata.arxiv_identifier.id}",
+        )
     else: 
         return not_available
   

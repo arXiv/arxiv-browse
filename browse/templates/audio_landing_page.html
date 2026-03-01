@@ -20,6 +20,23 @@
     <div>
         <h1>Audio for {{abs_meta.arxiv_id}}: {{abs_meta.title}}</h1>
         <a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">< Return to abstract page</a>
+        
+        {% if 'alphaxiv' in audio_urls %}
+            <div class="item-audio">
+                <h2>alphaXiv Audio Lecture</h2>
+                <p>AI-generated lecture on the paper designed to be concise, informative, and neutral. <a href="https://alphaxiv.org/abs/{{abs_meta.arxiv_id_v}}">Learn more about alphaXiv.</a></p>
+                <p>
+                    {% if audio_urls['alphaxiv'].url %}
+                        <a class="button-audio" href="{{audio_urls['alphaxiv'].url}}">Visit alphaXiv to listen</a>
+                    {% elif audio_urls['alphaxiv'].not_available_reason %}
+                        {{audio_urls['alphaxiv'].not_available_reason}}
+                    {% else %}
+                        Paper not yet available from alphaXiv.
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+        
         {% if 'sciencecast' in audio_urls %}
             <div class="item-audio">
                 <h2>ScienceCast Audio Summary</h2>
