@@ -18,6 +18,7 @@ $(document).ready(function() {
     "replicate": $('#replicate-toggle').data('script-url'),
     "spaces": $('#spaces-toggle').data('script-url'),
     "txyz": $('#txyz-toggle').data('script-url'),
+    "remyxai": $('#remyxai-toggle').data('script-url'),
     "dagshub": $('#dagshub-toggle').data('script-url'),
     "litmaps": $('#litmaps-toggle').data('script-url'),
     "scite": $('#scite-toggle').data('script-url'),
@@ -94,6 +95,12 @@ $(document).ready(function() {
             console.log(textStatus);
           }).fail(function() {
             console.error("failed to load txyz script (on cookie check)", arguments)
+          });
+	} else if (key === "remyxai-toggle") {
+          $.cachedScript(scripts["remyxai"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load remyxai script (on cookie check)", arguments)
           });
         } else if (key === "connectedpapers-toggle") {
           $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {
@@ -208,6 +215,12 @@ $(document).ready(function() {
       $.cachedScript(scripts["txyz"]).done(function(script, textStatus) {
       }).fail(function() {
         console.error("failed to load txyz script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "remyxai-toggle") {
+      $.cachedScript(scripts["remyxai"]).done(function(script, textStatus) {
+        console.log(textStatus);
+      }).fail(function() {
+        console.error("failed to load remyxai script (on lab toggle)", arguments)
       });
     } else if ($(this).attr("id") == "connectedpapers-toggle") {
       $.cachedScript(scripts["connectedpapers"]).done(function(script, textStatus) {

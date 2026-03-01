@@ -183,6 +183,22 @@
           <div class="column lab-switch">
             <label class="switch">
               <input
+                id="remyxai-toggle"
+                data-script-url="{{ url_for('static', filename='js/remyxai.js') }}"
+                type="checkbox" class="lab-toggle" aria-labelledby="label-for-remyxai">
+              <span class="slider"></span>
+              <span class="is-sr-only">Remyx Toggle</span>
+            </label>
+          </div>
+          <div class="column lab-name">
+            <span id="label-for-remyxai">Remyx Docker Environments</span> <em>(<a href="https://docs.remyx.ai" target="_blank">What is Remyx?</a>)</em>
+          </div>
+        </div>
+
+        <div class="columns is-mobile lab-row">
+          <div class="column lab-switch">
+            <label class="switch">
+              <input
                 id="paperwithcode-toggle"
                 data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
@@ -221,6 +237,7 @@
       <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
       <div id="huggingface-output" style="display:none"></div>
+      <div id="remyxai-output" style="display:none"></div>
     </div>
 
 
@@ -348,6 +365,7 @@
         <div id="coreRecommenderOutput"></div>
         <div id="iarxivOutput"></div>
       </div>
+
 
       <input type="radio" name="tabs" id="tabfive">
       <label for="tabfive">
