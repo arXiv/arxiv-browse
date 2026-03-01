@@ -1,82 +1,53 @@
- (function () {
-     const container = document.getElementById("alphaxiv-output")
-     const containerAlreadyHasContent = container.innerHTML.trim().length > 0
+(function () {
+  const container = document.getElementById("alphaxiv-output");
+  const containerAlreadyHasContent = container.innerHTML.trim().length > 0;
 
-     // This script is invoked every time the Labs toggle is toggled, even when
-     // it's toggled to disabled. So this check short-circuits the script if the
-     // container already has content.
-     if (containerAlreadyHasContent) {
-       container.innerHTML = ""
-       container.setAttribute("style", "display:none")
-       return
-     } else {
-       container.setAttribute("style", "display:block")
-     }
+  // This script is invoked every time the Labs toggle is toggled, even when
+  // it's toggled to disabled. So this check short-circuits the script if the
+  // container already has content.
+  if (containerAlreadyHasContent) {
+    container.innerHTML = "";
+    container.setAttribute("style", "display:none");
+    return;
+  } else {
+    container.setAttribute("style", "display:block");
+  }
 
-     // Get the arXiv paper ID from the URL, e.g. "2103.17249"
-     const urlList = window.location.pathname.split('/').reverse()
-     let arxivPaperId = urlList[0]
-     if (!arxivPaperId) return
+  // Get the arXiv paper ID from the URL, e.g. "2103.17249" or "astro-ph/9212001"
+  const arxivId = window.location.pathname.replace("/abs/", "");
 
-    // include the hep-th, math, etc subject tag
-    if (urlList.length > 0 && urlList[1] != 'abs') {
-        arxivPaperId = (urlList[1] + "_") + arxivPaperId  
+  const alphaxivApi = `https://api.alphaxiv.org/arxiv/v1/${encodeURIComponent(arxivId)}/labs`;
+  const alphaXivUrl = `https://alphaxiv.org/abs/${arxivId}`;
+
+  (async () => {
+    try {
+      let response = await fetch(alphaxivApi);
+      if (!response.ok) {
+        throw new Error("Not OK response");
+      }
+      let result = await response.json();
+      render(result.summary);
+    } catch {
+      render(null);
     }
+  })();
 
-    let versionlessPaperId = arxivPaperId;
-    if (versionlessPaperId.includes("v")) {
-        versionlessPaperId = versionlessPaperId.substring(0, versionlessPaperId.indexOf("v"))
-    }
-
-    const alphaxivApi = `https://api.alphaxiv.org/v1/papers/getpaperinfo/${arxivPaperId}`
-    let alphaXivUrl = `https://alphaxiv.org/abs/${versionlessPaperId}`;
-
-
-    (async () => {
-       let response = await fetch(alphaxivApi);
-       if (!response.ok) {
-         console.error(`Unable to fetch data from ${alphaxivApi}`)
-         render(0, false);
-         return;
-       }
-       let result = await response.json();
-       if (result.returnVersion > 0) {
-         alphaXivUrl = alphaXivUrl + "v" + result.returnVersion;
-         render(result.numQuestions, result.hasClaimedAuthorship);
-         return;
-       }
-       render(0, false);
-    })()
-
-     // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
-     function render(numComments, hasClaimedAuthorship) {
-       container.innerHTML = window.DOMPurify.sanitize(`
+  // Generate HTML, sanitize it to prevent XSS, and inject into the DOM
+  function render(summary) {
+    container.innerHTML = window.DOMPurify.sanitize(
+      `
        <h2 class="alphaxiv-logo">alphaXiv</h2>
-           ${html(numComments, hasClaimedAuthorship)}
-       `, { ADD_ATTR: ['target'] })
-     }
+       ${html(summary)}
+      `,
+      { ADD_ATTR: ["target"] },
+    );
+  }
 
-     function html(numComments, hasClaimedAuthorship) {
-        let resultStr = ""
-        if (numComments == 0) {
-            resultStr += `<h3 class="alphaxiv-summary">Comment directly on top of arXiv papers</h3>
-            <p> No comments yet for this paper. View recent comments <a href="https://alphaxiv.org/explore" target="_blank">on other papers here</a>.</p>`
-        } else if (numComments == 1) {
-            resultStr += `<h3 class="alphaxiv-summary">There is 1 comment on this paper</h3>
-            <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a> and add your own!</p>`
-        } else {
-            resultStr += `<h3 class="alpahxiv-summary">There are ${numComments} comments for this paper on alphaXiv</h3>
-            <p> View comments on <a href="${alphaXivUrl}" target="_blank">alphaXiv</a>.</p>`
-        }
-        if (hasClaimedAuthorship == true) {
-            resultStr += `<p> For this paper, the author is present on alphaXiv and will be notified of new comments.`
-            if (numComments == 0) {
-                resultStr += ` See <a href="${alphaXivUrl}" target="_blank">here</a>.</p>`
-            } else {
-                resultStr += `</p>`
-            }
-        }
-
-        return resultStr
-     }
+  function html(summary) {
+    let resultStr = `<h3 class="alphaxiv-summary">Your personalized arXiv assistant</h3><p>Highlight to chat with AI, read visual blog, and discover similar papers <a href="${alphaXivUrl}">here</a>.</p>`;
+    if (summary) {
+      resultStr += `<div>${summary}</div>`; // 2-4 line ai summary of paper, only available on some papers
+    }
+    return resultStr;
+  }
 })();
