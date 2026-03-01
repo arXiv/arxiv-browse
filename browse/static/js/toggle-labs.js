@@ -26,6 +26,7 @@ $(document).ready(function() {
     "influenceflower": $('#influenceflower-toggle').data('script-url'),
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
+    "plaudit": $('#plaudit-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
     "bibex": {
       "url": $('#bibex-toggle').data('script-url'),
@@ -75,6 +76,10 @@ $(document).ready(function() {
           });
         } else if (key === "paperwithcode-toggle") {
           $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          });
+        } else if (key == "plaudit-toggle") {
+          $.cachedScript(scripts["plaudit"]).done(function(script, textStatus) {
             console.log(textStatus);
           });
         } else if (key === "replicate-toggle") {
@@ -192,6 +197,8 @@ $(document).ready(function() {
       $.cachedScript(scripts["paperwithcode"]).done(function(script, textStatus) {
         console.log(textStatus);
       });
+    } else if ($(this).attr("id") == "plaudit-toggle") {
+      $.cachedScript(scripts["plaudit"]).done(function(script, textStatus) {});
     } else if ($(this).attr("id") == "replicate-toggle") {
       $.cachedScript(scripts["replicate"]).done(function(script, textStatus) {
         // console.log(textStatus, "replicate (on lab toggle)");
