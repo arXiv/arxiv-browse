@@ -216,6 +216,9 @@ def _html_response(file_list: Union[List[FileObj],FileObj],
         if _is_html_name(file_list):
             resp.headers['X-Robots-Tag'] = 'nofollow'
             resp.headers["Link"] = f"<https://arxiv.org/html/{arxiv_id.id}>; rel='canonical'"
+        elif _is_latexml_log(file_list):
+            resp.headers['X-Robots-Tag'] = 'nofollow'
+            resp.headers['X-Robots-Tag'] = 'noindex'
     else:
         # Not a data error since a non-html-source paper might legitimately not have a latexml HTML
         resp= unavailable(arxiv_id)
@@ -275,6 +278,10 @@ def _get_html_file_name(name:str) -> str:
 def _is_html_name(name: Union[str, FileObj]) -> bool:
     f_name = name.name if isinstance(name, FileObj) else name
     return f_name.lower().endswith(".html") or f_name.lower().endswith(".htm")
+
+def _is_latexml_log(name: Union[str, FileObj]) -> bool:
+    f_name = name.name if isinstance(name, FileObj) else name
+    return f_name == "__stdout.txt"
 
 
 def _ps_response(file: FileObj,
