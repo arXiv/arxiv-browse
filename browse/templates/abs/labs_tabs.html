@@ -267,18 +267,38 @@
                   data-script-url="{{ url_for('static', filename='js/txyz.js') }}"
                   type="checkbox" class="lab-toggle" aria-labelledby="label-for-txyz">
                 <span class="slider"></span>
-                <span class="is-sr-only">Spaces Toggle</span>
+                <span class="is-sr-only">TXYZ Toggle</span>
               </label>
             </div>
             <div class="column lab-name">
-              <span id="label-for-txyz">TXYZ.AI</span> <em>(<a href="https://txyz.ai" target="_blank">What is TXYZ.AI?</a>)</em>
+                <span id="label-for-txyz">TXYZ.AI</span> <em>(<a href="https://txyz.ai" target="_blank">What is TXYZ.AI?</a>)</em>
+            </div>
+          </div>
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
+                <input
+                  id="summarizepaper-toggle"
+                  type="checkbox"
+                  class="lab-toggle"
+                  aria-labelledby="label-for-summarizepaper"
+                  data-script-url="{{ url_for('static', filename='js/summarizepaper.js') }}"
+                />
+                <span class="slider"></span>
+                <span class="is-sr-only">SummarizePaper Toggle</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+                <span id="label-for-summarizepaper">SummarizePaper.com</span> <em>(<a href="https://summarizepaper.com" target="_blank">What is SummarizePaper.com?</a>)</em>
             </div>
           </div>
         </div>
         <div id="replicate-output"></div>
         <div id="spaces-output"></div>
         <div id="txyz-output"></div>
+        <div id="summarizepaper-output"></div>
       </div>
+
       <input type="radio" name="tabs" id="tabfour">
       <label for="tabfour">Related Papers</label>
       <div class="tab">
@@ -314,11 +334,12 @@
           <div class="columns is-mobile lab-row">
             <div class="column lab-switch">
               <label class="switch">
-                <input id="iarxiv-toggle"
-                       type="checkbox"
-                       class="lab-toggle"
-                       data-script-url="{{ url_for('static', filename='js/iarxiv.js') }}"
-                       aria-labelledby="label-for-iarxiv">
+                <input
+                  id="iarxiv-toggle"
+                  type="checkbox"
+                  class="lab-toggle"
+                  data-script-url="{{ url_for('static', filename='js/iarxiv.js') }}"
+                  aria-labelledby="label-for-iarxiv">
                 <span class="slider"></span>
                 <span class="is-sr-only">IArxiv recommender toggle</span>
               </label>
@@ -328,7 +349,7 @@
               <em>(<a href="https://iarxiv.org/about">What is IArxiv?</a>)</em>
             </div>
           </div>
-          {% endif -%}
+          {% endif %}
         </div>
         <div id="influenceflower-output"></div>
         <div id="influenceflower-output-graph" style="display:none">
@@ -370,3 +391,4 @@
     </div>
 </div>
 <!-- END LABS AREA -->
+<script src="{{ url_for('static', filename='js/txyz.js') }}"></script>
