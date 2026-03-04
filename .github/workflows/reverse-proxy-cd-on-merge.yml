@@ -1,4 +1,6 @@
 name: Notify reverse proxy GHA of relevant changes
+permissions:
+  contents: read
 
 on:
   push:
