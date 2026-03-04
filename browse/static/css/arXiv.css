@@ -1048,40 +1048,6 @@ p.tagline {
 
 
 
-/*added by Papers With Code*/
-#pwc-output {
-    padding: 7px;
-    margin-bottom: 10px;
-}
-
-#pwc-output > h3 {
-    margin-top: 25px;
-}
-#pwc-output .pwc-icon {
-    width: 23px;
-    height: 23px;
-    position: relative;
-    top: 5px;
-    margin-left: 3px;
-    margin-right: 6px;
-}
-
-#pwc-output .pwc-icon-primary {
-    top: 6px;
-    margin-left: 3px;
-}
-
-#pwc-output .pwc-avatar-box {
-    display: inline-block;
-}
-
-#pwc-output h3.pwc-community-nocode {
-  margin-bottom: 8px;
-}
-
-#pwc-output h3.pwc-community-code {
-  margin-bottom: 15px;
-}
 
 /* Added by CatalyzeX */
 
@@ -1105,95 +1071,6 @@ p.tagline {
   margin-right: 3px;
 }
 
-/* Papers with Code **Datasets** specific section */
-
-#pwc-data-output {
-    padding: 7px;
-    margin-bottom: 10px;
-    margin-top: 20px;
-}
-
-#labstabs #pwc-data-output > p.pwc-provided {
-  color: #666;
-  font-size: 0.75rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0;
-}
-
-#labstabs #pwc-data-output > p.pwc-provided > a {
-  color: #666;
-}
-
-#labstabs #pwc-data-output .pwc-icon-primary {
-  width: 14px;
-  height: 14px;
-  top: 3px;
-}
-
-#pwc-data-output > h3 {
-  margin-top: 5px;
-  margin-bottom: 15px;
-}
-
-#pwc-data-output > .pwc-data-card {
-  margin-top: 20px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-name {
-  font-size: 0.95rem;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image {
-  display: inline-block;
-  vertical-align:top;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  width: 34px;
-  height: 30px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image img {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  margin: 0.25rem;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  margin: 0.25rem;
-  text-align: center;
-  opacity: 0.3;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder span {
-  position: relative;
-  top: 4px;
-  text-align: center;
-  color: #fff;
-  font-size: 13px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name {
-  display: inline-block;
-  vertical-align:top;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-introduced {
-  margin-top: 4px;
-  font-size: 11px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-meta {
-  margin-top: 4px;
-  font-size: 11px;
-  color: #666;
-}
-
-
-/*END Papers With Code css*/
 
 /*BEGIN Replicate CSS*/
 
