@@ -384,11 +384,21 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
   .ltx_tocentry > a.ltx_ref {
     color: var(--secondary-text-color);
     font-family: var(--toc-font-family);
-    font-variant: normal;
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: bold;
     border: none;
+  }
+  /* avoid source-specified font customizations in the nav ToC */
+  .ltx_tocentry > a.ltx_ref * {
+    font-variant: normal;
+    font-size: inherit;
+    font-family: var(--toc-font-family);
+    font-weight: bold;
+  }
+  /* only show top-level toc entry navigation for now */
+  :not(.ltx_TOC) > .ltx_toclist {
+    display: none;
   }
 
   .ltx_tocentry > a.ltx_ref:hover {

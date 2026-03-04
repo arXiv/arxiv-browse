@@ -455,7 +455,8 @@ span.ltx_personname > .ltx_break + .ltx_break {
     margin: 2rem auto;
     text-align: center;
     width: var(--main-width);
-    left: calc((100vw - var(--main-width)) / 2);
+    left: 0;
+    right: 0;
 }
 .ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_address)):has( :last-child.ltx_role_address),
 .ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_affiliation)):has( :last-child.ltx_role_affiliation) {
