@@ -11,7 +11,7 @@ tests = [
     ("check_scienceCast_wrong_category", Identifier("2501.12345"), "quant-ph", "tex", False, False),
     ("check_scienceCast_missing_category", Identifier("2501.12345"), None, "tex", False, False),
     ("check_scienceCast_missing_category_2", Identifier("2501.12345"), "", "tex", False, False),
-    ("check_alphaXiv_valid", Identifier("2403.10561"), "cs.HC", "tex", False, True),
+    ("check_alphaXiv_valid", Identifier("2403.10561"), "cs.IR", "tex", False, True),
 ]
 
 @pytest.mark.parametrize("desc, paperid, category, src_format, has_sciencecast_audio, has_alphaxiv_audio", tests)
