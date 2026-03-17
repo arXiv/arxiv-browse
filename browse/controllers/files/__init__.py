@@ -7,7 +7,8 @@ import mimetypes
 from arxiv.identifier import Identifier
 from arxiv.document.version import VersionEntry
 from arxiv.files import FileObj
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
+from werkzeug.datastructures import Headers
 
 BUFFER_SIZE = 1024 * 4
 
@@ -143,16 +144,16 @@ def not_found_anc(arxiv_id: Identifier) -> Response:
 
 
 def bad_id(arxiv_id: Union[Identifier,str], err_msg: str) -> Response:
-    headers: Dict[str,str]
+    headers: Dict|Headers = {}
     if isinstance(arxiv_id,str):
-        headers={'Surrogate-Control': 'max-age=31536000'}
-        headers=add_surrogate_key(headers, ["paper-unavailable", "bad-id"])
+        sc={'Surrogate-Control': 'max-age=31536000'}
+        headers=b_add_surrogate_key(sc, ["paper-unavailable", "bad-id"])
     else:
         headers= _unavailable_headers(arxiv_id, [])
         headers['Surrogate-Control']= 'max-age=31536000'
     return make_response(render_template("dissemination/bad_id.html",
                                          err_msg=err_msg,
-                                         arxiv_id=arxiv_id), 404, headers)
+                                         arxiv_id=arxiv_id), 404, Headers(headers))
 
 
 def cannot_build_pdf(arxiv_id: Identifier, msg: str, fmt: str) -> Response:
@@ -162,7 +163,7 @@ def cannot_build_pdf(arxiv_id: Identifier, msg: str, fmt: str) -> Response:
                                          fmt=fmt,
                                          arxiv_id=arxiv_id), 404, headers)
 
-def _unavailable_headers(arxiv_id: Identifier, other_tags: List[str]) -> Dict[str,str]:
+def _unavailable_headers(arxiv_id: Identifier, other_tags: List[str]) -> Headers:
     keys=["paper-unavailable", f"paper-id-{arxiv_id.id}"] + other_tags
 
     if arxiv_id.has_version: 
@@ -178,5 +179,4 @@ def _unavailable_headers(arxiv_id: Identifier, other_tags: List[str]) -> Dict[st
 
     headers: Dict[str,str]={}
     headers['Surrogate-Control'] = maxage(arxiv_id.has_version)
-    headers=add_surrogate_key(headers, keys)
-    return headers
+    return b_add_surrogate_key(headers, keys)

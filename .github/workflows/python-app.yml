@@ -18,19 +18,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
-        poetry install
-    - name: Run ruff
-      run: |
-        pip install ruff
-        ruff check --output-format=github browse
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: Install the project
+      run: uv sync --locked --all-extras --dev
+
     - name: Test with pytest
       run: |
-        poetry run pytest --cov=browse --cov-fail-under=80 tests
+        uv run pytest --cov=browse --cov-fail-under=80 tests
+
+    - name: Ruff lint check
+      run: |
+        uv pip install ruff
+        uv run ruff check --output-format=github browse

@@ -1,22 +1,19 @@
 from typing import Optional, Dict, Any, Tuple, List
 from urllib.parse import unquote
 import re
-from datetime import datetime, time
-
-from arxiv.taxonomy.definitions import CATEGORIES
-from lxml.etree import Element, SubElement, tostring, QName
-from datetime import timezone
+from datetime import datetime, time, timezone
+import xml.etree.ElementTree as ET
 
 from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
+from arxiv.taxonomy.definitions import CATEGORIES
 from arxiv.document.metadata import DocMetadata
-
 from arxiv.authors import parse_author_affil
 from arxiv.taxonomy.category import Category
 
 from ...services.database import (
-    get_user_id_by_author_id, 
+    get_user_id_by_author_id,
     get_user_id_by_orcid,
     get_user_display_name,
     get_orcid_by_user_id,
@@ -25,24 +22,31 @@ from ...services.database import (
 from browse.services.documents import get_doc_service
 
 from browse.controllers.list_page import (
-    dl_for_articles, 
+    dl_for_articles,
     latexml_links_for_articles,
     authors_for_articles,
 )
-
 
 ORCID_URI_PREFIX = 'https://orcid.org'
 ORCID_RE = re.compile(r'^(\d{4}\-\d{4}\-\d{4}-\d{3}[\dX])$')
 
 ARXIV_SCHEMA_URI = 'http://arxiv.org/schemas/atom'
+ATOM_NS = 'http://www.w3.org/2005/Atom'
 
-def get_atom (id: str) -> str:
+# Register namespaces for cleaner XML output
+ET.register_namespace('', ATOM_NS)
+ET.register_namespace('arxiv', ARXIV_SCHEMA_URI)
+
+
+def get_atom(id: str) -> str:
     return _get_atom_feed(id, False)
 
-def get_atom2 (id: str) -> str:
+
+def get_atom2(id: str) -> str:
     return _get_atom_feed(id, True)
 
-def get_json (id: str) -> Optional[Dict]:
+
+def get_json(id: str) -> Optional[Dict]:
     user_id, is_orcid = _get_user_id(id)
     if user_id is None:
         return None
@@ -64,11 +68,12 @@ def get_json (id: str) -> Optional[Dict]:
         'title': f'{get_user_display_name(user_id)}\'s articles on arXiv'
     }
 
-def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
+
+def get_html_page(id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, str]]:
     user_id, is_orcid = _get_user_id(id)
     if user_id is None:
-        raise BadRequest (f'Author {id} not found')
-    
+        raise BadRequest(f'Author {id} not found')
+
     response_data: Dict[str, Any] = {}
 
     response_data['display_name'] = get_user_display_name(user_id)
@@ -76,7 +81,7 @@ def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, st
     if is_orcid:
         response_data['orcid'] = f'{ORCID_URI_PREFIX}/{unquote(id)}'
     else:
-        response_data['orcid'] = _get_orcid_uri (user_id)
+        response_data['orcid'] = _get_orcid_uri(user_id)
     response_data['title'] = f'{response_data["display_name"]}\'s articles on arXiv'
 
     listings = get_articles_for_author(user_id)
@@ -96,35 +101,39 @@ def get_html_page (id: str) -> Tuple[Dict[str, Optional[Any]], int, Dict[str, st
             else:
                 archive = CATEGORIES[article.primary_category.id].in_archive  # type: ignore
             return str(url_for('search_archive',
-                           searchtype='author',
-                           archive=archive,
-                           query=query))
+                               searchtype='author',
+                               archive=archive,
+                               query=query))
         except (AttributeError, KeyError):
             return str(url_for('search_archive',
                                searchtype='author',
                                archive=None,  # TODO: This should be handled somehow
                                query=query))
-    
+
     response_data['url_for_author_search'] = author_query
 
     return response_data, 200, dict()
 
-def _get_user_id (raw_id: str) -> Tuple[Optional[int], bool]:
-    id = unquote(raw_id) # Check if flask does this automatically
+
+def _get_user_id(raw_id: str) -> Tuple[Optional[int], bool]:
+    id = unquote(raw_id)  # Check if flask does this automatically
     if ORCID_RE.match(id):
         return get_user_id_by_orcid(id), True
     return get_user_id_by_author_id(id), False
 
-def _get_orcid_uri (user_id: int) -> Optional[str]:
+
+def _get_orcid_uri(user_id: int) -> Optional[str]:
     orcid = get_orcid_by_user_id(user_id)
     if orcid is not None:
         return f'{ORCID_URI_PREFIX}/{orcid}'
     return None
 
-def _author_name (author_line: List[str]) -> str:
+
+def _author_name(author_line: List[str]) -> str:
     return f'{author_line[1]} {author_line[0]} {author_line[2]}'.strip()
 
-def _author_affils (author_line: List[str]) -> Optional[List[str]]:
+
+def _author_affils(author_line: List[str]) -> Optional[List[str]]:
     return author_line[3:] if len(author_line) > 3 else None
 
 
@@ -143,7 +152,7 @@ def _guess_pub_date(metadata: DocMetadata) -> Optional[str]:
     return f"{yyyy}-{metadata.arxiv_identifier.month}-01:00:00.000000"
 
 
-def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
+def _make_json_entry(metadata: DocMetadata) -> Dict[str, str]:
     entry: Dict[str, Any] = {}
 
     # 'authors' field
@@ -161,18 +170,16 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
     entry['comment'] = metadata.comments if metadata.comments else ''
 
     # 'doi' field
-    if metadata.doi: # don't include if None
+    if metadata.doi:  # don't include if None
         entry['doi'] = metadata.doi
 
     # 'formats' field
-    # TODO: ps format? It doesn't seem like this is possible in the arXiv-NG implementation
     entry['formats'] = {
         'html': metadata.canonical_url(),
         'pdf': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True, _scheme="https")
     }
 
     # 'id' field
-    # TODO: This seems to be redundant with entry['formats']['html'] right above
     entry['id'] = metadata.canonical_url()
 
     # 'journal_ref' field
@@ -202,59 +209,57 @@ def _make_json_entry (metadata: DocMetadata) -> Dict[str, str]:
     return entry
 
 
-def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = False) -> None:
-    entry = SubElement(feed, 'entry')
-    SubElement(entry, 'id').text = metadata.canonical_url()
+def _add_atom_feed_entry(metadata: DocMetadata, feed: ET.Element, atom2: bool = False) -> None:
+    # Note: In stdlib ET, if the parent has a default namespace,
+    # we must explicitly use the namespace URI for children tags to inherit it properly.
+    entry = ET.SubElement(feed, f'{{{ATOM_NS}}}entry')
+    ET.SubElement(entry, f'{{{ATOM_NS}}}id').text = metadata.canonical_url()
+
     dt_ver = metadata.get_datetime_of_version(metadata.version)
     if dt_ver is not None:
-        SubElement(entry, 'updated').text = str(dt_ver.isoformat())
+        ET.SubElement(entry, f'{{{ATOM_NS}}}updated').text = str(dt_ver.isoformat())
+
     dt_orig_ver = metadata.get_datetime_of_version(1)
     if dt_orig_ver is not None:
-        SubElement(entry, 'published').text = str(dt_orig_ver.isoformat())
-    SubElement(entry, 'title').text = metadata.title
-    SubElement(entry, 'summary').text = re.sub(r'\n+', ' ', metadata.abstract.strip())
+        ET.SubElement(entry, f'{{{ATOM_NS}}}published').text = str(dt_orig_ver.isoformat())
+
+    ET.SubElement(entry, f'{{{ATOM_NS}}}title').text = metadata.title
+    ET.SubElement(entry, f'{{{ATOM_NS}}}summary').text = re.sub(r'\n+', ' ', metadata.abstract.strip())
+
     if atom2:
         names = ', '.join(map(_author_name, parse_author_affil(metadata.authors.raw)))
-        author = SubElement(entry, 'author')
-        SubElement(author, 'name').text = names
+        author = ET.SubElement(entry, f'{{{ATOM_NS}}}author')
+        ET.SubElement(author, f'{{{ATOM_NS}}}name').text = names
     else:
         for author_line in parse_author_affil(metadata.authors.raw):
-            author = SubElement(entry, 'author')
-            SubElement(author, 'name').text = _author_name(author_line)
+            author = ET.SubElement(entry, f'{{{ATOM_NS}}}author')
+            ET.SubElement(author, f'{{{ATOM_NS}}}name').text = _author_name(author_line)
             affils = _author_affils(author_line)
             if affils:
                 for affil in affils:
-                    SubElement(author, QName(ARXIV_SCHEMA_URI, 'affiliation'), nsmap={
-                        'arxiv': ARXIV_SCHEMA_URI
-                    }).text = affil
+                    ET.SubElement(author, f'{{{ARXIV_SCHEMA_URI}}}affiliation').text = affil
+
     if metadata.doi:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'doi'), nsmap={
-            'arxiv': ARXIV_SCHEMA_URI
-        }).text = metadata.doi
+        ET.SubElement(entry, f'{{{ARXIV_SCHEMA_URI}}}doi').text = metadata.doi
+
     if metadata.comments:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'comment'), nsmap={
-            'arxiv': ARXIV_SCHEMA_URI
-        }).text = metadata.comments
+        ET.SubElement(entry, f'{{{ARXIV_SCHEMA_URI}}}comment').text = metadata.comments
+
     if metadata.journal_ref:
-        SubElement(entry, QName(ARXIV_SCHEMA_URI, 'journal_ref'), nsmap={
-            'arxiv': ARXIV_SCHEMA_URI
-        }).text = metadata.journal_ref
-    SubElement(entry, 'link', attrib={ 
+        ET.SubElement(entry, f'{{{ARXIV_SCHEMA_URI}}}journal_ref').text = metadata.journal_ref
+
+    ET.SubElement(entry, f'{{{ATOM_NS}}}link', attrib={
         'href': metadata.canonical_url(),
-        'rel': 'alternate', 
+        'rel': 'alternate',
         'type': 'text/html'
     })
 
-    #TODO: linkType, linkScore?
-
-    SubElement(entry, 'link', attrib={
+    ET.SubElement(entry, f'{{{ATOM_NS}}}link', attrib={
         'title': 'pdf',
         'href': url_for('dissemination.pdf', arxiv_id=metadata.arxiv_id_v, _external=True, _scheme="https"),
-        'rel': 'alternate', 
+        'rel': 'alternate',
         'type': 'application/pdf'
     })
-
-    #TODO: ps link
 
     all_categories: List[Category] = []
     if metadata.primary_category:
@@ -264,53 +269,57 @@ def _add_atom_feed_entry (metadata: DocMetadata, feed: Element, atom2: bool = Fa
     if metadata.secondary_categories:
         all_categories.extend(metadata.secondary_categories)
 
-    SubElement(entry, QName(ARXIV_SCHEMA_URI, 'primary_category'), attrib={
+    ET.SubElement(entry, f'{{{ARXIV_SCHEMA_URI}}}primary_category', attrib={
         'term': metadata.primary_category.id,
         'scheme': ARXIV_SCHEMA_URI,
         'label': metadata.primary_category.display()
-    }, nsmap={
-        'arxiv': ARXIV_SCHEMA_URI
     })
 
     for category in all_categories:
-        SubElement(entry, 'category', attrib={
+        ET.SubElement(entry, f'{{{ATOM_NS}}}category', attrib={
             'term': category.id,
             'scheme': ARXIV_SCHEMA_URI,
             'label': category.display()
         })
-    
 
-def _get_atom_feed (id: str, atom2: bool = False) -> str:
+
+def _get_atom_feed(id: str, atom2: bool = False) -> str:
     user_id, is_orcid = _get_user_id(id)
 
     if user_id is None:
-        raise BadRequest (f'Author {id} not found')
-    
-    feed = Element('feed', attrib={'xmlns': 'http://www.w3.org/2005/Atom'})
-    SubElement(feed, 'title').text = f'{get_user_display_name(user_id)}\'s articles on arXiv'
-    SubElement(feed, 'link', attrib={ 
-        'rel': 'describes', 
-        'href': (f'{ORCID_URI_PREFIX}/{unquote(id)}' 
-                if is_orcid else _get_orcid_uri(user_id))
+        raise BadRequest(f'Author {id} not found')
+
+    # Create the root element with the Atom namespace
+    feed = ET.Element(f'{{{ATOM_NS}}}feed')
+
+    ET.SubElement(feed, f'{{{ATOM_NS}}}title').text = f'{get_user_display_name(user_id)}\'s articles on arXiv'
+    ET.SubElement(feed, f'{{{ATOM_NS}}}link', attrib={
+        'rel': 'describes',
+        'href': (f'{ORCID_URI_PREFIX}/{unquote(id)}'
+                 if is_orcid else _get_orcid_uri(user_id)) or ""
     })
-    # TODO: May need to add timezone info
-    SubElement(feed, 'updated').text = str(datetime.combine(datetime.today(), time.min, timezone.utc).isoformat())
-    SubElement(feed, 'id').text = f'{request.url_root}{id}'
-    SubElement(feed, 'link', 
+
+    ET.SubElement(feed, f'{{{ATOM_NS}}}updated').text = str(datetime.combine(datetime.today(), time.min, timezone.utc).isoformat())
+    ET.SubElement(feed, f'{{{ATOM_NS}}}id').text = f'{request.url_root}{id}'
+
+    ET.SubElement(feed, f'{{{ATOM_NS}}}link',
                attrib={
                    'href': request.base_url,
                    'rel': 'self',
                    'type': 'application/atom+xml'
                })
-    SubElement(feed, 'link', 
-               attrib={ 
-                    'rel': 'describes', 
+
+    ET.SubElement(feed, f'{{{ATOM_NS}}}link',
+               attrib={
+                    'rel': 'describes',
                     'href': f'{request.url_root}{id}'
                 })
-    
+
     for li in get_articles_for_author(user_id):
         _add_atom_feed_entry(get_doc_service().get_abs(li.id), feed, atom2)
 
-    return tostring(feed, pretty_print=True, xml_declaration=True, encoding='UTF-8')  # type: ignore
-    
+    # Indent for pretty printing (Python 3.9+)
+    ET.indent(feed, space="  ", level=0)
 
+    # return as string with xml declaration
+    return str(ET.tostring(feed, encoding='utf-8', xml_declaration=True).decode('utf-8'))

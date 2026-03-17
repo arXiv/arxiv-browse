@@ -1,69 +1,66 @@
-[tool.poetry]
+[project]
 name = "browse"
 version = "1.0.0"
 description = "arXiv public browse and download app."
 authors = []
+requires-python = "~=3.11"
 readme = "README.md"
+dependencies = [
+    "MarkupSafe",
+    "sqlalchemy>=2.0.26,<3",
+    "flask-rangerequest>=0.0.2,<0.0.3",
+    "flask-s3",
+    "flask-wtf",
+    "google-cloud-logging>=3.2.5,<4",
+    "google-cloud-storage>=3.4.1,<4",
+    "cloud-sql-python-connector[pymysql]>=1.4.1,<2",
+    "opentelemetry-api>=1.13.0,<2",
+    "opentelemetry-exporter-gcp-trace>=1.3.0,<2",
+    "opentelemetry-instrumentation-flask>=0.34b0,<0.35",
+    "opentelemetry-instrumentation-requests>=0.34b0,<0.35",
+    "opentelemetry-propagator-gcp>=1.3.0,<2",
+    "opentelemetry-sdk>=1.13.0,<2",
+    "mysqlclient>=2.1",
+    "pydantic==2.*",
+    "python-dateutil",
+    "validators",
+    "types-python-dateutil>=2.8.19.12,<3",
+    "arxiv-base",
+    "flask>=3.0.2,<4",
+    "google-cloud-compute>=1.14.1,<2",
+    "psycopg2-binary>=2.9.9,<3",
+    "gunicorn>=23.0.0,<24",
+    "logging_json",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
+[dependency-groups]
+dev = [
+    "beautifulsoup4",
+    "coverage",
+    "hypothesis",
+    "mypy",
+    "pycodestyle",
+    "pydocstyle",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "pytest-easyread",
+    "pytest-html",
+    "pytest-mock",
+    "types-requests>=2.31.0.20240125,<3",
+    "requests-mock>=1.12.1,<2",
+    "ruff>=0.11.8,<0.12",
+]
 
-MarkupSafe = "*"
-sqlalchemy = "^2.0.26" 
-flask-rangerequest = "^0.0.2"
-flask-s3 = "*"
-flask-wtf = "*"
-geoip2 = "*"
+[tool.uv.sources]
+arxiv-base = { git = "https://github.com/arXiv/arxiv-base.git", rev = "34fc8ac78dc8dbb2739eacaa055c99351642bc8f" }
 
-google-cloud-logging = "^3.2.5"
-google-cloud-storage = "^2.5.0"
-cloud-sql-python-connector = {extras = ["pymysql"], version = "^1.4.1"}
-
-opentelemetry-api = "^1.13.0"
-opentelemetry-exporter-gcp-trace = "^1.3.0"
-opentelemetry-instrumentation-flask = "^0.34b0"
-opentelemetry-instrumentation-requests = "^0.34b0"
-opentelemetry-propagator-gcp = "^1.3.0"
-opentelemetry-sdk = "^1.13.0"
-
-mysqlclient = ">=2.1"
-pydantic = "1.*"
-python-dateutil = "*"
-validators = "*"
-types-python-dateutil = "^2.8.19.12"
-lxml = "^4.9.2"
-xmltodict = "^0.13.0"
-
-arxiv-base = {git = "https://github.com/arXiv/arxiv-base.git", rev = "ef67476b69623549a78e0c6e511b6f71fe5aa377"}
-
-flask = "^3.0.2"
-google-cloud-compute = "^1.14.1"
-psycopg2-binary = "^2.9.9"
-gunicorn = "^23.0.0"
-
-[tool.poetry.group.dev.dependencies]
-beautifulsoup4 = "*"
-coverage = "*"
-hypothesis = "*"
-mypy = "*"
-pycodestyle = "*"
-pydocstyle = "*"
-pylint = "*"
-pytest = "*"
-pytest-cov = "*"
-pytest-easyread = "*"
-pytest-html = "*"
-pytest-mock = "*"
-types-requests = "^2.31.0.20240125"
-requests-mock = "^1.12.1"
-ruff = "^0.11.8"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 filterwarnings = [
     "ignore::DeprecationWarning",
     "ignore:As the c extension couldn't be imported, `google-crc32c` is using a pure python implementation that is significantly slower. If possible, please configure a c build environment and compile the extension:RuntimeWarning",
 ]
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"

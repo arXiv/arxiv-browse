@@ -1,0 +1,110 @@
+<dialog id="modal-form" aria-labelledby="modal-title" closedby="any">
+  <form id="modal-form-content" method="dialog" enctype="multipart/form-data">
+    <header class="modal-header">
+      <h5 id="modal-title" class="modal-title">Report GitHub Issue</h5>
+      <button type="submit" formnovalidate class="modal-close" aria-label="Close">×</button>
+    </header>
+
+    <div class="modal-body">
+      <label for="form_title">Title:</label>
+      <input class="form-control" id="form_title" name="form_title" required placeholder="Enter title">
+
+      <p id="selectedTextModalDescription" hidden>Content selection saved. Describe the issue below:</p>
+
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" name="description" required maxlength="500"
+        placeholder="500 characters maximum"></textarea>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="submit" value="internal-report" class="sr-only modal-submit">Submit without GitHub</button>
+      <button type="submit" value="github-report" class="modal-submit">Submit in GitHub</button>
+    </footer>
+  </form>
+</dialog>
+
+<header class="arxiv-html-header">
+  <div class="html-header-logo">
+    <a href="/">
+      <img alt="arXiv logo" class="logo desktop-only" width="100"
+        src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}">
+      <span class="sr-only">Back to arXiv</span>
+    </a>
+  </div>
+  <!--TOC, dark mode, links-->
+  <nav class="html-header-nav">
+    <a class="header-button hover-effect desktop-only" href="https://info.arxiv.org/about/accessible_HTML.html"
+      target="_blank">Why HTML?</a>
+    <a class="header-button" title="Report an Issue" href="#" title="Report an issue"
+      onclick="event.preventDefault(); showModalForm();">
+      <svg role="presentation" class="mobile-only toggle-icon" aria-hidden="true" height="1.25rem"
+        viewBox="0 0 640 640">
+        <path
+          d="M224 160C224 107 267 64 320 64C373 64 416 107 416 160L416 163.6C416 179.3 403.3 192 387.6 192L252.5 192C236.8 192 224.1 179.3 224.1 163.6L224.1 160zM569.6 172.8C580.2 186.9 577.3 207 563.2 217.6L465.4 290.9C470.7 299.8 474.7 309.6 477.2 320L576 320C593.7 320 608 334.3 608 352C608 369.7 593.7 384 576 384L480 384L480 416C480 418.6 479.9 421.3 479.8 423.9L563.2 486.4C577.3 497 580.2 517.1 569.6 531.2C559 545.3 538.9 548.2 524.8 537.6L461.7 490.3C438.5 534.5 395.2 566.5 344 574.2L344 344C344 330.7 333.3 320 320 320C306.7 320 296 330.7 296 344L296 574.2C244.8 566.5 201.5 534.5 178.3 490.3L115.2 537.6C101.1 548.2 81 545.3 70.4 531.2C59.8 517.1 62.7 497 76.8 486.4L160.2 423.9C160.1 421.3 160 418.7 160 416L160 384L64 384C46.3 384 32 369.7 32 352C32 334.3 46.3 320 64 320L162.8 320C165.3 309.6 169.3 299.8 174.6 290.9L76.8 217.6C62.7 207 59.8 186.9 70.4 172.8C81 158.7 101.1 155.8 115.2 166.4L224 248C236.3 242.9 249.8 240 264 240L376 240C390.2 240 403.7 242.8 416 248L524.8 166.4C538.9 155.8 559 158.7 569.6 172.8z" />
+      </svg>
+      <span class="desktop-only">Report Issue</span></a>
+    <!--back to abstract-->
+    {% if meta.published %}
+    <a class="header-button" title="Back to abstract page" aria-label="Back to abstract page"
+      href="{{url_for('browse.abstract', arxiv_id=meta.page_id)}}">
+      <svg class="mobile-only toggle-icon" role="presentation" height="1.25rem" viewBox="0 0 512 512" fill="#ffffff"
+        aria-hidden="true">
+        <path
+          d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z">
+        </path>
+      </svg>
+      <span class="desktop-only">Back to Abstract</span>
+    </a>
+    <!-- PDF download link -->
+    <a class="header-button" title="Download PDF" href="{{url_for('.pdf', arxiv_id=meta.page_id)}}"
+      target="_blank">
+      <svg class="mobile-only toggle-icon" role="presentation" height="1.25rem" viewBox="0 0 576 542">
+        <path
+          d="M208 48L96 48c-8.8 0-16 7.2-16 16l0 384c0 8.8 7.2 16 16 16l80 0 0 48-80 0c-35.3 0-64-28.7-64-64L32 64C32 28.7 60.7 0 96 0L229.5 0c17 0 33.3 6.7 45.3 18.7L397.3 141.3c12 12 18.7 28.3 18.7 45.3l0 149.5-48 0 0-128-88 0c-39.8 0-72-32.2-72-72l0-88zM348.1 160L256 67.9 256 136c0 13.3 10.7 24 24 24l68.1 0zM240 380l32 0c33.1 0 60 26.9 60 60s-26.9 60-60 60l-12 0 0 28c0 11-9 20-20 20s-20-9-20-20l0-128c0-11 9-20 20-20zm32 80c11 0 20-9 20-20s-9-20-20-20l-12 0 0 40 12 0zm96-80l32 0c28.7 0 52 23.3 52 52l0 64c0 28.7-23.3 52-52 52l-32 0c-11 0-20-9-20-20l0-128c0-11 9-20 20-20zm32 128c6.6 0 12-5.4 12-12l0-64c0-6.6-5.4-12-12-12l-12 0 0 88 12 0zm76-108c0-11 9-20 20-20l48 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 24 28 0c11 0 20 9 20 20s-9 20-20 20l-28 0 0 44c0 11-9 20-20 20s-20-9-20-20l0-128z" />
+      </svg>
+      <span class="desktop-only">Download PDF</span></a>
+    {% endif %}
+    <!-- navigational table of contents toggle -->
+    <a class="header-button toggle-icon" href="javascript:toggleNavTOC();" title="Toggle navigation"
+      aria-label="Toggle navigation">
+      <svg height="1.25rem" role="presentation" viewBox="0 0 512 512">
+        <path
+          d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z">
+        </path>
+      </svg>
+    </a>
+    <!--- collapsable header / reading mode toggle -->
+    <a class="header-button toggle-icon" href="javascript:toggleReadingMode();"
+      title="Disable reading mode, show header and footer">
+      <svg role="presentation" height="1.25rem"
+        viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path
+          d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32S0 334.3 0 352l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z" />
+      </svg>
+    </a>
+    <!--- colored theme toggle -->
+    <a class="header-button color-tog" href="javascript:toggleColorScheme();" title="Toggle dark/light mode">
+      <label class="toggle-icon automatic-tog" title="Switch to light mode">
+        <svg role="presentation" height="1.25rem" viewBox="0 0 24 24">
+          <path
+            d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9h-1.9M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69m-9.15 3.96h2.3L12 9l-1.15 3.65Z">
+          </path>
+        </svg>
+      </label>
+      <label class="toggle-icon light-tog" title="Switch to dark mode">
+        <svg role="presentation" height="1.25rem" viewBox="0 0 24 24">
+          <path
+            d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z">
+          </path>
+        </svg>
+      </label>
+      <label class="toggle-icon dark-tog" title="Switch to system preference">
+        <svg role="presentation" height="1.25rem" viewBox="0 0 24 24">
+          <path
+            d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z">
+          </path>
+        </svg>
+      </label>
+    </a>
+  </nav>
+</header>

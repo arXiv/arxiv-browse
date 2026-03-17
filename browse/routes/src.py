@@ -3,7 +3,7 @@ import logging
 from typing import Optional
 
 from arxiv.identifier import Identifier, IdentifierException
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 
 from browse.controllers.files.dissemination import get_src_resp
 from browse.controllers.files.ancillary_files import get_extracted_src_file_resp
@@ -76,20 +76,20 @@ def src(arxiv_id_str: str, archive: Optional[str]=None):  # type: ignore
 
 
 def _src_surrogate_keys(resp: Response, arxiv_id_str: str, anc:bool=False) -> None:
-    resp.headers=add_surrogate_key(resp.headers,["src"])
+    resp.headers=b_add_surrogate_key(resp.headers,["src"])
     if _check_id_for_version(arxiv_id_str):
-        resp.headers=add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}",
+        resp.headers=b_add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}",
                                                      f"paper-id-{arxiv_id_str}"])
     else:
-        resp.headers=add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}-current",
+        resp.headers=b_add_surrogate_key(resp.headers,[f"src-{arxiv_id_str}-current",
                                                      f"paper-id-{arxiv_id_str}-current"])
 
     if anc:
-        resp.headers=add_surrogate_key(resp.headers,["anc"])
+        resp.headers=b_add_surrogate_key(resp.headers,["anc"])
         if _check_id_for_version(arxiv_id_str):
-            resp.headers=add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}"])
+            resp.headers=b_add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}"])
         else:
-            resp.headers=add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}-current"])
+            resp.headers=b_add_surrogate_key(resp.headers,[f"anc-{arxiv_id_str}-current"])
 
 
 def _check_id_for_version(arxiv_id_str:str) -> bool:
