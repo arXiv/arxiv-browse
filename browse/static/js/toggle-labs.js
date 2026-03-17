@@ -34,7 +34,8 @@ $(document).ready(function() {
     "core-recommender": {
       "url": "https://static.arxiv.org/js/core/core-recommender.js?20200716.1",
       "container": "#coreRecommenderOutput"
-    }
+    },
+    "ploutos": $('#ploutos-toggle').data('script-url')
   };
 
   var pwcEnabled = true;
@@ -133,6 +134,12 @@ $(document).ready(function() {
           }).fail(function() {
             console.error("failed to load huggingface script (on cookie check)", arguments)
           });
+        } else if (key === "ploutos-toggle") {
+           $.cachedScript(scripts["ploutos"]).done(function(script, textStatus) {
+             console.log(textStatus);
+           }).fail(function() {
+             console.error("failed to load ploutos script (on cookie check)", arguments)
+           });
         }
       }
     }
@@ -247,9 +254,14 @@ $(document).ready(function() {
       }).fail(function() {
         console.error("failed to load huggingface script (on lab toggle)", arguments)
       });
+    } else if ($(this).attr("id") == "ploutos-toggle") {
+       $.cachedScript(scripts["ploutos"]).done(function(script, textStatus) {
+         console.log(textStatus, "ploutos (on lab toggle)");
+       }).fail(function() {
+         console.error("failed to load ploutos script (on lab toggle)", arguments)
+       });
     }
   
-
     // TODO: clean this up
     if (cookie_val == 'disabled') {
       if ($(this).attr("id") == "core-recommender-toggle") {
