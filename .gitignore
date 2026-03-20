@@ -224,3 +224,5 @@ override.tf.json
 # Include .terraformrc files in the root directory
 .terraformrc
 terraform.rc
+
+*.DS_Store
