@@ -188,3 +188,9 @@ variable "cloudsql_instance" {
   description = "Cloud SQL instance name"
   type        = string
 }
+
+variable "session_affinity" {
+  description = "Session affinity"
+  type        = bool
+  default     = false
+}

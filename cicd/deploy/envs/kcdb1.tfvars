@@ -36,7 +36,7 @@ classic_db_transaction_isolation_level = "READ UNCOMMITTED"
 latexml_db_transaction_isolation_level = "READ UNCOMMITTED"
 source_storage_prefix                  = "gs://arxiv-production-data"
 min_instances                          = 1
-
+session_affinity                       = true
 cloudsql_instance = "arxiv-kcdb1:us-central1:main-arxiv-db"
 
 # Secret names

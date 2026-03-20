@@ -54,7 +54,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 
   template {
     service_account  = google_service_account.browse_sa.email
-    session_affinity = "CLIENT_IP"
+    session_affinity = var.session_affinity
 
     labels = {
       "managed-by" = "terraform"
