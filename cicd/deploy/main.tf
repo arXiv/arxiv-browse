@@ -50,6 +50,12 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
   name     = "arxiv-browse"
   location = var.region
 
+  depends_on = [
+    google_project_iam_member.browse_secret_accessor,
+    google_project_iam_member.browse_sa_cloudsql_client,
+    google_project_iam_member.browse_sa_cloudsql_viewer
+  ]
+
   deletion_protection = false
 
   template {

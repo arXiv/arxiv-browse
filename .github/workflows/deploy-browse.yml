@@ -1,7 +1,7 @@
 ---
 name: Deploy
 
-run-name: "Deploy browse ${{ inputs.env }} ${{ inputs.image_tag }}"
+run-name: "Deploy ${{ inputs.env }} ${{ inputs.image_tag }}"
 
 on:
   workflow_dispatch:
