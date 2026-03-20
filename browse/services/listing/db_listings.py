@@ -10,6 +10,8 @@ from browse.services.database.listings import (
     get_new_listing,
     check_service
 )
+from browse.services.documents.config.deleted_papers import DELETED_PAPERS, intentionally_blank
+
 
 logger = logging.getLogger(__name__)
 logger.level = logging.DEBUG
@@ -33,8 +35,9 @@ class DBListingService(ListingService):
             year+=2000
         elif year<1900: #90s articles
             year+=1900
-        
+
         items=get_articles_for_month(archive_or_cat=archiveOrCategory, year=year, month=None, skip=skip, show=show)
+        items.listings = _without_deleted(items.listings)
         if _check_modified(items.listings,if_modified_since):
             return NotModifiedResponse(True,gen_expires())
         return items
@@ -58,6 +61,7 @@ class DBListingService(ListingService):
             year+=1900
 
         items=get_articles_for_month(archiveOrCategory, year, month, skip, show)
+        items.listings = _without_deleted(items.listings)
         if _check_modified(items.listings,if_modified_since):
             return NotModifiedResponse(True,gen_expires())
         return items
@@ -71,6 +75,7 @@ class DBListingService(ListingService):
         """Gets listings for the 5 most recent announcement/publish.
         """
         items=get_recent_listing(archiveOrCategory,skip,show)
+        items.listings = _without_deleted(items.listings)
         if _check_modified(items.listings,if_modified_since):
             return NotModifiedResponse(True,gen_expires())
         return items
@@ -82,6 +87,7 @@ class DBListingService(ListingService):
                           if_modified_since: Optional[str] = None)\
                           -> Union[ListingNew, NotModifiedResponse]:
         items=get_new_listing(archiveOrCategory,skip,show)
+        items.listings = _without_deleted(items.listings)
         if _check_modified(items.listings,if_modified_since):
             return NotModifiedResponse(True,gen_expires())
         return items
@@ -103,3 +109,10 @@ def _check_modified(items: List[ListingItem], if_modified_since: Optional[str] =
             if item.article and item.article.modified >=parsed:
                 return True
     return False
+
+
+def _without_deleted(listings: List[ListingItem] ) -> List[ListingItem]:
+    """Removes `intentionally_blank` deleted items from the listing items."""
+    return [item for item in listings
+            if item.id not in DELETED_PAPERS or
+            DELETED_PAPERS[item.id] != intentionally_blank]

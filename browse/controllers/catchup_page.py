@@ -10,7 +10,7 @@ from flask import request, url_for
 from werkzeug.exceptions import BadRequest
 
 from arxiv.document.metadata import DocMetadata
-from arxiv.integration.fastly.headers import add_surrogate_key
+from browse import b_add_surrogate_key
 from arxiv.taxonomy.category import Group, Archive, Category
 from arxiv.taxonomy.definitions import CATEGORIES, ARCHIVES, GROUPS
 
@@ -33,7 +33,7 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
         return {}, HTTPStatus.MOVED_PERMANENTLY, {"Location":new_address}
 
     headers: Dict[str,str]={}
-    headers=add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-{subject.id}"])
+    headers=b_add_surrogate_key(headers,["catchup",f"list-{start_day.year:04d}-{start_day.month:02d}-{subject.id}"])
     #get data
     listing=get_catchup_data(subject, start_day, include_abs, page)
     next_announce_day=get_next_announce_day(start_day)
@@ -92,7 +92,7 @@ def get_catchup_page(subject_str:str, date:str)-> Response:
 
 def get_catchup_form() -> Response:
     headers: Dict[str,str]={}
-    headers=add_surrogate_key(headers,["catchup"])
+    headers=b_add_surrogate_key(headers,["catchup"])
 
     #check for form/parameter requests
     subject = request.args.get('subject')  
@@ -105,7 +105,7 @@ def get_catchup_form() -> Response:
             new_address=url_for('.catchup', subject=subject, date=date)
         headers.update({'Location':new_address})
         headers.update({'Surrogate-Control': 'max-age=2600000'}) #one month, url construction should never change
-        headers=add_surrogate_key(headers,["catchup-redirect"])
+        headers=b_add_surrogate_key(headers,["catchup-redirect"])
         return {}, 301, headers
     
     #otherwise create catchup form
@@ -116,7 +116,7 @@ def get_catchup_form() -> Response:
     response_data['days']= [str(day).zfill(2) for day in range(1, 32)]
     response_data['groups']= GROUPS
 
-    headers=add_surrogate_key(headers,["catchup-form"])
+    headers=b_add_surrogate_key(headers,["catchup-form"])
     headers.update({'Surrogate-Control': 'max-age=604800'}) #one week, form never changes except for autoselecting currently month
     return response_data, 200, headers
 

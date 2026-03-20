@@ -115,7 +115,7 @@ function addBugReportForm() {
     // Create the modal title
     const modalTitle = document.createElement("h5");
     modalTitle.setAttribute("class", "modal-title");
-    modalTitle.appendChild(document.createTextNode("Report Github Issue"));
+    modalTitle.appendChild(document.createTextNode("Report GitHub Issue"));
 
     // Create the close button for the modal
     const closeButton = document.createElement("button");
@@ -142,7 +142,7 @@ function addBugReportForm() {
     const warningLabel = document.createElement("div");
     warningLabel.id = "warningLabel";
     warningLabel.setAttribute('class', 'form-text');
-    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
+    warningLabel.textContent = "Warning: Issue reports will be publicly available on GitHub, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
 
     // Create the description input field
     const selectedTextDescriptionLabel = document.createElement("label");
@@ -193,14 +193,14 @@ function addBugReportForm() {
     submitButton.setAttribute("class", "btn btn-primary");
     submitButton.setAttribute("id", "modal-submit"); // This id will use in submitBugReport function !!!
     // submitButton.setAttribute("style", "background-color: #b31b1b;", "border-color: #690604;");
-    submitButton.appendChild(document.createTextNode("Submit in Github"));
+    submitButton.appendChild(document.createTextNode("Submit in GitHub"));
 
     // Update: ScreenReader Submit Buttons. Needed for Submit without Github Function.
     const srSubmit = document.createElement("button");
     srSubmit.setAttribute("type", "submit");
     srSubmit.setAttribute("class", "sr-only button");
     srSubmit.setAttribute("id", "modal-submit-sr");
-    srSubmit.appendChild(document.createTextNode("Submit without Github"));
+    srSubmit.appendChild(document.createTextNode("Submit without GitHub"));
 
     // Create a container div for the buttons
     const buttonsContainer = document.createElement("div");
