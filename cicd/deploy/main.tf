@@ -146,15 +146,22 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
         value = var.source_storage_prefix
       }
 
-      dynamic "env" {
-        for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-        content {
-          name = upper(replace(env.key, "-", "_"))
-          value_source {
-            secret_key_ref {
-              secret  = "projects/${var.project_name}/secrets/${env.key}"
-              version = "latest"
-            }
+      env {
+        name = "CLASSIC_DB_URI"
+        value_source {
+          secret_key_ref {
+            secret  = var.classic_db_uri_secret_name
+            version = "latest"
+          }
+        }
+      }
+
+      env {
+        name = "LATEXML_DB_URI"
+        value_source {
+          secret_key_ref {
+            secret  = var.latexml_db_uri_secret_name
+            version = "latest"
           }
         }
       }
@@ -222,25 +229,31 @@ data "google_project" "current" {
   project_id = var.project_name
 }
 
-# Note: IAM permissions for the deployment service account are managed by arxiv-env script
-# The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
-# - roles/secretmanager.admin (includes secretAccessor and viewer)
-# - roles/storage.objectViewer
-# - roles/resourcemanager.projectIamAdmin
-# - roles/serviceusage.serviceUsageAdmin
-# - roles/run.developer
+# # Note: IAM permissions for the deployment service account are managed by arxiv-env script
+# # The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
+# # - roles/secretmanager.admin (includes secretAccessor and viewer)
+# # - roles/storage.objectViewer
+# # - roles/resourcemanager.projectIamAdmin
+# # - roles/serviceusage.serviceUsageAdmin
+# # - roles/run.developer
 
-# IAM bindings for secrets (secrets are created by the workflow)
-resource "google_secret_manager_secret_iam_binding" "secret_access" {
-  for_each  = { for secret in var.secrets_to_copy : secret.name => secret }
-  project   = var.project_name
-  secret_id = each.value.name
-  role      = "roles/secretmanager.secretAccessor"
-  members = var.service_account_email != "" ? [
-    "serviceAccount:${var.service_account_email}",
-    ] : [
-    "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
-  ]
+# # IAM bindings for secrets (secrets are created by the workflow)
+# resource "google_secret_manager_secret_iam_binding" "secret_access" {
+#   for_each  = { for secret in var.secrets_to_copy : secret.name => secret }
+#   project   = var.project_name
+#   secret_id = each.value.name
+#   role      = "roles/secretmanager.secretAccessor"
+#   members = var.service_account_email != "" ? [
+#     "serviceAccount:${var.service_account_email}",
+#     ] : [
+#     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
+#   ]
+# }
+
+resource "google_project_iam_member" "legacy_auth_sa_secret_accessor" {
+  project = var.project_name
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${var.service_account_email}"
 }
 
 # Enable Secret Manager API
