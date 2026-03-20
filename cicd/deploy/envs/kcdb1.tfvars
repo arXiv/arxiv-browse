@@ -2,8 +2,8 @@
 # Copy this file to variables.tfvars and modify as needed
 
 # Required variables (will be set by deployment script)
-#project_name = "arxiv-development"
-#region       = "us-central1"
+project_name = "arxiv-kcdb1"
+region       = "us-central1"
 
 # Container configuration
 container_image = "gcr.io/arxiv-development/arxiv-browse:latest"
