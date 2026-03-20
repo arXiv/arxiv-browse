@@ -50,27 +50,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Set environment variables
-        run: |
-          ENV_NAME="${{ inputs.env }}"
-          REGION="${{ inputs.region || 'us-central1' }}"
-          echo "ENVIRONMENT=$ENV_NAME" >> $GITHUB_ENV
-          echo "REGION=$REGION" >> $GITHUB_ENV
+      # - name: Set environment variables
+      #   run: |
+      #     ENV_NAME="${{ inputs.env }}"
+      #     REGION="${{ inputs.region || 'us-central1' }}"
+      #     echo "ENVIRONMENT=$ENV_NAME" >> $GITHUB_ENV
+      #     echo "REGION=$REGION" >> $GITHUB_ENV
 
-          # Set project name and terraform bucket based on environment
-          if [ "$ENV_NAME" = "production" ]; then
-            echo "PROJECT_NAME=arxiv-production" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=arxiv-production" >> $GITHUB_ENV
-          elif [ "$ENV_NAME" = "development" ]; then
-            echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=arxiv-development" >> $GITHUB_ENV
-          else
-            # For custom environments, use the environment name as project name
-            echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
-            echo "TERRAFORM_BUCKET=$ENV_NAME" >> $GITHUB_ENV
-            echo "Custom environment detected, using $ENV_NAME as project name"
-          fi
+      #     # Set project name and terraform bucket based on environment
+      #     if [ "$ENV_NAME" = "production" ]; then
+      #       echo "PROJECT_NAME=arxiv-production" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=arxiv-production" >> $GITHUB_ENV
+      #     elif [ "$ENV_NAME" = "development" ]; then
+      #       echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=arxiv-development" >> $GITHUB_ENV
+      #     else
+      #       # For custom environments, use the environment name as project name
+      #       echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=$ENV_NAME" >> $GITHUB_ENV
+      #       echo "Custom environment detected, using $ENV_NAME as project name"
+      #     fi
 
+      - name: Authenticate with target project workload identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/github-actions-provider
+          service_account: github-actions-sa@${{ vars.PROJECT_NAME }}.iam.gserviceaccount.com
+          project_id: ${{ vars.PROJECT_NAME }}
+       
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
@@ -97,11 +104,11 @@ jobs:
       #       exit 1
       #     fi
 
-      - name: Authenticate with project-specific Workload Identity
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ env.PROVIDER_NAME }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
+      # - name: Authenticate with project-specific Workload Identity
+      #   uses: google-github-actions/auth@v3
+      #   with:
+      #     workload_identity_provider: ${{ env.PROVIDER_NAME }}
+      #     service_account: ${{ env.SERVICE_ACCOUNT }}
 
       # - name: Show service account being used
       #   run: |
@@ -187,13 +194,13 @@ jobs:
       - name: Configure terraform
         run: |
           echo "provider \"google\" {" > provider_override.tf
-          echo "  project = \"${{ env.PROJECT_NAME }}\"" >> provider_override.tf
-          echo "  region  = \"${{ env.REGION }}\"" >> provider_override.tf
+          echo "  project = \"${{ vars.PROJECT_NAME }}\"" >> provider_override.tf
+          echo "  region  = \"${{ vars.REGION }}\"" >> provider_override.tf
           echo "}" >> provider_override.tf
           
           echo "Terraform configuration:"
-          echo "  Project: ${{ env.PROJECT_NAME }}"
-          echo "  Region: ${{ env.REGION }}"
+          echo "  Project: ${{ vars.PROJECT_NAME }}"
+          echo "  Region: ${{ vars.REGION }}"
           echo "  Commit SHA: ${{ inputs.image_tag || github.sha }}"
           echo "  Container Image: gcr.io/arxiv-development/arxiv-browse:${{ inputs.image_tag || github.sha }}"
         working-directory: cicd/deploy
@@ -235,8 +242,8 @@ jobs:
         run: |
           echo "Running terraform plan..."
           terraform plan \
-            -var="project_name=${{ env.PROJECT_NAME }}" \
-            -var="region=${{ env.REGION }}" \
+            -var="project_name=${{ vars.PROJECT_NAME }}" \
+            -var="region=${{ vars.REGION }}" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}"
         working-directory: cicd/deploy
 
@@ -244,8 +251,8 @@ jobs:
         run: |
           echo "Running terraform apply..."
           terraform apply \
-            -var="project_name=${{ env.PROJECT_NAME }}" \
-            -var="region=${{ env.REGION }}" \
+            -var="project_name=${{ vars.PROJECT_NAME }}" \
+            -var="region=${{ vars.REGION }}" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
             -auto-approve
         working-directory: cicd/deploy
