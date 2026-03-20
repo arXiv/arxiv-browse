@@ -15,6 +15,12 @@ variable "container_image" {
   default     = "gcr.io/arxiv-development/arxiv-browse:latest"
 }
 
+variable "min_instances" {
+  description = "Minimum number of instances for autoscaling"
+  type        = number
+  default     = 1
+}
+
 variable "max_instances" {
   description = "Maximum number of instances for autoscaling"
   type        = number
@@ -176,4 +182,9 @@ variable "latexml_db_uri_secret_name" {
   description = "LaTeXML DB URI secret name"
   type        = string
   default     = "latexml_db_uri_psycog2"
+}
+
+variable "cloudsql_instance" {
+  description = "Cloud SQL instance name"
+  type        = string
 }

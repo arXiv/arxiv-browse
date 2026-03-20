@@ -19,6 +19,32 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "browse_sa" {
+  account_id   = "browse-sa"
+  display_name = "${var.project_name} Browse Service Account"
+  project      = var.project_name
+}
+
+resource "google_project_iam_member" "browse_secret_accessor" {
+  project = var.project_name
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.browse_sa.email}"
+}
+
+# Grant Cloud SQL Client access
+resource "google_project_iam_member" "browse_sa_cloudsql_client" {
+  project = var.project_name
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.browse_sa.email}"
+}
+
+# Grant Cloud SQL Viewer access
+resource "google_project_iam_member" "browse_sa_cloudsql_viewer" {
+  project = var.project_name
+  role    = "roles/cloudsql.viewer"
+  member  = "serviceAccount:${google_service_account.browse_sa.email}"
+}
+
 # Cloud Run Service
 resource "google_cloud_run_v2_service" "arxiv_browse" {
   name     = "arxiv-browse"
@@ -27,11 +53,15 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
   deletion_protection = false
 
   template {
+    service_account  = google_service_account.browse_sa.email
+    session_affinity = "CLIENT_IP"
+
     labels = {
       "managed-by" = "terraform"
     }
 
     scaling {
+      min_instance_count = var.min_instances
       max_instance_count = var.max_instances
     }
 
@@ -192,9 +222,12 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
         period_seconds    = 240
         failure_threshold = 1
       }
-    }
 
-    service_account = var.service_account_email != "" ? var.service_account_email : "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+      volume_mounts {
+        name       = "cloudsql"
+        mount_path = "/cloudsql"
+      }
+    }
 
     # VPC connector disabled for now - can be enabled later if needed
     # dynamic "vpc_access" {
@@ -205,7 +238,13 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
     #   }
     # }
 
-    execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
+    volumes {
+      name = "cloudsql"
+      cloud_sql_instance {
+        instances = [var.cloudsql_instance]
+      }
+    }
+    #execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
   }
 
   traffic {
@@ -225,9 +264,9 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
 # These permissions are typically granted at the project level in arxiv-development
 
 # Get current project info for default service account
-data "google_project" "current" {
-  project_id = var.project_name
-}
+# data "google_project" "current" {
+#   project_id = var.project_name
+# }
 
 # # Note: IAM permissions for the deployment service account are managed by arxiv-env script
 # # The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
@@ -250,17 +289,11 @@ data "google_project" "current" {
 #   ]
 # }
 
-resource "google_project_iam_member" "legacy_auth_sa_secret_accessor" {
-  project = var.project_name
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${var.service_account_email}"
-}
-
 # Enable Secret Manager API
-resource "google_project_service" "secretmanager" {
-  project = var.project_name
-  service = "secretmanager.googleapis.com"
+# resource "google_project_service" "secretmanager" {
+#   project = var.project_name
+#   service = "secretmanager.googleapis.com"
 
-  disable_dependent_services = false
-  disable_on_destroy         = false
-}
+#   disable_dependent_services = false
+#   disable_on_destroy         = false
+# }

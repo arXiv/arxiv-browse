@@ -35,10 +35,10 @@ genpdf_service_url                     = "0"
 classic_db_transaction_isolation_level = "READ UNCOMMITTED"
 latexml_db_transaction_isolation_level = "READ UNCOMMITTED"
 source_storage_prefix                  = "gs://arxiv-production-data"
+min_instances                          = 1
+
+cloudsql_instance = "arxiv-kcdb1:us-central1:main-arxiv-db"
 
 # Secret names
 classic_db_uri_secret_name = "main_arxiv_db_readonly_uri"
 latexml_db_uri_secret_name = "latexml_db_uri_psycog2"
-
-# Secret copying
-copy_secrets_from_arxiv_development = false
