@@ -242,17 +242,17 @@ jobs:
         run: |
           echo "Running terraform plan..."
           terraform plan \
-            -var="project_name=${{ vars.PROJECT_NAME }}" \
-            -var="region=${{ vars.REGION }}" \
+            -var-file="envs/${{ inputs.env }}.tfvars" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+            # -var="project_name=${{ vars.PROJECT_NAME }}"
+            #-var="region=${{ vars.REGION }}"
         working-directory: cicd/deploy
 
       - name: Apply
         run: |
           echo "Running terraform apply..."
           terraform apply \
-            -var="project_name=${{ vars.PROJECT_NAME }}" \
-            -var="region=${{ vars.REGION }}" \
+            -var-file="envs/${{ inputs.env }}.tfvars" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
             -auto-approve
         working-directory: cicd/deploy

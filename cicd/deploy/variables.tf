@@ -36,7 +36,7 @@ variable "memory_limit" {
 variable "service_account_email" {
   description = "Service account email for the Cloud Run service (empty for default Compute Engine service account)"
   type        = string
-  default     = ""  # Empty means use default Compute Engine service account
+  default     = "" # Empty means use default Compute Engine service account
 }
 
 variable "vpc_connector" {
@@ -163,16 +163,16 @@ variable "source_storage_prefix" {
 variable "secrets_to_copy" {
   description = "List of secrets to copy from arxiv-development if they don't exist in target project"
   type = list(object({
-    name = string
+    name        = string
     description = string
   }))
   default = [
     {
-      name = "browse-sqlalchemy-db-uri"
+      name        = "browse-sqlalchemy-db-uri"
       description = "Classic DB URI"
     },
     {
-      name = "latexml_db_uri_psycog2"
+      name        = "latexml_db_uri_psycog2"
       description = "LaTeXML DB URI"
     }
   ]

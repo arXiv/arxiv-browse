@@ -6,11 +6,11 @@ terraform {
       version = "~> 7.2"
     }
   }
-  
+
   # Backend configuration will be added dynamically by the script
   backend "gcs" {
-    bucket = var.bucket
-    prefix = "browse/state"
+    #bucket = var.bucket
+    prefix = "browse"
   }
 }
 
@@ -23,7 +23,7 @@ provider "google" {
 resource "google_cloud_run_v2_service" "arxiv_browse" {
   name     = "arxiv-browse"
   location = var.region
-  
+
   deletion_protection = false
 
   template {
@@ -172,9 +172,9 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
           port = 8080
         }
         initial_delay_seconds = 30
-        timeout_seconds      = 2
-        period_seconds       = 60
-        failure_threshold    = 3
+        timeout_seconds       = 2
+        period_seconds        = 60
+        failure_threshold     = 3
       }
 
       startup_probe {
@@ -232,13 +232,13 @@ data "google_project" "current" {
 
 # IAM bindings for secrets (secrets are created by the workflow)
 resource "google_secret_manager_secret_iam_binding" "secret_access" {
-  for_each = { for secret in var.secrets_to_copy : secret.name => secret }
-  project  = var.project_name
+  for_each  = { for secret in var.secrets_to_copy : secret.name => secret }
+  project   = var.project_name
   secret_id = each.value.name
-  role     = "roles/secretmanager.secretAccessor"
+  role      = "roles/secretmanager.secretAccessor"
   members = var.service_account_email != "" ? [
     "serviceAccount:${var.service_account_email}",
-  ] : [
+    ] : [
     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
   ]
 }
@@ -247,7 +247,7 @@ resource "google_secret_manager_secret_iam_binding" "secret_access" {
 resource "google_project_service" "secretmanager" {
   project = var.project_name
   service = "secretmanager.googleapis.com"
-  
+
   disable_dependent_services = false
-  disable_on_destroy        = false
+  disable_on_destroy         = false
 }
