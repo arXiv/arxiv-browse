@@ -194,3 +194,9 @@ variable "session_affinity" {
   type        = bool
   default     = false
 }
+
+variable "allow_unauthenticated" {
+  description = "Allow unauthenticated access"
+  type        = bool
+  default     = false
+}

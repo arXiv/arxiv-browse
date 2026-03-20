@@ -42,3 +42,5 @@ cloudsql_instance = "arxiv-kcdb1:us-central1:main-arxiv-db"
 # Secret names
 classic_db_uri_secret_name = "main_arxiv_db_readonly_uri"
 latexml_db_uri_secret_name = "latexml_db_uri_psycog2"
+
+allow_unauthenticated = true

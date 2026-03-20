@@ -259,47 +259,10 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
   }
 }
 
-# Note: The Cloud Run service agent from the target project needs to be granted
-# access to the arxiv-development project's GCR registry. This should be done
-# manually in the arxiv-development project by granting the following service account
-# the roles/storage.objectViewer role:
-# service-953276348471@serverless-robot-prod.iam.gserviceaccount.com
-
-# Note: The service account ${var.service_account_email} should already have
-# the necessary permissions to pull images from gcr.io/arxiv-development/arxiv-browse
-# These permissions are typically granted at the project level in arxiv-development
-
-# Get current project info for default service account
-# data "google_project" "current" {
-#   project_id = var.project_name
-# }
-
-# # Note: IAM permissions for the deployment service account are managed by arxiv-env script
-# # The deployment-sa@<project>.iam.gserviceaccount.com already has the necessary permissions:
-# # - roles/secretmanager.admin (includes secretAccessor and viewer)
-# # - roles/storage.objectViewer
-# # - roles/resourcemanager.projectIamAdmin
-# # - roles/serviceusage.serviceUsageAdmin
-# # - roles/run.developer
-
-# # IAM bindings for secrets (secrets are created by the workflow)
-# resource "google_secret_manager_secret_iam_binding" "secret_access" {
-#   for_each  = { for secret in var.secrets_to_copy : secret.name => secret }
-#   project   = var.project_name
-#   secret_id = each.value.name
-#   role      = "roles/secretmanager.secretAccessor"
-#   members = var.service_account_email != "" ? [
-#     "serviceAccount:${var.service_account_email}",
-#     ] : [
-#     "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com",
-#   ]
-# }
-
-# Enable Secret Manager API
-# resource "google_project_service" "secretmanager" {
-#   project = var.project_name
-#   service = "secretmanager.googleapis.com"
-
-#   disable_dependent_services = false
-#   disable_on_destroy         = false
-# }
+# Allow unauthenticated access
+resource "google_cloud_run_service_iam_member" "browse_invoker" {
+  service  = google_cloud_run_v2_service.arxiv_browse.name
+  location = google_cloud_run_v2_service.arxiv_browse.location
+  role     = "roles/run.invoker"
+  member   = var.allow_unauthenticated ? "allUsers" : "serviceAccount:${google_service_account.browse_sa.email}"
+}
