@@ -348,7 +348,29 @@
         <div id="coreRecommenderOutput"></div>
         <div id="iarxivOutput"></div>
       </div>
-
+     <input type="radio" name="tabs" id="aireviewer-tab">
+     <label for="aireviewer-tab">AI Review</label>
+     <div class="tab">
+       <h1>AI-Powered Paper Review</h1>
+       <div class="toggle">
+         <div class="columns is-mobile lab-row">
+           <div class="column lab-switch">
+             <label class="switch">
+               <input
+                 id="deepreviewer-toggle"
+                 data-script-url="{{ url_for('static', filename='js/deepreviewer.js') }}"
+                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-deepreviewer">
+               <span class="slider"></span>
+               <span class="is-sr-only">DeepReviewer Toggle</span>
+             </label>
+           </div>
+           <div class="column lab-name">
+             <span id="label-for-deepreviewer">DeepReviewer</span> <em>(<a href="https://ai-researcher.net" target="_blank">What is DeepReviewer?</a>)</em>
+           </div>
+         </div>
+       </div>
+       <div id="deepreviewer-output"></div>
+     </div>
       <input type="radio" name="tabs" id="tabfive">
       <label for="tabfive">
         About arXivLabs
