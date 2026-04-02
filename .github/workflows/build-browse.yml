@@ -1,0 +1,113 @@
+name: Build browse
+
+run-name: "Build browse ${{ github.ref_name }} ${{ github.sha }}"
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - GHA-build
+    paths:
+      - "browse/**"
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - "browse/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  actions: write
+  contents: read
+  pull-requests: write
+
+env:
+  DEPLOY_WORKFLOW: "deploy-browse.yml"
+  DOCKERFILE: "Dockerfile"
+  GCP_PROJECT_ID: "arxiv-development"
+  ARTIFACT_REGISTRY_REPO: "arxiv-keycloak"
+  IMAGE_NAME: "arxiv-browse"
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Check version
+        run: terraform --version
+
+      - name: Format check
+        run: terraform fmt -check
+
+  build-push:
+    needs: format-check
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: build-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+
+      # - name: Inject build SHA into Dashboard
+      #   run: |
+      #     sed -i 's/developer-build/${{ github.sha }}/g' browse/src/browse.py
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET }}
+          service_account: ${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+
+      - name: Build image, caching from latest
+        #env:
+        #  ARXIV_GITHUB_REPO_READ_TOKEN: ${{ secrets.ARXIV_GITHUB_REPO_READ_TOKEN }}
+        #working-directory: browse
+        run: |
+          pwd
+          ls
+          ls ${DOCKERFILE}
+
+          # Pull latest image for caching (ignore errors if it doesn't exist yet)
+          docker pull gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest || true
+
+          BRANCH_TAG="$(printf "%.128s" "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" | sed 's/\//-/g')"
+
+          # Build the legacy auth provider image
+          # --secret id=github_token,env=ARXIV_GITHUB_REPO_READ_TOKEN \
+          DOCKER_BUILDKIT=1 docker build -f ${DOCKERFILE} --build-arg GIT_COMMIT=${{ github.sha }} \
+          --cache-from gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest \
+          -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${BRANCH_TAG} \
+          ${{ github.ref_name == 'develop' && format('-t gcr.io/{0}/{1}:latest', env.GCP_PROJECT_ID, env.IMAGE_NAME) || '' }} ..
+
+      - name: Push image
+        run: docker push --all-tags gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}
+
+      # # CI Deployment Routing ... manual builds of a commit are not CD candidates
+      # - name: Deployment Routing
+      #   if: ${{ !inputs.custom_sha }}
+      #   uses: arXiv/iac-public/.github/actions/service-deployment-routing@main
+      #   with:
+      #     image_tag: ${{ github.sha }}
+      #     deploy_workflow: ${{ env.DEPLOY_WORKFLOW }}
+      #     workload_identity_provider: ${{ vars.ARXIV_DEVELOPMENT_PROVIDER_NAME }}
+      #     service_account: ${{ vars.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT }}
