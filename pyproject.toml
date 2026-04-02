@@ -3,7 +3,7 @@ name = "browse"
 version = "1.0.0"
 description = "arXiv public browse and download app."
 authors = []
-requires-python = "~=3.11"
+requires-python = "~=3.11.0"
 readme = "README.md"
 dependencies = [
     "MarkupSafe",
@@ -52,8 +52,13 @@ dev = [
     "ruff>=0.11.8,<0.12",
 ]
 
+[tool.uv]
+exclude-newer = "1 week"
+exclude-newer-package = { arxiv-base = "1 minute" }
+
 [tool.uv.sources]
-arxiv-base = { git = "https://github.com/arXiv/arxiv-base.git", rev = "34fc8ac78dc8dbb2739eacaa055c99351642bc8f" }
+arxiv-base = { git = "https://github.com/arXiv/arxiv-base.git", branch = "master" }
+
 
 [build-system]
 requires = ["hatchling"]

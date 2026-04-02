@@ -37,8 +37,6 @@ $(document).ready(function() {
     }
   };
 
-  var pwcEnabled = true;
-
   var labsCookie = Cookies.getJSON("arxiv_labs");
   if (labsCookie) {
     has_enabled = false;
