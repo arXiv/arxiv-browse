@@ -247,15 +247,15 @@ jobs:
       #     fi
       #   working-directory: cicd/deploy
 
-      - name: Plan
-        run: |
-          echo "Running terraform plan..."
-          terraform plan \
-            -var-file="envs/${{ inputs.env }}.tfvars" \
-            -var="commit_sha=${{ inputs.image_tag || github.sha }}"
-            # -var="project_name=${{ vars.PROJECT_NAME }}"
-            #-var="region=${{ vars.REGION }}"
-        working-directory: cicd/deploy
+      # - name: Plan
+      #   run: |
+      #     echo "Running terraform plan..."
+      #     terraform plan \
+      #       -var-file="envs/${{ inputs.env }}.tfvars" \
+      #       -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+      #       # -var="project_name=${{ vars.PROJECT_NAME }}"
+      #       #-var="region=${{ vars.REGION }}"
+      #   working-directory: cicd/deploy
 
       - name: Apply
         run: |
