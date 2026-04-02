@@ -97,9 +97,15 @@ def bare_abs() -> Any:
                     r"^[a-z\-]+(\.[A-Z]{2})?\/\d{7}$", param
                 ):
                     return abstract(param)
-
-    """Return abs-specific 404."""
     raise AbsNotFound
+
+
+@blueprint.route("show-email-msg", methods=["GET"])
+def show_email_msg() -> Response:
+    """Show email message page."""
+    response = make_response(render_template("show-email-msg.html"))
+    response.headers["Cache-Control"] = "public, max-age=31536000"
+    return response
 
 
 @blueprint.route("abs/", methods=["GET"], defaults={"arxiv_id": ""})
@@ -111,7 +117,7 @@ def abstract(arxiv_id: str) -> Any:
     if code == status.OK:
         if request.args and "fmt" in request.args and request.args["fmt"] == "txt":
             return Response(response["abs_meta"].raw(), mimetype="text/plain")
-        return render_template("abs/abs.html", **response), code, headers
+        return make_response(render_template("abs/abs.html", **response), code, headers)
     elif code == status.MOVED_PERMANENTLY:
         return redirect(headers["Location"], code=code)
     elif code == status.NOT_MODIFIED:
