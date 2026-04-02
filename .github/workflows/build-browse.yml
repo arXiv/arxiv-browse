@@ -1,6 +1,6 @@
-name: Build browse
+name: Build
 
-run-name: "Build browse ${{ github.ref_name }} ${{ github.sha }}"
+run-name: "Build ${{ github.ref_name }} ${{ github.sha }}"
 
 on:
   push:
@@ -97,7 +97,7 @@ jobs:
           --cache-from gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest \
           -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
           -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${BRANCH_TAG} \
-          ${{ github.ref_name == 'develop' && format('-t gcr.io/{0}/{1}:latest', env.GCP_PROJECT_ID, env.IMAGE_NAME) || '' }} ..
+          ${{ github.ref_name == 'develop' && format('-t gcr.io/{0}/{1}:latest', env.GCP_PROJECT_ID, env.IMAGE_NAME) || '' }} .
 
       - name: Push image
         run: docker push --all-tags gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}
