@@ -7,7 +7,6 @@ on:
     branches:
       - master
       - develop
-      - GHA-build
     paths:
       - "browse/**"
   pull_request:
@@ -27,7 +26,6 @@ env:
   DEPLOY_WORKFLOW: "deploy-browse.yml"
   DOCKERFILE: "Dockerfile"
   GCP_PROJECT_ID: "arxiv-development"
-  ARTIFACT_REGISTRY_REPO: "arxiv-keycloak"
   IMAGE_NAME: "arxiv-browse"
 
 jobs:
