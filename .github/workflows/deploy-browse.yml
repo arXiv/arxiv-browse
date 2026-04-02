@@ -1,0 +1,267 @@
+---
+name: Deploy
+
+run-name: "Deploy ${{ inputs.env }} ${{ inputs.image_tag }}"
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: "Environment"
+        required: true
+        type: string
+        default: ""
+      image_tag:
+        description: "Docker image tag (latest or the commit SHA)"
+        required: false
+        type: string
+        default: "latest"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Environment"
+        required: true
+        type: environment
+        default: ""
+      image_tag:
+        description: "Docker image tag (latest or the commit SHA)"
+        required: false
+        type: string
+        default: "latest"
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Check version
+        run: terraform --version
+
+      - name: Format check
+        run: terraform fmt -check
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: format-check
+    environment: ${{ inputs.env }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # - name: Set environment variables
+      #   run: |
+      #     ENV_NAME="${{ inputs.env }}"
+      #     REGION="${{ inputs.region || 'us-central1' }}"
+      #     echo "ENVIRONMENT=$ENV_NAME" >> $GITHUB_ENV
+      #     echo "REGION=$REGION" >> $GITHUB_ENV
+
+      #     # Set project name and terraform bucket based on environment
+      #     if [ "$ENV_NAME" = "production" ]; then
+      #       echo "PROJECT_NAME=arxiv-production" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=arxiv-production" >> $GITHUB_ENV
+      #     elif [ "$ENV_NAME" = "development" ]; then
+      #       echo "PROJECT_NAME=arxiv-development" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=arxiv-development" >> $GITHUB_ENV
+      #     else
+      #       # For custom environments, use the environment name as project name
+      #       echo "PROJECT_NAME=$ENV_NAME" >> $GITHUB_ENV
+      #       echo "TERRAFORM_BUCKET=$ENV_NAME" >> $GITHUB_ENV
+      #       echo "Custom environment detected, using $ENV_NAME as project name"
+      #     fi
+
+      - name: Authenticate with target project workload identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/github-actions-provider
+          service_account: github-actions-sa@${{ vars.PROJECT_NAME }}.iam.gserviceaccount.com
+          project_id: ${{ vars.PROJECT_NAME }}
+       
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      # - name: Check for GitHub secrets
+      #   run: |
+      #     echo "Checking for GitHub secrets..."
+          
+      #     # Check if GitHub secrets are available
+      #     if [ -n "${{ secrets.ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET }}" ] && [ -n "${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET }}" ]; then
+      #       echo "PROVIDER_NAME=${{ secrets.ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET }}" >> $GITHUB_ENV
+      #       echo "SERVICE_ACCOUNT=${{ secrets.ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET }}" >> $GITHUB_ENV
+      #       echo "✅ Using GitHub secrets"
+      #     else
+      #       echo "❌ Error: No GitHub secrets found"
+      #       echo ""
+      #       echo "To set up credentials for this project:"
+      #       echo "1. Create the project using: cd /path/to/arxiv-iac/arxiv-env && ./arxiv-env -project_name ${{ env.PROJECT_NAME }}"
+      #       echo "2. Copy the PROVIDER_NAME and SERVICE_ACCOUNT values from the output"
+      #       echo "3. Go to repository Settings → Secrets and variables → Actions"
+      #       echo "4. Add ARXIV_DEVELOPMENT_PROVIDER_NAME_SECRET and ARXIV_DEVELOPMENT_SERVICE_ACCOUNT_SECRET as repository secrets"
+      #       echo ""
+      #       echo "The arxiv-env script will automatically store credentials in the project bucket"
+      #       echo "and grant the necessary permissions for automated deployment."
+      #       exit 1
+      #     fi
+
+      # - name: Authenticate with project-specific Workload Identity
+      #   uses: google-github-actions/auth@v3
+      #   with:
+      #     workload_identity_provider: ${{ env.PROVIDER_NAME }}
+      #     service_account: ${{ env.SERVICE_ACCOUNT }}
+
+      # - name: Show service account being used
+      #   run: |
+      #     echo "Service account being used: ${{ env.SERVICE_ACCOUNT }}"
+      #     echo "This is the account that needs access to arxiv-development secrets"
+
+      # - name: Get secret values from arxiv-development
+      #   run: |
+      #     echo "Getting secret values from arxiv-development..."
+      #     echo "Current authentication:"
+      #     gcloud auth list
+      #     echo ""
+      #     echo "Current project:"
+      #     gcloud config get-value project
+      #     echo ""
+          
+      #     # Switch to arxiv-development project to read secrets
+      #     gcloud config set project arxiv-development
+      #     echo "Switched to arxiv-development project"
+          
+      #     # Read secret names from Terraform variables file - extract only the actual secret names
+      #     SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | grep -v 'name = string' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
+      #     echo "Found secrets to get: $SECRETS"
+      #     for secret in $SECRETS; do
+      #       echo "Getting secret value: $secret"
+      #       # Get the secret value from arxiv-development and store in environment variable
+      #       SECRET_VALUE=$(gcloud secrets versions access latest --secret="$secret" --project="arxiv-development")
+      #       # Store in environment variable for later use
+      #       echo "SECRET_${secret//-/_}_VALUE=$SECRET_VALUE" >> $GITHUB_ENV
+      #       echo "✅ Retrieved secret value: $secret"
+      #     done
+
+      # - name: Impersonate project service account for deployment
+      #   run: |
+      #     # Set the project service account for deployment
+      #     PROJECT_SA="deployment-sa@${{ env.PROJECT_NAME }}.iam.gserviceaccount.com"
+      #     echo "Impersonating project service account: $PROJECT_SA"
+          
+      #     # Set impersonation for all gcloud commands
+      #     echo "GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=$PROJECT_SA" >> $GITHUB_ENV
+          
+      #     # Also set it in gcloud config
+      #     gcloud config set auth/impersonate_service_account $PROJECT_SA
+          
+      #     # Switch back to target project
+      #     gcloud config set project ${{ env.PROJECT_NAME }}
+          
+      #     # # Verify impersonation is working
+      #     # echo "Current authenticated account:"
+      #     # gcloud auth list
+      #     # echo ""
+      #     # echo "Testing impersonation:"
+      #     # gcloud auth print-access-token
+
+      # - name: Create secrets in target project
+      #   run: |
+      #     echo "Creating secrets in target project..."
+      #     # Read secret names from Terraform variables file - extract only the actual secret names
+      #     SECRETS=$(grep -A 20 'variable "secrets_to_copy"' cicd/deploy/variables.tf | grep 'name =' | grep -v 'name = string' | sed 's/.*name = "\(.*\)".*/\1/' | tr -d ' ')
+      #     echo "Found secrets to create: $SECRETS"
+      #     for secret in $SECRETS; do
+      #       echo "Processing secret: $secret"
+      #       # Check if secret exists in target project
+      #       if ! gcloud secrets describe "$secret" --project="${{ env.PROJECT_NAME }}" >/dev/null 2>&1; then
+      #         echo "Secret doesn't exist in target project, creating it..."
+      #         # Get the secret value from environment variable
+      #         SECRET_VAR_NAME="SECRET_${secret//-/_}_VALUE"
+      #         SECRET_VALUE="${!SECRET_VAR_NAME}"
+      #         # Create the secret in target project with the actual value
+      #         echo "$SECRET_VALUE" | gcloud secrets create "$secret" --project="${{ env.PROJECT_NAME }}" --replication-policy="automatic" --data-file=-
+      #         echo "✅ Created and populated secret: $secret"
+      #       else
+      #         echo "✅ Secret already exists in target project: $secret"
+      #       fi
+      #     done
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Check version
+        run: terraform --version
+
+      - name: Configure terraform
+        run: |
+          echo "provider \"google\" {" > provider_override.tf
+          echo "  project = \"${{ vars.PROJECT_NAME }}\"" >> provider_override.tf
+          echo "  region  = \"${{ vars.REGION }}\"" >> provider_override.tf
+          echo "}" >> provider_override.tf
+          
+          echo "Terraform configuration:"
+          echo "  Project: ${{ vars.PROJECT_NAME }}"
+          echo "  Region: ${{ vars.REGION }}"
+          echo "  Commit SHA: ${{ inputs.image_tag || github.sha }}"
+          echo "  Container Image: gcr.io/arxiv-development/arxiv-browse:${{ inputs.image_tag || github.sha }}"
+        working-directory: cicd/deploy
+
+      - name: Initialize remote backend
+        run: terraform init -backend-config="bucket=${{ vars.TERRAFORM_BUCKET }}"
+        working-directory: cicd/deploy
+
+      # - name: Handle state lock
+      #   run: |
+      #     echo "Checking for existing state locks..."
+          
+      #     # Try to get the current lock info
+      #     if terraform force-unlock -help >/dev/null 2>&1; then
+      #       echo "Terraform supports force-unlock command"
+      #     else
+      #       echo "Terraform version doesn't support force-unlock, trying alternative approach"
+      #     fi
+          
+      #     # Check if there's a lock file in the bucket
+      #     LOCK_FILE="gs://${{ env.TERRAFORM_BUCKET }}/browse/state/default.tflock"
+      #     if gsutil ls "$LOCK_FILE" >/dev/null 2>&1; then
+      #       echo "Found existing lock file: $LOCK_FILE"
+      #       echo "Attempting to remove stale lock..."
+            
+      #       # Try to remove the lock file
+      #       if gsutil rm "$LOCK_FILE" >/dev/null 2>&1; then
+      #         echo "✅ Successfully removed stale lock file"
+      #       else
+      #         echo "⚠️  Could not remove lock file automatically"
+      #         echo "The lock may be held by an active operation"
+      #       fi
+      #     else
+      #       echo "No lock file found, proceeding normally"
+      #     fi
+      #   working-directory: cicd/deploy
+
+      - name: Plan
+        run: |
+          echo "Running terraform plan..."
+          terraform plan \
+            -var-file="envs/${{ inputs.env }}.tfvars" \
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}"
+            # -var="project_name=${{ vars.PROJECT_NAME }}"
+            #-var="region=${{ vars.REGION }}"
+        working-directory: cicd/deploy
+
+      - name: Apply
+        run: |
+          echo "Running terraform apply..."
+          terraform apply \
+            -var-file="envs/${{ inputs.env }}.tfvars" \
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
+            -auto-approve
+        working-directory: cicd/deploy
