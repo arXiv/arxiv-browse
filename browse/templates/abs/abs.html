@@ -78,7 +78,7 @@
     <div class="submission-history">
       <h2>Submission history</h2>
       From: {{ abs_meta.submitter.name|tex2utf if abs_meta.submitter.name != None }}
-      [<a id="view-email-link" href="{{ url_for('.show_email_msg') }}" data-real-email="{{ ('/show-email/%s/%s' % (abs_meta.arxiv_id|show_email_hash, abs_meta.arxiv_id))|urlencode }}" rel="nofollow">show email</a>]
+      [<a id="view-email-link" href="{{ url_for('.show_email_msg') }}" rel="nofollow">view email</a>]
       {#- Extra message for proxy sites (i.e. Proxy line has username and id) -#}
       {#- TODO: revisit this. Logic for display follows classic but is strange; sometimes a proxy is just a person's name. -#}
       {% if abs_meta.proxy != None %}&nbsp;[via {% if abs_meta.proxy|wordcount == 1 or abs_meta.proxy.startswith('ccsd') %}{{ abs_meta.proxy.split()[0]|upper }} proxy{% else %}{{ abs_meta.proxy|tex2utf }} as proxy{% endif %}]{% endif %}
@@ -102,16 +102,13 @@
   <script type="text/javascript" language="javascript">
     mathjaxToggle();
     (function() {
-
-      document.cookie = "tapir_session=999; expires=Fri, 31 Dec 2027 23:59:59 GMT; path=/";
-
-      var is_logged_in = document.cookie.indexOf('tapir_session=') !== -1 || document.cookie.indexOf('ARXIVNG_SESSION_ID=') !== -1;
-      if (is_logged_in) {
-        var link = document.getElementById('view-email-link');
-        if (link && link.getAttribute('data-real-email')) {
-          link.href = decodeURIComponent(link.getAttribute('data-real-email'));
+        var is_logged_in = document.cookie.indexOf('tapir_session=') !== -1 || document.cookie.indexOf('ARXIVNG_SESSION_ID=') !== -1;
+        if (is_logged_in) {
+            var link = document.getElementById('view-email-link');
+            if (link){
+                link.href = decodeURIComponent('{{em_data}}');
+            }
         }
-      }
     })();
   </script>
 </div>

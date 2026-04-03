@@ -33,6 +33,7 @@ from arxiv.document.exceptions import (
 from browse import b_add_surrogate_key
 
 from browse.exceptions import AbsNotFound
+from browse.formatting.email import generate_show_email_hash
 from browse.services.database import (
     count_trackback_pings,
     get_datacite_doi,
@@ -154,6 +155,10 @@ def get_abs_page(arxiv_id: str) -> Response:
         response_data["encrypted"] = abs_meta.get_requested_version().source_flag.source_encrypted
         response_data["show_refs_cites"] = _show_refs_cites(arxiv_identifier)
         response_data["show_labs"] = _show_labs(arxiv_identifier)
+
+        hash = generate_show_email_hash(abs_meta.arxiv_id, current_app.config["SHOW_EMAIL_SECRET"])
+        em_url=f"/show-email/{hash}"
+        response_data["em_data"] = "".join(f"%{ord(c):02x}" for c in em_url)
 
         _non_critical_abs_data(abs_meta, arxiv_identifier, response_data)
 
