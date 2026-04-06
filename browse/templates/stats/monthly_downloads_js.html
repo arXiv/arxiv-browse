@@ -117,6 +117,7 @@
     .attr("height", height + margin.top + margin.bottom)
     .attr("id", "chart")
     .attr("role", "img")
+    .attr("tabindex", "0")
     .attr("aria-label", "Area chart showing monthly article downloads over time. Use the brush control below to zoom into a specific date range. Download the CSV data for full details.");
 
   svg.append("defs").append("clipPath")

@@ -23,8 +23,14 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Underline links within text content for accessibility (WCAG 1.4.1) */
-p a, li a, td a, th a, dd a, dt a, blockquote a, figcaption a, .abstract a {
+/* Underline links within prose content for accessibility (WCAG 1.4.1) */
+/* Only in contexts where links appear within running text, not navigation or link lists */
+.abstract a,
+blockquote:not(.abstract) a,
+figcaption a,
+.submission-history p a,
+#content .description a,
+.accordion-body p a {
   text-decoration: underline;
 }
 
@@ -2938,13 +2944,13 @@ body#front.with-cu-identity #header #search {
   outline: 2px solid #005ea2;
   outline-offset: 2px;
 }
-.large-data-list .accordion-toggle:after {
+.large-data-list .accordion-toggle .accordion-caret:before {
   content: "\02C5";
   padding-left: 1em;
   font-size: 1.25em;
   font-weight: 100;
 }
-.large-data-list .accordion-toggle[aria-expanded="true"]:after {
+.large-data-list .accordion-toggle[aria-expanded="true"] .accordion-caret:before {
   content: "\02C4";
   color: #b7b8b9;
 }

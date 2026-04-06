@@ -912,13 +912,12 @@ li.ltx_tocentry.ltx_tocentry_appendix {
 }
 
 .back-to-reference-btn:focus {
-  outline: 2px solid var(--link-text-color);
+  outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
 .back-to-reference-btn:focus-visible {
-  outline: 2px solid var(--link-text-color);
-  outline-offset: 2px;
+  box-shadow: none;
 }
 .hide{
   display: none;
