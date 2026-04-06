@@ -14,7 +14,7 @@ body {
 }
 
 a:link, a:visited, a:active {
-  text-decoration: none;
+  text-decoration: underline;
   /*font-weight: bold;*/
   font-weight: normal;
 }
@@ -1215,6 +1215,12 @@ p.tagline {
   border-radius: 6px 6px 0 0;
   background-color: #eef5f9;
 }
+/* Focus indicator for labs tab labels */
+#labstabs .labstabs > label:focus-within,
+#labstabs .labstabs > input:focus + label {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
 /*mobile diplay area:*/
 #abs #labstabs .labstabs > label {
   font-size: .88em;
@@ -1403,6 +1409,15 @@ p.tagline {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(86px);
   transform: translateX(18px);
+}
+/* Focus indicator for toggle switches - show on the visible slider element */
+#labstabs .toggle .lab-switch input:focus-visible + .slider {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+#labstabs .toggle .lab-switch input:focus + .slider {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 
 
@@ -2620,6 +2635,24 @@ body#front.with-cu-identity #header #search {
   white-space: nowrap !important;
   width: 0.01em !important;
 }
+/* Inline fieldset for form grouping without visual border */
+.inline-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.inline-fieldset legend {
+  display: inline;
+  padding: 0;
+  font-weight: normal;
+}
+/* Browse context heading style */
+.browse-context-heading {
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  display: inline;
+}
 .button {
   border-width: 1px;
   cursor: pointer;
@@ -2863,6 +2896,36 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-body {
   margin-top: 1em;
 }
+/* Accordion toggle button - reset and inherit styles */
+.large-data-list .accordion-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.large-data-list .accordion-toggle:focus {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+.large-data-list .accordion-toggle:after {
+  content: "\02C5";
+  padding-left: 1em;
+  font-size: 1.25em;
+  font-weight: 100;
+}
+.large-data-list .accordion-toggle[aria-expanded="true"]:after {
+  content: "\02C4";
+  color: #b7b8b9;
+}
+/* Legacy support - keep old selector for backwards compatibility */
 .large-data-list .accordion-head:after {
   content: "\02C5";
   padding-left: 1em;
@@ -2874,6 +2937,10 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-head.open:after {
   content: "\02C4";
   color: #b7b8b9;
+}
+/* Hide legacy pseudo-element when button is present */
+.large-data-list .accordion-head:has(.accordion-toggle):after {
+  display: none;
 }
 /*** styles for general large-data-list ***/
 .large-data-list {

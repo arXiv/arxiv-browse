@@ -27,7 +27,7 @@ var bugReportState = {
 function detectColorScheme() {
     let theme = "light";
     let current_theme = localStorage.getItem("ar5iv_theme");
-    let colorSchemeToggle = document.querySelector('.ar5iv-toggle-color-scheme');
+    let colorSchemeToggles = document.querySelectorAll('.ar5iv-toggle-color-scheme');
     let autoIcon = document.querySelectorAll('#automatic-tog');
     let lightIcon = document.querySelectorAll('#light-tog');
     let darkIcon = document.querySelectorAll('#dark-tog');
@@ -38,18 +38,18 @@ function detectColorScheme() {
         } else {
             theme = "light";
         }
-        colorSchemeToggle.setAttribute('aria-label', 'System preference')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: System preference. Click to switch to light mode.'));
         autoIcon.forEach(x => x.hidden = false);
         lightIcon.forEach(x => x.hidden = true);
         darkIcon.forEach(x => x.hidden = true);
     } else if (current_theme === "light") {
-        colorSchemeToggle.setAttribute('aria-label', 'Light mode')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: Light mode. Click to switch to dark mode.'));
         lightIcon.forEach(x => x.hidden = false);
         autoIcon.forEach(x => x.hidden = true);
         darkIcon.forEach(x => x.hidden = true);
         theme = "light";
     } else {
-        colorSchemeToggle.setAttribute('aria-label', 'Dark mode')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: Dark mode. Click to switch to system preference.'));
         darkIcon.forEach(x => x.hidden = false);
         autoIcon.forEach(x => x.hidden = true);
         lightIcon.forEach(x => x.hidden = true);
@@ -298,22 +298,80 @@ function addSRButton(modal) {
     return buttons;
 }
 
+// Store the element that had focus before modal opened
+var previouslyFocusedElement = null;
+
 function showModal(modal) {
     const theme = document.documentElement.getAttribute("data-theme");
     const modalHeader = document.getElementById("modal-header");
-    if (theme === 'dark') {  
+    if (theme === 'dark') {
         modalHeader.setAttribute('data-bs-theme', "dark");
     }else{
         modalHeader.setAttribute('data-bs-theme', "light");
     }
-        
+
+    // Store the currently focused element to restore later
+    previouslyFocusedElement = document.activeElement;
+
     modal.style.display = 'block';
     modal.setAttribute('tabindex', '-1'); // Ensure the modal is focusable
-    modal.focus();
+    modal.setAttribute('aria-modal', 'true');
+
+    // Focus the first focusable element in the modal
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+    } else {
+        modal.focus();
+    }
+
+    // Add focus trap event listener
+    modal.addEventListener('keydown', trapFocus);
 }
 
 function hideModal(modal) {
     modal.style.display = 'none';
+    modal.removeAttribute('aria-modal');
+
+    // Remove focus trap event listener
+    modal.removeEventListener('keydown', trapFocus);
+
+    // Restore focus to the previously focused element
+    if (previouslyFocusedElement) {
+        previouslyFocusedElement.focus();
+        previouslyFocusedElement = null;
+    }
+}
+
+// Trap focus within the modal
+function trapFocus(e) {
+    const modal = e.currentTarget;
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    // Close on Escape key
+    if (e.key === 'Escape') {
+        hideModal(modal);
+        return;
+    }
+
+    // Only handle Tab key for focus trapping
+    if (e.key !== 'Tab') return;
+
+    if (e.shiftKey) {
+        // Shift + Tab: if on first element, wrap to last
+        if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable.focus();
+        }
+    } else {
+        // Tab: if on last element, wrap to first
+        if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable.focus();
+        }
+    }
 }
 
 function showButtons(buttons) {

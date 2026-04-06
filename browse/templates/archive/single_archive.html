@@ -36,62 +36,72 @@
         </li>
         <li><a href="{{url_for('.list_articles', context=archive.id, subcontext='current')}}">current month's</a>
           {{archive_id}} listings</li>
-          <li>specific year/month:
-
+          <li>
             <form action="{{url_for('.list_articles')}}" method="get">
-            {{ list_form.archive }}
-            {{ list_form.year}} {{ list_form.month}}
-            {{list_form.submit}}
-          </form>
-        </li>
+              <fieldset class="inline-fieldset">
+                <legend>Specific year/month:</legend>
+                {{ list_form.archive }}
+                <label for="year" class="is-sr-only">Year</label>
+                {{ list_form.year}}
+                <label for="month" class="is-sr-only">Month</label>
+                {{ list_form.month}}
+                {{list_form.submit}}
+              </fieldset>
+            </form>
+          </li>
       </ul>
     </li>
 
     <li><b>Catch-up:</b>
       <form id="catchup-form" action="{{ url_for('.catchup_form') }}" method="get" onsubmit="catchupParamSelection('{{ archive.id }}')">
+        <fieldset class="inline-fieldset">
+          <legend class="is-sr-only">Catch-up options</legend>
+          <input id="catchup_archive" type="hidden" value="{{archive.id}}"/>
+          <input type="hidden" id="subject" name="subject" />
+          {% set categories = archive.get_categories() %}
+          {% if categories|length > 1 %}
+            <label for="catchup_category">Categories:</label>
+            <select name="catchup_category" id="catchup_category">
+                <option value="" selected>All</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">
+                        {{ category.full_name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <br>
+          {% endif %}
 
-        <input id="catchup_archive" type="hidden" value="{{archive.id}}"/>
-        <input type="hidden" id="subject" name="subject" />
-        {% set categories = archive.get_categories() %}
-        {% if categories|length > 1 %}
-          <label for="catchup_category">Categories:</label>
-          <select name="catchup_category" id="catchup_category">
-              <option value="" selected>All</option>
-              {% for category in categories %}
-                  <option value="{{ category.id }}">
-                      {{ category.full_name }}
-                  </option>
+          <span id="changes-since-label">Changes since:</span>
+          <label for="catchup_day" class="is-sr-only">Day</label>
+          <select id="catchup_day" aria-labelledby="changes-since-label">
+            {% for day in days %}
+                <option value="{{ day }}">{{ day }}</option>
+            {% endfor %}
+          </select>
+          <label for="catchup_month" class="is-sr-only">Month</label>
+          <select id="catchup_month" aria-labelledby="changes-since-label">
+              {% for val, name in months %}
+                  <option value="{{ val }}" {% if val == current_month %}selected{% endif %}>{{ name }}</option>
               {% endfor %}
           </select>
-          <br>
-        {% endif %}
+          <label for="catchup_year" class="is-sr-only">Year</label>
+          <select id="catchup_year" aria-labelledby="changes-since-label">
+              {% for year in years %}
+                  <option value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+          </select>
+          <input type="hidden" id="date" name="date" />
 
-        Changes since:
-        <select id="catchup_day">
-          {% for day in days %}
-              <option value="{{ day }}">{{ day }}</option>
-          {% endfor %}
-        </select>
-        <select id="catchup_month">
-            {% for val, name in months %}
-                <option value="{{ val }}" {% if val == current_month %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
-        <select id="catchup_year">
-            {% for year in years %}
-                <option value="{{ year }}">{{ year }}</option>
-            {% endfor %}
-        </select>
-        <input type="hidden" id="date" name="date" />
+          <label for="include_abs">, view results</label>
+          <select name="include_abs" id="include_abs">
+            <option value="False" selected> without </option>
+            <option value="True" > with </option>
+          </select>
+          abstracts
 
-        , view results 
-        <select name="include_abs">
-          <option value="False" selected> without </option>
-          <option value="True" > with </option>
-        </select>
-        abstracts
-
-        <input type="submit" value="Go"/>
+          <input type="submit" value="Go"/>
+        </fieldset>
       </form>
     </li>
 
