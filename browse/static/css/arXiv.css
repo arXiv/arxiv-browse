@@ -14,12 +14,17 @@ body {
 }
 
 a:link, a:visited, a:active {
-  text-decoration: underline;
+  text-decoration: none;
   /*font-weight: bold;*/
   font-weight: normal;
 }
 
 a:hover {
+  text-decoration: underline;
+}
+
+/* Underline links within text content for accessibility (WCAG 1.4.1) */
+p a, li a, td a, th a, dd a, dt a, blockquote a, figcaption a, .abstract a {
   text-decoration: underline;
 }
 
@@ -977,15 +982,20 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
-#abs-outer .extra-services span.bib-cite-button {
+#abs-outer .extra-services button.bib-cite-button {
   color: rgb(0, 0, 238);
   text-transform: capitalize;
   font-weight: bold;
   padding: .35em;
   display: block;
   text-transform: capitalize;
+  background: none;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
 }
-#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+#abs-outer .extra-services button.bib-cite-button:hover, #abs-outer .extra-services button.bib-cite-button:focus {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -1258,7 +1268,20 @@ p.tagline {
   width: 130px;
 }
 #labstabs .labstabs input[type="radio"] {
-	display: none;
+	/* Visually hidden but still focusable for accessibility */
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+#labstabs .labstabs input[type="radio"]:focus + label {
+	outline: 2px solid #005aa7;
+	outline-offset: 2px;
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
@@ -1744,7 +1767,7 @@ div#long-author-list {
   #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
     margin: 1em 0
   }
-  #abs-outer .extra-services span.bib-cite-button {
+  #abs-outer .extra-services button.bib-cite-button {
     margin: .5em .5em 0 0;
     display: inline-block !important;
     border-radius: 5px;
