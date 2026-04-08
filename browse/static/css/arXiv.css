@@ -2937,7 +2937,6 @@ body#front.with-cu-identity #header #search {
   text-align: left;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .large-data-list .accordion-toggle:focus {
@@ -2949,7 +2948,7 @@ body#front.with-cu-identity #header #search {
 }
 .large-data-list .accordion-toggle .accordion-caret:before {
   content: "\02C5";
-  padding-left: 1em;
+  padding-right: 0.5em;
   font-size: 1.25em;
   font-weight: 100;
 }
