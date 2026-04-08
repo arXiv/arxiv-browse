@@ -115,6 +115,7 @@ function addBugReportForm() {
     // Create the modal title
     const modalTitle = document.createElement("h5");
     modalTitle.setAttribute("class", "modal-title");
+    modalTitle.setAttribute("id", "modal-title");
     modalTitle.appendChild(document.createTextNode("Report GitHub Issue"));
 
     // Create the close button for the modal
@@ -144,10 +145,9 @@ function addBugReportForm() {
     warningLabel.setAttribute('class', 'form-text');
     warningLabel.textContent = "Warning: Issue reports will be publicly available on GitHub, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
 
-    // Create the description input field
-    const selectedTextDescriptionLabel = document.createElement("label");
-    selectedTextDescriptionLabel.setAttribute("for", "description");
-    //descriptionLabel.setAttribute("class", "form-label");
+    // Create the description status message (shown when text is selected)
+    const selectedTextDescriptionLabel = document.createElement("p");
+    selectedTextDescriptionLabel.setAttribute("class", "form-text");
     selectedTextDescriptionLabel.setAttribute("id", "selectedTextModalDescription");
     selectedTextDescriptionLabel.appendChild(document.createTextNode("Content selection saved. Describe the issue below:"));
 
