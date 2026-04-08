@@ -730,6 +730,11 @@ body:after {
   margin-top: 0.1rem;
   color: transparent;
   text-shadow: 0 0 0 var(--header-text-color);
+  /* Button reset for accessibility (changed from anchor to button) */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
 }
 
 .ar5iv-footer-button {
