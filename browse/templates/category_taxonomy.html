@@ -34,8 +34,13 @@
 
 <div id="{{ list_name }}_list" class="large-data-list">
   {%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
-  <h2 class="accordion-head">{{ group_details.full_name }}</h2>
-  <div class="accordion-body">
+  <h2 class="accordion-head" id="accordion-head-{{ group_key }}">
+    <button type="button" class="accordion-toggle" aria-expanded="false" aria-controls="accordion-panel-{{ group_key }}">
+      {{ group_details.full_name }}
+      <span class="accordion-caret" aria-hidden="true"></span>
+    </button>
+  </h2>
+  <div class="accordion-body" id="accordion-panel-{{ group_key }}" role="region" aria-labelledby="accordion-head-{{ group_key }}">
     {%- for archive in group_details.get_archives() | sort(attribute='full_name') -%}
     <div class="{% if not (loop.first and loop.last) %}physics {% endif %} columns ">
       {%- if not (loop.first and loop.last) -%}
@@ -65,21 +70,29 @@
   {%- endfor -%}
 </div><!-- end accordion -->
 <script type="text/javascript">
-// vanilla accordion script
+// vanilla accordion script with accessibility support
 var jsaccordion = {
   init : function (target) {
-  // initialize the accordion
-    var headers = document.querySelectorAll("#" + target + " .accordion-head");
-    if (headers.length > 0) { for (var head of headers) {
-      head.addEventListener("click", jsaccordion.select);
-    }}
+    // initialize the accordion - target the buttons inside headers
+    var buttons = document.querySelectorAll("#" + target + " .accordion-toggle");
+    if (buttons.length > 0) {
+      for (var btn of buttons) {
+        btn.addEventListener("click", jsaccordion.select);
+      }
+    }
   },
   select : function () {
-  // fired when user clicks on a header
-    var contents = this.nextElementSibling;
-    contents.classList.toggle("open");
-    var contents = this;
-    contents.classList.toggle("open");
+    // fired when user clicks/activates a button
+    var header = this.closest('.accordion-head');
+    var panel = header.nextElementSibling;
+    var isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+    // toggle aria-expanded
+    this.setAttribute('aria-expanded', !isExpanded);
+
+    // toggle open class on panel and header
+    panel.classList.toggle("open");
+    header.classList.toggle("open");
   }
 };
 // runs on page load. Dont forget to set variable 'list_name' on your page.
