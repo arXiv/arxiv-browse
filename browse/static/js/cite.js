@@ -4,6 +4,7 @@ $(document).ready(function() {
     var cached_provider=null
     var setup=0
     var API_CROSSREF_CITE='https://dx.doi.org/'
+    var previouslyFocusedElement=null
 
     function error_check(response) {
         switch (response.status) {
@@ -15,6 +16,57 @@ $(document).ready(function() {
             return 'Citation entry returned 500: internal server error'
         default:
             return 'Citation error ' + response.status
+        }
+    }
+
+    // Focus trap for modal accessibility
+    function trapFocus(e) {
+        var modal = document.getElementById('bib-cite-modal');
+        if (!modal || modal.hidden) return;
+
+        var focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        var firstFocusable = focusableElements[0];
+        var lastFocusable = focusableElements[focusableElements.length - 1];
+
+        if (e.key === 'Escape') {
+            closeModal();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    lastFocusable.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    firstFocusable.focus();
+                    e.preventDefault();
+                }
+            }
+        }
+    }
+
+    function openModal() {
+        previouslyFocusedElement = document.activeElement;
+        var modal = document.getElementById('bib-cite-modal');
+        modal.hidden = false;
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('role', 'dialog');
+        document.addEventListener('keydown', trapFocus);
+        // Focus the close button or first focusable element
+        var closeBtn = modal.querySelector('.bib-modal-close');
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closeModal() {
+        var modal = document.getElementById('bib-cite-modal');
+        modal.hidden = true;
+        modal.removeAttribute('aria-modal');
+        document.removeEventListener('keydown', trapFocus);
+        if (previouslyFocusedElement) {
+            previouslyFocusedElement.focus();
         }
     }
 
@@ -47,7 +99,7 @@ $(document).ready(function() {
         doi = metadoi ? metadoi.content: ''
 
         if(!setup){
-            $('.bib-modal-close').click(function(){$('#bib-cite-modal').hide()})
+            $('.bib-modal-close').click(function(){closeModal()})
             $('<link>').appendTo('head').attr({type:'text/css',rel: 'stylesheet',href: $('#bib-cite-css').attr('href')})
             setup = 1
         }
@@ -56,7 +108,7 @@ $(document).ready(function() {
             $('#bib-cite-loading').hide()
             $('#bib-cite-target').val(result)
             $('#bib-cite-source-api').text(provider_desc[provider]).attr('href', provider_url[provider])
-            $('#bib-cite-modal').show()
+            openModal()
         }
 
         if(cached_value){

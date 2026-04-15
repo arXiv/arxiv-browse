@@ -138,11 +138,15 @@ $(document).ready(function() {
     Cookies.set("arxiv_labs", { sameSite: "strict", expires: 365 });
   }
 
-  // record last-clicked tab
-  $("div.labstabs input[name='tabs']").on("click", function() {
+  // record last-clicked tab and update ARIA states for accessibility
+  $("div.labstabs input[name='tabs']").on("click change", function() {
     var labsCookie = Cookies.getJSON("arxiv_labs") || {};
     labsCookie["last_tab"] = $(this).attr("id");
     Cookies.set("arxiv_labs", labsCookie, { sameSite: "strict", expires: 365 });
+
+    // Update aria-selected states on tab labels
+    $("div.labstabs label[role='tab']").attr("aria-selected", "false");
+    $(this).next("label[role='tab']").attr("aria-selected", "true");
   });
 
   $(".lab-toggle").on("click", function() {
