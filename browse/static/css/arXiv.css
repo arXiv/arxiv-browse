@@ -2940,16 +2940,18 @@ body#front.with-cu-identity #header #search {
   text-align: left;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .large-data-list .accordion-toggle:focus {
+  outline: none;
+}
+.large-data-list .accordion-toggle:focus-visible {
   outline: 2px solid #005ea2;
   outline-offset: 2px;
 }
 .large-data-list .accordion-toggle .accordion-caret:before {
   content: "\02C5";
-  padding-left: 1em;
+  padding-right: 0.5em;
   font-size: 1.25em;
   font-weight: 100;
 }

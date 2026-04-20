@@ -36,8 +36,8 @@
   {%- for group_key, group_details in groups.items()|sort if not group_details.is_test  -%}
   <h2 class="accordion-head" id="accordion-head-{{ group_key }}">
     <button type="button" class="accordion-toggle" aria-expanded="false" aria-controls="accordion-panel-{{ group_key }}">
-      {{ group_details.full_name }}
       <span class="accordion-caret" aria-hidden="true"></span>
+      {{ group_details.full_name }}
     </button>
   </h2>
   <div class="accordion-body" id="accordion-panel-{{ group_key }}" role="region" aria-labelledby="accordion-head-{{ group_key }}">
