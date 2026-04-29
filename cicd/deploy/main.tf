@@ -223,8 +223,38 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
 
       env {
-        name = "AUTH_SERVER"
+        name  = "AUTH_SERVER"
         value = var.auth_server
+      }
+
+      env {
+        name = "CLICKTHROUGH_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = var.clickthrough_secret_name
+            version = "latest"
+          }
+        }
+      }
+
+      env {
+        name = "TRACKBACK_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = var.trackback_secret_name
+            version = "latest"
+          }
+        }
+      }
+
+      env {
+        name = "SHOW_EMAIL_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = var.show_email_secret_name
+            version = "latest"
+          }
+        }
       }
 
       resources {

@@ -1,4 +1,4 @@
----
+# gh workflow run deploy-browse.yml -r GHA-build -f env=kcdb1 -f image_tag=
 name: Deploy
 
 run-name: "Deploy ${{ inputs.env }} ${{ inputs.image_tag }}"

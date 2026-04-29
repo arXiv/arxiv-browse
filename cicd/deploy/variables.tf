@@ -229,3 +229,18 @@ variable "auth_server" {
   description = "Auth server"
   type        = string
 }
+
+variable "clickthrough_secret_name" {
+  description = "The secret name for the clickthrough secret"
+  type        = string
+  default     = "CLICKTHROUGH_SECRET"
+}
+variable "trackback_secret_name" {
+  description = "The secret name for the trackback secret"
+  type        = string
+  default     = "TRACKBACK_SECRET"
+}
+variable "show_email_secret_name" {
+  description = "The secret name for the show email secret"
+  type        = string
+  default     = "SHOW_EMAIL_SECRET"
