@@ -115,7 +115,10 @@
   var svg = d3.select("div#chart_content").append("svg:svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .attr("id", "chart");
+    .attr("id", "chart")
+    .attr("role", "img")
+    .attr("tabindex", "0")
+    .attr("aria-label", "Area chart showing monthly article downloads over time. Use the brush control below to zoom into a specific date range. Download the CSV data for full details.");
 
   svg.append("defs").append("clipPath")
     .attr("id", "clip")

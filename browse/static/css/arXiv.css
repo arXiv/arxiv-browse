@@ -23,6 +23,17 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Underline links within prose content for accessibility (WCAG 1.4.1) */
+/* Only in contexts where links appear within running text, not navigation or link lists */
+.abstract a,
+blockquote:not(.abstract) a,
+figcaption a,
+.submission-history p a,
+#content .description a,
+.accordion-body p a {
+  text-decoration: underline;
+}
+
 abbr, acronym {
   border-bottom: 0;
 }
@@ -977,15 +988,20 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
-#abs-outer .extra-services span.bib-cite-button {
+#abs-outer .extra-services button.bib-cite-button {
   color: rgb(0, 0, 238);
   text-transform: capitalize;
   font-weight: bold;
   padding: .35em;
   display: block;
   text-transform: capitalize;
+  background: none;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
 }
-#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+#abs-outer .extra-services button.bib-cite-button:hover, #abs-outer .extra-services button.bib-cite-button:focus {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -1215,6 +1231,12 @@ p.tagline {
   border-radius: 6px 6px 0 0;
   background-color: #eef5f9;
 }
+/* Focus indicator for labs tab labels */
+#labstabs .labstabs > label:focus-within,
+#labstabs .labstabs > input:focus-visible + label {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
 /*mobile diplay area:*/
 #abs #labstabs .labstabs > label {
   font-size: .88em;
@@ -1252,7 +1274,20 @@ p.tagline {
   width: 130px;
 }
 #labstabs .labstabs input[type="radio"] {
-	display: none;
+	/* Visually hidden but still focusable for accessibility */
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+#labstabs .labstabs input[type="radio"]:focus-visible + label {
+	outline: 2px solid #005ea2;
+	outline-offset: 2px;
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
@@ -1403,6 +1438,11 @@ p.tagline {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(86px);
   transform: translateX(18px);
+}
+/* Focus indicator for toggle switches - show on the visible slider element */
+#labstabs .toggle .lab-switch input:focus-visible + .slider {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 
 
@@ -1729,7 +1769,7 @@ div#long-author-list {
   #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
     margin: 1em 0
   }
-  #abs-outer .extra-services span.bib-cite-button {
+  #abs-outer .extra-services button.bib-cite-button {
     margin: .5em .5em 0 0;
     display: inline-block !important;
     border-radius: 5px;
@@ -2620,6 +2660,24 @@ body#front.with-cu-identity #header #search {
   white-space: nowrap !important;
   width: 0.01em !important;
 }
+/* Inline fieldset for form grouping without visual border */
+.inline-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.inline-fieldset legend {
+  display: inline;
+  padding: 0;
+  font-weight: normal;
+}
+/* Browse context heading style */
+.browse-context-heading {
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  display: inline;
+}
 .button {
   border-width: 1px;
   cursor: pointer;
@@ -2657,6 +2715,13 @@ body#front.with-cu-identity #header #search {
 .tabs a:hover {
   border-bottom-color: #363636;
   color: #363636;
+}
+.tabs a:focus {
+  outline: none;
+}
+.tabs a:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 .tabs li {
   display: block;
@@ -2863,6 +2928,38 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-body {
   margin-top: 1em;
 }
+/* Accordion toggle button - reset and inherit styles */
+.large-data-list .accordion-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.large-data-list .accordion-toggle:focus {
+  outline: none;
+}
+.large-data-list .accordion-toggle:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+.large-data-list .accordion-toggle .accordion-caret:before {
+  content: "\02C5";
+  padding-right: 0.5em;
+  font-size: 1.25em;
+  font-weight: 100;
+}
+.large-data-list .accordion-toggle[aria-expanded="true"] .accordion-caret:before {
+  content: "\02C4";
+  color: #b7b8b9;
+}
+/* Legacy support - keep old selector for backwards compatibility */
 .large-data-list .accordion-head:after {
   content: "\02C5";
   padding-left: 1em;
@@ -2874,6 +2971,10 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-head.open:after {
   content: "\02C4";
   color: #b7b8b9;
+}
+/* Hide legacy pseudo-element when button is present */
+.large-data-list .accordion-head:has(.accordion-toggle):after {
+  display: none;
 }
 /*** styles for general large-data-list ***/
 .large-data-list {
