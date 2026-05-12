@@ -27,7 +27,7 @@ var bugReportState = {
 function detectColorScheme() {
     let theme = "light";
     let current_theme = localStorage.getItem("ar5iv_theme");
-    let colorSchemeToggle = document.querySelector('.ar5iv-toggle-color-scheme');
+    let colorSchemeToggles = document.querySelectorAll('.ar5iv-toggle-color-scheme');
     let autoIcon = document.querySelectorAll('#automatic-tog');
     let lightIcon = document.querySelectorAll('#light-tog');
     let darkIcon = document.querySelectorAll('#dark-tog');
@@ -38,18 +38,18 @@ function detectColorScheme() {
         } else {
             theme = "light";
         }
-        colorSchemeToggle.setAttribute('aria-label', 'System preference')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: System preference. Click to switch to light mode.'));
         autoIcon.forEach(x => x.hidden = false);
         lightIcon.forEach(x => x.hidden = true);
         darkIcon.forEach(x => x.hidden = true);
     } else if (current_theme === "light") {
-        colorSchemeToggle.setAttribute('aria-label', 'Light mode')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: Light mode. Click to switch to dark mode.'));
         lightIcon.forEach(x => x.hidden = false);
         autoIcon.forEach(x => x.hidden = true);
         darkIcon.forEach(x => x.hidden = true);
         theme = "light";
     } else {
-        colorSchemeToggle.setAttribute('aria-label', 'Dark mode')
+        colorSchemeToggles.forEach(toggle => toggle.setAttribute('aria-label', 'Color scheme: Dark mode. Click to switch to system preference.'));
         darkIcon.forEach(x => x.hidden = false);
         autoIcon.forEach(x => x.hidden = true);
         lightIcon.forEach(x => x.hidden = true);
@@ -115,7 +115,8 @@ function addBugReportForm() {
     // Create the modal title
     const modalTitle = document.createElement("h5");
     modalTitle.setAttribute("class", "modal-title");
-    modalTitle.appendChild(document.createTextNode("Report Github Issue"));
+    modalTitle.setAttribute("id", "modal-title");
+    modalTitle.appendChild(document.createTextNode("Report GitHub Issue"));
 
     // Create the close button for the modal
     const closeButton = document.createElement("button");
@@ -142,12 +143,11 @@ function addBugReportForm() {
     const warningLabel = document.createElement("div");
     warningLabel.id = "warningLabel";
     warningLabel.setAttribute('class', 'form-text');
-    warningLabel.textContent = "Warning: Issue reports will be publicly available on Github, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
+    warningLabel.textContent = "Warning: Issue reports will be publicly available on GitHub, including highlighted text. You may want to omit screenshots if you are reporting on a paper still in submission.";
 
-    // Create the description input field
-    const selectedTextDescriptionLabel = document.createElement("label");
-    selectedTextDescriptionLabel.setAttribute("for", "description");
-    //descriptionLabel.setAttribute("class", "form-label");
+    // Create the description status message (shown when text is selected)
+    const selectedTextDescriptionLabel = document.createElement("p");
+    selectedTextDescriptionLabel.setAttribute("class", "form-text");
     selectedTextDescriptionLabel.setAttribute("id", "selectedTextModalDescription");
     selectedTextDescriptionLabel.appendChild(document.createTextNode("Content selection saved. Describe the issue below:"));
 
@@ -193,14 +193,14 @@ function addBugReportForm() {
     submitButton.setAttribute("class", "btn btn-primary");
     submitButton.setAttribute("id", "modal-submit"); // This id will use in submitBugReport function !!!
     // submitButton.setAttribute("style", "background-color: #b31b1b;", "border-color: #690604;");
-    submitButton.appendChild(document.createTextNode("Submit in Github"));
+    submitButton.appendChild(document.createTextNode("Submit in GitHub"));
 
     // Update: ScreenReader Submit Buttons. Needed for Submit without Github Function.
     const srSubmit = document.createElement("button");
     srSubmit.setAttribute("type", "submit");
     srSubmit.setAttribute("class", "sr-only button");
     srSubmit.setAttribute("id", "modal-submit-sr");
-    srSubmit.appendChild(document.createTextNode("Submit without Github"));
+    srSubmit.appendChild(document.createTextNode("Submit without GitHub"));
 
     // Create a container div for the buttons
     const buttonsContainer = document.createElement("div");
@@ -298,22 +298,82 @@ function addSRButton(modal) {
     return buttons;
 }
 
+// Store the element that had focus before modal opened
+var previouslyFocusedElement = null;
+
 function showModal(modal) {
     const theme = document.documentElement.getAttribute("data-theme");
     const modalHeader = document.getElementById("modal-header");
-    if (theme === 'dark') {  
+    if (theme === 'dark') {
         modalHeader.setAttribute('data-bs-theme', "dark");
-    }else{
+    } else {
         modalHeader.setAttribute('data-bs-theme', "light");
     }
-        
+
+    // Store the currently focused element to restore later
+    previouslyFocusedElement = document.activeElement;
+
     modal.style.display = 'block';
-    modal.setAttribute('tabindex', '-1'); // Ensure the modal is focusable
-    modal.focus();
+    modal.setAttribute('tabindex', '-1');
+    modal.setAttribute('aria-modal', 'true');
+
+    // Focus the first focusable element in the modal
+    var focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+    } else {
+        modal.focus();
+    }
+
+    // Add focus trap event listener
+    document.addEventListener('keydown', trapFocus);
 }
 
 function hideModal(modal) {
     modal.style.display = 'none';
+    modal.removeAttribute('aria-modal');
+
+    // Remove focus trap event listener
+    document.removeEventListener('keydown', trapFocus);
+
+    // Restore focus to the previously focused element
+    if (previouslyFocusedElement) {
+        previouslyFocusedElement.focus();
+        previouslyFocusedElement = null;
+    }
+}
+
+// Trap focus within the modal
+function trapFocus(e) {
+    var modal = document.getElementById('myForm');
+    if (!modal || modal.style.display === 'none') return;
+
+    var focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    var firstFocusable = focusableElements[0];
+    var lastFocusable = focusableElements[focusableElements.length - 1];
+
+    // Close on Escape key
+    if (e.key === 'Escape') {
+        hideModal(modal);
+        return;
+    }
+
+    // Only handle Tab key for focus trapping
+    if (e.key !== 'Tab') return;
+
+    if (e.shiftKey) {
+        // Shift + Tab: if on first element, wrap to last
+        if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable.focus();
+        }
+    } else {
+        // Tab: if on last element, wrap to first
+        if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable.focus();
+        }
+    }
 }
 
 function showButtons(buttons) {

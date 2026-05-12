@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 import os
 from typing import List, Optional
 
-from sqlalchemy import text
+from arxiv.db import Base
+from sqlalchemy import func, inspect, select, text
 from sqlalchemy.engine.base import Engine
 
 from arxiv.db.models import Metadata
@@ -30,10 +31,11 @@ def execute_sql_files(sql_files: List[str], engine: Engine) -> None:
     def exec_sql(filename: str) -> None:
         lnum=0
         try:
+
             with engine.connect() as conn:
                 with open(filename) as sql_file:
                     for ln, line in enumerate([line.strip() for line in sql_file]):
-                        lnum = ln
+                        lnum = ln + 1
                         if not comment(line):
                             conn.execute(text(line))
 
@@ -119,13 +121,20 @@ def _populate_latexml_test_data (db, latexml_engine: Engine):
 
 def populate_test_database(drop_and_create: bool, db, engine: Engine, latexml_engine: Engine):
     """Initialize the browse tables."""
+    with db.Session() as session:
+        has_md_table = inspect(engine).has_table("arXiv_metadata")
+        if has_md_table:
+            md_count = session.scalar(select(func.count()).select_from(db.models.Metadata))
+            if md_count > 1000000:
+                raise RuntimeError("Danger: arXiv_metadata has more than 1M rows. Not dropping, not adding test data. Check the DB connection URI.")
+
     if drop_and_create:
         foreign_key_check(engine, False)
-        db.metadata.drop_all(bind=engine)
-        db.Session.commit()
+        Base.metadata.drop_all(engine)
+        #db.Session.commit()
         foreign_key_check(engine, True)
-        db.metadata.create_all(bind=engine)
-        db.Session.commit()
+        Base.metadata.create_all(bind=engine)
+        #db.Session.commit()
 
     # Member institution data
     with db.Session() as session:

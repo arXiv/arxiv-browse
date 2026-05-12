@@ -81,7 +81,8 @@ Source
 {%- endmacro -%}
 
 {%- macro generate_browse_context() -%}
-  Current browse context: <div class="current">{{ browse_context }}</div>
+  <h3 class="browse-context-heading">Current browse context:</h3>
+  <div class="current">{{ browse_context }}</div>
 
   <div class="prevnext">
     {% if browse_context_previous_url -%}

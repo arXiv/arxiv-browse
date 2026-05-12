@@ -23,6 +23,17 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Underline links within prose content for accessibility (WCAG 1.4.1) */
+/* Only in contexts where links appear within running text, not navigation or link lists */
+.abstract a,
+blockquote:not(.abstract) a,
+figcaption a,
+.submission-history p a,
+#content .description a,
+.accordion-body p a {
+  text-decoration: underline;
+}
+
 abbr, acronym {
   border-bottom: 0;
 }
@@ -701,10 +712,10 @@ footer .sorry-app-links .a11y-main-link {
   display: inline-block;
   padding: .25em 1em;
   border-radius: .3em;
-  font-size: 2em;
+  font-size: 1.75em;
   background-color: #1c1a17;
   border: 2px solid #6b6459;
-  color: #fb595a;
+  color: #f9f7f7;
   text-decoration: none;
   transition: all .5s ease-in-out;
 }
@@ -977,15 +988,20 @@ p.tagline {
 #abs-outer .extra-services .bib-sidebar {
   border-left: .35em solid #ddd !important;
 }
-#abs-outer .extra-services span.bib-cite-button {
+#abs-outer .extra-services button.bib-cite-button {
   color: rgb(0, 0, 238);
   text-transform: capitalize;
   font-weight: bold;
   padding: .35em;
   display: block;
   text-transform: capitalize;
+  background: none;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
 }
-#abs-outer .extra-services span.bib-cite-button:hover, #abs-outer .extra-services span.bib-cite-button:focus {
+#abs-outer .extra-services button.bib-cite-button:hover, #abs-outer .extra-services button.bib-cite-button:focus {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -1048,40 +1064,6 @@ p.tagline {
 
 
 
-/*added by Papers With Code*/
-#pwc-output {
-    padding: 7px;
-    margin-bottom: 10px;
-}
-
-#pwc-output > h3 {
-    margin-top: 25px;
-}
-#pwc-output .pwc-icon {
-    width: 23px;
-    height: 23px;
-    position: relative;
-    top: 5px;
-    margin-left: 3px;
-    margin-right: 6px;
-}
-
-#pwc-output .pwc-icon-primary {
-    top: 6px;
-    margin-left: 3px;
-}
-
-#pwc-output .pwc-avatar-box {
-    display: inline-block;
-}
-
-#pwc-output h3.pwc-community-nocode {
-  margin-bottom: 8px;
-}
-
-#pwc-output h3.pwc-community-code {
-  margin-bottom: 15px;
-}
 
 /* Added by CatalyzeX */
 
@@ -1105,95 +1087,6 @@ p.tagline {
   margin-right: 3px;
 }
 
-/* Papers with Code **Datasets** specific section */
-
-#pwc-data-output {
-    padding: 7px;
-    margin-bottom: 10px;
-    margin-top: 20px;
-}
-
-#labstabs #pwc-data-output > p.pwc-provided {
-  color: #666;
-  font-size: 0.75rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0;
-}
-
-#labstabs #pwc-data-output > p.pwc-provided > a {
-  color: #666;
-}
-
-#labstabs #pwc-data-output .pwc-icon-primary {
-  width: 14px;
-  height: 14px;
-  top: 3px;
-}
-
-#pwc-data-output > h3 {
-  margin-top: 5px;
-  margin-bottom: 15px;
-}
-
-#pwc-data-output > .pwc-data-card {
-  margin-top: 20px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-name {
-  font-size: 0.95rem;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image {
-  display: inline-block;
-  vertical-align:top;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  width: 34px;
-  height: 30px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image img {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  margin: 0.25rem;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  margin: 0.25rem;
-  text-align: center;
-  opacity: 0.3;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-image .pwc-data-card-image-placeholder span {
-  position: relative;
-  top: 4px;
-  text-align: center;
-  color: #fff;
-  font-size: 13px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name {
-  display: inline-block;
-  vertical-align:top;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-introduced {
-  margin-top: 4px;
-  font-size: 11px;
-}
-
-#pwc-data-output > .pwc-data-card .pwc-data-card-name .pwc-data-name-meta {
-  margin-top: 4px;
-  font-size: 11px;
-  color: #666;
-}
-
-
-/*END Papers With Code css*/
 
 /*BEGIN Replicate CSS*/
 
@@ -1398,6 +1291,12 @@ p.tagline {
   border-radius: 6px 6px 0 0;
   background-color: #eef5f9;
 }
+/* Focus indicator for labs tab labels */
+#labstabs .labstabs > label:focus-within,
+#labstabs .labstabs > input:focus-visible + label {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
 /*mobile diplay area:*/
 #abs #labstabs .labstabs > label {
   font-size: .88em;
@@ -1435,7 +1334,20 @@ p.tagline {
   width: 130px;
 }
 #labstabs .labstabs input[type="radio"] {
-	display: none;
+	/* Visually hidden but still focusable for accessibility */
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+#labstabs .labstabs input[type="radio"]:focus-visible + label {
+	outline: 2px solid #005ea2;
+	outline-offset: 2px;
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
   background: #ffffff;
@@ -1586,6 +1498,11 @@ p.tagline {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(86px);
   transform: translateX(18px);
+}
+/* Focus indicator for toggle switches - show on the visible slider element */
+#labstabs .toggle .lab-switch input:focus-visible + .slider {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 
 
@@ -1912,7 +1829,7 @@ div#long-author-list {
   #abs-outer .extra-services .bib-sidebar .bib-sidebar-paper {
     margin: 1em 0
   }
-  #abs-outer .extra-services span.bib-cite-button {
+  #abs-outer .extra-services button.bib-cite-button {
     margin: .5em .5em 0 0;
     display: inline-block !important;
     border-radius: 5px;
@@ -2803,6 +2720,24 @@ body#front.with-cu-identity #header #search {
   white-space: nowrap !important;
   width: 0.01em !important;
 }
+/* Inline fieldset for form grouping without visual border */
+.inline-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.inline-fieldset legend {
+  display: inline;
+  padding: 0;
+  font-weight: normal;
+}
+/* Browse context heading style */
+.browse-context-heading {
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  display: inline;
+}
 .button {
   border-width: 1px;
   cursor: pointer;
@@ -2840,6 +2775,13 @@ body#front.with-cu-identity #header #search {
 .tabs a:hover {
   border-bottom-color: #363636;
   color: #363636;
+}
+.tabs a:focus {
+  outline: none;
+}
+.tabs a:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 .tabs li {
   display: block;
@@ -3046,6 +2988,38 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-body {
   margin-top: 1em;
 }
+/* Accordion toggle button - reset and inherit styles */
+.large-data-list .accordion-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.large-data-list .accordion-toggle:focus {
+  outline: none;
+}
+.large-data-list .accordion-toggle:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
+}
+.large-data-list .accordion-toggle .accordion-caret:before {
+  content: "\02C5";
+  padding-right: 0.5em;
+  font-size: 1.25em;
+  font-weight: 100;
+}
+.large-data-list .accordion-toggle[aria-expanded="true"] .accordion-caret:before {
+  content: "\02C4";
+  color: #b7b8b9;
+}
+/* Legacy support - keep old selector for backwards compatibility */
 .large-data-list .accordion-head:after {
   content: "\02C5";
   padding-left: 1em;
@@ -3057,6 +3031,10 @@ body#front.with-cu-identity #header #search {
 .large-data-list .accordion-head.open:after {
   content: "\02C4";
   color: #b7b8b9;
+}
+/* Hide legacy pseudo-element when button is present */
+.large-data-list .accordion-head:has(.accordion-toggle):after {
+  display: none;
 }
 /*** styles for general large-data-list ***/
 .large-data-list {

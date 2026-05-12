@@ -10,9 +10,10 @@ from http import HTTPStatus as status
 from flask import url_for, current_app
 
 from arxiv.identifier import Identifier
+from werkzeug.datastructures import Headers
 
 
-Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
+Response = Tuple[Dict[str, Any], int|status, Dict[str, Any]|Headers]
 
 
 def check_supplied_identifier(id: Identifier, route: str) -> Optional[Response]:

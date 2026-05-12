@@ -10,7 +10,7 @@ from arxiv.base.globals import get_application_config
 from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import BadRequest, InternalServerError
 
-from browse.controllers import check_supplied_identifier
+from browse.controllers import Response, check_supplied_identifier
 from arxiv.identifier import Identifier, IdentifierException
 from browse.exceptions import TrackbackNotFound
 from browse.services.database import (
@@ -28,7 +28,6 @@ from browse.formatting.search_authors import queries_for_authors, \
 app_config = get_application_config()
 logger = logging.getLogger(__name__)
 
-Response = Tuple[Dict[str, Any], int, Dict[str, Any]]
 truncate_author_list_size = 10
 trackback_count_options = [25, 50, 100, 200]
 

@@ -37,14 +37,6 @@
 /*!40000 ALTER TABLE `Subscription_UniversalInstitutionIP` ENABLE KEYS */;
 
 --
--- Dumping data for table `arXiv_admin_log`
---
-
-/*!40000 ALTER TABLE `arXiv_admin_log` DISABLE KEYS */;
-INSERT INTO `arXiv_admin_log` VALUES (1,NULL,'2020-06-22 16:04:57',NULL,'bbarker',NULL,'Admin::Queue','admin comment','test comment',NULL,1137914,0),(2,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'modapi.rest','Hold','Status changed from ''submitted'' to ''on hold'', reason: discussion',NULL,1137914,0),(3,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Mod Hold reason: discussion',NULL,1137914,0),(4,NULL,'2021-06-03 18:34:08',NULL,'lowjack',NULL,'modapi.rest','hold_release','Release: mod discussion hold',NULL,1137914,0),(5,NULL,'2021-06-03 18:34:08',NULL,'lowjack',NULL,'Admin::Queue','admin comment','Release: mod discussion hold',NULL,1137914,0),(6,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'modapi.rest','Hold','Status changed from ''submitted'' to ''on hold'', reason: discussion',NULL,1137914,0),(7,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Mod Hold reason: discussion',NULL,1137914,0),(8,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'modapi.rest','hold_release','Release: mod discussion hold',NULL,1137914,0),(9,NULL,'2021-06-03 18:34:08',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Release: mod discussion hold',NULL,1137914,0),(10,NULL,'2021-06-03 18:34:27',NULL,'bbarker',NULL,'modapi.rest','Hold','Status changed from ''submitted'' to ''on hold'', reason: discussion',NULL,1137914,0),(11,NULL,'2021-06-03 18:34:27',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Mod Hold reason: discussion',NULL,1137914,0),(12,NULL,'2021-06-03 18:34:27',NULL,'lowjack',NULL,'modapi.rest','hold_release','Release: mod discussion hold',NULL,1137914,0),(13,NULL,'2021-06-03 18:34:27',NULL,'lowjack',NULL,'Admin::Queue','admin comment','Release: mod discussion hold',NULL,1137914,0),(14,NULL,'2021-06-03 18:34:27',NULL,'bbarker',NULL,'modapi.rest','Hold','Status changed from ''submitted'' to ''on hold'', reason: discussion',NULL,1137914,0),(15,NULL,'2021-06-03 18:34:27',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Mod Hold reason: discussion',NULL,1137914,0),(16,NULL,'2021-06-03 18:34:28',NULL,'bbarker',NULL,'modapi.rest','hold_release','Release: mod discussion hold',NULL,1137914,0),(17,NULL,'2021-06-03 18:34:28',NULL,'bbarker',NULL,'Admin::Queue','admin comment','Release: mod discussion hold',NULL,1137914,0),(18,NULL,'2021-06-17 15:13:01',NULL,'bbarker',NULL,'Admin::Queue','admin comment','testx',NULL,1137914,0),(19,NULL,'2021-06-17 15:16:14',NULL,'bbarker',NULL,'Admin::Queue','admin comment','testx',NULL,1137914,0),(20,NULL,'2021-06-17 15:16:26',NULL,'bbarker',NULL,'Admin::Queue','admin comment','testx',NULL,1137914,0);
-/*!40000 ALTER TABLE `arXiv_admin_log` ENABLE KEYS */;
-
---
 -- Dumping data for table `arXiv_admin_metadata`
 --
 

@@ -1,21 +1,21 @@
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <!-- LABS AREA -->
 <div id="labstabs">
-  <div class="labstabs">
+  <div class="labstabs" role="tablist" aria-label="arXivLabs tools">
 
     {%- if request.args.get('labs-style') == 'tabs-above'-%}
-    <input type="radio" name="tabs" id="tabzero" checked="checked">
-    <label for="tabzero">Abstract</label>
-    <div class="tab">
+    <input type="radio" name="tabs" id="tabzero" checked="checked" class="labs-tab-input">
+    <label for="tabzero" role="tab" aria-selected="true" aria-controls="tabpanel-zero" id="tab-label-zero">Abstract</label>
+    <div class="tab" role="tabpanel" id="tabpanel-zero" aria-labelledby="tab-label-zero">
       <blockquote class="abstract mathjax">
         <span class="descriptor">Abstract:</span>{{ abs_meta.abstract|tex2utf_no_symbols|abstract_lf_to_br|urlize|safe }}
       </blockquote>
     </div>
     {%- endif -%}
 
-    <input type="radio" name="tabs" id="tabone" {%- if request.args.get('labs-style') != 'tabs-above'-%}checked="checked"{%- endif -%}>
-    <label for="tabone">Bibliographic Tools</label>
-    <div class="tab labs-display-bib">
+    <input type="radio" name="tabs" id="tabone" {%- if request.args.get('labs-style') != 'tabs-above'-%}checked="checked"{%- endif -%} class="labs-tab-input">
+    <label for="tabone" role="tab" aria-selected="{%- if request.args.get('labs-style') != 'tabs-above'-%}true{%- else -%}false{%- endif -%}" aria-controls="tabpanel-one" id="tab-label-one">Bibliographic Tools</label>
+    <div class="tab labs-display-bib" role="tabpanel" id="tabpanel-one" aria-labelledby="tab-label-one">
       <h1>Bibliographic and Citation Tools</h1>
       <div class="toggle">
         {% if config['LABS_BIBEXPLORER_ENABLED'] %}
@@ -94,9 +94,9 @@
     </div>
 
 
-    <input type="radio" name="tabs" id="tabtwo">
-    <label for="tabtwo">Code, Data, Media</label>
-    <div class="tab">
+    <input type="radio" name="tabs" id="tabtwo" class="labs-tab-input">
+    <label for="tabtwo" role="tab" aria-selected="false" aria-controls="tabpanel-two" id="tab-label-two">Code, Data, Media</label>
+    <div class="tab" role="tabpanel" id="tabpanel-two" aria-labelledby="tab-label-two">
       <h1>Code, Data and Media Associated with this Article</h1>
       <div class="toggle">
         <div class="columns is-mobile lab-row">
@@ -183,23 +183,6 @@
           <div class="column lab-switch">
             <label class="switch">
               <input
-                id="paperwithcode-toggle"
-                data-script-url="{{ url_for('static', filename='js/paperswithcode.js') }}"
-                type="checkbox" class="lab-toggle" aria-labelledby="label-for-pwc">
-              <span class="slider"></span>
-              <span class="is-sr-only">Links to Code Toggle</span>
-            </label>
-          </div>
-          <div class="column lab-name">
-            <span id="label-for-pwc">Papers with Code</span> <em>(<a href="https://paperswithcode.com/" target="_blank">What is Papers with Code?</a>)</em>
-          </div>
-        </div>
-
-
-        <div class="columns is-mobile lab-row">
-          <div class="column lab-switch">
-            <label class="switch">
-              <input
                 id="sciencecast-toggle"
                 data-script-url="{{ url_for('static', filename='js/sciencecast.js') }}"
                 type="checkbox" class="lab-toggle" aria-labelledby="label-for-sciencecast">
@@ -233,17 +216,15 @@
       <div id="catalyzex-output" style="display:none"></div>
       <div id="dagshub-output" style="display:none"></div>
       <div id="gotitpub-output" style="display:none"></div>
-      <div id="pwc-output" style="display:none"></div>
-      <div id="pwc-data-output" style="display:none"></div>
       <div id="sciencecast-output" style="display:none"></div>
       <div id="huggingface-output" style="display:none"></div>
       <div id="ploutos-output" style="display:none"></div>
     </div>
 
 
-      <input type="radio" name="tabs" id="labstabs-demos-input">
-      <label for="labstabs-demos-input" id="labstabs-demos-label">Demos</label>
-      <div class="tab">
+      <input type="radio" name="tabs" id="labstabs-demos-input" class="labs-tab-input">
+      <label for="labstabs-demos-input" id="labstabs-demos-label" role="tab" aria-selected="false" aria-controls="tabpanel-demos">Demos</label>
+      <div class="tab" role="tabpanel" id="tabpanel-demos" aria-labelledby="labstabs-demos-label">
         <h1>Demos</h1>
         <div class="toggle">
           <div class="columns is-mobile lab-row">
@@ -296,9 +277,9 @@
         <div id="spaces-output"></div>
         <div id="txyz-output"></div>
       </div>
-      <input type="radio" name="tabs" id="tabfour">
-      <label for="tabfour">Related Papers</label>
-      <div class="tab">
+      <input type="radio" name="tabs" id="tabfour" class="labs-tab-input">
+      <label for="tabfour" role="tab" aria-selected="false" aria-controls="tabpanel-four" id="tab-label-four">Related Papers</label>
+      <div class="tab" role="tabpanel" id="tabpanel-four" aria-labelledby="tab-label-four">
         <h1>Recommenders and Search Tools</h1>
         <div class="toggle">
           <div class="columns is-mobile lab-row">
@@ -366,11 +347,11 @@
         <div id="iarxivOutput"></div>
       </div>
 
-      <input type="radio" name="tabs" id="tabfive">
-      <label for="tabfive">
+      <input type="radio" name="tabs" id="tabfive" class="labs-tab-input">
+      <label for="tabfive" role="tab" aria-selected="false" aria-controls="tabpanel-five" id="tab-label-five">
         About arXivLabs
       </label>
-      <div class="tab">
+      <div class="tab" role="tabpanel" id="tabpanel-five" aria-labelledby="tab-label-five">
         <div class="columns">
           <div class="column">
             <h1>arXivLabs: experimental projects with community collaborators</h1>

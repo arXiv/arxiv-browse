@@ -455,7 +455,8 @@ span.ltx_personname > .ltx_break + .ltx_break {
     margin: 2rem auto;
     text-align: center;
     width: var(--main-width);
-    left: calc((100vw - var(--main-width)) / 2);
+    left: 0;
+    right: 0;
 }
 .ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_address)):has( :last-child.ltx_role_address),
 .ltx_authors:has(> :nth-child(2)):not(:has(> *:not(:last-child) .ltx_role_affiliation)):has( :last-child.ltx_role_affiliation) {
@@ -885,7 +886,7 @@ div.ltx_keywords:empty:before {
   margin-top: 0;
   margin-bottom: 1.5rem;
   padding-top: 0;
-  color: var(--link-text-color);
+  color: var(--text-color);
   text-decoration: none;
   font-size: 1.4rem;
   font-weight: bold;
@@ -949,7 +950,8 @@ ul.ltx_toclist > .ltx_tocentry:first-of-type {
 }
 .ltx_tocentry_part > .ltx_ref > .ltx_ref_title > .ltx_tag,
 .ltx_tocentry_chapter > .ltx_ref > .ltx_ref_title > .ltx_tag,
-.ltx_tocentry_section > .ltx_ref > .ltx_ref_title > .ltx_tag {
+.ltx_tocentry_section > .ltx_ref > .ltx_ref_title > .ltx_tag,
+.ltx_tocentry_appendix > .ltx_ref > .ltx_ref_title > .ltx_tag {
   margin-right: 1rem;
   display: inline-block;
   min-width: 1.5rem;
@@ -966,13 +968,15 @@ ul.ltx_toclist > .ltx_tocentry:first-of-type {
 
 .ltx_tocentry_part .ltx_tocentry_chapter > .ltx_ref,
 .ltx_tocentry_chapter .ltx_tocentry_section > .ltx_ref > .ltx_ref_title,
-.ltx_tocentry_subsection > .ltx_ref > .ltx_ref_title {
+.ltx_tocentry_subsection > .ltx_ref > .ltx_ref_title,
+.ltx_tocentry_appendix > .ltx_ref > .ltx_ref_title {
   font-family: var(--text-font-family);
 }
 .ltx_tocentry_part .ltx_tocentry_chapter > .ltx_ref,
 .ltx_tocentry_chapter .ltx_tocentry_section > .ltx_ref,
 .ltx_tocentry_subsection > .ltx_ref,
-.ltx_tocentry_subsubsection > .ltx_ref {
+.ltx_tocentry_subsubsection > .ltx_ref,
+.ltx_tocentry_appendix > .ltx_ref > .ltx_ref_title {
   border-bottom: none;
 }
 
@@ -993,6 +997,14 @@ ul.ltx_toclist > .ltx_tocentry:first-of-type {
   display: inline-block;
   line-height: 1.1rem;
   margin-right: 0.3rem;
+}
+
+/* A (top level) tocentry without tags should still have an equivalent padding to align well */
+.ltx_toclist > .ltx_tocentry_abstract, 
+.ltx_toclist > .ltx_tocentry_acknowledgements, 
+.ltx_toclist > .ltx_tocentry_paragraph, 
+.ltx_toclist > .ltx_tocentry_bibliography {
+  margin-left: 2.5rem;
 }
 
 /* Various kinds of visual Tags */
@@ -1683,6 +1695,15 @@ svg {
     See Fig 1 in 0709.4426, for a vertical case.
     For now: require svg content is underneath the main page. */
   z-index: -1;
+}
+@media only screen and (max-width: 79.99rem) {
+  /* contain to screen width on narrow viewports,
+     as the horizontal overflow can have cascading effects that
+     are quite disorienting for navigation.
+     Note that this was motivated by a foreignObject containing an <img> */
+  svg.ltx_picture {
+    max-width: min(var(--main-width), 100%);
+  }
 }
 
 /*SVG (pgf/tikz & xy) basics */

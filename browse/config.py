@@ -169,10 +169,7 @@ class Settings(arxiv_base.Settings):
     """Used in linking to /show-email.
 
     Set to be random by default to avoid leaking in misconfigured apps."""
-    CLICKTHROUGH_SECRET: SecretStr = SecretStr(token_hex(10))
-    """Used in linking to /ct.
 
-    Set to be random by default to avoid leaking in misconfigured apps."""
     TRACKBACK_SECRET: SecretStr = SecretStr(token_hex(10))
     """Used in linking to trackbacks in /tb pages
 
