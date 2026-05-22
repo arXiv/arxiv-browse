@@ -8,9 +8,9 @@ region       = "us-central1"
 # Container configuration
 container_image = "gcr.io/arxiv-development/arxiv-browse:latest"
 # gcr.io/arxiv-development/arxiv-browse:c3fed0a1af197f1627e264f162bdb0a8a31c9e79
-max_instances   = 2
-cpu_limit       = "1000m"
-memory_limit    = "2Gi"
+max_instances = 2
+cpu_limit     = "1000m"
+memory_limit  = "2Gi"
 
 # Service account and networking
 service_account_email = "" # Empty for default Compute Engine service account
