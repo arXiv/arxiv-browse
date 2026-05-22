@@ -194,3 +194,16 @@ TAG.txt
 .htaccess
 
 /.prerequisit
+
+.DS_Store
+
+# Local .terraform directories
+.terraform/
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Ignore transient lock info files created by terraform apply
+.terraform.tfstate.lock.info
+.terraform.lock.hcl

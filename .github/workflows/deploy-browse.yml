@@ -1,0 +1,89 @@
+# gh workflow run deploy-browse.yml -r GHA-build -f env=kcdb1 -f image_tag=
+name: Deploy
+
+run-name: "Deploy ${{ inputs.env }} ${{ inputs.image_tag }}"
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: "Environment"
+        required: true
+        type: string
+        default: ""
+      image_tag:
+        description: "Docker image tag (latest or the commit SHA)"
+        required: false
+        type: string
+        default: "latest"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Environment"
+        required: true
+        type: environment
+        default: ""
+      image_tag:
+        description: "Docker image tag (latest or the commit SHA)"
+        required: false
+        type: string
+        default: "latest"
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Check version
+        run: terraform --version
+
+      - name: Format check
+        run: terraform fmt -check
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: format-check
+    environment: ${{ inputs.env }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Authenticate with target project workload identity
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/github-actions-provider
+          service_account: github-actions-sa@${{ vars.PROJECT_NAME }}.iam.gserviceaccount.com
+          project_id: ${{ vars.PROJECT_NAME }}
+       
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Check version
+        run: terraform --version
+
+      - name: Initialize remote backend
+        run: terraform init -backend-config="bucket=${{ vars.TERRAFORM_BUCKET }}"
+        working-directory: cicd/deploy
+
+      - name: Apply
+        run: |
+          echo "Running terraform apply..."
+          terraform apply \
+            -var-file="envs/${{ inputs.env }}.tfvars" \
+            -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
+            -auto-approve
+        working-directory: cicd/deploy
