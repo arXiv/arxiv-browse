@@ -262,6 +262,8 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
           cpu    = var.cpu_limit
           memory = var.memory_limit
         }
+        cpu_idle          = true
+        startup_cpu_boost = true
       }
 
       liveness_probe {
@@ -290,14 +292,13 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
     }
 
-    # VPC connector disabled for now - can be enabled later if needed
-    # dynamic "vpc_access" {
-    #   for_each = var.vpc_connector != "" ? [1] : []
-    #   content {
-    #     connector = var.vpc_connector
-    #     egress    = "PRIVATE_RANGES_ONLY"
-    #   }
-    # }
+    dynamic "vpc_access" {
+      for_each = var.vpc_connector != "" ? [1] : []
+      content {
+        connector = var.vpc_connector
+        egress    = "PRIVATE_RANGES_ONLY"
+      }
+    }
 
     volumes {
       name = "cloudsql"
