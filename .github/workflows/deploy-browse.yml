@@ -83,7 +83,7 @@ jobs:
         run: |
           echo "Running terraform apply..."
           terraform apply \
-            -var-file="envs/${{ inputs.env }}.tfvars" \
+            -var-file="envs/${{ vars.ENV_VAR }}.tfvars" \
             -var="commit_sha=${{ inputs.image_tag || github.sha }}" \
             -auto-approve
         working-directory: cicd/deploy
