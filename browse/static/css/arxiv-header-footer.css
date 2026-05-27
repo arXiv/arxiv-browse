@@ -1,0 +1,455 @@
+/* arxiv-header-footer.css
+ * Spinout-era header + footer for public pages. Replaces the Cornell identity
+ * strip and the bulma-columns footer in arXiv.css.
+ *
+ * Palette references: Repository Brown #1c1a17, Disabled Grey #b0aba6,
+ * Grey Hover #f0eeec, Grey Active #e4e0db, Link Blue #1565c0, Open Blue #a5d6fe,
+ * UI Boundary Grey #8b8680, Focus Ring (dark) #64b5f6.
+ *
+ * Two derived shades are used pending palette additions:
+ *   #302c28 — hover fill on Repository Brown (~12% lift)
+ *   #2d2a26 — divider stroke on Repository Brown
+ */
+
+/* ---------- Typography ---------- *
+ * IBM Plex Sans, self-hosted (Regular / Medium / SemiBold). Path is relative
+ * to this CSS file so the URL is correct regardless of how Flask mounts the
+ * static directory. */
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/IBMPlexSans-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/IBMPlexSans-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+}
+
+:root {
+  --arxiv-font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ---------- Announcement banner (spinout) ---------- */
+.announcement-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 24px;
+  background: #a5d6fe;
+  font-family: var(--arxiv-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: #1c1a17;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 101;
+}
+
+.announcement-banner-icon {
+  height: 20px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.announcement-banner-text a {
+  color: #1c1a17;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.announcement-banner-text a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.announcement-banner-close {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  color: #1c1a17;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 1px 6px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: background 0.12s, box-shadow 0.12s;
+}
+
+.announcement-banner-close:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.announcement-banner-close:focus-visible {
+  outline: 2px solid #1565c0;
+  outline-offset: 2px;
+}
+
+.announcement-banner-close:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.announcement-banner.is-dismissed {
+  display: none;
+}
+
+/* ---------- Header ---------- */
+.arxiv-header {
+  position: relative;
+  font-family: var(--arxiv-font-sans);
+}
+
+.arxiv-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  height: 52px;
+  background: #1c1a17;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.arxiv-header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-right: auto;
+}
+
+.arxiv-header-logo img {
+  height: 39px;
+  width: auto;
+  display: block;
+}
+
+.arxiv-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.arxiv-header-nav a,
+.arxiv-header-nav button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b0aba6;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.arxiv-header-nav a:visited {
+  color: #b0aba6;
+}
+
+.arxiv-header-nav a:hover,
+.arxiv-header-nav button:hover {
+  background: #302c28;
+  color: #f0eeec;
+}
+
+.arxiv-header-nav a:focus-visible,
+.arxiv-header-nav button:focus-visible {
+  outline: 3px solid #64b5f6;
+  outline-offset: 1px;
+}
+
+.arxiv-header-nav .nav-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.arxiv-header-divider {
+  width: 1px;
+  height: 20px;
+  background: #2d2a26;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.arxiv-header-login {
+  font-weight: 600;
+  color: #f0eeec;
+}
+
+/* Breadcrumb sub-strip — appears when a child template fills the header_h1
+ * block. Sits below the dark bar, light background, page-context titles. */
+.arxiv-header-breadcrumb {
+  background: #f9f7f7;
+  border-bottom: 1px solid #e4e0db;
+  padding: 8px 24px;
+  font-family: var(--arxiv-font-sans);
+  font-size: 14px;
+  color: #1c1a17;
+}
+
+.arxiv-header-breadcrumb h1 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.arxiv-header-breadcrumb a {
+  color: #1565c0;
+  text-decoration: none;
+}
+
+.arxiv-header-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.arxiv-header-breadcrumb img {
+  vertical-align: middle;
+  height: 24px;
+  width: auto;
+  /* invert the white-on-dark logo for the light breadcrumb strip */
+  filter: invert(1);
+}
+
+/* ---------- Search overlay ---------- */
+.arxiv-search-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  background: rgba(28, 26, 23, 0.3);
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.arxiv-search-overlay.is-open {
+  display: flex;
+}
+
+.arxiv-search-overlay[hidden] {
+  display: none;
+}
+
+.arxiv-search-panel {
+  margin-top: 52px;
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 20px 24px;
+}
+
+.arxiv-search-panel input[type="text"] {
+  width: 100%;
+  font-family: var(--arxiv-font-sans);
+  font-size: 16px;
+  padding: 10px 14px;
+  border: 2px solid #e4e0db;
+  border-radius: 6px;
+  outline: none;
+  color: #1c1a17;
+  box-sizing: border-box;
+}
+
+.arxiv-search-panel input[type="text"]:focus {
+  border-color: #1565c0;
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+}
+
+.arxiv-search-panel input[type="text"]::placeholder {
+  color: #8b8680;
+}
+
+.arxiv-search-hint {
+  font-family: var(--arxiv-font-sans);
+  font-size: 12px;
+  color: #6b6459;
+  margin-top: 8px;
+}
+
+.arxiv-search-hint a {
+  color: #1565c0;
+  font-size: 12px;
+}
+
+/* ---------- Footer ---------- */
+.arxiv-footer {
+  font-family: var(--arxiv-font-sans);
+  background: #f9f7f7;
+  border-top: 1px solid #e4e0db;
+  padding: 24px;
+  color: #1c1a17;
+  clear: both;
+}
+
+.arxiv-footer-grid {
+  display: flex;
+  row-gap: 24px;
+  column-gap: 32px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.arxiv-footer-main {
+  flex: 1 1 320px;
+  min-width: 280px;
+  max-width: 720px;
+}
+
+.arxiv-footer-ack {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  color: #1c1a17;
+}
+
+.arxiv-footer-ack a {
+  color: #1565c0;
+  text-decoration: underline;
+}
+
+.arxiv-footer-ack a:hover {
+  text-decoration-thickness: 2px;
+}
+
+#arxiv-ack-member strong {
+  color: #1c1a17;
+  font-weight: 600;
+}
+
+.arxiv-footer-links {
+  font-size: 13px;
+  line-height: 1.8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+
+.arxiv-footer-links a {
+  color: #1565c0;
+  text-decoration: none;
+  padding: 2px 0;
+}
+
+.arxiv-footer-links a:hover {
+  text-decoration: underline;
+}
+
+.arxiv-footer-links a:focus-visible {
+  outline: 2px solid #1565c0;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.arxiv-footer-sep {
+  color: #8b8680;
+  margin: 0 8px;
+}
+
+.arxiv-footer-funders {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.arxiv-footer-funders-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1a17;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.arxiv-footer-funders-logos {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.funder-logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: 1px solid #e4e0db;
+  border-radius: 3px;
+  background: #fff;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .arxiv-header-bar {
+    padding: 0 12px;
+    gap: 6px;
+  }
+  .arxiv-header-logo img {
+    height: 32px;
+  }
+  .arxiv-header-nav {
+    gap: 2px;
+  }
+  .arxiv-header-nav a,
+  .arxiv-header-nav button {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  /* Hide the Submit / Donate labels on narrow screens to keep the bar usable;
+   * search and login are the most-used actions. */
+  .arxiv-header-divider {
+    display: none;
+  }
+  .arxiv-footer-grid {
+    flex-direction: column;
+  }
+  .arxiv-footer-funders {
+    width: 100%;
+  }
+}
+
+/* ---------- Body overrides ---------- *
+ * arXiv.css contains rules that target the legacy #cu-identity / #header
+ * markup and assume `body.with-cu-identity`. Those rules now do nothing
+ * because we removed the class and IDs; no compatibility shim is required.
+ * If a downstream stylesheet still expects `flex-wrap-footer` to bottom-pin
+ * the footer it continues to work — that wrapper is untouched. */

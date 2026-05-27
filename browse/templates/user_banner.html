@@ -33,6 +33,14 @@ Adding an environment var, so we can enable only on gcp.
 {% set BANNER_START_2 = 202009120000 %} {#  9/12  start of day,    disabled by #}
 {% set BANNER_END_2 = 202009302350 %}   {#  9/30 end of day,       editing to year 2020 #}
 
+{# Spinout announcement banner — runs from now through two weeks post-spinout #}
+{% set BANNER_3_NAME = "spinout-nonprofit" %}
+{% set BANNER_START_3 = 202605270000 %} {# 5/27 start of day #}
+{% set BANNER_END_3   = 202607142359 %} {# 7/14 end of day  #}
+{% set BANNER_3_TEXT = "arXiv is now an independent nonprofit!" %}
+{% set BANNER_3_LINK_TEXT = "Learn more" %}
+{% set BANNER_3_LINK = "https://info.arxiv.org/about" %}
+
 {% set SLIDE = True %}
 
 {%- macro banner_1_content(request_datetime) -%}
@@ -94,10 +102,23 @@ Adding an environment var, so we can enable only on gcp.
   {%- endif -%}
 {%- endmacro -%}
 
+{%- macro banner_3_content(request_datetime) -%}
+  {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+  {%- if now >= BANNER_START_3 and now < BANNER_END_3 -%}
+    <div class="announcement-banner" id="announcement-banner" role="region" aria-label="Site announcement">
+      <img class="announcement-banner-icon" src="{{ url_for('static', filename='images/icons/smileybones-small.svg') }}" alt="" aria-hidden="true">
+      <span class="announcement-banner-text">{{ BANNER_3_TEXT }} <a href="{{ BANNER_3_LINK }}">{{ BANNER_3_LINK_TEXT }}</a></span>
+      <button type="button" class="announcement-banner-close" aria-label="Dismiss announcement"
+        onclick="this.parentElement.classList.add('is-dismissed')">&times;</button>
+    </div>
+  {%- endif -%}
+{%- endmacro -%}
+
 {# Wrapper content macro #}
 {%- macro content(request_datetime) -%}
   {{ banner_1_content(request_datetime) }}
   {{ banner_2_content(request_datetime) }}
+  {{ banner_3_content(request_datetime) }}
 {%- endmacro -%}
 
 {%- macro banner_1_script(request_datetime) -%}
