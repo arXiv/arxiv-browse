@@ -41,15 +41,45 @@
     overlay.addEventListener("click", function (e) {
       if (e.target === overlay) closeOverlay();
     });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && overlay.classList.contains("is-open")) {
-        closeOverlay();
-      } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        openOverlay();
-      }
+  }
+
+  /* ----- Hamburger nav (phone breakpoint) ----- */
+  const navToggle = document.getElementById("arxiv-nav-toggle");
+  const nav = document.getElementById("arxiv-header-nav");
+
+  function setNavOpen(open) {
+    if (!nav || !navToggle) return;
+    nav.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  }
+
+  if (navToggle && nav) {
+    navToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setNavOpen(!nav.classList.contains("is-open"));
+    });
+    document.addEventListener("click", function (e) {
+      if (!nav.classList.contains("is-open")) return;
+      if (nav.contains(e.target) || navToggle.contains(e.target)) return;
+      setNavOpen(false);
     });
   }
+
+  /* ----- Shared keyboard handling ----- */
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (overlay && overlay.classList.contains("is-open")) {
+        closeOverlay();
+      } else if (nav && nav.classList.contains("is-open")) {
+        setNavOpen(false);
+        if (navToggle) navToggle.focus();
+      }
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openOverlay();
+    }
+  });
 
   /* ----- Institutional ack ----- */
   const MEMBER_TTL_MS = 30 * 24 * 60 * 60 * 1000;
