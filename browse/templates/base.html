@@ -43,7 +43,16 @@
           <img src="{{ url_for('static', filename='images/arxiv-logo-primary-light.svg') }}" alt="arXiv">
         </a>
 
-        <nav class="arxiv-header-nav" aria-label="Main navigation">
+        <button type="button" id="arxiv-nav-toggle" class="arxiv-header-nav-toggle"
+          aria-label="Open menu" aria-controls="arxiv-header-nav" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <nav class="arxiv-header-nav" id="arxiv-header-nav" aria-label="Main navigation">
           <button type="button" id="arxiv-search-toggle" class="arxiv-header-search-toggle"
             aria-label="Search arXiv" aria-controls="arxiv-search-overlay" aria-expanded="false">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

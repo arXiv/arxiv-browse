@@ -209,6 +209,39 @@
   color: #f0eeec;
 }
 
+/* Hamburger toggle — hidden by default; shown only on phone breakpoint. */
+.arxiv-header-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  color: #b0aba6;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+}
+
+.arxiv-header-nav-toggle:hover {
+  background: #302c28;
+  color: #f0eeec;
+}
+
+.arxiv-header-nav-toggle:focus-visible {
+  outline: 3px solid #64b5f6;
+  outline-offset: 1px;
+}
+
+.arxiv-header-nav-toggle svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
 /* Breadcrumb sub-strip — appears when a child template fills the header_h1
  * block. Sits below the dark bar, light background, page-context titles. */
 .arxiv-header-breadcrumb {
@@ -417,7 +450,10 @@
   background: #fff;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Responsive ---------- *
+ * Tablet: 600–720px keeps the inline nav but tightens spacing.
+ * Phone:  <600px collapses the nav into a hamburger dropdown. */
+
 @media (max-width: 720px) {
   .arxiv-header-bar {
     padding: 0 12px;
@@ -434,17 +470,61 @@
     padding: 6px 8px;
     font-size: 12px;
   }
-  /* Hide the Submit / Donate labels on narrow screens to keep the bar usable;
-   * search and login are the most-used actions. */
   .arxiv-header-divider {
     display: none;
   }
+
   .arxiv-footer-grid {
     flex-direction: column;
+  }
+  /* In column flow the flex-basis becomes the initial main-size (height),
+   * which left ~320px of empty space below the link list. Reset to content. */
+  .arxiv-footer-main {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
   }
   .arxiv-footer-funders {
     width: 100%;
   }
+}
+
+@media (max-width: 599px) {
+  .arxiv-header-nav-toggle {
+    display: inline-flex;
+  }
+
+  /* Hide the inline nav; the toggle opens it as a dropdown panel below
+   * the sticky bar. Fixed positioning so it follows the bar at any scroll
+   * position (absolute would anchor to the header's static origin). */
+  .arxiv-header-nav {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 2px;
+    padding: 8px;
+    background: #1c1a17;
+    border-top: 1px solid #2d2a26;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    z-index: 99;
+  }
+  .arxiv-header-nav.is-open {
+    display: flex;
+  }
+  .arxiv-header-nav a,
+  .arxiv-header-nav button {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+  /* Search icon retains its leading position; rest read as a stacked list. */
 }
 
 /* ---------- Body overrides ---------- *
