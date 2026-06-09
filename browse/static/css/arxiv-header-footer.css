@@ -376,8 +376,15 @@
   color: #1c1a17;
 }
 
+/* Footer links use --link-hover (#1050a0) instead of --link (#1565c0):
+ *   #1565c0 on Warm Wash #f9f7f7 = 5.38:1 — passes AA, fails AAA
+ *   #1050a0 on Warm Wash #f9f7f7 = 7.35:1 — passes AAA
+ * The footer is link-dense, so we err on the side of AAA contrast here.
+ * Separators use Library Grey (5.48:1) because UI Boundary Grey #8b8680
+ * is reserved for borders/tracks (3.38:1, fails text contrast). */
+
 .arxiv-footer-ack a {
-  color: #1565c0;
+  color: #1050a0;
   text-decoration: underline;
 }
 
@@ -399,7 +406,7 @@
 }
 
 .arxiv-footer-links a {
-  color: #1565c0;
+  color: #1050a0;
   text-decoration: none;
   padding: 2px 0;
 }
@@ -409,13 +416,13 @@
 }
 
 .arxiv-footer-links a:focus-visible {
-  outline: 2px solid #1565c0;
+  outline: 2px solid #1050a0;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 .arxiv-footer-sep {
-  color: #8b8680;
+  color: #6b6459;
   margin: 0 8px;
 }
 
@@ -476,6 +483,8 @@
 
   .arxiv-footer-grid {
     flex-direction: column;
+    /* Reset row-gap so the divider rule below controls spacing. */
+    row-gap: 0;
   }
   /* In column flow the flex-basis becomes the initial main-size (height),
    * which left ~320px of empty space below the link list. Reset to content. */
@@ -486,6 +495,9 @@
   }
   .arxiv-footer-funders {
     width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e4e0db;
   }
 }
 
