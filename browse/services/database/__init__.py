@@ -354,6 +354,7 @@ def get_sequential_id(paper_id: Identifier,
         if subject_class:
             query = query.filter(t_arXiv_in_category.c.subject_class == subject_class)
 
+    query = query.limit(1)
     result = Session.scalar(query)
     if result:
         return f"{result}"
