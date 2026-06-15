@@ -1233,7 +1233,7 @@ p.tagline {
 }
 /* Focus indicator for labs tab labels */
 #labstabs .labstabs > label:focus-within,
-#labstabs .labstabs > input:focus + label {
+#labstabs .labstabs > input:focus-visible + label {
   outline: 2px solid #005ea2;
   outline-offset: 2px;
 }
@@ -1285,8 +1285,8 @@ p.tagline {
 	clip: rect(0, 0, 0, 0);
 	border: 0;
 }
-#labstabs .labstabs input[type="radio"]:focus + label {
-	outline: 2px solid #005aa7;
+#labstabs .labstabs input[type="radio"]:focus-visible + label {
+	outline: 2px solid #005ea2;
 	outline-offset: 2px;
 }
 #labstabs .labstabs input[type="radio"]:checked + label {
@@ -1441,10 +1441,6 @@ p.tagline {
 }
 /* Focus indicator for toggle switches - show on the visible slider element */
 #labstabs .toggle .lab-switch input:focus-visible + .slider {
-  outline: 2px solid #005ea2;
-  outline-offset: 2px;
-}
-#labstabs .toggle .lab-switch input:focus + .slider {
   outline: 2px solid #005ea2;
   outline-offset: 2px;
 }
@@ -2719,6 +2715,13 @@ body#front.with-cu-identity #header #search {
 .tabs a:hover {
   border-bottom-color: #363636;
   color: #363636;
+}
+.tabs a:focus {
+  outline: none;
+}
+.tabs a:focus-visible {
+  outline: 2px solid #005ea2;
+  outline-offset: 2px;
 }
 .tabs li {
   display: block;
