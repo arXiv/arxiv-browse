@@ -73,15 +73,6 @@
         </nav>
       </div>
 
-      {#- header_h1 is preserved as a slot for breadcrumb-style page titles
-          (abs, archive, taxonomy pages). The block is captured into a variable
-          so we can omit the wrapper when no child provides content. -#}
-      {%- set header_h1_content %}{% block header_h1 %}{% endblock header_h1 %}{% endset -%}
-      {%- if header_h1_content|trim -%}
-      <div class="arxiv-header-breadcrumb">
-        {{ header_h1_content|safe }}
-      </div>
-      {%- endif -%}
     </header>
 
     <div class="arxiv-search-overlay" id="arxiv-search-overlay" hidden>
