@@ -242,41 +242,6 @@
   display: block;
 }
 
-/* Breadcrumb sub-strip — appears when a child template fills the header_h1
- * block. Sits below the dark bar, light background, page-context titles. */
-.arxiv-header-breadcrumb {
-  background: #f9f7f7;
-  border-bottom: 1px solid #e4e0db;
-  padding: 8px 24px;
-  font-family: var(--arxiv-font-sans);
-  font-size: 14px;
-  color: #1c1a17;
-}
-
-.arxiv-header-breadcrumb h1 {
-  margin: 0;
-  font-size: inherit;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.arxiv-header-breadcrumb a {
-  color: #1565c0;
-  text-decoration: none;
-}
-
-.arxiv-header-breadcrumb a:hover {
-  text-decoration: underline;
-}
-
-.arxiv-header-breadcrumb img {
-  vertical-align: middle;
-  height: 24px;
-  width: auto;
-  /* invert the white-on-dark logo for the light breadcrumb strip */
-  filter: invert(1);
-}
-
 /* ---------- Search overlay ---------- */
 .arxiv-search-overlay {
   display: none;
