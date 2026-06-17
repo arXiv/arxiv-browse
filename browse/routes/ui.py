@@ -40,6 +40,7 @@ from browse.controllers.year import year_page
 from browse.controllers.bibtexcite import bibtex_citation
 from browse.controllers.list_page import author
 from browse.controllers import audio
+from browse.controllers import repec
 
 logger = logging.getLogger(__name__)
 geoip_reader = None
@@ -463,6 +464,14 @@ def a (id: str, ext: str):  # type: ignore
 @blueprint.route('audio/<path:arxivid>', methods=['GET'])
 def audio_landing_page(arxivid: str):  # type: ignore
     return audio.audio_landing_page(arxivid)
+
+
+@blueprint.route("repec", strict_slashes=False, defaults={"path": ""}, methods=["GET"])
+@blueprint.route("repec/<path:path>", methods=["GET"])
+def repec_interface(path: str) -> Response:
+    """RePEc/ReDIF metadata interface for q-fin and econ papers."""
+    body, code, content_type = repec.get_repec(path)
+    return Response(body, status=code, content_type=content_type)
 
 
 def _add_an_alert(data: Dict[str, Any]) -> Dict[str, Any]:
