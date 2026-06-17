@@ -20,7 +20,7 @@ from arxiv.db import Session
 from arxiv.base.globals import get_application_config
 from arxiv.document.metadata import DocMetadata
 from dateutil.tz import gettz, tzutc
-from sqlalchemy import Row, asc, desc, not_
+from sqlalchemy import ColumnElement, Row, asc, desc, not_
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import func, select, Select, tuple_
@@ -366,6 +366,7 @@ def get_sequential_id(paper_id: Identifier,
 def get_repec_paper_ids(year: int) -> List[str]:
     """Get distinct paper_ids in q-fin or econ for a given year, ordered by id."""
     yy = f"{year % 100:02d}"
+    date_filter: ColumnElement[bool]
     if year < 2007:
         date_filter = Document.paper_id.like(f"%/{yy}%")
     elif year == 2007:
