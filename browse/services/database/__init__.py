@@ -20,7 +20,7 @@ from arxiv.db import Session
 from arxiv.base.globals import get_application_config
 from arxiv.document.metadata import DocMetadata
 from dateutil.tz import gettz, tzutc
-from sqlalchemy import Row, asc, desc, not_
+from sqlalchemy import ColumnElement, Row, asc, desc, not_
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import func, select, Select, tuple_
@@ -359,6 +359,30 @@ def get_sequential_id(paper_id: Identifier,
     if result:
         return f"{result}"
     return None
+
+
+# Used on the RePEc interface
+@db_handle_error(db_logger=logger, default_return_val=[])
+def get_repec_paper_ids(year: int) -> List[str]:
+    """Get distinct paper_ids in q-fin or econ for a given year, ordered by id."""
+    yy = f"{year % 100:02d}"
+    date_filter: ColumnElement[bool]
+    if year < 2007:
+        date_filter = Document.paper_id.like(f"%/{yy}%")
+    elif year == 2007:
+        date_filter = Document.paper_id.like(f"%/{yy}%") | Document.paper_id.like(f"{yy}%")
+    else:
+        date_filter = Document.paper_id.like(f"{yy}%")
+
+    rows = Session.scalars(
+        select(Document.paper_id)
+        .join(t_arXiv_in_category)
+        .filter(date_filter)
+        .filter(t_arXiv_in_category.c.archive.in_(["q-fin", "econ"]))
+        .distinct()
+        .order_by(asc(Document.paper_id))
+    ).all()
+    return list(rows)
 
 
 def __all_hourly_stats_query() -> Select[Any]:

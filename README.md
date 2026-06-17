@@ -46,14 +46,14 @@ LATEXML_DB_PORT=3302
 
 # The value of `CLASSIC_DB_URI` one can obtain by
 
-MAIN_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=readonly-arxiv-db-uri)
+MAIN_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=rep11-readonly-uri)
 CLASSIC_DB_URI=$(echo $MAIN_SECRET | sed -e "s#/arXiv.*#127.0.0.1:${MAIN_DB_PORT}/arXiv#")
 
 # The value of `LATEXML_DB_URI` one can obtain by
 LATEXML_SECRET=$(gcloud secrets versions access latest --project=arxiv-production  --secret=latexml_db_uri_psycopg2)
 LATEXML_DB_URI=$(echo $LATEXML_SECRET | sed -e "s#/latexmldb.*#127.0.0.1:${LATEXML_DB_PORT}/latexmldb#")
 
-cat >> tests/.env << EOF
+cat >> tests/.env.prod << EOF
 ENV_CREATED="$(date)"
 DOCUMENT_ABSTRACT_SERVICE=browse.services.documents.db_docs
 ABS_PATH_ROOT=gs://arxiv-production-data
@@ -90,8 +90,9 @@ same `$SECRET` as in the previous steps:
     MAIN_DB_NAME=$(echo $MAIN_SECRET | sed -e "s#^.*unix_socket=/cloudsql/##")
     LATEXML_DB_NAME=$(echo $LATEXML_SECRET | sed -e "s#^.*host=/cloudsql/##")
 
-    cloud-sql-proxy --address 0.0.0.0 --port ${MAIN_DB_PORT} ${MAIN_DB_NAME}
     cloud-sql-proxy --address 0.0.0.0 --port ${LATEXML_DB_PORT} ${LATEXML_DB_NAME}
+    cloud-sql-proxy --address 0.0.0.0 --port ${MAIN_DB_PORT} ${MAIN_DB_NAME}
+    # or this: cloud-sql-proxy --unix-socket a_sockets_path ${MAIN_DB_NAME}
 
 To check if the proxy is working, you can use mysql client to connect to the db.
 
