@@ -24,7 +24,7 @@ REPEC_PREFIX = "arx"
 REPEC_DIR = "papers"
 REPEC_ARCHIVE_HANDLE = f"RePEc:{REPEC_PREFIX}"
 REPEC_SERIES_HANDLE = f"RePEc:{REPEC_PREFIX}:{REPEC_DIR}"
-REPEC_URL = "http://export.arxiv.org/repec/"
+REPEC_URL = "https://arxiv.org/repec/"
 REPEC_ARCHIVE = f"{REPEC_PREFIX}arch.rdf"
 REPEC_SERIES = f"{REPEC_PREFIX}seri.rdf"
 ADMIN_EMAIL = "help@arxiv.org"
@@ -96,7 +96,7 @@ def _series() -> Tuple[str, int, str]:
         "Template-type: ReDIF-Series 1.0\n"
         "Name: Papers\n"
         "Provider-Name: arXiv.org\n"
-        "Provider-Homepage: http://arxiv.org/\n"
+        "Provider-Homepage: https://arxiv.org/\n"
         "Maintainer-Name: arXiv administrators\n"
         f"Maintainer-Email: {ADMIN_EMAIL}\n"
         "Type: ReDIF-Paper\n"
@@ -174,7 +174,7 @@ def _item(paper_id: str) -> Optional[str]:
     if metadata.journal_ref:
         lines.append(f"Publication-Status: Published in {metadata.journal_ref}")
 
-    lines.append(f"File-URL: http://arxiv.org/pdf/{paper_id}")
+    lines.append(f"File-URL: https://arxiv.org/pdf/{paper_id}")
     lines.append("File-Format: application/pdf")
     lines.append("File-Function: Latest version")
 
