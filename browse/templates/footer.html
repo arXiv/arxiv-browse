@@ -1,0 +1,45 @@
+{#- Spinout site footer. Self-contained chrome shared across arXiv apps (see
+    INTEGRATION.md). Pairs with css/arxiv-header-footer.css. The member-institution
+    name in #arxiv-ack-member is filled in by js/arxiv-header.js from
+    /institutional_banner. Depends on these host bindings:
+      - url_for('about' | 'help' | 'contact' | 'subscribe' | 'copyright'
+                | 'privacy_policy' | 'a11y')
+      - url_for('static', filename='images/funders/{simons-foundation,schmidt-sciences}.png')
+    Included by base.html via {% block footer %}. -#}
+<footer class="arxiv-footer">
+  <div class="arxiv-footer-grid">
+    <div class="arxiv-footer-main">
+      <p class="arxiv-footer-ack">
+        We gratefully acknowledge support from
+        our <strong>major funders</strong>,
+        <a href="https://info.arxiv.org/about/ourmembers.html"><strong>member institutions</strong></a><span id="arxiv-ack-member" hidden>, <strong></strong></span>,
+        and all contributors.
+      </p>
+      <nav class="arxiv-footer-links" aria-label="Secondary">
+        <a href="{{ url_for('about') }}">About</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('help') }}">Help</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('subscribe') }}">Subscribe</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('copyright') }}">Copyright</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('privacy_policy') }}">Privacy</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ url_for('a11y') }}">Accessibility</a>
+        <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://status.arxiv.org" target="_blank" rel="noopener">Operational Status</a>
+      </nav>
+    </div>
+
+    <div class="arxiv-footer-funders" aria-label="Major funders">
+      <div class="arxiv-footer-funders-label">Major funding support from</div>
+      <div class="arxiv-footer-funders-logos">
+        <img class="funder-logo" src="{{ url_for('static', filename='images/funders/simons-foundation.png') }}" alt="Simons Foundation">
+        <img class="funder-logo" src="{{ url_for('static', filename='images/funders/schmidt-sciences.png') }}" alt="Schmidt Sciences">
+      </div>
+    </div>
+  </div>
+</footer>

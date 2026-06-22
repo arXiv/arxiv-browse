@@ -37,75 +37,7 @@
   {%- endif -%}
 
   <div class="flex-wrap-footer">
-    <header class="arxiv-header" id="arxiv-header">
-      <a href="#content" class="is-sr-only">Skip to main content</a>
-      {#- IgnoreMe honeypot: hidden link to catch robots that ignore robots.txt. -#}
-      <a aria-hidden="true" tabindex="-1" href="/IgnoreMe" class="is-sr-only"></a>
-
-      <div class="arxiv-header-bar">
-        <a href="{{ url_for('home') }}" class="arxiv-header-logo" aria-label="arXiv home">
-          <img src="{{ url_for('static', filename='images/arxiv-logo-primary-light.svg') }}" alt="arXiv">
-        </a>
-
-        <button type="button" id="arxiv-nav-toggle" class="arxiv-header-nav-toggle"
-          aria-label="Open menu" aria-controls="arxiv-header-nav" aria-expanded="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-
-        <nav class="arxiv-header-nav" id="arxiv-header-nav" aria-label="Main navigation">
-          {#- Search opens an in-page overlay, so the primary control is a
-              <button> (correct dialog-trigger semantics for WCAG/ARIA). When JS
-              is absent we instead show a plain link to the search page so search
-              still works. CSS shows exactly one of the two based on `html.js`,
-              so only the right element is in the accessibility tree. -#}
-          <button type="button" id="arxiv-search-toggle"
-            class="arxiv-header-search-toggle arxiv-js-only"
-            aria-label="Search arXiv" aria-controls="arxiv-search-overlay" aria-expanded="false">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <span>Search</span>
-          </button>
-          <a href="{{ url_for('search_box') }}" class="arxiv-header-search-toggle arxiv-no-js" aria-label="Search arXiv">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <span>Search</span>
-          </a>
-          <a href="{{ url_for('create') }}">Submit</a>
-          <a href="https://info.arxiv.org/about/donate.html" class="arxiv-header-donate">Donate</a>
-          <span class="arxiv-header-divider" aria-hidden="true"></span>
-          {% if request.auth is defined and request.auth.user is defined %}
-            <a href="{{ url_for('account') }}" class="arxiv-header-login">My Account</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-          {% else %}
-            <a href="{{ url_for('login') }}" class="arxiv-header-login">Log in</a>
-          {% endif %}
-        </nav>
-      </div>
-
-    </header>
-
-    <div class="arxiv-search-overlay" id="arxiv-search-overlay" hidden>
-      <div class="arxiv-search-panel" role="search">
-        <form method="GET" action="{{ url_for('search_box') }}">
-          <label for="arxiv-search-input" class="is-sr-only">Search arXiv</label>
-          <input type="text" name="query" id="arxiv-search-input" autocomplete="off"
-            placeholder="Search papers by title, author, abstract, or ID...">
-          <input type="hidden" name="searchtype" value="all">
-          <input type="hidden" name="source" value="header">
-        </form>
-        <div class="arxiv-search-hint">
-          Press Enter to search &middot; <a href="/search/advanced">Advanced search</a>
-        </div>
-      </div>
-    </div>
+    {% block header %}{% include "header.html" %}{% endblock header %}
 
     <main>
       {% block content_stats %}
@@ -116,43 +48,7 @@
       </div>
     </main>
 
-    <footer class="arxiv-footer">
-      <div class="arxiv-footer-grid">
-        <div class="arxiv-footer-main">
-          <p class="arxiv-footer-ack">
-            We gratefully acknowledge support from
-            our <strong>major funders</strong>,
-            <a href="https://info.arxiv.org/about/ourmembers.html"><strong>member institutions</strong></a><span id="arxiv-ack-member" hidden>, <strong></strong></span>,
-            and all contributors.
-          </p>
-          <nav class="arxiv-footer-links" aria-label="Secondary">
-            <a href="{{ url_for('about') }}">About</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('help') }}">Help</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('contact') }}">Contact</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('subscribe') }}">Subscribe</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('copyright') }}">Copyright</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('privacy_policy') }}">Privacy</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="{{ url_for('a11y') }}">Accessibility</a>
-            <span class="arxiv-footer-sep" aria-hidden="true">&middot;</span>
-            <a href="https://status.arxiv.org" target="_blank" rel="noopener">Operational Status</a>
-          </nav>
-        </div>
-
-        <div class="arxiv-footer-funders" aria-label="Major funders">
-          <div class="arxiv-footer-funders-label">Major funding support from</div>
-          <div class="arxiv-footer-funders-logos">
-            <img class="funder-logo" src="{{ url_for('static', filename='images/funders/simons-foundation.png') }}" alt="Simons Foundation">
-            <img class="funder-logo" src="{{ url_for('static', filename='images/funders/schmidt-sciences.png') }}" alt="Schmidt Sciences">
-          </div>
-        </div>
-      </div>
-    </footer>
+    {% block footer %}{% include "footer.html" %}{% endblock footer %}
   </div>
 
   <script src="{{ url_for('static', filename='js/arxiv-header.js') }}?v=20260622"></script>

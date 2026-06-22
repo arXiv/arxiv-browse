@@ -105,15 +105,10 @@ Adding an environment var, so we can enable only on gcp.
 {%- macro banner_3_content(request_datetime) -%}
   {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
   {%- if now >= BANNER_START_3 and now < BANNER_END_3 -%}
-    {#- Dismissal is handled by arxiv-header.js (persisted via a seenBanner_<name>
-        cookie keyed off the data-* attributes below), keeping the header/footer
-        kit self-contained for reuse in other arXiv apps. -#}
-    <div class="announcement-banner" id="announcement-banner" role="region" aria-label="Site announcement"
-      data-banner-name="{{ BANNER_3_NAME }}" data-banner-end="{{ BANNER_END_3 }}">
-      <img class="announcement-banner-icon" src="{{ url_for('static', filename='images/icons/smileybones-small.svg') }}" alt="" aria-hidden="true">
-      <span class="announcement-banner-text">{{ BANNER_3_TEXT }} <a href="{{ BANNER_3_LINK }}">{{ BANNER_3_LINK_TEXT }}</a></span>
-      <button type="button" class="announcement-banner-close" aria-label="Dismiss announcement">&times;</button>
-    </div>
+    {#- Markup lives in the reusable announcement_banner.html partial; dismissal
+        is handled by arxiv-header.js so the kit stays self-contained. -#}
+    {% import 'announcement_banner.html' as ab %}
+    {{ ab.announcement_banner(BANNER_3_TEXT, BANNER_3_LINK_TEXT, BANNER_3_LINK, BANNER_3_NAME, BANNER_END_3) }}
   {%- endif -%}
 {%- endmacro -%}
 
