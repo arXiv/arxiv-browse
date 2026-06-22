@@ -54,7 +54,7 @@ In the app's `base.html`:
    ```jinja
    {% import 'announcement_banner.html' as ab %}
    {{ ab.announcement_banner("arXiv is now an independent nonprofit!", "Learn more",
-                             "https://info.arxiv.org/about", "spinout-nonprofit", 202607142359) }}
+                             "https://info.arxiv.org/about", "spinout-nonprofit") }}
    ```
 
 ## Contract (host bindings the templates expect)
@@ -71,9 +71,10 @@ In the app's `base.html`:
   `/institutional_banner` (IP-keyed JSON `{"label": "<Institution>"}`) and fills
   `#arxiv-ack-member`. Without that endpoint the name is simply omitted — the rest
   of the footer is unaffected.
-- **Announcement banner**: `end` is `YYYYMMDDHHMM`; dismissal is persisted in a
-  `seenBanner_<name>` cookie that lasts until `end` (so a closed banner stays closed
-  for its run). No external JS/CSS needed.
+- **Announcement banner**: the caller gates rendering (e.g. a date window);
+  dismissal is remembered in a `localStorage` flag keyed by `name`, so a closed
+  banner stays closed and a new announcement (new `name`) shows again. No cookie,
+  no external JS/CSS.
 
 ## Non-Jinja apps (e.g. arxiv-submit, Perl/Catalyst)
 

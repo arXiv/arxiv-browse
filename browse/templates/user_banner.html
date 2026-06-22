@@ -1,3 +1,4 @@
+{%- import 'announcement_banner.html' as ab -%}
 {#- How to use the user_banner
 
 The content() and script() macro get added to the base.html.
@@ -107,8 +108,7 @@ Adding an environment var, so we can enable only on gcp.
   {%- if now >= BANNER_START_3 and now < BANNER_END_3 -%}
     {#- Markup lives in the reusable announcement_banner.html partial; dismissal
         is handled by arxiv-header.js so the kit stays self-contained. -#}
-    {% import 'announcement_banner.html' as ab %}
-    {{ ab.announcement_banner(BANNER_3_TEXT, BANNER_3_LINK_TEXT, BANNER_3_LINK, BANNER_3_NAME, BANNER_END_3) }}
+    {{ ab.announcement_banner(BANNER_3_TEXT, BANNER_3_LINK_TEXT, BANNER_3_LINK, BANNER_3_NAME) }}
   {%- endif -%}
 {%- endmacro -%}
 

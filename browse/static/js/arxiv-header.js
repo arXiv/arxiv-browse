@@ -86,46 +86,25 @@
     }
   });
 
-  /* ----- Announcement banner: persistent dismissal -----
-   * Self-contained (no jQuery / donate.js / slider.css) so the header/footer
-   * kit ports cleanly to other arXiv apps. Mirrors the browse "seenBanner_<name>"
-   * cookie convention, reading the banner's identity from its data-* attributes.
-   * Once dismissed, the banner stays closed for the rest of its scheduled run. */
+  /* ----- Announcement banner: stay-closed-when-closed -----
+   * Self-contained (no jQuery / donate.js / slider.css) so the header/footer kit
+   * ports cleanly to other arXiv apps. Dismissal is remembered in localStorage
+   * keyed by the banner's data-banner-name; the server controls when the banner
+   * runs, so a new announcement (new name) shows again. */
   const banner = document.getElementById("announcement-banner");
   if (banner) {
-    const bannerName = banner.dataset.bannerName || "announcement";
-    const cookieKey = "seenBanner_" + bannerName;
-    const seen = document.cookie.split("; ").some(function (c) {
-      return c.indexOf(cookieKey + "=") === 0;
-    });
-    if (seen) {
+    const dismissKey = "arxiv-banner-dismissed:" + (banner.dataset.bannerName || "announcement");
+    if (localStorage.getItem(dismissKey)) {
       banner.classList.add("is-dismissed");
     } else {
       const closeBtn = banner.querySelector(".announcement-banner-close");
       if (closeBtn) {
         closeBtn.addEventListener("click", function () {
           banner.classList.add("is-dismissed");
-          document.cookie =
-            cookieKey + "=1; max-age=" + bannerMaxAge(banner.dataset.bannerEnd) +
-            "; path=/; samesite=lax";
+          try { localStorage.setItem(dismissKey, "1"); } catch (e) {}
         });
       }
     }
-  }
-
-  // Seconds from now until a banner's end date ("YYYYMMDDHHMM"), clamped to
-  // [1 day, 180 days]; falls back to 30 days when absent/unparseable. Keeps a
-  // dismissed banner closed for the remainder of its scheduled run.
-  function bannerMaxAge(endStr) {
-    const DAY = 86400;
-    if (!endStr || endStr.length < 12) return 30 * DAY;
-    const end = Date.UTC(
-      +endStr.slice(0, 4), +endStr.slice(4, 6) - 1, +endStr.slice(6, 8),
-      +endStr.slice(8, 10), +endStr.slice(10, 12), 0
-    );
-    const secs = Math.floor((end - Date.now()) / 1000);
-    if (!isFinite(secs)) return 30 * DAY;
-    return Math.min(180 * DAY, Math.max(DAY, secs));
   }
 
   /* ----- Institutional ack ----- */

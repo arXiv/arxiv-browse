@@ -1,17 +1,16 @@
 {#- Reusable spinout announcement banner (self-contained chrome; see
-    INTEGRATION.md). Dismissal is handled by js/arxiv-header.js — a persistent
-    seenBanner_<name> cookie keyed off the data-* attributes below — so no
-    jQuery / donate.js / slider.css is required.
+    CHROME-INTEGRATION.md). Dismissal is handled by js/arxiv-header.js — a
+    localStorage flag keyed by data-banner-name — so no jQuery / donate.js /
+    slider.css is required.
 
     The caller decides WHEN to show it (e.g. a date window) and passes the copy:
       {%- import 'announcement_banner.html' as ab -%}
-      {{ ab.announcement_banner(text, link_text, link, name, end) }}
-    where `end` is "YYYYMMDDHHMM" (the cookie persists until then).
+      {{ ab.announcement_banner(text, link_text, link, name) }}
 
     Host binding: url_for('static', filename='images/icons/smileybones-small.svg'). -#}
-{%- macro announcement_banner(text, link_text, link, name, end) -%}
+{%- macro announcement_banner(text, link_text, link, name) -%}
   <div class="announcement-banner" id="announcement-banner" role="region" aria-label="Site announcement"
-    data-banner-name="{{ name }}" data-banner-end="{{ end }}">
+    data-banner-name="{{ name }}">
     <img class="announcement-banner-icon" src="{{ url_for('static', filename='images/icons/smileybones-small.svg') }}" alt="" aria-hidden="true">
     <span class="announcement-banner-text">{{ text }} <a href="{{ link }}">{{ link_text }}</a></span>
     <button type="button" class="announcement-banner-close" aria-label="Dismiss announcement">&times;</button>

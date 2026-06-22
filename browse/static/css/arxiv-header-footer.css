@@ -42,25 +42,27 @@
   --arxiv-font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* Color tokens — 1:1 with design-system.css canonical names (values are the
-   * source of truth). Comments note the canonical token each maps to. */
+  /* Color tokens, prefixed per design-system policy. Names map 1:1 to the
+   * canonical tokens in design-system.css; the hex values are the source of
+   * truth. (The header bar is always dark, so a few tokens carry the design
+   * system's DARK-mode values even though browse has no theme switch.) */
   --arxiv-text:            #1c1a17; /* = --text (Repository Brown); dark surface + body text */
   --arxiv-grey:            #6b6459; /* = --grey; footer separators, muted hint text */
-  --arxiv-grey-ui:         #8b8680; /* = --grey-ui; input placeholder / UI boundary */
-  --arxiv-grey-hover-bg:   #f0eeec; /* = --grey-hover-bg (light); near-white nav text on hover */
-  --arxiv-grey-active-bg:  #e4e0db; /* = --grey-active-bg (light); borders */
-  --arxiv-grey-dark:       #b0aba6; /* = --grey (dark mode); resting nav text on dark header */
-  --arxiv-link:            #1565c0; /* = --link (Link Blue); on the white search panel */
+  --arxiv-grey-ui:         #8b8680; /* = --grey-ui; input placeholder */
+  --arxiv-grey-dis:        #b0aba6; /* = --grey-dis; resting nav text on the dark header */
+  --arxiv-grey-hover-bg:   #f0eeec; /* = --grey-hover-bg; near-white nav text on hover */
+  --arxiv-grey-active-bg:  #e4e0db; /* = --grey-active-bg; borders */
+  --arxiv-link:            #1565c0; /* = --link; on the white search panel */
   --arxiv-link-hover:      #1050a0; /* = --link-hover; footer links on Warm Wash (AAA 7.35:1) */
-  --arxiv-focus-ring-dark: #64b5f6; /* = --focus-ring (dark); focus ring on the dark header */
-  --arxiv-surface-hover:   #302c28; /* = --grey-active-bg (dark mode); hover fill on Repository Brown */
-  --arxiv-surface:         #fff;    /* white panel/card surface */
+  --arxiv-header-hover:    #302c28; /* = --grey-active-bg (dark mode); hover fill on the dark header */
+  --arxiv-focus-ring-dark: #64b5f6; /* = --focus-ring (dark mode); focus ring on the dark header */
+  --arxiv-surface:         #fff;    /* white panel surface */
 
   /* Palette GAPs — no canonical token in design-system.css yet. Flag for the
    * design-system repo / ARXIVCE-4425 so they can be named and consolidated. */
   --arxiv-open-blue:       #a5d6fe; /* Open Blue — announcement banner surface */
-  --arxiv-bg-wash:         #f9f7f7; /* Warm Wash — footer surface (referenced but unnamed) */
-  --arxiv-surface-divider: #2d2a26; /* divider stroke on Repository Brown */
+  --arxiv-bg-wash:         #f9f7f7; /* Warm Wash — footer surface */
+  --arxiv-header-divider:  #2d2a26; /* divider stroke on the dark header */
 }
 
 /* ---------- Announcement banner (spinout) ---------- */
@@ -189,7 +191,7 @@ html:not(.js) .announcement-banner-close {
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
-  color: var(--arxiv-grey-dark);
+  color: var(--arxiv-grey-dis);
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 4px;
@@ -204,12 +206,12 @@ html:not(.js) .announcement-banner-close {
 }
 
 .arxiv-header-nav a:visited {
-  color: var(--arxiv-grey-dark);
+  color: var(--arxiv-grey-dis);
 }
 
 .arxiv-header-nav a:hover,
 .arxiv-header-nav button:hover {
-  background: var(--arxiv-surface-hover);
+  background: var(--arxiv-header-hover);
   color: var(--arxiv-grey-hover-bg);
 }
 
@@ -229,7 +231,7 @@ html:not(.js) .announcement-banner-close {
 .arxiv-header-divider {
   width: 1px;
   height: 20px;
-  background: var(--arxiv-surface-divider);
+  background: var(--arxiv-header-divider);
   margin: 0 4px;
   flex-shrink: 0;
 }
@@ -251,14 +253,14 @@ html:not(.js) .announcement-banner-close {
   border: none;
   background: none;
   border-radius: 4px;
-  color: var(--arxiv-grey-dark);
+  color: var(--arxiv-grey-dis);
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.12s, color 0.12s;
 }
 
 .arxiv-header-nav-toggle:hover {
-  background: var(--arxiv-surface-hover);
+  background: var(--arxiv-header-hover);
   color: var(--arxiv-grey-hover-bg);
 }
 
@@ -544,7 +546,7 @@ html:not(.js) .arxiv-js-only {
     gap: 2px;
     padding: 8px;
     background: var(--arxiv-text);
-    border-top: 1px solid var(--arxiv-surface-divider);
+    border-top: 1px solid var(--arxiv-header-divider);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     z-index: 60; /* header-attached dropdown (design-system z-scale) */
   }
