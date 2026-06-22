@@ -2,13 +2,11 @@
  * Spinout-era header + footer for public pages. Replaces the Cornell identity
  * strip and the bulma-columns footer in arXiv.css.
  *
- * Palette references: Repository Brown #1c1a17, Disabled Grey #b0aba6,
- * Grey Hover #f0eeec, Grey Active #e4e0db, Link Blue #1565c0, Open Blue #a5d6fe,
- * UI Boundary Grey #8b8680, Focus Ring (dark) #64b5f6.
- *
- * Two derived shades are used pending palette additions:
- *   #302c28 — hover fill on Repository Brown (~12% lift)
- *   #2d2a26 — divider stroke on Repository Brown
+ * Colors are tokenized as --arxiv-* custom properties (see :root below) per the
+ * arXiv design-system policy: prefixed names map 1:1 to the canonical tokens in
+ * design-system.css; values are authoritative. The header bar is a fixed dark
+ * surface, so some tokens intentionally carry the design system's DARK-mode
+ * values even though browse has no light/dark switch.
  */
 
 /* ---------- Typography ---------- *
@@ -43,6 +41,26 @@
 :root {
   --arxiv-font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Color tokens — 1:1 with design-system.css canonical names (values are the
+   * source of truth). Comments note the canonical token each maps to. */
+  --arxiv-text:            #1c1a17; /* = --text (Repository Brown); dark surface + body text */
+  --arxiv-grey:            #6b6459; /* = --grey; footer separators, muted hint text */
+  --arxiv-grey-ui:         #8b8680; /* = --grey-ui; input placeholder / UI boundary */
+  --arxiv-grey-hover-bg:   #f0eeec; /* = --grey-hover-bg (light); near-white nav text on hover */
+  --arxiv-grey-active-bg:  #e4e0db; /* = --grey-active-bg (light); borders */
+  --arxiv-grey-dark:       #b0aba6; /* = --grey (dark mode); resting nav text on dark header */
+  --arxiv-link:            #1565c0; /* = --link (Link Blue); on the white search panel */
+  --arxiv-link-hover:      #1050a0; /* = --link-hover; footer links on Warm Wash (AAA 7.35:1) */
+  --arxiv-focus-ring-dark: #64b5f6; /* = --focus-ring (dark); focus ring on the dark header */
+  --arxiv-surface-hover:   #302c28; /* = --grey-active-bg (dark mode); hover fill on Repository Brown */
+  --arxiv-surface:         #fff;    /* white panel/card surface */
+
+  /* Palette GAPs — no canonical token in design-system.css yet. Flag for the
+   * design-system repo / ARXIVCE-4425 so they can be named and consolidated. */
+  --arxiv-open-blue:       #a5d6fe; /* Open Blue — announcement banner surface */
+  --arxiv-bg-wash:         #f9f7f7; /* Warm Wash — footer surface (referenced but unnamed) */
+  --arxiv-surface-divider: #2d2a26; /* divider stroke on Repository Brown */
 }
 
 /* ---------- Announcement banner (spinout) ---------- */
@@ -52,11 +70,11 @@
   justify-content: center;
   gap: 8px;
   padding: 8px 24px;
-  background: #a5d6fe;
+  background: var(--arxiv-open-blue);
   font-family: var(--arxiv-font-sans);
   font-size: 13px;
   font-weight: 500;
-  color: #1c1a17;
+  color: var(--arxiv-text);
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -70,7 +88,7 @@
 }
 
 .announcement-banner-text a {
-  color: #1c1a17;
+  color: var(--arxiv-text);
   font-size: 13px;
   font-weight: 600;
   text-decoration: underline;
@@ -82,13 +100,19 @@
 }
 
 .announcement-banner-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.2 SC 2.5.8: hit target floor of 24x24 CSS px. */
+  min-width: 24px;
+  min-height: 24px;
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
-  color: #1c1a17;
+  color: var(--arxiv-text);
   font-size: 14px;
   cursor: pointer;
-  padding: 1px 6px;
+  padding: 2px 6px;
   line-height: 1;
   flex-shrink: 0;
   margin-left: 4px;
@@ -102,7 +126,7 @@
 }
 
 .announcement-banner-close:focus-visible {
-  outline: 2px solid #1565c0;
+  outline: 2px solid var(--arxiv-link);
   outline-offset: 2px;
 }
 
@@ -115,7 +139,10 @@
   display: none;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header ---------- *
+ * The header is NOT sticky: per the design-system "Chrome and interaction
+ * structure" policy, sticky chrome is reserved for the HTML reader. The bar
+ * scrolls away with the page like any other content. */
 .arxiv-header {
   position: relative;
   font-family: var(--arxiv-font-sans);
@@ -127,10 +154,7 @@
   gap: 12px;
   padding: 0 24px;
   height: 52px;
-  background: #1c1a17;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background: var(--arxiv-text);
 }
 
 .arxiv-header-logo {
@@ -159,7 +183,7 @@
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
-  color: #b0aba6;
+  color: var(--arxiv-grey-dark);
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 4px;
@@ -174,18 +198,18 @@
 }
 
 .arxiv-header-nav a:visited {
-  color: #b0aba6;
+  color: var(--arxiv-grey-dark);
 }
 
 .arxiv-header-nav a:hover,
 .arxiv-header-nav button:hover {
-  background: #302c28;
-  color: #f0eeec;
+  background: var(--arxiv-surface-hover);
+  color: var(--arxiv-grey-hover-bg);
 }
 
 .arxiv-header-nav a:focus-visible,
 .arxiv-header-nav button:focus-visible {
-  outline: 3px solid #64b5f6;
+  outline: 3px solid var(--arxiv-focus-ring-dark);
   outline-offset: 1px;
 }
 
@@ -199,17 +223,18 @@
 .arxiv-header-divider {
   width: 1px;
   height: 20px;
-  background: #2d2a26;
+  background: var(--arxiv-surface-divider);
   margin: 0 4px;
   flex-shrink: 0;
 }
 
 .arxiv-header-login {
   font-weight: 600;
-  color: #f0eeec;
+  color: var(--arxiv-grey-hover-bg);
 }
 
-/* Hamburger toggle — hidden by default; shown only on phone breakpoint. */
+/* Hamburger toggle — only meaningful with JS, so it is hidden by default and
+ * revealed (at the phone breakpoint) only under html.js. */
 .arxiv-header-nav-toggle {
   display: none;
   align-items: center;
@@ -220,19 +245,19 @@
   border: none;
   background: none;
   border-radius: 4px;
-  color: #b0aba6;
+  color: var(--arxiv-grey-dark);
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.12s, color 0.12s;
 }
 
 .arxiv-header-nav-toggle:hover {
-  background: #302c28;
-  color: #f0eeec;
+  background: var(--arxiv-surface-hover);
+  color: var(--arxiv-grey-hover-bg);
 }
 
 .arxiv-header-nav-toggle:focus-visible {
-  outline: 3px solid #64b5f6;
+  outline: 3px solid var(--arxiv-focus-ring-dark);
   outline-offset: 1px;
 }
 
@@ -240,6 +265,18 @@
   width: 22px;
   height: 22px;
   display: block;
+}
+
+/* Search control swap: with JS the <button> drives the overlay (correct
+ * dialog-trigger semantics); without JS the <a> falls back to the search page.
+ * Exactly one is shown — and thus in the accessibility tree — in each case.
+ * (Selectors are scoped to html(:not).js so they outrank `.arxiv-header-nav
+ * button|a`.) */
+html:not(.js) .arxiv-js-only {
+  display: none;
+}
+.js .arxiv-no-js {
+  display: none;
 }
 
 /* ---------- Search overlay ---------- */
@@ -251,7 +288,7 @@
   right: 0;
   bottom: 0;
   z-index: 200;
-  background: rgba(28, 26, 23, 0.3);
+  background: rgba(28, 26, 23, 0.3); /* var(--arxiv-text) @ 30% scrim */
   align-items: flex-start;
   justify-content: center;
 }
@@ -268,7 +305,7 @@
   margin-top: 52px;
   width: 100%;
   max-width: 640px;
-  background: #fff;
+  background: var(--arxiv-surface);
   border-radius: 0 0 8px 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   padding: 20px 24px;
@@ -279,42 +316,54 @@
   font-family: var(--arxiv-font-sans);
   font-size: 16px;
   padding: 10px 14px;
-  border: 2px solid #e4e0db;
+  border: 2px solid var(--arxiv-grey-active-bg);
   border-radius: 6px;
   outline: none;
-  color: #1c1a17;
+  color: var(--arxiv-text);
   box-sizing: border-box;
 }
 
 .arxiv-search-panel input[type="text"]:focus {
-  border-color: #1565c0;
-  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+  border-color: var(--arxiv-link);
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1); /* var(--arxiv-link) @ 10% glow */
 }
 
 .arxiv-search-panel input[type="text"]::placeholder {
-  color: #8b8680;
+  color: var(--arxiv-grey-ui);
 }
 
 .arxiv-search-hint {
   font-family: var(--arxiv-font-sans);
   font-size: 12px;
-  color: #6b6459;
+  color: var(--arxiv-grey);
   margin-top: 8px;
 }
 
 .arxiv-search-hint a {
-  color: #1565c0;
+  color: var(--arxiv-link);
   font-size: 12px;
 }
 
 /* ---------- Footer ---------- */
 .arxiv-footer {
   font-family: var(--arxiv-font-sans);
-  background: #f9f7f7;
-  border-top: 1px solid #e4e0db;
+  background: var(--arxiv-bg-wash);
+  border-top: 1px solid var(--arxiv-grey-active-bg);
   padding: 24px;
-  color: #1c1a17;
+  color: var(--arxiv-text);
   clear: both;
+  /* Neutralize the legacy bare `footer { margin-top: 6rem }` in arXiv.css that
+   * would otherwise bleed in and leave a large gap above the new footer. */
+  margin-top: 0;
+}
+
+/* Neutralize the legacy `footer a:hover { border-bottom: 1px dotted }` from
+ * arXiv.css so it doesn't stack a dotted underline on the new footer links.
+ * (Specificity must beat `footer a:hover` = 0,0,1,2.) */
+.arxiv-footer a,
+.arxiv-footer a:hover,
+.arxiv-footer a:active {
+  border-bottom: 0;
 }
 
 .arxiv-footer-grid {
@@ -338,18 +387,19 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 12px;
-  color: #1c1a17;
+  color: var(--arxiv-text);
 }
 
-/* Footer links use --link-hover (#1050a0) instead of --link (#1565c0):
+/* Footer links use --arxiv-link-hover (#1050a0) instead of --arxiv-link
+ * (#1565c0):
  *   #1565c0 on Warm Wash #f9f7f7 = 5.38:1 — passes AA, fails AAA
  *   #1050a0 on Warm Wash #f9f7f7 = 7.35:1 — passes AAA
  * The footer is link-dense, so we err on the side of AAA contrast here.
- * Separators use Library Grey (5.48:1) because UI Boundary Grey #8b8680
- * is reserved for borders/tracks (3.38:1, fails text contrast). */
+ * Separators use --arxiv-grey (5.48:1) because --arxiv-grey-ui #8b8680 is
+ * reserved for borders/tracks (3.38:1, fails text contrast). */
 
 .arxiv-footer-ack a {
-  color: #1050a0;
+  color: var(--arxiv-link-hover);
   text-decoration: underline;
 }
 
@@ -358,7 +408,7 @@
 }
 
 #arxiv-ack-member strong {
-  color: #1c1a17;
+  color: var(--arxiv-text);
   font-weight: 600;
 }
 
@@ -371,7 +421,7 @@
 }
 
 .arxiv-footer-links a {
-  color: #1050a0;
+  color: var(--arxiv-link-hover);
   text-decoration: none;
   padding: 2px 0;
 }
@@ -381,13 +431,13 @@
 }
 
 .arxiv-footer-links a:focus-visible {
-  outline: 2px solid #1050a0;
+  outline: 2px solid var(--arxiv-link-hover);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 .arxiv-footer-sep {
-  color: #6b6459;
+  color: var(--arxiv-grey);
   margin: 0 8px;
 }
 
@@ -399,7 +449,7 @@
 .arxiv-footer-funders-label {
   font-size: 14px;
   font-weight: 600;
-  color: #1c1a17;
+  color: var(--arxiv-text);
   margin-bottom: 12px;
   line-height: 1.4;
 }
@@ -417,14 +467,15 @@
   width: auto;
   flex-shrink: 0;
   padding: 4px 8px;
-  border: 1px solid #e4e0db;
+  border: 1px solid var(--arxiv-grey-active-bg);
   border-radius: 3px;
-  background: #fff;
+  background: var(--arxiv-surface);
 }
 
 /* ---------- Responsive ---------- *
- * Tablet: 600–720px keeps the inline nav but tightens spacing.
- * Phone:  <600px collapses the nav into a hamburger dropdown. */
+ * Tablet: 600-720px keeps the inline nav but tightens spacing.
+ * Phone:  <600px collapses the nav into a hamburger dropdown WHEN JS is
+ *         available; without JS the full nav stays visible (see html:not(.js)). */
 
 @media (max-width: 720px) {
   .arxiv-header-bar {
@@ -462,21 +513,22 @@
     width: 100%;
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px solid #e4e0db;
+    border-top: 1px solid var(--arxiv-grey-active-bg);
   }
 }
 
 @media (max-width: 599px) {
-  .arxiv-header-nav-toggle {
+  /* --- JS present: collapse the nav behind the hamburger toggle. --- */
+  .js .arxiv-header-nav-toggle {
     display: inline-flex;
   }
 
-  /* Hide the inline nav; the toggle opens it as a dropdown panel below
-   * the sticky bar. Fixed positioning so it follows the bar at any scroll
-   * position (absolute would anchor to the header's static origin). */
-  .arxiv-header-nav {
+  /* The dropdown panel drops below the bar. The header is non-sticky, so we
+   * anchor it with `absolute` (relative to .arxiv-header) rather than `fixed`
+   * — it tracks the bar wherever the bar sits in the page. */
+  .js .arxiv-header-nav {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 52px;
     left: 0;
     right: 0;
@@ -485,16 +537,16 @@
     flex-wrap: nowrap;
     gap: 2px;
     padding: 8px;
-    background: #1c1a17;
-    border-top: 1px solid #2d2a26;
+    background: var(--arxiv-text);
+    border-top: 1px solid var(--arxiv-surface-divider);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    z-index: 99;
+    z-index: 60; /* header-attached dropdown (design-system z-scale) */
   }
-  .arxiv-header-nav.is-open {
+  .js .arxiv-header-nav.is-open {
     display: flex;
   }
-  .arxiv-header-nav a,
-  .arxiv-header-nav button {
+  .js .arxiv-header-nav a,
+  .js .arxiv-header-nav button {
     width: 100%;
     justify-content: flex-start;
     padding: 10px 12px;
@@ -502,6 +554,30 @@
     border-radius: 6px;
   }
   /* Search icon retains its leading position; rest read as a stacked list. */
+
+  /* --- No JS: the hamburger can't operate, so keep the full nav visible.
+   * Let the bar grow and the nav wrap onto its own line below the logo. --- */
+  html:not(.js) .arxiv-header-bar {
+    height: auto;
+    flex-wrap: wrap;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  html:not(.js) .arxiv-header-nav {
+    width: 100%;
+  }
+}
+
+/* ---------- Reduced motion ---------- *
+ * Honor prefers-reduced-motion by removing the chrome's color/background
+ * transitions (the press-affordance translate on :active is left intact). */
+@media (prefers-reduced-motion: reduce) {
+  .arxiv-header-nav a,
+  .arxiv-header-nav button,
+  .arxiv-header-nav-toggle,
+  .announcement-banner-close {
+    transition: none;
+  }
 }
 
 /* ---------- Body overrides ---------- *

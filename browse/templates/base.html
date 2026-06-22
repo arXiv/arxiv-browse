@@ -5,6 +5,10 @@
 <html lang="en">
 
 <head>
+  {#- Progressive enhancement: flag the document as JS-capable up front so CSS
+      can reveal JS-only controls (the search overlay toggle and the phone
+      hamburger) and keep them server-rendered-usable when JS is absent. -#}
+  <script>document.documentElement.classList.add('js');</script>
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +22,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20260318" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arxiv-header-footer.css') }}?v=20260527" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arxiv-header-footer.css') }}?v=20260622" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
@@ -53,7 +57,13 @@
         </button>
 
         <nav class="arxiv-header-nav" id="arxiv-header-nav" aria-label="Main navigation">
-          <button type="button" id="arxiv-search-toggle" class="arxiv-header-search-toggle"
+          {#- Search opens an in-page overlay, so the primary control is a
+              <button> (correct dialog-trigger semantics for WCAG/ARIA). When JS
+              is absent we instead show a plain link to the search page so search
+              still works. CSS shows exactly one of the two based on `html.js`,
+              so only the right element is in the accessibility tree. -#}
+          <button type="button" id="arxiv-search-toggle"
+            class="arxiv-header-search-toggle arxiv-js-only"
             aria-label="Search arXiv" aria-controls="arxiv-search-overlay" aria-expanded="false">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8"/>
@@ -61,6 +71,13 @@
             </svg>
             <span>Search</span>
           </button>
+          <a href="{{ url_for('search_box') }}" class="arxiv-header-search-toggle arxiv-no-js" aria-label="Search arXiv">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>Search</span>
+          </a>
           <a href="{{ url_for('create') }}">Submit</a>
           <a href="https://info.arxiv.org/about/donate.html" class="arxiv-header-donate">Donate</a>
           <span class="arxiv-header-divider" aria-hidden="true"></span>
@@ -85,7 +102,7 @@
           <input type="hidden" name="source" value="header">
         </form>
         <div class="arxiv-search-hint">
-          Press Enter to search &middot; <a href="https://arxiv.org/search/advanced">Advanced search</a>
+          Press Enter to search &middot; <a href="/search/advanced">Advanced search</a>
         </div>
       </div>
     </div>
@@ -138,7 +155,7 @@
     </footer>
   </div>
 
-  <script src="{{ url_for('static', filename='js/arxiv-header.js') }}?v=20260527"></script>
+  <script src="{{ url_for('static', filename='js/arxiv-header.js') }}?v=20260622"></script>
 
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>

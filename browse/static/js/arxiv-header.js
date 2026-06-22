@@ -37,7 +37,12 @@
   }
 
   if (toggle && overlay) {
-    toggle.addEventListener("click", openOverlay);
+    // The toggle is a <button> shown only when JS is present (the no-JS <a>
+    // fallback link is hidden via CSS). preventDefault is belt-and-suspenders.
+    toggle.addEventListener("click", function (e) {
+      e.preventDefault();
+      openOverlay();
+    });
     overlay.addEventListener("click", function (e) {
       if (e.target === overlay) closeOverlay();
     });
