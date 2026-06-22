@@ -139,6 +139,12 @@
   display: none;
 }
 
+/* The dismiss control only works with JS (dismissal is persisted via cookie),
+ * so hide it when JS is absent — the announcement itself still renders. */
+html:not(.js) .announcement-banner-close {
+  display: none;
+}
+
 /* ---------- Header ---------- *
  * The header is NOT sticky: per the design-system "Chrome and interaction
  * structure" policy, sticky chrome is reserved for the HTML reader. The bar
