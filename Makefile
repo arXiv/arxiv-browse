@@ -1,4 +1,4 @@
-.PHONY: default run proxy gcp.dev.env.standard gcp.dev.env.integration
+.PHONY: default run sync test proxy gcp.dev.env.standard gcp.dev.env.integration
 
 TAG := arxiv-browse
 NAME := arxiv-browse
@@ -8,14 +8,11 @@ LOCALPORT := 6200
 DBPROXYPORT := 6201
 BROWSE_DOCKER_RUN := docker run --cpus 2 --rm -p ${LOCALPORT}:${DOCKERPORT} -e PORT=${DOCKERPORT} -v  ${HOME}/arxiv/arxiv-browse/tests:/tests  --name ${NAME} --env-file "${PWD}/tests/docker.env"  --security-opt="no-new-privileges=true" 
 
-default: venv
+default: sync
 
-venv: .prerequisit
-	python3 -c 'import sys; assert sys.hexversion >= 0x030a0000'
-	python3 -m venv ./venv
-	. venv/bin/activate && pip install pip --upgrade
-	. venv/bin/activate && pip install poetry==1.3.2
-	. venv/bin/activate && poetry install
+# Create/refresh the uv-managed .venv from uv.lock.
+sync: .prerequisit
+	uv sync
 
 /usr/local/bin/cloud-sql-proxy:
 	curl -o ./cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.2/cloud-sql-proxy.linux.amd64
@@ -26,8 +23,11 @@ venv: .prerequisit
 	sudo apt install -y libmysqlclient-dev
 	touch .prerequisit
 
-run:	venv
-	. venv/bin/activate && python main.py
+run:	sync
+	uv run python main.py
+
+test:	sync
+	uv run pytest
 
 proxy:
 	/usr/local/bin/cloud-sql-proxy --address 0.0.0.0 --port ${PROD_DB_PROXY_PORT} arxiv-production:us-central1:arxiv-production-rep9 > /dev/null 2>&1 &
