@@ -71,7 +71,7 @@ def test_repec_item_format(client_with_test_fs):
     assert "Author-X-Name-First: Marcello" in lines
     assert "Author-X-Name-Last: Bernardara" in lines
     assert "Title: Bridgeland Stability Conditions on Fano Threefolds" in lines
-    assert "File-URL: http://arxiv.org/pdf/1607.08199" in lines
+    assert "File-URL: https://arxiv.org/pdf/1607.08199" in lines
     assert "File-Format: application/pdf" in lines
     assert "File-Function: Latest version" in lines
     assert "Handle: RePEc:arx:papers:1607.08199" in lines
