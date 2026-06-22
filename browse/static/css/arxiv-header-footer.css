@@ -275,16 +275,12 @@ html:not(.js) .announcement-banner-close {
   display: block;
 }
 
-/* Search control swap: with JS the <button> drives the overlay (correct
- * dialog-trigger semantics); without JS the <a> falls back to the search page.
- * Exactly one is shown — and thus in the accessibility tree — in each case.
- * (Selectors are scoped to html(:not).js so they outrank `.arxiv-header-nav
- * button|a`.) */
-html:not(.js) .arxiv-js-only {
-  display: none;
-}
-.js .arxiv-no-js {
-  display: none;
+/* The search control is a <button> that submits a GET form to the search page
+ * when JS is off; arxiv-header.js intercepts the submit and opens the overlay
+ * instead. The wrapper form is layout-transparent so the button sits directly
+ * in the nav flex flow. */
+.arxiv-header-search-form {
+  display: contents;
 }
 
 /* ---------- Search overlay ---------- */

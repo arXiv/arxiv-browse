@@ -36,10 +36,11 @@
     }
   }
 
-  if (toggle && overlay) {
-    // The toggle is a <button> shown only when JS is present (the no-JS <a>
-    // fallback link is hidden via CSS). preventDefault is belt-and-suspenders.
-    toggle.addEventListener("click", function (e) {
+  // Without JS the button submits its GET form to the search page; with JS we
+  // intercept the submit and open the in-page overlay instead.
+  const toggleForm = toggle ? toggle.closest("form") : null;
+  if (toggleForm && overlay) {
+    toggleForm.addEventListener("submit", function (e) {
       e.preventDefault();
       openOverlay();
     });

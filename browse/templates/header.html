@@ -25,27 +25,20 @@
     </button>
 
     <nav class="arxiv-header-nav" id="arxiv-header-nav" aria-label="Main navigation">
-      {#- Search opens an in-page overlay, so the primary control is a
-          <button> (correct dialog-trigger semantics for WCAG/ARIA). When JS
-          is absent we instead show a plain link to the search page so search
-          still works. CSS shows exactly one of the two based on `html.js`,
-          so only the right element is in the accessibility tree. -#}
-      <button type="button" id="arxiv-search-toggle"
-        class="arxiv-header-search-toggle arxiv-js-only"
-        aria-label="Search arXiv" aria-controls="arxiv-search-overlay" aria-expanded="false">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <span>Search</span>
-      </button>
-      <a href="{{ url_for('search_box') }}" class="arxiv-header-search-toggle arxiv-no-js" aria-label="Search arXiv">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <span>Search</span>
-      </a>
+      {#- Search is one <button> (correct dialog-trigger semantics). Its no-JS
+          action is to submit this GET form to the search page; arxiv-header.js
+          intercepts the submit and opens the in-page overlay instead. The
+          wrapper form is layout-transparent (display:contents). -#}
+      <form class="arxiv-header-search-form" method="get" action="{{ url_for('search_box') }}">
+        <button type="submit" id="arxiv-search-toggle" class="arxiv-header-search-toggle"
+          aria-label="Search arXiv" aria-controls="arxiv-search-overlay" aria-expanded="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span>Search</span>
+        </button>
+      </form>
       <a href="{{ url_for('create') }}">Submit</a>
       <a href="https://info.arxiv.org/about/donate.html" class="arxiv-header-donate">Donate</a>
       <span class="arxiv-header-divider" aria-hidden="true"></span>
