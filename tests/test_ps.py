@@ -53,9 +53,14 @@ def test_ps(dbclient):
     for exp_key in expected_keys:
         assert exp_key in keys
 
-    resp = client.get(path + paperid, headers={"Range": "0-1"})
+    # A Range request for an object small enough for Fastly to cache whole is
+    # answered in full (200) so Fastly caches it once and serves subsequent range
+    # requests from the edge instead of hitting the origin for each one.
+    resp = client.get(path + paperid, headers={"Range": "bytes=0-1"})
     assert resp
-    assert resp.status_code == 206 or resp.status_code == 416
+    assert resp.status_code == 200
+    assert resp.headers["Accept-Ranges"] == "bytes"  # still range-capable, served whole
+    assert "max-age=31536000" in resp.headers.get("Surrogate-Control")  # cacheable at Fastly
 
 
 def test_non_ps(dbclient):
