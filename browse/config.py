@@ -85,6 +85,20 @@ class Settings(arxiv_base.Settings):
     The cache-control: max-age to set for /pdf /src /e-print /html pages. Max
     for this in the RFC is one year.
     """
+
+    FASTLY_CACHE_MAX_OBJECT_SIZE: int = 20 * 1024 * 1024
+    """Largest object, in bytes, that Fastly will cache as a single whole object.
+
+    Files at or below this size are returned in full (HTTP 200) even when the
+    client/CDN sends a Range header, so Fastly caches the whole object once and
+    serves later range requests from the edge instead of forwarding every range
+    request to the origin (the dominant driver of carrier-peering egress cost).
+
+    Files larger than this are served as HTTP 206 Partial Content so Fastly's
+    segmented caching can fetch them in range-sized pieces, and Cloud Run is not
+    forced to stream the whole (large) object in one response. Fastly's default
+    whole-object cache limit is 20 MB.
+    """
     """"========================= Services ========================="""
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.

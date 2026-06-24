@@ -87,9 +87,36 @@ def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     assert "Content-Length" in resp.headers
     assert "max-age=31536000" in resp.headers.get("Surrogate-Control")
 
-    resp = client.get(path + paperid, headers={"Range": "0-1"})
+    # A Range request for an object small enough for Fastly to cache whole is
+    # answered in full (200) so Fastly caches it once and serves subsequent range
+    # requests from the edge instead of hitting the origin for each one.
+    resp = client.get(path + paperid, headers={"Range": "bytes=0-1"})
     assert resp
-    assert resp.status_code == 206 or resp.status_code == 416
+    assert resp.status_code == 200
+    assert resp.headers["Accept-Ranges"] == "bytes"  # still range-capable, served whole
+    assert "max-age=31536000" in resp.headers.get("Surrogate-Control")  # cacheable at Fastly
+
+
+@pytest.mark.parametrize("eprint_path, src_path", [
+    ("/e-print/1601.04345", "/src/1601.04345"),               # current version
+    ("/e-print/1601.04345v2", "/src/1601.04345v2"),           # explicit version
+    ("/e-print/cs/0011004", "/src/cs/0011004"),               # old style id
+    ("/e-print/cond-mat/9805021v1", "/src/cond-mat/9805021v1"),  # old style id + version
+])
+def test_e_print_redirects_to_src(client_with_test_fs, eprint_path, src_path):
+    """Legacy /e-print URLs permanently redirect to the canonical /src URL."""
+    resp = client_with_test_fs.get(eprint_path)  # do not follow the redirect
+    assert resp.status_code == 301
+    assert resp.headers["Location"].endswith(src_path)  # version/archive preserved
+    # The 301 must be cacheable at Fastly so repeat crawler hits to /e-print are
+    # absorbed at the edge instead of reaching the origin, and purgeable in bulk.
+    assert "max-age" in resp.headers.get("Surrogate-Control", "")
+    assert "e-print-redirect" in resp.headers.get("Surrogate-Key", "")
+
+    # Following the redirect yields the same source the /e-print URL used to serve.
+    followed = client_with_test_fs.get(eprint_path, follow_redirects=True)
+    assert followed.status_code == 200
+    assert followed.headers["Content-Disposition"].startswith("attachment")
 
 
 def test_src_version_not_found(client_with_test_fs):
