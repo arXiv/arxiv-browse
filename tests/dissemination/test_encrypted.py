@@ -22,8 +22,8 @@ def test_no_src_access(client_with_test_fs):
     expected_keys=["paper-unavailable", "unavailable-0704.0945v2", "paper-id-0704.0945", "not-public", "paper-id-0704.0945v2", "src"]
     assert all(" "+item+" " in keys for item in expected_keys)
 
-    #eprint path also blocks
-    resp = client_with_test_fs.get("/e-print/0704.0945v2")
+    #eprint path 301-redirects to /src, which still blocks not-public source
+    resp = client_with_test_fs.get("/e-print/0704.0945v2", follow_redirects=True)
     assert resp.status_code == 403
     assert 'Source Not Public' in resp.text
     assert headers["Surrogate-Control"]== 'max-age=31536000'

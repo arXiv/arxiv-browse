@@ -138,20 +138,22 @@ def test_content_type_header( client_with_test_fs) -> None:
     resp = client.head("/pdf/cs/0012007")
     assert resp.headers.get('Content-Type', '')== "application/pdf"
 
+    # source content types are served from the canonical /src route;
+    # /e-print now 301-redirects to /src (see test_src.test_e_print_redirects_to_src)
     #source in .gz
-    resp = client.head("/e-print/cs/0011004")
+    resp = client.head("/src/cs/0011004")
     assert resp.headers.get('Content-Type', '')== "application/gzip"
 
     #source in tar.gz
-    resp = client.head("/e-print/cs/0012007")
+    resp = client.head("/src/cs/0012007")
     assert resp.headers.get('Content-Type', '')== "application/gzip"
     resp = client.head("/pdf/cs/0012007")
     assert resp.headers.get('Content-Type', '')== "application/pdf"
 
     #source is pdf
-    resp = client.head("/e-print/cs/0212040")
+    resp = client.head("/src/cs/0212040")
     assert resp.headers.get('Content-Type', '')== "application/pdf"
 
     #source file comes in a gz
-    resp = client.head("/e-print/cond-mat/9805021v1")
+    resp = client.head("/src/cond-mat/9805021v1")
     assert resp.headers.get('Content-Type', '')== "application/gzip"
