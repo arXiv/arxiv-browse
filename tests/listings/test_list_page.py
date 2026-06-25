@@ -868,6 +868,7 @@ def test_surrogate_keys(client_with_db_listings):
     assert "list-ym" in head
     assert "announce"  not in head
     assert "list-2005-06-nlin.SI" in head
+    assert " list-2005-06 " in " "+head+" "
 
     rv = client.get("/list/astro-ph/2005")
     head=rv.headers["Surrogate-Key"]
@@ -875,6 +876,7 @@ def test_surrogate_keys(client_with_db_listings):
     assert "list-ym" in head
     assert "announce"  not in head
     assert "list-2005-astro-ph" in head
+    assert " list-2005 " in " "+head+" "
 
     rv = client.get(f"/list/astro-ph/{date.today().year:04d}")
     head=rv.headers["Surrogate-Key"]

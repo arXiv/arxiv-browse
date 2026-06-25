@@ -274,7 +274,7 @@ def get_listing(subject_or_category: str,
             if list_month < 1 or list_month > 12:
                 raise BadRequest(f"Invalid month: {list_month}")
             list_type = 'month'
-            response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}"])
+            response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}", f"list-{list_year:04d}-{list_month:02d}"])
             if date.today().year==list_year and date.today().month==list_month:
                 announce_page = True
                 response_headers=b_add_surrogate_key(response_headers,["announce"])
@@ -284,10 +284,11 @@ def get_listing(subject_or_category: str,
                 list_ctx_id, list_year, list_month, skipn, shown, if_mod_since)
         else:
             list_type = 'year'
-            response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}"])
-            if list_year==date.today().year:
+            response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}", f"list-{list_year:04d}"])
+            if list_year==date.today().year: 
                 announce_page = True
                 response_headers=b_add_surrogate_key(response_headers,["announce"])
+                
             resp = listing_service.list_articles_by_year(
                 list_ctx_id, list_year, skipn, shown, if_mod_since)
 
