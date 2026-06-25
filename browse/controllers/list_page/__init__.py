@@ -63,7 +63,7 @@ from browse.services.listing import (Listing, ListingNew, NotModifiedResponse,
 
 from browse.formatting.latexml import get_latexml_url, get_latexml_urls_for_articles
 
-from flask import request, url_for
+from flask import current_app, request, url_for
 from werkzeug.exceptions import BadRequest, NotFound
 
 logger = logging.getLogger(__name__)
@@ -88,6 +88,7 @@ type_to_template = {
     'month': 'list/month.html',
     'year': 'list/year.html'
 }
+
 
 class ListingSection:
     heading:str
@@ -198,9 +199,17 @@ def get_listing(subject_or_category: str,
 
     response_data: Dict[str, Any] = {}
     response_headers: Headers = Headers()
+    # Daily-volatile pages (new/recent and the current month/year) carry the
+    # "announce" surrogate key. Only these can become *transiently* empty from
+    # replica lag, so only these get the short-cache-on-empty treatment below;
+    # immutable historical months keep their normal long cache even when empty.
+    announce_page = False
+    # True when the counts promise items this page should show but none rendered.
+    expected_but_missing = False
 
     if time_period == 'new':
         list_type = 'new'
+        announce_page = True
         response_headers=b_add_surrogate_key(response_headers,["list-new", "announce", f"list-new-{list_ctx_id}"])
         new_resp: Union[ListingNew, NotModifiedResponse] =\
             listing_service.list_new_articles(list_ctx_id, skipn,
@@ -211,6 +220,11 @@ def get_listing(subject_or_category: str,
         listings = new_resp.listings
         count = new_resp.new_count + \
             new_resp.rep_count + new_resp.cross_count
+        # Key /new on the new count, not the replacement-polluted total: a day of
+        # only replacements is legitimate, missing new submissions is not.
+        new_shown = any(item.listingType == 'new' for item in listings)
+        expected_but_missing = (new_resp.new_count > skipn and not new_shown) \
+            or (count > skipn and not listings)
         response_data['announced'] = new_resp.announced
         response_data.update(
             index_for_types(new_resp, list_ctx_id, time_period, skipn, shown))
@@ -219,6 +233,7 @@ def get_listing(subject_or_category: str,
     elif time_period in ['pastweek', 'recent']:
         # A bit different due to returning days not listings
         list_type = 'recent'
+        announce_page = True
         response_headers=b_add_surrogate_key(response_headers,["list-recent", "announce", f"list-recent-{list_ctx_id}"])
         rec_resp = listing_service.list_pastweek_articles(
             list_ctx_id, skipn, shown, if_mod_since)
@@ -227,6 +242,7 @@ def get_listing(subject_or_category: str,
             return {}, status.NOT_MODIFIED, response_headers
         listings = rec_resp.listings
         count = rec_resp.count
+        expected_but_missing = count > skipn and not listings
         response_data['pubdates'] = rec_resp.pubdates
         response_data.update(sub_sections_for_recent(rec_resp, skipn, shown))
 
@@ -260,6 +276,7 @@ def get_listing(subject_or_category: str,
             list_type = 'month'
             response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_month:02d}-{list_ctx_id}", f"list-{list_year:04d}-{list_month:02d}"])
             if date.today().year==list_year and date.today().month==list_month:
+                announce_page = True
                 response_headers=b_add_surrogate_key(response_headers,["announce"])
             response_data['list_month'] = str(list_month)
             response_data['list_month_name'] = calendar.month_abbr[list_month]
@@ -269,7 +286,9 @@ def get_listing(subject_or_category: str,
             list_type = 'year'
             response_headers=b_add_surrogate_key(response_headers,[f"list-{list_year:04d}-{list_ctx_id}", f"list-{list_year:04d}"])
             if list_year==date.today().year: 
+                announce_page = True
                 response_headers=b_add_surrogate_key(response_headers,["announce"])
+                
             resp = listing_service.list_articles_by_year(
                 list_ctx_id, list_year, skipn, shown, if_mod_since)
 
@@ -278,10 +297,38 @@ def get_listing(subject_or_category: str,
             return {}, status.NOT_MODIFIED, response_headers
         listings = resp.listings
         count = resp.count
+        expected_but_missing = count > skipn and not listings
         if resp.pubdates and resp.pubdates[0]:
             response_data['pubmonth'] = resp.pubdates[0][0]
         else:
             response_data['pubmonth'] = datetime.now() # just to make the template happy
+
+    # Don't long-cache an empty/inconsistent listing: a replica-lag blip that
+    # left /new empty was frozen for a week (~10h outage on 2026-06-25).
+    if expected_but_missing or not listings:
+        empty_max_age = current_app.config.get("LISTING_EMPTY_MAX_AGE", 5 * 60)
+        if expected_but_missing:
+            # Counts promise items but none rendered (replica-lag fingerprint):
+            # 503 so Fastly serves the last good copy via stale-if-error, while a
+            # short edge cache (the empty-listing TTL, not the week-long freeze)
+            # keeps a thundering herd off the DB until the listing is ready.
+            # Surrogate keys are preserved so it stays purgeable. The route
+            # renders the simple text body for this status; an empty context dict
+            # keeps the response shape unchanged (no template rendering for an
+            # error page).
+            if current_app.config.get("ARXIV_LOG_DATA_INCONSTANCY_ERRORS"):
+                logger.error(
+                    "Listing inconsistency for %s/%s: counts promise items but "
+                    "none rendered (skip=%d, count=%d, items=%d). Likely "
+                    "read-replica lag; returning 503 instead of a wrong page.",
+                    list_ctx_id, time_period, skipn, count, len(listings))
+            response_headers["Surrogate-Control"] = f"max-age={empty_max_age}"
+            response_headers["Retry-After"] = str(empty_max_age)
+            return ({}, status.SERVICE_UNAVAILABLE, response_headers)
+        if announce_page:
+            # Genuinely empty or a total-lag transient (counts empty too): cache
+            # briefly so it self-heals; historical months keep their long cache.
+            response_headers["Surrogate-Control"] = f"max-age={empty_max_age}"
 
     # TODO if it is a HEAD, and nothing has changed, send not modified
 
@@ -602,6 +649,13 @@ def _expires_headers(listing_resp:
                      Union[Listing, ListingNew, NotModifiedResponse]) \
                      -> Dict[str, str]:
     if listing_resp and listing_resp.expires:
-        return {'Surrogate-Control': f'max-age={listing_resp.expires}'}
+        # stale-if-error lets Fastly keep serving the last good listing from
+        # grace when the origin answers a revalidation with a 5xx -- including
+        # the 503 get_listing deliberately returns for a count/items
+        # inconsistency. Without it, that 503 (or any origin error) would reach
+        # users instead of the cached page.
+        stale = current_app.config.get("LISTING_STALE_IF_ERROR", 24 * 60 * 60)
+        return {'Surrogate-Control':
+                f'max-age={listing_resp.expires}, stale-if-error={stale}'}
     else:
         return {}
