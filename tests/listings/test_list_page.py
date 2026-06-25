@@ -917,17 +917,18 @@ def _empty_new(new_count=0, cross_count=0, rep_count=0):
 def test_new_inconsistency_returns_503(client_with_fake_listings, caplog, listing_new, why):
     """The counts promise new submissions but none rendered -- whether the page is
     wholly empty, or only replacements remain because the new papers' fresh
-    metadata is still lagging. Either shape is the replica-lag fingerprint: an
-    uncacheable 503 that is logged and stays purgeable, not a wrong page frozen at
-    Fastly for a week. (The reps-present case proves the check keys on the new
-    count, not the replacement-polluted total.)"""
+    metadata is still lagging. Either shape is the replica-lag fingerprint: a
+    short-cached 503 that is logged and stays purgeable, not a wrong page frozen at
+    Fastly for a week. The short edge cache keeps a thundering herd off the DB
+    while the listing is not yet ready. (The reps-present case proves the check
+    keys on the new count, not the replacement-polluted total.)"""
     with mock.patch.object(FakeListingFilesService, "list_new_articles",
                            return_value=listing_new), \
             caplog.at_level(logging.ERROR):
         rv = client_with_fake_listings.get("/list/hep-ph/new")
     assert rv.status_code == 503, why
     sc = rv.headers.get("Surrogate-Control", "")
-    assert "604800" not in sc and "max-age=0" in sc    # uncacheable, not the week freeze
+    assert "604800" not in sc and "max-age=300" in sc  # short-cached, not the week freeze
     assert rv.headers.get("Retry-After")               # tells clients when to retry
     keys = " " + rv.headers.get("Surrogate-Key", "") + " "
     assert " list " in keys and " list-new " in keys   # still purgeable
@@ -944,7 +945,8 @@ def test_recent_inconsistent_counts_returns_503(client_with_fake_listings):
                            return_value=bad):
         rv = client.get("/list/hep-ph/recent")
     assert rv.status_code == 503
-    assert "max-age=0" in rv.headers.get("Surrogate-Control", "")
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "604800" not in sc and "max-age=300" in sc  # short-cached, not the week freeze
     keys = " " + rv.headers.get("Surrogate-Key", "") + " "
     assert " list-recent " in keys
 
@@ -965,8 +967,7 @@ def test_new_only_replacements_served_normally(client_with_fake_listings):
         rv = client.get("/list/hep-ph/new")
     assert rv.status_code == 200                    # legit page, served normally
     sc = rv.headers.get("Surrogate-Control", "")
-    assert "max-age=0" not in sc                    # not the 503 path
-    assert "max-age=300" not in sc                  # not short-cached; it is a real page
+    assert "max-age=300" not in sc                  # neither short-cache path fired
 
 
 def test_new_genuinely_empty_is_short_cached_not_frozen(client_with_fake_listings):
@@ -1002,8 +1003,7 @@ def test_populated_new_unchanged_and_advertises_stale_if_error(client_with_fake_
     rv = client_with_fake_listings.get("/list/hep-ph/new")
     assert rv.status_code == 200
     sc = rv.headers.get("Surrogate-Control", "")
-    assert "max-age=0" not in sc        # the 503 path did not fire
-    assert "max-age=300" not in sc      # the short-cache path did not fire
+    assert "max-age=300" not in sc      # neither short-cache path fired
     assert "stale-if-error=" in sc      # error-grace advertised on the good response
 
 

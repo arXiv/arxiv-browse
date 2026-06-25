@@ -308,17 +308,20 @@ def get_listing(subject_or_category: str,
         empty_max_age = current_app.config.get("LISTING_EMPTY_MAX_AGE", 5 * 60)
         if expected_but_missing:
             # Counts promise items but none rendered (replica-lag fingerprint):
-            # 503 so Fastly serves the last good copy via stale-if-error; keep the
-            # surrogate keys so it stays purgeable. The route renders the simple
-            # text body for this status; an empty context dict keeps the response
-            # shape unchanged (no template rendering for an error page).
+            # 503 so Fastly serves the last good copy via stale-if-error, while a
+            # short edge cache (the empty-listing TTL, not the week-long freeze)
+            # keeps a thundering herd off the DB until the listing is ready.
+            # Surrogate keys are preserved so it stays purgeable. The route
+            # renders the simple text body for this status; an empty context dict
+            # keeps the response shape unchanged (no template rendering for an
+            # error page).
             if current_app.config.get("ARXIV_LOG_DATA_INCONSTANCY_ERRORS"):
                 logger.error(
                     "Listing inconsistency for %s/%s: counts promise items but "
                     "none rendered (skip=%d, count=%d, items=%d). Likely "
                     "read-replica lag; returning 503 instead of a wrong page.",
                     list_ctx_id, time_period, skipn, count, len(listings))
-            response_headers["Surrogate-Control"] = "max-age=0"  # never cache
+            response_headers["Surrogate-Control"] = f"max-age={empty_max_age}"
             response_headers["Retry-After"] = str(empty_max_age)
             return ({}, status.SERVICE_UNAVAILABLE, response_headers)
         if announce_page:
