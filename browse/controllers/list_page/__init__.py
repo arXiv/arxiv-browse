@@ -89,21 +89,6 @@ type_to_template = {
     'year': 'list/year.html'
 }
 
-# Body for the 503 served when a listing is empty but its counts say it should
-# not be (the read-replica inconsistency fingerprint). Deliberately a
-# self-contained static string, not a rendered template: an error page shown
-# when the data layer is misbehaving must not depend on templates or services
-# that could be failing too. Users rarely see it (stale-if-error serves the last
-# good copy at the edge). No request data is interpolated, so nothing to escape.
-_LISTING_UNAVAILABLE_HTML = (
-    "<!DOCTYPE html>\n"
-    "<html lang='en'><head><meta charset='utf-8'>"
-    "<title>Listing temporarily unavailable</title></head>"
-    "<body><h1>This listing is temporarily unavailable</h1>"
-    "<p>This page is being refreshed. Please retry in a few minutes.</p>"
-    "</body></html>"
-)
-
 
 class ListingSection:
     heading:str
@@ -324,7 +309,9 @@ def get_listing(subject_or_category: str,
         if expected_but_missing:
             # Counts promise items but none rendered (replica-lag fingerprint):
             # 503 so Fastly serves the last good copy via stale-if-error; keep the
-            # surrogate keys so it stays purgeable.
+            # surrogate keys so it stays purgeable. The route renders the simple
+            # text body for this status; an empty context dict keeps the response
+            # shape unchanged (no template rendering for an error page).
             if current_app.config.get("ARXIV_LOG_DATA_INCONSTANCY_ERRORS"):
                 logger.error(
                     "Listing inconsistency for %s/%s: counts promise items but "
@@ -333,8 +320,7 @@ def get_listing(subject_or_category: str,
                     list_ctx_id, time_period, skipn, count, len(listings))
             response_headers["Surrogate-Control"] = "max-age=0"  # never cache
             response_headers["Retry-After"] = str(empty_max_age)
-            return (_LISTING_UNAVAILABLE_HTML,
-                    status.SERVICE_UNAVAILABLE, response_headers)
+            return ({}, status.SERVICE_UNAVAILABLE, response_headers)
         if announce_page:
             # Genuinely empty or a total-lag transient (counts empty too): cache
             # briefly so it self-heals; historical months keep their long cache.
