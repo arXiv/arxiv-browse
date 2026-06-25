@@ -68,7 +68,11 @@ def test_src(client_with_test_fs, path, paperid, expected_file, desc ):
     assert resp
     assert resp.status_code == 200
     assert resp.headers["Accept-Ranges"] == "bytes"  # Must do Accept-Ranges for Fastly CDN large objs
-    assert resp.headers["Transfer-Encoding"] == "chunked" # Must do chunked on a raw get for Cloud run large obj
+    # Sub-20MB object: returned whole with a definite Content-Length and NOT
+    # chunked, so Fastly caches the entire object. chunked is reserved for
+    # >20MB objects that exceed Cloud Run's buffer.
+    assert "chunked" not in resp.headers.get("Transfer-Encoding", "").lower()
+    assert "Content-Length" in resp.headers
     assert expected_file in resp.headers["Content-Disposition"]
     assert "v" in resp.headers["Content-Disposition"]  # want the v in both current and v requests
     assert "/" not in resp.headers["Content-Disposition"]  # nobody wants a slash in their file name

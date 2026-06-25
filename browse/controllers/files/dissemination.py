@@ -36,6 +36,48 @@ Resp_Fn_Sig = Callable[[FileObj, Identifier, DocMetadata,
                         VersionEntry], Response]
 
 
+# Chunk size for streaming a whole verbatim object out with a definite length.
+_DOWNLOAD_CHUNK_SIZE = 1024 * 1024  # 1 MiB
+
+
+def _length_checked_stream(fh, size: int, name: str):  # type: ignore[no-untyped-def]
+    """Yield the bytes of `fh`, guaranteeing the total is exactly `size`.
+
+    Used only on the whole-object 200 path, where we advertise
+    ``Content-Length: size`` so Fastly stores the object once and synthesizes
+    range responses at the edge. The one thing we must never do there is emit a
+    200 whose body length disagrees with that Content-Length: Fastly would cache
+    the mismatched bytes as a *complete* object and serve them for the full TTL
+    -- the truncated/corrupted-cache failure this whole branch exists to avoid.
+
+    So we count bytes and refuse to overrun: if the source yields more than
+    `size` we raise *before* emitting the extra bytes; if it yields fewer the
+    body stays short of its declared length, which Fastly treats as an
+    incomplete fill and will not cache. Either way the edge can never store a
+    length-mismatched 200. For files served verbatim ``size`` equals the stream
+    length, so this never trips in practice -- it is the guard that keeps a
+    lying `.size` (e.g. a gzip-on-read FileObj that reports its *compressed*
+    length) from ever silently corrupting the cache.
+    """
+    sent = 0
+    try:
+        for chunk in iter(lambda: fh.read(_DOWNLOAD_CHUNK_SIZE), b""):
+            sent += len(chunk)
+            if sent > size:
+                raise IOError(
+                    f"{name}: body exceeded declared size {size} bytes; "
+                    "aborting to avoid caching a length-mismatched 200")
+            yield chunk
+        if sent != size:
+            raise IOError(
+                f"{name}: body was {sent} bytes but declared {size}; "
+                "aborting to avoid caching a length-mismatched 200")
+    finally:
+        close = getattr(fh, "close", None)
+        if callable(close):
+            close()
+
+
 def default_resp_fn(file: FileObj,
                     arxiv_id: Identifier,
                     docmeta: Optional[DocMetadata] = None,
@@ -65,24 +107,59 @@ def default_resp_fn(file: FileObj,
     # Fastly the end user still sees a 206; only the origin->Fastly fill changes.)
     fastly_max_object = current_app.config.get(
         "FASTLY_CACHE_MAX_OBJECT_SIZE", 20 * 1024 * 1024)
-    if range_requested and file.size > fastly_max_object:
-        # Fastly's segmented caching fetches >20MB objects in range-sized pieces,
-        # and Cloud Run is not forced to chunk-stream the whole large object.
+    # file.size is the true body length only for files served verbatim.
+    # FileTransform/HTMLFileTransform produce their bytes on the fly and report
+    # the *source* size (FileTransform.size is documented as "a lie"), so we can
+    # neither set a Content-Length nor build a 206 from it -- both would describe
+    # a length the body does not have. Such files must be chunk-streamed whole.
+    known_size = not isinstance(file, FileTransform)
+    if range_requested and known_size and file.size > fastly_max_object:
+        # Large verbatim object: Fastly's segmented caching fetches it in
+        # range-sized pieces, and Cloud Run is not forced to chunk-stream the
+        # whole large object. Only verbatim files reach here -- a 206 built from
+        # a transform's lying size would be corrupt, so transforms fall through
+        # to the chunked branch below regardless of the Range header.
         resp = RangeRequest(file.open('rb'),
                             etag=file.etag,
                             last_modified=file.updated,
                             size=file.size).make_response()
     else:
-        # Cloud run needs chunked for large responses
         if request.method == "GET":
-            # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
-            resp = make_response(stream_with_context(iter(file.open("rb"))))
-            # but the unit test client doesn't do that so we force it for those
-            # see https://github.com/pallets/flask/issues/5424
-            resp.headers["Transfer-Encoding"] = "chunked"
-            # Don't set Content-Length, it will disable Transfer-Encoding: chunked
+            if known_size and file.size <= fastly_max_object:
+                # Small verbatim object: return the COMPLETE body with a definite
+                # Content-Length and no chunked encoding, so Fastly caches the
+                # whole object and synthesizes later range responses from the
+                # edge. A length-less chunked 200 is not a cacheable whole object
+                # for Fastly -- it stored only the first ~1MB -- so these must
+                # never be served chunked. _length_checked_stream guarantees the
+                # body is exactly Content-Length bytes, so the edge can never
+                # cache a truncated or length-mismatched 200.
+                #
+                # NB: serving a whole 200 to a *ranged* request is only safe if
+                # Fastly segmented caching is OFF for these paths (/pdf, /src).
+                # With it ON, Fastly would store only segment 0 of the 200
+                # regardless of Content-Length. Confirm the Fastly config before
+                # relying on this.
+                resp = make_response(stream_with_context(
+                    _length_checked_stream(file.open("rb"), file.size, file.name)))
+                resp.headers["Content-Length"] = str(file.size)
+            else:
+                # Large objects (Cloud Run cannot buffer the whole body) and
+                # transformed files (final size not known up front) are streamed
+                # with chunked transfer encoding.
+                # Flask/werkzeug automatically do Transfer-Encoding: chunked for a file
+                resp = make_response(stream_with_context(iter(file.open("rb"))))
+                # but the unit test client doesn't do that so we force it for those
+                # see https://github.com/pallets/flask/issues/5424
+                resp.headers["Transfer-Encoding"] = "chunked"
+                # Don't set Content-Length, it will disable Transfer-Encoding: chunked
         else:
-            resp.headers["Content-Length"] = str(file.size)
+            # HEAD: advertise Content-Length only when the body length is known.
+            # For FileTransform/HTMLFileTransform file.size is the *source* size
+            # ("a lie"), and the GET for those is chunked with no Content-Length,
+            # so HEAD must match -- omit it rather than report a wrong length.
+            if known_size:
+                resp.headers["Content-Length"] = str(file.size)
 
         resp.set_etag(file.etag)
         resp.headers["Last-Modified"] = last_modified(file)
