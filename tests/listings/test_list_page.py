@@ -1,12 +1,15 @@
 import pytest
 import re
+import logging
 from datetime import date
 from unittest.mock import MagicMock
 from unittest import mock
 
 from browse.controllers import list_page
 
-from browse.services.listing import NotModifiedResponse, get_listing_service
+from browse.services.listing import (NotModifiedResponse, get_listing_service,
+                                      ListingNew, Listing, ListingItem, gen_expires)
+from browse.services.listing.fake_listings import FakeListingFilesService
 from bs4 import BeautifulSoup
 
 
@@ -885,3 +888,148 @@ def test_surrogate_keys(client_with_db_listings):
     assert "list-ym" in head
     assert "announce" in head
 
+
+
+# --- Regression tests for the empty/inconsistent listing cache guard ----------
+# Background: /list/<ctx>/new and /recent render their item list from a
+# Metadata.is_current=1 join, but compute the counts from a separate
+# arXiv_updates(+in_category) query. A read-replica lag window during an
+# announcement can leave the counts non-zero while the items come back empty.
+# Long-caching that empty render (Surrogate-Control: max-age=604800) froze a
+# ~2 minute replica blip into a ~10 hour outage on 2026-06-25.
+
+def _empty_new(new_count=0, cross_count=0, rep_count=0):
+    """A ListingNew with NO items but the given (separately-computed) counts --
+    the shape the controller sees during a read-replica lag window."""
+    return ListingNew(listings=[], new_count=new_count, cross_count=cross_count,
+                      rep_count=rep_count, announced=date(2007, 4, 1),
+                      expires=gen_expires())
+
+
+@pytest.mark.parametrize("listing_new, why", [
+    (_empty_new(new_count=7), "whole page empty"),
+    (ListingNew(listings=[ListingItem("0704.0526", "rep", "cs.DB"),
+                          ListingItem("0704.0988", "rep", "cs.DB")],
+                new_count=9, cross_count=0, rep_count=2,
+                announced=date(2007, 4, 1), expires=gen_expires()),
+     "new submissions missing while replacements still render"),
+])
+def test_new_inconsistency_returns_503(client_with_fake_listings, caplog, listing_new, why):
+    """The counts promise new submissions but none rendered -- whether the page is
+    wholly empty, or only replacements remain because the new papers' fresh
+    metadata is still lagging. Either shape is the replica-lag fingerprint: a
+    short-cached 503 that is logged and stays purgeable, not a wrong page frozen at
+    Fastly for a week. The short edge cache keeps a thundering herd off the DB
+    while the listing is not yet ready. (The reps-present case proves the check
+    keys on the new count, not the replacement-polluted total.)"""
+    with mock.patch.object(FakeListingFilesService, "list_new_articles",
+                           return_value=listing_new), \
+            caplog.at_level(logging.ERROR):
+        rv = client_with_fake_listings.get("/list/hep-ph/new")
+    assert rv.status_code == 503, why
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "604800" not in sc and "max-age=300" in sc  # short-cached, not the week freeze
+    assert rv.headers.get("Retry-After")               # tells clients when to retry
+    keys = " " + rv.headers.get("Surrogate-Key", "") + " "
+    assert " list " in keys and " list-new " in keys   # still purgeable
+    assert "inconsistency" in caplog.text.lower()      # alerting hook fired
+
+
+def test_recent_inconsistent_counts_returns_503(client_with_fake_listings):
+    """The same guard protects /recent, which was also empty during the
+    2026-06-25 outage (it uses a different controller branch and response type)."""
+    client = client_with_fake_listings
+    bad = Listing(listings=[], pubdates=[(date(2007, 4, 1), 5)], count=5,
+                  expires=gen_expires())
+    with mock.patch.object(FakeListingFilesService, "list_pastweek_articles",
+                           return_value=bad):
+        rv = client.get("/list/hep-ph/recent")
+    assert rv.status_code == 503
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "604800" not in sc and "max-age=300" in sc  # short-cached, not the week freeze
+    keys = " " + rv.headers.get("Surrogate-Key", "") + " "
+    assert " list-recent " in keys
+
+
+def test_new_only_replacements_served_normally(client_with_fake_listings):
+    """A day with only replacements and zero new submissions is a legitimate,
+    fully-rendered /new page. It must NOT be mistaken for the inconsistency and
+    503'd: replacements legitimately 'pollute' the total count, which is exactly
+    why the check looks at the new count instead."""
+    client = client_with_fake_listings
+    only_reps = ListingNew(
+        listings=[ListingItem("0704.0526", "rep", "cs.DB"),
+                  ListingItem("0704.0988", "rep", "cs.DB")],
+        new_count=0, cross_count=0, rep_count=2,   # genuinely no new submissions
+        announced=date(2007, 4, 1), expires=gen_expires())
+    with mock.patch.object(FakeListingFilesService, "list_new_articles",
+                           return_value=only_reps):
+        rv = client.get("/list/hep-ph/new")
+    assert rv.status_code == 200                    # legit page, served normally
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "max-age=300" not in sc                  # neither short-cache path fired
+
+
+def test_new_genuinely_empty_is_short_cached_not_frozen(client_with_fake_listings):
+    """An empty /new with zero counts (genuinely empty, or a total-replica-lag
+    transient we cannot tell apart) is cached only briefly so it self-heals in
+    minutes instead of staying frozen for a week."""
+    client = client_with_fake_listings
+    with mock.patch.object(FakeListingFilesService, "list_new_articles",
+                           return_value=_empty_new()):
+        rv = client.get("/list/hep-ph/new")
+    assert rv.status_code == 200
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "604800" not in sc          # not the week-long freeze
+    assert "max-age=300" in sc         # the short empty-listing TTL (5 min default)
+
+
+def test_new_overskip_empty_is_not_503(client_with_fake_listings):
+    """An empty page reached only by skipping past the end (skip >= count) is a
+    legitimate empty page, not the inconsistency fingerprint: 200 and
+    short-cached, never a 503."""
+    client = client_with_fake_listings
+    with mock.patch.object(FakeListingFilesService, "list_new_articles",
+                           return_value=_empty_new(new_count=3)):
+        rv = client.get("/list/hep-ph/new?skip=100&show=25")
+    assert rv.status_code == 200
+    assert "604800" not in rv.headers.get("Surrogate-Control", "")
+
+
+def test_populated_new_unchanged_and_advertises_stale_if_error(client_with_fake_listings):
+    """A normal, populated /new is untouched by the guard -- not 503'd, not
+    short-cached -- and carries stale-if-error so Fastly serves the last good copy
+    from grace if the origin later 5xxs (e.g. the inconsistency 503)."""
+    rv = client_with_fake_listings.get("/list/hep-ph/new")
+    assert rv.status_code == 200
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "max-age=300" not in sc      # neither short-cache path fired
+    assert "stale-if-error=" in sc      # error-grace advertised on the good response
+
+
+def test_current_month_empty_is_short_cached_not_503(client_with_fake_listings):
+    """An empty *current* month is a daily-volatile announce page, so like /new
+    it is short-cached (200), never 503: its count and items come from one query
+    so a contradiction can't arise, and it may legitimately/transiently be empty."""
+    client = client_with_fake_listings
+    empty = Listing(listings=[], pubdates=[], count=0, expires=gen_expires())
+    with mock.patch.object(FakeListingFilesService, "list_articles_by_month",
+                           return_value=empty):
+        rv = client.get("/list/hep-ph/current")
+    assert rv.status_code == 200
+    sc = rv.headers.get("Surrogate-Control", "")
+    assert "max-age=300" in sc         # short empty-listing TTL
+    assert "604800" not in sc          # not the week-long freeze
+
+
+def test_historical_empty_month_keeps_long_cache(client_with_fake_listings):
+    """An empty *historical* month is immutable, not a transient, so it keeps the
+    normal long cache: the short-cache-on-empty guard is scoped to daily-volatile
+    announce pages (new/recent/current month)."""
+    client = client_with_fake_listings
+    empty = Listing(listings=[], pubdates=[], count=0, expires=gen_expires())
+    with mock.patch.object(FakeListingFilesService, "list_articles_by_month",
+                           return_value=empty):
+        rv = client.get("/list/hep-ph/2009-01")
+    assert rv.status_code == 200
+    assert "max-age=604800" in rv.headers.get("Surrogate-Control", "")
