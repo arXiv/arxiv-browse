@@ -13,7 +13,10 @@ from arxiv.identifier import Identifier
 from werkzeug.datastructures import Headers
 
 
-Response = Tuple[Dict[str, Any], int|status, Dict[str, Any]|Headers]
+# The body is usually a template-context dict, but a controller may also return
+# a ready-made body string (e.g. the list_page 503 served on a listing
+# inconsistency, which must not go through normal template rendering).
+Response = Tuple[Dict[str, Any]|str, int|status, Dict[str, Any]|Headers]
 
 
 def check_supplied_identifier(id: Identifier, route: str) -> Optional[Response]:

@@ -99,6 +99,33 @@ class Settings(arxiv_base.Settings):
     forced to stream the whole (large) object in one response. Fastly's default
     whole-object cache limit is 20 MB.
     """
+
+    LISTING_EMPTY_MAX_AGE: int = 5 * 60
+    """Surrogate-Control max-age (seconds) for an unexpectedly empty listing.
+
+    /list/<ctx>/new and /recent are normally cached for a week. But their item
+    list is rendered from a different query than the counts (items require a
+    Metadata.is_current=1 join the counts do not), so a read-replica lag window
+    during an announcement can produce an empty render while the counts are
+    non-zero. Long-caching that empty page froze a ~2 minute DB blip into a ~10
+    hour outage on 2026-06-25. When a daily-volatile listing comes back empty we
+    cache it only this briefly so it self-heals instead of staying frozen for a
+    week. A count/items contradiction is treated more strongly (see the list_page
+    controller): it returns 503 so Fastly does not cache it at all.
+    """
+
+    LISTING_STALE_IF_ERROR: int = DAY
+    """How long (seconds) Fastly may serve a stale-but-good listing on origin error.
+
+    Emitted as ``stale-if-error`` on the Surrogate-Control of every /list page.
+    It is what makes the 503-on-inconsistency safe: when the origin answers a
+    revalidation with a 5xx (including the deliberate 503 we return for a
+    count/items contradiction), Fastly keeps serving the last good listing from
+    grace for up to this long instead of showing users the error. Listings are
+    refreshed by the announce/publish pipeline's purges, so the cached object
+    rarely approaches even its normal max-age; a day of error-grace is ample to
+    cover an announcement read-replica lag window and its recovery.
+    """
     """"========================= Services ========================="""
     DOCUMENT_LISTING_SERVICE: PyObject = 'browse.services.listing.db_listing'  # type: ignore
     """What implementation to use for the listing service.
