@@ -22,7 +22,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20260318" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260624c" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
@@ -52,7 +52,7 @@
     {% block footer %}{% include "base/footer.html" %}{% endblock footer %}
   </div>
 
-  <script src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260624c"></script>
+  <script src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
