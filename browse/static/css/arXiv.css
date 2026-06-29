@@ -388,6 +388,11 @@ main {
    min-height: 100vh;
    flex-direction: column;
  }
+ /* Spinout footer: span the page width like the abs-page #content (very minimal side
+    margins) instead of the centred 1200px grid. Browse-local override of the shared
+    chrome — the descendant selector beats it regardless of stylesheet order. */
+ .flex-wrap-footer .ds-site-footer { padding-left: 10px; padding-right: 10px; }
+ .flex-wrap-footer .ds-site-footer-grid { max-width: none; }
  footer ul li {
    display: flex;
    align-items: center;
