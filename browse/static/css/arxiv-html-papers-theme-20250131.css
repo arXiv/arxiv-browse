@@ -235,7 +235,7 @@
   }
 
   .html-header-nav a span:hover {
-    text-shadow: 0 0 0 #000000;
+    text-shadow: 0 0 0 var(--header-hover-color);
     color: transparent;
   }
 
