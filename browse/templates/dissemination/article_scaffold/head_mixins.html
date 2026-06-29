@@ -38,4 +38,15 @@
 <link rel="manifest" href="{{ url_for('static', filename='images/icons/site.webmanifest') }}">
 <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
 <link rel="stylesheet" type="text/css" media="screen" href="https://use.typekit.net/utz6mli.css">
+{#- ARXIVCE-4426: spinout chrome for HTML papers. The shared announcement banner +
+    site footer (markup added in header.html / footer.html) are styled by the
+    arxiv-base SSOT chrome, consumed via base.static exactly as the main site does.
+    This supplies the .ds-* rules, the --arxiv-* design tokens (e.g. --arxiv-ink, the
+    spinout black the reader header is recoloured to) and IBM Plex. Injected here so
+    it reaches every served paper regardless of which baked theme version it pins.
+    arxiv-header.js is null-safe (it guards the absent search/hamburger controls) and
+    persists banner dismissal, keyed by data-banner-name — same as the homepage. -#}
+<link rel="stylesheet" type="text/css" media="screen"
+  href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626">
+<script defer src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 {# {{ user_banner.script(request_datetime) }} #}

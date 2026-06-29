@@ -23,11 +23,21 @@
   </form>
 </dialog>
 
+{#- ARXIVCE-4426: spinout announcement banner — reuse the shared arxiv-base macro
+    with the SAME invocation as the /abs site chrome (base/base.html), so wording,
+    markup and dismissal stay DRY and byte-identical across /abs and /html. A
+    normal-flow sibling above the reader header: it scrolls away while the sticky
+    .arxiv-html-header remains. -#}
+{% import "base/announcement_banner.html" as announcement %}
+{{ announcement.announcement_banner("arXiv is now an independent nonprofit!", "Learn more", "https://info.arxiv.org/about", "spinout-nonprofit") }}
+
 <header class="arxiv-html-header">
   <div class="html-header-logo">
     <a href="/">
+      {#- ARXIVCE-4426: spinout logo from the arxiv-base SSOT (white-on-dark), -#}
+      {#- replacing the legacy one-colour logo now that the bar is spinout ink. -#}
       <img alt="arXiv logo" class="logo desktop-only" width="100"
-        src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}">
+        src="{{ url_for('base.static', filename='images/arxiv-logo-primary-light.svg') }}">
       <span class="sr-only">Back to arXiv</span>
     </a>
   </div>

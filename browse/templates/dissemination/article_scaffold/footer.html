@@ -45,6 +45,12 @@
         href="https://github.com/brucemiller/LaTeXML/issues" target="_blank">developer contributions</a>.</p>
   </div>
 </footer>
+{#- ARXIVCE-4426: spinout site footer — include the shared arxiv-base SSOT
+    (base/footer.html) rather than duplicating it, so /html renders the exact same
+    component as /abs and the links resolve via url_for / HELP_SERVER (not hardcoded,
+    so a dev build stays on info.dev.arxiv.org). Purely additive: the LaTeXML
+    attribution above is retained. Hidden in reading mode via the theme CSS. -#}
+{% include "base/footer.html" %}
 <div id="fixed-buttons-container">
   <div id="beta-badge" aria-hidden="true">BETA</div>
   <a id="disable-reading-mode-btn" class="header-button" href="javascript:toggleReadingMode();"
