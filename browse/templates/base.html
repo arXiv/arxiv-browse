@@ -30,16 +30,16 @@
 </head>
 
 <body {% block body_id %}{% endblock %}>
-  {#- Date-windowed promo + announcement banners (incl. the spinout .ds-announcement
-      band) are configured in user_banner.html. -#}
-  {{ user_banner.content(request_datetime) }}
-
   {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
     {% block opt_in_modal %}{% endblock %}
   {%- endif -%}
 
   <div class="flex-wrap-footer">
     <a href="#content" class="ds-skip-link">Skip to main content</a>
+    {#- Promo + announcement banners (configured in user_banner.html). Kept inside
+        .flex-wrap-footer so the sticky-footer 100vh accounts for the banner height,
+        otherwise the footer is pushed ~one banner-height below the viewport. -#}
+    {{ user_banner.content(request_datetime) }}
     {% block header %}{% include "base/header.html" %}{% endblock header %}
 
     <main>
