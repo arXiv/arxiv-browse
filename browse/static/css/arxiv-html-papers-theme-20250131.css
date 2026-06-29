@@ -838,23 +838,7 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
 
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   ARXIVCE-4426 — spinout chrome integration for HTML papers.
-   The shared .ds-announcement / .ds-site-footer markup (added in the vendored
-   header.html / footer.html) is styled by the arxiv-base SSOT chrome consumed
-   in head_mixins.html. These few reader-specific rules bridge it to the paper.
-   Intentionally UNLAYERED: the base chrome's .ds-* rules are unlayered too, so a
-   layered rule here would lose to them regardless of specificity.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-/* The announcement band is Open Blue in both themes; its plain text would
-   otherwise inherit the paper's --text-color (warm wash in dark mode) and wash
-   out. Pin it to spinout ink so it stays legible on the band in light AND dark.
-   (The .ds-site-footer stays warm-wash in both themes by design — the funder
-   wordmark PNGs are dark and need a light surface to read.) */
-.ds-announcement-text { color: var(--arxiv-ink, #1c1a17); }
-
-/* Reading mode hides the legacy header/footer; hide the spinout banner and site
-   footer with them, so distraction-free reading stays chrome-free. */
-[data-reading-mode=enabled] .ds-announcement,
-[data-reading-mode=enabled] .ds-site-footer { display: none; }
+/* ARXIVCE-4426: the .ds-* visibility + announcement-text overrides for the spinout
+   chrome live (UNLAYERED) in dissemination/article_scaffold/head_mixins.html. They
+   must be unlayered to outrank the base chrome's own unlayered .ds-* rules — which
+   this file cannot do, since it is @imported into layer(arxiv-theme). */

@@ -25,6 +25,12 @@
     if (readingMode) {
       document.documentElement.setAttribute("data-reading-mode", readingMode);
     }
+    // Pre-apply spinout-banner dismissal here, before the banner paints, so it
+    // never flashes in only to be hidden later by the deferred arxiv-header.js.
+    // Key matches arxiv-header.js: "arxiv-banner-dismissed:" + data-banner-name.
+    if (localStorage.getItem('arxiv-banner-dismissed:spinout-nonprofit')) {
+      document.documentElement.setAttribute("data-banner-dismissed", "");
+    }
   }
   // Run as soon as JS starts, to minimize repainting
   initializeReadingPreferences();
@@ -48,5 +54,19 @@
     persists banner dismissal, keyed by data-banner-name — same as the homepage. -#}
 <link rel="stylesheet" type="text/css" media="screen"
   href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626">
+{#- Reader-specific .ds-* visibility overrides. These MUST be unlayered: the reader
+    body theme is @imported into layer(arxiv-theme), and an unlayered rule (such as
+    the base chrome's own `.ds-announcement { display:flex }`) always outranks any
+    layer — so a hide rule placed in the theme file is silently overridden. -#}
+<style>
+  /* Banner pre-dismissal (set above before paint -> no flash-then-hide) and
+     reading-mode chrome hiding. */
+  html[data-banner-dismissed] .ds-announcement { display: none; }
+  html[data-reading-mode="enabled"] .ds-announcement,
+  html[data-reading-mode="enabled"] .ds-site-footer { display: none; }
+  /* Keep the announcement text dark on the Open-Blue band in both colour themes
+     (otherwise it inherits the paper's warm-wash text in dark mode and washes out). */
+  .ds-announcement-text { color: var(--arxiv-ink, #1c1a17); }
+</style>
 <script defer src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 {# {{ user_banner.script(request_datetime) }} #}
