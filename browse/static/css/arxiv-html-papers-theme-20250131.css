@@ -22,9 +22,9 @@
     --code-font-family: "ibm-plex-mono", monospace;
     /* warm wash */
     --note-highlight-color: #f9f7f7;
-    /* spinout ink — uniform black chrome (was Cornell Red) */
+    /* spinout ink */
     --header-background-color: var(--arxiv-ink, #1c1a17);
-    /* Link Blue — spinout TOC highlight (was Cornell Red) */
+    /* Link Blue */
     --toc-text-highlight-color: var(--arxiv-link-blue, #1565c0);
     /* Archival Blue */
     --inpage-text-highlight-color: #1f5e96;
@@ -38,7 +38,7 @@
     --background-color: #ffffff;
     /* warm wash */
     --header-text-color: #f9f7f7;
-    --header-hover-color: var(--arxiv-open-blue, #a5d6fe); /* visible on the ink bar (was black) */
+    --header-hover-color: var(--arxiv-open-blue, #a5d6fe);
     /* lighter Library Grey */
     --secondary-text-color: #7D7568;
     /*warm wash to white*/
@@ -56,13 +56,13 @@
     --form-border-radius: 4px;
     --modal-submit-btn-color: var(--header-text-color);
     --modal-submit-btn-background-color: var(--header-background-color);
-    --modal-submit-btn-border-color: var(--arxiv-ink, #1c1a17); /* spinout ink (was dark red) */
+    --modal-submit-btn-border-color: var(--arxiv-ink, #1c1a17);
   }
 
   [data-theme=dark] {
     /* warm grey */
     --note-highlight-color: #6b6459;
-    /* spinout ink — uniform black chrome (was Cornell Red) */
+    /* spinout ink */
     --header-background-color: var(--arxiv-ink, #1c1a17);
     /* Open Blue */
     --toc-text-highlight-color: var(--arxiv-open-blue, #a5d6fe);
@@ -78,7 +78,7 @@
     --report-btn-hover-fg-color: black;
     /* warm wash */
     --header-text-color: #f9f7f7;
-    --header-hover-color: var(--arxiv-open-blue, #a5d6fe); /* visible on the ink bar (was black) */
+    --header-hover-color: var(--arxiv-open-blue, #a5d6fe);
     /* darker warm wash */
     --secondary-text-color: #ADA4A4;
     /*darker shade to background*/
@@ -837,8 +837,3 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
   }
 
 }
-
-/* ARXIVCE-4426: the .ds-* visibility + announcement-text overrides for the spinout
-   chrome live (UNLAYERED) in dissemination/article_scaffold/head_mixins.html. They
-   must be unlayered to outrank the base chrome's own unlayered .ds-* rules — which
-   this file cannot do, since it is @imported into layer(arxiv-theme). */

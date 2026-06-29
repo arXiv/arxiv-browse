@@ -23,11 +23,7 @@
   </form>
 </dialog>
 
-{#- ARXIVCE-4426: spinout announcement banner — reuse the shared arxiv-base macro
-    with the SAME invocation as the /abs site chrome (base/base.html), so wording,
-    markup and dismissal stay DRY and byte-identical across /abs and /html. A
-    normal-flow sibling above the reader header: it scrolls away while the sticky
-    .arxiv-html-header remains. -#}
+{#- Spinout announcement banner — shared arxiv-base macro, same call as /abs. -#}
 {% import "base/announcement_banner.html" as announcement %}
 {{ announcement.announcement_banner("arXiv is now an independent nonprofit!", "Learn more", "https://info.arxiv.org/about", "spinout-nonprofit") }}
 
