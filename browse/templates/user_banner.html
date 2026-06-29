@@ -42,6 +42,17 @@ Adding an environment var, so we can enable only on gcp.
 {% set BANNER_3_LINK_TEXT = "Learn more" %}
 {% set BANNER_3_LINK = "https://info.arxiv.org/about" %}
 
+{# Kept template — small site banner (hiring, surveys, …) in the spinout chrome,
+   the replacement for the old header "banner-minimal" slots. Disabled by default;
+   set a real START/END window to switch on. Run one announcement banner at a time
+   (they share the single .ds-announcement slot). #}
+{% set BANNER_4_NAME = "hiring" %}
+{% set BANNER_START_4 = 202001010000 %} {# disabled — set a real window to use #}
+{% set BANNER_END_4   = 202001012359 %}
+{% set BANNER_4_TEXT = "arXiv is hiring a DevOps Engineer" %}
+{% set BANNER_4_LINK_TEXT = "View jobs" %}
+{% set BANNER_4_LINK = "https://info.arxiv.org/hiring/index.html" %}
+
 {% set SLIDE = True %}
 
 {%- macro banner_1_content(request_datetime) -%}
@@ -112,11 +123,20 @@ Adding an environment var, so we can enable only on gcp.
   {%- endif -%}
 {%- endmacro -%}
 
+{#- Kept template (see vars above): same shape as banner_3, in the spinout chrome. -#}
+{%- macro banner_4_content(request_datetime) -%}
+  {%- set now=request_datetime.strftime("%Y%m%d%H%M")|int -%}
+  {%- if now >= BANNER_START_4 and now < BANNER_END_4 -%}
+    {{ ab.announcement_banner(BANNER_4_TEXT, BANNER_4_LINK_TEXT, BANNER_4_LINK, BANNER_4_NAME) }}
+  {%- endif -%}
+{%- endmacro -%}
+
 {# Wrapper content macro #}
 {%- macro content(request_datetime) -%}
   {{ banner_1_content(request_datetime) }}
   {{ banner_2_content(request_datetime) }}
   {{ banner_3_content(request_datetime) }}
+  {{ banner_4_content(request_datetime) }}
 {%- endmacro -%}
 
 {%- macro banner_1_script(request_datetime) -%}

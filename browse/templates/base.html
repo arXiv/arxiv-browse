@@ -30,6 +30,8 @@
 </head>
 
 <body {% block body_id %}{% endblock %}>
+  {#- Date-windowed promo + announcement banners (incl. the spinout .ds-announcement
+      band) are configured in user_banner.html. -#}
   {{ user_banner.content(request_datetime) }}
 
   {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
