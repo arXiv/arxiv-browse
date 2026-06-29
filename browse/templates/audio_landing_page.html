@@ -8,13 +8,6 @@
 {% endblock head %}
 
 
-{% block header_h1 %}
-<h1>
-<a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
-<a href="{{url_for('browse.abstract', arxiv_id=abs_meta.arxiv_id_v)}}">{{abs_meta.arxiv_id_v}}</a> &gt audio
-</h1>
-{% endblock %}
-
 {% block content %}
 <div>
     <div>

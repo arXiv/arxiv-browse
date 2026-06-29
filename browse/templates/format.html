@@ -1,11 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Format selector for {{arxiv_idv}}{% endblock %}
-{% block header_h1 %}
-<h1>
-<a href="{{ url_for('browse.home') }}">{{ config['BROWSE_SITE_LABEL'] }}</a> &gt
-<a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}">{{arxiv_idv}}</a> &gt format
-</h1>
-{% endblock %}
 
 {% block content %}
 <h1>Format selector for <a href="{{url_for('browse.abstract', arxiv_id=arxiv_idv)}}">{{arxiv_idv}}</a></h1>
