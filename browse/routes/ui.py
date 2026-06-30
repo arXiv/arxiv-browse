@@ -259,6 +259,13 @@ def list_articles(context: str, subcontext: str) -> Response:
         return redirect(headers["Location"], code=code)  # type: ignore
     elif code == status.NOT_MODIFIED:
         return "", code, headers  # type: ignore
+    elif code == status.SERVICE_UNAVAILABLE:
+        # Empty/inconsistent listing the controller declined to cache as a real
+        # page: a simple text body, not a rendered template (the data layer may
+        # be misbehaving). Users rarely see it -- stale-if-error serves the last
+        # good copy at the edge.
+        return ("This listing is temporarily unavailable; please retry in a few minutes.",
+                code, headers)  # type: ignore
     return response, code, headers  # type: ignore
 
 

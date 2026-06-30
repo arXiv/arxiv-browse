@@ -144,6 +144,9 @@ venv.bak/
 .mypy_cache/
 mypy_test_errors.txt
 
+# Claude Code
+.claude/
+
 # IDE/editor files
 .idea
 arxiv-browse.iml

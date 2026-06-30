@@ -231,12 +231,14 @@ class BrowseTest(unittest.TestCase):
 
     def test_requested_version(self):
         """Test that requested version is reflected in display fields."""
-        # We expect the requested version to appear in the breadcrum header,
-        # header title and download links
+        # We expect the requested version to appear in the abs-page id header,
+        # header title and download links. (The spinout redesign removed the
+        # desktop .header-breadcrumbs strip; .header-breadcrumbs-mobile still
+        # carries the arXiv:<id> with version affix.)
         rv = self.client.get('/abs/physics/9707012')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        div_elmt = html.find('div', class_= 'header-breadcrumbs')
+        div_elmt = html.find('div', class_= 'header-breadcrumbs-mobile')
         div_txt = div_elmt.text
         self.assertRegex(div_txt, r'arXiv:physics\/9707012')
         self.assertNotRegex(div_txt, r'arXiv:physics\/9707012v')
@@ -255,7 +257,7 @@ class BrowseTest(unittest.TestCase):
         rv = self.client.get('/abs/physics/9707012v4')
         self.assertEqual(rv.status_code, 200)
         html = BeautifulSoup(rv.data.decode('utf-8'), 'html.parser')
-        div_elmt = html.find('div', class_='header-breadcrumbs')
+        div_elmt = html.find('div', class_='header-breadcrumbs-mobile')
         div_txt = div_elmt.text
         self.assertRegex(div_txt, r'arXiv:physics\/9707012v4')
 

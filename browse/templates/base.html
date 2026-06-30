@@ -5,6 +5,10 @@
 <html lang="en">
 
 <head>
+  {#- Progressive enhancement: flag the document as JS-capable up front so CSS
+      can reveal JS-only controls (the search overlay toggle and the phone
+      hamburger) and keep them server-rendered-usable when JS is absent. -#}
+  <script>document.documentElement.classList.add('js');</script>
   {%- block head -%}
   <title>{% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,140 +22,25 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20260318" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
 
-<body {% block body_id %}{% endblock %} class="with-cu-identity">
-  {{ user_banner.content(request_datetime) }}
+<body {% block body_id %}{% endblock %}>
+  {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
+    {% block opt_in_modal %}{% endblock %}
+  {%- endif -%}
+
   <div class="flex-wrap-footer">
-    <header>
-      <a href="#content" class="is-sr-only">Skip to main content</a>
-      <!-- start desktop header -->
-      <div class="columns is-vcentered is-hidden-mobile" id="cu-identity">
-        <div class="column" id="cu-logo">
-          <a href="https://www.cornell.edu/"><img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University" /></a>
-        </div>
-
-        {%- if rd_int >= 202504070100 and rd_int <= 202510282140 -%}
-        <div class="column">
-        {% block opt_in_modal %}{% endblock %}
-        </div>
-        {%- endif -%}
-
-        <!-- /from April 7 at 1:00 AM to May 29 at 21:40 -->
-        {%- if rd_int >= 202504070100 and rd_int <= 202505282140 -%}
-        <div class="column banner-minimal forum">
-          <p>arXiv Is Hiring a DevOps Engineer</p>
-          <a href="https://info.arxiv.org/hiring/index.html" target="_blank">View Jobs</a>
-        </div>
-        {%- endif -%}
-
-        <!-- /from May 2 at 1:00 AM to May 5 at 9:45 AM -->
-        {%- if rd_int >= 202505020100 and rd_int <= 202405050945 -%}
-        <div class="column banner-minimal forum">
-          <h3 style="color:#b31b1b;"><b>Monday, May 5:</b> arXiv will be READ ONLY at 9:00AM EST for approximately 30 minutes. We apologize for any inconvenience.</h3>
-        </div>
-        {%- endif -%}
-
-        {%- if rd_int >= 202403120100 and rd_int <= 202403150100 -%}
-        <div class="column">
-          <p>Pi Day is Giving Day: arXiv depends on donations to operate and keep science open for all.
-              <a href="https://givingday.cornell.edu/campaigns/arxiv" target="_blank">
-              <span style="color:white;text-decoration-line:underline;">Give back to arXiv on 3.14.24!</span>
-              </a>
-          </p>
-        </div>
-        {%- endif -%}
-
-        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202310010100 and rd_int <= 202312300100 -%}
-        <div class="column">
-            <a href="https://info.arxiv.org/help/cloud.html"><span style="color:white;text-decoration-line:underline;">
-                Served from the cloud
-            </span></a>
-        </div>
-        {%- endif -%}
-        {%- if rd_int >= 202511030500 and rd_int <= 202511170500 -%}
-          <div class="column banner-minimal">
-            <p>In just 5 minutes help us improve arXiv:</p>
-            <a href="https://cornell.ca1.qualtrics.com/jfe/form/SV_6kZEJCkEgp3yGZo" target="_blank">Annual Global Survey</a>
-          </div>
-        {%- endif -%}
-        {%- if config["BROWSE_MINIMAL_BANNER_ENABLED"] and rd_int >= 202603180000 and rd_int <= 202606302359 -%}
-        <div class="column banner-minimal">
-            <a href="https://tech.cornell.edu/arxiv/" target="_blank">Learn about arXiv becoming an independent nonprofit.</a>
-        </div>
-        {%- endif -%}
-        <div class="column" id="support-ack">
-          <span id="support-ack-url">We gratefully acknowledge support from the Simons Foundation, <a href="https://info.arxiv.org/about/ourmembers.html">member institutions</a>, and all contributors.</span>
-          <a href="https://info.arxiv.org/about/donate.html" class="btn-header-donate">Donate</a>
-        </div>
-      </div>
-
-      <div id="header" class="is-hidden-mobile">
-        {% block header %}
-        {#- The ignore_me link is not meant to be visible to users; it is meant to catch robots/crawlers not respecting robots.txt.
-            aria-hidden prevents screenreaders from being caught, and tabindex prevents it from being selectable via the tab key. -#}
-        <a aria-hidden="true" tabindex="-1" href="/IgnoreMe"></a>
-        {% block header_h1 %}<h1><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:60px;"/></h1>{% endblock header_h1%}
-
-        <div class="columns is-vcentered is-mobile" style="justify-content: flex-end;">
-          {% block opt_in_button %}{% endblock %}
-          {% block login_link %}{% endblock %}
-        </div>
-
-        {{ base_macros.compactsearch() }}
-       {% endblock header %}
-     </div><!-- /end desktop header -->
-
-      <div class="mobile-header">
-        <div class="columns is-mobile">
-          <div class="column logo-arxiv"><a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/arxiv-logomark-small-white.svg') }}" alt="arXiv logo" style="height:60px;" /></a></div>
-          <div class="column logo-cornell"><a href="https://www.cornell.edu/">
-            <picture>
-              <source media="(min-width: 501px)"
-                srcset="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}  400w"
-                sizes="400w" />
-              <source srcset="{{ url_for('static', filename='images/icons/cu/cornell_seal_simple_black.svg') }} 2x" />
-              <img src="{{ url_for('static', filename='images/icons/cu/cornell-reduced-white-SMALL.svg') }}" alt="Cornell University Logo" />
-            </picture>
-          </a></div>
-          <div class="column nav" id="toggle-container">
-            <button class="toggle-control" aria-label="Open search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-white" aria-hidden="true"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
-            <div class="mobile-toggle-block toggle-target">
-              <form class="mobile-search-form" method="GET" action="{{ url_for('search_box') }}">
-                <div class="field has-addons">
-                  <input class="input" type="text" name="query" placeholder="Search..." aria-label="Search term or terms" />
-                  <input type="hidden" name="source" value="header">
-                  <input type="hidden" name="searchtype" value="all">
-                  <button class="button">GO</button>
-                </div>
-              </form>
-            </div>
-
-            <button class="toggle-control" aria-label="Open navigation menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon filter-white" aria-hidden="true"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
-            <div class="mobile-toggle-block toggle-target">
-              <nav class="mobile-menu" aria-labelledby="mobilemenulabel">
-                <h2 id="mobilemenulabel">quick links</h2>
-                <ul>
-                    {% if request.auth is defined and request.auth.user is defined %}
-                    <li><a href="{{ url_for('account') }}">My Account</a></li>
-                    <li><a href="{{ url_for('create') }}">Start Submission</a></li>
-                    <li><a href="{{ url_for('logout')}} ">Logout</a></li>
-                    {% else %}
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    {% endif %}
-                    <li><a href="{{ url_for('help') }}">Help Pages</a></li>
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div><!-- /end mobile-header -->
-    </header>
+    <a href="#content" class="ds-skip-link">Skip to main content</a>
+    {#- Promo + announcement banners (configured in user_banner.html). Kept inside
+        .flex-wrap-footer so the sticky-footer 100vh accounts for the banner height,
+        otherwise the footer is pushed ~one banner-height below the viewport. -#}
+    {{ user_banner.content(request_datetime) }}
+    {% block header %}{% include "base/header.html" %}{% endblock header %}
 
     <main>
       {% block content_stats %}
@@ -162,59 +51,10 @@
       </div>
     </main>
 
-    <footer style="clear: both;">
-      <div class="columns is-desktop" role="navigation" aria-label="Secondary" style="margin: -0.75em -0.75em 0.75em -0.75em">
-        <!-- Macro-Column 1 -->
-        <div class="column" style="padding: 0;">
-          <div class="columns">
-            <div class="column">
-              <ul style="list-style: none; line-height: 2;">
-                <li><a href="{{ url_for('about')}}">About</a></li>
-                <li><a href="{{ url_for('help') }}">Help</a></li>
-              </ul>
-            </div>
-            <div class="column">
-              <ul style="list-style: none; line-height: 2;">
-                <li>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-black" role="presentation"><title>contact arXiv</title><desc>Click here to contact arXiv</desc><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>
-                  <a href="{{ url_for('contact') }}"> Contact</a>
-                </li>
-                <li>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon filter-black" role="presentation"><title>subscribe to arXiv mailings</title><desc>Click here to subscribe</desc><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/></svg>
-                  <a href="{{ url_for('subscribe') }}"> Subscribe</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <!-- End Macro-Column 1 -->
-        <!-- Macro-Column 2 -->
-        <div class="column" style="padding: 0;">
-          <div class="columns">
-            <div class="column">
-              <ul style="list-style: none; line-height: 2;">
-                <li><a href="{{ url_for('copyright') }}">Copyright</a></li>
-                <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
-              </ul>
-            </div>
-            <div class="column sorry-app-links">
-              <ul style="list-style: none; line-height: 2;">
-                <li><a href="{{ url_for('a11y') }}">Web Accessibility Assistance</a></li>
-                <li>
-                  <p class="help">
-                    <a class="a11y-main-link" href="https://status.arxiv.org" target="_blank">arXiv Operational Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" class="icon filter-dark_grey" role="presentation"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a><br>
-                  </p>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div> <!-- end MetaColumn 2 -->
-        <!-- End Macro-Column 2 -->
-      </div>
-    </footer>
+    {% block footer %}{% include "base/footer.html" %}{% endblock footer %}
   </div>
 
-  <script src="{{ url_for('base.static', filename='js/member_acknowledgement.js') }}"></script>
+  <script src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>

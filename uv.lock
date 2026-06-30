@@ -3,11 +3,11 @@ revision = 3
 requires-python = "==3.11.*"
 
 [options]
-exclude-newer = "2026-03-25T15:21:20.775762123Z"
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P1W"
 
 [options.exclude-newer-package]
-arxiv-base = { timestamp = "2026-04-01T15:20:20.775775228Z", span = "PT1M" }
+arxiv-base = { timestamp = "0001-01-01T00:00:00Z", span = "PT1M" }
 
 [[package]]
 name = "aiofiles"
@@ -86,7 +86,7 @@ wheels = [
 [[package]]
 name = "arxiv-base"
 version = "1.0.1"
-source = { git = "https://github.com/arXiv/arxiv-base.git?branch=master#8135d213c8409297e807f1d9a73709799b9750ef" }
+source = { git = "https://github.com/arXiv/arxiv-base.git?branch=master#c5b33dc0003f354a07773ae5753af4e308e25c12" }
 dependencies = [
     { name = "bleach" },
     { name = "fastly" },

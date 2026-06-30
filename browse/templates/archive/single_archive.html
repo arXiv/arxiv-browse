@@ -7,11 +7,6 @@
 
 {% block title %}{{archive.full_name}}{% endblock %}
 
-{% block header_h1 %}
-<h1 class="header-breadcrumbs"><a href="/"><img src="{{ url_for('static', filename='images/arxiv-logo-one-color-white.svg') }}" alt="arxiv logo" style="height:40px;"/></a> <span>&gt;</span> <a href="{{url_for('.list_articles', context=archive.id, subcontext='recent')}}">{{archive.id}}</a></h1>
-{% endblock %}
-
-
 {%- block content %}
   <h1>{{archive.full_name}} <span style="font-size: 70%;">(since {{archive.start_date.strftime('%B %Y')}})</span></h1>
 

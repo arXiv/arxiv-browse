@@ -54,20 +54,9 @@ def default_resp_fn(file: FileObj,
         Any extra after the normal URL path part. For use in anc files or html files.
     """
     resp: Response = Response()
-    range_requested = (request.method == 'GET'
-                       and 'range' in [hk.lower() for hk in request.headers.keys()])
-    # Only answer with HTTP 206 Partial Content for objects too large for Fastly
-    # to cache as a single whole object. For smaller objects a 206 stops Fastly
-    # from caching at all, so every range request (e.g. in-browser PDF viewers
-    # fetching byte ranges) is forwarded to the origin -- the main driver of
-    # carrier-peering egress cost. Returning the full 200 lets Fastly cache the
-    # object once and synthesize later range responses from the edge. (Through
-    # Fastly the end user still sees a 206; only the origin->Fastly fill changes.)
-    fastly_max_object = current_app.config.get(
-        "FASTLY_CACHE_MAX_OBJECT_SIZE", 20 * 1024 * 1024)
-    if range_requested and file.size > fastly_max_object:
-        # Fastly's segmented caching fetches >20MB objects in range-sized pieces,
-        # and Cloud Run is not forced to chunk-stream the whole large object.
+    if request.method == 'GET' and 'range' in [hk.lower() for hk in request.headers.keys()]:
+        # Fastly requires Range response to cache large objects (>20MB),
+        # Cloud run requires response larger than 20MB to be chunked but Range response will be smaller.
         resp = RangeRequest(file.open('rb'),
                             etag=file.etag,
                             last_modified=file.updated,
