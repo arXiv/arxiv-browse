@@ -86,7 +86,7 @@ wheels = [
 [[package]]
 name = "arxiv-base"
 version = "1.0.1"
-source = { git = "https://github.com/arXiv/arxiv-base.git?branch=master#c5b33dc0003f354a07773ae5753af4e308e25c12" }
+source = { git = "https://github.com/arXiv/arxiv-base.git?branch=master#dd15adcdeff6cd06c3ee2555ddf6381582c8966e" }
 dependencies = [
     { name = "bleach" },
     { name = "fastly" },
