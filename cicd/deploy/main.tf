@@ -303,7 +303,7 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
     volumes {
       name = "cloudsql"
       cloud_sql_instance {
-        instances = [var.cloudsql_instance]
+        instances = var.cloudsql_instances
       }
     }
     #execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
