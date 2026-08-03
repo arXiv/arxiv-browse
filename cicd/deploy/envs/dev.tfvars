@@ -43,11 +43,11 @@ cloudsql_instances = [
   # Required by latexml_enabled = "1" above; browse queries this on every /abs/ page.
   "arxiv-development:us-central1:latexml-db",
 ]
-browse_minimal_banner_enabled          = "1"
-browse_user_banner_enabled             = "1"
-browse_special_message_enabled         = "1"
-latexml_bucket                         = "gs://latexml_arxiv_id_converted"
-auth_server                            = "dev.arxiv.org"
+browse_minimal_banner_enabled  = "1"
+browse_user_banner_enabled     = "1"
+browse_special_message_enabled = "1"
+latexml_bucket                 = "gs://latexml_arxiv_id_converted"
+auth_server                    = "dev.arxiv.org"
 
 # Secret names
 classic_db_uri_secret_name = "browse-sqlalchemy-db-uri"
