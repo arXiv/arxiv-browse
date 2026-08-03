@@ -38,7 +38,11 @@ latexml_db_transaction_isolation_level = "READ UNCOMMITTED"
 source_storage_prefix                  = "gs://arxiv-production-data"
 min_instances                          = 1
 session_affinity                       = true
-cloudsql_instance                      = "arxiv-development:us-east4:arxiv-db-dev"
+cloudsql_instances = [
+  "arxiv-development:us-east4:arxiv-db-dev",
+  # Required by latexml_enabled = "1" above; browse queries this on every /abs/ page.
+  "arxiv-development:us-central1:latexml-db",
+]
 browse_minimal_banner_enabled          = "1"
 browse_user_banner_enabled             = "1"
 browse_special_message_enabled         = "1"

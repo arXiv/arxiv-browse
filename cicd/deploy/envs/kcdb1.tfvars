@@ -37,7 +37,7 @@ latexml_db_transaction_isolation_level = "READ UNCOMMITTED"
 source_storage_prefix                  = "gs://arxiv-production-data"
 min_instances                          = 1
 session_affinity                       = true
-cloudsql_instance                      = "arxiv-kcdb1:us-central1:main-arxiv-db"
+cloudsql_instances = ["arxiv-kcdb1:us-central1:main-arxiv-db"] # latexml_enabled = "0", so no latexml-db mount
 browse_minimal_banner_enabled          = "1"
 browse_user_banner_enabled             = "1"
 browse_special_message_enabled         = "1"
