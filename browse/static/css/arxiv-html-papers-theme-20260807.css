@@ -637,6 +637,11 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
     margin: 1rem;
   }
 
+  /* Hide the author-contact labels ("Affiliation:", "Email:"). */
+  .ltx_contact_name {
+    display: none;
+  }
+
   /* Restore a visible text selection. ar5iv 0.9.0 newly tints ::selection with
      var(--note-highlight-color) (a11y.css), which the arXiv theme sets near-white
      (#f9f7f7) for its subtle target/bib highlights -- so selected text becomes
