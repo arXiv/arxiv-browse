@@ -441,6 +441,18 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
   :target {
     scroll-margin-top: 4rem;
   }
+
+  /* Navigation highlight disabled for now: clicking into a fragment jumps there
+     with no background-colour highlight or pulse animation (both come from the
+     ar5iv base :target rule). The forced-colors Mark highlight is left intact as
+     an accessibility affordance for high-contrast users. */
+  @media not (forced-colors: active) {
+    :target {
+      background-color: transparent;
+      box-shadow: none;
+      animation: none;
+    }
+  }
 }
 
 /* Styling related to the "report issue" feature */
@@ -624,6 +636,17 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
   .ltx_page_content {
     margin: 1rem;
   }
+
+  /* Restore a visible text selection. ar5iv 0.9.0 newly tints ::selection with
+     var(--note-highlight-color) (a11y.css), which the arXiv theme sets near-white
+     (#f9f7f7) for its subtle target/bib highlights -- so selected text becomes
+     invisible on the white page. Fall back to the browser's default selection
+     colours, matching the pre-0.9 behaviour. */
+  ::selection {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
   .ltx_ref:hover {
     text-decoration: none;
     color: var(--inpage-text-highlight-color);
@@ -636,12 +659,13 @@ Empirically, the xl >1280px breakpoint seems to be the first where a sidebar TOC
     border: none;
   }
 
-  .ltx_tag_bibitem:active~*,
-  .ltx_tag_bibitem:hover~*,
-  .ltx_tag_bibitem~:active,
-  .ltx_tag_bibitem~:hover {
-    /* do nothing */
-    background-color: var(--background-color);
+  /* Disable the bibliography colour highlight for now. The ar5iv base tints
+     every child of a hovered/active bib entry
+     (`.ltx_bibitem:is(:hover,:active) > *` -> var(--note-highlight-color));
+     match that selector so the entry does not change colour on hover/active.
+     (Citation-target highlighting is handled by the :target override above.) */
+  .ltx_bibitem:is(:hover, :active) > * {
+    background-color: transparent;
   }
 
   .ltx_bibitem {
