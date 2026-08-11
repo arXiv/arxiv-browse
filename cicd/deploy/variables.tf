@@ -184,9 +184,9 @@ variable "latexml_db_uri_secret_name" {
   default     = "latexml_db_uri_psycog2"
 }
 
-variable "cloudsql_instance" {
-  description = "Cloud SQL instance name"
-  type        = string
+variable "cloudsql_instances" {
+  description = "Cloud SQL instance connection names to mount under /cloudsql"
+  type        = list(string)
 }
 
 variable "session_affinity" {
