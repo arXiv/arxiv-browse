@@ -12,6 +12,7 @@ tests = [
     ("check_scienceCast_missing_category", Identifier("2501.12345"), None, "tex", False, False),
     ("check_scienceCast_missing_category_2", Identifier("2501.12345"), "", "tex", False, False),
     ("check_alphaXiv_valid", Identifier("2403.10561"), "cs.IR", "tex", False, True),
+    ("check_alphaXiv_valid", Identifier("2608.18066"), "cs.AI", "tex", False, True),
 ]
 
 @pytest.mark.parametrize("desc, paperid, category, src_format, has_sciencecast_audio, has_alphaxiv_audio", tests)
@@ -20,6 +21,7 @@ def test_sciencecast_conditions(mocker, desc, paperid, category, src_format, has
     metadata = mocker.MagicMock()
     metadata.arxiv_identifier = paperid
     metadata.primary_category.id = category
+    metadata.primary_category.in_archive = category.split(".")[0] if category else None
     metadata.source_format = src_format
 
     result = get_audio_urls(metadata)
