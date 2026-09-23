@@ -80,7 +80,9 @@ import os
 import logging.handlers
 import logging
 import threading
+import base64
 import gzip
+import hashlib
 import tarfile
 
 from google.cloud.pubsub_v1.subscriber.message import Message
@@ -189,6 +191,15 @@ def md5_sum(file_path: str) -> str:
         raise FileNotFoundError(file_path)
     md5_value = subprocess.run(['md5sum', file_path], stdout=subprocess.PIPE)
     return md5_value.stdout.decode('utf-8').strip()
+
+
+def md5_base64(file_path: str) -> str:
+    """MD5 of a file in the base64 form GCS uses for Blob.md5_hash."""
+    digest = hashlib.md5()
+    with open(file_path, 'rb') as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b''):
+            digest.update(chunk)
+    return base64.b64encode(digest.digest()).decode('ascii')
 
 #
 # source_flags in database
@@ -949,13 +960,16 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
 
 
 @STORAGE_RETRY
-def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdict: SyncVerdict, log_extra: dict):
+def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str, str)], verdict: SyncVerdict, log_extra: dict):
     """
     Retire object - apparently, you have to copy blob
+
+    Each entry is (from_obj, to_obj, obj_type, cit_path), where cit_path is the
+    CIT copy of the retired version (/data/orig/...vN).
     """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
-    for from_obj, to_obj, obj_type in objects:
+    for from_obj, to_obj, obj_type, cit_path in objects:
         logger.debug("%s: %s is being renamed to %s", obj_type, from_obj, to_obj, extra=log_extra)
         from_blob: Blob = bucket.blob(from_obj)
         to_blob: Blob = bucket.blob(to_obj)
@@ -987,6 +1001,21 @@ def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verd
                                to_blob.md5_hash,
                                extra=log_extra)
                 verdict.add_verdict(True, "Both exists but contents not the same!", (from_obj, to_blob, obj_type))
+            continue
+
+        # The /ftp object is only the retired version if nothing updated it after
+        # publish. When a sync is delayed (e.g. waiting for a PDF that only builds
+        # after an admin compile fix), an admin restore may already have synced the
+        # new current version to /ftp, and copying it would put the new version in
+        # /orig. So compare against CIT's copy of the retired version, and upload
+        # that instead when they differ.
+        from_blob.reload()
+        if os.path.isfile(cit_path) and from_blob.md5_hash != md5_base64(cit_path):
+            logger.warning("%s: %s md5[%s] is not the retired version %s; uploading it to %s instead",
+                           obj_type, from_obj, from_blob.md5_hash, cit_path, to_obj, extra=log_extra)
+            upload(gs_client, Path(cit_path), to_obj, upload_logger=logger)
+            from_blob.delete()
+            verdict.add_verdict(True, "Retired version uploaded from CIT", (from_obj, to_blob, obj_type))
             continue
 
         try:
@@ -1217,13 +1246,13 @@ def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: di
         obsoleted = entry["obsoleted"]
         original = entry["original"]
         entry_type = entry['type']
-        retired.append((obsoleted, original, entry_type))
+        retired.append((obsoleted, original, entry_type, entry["cit"]))
 
     if retired:
         # Move blobs from /ftp to /orig
         retire_bucket_objects(gs_client, retired, verdict, log_extra)
         # Obsoleted objects are gone
-        for obsoleted, _original, _entry_type in retired:
+        for obsoleted, _original, _entry_type, _cit in retired:
             if obsoleted in bucket_objects:
                 bucket_objects.remove(obsoleted)
 
