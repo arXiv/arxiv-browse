@@ -112,6 +112,12 @@ variable "help_server" {
   default     = "info.dev.arxiv.org"
 }
 
+variable "brand_static_base" {
+  description = "Design-system asset route for the shared chrome; empty is the production route"
+  type        = string
+  default     = ""
+}
+
 variable "classic_html_bucket" {
   description = "Classic HTML bucket name"
   type        = string

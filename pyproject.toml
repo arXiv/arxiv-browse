@@ -26,6 +26,7 @@ dependencies = [
     "validators",
     "types-python-dateutil>=2.8.19.12,<3",
     "arxiv-base",
+    "arxiv-brand-templates",
     "flask>=3.0.2,<4",
     "google-cloud-compute>=1.14.1,<2",
     "psycopg2-binary>=2.9.9,<3",
@@ -58,6 +59,9 @@ exclude-newer-package = { arxiv-base = "1 minute" }
 
 [tool.uv.sources]
 arxiv-base = { git = "https://github.com/arXiv/arxiv-base.git", branch = "master" }
+# The shared head/header/footer from the design system; uv.lock pins the SHA, and an
+# update is a relock (uv lock --upgrade-package arxiv-brand-templates).
+arxiv-brand-templates = { git = "https://github.com/arXiv/design-system.git", branch = "master", subdirectory = "templates" }
 
 
 [build-system]

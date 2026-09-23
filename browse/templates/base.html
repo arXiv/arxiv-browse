@@ -22,9 +22,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20260318" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20260924" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  {#- Not screen-only: its print rules lay the chrome out on paper, whose logo, icons and
-      funder logos have no size without it (ARXIVCE-4527). -#}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260929" />
+  {% include "arxiv_brand/head.html" %}
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}
@@ -38,11 +36,11 @@
 
   <div class="flex-wrap-footer">
     <a href="#content" class="ds-skip-link">Skip to main content</a>
-    {#- Promo + announcement banners (configured in user_banner.html). Kept inside
+    {#- Promo banners (configured in user_banner.html). Kept inside
         .flex-wrap-footer so the sticky-footer 100vh accounts for the banner height,
         otherwise the footer is pushed ~one banner-height below the viewport. -#}
     {{ user_banner.content(request_datetime) }}
-    {% block header %}{% include "base/header.html" %}{% endblock header %}
+    {% block header %}{% include "arxiv_brand/header.html" %}{% endblock header %}
 
     <main>
       {% block content_stats %}
@@ -53,10 +51,8 @@
       </div>
     </main>
 
-    {% block footer %}{% include "base/footer.html" %}{% endblock footer %}
+    {% block footer %}{% include "arxiv_brand/footer.html" %}{% endblock footer %}
   </div>
-
-  <script src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 
   {% if config['BROWSE_STATUS_BANNER_ENABLED'] -%}
   <script async src="{{ config['BROWSE_STATUS_BANNER_SCRIPT_URL'] }}" data-for="{{ config['BROWSE_STATUS_BANNER_SITE_ID'] }}"></script>
