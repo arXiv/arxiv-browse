@@ -10,6 +10,7 @@ from arxiv.base.urls import canonical_url, urlizer
 from arxiv.db import config_query_timing, configure_db
 from flask import Flask
 from flask_s3 import FlaskS3
+import arxiv_brand
 # This gives the error on import
 # RuntimeError: __class__ not set defining 'User' as <class 'arxiv.users.domain.User'>. Was __classcell__ propagated to type.__new__?
 # from arxiv.users.auth import Auth
@@ -39,6 +40,9 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
     app.engine, app.latexml_engine  = configure_db(settings) # type: ignore
 
     Base(app)
+
+    # The design system's head/header/footer; the member acknowledgement fills in the browser.
+    arxiv_brand.init_app(app, member_institution='<span class="ack-member-inline" hidden>, <strong></strong></span>')
 
     # Log long SQL queries
     config_query_timing(app.engine, 0.2, 8) # type: ignore
