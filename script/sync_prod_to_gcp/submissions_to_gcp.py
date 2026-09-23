@@ -971,6 +971,8 @@ def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verd
             # When the destination of retired object exists, you do nothing.
             # IOW, You cannot retire object twice.
             to_blob.reload(projection='full')
+            # bucket.blob() carries no metadata; without this md5_hash is None and never matches.
+            from_blob.reload(projection='full')
             if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
                 # The object is already in the orig, and should not be in /ftp
                 from_blob.delete()
