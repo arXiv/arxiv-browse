@@ -22,7 +22,9 @@
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/arXiv.css') }}?v=20260318" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ url_for('static', filename='css/arXiv-print.css') }}?v=20200611" />
   <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='css/browse_search.css') }}" />
-  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626" />
+  {#- Not screen-only: its print rules lay the chrome out on paper, whose logo, icons and
+      funder logos have no size without it (ARXIVCE-4527). -#}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626" />
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
   {{ user_banner.script(request_datetime) }}

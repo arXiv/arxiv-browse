@@ -51,8 +51,10 @@
     spinout black the reader header is recoloured to) and IBM Plex. Injected here so
     it reaches every served paper regardless of which baked theme version it pins.
     arxiv-header.js is null-safe (it guards the absent search/hamburger controls) and
-    persists banner dismissal, keyed by data-banner-name — same as the homepage. -#}
-<link rel="stylesheet" type="text/css" media="screen"
+    persists banner dismissal, keyed by data-banner-name — same as the homepage.
+    Not screen-only: its print rules hide the chrome, whose banner glyph and funder
+    logos have no size without it (ARXIVCE-4527). -#}
+<link rel="stylesheet" type="text/css"
   href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260626">
 {#- Reader-specific .ds-* visibility overrides. These MUST be unlayered: the reader
     body theme is @imported into layer(arxiv-theme), and an unlayered rule (such as
