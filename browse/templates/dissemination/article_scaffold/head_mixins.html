@@ -66,6 +66,9 @@
   html[data-banner-dismissed] .ds-announcement { display: none; }
   html[data-reading-mode="enabled"] .ds-announcement,
   html[data-reading-mode="enabled"] .ds-site-footer { display: none; }
+  /* Print keeps the reader header's logo, not its controls: the theme's own print rule
+     (header, nav { display: none }) sits in a layer that its header layer outranks. */
+  @media print { .arxiv-html-header .html-header-nav { display: none; } }
   /* Keep the announcement text dark on the Open-Blue band in both colour themes
      (otherwise it inherits the paper's warm-wash text in dark mode and washes out). */
   .ds-announcement-text { color: var(--arxiv-ink, #1c1a17); }
