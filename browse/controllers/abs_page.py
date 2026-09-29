@@ -54,7 +54,7 @@ from browse.formatting.external_refs_cits import (
     get_dblp_bibtex_path,
 )
 from browse.formatting.latexml import get_latexml_url
-from browse.formatting.search_authors import queries_for_authors, split_long_author_list
+from arxiv.authors.search_authors import queries_for_authors, split_long_author_list
 from browse.controllers.response_headers import mime_header_date
 from browse.formatting.metatags import meta_tag_metadata
 from browse.services.audio import has_audio
