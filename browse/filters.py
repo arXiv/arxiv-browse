@@ -1,19 +1,8 @@
 """Browse jinja filters."""
 import html
 import re
-from typing import Union
 
 from markupsafe import Markup
-
-JinjaFilterInput = Union[Markup, str]
-"""
-   Jinja filters will receive their text input as either
-   a Markup object or a str. It is critical for proper escaping to
-   to ensure that str is correctly HTML escaped.
-
-   Markup is decoded from str so this type is redundant but
-   the hope is to make it clear what is going on to arXiv developers.
-"""
 
 
 def entity_to_utf(text: str) -> str:
