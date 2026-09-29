@@ -77,7 +77,7 @@
   {%- else -%}
     {%- for part in au_list_tup[0] -%}
       {%- if part is string -%}
-        {{- part|arxiv_urlize -}}
+        {{- part|urlize -}}
       {%- else -%}
         <a href="{{url_for_author_search(article, part[1])}}">{{part[0]}}</a>
       {%- endif -%}

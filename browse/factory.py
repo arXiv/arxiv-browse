@@ -7,7 +7,6 @@ from flask.logging import default_handler
 
 from arxiv.base import Base
 from arxiv.base.urls import canonical_url, urlizer
-from arxiv.base.filters import tidy_filesize
 from arxiv.db import config_query_timing, configure_db
 from flask import Flask
 from flask_s3 import FlaskS3
@@ -74,10 +73,7 @@ def create_web_app(**kwargs) -> Flask: # type: ignore
         partial(generate_show_email_hash,
                 secret=settings.SHOW_EMAIL_SECRET.get_secret_value())  # pylint: disable=E1101
 
-    app.jinja_env.filters['arxiv_id_urls'] = urlizer(['arxiv_id'])
-    app.jinja_env.filters['arxiv_urlize'] = urlizer(['arxiv_id', 'doi', 'url'])
     app.jinja_env.filters['arxiv_id_doi_filter'] = urlizer(['arxiv_id', 'doi'])
-    app.jinja_env.filters['tidy_filesize'] = tidy_filesize
 
     with app.app_context():
         problems = service_statuses()
