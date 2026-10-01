@@ -30,18 +30,23 @@ steps:
   #       exit "$exit_code"
   #   id: IntegrationTest
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: 'bash'
     args:
-      - run
-      - services
-      - update
-      - $_SERVICE_NAME
-      - '--platform=managed'
-      - >-
-        --image=gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA
-      - >-
-        --labels=commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
-      - '--region=$_DEPLOY_REGION'
-      - '--quiet'
+      - '-eEuo'
+      - 'pipefail'
+      - '-c'
+      - |-
+        if [ -n "$_PR_NUMBER" ] ; then
+          echo "Found PR number, doing demo deployment for PR number=$_PR_NUMBER==="
+          NOTRAFFIC="--no-traffic --tag=pr-$_PR_NUMBER"
+        else
+          NOTRAFFIC=
+        fi
+        gcloud run services update $_SERVICE_NAME --platform=managed \
+          --image=gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA \
+          --labels=commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID \
+          --region=$_DEPLOY_REGION --quiet \
+          $$NOTRAFFIC
     id: Deploy
     entrypoint: gcloud
 images: ['gcr.io/$PROJECT_ID/arxiv-browse:latest', 'gcr.io/$PROJECT_ID/arxiv-browse:$COMMIT_SHA']
