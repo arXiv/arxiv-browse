@@ -80,7 +80,9 @@ import os
 import logging.handlers
 import logging
 import threading
+import base64
 import gzip
+import hashlib
 import tarfile
 
 from google.cloud.pubsub_v1.subscriber.message import Message
@@ -189,6 +191,15 @@ def md5_sum(file_path: str) -> str:
         raise FileNotFoundError(file_path)
     md5_value = subprocess.run(['md5sum', file_path], stdout=subprocess.PIPE)
     return md5_value.stdout.decode('utf-8').strip()
+
+
+def md5_base64(file_path: str) -> str:
+    """MD5 of a file in the base64 form GCS uses for Blob.md5_hash."""
+    digest = hashlib.md5()
+    with open(file_path, 'rb') as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b''):
+            digest.update(chunk)
+    return base64.b64encode(digest.digest()).decode('ascii')
 
 #
 # source_flags in database
@@ -949,64 +960,66 @@ def trash_bucket_objects(gs_client, objects: typing.List[str], log_extra: dict):
 
 
 @STORAGE_RETRY
-def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str)], verdict: SyncVerdict, log_extra: dict):
+def retire_bucket_objects(gs_client, objects: typing.List[(str, str, str, str)], verdict: SyncVerdict, log_extra: dict):
     """
     Retire object - apparently, you have to copy blob
+
+    Each entry is (from_obj, to_obj, obj_type, cit_path), where cit_path is the
+    CIT copy of the retired version (/data/orig/...vN).
+
+    The /ftp object is only the retired version if nothing updated it after
+    publish. When a sync is delayed (e.g. waiting for a PDF that only builds
+    after an admin compile fix), an admin restore may already have synced the
+    new current version to /ftp, and copying it would put the new version in
+    /orig. So the CIT copy decides what /orig must hold: /ftp is copied only when
+    it matches, otherwise the CIT copy is uploaded. This also repairs an /orig
+    that an earlier blind copy got wrong, whenever the paper is re-synced.
+    Without a CIT copy, it falls back to the existing /orig, then to /ftp.
     """
     from sync_published_to_gcp import GS_BUCKET
     bucket: Bucket = gs_client.bucket(GS_BUCKET)
-    for from_obj, to_obj, obj_type in objects:
-        logger.debug("%s: %s is being renamed to %s", obj_type, from_obj, to_obj, extra=log_extra)
-        from_blob: Blob = bucket.blob(from_obj)
-        to_blob: Blob = bucket.blob(to_obj)
-        if not from_blob.exists():
-            logger.warning("%s: FROM %s does not exist", obj_type, from_obj, extra=log_extra)
-            if to_blob.exists():
-                verdict.add_verdict(True, "Destination Exists", (from_obj, to_blob, obj_type))
-            else:
-                verdict.add_verdict(True, "None Exists", (from_obj, to_blob, obj_type))
-            continue
-
-        if to_blob.exists():
-            # When the destination of retired object exists, you do nothing.
-            # IOW, You cannot retire object twice.
-            to_blob.reload(projection='full')
-            if to_blob.md5_hash == from_blob.md5_hash and to_blob.size == from_blob.size:
-                # The object is already in the orig, and should not be in /ftp
-                from_blob.delete()
-                logger.warning("%s: from: %s  <---> to: %s are identical - md5[%s]", obj_type, from_obj, to_obj, from_blob.md5_hash, extra=log_extra)
-                verdict.add_verdict(True, "Both Exists", (from_obj, to_blob, obj_type))
-            else:
-                logger.warning("%s (%s) --> %s exists (NOT COPIED). FROM %s / %s --> TO %s / %s",
-                               from_obj,
-                               obj_type,
-                               to_obj,
-                               from_blob.size,
-                               from_blob.md5_hash,
-                               to_blob.size,
-                               to_blob.md5_hash,
-                               extra=log_extra)
-                verdict.add_verdict(True, "Both exists but contents not the same!", (from_obj, to_blob, obj_type))
-            continue
-
+    for from_obj, to_obj, obj_type, cit_path in objects:
+        entry = (from_obj, to_obj, obj_type)
         try:
-            copied_blob = bucket.copy_blob(from_blob, bucket, to_obj)
-            logger.debug("%s: %s is copied to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash, extra=log_extra)
-            try:
+            # get_blob() loads md5_hash; bucket.blob() + exists() leaves it None.
+            from_blob: Blob = bucket.get_blob(from_obj)
+            to_blob: Blob = bucket.get_blob(to_obj)
+            from_md5 = from_blob.md5_hash if from_blob else None
+            to_md5 = to_blob.md5_hash if to_blob else None
+            if os.path.isfile(cit_path):
+                wanted = md5_base64(cit_path)
+            else:
+                logger.warning("%s: no CIT copy %s, cannot verify %s", obj_type, cit_path, to_obj, extra=log_extra)
+                wanted = to_md5 or from_md5
+            if wanted is None:
+                logger.warning("%s: neither %s nor %s exists", obj_type, from_obj, to_obj, extra=log_extra)
+                verdict.add_verdict(True, "None Exists", entry)
+                continue
+
+            if to_md5 == wanted:
+                reason = "Destination Exists"
+            elif from_md5 == wanted:
+                bucket.copy_blob(from_blob, bucket, to_obj)
+                reason = "Object moved successfully"
+            else:
+                # Only reachable with a CIT copy: /orig is missing or wrong, and /ftp is not the retired version.
+                logger.warning("%s: %s md5[%s] / %s md5[%s] are not the retired version %s md5[%s]; uploading it",
+                               obj_type, from_obj, from_md5, to_obj, to_md5, cit_path, wanted, extra=log_extra)
+                upload(gs_client, Path(cit_path), to_obj, upload_logger=logger)
+                reason = "Retired version uploaded from CIT"
+
+            if from_md5 == wanted:
+                # The retired version must not stay in /ftp.
                 from_blob.delete()
-                verdict.add_verdict(True, "Object moved successfully", (from_obj, to_blob, obj_type))
-                logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
-                            extra=log_extra)
-            except Exception as _exc:
-                verdict.add_verdict(True, "Object moved but source remains", (from_obj, to_blob, obj_type))
-                logger.info("%s: %s is moved to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
-                            extra=log_extra)
-                pass
-        except:
-            verdict.add_verdict(False, "Object copy failed", (from_obj, to_blob, obj_type))
-            logger.warning("%s: %s failed to copy to %s md5:[%s]", obj_type, from_obj, to_obj, copied_blob.md5_hash,
-                        extra=log_extra)
-            pass
+            elif from_blob:
+                # /ftp already holds another version; the current-file sync overwrites it.
+                logger.info("%s: %s md5[%s] is not the retired version; left in place",
+                            obj_type, from_obj, from_md5, extra=log_extra)
+            logger.info("%s: %s -> %s: %s md5:[%s]", obj_type, from_obj, to_obj, reason, wanted, extra=log_extra)
+            verdict.add_verdict(True, reason, entry)
+        except Exception:
+            logger.error("%s: failed to retire %s to %s", obj_type, from_obj, to_obj, exc_info=True, extra=log_extra)
+            verdict.add_verdict(False, "Retire failed", entry)
 
     return
 
@@ -1101,6 +1114,8 @@ def submission_callback(message: Message) -> None:
 
     except Exception as _exc:
         logger.error("Error processing message: {exc}", exc_info=True, extra=log_extra)
+        # A partial sync must not be acked on the strength of the steps that did succeed.
+        verdict.add_verdict(False, "sync_to_gcp raised", {})
 
     id_v = f"{paper_id}v{version}"
     error_state_file = ErrorStateFile(id_v)
@@ -1217,13 +1232,13 @@ def sync_to_gcp(state: SubmissionFilesState, verdict: SyncVerdict, log_extra: di
         obsoleted = entry["obsoleted"]
         original = entry["original"]
         entry_type = entry['type']
-        retired.append((obsoleted, original, entry_type))
+        retired.append((obsoleted, original, entry_type, entry["cit"]))
 
     if retired:
         # Move blobs from /ftp to /orig
         retire_bucket_objects(gs_client, retired, verdict, log_extra)
         # Obsoleted objects are gone
-        for obsoleted, _original, _entry_type in retired:
+        for obsoleted, _original, _entry_type, _cit in retired:
             if obsoleted in bucket_objects:
                 bucket_objects.remove(obsoleted)
 

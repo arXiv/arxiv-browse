@@ -29,6 +29,10 @@ jobs:
       run: |
         uv run pytest --cov=browse --cov-fail-under=80 tests
 
+    - name: Test sync_prod_to_gcp unit tests
+      # Only the fake-based tests; the other sync tests need a real bucket and credentials.
+      run: uv run pytest script/sync_prod_to_gcp/test/test_retire_*.py
+
     - name: Ruff lint check
       run: |
         uv pip install ruff
