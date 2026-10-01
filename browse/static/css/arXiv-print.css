@@ -15,3 +15,19 @@
   font-size:14px;
   font-weight: bold;
 }
+/* arXivLabs: interactive tools, nothing for paper (and its logo has no size here) */
+#labstabs {
+  display: none;
+}
+/* abs.css (every medium) indents the abstract block to the screen's left column; on
+   paper it starts at the margin like the rest, the abstract inset as on screen. The
+   ancestor outranks abs.css, which loads later. */
+#content-inner #abs h1.title,
+#content-inner #abs div.authors,
+#content-inner #abs div.dateline,
+#content-inner #abs div.metatable {
+  margin-left: 0;
+}
+#content-inner #abs blockquote.abstract {
+  margin-inline: 20px;
+}
