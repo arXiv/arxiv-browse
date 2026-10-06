@@ -66,17 +66,16 @@ def check_scienceCast(metadata: DocMetadata) -> AudioLink:
 def check_alphaXiv(metadata: DocMetadata) -> AudioLink:
     """check if alphaXiv should have an audio summary for the paper"""
     
-    alphaXiv_cats=["cs.IR"]
     not_available=AudioLink(
         service=AudioProvider.ALPHAXIV,
         url=None,
-        not_available_reason=f"The audio pilot for alphaXiv is currently only rolled out in following categories: {', '.join(alphaXiv_cats)}"
+        not_available_reason="The audio pilot for alphaXiv is currently only rolled out in the Computer Science ('cs') categories."
     )
 
     if not metadata.primary_category:
         return not_available
 
-    if (metadata.primary_category.id in alphaXiv_cats):
+    if (metadata.primary_category.in_archive == "cs"):
         return AudioLink(
             service=AudioProvider.ALPHAXIV,
             url=f"https://alphaxiv.org/audio/{metadata.arxiv_identifier.id}",
