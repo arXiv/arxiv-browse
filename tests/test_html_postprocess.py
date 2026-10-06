@@ -16,3 +16,9 @@ def test_post_process_html(app_with_test_fs):
         assert b"/abs/0705.0001" in pphtml
         assert b"""[<a href="/pdf/0705.0001" title="Download PDF" id="pdf-0705.0001" aria-labelledby="pdf-0705.0001">pdf</a>, <a href="/format/0705.0001" title="Other formats" id="oth-0705.0001" aria-labelledby="oth-0705.0001">other</a>]\n""" \
                in pphtml
+
+
+def test_post_process_html_leaves_unknown_papers(app_with_test_fs):
+    """A line whose paper is not found is left as it is."""
+    with app_with_test_fs.test_request_context():
+        assert post_process_html(b"LIST:0705.9999\n") == b"LIST:0705.9999\n"

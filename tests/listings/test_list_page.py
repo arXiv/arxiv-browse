@@ -2,6 +2,7 @@ import pytest
 import re
 import logging
 from datetime import date
+from types import SimpleNamespace
 from unittest.mock import MagicMock
 from unittest import mock
 
@@ -151,6 +152,21 @@ def test_listing_authors(client_with_fake_listings):
     assert (
         " ," not in auDivs[0].get_text()
     )  # Should not have a comma with a space in front of it
+
+
+def test_author_list_affiliations_are_plain_text(app_with_test_fs):
+    """ARXIVCE-4535: affiliations show as written, as on the abs page, escaped once and not linked."""
+    raw = "George M. Bergman (U.C.Berkeley), A. Author (AT&T <b>Labs</b>, https://example.org/?a=1&b=2)"
+    article = SimpleNamespace(arxiv_id_v="0704.0275v1", authors=SimpleNamespace(raw=raw))
+    template = app_with_test_fs.jinja_env.from_string(
+        '{% import "list/list_macros.html" as m with context %}{{ m.do_author_list(article) }}')
+    with app_with_test_fs.app_context():
+        html = template.render(article=article,
+                               author_links={article.arxiv_id_v: list_page.author_links(article)},
+                               url_for_author_search=lambda article, query: f"/a?q={query}")
+    assert html == ('<a href="/a?q=Bergman, G M">George M. Bergman</a> (U.C.Berkeley), '
+                    '<a href="/a?q=Author, A">A. Author</a> '
+                    '(AT&amp;T &lt;b&gt;Labs&lt;/b&gt;, https://example.org/?a=1&amp;b=2)')
 
 
 def test_paging_first(client_with_fake_listings):

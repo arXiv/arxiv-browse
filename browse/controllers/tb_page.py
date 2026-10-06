@@ -22,7 +22,7 @@ from browse.services.database import (
 from browse.services.documents import get_doc_service
 from arxiv.document.exceptions import AbsException, \
     AbsNotFoundException
-from browse.formatting.search_authors import queries_for_authors, \
+from arxiv.authors.search_authors import queries_for_authors, \
     split_long_author_list
 
 app_config = get_application_config()
