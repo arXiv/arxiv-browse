@@ -31,7 +31,7 @@ def add_time_headers(resp: Response, file: FileObj, arxiv_id: Identifier) -> Non
 
 
 def last_modified(fileobj: FileObj) -> str:
-    """Returns a value for use with HTTP last-Modified."""
+    """Returns a value for use with HTTP Last-Modified."""
     return format_datetime(fileobj.updated.astimezone(timezone.utc),
                            usegmt=True)
 
