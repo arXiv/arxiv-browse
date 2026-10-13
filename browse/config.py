@@ -62,6 +62,10 @@ class Settings(arxiv_base.Settings):
 
     BROWSE_SITE_LABEL: str = "arXiv.org"
 
+    BRAND_STATIC_BASE: str | None = None
+    """The design-system asset route (CSS, fonts, logos, chrome JS). Unset, the templates'
+    default: the production route. The dev deployment sets its own (cicd/deploy)."""
+
     BROWSE_ANALYTICS_ENABLED: bool = bool(int(os.environ.get("BROWSE_ANALYTICS_ENABLED", "0")))
     """Enable/disable web analytics, ie: Pendo, Piwik, geoip."""
 

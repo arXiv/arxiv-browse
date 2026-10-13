@@ -138,6 +138,11 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
 
       env {
+        name  = "BRAND_STATIC_BASE"
+        value = var.brand_static_base
+      }
+
+      env {
         name  = "CLASSIC_HTML_BUCKET"
         value = var.classic_html_bucket
       }
