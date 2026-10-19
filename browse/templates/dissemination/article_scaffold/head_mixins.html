@@ -45,13 +45,13 @@
 {#- The paper's adjustments to the shared chrome. Unlayered on purpose: the paper themes are
     in cascade layers, so these outrank them in every theme version a paper pins. -#}
 <style>
-  /* Reading mode hides the chrome, and the paper controls themselves: the pinned JS reads
-     their display to know which way to toggle. */
+  /* Reading mode hides the chrome and the empty .arxiv-html-header marker: the pinned JS reads
+     the marker's display to know which way to toggle. The marker draws no box. */
+  .arxiv-html-header { display: contents; }
   html[data-reading-mode="enabled"] :is(.arxiv-html-site-chrome, .arxiv-html-header, .ds-site-footer) { display: none; }
-  /* The paper controls (.arxiv-html-header) end the bar; their icons are blocks, so they sit
-     centred (the pinned JS shows the theme icon by making its span a block). */
-  .arxiv-html-header { margin-inline-start: auto; }
-  .arxiv-html-header svg { display: block; width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
+  /* The paper controls' icons are blocks, so they sit centred (the pinned JS shows the theme
+     icon by making its span a block). */
+  .arxiv-html-site-chrome .ds-site-header-tools svg { display: block; width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
   /* ar5iv dims every image in dark mode and puts it on a grey wash, for paper figures;
      arXiv's own render as they are (the funder logos keep their white chips). */
   :is(.ds-site-header, .ds-site-footer) img { filter: none; }
@@ -67,7 +67,7 @@
     .arxiv-html-site-chrome { display: contents; }
     .arxiv-html-site-chrome > #ds-announcement { grid-area: announce; }
     .arxiv-html-site-chrome > .ds-site-header { grid-area: header; position: sticky; top: 0; z-index: 3; }
-    .arxiv-html-header .tool-icon { display: none; }
+    .arxiv-html-site-chrome .tool-icon { display: none; }
   }
   /* Narrow: the header scrolls away, and the controls show icons (names kept for screen
      readers; Why HTML? goes). The theme's contents panel is fixed below where its old sticky
@@ -75,8 +75,8 @@
      over the header and the paper: it shows only while open, under the chrome, in its place in
      the page. */
   @media (max-width: 1279px) {
-    .arxiv-html-header .tool-wide { display: none; }
-    .arxiv-html-header .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .arxiv-html-site-chrome .tool-wide { display: none; }
+    .arxiv-html-site-chrome .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     html:not([data-toc-display="block"]) .ltx_page_navbar { display: none; }
     .ltx_page_navbar { position: absolute; top: auto; }
   }
