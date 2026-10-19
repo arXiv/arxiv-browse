@@ -73,12 +73,14 @@
      readers; Why HTML? goes). The theme's contents panel is fixed below where its old sticky
      bar was, and hidden only once the reader has closed it, so until then it is an invisible box
      over the header and the paper: it shows only while open, under the chrome, in its place in
-     the page. */
+     the page. The paper's footer (build logs, reporting instructions) keeps the text's side
+     inset; the theme gives it none, so it met the screen edges. */
   @media (max-width: 1279px) {
     .arxiv-html-site-chrome .tool-wide { display: none; }
     .arxiv-html-site-chrome .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     html:not([data-toc-display="block"]) .ltx_page_navbar { display: none; }
     .ltx_page_navbar { position: absolute; top: auto; }
+    .arxiv-html-footer { padding-inline: 1rem; }
   }
 </style>
 {# {{ user_banner.script(request_datetime) }} #}
