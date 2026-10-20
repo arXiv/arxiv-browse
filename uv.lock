@@ -117,7 +117,7 @@ dependencies = [
 [[package]]
 name = "arxiv-brand-templates"
 version = "0.1.0"
-source = { git = "https://github.com/arXiv/design-system.git?subdirectory=templates&branch=master#a870ade41a0a52521617aa26db279e4b168a48d2" }
+source = { git = "https://github.com/arXiv/design-system.git?subdirectory=templates&branch=master#cc42fd8d7f64e2e9e7bb61a3aca6c4f4aa7843e8" }
 dependencies = [
     { name = "jinja2" },
 ]
