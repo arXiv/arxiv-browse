@@ -52,10 +52,12 @@
   /* The paper controls' icons are blocks, so they sit centred (the pinned JS shows the theme
      icon by making its span a block). */
   .arxiv-html-site-chrome .ds-site-header-tools svg { display: block; width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
-  /* ar5iv dims every image in dark mode and puts it on a grey wash, for paper figures;
-     arXiv's own render as they are (the funder logos keep their white chips). */
-  :is(.ds-site-header, .ds-site-footer) img { filter: none; }
-  .ds-site-header img { background-color: transparent; }
+  /* ar5iv dims every image in dark mode and puts it on a white wash, for paper figures;
+     arXiv's own render as they are (the logo on the bar, the funder logos on their white
+     chips). Important: ar5iv's dark rules are unlayered, as specific as
+     :root:not([data-theme]) img:not(.ltx_no_dark_filter). */
+  :is(.ds-site-header, .ds-site-footer) img { filter: none !important; }
+  .ds-site-header img { background-color: transparent !important; }
 
   /* Wide (the theme's 1280px): the theme lays the body out as a grid whose full-width top rows
      were the band's and its sticky reader bar's. The band takes the first and scrolls away; the
