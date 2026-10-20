@@ -45,7 +45,6 @@ cloudsql_instances = [
   "arxiv-development:us-central1:latexml-db",
 ]
 browse_minimal_banner_enabled  = "1"
-browse_user_banner_enabled     = "1"
 browse_special_message_enabled = "1"
 latexml_bucket                 = "gs://latexml_arxiv_id_converted"
 auth_server                    = "dev.arxiv.org"

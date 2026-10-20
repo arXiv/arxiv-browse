@@ -213,12 +213,6 @@ variable "browse_minimal_banner_enabled" {
   default     = "0"
 }
 
-variable "browse_user_banner_enabled" {
-  description = "Browse user banner enabled"
-  type        = string
-  default     = "0"
-}
-
 variable "browse_special_message_enabled" {
   description = "Browse special message enabled"
   type        = string
