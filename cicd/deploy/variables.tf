@@ -55,7 +55,7 @@ variable "vpc_connector" {
 variable "base_server" {
   description = "Base server URL"
   type        = string
-  default     = "browse.dev.arxiv.org"
+  default     = "dev.arxiv.org"
 }
 
 variable "document_abstract_service" {
@@ -103,13 +103,19 @@ variable "document_cache_path" {
 variable "latexml_base_url" {
   description = "LaTeXML base URL"
   type        = string
-  default     = "https://browse.dev.arxiv.org"
+  default     = "https://dev.arxiv.org"
 }
 
 variable "help_server" {
   description = "Help server URL"
   type        = string
   default     = "info.dev.arxiv.org"
+}
+
+variable "brand_static_base" {
+  description = "Design-system asset route for the shared chrome; empty is the production route"
+  type        = string
+  default     = ""
 }
 
 variable "classic_html_bucket" {

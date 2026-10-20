@@ -25,12 +25,6 @@
     if (readingMode) {
       document.documentElement.setAttribute("data-reading-mode", readingMode);
     }
-    // Pre-apply spinout-banner dismissal here, before the banner paints, so it
-    // never flashes in only to be hidden later by the deferred arxiv-header.js.
-    // Key matches arxiv-header.js: "arxiv-banner-dismissed:" + data-banner-name.
-    if (localStorage.getItem('arxiv-banner-dismissed:spinout-nonprofit')) {
-      document.documentElement.setAttribute("data-banner-dismissed", "");
-    }
   }
   // Run as soon as JS starts, to minimize repainting
   initializeReadingPreferences();
@@ -44,34 +38,51 @@
 <link rel="manifest" href="{{ url_for('static', filename='images/icons/site.webmanifest') }}">
 <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
 <link rel="stylesheet" type="text/css" media="screen" href="https://use.typekit.net/utz6mli.css">
-{#- ARXIVCE-4426: spinout chrome for HTML papers. The shared announcement banner +
-    site footer (markup added in header.html / footer.html) are styled by the
-    arxiv-base SSOT chrome, consumed via base.static exactly as the main site does.
-    This supplies the .ds-* rules, the --arxiv-* design tokens (e.g. --arxiv-ink, the
-    spinout black the reader header is recoloured to) and IBM Plex. Injected here so
-    it reaches every served paper regardless of which baked theme version it pins.
-    arxiv-header.js is null-safe (it guards the absent search/hamburger controls) and
-    persists banner dismissal, keyed by data-banner-name — same as the homepage.
-    Not screen-only: its print rules hide the chrome, whose banner glyph and funder
-    logos have no size without it (ARXIVCE-4527). -#}
-<link rel="stylesheet" type="text/css"
-  href="{{ url_for('base.static', filename='css/arxiv-header-footer.css') }}?v=20260929">
-{#- Reader-specific .ds-* visibility overrides. These MUST be unlayered: the reader
-    body theme is @imported into layer(arxiv-theme), and an unlayered rule (such as
-    the base chrome's own `.ds-announcement { display:flex }`) always outranks any
-    layer — so a hide rule placed in the theme file is silently overridden. -#}
+{#- The shared arXiv chrome's stylesheets (arxiv-brand-templates), injected here so they reach
+    every served paper whichever baked theme version it pins. The theme's --arxiv-* colours
+    fall back to the same values without base's stylesheet. -#}
+{% include "arxiv_brand/head.html" %}
+{#- The paper's adjustments to the shared chrome. Unlayered on purpose: the paper themes are
+    in cascade layers, so these outrank them in every theme version a paper pins. -#}
 <style>
-  /* Banner pre-dismissal (set above before paint -> no flash-then-hide) and
-     reading-mode chrome hiding. */
-  html[data-banner-dismissed] .ds-announcement { display: none; }
-  html[data-reading-mode="enabled"] .ds-announcement,
-  html[data-reading-mode="enabled"] .ds-site-footer { display: none; }
-  /* Print keeps the reader header's logo, not its controls: the theme's own print rule
-     (header, nav { display: none }) sits in a layer that its header layer outranks. */
-  @media print { .arxiv-html-header .html-header-nav { display: none; } }
-  /* Keep the announcement text dark on the Open-Blue band in both colour themes
-     (otherwise it inherits the paper's warm-wash text in dark mode and washes out). */
-  .ds-announcement-text { color: var(--arxiv-ink, #1c1a17); }
+  /* Reading mode hides the chrome and the empty .arxiv-html-header marker: the pinned JS reads
+     the marker's display to know which way to toggle. The marker draws no box. */
+  .arxiv-html-header { display: contents; }
+  html[data-reading-mode="enabled"] :is(.arxiv-html-site-chrome, .arxiv-html-header, .ds-site-footer) { display: none; }
+  /* The paper controls' icons are blocks, so they sit centred (the pinned JS shows the theme
+     icon by making its span a block). */
+  .arxiv-html-site-chrome .ds-site-header-tools svg { display: block; width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
+  /* ar5iv dims every image in dark mode and puts it on a white wash, for paper figures;
+     arXiv's own render as they are (the logo on the bar, the funder logos on their white
+     chips). Important: ar5iv's dark rules are unlayered, as specific as
+     :root:not([data-theme]) img:not(.ltx_no_dark_filter). */
+  :is(.ds-site-header, .ds-site-footer) img { filter: none !important; }
+  .ds-site-header img { background-color: transparent !important; }
+
+  /* Wide (the theme's 1280px): the theme lays the body out as a grid whose full-width top rows
+     were the band's and its sticky reader bar's. The band takes the first and scrolls away; the
+     header, the paper's bar (no site navigation, the paper's controls), takes the second and
+     stays in view, the one sticky bar, with the anchor clearance that requires (DESIGN-POLICIES).
+     The controls show their names. */
+  @media (min-width: 1280px) {
+    html { scroll-padding-top: 80px; }
+    .arxiv-html-site-chrome { display: contents; }
+    .arxiv-html-site-chrome > #ds-announcement { grid-area: announce; }
+    .arxiv-html-site-chrome > .ds-site-header { grid-area: header; position: sticky; top: 0; z-index: 3; }
+    .arxiv-html-site-chrome .tool-icon { display: none; }
+  }
+  /* Narrow: the header scrolls away, and the controls show icons (names kept for screen
+     readers; Why HTML? goes). The theme's contents panel is fixed below where its old sticky
+     bar was, and hidden only once the reader has closed it, so until then it is an invisible box
+     over the header and the paper: it shows only while open, under the chrome, in its place in
+     the page. The paper's footer (build logs, reporting instructions) keeps the text's side
+     inset; the theme gives it none, so it met the screen edges. */
+  @media (max-width: 1279px) {
+    .arxiv-html-site-chrome .tool-wide { display: none; }
+    .arxiv-html-site-chrome .tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    html:not([data-toc-display="block"]) .ltx_page_navbar { display: none; }
+    .ltx_page_navbar { position: absolute; top: auto; }
+    .arxiv-html-footer { padding-inline: 1rem; }
+  }
 </style>
-<script defer src="{{ url_for('base.static', filename='js/arxiv-header.js') }}?v=20260626"></script>
 {# {{ user_banner.script(request_datetime) }} #}
