@@ -1,5 +1,4 @@
 {%- import 'base/macros.html' as base_macros -%}
-{%- import 'user_banner.html' as user_banner -%}
 {%- set rd_int = request_datetime.strftime("%Y%m%d%H%M")|int -%}
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +24,6 @@
   {% include "arxiv_brand/head.html" %}
   <script language="javascript" src="{{ url_for('static', filename='js/accordion.js') }}" ></script>
   <script language="javascript" src="{{ url_for('static', filename='js/optin-modal.js') }}?v=20250819"></script>
-  {{ user_banner.script(request_datetime) }}
   {%- endblock head -%}
 </head>
 
@@ -36,10 +34,6 @@
 
   <div class="flex-wrap-footer">
     <a href="#content" class="ds-skip-link">Skip to main content</a>
-    {#- Promo banners (configured in user_banner.html). Kept inside
-        .flex-wrap-footer so the sticky-footer 100vh accounts for the banner height,
-        otherwise the footer is pushed ~one banner-height below the viewport. -#}
-    {{ user_banner.content(request_datetime) }}
     {% block header %}{% include "arxiv_brand/header.html" %}{% endblock header %}
 
     <main>

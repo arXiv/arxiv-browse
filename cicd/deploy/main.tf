@@ -198,11 +198,6 @@ resource "google_cloud_run_v2_service" "arxiv_browse" {
       }
 
       env {
-        name  = "BROWSE_USER_BANNER_ENABLED"
-        value = var.browse_user_banner_enabled
-      }
-
-      env {
         name  = "BROWSE_SPECIAL_MESSAGE_ENABLED"
         value = var.browse_special_message_enabled
       }
