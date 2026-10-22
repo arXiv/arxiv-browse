@@ -119,7 +119,7 @@ def parse_new_listing_file(listingFilePath: FileObj, listingFilter: str='')\
         if line.startswith('--------'):
             rules_to_pop = rules_to_pop - 1
 
-    # Lines how has the new listings, then a rule, the cross listings, then a
+    # Lines now has the new listings, then a rule, the cross listings, then a
     # rule, the rep listings then a rule and then some unused tail matter.  line
     # should be at // that is part of the first listing item Now cycle through
     # and process update entries in file.
@@ -196,5 +196,5 @@ def _to_item(data: str, ltype: Literal['new', 'cross', 'rep']) -> ListingItem:
 _stripex_re = re.compile(r"\\\\ \( https.*kb.*\)")
 
 def _strip_extra(data: str) -> str:
-    """Srips the extra "(https://arxiv.org/abs/1234.12345,  234332kb)" """
+    """Strips the extra "(https://arxiv.org/abs/1234.12345,  234332kb)" """
     return _stripex_re.sub('', data)
