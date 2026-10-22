@@ -38,11 +38,13 @@ def _normalize_whitespace(txt: str) -> str:
 
 
 def _fmt_author_list(pauths: List[List[str]]) -> str:
+    # ARXIVCE-4551 suppress ":" in authors
     authors = [
         (f"{au[1]} " if (len(au) > 1 and au[1]) else "")
         + f"{au[0]}"
         + (f" {au[2]}" if (len(au) > 2 and au[2]) else "")
         for au in pauths
+        if (len(au) < 3 or au[0] != ":" or au[1] != "" or au[2] != "")
     ]
     return " and ".join(authors)
 
