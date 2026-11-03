@@ -18,7 +18,18 @@ def test_good_bibtex(client_with_test_fs):
     rv = client_with_test_fs.get(f"/bibtex/0906.3421v1")
     assert rv.status_code == 200
 
+    txt = rv.data.decode('utf-8')
+    assert "title={Q-system Cluster Algebras, Paths and Total Positivity}" in txt
+    assert "author={P. Di Francesco and R. Kedem}" in txt
 
+    rv = client_with_test_fs.get(f"/bibtex/2403.02159")
+    assert rv.status_code == 200
+
+    txt = rv.data.decode('utf-8')
+    assert "title={The variability patterns of the TeV blazar PG 1553+113" in txt
+    assert "author={Project Apertus and H. Abe and S. Abe" in txt
+
+    
 def test_bibex_none(client_with_test_fs):
     """Don't do a 500 for /bibex/None ARXIVCE-339."""
     rv = client_with_test_fs.get(f"/bibtex/None")
