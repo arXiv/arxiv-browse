@@ -101,6 +101,15 @@ class Settings(arxiv_base.Settings):
     controller): it returns 503 so Fastly does not cache it at all.
     """
 
+    LISTING_BAD_REQUEST_MAX_AGE: int = 365 * DAY
+    """Surrogate-Control max-age (seconds) for a 400 from /list.
+
+    Those rejections (skip not a multiple of the minimum show, show outside the
+    allowed set, unknown category, malformed time period) depend only on the URL
+    and are raised before any DB work, so they are safe to edge-cache for a long
+    time. If the allowed values are ever widened, purge the "list" surrogate key.
+    """
+
     LISTING_STALE_IF_ERROR: int = DAY
     """How long (seconds) Fastly may serve a stale-but-good listing on origin error.
 

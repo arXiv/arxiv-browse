@@ -102,7 +102,8 @@
 
 {%- macro show_link( txt, to_show ) %}
   {% if to_show %}
-    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn, show=to_show)}} rel="nofollow">
+    {#- skip must be a multiple of the new show: stay on the page holding the current first item -#}
+    <a href={{url_for('.list_articles',context=context, subcontext=subcontext, skip=skipn - skipn % to_show, show=to_show)}} rel="nofollow">
       {{txt}}</a>
   {% else %}
     <span style="color: #454545">{{txt}}</span>
