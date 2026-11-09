@@ -17,8 +17,8 @@ logger = logging.getLogger(__file__)
 src_regex = re.compile(r'.*(\.tar\.gz|\.pdf|\.ps\.gz|\.gz|\.div\.gz|\.html\.gz)')
 
 MAX_ITEMS_IN_PATTERN_MATCH = 1000
-"""This uses pattern matching on all the keys in an itmes directory. If
-the number if items is very large the was probably a problem"""
+"""This uses pattern matching on all the keys in an items directory. If
+the number of items is very large there was probably a problem"""
 
 # TODO move this src_path_prefix() to arxiv-base+
 def src_path_prefix(arxiv_id: Identifier, is_current:bool) -> str:
@@ -90,7 +90,7 @@ class SourceStore():
         if is_current:
             # try from the /ftp with no number for current ver of pdf only paper
             # TODO: this should use current_ps_path() from arxiv-base but we
-            # need this fixed and updgrading arxiv-base is going to be a bit of work
+            # need this fixed and upgrading arxiv-base is going to be a bit of work
             archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
             path = f"ftp/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}.ps.gz"
             ps_file = self.objstore.to_obj(path)
@@ -99,7 +99,7 @@ class SourceStore():
         else:
             # try from the /orig with version number for a pdf only paper
             # TODO: this should use previous_ps_path() from arxiv-base but we
-            # need this fixed and updgrading arxiv-base is going to be a bit of work
+            # need this fixed and upgrading arxiv-base is going to be a bit of work
             archive = arxiv_id.archive if arxiv_id.is_old_id else 'arxiv'
             path = f"orig/{archive}/papers/{arxiv_id.yymm}/{arxiv_id.filename}v{arxiv_id.version}.ps.gz"
             ps_file = self.objstore.to_obj(path)
