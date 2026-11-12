@@ -255,10 +255,26 @@
               <span id="label-for-txyz">TXYZ.AI</span> <em>(<a href="https://txyz.ai" target="_blank">What is TXYZ.AI?</a>)</em>
             </div>
           </div>
+          <div class="columns is-mobile lab-row">
+            <div class="column lab-switch">
+              <label class="switch">
+                <input
+                  id="summarizepaper-toggle"
+                  data-script-url="{{ url_for('static', filename='js/summarizepaper.js') }}"
+                  type="checkbox" class="lab-toggle" aria-labelledby="label-for-summarizepaper">
+                <span class="slider"></span>
+                <span class="is-sr-only">SummarizePaper Toggle</span>
+              </label>
+            </div>
+            <div class="column lab-name">
+              <span id="label-for-summarizepaper">SummarizePaper</span> <em>(<a href="https://www.summarizepaper.com/en/about/" target="_blank">What is SummarizePaper?</a>)</em>
+            </div>
+          </div>
         </div>
         <div id="replicate-output"></div>
         <div id="spaces-output"></div>
         <div id="txyz-output"></div>
+        <div id="summarizepaper-output" aria-live="polite"></div>
       </div>
       <input type="radio" name="tabs" id="tabfour" class="labs-tab-input">
       <label for="tabfour" role="tab" aria-selected="false" aria-controls="tabpanel-four" id="tab-label-four">Related Papers</label>
