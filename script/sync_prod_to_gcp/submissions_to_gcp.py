@@ -89,7 +89,9 @@ from google.cloud.pubsub_v1.subscriber.message import Message
 from google.cloud.pubsub_v1 import SubscriberClient
 from google.cloud.storage import Client as StorageClient, Bucket, Blob
 from google.cloud.storage.retry import DEFAULT_RETRY as STORAGE_RETRY
-from requests.exceptions import RetryError, ReadTimeout
+from requests.exceptions import ReadTimeout
+# get_pdf's @retry.Retry raises the google RetryError, not the requests one
+from google.api_core.exceptions import RetryError
 
 from identifier import Identifier
 
@@ -848,12 +850,12 @@ def ask_caches_to_webnode(file_state: SubmissionFilesState, log_extra: typing.Di
                 except ReadTimeout as exc:
                     # This happens when failed to talk to webnode
                     logger.info("Timeout for %s", pdf_path, extra=log_extra)
-                    raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
+                    raise MissingGeneratedFile("Failed to retrieve pdf: %s" % pdf_path) from exc
 
                 except RetryError as exc:
                     # This happens when failed to talk to webnode
                     logger.info("Retry for %s", pdf_path, extra=log_extra)
-                    raise MissingGeneratedFile("Failed to retrieve pdf: %s") from exc
+                    raise MissingGeneratedFile("Failed to retrieve pdf: %s" % pdf_path) from exc
 
                 except Exception as _exc:
                     logger.warning("ensure_pdf: %s - %s", file_state.vxid.ids, str(_exc),
