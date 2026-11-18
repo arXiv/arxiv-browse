@@ -195,3 +195,27 @@ def test_year_listing_page( client_with_db_listings):
     assert 'Estimating the Attractor Dimension of the Equatorial Weather System'in text 
     assert '<a href ="/abs/chao-dyn/9510015" title="Abstract" id="chao-dyn/9510015">\n        arXiv:chao-dyn/9510015\n      </a>' in text
     assert '<a href="https://arxiv.org/search/chao-dyn?searchtype=author&amp;query=Tiong,+M+L+B">Melvin Leok Boon Tiong</a>' in text
+
+def test_old_style_ids_use_prefix_like(app_with_db):
+    """Old-style id filters must be prefix LIKEs ('<archive>/<yymm>%'): a leading
+    '%' cannot use the paper_id index and took minutes on prod."""
+    from sqlalchemy import event
+    from sqlalchemy.engine import Engine
+
+    params = []
+    def capture(conn, cursor, statement, parameters, context, executemany):
+        params.extend(p for p in parameters if isinstance(p, str))
+
+    event.listen(Engine, "before_cursor_execute", capture)
+    try:
+        with app_with_db.app_context():
+            ls = get_listing_service()
+            month = ls.list_articles_by_month('nlin.CD', 1995, 10, 0, 25)
+            year = ls.list_articles_by_month('ao-sci', 1995, None, 0, 25)
+    finally:
+        event.remove(Engine, "before_cursor_execute", capture)
+
+    assert any(item.id == "chao-dyn/9510015" for item in month.listings)
+    assert any(item.id == "chao-dyn/9510015" for item in year.listings)
+    assert "chao-dyn/9510%" in params and "chao-dyn/95%" in params
+    assert not [p for p in params if p.startswith('%')]

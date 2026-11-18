@@ -1,3 +1,4 @@
+import pytest
 from datetime import date
 from typing import List
 from unittest import mock
@@ -163,7 +164,9 @@ def test_recent_listing_page_pagination(client_with_db_listings):
     assert "Wed, 2 Feb 2011 (showing" not in text
     assert "0704.0046" not in text
 
-    rv = client.get("/list/math/recent?skip=1")
+    # section math at an unaligned offset; skip validation is tested elsewhere
+    with mock.patch.object(list_page, '_parse_skip', lambda skip, shown: int(skip)):
+        rv = client.get("/list/math/recent?skip=1")
     assert rv.status_code == 200
     text = rv.text
     assert "Thu, 3 Feb 2011 (continued, showing last 1 of 2 entries )" in text
@@ -186,10 +189,10 @@ def test_recent_page_links( client_with_db_listings):
         rv = client.get("/list/math/recent?show=2")
     assert rv.status_code == 200
     text = rv.text
-    assert '<a href="/list/math/recent?skip=4&amp;show=2">\n          Fri, 28 Jan 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=3&amp;show=2">\n          Tue, 1 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=2&amp;show=2">\n          Wed, 2 Feb 2011\n        </a>' in text
-    assert '<a href="/list/math/recent?skip=0&amp;show=2">\n          Thu, 3 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=4&amp;show=2#item5">\n          Fri, 28 Jan 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=2&amp;show=2#item4">\n          Tue, 1 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=2&amp;show=2#item3">\n          Wed, 2 Feb 2011\n        </a>' in text
+    assert '<a href="/list/math/recent?skip=0&amp;show=2#item1">\n          Thu, 3 Feb 2011\n        </a>' in text
 
 def test_bad_pagination( client_with_db_listings):
     client = client_with_db_listings
@@ -202,3 +205,29 @@ def test_bad_pagination( client_with_db_listings):
     rv = client.get("/list/math/recent?show=247")
     assert rv.status_code == 400
     assert 'Invalid show value.' in rv.text
+
+
+@pytest.mark.parametrize("query", ["skip=365&show=736", "skip=365", "show=736", "skip=abc",
+                                   "skip=25&show=50", "skip=25", "skip=350&show=250"])
+def test_bad_paging_params_never_check_out_a_db_connection(client_with_db_listings, query):
+    """Crawler-synthesized paging values must be rejected with zero DB load."""
+    from sqlalchemy import event
+    from sqlalchemy.pool import Pool
+    client = client_with_db_listings
+    checkouts = []
+
+    def on_checkout(*_args):
+        checkouts.append(1)
+
+    event.listen(Pool, "checkout", on_checkout)
+    try:
+        rv = client.get(f"/list/math/pastweek?{query}")
+        assert rv.status_code == 400
+        assert checkouts == [], "a bad /list request checked out a DB connection"
+
+        # Control: a valid listing does use the DB, so the listener is live.
+        rv = client.get("/list/math/recent")
+        assert rv.status_code == 200
+        assert checkouts, "listener did not observe the listing DB"
+    finally:
+        event.remove(Pool, "checkout", on_checkout)
