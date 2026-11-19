@@ -2,7 +2,7 @@
 # pylint disable=no-member
 
 import ipaddress
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from typing import (
     Any, 
     Callable, 
@@ -34,16 +34,13 @@ from arxiv.db.models import (
     Document,
     MemberInstitution,
     MemberInstitutionIP,
-    StatsMonthlyDownload,
-    StatsMonthlySubmission,
     TrackbackPing,
     DBLaTeXMLDocuments,
     OrcidIds,
     AuthorIds,
     TapirUser,
     PaperOwner,
-    t_arXiv_in_category,
-    t_arXiv_stats_hourly
+    t_arXiv_in_category
 )
 from browse.services.listing import ListingItem
 from arxiv.base import logging
@@ -283,23 +280,6 @@ def get_document_count() -> Optional[int]:
     return num_documents
 
 
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=0)
-def get_document_count_by_yymm(paper_date: Optional[date] = None) -> int:
-    """Get number of papers for a given year and month."""
-    paper_date = date.today() if not isinstance(paper_date, date) else paper_date
-    yymm = paper_date.strftime("%y%m")
-    yymm_like = f"{yymm}%"
-    if paper_date < date(2007, 4, 1):
-        yymm_like = f"%/{yymm}%"
-    num_documents = Session.scalar(
-        select(func.count(Document.document_id).label("num_documents"))
-        .filter(Document.paper_id.like(yymm_like))
-        .filter(not_(Document.paper_id.like("test%")))
-    )
-    return num_documents or 0
-
-
 # Only used on prevnext page
 @db_handle_error(db_logger=logger, default_return_val=None)
 def get_sequential_id(paper_id: Identifier,
@@ -383,118 +363,6 @@ def get_repec_paper_ids(year: int) -> List[str]:
         .order_by(asc(Document.paper_id))
     ).all()
     return list(rows)
-
-
-def __all_hourly_stats_query() -> Select[Any]:
-    return select(t_arXiv_stats_hourly)
-
-
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=(0, 0, 0))
-def get_hourly_stats_count(stats_date: Optional[date]) -> Tuple[int, int, int]:
-    """Get sum of normal/admin connections and nodes for a given date."""
-    stats_date = date.today() if not isinstance(stats_date, date) else stats_date
-    normal_count = 0
-    admin_count = 0
-    num_nodes = 0
-    a = (select(
-            t_arXiv_stats_hourly,
-            func.sum(t_arXiv_stats_hourly.c.connections).label("num_connections"),
-            t_arXiv_stats_hourly.c.access_type,
-            func.max(t_arXiv_stats_hourly.c.node_num).label("num_nodes"),
-        )
-        .filter(t_arXiv_stats_hourly.c.ymd == stats_date.isoformat())
-        .group_by(t_arXiv_stats_hourly.c.access_type))
-    
-    rows = Session.execute(
-        a
-    ).all()
-    try:
-        logger.warn(f'ROW TYPE: {type(rows[0])}')
-    except Exception as e:
-        logger.warn(f'CAN\'T PRINT ROW TYPE WITH {str(e)}')
-    for r in rows:
-        if r.access_type == "A":
-            admin_count = int(r.num_connections) # This is a decimal.Decimal
-        else:
-            normal_count = int(r.num_connections) # This is a decimal.Decimal
-            num_nodes = int(r.num_nodes) # This is an int but want to make sure for mypy
-
-    assert isinstance(normal_count, int) and isinstance(admin_count, int) \
-        and isinstance(num_nodes, int)
-    return (normal_count, admin_count, num_nodes)
-
-
-# Used on stats page
-# maybe on /today page?
-@db_handle_error(db_logger=logger, default_return_val=[])
-def get_hourly_stats(stats_date: Optional[date] = None) -> List:
-    """Get the hourly stats for a given date."""
-    stats_date = date.today() if not isinstance(stats_date, date) else stats_date
-
-    return list(
-        Session.execute(
-            __all_hourly_stats_query()
-            .filter(
-                t_arXiv_stats_hourly.c.access_type == "N",
-                t_arXiv_stats_hourly.c.ymd == stats_date.isoformat(),
-            )
-            .order_by(asc(t_arXiv_stats_hourly.c.hour), t_arXiv_stats_hourly.c.node_num)
-        ).all()
-    )
-
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=[])
-def get_monthly_submission_stats() -> List[StatsMonthlySubmission]:
-    """Get monthly submission stats from :class:`.StatsMonthlySubmission`."""
-    return list(
-        Session.execute(
-            select(StatsMonthlySubmission)
-            .order_by(asc(StatsMonthlySubmission.ym))
-        ).scalars().all()
-    )
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=(0, 0))
-def get_monthly_submission_count() -> Tuple[int, int]:
-    """Get submission totals: number of submissions and number migrated."""
-    row = Session.execute(
-        select(
-            func.sum(StatsMonthlySubmission.num_submissions),
-            func.sum(StatsMonthlySubmission.historical_delta),
-        )
-    ).first()
-    return row._t if row else (0, 0)
-
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=[])
-def get_monthly_download_stats() -> List[StatsMonthlyDownload]:
-    """Get all the monthly download stats."""
-    return list(
-        Session.execute(
-            select(StatsMonthlyDownload)
-            .order_by(asc(StatsMonthlyDownload.ym))
-        ).scalars().all()
-    )
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=0)
-def get_monthly_download_count() -> int:
-    """Get the sum of monthly downloads for all time."""
-    row = Session.scalar(
-        select(func.sum(StatsMonthlyDownload.downloads).label("total_downloads"))
-    )
-    return row or 0
-
-
-# Used on stats page
-@db_handle_error(db_logger=logger, default_return_val=None)
-def get_max_download_stats_dt() -> Optional[date]:
-    """Get the datetime of the most recent download stats."""
-    return Session.scalar(select(func.max(StatsMonthlyDownload.ym).label("max_ym")))
 
 
 @db_handle_error(db_logger=logger, default_return_val=None)
