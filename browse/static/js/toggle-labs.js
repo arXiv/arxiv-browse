@@ -27,6 +27,7 @@ $(document).ready(function() {
     "sciencecast": $('#sciencecast-toggle').data('script-url'),
     "gotitpub": $('#gotitpub-toggle').data('script-url'),
     "alphaxiv": $('#alphaxiv-toggle').data('script-url'),
+    "summarizepaper": $('#summarizepaper-toggle').data('script-url'),
     "bibex": {
       "url": $('#bibex-toggle').data('script-url'),
       "container": "#bib-main"
@@ -130,6 +131,12 @@ $(document).ready(function() {
             console.log(textStatus);
           }).fail(function() {
             console.error("failed to load huggingface script (on cookie check)", arguments)
+          });
+        } else if (key === "summarizepaper-toggle") {
+          $.cachedScript(scripts["summarizepaper"]).done(function(script, textStatus) {
+            console.log(textStatus);
+          }).fail(function() {
+            console.error("failed to load summarizepaper script (on cookie check)", arguments)
           });
         }
       }
@@ -248,6 +255,12 @@ $(document).ready(function() {
         console.log(textStatus, "huggingface (on lab toggle)");
       }).fail(function() {
         console.error("failed to load huggingface script (on lab toggle)", arguments)
+      });
+    } else if ($(this).attr("id") == "summarizepaper-toggle") {
+      $.cachedScript(scripts["summarizepaper"]).done(function(script, textStatus) {
+        console.log(textStatus, "summarizepaper (on lab toggle)");
+      }).fail(function() {
+        console.error("failed to load summarizepaper script (on lab toggle)", arguments)
       });
     }
   
