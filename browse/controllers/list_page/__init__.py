@@ -155,7 +155,14 @@ def get_listing(subject_or_category: str,
               )
         )
     ):
-        raise BadRequest("Listing requires subject and valid time period parameters.") 
+        raise BadRequest("Listing requires subject and valid time period parameters.")
+
+    # Validate paging params before any listing-service/DB work, so
+    # crawler-synthesized values are rejected for free.
+    shown = _parse_show(show)
+    if shown is None:
+        shown = max_show if time_period == 'new' else default_show
+    skipn = _parse_skip(skip, shown)
 
     if subject_or_category in ARCHIVES_SUBSUMED:
         subject_or_category=ARCHIVES_SUBSUMED[subject_or_category]
@@ -177,23 +184,6 @@ def get_listing(subject_or_category: str,
         raise BadRequest(f"Invalid archive or category: {subject_or_category}")
 
     listing_service = get_listing_service()
-
-    if not skip or not skip.isdigit():
-        skipn = 0
-    else:
-        skipn = int(skip)
-
-    if show:
-        if show.isdigit() and int(show) in show_values:
-            shown=int(show)
-        else:
-            raise BadRequest(f"Invalid show value. Valid values: {', '.join(map(str, show_values))}")
-    else:
-        if time_period == 'new':
-            shown = max_show
-        else:
-            shown = default_show
-
 
     if_mod_since = request.headers.get('If-Modified-Since', None)
 
@@ -384,6 +374,34 @@ def get_listing(subject_or_category: str,
     response_data['url_for_author_search'] = author_query
 
     return response_data, status.OK, response_headers
+
+_ascii_digits = re.compile(r'[0-9]+')
+
+
+def _parse_skip(skip: str, shown: int) -> int:
+    """Validate ``skip`` against the closed set of values the UI generates.
+
+    Pages advance by ``shown``, and every link the listing UI emits (paging,
+    more/fewer/all, the /new section index, the /recent day links) uses a
+    ``skip`` that is a multiple of the ``show`` it is paired with. Anything else
+    (e.g. ``skip=365&show=250`` from a crawler incrementing params) is rejected
+    before any DB work.
+    """
+    if not skip:
+        return 0
+    if not _ascii_digits.fullmatch(skip) or int(skip) % shown != 0:
+        raise BadRequest(f"Invalid skip value. Must be a multiple of show ({shown}).")
+    return int(skip)
+
+
+def _parse_show(show: str) -> Optional[int]:
+    """Validate ``show`` against ``show_values``; ``None`` means use the default."""
+    if not show:
+        return None
+    if not _ascii_digits.fullmatch(show) or int(show) not in show_values:
+        raise BadRequest(f"Invalid show value. Valid values: {', '.join(map(str, show_values))}")
+    return int(show)
+
 
 def year_month(tp: str)->Optional[Tuple[bool, int, Optional[int]]]:
     """Gets the year and month from the time_period parameter. The boolean is if a redirect needs to be sent"""

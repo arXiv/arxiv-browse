@@ -250,7 +250,18 @@ def list_articles(context: str, subcontext: str) -> Response:
     Context might be a context or an archive; Subcontext should be
     'recent', 'new' or a string of format YYMM.
     """
-    response, code, headers = list_page.get_listing(context, subcontext)
+    try:
+        response, code, headers = list_page.get_listing(context, subcontext)
+    except BadRequest as ex:
+        # Every BadRequest from get_listing is a pure function of the URL and
+        # raised before any DB work, so let Fastly hold the rejection for a long
+        # time: crawlers iterating skip/show/etc. stay off the origin. Plain text,
+        # no template rendering. Purgeable via the "list" surrogate key.
+        bad_headers = b_add_surrogate_key({}, ["list"])
+        bad_headers["Surrogate-Control"] = \
+            f"max-age={current_app.config.get('LISTING_BAD_REQUEST_MAX_AGE', 365 * 24 * 60 * 60)}"
+        return (f"Bad Request: {ex.description}", status.BAD_REQUEST,
+                bad_headers)  # type: ignore
     headers=b_add_surrogate_key(headers,["list"])
     if code == status.OK:
         # TODO if it is a HEAD request we don't want to render the template

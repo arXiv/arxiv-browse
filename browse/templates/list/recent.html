@@ -5,10 +5,14 @@
   <ul>
     {% set cumulative = namespace(total=0) %}
     {%- for pdate in pubdates -%}
-      {%- set skipfordate = cumulative.total -%}
+      {#- skip must stay a multiple of shown (the controller rejects
+          anything else), so land on the page containing the day's first
+          item and jump to it via its item anchor. -#}
+      {%- set day_start = cumulative.total -%}
+      {%- set skipfordate = day_start - day_start % shown -%}
       {%- set cumulative.total = cumulative.total + pdate[1] -%}
       <li>
-        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown ) }}">
+        <a href="{{url_for('browse.list_articles', context=context, subcontext='recent', skip=skipfordate, show=shown, _anchor='item' ~ (day_start + 1)) }}">
           {{ pdate[0].strftime('%a, %-d %b %Y') }}
         </a>
       </li>

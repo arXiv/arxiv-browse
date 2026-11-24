@@ -125,6 +125,84 @@ def test_basic_lists_errors(client_with_fake_listings):
     assert rv.status_code == 400
 
 
+@pytest.mark.parametrize("query", [
+    "skip=365&show=736",  # crawler-incremented values seen in prod
+    "skip=365&show=250",
+    "skip=365",
+    "skip=1",
+    "skip=25",  # default show is 50
+    "skip=25&show=50",  # pages advance by show: 0, 50, 100, ...
+    "skip=50&show=100",
+    "skip=350&show=250",
+    "show=736",
+    "skip=abc",
+    "skip=-25",
+    "skip=%C2%B2",  # unicode superscript two: isdigit() but not int()-able
+    "show=%C2%B2",
+])
+def test_bad_paging_params_rejected_before_db(client_with_fake_listings, query):
+    """Values the UI never generates are rejected without touching the listing service."""
+    client = client_with_fake_listings
+    with mock.patch.object(list_page, 'get_listing_service',
+                           side_effect=AssertionError("listing service must not be used")):
+        rv = client.get(f"/list/math/pastweek?{query}")
+    assert rv.status_code == 400
+    assert rv.headers["Surrogate-Control"] == "max-age=31536000"
+    assert " list " in " " + rv.headers["Surrogate-Key"] + " "
+
+
+@pytest.mark.parametrize("query", [
+    "", "skip=", "skip=0", "skip=25&show=25", "skip=50", "skip=50&show=50",
+    "skip=200&show=100", "skip=250&show=250",
+])
+def test_ui_paging_params_accepted(client_with_fake_listings, query):
+    rv = client_with_fake_listings.get(f"/list/astro-ph.EP/recent?{query}")
+    assert rv.status_code == 200
+
+
+def test_recent_day_links_use_valid_skip(client_with_fake_listings):
+    """Day links round skip down to a multiple of show and anchor to the day's first item."""
+    client = client_with_fake_listings
+    rv = client.get("/list/astro-ph.EP/recent?show=25")
+    assert rv.status_code == 200
+    soup = BeautifulSoup(rv.text, 'html.parser')
+    day_links = [a['href'] for a in soup.select('#dlpage ul li a')
+                 if '/list/astro-ph.EP/recent?' in a['href']]
+    assert day_links
+    saw_rounding = False
+    for href in day_links:
+        m = re.search(r'skip=(\d+)&show=25#item(\d+)$', href)
+        assert m, href
+        skip, item = int(m.group(1)), int(m.group(2))
+        assert skip % 25 == 0
+        assert skip < item <= skip + 25  # the anchored item is on the linked page
+        saw_rounding = saw_rounding or skip != item - 1
+        target = client.get(href.split('#')[0])
+        assert target.status_code == 200
+        assert f"name='item{item}'" in target.text or f'name="item{item}"' in target.text
+    assert saw_rounding, "fixture should exercise a day boundary that is not a multiple of 25"
+
+
+@pytest.mark.parametrize("start", [
+    "/list/astro-ph.EP/recent", "/list/astro-ph.EP/recent?skip=50&show=25",
+    "/list/astro-ph.EP/recent?skip=50&show=50", "/list/astro-ph.EP/recent?show=100",
+    "/list/hep-ph/2009-01", "/list/hep-ph/2009-01?skip=175&show=25",
+    "/list/hep-ph/2009-01?skip=250&show=250", "/list/hep-ph/2009-01?skip=500&show=100",
+    "/list/hep-ph/new", "/list/hep-ph/new?skip=100&show=25",
+])
+def test_every_emitted_list_link_is_accepted(client_with_fake_listings, start):
+    """Paging, more/fewer/all, section-index and day links never produce a rejected skip/show."""
+    client = client_with_fake_listings
+    rv = client.get(start)
+    assert rv.status_code == 200
+    soup = BeautifulSoup(rv.text, 'html.parser')
+    links = {a['href'].split('#')[0] for a in soup.find_all('a', href=True)
+             if a['href'].startswith('/list/') and 'skip=' in a['href']}
+    assert links
+    for href in sorted(links):
+        assert client.get(href).status_code != 400, f"{start} emitted rejected link {href}"
+
+
 def test_listing_authors(client_with_fake_listings):
     client = client_with_fake_listings
     rv = client.get("/list/hep-ph/2009-01")
@@ -830,7 +908,9 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Fri, 28 Jan 2011") == 2
 
     #skipped updates not shown
-    rv = client.get("/list/physics/recent?skip=1")
+    # section math at an unaligned offset; skip validation is tested elsewhere
+    with mock.patch.object(list_page, '_parse_skip', lambda skip, shown: int(skip)):
+        rv = client.get("/list/physics/recent?skip=1")
     assert rv.status_code == 200
     assert rv.text.count(expected_string) == 2
     assert rv.text.count("Thu, 3 Feb 2011") == 1
@@ -851,7 +931,9 @@ def test_no_listings_recent(client_with_db_listings):
     assert rv.text.count("Fri, 28 Jan 2011") == 1
 
     #empty sections shown after a skip
-    rv = client.get("/list/math/recent?skip=4")
+    # section math at an unaligned offset; skip validation is tested elsewhere
+    with mock.patch.object(list_page, '_parse_skip', lambda skip, shown: int(skip)):
+        rv = client.get("/list/math/recent?skip=4")
     assert rv.status_code == 200
     assert rv.text.count(expected_string) == 1
     assert rv.text.count("Thu, 3 Feb 2011") == 1
@@ -864,7 +946,7 @@ def test_no_listings_recent(client_with_db_listings):
 def test_surrogate_keys(client_with_db_listings):
     client=client_with_db_listings
 
-    rv = client.get("/list/math/recent?skip=4")
+    rv = client.get("/list/math/recent")
     head=rv.headers["Surrogate-Key"]
     assert " list " in " "+head+" "
     assert "list-recent" in head
